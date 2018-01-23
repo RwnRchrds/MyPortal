@@ -20,6 +20,17 @@ namespace MyPortal.Controllers
             return View(student);
         }
 
-  
+        public ActionResult Edit(int id)
+        {
+            return Content("id:" + id);
+        }
+
+        [Route( "students/results/{resultset}")]
+        public ActionResult Results(int? resultSet)
+        {
+            if (!resultSet.HasValue)
+                resultSet = 1;
+            return Content("Results from " + resultSet);
+        }
     }
 }
