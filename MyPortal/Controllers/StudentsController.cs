@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MyPortal.Models;
+using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers
 {
@@ -14,10 +15,23 @@ namespace MyPortal.Controllers
         {
             return View();
         }
+        // StudentsController --> "Random" ActionResult
         public ActionResult Random()
         {
             var student = new Student() {Id = 1, FirstName = "Aaron", LastName = "Aardvark"};
-            return View(student);
+            var results = new List<Result>
+            {
+                new Result {ResultSet = 1, Student = 1, Subject = 1, Value = "A"},
+                new Result {ResultSet = 1, Student = 1, Subject = 2, Value = "A"}
+            };
+
+            var viewModel = new RandomStudentViewModel
+            {
+                Results = results,
+                Student = student
+            };
+
+            return View(viewModel);
         }
 
         public ActionResult Edit(int id)

@@ -1,9 +1,25 @@
-﻿
-@model MyPortal.Models.Student
+﻿@model MyPortal.ViewModels.RandomStudentViewModel
 @{
     ViewBag.Title = "Random";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>@Model.LastName, @Model.FirstName</h2>
+@{
+    var className = Model.Results.Count > 0 ? "popular" : null;
+}
 
+<h2 class="@className">@Model.Student.LastName, @Model.Student.FirstName</h2>
+
+@if (Model.Results.Count == 0)
+{
+    <text>No results to display.</text>
+}
+else
+{
+    <ul>
+        @foreach (var result in Model.Results)
+        {
+            <li>@result.Subject: @result.Value</li>
+        }
+    </ul>
+}

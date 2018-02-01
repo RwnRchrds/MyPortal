@@ -9,5 +9,6 @@ namespace MyPortal.ViewModels
     public class RandomStudentViewModel
     {
         public Student Student { get; set; }
+        public List<Result> Results { get; set; }
     }
 }
