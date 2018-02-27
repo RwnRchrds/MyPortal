@@ -201,12 +201,14 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Log.cs" />
+    <Compile Include="Models\LogType.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\RegGroup.cs" />
     <Compile Include="Models\Result.cs" />
     <Compile Include="Models\ResultSet.cs" />
     <Compile Include="Models\Staff.cs" />
     <Compile Include="Models\Student.cs" />
+    <Compile Include="Models\Subject.cs" />
     <Compile Include="Models\TrainingCertificate.cs" />
     <Compile Include="Models\TrainingCourse.cs" />
     <Compile Include="Models\User.cs" />

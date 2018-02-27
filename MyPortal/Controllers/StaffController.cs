@@ -35,7 +35,7 @@ namespace MyPortal.Controllers
                 new Student {Id = 1,FirstName = "John", LastName = "Aburn",YearGroup = "Year 7",RegGroup = "7V"},
                 new Student {Id = 2,FirstName = "Calum", LastName = "Worthy",YearGroup = "Year 11",RegGroup = "11A"},
                 new Student {Id = 3,FirstName = "Haymitch",LastName = "Abernathy",YearGroup = "Year 5",RegGroup = "5S"}
-            };
+            };     
         }
 
         private IEnumerable<Staff> GetStaff()
