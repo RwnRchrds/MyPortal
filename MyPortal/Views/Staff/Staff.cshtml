@@ -1,0 +1,31 @@
+﻿@model IEnumerable<MyPortal.Models.Staff>
+@{
+    ViewBag.Title = "Staff";
+    Layout = "~/Views/Shared/_LayoutStaff.cshtml";
+}
+
+<h2>Staff</h2>
+@if (!Model.Any())
+{
+    <p>No staff to display.</p>
+}
+
+else
+{
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Staff</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var staff in Model)
+            {
+                <tr>
+                    <td>@Html.ActionLink(staff.LastName + ", " + staff.FirstName,"StaffDetails","Staff",new {id = staff.Code},null)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+

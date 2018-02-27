@@ -286,6 +286,8 @@
     <Content Include="Views\Shared\_NavBarSmt.cshtml" />
     <Content Include="Views\Shared\_NavBarAdmin.cshtml" />
     <Content Include="Views\Shared\_LayoutAdmin.cshtml" />
+    <Content Include="Views\Staff\Staff.cshtml" />
+    <Content Include="Views\Staff\StaffDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

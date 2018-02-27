@@ -19,19 +19,35 @@ namespace MyPortal.Controllers
         public ActionResult Students()
         {
             var students = GetStudents();
-            return View();
+            return View(students);
+        }
+
+        public ActionResult Staff()
+        {
+            var staff = GetStaff();
+            return View(staff);
         }
 
         private IEnumerable<Student> GetStudents()
         {
             return new List<Student>
             {
-                new Student {Id = 1,FirstName = "John", LastName = "Aburn"},
-                new Student {Id = 2,FirstName = "Calum", LastName = "Worthy"}
+                new Student {Id = 1,FirstName = "John", LastName = "Aburn",YearGroup = "Year 7",RegGroup = "7V"},
+                new Student {Id = 2,FirstName = "Calum", LastName = "Worthy",YearGroup = "Year 11",RegGroup = "11A"},
+                new Student {Id = 3,FirstName = "Haymitch",LastName = "Abernathy",YearGroup = "Year 5",RegGroup = "5S"}
             };
         }
 
-        [Route("staff/students/{student}")]
+        private IEnumerable<Staff> GetStaff()
+        {
+            return new List<Staff>
+            {
+                new Staff {Code = "GAL",Title = "Mrs",FirstName = "Georgia",LastName = "Alibi"},
+                new Staff {Code = "LSP",Title = "Mrs",FirstName = "Lily",LastName = "Sprague"}
+            };
+        }
+
+        [Route("Staff/Students/{id}")]
         public ActionResult StudentDetails(int id)
         {
             var student = GetStudents().SingleOrDefault(s => s.Id == id);
@@ -40,6 +56,17 @@ namespace MyPortal.Controllers
                 return HttpNotFound();
 
             return View(student);
+        }
+
+        [Route("Staff/Staff/{id}")]
+        public ActionResult StaffDetails(string id)
+        {
+            var staff = GetStaff().SingleOrDefault(s => s.Code == id);
+
+            if (staff == null)
+                return HttpNotFound();
+
+            return View(staff);
         }
     }
 }

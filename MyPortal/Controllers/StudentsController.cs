@@ -22,7 +22,7 @@ namespace MyPortal.Controllers
             var results = new List<Result>
             {
                 new Result {ResultSet = 1, Student = 1, Subject = 1, Value = "A"},
-                new Result {ResultSet = 1, Student = 1, Subject = 2, Value = "A"}
+                new Result {ResultSet = 1, Student = 1, Subject = 2, Value = "C"}
             };
 
             var viewModel = new RandomStudentViewModel
