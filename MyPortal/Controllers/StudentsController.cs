@@ -39,7 +39,7 @@ namespace MyPortal.Controllers
             return Content("id:" + id);
         }
 
-        [Route( "students/results/{resultset}")]
+        [Route( "Students/Results/{resultset}")]
         public ActionResult Results(int? resultSet)
         {
             if (!resultSet.HasValue)
