@@ -10,7 +10,18 @@ namespace MyPortal.Controllers
 {
     public class StaffController : Controller
     {
-        // GET: Staff
+        private MyPortalDbContext _context;
+
+        public StaffController()
+        {
+            _context = new MyPortalDbContext();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _context.Dispose();
+        }
+
         public ActionResult Index()
         {
             return View();
@@ -18,39 +29,20 @@ namespace MyPortal.Controllers
 
         public ActionResult Students()
         {
-            var students = GetStudents();
+            var students = _context.Students.ToList();
             return View(students);
         }
 
         public ActionResult Staff()
         {
-            var staff = GetStaff();
+            var staff = _context.Staff.ToList();
             return View(staff);
-        }
-
-        private IEnumerable<Student> GetStudents()
-        {
-            return new List<Student>
-            {
-                new Student {Id = 1,FirstName = "John", LastName = "Aburn",YearGroup = "Year 7",RegGroup = "7V"},
-                new Student {Id = 2,FirstName = "Calum", LastName = "Worthy",YearGroup = "Year 11",RegGroup = "11A"},
-                new Student {Id = 3,FirstName = "Haymitch",LastName = "Abernathy",YearGroup = "Year 5",RegGroup = "5S"}
-            };     
-        }
-
-        private IEnumerable<Staff> GetStaff()
-        {
-            return new List<Staff>
-            {
-                new Staff {Id = "GAL",Title = "Mrs",FirstName = "Georgia",LastName = "Alibi"},
-                new Staff {Id = "LSP",Title = "Mrs",FirstName = "Lily",LastName = "Sprague"}
-            };
-        }
+        }       
 
         [Route("Staff/Students/{id}")]
         public ActionResult StudentDetails(int id)
         {
-            var student = GetStudents().SingleOrDefault(s => s.Id == id);
+            var student = _context.Students.SingleOrDefault(s => s.Id == id);
 
             if (student == null)
                 return HttpNotFound();
@@ -61,7 +53,7 @@ namespace MyPortal.Controllers
         [Route("Staff/Staff/{id}")]
         public ActionResult StaffDetails(string id)
         {
-            var staff = GetStaff().SingleOrDefault(s => s.Id == id);
+            var staff = _context.Staff.SingleOrDefault(s => s.Id == id);
 
             if (staff == null)
                 return HttpNotFound();

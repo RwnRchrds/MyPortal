@@ -210,7 +210,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\MyPortalModels.cs" />
+    <Compile Include="Models\MyPortalDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\RegGroup.cs" />
     <Compile Include="Models\Result.cs" />

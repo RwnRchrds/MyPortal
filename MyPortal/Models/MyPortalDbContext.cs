@@ -5,10 +5,10 @@ namespace MyPortal.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
 
-    public partial class MyPortalModels : DbContext
+    public partial class MyPortalDbContext : DbContext
     {
-        public MyPortalModels()
-            : base("name=MyPortalModels")
+        public MyPortalDbContext()
+            : base("name=MyPortalDbContext")
         {
         }
 
@@ -17,7 +17,7 @@ namespace MyPortal.Models
         public virtual DbSet<RegGroup> RegGroups { get; set; }
         public virtual DbSet<Result> Results { get; set; }
         public virtual DbSet<ResultSet> ResultSets { get; set; }
-        public virtual DbSet<Staff> Staffs { get; set; }
+        public virtual DbSet<Staff> Staff { get; set; }
         public virtual DbSet<Student> Students { get; set; }
         public virtual DbSet<Subject> Subjects { get; set; }
         public virtual DbSet<TrainingCertificate> TrainingCertificates { get; set; }
