@@ -21,7 +21,7 @@ namespace MyPortal.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("name=MyPortalContext", throwIfV1Schema:false)
+            : base("name=MyPortalModels", throwIfV1Schema:false)
         {
         }
 

@@ -15,7 +15,7 @@ namespace MyPortal.Models
             Logs = new HashSet<Log>();
             RegGroups = new HashSet<RegGroup>();
             Subjects = new HashSet<Subject>();
-            TrainingCerts = new HashSet<TrainingCertificate>();
+            TrainingCertificates = new HashSet<TrainingCertificate>();
         }
 
         [StringLength(3)]
@@ -46,6 +46,6 @@ namespace MyPortal.Models
         public virtual ICollection<Subject> Subjects { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TrainingCertificate> TrainingCerts { get; set; }
+        public virtual ICollection<TrainingCertificate> TrainingCertificates { get; set; }
     }
 }

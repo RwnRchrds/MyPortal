@@ -1,4 +1,4 @@
-namespace MyPortal
+namespace MyPortal.Models
 {
     using System;
     using System.Collections.Generic;

@@ -18,9 +18,10 @@ namespace MyPortal.Models
         [StringLength(3)]
         public string Staff { get; set; }
 
-        [StringLength(255)]
-        public string Status { get; set; }
+        public int? Status { get; set; }
 
         public virtual Staff Staff1 { get; set; }
+
+        public virtual TrainingStatus TrainingStatus { get; set; }
     }
 }

@@ -1,16 +1,14 @@
-using MyPortal.Models;
-
-namespace MyPortal
+namespace MyPortal.Models
 {
     using System;
     using System.Data.Entity;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
 
-    public partial class MyPortalContext : DbContext
+    public partial class MyPortalModels : DbContext
     {
-        public MyPortalContext()
-            : base("name=MyPortalContext")
+        public MyPortalModels()
+            : base("name=MyPortalModels")
         {
         }
 
@@ -22,8 +20,9 @@ namespace MyPortal
         public virtual DbSet<Staff> Staffs { get; set; }
         public virtual DbSet<Student> Students { get; set; }
         public virtual DbSet<Subject> Subjects { get; set; }
-        public virtual DbSet<TrainingCertificate> TrainingCerts { get; set; }
-        public virtual DbSet<TrainingCours> TrainingCourses { get; set; }
+        public virtual DbSet<TrainingCertificate> TrainingCertificates { get; set; }
+        public virtual DbSet<TrainingCourse> TrainingCourses { get; set; }
+        public virtual DbSet<TrainingStatus> TrainingStatuses { get; set; }
         public virtual DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -99,7 +98,7 @@ namespace MyPortal
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Staff>()
-                .HasMany(e => e.TrainingCerts)
+                .HasMany(e => e.TrainingCertificates)
                 .WithRequired(e => e.Staff1)
                 .HasForeignKey(e => e.Staff)
                 .WillCascadeOnDelete(false);
@@ -154,17 +153,22 @@ namespace MyPortal
                 .Property(e => e.Staff)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<TrainingCertificate>()
-                .Property(e => e.Status)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<TrainingCours>()
+            modelBuilder.Entity<TrainingCourse>()
                 .Property(e => e.Code)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<TrainingCours>()
+            modelBuilder.Entity<TrainingCourse>()
                 .Property(e => e.Description)
                 .IsUnicode(false);
+
+            modelBuilder.Entity<TrainingStatus>()
+                .Property(e => e.Name)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<TrainingStatus>()
+                .HasMany(e => e.TrainingCertificates)
+                .WithOptional(e => e.TrainingStatus)
+                .HasForeignKey(e => e.Status);
 
             modelBuilder.Entity<User>()
                 .Property(e => e.Id)

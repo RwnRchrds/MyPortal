@@ -7,7 +7,7 @@ namespace MyPortal.Models
     using System.Data.Entity.Spatial;
 
     [Table("TrainingCourses")]
-    public partial class TrainingCours
+    public partial class TrainingCourse
     {
         public int Id { get; set; }
 
