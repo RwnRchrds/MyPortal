@@ -42,8 +42,8 @@ namespace MyPortal.Controllers
         {
             return new List<Staff>
             {
-                new Staff {Code = "GAL",Title = "Mrs",FirstName = "Georgia",LastName = "Alibi"},
-                new Staff {Code = "LSP",Title = "Mrs",FirstName = "Lily",LastName = "Sprague"}
+                new Staff {Id = "GAL",Title = "Mrs",FirstName = "Georgia",LastName = "Alibi"},
+                new Staff {Id = "LSP",Title = "Mrs",FirstName = "Lily",LastName = "Sprague"}
             };
         }
 
@@ -61,7 +61,7 @@ namespace MyPortal.Controllers
         [Route("Staff/Staff/{id}")]
         public ActionResult StaffDetails(string id)
         {
-            var staff = GetStaff().SingleOrDefault(s => s.Code == id);
+            var staff = GetStaff().SingleOrDefault(s => s.Id == id);
 
             if (staff == null)
                 return HttpNotFound();

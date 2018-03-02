@@ -1,14 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
 namespace MyPortal.Models
 {
-    public class TrainingCertificate
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
+
+    public partial class TrainingCertificate
     {
+        [Key]
+        [Column(Order = 0)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Course { get; set; }
+
+        [Key]
+        [Column(Order = 1)]
+        [StringLength(3)]
         public string Staff { get; set; }
+
+        [StringLength(255)]
         public string Status { get; set; }
+
+        public virtual Staff Staff1 { get; set; }
     }
 }

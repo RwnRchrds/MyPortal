@@ -1,17 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
 namespace MyPortal.Models
 {
-    public class Staff
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
+
+    [Table("Staff")]
+    public partial class Staff
     {
-        public string Code { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Staff()
+        {
+            Logs = new HashSet<Log>();
+            RegGroups = new HashSet<RegGroup>();
+            Subjects = new HashSet<Subject>();
+            TrainingCerts = new HashSet<TrainingCertificate>();
+        }
+
+        [StringLength(3)]
+        public string Id { get; set; }
+
+        [StringLength(255)]
         public string Title { get; set; }
+
+        [Required]
+        [StringLength(255)]
         public string FirstName { get; set; }
+
+        [Required]
+        [StringLength(255)]
         public string LastName { get; set; }
+
         public bool IsTutor { get; set; }
-        public int Count { get; set; }
+
+        public int? Count { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Log> Logs { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<RegGroup> RegGroups { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Subject> Subjects { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TrainingCertificate> TrainingCerts { get; set; }
     }
 }

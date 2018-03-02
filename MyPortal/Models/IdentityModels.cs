@@ -21,7 +21,7 @@ namespace MyPortal.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+            : base("name=MyPortalContext", throwIfV1Schema:false)
         {
         }
 

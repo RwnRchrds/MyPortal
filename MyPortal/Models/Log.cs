@@ -1,17 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
 namespace MyPortal.Models
 {
-    public class Log
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
+
+    public partial class Log
     {
         public int Id { get; set; }
+
         public int Type { get; set; }
+
+        [Required]
+        [StringLength(3)]
         public string Author { get; set; }
+
         public int Student { get; set; }
+
+        [Required]
+        [StringLength(4000)]
         public string Message { get; set; }
+
+        [Column(TypeName = "date")]
         public DateTime Date { get; set; }
+
+        public virtual Staff Staff { get; set; }
+
+        public virtual Student Student1 { get; set; }
+
+        public virtual LogType LogType { get; set; }
     }
 }
