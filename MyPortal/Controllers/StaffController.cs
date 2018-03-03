@@ -47,7 +47,9 @@ namespace MyPortal.Controllers
 
             var results = _context.Results.Where(r => r.Student == id && r.ResultSet1.IsCurrent == true).ToList();
 
-            var student = _context.Students.SingleOrDefault(s => s.Id == id);         
+            var student = _context.Students.SingleOrDefault(s => s.Id == id);
+
+            var logTypes = _context.LogTypes.ToList();
 
             bool upperSchool = student.YearGroup == "Year 11" || student.YearGroup == "Year 10";
 
@@ -62,7 +64,8 @@ namespace MyPortal.Controllers
                 Student = student,
                 Results = results,
                 IsUpperSchool = upperSchool,
-                ChartData = chartData
+                ChartData = chartData,
+                LogTypes = logTypes
             };
 
             return View(viewModel);

@@ -13,5 +13,6 @@ namespace MyPortal.ViewModels
         public IEnumerable<Result> Results { get; set; }
         public bool IsUpperSchool { get; set; }
         public ChartData ChartData { get; set; }
+        public IEnumerable<LogType> LogTypes { get; set; }
     }
 }
