@@ -205,6 +205,7 @@
       <DependentUpon>201803020235412_InitialMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\ChartData.cs" />
     <Compile Include="Models\Log.cs" />
     <Compile Include="Models\LogType.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -224,6 +225,7 @@
     <Compile Include="Models\TrainingStatus.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="ViewModels\RandomStudentViewModel.cs" />
+    <Compile Include="ViewModels\StudentDetailsViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-lumen.css" />
