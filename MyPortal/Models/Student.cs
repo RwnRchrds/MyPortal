@@ -36,6 +36,7 @@ namespace MyPortal.Models
         [StringLength(50)]
         public string YearGroup { get; set; }
 
+        [Display(Name = "Account Balance")]
         public decimal AccountBalance { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

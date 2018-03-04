@@ -43,20 +43,20 @@ namespace MyPortal.Controllers
         [Route("Staff/Students/{id}")]
         public ActionResult StudentDetails(int id)
         {
+            var student = _context.Students.SingleOrDefault(s => s.Id == id);
+
+            if (student == null)
+                return HttpNotFound();
+
             var logs = _context.Logs.Where(l => l.Student == id).ToList();
 
-            var results = _context.Results.Where(r => r.Student == id && r.ResultSet1.IsCurrent == true).ToList();
-
-            var student = _context.Students.SingleOrDefault(s => s.Id == id);
+            var results = _context.Results.Where(r => r.Student == id && r.ResultSet1.IsCurrent == true).ToList();            
 
             var logTypes = _context.LogTypes.ToList();
 
             bool upperSchool = student.YearGroup == "Year 11" || student.YearGroup == "Year 10";
 
             var chartData = GetChartData(results,upperSchool);
-
-            if (student == null)
-                return HttpNotFound();
 
             var viewModel = new StudentDetailsViewModel
             {
@@ -179,9 +179,40 @@ namespace MyPortal.Controllers
                         data.L9++;
                     }
                 }
+            }        
+            return data;
+        }
+
+        [HttpPost]
+        public ActionResult SaveLog(Log log)
+        {
+            if (log.Id == 0)
+            {
+                log.Author = "RRI";
+                _context.Logs.Add(log);           
             }
 
-            return data;
+            else
+            {
+                var logInDb = _context.Logs.Single(l => l.Id == log.Id);
+
+                logInDb.Author = log.Author;
+                logInDb.Date = log.Date;
+                logInDb.Message = log.Message;
+            }
+
+            _context.SaveChanges();
+            return RedirectToAction("StudentDetails", "Staff", new { id = log.Student });
+        }
+
+        [HttpPost]
+        public ActionResult SaveStudent(Student student)
+        {
+            var studentInDb = _context.Students.Single(l => l.Id == student.Id);
+            studentInDb.AccountBalance = student.AccountBalance;
+
+            _context.SaveChanges();
+            return RedirectToAction("StudentDetails", "Staff", new { id = student.Id });
         }
     }
 }
