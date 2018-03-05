@@ -15,6 +15,7 @@ namespace MyPortal.Models
             Results = new HashSet<Result>();
         }
 
+        //ID Provided to Student by SIMS .net (MIS ID)
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
 
@@ -26,6 +27,8 @@ namespace MyPortal.Models
         [StringLength(255)]
         public string LastName { get; set; }
 
+        //ID of Student in the 4Matrix Database --> Used for links between MyPortal and 4Matrix
+        [Display(Name = "4Matrix ID")]        
         public int? FourMId { get; set; }
 
         [Required]
