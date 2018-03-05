@@ -5,6 +5,9 @@
 }
 
 <h2>Students</h2>
+
+<p>@Html.ActionLink("New Student", "NewStudent", "Staff", null, new { @class = "btn btn-success" })</p>
+
 @if (!Model.Any())
 {
     <p>No students to display.</p>
@@ -25,8 +28,8 @@ else
         {
             <tr>
                 <td>@Html.ActionLink(student.LastName+", "+student.FirstName, "StudentDetails","Staff", new {id = student.Id},null)</td>
-                <td>@student.YearGroup</td>
-                <td>@student.RegGroup</td>
+                <td>@student.YearGroup1.Name</td>
+                <td>@student.RegGroup1.Name</td>
             </tr>
         }
         </tbody>

@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 namespace MyPortal.Models
 {
     using System;
@@ -16,6 +18,7 @@ namespace MyPortal.Models
             RegGroups = new HashSet<RegGroup>();
             Subjects = new HashSet<Subject>();
             TrainingCertificates = new HashSet<TrainingCertificate>();
+            YearGroups = new HashSet<YearGroup>();
         }
 
         [StringLength(3)]
@@ -26,10 +29,12 @@ namespace MyPortal.Models
 
         [Required]
         [StringLength(255)]
+        [DisplayName("First Name")]
         public string FirstName { get; set; }
 
         [Required]
         [StringLength(255)]
+        [DisplayName("Last Name")]
         public string LastName { get; set; }
 
         public bool IsTutor { get; set; }
@@ -47,5 +52,8 @@ namespace MyPortal.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TrainingCertificate> TrainingCertificates { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<YearGroup> YearGroups { get; set; }
     }
 }

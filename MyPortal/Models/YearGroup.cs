@@ -1,5 +1,4 @@
 namespace MyPortal.Models
-
 {
     using System;
     using System.Collections.Generic;
@@ -7,21 +6,28 @@ namespace MyPortal.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class LogType
+    public partial class YearGroup
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public LogType()
+        public YearGroup()
         {
-            Logs = new HashSet<Log>();
+            Students = new HashSet<Student>();
         }
 
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
 
         [Required]
         [StringLength(255)]
         public string Name { get; set; }
 
+        [Required]
+        [StringLength(3)]
+        public string Head { get; set; }
+
+        public virtual Staff Staff { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Log> Logs { get; set; }
+        public virtual ICollection<Student> Students { get; set; }
     }
 }

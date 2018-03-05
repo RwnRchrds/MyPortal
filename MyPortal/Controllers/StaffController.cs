@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Mvc;
+using System.Web.WebSockets;
 using MyPortal.Models;
 using MyPortal.ViewModels;
 
@@ -54,7 +55,7 @@ namespace MyPortal.Controllers
 
             var logTypes = _context.LogTypes.ToList();
 
-            bool upperSchool = student.YearGroup == "Year 11" || student.YearGroup == "Year 10";
+            bool upperSchool = student.YearGroup == 11 || student.YearGroup == 10;
 
             var chartData = GetChartData(results,upperSchool);
 
@@ -80,6 +81,21 @@ namespace MyPortal.Controllers
                 return HttpNotFound();
 
             return View(staff);
+        }
+
+        [Route("Staff/Students/New")]
+        public ActionResult NewStudent()
+        {
+            var yearGroups = _context.YearGroups.ToList();
+            var regGroups = _context.RegGroups.ToList();
+
+            var viewModel = new NewStudentViewModel
+            {
+                RegGroups = regGroups,
+                YearGroups = yearGroups
+            };
+
+            return View(viewModel);
         }
 
         public ChartData GetChartData(List<Result> results, bool upperSchool)
@@ -188,7 +204,6 @@ namespace MyPortal.Controllers
         {
             if (log.Id == 0)
             {
-                log.Author = "RRI";
                 _context.Logs.Add(log);           
             }
 
@@ -206,9 +221,35 @@ namespace MyPortal.Controllers
         }
 
         [HttpPost]
+        public ActionResult CreateStudent(Student student)
+        {
+            if (!ModelState.IsValid)
+            {
+                var viewModel = new NewStudentViewModel
+                {
+                    Student = student,
+                    RegGroups = _context.RegGroups.ToList(),
+                    YearGroups = _context.YearGroups.ToList()
+                };
+                return View("NewStudent", viewModel);
+            }
+
+            _context.Students.Add(student);
+            _context.SaveChanges();
+
+            return RedirectToAction("Students", "Staff");
+
+        }
+
+        [HttpPost]
         public ActionResult SaveStudent(Student student)
         {
             var studentInDb = _context.Students.Single(l => l.Id == student.Id);
+
+            studentInDb.FirstName = student.FirstName;
+            studentInDb.LastName = student.LastName;
+            studentInDb.YearGroup = student.YearGroup;
+            studentInDb.RegGroup = student.RegGroup;
             studentInDb.AccountBalance = student.AccountBalance;
 
             _context.SaveChanges();

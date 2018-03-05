@@ -216,14 +216,14 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201803020235412_InitialMigration.cs" />
-    <Compile Include="Migrations\201803020235412_InitialMigration.Designer.cs">
-      <DependentUpon>201803020235412_InitialMigration.cs</DependentUpon>
+    <Compile Include="Migrations\201803051926258_InitialModel.cs" />
+    <Compile Include="Migrations\201803051926258_InitialModel.Designer.cs">
+      <DependentUpon>201803051926258_InitialModel.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\ChartData.cs" />
     <Compile Include="Models\Log.cs" />
     <Compile Include="Models\LogType.cs" />
+    <Compile Include="Models\ChartData.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -240,8 +240,10 @@
     <Compile Include="Models\TrainingCourse.cs" />
     <Compile Include="Models\TrainingStatus.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="ViewModels\NewStudentViewModel.cs" />
     <Compile Include="ViewModels\RandomStudentViewModel.cs" />
     <Compile Include="ViewModels\StudentDetailsViewModel.cs" />
+    <Compile Include="Models\YearGroup.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-lumen.css" />
@@ -317,6 +319,7 @@
     <Content Include="Views\Shared\_LayoutAdmin.cshtml" />
     <Content Include="Views\Staff\Staff.cshtml" />
     <Content Include="Views\Staff\StaffDetails.cshtml" />
+    <Content Include="Views\Staff\NewStudent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -335,8 +338,8 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201803020235412_InitialMigration.resx">
-      <DependentUpon>201803020235412_InitialMigration.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201803051926258_InitialModel.resx">
+      <DependentUpon>201803051926258_InitialModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

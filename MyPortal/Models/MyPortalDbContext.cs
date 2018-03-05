@@ -24,6 +24,7 @@ namespace MyPortal.Models
         public virtual DbSet<TrainingCourse> TrainingCourses { get; set; }
         public virtual DbSet<TrainingStatus> TrainingStatuses { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<YearGroup> YearGroups { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -52,6 +53,12 @@ namespace MyPortal.Models
             modelBuilder.Entity<RegGroup>()
                 .Property(e => e.Tutor)
                 .IsUnicode(false);
+
+            modelBuilder.Entity<RegGroup>()
+                .HasMany(e => e.Students)
+                .WithRequired(e => e.RegGroup1)
+                .HasForeignKey(e => e.RegGroup)
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<ResultSet>()
                 .Property(e => e.Name)
@@ -103,20 +110,18 @@ namespace MyPortal.Models
                 .HasForeignKey(e => e.Staff)
                 .WillCascadeOnDelete(false);
 
+            modelBuilder.Entity<Staff>()
+                .HasMany(e => e.YearGroups)
+                .WithRequired(e => e.Staff)
+                .HasForeignKey(e => e.Head)
+                .WillCascadeOnDelete(false);
+
             modelBuilder.Entity<Student>()
                 .Property(e => e.FirstName)
                 .IsUnicode(false);
 
             modelBuilder.Entity<Student>()
                 .Property(e => e.LastName)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Student>()
-                .Property(e => e.RegGroup)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Student>()
-                .Property(e => e.YearGroup)
                 .IsUnicode(false);
 
             modelBuilder.Entity<Student>()
@@ -161,6 +166,12 @@ namespace MyPortal.Models
                 .Property(e => e.Description)
                 .IsUnicode(false);
 
+            modelBuilder.Entity<TrainingCourse>()
+                .HasMany(e => e.TrainingCertificates)
+                .WithRequired(e => e.TrainingCourse)
+                .HasForeignKey(e => e.Course)
+                .WillCascadeOnDelete(false);
+
             modelBuilder.Entity<TrainingStatus>()
                 .Property(e => e.Name)
                 .IsUnicode(false);
@@ -177,6 +188,20 @@ namespace MyPortal.Models
             modelBuilder.Entity<User>()
                 .Property(e => e.PasswordHash)
                 .IsUnicode(false);
+
+            modelBuilder.Entity<YearGroup>()
+                .Property(e => e.Name)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<YearGroup>()
+                .Property(e => e.Head)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<YearGroup>()
+                .HasMany(e => e.Students)
+                .WithRequired(e => e.YearGroup1)
+                .HasForeignKey(e => e.YearGroup)
+                .WillCascadeOnDelete(false);
         }
     }
 }

@@ -9,6 +9,12 @@ namespace MyPortal.Models
     [Table("TrainingCourses")]
     public partial class TrainingCourse
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public TrainingCourse()
+        {
+            TrainingCertificates = new HashSet<TrainingCertificate>();
+        }
+
         public int Id { get; set; }
 
         [StringLength(255)]
@@ -16,5 +22,8 @@ namespace MyPortal.Models
 
         [StringLength(1000)]
         public string Description { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TrainingCertificate> TrainingCertificates { get; set; }
     }
 }

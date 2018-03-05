@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 namespace MyPortal.Models
 {
     using System;
@@ -11,6 +13,7 @@ namespace MyPortal.Models
         [Key]
         [Column(Order = 0)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DisplayName("Result Set")]
         public int ResultSet { get; set; }
 
         [Key]

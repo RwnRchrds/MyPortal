@@ -9,7 +9,7 @@ namespace MyPortal.Dtos
 {
     public class StudentDto
     {
-        //ID Provided to Student by SIMS .net (MIS ID)
+        //ID Provided to Student by SIMS .net (MIS ID) --> Student *MUST* Exist in MIS before adding to MyPortal
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
 
@@ -27,11 +27,11 @@ namespace MyPortal.Dtos
 
         [Required]
         [StringLength(3)]
-        public string RegGroup { get; set; }
+        public int RegGroup { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string YearGroup { get; set; }
+        public int YearGroup { get; set; }
 
         [Display(Name = "Account Balance")]
         public decimal AccountBalance { get; set; }
