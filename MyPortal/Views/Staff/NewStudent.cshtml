@@ -34,7 +34,13 @@
         @Html.LabelFor(s => s.Student.FourMId)
         @Html.TextBoxFor(s => s.Student.FourMId, new { @class = "form-control" })
     </div>
-    @Html.HiddenFor(s => s.Student.AccountBalance, new {Value = 0.00})  
+    @Html.HiddenFor(s => s.Student.AccountBalance, new {Value = 0.00})
+    @Html.AntiForgeryToken()
     <button type="submit" class="btn btn-primary">Save</button>
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
 }
 

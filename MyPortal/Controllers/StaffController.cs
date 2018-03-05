@@ -221,6 +221,7 @@ namespace MyPortal.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult CreateStudent(Student student)
         {
             if (!ModelState.IsValid)
