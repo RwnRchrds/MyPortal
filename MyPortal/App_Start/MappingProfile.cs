@@ -14,6 +14,9 @@ namespace MyPortal.App_Start
         {
             Mapper.CreateMap<Student, StudentDto>();
             Mapper.CreateMap<StudentDto, Student>();
+
+            Mapper.CreateMap<LogDto, Log>();
+            Mapper.CreateMap<Log, LogDto>();
         }
     }
 }
