@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using AutoMapper;
+using MyPortal.Dtos;
 using MyPortal.Models;
 
 namespace MyPortal.Controllers.Api
@@ -15,6 +17,57 @@ namespace MyPortal.Controllers.Api
         public LogsController()
         {
             _context = new MyPortalDbContext();
+        }
+
+        public IEnumerable<LogDto> GetLogs(int student)
+        {
+            return _context.Logs.Where(l => l.Student == student).ToList().Select(Mapper.Map<Log, LogDto>);
+        }
+
+        public LogDto GetLog(int id)
+        {
+            var log = _context.Logs.SingleOrDefault(l => l.Id == id);
+
+            if (log == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            return Mapper.Map<Log, LogDto>(log);
+        }
+
+        [HttpPost]
+        public LogDto CreateLog(LogDto logDto)
+        {
+            if (!ModelState.IsValid)
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+
+            var log = Mapper.Map<LogDto, Log>(logDto);
+            _context.Logs.Add(log);
+            _context.SaveChanges();
+
+            logDto.Id = log.Id;
+
+            return logDto;
+        }
+
+        [HttpPut]
+        public void UpdateStudent(int id, LogDto logDto)
+        {
+            if (logDto == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            var logInDb = _context.Logs.SingleOrDefault(l => l.Id == id);
+
+            if (logInDb == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            var c = Mapper.Map(logDto, logInDb);
+
+            logInDb.Author = logDto.Author;
+            logInDb.Type = logDto.Type;
+            logInDb.Message = logDto.Message;
+            logInDb.Date = logDto.Date;
+
+            _context.SaveChanges();
         }
 
         public void DeleteLog(int id)
