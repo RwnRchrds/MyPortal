@@ -12,7 +12,7 @@ using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers
 {    
-    [Authorize(Roles = "Staff")]
+    [Authorize(Roles = "Staff, SeniorStaff")]
     public class StaffController : Controller
     {
         private MyPortalDbContext _context;
@@ -85,7 +85,7 @@ namespace MyPortal.Controllers
             return View(viewModel);
         }
 
-        [Authorize(Roles = "SMT")]
+        [Authorize(Roles = "SeniorStaff")]
         [Route("Staff/Staff/{id}")]
         public ActionResult StaffDetails(string id)
         {

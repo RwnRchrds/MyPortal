@@ -19,11 +19,13 @@ namespace MyPortal.Controllers.Api
             _context = new MyPortalDbContext();
         }
 
+        [Route("api/logs/{student}")]
         public IEnumerable<LogDto> GetLogs(int student)
         {
             return _context.Logs.Where(l => l.Student == student).ToList().Select(Mapper.Map<Log, LogDto>);
         }
 
+        [Route("api/logs/log/{id}")]
         public LogDto GetLog(int id)
         {
             var log = _context.Logs.SingleOrDefault(l => l.Id == id);
