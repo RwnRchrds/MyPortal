@@ -17,6 +17,12 @@ namespace MyPortal.App_Start
 
             Mapper.CreateMap<LogDto, Log>();
             Mapper.CreateMap<Log, LogDto>();
+
+            Mapper.CreateMap<YearGroupDto, YearGroup>();
+            Mapper.CreateMap<YearGroup, YearGroupDto>();
+
+            Mapper.CreateMap<RegGroupDto, RegGroup>();
+            Mapper.CreateMap<RegGroup, RegGroupDto>();
         }
     }
 }

@@ -35,5 +35,7 @@ namespace MyPortal.Dtos
 
         [Display(Name = "Account Balance")]
         public decimal AccountBalance { get; set; }
+
+        public YearGroupDto YearGroup1 { get; set; }
     }
 }

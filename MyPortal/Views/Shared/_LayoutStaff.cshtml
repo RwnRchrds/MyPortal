@@ -9,20 +9,28 @@
 
 </head>
 <body>
-    @Html.Partial("_NavBarSmt")
-
-@*FOR WHEN ROLE MANAGER IS ENABLED (SMT/STAFF NavBar)*@
-@*    @if (Roles.IsUserInRole(User.Identity.Name, "smt"))
+    @if (User.IsInRole("SeniorStaff"))
     {
         @Html.Partial("_NavBarSmt")
     }
     else
     {
         @Html.Partial("_NavBarStaff")
-    }*@
+    }
 
 
-<div class="container body-content">
+    @*FOR WHEN ROLE MANAGER IS ENABLED (SMT/STAFF NavBar)*@
+    @*    @if (Roles.IsUserInRole(User.Identity.Name, "smt"))
+        {
+            @Html.Partial("_NavBarSmt")
+        }
+        else
+        {
+            @Html.Partial("_NavBarStaff")
+        }*@
+
+
+    <div class="container body-content">
         @RenderBody()
         <hr />
         <footer>
@@ -30,8 +38,7 @@
         </footer>
     </div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/lib")
     @RenderSection("scripts", required: false)
 </body>
 </html>

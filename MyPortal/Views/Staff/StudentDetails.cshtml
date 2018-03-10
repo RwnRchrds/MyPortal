@@ -1,4 +1,5 @@
-﻿@model MyPortal.ViewModels.StudentDetailsViewModel
+﻿@using Microsoft.AspNet.Identity
+@model MyPortal.ViewModels.StudentDetailsViewModel
 @{
     ViewBag.Title = "Student Details";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
@@ -14,9 +15,12 @@
 <!-- MyDetails Panel -->
 <div class="container" id="Details">
     <div style="float: left;">
-        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#EditDetailsForm">
-            <span class="glyphicon glyphicon-list" aria-hidden="true"></span> Edit Details
-        </button>
+        @if (User.IsInRole("SeniorStaff"))
+        {
+            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#EditDetailsForm">
+                <span class="glyphicon glyphicon-list" aria-hidden="true"></span> Edit Details
+            </button>
+        }
         <div class="panel panel-primary" style="width: 300px; margin-top: 8px;">
             <div class="panel-heading">MyDetails</div>
             <div class="panel-body">
@@ -253,7 +257,7 @@
                     </div>
                     <div class="form-group">
                         @Html.HiddenFor(l => l.Log.Date, new { Value = DateTime.Now })
-                        @Html.HiddenFor(l => l.Log.Author, new {Value = "RRI"})
+                        @Html.HiddenFor(l => l.Log.Author, new {Value = User.Identity.GetUserId()})
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -316,17 +320,19 @@
 {
     <script>
         $(document).ready(function() {
-            $("#logs .js-delete").on("click", function () {
+            $("#logs").on("click", "js-delete", function () {
                 var button = $(this);
-                if (confirm("Are you sure you wish to delete this log?")) {
-                    $.ajax({
-                        url: "/api/logs/" + button.attr("data-log-id"),
-                        method: "DELETE",
-                        success: function() {
-                            button.parents("tr").remove();
-                        }
-                    });
-                }
+                bootbox.confirm("Are you sure you wish to delete this log?", function(result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/logs/" + button.attr("data-log-id"),
+                            method: "DELETE",
+                            success: function() {
+                                button.parents("tr").remove();
+                            }
+                        });
+                    }
+                });
             });
         });
     </script>

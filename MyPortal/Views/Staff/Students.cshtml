@@ -6,32 +6,42 @@
 
 <h2>Students</h2>
 
-<p>@Html.ActionLink("New Student", "NewStudent", "Staff", null, new { @class = "btn btn-success" })</p>
+<table class="table table-bordered table-hover" id="students">
+    <thead>
+    <tr>
+        <th>Student</th>
+        <th>Year Group</th>
+        <th>Reg Group</th>
+    </tr>
+    </thead>
+    <tbody>      
+    </tbody>
+</table>
 
-@if (!Model.Any())
+@section scripts
 {
-    <p>No students to display.</p>
-}
-
-else
-{
-    <table class="table table-bordered table-hover">
-        <thead>
-        <tr>
-            <th>Student</th>
-            <th>Year Group</th>
-            <th>Reg Group</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var student in Model)
-        {
-            <tr>
-                <td>@Html.ActionLink(student.LastName+", "+student.FirstName, "StudentDetails","Staff", new {id = student.Id},null)</td>
-                <td>@student.YearGroup1.Name</td>
-                <td>@student.RegGroup1.Name</td>
-            </tr>
-        }
-        </tbody>
-    </table>
+    <script>
+        $(document).ready(function() {
+            $("#students").DataTable({
+                ajax: {
+                    url: "/api/students",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "firstName",
+                        render: function(data, type, student) {
+                            return "<a href='/staff/students/" + student.id + "'>" + student.lastName + ", " + student.firstName + "</a>";
+                        }
+                    },
+                    {
+                        data: "yearGroup1.name"
+                    },
+                    {
+                        data: "regGroup"
+                    }
+            ]
+        });
+    } );
+    </script>
 }

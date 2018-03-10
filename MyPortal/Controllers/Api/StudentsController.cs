@@ -22,7 +22,11 @@ namespace MyPortal.Controllers.Api
 
         public IEnumerable<StudentDto> GetStudents()
         {
-            return _context.Students.ToList().Select(Mapper.Map<Student, StudentDto>);
+            return _context.Students
+                .Include(s => s.YearGroup1)
+                .Include(s => s.RegGroup1)
+                .ToList()
+                .Select(Mapper.Map<Student, StudentDto>);
         }
 
         public StudentDto GetStudent(int id)
@@ -42,7 +46,9 @@ namespace MyPortal.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
 
             var student = Mapper.Map<StudentDto, Student>(studentDto);
-            _context.Students.Add(student);
+            _context.Students
+                .Add(student);
+
             _context.SaveChanges();
 
             studentDto.Id = student.Id;

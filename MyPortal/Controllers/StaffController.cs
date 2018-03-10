@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Configuration;
+using System.Web.Helpers;
 using System.Web.Mvc;
 using System.Web.WebSockets;
+using Microsoft.AspNet.Identity;
 using MyPortal.Models;
 using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers
-{
+{    
+    [Authorize(Roles = "Staff")]
     public class StaffController : Controller
     {
         private MyPortalDbContext _context;
@@ -26,18 +29,28 @@ namespace MyPortal.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            var staffID = User.Identity.GetUserId();
+            var staff = _context.Staff.SingleOrDefault(s => s.Id == staffID);
+
+            var viewModel = new StaffHomeViewModel
+            {
+                CurrentUser = staff
+            };
+
+            return View(viewModel);
         }
 
         public ActionResult Students()
         {
-            var students = _context.Students.ToList();
-            return View(students);
+            return View();
         }
 
+        [Authorize(Roles = "SeniorStaff")]
         public ActionResult Staff()
         {
             var staff = _context.Staff.ToList();
+            string passHash = Crypto.HashPassword("***REMOVED***");
+            Console.WriteLine(passHash);
             return View(staff);
         }        
 
@@ -72,6 +85,7 @@ namespace MyPortal.Controllers
             return View(viewModel);
         }
 
+        [Authorize(Roles = "SMT")]
         [Route("Staff/Staff/{id}")]
         public ActionResult StaffDetails(string id)
         {
@@ -98,7 +112,7 @@ namespace MyPortal.Controllers
             return View(viewModel);
         }
 
-        public ChartData GetChartData(List<Result> results, bool upperSchool)
+        public static ChartData GetChartData(List<Result> results, bool upperSchool)
         {
             ChartData data = new ChartData();
 
