@@ -246,6 +246,7 @@
     <Compile Include="Models\User.cs" />
     <Compile Include="ViewModels\NewStudentViewModel.cs" />
     <Compile Include="ViewModels\RandomStudentViewModel.cs" />
+    <Compile Include="ViewModels\StaffDetailsViewModel.cs" />
     <Compile Include="ViewModels\StaffHomeViewModel.cs" />
     <Compile Include="ViewModels\StudentDetailsViewModel.cs" />
     <Compile Include="Models\YearGroup.cs" />

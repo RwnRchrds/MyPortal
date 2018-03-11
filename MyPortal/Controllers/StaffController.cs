@@ -92,7 +92,15 @@ namespace MyPortal.Controllers
             if (staff == null)
                 return HttpNotFound();
 
-            return View(staff);
+            var certificates = _context.TrainingCertificates.Where(c => c.Staff == id).ToList();
+
+            var viewModel = new StaffDetailsViewModel
+            {
+                Staff = staff,
+                TrainingCertificates = certificates
+            };
+
+            return View(viewModel);
         }
 
         [Route("Staff/Students/New")]

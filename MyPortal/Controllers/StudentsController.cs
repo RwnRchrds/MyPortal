@@ -33,8 +33,6 @@ namespace MyPortal.Controllers
 
             var results = _context.Results.Where(r => r.Student == currentUser && r.ResultSet1.IsCurrent == true).ToList();
 
-            var logTypes = _context.LogTypes.ToList();
-
             bool upperSchool = student.YearGroup == 11 || student.YearGroup == 10;
 
             var chartData = StaffController.GetChartData(results, upperSchool);
