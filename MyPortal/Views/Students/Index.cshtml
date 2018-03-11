@@ -54,30 +54,28 @@
         <div style="float: left; margin-left: 20px;" id="Results">
             <div class="panel panel-primary" style="width: 300px; margin-top: 8px;">
                 <div class="panel-heading">MyResults</div>
-                <div class="panel-body">
-                    @if (!Model.Results.Any())
+                @if (!Model.Results.Any())
+                {
+                    {<text><div class="panel-body">No results to display.</div></text>}
+            }
+            else
+            {
+                <table class="table table-condensed table-bordered">
+                    <thead>
+                        <tr style="background-color: #18bc9c">
+                            <th style="color: whitesmoke">Subject</th>
+                            <th style="color: whitesmoke">Result</th>
+                        </tr>
+                    </thead>
+                    @foreach (var result in Model.Results)
                     {
-                        <text>No results to display.</text>
+                        <tr>
+                            <td>@result.Subject1.Name</td>
+                            <td>@result.Value</td>
+                        </tr>
                     }
-                    else
-                    {
-                        <table class="table table-condensed table-bordered">
-                            <thead style="">
-                                <tr style="background-color: #158cba;">
-                                    <th style="color: white">Subject</th>
-                                    <th style="color: white">Result</th>
-                                </tr>
-                            </thead>
-                            @foreach (var result in Model.Results)
-                            {
-                                <tr>
-                                    <td>@result.Subject1.Name</td>
-                                    <td>@result.Value</td>
-                                </tr>
-                            }
-                        </table>
-                    }
-                </div>
+                </table>
+            }
             </div>
         </div>
 
@@ -95,15 +93,15 @@
                         <canvas id="resultsChart" style="width: 300px; height: 300px;"></canvas>
 
                         <script>
-                        var ctx = document.getElementById('resultsChart').getContext('2d');
-                        var chart = new Chart(ctx,
-                            {
-                                // The type of chart we want to create
-                                type: 'bar',
-                                fillOpacity: .3,
-                                // The data for our dataset
-                                data: {
-                                    @if (Model.IsUpperSchool == true)
+                            var ctx = document.getElementById('resultsChart').getContext('2d');
+                            var chart = new Chart(ctx,
+                                {
+                                    // The type of chart we want to create
+                                    type: 'bar',
+                                    fillOpacity: .3,
+                                    // The data for our dataset
+                                    data: {
+                                        @if (Model.IsUpperSchool == true)
                                     {
                                         <text>labels: ["A*", "A", "B", "C", "D", "E", "F", "G", "U"],</text>
                                     }
@@ -111,62 +109,62 @@
                                     {
                                         <text>labels: ["E", "8", "7", "6", "5", "4", "3", "2", "1"],</text>
                                     }
-                                    datasets: [
-                                        {
-                                            label: "",
-                                            backgroundColor: [
-                                                "rgba(255,0,0,0.5)", //L1
-                                                "rgba(255,127,0,0.5)", //L2
-                                                "rgba(255,255,0,0.5)", //L3
-                                                "rgba(0,255,0,0.5)", //L4
-                                                "rgba(0,0,255,0.5)", //L5
-                                                "rgba(75,0,130,0.5)", //L6
-                                                "rgba(148,0,211,0.5)", //L7
-                                                "rgba(228,35,157,0.5)", //L8
-                                                "rgba(0,0,0,0.5)"
-                                            ], //L9
-                                            borderColor: [
-                                                "rgba(255,0,0,0.5)", //L1
-                                                "rgba(255,127,0,0.5)", //L2
-                                                "rgba(255,255,0,0.5)", //L3
-                                                "rgba(0,255,0,0.5)", //L4
-                                                "rgba(0,0,255,0.5)", //L5
-                                                "rgba(75,0,130,0.5)", //L6
-                                                "rgba(148,0,211,0.5)", //L7
-                                                "rgba(228,35,157,0.5)", //L8
-                                                "rgba(0,0,0,0.5)"
-                                            ], //L9
-                                            data: [
-                                                @Model.ChartData.L1,
-                                                @Model.ChartData.L2,
-                                                @Model.ChartData.L3,
-                                                @Model.ChartData.L4,
-                                                @Model.ChartData.L5,
-                                                @Model.ChartData.L6,
-                                                @Model.ChartData.L7,
-                                                @Model.ChartData.L8,
-                                                @Model.ChartData.L9
-                                            ]
-                                        }
-                                    ]
-                                },
-
-                                // Configuration options go here
-                                options: {
-                                    legend: {
-                                        display: false,
-                                    },
-                                    scales: {
-                                        yAxes: [
+                                        datasets: [
                                             {
-                                                ticks: {
-                                                    beginAtZero: true
-                                                }
+                                                label: "",
+                                                backgroundColor: [
+                                                    "rgba(255,0,0,0.5)", //L1
+                                                    "rgba(255,127,0,0.5)", //L2
+                                                    "rgba(255,255,0,0.5)", //L3
+                                                    "rgba(0,255,0,0.5)", //L4
+                                                    "rgba(0,0,255,0.5)", //L5
+                                                    "rgba(75,0,130,0.5)", //L6
+                                                    "rgba(148,0,211,0.5)", //L7
+                                                    "rgba(228,35,157,0.5)", //L8
+                                                    "rgba(0,0,0,0.5)"
+                                                ], //L9
+                                                borderColor: [
+                                                    "rgba(255,0,0,0.5)", //L1
+                                                    "rgba(255,127,0,0.5)", //L2
+                                                    "rgba(255,255,0,0.5)", //L3
+                                                    "rgba(0,255,0,0.5)", //L4
+                                                    "rgba(0,0,255,0.5)", //L5
+                                                    "rgba(75,0,130,0.5)", //L6
+                                                    "rgba(148,0,211,0.5)", //L7
+                                                    "rgba(228,35,157,0.5)", //L8
+                                                    "rgba(0,0,0,0.5)"
+                                                ], //L9
+                                                data: [
+                                                    @Model.ChartData.L1,
+                                                    @Model.ChartData.L2,
+                                                    @Model.ChartData.L3,
+                                                    @Model.ChartData.L4,
+                                                    @Model.ChartData.L5,
+                                                    @Model.ChartData.L6,
+                                                    @Model.ChartData.L7,
+                                                    @Model.ChartData.L8,
+                                                    @Model.ChartData.L9
+                                                ]
                                             }
                                         ]
+                                    },
+
+                                    // Configuration options go here
+                                    options: {
+                                        legend: {
+                                            display: false,
+                                        },
+                                        scales: {
+                                            yAxes: [
+                                                {
+                                                    ticks: {
+                                                        beginAtZero: true
+                                                    }
+                                                }
+                                            ]
+                                        }
                                     }
-                                }
-                            });
+                                });
                         </script>
 
                     }
@@ -180,34 +178,35 @@
         <div>
             <div class="panel panel-primary" style="width: 1000px; margin-top: 8px;" id="Logs">
                 <div class="panel-heading">MyLogs</div>
-                <div class="panel-body">
-                    @if (!Model.Logs.Any())
-                    {<text>No logs to display.</text>}
-                else
-                {
-                    <table class="table table-bordered" id="logs">
-                        <thead>
-                            <tr style="background-color: #158cba;">
-                                <th style="color: white;">Date</th>
-                                <th style="color: white;">Author</th>
-                                <th style="color: white;">Type</th>
-                                <th style="color: white;">Message</th>
-                            </tr>
-                        </thead>
-                        @foreach (var log in Model.Logs)
-                        {
-                            <tr>
-                                <td>@log.Date.ToShortDateString()</td>
-                                <td>@log.Staff.Title @log.Staff.FirstName.Substring(0, 1) @log.Staff.LastName</td>
-                                <td>@log.LogType.Name</td>
-                                <td>@log.Message</td>
-                            </tr>
-                        }
-                    </table>
-                }
-                </div>
+                @if (!Model.Logs.Any())
+                {<text><div class="panel-body">No logs to display.</div></text>}
+            else
+            {
+                <table class="table table-bordered" id="logs">
+                    <thead>
+                        <tr style="background-color: #18bc9c;">
+                            <th style="color: whitesmoke;">Date</th>
+                            <th style="color: whitesmoke;">Author</th>
+                            <th style="color: whitesmoke;">Type</th>
+                            <th style="color: whitesmoke;">Message</th>
+                            <th style="color: whitesmoke; min-width: 70px;">Edit</th>
+                        </tr>
+                    </thead>
+                    @foreach (var log in Model.Logs)
+                    {
+                        <tr>
+                            <td>@log.Date.ToShortDateString()</td>
+                            <td>@log.Staff.Title @log.Staff.FirstName.Substring(0, 1) @log.Staff.LastName</td>
+                            <td>@log.LogType.Name</td>
+                            <td>@log.Message</td>
+                        </tr>
+                    }
+                </table>
+            }
             </div>
         </div>
     </div>
+
 </body>
+
 
