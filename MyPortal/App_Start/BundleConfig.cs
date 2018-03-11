@@ -26,7 +26,7 @@ namespace MyPortal
                         "~/Scripts/modernizr-*"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap-lumen.css",
+                      "~/Content/bootstrap-flatly.css",
                       "~/content/datatables/css/datatables.bootstrap.css",
                       "~/Content/site.css"));
         }
