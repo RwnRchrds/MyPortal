@@ -67,25 +67,25 @@
                 @if (!Model.Results.Any())
                 {
                     {<text><div class="panel-body">No results to display.</div></text>}
-                }
-                else
-                {
-                    <table class="table table-condensed table-bordered">
-                        <thead>
-                            <tr style="background-color: #18bc9c">
-                                <th style="color: whitesmoke">Subject</th>
-                                <th style="color: whitesmoke">Result</th>
-                            </tr>
-                        </thead>
-                        @foreach (var result in Model.Results)
-                        {
-                            <tr>
-                                <td>@result.Subject1.Name</td>
-                                <td>@result.Value</td>
-                            </tr>
-                        }
-                    </table>
-                }
+            }
+            else
+            {
+                <table class="table table-condensed table-bordered">
+                    <thead>
+                        <tr style="background-color: #18bc9c">
+                            <th style="color: whitesmoke">Subject</th>
+                            <th style="color: whitesmoke">Result</th>
+                        </tr>
+                    </thead>
+                    @foreach (var result in Model.Results)
+                    {
+                        <tr>
+                            <td>@result.Subject1.Name</td>
+                            <td>@result.Value</td>
+                        </tr>
+                    }
+                </table>
+            }
             </div>
         </div>
 
@@ -238,23 +238,23 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">New Log - @Model.Student.LastName, @Model.Student.FirstName</h4>
                 </div>
-                @using (Html.BeginForm(null, null, FormMethod.Post,new {id = "NewLog"}))
+                @using (Html.BeginForm("SaveLog", "Staff"))
                 {
                     <div class="modal-body">
                         <div class="form-group">
                             @Html.LabelFor(l => l.Log.Type)
-                            @Html.DropDownListFor(l => l.Log.Type, new SelectList(Model.LogTypes, "Id", "Name"), "Select Log Type", new { @class = "form-control", Name = "Type" })
+                            @Html.DropDownListFor(l => l.Log.Type, new SelectList(Model.LogTypes, "Id", "Name"), "Select Log Type", new { @class = "form-control" })
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(l => l.Log.Message)
-                            @Html.TextAreaFor(l => l.Log.Message, new { @class = "form-control", @style = "min-width:500px;", Name = "Message" })
+                            @Html.TextAreaFor(l => l.Log.Message, new { @class = "form-control", @style = "min-width:500px;" })
                         </div>
                         <div class="form-group">
-                            @Html.HiddenFor(l => l.Log.Student, new { Value = Model.Student.Id, Name = "Student" })
+                            @Html.HiddenFor(l => l.Log.Student, new { Value = Model.Student.Id })
                         </div>
                         <div class="form-group">
-                            @Html.HiddenFor(l => l.Log.Date, new { Value = DateTime.UtcNow, Name = "Date" })
-                            @Html.HiddenFor(l => l.Log.Author, new { Value = User.Identity.GetUserId(), Name = "Author" })
+                            @Html.HiddenFor(l => l.Log.Date, new { Value = DateTime.Now.ToString(CultureInfo.CreateSpecificCulture("en-GB")) })
+                            @Html.HiddenFor(l => l.Log.Author, new { Value = User.Identity.GetUserId() })
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -328,26 +328,11 @@
                             url: "/api/logs/log/" + button.attr("data-log-id"),
                             method: "DELETE",
                             success: function () {
-                                button.parents("tr").remove();
+                                location.reload();
                             }
                         });
                     }
                 });
-            });
-
-            //Create Log When Button Clicked
-            $("#NewLog").submit(function(event) {
-                var data = $(this).serialize();
-                $.ajax({
-                    url: "/api/logs/",
-                    method: "POST",
-                    data: data,
-                    success: function() {
-                        $('#LogModal').modal('hide');
-                        return false;
-                    }
-                });
-                event.preventDefault();
             });
 
             //Clear Modal When Closed
