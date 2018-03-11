@@ -10,6 +10,7 @@ namespace MyPortal.Models
     {
         public int Id { get; set; }
 
+        [Required]
         public int Type { get; set; }
 
         [Required]

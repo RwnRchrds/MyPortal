@@ -51,6 +51,7 @@ namespace MyPortal.Controllers.Api
             return logDto;
         }
 
+        [Route("api/logs/log/{id}")]
         [HttpPut]
         public void UpdateStudent(int id, LogDto logDto)
         {
@@ -72,6 +73,7 @@ namespace MyPortal.Controllers.Api
             _context.SaveChanges();
         }
 
+        [Route("api/logs/log/{id}")]
         public void DeleteLog(int id)
         {
             var logInDb = _context.Logs.SingleOrDefault(l => l.Id == id);

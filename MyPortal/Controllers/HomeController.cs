@@ -30,7 +30,7 @@ namespace MyPortal.Controllers
 
             if (User.IsInRole("Student"))
             {
-                return RedirectToAction("Index", "Students");
+                return RedirectToAction("Index","Students");
             }            
 
             return RedirectToAction("Login","Account");
