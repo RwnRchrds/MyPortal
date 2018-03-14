@@ -6,22 +6,26 @@
 
 <h2>Students</h2>
 
+@if (User.IsInRole("SeniorStaff"))
+{
+    @Html.ActionLink("New Student", "NewStudent", "Staff", null, new { @class = "btn btn-success", @style = "margin-bottom: 8px;" })
+}
+
 <table class="table table-bordered table-hover" id="students">
     <thead>
-    <tr>
-        <th>Student</th>
-        <th>Year Group</th>
-        <th>Reg Group</th>
-    </tr>
+        <tr>
+            <th>Student</th>
+            <th>Year Group</th>
+            <th>Reg Group</th>
+        </tr>
     </thead>
-    <tbody>      
-    </tbody>
+    <tbody></tbody>
 </table>
 
 @section scripts
 {
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $("#students").DataTable({
                 ajax: {
                     url: "/api/students",
@@ -30,8 +34,8 @@
                 columns: [
                     {
                         data: "firstName",
-                        render: function(data, type, student) {
-                            return "<a href='/Staff/Students/" + student.id + "'>" + student.lastName + ", " + student.firstName + "</a>";
+                        render: function (data, type, student) {
+                            return "<a href=/Staff/Students/" + student.id + "'>" + student.lastName + ", " + student.firstName + "</a>";
                         }
                     },
                     {
@@ -40,8 +44,8 @@
                     {
                         data: "regGroup"
                     }
-            ]
+                ]
+            });
         });
-    } );
     </script>
 }

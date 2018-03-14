@@ -12,20 +12,36 @@
 
 else
 {
-    <table class="table table-bordered table-hover">
+    <table class="table table-bordered table-hover" id="staff">
         <thead>
             <tr>
                 <th>Staff</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var staff in Model)
-            {
-                <tr>
-                    <td>@Html.ActionLink(staff.LastName + ", " + staff.FirstName,"StaffDetails","Staff",new {id = staff.Id},null)</td>
-                </tr>
-            }
         </tbody>
     </table>
+}
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+            $("#staff").DataTable({
+                ajax: {
+                    url: "/api/staff",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "firstName",
+                        render: function(data, type, staff) {
+                            return "<a href='/Staff/Staff/" + staff.id + "'>" + staff.lastName + ", " + staff.firstName + "</a>";
+                        }
+                    }
+                ]
+            });
+        } );
+    </script>
 }
 

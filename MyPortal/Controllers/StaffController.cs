@@ -30,11 +30,15 @@ namespace MyPortal.Controllers
         public ActionResult Index()
         {
             var staffID = User.Identity.GetUserId();
+
             var staff = _context.Staff.SingleOrDefault(s => s.Id == staffID);
+
+            var certificates = _context.TrainingCertificates.Where(c => c.Staff == staffID).ToList();
 
             var viewModel = new StaffHomeViewModel
             {
-                CurrentUser = staff
+                CurrentUser = staff,
+                TrainingCertificates = certificates
             };
 
             return View(viewModel);
@@ -103,6 +107,7 @@ namespace MyPortal.Controllers
             return View(viewModel);
         }
 
+        [Authorize(Roles = "SeniorStaff")]
         [Route("Staff/Students/New")]
         public ActionResult NewStudent()
         {

@@ -23,6 +23,15 @@ namespace MyPortal.App_Start
 
             Mapper.CreateMap<RegGroupDto, RegGroup>();
             Mapper.CreateMap<RegGroup, RegGroupDto>();
+
+            Mapper.CreateMap<StaffDto, Staff>();
+            Mapper.CreateMap<Staff, StaffDto>();
+
+            Mapper.CreateMap<TrainingCertificateDto, TrainingCertificate>();
+            Mapper.CreateMap<TrainingCertificate, TrainingCertificateDto>();
+
+            Mapper.CreateMap<TrainingCourseDto, TrainingCourse>();
+            Mapper.CreateMap<TrainingCourse, TrainingCourseDto>();
         }
     }
 }

@@ -208,6 +208,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\Api\LogsController.cs" />
+    <Compile Include="Controllers\Api\StaffController.cs" />
     <Compile Include="Controllers\Api\StudentsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -215,7 +216,10 @@
     <Compile Include="Controllers\StudentsController.cs" />
     <Compile Include="Dtos\LogDto.cs" />
     <Compile Include="Dtos\RegGroupDto.cs" />
+    <Compile Include="Dtos\StaffDto.cs" />
     <Compile Include="Dtos\StudentDto.cs" />
+    <Compile Include="Dtos\TrainingCertificateDto.cs" />
+    <Compile Include="Dtos\TrainingCourseDto.cs" />
     <Compile Include="Dtos\YearGroupDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
