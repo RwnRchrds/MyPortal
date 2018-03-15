@@ -23,6 +23,6 @@ namespace MyPortal.Dtos
         [Required]
         public int Status { get; set; }
 
-        public TrainingCourse TrainingCourse { get; set; }
+        public TrainingCourseDto TrainingCourse { get; set; }
     }
 }

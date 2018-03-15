@@ -35,14 +35,14 @@
                     {
                         data: "firstName",
                         render: function (data, type, student) {
-                            return "<a href=/Staff/Students/" + student.id + "'>" + student.lastName + ", " + student.firstName + "</a>";
+                            return "<a href='/Staff/Students/" + student.id + "'>" + student.lastName + ", " + student.firstName + "</a>";
                         }
                     },
                     {
                         data: "yearGroup1.name"
                     },
                     {
-                        data: "regGroup"
+                        data: "regGroup1.name"
                     }
                 ]
             });
