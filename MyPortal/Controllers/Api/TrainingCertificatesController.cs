@@ -41,5 +41,17 @@ namespace MyPortal.Controllers.Api
 
             return trainingCertificateDto;
         }
+
+        [Route("api/certificates/certificate/{staff}/{course}")]
+        public void DeleteCertificate(string staff, int course)
+        {
+            var certInDb = _context.TrainingCertificates.SingleOrDefault(l => l.Staff == staff && l.Course == course);
+
+            if (certInDb == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            _context.TrainingCertificates.Remove(certInDb);
+            _context.SaveChanges();
+        }
     }
 }
