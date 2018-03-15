@@ -18,18 +18,6 @@
         @Html.Partial("_NavBarStaff")
     }
 
-
-    @*FOR WHEN ROLE MANAGER IS ENABLED (SMT/STAFF NavBar)*@
-    @*    @if (Roles.IsUserInRole(User.Identity.Name, "smt"))
-        {
-            @Html.Partial("_NavBarSmt")
-        }
-        else
-        {
-            @Html.Partial("_NavBarStaff")
-        }*@
-
-
     <div class="container body-content">
         @RenderBody()
         <hr />

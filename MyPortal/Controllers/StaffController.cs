@@ -98,10 +98,16 @@ namespace MyPortal.Controllers
 
             var certificates = _context.TrainingCertificates.Where(c => c.Staff == id).ToList();
 
+            var courses = _context.TrainingCourses.ToList();
+
+            var statuses = _context.TrainingStatuses.ToList();
+
             var viewModel = new StaffDetailsViewModel
             {
                 Staff = staff,
-                TrainingCertificates = certificates
+                TrainingCertificates = certificates,
+                TrainingCourses = courses,
+                TrainingStatuses = statuses
             };
 
             return View(viewModel);
@@ -242,7 +248,16 @@ namespace MyPortal.Controllers
             }
 
             _context.SaveChanges();
-            return RedirectToAction("StudentDetails", "Staff", new { id = log.Student });
+            return RedirectToAction("StudentDetails", "Staff", new {id = log.Student});
+        }
+
+        [HttpPost]
+        public ActionResult CreateCertificate(TrainingCertificate trainingCertificate)
+        {
+            _context.TrainingCertificates.Add(trainingCertificate);
+            _context.SaveChanges();
+
+            return RedirectToAction("StaffDetails", "Staff", new {id = trainingCertificate.Staff});
         }
 
         [HttpPost]

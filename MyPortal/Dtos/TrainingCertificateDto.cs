@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using MyPortal.Models;
 
 namespace MyPortal.Dtos
 {
@@ -21,5 +22,7 @@ namespace MyPortal.Dtos
 
         [Required]
         public int Status { get; set; }
+
+        public TrainingCourse TrainingCourse { get; set; }
     }
 }
