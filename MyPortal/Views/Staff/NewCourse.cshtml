@@ -1,0 +1,29 @@
+﻿@model MyPortal.Models.TrainingCourse
+@{
+    ViewBag.Title = "NewCourse";
+    Layout = "~/Views/Shared/_LayoutStaff.cshtml";
+}
+
+<h2>New Training Course</h2>
+
+@using (Html.BeginForm("CreateCourse", "Staff"))
+{
+    <div class="form-group">
+        @Html.LabelFor(c => c.Code)
+        @Html.TextBoxFor(c => c.Code, new { @class = "form-control"})
+        @Html.ValidationMessageFor(c => c.Code)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(c => c.Description)
+        @Html.TextBoxFor(c => c.Description, new { @class = "form-control"})
+        @Html.ValidationMessageFor(c => c.Description)
+    </div>
+    @Html.AntiForgeryToken()
+    <button type="submit" class ="btn btn-primary">Save</button>
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

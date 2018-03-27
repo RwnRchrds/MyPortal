@@ -1,0 +1,48 @@
+﻿@model IEnumerable<MyPortal.Models.TrainingCourse>
+@{
+    ViewBag.Title = "TrainingCourses";
+    Layout = "~/Views/Shared/_LayoutStaff.cshtml";
+}
+
+<h2>Training Courses</h2>
+
+@if (User.IsInRole("SeniorStaff"))
+{
+    @Html.ActionLink("New Course", "NewCourse", "Staff", null, new { @class = "btn btn-success", @style = "margin-bottom: 8px;" })
+}
+
+<table class="table table-bordered table-hover" id="courses">
+    <thead>
+        <tr>
+            <th>Code</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#courses").DataTable({
+                ajax: {
+                    url: "/api/courses",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "code",
+                        render: function (data, type, course) {
+                            return "<a href='/Staff/TrainingCourses/" + course.id + "'>" + course.code + "</a>";
+                        }
+                    },
+                    {
+                        data: "description"
+                    }
+                ]
+            });
+        });
+    </script>
+}
+

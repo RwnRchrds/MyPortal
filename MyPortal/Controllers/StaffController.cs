@@ -129,6 +129,13 @@ namespace MyPortal.Controllers
             return View(viewModel);
         }
 
+        [Authorize(Roles = "SeniorStaff")]
+        [Route("Staff/TrainingCourses/New")]
+        public ActionResult NewCourse()
+        {
+            return View();
+        }
+
         public static ChartData GetChartData(List<Result> results, bool upperSchool)
         {
             ChartData data = new ChartData();
@@ -283,6 +290,21 @@ namespace MyPortal.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateCourse(TrainingCourse course)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("NewCourse");
+            }
+
+            _context.TrainingCourses.Add(course);
+            _context.SaveChanges();
+
+            return RedirectToAction("TrainingCourses", "Staff");
+        }
+
+        [HttpPost]
         public ActionResult SaveStudent(Student student)
         {
             var studentInDb = _context.Students.Single(l => l.Id == student.Id);
@@ -295,6 +317,12 @@ namespace MyPortal.Controllers
 
             _context.SaveChanges();
             return RedirectToAction("StudentDetails", "Staff", new { id = student.Id });
+        }
+
+        [Authorize(Roles = "SeniorStaff")]
+        public ActionResult TrainingCourses()
+        {
+            return View();
         }
     }
 }

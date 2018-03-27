@@ -13,6 +13,7 @@ namespace MyPortal
                         "~/Scripts/bootstrap.js",
                         "~/scripts/bootbox.js",
                         "~/Scripts/respond.js",
+                        "~/scripts/toastr.js",
                         "~/scripts/datatables/jquery.datatables.js",
                         "~/scripts/datatables/datatables.bootstrap.js"
                         ));
@@ -28,6 +29,7 @@ namespace MyPortal
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap-flatly.css",
                       "~/content/datatables/css/datatables.bootstrap.css",
+                      "~/content/toastr.css",
                       "~/Content/site.css"));
         }
     }

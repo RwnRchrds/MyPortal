@@ -329,7 +329,8 @@
                             method: "DELETE",
                             success: function () {
                                 location.reload();
-                            }
+                                toastr.success("Log deleted");
+                            }                         
                         });
                     }
                 });
