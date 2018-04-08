@@ -18,9 +18,11 @@ namespace MyPortal.Models
         public int Id { get; set; }
 
         [StringLength(255)]
+        [Required]
         public string Code { get; set; }
 
         [StringLength(1000)]
+        [Required]
         public string Description { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
