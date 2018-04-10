@@ -207,10 +207,10 @@
                     </thead>
                     @foreach (var log in Model.Logs)
                     {
-                        <tr>
+                        <tr class="logentry">
                             <td>@log.Date.ToShortDateString()</td>
                             <td>@log.Staff.Title @log.Staff.FirstName.Substring(0, 1) @log.Staff.LastName</td>
-                            <td>@log.LogType.Name</td>
+                            <td class="logtype">@log.LogType.Name</td>
                             <td>@log.Message</td>
                             <td>
                                 <button type="button" class="btn btn-warning btn-xs">
@@ -334,6 +334,40 @@
                         });
                     }
                 });
+            });
+
+            //Colour Code Logs
+            $(".logentry").each(function () {
+                var log = (this);
+                var logType = $(this).find(".logtype").html();
+
+                if (logType == "Academic Support") {
+                    $(log).addClass("logAcademicSupport");
+                }
+
+                if (logType == "Behaviour Log") {
+                    $(log).addClass("logBehaviour");
+                }
+
+                if (logType == "EOY Report") {
+                    $(log).addClass("logEoy");
+                }
+
+                if (logType == "Praise") {
+                    $(log).addClass("logPraise");
+                }
+
+                if (logType == "SEN Note") {
+                    $(log).addClass("logSen");
+                }
+
+                if (logType == "Student Feed") {
+                    $(log).addClass("logStudent");
+                }
+
+                if (logType == "Tutor Note") {
+                    $(log).addClass("logTutor");
+                }
             });
 
             //Clear Modal When Closed

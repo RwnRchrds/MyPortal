@@ -27,6 +27,7 @@ namespace MyPortal.Controllers
             _context.Dispose();
         }
 
+        // Staff Landing Page
         public ActionResult Index()
         {
             var staffID = User.Identity.GetUserId();
@@ -44,11 +45,15 @@ namespace MyPortal.Controllers
             return View(viewModel);
         }
 
+        // Menu | Students --> Students List (All)
+        // Accessible by [Staff] or [SeniorStaff]
         public ActionResult Students()
         {
             return View();
         }
 
+        // Menu | Staff --> Staff Lits (All)
+        // Accessible by [SeniorStaff] only
         [Authorize(Roles = "SeniorStaff")]
         public ActionResult Staff()
         {
@@ -56,6 +61,8 @@ namespace MyPortal.Controllers
             return View(staff);
         }        
 
+        // Menu | Students | X --> Student Details (for Student X)
+        //Accessible by [Staff] or [SeniorStaff]
         [Route("Staff/Students/{id}")]
         public ActionResult StudentDetails(int id)
         {
@@ -87,6 +94,8 @@ namespace MyPortal.Controllers
             return View(viewModel);
         }
 
+        // Menu | Staff | X --> Student Details (for Staff X)
+        //Accessible by [SeniorStaff] only
         [Authorize(Roles = "SeniorStaff")]
         [Route("Staff/Staff/{id}")]
         public ActionResult StaffDetails(string id)
@@ -113,6 +122,8 @@ namespace MyPortal.Controllers
             return View(viewModel);
         }
 
+        // Menu | Students | New Student --> New Student form
+        // Accessible by [SeniorStaff] only
         [Authorize(Roles = "SeniorStaff")]
         [Route("Staff/Students/New")]
         public ActionResult NewStudent()

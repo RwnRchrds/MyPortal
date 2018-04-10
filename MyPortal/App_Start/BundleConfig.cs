@@ -30,6 +30,7 @@ namespace MyPortal
                       "~/Content/bootstrap-flatly.css",
                       "~/content/datatables/css/datatables.bootstrap.css",
                       "~/content/toastr.css",
+                      "~/content/myportal.css",
                       "~/Content/site.css"));
         }
     }
