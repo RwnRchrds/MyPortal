@@ -140,6 +140,15 @@ namespace MyPortal.Controllers
             return View(viewModel);
         }
 
+        // Menu | Training Courses --> Training Courses List (All)
+        [Authorize(Roles = "SeniorStaff")]
+        public ActionResult TrainingCourses()
+        {
+            return View();
+        }
+
+        // Menu | Training Courses | New Course --> New Course Form
+        // Accessible by [SeniorStaff] only
         [Authorize(Roles = "SeniorStaff")]
         [Route("Staff/TrainingCourses/New")]
         public ActionResult NewCourse()
@@ -147,6 +156,7 @@ namespace MyPortal.Controllers
             return View();
         }
 
+        // Generates chart data for Student Details view
         public static ChartData GetChartData(List<Result> results, bool upperSchool)
         {
             ChartData data = new ChartData();
@@ -248,6 +258,7 @@ namespace MyPortal.Controllers
             return data;
         }
 
+        // HTTP POST request for saving/creating logs using HTML form 
         [HttpPost]
         public ActionResult SaveLog(Log log)
         {
@@ -269,6 +280,7 @@ namespace MyPortal.Controllers
             return RedirectToAction("StudentDetails", "Staff", new {id = log.Student});
         }
 
+        // HTTP POST request for creating certificates using HTML form
         [HttpPost]
         public ActionResult CreateCertificate(TrainingCertificate trainingCertificate)
         {
@@ -278,6 +290,7 @@ namespace MyPortal.Controllers
             return RedirectToAction("StaffDetails", "Staff", new {id = trainingCertificate.Staff});
         }
 
+        // HTTP POST request for creating students using HTML form
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CreateStudent(Student student)
@@ -300,6 +313,7 @@ namespace MyPortal.Controllers
 
         }
 
+        // HTTP POST request for creating training courses using HTML form
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CreateCourse(TrainingCourse course)
@@ -315,6 +329,7 @@ namespace MyPortal.Controllers
             return RedirectToAction("TrainingCourses", "Staff");
         }
 
+        // HTTP POST request for updating student details using HTML form
         [HttpPost]
         public ActionResult SaveStudent(Student student)
         {
@@ -328,12 +343,6 @@ namespace MyPortal.Controllers
 
             _context.SaveChanges();
             return RedirectToAction("StudentDetails", "Staff", new { id = student.Id });
-        }
-
-        [Authorize(Roles = "SeniorStaff")]
-        public ActionResult TrainingCourses()
-        {
-            return View();
         }
     }
 }

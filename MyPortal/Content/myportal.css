@@ -1,4 +1,6 @@
-﻿/*Log Background Colours*/
+﻿/*---MyPortal Custom Styles---*/
+
+/*Log Table Background Colours*/
 .logAcademicSupport {
     background-color: #a4dae8;
 }
@@ -19,4 +21,15 @@
 }
 .logTutor {
     background-color: #ffa0d6;
+}
+
+/*Certificate Table Background Colours*/
+.certCompleted {
+    background-color: #99e8a1;
+}
+.certPending {
+    background-color: #f9f4a4;
+}
+.certFailed {
+    background-color: #ed7171;
 }
