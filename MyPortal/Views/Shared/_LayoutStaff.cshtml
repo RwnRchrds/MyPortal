@@ -22,6 +22,7 @@
         @RenderBody()
         <hr />
         <footer>
+            <p><b>Version:</b> @ViewContext.Controller.GetType().Assembly.GetName().Version.ToString()</p>
             <p>&copy; @DateTime.Now.Year - Rowan Richards</p>
         </footer>
     </div>
