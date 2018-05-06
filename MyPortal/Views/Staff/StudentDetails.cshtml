@@ -293,8 +293,8 @@
                         </div>
                         <div class="form-group">
                             @Html.HiddenFor(l => l.Log.Id)
-                            @Html.HiddenFor(l => l.Log.Date, new {Value = DateTime.Now.ToString(CultureInfo.CreateSpecificCulture("en-GB"))})
-                            @Html.HiddenFor(l => l.Log.Author, new {Value = User.Identity.GetUserId()})
+                            @Html.HiddenFor(l => l.Log.Date, new { Value = DateTime.Now.ToString(CultureInfo.CreateSpecificCulture("en-GB")) })
+                            @Html.HiddenFor(l => l.Log.Author, new { Value = User.Identity.GetUserId() })
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -370,7 +370,7 @@
                             success: function () {
                                 location.reload();
                                 toastr.success("Log deleted");
-                            }                         
+                            }
                         });
                     }
                 });
@@ -379,7 +379,7 @@
             //Edit Log When Button Clicked
             $("#logs").on("click",
                 ".js-edit",
-                function() {
+                function () {
                     var button = $(this);
                     $("#EditLogModal").modal('toggle');
                     $("#LogMessageControl").val("This is a test message");
@@ -421,11 +421,13 @@
             });
 
             //Clear Modal When Closed
-            $('#LogModal').on('hidden.bs.modal', function () {
-                $(this).find('form').trigger('reset');
-            })
+            $('#LogModal').on('hidden.bs.modal',
+                function () {
+                    $(this).find('form').trigger('reset');
+                });
         });
-    </script>   
-
+    </script>
+    
+    @Scripts.Render("~/bundles/staff")
     @Scripts.Render("~/bundles/jqueryval")
 }
