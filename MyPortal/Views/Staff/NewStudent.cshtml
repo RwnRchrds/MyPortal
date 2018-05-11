@@ -8,11 +8,11 @@
 
 @using (Html.BeginForm("CreateStudent", "Staff"))
 {
-<div class="form-group">
-    @Html.LabelFor(s => s.Student.Id)
-    @Html.TextBoxFor(s => s.Student.Id, new { @class = "form-control" })
-    @Html.ValidationMessageFor(s => s.Student.Id)
-</div>
+    <div class="form-group">
+        @Html.LabelFor(s => s.Student.Id)
+        @Html.TextBoxFor(s => s.Student.Id, new { @class = "form-control" })
+        @Html.ValidationMessageFor(s => s.Student.Id)
+    </div>
     <div class="form-group">
         @Html.LabelFor(s => s.Student.FirstName)
         @Html.TextBoxFor(s => s.Student.FirstName, new { @class = "form-control" })
@@ -25,19 +25,19 @@
     </div>
     <div class="form-group">
         @Html.LabelFor(s => s.Student.YearGroup)
-        @Html.DropDownListFor(s => s.Student.YearGroup, new SelectList(Model.YearGroups,"Id","Name"),"" ,new { @class = "form-control" })
+        @Html.DropDownListFor(s => s.Student.YearGroup, new SelectList(Model.YearGroups, "Id", "Name"), "", new { @class = "form-control" })
         @Html.ValidationMessageFor(s => s.Student.YearGroup)
     </div>
     <div class="form-group">
         @Html.LabelFor(s => s.Student.RegGroup)
-        @Html.DropDownListFor(s => s.Student.RegGroup, new SelectList(Model.RegGroups,"Id","Name"),"" ,new { @class = "form-control" })
+        @Html.DropDownListFor(s => s.Student.RegGroup, new SelectList(Model.RegGroups, "Id", "Name"), "", new { @class = "form-control" })
         @Html.ValidationMessageFor(s => s.Student.RegGroup)
     </div>
     <div class="form-group">
         @Html.LabelFor(s => s.Student.FourMId)
         @Html.TextBoxFor(s => s.Student.FourMId, new { @class = "form-control" })
     </div>
-    @Html.HiddenFor(s => s.Student.AccountBalance, new {Value = 0.00})
+    @Html.HiddenFor(s => s.Student.AccountBalance, new { Value = 0.00 })
     @Html.AntiForgeryToken()
     <button type="submit" class="btn btn-primary">Save</button>
 }
@@ -45,5 +45,6 @@
 @section scripts
 {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/staff")
 }
 

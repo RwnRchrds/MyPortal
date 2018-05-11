@@ -9,6 +9,7 @@ namespace MyPortal.Controllers
     public class AdminController : Controller
     {
         // GET: Admin
+        [Route("Staff/Admin")]
         public ActionResult Index()
         {
             return View();

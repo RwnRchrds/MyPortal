@@ -317,7 +317,7 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Edit Details - @Model.Student.LastName, @Model.Student.FirstName</h4>
                 </div>
-                @using (Html.BeginForm("SaveStudent", "Staff"))
+                @using (Ajax.BeginForm("SaveStudent", "Staff"))
                 {
                     <div class="modal-body">
                         <div class="form-group">
@@ -374,6 +374,26 @@
                         });
                     }
                 });
+            });
+
+            //AJAX -- New Log           
+            $.ajax({
+                url: "/api/logs/log",
+                data: "",
+                method: "POST",
+                success: function() {
+                    toastr.success("Log created");
+                }
+            });
+
+            //AJAX -- Edit Log
+            $.ajax({
+                url: "/api/logs/log",
+                data: "",
+                method: "POST",
+                success: function() {
+                    toastr.success("Log updated");
+                }
             });
 
             //Edit Log When Button Clicked
