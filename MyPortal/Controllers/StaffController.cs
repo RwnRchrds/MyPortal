@@ -347,19 +347,6 @@ namespace MyPortal.Controllers
 
         //TODO: Ajax Create Log Request
 
-        // HTTP POST request for creating a new student log
-        [HttpPost]
-        public JsonResult CreateLog(Log log)
-        {
-            if (!ModelState.IsValid)
-            {
-
-            }
-
-            _context.Logs.Add(log);
-            _context.SaveChanges();
-        }
-
         //TODO: Ajax Edit Log Request
     }
 }
