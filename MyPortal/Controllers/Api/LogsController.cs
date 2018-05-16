@@ -64,11 +64,9 @@ namespace MyPortal.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
             var c = Mapper.Map(logDto, logInDb);
-
-            logInDb.Author = logDto.Author;
+          
             logInDb.Type = logDto.Type;
             logInDb.Message = logDto.Message;
-            logInDb.Date = logDto.Date;
 
             _context.SaveChanges();
         }

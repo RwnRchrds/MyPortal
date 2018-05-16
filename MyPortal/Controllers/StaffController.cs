@@ -71,7 +71,7 @@ namespace MyPortal.Controllers
             if (student == null)
                 return HttpNotFound();
 
-            var logs = _context.Logs.Where(l => l.Student == id).ToList();
+            var logs = _context.Logs.Where(l => l.Student == id).OrderByDescending(x => x.Date).ToList();
 
             var results = _context.Results.Where(r => r.Student == id && r.ResultSet1.IsCurrent == true).ToList();            
 
