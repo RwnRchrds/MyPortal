@@ -63,7 +63,7 @@ namespace MyPortal.Controllers.Api
             if (logInDb == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            var c = Mapper.Map(logDto, logInDb);
+            //var c = Mapper.Map(logDto, logInDb);
           
             logInDb.Type = logDto.Type;
             logInDb.Message = logDto.Message;
