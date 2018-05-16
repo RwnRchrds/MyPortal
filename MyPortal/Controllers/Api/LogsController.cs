@@ -51,14 +51,14 @@ namespace MyPortal.Controllers.Api
             return logDto;
         }
 
-        [Route("api/logs/log/{id}")]
-        [HttpPut]
-        public void UpdateStudent(int id, LogDto logDto)
+        [Route("api/logs/log/edit")]
+        [HttpPost]
+        public void UpdateLog(LogDto logDto)
         {
             if (logDto == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            var logInDb = _context.Logs.SingleOrDefault(l => l.Id == id);
+            var logInDb = _context.Logs.SingleOrDefault(l => l.Id == logDto.Id);
 
             if (logInDb == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
