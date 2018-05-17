@@ -25,7 +25,7 @@
             <button type="button" class="btn btn-warning" id="EditResultsButton">
                 <span class="glyphicon glyphicon-stats" aria-hidden="true"></span> Edit Results
             </button>
-            <div class="panel panel-primary" style="width: 300px; margin-top: 8px;">
+            <div class="panel panel-primary" style="max-width: 300px; margin-top: 8px;">
                 <div class="panel-heading">MyDetails</div>
                 <div class="panel-body">
                     <table class="table-condensed">
@@ -62,7 +62,7 @@
 
         <!-- MyResults Panel -->
         <div style="float: left; margin-left: 20px;" id="Results">
-            <div class="panel panel-primary" style="width: 300px; margin-top: 8px;">
+            <div class="panel panel-primary" style="max-width: 300px; margin-top: 8px;">
                 <div class="panel-heading">MyResults</div>
                 @if (!Model.Results.Any())
                 {
@@ -91,7 +91,7 @@
 
         <!-- MyResults Chart Panel -->
         <div style="float: left; margin-left: 20px;" id="Chart">
-            <div class="panel panel-primary" style="width: 300px; margin-top: 8px;">
+            <div class="panel panel-primary" style="max-width: 300px; margin-top: 8px;">
                 <div class="panel-heading">MyResults - Chart</div>
                 <div class="panel-body">
                     @if (!Model.Results.Any())
@@ -189,7 +189,7 @@
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#LogModal">
                 <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> New Log
             </button>
-            <div class="panel panel-primary" style="width: 1000px; margin-top: 8px;" id="LogsPanel">
+            <div class="panel panel-primary" style="max-width: 1000px; margin-top: 8px;" id="LogsPanel">
                 <div class="panel-heading">MyLogs</div>
                 @if (!Model.Logs.Any())
                 {<text><div class="panel-body">No logs to display.</div></text>}
@@ -287,7 +287,7 @@
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(l => l.Log.Message)
-                            @Html.TextAreaFor(l => l.Log.Message, new { @class = "form-control", @style = "min-width:500px;", @id = "EditLogMessageControl", Name="Message" })
+                            @Html.TextAreaFor(l => l.Log.Message, new { @class = "form-control", @style = "max-width:500px;", @id = "EditLogMessageControl", Name="Message" })
                         </div>
                         <div class="form-group">
                             @Html.HiddenFor(l => l.Log.Student, new { Value = Model.Student.Id, Name="Student" })
