@@ -12,60 +12,60 @@
 <hr />
 
 <body>
-<!-- MyDetails Panel -->
-<div class="container" id="Details">
-    <div style="float: left;">
-        <div class="panel panel-primary" style="width: 300px; margin-top: 8px;">
-            <div class="panel-heading">MyDetails</div>
-            <div class="panel-body">
-                <table class="table-condensed">
-                    <tr>
-                        <td><b>First Name</b></td>
-                        <td>@Model.Student.FirstName</td>
-                    </tr>
-                    <tr>
-                        <td><b>Last Name</b></td>
-                        <td>@Model.Student.LastName</td>
-                    </tr>
-                    <tr>
-                        <td><b>Year Group</b></td>
-                        <td>@Model.Student.YearGroup1.Name</td>
-                    </tr>
-                    <tr>
-                        <td><b>Reg Group</b></td>
-                        <td>@Model.Student.RegGroup1.Name</td>
-                    </tr>
-                    <tr>
-                        <td><b>Reg Tutor</b></td>
-                        <td>@Model.Student.RegGroup1.Staff.Title @Model.Student.RegGroup1.Staff.FirstName.Substring(0, 1) @Model.Student.RegGroup1.Staff.LastName</td>
-                    </tr>
-                    <tr>
-                        <td><b>Head of Year</b></td>
-                        <td>@Model.Student.YearGroup1.Staff.Title @Model.Student.YearGroup1.Staff.FirstName.Substring(0, 1) @Model.Student.YearGroup1.Staff.LastName</td>
-                    </tr>
-                </table>
-                <hr />
-                <h4><b>Balance:</b> £@Model.Student.AccountBalance</h4>
+    <!-- MyDetails Panel -->
+    <div class="container" id="Details">
+        <div style="float: left;">
+            <div class="panel panel-primary" style="width: 300px; margin-top: 8px;">
+                <div class="panel-heading">MyDetails</div>
+                <div class="panel-body">
+                    <table class="table-condensed">
+                        <tr>
+                            <td><b>First Name</b></td>
+                            <td>@Model.Student.FirstName</td>
+                        </tr>
+                        <tr>
+                            <td><b>Last Name</b></td>
+                            <td>@Model.Student.LastName</td>
+                        </tr>
+                        <tr>
+                            <td><b>Year Group</b></td>
+                            <td>@Model.Student.YearGroup1.Name</td>
+                        </tr>
+                        <tr>
+                            <td><b>Reg Group</b></td>
+                            <td>@Model.Student.RegGroup1.Name</td>
+                        </tr>
+                        <tr>
+                            <td><b>Reg Tutor</b></td>
+                            <td>@Model.Student.RegGroup1.Staff.Title @Model.Student.RegGroup1.Staff.FirstName.Substring(0, 1) @Model.Student.RegGroup1.Staff.LastName</td>
+                        </tr>
+                        <tr>
+                            <td><b>Head of Year</b></td>
+                            <td>@Model.Student.YearGroup1.Staff.Title @Model.Student.YearGroup1.Staff.FirstName.Substring(0, 1) @Model.Student.YearGroup1.Staff.LastName</td>
+                        </tr>
+                    </table>
+                    <hr />
+                    <h4><b>Balance:</b> £@Model.Student.AccountBalance</h4>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- MyResults Panel -->
-    <div style="float: left; margin-left: 20px;" id="Results">
-        <div class="panel panel-primary" style="width: 300px; margin-top: 8px;">
-            <div class="panel-heading">MyResults</div>
-            @if (!Model.Results.Any())
-            {
-                {<text><div class="panel-body">No results to display.</div></text>}
+        <!-- MyResults Panel -->
+        <div style="float: left; margin-left: 20px;" id="Results">
+            <div class="panel panel-primary" style="width: 300px; margin-top: 8px;">
+                <div class="panel-heading">MyResults</div>
+                @if (!Model.Results.Any())
+                {
+                    {<text><div class="panel-body">No results to display.</div></text>}
             }
             else
             {
                 <table class="table table-condensed table-bordered">
                     <thead>
-                    <tr style="background-color: #18bc9c">
-                        <th style="color: whitesmoke">Subject</th>
-                        <th style="color: whitesmoke">Result</th>
-                    </tr>
+                        <tr style="background-color: #18bc9c">
+                            <th style="color: whitesmoke">Subject</th>
+                            <th style="color: whitesmoke">Result</th>
+                        </tr>
                     </thead>
                     @foreach (var result in Model.Results)
                     {
@@ -76,23 +76,23 @@
                     }
                 </table>
             }
+            </div>
         </div>
-    </div>
 
-    <!-- MyResults Chart Panel -->
-    <div style="float: left; margin-left: 20px;" id="Chart">
-        <div class="panel panel-primary" style="width: 300px; margin-top: 8px;">
-            <div class="panel-heading">MyResults - Chart</div>
-            <div class="panel-body">
-                @if (!Model.Results.Any())
-                {
-                    <text>No data to display.</text>
-                }
-                else
-                {
-                    <canvas id="resultsChart" style="width: 300px; height: 300px;"></canvas>
+        <!-- MyResults Chart Panel -->
+        <div style="float: left; margin-left: 20px;" id="Chart">
+            <div class="panel panel-primary" style="width: 300px; margin-top: 8px;">
+                <div class="panel-heading">MyResults - Chart</div>
+                <div class="panel-body">
+                    @if (!Model.Results.Any())
+                    {
+                        <text>No data to display.</text>
+                    }
+                    else
+                    {
+                        <canvas id="resultsChart" style="width: 300px; height: 300px;"></canvas>
 
-                    <script>
+                        <script>
                         var ctx = document.getElementById('resultsChart').getContext('2d');
                         var chart = new Chart(ctx,
                             {
@@ -165,46 +165,46 @@
                                     }
                                 }
                             });
-                    </script>
+                        </script>
 
-                }
+                    }
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- MyLogs Panel -->
-<div class="container">
-    <div>
-        <div class="panel panel-primary" style="width: 1000px; margin-top: 8px;" id="Logs">
-            <div class="panel-heading">MyLogs</div>
-            @if (!Model.Logs.Any())
-            {<text><div class="panel-body">No logs to display.</div></text>}
+    <!-- MyLogs Panel -->
+    <div class="container">
+        <div>
+            <div class="panel panel-primary" style="width: 1000px; margin-top: 8px;" id="Logs">
+                <div class="panel-heading">MyLogs</div>
+                @if (!Model.Logs.Any())
+                {<text><div class="panel-body">No logs to display.</div></text>}
             else
             {
                 <table class="table table-bordered" id="logs">
                     <thead>
-                    <tr style="background-color: #18bc9c;">
-                        <th style="color: whitesmoke;">Date</th>
-                        <th style="color: whitesmoke;">Author</th>
-                        <th style="color: whitesmoke;">Type</th>
-                        <th style="color: whitesmoke;">Message</th>
-                    </tr>
+                        <tr style="background-color: #18bc9c;">
+                            <th style="color: whitesmoke;">Date</th>
+                            <th style="color: whitesmoke;">Author</th>
+                            <th style="color: whitesmoke;">Type</th>
+                            <th style="color: whitesmoke;">Message</th>
+                        </tr>
                     </thead>
                     @foreach (var log in Model.Logs)
                     {
                         <tr class="logentry">
                             <td>@log.Date.ToShortDateString()</td>
                             <td>@log.Staff.Title @log.Staff.FirstName.Substring(0, 1) @log.Staff.LastName</td>
-                            <td class ="logtype">@log.LogType.Name</td>
+                            <td class="logtype">@log.LogType.Name</td>
                             <td>@log.Message</td>
                         </tr>
                     }
                 </table>
             }
+            </div>
         </div>
     </div>
-</div>
 
 </body>
 
@@ -212,10 +212,10 @@
 {
     <script>
         //Script run when page loads
-        $(document).ready(function() {
+        $(document).ready(function () {
 
             //Colour Code Logs
-            $(".logentry").each(function() {
+            $(".logentry").each(function () {
                 var log = (this);
                 var logType = $(this).find(".logtype").html();
 
@@ -249,6 +249,8 @@
             });
         });
     </script>
+
+    @Scripts.Render("~/bundles/students")
 }
 
 

@@ -22,7 +22,7 @@
                     <span class="glyphicon glyphicon-list" aria-hidden="true"></span> Edit Details
                 </button>
             }
-            <button type="button" class="btn btn-warning">
+            <button type="button" class="btn btn-warning" id="EditResultsButton">
                 <span class="glyphicon glyphicon-stats" aria-hidden="true"></span> Edit Results
             </button>
             <div class="panel panel-primary" style="width: 300px; margin-top: 8px;">
@@ -436,6 +436,12 @@
                         }
                     });
                     $("#EditLogModal").modal('toggle');
+                });
+
+            //Edit Results Not yet Available
+            $("#EditResultsButton").on("click",
+                function() {
+                    toastr.warning("This feature is not yet available");
                 });
 
             //Colour Code Logs

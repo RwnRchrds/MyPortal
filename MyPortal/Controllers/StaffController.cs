@@ -71,10 +71,12 @@ namespace MyPortal.Controllers
             if (student == null)
                 return HttpNotFound();
 
+            // TODO: [REPLACE WITH DATATABLE??]
             var logs = _context.Logs.Where(l => l.Student == id).OrderByDescending(x => x.Date).ToList();
 
             var results = _context.Results.Where(r => r.Student == id && r.ResultSet1.IsCurrent == true).ToList();            
 
+            // TODO: [REPLACE WITH AJAX REQUEST]
             var logTypes = _context.LogTypes.ToList();
 
             bool upperSchool = student.YearGroup == 11 || student.YearGroup == 10;
@@ -141,7 +143,7 @@ namespace MyPortal.Controllers
         }
 
         // Menu | Training Courses --> Training Courses List (All)
-        [Authorize(Roles = "SeniorStaff")]
+        //[Authorize(Roles = "SeniorStaff")]
         public ActionResult TrainingCourses()
         {
             return View();
@@ -344,9 +346,5 @@ namespace MyPortal.Controllers
             _context.SaveChanges();
             return RedirectToAction("StudentDetails", "Staff", new { id = student.Id });
         }
-
-        //TODO: Ajax Create Log Request
-
-        //TODO: Ajax Edit Log Request
     }
 }

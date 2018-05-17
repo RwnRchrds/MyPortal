@@ -19,7 +19,7 @@ namespace MyPortal.Controllers
             _context = new MyPortalDbContext();
         }
 
-        // GET: Students
+        // Student Landing Page
         public ActionResult Index()
         {
             var currentUser = Int32.Parse(User.Identity.GetUserId());
@@ -29,9 +29,10 @@ namespace MyPortal.Controllers
             if (student == null)
                 return HttpNotFound();
 
-            var logs = _context.Logs.Where(l => l.Student == currentUser).ToList();
+            var logs = _context.Logs.Where(l => l.Student == currentUser).OrderByDescending(x => x.Date).ToList();
 
-            var results = _context.Results.Where(r => r.Student == currentUser && r.ResultSet1.IsCurrent == true).ToList();
+            var results = _context.Results.Where(r => r.Student == currentUser && r.ResultSet1.IsCurrent == true)
+                .ToList();
 
             bool upperSchool = student.YearGroup == 11 || student.YearGroup == 10;
 
@@ -47,36 +48,6 @@ namespace MyPortal.Controllers
             };
             return View(viewModel);
         }
-        // StudentsController --> "Random" ActionResult
-        public ActionResult Random()
-        {
-            var student = new Student() {Id = 1, FirstName = "Aaron", LastName = "Aardvark"};
-            var results = new List<Result>
-            {
-                new Result {ResultSet = 1, Student = 1, Subject = 1, Value = "A"},
-                new Result {ResultSet = 1, Student = 1, Subject = 2, Value = "C"}
-            };
 
-            var viewModel = new RandomStudentViewModel
-            {
-                Results = results,
-                Student = student
-            };
-
-            return View(viewModel);
-        }
-
-        public ActionResult Edit(int id)
-        {
-            return Content("id:" + id);
-        }
-
-        [Route( "Students/Results/{resultset}")]
-        public ActionResult Results(int? resultSet)
-        {
-            if (!resultSet.HasValue)
-                resultSet = 1;
-            return Content("Results from " + resultSet);
-        }
     }
 }

@@ -11,7 +11,7 @@
     <div style="float: left;">
         @if (User.IsInRole("SeniorStaff"))
         {
-            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#EditDetailsForm">
+            <button type="button" class="btn btn-warning" id="EditDetailsButton" data-toggle="modal" data-target="#EditDetailsForm">
                 <span class="glyphicon glyphicon-list" aria-hidden="true"></span> Edit Details
             </button>
         }
@@ -143,6 +143,12 @@
                 });
             });
         });
+
+        //Edit Details Not Yet Available
+        $("#EditDetailsButton").on("click",
+            function() {
+                toastr.warning("This feature is not yet available");
+            });
     </script>
 
     @Scripts.Render("~/bundles/jqueryval");

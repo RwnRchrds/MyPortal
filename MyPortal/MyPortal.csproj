@@ -464,6 +464,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\MyPortal\StaffNavBar.js" />
+    <Content Include="Scripts\MyPortal\StudentNavBar.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\toastr.js" />
@@ -500,7 +501,6 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Students\Random.cshtml" />
     <Content Include="Views\Students\Index.cshtml" />
     <Content Include="Views\Staff\Index.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
