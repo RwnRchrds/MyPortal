@@ -1,0 +1,46 @@
+﻿
+@{
+    ViewBag.Title = "Users";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>Users</h2>
+
+@if (User.IsInRole("Admin"))
+{
+    //Insert New User Button
+}
+
+<table class="table table-bordered table-hover" id="users">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Username</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+            $("#users").DataTable({
+                ajax: {
+                    url: "/api/users",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "id"
+                    },
+                    {
+                        data: "userName"
+                    }
+                ]
+
+            });
+        });
+    </script>
+}
+

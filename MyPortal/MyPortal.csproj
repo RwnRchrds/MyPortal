@@ -213,10 +213,12 @@
     <Compile Include="Controllers\Api\StudentsController.cs" />
     <Compile Include="Controllers\Api\TrainingCertificatesController.cs" />
     <Compile Include="Controllers\Api\TrainingCoursesController.cs" />
+    <Compile Include="Controllers\Api\UsersController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\StaffController.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
+    <Compile Include="Dtos\Identity\UserDto.cs" />
     <Compile Include="Dtos\LogDto.cs" />
     <Compile Include="Dtos\RegGroupDto.cs" />
     <Compile Include="Dtos\StaffDto.cs" />
@@ -519,6 +521,7 @@
     <Content Include="Views\Staff\NewStudent.cshtml" />
     <Content Include="Views\Staff\TrainingCourses.cshtml" />
     <Content Include="Views\Staff\NewCourse.cshtml" />
+    <Content Include="Views\Admin\Users.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

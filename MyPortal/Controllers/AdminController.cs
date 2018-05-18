@@ -15,5 +15,11 @@ namespace MyPortal.Controllers
         {
             return View();
         }
+
+        [Route("Staff/Admin/Users")]
+        public ActionResult Users()
+        {
+            return View();
+        }
     }
 }
