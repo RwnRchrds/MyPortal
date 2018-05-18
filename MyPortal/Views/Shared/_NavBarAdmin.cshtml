@@ -12,10 +12,12 @@
             <ul class="nav navbar-nav">
                 <li>@Html.ActionLink("Home", "Index", "Home")</li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Menu <span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">ADMIN <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="#">Users</a></li>
-                        <li><a href="#">Data</a></li>
+                        <li><a href="#">Data Management</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li>@Html.ActionLink("MyPortal Home", "Index", "Home")</li>
                     </ul>
                 </li>
             </ul>
