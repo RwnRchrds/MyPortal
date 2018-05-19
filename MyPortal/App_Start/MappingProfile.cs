@@ -37,6 +37,9 @@ namespace MyPortal.App_Start
 
             Mapper.CreateMap<UserDto, IdentityUser>();
             Mapper.CreateMap<IdentityUser, UserDto>();
+
+            Mapper.CreateMap<RoleDto, IdentityRole>();
+            Mapper.CreateMap<IdentityRole, RoleDto>();
         }
     }
 }

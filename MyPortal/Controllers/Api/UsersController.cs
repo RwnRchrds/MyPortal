@@ -33,24 +33,9 @@ namespace MyPortal.Controllers.Api
             return _identity.Users.ToList().Select(Mapper.Map<IdentityUser, UserDto>);
         }
 
-        //DELETE User
-        [HttpDelete]
-        [Route("api/users/{userId}")]
-        public void DeleteUser(string id)
-        {
-            var userInDb = _identity.Users.SingleOrDefault(u => u.Id == id);
-
-            if (userInDb == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            if (userInDb.Roles.Count > 0)
-            {
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
-            }
-        }
-
-        [HttpDelete]
+        //Remove Users From a Role
         [Route("api/users/{userId}/roles/{roleName}")]
+        [HttpDelete]
         public async Task<IHttpActionResult> RemoveFromRole(string userId, string roleName)
         {
             var userInDb = _identity.Users.FirstOrDefault(user => user.Id == userId);
@@ -71,5 +56,30 @@ namespace MyPortal.Controllers.Api
 
             return BadRequest();
         }
+
+        //Change a User's Password
+        [HttpPost]
+        [Route("api/users/resetpassword")]
+        public async Task<IHttpActionResult> ChangePassword([FromBody] ChangePasswordModel data)
+        {
+            var userInDb = _identity.Users.FirstOrDefault(user => user.Id == data.UserId);
+            if (userInDb == null)
+                return NotFound();
+
+            var removePassword = await _userManager.RemovePasswordAsync(data.UserId);
+
+            if (removePassword.Succeeded)
+            {
+                var addNewPassword = await _userManager.AddPasswordAsync(data.UserId, data.Password);
+
+                if (addNewPassword.Succeeded)
+                    return Ok();
+
+                return BadRequest();
+            }
+
+            return BadRequest();
+        }
+
     }
 }
