@@ -52,7 +52,7 @@ namespace MyPortal.Controllers
             return View();
         }
 
-        // Menu | Staff --> Staff Lits (All)
+        // Menu | Staff --> Staff List (All)
         // Accessible by [SeniorStaff] only
         [Authorize(Roles = "SeniorStaff")]
         public ActionResult Staff()

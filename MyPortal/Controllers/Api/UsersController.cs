@@ -14,17 +14,18 @@ namespace MyPortal.Controllers.Api
 {
     public class UsersController : ApiController
     {
-        private ApplicationDbContext _context;
+        private ApplicationDbContext _identity;
 
         public UsersController()
         {
-            _context = new ApplicationDbContext();
+            _identity = new ApplicationDbContext();
         }
 
+        //Get Users From Database
         [Route("api/users")]
         public IEnumerable<UserDto> GetUsers()
         {
-            return _context.Users.ToList().Select(Mapper.Map<IdentityUser, UserDto>);
+            return _identity.Users.ToList().Select(Mapper.Map<IdentityUser, UserDto>);
         }
     }
 }
