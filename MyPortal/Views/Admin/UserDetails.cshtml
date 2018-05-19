@@ -54,16 +54,22 @@
             }
             else
             {
-                <table class="table table-condensed table-bordered">
+                <table class="table table-condensed table-bordered" id="roles">
                     <thead>
                     <tr style="background-color: #18bc9c">
                         <th style="color: whitesmoke">Role</th>
+                        <th style="color: whitesmoke">Remove</th>
                     </tr>
                     </thead>
-                    @foreach (var role in Model.Roles)
+                    @foreach (var role in Model.UserRoles)
                     {
                         <tr>
                             <td>@role</td>
+                            <td>
+                                <button data-role-name="@role" data-user-id="@Model.User.Id" type="button" class="btn btn-danger btn-xs js-delete">
+                                    <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
+                                </button>
+                            </td>
                         </tr>
                     }
                 </table>
@@ -72,4 +78,35 @@
     </div>
 </div>
 </body>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+
+            $("#roles").on("click", ".js-delete", function() {
+                var button = $(this);
+                bootbox.confirm("Are you sure you want to remove the user from this role?",
+                    function(result) {
+                        if (result) {
+                            $.ajax({
+                                url: "/api/users/" +
+                                    button.attr("data-user-id") +
+                                    "/roles/" +
+                                    button.attr("data-role-name"),
+                                method: "DELETE",
+                                success: function() {
+                                    location.reload();
+                                    toastr.success("Role removed");
+                                },
+                                error: function() {
+                                    toastr.error("Unable to remove user from role");
+                                }
+                            });
+                        }
+                    });
+            });
+        });
+    </script>
+}
 

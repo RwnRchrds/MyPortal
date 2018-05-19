@@ -9,6 +9,7 @@ namespace MyPortal.ViewModels
     public class UserDetailsViewModel
     {
         public IdentityUser User { get; set; }
-        public IList<string> Roles { get; set; }
+        public IList<string> UserRoles { get; set; }
+        public IEnumerable<IdentityRole> Roles { get; set; }
     }
 }

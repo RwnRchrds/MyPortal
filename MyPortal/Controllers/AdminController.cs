@@ -59,11 +59,14 @@ namespace MyPortal.Controllers
             if (user == null)
                 return HttpNotFound();
 
-            var roles = _userManager.GetRolesAsync(id).Result;
+            var userRoles = _userManager.GetRolesAsync(id).Result;
+
+            var roles = _identity.Roles.ToList();
 
             var viewModel = new UserDetailsViewModel
             {
                 User = user,
+                UserRoles = userRoles,
                 Roles = roles
             };
 
