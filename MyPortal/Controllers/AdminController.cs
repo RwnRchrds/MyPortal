@@ -72,5 +72,12 @@ namespace MyPortal.Controllers
 
             return View(viewModel);
         }
+
+        // Admin | Users | New User --> New User Form
+        [Route("Staff/Admin/Users/New")]
+        public ActionResult NewUser()
+        {
+            return View();
+        }
     }
 }

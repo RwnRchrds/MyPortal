@@ -8,15 +8,15 @@
 
 @if (User.IsInRole("Admin"))
 {
-    //Insert New User Button
+    @Html.ActionLink("New User", "NewUser", "Admin", null, new { @class = "btn btn-success", @style = "margin-bottom: 8px;" })
 }
 
 <table class="table table-bordered table-hover" id="users">
     <thead>
-    <tr>
-        <th>ID</th>
-        <th>Username</th>
-    </tr>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+        </tr>
     </thead>
     <tbody></tbody>
 </table>

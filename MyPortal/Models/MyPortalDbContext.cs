@@ -23,7 +23,6 @@ namespace MyPortal.Models
         public virtual DbSet<TrainingCertificate> TrainingCertificates { get; set; }
         public virtual DbSet<TrainingCourse> TrainingCourses { get; set; }
         public virtual DbSet<TrainingStatus> TrainingStatuses { get; set; }
-        public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<YearGroup> YearGroups { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -180,14 +179,6 @@ namespace MyPortal.Models
                 .HasMany(e => e.TrainingCertificates)
                 .WithOptional(e => e.TrainingStatus)
                 .HasForeignKey(e => e.Status);
-
-            modelBuilder.Entity<User>()
-                .Property(e => e.Id)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<User>()
-                .Property(e => e.PasswordHash)
-                .IsUnicode(false);
 
             modelBuilder.Entity<YearGroup>()
                 .Property(e => e.Name)

@@ -11,6 +11,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using MyPortal.Dtos.Identity;
 using MyPortal.Models;
+using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers.Api
 {
@@ -131,6 +132,52 @@ namespace MyPortal.Controllers.Api
 
             return BadRequest();
 
+        }
+
+        //New user
+        [HttpPost]
+        [Route("api/users/new")]
+        public async Task<IHttpActionResult> NewUser([FromBody] NewUserViewModel data)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var user = new ApplicationUser();
+
+            user.Id = data.Id;
+            user.UserName = data.Username;
+
+            var result = await _userManager.CreateAsync(user, data.Password);
+
+            if (result.Succeeded)
+                return Ok();
+
+            return BadRequest();
+        }
+
+        //Delete user
+        [HttpDelete]
+        [Route("api/users/{userId}/delete")]
+        public async Task<IHttpActionResult> DeleteUser(string userId)
+        {
+            var userInDb = _identity.Users.FirstOrDefault(x => x.Id == userId);
+
+            if (userInDb == null)
+                return NotFound();
+
+            var userRoles = await _userManager.GetRolesAsync(userId);
+
+            foreach (string role in userRoles)
+            {
+                await _userManager.RemoveFromRoleAsync(userId, role);
+            }
+
+            var result = await _userManager.DeleteAsync(userInDb);
+
+            if (result.Succeeded)
+                return Ok();
+
+            return BadRequest();
         }
 
     }
