@@ -1,0 +1,66 @@
+﻿@model MyPortal.ViewModels.NewUserViewModel
+@{
+    ViewBag.Title = "New User";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>New User</h2>
+<hr />
+<body>
+    @using (Ajax.BeginForm(null, null, new AjaxOptions() { Url = "" }, new { id = "newUserForm" }))
+    {
+        <div class="form-group">
+            @Html.LabelFor(x => x.Id)
+            @Html.TextBoxFor(x => x.Id, new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.Id)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.Username)
+            @Html.TextBoxFor(x => x.Username, new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.Username)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.Password)
+            @Html.PasswordFor(x => x.Password, new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.Password)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.ConfirmPassword)
+            @Html.PasswordFor(x => x.ConfirmPassword, new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.ConfirmPassword)
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    }
+</body>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#newUserForm").on("submit",
+                function (e) {
+
+                    e.preventDefault();
+
+                    var form = $("#newUserForm");
+                    var data = form.serialize();                    
+
+                    $.ajax({
+                        url: "/api/users/new",
+                        data: data,
+                        method: "POST",
+                        success: function () {
+                            toastr.success("User added");
+                            location.replace("/Staff/Admin/Users");
+                        },
+                        error: function () {
+                            toastr.error("Could not add user");
+                            form.reset();
+                        }
+                    });
+                });
+        })
+    </script>
+
+    @Scripts.Render("~/bundles/jqueryval")
+}
