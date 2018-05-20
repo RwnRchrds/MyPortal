@@ -42,7 +42,7 @@
 
         <!-- USER ROLES PANEL -->
         <div style="float: left; margin-left: 20px;" id="Results">
-            <button type="button" class="btn btn-success" id="AddRole">
+            <button type="button" class="btn btn-success" id="AddRole" data-toggle="modal" data-target="#AddRoleModal">
                 <span class="glyphicon glyphicon-plus-sign"></span> Add Role
             </button>
             <div class="panel panel-primary" style="max-width: 300px; margin-top: 8px;">
@@ -105,6 +105,36 @@
 
                 </div>
             </div>
+        </div>               
+        
+        <!-- Add Role Modal -->
+        <div id="AddRoleModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!--content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Add Role - @Model.User.UserName</h4>
+                    </div>
+                    @using (Ajax.BeginForm(null, null, new AjaxOptions(){Url=""}, new {id = "AddRoleForm"}))
+                    {
+                        <div class="modal-body">
+                            <div class="form-group">
+                                @Html.LabelFor(r => r.ChangeRole.RoleName)
+                                @Html.DropDownListFor(r => r.ChangeRole.RoleName, new SelectList(Model.Roles, "Name", "Name"), "Select Role" ,new { @class = "form-control", Name="RoleName" })
+
+                                @Html.HiddenFor(u => u.ChangePassword.UserId, new { Value = Model.User.Id, Name="UserId" })
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
         </div>
     </div>
 </body>
@@ -127,7 +157,7 @@
                                 method: "DELETE",
                                 success: function () {
                                     location.reload();
-                                    toastr.success("Role removed");
+                                    toastr.success("User removed from role");
                                 },
                                 error: function () {
                                     toastr.error("Unable to remove user from role");
@@ -157,6 +187,29 @@
                             toastr.error("Password could not be reset");
                         }
 
+                    });
+                });
+
+            $("#AddRoleForm").on("submit",
+                function(e) {
+
+                    e.preventDefault();
+
+                    var form = $("#AddRoleForm");
+
+                    $.ajax({
+                        url: "/api/users/addrole",
+                        data: form.serialize(),
+                        method: "POST",
+                        success: function() {
+                            $("#AddRoleModal").modal('toggle');                            
+                            toastr.success("User added to role");
+                            location.reload();
+                        },
+                        error: function() {
+                            $("#AddRoleModal").modal('toggle');
+                            toastr.error("Unable to add user to role");
+                        }
                     });
                 });
 

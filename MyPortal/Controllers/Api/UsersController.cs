@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
@@ -79,6 +80,57 @@ namespace MyPortal.Controllers.Api
             }
 
             return BadRequest();
+        }
+
+        //Add a role to a user
+        [HttpPost]
+        [Route("api/users/addrole")]
+        public async Task<IHttpActionResult> AddRole([FromBody] UserRoleModel data)
+        {
+            var userInDb = _identity.Users.FirstOrDefault(u => u.Id == data.UserId);
+            var roleToAdd = _identity.Roles.FirstOrDefault(r => r.Name == data.RoleName);
+
+            if (data.RoleName == "Admin")
+            {
+                if (!await _userManager.IsInRoleAsync(data.UserId, "SeniorStaff"))
+                {
+                    return BadRequest();
+                }
+            }
+
+            if (data.RoleName == "Staff" || data.RoleName == "SeniorStaff" || data.RoleName == "Admin")
+            {
+                if (await _userManager.IsInRoleAsync(data.UserId, "Student"))
+                {
+                    return BadRequest();
+                }
+            }
+
+            if (data.RoleName == "Student")
+            {
+                if (await _userManager.IsInRoleAsync(data.UserId, "Staff"))
+                {
+                    return BadRequest();
+                }
+
+                if (await _userManager.IsInRoleAsync(data.UserId, "SeniorStaff"))
+                {
+                    return BadRequest();
+                }
+            }
+
+            if (await _userManager.IsInRoleAsync(data.UserId, data.RoleName))
+            {
+                return BadRequest();
+            }
+
+            var result = await _userManager.AddToRoleAsync(data.UserId, data.RoleName);
+
+            if (result.Succeeded)
+                return Ok();
+
+            return BadRequest();
+
         }
 
     }
