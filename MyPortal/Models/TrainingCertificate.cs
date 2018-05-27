@@ -1,5 +1,3 @@
-using System.ComponentModel;
-
 namespace MyPortal.Models
 {
     using System;
@@ -24,10 +22,8 @@ namespace MyPortal.Models
 
         public virtual Staff Staff1 { get; set; }
 
-        [DisplayName("Course")]
         public virtual TrainingCourse TrainingCourse { get; set; }
 
-        [DisplayName("Status")]
         public virtual TrainingStatus TrainingStatus { get; set; }
     }
 }

@@ -19,7 +19,7 @@ namespace MyPortal.Controllers.Api
         {
             _context = new MyPortalDbContext();
         }
-
+        
         public IEnumerable<StudentDto> GetStudents()
         {
             return _context.Students

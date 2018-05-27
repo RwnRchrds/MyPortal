@@ -1,5 +1,3 @@
-using System.ComponentModel;
-
 namespace MyPortal.Models
 {
     using System;
@@ -22,6 +20,7 @@ namespace MyPortal.Models
         }
 
         [StringLength(3)]
+        [Display(Name = "ID")]
         public string Id { get; set; }
 
         [StringLength(255)]
@@ -29,14 +28,15 @@ namespace MyPortal.Models
 
         [Required]
         [StringLength(255)]
-        [DisplayName("First Name")]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
 
         [Required]
         [StringLength(255)]
-        [DisplayName("Last Name")]
+        [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
+        [Display(Name = "Is a Tutor?")]
         public bool IsTutor { get; set; }
 
         public int? Count { get; set; }

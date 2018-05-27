@@ -40,6 +40,12 @@ namespace MyPortal.App_Start
 
             Mapper.CreateMap<RoleDto, IdentityRole>();
             Mapper.CreateMap<IdentityRole, RoleDto>();
+
+            Mapper.CreateMap<RegGroupDto, RegGroup>();
+            Mapper.CreateMap<RegGroup, RegGroupDto>();
+
+            Mapper.CreateMap<ResultDto, Result>();
+            Mapper.CreateMap<Result, ResultDto>();
         }
     }
 }

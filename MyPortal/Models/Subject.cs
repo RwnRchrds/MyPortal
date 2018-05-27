@@ -1,5 +1,3 @@
-using System.ComponentModel;
-
 namespace MyPortal.Models
 {
     using System;
@@ -16,6 +14,7 @@ namespace MyPortal.Models
             Results = new HashSet<Result>();
         }
 
+        [Display(Name = "ID")]
         public int Id { get; set; }
 
         [Required]
@@ -24,20 +23,19 @@ namespace MyPortal.Models
 
         [Required]
         [StringLength(3)]
+        [Display(Name = "Head of Department")]
         public string Leader { get; set; }
 
-        //ID Referring to Subject Mapped to Results in 4Matrix --> Used to link subjects between MyPortal and 4Matrix
-        [DisplayName("4Matrix Subject ID (KS3)")]
+        [Display(Name = "4Matrix Qualification ID (KS3)")]
         public int? QsiKs3 { get; set; }
-      
-        [DisplayName("4Matrix Subject ID (KS4)")]
+
+        [Display(Name = "4Matrix Qualifcation ID (KS4)")]
         public int? QsiKs4 { get; set; }
 
-        //ID Referring to the mapped 4Matrix Qualification for Subject --> Used to cross-reference
-        [DisplayName("4Matrix Qualification ID (KS3)")]
+        [Display(Name = "4Matrix Subject ID (KS3)")]
         public int? FourMIdKs3 { get; set; }
 
-        [DisplayName("4Matrix Qualification ID (KS4)")]
+        [Display(Name = "4Matrix Subject ID (KS4)")]
         public int? FourMIdKs4 { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

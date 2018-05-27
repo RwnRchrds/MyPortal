@@ -8,9 +8,10 @@ namespace MyPortal.Models
 
     public partial class Log
     {
+        [Display(Name = "ID")]
         public int Id { get; set; }
 
-        [Required]
+        [Display(Name = "Log Type")]
         public int Type { get; set; }
 
         [Required]

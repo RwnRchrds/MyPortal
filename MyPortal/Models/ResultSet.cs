@@ -14,6 +14,7 @@ namespace MyPortal.Models
             Results = new HashSet<Result>();
         }
 
+        [Display(Name = "ID")]
         public int Id { get; set; }
 
         [Required]

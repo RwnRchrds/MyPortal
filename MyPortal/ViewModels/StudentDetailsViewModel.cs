@@ -15,5 +15,10 @@ namespace MyPortal.ViewModels
         public ChartData ChartData { get; set; }
         public IEnumerable<LogType> LogTypes { get; set; }
         public Log Log { get; set; }
+        public IEnumerable<YearGroup> YearGroups { get; set; }
+        public IEnumerable<RegGroup> RegGroups { get; set; }
+        public Result Result { get; set; }
+        public IEnumerable<ResultSet> ResultSets { get; set; }
+        public IEnumerable<Subject> Subjects { get; set; }
     }
 }

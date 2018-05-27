@@ -1,5 +1,4 @@
 namespace MyPortal.Models
-
 {
     using System;
     using System.Collections.Generic;
@@ -15,6 +14,7 @@ namespace MyPortal.Models
             Logs = new HashSet<Log>();
         }
 
+        [Display(Name = "ID")]
         public int Id { get; set; }
 
         [Required]

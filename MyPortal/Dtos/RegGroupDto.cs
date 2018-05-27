@@ -19,5 +19,8 @@ namespace MyPortal.Dtos
         [Required]
         [StringLength(3)]
         public string Tutor { get; set; }
+
+        [Required]
+        public int YearGroup { get; set; }
     }
 }

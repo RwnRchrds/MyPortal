@@ -1,4 +1,4 @@
-using System.ComponentModel;
+using MyPortal.Models.Validation;
 
 namespace MyPortal.Models
 {
@@ -17,32 +17,31 @@ namespace MyPortal.Models
             Results = new HashSet<Result>();
         }
 
-        //ID Provided to Student by SIMS .net (MIS ID) --> Student *MUST* Exist in MIS before adding to MyPortal
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        [DisplayName("SIMS ID")]
+        [Display(Name="ID")]
         public int Id { get; set; }
 
         [Required]
         [StringLength(255)]
-        [DisplayName("First Name")]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
 
         [Required]
         [StringLength(255)]
-        [DisplayName("Last Name")]
+        [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
-        //ID of Student in the 4Matrix Database --> Used for links between MyPortal and 4Matrix
         [Display(Name = "4Matrix ID")]
         public int? FourMId { get; set; }
 
-        [DisplayName("Registration Group")]
+        [Display(Name = "Reg Group")]
+        //[IsInYearGroup]
         public int RegGroup { get; set; }
 
-        [DisplayName("Year Group")]
+        [Display(Name = "Year Group")]
         public int YearGroup { get; set; }
 
-        [DisplayName("Account Balance")]
+        [Display(Name = "Account Balance")]
         public decimal AccountBalance { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

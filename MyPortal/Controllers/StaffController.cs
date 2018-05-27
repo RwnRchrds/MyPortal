@@ -79,6 +79,14 @@ namespace MyPortal.Controllers
             // TODO: [REPLACE WITH AJAX REQUEST]
             var logTypes = _context.LogTypes.ToList();
 
+            var yearGroups = _context.YearGroups.ToList();
+
+            var regGroups = _context.RegGroups.ToList();
+
+            var resultSets = _context.ResultSets.ToList();
+
+            var subjects = _context.Subjects.ToList();
+
             bool upperSchool = student.YearGroup == 11 || student.YearGroup == 10;
 
             var chartData = GetChartData(results,upperSchool);
@@ -90,7 +98,11 @@ namespace MyPortal.Controllers
                 Results = results,
                 IsUpperSchool = upperSchool,
                 ChartData = chartData,
-                LogTypes = logTypes
+                LogTypes = logTypes,
+                YearGroups = yearGroups,
+                RegGroups = regGroups,
+                ResultSets = resultSets,
+                Subjects = subjects
             };
 
             return View(viewModel);

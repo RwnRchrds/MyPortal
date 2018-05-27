@@ -209,6 +209,8 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\Api\LogsController.cs" />
+    <Compile Include="Controllers\Api\RegGroupsController.cs" />
+    <Compile Include="Controllers\Api\ResultsController.cs" />
     <Compile Include="Controllers\Api\RolesController.cs" />
     <Compile Include="Controllers\Api\StaffController.cs" />
     <Compile Include="Controllers\Api\StudentsController.cs" />
@@ -223,6 +225,7 @@
     <Compile Include="Dtos\Identity\UserDto.cs" />
     <Compile Include="Dtos\LogDto.cs" />
     <Compile Include="Dtos\RegGroupDto.cs" />
+    <Compile Include="Dtos\ResultDto.cs" />
     <Compile Include="Dtos\StaffDto.cs" />
     <Compile Include="Dtos\StudentDto.cs" />
     <Compile Include="Dtos\TrainingCertificateDto.cs" />
@@ -237,32 +240,33 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ChangePasswordModel.cs" />
-    <Compile Include="Models\Log.cs" />
-    <Compile Include="Models\LogType.cs" />
     <Compile Include="Models\ChartData.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MyPortalDbContext.cs" />
     <Compile Include="Models\UserRoleModel.cs" />
+    <Compile Include="Models\Validation\IsInYearGroup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Startup.cs" />
+    <Compile Include="Models\Log.cs" />
+    <Compile Include="Models\LogType.cs" />
     <Compile Include="Models\RegGroup.cs" />
     <Compile Include="Models\Result.cs" />
     <Compile Include="Models\ResultSet.cs" />
     <Compile Include="Models\Staff.cs" />
-    <Compile Include="Startup.cs" />
     <Compile Include="Models\Student.cs" />
     <Compile Include="Models\Subject.cs" />
     <Compile Include="Models\TrainingCertificate.cs" />
     <Compile Include="Models\TrainingCourse.cs" />
     <Compile Include="Models\TrainingStatus.cs" />
+    <Compile Include="Models\YearGroup.cs" />
     <Compile Include="ViewModels\NewStudentViewModel.cs" />
     <Compile Include="ViewModels\NewUserViewModel.cs" />
     <Compile Include="ViewModels\RandomStudentViewModel.cs" />
     <Compile Include="ViewModels\StaffDetailsViewModel.cs" />
     <Compile Include="ViewModels\StaffHomeViewModel.cs" />
     <Compile Include="ViewModels\StudentDetailsViewModel.cs" />
-    <Compile Include="Models\YearGroup.cs" />
     <Compile Include="ViewModels\StudentHomeViewModel.cs" />
     <Compile Include="ViewModels\UserDetailsViewModel.cs" />
   </ItemGroup>
@@ -532,6 +536,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Temp\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

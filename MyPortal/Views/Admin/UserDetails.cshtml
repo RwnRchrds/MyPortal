@@ -14,7 +14,7 @@
             <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#ResetPasswordModal" id="ResetPassword">
                 <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset Password
             </button>
-            <button type="button" class="btn btn-danger" id="DeleteUser">
+            <button type="button" class="btn btn-danger" data-user-id="@Model.User.Id" id="DeleteUser">
                 <span class="glyphicon glyphicon-remove-sign"></span> Delete User
             </button>
 
@@ -166,6 +166,27 @@
                         }
                     });
             });
+
+            $("#DeleteUser").on("click",
+                function() {
+                    var button = $(this);
+                    bootbox.confirm("Are you sure you want to DELETE this user?",
+                        function(result) {
+                            if (result) {
+                                $.ajax({
+                                    url: "/api/users/" + button.attr("data-user-id") + "/delete",
+                                    method: "DELETE",
+                                    success: function() {
+                                        location.replace("/Staff/Admin/Users");
+                                        toastr.success("User deleted");
+                                    },
+                                    error: function() {
+                                        toastr.error("Unable to delete user");
+                                    }
+                                });
+                            }
+                        });
+                });
 
             $("#ResetPasswordForm").on("submit",
                 function (e) {
