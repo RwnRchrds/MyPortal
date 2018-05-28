@@ -49,5 +49,31 @@ namespace MyPortal.Controllers
             return View(viewModel);
         }
 
+        //MyResults Page
+        [Route("Students/MyResults")]
+        public ActionResult Results()
+        {
+            var currentUser = Int32.Parse(User.Identity.GetUserId());
+
+            var student = _context.Students.SingleOrDefault(s => s.Id == currentUser);
+
+            if (student == null)
+                return HttpNotFound();
+
+            var resultSets = _context.ResultSets.ToList();
+
+            var currentResultSetId = _context.ResultSets.SingleOrDefault(r => r.IsCurrent).Id;
+
+            var viewModel = new StudentResultsViewModel
+            {
+                Student = student,
+                ResultSets = resultSets,
+                CurrentResultSetId = currentResultSetId
+            };
+
+            return View(viewModel);
+
+        }
+
     }
 }
