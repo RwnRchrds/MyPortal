@@ -139,6 +139,7 @@
                         method: "POST",
                         success: function () {
                             toastr.success("Result added");
+                            $("#NewResultModal").modal('toggle');
                         },
                         error: function () {
                             toastr.error("Result could not be added");
