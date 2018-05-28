@@ -22,7 +22,7 @@
                     <span class="glyphicon glyphicon-list" aria-hidden="true"></span> Edit Details
                 </button>
             }
-            <button type="button" class="btn btn-warning" id="ViewResultsButton">
+            <button type="button" class="btn btn-warning" id="ViewResultsButton" data-student-id="@Model.Student.Id">
                 <span class="glyphicon glyphicon-stats" aria-hidden="true"></span> View Results
             </button>
             <div class="panel panel-primary" style="max-width: 300px; margin-top: 8px;">
@@ -62,9 +62,6 @@
 
         <!-- MyResults Panel -->
         <div style="float: left; margin-left: 20px;" id="Results">
-            <button type="button" class="btn btn-success" id="NewResultButton" data-toggle="modal" data-target="#NewResultModal">
-                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> New Result
-            </button>
             <div class="panel panel-primary" style="max-width: 300px; margin-top: 8px;">
                 <div class="panel-heading">MyResults</div>
                 @if (!Model.Results.Any())
@@ -361,43 +358,6 @@
         </div>
     </div>
 </div>
-
-<div id="NewResultModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <!--CONTENT-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">New Result - @Model.Student.LastName, @Model.Student.FirstName</h4>
-            </div>
-            @using (Ajax.BeginForm(null, null, null, new {id = "NewResultForm"}))
-            {
-                <div class="modal-body">
-                    <div class="form-group">
-                        @Html.LabelFor(x => x.Result.ResultSet)
-                        @Html.DropDownListFor(x => x.Result.ResultSet, new SelectList(Model.ResultSets, "Id", "Name", Model.ResultSets.SingleOrDefault(y => y.IsCurrent).Id), new {@class="form-control", Name="ResultSet"})
-                        @Html.ValidationMessageFor(x => x.Result.ResultSet)
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(x => x.Result.Subject)
-                        @Html.DropDownListFor(x => x.Result.Subject, new SelectList(Model.Subjects,"Id","Name"),"Select a Subject", new{@class="form-control", Name="Subject"})
-                        @Html.ValidationMessageFor(x => x.Result.Subject)
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(x => x.Result.Value)
-                        @Html.TextBoxFor(x => x.Result.Value, new {@class="form-control", Name="Value"})
-                        @Html.ValidationMessageFor(x => x.Result.Value)
-                    </div>
-                    @Html.HiddenFor(x => x.Result.Student, new { Value = Model.Student.Id, Name="Student" })
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
-                </div>
-            }
-        </div>
-    </div>
-</div>
 </body>
 
 @section scripts
@@ -531,30 +491,12 @@
                 function() {
                     $(this).find('form').trigger('reset');
                 }); 
-            $('#NewResultModal').on('hidden.bs.modal',
+
+            //View Results
+            $("#ViewResultsButton").on("click",
                 function() {
-                    $(this).find('form').trigger('reset');
-                });
-
-            //New Result Submit
-            $("#NewResultForm").on("submit",
-                function(e) {
-                    var form = $("#NewResultForm");
-
-                    e.preventDefault();
-
-                    $.ajax({
-                        url: "/api/results/new",
-                        data: form.serialize(),
-                        method: "POST",
-                        success: function() {
-                            toastr.success("Result added");
-                            location.reload();
-                        },
-                        error: function() {
-                            toastr.error("Result could not be added");
-                        }
-                    });
+                    var button = $(this);
+                    location.replace("/Staff/Students/" + button.attr("data-student-id") + "/Results");
                 });
         });
     </script>

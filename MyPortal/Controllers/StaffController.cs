@@ -119,6 +119,8 @@ namespace MyPortal.Controllers
 
             var resultSets = _context.ResultSets.ToList();
 
+            var subjects = _context.Subjects.ToList();
+
             if (student == null)
                 return HttpNotFound();
 
@@ -130,7 +132,8 @@ namespace MyPortal.Controllers
             {
                 Student = student,
                 CurrentResultSetId = currentResultSet.Id,
-                ResultSets = resultSets
+                ResultSets = resultSets,
+                Subjects = subjects            
             };
 
             return View(viewModel);

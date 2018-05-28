@@ -46,6 +46,9 @@ namespace MyPortal.App_Start
 
             Mapper.CreateMap<ResultDto, Result>();
             Mapper.CreateMap<Result, ResultDto>();
+
+            Mapper.CreateMap<SubjectDto, Subject>();
+            Mapper.CreateMap<Subject, SubjectDto>();
         }
     }
 }
