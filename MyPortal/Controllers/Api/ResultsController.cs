@@ -20,6 +20,7 @@ namespace MyPortal.Controllers.Api
             _context = new MyPortalDbContext();
         }
 
+        [HttpPost]
         [Route("api/results/new")]
         public void AddResult(ResultDto data)
         {
@@ -29,7 +30,20 @@ namespace MyPortal.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
 
             _context.Results.Add(Mapper.Map<ResultDto, Result>(data));
-            _context.SaveChanges();
+            _context.SaveChanges();                       
+        }
+
+        [HttpGet]
+        [Route("api/results/fetch")]
+        public IEnumerable<ResultDto> GetResults(int student, int resultset)
+        {
+            var results = _context.Results
+                .Where(r => r.Student == student && r.ResultSet == resultset)
+                .ToList()
+                .Select(Mapper.Map<Result, ResultDto>);
+
+            return results;
+
         }
     }
 }

@@ -226,8 +226,10 @@
     <Compile Include="Dtos\LogDto.cs" />
     <Compile Include="Dtos\RegGroupDto.cs" />
     <Compile Include="Dtos\ResultDto.cs" />
+    <Compile Include="Dtos\ResultSetDto.cs" />
     <Compile Include="Dtos\StaffDto.cs" />
     <Compile Include="Dtos\StudentDto.cs" />
+    <Compile Include="Dtos\SubjectDto.cs" />
     <Compile Include="Dtos\TrainingCertificateDto.cs" />
     <Compile Include="Dtos\TrainingCourseDto.cs" />
     <Compile Include="Dtos\YearGroupDto.cs" />
@@ -268,6 +270,7 @@
     <Compile Include="ViewModels\StaffHomeViewModel.cs" />
     <Compile Include="ViewModels\StudentDetailsViewModel.cs" />
     <Compile Include="ViewModels\StudentHomeViewModel.cs" />
+    <Compile Include="ViewModels\StudentResultsViewModel.cs" />
     <Compile Include="ViewModels\UserDetailsViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -533,6 +536,7 @@
     <Content Include="Views\Admin\Users.cshtml" />
     <Content Include="Views\Admin\UserDetails.cshtml" />
     <Content Include="Views\Admin\NewUser.cshtml" />
+    <Content Include="Views\Staff\StudentResults.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

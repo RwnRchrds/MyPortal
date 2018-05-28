@@ -108,6 +108,35 @@ namespace MyPortal.Controllers
             return View(viewModel);
         }
 
+        //Menu | Students | X | [View Results] --> Student Results (for Student X)
+        //Accessible by [Staff] or [SeniorStaff]
+        [Route("Staff/Students/{id}/Results")]
+        public ActionResult StudentResults(int id)
+        {
+            var student = _context.Students.SingleOrDefault(s => s.Id == id);
+
+            var currentResultSet = _context.ResultSets.SingleOrDefault(r => r.IsCurrent);
+
+            var resultSets = _context.ResultSets.ToList();
+
+            if (student == null)
+                return HttpNotFound();
+
+            if (currentResultSet == null)
+                return Content("ERROR: No Current Result Set Found");
+
+
+            var viewModel = new StudentResultsViewModel
+            {
+                Student = student,
+                CurrentResultSetId = currentResultSet.Id,
+                ResultSets = resultSets
+            };
+
+            return View(viewModel);
+
+        }
+
         // Menu | Staff | X --> Student Details (for Staff X)
         //Accessible by [SeniorStaff] only
         [Authorize(Roles = "SeniorStaff")]
