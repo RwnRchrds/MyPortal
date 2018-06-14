@@ -12,6 +12,7 @@ using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers
 {
+    //MyPortal Admin Portal Controller --> Controller methods for Admin Portal
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {

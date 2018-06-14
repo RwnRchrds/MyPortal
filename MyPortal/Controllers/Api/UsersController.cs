@@ -99,6 +99,14 @@ namespace MyPortal.Controllers.Api
                 }
             }
 
+            if (data.RoleName == "Finance")
+            {
+                if (!await _userManager.IsInRoleAsync(data.UserId, "SeniorStaff"))
+                {
+                    return BadRequest();
+                }
+            }
+
             if (data.RoleName == "Staff" || data.RoleName == "SeniorStaff" || data.RoleName == "Admin")
             {
                 if (await _userManager.IsInRoleAsync(data.UserId, "Student"))
@@ -147,7 +155,7 @@ namespace MyPortal.Controllers.Api
             user.Id = data.Id;
             user.UserName = data.Username;
 
-            var result = await _userManager.CreateAsync(user, data.Password);
+            var result = await _userManager.CreateAsync(user, data.Password);           
 
             if (result.Succeeded)
                 return Ok();

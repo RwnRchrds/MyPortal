@@ -219,6 +219,7 @@
     <Compile Include="Controllers\Api\UsersController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\PosController.cs" />
     <Compile Include="Controllers\StaffController.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
     <Compile Include="Dtos\Identity\RoleDto.cs" />
@@ -538,6 +539,9 @@
     <Content Include="Views\Admin\NewUser.cshtml" />
     <Content Include="Views\Staff\StudentResults.cshtml" />
     <Content Include="Views\Students\Results.cshtml" />
+    <Content Include="Views\Shared\_NavBarPOS.cshtml" />
+    <Content Include="Views\Shared\_LayoutPOS.cshtml" />
+    <Content Include="Views\POS\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

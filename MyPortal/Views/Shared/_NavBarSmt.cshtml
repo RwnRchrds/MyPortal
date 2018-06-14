@@ -24,6 +24,11 @@
                             <li role="separator" class="divider"></li>
                             <li>@Html.ActionLink("MyPortal Admin", "Index","Admin")</li>
                         }
+                        @if (User.IsInRole("Finance"))
+                        {
+                            <li role="separator" class="divider"></li>
+                            <li>@Html.ActionLink("POS","Index","Pos")</li>
+                        }
                     </ul>
                 </li>
                 <li class="dropdown">

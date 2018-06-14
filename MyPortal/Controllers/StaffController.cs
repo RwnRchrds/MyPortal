@@ -11,7 +11,8 @@ using MyPortal.Models;
 using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers
-{    
+{   
+    //MyPortal Staff Controller --> Controller Methods for Staff Areas
     [Authorize(Roles = "Staff, SeniorStaff")]
     public class StaffController : Controller
     {

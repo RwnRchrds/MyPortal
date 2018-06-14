@@ -9,6 +9,7 @@ using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers
 {
+    //MyPortal Students Controller --> Controller methods for Student areas
     [Authorize(Roles = "Student")]
     public class StudentsController : Controller
     {
