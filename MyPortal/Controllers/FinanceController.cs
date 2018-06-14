@@ -8,11 +8,11 @@ using MyPortal.Models;
 namespace MyPortal.Controllers
 {
     [Authorize(Roles = "Finance")]
-    public class PosController : Controller
+    public class FinanceController : Controller
     {
         private MyPortalDbContext _context;
 
-        public PosController()
+        public FinanceController()
         {
             _context = new MyPortalDbContext();
         }
@@ -22,7 +22,7 @@ namespace MyPortal.Controllers
             _context.Dispose();
         }
 
-        [Route("Staff/POS")]
+        [Route("Staff/Finance")]
         public ActionResult Index()
         {
             return View();
