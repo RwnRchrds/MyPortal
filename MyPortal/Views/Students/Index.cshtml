@@ -176,13 +176,9 @@
     <!-- MyLogs Panel -->
     <div class="container">
         <div>
-            <div class="panel panel-primary" style="width: 1000px; margin-top: 8px;" id="Logs">
+            <div class="panel panel-primary" style="width: 1000px; margin-top: 8px;" id="LogsPanel">
                 <div class="panel-heading">MyLogs</div>
-                @if (!Model.Logs.Any())
-                {<text><div class="panel-body">No logs to display.</div></text>}
-            else
-            {
-                <table class="table table-bordered" id="logs">
+                <table class="table table-bordered" id="logs" data-student-id="@Model.Student.Id">
                     <thead>
                         <tr style="background-color: #18bc9c;">
                             <th style="color: whitesmoke;">Date</th>
@@ -191,17 +187,7 @@
                             <th style="color: whitesmoke;">Message</th>
                         </tr>
                     </thead>
-                    @foreach (var log in Model.Logs)
-                    {
-                        <tr class="logentry">
-                            <td>@log.Date.ToShortDateString()</td>
-                            <td>@log.Staff.Title @log.Staff.FirstName.Substring(0, 1) @log.Staff.LastName</td>
-                            <td class="logtype">@log.LogType.Name</td>
-                            <td>@log.Message</td>
-                        </tr>
-                    }
-                </table>
-            }
+                </table>            
             </div>
         </div>
     </div>
@@ -212,41 +198,78 @@
 {
     <script>
         //Script run when page loads
-        $(document).ready(function () {
+        $(document).ready(function () {       
+            function loadLogTable() {
+                var logsTable = $("#logs");
+                $("#logs").DataTable({
+                    ajax: {
+                        url: "/api/logs/" + logsTable.attr("data-student-id"),
+                        dataSrc: "",
+                        method: "GET"
+                    },
+                    columns: [
+                        {
+                            data: "date",
+                            render: function (data) {
+                                var date = new Date(data);
+                                return date.toLocaleDateString();
+                            }
 
-            //Colour Code Logs
-            $(".logentry").each(function () {
-                var log = (this);
-                var logType = $(this).find(".logtype").html();
+                        },
+                        {
+                            data: "staff.lastName",
+                            render: function (data, type, log) {
+                                return log.staff.title +
+                                    " " +
+                                    log.staff.firstName.substring(0, 1) +
+                                    " " +
+                                    log.staff.lastName;
+                            }
+                        },
+                        {
+                            data: "logType.name"
+                        },
+                        {
+                            data: "message"
+                        }
+                    ],
+                    paging: false,
+                    ordering: false,
+                    searching: false,
+                    info: false,
+                    "createdRow": function (row, data, dataIndex) {
+                        if (data.logType.name == "Academic Support") {
+                            $(row).addClass("logAcademicSupport");
+                        }
 
-                if (logType == "Academic Support") {
-                    $(log).addClass("logAcademicSupport");
-                }
+                        if (data.logType.name == "Behaviour Log") {
+                            $(row).addClass("logBehaviour");
+                        }
 
-                if (logType == "Behaviour Log") {
-                    $(log).addClass("logBehaviour");
-                }
+                        if (data.logType.name == "EOY Report") {
+                            $(row).addClass("logEoy");
+                        }
 
-                if (logType == "EOY Report") {
-                    $(log).addClass("logEoy");
-                }
+                        if (data.logType.name == "Praise") {
+                            $(row).addClass("logPraise");
+                        }
 
-                if (logType == "Praise") {
-                    $(log).addClass("logPraise");
-                }
+                        if (data.logType.name == "SEN Note") {
+                            $(row).addClass("logSen");
+                        }
 
-                if (logType == "SEN Note") {
-                    $(log).addClass("logSen");
-                }
+                        if (data.logType.name == "Student Feed") {
+                            $(row).addClass("logStudent");
+                        }
 
-                if (logType == "Student Feed") {
-                    $(log).addClass("logStudent");
-                }
+                        if (data.logType.name == "Tutor Note") {
+                            $(row).addClass("logTutor");
+                        }
+                    }
+                });
+            }
 
-                if (logType == "Tutor Note") {
-                    $(log).addClass("logTutor");
-                }
-            });
+            loadLogTable();
         });
     </script>
 

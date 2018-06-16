@@ -72,12 +72,10 @@ namespace MyPortal.Controllers
             if (student == null)
                 return HttpNotFound();
 
-            // TODO: [REPLACE WITH DATATABLE??]
-            var logs = _context.Logs.Where(l => l.Student == id).OrderByDescending(x => x.Date).ToList();
+            //var logs = _context.Logs.Where(l => l.Student == id).OrderByDescending(x => x.Date).ToList();
 
             var results = _context.Results.Where(r => r.Student == id && r.ResultSet1.IsCurrent == true).ToList();            
 
-            // TODO: [REPLACE WITH AJAX REQUEST]
             var logTypes = _context.LogTypes.ToList();
 
             var yearGroups = _context.YearGroups.ToList();
@@ -94,7 +92,7 @@ namespace MyPortal.Controllers
 
             var viewModel = new StudentDetailsViewModel
             {
-                Logs = logs,
+                //Logs = logs,
                 Student = student,
                 Results = results,
                 IsUpperSchool = upperSchool,
@@ -306,7 +304,8 @@ namespace MyPortal.Controllers
         }
 
         // HTTP POST request for saving/creating logs using HTML form 
-        [HttpPost]
+        // TODO: [REPLACE WITH AJAX REQUEST]
+        [HttpPost]        
         public ActionResult SaveLog(Log log)
         {
             if (log.Id == 0)

@@ -225,6 +225,7 @@
     <Compile Include="Dtos\Identity\RoleDto.cs" />
     <Compile Include="Dtos\Identity\UserDto.cs" />
     <Compile Include="Dtos\LogDto.cs" />
+    <Compile Include="Dtos\LogTypeDto.cs" />
     <Compile Include="Dtos\RegGroupDto.cs" />
     <Compile Include="Dtos\ResultDto.cs" />
     <Compile Include="Dtos\ResultSetDto.cs" />

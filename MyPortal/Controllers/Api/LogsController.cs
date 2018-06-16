@@ -22,7 +22,10 @@ namespace MyPortal.Controllers.Api
         [Route("api/logs/{student}")]
         public IEnumerable<LogDto> GetLogs(int student)
         {
-            return _context.Logs.Where(l => l.Student == student).ToList().Select(Mapper.Map<Log, LogDto>);
+            return _context.Logs.Where(l => l.Student == student)
+                .OrderByDescending(x => x.Date)
+                .ToList()
+                .Select(Mapper.Map<Log, LogDto>);
         }
 
         [Route("api/logs/log/{id}")]
@@ -37,6 +40,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [Route("api/logs/new")]
         public LogDto CreateLog(LogDto logDto)
         {
             if (!ModelState.IsValid)

@@ -25,5 +25,11 @@ namespace MyPortal.Dtos
 
         [Column(TypeName = "date")]
         public DateTime Date { get; set; }
+
+        public LogTypeDto LogType { get; set; }
+
+        public StaffDto Staff { get; set; }
+
+        public StudentDto Student1 { get; set; }
     }
 }

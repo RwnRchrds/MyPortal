@@ -49,6 +49,9 @@ namespace MyPortal.App_Start
 
             Mapper.CreateMap<SubjectDto, Subject>();
             Mapper.CreateMap<Subject, SubjectDto>();
+
+            Mapper.CreateMap<LogTypeDto, LogType>();
+            Mapper.CreateMap<LogType, LogTypeDto>();
         }
     }
 }
