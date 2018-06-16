@@ -24,14 +24,14 @@ namespace MyPortal
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
 
-        protected void Application_BeginRequest()
+        /*protected void Application_BeginRequest()
         {
             if (Request.Url.Scheme == "http")
             {
                 var path = "https://" + Request.Url.Host + Request.Url.PathAndQuery;
                 Response.Status = "301 Moved Permanently";
-                Response.AddHeader("Location", path);         
+                Response.AddHeader("Location", path);        
             }
-        }
+        }*/
     }
 }

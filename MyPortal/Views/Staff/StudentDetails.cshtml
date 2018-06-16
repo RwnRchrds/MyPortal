@@ -187,7 +187,7 @@
     <!-- MyLogs Panel -->
     <div class="container">
         <div>
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#LogModal">
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewLogModal">
                 <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> New Log
             </button>
             <div class="panel panel-primary" style="max-width: 1000px; margin-top: 8px;" id="LogsPanel">
@@ -222,18 +222,18 @@
                     <div class="modal-body">
                         <div class="form-group">
                             @Html.LabelFor(l => l.Log.Type)
-                            @Html.DropDownListFor(l => l.Log.Type, new SelectList(Model.LogTypes, "Id", "Name"), "Select Log Type", new { @class = "form-control" })
+                            @Html.DropDownListFor(l => l.Log.Type, new SelectList(Model.LogTypes, "Id", "Name"), "Select Log Type", new { @class = "form-control", @Name="Type" })
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(l => l.Log.Message)
-                            @Html.TextAreaFor(l => l.Log.Message, new { @class = "form-control", @style = "max-width:500px" })
+                            @Html.TextAreaFor(l => l.Log.Message, new { @class = "form-control", @style = "max-width:500px", @Name="Message" })
                         </div>
                         <div class="form-group">
-                            @Html.HiddenFor(l => l.Log.Student, new { Value = Model.Student.Id })
+                            @Html.HiddenFor(l => l.Log.Student, new { Value = Model.Student.Id, @Name="Student" })
                         </div>
                         <div class="form-group">
-                            @Html.HiddenFor(l => l.Log.Date, new { Value = DateTime.Now.ToString(CultureInfo.CreateSpecificCulture("en-GB")) })
-                            @Html.HiddenFor(l => l.Log.Author, new { Value = User.Identity.GetUserId() })
+                            @Html.HiddenFor(l => l.Log.Date, new { Value = DateTime.Now, @Name="Date" })
+                            @Html.HiddenFor(l => l.Log.Author, new { Value = User.Identity.GetUserId(), @Name="Author" })
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -448,6 +448,11 @@
                         if (data.logType.name == "Tutor Note") {
                             $(row).addClass("logTutor");
                         }
+
+
+                        if (data.logType.name == "Medical Event") {
+                            $(row).addClass("logMedical");
+                        }
                     }
                 });
             }
@@ -555,7 +560,7 @@
                     e.preventDefault();
 
                     $.ajax({
-                        url: "api/logs/new",
+                        url: "/api/logs/new",
                         data: $("#NewLogForm").serialize(),
                         method: "POST",
                         success: function() {

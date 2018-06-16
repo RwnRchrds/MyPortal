@@ -19,6 +19,7 @@ namespace MyPortal.Controllers.Api
             _context = new MyPortalDbContext();
         }
 
+        [HttpGet]
         [Route("api/logs/{student}")]
         public IEnumerable<LogDto> GetLogs(int student)
         {
@@ -28,6 +29,7 @@ namespace MyPortal.Controllers.Api
                 .Select(Mapper.Map<Log, LogDto>);
         }
 
+        [HttpGet]
         [Route("api/logs/log/{id}")]
         public LogDto GetLog(int id)
         {
@@ -41,18 +43,11 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("api/logs/new")]
-        public LogDto CreateLog(LogDto logDto)
+        public void CreateLog(LogDto data)
         {
-            if (!ModelState.IsValid)
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
-
-            var log = Mapper.Map<LogDto, Log>(logDto);
+            var log = Mapper.Map<LogDto, Log>(data);
             _context.Logs.Add(log);
             _context.SaveChanges();
-
-            logDto.Id = log.Id;
-
-            return logDto;
         }
 
         [Route("api/logs/log/edit")]
