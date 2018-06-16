@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using AutoMapper;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -13,11 +10,16 @@ namespace MyPortal.Controllers.Api
 {
     public class RolesController : ApiController
     {
-        private ApplicationDbContext _identity;
+        private readonly ApplicationDbContext _identity;
 
         public RolesController()
         {
             _identity = new ApplicationDbContext();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _identity.Dispose();
         }
 
         [HttpGet]

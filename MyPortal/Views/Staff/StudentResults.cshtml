@@ -65,6 +65,8 @@
     </div>
 </div>
 
+<button type="button" class="btn btn-primary" data-student-id="@Model.Student.Id" id="backButton">Back</button>
+
 @section scripts
 {
     <script>
@@ -145,6 +147,11 @@
                             toastr.error("Result could not be added");
                         }
                     });
+                });
+
+            $("#backButton").on("click",
+                function() {
+                    location.replace("/Staff/Students/" + $("#backButton").attr("data-student-id"));
                 });
         });
     </script>

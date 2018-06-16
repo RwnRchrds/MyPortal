@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
@@ -12,11 +10,16 @@ namespace MyPortal.Controllers.Api
 {
     public class LogsController : ApiController
     {
-        private MyPortalDbContext _context;
+        private readonly MyPortalDbContext _context;
 
         public LogsController()
         {
             _context = new MyPortalDbContext();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _context.Dispose();
         }
 
         [HttpGet]
@@ -63,7 +66,7 @@ namespace MyPortal.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
             //var c = Mapper.Map(logDto, logInDb);
-          
+
             logInDb.Type = logDto.Type;
             logInDb.Message = logDto.Message;
 
