@@ -92,5 +92,44 @@ namespace MyPortal.Controllers.Api
             _context.Students.Remove(studentInDb);
             _context.SaveChanges();
         }
+
+        [HttpPost]
+        [Route("api/students/credit")]
+        public void CreditAccount(BalanceAdjustment data)
+        {
+            if (data.Amount <= 0)
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+
+
+
+            var studentInDb = _context.Students.SingleOrDefault(s => s.Id == data.Student);
+
+            if (studentInDb == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            studentInDb.AccountBalance += data.Amount;
+
+            _context.SaveChanges();
+        }
+
+        [HttpPost]
+        [Route("api/students/debit")]
+        public void DebitAccount(BalanceAdjustment data)
+        {
+            if (data.Amount <= 0)
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+
+            var studentInDb = _context.Students.SingleOrDefault(s => s.Id == data.Student);
+
+            if (studentInDb == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            if (studentInDb.AccountBalance < data.Amount)
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+
+            studentInDb.AccountBalance -= data.Amount;
+
+            _context.SaveChanges();
+        }
     }
 }

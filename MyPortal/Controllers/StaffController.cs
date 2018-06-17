@@ -318,7 +318,6 @@ namespace MyPortal.Controllers
             studentInDb.LastName = student.LastName;
             studentInDb.YearGroup = student.YearGroup;
             studentInDb.RegGroup = student.RegGroup;
-            studentInDb.AccountBalance = student.AccountBalance;
 
             _context.SaveChanges();
             return RedirectToAction("StudentDetails", "Staff", new {id = student.Id});

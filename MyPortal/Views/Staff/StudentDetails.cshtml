@@ -320,11 +320,6 @@
                         @Html.DropDownListFor(s => s.Student.RegGroup, new SelectList(Model.RegGroups, "Id", "Name"), "Select Reg Group", new { @class = "form-control", id = "regGroupList" })
                         @Html.ValidationMessageFor(s => s.Student.RegGroup)
                     </div>
-                    <div class="form-group">
-                        @Html.LabelFor(s => s.Student.AccountBalance)
-                        @Html.TextBoxFor(s => s.Student.AccountBalance, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(s => s.Student.AccountBalance)
-                    </div>
                     @Html.HiddenFor(s => s.Student.Id)
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -358,8 +353,7 @@
                                     url: "/api/logs/log/" + button.attr("data-log-id"),
                                     method: "DELETE",
                                     success: function() {
-                                        $("#logs").DataTable().destroy();
-                                        loadLogTable();
+                                        $("#logs").DataTable().ajax.reload();
                                         toastr.success("Log Deleted");
                                     },
                                     error: function() {
@@ -473,8 +467,7 @@
                         success: function () {
                             $("#EditLogModal").modal('hide');
                             toastr.success("Log Updated");
-                            $("#logs").DataTable().destroy();
-                            loadLogTable();
+                            $("#logs").DataTable().ajax.reload();
                         },
                         error: function() {
                             toastr.error("An Error Occurred Updating Log");
@@ -569,8 +562,7 @@
                         success: function() {
                             $("#NewLogModal").modal('hide');
                             toastr.success("Log Added");
-                            $("#logs").DataTable().destroy();
-                            loadLogTable();
+                            $("#logs").DataTable().ajax.reload();
                         },
                         error: function() {
                             toastr.error("Could Not Add Log");

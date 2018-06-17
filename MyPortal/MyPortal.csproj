@@ -245,13 +245,14 @@
       <DependentUpon>201803051926258_InitialModel.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\BalanceAdjustment.cs" />
     <Compile Include="Models\ChangePasswordModel.cs" />
     <Compile Include="Models\ChartData.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\UserRoleModel.cs" />
-    <Compile Include="Models\Validation\IsInYearGroup.cs" />
+    <Compile Include="Models\Validation\BalanceNotNegative.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Models\Log.cs" />
@@ -269,6 +270,7 @@
     <Compile Include="Models\TrainingCourse.cs" />
     <Compile Include="Models\TrainingStatus.cs" />
     <Compile Include="Models\YearGroup.cs" />
+    <Compile Include="ViewModels\AccountsViewModel.cs" />
     <Compile Include="ViewModels\NewProductViewModel.cs" />
     <Compile Include="ViewModels\NewStudentViewModel.cs" />
     <Compile Include="ViewModels\NewUserViewModel.cs" />
@@ -551,6 +553,7 @@
     <Content Include="Views\Finance\Index.cshtml" />
     <Content Include="Views\Finance\Products.cshtml" />
     <Content Include="Views\Finance\NewProduct.cshtml" />
+    <Content Include="Views\Finance\Accounts.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

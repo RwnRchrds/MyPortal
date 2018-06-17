@@ -35,5 +35,11 @@ namespace MyPortal.Controllers
         {
             return View();
         }
+
+        [Route("Staff/Finance/Accounts")]
+        public ActionResult Accounts()
+        {
+            return View();
+        }
     }
 }

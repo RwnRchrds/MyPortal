@@ -22,6 +22,7 @@ namespace MyPortal.Models
         [Display(Name = "Description")]
         public string Description { get; set; }
 
+        [Required]
         [Display(Name = "Price")]
         public decimal Price { get; set; }
 

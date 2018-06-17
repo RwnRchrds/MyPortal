@@ -1,3 +1,5 @@
+using MyPortal.Models.Validation;
+
 namespace MyPortal.Models
 {
     using System;
@@ -40,6 +42,7 @@ namespace MyPortal.Models
         public int YearGroup { get; set; }
 
         [Display(Name = "Account Balance")]
+        [BalanceNotNegative]
         public decimal AccountBalance { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

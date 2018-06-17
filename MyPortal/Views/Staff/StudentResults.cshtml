@@ -74,15 +74,13 @@
 
             var student = $("#results").attr("data-student-id");
 
-            var resultset = $("#selectedResultSet").val();
-
-            $("#results").DataTable({
-                ajax: {
-                    url: "/api/results/fetch",
-                    data: {
-                        'student': student,
-                        'resultset': resultset
-                    },
+                $("#results").DataTable({
+                    ajax: {
+                        url: "/api/results/fetch",
+                        data: function(d) {
+                            d.student = student;
+                            d.resultSet = $("#selectedResultSet").val();
+                        },
                     dataSrc: ""
                 },
                 columns: [
@@ -103,31 +101,7 @@
             });
 
             $("#selectedResultSet").on("change", function () {
-                $("#results").DataTable().destroy();
-                var resultset = $("#selectedResultSet").val();
-                $("#results").DataTable({
-                    ajax: {
-                        url: "/api/results/fetch",
-                        data: {
-                            'student': student,
-                            'resultset': resultset
-                        },
-                        dataSrc: "",
-                        method: "GET"
-                    },
-                    columns: [
-                        {
-                            data: "subject1.name"
-                        },
-                        {
-                            data: "value"
-                        }
-                    ],
-                    paging: false,
-                    ordering: false,
-                    searching: false,
-                    info: false
-                });
+                $("#results").DataTable().ajax.reload();              
             });
 
 

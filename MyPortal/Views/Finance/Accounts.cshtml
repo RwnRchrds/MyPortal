@@ -1,0 +1,210 @@
+﻿@model MyPortal.ViewModels.AccountsViewModel
+@{
+    ViewBag.Title = "Accounts";
+    Layout = "~/Views/Shared/_LayoutFinance.cshtml";
+}
+
+<h2>Accounts</h2>
+
+<table class="table table-bordered table-hover" id="students">
+    <thead>
+        <tr>
+            <th>Student</th>
+            <th>Year Group</th>
+            <th>Reg Group</th>
+            <th>Balance</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<div id="CreditModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" style="color: green">Credit Account</h4>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions() { Url = "" }, new { id = "CreditForm" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.BalanceAdjustment.Amount)
+                        @Html.TextBoxFor(x => x.BalanceAdjustment.Amount, new { @class = "form-control", Name = "Amount" })
+                        @Html.ValidationMessageFor(x => x.BalanceAdjustment.Amount)
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(x => x.BalanceAdjustment.Student, new { Name = "Student", id = "studentIdControlCredit" })
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+<div id="DebitModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" style="color: red">Debit Account</h4>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions() { Url = "" }, new { id = "DebitForm" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.BalanceAdjustment.Amount)
+                        @Html.TextBoxFor(x => x.BalanceAdjustment.Amount, new { @class = "form-control", Name = "Amount" })
+                        @Html.ValidationMessageFor(x => x.BalanceAdjustment.Amount)
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(x => x.BalanceAdjustment.Student, new { Name = "Student", id = "studentIdControlDebit" })
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            function loadAccounts() {
+                $("#students").DataTable({
+                    ajax: {
+                        url: "/api/students",
+                        dataSrc: ""
+                    },
+                    columns: [
+                        {
+                            data: "firstName",
+                            render: function (data, type, student) {
+                                return student.lastName + ", " + student.firstName;
+                            }
+                        },
+                        {
+                            data: "yearGroup1.name"
+                        },
+                        {
+                            data: "regGroup1.name"
+                        },
+                        {
+                            data: "accountBalance",
+                            render: $.fn.dataTable.render.number(',', '.', 2, '£')
+                        },
+                        {
+                            data: "id",
+                            render: function (data) {
+                                return "<button type='button' class='btn btn-xs btn-danger js-debit' data-student-id=" +
+                                    data +
+                                    "><span class='glyphicon glyphicon-minus' aria-hidden='true'></span></button> " +
+                                    "<button type='button' class='btn btn-xs btn-success js-credit' data-student-id=" +
+                                    data +
+                                    "><span class='glyphicon glyphicon-plus' aria-hidden='true'></span></button>";
+                            }
+                        }
+                    ]
+                });
+            }
+
+            //Show Credit Modal on Click
+            $("#students").on("click",
+                ".js-credit",
+                function () {
+                    var button = $(this);
+                    var studentId = button.attr("data-student-id");
+
+                    $("#studentIdControlCredit").val(studentId);
+
+                    $("#CreditModal").modal('toggle');
+                });
+
+            //Show Debit Modal on Click
+            $("#students").on("click",
+                ".js-debit",
+                function () {
+                    var button = $(this);
+                    var studentId = button.attr("data-student-id");
+
+                    $("#studentIdControlDebit").val(studentId);
+
+                    $("#DebitModal").modal('toggle');
+                });
+
+            //Credit on Submit
+            $("#CreditForm").on("submit",
+                function (e) {
+                    e.preventDefault();
+
+                    $.ajax({
+                        url: "/api/students/credit",
+                        data: $("#CreditForm").serialize(),
+                        method: "POST",
+                        success: function () {
+                            $("#CreditModal").modal('hide');
+                            toastr.success("Account credited");
+                            $("#students").DataTable().ajax.reload();
+                        },
+                        error: function () {
+                            $("#CreditModal").modal('hide');
+                            toastr.error("Could not credit account");
+                        }
+                    });
+                });
+
+            //Debit on Submit
+            $("#DebitForm").on("submit",
+                function (e) {
+                    e.preventDefault();
+
+                    $.ajax({
+                        url: "/api/students/debit",
+                        data: $("#DebitForm").serialize(),
+                        method: "POST",
+                        success: function () {
+                            $("#DebitModal").modal('hide');
+                            toastr.success("Account debited");
+                            $("#students").DataTable().ajax.reload();
+                        },
+                        error: function () {
+                            $("#CreditModal").modal('hide');
+                            toastr.error("Could not credit account");
+                        }
+                    });
+                });
+
+            //Clear Modal When Closed
+            $('#CreditModal').on('hidden.bs.modal',
+                function () {
+                    $(this).find('form').trigger('reset');
+                });
+            $('#DebitModal').on('hidden.bs.modal',
+                function () {
+                    $(this).find('form').trigger('reset');
+                });
+
+            loadAccounts();
+        });
+    </script>
+
+    @Scripts.Render("~/bundles/staff")
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
