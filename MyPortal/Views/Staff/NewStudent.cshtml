@@ -39,11 +39,21 @@
     </div>
     @Html.HiddenFor(s => s.Student.AccountBalance, new { Value = 0.00 })
     @Html.AntiForgeryToken()
+    <button type="button" class="btn btn-primary" id="backButton">Back</button>
     <button type="submit" class="btn btn-primary">Save</button>
 }
 
 @section scripts
 {
+    <script>
+        $(document).ready(function() {
+            $("#backButton").on("click",
+                function() {
+                    location.replace("/Staff/Students");
+                });
+        });
+    </script>
+
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/staff")
 }

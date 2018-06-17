@@ -11,23 +11,23 @@
     {
         <div class="form-group">
             @Html.LabelFor(x => x.Product.Description)
-            @Html.TextBoxFor(x => x.Product.Description, new { @class = "form-control", Name="Description" })
+            @Html.TextBoxFor(x => x.Product.Description, new { @class = "form-control", @Name = "Description" })
             @Html.ValidationMessageFor(x => x.Product.Description)
         </div>
         <div class="form-group">
             @Html.LabelFor(x => x.Product.Price)
-            @Html.PasswordFor(x => x.Product.Price, new { @class = "form-control" })
-            @Html.ValidationMessageFor(x => x.Product.Price)
+            @Html.TextBoxFor(x => x.Product.Price, new { @class = "form-control", @Name="Price" })
+            @Html.ValidationMessageFor(x => x.Product.Price)            
         </div>
         <div class="form-group">
             @Html.LabelFor(x => x.Product.Visible)
-            @Html.CheckBoxFor(x => x.Product.Visible, new {@class="form-control", @Value=true})
+            @Html.CheckBoxFor(x => x.Product.Visible, new { @class = "form-control",@Name="Visible", @Value = true })
             @Html.ValidationMessageFor(x => x.Product.Visible)
         </div>
+        <button type="button" class="btn btn-primary" id="backButton">Back</button>
         <button type="submit" class="btn btn-primary">Save</button>
     }
-
-        <button type="button" class="btn btn-primary" id="backButton">Back</button>
+    <br />
 </body>
 
 @section scripts
@@ -39,7 +39,7 @@
 
                     e.preventDefault();
 
-                    var form = $("#newUserForm");
+                    var form = $("#newProductForm");
                     var data = form.serialize();
 
                     $.ajax({

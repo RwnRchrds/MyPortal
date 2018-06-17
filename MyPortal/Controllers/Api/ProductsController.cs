@@ -44,5 +44,19 @@ namespace MyPortal.Controllers.Api
             _context.Products.Add(product);
             _context.SaveChanges();
         }
+
+        //DELETE PRODUCT
+        [HttpDelete]
+        [Route("api/products/{id}")]
+        public void DeleteProduct(int id)
+        {
+            var productInDb = _context.Products.SingleOrDefault(p => p.Id == id);
+
+            if (productInDb == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            _context.Products.Remove(productInDb);
+            _context.SaveChanges();
+        }
     }
 }

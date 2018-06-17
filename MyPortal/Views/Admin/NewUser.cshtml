@@ -29,6 +29,7 @@
             @Html.PasswordFor(x => x.ConfirmPassword, new { @class = "form-control" })
             @Html.ValidationMessageFor(x => x.ConfirmPassword)
         </div>
+        <button type="button" class="btn btn-primary" id="backButton">Back</button>
         <button type="submit" class="btn btn-primary">Save</button>
     }
 </body>
@@ -58,6 +59,11 @@
                             form.reset();
                         }
                     });
+                });
+
+            $("#backButton").on("click",
+                function () {
+                    location.replace("/Staff/Admin/Users");
                 });
         })
     </script>
