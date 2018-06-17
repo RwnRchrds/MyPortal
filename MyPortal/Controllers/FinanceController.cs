@@ -23,5 +23,17 @@ namespace MyPortal.Controllers
         {
             return View();
         }
+
+        [Route("Staff/Finance/Products")]
+        public ActionResult Products()
+        {
+            return View();
+        }
+
+        [Route("Staff/Finance/Products/New")]
+        public ActionResult NewProduct()
+        {
+            return View();
+        }
     }
 }

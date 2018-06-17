@@ -14,10 +14,12 @@ namespace MyPortal.Models
             Logs = new HashSet<Log>();
         }
 
+        [Display(Name = "ID")]
         public int Id { get; set; }
 
         [Required]
         [StringLength(255)]
+        [Display(Name = "Name")]
         public string Name { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

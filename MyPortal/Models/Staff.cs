@@ -20,19 +20,24 @@ namespace MyPortal.Models
         }
 
         [StringLength(3)]
+        [Display(Name = "ID")]
         public string Id { get; set; }
 
         [StringLength(255)]
+        [Display(Name = "Title")]
         public string Title { get; set; }
 
         [Required]
         [StringLength(255)]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
 
         [Required]
         [StringLength(255)]
+        [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
+        [Display(Name = "Is a Tutor")]
         public bool IsTutor { get; set; }
 
         public int? Count { get; set; }

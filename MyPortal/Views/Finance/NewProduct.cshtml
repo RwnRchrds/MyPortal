@@ -1,0 +1,69 @@
+﻿@model MyPortal.ViewModels.NewProductViewModel
+@{
+    ViewBag.Title = "NewProduct";
+    Layout = "~/Views/Shared/_LayoutFinance.cshtml";
+}
+
+<h2>New Product</h2>
+<hr />
+<body>
+    @using (Ajax.BeginForm(null, null, new AjaxOptions() { Url = "" }, new { id = "newProductForm" }))
+    {
+        <div class="form-group">
+            @Html.LabelFor(x => x.Product.Description)
+            @Html.TextBoxFor(x => x.Product.Description, new { @class = "form-control", Name="Description" })
+            @Html.ValidationMessageFor(x => x.Product.Description)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.Product.Price)
+            @Html.PasswordFor(x => x.Product.Price, new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.Product.Price)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.Product.Visible)
+            @Html.CheckBoxFor(x => x.Product.Visible, new {@class="form-control", @Value=true})
+            @Html.ValidationMessageFor(x => x.Product.Visible)
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    }
+
+        <button type="button" class="btn btn-primary" id="backButton">Back</button>
+</body>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#newProductForm").on("submit",
+                function (e) {
+
+                    e.preventDefault();
+
+                    var form = $("#newUserForm");
+                    var data = form.serialize();
+
+                    $.ajax({
+                        url: "/api/products/new",
+                        data: data,
+                        method: "POST",
+                        success: function () {
+                            toastr.success("User added");
+                            location.replace("/Staff/Finance/Products");
+                        },
+                        error: function () {
+                            toastr.error("Could Not Add Product");
+                            form.reset();
+                        }
+                    });
+                });
+
+            $("#backButton").on("click",
+                function () {
+                    location.replace("/Staff/Finance/Products");
+                });
+        })
+    </script>
+
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

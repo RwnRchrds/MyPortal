@@ -209,6 +209,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\Api\LogsController.cs" />
+    <Compile Include="Controllers\Api\ProductsController.cs" />
     <Compile Include="Controllers\Api\RegGroupsController.cs" />
     <Compile Include="Controllers\Api\ResultsController.cs" />
     <Compile Include="Controllers\Api\RolesController.cs" />
@@ -226,6 +227,7 @@
     <Compile Include="Dtos\Identity\UserDto.cs" />
     <Compile Include="Dtos\LogDto.cs" />
     <Compile Include="Dtos\LogTypeDto.cs" />
+    <Compile Include="Dtos\ProductDto.cs" />
     <Compile Include="Dtos\RegGroupDto.cs" />
     <Compile Include="Dtos\ResultDto.cs" />
     <Compile Include="Dtos\ResultSetDto.cs" />
@@ -267,6 +269,7 @@
     <Compile Include="Models\TrainingCourse.cs" />
     <Compile Include="Models\TrainingStatus.cs" />
     <Compile Include="Models\YearGroup.cs" />
+    <Compile Include="ViewModels\NewProductViewModel.cs" />
     <Compile Include="ViewModels\NewStudentViewModel.cs" />
     <Compile Include="ViewModels\NewUserViewModel.cs" />
     <Compile Include="ViewModels\RandomStudentViewModel.cs" />
@@ -546,6 +549,8 @@
     <Content Include="Views\Shared\_NavBarFinance.cshtml" />
     <Content Include="Views\Shared\_LayoutFinance.cshtml" />
     <Content Include="Views\Finance\Index.cshtml" />
+    <Content Include="Views\Finance\Products.cshtml" />
+    <Content Include="Views\Finance\NewProduct.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

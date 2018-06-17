@@ -14,15 +14,19 @@ namespace MyPortal.Models
             Sales = new HashSet<Sale>();
         }
 
+        [Display(Name = "ID")]
         public int Id { get; set; }
 
         [Required]
         [StringLength(255)]
+        [Display(Name = "Description")]
         public string Description { get; set; }
 
+        [Display(Name = "Price")]
         public decimal Price { get; set; }
 
-        public bool? Visible { get; set; }
+        [Display(Name = "Available On Store")]
+        public bool Visible { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Sale> Sales { get; set; }

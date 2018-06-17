@@ -11,20 +11,24 @@ namespace MyPortal.Models
         [Key]
         [Column(Order = 0)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Display(Name = "Result Set")]
         public int ResultSet { get; set; }
 
         [Key]
         [Column(Order = 1)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Display(Name = "Student")]
         public int Student { get; set; }
 
         [Key]
         [Column(Order = 2)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Display(Name = "Subject")]
         public int Subject { get; set; }
 
         [Required]
         [StringLength(50)]
+        [Display(Name = "Result")]
         public string Value { get; set; }
 
         public virtual ResultSet ResultSet1 { get; set; }

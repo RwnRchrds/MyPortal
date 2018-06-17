@@ -1,0 +1,48 @@
+﻿
+@{
+    ViewBag.Title = "Products";
+    Layout = "~/Views/Shared/_LayoutFinance.cshtml";
+}
+
+<h2>Products</h2>
+
+@if (User.IsInRole("Finance"))
+{
+    @Html.ActionLink("New Product", "NewProduct", "Finance", null, new { @class = "btn btn-success", @style = "margin-bottom: 8px;" })
+}
+
+<table class="table table-bordered table-hover" id="products">
+    <thead>
+        <tr>
+            <th>Description</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            $("#products").DataTable({
+                ajax: {
+                    url: "/api/products",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "description"
+                    },
+                    {
+                        data: "price",
+                        render: $.fn.dataTable.render.number(',', '.', 2, '£')
+                    }
+                ]
+
+            });
+        });
+    </script>
+}
+

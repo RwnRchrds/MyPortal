@@ -15,16 +15,20 @@ namespace MyPortal.Models
         }
 
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Display(Name = "ID")]
         public int Id { get; set; }
 
         [Required]
         [StringLength(3)]
+        [Display(Name = "Name")]
         public string Name { get; set; }
 
         [Required]
         [StringLength(3)]
+        [Display(Name = "Reg Tutor")]
         public string Tutor { get; set; }
 
+        [Display(Name = "Year Group")]
         public int YearGroup { get; set; }
 
         public virtual Staff Staff { get; set; }

@@ -17,22 +17,29 @@ namespace MyPortal.Models
         }
 
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Display(Name = "ID")]
         public int Id { get; set; }
 
         [Required]
         [StringLength(255)]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
 
         [Required]
         [StringLength(255)]
+        [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
+        [Display(Name = "4Matrix ID")]
         public int? FourMId { get; set; }
 
+        [Display(Name = "Reg Group")]
         public int RegGroup { get; set; }
 
+        [Display(Name = "Year Group")]
         public int YearGroup { get; set; }
 
+        [Display(Name = "Account Balance")]
         public decimal AccountBalance { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

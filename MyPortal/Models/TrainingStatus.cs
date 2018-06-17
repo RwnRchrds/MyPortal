@@ -15,9 +15,11 @@ namespace MyPortal.Models
             TrainingCertificates = new HashSet<TrainingCertificate>();
         }
 
+        [Display(Name = "ID")]
         public int Id { get; set; }
 
         [StringLength(255)]
+        [Display(Name = "Name")]
         public string Name { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

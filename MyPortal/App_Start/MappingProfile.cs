@@ -52,6 +52,9 @@ namespace MyPortal.App_Start
 
             Mapper.CreateMap<LogTypeDto, LogType>();
             Mapper.CreateMap<LogType, LogTypeDto>();
+
+            Mapper.CreateMap<ProductDto, Product>();
+            Mapper.CreateMap<Product, ProductDto>();
         }
     }
 }
