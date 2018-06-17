@@ -6,23 +6,25 @@ namespace MyPortal.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class ResultSet
+    public partial class Product
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public ResultSet()
+        public Product()
         {
-            Results = new HashSet<Result>();
+            Sales = new HashSet<Sale>();
         }
 
         public int Id { get; set; }
 
         [Required]
         [StringLength(255)]
-        public string Name { get; set; }
+        public string Description { get; set; }
 
-        public bool IsCurrent { get; set; }
+        public decimal Price { get; set; }
+
+        public bool? Visible { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Result> Results { get; set; }
+        public virtual ICollection<Sale> Sales { get; set; }
     }
 }

@@ -14,9 +14,11 @@ namespace MyPortal.Models
 
         public virtual DbSet<Log> Logs { get; set; }
         public virtual DbSet<LogType> LogTypes { get; set; }
+        public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<RegGroup> RegGroups { get; set; }
         public virtual DbSet<Result> Results { get; set; }
         public virtual DbSet<ResultSet> ResultSets { get; set; }
+        public virtual DbSet<Sale> Sales { get; set; }
         public virtual DbSet<Staff> Staff { get; set; }
         public virtual DbSet<Student> Students { get; set; }
         public virtual DbSet<Subject> Subjects { get; set; }
@@ -45,6 +47,20 @@ namespace MyPortal.Models
                 .HasForeignKey(e => e.Type)
                 .WillCascadeOnDelete(false);
 
+            modelBuilder.Entity<Product>()
+                .Property(e => e.Description)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Product>()
+                .Property(e => e.Price)
+                .HasPrecision(10, 2);
+
+            modelBuilder.Entity<Product>()
+                .HasMany(e => e.Sales)
+                .WithRequired(e => e.Product1)
+                .HasForeignKey(e => e.Product)
+                .WillCascadeOnDelete(false);
+
             modelBuilder.Entity<RegGroup>()
                 .Property(e => e.Name)
                 .IsUnicode(false);
@@ -56,8 +72,7 @@ namespace MyPortal.Models
             modelBuilder.Entity<RegGroup>()
                 .HasMany(e => e.Students)
                 .WithRequired(e => e.RegGroup1)
-                .HasForeignKey(e => e.RegGroup)
-                .WillCascadeOnDelete(false);
+                .HasForeignKey(e => e.RegGroup);
 
             modelBuilder.Entity<ResultSet>()
                 .Property(e => e.Name)
@@ -130,11 +145,15 @@ namespace MyPortal.Models
             modelBuilder.Entity<Student>()
                 .HasMany(e => e.Logs)
                 .WithRequired(e => e.Student1)
-                .HasForeignKey(e => e.Student)
-                .WillCascadeOnDelete(false);
+                .HasForeignKey(e => e.Student);
 
             modelBuilder.Entity<Student>()
                 .HasMany(e => e.Results)
+                .WithRequired(e => e.Student1)
+                .HasForeignKey(e => e.Student);
+
+            modelBuilder.Entity<Student>()
+                .HasMany(e => e.Sales)
                 .WithRequired(e => e.Student1)
                 .HasForeignKey(e => e.Student)
                 .WillCascadeOnDelete(false);
@@ -191,8 +210,7 @@ namespace MyPortal.Models
             modelBuilder.Entity<YearGroup>()
                 .HasMany(e => e.Students)
                 .WithRequired(e => e.YearGroup1)
-                .HasForeignKey(e => e.YearGroup)
-                .WillCascadeOnDelete(false);
+                .HasForeignKey(e => e.YearGroup);
         }
     }
 }

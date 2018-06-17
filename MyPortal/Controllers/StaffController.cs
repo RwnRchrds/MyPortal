@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Configuration;
-using System.Web.Helpers;
 using System.Web.Mvc;
-using System.Web.WebSockets;
 using Microsoft.AspNet.Identity;
 using MyPortal.Models;
 using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers
-{   
+{
     //MyPortal Staff Controller --> Controller Methods for Staff Areas
     [Authorize(Roles = "Staff, SeniorStaff")]
     public class StaffController : Controller
     {
-        private MyPortalDbContext _context;
+        private readonly MyPortalDbContext _context;
 
         public StaffController()
         {
@@ -60,7 +55,7 @@ namespace MyPortal.Controllers
         {
             var staff = _context.Staff.ToList();
             return View(staff);
-        }        
+        }
 
         // Menu | Students | X --> Student Details (for Student X)
         //Accessible by [Staff] or [SeniorStaff]
@@ -74,7 +69,7 @@ namespace MyPortal.Controllers
 
             //var logs = _context.Logs.Where(l => l.Student == id).OrderByDescending(x => x.Date).ToList();
 
-            var results = _context.Results.Where(r => r.Student == id && r.ResultSet1.IsCurrent == true).ToList();            
+            var results = _context.Results.Where(r => r.Student == id && r.ResultSet1.IsCurrent).ToList();
 
             var logTypes = _context.LogTypes.ToList();
 
@@ -86,9 +81,9 @@ namespace MyPortal.Controllers
 
             var subjects = _context.Subjects.ToList();
 
-            bool upperSchool = student.YearGroup == 11 || student.YearGroup == 10;
+            var upperSchool = student.YearGroup == 11 || student.YearGroup == 10;
 
-            var chartData = GetChartData(results,upperSchool);
+            var chartData = GetChartData(results, upperSchool);
 
             var viewModel = new StudentDetailsViewModel
             {
@@ -132,11 +127,10 @@ namespace MyPortal.Controllers
                 Student = student,
                 CurrentResultSetId = currentResultSet.Id,
                 ResultSets = resultSets,
-                Subjects = subjects            
+                Subjects = subjects
             };
 
             return View(viewModel);
-
         }
 
         // Menu | Staff | X --> Student Details (for Staff X)
@@ -204,7 +198,7 @@ namespace MyPortal.Controllers
         // Generates chart data for Student Details view
         public static ChartData GetChartData(List<Result> results, bool upperSchool)
         {
-            ChartData data = new ChartData();
+            var data = new ChartData();
 
             data.L1 = 0;
             data.L2 = 0;
@@ -216,101 +210,44 @@ namespace MyPortal.Controllers
             data.L8 = 0;
             data.L9 = 0;
 
-            if (upperSchool == true)
-            {
+            if (upperSchool)
                 foreach (var result in results)
                 {
-                    if (result.Value == "A*")
-                    {
-                        data.L1++;
-                    }
-                    if (result.Value == "A")
-                    {
-                        data.L2++;
-                    }
-                    if (result.Value == "B")
-                    {
-                        data.L3++;
-                    }
-                    if (result.Value == "C")
-                    {
-                        data.L4++;
-                    }
-                    if (result.Value == "D")
-                    {
-                        data.L5++;
-                    }
-                    if (result.Value == "E")
-                    {
-                        data.L6++;
-                    }
-                    if (result.Value == "F")
-                    {
-                        data.L7++;
-                    }
-                    if (result.Value == "G")
-                    {
-                        data.L8++;
-                    }
-                    if (result.Value == "U")
-                    {
-                        data.L9++;
-                    }
+                    if (result.Value == "A*") data.L1++;
+                    if (result.Value == "A") data.L2++;
+                    if (result.Value == "B") data.L3++;
+                    if (result.Value == "C") data.L4++;
+                    if (result.Value == "D") data.L5++;
+                    if (result.Value == "E") data.L6++;
+                    if (result.Value == "F") data.L7++;
+                    if (result.Value == "G") data.L8++;
+                    if (result.Value == "U") data.L9++;
                 }
-            }
             else
-            {
                 foreach (var result in results)
                 {
-                    if (result.Value.Contains("E"))
-                    {
-                        data.L1++;
-                    }
-                    if (result.Value.Contains("8"))
-                    {
-                        data.L2++;
-                    }
-                    if (result.Value.Contains("7"))
-                    {
-                        data.L3++;
-                    }
-                    if (result.Value.Contains("6"))
-                    {
-                        data.L4++;
-                    }
-                    if (result.Value.Contains("5"))
-                    {
-                        data.L5++;
-                    }
-                    if (result.Value.Contains("4"))
-                    {
-                        data.L6++;
-                    }
-                    if (result.Value.Contains("3"))
-                    {
-                        data.L7++;
-                    }
-                    if (result.Value.Contains("2"))
-                    {
-                        data.L8++;
-                    }
-                    if (result.Value.Contains("1"))
-                    {
-                        data.L9++;
-                    }
+                    if (result.Value.Contains("E")) data.L1++;
+                    if (result.Value.Contains("8")) data.L2++;
+                    if (result.Value.Contains("7")) data.L3++;
+                    if (result.Value.Contains("6")) data.L4++;
+                    if (result.Value.Contains("5")) data.L5++;
+                    if (result.Value.Contains("4")) data.L6++;
+                    if (result.Value.Contains("3")) data.L7++;
+                    if (result.Value.Contains("2")) data.L8++;
+                    if (result.Value.Contains("1")) data.L9++;
                 }
-            }        
+
             return data;
         }
 
         // HTTP POST request for saving/creating logs using HTML form 
         // TODO: [REPLACE WITH AJAX REQUEST]
-        [HttpPost]        
+        [HttpPost]
         public ActionResult SaveLog(Log log)
         {
             if (log.Id == 0)
             {
-                _context.Logs.Add(log);           
+                _context.Logs.Add(log);
             }
 
             else
@@ -356,7 +293,6 @@ namespace MyPortal.Controllers
             _context.SaveChanges();
 
             return RedirectToAction("Students", "Staff");
-
         }
 
         // HTTP POST request for creating training courses using HTML form
@@ -364,10 +300,7 @@ namespace MyPortal.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreateCourse(TrainingCourse course)
         {
-            if (!ModelState.IsValid)
-            {
-                return View("NewCourse");
-            }
+            if (!ModelState.IsValid) return View("NewCourse");
 
             _context.TrainingCourses.Add(course);
             _context.SaveChanges();
@@ -388,7 +321,7 @@ namespace MyPortal.Controllers
             studentInDb.AccountBalance = student.AccountBalance;
 
             _context.SaveChanges();
-            return RedirectToAction("StudentDetails", "Staff", new { id = student.Id });
+            return RedirectToAction("StudentDetails", "Staff", new {id = student.Id});
         }
     }
 }

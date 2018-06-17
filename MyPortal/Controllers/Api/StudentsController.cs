@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Data.Entity;
-using System.Net.Http;
 using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
@@ -13,13 +11,18 @@ namespace MyPortal.Controllers.Api
 {
     public class StudentsController : ApiController
     {
-        private MyPortalDbContext _context;
+        private readonly MyPortalDbContext _context;
 
         public StudentsController()
         {
             _context = new MyPortalDbContext();
         }
-        
+
+        protected override void Dispose(bool disposing)
+        {
+            _context.Dispose();
+        }
+
         public IEnumerable<StudentDto> GetStudents()
         {
             return _context.Students
@@ -53,7 +56,7 @@ namespace MyPortal.Controllers.Api
 
             studentDto.Id = student.Id;
 
-            return studentDto;        
+            return studentDto;
         }
 
         [HttpPut]

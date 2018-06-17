@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using System.Web.Mvc;
-using System.Web.Security;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using MyPortal.Models;
@@ -16,9 +11,8 @@ namespace MyPortal.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
-
-        private MyPortalDbContext _context;        
-        private ApplicationDbContext _identity;
+        private readonly MyPortalDbContext _context;
+        private readonly ApplicationDbContext _identity;
         private readonly UserManager<ApplicationUser> _userManager;
 
         public AdminController()
@@ -31,8 +25,14 @@ namespace MyPortal.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            _context.Dispose();
-            _identity.Dispose();
+            if (disposing)
+            {
+                _context.Dispose();
+                _identity.Dispose();
+                _userManager.Dispose();
+            }
+
+            base.Dispose(disposing);
         }
 
         // GET: Admin
@@ -55,14 +55,14 @@ namespace MyPortal.Controllers
         {
             var user = _identity.Users
                 .SingleOrDefault(x => x.Id == id);
-                        
+
 
             if (user == null)
                 return HttpNotFound();
 
             var userRoles = _userManager.GetRolesAsync(id).Result;
 
-            var roles = _identity.Roles.ToList();           
+            var roles = _identity.Roles.ToList();
 
             var viewModel = new UserDetailsViewModel
             {

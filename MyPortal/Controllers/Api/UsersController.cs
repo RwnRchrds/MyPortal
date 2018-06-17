@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
@@ -17,14 +14,20 @@ namespace MyPortal.Controllers.Api
 {
     public class UsersController : ApiController
     {
-        private ApplicationDbContext _identity;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ApplicationDbContext _identity;
 
         public UsersController()
         {
             _identity = new ApplicationDbContext();
             var store = new UserStore<ApplicationUser>(_identity);
             _userManager = new UserManager<ApplicationUser>(store);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _identity.Dispose();
+            _userManager.Dispose();
         }
 
         //GET Users From Database
@@ -45,10 +48,11 @@ namespace MyPortal.Controllers.Api
                 return NotFound();
 
             //get user's assigned roles
-            IList<string> userRoles = await _userManager.GetRolesAsync(userId);
+            var userRoles = await _userManager.GetRolesAsync(userId);
 
             //check for role to be removed
-            var roleToRemove = userRoles.FirstOrDefault(role => role.Equals(roleName, StringComparison.InvariantCultureIgnoreCase));
+            var roleToRemove =
+                userRoles.FirstOrDefault(role => role.Equals(roleName, StringComparison.InvariantCultureIgnoreCase));
             if (roleToRemove == null)
                 return NotFound();
 
@@ -92,46 +96,25 @@ namespace MyPortal.Controllers.Api
             var roleToAdd = _identity.Roles.FirstOrDefault(r => r.Name == data.RoleName);
 
             if (data.RoleName == "Admin")
-            {
                 if (!await _userManager.IsInRoleAsync(data.UserId, "SeniorStaff"))
-                {
                     return BadRequest();
-                }
-            }
 
             if (data.RoleName == "Finance")
-            {
                 if (!await _userManager.IsInRoleAsync(data.UserId, "SeniorStaff"))
-                {
                     return BadRequest();
-                }
-            }
 
             if (data.RoleName == "Staff" || data.RoleName == "SeniorStaff" || data.RoleName == "Admin")
-            {
                 if (await _userManager.IsInRoleAsync(data.UserId, "Student"))
-                {
                     return BadRequest();
-                }
-            }
 
             if (data.RoleName == "Student")
             {
-                if (await _userManager.IsInRoleAsync(data.UserId, "Staff"))
-                {
-                    return BadRequest();
-                }
+                if (await _userManager.IsInRoleAsync(data.UserId, "Staff")) return BadRequest();
 
-                if (await _userManager.IsInRoleAsync(data.UserId, "SeniorStaff"))
-                {
-                    return BadRequest();
-                }
+                if (await _userManager.IsInRoleAsync(data.UserId, "SeniorStaff")) return BadRequest();
             }
 
-            if (await _userManager.IsInRoleAsync(data.UserId, data.RoleName))
-            {
-                return BadRequest();
-            }
+            if (await _userManager.IsInRoleAsync(data.UserId, data.RoleName)) return BadRequest();
 
             var result = await _userManager.AddToRoleAsync(data.UserId, data.RoleName);
 
@@ -139,7 +122,6 @@ namespace MyPortal.Controllers.Api
                 return Ok();
 
             return BadRequest();
-
         }
 
         //New user
@@ -155,7 +137,7 @@ namespace MyPortal.Controllers.Api
             user.Id = data.Id;
             user.UserName = data.Username;
 
-            var result = await _userManager.CreateAsync(user, data.Password);           
+            var result = await _userManager.CreateAsync(user, data.Password);
 
             if (result.Succeeded)
                 return Ok();
@@ -175,10 +157,7 @@ namespace MyPortal.Controllers.Api
 
             var userRoles = await _userManager.GetRolesAsync(userId);
 
-            foreach (string role in userRoles)
-            {
-                await _userManager.RemoveFromRoleAsync(userId, role);
-            }
+            foreach (var role in userRoles) await _userManager.RemoveFromRoleAsync(userId, role);
 
             var result = await _userManager.DeleteAsync(userInDb);
 
@@ -187,6 +166,5 @@ namespace MyPortal.Controllers.Api
 
             return BadRequest();
         }
-
     }
 }

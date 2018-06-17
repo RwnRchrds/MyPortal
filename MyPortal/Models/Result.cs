@@ -11,7 +11,6 @@ namespace MyPortal.Models
         [Key]
         [Column(Order = 0)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        [Display(Name = "Result Set")]
         public int ResultSet { get; set; }
 
         [Key]
@@ -26,7 +25,6 @@ namespace MyPortal.Models
 
         [Required]
         [StringLength(50)]
-        [Display(Name = "Result")]
         public string Value { get; set; }
 
         public virtual ResultSet ResultSet1 { get; set; }

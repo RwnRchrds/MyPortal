@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using MyPortal.Models;
@@ -13,17 +10,27 @@ namespace MyPortal.Controllers
     [Authorize(Roles = "Student")]
     public class StudentsController : Controller
     {
-        private MyPortalDbContext _context;
+        private readonly MyPortalDbContext _context;
 
         public StudentsController()
         {
             _context = new MyPortalDbContext();
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _context?.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
+
         // Student Landing Page
         public ActionResult Index()
         {
-            var currentUser = Int32.Parse(User.Identity.GetUserId());
+            var currentUser = int.Parse(User.Identity.GetUserId());
 
             var student = _context.Students.SingleOrDefault(s => s.Id == currentUser);
 
@@ -32,10 +39,10 @@ namespace MyPortal.Controllers
 
             var logs = _context.Logs.Where(l => l.Student == currentUser).OrderByDescending(x => x.Date).ToList();
 
-            var results = _context.Results.Where(r => r.Student == currentUser && r.ResultSet1.IsCurrent == true)
+            var results = _context.Results.Where(r => r.Student == currentUser && r.ResultSet1.IsCurrent)
                 .ToList();
 
-            bool upperSchool = student.YearGroup == 11 || student.YearGroup == 10;
+            var upperSchool = student.YearGroup == 11 || student.YearGroup == 10;
 
             var chartData = StaffController.GetChartData(results, upperSchool);
 
@@ -45,7 +52,7 @@ namespace MyPortal.Controllers
                 Student = student,
                 Results = results,
                 IsUpperSchool = upperSchool,
-                ChartData = chartData,
+                ChartData = chartData
             };
             return View(viewModel);
         }
@@ -54,7 +61,7 @@ namespace MyPortal.Controllers
         [Route("Students/MyResults")]
         public ActionResult Results()
         {
-            var currentUser = Int32.Parse(User.Identity.GetUserId());
+            var currentUser = int.Parse(User.Identity.GetUserId());
 
             var student = _context.Students.SingleOrDefault(s => s.Id == currentUser);
 
@@ -73,8 +80,6 @@ namespace MyPortal.Controllers
             };
 
             return View(viewModel);
-
         }
-
     }
 }

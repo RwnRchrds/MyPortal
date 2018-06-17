@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
@@ -12,12 +9,16 @@ namespace MyPortal.Controllers.Api
 {
     public class TrainingCoursesController : ApiController
     {
-
-        private MyPortalDbContext _context;
+        private readonly MyPortalDbContext _context;
 
         public TrainingCoursesController()
         {
             _context = new MyPortalDbContext();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _context.Dispose();
         }
 
         [Route("api/courses")]
