@@ -72,12 +72,11 @@
                                     url: "/api/products/" + button.attr("data-product-id"),
                                     method: "DELETE",
                                     success: function() {
-                                        $("#products").DataTable().destroy();
-                                        loadProducts();
-                                        toastr.success("Product Deleted");
+                                        $("#products").DataTable().ajax.reload();
+                                        toastr.success("Product deleted");
                                     },
                                     error: function() {
-                                        toastr.error("Could Not Delete Product");
+                                        toastr.error("Could not delete product");
                                     }
                                 });
                             }

@@ -213,6 +213,7 @@
     <Compile Include="Controllers\Api\RegGroupsController.cs" />
     <Compile Include="Controllers\Api\ResultsController.cs" />
     <Compile Include="Controllers\Api\RolesController.cs" />
+    <Compile Include="Controllers\Api\SalesController.cs" />
     <Compile Include="Controllers\Api\StaffController.cs" />
     <Compile Include="Controllers\Api\StudentsController.cs" />
     <Compile Include="Controllers\Api\TrainingCertificatesController.cs" />
@@ -231,6 +232,7 @@
     <Compile Include="Dtos\RegGroupDto.cs" />
     <Compile Include="Dtos\ResultDto.cs" />
     <Compile Include="Dtos\ResultSetDto.cs" />
+    <Compile Include="Dtos\SaleDto.cs" />
     <Compile Include="Dtos\StaffDto.cs" />
     <Compile Include="Dtos\StudentDto.cs" />
     <Compile Include="Dtos\SubjectDto.cs" />
@@ -272,6 +274,7 @@
     <Compile Include="Models\YearGroup.cs" />
     <Compile Include="ViewModels\AccountsViewModel.cs" />
     <Compile Include="ViewModels\NewProductViewModel.cs" />
+    <Compile Include="ViewModels\NewSaleViewModel.cs" />
     <Compile Include="ViewModels\NewStudentViewModel.cs" />
     <Compile Include="ViewModels\NewUserViewModel.cs" />
     <Compile Include="ViewModels\RandomStudentViewModel.cs" />
@@ -554,6 +557,8 @@
     <Content Include="Views\Finance\Products.cshtml" />
     <Content Include="Views\Finance\NewProduct.cshtml" />
     <Content Include="Views\Finance\Accounts.cshtml" />
+    <Content Include="Views\Finance\Sales.cshtml" />
+    <Content Include="Views\Finance\NewSale.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -55,6 +55,9 @@ namespace MyPortal.App_Start
 
             Mapper.CreateMap<ProductDto, Product>();
             Mapper.CreateMap<Product, ProductDto>();
+
+            Mapper.CreateMap<SaleDto, Sale>();
+            Mapper.CreateMap<Sale, SaleDto>();
         }
     }
 }
