@@ -208,6 +208,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\Api\BasketItemsController.cs" />
     <Compile Include="Controllers\Api\LogsController.cs" />
     <Compile Include="Controllers\Api\ProductsController.cs" />
     <Compile Include="Controllers\Api\RegGroupsController.cs" />
@@ -224,6 +225,7 @@
     <Compile Include="Controllers\FinanceController.cs" />
     <Compile Include="Controllers\StaffController.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
+    <Compile Include="Dtos\BasketItemDto.cs" />
     <Compile Include="Dtos\Identity\RoleDto.cs" />
     <Compile Include="Dtos\Identity\UserDto.cs" />
     <Compile Include="Dtos\LogDto.cs" />
@@ -238,6 +240,7 @@
     <Compile Include="Dtos\SubjectDto.cs" />
     <Compile Include="Dtos\TrainingCertificateDto.cs" />
     <Compile Include="Dtos\TrainingCourseDto.cs" />
+    <Compile Include="Dtos\TrainingStatusDto.cs" />
     <Compile Include="Dtos\YearGroupDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -247,16 +250,19 @@
       <DependentUpon>201803051926258_InitialModel.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\BalanceAdjustment.cs" />
-    <Compile Include="Models\ChangePasswordModel.cs" />
-    <Compile Include="Models\ChartData.cs" />
+    <Compile Include="Models\Misc\BalanceAdjustment.cs" />
+    <Compile Include="Models\Misc\ChangePasswordModel.cs" />
+    <Compile Include="Models\Misc\ChartData.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\UserRoleModel.cs" />
+    <Compile Include="Models\Misc\ShoppingBasket.cs" />
+    <Compile Include="Models\Misc\UserRoleModel.cs" />
+    <Compile Include="Models\MyPortalDbContext.cs" />
     <Compile Include="Models\Validation\BalanceNotNegative.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Models\BasketItem.cs" />
     <Compile Include="Models\Log.cs" />
     <Compile Include="Models\LogType.cs" />
     <Compile Include="Models\Product.cs" />
@@ -267,7 +273,6 @@
     <Compile Include="Models\Staff.cs" />
     <Compile Include="Models\Student.cs" />
     <Compile Include="Models\Subject.cs" />
-    <Compile Include="Models\MyPortalDbContext.cs" />
     <Compile Include="Models\TrainingCertificate.cs" />
     <Compile Include="Models\TrainingCourse.cs" />
     <Compile Include="Models\TrainingStatus.cs" />

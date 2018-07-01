@@ -24,16 +24,18 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("api/results/new")]
-        public void AddResult(ResultDto data)
+        public IHttpActionResult AddResult(ResultDto data)
         {
             var resultInDb = _context.Results.SingleOrDefault(x =>
                 x.Student == data.Student && x.Subject == data.Subject && x.ResultSet == data.ResultSet);
 
             if (resultInDb != null)
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+                return Content(HttpStatusCode.BadRequest, "Result already exists");
 
             _context.Results.Add(Mapper.Map<ResultDto, Result>(data));
             _context.SaveChanges();
+
+            return Ok("Result added");
         }
 
         [HttpGet]

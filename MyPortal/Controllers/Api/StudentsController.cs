@@ -6,6 +6,7 @@ using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Models;
+using MyPortal.Models.Misc;
 
 namespace MyPortal.Controllers.Api
 {
@@ -60,15 +61,15 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPut]
-        public void UpdateStudent(int id, StudentDto studentDto)
+        public IHttpActionResult UpdateStudent(int id, StudentDto studentDto)
         {
             if (studentDto == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return Content(HttpStatusCode.BadRequest, "Invalid request data");
 
             var studentInDb = _context.Students.SingleOrDefault(s => s.Id == id);
 
             if (studentInDb == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return Content(HttpStatusCode.NotFound, "Student not found");
 
             var c = Mapper.Map(studentDto, studentInDb);
             studentInDb.FirstName = studentDto.FirstName;
@@ -79,57 +80,65 @@ namespace MyPortal.Controllers.Api
             studentInDb.AccountBalance = studentDto.AccountBalance;
 
             _context.SaveChanges();
+
+            return Ok("Student updated");
         }
 
         [HttpDelete]
-        public void DeleteStudent(int id)
+        public IHttpActionResult DeleteStudent(int id)
         {
             var studentInDb = _context.Students.SingleOrDefault(s => s.Id == id);
 
             if (studentInDb == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return Content(HttpStatusCode.NotFound, "Student not found");
 
             _context.Students.Remove(studentInDb);
             _context.SaveChanges();
+
+            return Ok("Student deleted");
         }
 
         [HttpPost]
         [Route("api/students/credit")]
-        public void CreditAccount(BalanceAdjustment data)
+        public IHttpActionResult CreditAccount(BalanceAdjustment data)
         {
             if (data.Amount <= 0)
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+                return Content(HttpStatusCode.BadRequest, "Cannot credit negative amount");
 
 
 
             var studentInDb = _context.Students.SingleOrDefault(s => s.Id == data.Student);
 
             if (studentInDb == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return Content(HttpStatusCode.NotFound, "Student not found");
 
             studentInDb.AccountBalance += data.Amount;
 
             _context.SaveChanges();
+
+            return Ok("Account credited");
         }
 
         [HttpPost]
         [Route("api/students/debit")]
-        public void DebitAccount(BalanceAdjustment data)
+        public IHttpActionResult DebitAccount(BalanceAdjustment data)
         {
             if (data.Amount <= 0)
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+                return Content(HttpStatusCode.BadRequest, "Cannot debit negative amount");
 
             var studentInDb = _context.Students.SingleOrDefault(s => s.Id == data.Student);
 
             if (studentInDb == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return Content(HttpStatusCode.NotFound, "Student not found");
 
             if (studentInDb.AccountBalance < data.Amount)
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+                return Content(HttpStatusCode.BadRequest, "Insufficient Funds");
 
             studentInDb.AccountBalance -= data.Amount;
 
             _context.SaveChanges();
+
+            return Ok("Account debited");
         }
     }
 }

@@ -46,12 +46,12 @@
                         url: "/api/products/new",
                         data: data,
                         method: "POST",
-                        success: function () {
-                            toastr.success("User added");
+                        success: function (result) {
+                            toastr.success(result);
                             location.replace("/Staff/Finance/Products");
                         },
-                        error: function () {
-                            toastr.error("Could Not Add Product");
+                        error: function (result) {
+                            toastr.error(result.responseJSON);
                             form.reset();
                         }
                     });

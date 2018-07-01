@@ -1,18 +1,15 @@
-using MyPortal.Models.Validation;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Models
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
-
     public partial class Student
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Student()
         {
+            BasketItems = new HashSet<BasketItem>();
             Logs = new HashSet<Log>();
             Results = new HashSet<Result>();
             Sales = new HashSet<Sale>();
@@ -42,8 +39,10 @@ namespace MyPortal.Models
         public int YearGroup { get; set; }
 
         [Display(Name = "Account Balance")]
-        [BalanceNotNegative]
         public decimal AccountBalance { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BasketItem> BasketItems { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Log> Logs { get; set; }

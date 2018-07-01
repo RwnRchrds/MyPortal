@@ -352,12 +352,12 @@
                                 $.ajax({
                                     url: "/api/logs/log/" + button.attr("data-log-id"),
                                     method: "DELETE",
-                                    success: function() {
+                                    success: function(result) {
                                         $("#logs").DataTable().ajax.reload();
-                                        toastr.success("Log Deleted");
+                                        toastr.success(result);
                                     },
-                                    error: function() {
-                                        toastr.error("Could Not Delete Log");
+                                    error: function(result) {
+                                        toastr.error(result.responseJSON);
                                     }
                                 });
                             }
@@ -464,13 +464,13 @@
                         url: "/api/logs/log/edit",
                         data: $("#EditLogForm").serialize(),
                         method: "POST",
-                        success: function () {
+                        success: function (result) {
                             $("#EditLogModal").modal('hide');
-                            toastr.success("Log Updated");
+                            toastr.success(result);
                             $("#logs").DataTable().ajax.reload();
                         },
-                        error: function() {
-                            toastr.error("An Error Occurred Updating Log");
+                        error: function(result) {
+                            toastr.error(result.responseJSON);
                         }
 
                     });
@@ -491,7 +491,7 @@
                             $("#EditLogIdControl").val(result["id"]);
                         },
                         error: function() {
-                            toastr.error("Could not load form");
+                            toastr.error("Could Not Load Form");
                         }
                     });
                     $("#EditLogModal").modal('toggle');
@@ -559,13 +559,13 @@
                         url: "/api/logs/new",
                         data: $("#NewLogForm").serialize(),
                         method: "POST",
-                        success: function() {
+                        success: function(result) {
                             $("#NewLogModal").modal('hide');
-                            toastr.success("Log Added");
+                            toastr.success(result);
                             $("#logs").DataTable().ajax.reload();
                         },
-                        error: function() {
-                            toastr.error("Could Not Add Log");
+                        error: function(result) {
+                            toastr.error(result.responseJSON);
                         }
                     });
                 });

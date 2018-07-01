@@ -163,14 +163,15 @@
                         url: "/api/students/credit",
                         data: $("#CreditForm").serialize(),
                         method: "POST",
-                        success: function () {
+                        success: function (result) {
                             $("#CreditModal").modal('hide');
-                            toastr.success("Account credited");
+                            console.log(result);
+                            toastr.success(result);
                             $("#students").DataTable().ajax.reload();
                         },
-                        error: function () {
+                        error: function (result) {
                             $("#CreditModal").modal('hide');
-                            toastr.error("Could not credit account");
+                            toastr.error(result.responseJSON);
                         }
                     });
                 });
@@ -184,14 +185,14 @@
                         url: "/api/students/debit",
                         data: $("#DebitForm").serialize(),
                         method: "POST",
-                        success: function () {
+                        success: function (result) {
                             $("#DebitModal").modal('hide');
-                            toastr.success("Account debited");
+                            toastr.success(result);
                             $("#students").DataTable().ajax.reload();
                         },
-                        error: function () {
+                        error: function (result) {
                             $("#CreditModal").modal('hide');
-                            toastr.error("Could not credit account");
+                            toastr.error(result.responseJSON);
                         }
                     });
                 });

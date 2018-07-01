@@ -116,12 +116,12 @@
                         url: "/api/results/new",
                         data: form.serialize(),
                         method: "POST",
-                        success: function () {
-                            toastr.success("Result added");
+                        success: function (result) {
+                            toastr.success(result);
                             $("#NewResultModal").modal('toggle');
                         },
-                        error: function () {
-                            toastr.error("Result could not be added");
+                        error: function (result) {
+                            toastr.error(result.responseJSON);
                         }
                     });
                 });

@@ -1,22 +1,20 @@
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace MyPortal.Models
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
-
     public partial class Log
     {
-        [Display(Name="ID")]
+        [Display(Name = "ID")]
         public int Id { get; set; }
 
-        [Display(Name="Log Type")]
+        [Display(Name = "Log Type")]
         public int Type { get; set; }
 
         [Required]
+        [Display(Name = "Author")]
         [StringLength(3)]
-        [Display(Name="Author")]
         public string Author { get; set; }
 
         [Display(Name = "Student")]

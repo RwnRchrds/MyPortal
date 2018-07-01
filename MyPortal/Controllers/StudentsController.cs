@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Data.Entity;
+using System.Linq;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using MyPortal.Models;
@@ -58,7 +59,7 @@ namespace MyPortal.Controllers
         }
 
         //MyResults Page
-        [Route("Students/MyResults")]
+        [Route("Students/Results")]
         public ActionResult Results()
         {
             var currentUser = int.Parse(User.Identity.GetUserId());

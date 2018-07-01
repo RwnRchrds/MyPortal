@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using MyPortal.Models;
+using MyPortal.Models.Misc;
 using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers
@@ -213,15 +214,36 @@ namespace MyPortal.Controllers
             if (upperSchool)
                 foreach (var result in results)
                 {
-                    if (result.Value == "A*") data.L1++;
-                    if (result.Value == "A") data.L2++;
-                    if (result.Value == "B") data.L3++;
-                    if (result.Value == "C") data.L4++;
-                    if (result.Value == "D") data.L5++;
-                    if (result.Value == "E") data.L6++;
-                    if (result.Value == "F") data.L7++;
-                    if (result.Value == "G") data.L8++;
-                    if (result.Value == "U") data.L9++;
+                    switch (result.Value)
+                    {
+                        case "A*":
+                            data.L1++;
+                            break;
+                        case "A":
+                            data.L2++;
+                            break;
+                        case "B":
+                            data.L3++;
+                            break;
+                        case "C":
+                            data.L4++;
+                            break;
+                        case "D":
+                            data.L5++;
+                            break;
+                        case "E":
+                            data.L6++;
+                            break;
+                        case "F":
+                            data.L7++;
+                            break;
+                        case "G":
+                            data.L8++;
+                            break;
+                        case "U":
+                            data.L9++;
+                            break;
+                    }
                 }
             else
                 foreach (var result in results)

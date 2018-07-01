@@ -1,11 +1,9 @@
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace MyPortal.Models
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
-
     [Table("TrainingCourses")]
     public partial class TrainingCourse
     {
@@ -19,11 +17,9 @@ namespace MyPortal.Models
         public int Id { get; set; }
 
         [StringLength(255)]
-        [Display(Name = "Code")]
         public string Code { get; set; }
 
         [StringLength(1000)]
-        [Display(Name = "Description")]
         public string Description { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

@@ -1,10 +1,7 @@
+﻿using System.Data.Entity;
+
 namespace MyPortal.Models
 {
-    using System;
-    using System.Data.Entity;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Linq;
-
     public partial class MyPortalDbContext : DbContext
     {
         public MyPortalDbContext()
@@ -12,6 +9,7 @@ namespace MyPortal.Models
         {
         }
 
+        public virtual DbSet<BasketItem> BasketItems { get; set; }
         public virtual DbSet<Log> Logs { get; set; }
         public virtual DbSet<LogType> LogTypes { get; set; }
         public virtual DbSet<Product> Products { get; set; }
@@ -54,6 +52,12 @@ namespace MyPortal.Models
             modelBuilder.Entity<Product>()
                 .Property(e => e.Price)
                 .HasPrecision(10, 2);
+
+            modelBuilder.Entity<Product>()
+                .HasMany(e => e.BasketItems)
+                .WithRequired(e => e.Product1)
+                .HasForeignKey(e => e.Product)
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Product>()
                 .HasMany(e => e.Sales)
@@ -141,6 +145,12 @@ namespace MyPortal.Models
             modelBuilder.Entity<Student>()
                 .Property(e => e.AccountBalance)
                 .HasPrecision(10, 2);
+
+            modelBuilder.Entity<Student>()
+                .HasMany(e => e.BasketItems)
+                .WithRequired(e => e.Student1)
+                .HasForeignKey(e => e.Student)
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Student>()
                 .HasMany(e => e.Logs)

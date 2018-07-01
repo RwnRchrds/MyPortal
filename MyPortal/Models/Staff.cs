@@ -1,11 +1,9 @@
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace MyPortal.Models
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
-
     [Table("Staff")]
     public partial class Staff
     {
@@ -37,8 +35,9 @@ namespace MyPortal.Models
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
-        [Display(Name = "Is a Tutor")]
+        [Display(Name = "Is a Tutor?")]
         public bool IsTutor { get; set; }
+
 
         public int? Count { get; set; }
 

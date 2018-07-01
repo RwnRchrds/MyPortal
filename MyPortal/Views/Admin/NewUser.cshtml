@@ -50,12 +50,12 @@
                         url: "/api/users/new",
                         data: data,
                         method: "POST",
-                        success: function () {
-                            toastr.success("User added");
+                        success: function (result) {
+                            toastr.success(result);
                             location.replace("/Staff/Admin/Users");
                         },
-                        error: function () {
-                            toastr.error("Could not add user");
+                        error: function (result) {
+                            toastr.error(result.responseJSON);
                             form.reset();
                         }
                     });

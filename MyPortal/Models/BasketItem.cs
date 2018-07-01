@@ -1,10 +1,10 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Models
 {
-    public partial class Sale
+    [Table("BasketItem")]
+    public partial class BasketItem
     {
         [Display(Name = "ID")]
         public int Id { get; set; }
@@ -14,10 +14,6 @@ namespace MyPortal.Models
 
         [Display(Name = "Product")]
         public int Product { get; set; }
-
-        [Display(Name = "Date")]
-        [Column(TypeName = "date")]
-        public DateTime Date { get; set; }
 
         public virtual Product Product1 { get; set; }
 

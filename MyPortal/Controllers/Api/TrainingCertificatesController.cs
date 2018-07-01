@@ -46,15 +46,17 @@ namespace MyPortal.Controllers.Api
         }
 
         [Route("api/certificates/certificate/{staff}/{course}")]
-        public void DeleteCertificate(string staff, int course)
+        public IHttpActionResult DeleteCertificate(string staff, int course)
         {
             var certInDb = _context.TrainingCertificates.SingleOrDefault(l => l.Staff == staff && l.Course == course);
 
             if (certInDb == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return Content(HttpStatusCode.NotFound, "Certificate not found");
 
             _context.TrainingCertificates.Remove(certInDb);
             _context.SaveChanges();
+
+            return Ok("Certificate deleted");
         }
     }
 }

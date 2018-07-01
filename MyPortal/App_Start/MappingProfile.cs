@@ -58,6 +58,12 @@ namespace MyPortal.App_Start
 
             Mapper.CreateMap<SaleDto, Sale>();
             Mapper.CreateMap<Sale, SaleDto>();
+
+            Mapper.CreateMap<BasketItemDto, BasketItem>();
+            Mapper.CreateMap<BasketItem, BasketItemDto>();
+
+            Mapper.CreateMap<TrainingStatusDto, TrainingStatus>();
+            Mapper.CreateMap<TrainingStatus, TrainingStatusDto>();
         }
     }
 }

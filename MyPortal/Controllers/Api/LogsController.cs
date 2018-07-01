@@ -46,24 +46,26 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("api/logs/new")]
-        public void CreateLog(LogDto data)
+        public IHttpActionResult CreateLog(LogDto data)
         {
             var log = Mapper.Map<LogDto, Log>(data);
             _context.Logs.Add(log);
             _context.SaveChanges();
+
+            return Ok("Log created");
         }
 
         [Route("api/logs/log/edit")]
         [HttpPost]
-        public void UpdateLog(LogDto logDto)
+        public IHttpActionResult UpdateLog(LogDto logDto)
         {
             if (logDto == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return Content(HttpStatusCode.BadRequest, "No valid data was received");
 
             var logInDb = _context.Logs.SingleOrDefault(l => l.Id == logDto.Id);
 
             if (logInDb == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return Content(HttpStatusCode.NotFound, "Log not found");
 
             //var c = Mapper.Map(logDto, logInDb);
 
@@ -71,18 +73,22 @@ namespace MyPortal.Controllers.Api
             logInDb.Message = logDto.Message;
 
             _context.SaveChanges();
+
+            return Ok("Log updated");
         }
 
         [Route("api/logs/log/{id}")]
-        public void DeleteLog(int id)
+        public IHttpActionResult DeleteLog(int id)
         {
             var logInDb = _context.Logs.SingleOrDefault(l => l.Id == id);
 
             if (logInDb == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return Content(HttpStatusCode.NotFound, "Log does not exist");
 
             _context.Logs.Remove(logInDb);
             _context.SaveChanges();
+
+            return Ok("Log deleted");
         }
     }
 }

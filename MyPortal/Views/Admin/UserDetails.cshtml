@@ -155,12 +155,12 @@
                                 "/roles/" +
                                 button.attr("data-role-name"),
                                 method: "DELETE",
-                                success: function () {
+                                success: function (result) {
                                     location.reload();
-                                    toastr.success("User removed from role");
+                                    toastr.success(result);
                                 },
-                                error: function () {
-                                    toastr.error("Unable to remove user from role");
+                                error: function (result) {
+                                    toastr.error(result.responseJSON);
                                 }
                             });
                         }
@@ -176,12 +176,12 @@
                                 $.ajax({
                                     url: "/api/users/" + button.attr("data-user-id") + "/delete",
                                     method: "DELETE",
-                                    success: function() {
+                                    success: function(result) {
                                         location.replace("/Staff/Admin/Users");
-                                        toastr.success("User deleted");
+                                        toastr.success(result);
                                     },
-                                    error: function() {
-                                        toastr.error("Unable to delete user");
+                                    error: function(result) {
+                                        toastr.error(result.responseJSON);
                                     }
                                 });
                             }
@@ -199,13 +199,13 @@
                         url: "/api/users/resetpassword",
                         data: form.serialize(),
                         method: "POST",
-                        success: function () {
+                        success: function (result) {
                             $("#ResetPasswordModal").modal('toggle');
-                            toastr.success("Password reset");
+                            toastr.success(result);
                         },
-                        error: function () {
+                        error: function (result) {
                             $("#ResetPasswordModal").modal('toggle');
-                            toastr.error("Password could not be reset");
+                            toastr.error(result.responseJSON);
                         }
 
                     });
@@ -222,14 +222,14 @@
                         url: "/api/users/addrole",
                         data: form.serialize(),
                         method: "POST",
-                        success: function() {
+                        success: function(result) {
                             $("#AddRoleModal").modal('toggle');                            
-                            toastr.success("User added to role");
+                            toastr.success(result);
                             location.reload();
                         },
-                        error: function() {
+                        error: function (result) {
                             $("#AddRoleModal").modal('toggle');
-                            toastr.error("Unable to add user to role");
+                            toastr.error(result.responseJSON);
                         }
                     });
                 });

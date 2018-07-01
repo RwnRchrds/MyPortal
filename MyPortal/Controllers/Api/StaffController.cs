@@ -45,13 +45,13 @@ namespace MyPortal.Controllers.Api
             if (!ModelState.IsValid)
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-            var Staff = Mapper.Map<StaffDto, Staff>(staffDto);
+            var staff = Mapper.Map<StaffDto, Staff>(staffDto);
             _context.Staff
-                .Add(Staff);
+                .Add(staff);
 
             _context.SaveChanges();
 
-            staffDto.Id = Staff.Id;
+            staffDto.Id = staff.Id;
 
             return staffDto;
         }

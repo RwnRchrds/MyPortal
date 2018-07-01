@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using Microsoft.AspNet.Identity.EntityFramework;
 using MyPortal.Models;
+using MyPortal.Models.Misc;
 
 namespace MyPortal.ViewModels
 {

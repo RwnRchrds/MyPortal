@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
@@ -8,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using MyPortal.Dtos.Identity;
 using MyPortal.Models;
+using MyPortal.Models.Misc;
 using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers.Api
@@ -45,7 +47,7 @@ namespace MyPortal.Controllers.Api
         {
             var userInDb = _identity.Users.FirstOrDefault(user => user.Id == userId);
             if (userInDb == null)
-                return NotFound();
+                return Content(HttpStatusCode.NotFound, "User not found");
 
             //get user's assigned roles
             var userRoles = await _userManager.GetRolesAsync(userId);
@@ -54,7 +56,7 @@ namespace MyPortal.Controllers.Api
             var roleToRemove =
                 userRoles.FirstOrDefault(role => role.Equals(roleName, StringComparison.InvariantCultureIgnoreCase));
             if (roleToRemove == null)
-                return NotFound();
+                return Content(HttpStatusCode.NotFound, "User is not in role");
 
             var result = await _userManager.RemoveFromRoleAsync(userId, roleToRemove);
             if (result.Succeeded)
@@ -70,7 +72,7 @@ namespace MyPortal.Controllers.Api
         {
             var userInDb = _identity.Users.FirstOrDefault(user => user.Id == data.UserId);
             if (userInDb == null)
-                return NotFound();
+                return Content(HttpStatusCode.NotFound, "User not found");
 
             var removePassword = await _userManager.RemovePasswordAsync(data.UserId);
 
@@ -79,7 +81,7 @@ namespace MyPortal.Controllers.Api
                 var addNewPassword = await _userManager.AddPasswordAsync(data.UserId, data.Password);
 
                 if (addNewPassword.Succeeded)
-                    return Ok();
+                    return Ok("Password reset");
 
                 return BadRequest();
             }
@@ -95,31 +97,42 @@ namespace MyPortal.Controllers.Api
             var userInDb = _identity.Users.FirstOrDefault(u => u.Id == data.UserId);
             var roleToAdd = _identity.Roles.FirstOrDefault(r => r.Name == data.RoleName);
 
-            if (data.RoleName == "Admin")
-                if (!await _userManager.IsInRoleAsync(data.UserId, "SeniorStaff"))
-                    return BadRequest();
-
-            if (data.RoleName == "Finance")
-                if (!await _userManager.IsInRoleAsync(data.UserId, "SeniorStaff"))
-                    return BadRequest();
-
-            if (data.RoleName == "Staff" || data.RoleName == "SeniorStaff" || data.RoleName == "Admin")
-                if (await _userManager.IsInRoleAsync(data.UserId, "Student"))
-                    return BadRequest();
-
-            if (data.RoleName == "Student")
+            switch (data.RoleName)
             {
-                if (await _userManager.IsInRoleAsync(data.UserId, "Staff")) return BadRequest();
-
-                if (await _userManager.IsInRoleAsync(data.UserId, "SeniorStaff")) return BadRequest();
+                case "Admin":
+                    if (!await _userManager.IsInRoleAsync(data.UserId, "SeniorStaff"))
+                        return Content(HttpStatusCode.BadRequest, "User must be a member of SeniorStaff");
+                    break;
+                case "Finance":
+                    if (!await _userManager.IsInRoleAsync(data.UserId, "SeniorStaff"))
+                        return Content(HttpStatusCode.BadRequest, "User must be a member of SeniorStaff");
+                    break;
             }
 
-            if (await _userManager.IsInRoleAsync(data.UserId, data.RoleName)) return BadRequest();
+            switch (data.RoleName)
+            {
+                case "Staff":
+                case "SeniorStaff":
+                case "Admin":
+                    if (await _userManager.IsInRoleAsync(data.UserId, "Student"))
+                        return Content(HttpStatusCode.BadRequest, "Students cannot be added to staff groups");
+                    break;
+                case "Student":
+                    if (await _userManager.IsInRoleAsync(data.UserId, "Staff"))
+                        return Content(HttpStatusCode.BadRequest, "Staff cannot be added to student groups");
+
+                    if (await _userManager.IsInRoleAsync(data.UserId, "SeniorStaff"))
+                        return Content(HttpStatusCode.BadRequest, "Staff cannot be added to student groups");
+                    break;
+            }
+
+            if (await _userManager.IsInRoleAsync(data.UserId, data.RoleName))
+                return Content(HttpStatusCode.BadRequest, "User is already in role");
 
             var result = await _userManager.AddToRoleAsync(data.UserId, data.RoleName);
 
             if (result.Succeeded)
-                return Ok();
+                return Ok("Role added");
 
             return BadRequest();
         }
@@ -140,7 +153,7 @@ namespace MyPortal.Controllers.Api
             var result = await _userManager.CreateAsync(user, data.Password);
 
             if (result.Succeeded)
-                return Ok();
+                return Ok("User added");
 
             return BadRequest();
         }
@@ -153,7 +166,7 @@ namespace MyPortal.Controllers.Api
             var userInDb = _identity.Users.FirstOrDefault(x => x.Id == userId);
 
             if (userInDb == null)
-                return NotFound();
+                return Content(HttpStatusCode.NotFound, "User not found");
 
             var userRoles = await _userManager.GetRolesAsync(userId);
 
@@ -162,7 +175,7 @@ namespace MyPortal.Controllers.Api
             var result = await _userManager.DeleteAsync(userInDb);
 
             if (result.Succeeded)
-                return Ok();
+                return Ok("User deleted");
 
             return BadRequest();
         }
