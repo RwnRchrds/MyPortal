@@ -560,7 +560,6 @@
     <Content Include="Views\Shared\_LayoutFinance.cshtml" />
     <Content Include="Views\Finance\Index.cshtml" />
     <Content Include="Views\Finance\Products.cshtml" />
-    <Content Include="Views\Finance\NewProduct.cshtml" />
     <Content Include="Views\Finance\Accounts.cshtml" />
     <Content Include="Views\Finance\Sales.cshtml" />
     <Content Include="Views\Finance\NewSale.cshtml" />

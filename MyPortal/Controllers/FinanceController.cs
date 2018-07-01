@@ -30,12 +30,6 @@ namespace MyPortal.Controllers
             return View();
         }
 
-        [Route("Staff/Finance/Products/New")]
-        public ActionResult NewProduct()
-        {
-            return View();
-        }
-
         [Route("Staff/Finance/Accounts")]
         public ActionResult Accounts()
         {

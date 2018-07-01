@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
@@ -22,7 +23,7 @@ namespace MyPortal.Controllers.Api
             _context.Dispose();
         }
 
-        //GET PRODUCTS
+        //GET ALL PRODUCTS
         [HttpGet]
         [Route("api/products")]
         public IEnumerable<ProductDto> GetProducts()
@@ -30,6 +31,19 @@ namespace MyPortal.Controllers.Api
             return _context.Products
                 .ToList()
                 .Select(Mapper.Map<Product, ProductDto>);
+        }
+
+        //GET SINGLE PRODUCT
+        [HttpGet]
+        [Route("api/products/{id}")]
+        public ProductDto GetProduct(int id)
+        {
+            var product = _context.Products.SingleOrDefault(x => x.Id == id);
+
+            if (product == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            return Mapper.Map<Product, ProductDto>(product);
         }
 
         //NEW PRODUCT
@@ -43,6 +57,30 @@ namespace MyPortal.Controllers.Api
             _context.SaveChanges();
 
             return Ok("Product added");
+        }
+
+        //UPDATE PRODUCT
+        [HttpPost]
+        [Route("api/products/edit")]
+        public IHttpActionResult UpdateProduct(ProductDto product)
+        {
+            if (product == null)
+                return Content(HttpStatusCode.BadRequest, "Invalid request data");
+
+            var productInDb = _context.Products.SingleOrDefault(x => x.Id == product.Id);
+
+            if (productInDb == null)
+                return Content(HttpStatusCode.NotFound, "Product not found");
+
+            Mapper.Map(product, productInDb);
+            productInDb.OnceOnly = product.OnceOnly;
+            productInDb.Price = product.Price;
+            productInDb.Visible = product.Visible;
+            productInDb.Description = product.Description;
+
+            _context.SaveChanges();
+
+            return Ok("Product updated");
         }
 
         //DELETE PRODUCT
