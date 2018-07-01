@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 
@@ -35,7 +36,8 @@ namespace MyPortal.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm new password")]
-        [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        [System.ComponentModel.DataAnnotations.Compare("NewPassword", ErrorMessage =
+            "The new password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
 
@@ -54,7 +56,8 @@ namespace MyPortal.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm new password")]
-        [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        [System.ComponentModel.DataAnnotations.Compare("NewPassword", ErrorMessage =
+            "The new password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
 
@@ -68,9 +71,7 @@ namespace MyPortal.Models
 
     public class VerifyPhoneNumberViewModel
     {
-        [Required]
-        [Display(Name = "Code")]
-        public string Code { get; set; }
+        [Required] [Display(Name = "Code")] public string Code { get; set; }
 
         [Required]
         [Phone]
@@ -81,6 +82,6 @@ namespace MyPortal.Models
     public class ConfigureTwoFactorViewModel
     {
         public string SelectedProvider { get; set; }
-        public ICollection<System.Web.Mvc.SelectListItem> Providers { get; set; }
+        public ICollection<SelectListItem> Providers { get; set; }
     }
 }

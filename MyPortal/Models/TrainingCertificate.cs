@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Models
 {
-    public partial class TrainingCertificate
+    public class TrainingCertificate
     {
         [Key]
         [Column(Order = 0)]
@@ -17,8 +17,7 @@ namespace MyPortal.Models
         [Display(Name = "Staff")]
         public string Staff { get; set; }
 
-        [Display(Name = "Status")]
-        public int? Status { get; set; }
+        [Display(Name = "Status")] public int? Status { get; set; }
 
         public virtual Staff Staff1 { get; set; }
 

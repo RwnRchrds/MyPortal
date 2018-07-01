@@ -6,60 +6,68 @@
 
 <h2>@Model.User.Id - @Model.User.UserName</h2>
 
-<hr />
+<hr/>
 
 <body>
-    <div class="container" id="details">
-        <div style="float: left;">
-            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#ResetPasswordModal" id="ResetPassword">
-                <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset Password
-            </button>
-            <button type="button" class="btn btn-danger" data-user-id="@Model.User.Id" id="DeleteUser">
-                <span class="glyphicon glyphicon-remove-sign"></span> Delete User
-            </button>
+<div class="container" id="details">
+    <div style="float: left;">
+        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#ResetPasswordModal" id="ResetPassword">
+            <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset Password
+        </button>
+        <button type="button" class="btn btn-danger" data-user-id="@Model.User.Id" id="DeleteUser">
+            <span class="glyphicon glyphicon-remove-sign"></span> Delete User
+        </button>
 
-            <!--USER DETAILS PANEL-->
-            <div class="panel panel-primary" style="max-width: 300px; margin-top: 8px;">
-                <div class="panel-heading">User Details</div>
-                <div class="panel-body">
-                    <table class="table-condensed">
-                        <tr>
-                            <td><b>User ID</b></td>
-                            <td>@Model.User.Id</td>
-                        </tr>
-                        <tr>
-                            <td><b>Username</b></td>
-                            <td>@Model.User.UserName</td>
-                        </tr>
-                        <tr>
-                            <td><b>Access Failed Count</b></td>
-                            <td>@Model.User.AccessFailedCount</td>
-                        </tr>
-                    </table>
-                </div>
+        <!--USER DETAILS PANEL-->
+        <div class="panel panel-primary" style="margin-top: 8px; max-width: 300px;">
+            <div class="panel-heading">User Details</div>
+            <div class="panel-body">
+                <table class="table-condensed">
+                    <tr>
+                        <td>
+                            <b>User ID</b>
+                        </td>
+                        <td>@Model.User.Id</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Username</b>
+                        </td>
+                        <td>@Model.User.UserName</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Access Failed Count</b>
+                        </td>
+                        <td>@Model.User.AccessFailedCount</td>
+                    </tr>
+                </table>
             </div>
         </div>
+    </div>
 
-        <!-- USER ROLES PANEL -->
-        <div style="float: left; margin-left: 20px;" id="Results">
-            <button type="button" class="btn btn-success" id="AddRole" data-toggle="modal" data-target="#AddRoleModal">
-                <span class="glyphicon glyphicon-plus-sign"></span> Add Role
-            </button>
-            <div class="panel panel-primary" style="max-width: 300px; margin-top: 8px;">
-                <div class="panel-heading">User Roles</div>
-                @if (!Model.User.Roles.Any())
+    <!-- USER ROLES PANEL -->
+    <div style="float: left; margin-left: 20px;" id="Results">
+        <button type="button" class="btn btn-success" id="AddRole" data-toggle="modal" data-target="#AddRoleModal">
+            <span class="glyphicon glyphicon-plus-sign"></span> Add Role
+        </button>
+        <div class="panel panel-primary" style="margin-top: 8px; max-width: 300px;">
+            <div class="panel-heading">User Roles</div>
+            @if (!Model.User.Roles.Any())
+            {
                 {
-                    {<text>
-                            <div class="panel-body">No roles to display.</div></text>}
+                    <text>
+                        <div class="panel-body">No roles to display.</div></text>
+                }
             }
             else
             {
                 <table class="table table-condensed table-bordered" id="roles">
                     <thead>
-                        <tr style="background-color: #18bc9c">
-                            <th style="color: whitesmoke">Role</th>
-                            <th style="color: whitesmoke">Remove</th>
-                        </tr>
+                    <tr style="background-color: #18bc9c">
+                        <th style="color: whitesmoke">Role</th>
+                        <th style="color: whitesmoke">Remove</th>
+                    </tr>
                     </thead>
                     @foreach (var role in Model.UserRoles)
                     {
@@ -74,98 +82,100 @@
                     }
                 </table>
             }
-            </div>
         </div>
+    </div>
 
-        <!-- Reset Password Modal -->
-        <div id="ResetPasswordModal" class="modal fade" role="dialog">
-            <div class="modal-dialog">
+    <!-- Reset Password Modal -->
+    <div id="ResetPasswordModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
 
-                <!--content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Reset Password - @Model.User.UserName</h4>
-                    </div>
-                    @using (Ajax.BeginForm(null, null, new AjaxOptions(){Url=""}, new {id = "ResetPasswordForm"}))
-                    {
-                        <div class="modal-body">
-                            <div class="form-group">
-                                @Html.LabelFor(p => p.ChangePassword.Password)
-                                @Html.PasswordFor(p => p.ChangePassword.Password, new { @class = "form-control", id = "enteredPassword", Name="Password" })
-
-                                @Html.HiddenFor(u => u.ChangePassword.UserId, new { Value = Model.User.Id, id = "userIdControl", Name="UserId" })
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Save</button>
-                            </div>
-                        </div>
-                    }
-
+            <!--content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Reset Password - @Model.User.UserName</h4>
                 </div>
-            </div>
-        </div>               
-        
-        <!-- Add Role Modal -->
-        <div id="AddRoleModal" class="modal fade" role="dialog">
-            <div class="modal-dialog">
+                @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "ResetPasswordForm"}))
+                {
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @Html.LabelFor(p => p.ChangePassword.Password)
+                            @Html.PasswordFor(p => p.ChangePassword.Password, new {@class = "form-control", id = "enteredPassword", Name = "Password"})
 
-                <!--content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Add Role - @Model.User.UserName</h4>
-                    </div>
-                    @using (Ajax.BeginForm(null, null, new AjaxOptions(){Url=""}, new {id = "AddRoleForm"}))
-                    {
-                        <div class="modal-body">
-                            <div class="form-group">
-                                @Html.LabelFor(r => r.ChangeRole.RoleName)
-                                @Html.DropDownListFor(r => r.ChangeRole.RoleName, new SelectList(Model.Roles, "Name", "Name"), "Select Role" ,new { @class = "form-control", Name="RoleName" })
-
-                                @Html.HiddenFor(u => u.ChangePassword.UserId, new { Value = Model.User.Id, Name="UserId" })
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Save</button>
-                            </div>
+                            @Html.HiddenFor(u => u.ChangePassword.UserId, new {Value = Model.User.Id, id = "userIdControl", Name = "UserId"})
                         </div>
-                    }
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                }
 
-                </div>
             </div>
         </div>
     </div>
+
+    <!-- Add Role Modal -->
+    <div id="AddRoleModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!--content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add Role - @Model.User.UserName</h4>
+                </div>
+                @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "AddRoleForm"}))
+                {
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @Html.LabelFor(r => r.ChangeRole.RoleName)
+                            @Html.DropDownListFor(r => r.ChangeRole.RoleName, new SelectList(Model.Roles, "Name", "Name"), "Select Role", new {@class = "form-control", Name = "RoleName"})
+
+                            @Html.HiddenFor(u => u.ChangePassword.UserId, new {Value = Model.User.Id, Name = "UserId"})
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 
 @section scripts
 {
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
 
-            $("#roles").on("click", ".js-delete", function () {
-                var button = $(this);
-                bootbox.confirm("Are you sure you want to remove the user from this role?",
-                    function (result) {
-                        if (result) {
-                            $.ajax({
-                                url: "/api/users/" +
-                                button.attr("data-user-id") +
-                                "/roles/" +
-                                button.attr("data-role-name"),
-                                method: "DELETE",
-                                success: function (result) {
-                                    location.reload();
-                                    toastr.success(result);
-                                },
-                                error: function (result) {
-                                    toastr.error(result.responseJSON);
-                                }
-                            });
-                        }
-                    });
-            });
+            $("#roles").on("click",
+                ".js-delete",
+                function() {
+                    var button = $(this);
+                    bootbox.confirm("Are you sure you want to remove the user from this role?",
+                        function(result) {
+                            if (result) {
+                                $.ajax({
+                                    url: "/api/users/" +
+                                        button.attr("data-user-id") +
+                                        "/roles/" +
+                                        button.attr("data-role-name"),
+                                    method: "DELETE",
+                                    success: function(result) {
+                                        location.reload();
+                                        toastr.success(result);
+                                    },
+                                    error: function(result) {
+                                        toastr.error(result.responseJSON);
+                                    }
+                                });
+                            }
+                        });
+                });
 
             $("#DeleteUser").on("click",
                 function() {
@@ -189,7 +199,7 @@
                 });
 
             $("#ResetPasswordForm").on("submit",
-                function (e) {
+                function(e) {
 
                     e.preventDefault();
 
@@ -199,11 +209,11 @@
                         url: "/api/users/resetpassword",
                         data: form.serialize(),
                         method: "POST",
-                        success: function (result) {
+                        success: function(result) {
                             $("#ResetPasswordModal").modal('toggle');
                             toastr.success(result);
                         },
-                        error: function (result) {
+                        error: function(result) {
                             $("#ResetPasswordModal").modal('toggle');
                             toastr.error(result.responseJSON);
                         }
@@ -223,11 +233,11 @@
                         data: form.serialize(),
                         method: "POST",
                         success: function(result) {
-                            $("#AddRoleModal").modal('toggle');                            
+                            $("#AddRoleModal").modal('toggle');
                             toastr.success(result);
                             location.reload();
                         },
-                        error: function (result) {
+                        error: function(result) {
                             $("#AddRoleModal").modal('toggle');
                             toastr.error(result.responseJSON);
                         }
@@ -235,7 +245,7 @@
                 });
 
             $('#ResetPasswordModal').on('hidden.bs.modal',
-                function () {
+                function() {
                     $(this).find('form').trigger('reset');
                 });
         });
@@ -243,4 +253,3 @@
 
     @Scripts.Render("~/bundles/jqueryval")
 }
-

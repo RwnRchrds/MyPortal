@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Models
 {
-    public partial class Result
+    public class Result
     {
         [Key]
         [Column(Order = 0)]

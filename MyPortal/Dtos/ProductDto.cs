@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace MyPortal.Dtos
+﻿namespace MyPortal.Dtos
 {
     public class ProductDto
     {
@@ -11,5 +6,6 @@ namespace MyPortal.Dtos
         public string Description { get; set; }
         public decimal Price { get; set; }
         public bool? Visible { get; set; }
+        public bool? OnceOnly { get; set; }
     }
 }

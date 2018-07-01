@@ -27,11 +27,11 @@ namespace MyPortal.Controllers
         // Staff Landing Page
         public ActionResult Index()
         {
-            var staffID = User.Identity.GetUserId();
+            var staffId = User.Identity.GetUserId();
 
-            var staff = _context.Staff.SingleOrDefault(s => s.Id == staffID);
+            var staff = _context.Staff.SingleOrDefault(s => s.Id == staffId);
 
-            var certificates = _context.TrainingCertificates.Where(c => c.Staff == staffID).ToList();
+            var certificates = _context.TrainingCertificates.Where(c => c.Staff == staffId).ToList();
 
             var viewModel = new StaffHomeViewModel
             {
@@ -199,21 +199,22 @@ namespace MyPortal.Controllers
         // Generates chart data for Student Details view
         public static ChartData GetChartData(List<Result> results, bool upperSchool)
         {
-            var data = new ChartData();
+            var data = new ChartData
+            {
+                L1 = 0,
+                L2 = 0,
+                L3 = 0,
+                L4 = 0,
+                L5 = 0,
+                L6 = 0,
+                L7 = 0,
+                L8 = 0,
+                L9 = 0
+            };
 
-            data.L1 = 0;
-            data.L2 = 0;
-            data.L3 = 0;
-            data.L4 = 0;
-            data.L5 = 0;
-            data.L6 = 0;
-            data.L7 = 0;
-            data.L8 = 0;
-            data.L9 = 0;
 
             if (upperSchool)
                 foreach (var result in results)
-                {
                     switch (result.Value)
                     {
                         case "A*":
@@ -244,7 +245,6 @@ namespace MyPortal.Controllers
                             data.L9++;
                             break;
                     }
-                }
             else
                 foreach (var result in results)
                 {

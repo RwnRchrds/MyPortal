@@ -4,16 +4,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MyPortal.Models
 {
     [Table("BasketItem")]
-    public partial class BasketItem
+    public class BasketItem
     {
-        [Display(Name = "ID")]
-        public int Id { get; set; }
+        [Display(Name = "ID")] public int Id { get; set; }
 
-        [Display(Name = "Student")]
-        public int Student { get; set; }
+        [Display(Name = "Student")] public int Student { get; set; }
 
-        [Display(Name = "Product")]
-        public int Product { get; set; }
+        [Display(Name = "Product")] public int Product { get; set; }
 
         public virtual Product Product1 { get; set; }
 

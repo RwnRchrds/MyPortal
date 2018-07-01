@@ -16,8 +16,8 @@ namespace MyPortal.Controllers.Api
 {
     public class UsersController : ApiController
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _identity;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public UsersController()
         {
@@ -145,10 +145,12 @@ namespace MyPortal.Controllers.Api
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var user = new ApplicationUser();
+            var user = new ApplicationUser
+            {
+                Id = data.Id,
+                UserName = data.Username
+            };
 
-            user.Id = data.Id;
-            user.UserName = data.Username;
 
             var result = await _userManager.CreateAsync(user, data.Password);
 

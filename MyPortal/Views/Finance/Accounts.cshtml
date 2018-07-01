@@ -8,13 +8,13 @@
 
 <table class="table table-bordered table-hover" id="students">
     <thead>
-        <tr>
-            <th>Student</th>
-            <th>Year Group</th>
-            <th>Reg Group</th>
-            <th>Balance</th>
-            <th>Actions</th>
-        </tr>
+    <tr>
+        <th>Student</th>
+        <th>Year Group</th>
+        <th>Reg Group</th>
+        <th>Balance</th>
+        <th>Actions</th>
+    </tr>
     </thead>
     <tbody></tbody>
 </table>
@@ -28,19 +28,19 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title" style="color: green">Credit Account</h4>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions() { Url = "" }, new { id = "CreditForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "CreditForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.LabelFor(x => x.BalanceAdjustment.Amount)
                         <div class="input-group">
-                            <span class="input-group-addon" id="basic-addon">£</span>
-                            @Html.TextBoxFor(x => x.BalanceAdjustment.Amount, new { @class = "form-control", Name = "Amount" })
+                            <span class="input-group-addon" id="basic-addon" style="font-weight: bold;">£</span>
+                            @Html.TextBoxFor(x => x.BalanceAdjustment.Amount, new {@class = "form-control", Name = "Amount"})
                         </div>
                         @Html.ValidationMessageFor(x => x.BalanceAdjustment.Amount)
                     </div>
                     <div class="form-group">
-                        @Html.HiddenFor(x => x.BalanceAdjustment.Student, new { Name = "Student", id = "studentIdControlCredit" })
+                        @Html.HiddenFor(x => x.BalanceAdjustment.Student, new {Name = "Student", id = "studentIdControlCredit"})
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -62,19 +62,19 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title" style="color: red">Debit Account</h4>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions() { Url = "" }, new { id = "DebitForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "DebitForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.LabelFor(x => x.BalanceAdjustment.Amount)
                         <div class="input-group">
-                            <span class="input-group-addon" id="basic-addon">£</span>
-                            @Html.TextBoxFor(x => x.BalanceAdjustment.Amount, new { @class = "form-control", Name = "Amount" })
+                            <span class="input-group-addon" id="basic-addon" style="font-weight: bold;">£</span>
+                            @Html.TextBoxFor(x => x.BalanceAdjustment.Amount, new {@class = "form-control", Name = "Amount"})
                         </div>
                         @Html.ValidationMessageFor(x => x.BalanceAdjustment.Amount)
                     </div>
                     <div class="form-group">
-                        @Html.HiddenFor(x => x.BalanceAdjustment.Student, new { Name = "Student", id = "studentIdControlDebit" })
+                        @Html.HiddenFor(x => x.BalanceAdjustment.Student, new {Name = "Student", id = "studentIdControlDebit"})
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -90,7 +90,7 @@
 @section scripts
 {
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
 
             function loadAccounts() {
                 $("#students").DataTable({
@@ -101,7 +101,7 @@
                     columns: [
                         {
                             data: "firstName",
-                            render: function (data, type, student) {
+                            render: function(data, type, student) {
                                 return student.lastName + ", " + student.firstName;
                             }
                         },
@@ -117,7 +117,7 @@
                         },
                         {
                             data: "id",
-                            render: function (data) {
+                            render: function(data) {
                                 return "<button type='button' class='btn btn-xs btn-danger js-debit' data-student-id=" +
                                     data +
                                     "><span class='glyphicon glyphicon-minus' aria-hidden='true'></span></button> " +
@@ -133,7 +133,7 @@
             //Show Credit Modal on Click
             $("#students").on("click",
                 ".js-credit",
-                function () {
+                function() {
                     var button = $(this);
                     var studentId = button.attr("data-student-id");
 
@@ -145,7 +145,7 @@
             //Show Debit Modal on Click
             $("#students").on("click",
                 ".js-debit",
-                function () {
+                function() {
                     var button = $(this);
                     var studentId = button.attr("data-student-id");
 
@@ -156,20 +156,20 @@
 
             //Credit on Submit
             $("#CreditForm").on("submit",
-                function (e) {
+                function(e) {
                     e.preventDefault();
 
                     $.ajax({
                         url: "/api/students/credit",
                         data: $("#CreditForm").serialize(),
                         method: "POST",
-                        success: function (result) {
+                        success: function(result) {
                             $("#CreditModal").modal('hide');
                             console.log(result);
                             toastr.success(result);
                             $("#students").DataTable().ajax.reload();
                         },
-                        error: function (result) {
+                        error: function(result) {
                             $("#CreditModal").modal('hide');
                             toastr.error(result.responseJSON);
                         }
@@ -178,19 +178,19 @@
 
             //Debit on Submit
             $("#DebitForm").on("submit",
-                function (e) {
+                function(e) {
                     e.preventDefault();
 
                     $.ajax({
                         url: "/api/students/debit",
                         data: $("#DebitForm").serialize(),
                         method: "POST",
-                        success: function (result) {
+                        success: function(result) {
                             $("#DebitModal").modal('hide');
                             toastr.success(result);
                             $("#students").DataTable().ajax.reload();
                         },
-                        error: function (result) {
+                        error: function(result) {
                             $("#CreditModal").modal('hide');
                             toastr.error(result.responseJSON);
                         }
@@ -199,11 +199,11 @@
 
             //Clear Modal When Closed
             $('#CreditModal').on('hidden.bs.modal',
-                function () {
+                function() {
                     $(this).find('form').trigger('reset');
                 });
             $('#DebitModal').on('hidden.bs.modal',
-                function () {
+                function() {
                     $(this).find('form').trigger('reset');
                 });
 
@@ -214,4 +214,3 @@
     @Scripts.Render("~/bundles/staff")
     @Scripts.Render("~/bundles/jqueryval")
 }
-

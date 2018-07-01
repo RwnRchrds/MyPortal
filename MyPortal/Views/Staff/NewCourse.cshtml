@@ -10,12 +10,12 @@
 {
     <div class="form-group">
         @Html.LabelFor(c => c.Code)
-        @Html.TextBoxFor(c => c.Code, new { @class = "form-control" })
+        @Html.TextBoxFor(c => c.Code, new {@class = "form-control"})
         @Html.ValidationMessageFor(c => c.Code)
     </div>
     <div class="form-group">
         @Html.LabelFor(c => c.Description)
-        @Html.TextBoxFor(c => c.Description, new { @class = "form-control" })
+        @Html.TextBoxFor(c => c.Description, new {@class = "form-control"})
         @Html.ValidationMessageFor(c => c.Description)
     </div>
     @Html.AntiForgeryToken()
@@ -26,9 +26,9 @@
 @section scripts
 {
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $("#backButton").on("click",
-                function () {
+                function() {
                     location.replace("/Staff/TrainingCourses");
                 });
         });
@@ -37,4 +37,3 @@
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/staff")
 }
-

@@ -1,5 +1,4 @@
-﻿@using System.Activities.Statements
-<div class="navbar navbar-inverse navbar-fixed-top">
+﻿<div class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -7,7 +6,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            @Html.ActionLink("MyPortal", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            @Html.ActionLink("MyPortal", "Index", "Home", new {area = ""}, new {@class = "navbar-brand"})
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
@@ -17,29 +16,43 @@
                     <ul class="dropdown-menu">
                         <li>@Html.ActionLink("Students", "Students", "Staff")</li>
                         <li>@Html.ActionLink("Staff", "Staff", "Staff")</li>
-                        <li id="markbook-link"><a href="#">Markbook</a></li>
+                        <li id="markbook-link">
+                            <a href="#">Markbook</a>
+                        </li>
                         <li>@Html.ActionLink("Training Courses", "TrainingCourses", "Staff")</li>
                         @if (User.IsInRole("Admin"))
                         {
                             <li role="separator" class="divider"></li>
-                            <li>@Html.ActionLink("MyPortal Admin", "Index","Admin")</li>
+                            <li>@Html.ActionLink("MyPortal Admin", "Index", "Admin")</li>
                         }
                         @if (User.IsInRole("Finance"))
                         {
                             <li role="separator" class="divider"></li>
-                            <li>@Html.ActionLink("Finance","Index","Finance")</li>
+                            <li>@Html.ActionLink("Finance", "Index", "Finance")</li>
                         }
                     </ul>
                 </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">VLE <span class="caret"></span></a>
-                    <ul class="dropdown-menu">   
-                        <li><a href="http://calendar.google.com/a/harrodsschool.ddns.net" target="_blank">Calendar</a></li>
-                        <li><a href="http://classroom.google.com/a/harrodsschool.ddns.net" target="_blank">Classroom</a></li>
-                        <li><a href="http://drive.google.com/a/harrodsschool.ddns.net" target="_blank">Drive</a></li>
-                        <li><a href="http://hangouts.google.com/a/harrodsschool.ddns.net" target="_blank">Hangouts</a></li>
-                        <li><a href="http://keep.google.com/a/harrodsschool.ddns.net" target="_blank">Keep</a></li>
-                        <li><a href="http://mail.google.com/a/harrodsschool.ddns.net" target="_blank">Mail</a></li>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="http://calendar.google.com/a/harrodsschool.ddns.net" target="_blank">Calendar</a>
+                        </li>
+                        <li>
+                            <a href="http://classroom.google.com/a/harrodsschool.ddns.net" target="_blank">Classroom</a>
+                        </li>
+                        <li>
+                            <a href="http://drive.google.com/a/harrodsschool.ddns.net" target="_blank">Drive</a>
+                        </li>
+                        <li>
+                            <a href="http://hangouts.google.com/a/harrodsschool.ddns.net" target="_blank">Hangouts</a>
+                        </li>
+                        <li>
+                            <a href="http://keep.google.com/a/harrodsschool.ddns.net" target="_blank">Keep</a>
+                        </li>
+                        <li>
+                            <a href="http://mail.google.com/a/harrodsschool.ddns.net" target="_blank">Mail</a>
+                        </li>
                     </ul>
                 </li>
             </ul>
@@ -47,7 +60,3 @@
         </div>
     </div>
 </div>
-
-
-
-

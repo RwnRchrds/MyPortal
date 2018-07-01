@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MyPortal.ViewModels
 {
     public class NewUserViewModel
     {
-        [Required]
-        [Display(Name = "User ID")]
-        public string Id { get; set; }
+        [Required] [Display(Name = "User ID")] public string Id { get; set; }
 
         [Required]
-        [Display(Name ="Username")]
+        [Display(Name = "Username")]
         public string Username { get; set; }
 
         [Required]

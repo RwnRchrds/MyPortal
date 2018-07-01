@@ -5,28 +5,36 @@
 }
 
 <h2>@Model.CurrentUser.Title @Model.CurrentUser.FirstName.Substring(0, 1) @Model.CurrentUser.LastName</h2>
-<hr />
+<hr/>
 <!-- MyDetails Panel -->
 <div class="container" id="Details">
     <div style="float: left;">
-        <div class="panel panel-primary" style="width: 300px; margin-top: 8px;">
+        <div class="panel panel-primary" style="margin-top: 8px; width: 300px;">
             <div class="panel-heading">MyDetails</div>
             <div class="panel-body">
                 <table class="table-condensed">
                     <tr>
-                        <td><b>Title</b></td>
+                        <td>
+                            <b>Title</b>
+                        </td>
                         <td>@Model.CurrentUser.Title</td>
                     </tr>
                     <tr>
-                        <td><b>First Name</b></td>
+                        <td>
+                            <b>First Name</b>
+                        </td>
                         <td>@Model.CurrentUser.FirstName</td>
                     </tr>
                     <tr>
-                        <td><b>Last Name</b></td>
+                        <td>
+                            <b>Last Name</b>
+                        </td>
                         <td>@Model.CurrentUser.LastName</td>
                     </tr>
                     <tr>
-                        <td><b>Staff Code</b></td>
+                        <td>
+                            <b>Staff Code</b>
+                        </td>
                         <td>@Model.CurrentUser.Id</td>
                     </tr>
                 </table>
@@ -34,31 +42,33 @@
         </div>
     </div>
     <div style="float: left;">
-        <div class="panel panel-primary" style="width: 1000px; margin-top: 8px;">
+        <div class="panel panel-primary" style="margin-top: 8px; width: 1000px;">
             <div class="panel-heading">MyTraining</div>
             @if (!Model.TrainingCertificates.Any())
-            {<text>
-                    <div class="panel-body">No training certificates to display.</div></text>}
-        else
-        {
-            <table class="table table-bordered" id="logs">
-                <thead>
+            {
+                <text>
+                    <div class="panel-body">No training certificates to display.</div></text>
+            }
+            else
+            {
+                <table class="table table-bordered" id="logs">
+                    <thead>
                     <tr style="background-color: #18bc9c;">
                         <th style="color: whitesmoke;">Course</th>
                         <th style="color: whitesmoke;">Description</th>
                         <th style="color: whitesmoke;">Status</th>
                     </tr>
-                </thead>
-                @foreach (var certificate in Model.TrainingCertificates)
-                {
-                    <tr>
-                        <td>@certificate.TrainingCourse.Code</td>
-                        <td>@certificate.TrainingCourse.Description</td>
-                        <td>@certificate.TrainingStatus.Name</td>
-                    </tr>
-                }
-            </table>
-        }
+                    </thead>
+                    @foreach (var certificate in Model.TrainingCertificates)
+                    {
+                        <tr>
+                            <td>@certificate.TrainingCourse.Code</td>
+                            <td>@certificate.TrainingCourse.Description</td>
+                            <td>@certificate.TrainingStatus.Name</td>
+                        </tr>
+                    }
+                </table>
+            }
         </div>
     </div>
 </div>
@@ -67,4 +77,3 @@
 {
     @Scripts.Render("~/bundles/staff")
 }
-

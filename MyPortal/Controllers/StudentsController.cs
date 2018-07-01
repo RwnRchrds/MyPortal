@@ -1,5 +1,4 @@
-﻿using System.Data.Entity;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using MyPortal.Models;
@@ -20,10 +19,7 @@ namespace MyPortal.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                _context?.Dispose();
-            }
+            if (disposing) _context?.Dispose();
 
             base.Dispose(disposing);
         }

@@ -4,16 +4,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Models
 {
-    public partial class Sale
+    public class Sale
     {
-        [Display(Name = "ID")]
-        public int Id { get; set; }
+        [Display(Name = "ID")] public int Id { get; set; }
 
-        [Display(Name = "Student")]
-        public int Student { get; set; }
+        [Display(Name = "Student")] public int Student { get; set; }
 
-        [Display(Name = "Product")]
-        public int Product { get; set; }
+        [Display(Name = "Product")] public int Product { get; set; }
 
         [Display(Name = "Date")]
         [Column(TypeName = "date")]

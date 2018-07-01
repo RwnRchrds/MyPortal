@@ -4,11 +4,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Models
 {
-    public partial class Log
+    public class Log
     {
-        [Display(Name = "ID")]
-        public int Id { get; set; }
+        [Display(Name = "ID")] public int Id { get; set; }
 
+        [Required]
         [Display(Name = "Log Type")]
         public int Type { get; set; }
 
@@ -17,8 +17,7 @@ namespace MyPortal.Models
         [StringLength(3)]
         public string Author { get; set; }
 
-        [Display(Name = "Student")]
-        public int Student { get; set; }
+        [Display(Name = "Student")] public int Student { get; set; }
 
         [Required]
         [StringLength(4000)]

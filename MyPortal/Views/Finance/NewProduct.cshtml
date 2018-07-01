@@ -5,37 +5,45 @@
 }
 
 <h2>New Product</h2>
-<hr />
+<hr/>
 <body>
-    @using (Ajax.BeginForm(null, null, new AjaxOptions() { Url = "" }, new { id = "newProductForm" }))
-    {
-        <div class="form-group">
-            @Html.LabelFor(x => x.Product.Description)
-            @Html.TextBoxFor(x => x.Product.Description, new { @class = "form-control", @Name = "Description" })
-            @Html.ValidationMessageFor(x => x.Product.Description)
+@using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "newProductForm"}))
+{
+    <div class="form-group">
+        @Html.LabelFor(x => x.Product.Description)
+        @Html.TextBoxFor(x => x.Product.Description, new {@class = "form-control", Name = "Description"})
+        @Html.ValidationMessageFor(x => x.Product.Description)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.Product.Price)
+        <div class="input-group">
+            <span class="input-group-addon" id="basic-addon" style="font-weight: bold;">£</span>
+            @Html.TextBoxFor(x => x.Product.Price, new {@class = "form-control", Name = "Price"})
         </div>
-        <div class="form-group">
-            @Html.LabelFor(x => x.Product.Price)
-            @Html.TextBoxFor(x => x.Product.Price, new { @class = "form-control", @Name="Price" })
-            @Html.ValidationMessageFor(x => x.Product.Price)            
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(x => x.Product.Visible)
-            @Html.CheckBoxFor(x => x.Product.Visible, new { @class = "form-control",@Name="Visible", @Value = true })
-            @Html.ValidationMessageFor(x => x.Product.Visible)
-        </div>
-        <button type="button" class="btn btn-primary" id="backButton">Back</button>
-        <button type="submit" class="btn btn-primary">Save</button>
-    }
-    <br />
+        @Html.ValidationMessageFor(x => x.Product.Price)
+    </div>
+    <div class="checkbox">
+        <label style="font-weight: bold;">
+            @Html.CheckBoxFor(x => x.Product.Visible, new {Name = "Visible"}) Available on Store
+        </label>
+    </div>
+    <div class="checkbox">
+        <label style="font-weight: bold;">
+            @Html.CheckBoxFor(x => x.Product.OnceOnly, new {Name = "OnceOnly"}) One-Time Purchase
+        </label>
+    </div>
+    <button type="button" class="btn btn-primary" id="backButton">Back</button>
+    <button type="submit" class="btn btn-primary">Save</button>
+}
+<br/>
 </body>
 
 @section scripts
 {
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $("#newProductForm").on("submit",
-                function (e) {
+                function(e) {
 
                     e.preventDefault();
 
@@ -46,11 +54,11 @@
                         url: "/api/products/new",
                         data: data,
                         method: "POST",
-                        success: function (result) {
+                        success: function(result) {
                             toastr.success(result);
                             location.replace("/Staff/Finance/Products");
                         },
-                        error: function (result) {
+                        error: function(result) {
                             toastr.error(result.responseJSON);
                             form.reset();
                         }
@@ -58,7 +66,7 @@
                 });
 
             $("#backButton").on("click",
-                function () {
+                function() {
                     location.replace("/Staff/Finance/Products");
                 });
         })
@@ -66,4 +74,3 @@
 
     @Scripts.Render("~/bundles/jqueryval")
 }
-

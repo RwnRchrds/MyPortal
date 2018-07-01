@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MyPortal.Models
 {
-    public partial class Student
+    public class Student
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Student()
         {
             BasketItems = new HashSet<BasketItem>();
@@ -29,30 +30,26 @@ namespace MyPortal.Models
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
-        [Display(Name = "4Matrix ID")]
-        public int? FourMId { get; set; }
+        [Display(Name = "4Matrix ID")] public int? FourMId { get; set; }
 
-        [Display(Name = "Reg Group")]
-        public int RegGroup { get; set; }
+        [Display(Name = "Reg Group")] public int RegGroup { get; set; }
 
-        [Display(Name = "Year Group")]
-        public int YearGroup { get; set; }
+        [Display(Name = "Year Group")] public int YearGroup { get; set; }
 
-        [Display(Name = "Account Balance")]
-        public decimal AccountBalance { get; set; }
+        [Display(Name = "Account Balance")] public decimal AccountBalance { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BasketItem> BasketItems { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Log> Logs { get; set; }
 
         public virtual RegGroup RegGroup1 { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Result> Results { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Sale> Sales { get; set; }
 
         public virtual YearGroup YearGroup1 { get; set; }

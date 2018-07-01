@@ -1,7 +1,7 @@
 ﻿//MyResults Placeholder
-$(document).ready(function () {
+$(document).ready(function() {
     $("#myresults-link").on("click",
-        function () {
+        function() {
             toastr.warning("This feature is not yet available");
         });
 });

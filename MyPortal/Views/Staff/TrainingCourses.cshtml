@@ -8,15 +8,15 @@
 
 @if (User.IsInRole("SeniorStaff"))
 {
-    @Html.ActionLink("New Course", "NewCourse", "Staff", null, new { @class = "btn btn-success", @style = "margin-bottom: 8px;" })
+    @Html.ActionLink("New Course", "NewCourse", "Staff", null, new {@class = "btn btn-success", style = "margin-bottom: 8px;"})
 }
 
 <table class="table table-bordered table-hover" id="courses">
     <thead>
-        <tr>
-            <th>Code</th>
-            <th>Description</th>
-        </tr>
+    <tr>
+        <th>Code</th>
+        <th>Description</th>
+    </tr>
     </thead>
     <tbody></tbody>
 </table>
@@ -24,7 +24,7 @@
 @section scripts
 {
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $("#courses").DataTable({
                 ajax: {
                     url: "/api/courses",
@@ -44,4 +44,3 @@
 
     @Scripts.Render("~/bundles/staff")
 }
-

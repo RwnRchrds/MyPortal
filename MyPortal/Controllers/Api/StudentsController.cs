@@ -71,7 +71,7 @@ namespace MyPortal.Controllers.Api
             if (studentInDb == null)
                 return Content(HttpStatusCode.NotFound, "Student not found");
 
-            var c = Mapper.Map(studentDto, studentInDb);
+            Mapper.Map(studentDto, studentInDb);
             studentInDb.FirstName = studentDto.FirstName;
             studentInDb.LastName = studentDto.LastName;
             studentInDb.FourMId = studentDto.FourMId;
@@ -104,7 +104,6 @@ namespace MyPortal.Controllers.Api
         {
             if (data.Amount <= 0)
                 return Content(HttpStatusCode.BadRequest, "Cannot credit negative amount");
-
 
 
             var studentInDb = _context.Students.SingleOrDefault(s => s.Id == data.Student);

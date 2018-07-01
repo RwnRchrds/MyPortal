@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Security.Cryptography.X509Certificates;
 using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
@@ -74,7 +71,8 @@ namespace MyPortal.Controllers.Api
             var inBasket = _context.BasketItems.Where(a => a.Student == student);
 
             return _context.Products
-                .Where(x => !x.OnceOnly && x.Visible || x.Visible && purchased.All(p => p.Product != x.Id) && inBasket.All(b => b.Product != x.Id))
+                .Where(x => !x.OnceOnly && x.Visible || x.Visible && purchased.All(p => p.Product != x.Id) &&
+                            inBasket.All(b => b.Product != x.Id))
                 .ToList()
                 .Select(Mapper.Map<Product, ProductDto>);
         }

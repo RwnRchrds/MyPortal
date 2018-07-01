@@ -5,56 +5,56 @@
 }
 
 <h2>New User</h2>
-<hr />
+<hr/>
 <body>
-    @using (Ajax.BeginForm(null, null, new AjaxOptions() { Url = "" }, new { id = "newUserForm" }))
-    {
-        <div class="form-group">
-            @Html.LabelFor(x => x.Id)
-            @Html.TextBoxFor(x => x.Id, new { @class = "form-control" })
-            @Html.ValidationMessageFor(x => x.Id)
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(x => x.Username)
-            @Html.TextBoxFor(x => x.Username, new { @class = "form-control" })
-            @Html.ValidationMessageFor(x => x.Username)
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(x => x.Password)
-            @Html.PasswordFor(x => x.Password, new { @class = "form-control" })
-            @Html.ValidationMessageFor(x => x.Password)
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(x => x.ConfirmPassword)
-            @Html.PasswordFor(x => x.ConfirmPassword, new { @class = "form-control" })
-            @Html.ValidationMessageFor(x => x.ConfirmPassword)
-        </div>
-        <button type="button" class="btn btn-primary" id="backButton">Back</button>
-        <button type="submit" class="btn btn-primary">Save</button>
-    }
+@using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "newUserForm"}))
+{
+    <div class="form-group">
+        @Html.LabelFor(x => x.Id)
+        @Html.TextBoxFor(x => x.Id, new {@class = "form-control"})
+        @Html.ValidationMessageFor(x => x.Id)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.Username)
+        @Html.TextBoxFor(x => x.Username, new {@class = "form-control"})
+        @Html.ValidationMessageFor(x => x.Username)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.Password)
+        @Html.PasswordFor(x => x.Password, new {@class = "form-control"})
+        @Html.ValidationMessageFor(x => x.Password)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.ConfirmPassword)
+        @Html.PasswordFor(x => x.ConfirmPassword, new {@class = "form-control"})
+        @Html.ValidationMessageFor(x => x.ConfirmPassword)
+    </div>
+    <button type="button" class="btn btn-primary" id="backButton">Back</button>
+    <button type="submit" class="btn btn-primary">Save</button>
+}
 </body>
 
 @section scripts
 {
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $("#newUserForm").on("submit",
-                function (e) {
+                function(e) {
 
                     e.preventDefault();
 
                     var form = $("#newUserForm");
-                    var data = form.serialize();                    
+                    var data = form.serialize();
 
                     $.ajax({
                         url: "/api/users/new",
                         data: data,
                         method: "POST",
-                        success: function (result) {
+                        success: function(result) {
                             toastr.success(result);
                             location.replace("/Staff/Admin/Users");
                         },
-                        error: function (result) {
+                        error: function(result) {
                             toastr.error(result.responseJSON);
                             form.reset();
                         }
@@ -62,7 +62,7 @@
                 });
 
             $("#backButton").on("click",
-                function () {
+                function() {
                     location.replace("/Staff/Admin/Users");
                 });
         })

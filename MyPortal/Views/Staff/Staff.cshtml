@@ -14,9 +14,9 @@ else
 {
     <table class="table table-bordered table-hover" id="staff">
         <thead>
-            <tr>
-                <th>Staff</th>
-            </tr>
+        <tr>
+            <th>Staff</th>
+        </tr>
         </thead>
         <tbody></tbody>
     </table>
@@ -25,7 +25,7 @@ else
 @section scripts
 {
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $("#staff").DataTable({
                 ajax: {
                     url: "/api/staff",
@@ -34,8 +34,14 @@ else
                 columns: [
                     {
                         data: "firstName",
-                        render: function (data, type, staff) {
-                            return "<a href='/Staff/Staff/" + staff.id + "'>" + staff.lastName + ", " + staff.firstName + "</a>";
+                        render: function(data, type, staff) {
+                            return "<a href='/Staff/Staff/" +
+                                staff.id +
+                                "'>" +
+                                staff.lastName +
+                                ", " +
+                                staff.firstName +
+                                "</a>";
                         }
                     }
                 ]
@@ -45,4 +51,3 @@ else
 
     @Scripts.Render("~/bundles/staff")
 }
-

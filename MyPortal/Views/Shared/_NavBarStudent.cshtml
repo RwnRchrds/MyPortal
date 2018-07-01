@@ -6,7 +6,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            @Html.ActionLink("MyPortal", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            @Html.ActionLink("MyPortal", "Index", "Home", new {area = ""}, new {@class = "navbar-brand"})
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
@@ -14,17 +14,27 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Menu <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li>@Html.ActionLink("MyResults","Results","Students")</li>
+                        <li>@Html.ActionLink("MyResults", "Results", "Students")</li>
                     </ul>
                 </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">VLE <span class="caret"></span></a>
-                    <ul class="dropdown-menu">   
-                        <li><a href="http://calendar.google.com/a/harrodsschool.ddns.net" target="_blank">Calendar</a></li>
-                        <li><a href="http://classroom.google.com/a/harrodsschool.ddns.net" target="_blank">Classroom</a></li>
-                        <li><a href="http://drive.google.com/a/harrodsschool.ddns.net" target="_blank">Drive</a></li>
-                        <li><a href="http://keep.google.com/a/harrodsschool.ddns.net" target="_blank">Keep</a></li>
-                        <li><a href="http://mail.google.com/a/harrodsschool.ddns.net" target="_blank">Mail</a></li>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="http://calendar.google.com/a/harrodsschool.ddns.net" target="_blank">Calendar</a>
+                        </li>
+                        <li>
+                            <a href="http://classroom.google.com/a/harrodsschool.ddns.net" target="_blank">Classroom</a>
+                        </li>
+                        <li>
+                            <a href="http://drive.google.com/a/harrodsschool.ddns.net" target="_blank">Drive</a>
+                        </li>
+                        <li>
+                            <a href="http://keep.google.com/a/harrodsschool.ddns.net" target="_blank">Keep</a>
+                        </li>
+                        <li>
+                            <a href="http://mail.google.com/a/harrodsschool.ddns.net" target="_blank">Mail</a>
+                        </li>
                     </ul>
                 </li>
             </ul>
@@ -32,5 +42,3 @@
         </div>
     </div>
 </div>
-
-

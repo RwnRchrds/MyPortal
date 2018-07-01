@@ -6,22 +6,22 @@
 
 <h2>Assessment Results - @Model.Student.LastName, @Model.Student.FirstName</h2>
 
-<hr />
+<hr/>
 
 <div class="container">
     <div>
-        @Html.DropDownList("SelectedResultSet", new SelectList(Model.ResultSets, "Id", "Name", Model.CurrentResultSetId), new { @class = "form-control", Name = "ResultSet", id = "selectedResultSet" })
+        @Html.DropDownList("SelectedResultSet", new SelectList(Model.ResultSets, "Id", "Name", Model.CurrentResultSetId), new {@class = "form-control", Name = "ResultSet", id = "selectedResultSet"})
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewResultModal" style="margin-top: 8px;">
             <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> New Result
         </button>
-        <div class="panel panel-primary" style="max-width: 1000px; margin-top: 8px;" id="ResultsPanel">
+        <div class="panel panel-primary" style="margin-top: 8px; max-width: 1000px;" id="ResultsPanel">
             <div class="panel-heading">MyResults</div>
             <table class="table table-bordered" id="results" data-student-id="@Model.Student.Id">
                 <thead>
-                    <tr style="background-color: #18bc9c;">
-                        <th style="color: whitesmoke;">Subject</th>
-                        <th style="color: whitesmoke;">Result</th>
-                    </tr>
+                <tr style="background-color: #18bc9c;">
+                    <th style="color: whitesmoke;">Subject</th>
+                    <th style="color: whitesmoke;">Result</th>
+                </tr>
                 </thead>
             </table>
         </div>
@@ -36,25 +36,25 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">New Result - @Model.Student.LastName, @Model.Student.FirstName</h4>
             </div>
-            @using (Ajax.BeginForm(null, null, null, new { id = "NewResultForm" }))
+            @using (Ajax.BeginForm(null, null, null, new {id = "NewResultForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.LabelFor(x => x.Result.ResultSet)
-                        @Html.DropDownListFor(x => x.Result.ResultSet, new SelectList(Model.ResultSets, "Id", "Name", Model.ResultSets.SingleOrDefault(y => y.IsCurrent).Id), new { @class = "form-control", Name = "ResultSet" })
+                        @Html.DropDownListFor(x => x.Result.ResultSet, new SelectList(Model.ResultSets, "Id", "Name", Model.ResultSets.SingleOrDefault(y => y.IsCurrent).Id), new {@class = "form-control", Name = "ResultSet"})
                         @Html.ValidationMessageFor(x => x.Result.ResultSet)
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(x => x.Result.Subject)
-                        @Html.DropDownListFor(x => x.Result.Subject, new SelectList(Model.Subjects, "Id", "Name"), "Select a Subject", new { @class = "form-control", Name = "Subject" })
+                        @Html.DropDownListFor(x => x.Result.Subject, new SelectList(Model.Subjects, "Id", "Name"), "Select a Subject", new {@class = "form-control", Name = "Subject"})
                         @Html.ValidationMessageFor(x => x.Result.Subject)
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(x => x.Result.Value)
-                        @Html.TextBoxFor(x => x.Result.Value, new { @class = "form-control", Name = "Value" })
+                        @Html.TextBoxFor(x => x.Result.Value, new {@class = "form-control", Name = "Value"})
                         @Html.ValidationMessageFor(x => x.Result.Value)
                     </div>
-                    @Html.HiddenFor(x => x.Result.Student, new { Value = Model.Student.Id, Name = "Student" })
+                    @Html.HiddenFor(x => x.Result.Student, new {Value = Model.Student.Id, Name = "Student"})
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Save</button>
@@ -70,17 +70,17 @@
 @section scripts
 {
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
 
             var student = $("#results").attr("data-student-id");
 
-                $("#results").DataTable({
-                    ajax: {
-                        url: "/api/results/fetch",
-                        data: function(d) {
-                            d.student = student;
-                            d.resultSet = $("#selectedResultSet").val();
-                        },
+            $("#results").DataTable({
+                ajax: {
+                    url: "/api/results/fetch",
+                    data: function(d) {
+                        d.student = student;
+                        d.resultSet = $("#selectedResultSet").val();
+                    },
                     dataSrc: ""
                 },
                 columns: [
@@ -100,14 +100,15 @@
                 }
             });
 
-            $("#selectedResultSet").on("change", function () {
-                $("#results").DataTable().ajax.reload();              
-            });
+            $("#selectedResultSet").on("change",
+                function() {
+                    $("#results").DataTable().ajax.reload();
+                });
 
 
             //New Result Submit
             $("#NewResultForm").on("submit",
-                function (e) {
+                function(e) {
                     var form = $("#NewResultForm");
 
                     e.preventDefault();
@@ -116,11 +117,11 @@
                         url: "/api/results/new",
                         data: form.serialize(),
                         method: "POST",
-                        success: function (result) {
+                        success: function(result) {
                             toastr.success(result);
                             $("#NewResultModal").modal('toggle');
                         },
-                        error: function (result) {
+                        error: function(result) {
                             toastr.error(result.responseJSON);
                         }
                     });
@@ -136,4 +137,3 @@
     @Scripts.Render("~/bundles/staff")
     @Scripts.Render("~/bundles/jqueryval")
 }
-

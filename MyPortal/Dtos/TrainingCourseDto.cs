@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MyPortal.Dtos
 {
@@ -10,10 +6,8 @@ namespace MyPortal.Dtos
     {
         public int Id { get; set; }
 
-        [StringLength(255)]
-        public string Code { get; set; }
+        [StringLength(255)] public string Code { get; set; }
 
-        [StringLength(1000)]
-        public string Description { get; set; }
+        [StringLength(1000)] public string Description { get; set; }
     }
 }

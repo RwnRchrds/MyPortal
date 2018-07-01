@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using MyPortal.Models;
 
 namespace MyPortal.ViewModels
@@ -12,6 +9,6 @@ namespace MyPortal.ViewModels
         public IEnumerable<ResultSet> ResultSets { get; set; }
         public int CurrentResultSetId { get; set; }
         public Result Result { get; set; }
-        public IEnumerable<Subject> Subjects { get; set; } 
+        public IEnumerable<Subject> Subjects { get; set; }
     }
 }

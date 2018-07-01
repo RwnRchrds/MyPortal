@@ -2,7 +2,7 @@
 
 namespace MyPortal.Models
 {
-    public partial class MyPortalDbContext : DbContext
+    public class MyPortalDbContext : DbContext
     {
         public MyPortalDbContext()
             : base("name=MyPortalDbContext")

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
@@ -53,14 +51,16 @@ namespace MyPortal.Controllers.Api
             if (!productToAdd.Visible)
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-            var purchased = _context.Sales.Where(x => x.Student == student && x.Product == product && x.Product1.OnceOnly);
+            var purchased =
+                _context.Sales.Where(x => x.Student == student && x.Product == product && x.Product1.OnceOnly);
 
-            var inBasket = _context.BasketItems.Where(x => x.Student == student && x.Product == product && x.Product1.OnceOnly);
+            var inBasket =
+                _context.BasketItems.Where(x => x.Student == student && x.Product == product && x.Product1.OnceOnly);
 
             if (purchased.Any() || inBasket.Any())
-                return Content(HttpStatusCode.BadRequest,"This item cannot be purchased more than once");
+                return Content(HttpStatusCode.BadRequest, "This item cannot be purchased more than once");
 
-            var itemToAdd = new BasketItem()
+            var itemToAdd = new BasketItem
             {
                 Product = product,
                 Student = student

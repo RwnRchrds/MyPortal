@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
-using MyPortal.Models;
 
 namespace MyPortal.Dtos
 {
@@ -20,8 +15,7 @@ namespace MyPortal.Dtos
         [StringLength(3)]
         public string Staff { get; set; }
 
-        [Required]
-        public int Status { get; set; }
+        [Required] public int Status { get; set; }
 
         public TrainingCourseDto TrainingCourse { get; set; }
     }

@@ -1,4 +1,4 @@
-﻿
+﻿@model MyPortal.ViewModels.NewProductViewModel
 @{
     ViewBag.Title = "Products";
     Layout = "~/Views/Shared/_LayoutFinance.cshtml";
@@ -8,19 +8,68 @@
 
 @if (User.IsInRole("Finance"))
 {
-    @Html.ActionLink("New Product", "NewProduct", "Finance", null, new { @class = "btn btn-success", @style = "margin-bottom: 8px;" })
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewProductModal">New Product</button>
+    <br/>
 }
 
 <table class="table table-bordered table-hover" id="products">
     <thead>
-        <tr>
-            <th>Description</th>
-            <th>Price</th>
-            <th>Actions</th>
-        </tr>
+    <tr>
+        <th>Description</th>
+        <th>Price</th>
+        <th>On Store</th>
+        <th>One Time</th>
+        <th>Actions</th>
+    </tr>
     </thead>
     <tbody></tbody>
 </table>
+
+<div id="NewProductModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">New Product</h4>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "newProductForm"}))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Product.Description)
+                        @Html.TextBoxFor(x => x.Product.Description, new {@class = "form-control", Name = "Description"})
+                        @Html.ValidationMessageFor(x => x.Product.Description)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Product.Price)
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon" style="font-weight: bold;">£</span>
+                            @Html.TextBoxFor(x => x.Product.Price, new {@class = "form-control", Name = "Price"})
+                        </div>
+                        @Html.ValidationMessageFor(x => x.Product.Price)
+                    </div>
+                    <div class="checkbox">
+                        <label style="font-weight: bold;">
+                            @Html.CheckBoxFor(x => x.Product.Visible, new {Name = "Visible"}) Available on Store
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label style="font-weight: bold;">
+                            @Html.CheckBoxFor(x => x.Product.OnceOnly, new {Name = "OnceOnly"}) One-Time Purchase
+                        </label>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
 
 @section scripts
 {
@@ -28,6 +77,14 @@
         $(document).ready(function() {
 
             function loadProducts() {
+
+                var simpleCheckbox = function(data, type, full, meta) {
+                    var isChecked = data === true ? "checked" : "";
+                    return '<input type="checkbox" class="checkbox" onclick="return false;" ' +
+                        isChecked +
+                        ' />';
+                };
+
                 $("#products").DataTable({
                     ajax: {
                         url: "/api/products",
@@ -40,6 +97,14 @@
                         {
                             data: "price",
                             render: $.fn.dataTable.render.number(',', '.', 2, '£')
+                        },
+                        {
+                            data: "visible",
+                            render: simpleCheckbox
+                        },
+                        {
+                            data: "onceOnly",
+                            render: simpleCheckbox
                         },
                         {
                             data: "id",
@@ -83,8 +148,35 @@
                         });
                 });
 
+            $("#newProductForm").on("submit",
+                function(e) {
+
+                    e.preventDefault();
+
+                    var form = $("#newProductForm");
+                    var data = form.serialize();
+
+                    $.ajax({
+                        url: "/api/products/new",
+                        data: data,
+                        method: "POST",
+                        success: function(result) {
+                            toastr.success(result);
+                            location.replace("/Staff/Finance/Products");
+                        },
+                        error: function(result) {
+                            toastr.error(result.responseJSON);
+                            form.reset();
+                        }
+                    });
+                });
+
+            $('#NewProductModal').on('hidden.bs.modal',
+                function() {
+                    $(this).find('form').trigger('reset');
+                });
+
             loadProducts();
         });
     </script>
 }
-

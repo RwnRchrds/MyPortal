@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Models;
-using MyPortal.Models.Misc;
 
 namespace MyPortal.Controllers.Api
 {
@@ -88,7 +86,7 @@ namespace MyPortal.Controllers.Api
 
             student.AccountBalance -= product.Price;
 
-            _context.Sales.Add(Mapper.Map<SaleDto, Sale>(sale));            
+            _context.Sales.Add(Mapper.Map<SaleDto, Sale>(sale));
         }
 
         //STORE: NEW PURCHASE (From Student Side)
@@ -137,7 +135,6 @@ namespace MyPortal.Controllers.Api
             _context.SaveChanges();
 
             return Ok("Purchase completed");
-
         }
     }
 }

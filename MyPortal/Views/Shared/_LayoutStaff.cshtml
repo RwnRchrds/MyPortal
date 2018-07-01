@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MyPortal - @ViewBag.Title</title>
     @Styles.Render("~/Content/css")
@@ -9,27 +9,19 @@
 
 </head>
 <body>
-    @if (User.IsInRole("SeniorStaff"))
-    {
-        @Html.Partial("_NavBarSmt")
-    }
-    else
-    {
-        @Html.Partial("_NavBarStaff")
-    }
+@(User.IsInRole("SeniorStaff") ? Html.Partial("_NavBarSmt") : Html.Partial("_NavBarStaff"))
 
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p><b>Version:</b> @ViewContext.Controller.GetType().Assembly.GetName().Version.ToString()</p>
-            <p>&copy; @DateTime.Now.Year - Rowan Richards</p>
-        </footer>
-    </div>
+<div class="container body-content">
+    @RenderBody()
+    <hr/>
+    <footer>
+        <p>
+            <b>Version:</b> @ViewContext.Controller.GetType().Assembly.GetName().Version.ToString()</p>
+        <p>&copy; @DateTime.Now.Year - Rowan Richards</p>
+    </footer>
+</div>
 
-    @Scripts.Render("~/bundles/lib")
-    @RenderSection("scripts", required: false)
+@Scripts.Render("~/bundles/lib")
+@RenderSection("scripts", false)
 </body>
 </html>
-
-
