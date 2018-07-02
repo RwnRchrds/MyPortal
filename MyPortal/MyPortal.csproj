@@ -256,6 +256,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Misc\Checkout.cs" />
     <Compile Include="Models\Misc\ShoppingBasket.cs" />
     <Compile Include="Models\Misc\UserRoleModel.cs" />
     <Compile Include="Models\MyPortalDbContext.cs" />
@@ -288,6 +289,7 @@
     <Compile Include="ViewModels\StudentDetailsViewModel.cs" />
     <Compile Include="ViewModels\StudentHomeViewModel.cs" />
     <Compile Include="ViewModels\StudentResultsViewModel.cs" />
+    <Compile Include="ViewModels\StudentStoreViewModel.cs" />
     <Compile Include="ViewModels\UserDetailsViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -562,7 +564,7 @@
     <Content Include="Views\Finance\Products.cshtml" />
     <Content Include="Views\Finance\Accounts.cshtml" />
     <Content Include="Views\Finance\Sales.cshtml" />
-    <Content Include="Views\Finance\NewSale.cshtml" />
+    <Content Include="Views\Students\Store.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using System.Net;
+using System.Web.Http;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using MyPortal.Models;
@@ -7,7 +9,7 @@ using MyPortal.ViewModels;
 namespace MyPortal.Controllers
 {
     //MyPortal Students Controller --> Controller methods for Student areas
-    [Authorize(Roles = "Student")]
+    [System.Web.Mvc.Authorize(Roles = "Student")]
     public class StudentsController : Controller
     {
         private readonly MyPortalDbContext _context;
@@ -55,7 +57,7 @@ namespace MyPortal.Controllers
         }
 
         //MyResults Page
-        [Route("Students/Results")]
+        [System.Web.Mvc.Route("Students/Results")]
         public ActionResult Results()
         {
             var currentUser = int.Parse(User.Identity.GetUserId());
@@ -74,6 +76,25 @@ namespace MyPortal.Controllers
                 Student = student,
                 ResultSets = resultSets,
                 CurrentResultSetId = currentResultSetId
+            };
+
+            return View(viewModel);
+        }
+
+        //Store Page
+        [System.Web.Mvc.Route("Students/Store")]
+        public ActionResult Store()
+        {
+            var currentUser = int.Parse(User.Identity.GetUserId());
+
+            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == currentUser);
+
+            if (studentInDb == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            var viewModel = new StudentStoreViewModel()
+            {
+                Student = studentInDb
             };
 
             return View(viewModel);

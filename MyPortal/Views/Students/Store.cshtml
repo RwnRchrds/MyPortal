@@ -1,0 +1,240 @@
+﻿@model MyPortal.ViewModels.StudentStoreViewModel
+@{
+    ViewBag.Title = "Store";
+    Layout = "~/Views/Shared/_LayoutStudent.cshtml";
+}
+
+<h2>MyShop</h2>
+<hr/>
+<p>Please make sure you have your parents' permission before using the store.</p>
+<h4 id="accountBalance"><b>Your Balance:</b> Loading...</h4>
+<div class="container" id="productsPanel">
+    <div style="float: left; margin-top: 8px;">
+        <div class="panel panel-primary" style="margin-top: 8px;">
+            <div class="panel-heading">Available Products</div>
+            <table class="table table-bordered" id="products" data-student-id="@Model.Student.Id">
+                <thead>
+                <tr style="background-color: #18bc9c;">
+                    <th style="color: whitesmoke;">Description</th>
+                    <th style="color: whitesmoke;">Price</th>
+                    <th style="color: whitesmoke;">Actions</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+    <div class="container" id="basketPanel">
+        <div style="float: left; margin-left: 20px;">
+            <div class="panel panel-primary" style="margin-top: 16px;">
+                <div class="panel-heading">My Basket</div>
+                <table class="table table-bordered" id="basket" data-student-id="@Model.Student.Id">
+                    <thead>
+                    <tr style="background-color: #18bc9c;">
+                        <th style="color: whitesmoke;">Description</th>
+                        <th style="color: whitesmoke;">Price</th>
+                        <th style="color: whitesmoke;">Actions</th>
+                    </tr>
+                    </thead>
+                </table>
+                <div class="panel-footer">
+                    <h5 id="basketTotal"><b>Total:</b> Loading...</h5>
+                    <button type="button" class="btn btn-success" id="checkoutButton">Checkout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+
+            var student = $("#products").attr("data-student-id");
+
+            function updateTotal() {
+                $.ajax({
+                    url: "/api/basket/total",
+                    data: {
+                        'student': student
+                    },
+                    method: "GET",
+                    success: function(result) {
+                        $("#basketTotal").html("<b>Total:</b> £" + result.toFixed(2));
+                        if (result > 0) {
+                            $("#checkoutButton").removeClass("hidden");
+                        } else {
+                            $("#checkoutButton").addClass("hidden");
+                        }
+                    },
+                    error: function(result) {
+                        toastr.error(result.responseJSON);
+                    }
+                });
+            }
+
+            function updateBalance() {
+                $.ajax({
+                    url: "/api/students/balance",
+                    data: {
+                        'student': student
+                    },
+                    method: "GET",
+                    success: function (result) {
+                        $("#accountBalance").html("<b>Your Balance:</b> £" + result.toFixed(2));
+                    },
+                    error: function (result) {
+                        toastr.error(result.responseJSON);
+                    }
+                });
+            }
+
+            $("#products").DataTable({
+                ajax: {
+                    url: "/api/products/store",
+                    data: {
+                        'student': student
+                    },
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "description"
+                    },
+                    {
+                        data: "price",
+                        render: $.fn.dataTable.render.number(',', '.', 2, '£')
+                    },
+                    {
+                        data: "id",
+                        render: function(data) {
+                            return "<button type='button' class='btn btn-xs btn-primary js-add' data-product-id=" +
+                                data +
+                                ">Add to Basket</button>";
+                        }
+                    }
+                ],
+                paging: false,
+                ordering: false,
+                searching: false,
+                info: false,
+                "language": {
+                    "emptyTable": "No products available"
+                }
+            });
+
+            $("#basket").DataTable({
+                ajax: {
+                    url: "/api/basket",
+                    data: {
+                        'student': student
+                    },
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "product1.description"
+                    },
+                    {
+                        data: "product1.price",
+                        render: $.fn.dataTable.render.number(',', '.', 2, '£')
+                    },
+                    {
+                        data: "id",
+                        render: function(data) {
+                            return "<button type='button' class='btn btn-xs btn-danger js-remove' data-item-id=" +
+                                data +
+                                ">Remove</button>";
+                        }
+                    }
+                ],
+                paging: false,
+                ordering: false,
+                searching: false,
+                info: false,
+                "language": {
+                    "emptyTable": "Basket is empty"
+                }
+            });
+
+            $("#products").on("click",
+                ".js-add",
+                function() {
+                    var button = $(this);
+                    $.ajax({
+                        url: "/api/basket/add",
+                        data: {
+                            'Id': 0,
+                            'Product': button.attr("data-product-id"),
+                            'Student': student
+                        },
+                        method: "POST",
+                        contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+                        success: function(result) {
+                            $("#products").DataTable().ajax.reload();
+                            $("#basket").DataTable().ajax.reload();
+                            updateTotal();
+                            toastr.success(result);
+                        },
+                        error: function(result) {
+                            toastr.error(result.responseJSON);
+                        }
+                    });
+                });
+
+            $("#basket").on("click",
+                ".js-remove",
+                function() {
+                    var button = $(this);
+                    $.ajax({
+                        url: "/api/basket/remove/" + button.attr("data-item-id"),
+                        method: "DELETE",
+                        success: function(result) {
+                            $("#products").DataTable().ajax.reload();
+                            $("#basket").DataTable().ajax.reload();
+                            updateTotal();
+                            toastr.success(result);
+                        },
+                        error: function(result) {
+                            toastr.error(result.responseJSON);
+                        }
+                    });
+                });
+
+            $("#checkoutButton").on("click",
+                function() {
+                    bootbox.confirm("Are you sure you wish to checkout?",
+                        function(result) {
+                            if (result)
+                                $.ajax({
+                                    url: "/api/sales/purchase",
+                                    method: "POST",
+                                    data: {
+                                        'studentId': student
+                                    },
+                                    contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+                                    success: function(result) {
+                                        $("#products").DataTable().ajax.reload();
+                                        $("#basket").DataTable().ajax.reload();
+                                        updateTotal();
+                                        updateBalance();
+                                        toastr.success(result);
+                                    },
+                                    error: function(result) {
+                                        toastr.error(result.responseJSON);
+                                    }
+                                });
+                        });
+                });
+
+            updateTotal();
+            updateBalance();
+        });
+    </script>
+
+    @Scripts.Render("~/bundles/students")
+    @Scripts.Render("~/bundles/jqueryval")
+
+}
+

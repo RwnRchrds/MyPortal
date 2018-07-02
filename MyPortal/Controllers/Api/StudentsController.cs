@@ -139,5 +139,18 @@ namespace MyPortal.Controllers.Api
 
             return Ok("Account debited");
         }
+
+        //GET ACCOUNT BALANCE
+        [HttpGet]
+        [Route("api/students/balance")]
+        public decimal GetBalance(int student)
+        {
+            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == student);
+
+            if (studentInDb == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            return studentInDb.AccountBalance;
+        }
     }
 }

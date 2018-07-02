@@ -4,6 +4,7 @@
 }
 
 <h2>Sales</h2>
+<hr/>
 
 <table class="table table-bordered table-hover" id="sales">
     <thead>
@@ -71,7 +72,7 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: "/api/sales/" + button.attr("data-sale-id"),
+                                    url: "/api/sales/delete/" + button.attr("data-sale-id"),
                                     method: "DELETE",
                                     success: function() {
                                         $("#sales").DataTable().ajax.reload();

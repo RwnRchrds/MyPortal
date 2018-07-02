@@ -210,6 +210,7 @@
                         data: data,
                         method: "POST",
                         success: function (result) {
+                            $("#NewProductModal").modal('hide');
                             toastr.success(result);
                             $("#products").DataTable().ajax.reload();
                         },
@@ -246,8 +247,8 @@
                             $("#editVisibleControl").attr("checked",(result["visible"]));
                             $("#editOnceOnlyControl").attr("checked", (result["onceOnly"]));
                         },
-                        error: function () {
-                            toastr.error("Could Not Load Form");
+                        error: function (result) {
+                            toastr.error(result.responseJSON);
                         }
                     });
                     $("#EditProductModal").modal('toggle');

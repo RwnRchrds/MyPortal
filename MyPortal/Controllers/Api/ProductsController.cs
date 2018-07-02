@@ -29,6 +29,7 @@ namespace MyPortal.Controllers.Api
         public IEnumerable<ProductDto> GetProducts()
         {
             return _context.Products
+                .OrderBy(x => x.Description)
                 .ToList()
                 .Select(Mapper.Map<Product, ProductDto>);
         }
@@ -111,6 +112,7 @@ namespace MyPortal.Controllers.Api
             return _context.Products
                 .Where(x => !x.OnceOnly && x.Visible || x.Visible && purchased.All(p => p.Product != x.Id) &&
                             inBasket.All(b => b.Product != x.Id))
+                .OrderBy(x => x.Description)
                 .ToList()
                 .Select(Mapper.Map<Product, ProductDto>);
         }

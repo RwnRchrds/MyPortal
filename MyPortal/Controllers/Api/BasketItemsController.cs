@@ -29,41 +29,57 @@ namespace MyPortal.Controllers.Api
         {
             return _context.BasketItems
                 .Where(x => x.Student == student)
+                .OrderBy(x => x.Product1.Description)
                 .ToList()
                 .Select(Mapper.Map<BasketItem, BasketItemDto>);
+        }
+
+        //GET BASKET TOTAL
+        [HttpGet]
+        [Route("api/basket/total")]
+        public decimal GetTotal(int student)
+        {
+            var allItems = _context.BasketItems.Where(x => x.Student == student);
+
+            if (!allItems.Any())
+                return 0.00m;
+
+            var total = allItems.Sum(x => x.Product1.Price);
+
+            return total;
         }
 
         //ADD TO BASKET
         [HttpPost]
         [Route("api/basket/add")]
-        public IHttpActionResult AddToBasket(int product, int student)
+        public IHttpActionResult AddToBasket(BasketItemDto data)
         {
-            var studentQuery = _context.Students.SingleOrDefault(x => x.Id == student);
+            var studentQuery = _context.Students.SingleOrDefault(x => x.Id == data.Student);
 
             if (studentQuery == null)
-                return NotFound();
+                return Content(HttpStatusCode.NotFound, "Student not found");
 
-            var productToAdd = _context.Products.SingleOrDefault(x => x.Id == product);
+            var productToAdd = _context.Products.SingleOrDefault(x => x.Id == data.Product);
 
             if (productToAdd == null)
-                return NotFound();
+                return Content(HttpStatusCode.NotFound, "Product not found");
 
             if (!productToAdd.Visible)
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+                return Content(HttpStatusCode.BadRequest, "Product not available");
 
             var purchased =
-                _context.Sales.Where(x => x.Student == student && x.Product == product && x.Product1.OnceOnly);
+                _context.Sales.Where(x => x.Student == data.Student && x.Product == data.Product && x.Product1.OnceOnly);
 
             var inBasket =
-                _context.BasketItems.Where(x => x.Student == student && x.Product == product && x.Product1.OnceOnly);
+                _context.BasketItems.Where(x => x.Student == data.Student && x.Product == data.Product && x.Product1.OnceOnly);
 
             if (purchased.Any() || inBasket.Any())
                 return Content(HttpStatusCode.BadRequest, "This item cannot be purchased more than once");
 
             var itemToAdd = new BasketItem
             {
-                Product = product,
-                Student = student
+                Product = data.Product,
+                Student = data.Student
             };
 
             _context.BasketItems.Add(itemToAdd);
@@ -74,7 +90,7 @@ namespace MyPortal.Controllers.Api
 
         //REMOVE FROM BASKET
         [HttpDelete]
-        [Route("api/basket/remove")]
+        [Route("api/basket/remove/{id}")]
         public IHttpActionResult RemoveFromBasket(int id)
         {
             var itemInDb = _context.BasketItems.SingleOrDefault(x => x.Id == id);

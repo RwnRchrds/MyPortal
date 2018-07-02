@@ -6,6 +6,7 @@ using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Models;
+using MyPortal.Models.Misc;
 
 namespace MyPortal.Controllers.Api
 {
@@ -35,7 +36,7 @@ namespace MyPortal.Controllers.Api
 
         //DELETE SALE
         [HttpDelete]
-        [Route("api/sales/{id}")]
+        [Route("api/sales/delete/{id}")]
         public IHttpActionResult DeleteSale(int id)
         {
             var saleInDb = _context.Sales.SingleOrDefault(p => p.Id == id);
@@ -92,37 +93,34 @@ namespace MyPortal.Controllers.Api
         //STORE: NEW PURCHASE (From Student Side)
         [HttpPost]
         [Route("api/sales/purchase")]
-        public IHttpActionResult Purchase(int studentId)
+        public IHttpActionResult Purchase(Checkout data)
         {
             //Check student actually exists
-            var student = _context.Students.SingleOrDefault(x => x.Id == studentId);
+            var student = _context.Students.SingleOrDefault(x => x.Id == data.studentId);
 
             if (student == null)
                 return Content(HttpStatusCode.NotFound, "Student not found");
 
             //Obtain items from student's shopping basket
-            var basket = _context.BasketItems.Where(x => x.Student == studentId);
+            var basket = _context.BasketItems.Where(x => x.Student == data.studentId);
 
             //Check there are actually items in the basket
             if (!basket.Any())
                 return Content(HttpStatusCode.BadRequest, "There are no items in your basket");
 
-            //Obtain product details from items in basket
-            var products = _context.Products.Where(x => basket.Any(b => b.Product == x.Id));
-
             //Check student has enough money to afford all items
-            var totalCost = products.Sum(x => x.Price);
+            var totalCost = basket.Sum(x => x.Product1.Price);
 
             if (totalCost > student.AccountBalance)
                 return Content(HttpStatusCode.BadRequest, "Insufficient Funds");
 
             //Process sales for each item
-            foreach (var product in products)
+            foreach (var item in basket)
             {
                 var sale = new SaleDto
                 {
-                    Student = studentId,
-                    Product = product.Id,
+                    Student = data.studentId,
+                    Product = item.Product,
                     Date = DateTime.Today
                 };
 
