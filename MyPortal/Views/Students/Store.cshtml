@@ -81,10 +81,10 @@
                         'student': student
                     },
                     method: "GET",
-                    success: function (result) {
+                    success: function(result) {
                         $("#accountBalance").html("<b>Your Balance:</b> £" + result.toFixed(2));
                     },
-                    error: function (result) {
+                    error: function(result) {
                         toastr.error(result.responseJSON);
                     }
                 });
@@ -237,4 +237,3 @@
     @Scripts.Render("~/bundles/jqueryval")
 
 }
-

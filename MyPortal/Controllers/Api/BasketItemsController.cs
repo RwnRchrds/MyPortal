@@ -68,10 +68,12 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.BadRequest, "Product not available");
 
             var purchased =
-                _context.Sales.Where(x => x.Student == data.Student && x.Product == data.Product && x.Product1.OnceOnly);
+                _context.Sales.Where(x =>
+                    x.Student == data.Student && x.Product == data.Product && x.Product1.OnceOnly);
 
             var inBasket =
-                _context.BasketItems.Where(x => x.Student == data.Student && x.Product == data.Product && x.Product1.OnceOnly);
+                _context.BasketItems.Where(x =>
+                    x.Student == data.Student && x.Product == data.Product && x.Product1.OnceOnly);
 
             if (purchased.Any() || inBasket.Any())
                 return Content(HttpStatusCode.BadRequest, "This item cannot be purchased more than once");

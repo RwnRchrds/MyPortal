@@ -92,7 +92,7 @@ namespace MyPortal.Controllers
             if (studentInDb == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            var viewModel = new StudentStoreViewModel()
+            var viewModel = new StudentStoreViewModel
             {
                 Student = studentInDb
             };

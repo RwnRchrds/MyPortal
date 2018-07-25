@@ -14,6 +14,7 @@ namespace MyPortal.Models
             Logs = new HashSet<Log>();
             Results = new HashSet<Result>();
             Sales = new HashSet<Sale>();
+            StudentDocuments = new HashSet<StudentDocument>();
         }
 
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -51,6 +52,9 @@ namespace MyPortal.Models
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Sale> Sales { get; set; }
+
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<StudentDocument> StudentDocuments { get; set; }
 
         public virtual YearGroup YearGroup1 { get; set; }
     }

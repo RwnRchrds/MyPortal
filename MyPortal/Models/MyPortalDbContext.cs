@@ -10,6 +10,7 @@ namespace MyPortal.Models
         }
 
         public virtual DbSet<BasketItem> BasketItems { get; set; }
+        public virtual DbSet<Document> Documents { get; set; }
         public virtual DbSet<Log> Logs { get; set; }
         public virtual DbSet<LogType> LogTypes { get; set; }
         public virtual DbSet<Product> Products { get; set; }
@@ -18,6 +19,9 @@ namespace MyPortal.Models
         public virtual DbSet<ResultSet> ResultSets { get; set; }
         public virtual DbSet<Sale> Sales { get; set; }
         public virtual DbSet<Staff> Staff { get; set; }
+        public virtual DbSet<StaffDocument> StaffDocuments { get; set; }
+        public virtual DbSet<StaffObservation> StaffObservations { get; set; }
+        public virtual DbSet<StudentDocument> StudentDocuments { get; set; }
         public virtual DbSet<Student> Students { get; set; }
         public virtual DbSet<Subject> Subjects { get; set; }
         public virtual DbSet<TrainingCertificate> TrainingCertificates { get; set; }
@@ -27,6 +31,25 @@ namespace MyPortal.Models
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Document>()
+                .Property(e => e.Description)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Document>()
+                .Property(e => e.Url)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Document>()
+                .HasMany(e => e.StaffDocuments)
+                .WithOptional(e => e.Document1)
+                .HasForeignKey(e => e.Document);
+
+            modelBuilder.Entity<Document>()
+                .HasMany(e => e.StudentDocuments)
+                .WithRequired(e => e.Document1)
+                .HasForeignKey(e => e.Document)
+                .WillCascadeOnDelete(false);
+
             modelBuilder.Entity<Log>()
                 .Property(e => e.Author)
                 .IsUnicode(false);
@@ -117,6 +140,23 @@ namespace MyPortal.Models
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Staff>()
+                .HasMany(e => e.StaffDocuments)
+                .WithOptional(e => e.Staff1)
+                .HasForeignKey(e => e.Staff);
+
+            modelBuilder.Entity<Staff>()
+                .HasMany(e => e.StaffObservations)
+                .WithRequired(e => e.Staff)
+                .HasForeignKey(e => e.Observee)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Staff>()
+                .HasMany(e => e.StaffObservations1)
+                .WithRequired(e => e.Staff1)
+                .HasForeignKey(e => e.Observer)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Staff>()
                 .HasMany(e => e.Subjects)
                 .WithRequired(e => e.Staff)
                 .HasForeignKey(e => e.Leader)
@@ -133,6 +173,22 @@ namespace MyPortal.Models
                 .WithRequired(e => e.Staff)
                 .HasForeignKey(e => e.Head)
                 .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<StaffDocument>()
+                .Property(e => e.Staff)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<StaffObservation>()
+                .Property(e => e.Observee)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<StaffObservation>()
+                .Property(e => e.Observer)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<StaffObservation>()
+                .Property(e => e.Outcome)
+                .IsUnicode(false);
 
             modelBuilder.Entity<Student>()
                 .Property(e => e.FirstName)
@@ -164,6 +220,12 @@ namespace MyPortal.Models
 
             modelBuilder.Entity<Student>()
                 .HasMany(e => e.Sales)
+                .WithRequired(e => e.Student1)
+                .HasForeignKey(e => e.Student)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Student>()
+                .HasMany(e => e.StudentDocuments)
                 .WithRequired(e => e.Student1)
                 .HasForeignKey(e => e.Student)
                 .WillCascadeOnDelete(false);

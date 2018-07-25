@@ -60,6 +60,15 @@ namespace MyPortal.App_Start
 
             Mapper.CreateMap<TrainingStatusDto, TrainingStatus>();
             Mapper.CreateMap<TrainingStatus, TrainingStatusDto>();
+
+            Mapper.CreateMap<DocumentDto, Document>();
+            Mapper.CreateMap<Document, DocumentDto>();
+
+            Mapper.CreateMap<StudentDocumentDto, StudentDocument>();
+            Mapper.CreateMap<StudentDocument, StudentDocumentDto>();
+
+            Mapper.CreateMap<StaffDocumentDto, StaffDocument>();
+            Mapper.CreateMap<StaffDocument, StaffDocumentDto>();
         }
     }
 }
