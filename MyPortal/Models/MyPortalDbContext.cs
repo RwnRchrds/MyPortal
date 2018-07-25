@@ -41,7 +41,7 @@ namespace MyPortal.Models
 
             modelBuilder.Entity<Document>()
                 .HasMany(e => e.StaffDocuments)
-                .WithOptional(e => e.Document1)
+                .WithRequired(e => e.Document1)
                 .HasForeignKey(e => e.Document);
 
             modelBuilder.Entity<Document>()
@@ -141,7 +141,7 @@ namespace MyPortal.Models
 
             modelBuilder.Entity<Staff>()
                 .HasMany(e => e.StaffDocuments)
-                .WithOptional(e => e.Staff1)
+                .WithRequired(e => e.Staff1)
                 .HasForeignKey(e => e.Staff);
 
             modelBuilder.Entity<Staff>()

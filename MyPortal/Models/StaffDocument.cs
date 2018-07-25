@@ -6,7 +6,8 @@ namespace MyPortal.Models
     {
         public int Id { get; set; }
 
-        [StringLength(3)] public string Staff { get; set; }
+        [StringLength(3)]
+        public string Staff { get; set; }
 
         public int Document { get; set; }
 

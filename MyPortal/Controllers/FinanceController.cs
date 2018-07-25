@@ -18,12 +18,6 @@ namespace MyPortal.Controllers
             _context.Dispose();
         }
 
-        [Route("Staff/Finance")]
-        public ActionResult Index()
-        {
-            return View();
-        }
-
         [Route("Staff/Finance/Products")]
         public ActionResult Products()
         {
@@ -41,5 +35,7 @@ namespace MyPortal.Controllers
         {
             return View();
         }
+
+        //TODO: Dinner Money
     }
 }

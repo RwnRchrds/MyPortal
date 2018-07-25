@@ -9,7 +9,7 @@
 
 </head>
 <body>
-@(User.IsInRole("SeniorStaff") ? Html.Partial("_NavBarSmt") : Html.Partial("_NavBarStaff"))
+@Html.Partial("_NavBarStaff"))
 
 <div class="container body-content">
     @RenderBody()

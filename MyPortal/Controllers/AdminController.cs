@@ -35,13 +35,6 @@ namespace MyPortal.Controllers
             base.Dispose(disposing);
         }
 
-        // GET: Admin
-        [Route("Staff/Admin")]
-        public ActionResult Index()
-        {
-            return View();
-        }
-
         // Admin | Users --> Users List (All)
         [Route("Staff/Admin/Users")]
         public ActionResult Users()

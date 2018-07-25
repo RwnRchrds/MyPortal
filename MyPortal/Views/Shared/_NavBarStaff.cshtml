@@ -10,15 +10,31 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                <li>@Html.ActionLink("Home", "Index", "Staff")</li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Menu <span class="caret"></span></a>
                     <ul class="dropdown-menu">
+                        <li class="dropdown-header">Home</li>
                         <li>@Html.ActionLink("Students", "Students", "Staff")</li>
-                        <li id="markbook-link">
-                            <a href="#">Markbook</a>
-                        </li>
+                        @if (User.IsInRole("SeniorStaff"))
+                        {
+                            <li>@Html.ActionLink("Staff", "Staff", "Staff")</li>
+                        }
                         <li>@Html.ActionLink("Training Courses", "TrainingCourses", "Staff")</li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li role="separator" class="divider"></li>
+                            <li class="dropdown-header">Admin</li>
+                            <li>@Html.ActionLink("Users", "Users", "Admin")</li>
+                        }
+                        @if (User.IsInRole("Finance"))
+                        {
+                            <li role="separator" class="divider"></li>
+                            <li class="dropdown-header">Finance</li>
+                            <li>@Html.ActionLink("Products", "Products", "Finance")</li>
+                            <li>@Html.ActionLink("Accounts", "Accounts", "Finance")</li>
+                            <li>@Html.ActionLink("Sales", "Sales", "Finance")</li>
+                        }
                     </ul>
                 </li>
                 <li class="dropdown">

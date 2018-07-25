@@ -262,6 +262,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Misc\Checkout.cs" />
     <Compile Include="Models\Misc\ShoppingBasket.cs" />
+    <Compile Include="Models\Misc\StaffDocumentUpload.cs" />
     <Compile Include="Models\Misc\UserRoleModel.cs" />
     <Compile Include="Models\MyPortalDbContext.cs" />
     <Compile Include="Models\StaffDocument.cs" />
@@ -543,17 +544,13 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Students\Index.cshtml" />
     <Content Include="Views\Staff\Index.cshtml" />
-    <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Shared\_NavBar.cshtml" />
     <Content Include="Views\Staff\Students.cshtml" />
     <Content Include="Views\Staff\StudentDetails.cshtml" />
     <Content Include="Views\Shared\_NavBarStudent.cshtml" />
     <Content Include="Views\Shared\_LayoutStudent.cshtml" />
-    <Content Include="Views\Shared\_NavBarStaff.cshtml" />
     <Content Include="Views\Shared\_LayoutStaff.cshtml" />
-    <Content Include="Views\Shared\_NavBarSmt.cshtml" />
-    <Content Include="Views\Shared\_NavBarAdmin.cshtml" />
-    <Content Include="Views\Shared\_LayoutAdmin.cshtml" />
+    <Content Include="Views\Shared\_NavBarStaff.cshtml" />
     <Content Include="Views\Staff\Staff.cshtml" />
     <Content Include="Views\Staff\StaffDetails.cshtml" />
     <Content Include="Views\Staff\NewStudent.cshtml" />
@@ -564,13 +561,10 @@
     <Content Include="Views\Admin\NewUser.cshtml" />
     <Content Include="Views\Staff\StudentResults.cshtml" />
     <Content Include="Views\Students\Results.cshtml" />
-    <Content Include="Views\Shared\_NavBarFinance.cshtml" />
-    <Content Include="Views\Shared\_LayoutFinance.cshtml" />
-    <Content Include="Views\Finance\Index.cshtml" />
-    <Content Include="Views\Finance\Products.cshtml" />
-    <Content Include="Views\Finance\Accounts.cshtml" />
-    <Content Include="Views\Finance\Sales.cshtml" />
     <Content Include="Views\Students\Store.cshtml" />
+    <Content Include="Views\Finance\Accounts.cshtml" />
+    <Content Include="Views\Finance\Products.cshtml" />
+    <Content Include="Views\Finance\Sales.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
