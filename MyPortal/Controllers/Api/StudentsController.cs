@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -10,6 +11,7 @@ using MyPortal.Models.Misc;
 
 namespace MyPortal.Controllers.Api
 {
+    [Authorize]
     public class StudentsController : ApiController
     {
         private readonly MyPortalDbContext _context;
@@ -24,6 +26,7 @@ namespace MyPortal.Controllers.Api
             _context.Dispose();
         }
 
+        [Authorize(Roles="Staff, SeniorStaff")]
         public IEnumerable<StudentDto> GetStudents()
         {
             return _context.Students
@@ -33,6 +36,7 @@ namespace MyPortal.Controllers.Api
                 .Select(Mapper.Map<Student, StudentDto>);
         }
 
+        [Authorize]
         public StudentDto GetStudent(int id)
         {
             var student = _context.Students.SingleOrDefault(s => s.Id == id);
@@ -44,6 +48,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [Authorize(Roles="Staff, SeniorStaff")]
         public StudentDto CreateStudent(StudentDto studentDto)
         {
             if (!ModelState.IsValid)
@@ -60,7 +65,8 @@ namespace MyPortal.Controllers.Api
             return studentDto;
         }
 
-        [HttpPut]
+        [HttpPut]   
+        [Authorize(Roles="Staff, SeniorStaff")]
         public IHttpActionResult UpdateStudent(int id, StudentDto studentDto)
         {
             if (studentDto == null)
@@ -85,6 +91,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpDelete]
+        [Authorize(Roles="Staff, SeniorStaff")]
         public IHttpActionResult DeleteStudent(int id)
         {
             var studentInDb = _context.Students.SingleOrDefault(s => s.Id == id);
@@ -100,6 +107,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("api/students/credit")]
+        [Authorize(Roles="Staff, SeniorStaff")]
         public IHttpActionResult CreditAccount(BalanceAdjustment data)
         {
             if (data.Amount <= 0)
@@ -120,6 +128,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("api/students/debit")]
+        [Authorize(Roles="Staff, SeniorStaff")]
         public IHttpActionResult DebitAccount(BalanceAdjustment data)
         {
             if (data.Amount <= 0)
@@ -142,6 +151,7 @@ namespace MyPortal.Controllers.Api
 
         //GET ACCOUNT BALANCE
         [HttpGet]
+        [Authorize]
         [Route("api/students/balance")]
         public decimal GetBalance(int student)
         {
@@ -151,6 +161,106 @@ namespace MyPortal.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
             return studentInDb.AccountBalance;
+        }
+
+        [HttpGet]
+        [Route("api/students/documents/fetch/{studentId}")]
+        public IEnumerable<StudentDocumentDto> GetDocuments(int studentId)
+        {
+            var student = _context.Students.SingleOrDefault(s => s.Id == studentId);
+
+            if (student == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            var documents = _context.StudentDocuments
+                .Where(x => x.Student == studentId)
+                .ToList()
+                .Select(Mapper.Map<StudentDocument, StudentDocumentDto>);
+
+            return documents;
+        }
+
+        [HttpPost]
+        [Route("api/students/documents/add")]
+        public IHttpActionResult AddDocument(StudentDocumentUpload data)
+        {
+            var student = _context.Students.SingleOrDefault(x => x.Id == data.Student);
+
+            if (student == null)
+                return Content(HttpStatusCode.NotFound, "Student not found");
+
+            var document = data.Document;
+
+            document.IsGeneral = false;
+
+            document.Date = DateTime.Now;
+
+            var isUriValid = Uri.TryCreate(document.Url, UriKind.Absolute, out var uriResult)
+                             && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+
+            if (!isUriValid)
+                return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
+
+            _context.Documents.Add(document);
+            _context.SaveChanges();
+
+            var studentDocument = new StudentDocument()
+            {
+                Document = document.Id,
+                Student = data.Student
+            };
+
+            _context.StudentDocuments.Add(studentDocument);
+            _context.SaveChanges();
+
+            return Ok("Document added");
+        }
+
+        [HttpDelete]
+        [Route("api/students/documents/remove/{documentId}")]
+        public IHttpActionResult RemoveDocument(int documentId)
+        {
+            var studentDocument = _context.StudentDocuments.SingleOrDefault(x => x.Id == documentId);
+
+            if (studentDocument == null)
+                return Content(HttpStatusCode.NotFound, "Document not found");
+
+            var attachedDocument = studentDocument.Document1;
+
+            if (attachedDocument == null)
+                return Content(HttpStatusCode.BadRequest, "No document attached");
+
+            _context.StudentDocuments.Remove(studentDocument);
+
+            _context.Documents.Remove(attachedDocument);
+
+            _context.SaveChanges();
+
+            return Ok("Document deleted");
+        }
+
+        [HttpPost]
+        [Route("api/students/documents/edit")]
+        public IHttpActionResult UpdateDocument(DocumentDto data)
+        {
+            var documentInDb = _context.Documents.Single(x => x.Id == data.Id);
+
+            if (documentInDb == null)
+                return Content(HttpStatusCode.NotFound, "Upload not found");
+
+            var isUriValid = Uri.TryCreate(data.Url, UriKind.Absolute, out var uriResult)
+                          && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+
+            if (!isUriValid)
+                return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
+
+            documentInDb.Description = data.Description;
+            documentInDb.Url = data.Url;
+            documentInDb.IsGeneral = false;
+
+            _context.SaveChanges();
+
+            return Ok("Document updated");
         }
     }
 }

@@ -10,6 +10,7 @@ using MyPortal.Models.Misc;
 
 namespace MyPortal.Controllers.Api
 {
+    [Authorize]
     public class SalesController : ApiController
     {
         private readonly MyPortalDbContext _context;

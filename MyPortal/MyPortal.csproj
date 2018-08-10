@@ -209,6 +209,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\Api\BasketItemsController.cs" />
+    <Compile Include="Controllers\Api\DocumentsController.cs" />
     <Compile Include="Controllers\Api\LogsController.cs" />
     <Compile Include="Controllers\Api\ProductsController.cs" />
     <Compile Include="Controllers\Api\RegGroupsController.cs" />
@@ -263,6 +264,7 @@
     <Compile Include="Models\Misc\Checkout.cs" />
     <Compile Include="Models\Misc\ShoppingBasket.cs" />
     <Compile Include="Models\Misc\StaffDocumentUpload.cs" />
+    <Compile Include="Models\Misc\StudentDocumentUpload.cs" />
     <Compile Include="Models\Misc\UserRoleModel.cs" />
     <Compile Include="Models\MyPortalDbContext.cs" />
     <Compile Include="Models\StaffDocument.cs" />
@@ -286,6 +288,7 @@
     <Compile Include="Models\TrainingStatus.cs" />
     <Compile Include="Models\YearGroup.cs" />
     <Compile Include="ViewModels\AccountsViewModel.cs" />
+    <Compile Include="ViewModels\DocumentsViewModel.cs" />
     <Compile Include="ViewModels\NewProductViewModel.cs" />
     <Compile Include="ViewModels\NewSaleViewModel.cs" />
     <Compile Include="ViewModels\NewStudentViewModel.cs" />
@@ -565,6 +568,7 @@
     <Content Include="Views\Finance\Accounts.cshtml" />
     <Content Include="Views\Finance\Products.cshtml" />
     <Content Include="Views\Finance\Sales.cshtml" />
+    <Content Include="Views\Staff\Documents.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

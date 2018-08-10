@@ -73,7 +73,62 @@
     </div>
 </div>
 
+<!-- MyDocuments Panel -->
+<div class="container">
+    <div>
+        <div class="panel panel-primary" style="margin-top: 8px; width: 1000px;" id="DocumentsPanel">
+            <div class="panel-heading">MyDocuments</div>
+            <table class="table table-bordered" id="documents" data-staff-id="@Model.CurrentUser.Id">
+                <thead>
+                <tr style="background-color: #18bc9c;">
+                    <th style="color: whitesmoke;">Description</th>
+                    <th style="color: whitesmoke;">Date</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
 @section scripts
 {
+    <script>
+        $(document).ready(function () {
+            $("#documents").DataTable({
+                ajax: {
+                    url: "/api/staff/documents/fetch/" + $("#documents").attr("data-staff-id"),
+                    dataSrc: "",
+                    method: "GET"
+                },
+                columns: [
+                    {
+                        data: "document1.description",
+                        render: function(data, type, document) {
+                            return "<a href='" +
+                                document.document1.url +
+                                "' target='_blank'>" +
+                                document.document1.description +
+                                "</a>";
+                        }
+
+                    },
+                    {
+                        data: "document1.date",
+                        render: function(data) {
+                            var date = new Date(data);
+                            return date.toLocaleDateString();
+                        }
+                    }
+                ],
+                paging: false,
+                ordering: false,
+                searching: false,
+                info: false,
+                "language": {
+                    "emptyTable": "No documents to display"
+                }
+            });
+        });
+    </script>
     @Scripts.Render("~/bundles/staff")
 }

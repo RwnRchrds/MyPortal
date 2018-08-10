@@ -8,6 +8,7 @@ using MyPortal.Models;
 
 namespace MyPortal.Controllers.Api
 {
+    [Authorize]
     public class TrainingCertificatesController : ApiController
     {
         private readonly MyPortalDbContext _context;

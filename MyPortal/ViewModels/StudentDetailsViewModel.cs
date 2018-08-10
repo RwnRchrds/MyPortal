@@ -18,5 +18,6 @@ namespace MyPortal.ViewModels
         public Result Result { get; set; }
         public IEnumerable<ResultSet> ResultSets { get; set; }
         public IEnumerable<Subject> Subjects { get; set; }
+        public StudentDocumentUpload Upload { get; set; }
     }
 }

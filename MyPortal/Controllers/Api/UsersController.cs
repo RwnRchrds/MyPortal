@@ -14,6 +14,7 @@ using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers.Api
 {
+    [Authorize]
     public class UsersController : ApiController
     {
         private readonly ApplicationDbContext _identity;

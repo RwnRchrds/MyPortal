@@ -7,6 +7,7 @@ using MyPortal.Models;
 
 namespace MyPortal.Controllers.Api
 {
+    [Authorize]
     public class RegGroupsController : ApiController
     {
         private readonly MyPortalDbContext _context;

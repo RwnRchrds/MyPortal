@@ -196,6 +196,13 @@ namespace MyPortal.Controllers
             return View();
         }
 
+        // Menu | Documents --> General Controlled Documents List (All)
+        //Accessible by [Staff] or [SeniorStaff]
+        public ActionResult Documents()
+        {
+            return View();
+        }
+
         // Generates chart data for Student Details view
         public static ChartData GetChartData(List<Result> results, bool upperSchool)
         {

@@ -219,6 +219,27 @@
     </div>
 </div>
 
+<!-- MyDocuments Panel -->
+<div class="container">
+    <div>
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewDocumentModal">
+            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add Document
+        </button>
+        <div class="panel panel-primary" style="margin-top: 8px; width: 1000px;" id="DocumentsPanel">
+            <div class="panel-heading">MyDocuments</div>
+            <table class="table table-bordered" id="documents" data-student-id="@Model.Student.Id">
+                <thead>
+                <tr style="background-color: #18bc9c;">
+                    <th style="color: whitesmoke;">Description</th>
+                    <th style="color: whitesmoke;">Date</th>
+                    <th style="color: whitesmoke;">Actions</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
 <!-- New Logs Form -->
 <div id="NewLogModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -345,6 +366,40 @@
         </div>
     </div>
 </div>
+
+<div id="NewDocumentModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add Document - @Model.Student.LastName, @Model.Student.FirstName</h4>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "newDocumentForm"}))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Upload.Document.Description)
+                        @Html.TextBoxFor(x => x.Upload.Document.Description, new {@class = "form-control", Name = "Document.Description"})
+                        @Html.ValidationMessageFor(x => x.Upload.Document.Description)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Upload.Document.Url)
+                        @Html.TextBoxFor(x => x.Upload.Document.Url, new {@class = "form-control", Name = "Document.Url"})
+                        @Html.ValidationMessageFor(x => x.Upload.Document.Url)
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(x => x.Upload.Student, new {@class = "form-control", Value = Model.Student.Id, Name="Student"})
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
 </body>
 
 @section scripts
@@ -376,6 +431,57 @@
                                 });
                             }
                         });
+                });
+
+            $("#newDocumentForm").on("submit",
+                function(e) {
+
+                    e.preventDefault();
+
+                    var form = $("#newDocumentForm");
+                    var data = form.serialize();
+
+                    $.ajax({
+                        url: "/api/students/documents/add",
+                        data: data,
+                        method: "POST",
+                        success: function(result) {
+                            $("#NewDocumentModal").modal('hide');
+                            toastr.success(result);
+                            $("#documents").DataTable().ajax.reload();
+                        },
+                        error: function(result) {
+                            toastr.error(result.responseJSON);
+                            form.reset();
+                        }
+                    });
+                });
+
+            $("#documents").on("click",
+                ".js-delete",
+                function() {
+                    var button = $(this);
+                    bootbox.confirm("Are you sure you wish to delete this document?",
+                        function(result) {
+                            if (result) {
+                                $.ajax({
+                                    url: "/api/students/documents/remove/" + button.attr("data-document-id"),
+                                    method: "DELETE",
+                                    success: function(ajaxResult) {
+                                        $("#documents").DataTable().ajax.reload();
+                                        toastr.success(ajaxResult);
+                                    },
+                                    error: function(ajaxResult) {
+                                        toastr.error(ajaxResult.responseJSON);
+                                    }
+                                });
+                            }
+                        });
+                });
+
+            $('#NewDocumentModal').on('hidden.bs.modal',
+                function() {
+                    $(this).find('form').trigger('reset');
                 });
 
             //Load Logs Table
@@ -467,6 +573,52 @@
                     }
                 });
             }
+
+            $("#documents").DataTable({
+                ajax: {
+                    url: "/api/students/documents/fetch/" + $("#documents").attr("data-student-id"),
+                    dataSrc: "",
+                    method: "GET"
+                },
+                columns: [
+                    {
+                        data: "document1.description",
+                        render: function(data, type, document) {
+                            return "<a href='" +
+                                document.document1.url +
+                                "' target='_blank'>" +
+                                document.document1.description +
+                                "</a>";
+                        }
+
+                    },
+                    {
+                        data: "document1.date",
+                        render: function(data) {
+                            var date = new Date(data);
+                            return date.toLocaleDateString();
+                        }
+                    },
+                    {
+                        data: "id",
+                        render: function(data) {
+                            return "<button type='button' class='btn btn-xs btn-warning js-edit' data-document-id=" +
+                                data +
+                                "><span class='glyphicon glyphicon-pencil' aria-hidden='true'></span></button> " +
+                                "<button type='button' class='btn btn-xs btn-danger js-delete' data-document-id=" +
+                                data +
+                                "><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span></button>";
+                        }
+                    }
+                ],
+                paging: false,
+                ordering: false,
+                searching: false,
+                info: false,
+                "language": {
+                    "emptyTable": "No documents to display"
+                }
+            });
 
             //Edit Log Form Submit
             $("#EditLogForm").on("submit",

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
@@ -9,6 +10,7 @@ using MyPortal.Models.Misc;
 
 namespace MyPortal.Controllers.Api
 {
+    [Authorize]
     public class StaffController : ApiController
     {
         private readonly MyPortalDbContext _context;
@@ -58,7 +60,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Route("api/staff/documents/fetch")]
+        [Route("api/staff/documents/fetch/{staffId}")]
         public IEnumerable<StaffDocumentDto> GetDocuments(string staffId)
         {
             var staff = _context.Staff.SingleOrDefault(s => s.Id == staffId);
@@ -85,6 +87,16 @@ namespace MyPortal.Controllers.Api
 
             var document = data.Document;
 
+            document.IsGeneral = false;
+
+            document.Date = DateTime.Now;
+
+            var isUriValid = Uri.TryCreate(document.Url, UriKind.Absolute, out var uriResult)
+                             && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+
+            if (!isUriValid)
+                return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
+
             _context.Documents.Add(document);
             _context.SaveChanges();
 
@@ -97,7 +109,7 @@ namespace MyPortal.Controllers.Api
             _context.StaffDocuments.Add(staffDocument);
             _context.SaveChanges();
 
-            return Ok();
+            return Ok("Document added");
         }
 
         [HttpDelete]
@@ -109,13 +121,42 @@ namespace MyPortal.Controllers.Api
             if (staffDocument == null)
                 return Content(HttpStatusCode.NotFound, "Document not found");
 
+            var attachedDocument = staffDocument.Document1;
+
+            if (attachedDocument == null)
+                return Content(HttpStatusCode.BadRequest, "No document attached");
+
             _context.StaffDocuments.Remove(staffDocument);
 
-            _context.Documents.Remove(staffDocument.Document1);
+            _context.Documents.Remove(attachedDocument);
 
             _context.SaveChanges();
 
-            return Ok();
+            return Ok("Document deleted");
+        }
+
+        [HttpPost]
+        [Route("api/staff/documents/edit")]
+        public IHttpActionResult UpdateDocument(DocumentDto data)
+        {
+            var documentInDb = _context.Documents.Single(x => x.Id == data.Id);
+
+            if (documentInDb == null)
+                return Content(HttpStatusCode.NotFound, "Upload not found");
+
+            var isUriValid = Uri.TryCreate(data.Url, UriKind.Absolute, out var uriResult)
+                          && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+
+            if (!isUriValid)
+                return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
+
+            documentInDb.Description = data.Description;
+            documentInDb.Url = data.Url;
+            documentInDb.IsGeneral = false;
+
+            _context.SaveChanges();
+
+            return Ok("Document updated");
         }
     }
 }

@@ -8,6 +8,7 @@ using MyPortal.Models;
 
 namespace MyPortal.Controllers.Api
 {
+    [Authorize]
     public class RolesController : ApiController
     {
         private readonly ApplicationDbContext _identity;
