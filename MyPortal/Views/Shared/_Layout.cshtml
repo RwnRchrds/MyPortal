@@ -10,15 +10,19 @@
 </head>
 <body>
 @Html.Partial("_NavBar")
-<div class="container body-content">
-    @RenderBody()
-    <hr/>
-    <footer>
-        <p>
-            <b>Version:</b> @ViewContext.Controller.GetType().Assembly.GetName().Version.ToString()</p>
-        <p>&copy; @DateTime.Now.Year - Rowan Richards</p>
-    </footer>
-</div>
+
+    <div class="container body-content">
+        @RenderBody()
+        <div class="container float-left">
+            <hr />
+            <footer>
+                <p>
+                    <b>Version:</b> @ViewContext.Controller.GetType().Assembly.GetName().Version.ToString()
+                </p>
+                <p>&copy; @DateTime.Now.Year - Rowan Richards</p>
+            </footer>
+        </div>
+    </div>
 
 @Scripts.Render("~/bundles/lib")
 @RenderSection("scripts", false)

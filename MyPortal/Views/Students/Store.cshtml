@@ -4,47 +4,46 @@
     Layout = "~/Views/Shared/_LayoutStudent.cshtml";
 }
 
-<h2>Shop</h2>
-<hr/>
-<p>Please make sure you have your parents' permission before using the store.</p>
-<h4 id="accountBalance"><b>Your Balance:</b> Loading...</h4>
-<div class="container" id="productsPanel">
-    <div style="float: left; margin-top: 8px;">
-        <div class="panel panel-primary" style="margin-top: 8px;">
-            <div class="panel-heading">Available Products</div>
-            <table class="table table-bordered" id="products" data-student-id="@Model.Student.Id">
+<div class="container float-left">
+    <h2 class="mp-page-title">Shop</h2>
+    <p>Please make sure you have your parents' permission before using the store.</p>
+    <hr/>
+</div>
+
+<div class="container float-left">
+    <h4 id="accountBalance"><b>Your Balance:</b> Loading...</h4>
+    <hr/>
+    <div class="container" id="productsPanel">
+        <h4 class="mp-bold">Available Products</h4>
+        <table class="table table-bordered mp-table" id="products" data-student-id="@Model.Student.Id">
+            <thead>
+            <tr>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    
+    <div class="container" id="basketPanel">
+        <div>
+            <h4 class="mp-bold">My Basket</h4>
+            <table class="table table-bordered mp-table" id="basket" data-student-id="@Model.Student.Id">
                 <thead>
-                <tr style="background-color: #18bc9c;">
-                    <th style="color: whitesmoke;">Description</th>
-                    <th style="color: whitesmoke;">Price</th>
-                    <th style="color: whitesmoke;">Actions</th>
+                <tr>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
             </table>
-        </div>
-    </div>
-
-    <div class="container" id="basketPanel">
-        <div style="float: left; margin-left: 20px;">
-            <div class="panel panel-primary" style="margin-top: 16px;">
-                <div class="panel-heading">My Basket</div>
-                <table class="table table-bordered" id="basket" data-student-id="@Model.Student.Id">
-                    <thead>
-                    <tr style="background-color: #18bc9c;">
-                        <th style="color: whitesmoke;">Description</th>
-                        <th style="color: whitesmoke;">Price</th>
-                        <th style="color: whitesmoke;">Actions</th>
-                    </tr>
-                    </thead>
-                </table>
-                <div class="panel-footer">
-                    <h5 id="basketTotal"><b>Total:</b> Loading...</h5>
-                    <button type="button" class="btn btn-success" id="checkoutButton">Checkout</button>
-                </div>
-            </div>
+            <h5 id="basketTotal"><b>Total:</b> Loading...</h5>
+            <button type="button" class="btn btn-success" id="checkoutButton">Checkout</button>
         </div>
     </div>
 </div>
+   
 
 @section scripts
 {
@@ -63,9 +62,9 @@
                     success: function(result) {
                         $("#basketTotal").html("<b>Total:</b> £" + result.toFixed(2));
                         if (result > 0) {
-                            $("#checkoutButton").removeClass("hidden");
+                            $("#checkoutButton").removeClass("d-none");
                         } else {
-                            $("#checkoutButton").addClass("hidden");
+                            $("#checkoutButton").addClass("d-none");
                         }
                     },
                     error: function(result) {

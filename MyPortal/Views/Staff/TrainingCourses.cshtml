@@ -4,44 +4,93 @@
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<h2>Training Courses</h2>
-<hr/>
+<div class="container float-left">
+    <h2 class="mp-page-title">Training Courses</h2>
+    <hr />
+</div>
 
-@if (User.IsInRole("SeniorStaff"))
-{
-    @Html.ActionLink("New Course", "NewCourse", "Staff", null, new {@class = "btn btn-success", style = "margin-bottom: 8px;"})
-}
+<div class="container float-left">
+    @if (User.IsInRole("SeniorStaff"))
+    {
+        @Html.ActionLink("New Course", "NewCourse", "Staff", null, new { @class = "btn btn-success", style = "margin-bottom: 8px;" })
+        <hr />
+    }
+</div>
 
-<table class="table table-bordered table-hover" id="courses">
-    <thead>
-    <tr>
-        <th>Code</th>
-        <th>Description</th>
-    </tr>
-    </thead>
-    <tbody></tbody>
-</table>
+<div class="container float-left">
+    <table class="table table-bordered table-hover mp-table" id="courses">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Description</th>
+                @if (User.IsInRole("SeniorStaff"))
+                {
+                    <th>Actions</th>
+                }
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
 
 @section scripts
 {
-    <script>
-        $(document).ready(function() {
-            $("#courses").DataTable({
-                ajax: {
-                    url: "/api/courses",
-                    dataSrc: ""
-                },
-                columns: [
-                    {
-                        data: "code"
+    @if (User.IsInRole("SeniorStaff"))
+    {
+        <script>
+            $(document).ready(function () {
+                $("#courses").DataTable({
+                    ajax: {
+                        url: "/api/courses",
+                        dataSrc: ""
                     },
-                    {
-                        data: "description"
-                    }
-                ]
+                    columns: [
+                        {
+                            data: "code"
+                        },
+                        {
+                            data: "description"
+                        },
+                        {
+                            data: "id",
+                            render: function (data) {
+                                return "<button type='button' class='btn btn-xs btn-warning js-edit' data-course-id=" +
+                                    data +
+                                    "><i class=\"far fa-edit\"></i></button> " +
+                                    "<button type='button' class='btn btn-xs btn-danger js-delete' data-course-id=" +
+                                    data +
+                                    "><i class=\"far fa-trash-alt\"></i></button>";
+                            }
+                        }
+                    ]
+                });
             });
-        });
-    </script>
+        </script>
+    }
+
+    @if (!User.IsInRole("SeniorStaff") && User.IsInRole("Staff"))
+    {
+        <script>
+            $(document).ready(function () {
+                $("#courses").DataTable({
+                    ajax: {
+                        url: "/api/courses",
+                        dataSrc: ""
+                    },
+                    columns: [
+                        {
+                            data: "code"
+                        },
+                        {
+                            data: "description"
+                        }                       
+                    ]
+                });
+            });
+        </script>
+    }
+
 
     @Scripts.Render("~/bundles/staff")
 }

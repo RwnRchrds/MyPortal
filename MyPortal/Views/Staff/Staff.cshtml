@@ -4,24 +4,21 @@
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<h2>Staff</h2>
-<hr/>
-@if (!Model.Any())
-{
-    <p>No staff to display.</p>
-}
+<div class="container float-left">
+    <h2>Staff</h2>
+    <hr/>
+</div>
 
-else
-{
-    <table class="table table-bordered table-hover" id="staff">
+<div class="container float-left">
+    <table class="table table-bordered table-hover mp-table mp-table-link" id="staff">
         <thead>
-        <tr>
-            <th>Staff</th>
-        </tr>
+            <tr>
+                <th>Staff</th>
+            </tr>
         </thead>
         <tbody></tbody>
     </table>
-}
+</div>
 
 @section scripts
 {
@@ -45,7 +42,11 @@ else
                                 "</a>";
                         }
                     }
-                ]
+                ],
+                responsive: true,
+                language: {
+                    "emptytable": "No staff to display"
+                }
             });
         });
     </script>

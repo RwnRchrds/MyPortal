@@ -49,6 +49,9 @@ namespace MyPortal.Controllers.Api
         [Route("api/logs/new")]
         public IHttpActionResult CreateLog(LogDto data)
         {
+            if (!ModelState.IsValid)
+                return Content(HttpStatusCode.BadRequest, "Invalid data");
+
             var log = Mapper.Map<LogDto, Log>(data);
             _context.Logs.Add(log);
             _context.SaveChanges();

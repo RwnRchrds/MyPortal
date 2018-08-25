@@ -1,26 +1,141 @@
 ﻿/*---MyPortal Custom Styles---*/
 
 /*Log Table Background Colours*/
-.logAcademicSupport { background-color: #a4dae8; }
+.mp-log-academic-support { background-color: #a4dae8; }
 
-.logBehaviour { background-color: #ed7171; }
+.mp-log-behaviour { background-color: #ed7171; }
 
-.logEoy { background-color: #f9f4a4; }
+.mp-log-eoy { background-color: #f9f4a4; }
 
-.logPraise { background-color: #99e8a1 }
+.mp-log-praise { background-color: #99e8a1 }
 
-.logSen { background-color: #e6baff; }
+.mp-log-sen { background-color: #e6baff; }
 
-.logStudent { background-color: #ffd07f; }
+.mp-log-student-feed { background-color: #ffd07f; }
 
-.logTutor { background-color: #ffa0d6; }
+.mp-log-tutor-note { background-color: #ffa0d6; }
 
-.logMedical { background-color: #dee0d9; }
+.mp-log-medical-event { background-color: #dee0d9; }
+
 
 /*Certificate Table Background Colours*/
+.mp-cert-completed { background-color: #99e8a1; }
 
-.certCompleted { background-color: #99e8a1; }
+.mp-cert-pending { background-color: #f9f4a4; }
 
-.certPending { background-color: #f9f4a4; }
+.mp-cert-failed { background-color: #ed7171; }
 
-.certFailed { background-color: #ed7171; }
+
+/*Observation Table Background Colours*/
+.mp-observation-outstanding {background-color: #a4dae8}
+
+.mp-observation-good {background-color: #99e8a1}
+
+.mp-observation-satisfactory {background-color: #f9f4a4}
+
+.mp-observation-inadequate {background-color: #ed7171}
+
+
+.mp-table {
+    border-spacing: 1px;
+    border-collapse: separate;
+}
+
+
+.mp-table thead {
+    background-color: #18bc9c !important;
+}
+
+.mp-table th {
+    color: white;
+}
+
+
+.mp-table-link a {
+    text-decoration: underline;
+}
+
+.mp-margin-left {
+    margin-left: 20px !important;
+}
+
+
+.mp-margin-top {
+    margin-top: 20px !important;
+}
+
+
+.mp-btn-action-left {
+    width: 41px;
+}
+
+
+.mp-bold {
+    font-weight: bolder;
+}
+
+.mp-btn-size {
+    font-size: 15px !important;
+}
+
+
+.mp-btn-action-right {
+    width: 41px;
+}
+
+
+.mp-btn-top {
+    width: 131px;
+}
+
+
+.mp-table-condensed {
+    width: 210px;
+}
+
+
+.mp-shrink-width {
+    width: min-content;
+}
+
+
+.mp-log-message-box {
+    max-width: 500px;
+}
+
+
+.mp-log-table td:not(:nth-of-type(4)) {
+    white-space: nowrap !important;
+}
+
+
+.mp-document-table td {
+    white-space: nowrap !important;
+}
+
+.mp-document-table td:not(:first-of-type) {
+    width: min-content;
+}
+
+
+.mp-card {
+    margin-top: 8px;
+    margin-right: 20px;
+    width: 250px;
+}
+
+.mp-btn-top-auto {
+    width: auto;
+}
+
+.mp-page-title {
+    margin-top: 32px !important;
+}
+
+.mp-title-credit {
+    color: limegreen;
+}
+
+.mp-title-debit {
+    color: crimson;
+}

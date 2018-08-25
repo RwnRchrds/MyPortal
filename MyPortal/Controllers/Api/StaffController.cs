@@ -32,6 +32,9 @@ namespace MyPortal.Controllers.Api
                 .Select(Mapper.Map<Staff, StaffDto>);
         }
 
+        // --[STAFF DETAILS]--
+
+
         public StaffDto GetStaffMember(string id)
         {
             var staff = _context.Staff.SingleOrDefault(s => s.Id == id);
@@ -58,6 +61,9 @@ namespace MyPortal.Controllers.Api
 
             return staffDto;
         }
+
+
+        // --[STAFF DOCUMENTS]--
 
         [HttpGet]
         [Route("api/staff/documents/fetch/{staffId}")]
@@ -157,6 +163,83 @@ namespace MyPortal.Controllers.Api
             _context.SaveChanges();
 
             return Ok("Document updated");
+        }
+
+
+        // --[STAFF OBSERVATIONS]--
+
+
+        [HttpGet]
+        [Route("api/staff/observations/fetch/{staffId}")]
+        public IEnumerable<StaffObservationDto> GetObservations(string staffId)
+        {
+            var staff = _context.Staff.Single(x => x.Id == staffId);
+
+            if (staff == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            var observations = _context.StaffObservations
+                .Where(x => x.Observee == staffId)
+                .ToList()
+                .Select(Mapper.Map<StaffObservation, StaffObservationDto>);
+
+            return observations;
+        }
+
+        [HttpPost]
+        [Route("api/staff/observations/add")]
+        public IHttpActionResult AddObservation(StaffObservationDto data)
+        {
+
+            data.Date = DateTime.Now;
+
+            if (!ModelState.IsValid)
+                return Content(HttpStatusCode.BadRequest, "Invalid data");
+            
+            var observee = _context.Staff.Single(x => x.Id == data.Observee);
+
+            var observer = _context.Staff.Single(x => x.Id == data.Observer);
+
+            if (observee == null || observer == null)
+                return Content(HttpStatusCode.NotFound, "Staff member not found");
+
+            var observationToAdd = Mapper.Map<StaffObservationDto, StaffObservation>(data);
+
+            _context.StaffObservations.Add(observationToAdd);
+            _context.SaveChanges();
+
+            return Ok("Observation added");
+        }
+
+        [HttpDelete]
+        [Route("api/staff/observations/remove")]
+        public IHttpActionResult RemoveObservation(int observationId)
+        {
+            var observationToRemove = _context.StaffObservations.Single(x => x.Id == observationId);
+
+            if (observationToRemove == null)
+                return Content(HttpStatusCode.NotFound, "Observation not found");
+
+            _context.StaffObservations.Remove(observationToRemove);
+            _context.SaveChanges();
+
+            return Ok("Observation removed");
+        }
+
+        [HttpPost]
+        [Route("api/staff/observations/update")]
+        public IHttpActionResult UpdateObservation(StaffObservationDto data)
+        {
+            var observationInDb = _context.StaffObservations.Single(x => x.Id == data.Id);
+
+            if (observationInDb == null)
+                return Content(HttpStatusCode.NotFound, "Observation not found");
+
+            observationInDb.Outcome = data.Outcome;
+
+            _context.SaveChanges();
+
+            return Ok("Observation updated");
         }
     }
 }

@@ -7,27 +7,52 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 
-<h2>@Model.Student.LastName, @Model.Student.FirstName</h2>
+<!--TITLE [STUDENT NAME]-->
+<div class="container float-left" id="title">  
 
-<hr/>
+    <h2 class="mp-page-title">@Model.Student.LastName, @Model.Student.FirstName</h2>
+
+    <hr/>
+
+</div>
 
 <body>
-<!-- MyDetails Panel -->
-<div class="container" id="Details">
-    <div style="float: left;">
-        @if (User.IsInRole("SeniorStaff"))
-        {
-            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#EditDetailsForm">
-                <span class="glyphicon glyphicon-list" aria-hidden="true"></span> Edit Details
-            </button>
-        }
-        <button type="button" class="btn btn-warning" id="ViewResultsButton" data-student-id="@Model.Student.Id">
-            <span class="glyphicon glyphicon-stats" aria-hidden="true"></span> View Results
+
+<!--BUTTONS AT TOP OF PAGE-->
+<div class="container float-left" id="container-1">
+
+    @if (User.IsInRole("SeniorStaff"))
+    {
+        <button type="button" class="btn btn-warning mp-btn-top" data-toggle="modal" data-target="#EditDetailsForm">
+
+            <i class="far fa-id-card"></i> Edit Details
+
         </button>
-        <div class="panel panel-primary" style="margin-top: 8px; max-width: 300px;">
-            <div class="panel-heading">MyDetails</div>
-            <div class="panel-body">
-                <table class="table-condensed">
+    }
+
+    <button type="button" class="btn btn-warning mp-btn-top" id="ViewResultsButton" data-student-id="@Model.Student.Id">
+
+        <i class="far fa-chart-bar"></i> View Results
+
+    </button>
+    
+    <hr />
+
+</div>
+
+<!--CARD CONTAINER-->
+<div class="container float-left" id="container-2">
+    <!--Student Details Card-->
+    <div class="float-left" id="detailsDiv">
+
+        <div class="card border-primary mp-card" id="detailsCard">
+
+            <div class="card-header bg-primary">MyDetails</div>
+
+            <div class="card-body">
+                
+                <!--Student Details Table-->
+                <table class="table-condensed mp-table-condensed">
                     <tr>
                         <td>
                             <b>First Name</b>
@@ -65,30 +90,36 @@
                         <td>@Model.Student.YearGroup1.Staff.Title @Model.Student.YearGroup1.Staff.FirstName.Substring(0, 1) @Model.Student.YearGroup1.Staff.LastName</td>
                     </tr>
                 </table>
-                <hr/>
-                <h4><b>Balance:</b> £@Model.Student.AccountBalance</h4>
+
+            </div>
+            
+            <!--Student Details Footer (Account Balance)-->
+            <div class="card-footer bg-transparent border-primary">
+
+                <h5><b>Balance:</b> £@Model.Student.AccountBalance</h5>
+
             </div>
         </div>
     </div>
 
-    <!-- MyResults Panel -->
-    <div style="float: left; margin-left: 20px;" id="Results">
-        <div class="panel panel-primary" style="margin-top: 8px; max-width: 300px;">
-            <div class="panel-heading">MyResults</div>
+    <!-- MyResults Table Card -->
+    <div class="float-left" id="resultsTableDiv">
+        <div class="card border-primary mp-card" id="resultsTableCard">
+            <div class="card-header bg-primary">MyResults</div>
             @if (!Model.Results.Any())
             {
                 {
                     <text>
-                        <div class="panel-body">No results to display.</div></text>
+                        <div class="card-body">No results to display.</div></text>
                 }
             }
             else
             {
-                <table class="table table-condensed table-bordered">
+                <table class="table table-condensed table-bordered mp-table" id="resultsTable">
                     <thead>
-                    <tr style="background-color: #18bc9c">
-                        <th style="color: whitesmoke">Subject</th>
-                        <th style="color: whitesmoke">Result</th>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Result</th>
                     </tr>
                     </thead>
                     @foreach (var result in Model.Results)
@@ -104,10 +135,10 @@
     </div>
 
     <!-- MyResults Chart Panel -->
-    <div style="float: left; margin-left: 20px;" id="Chart">
-        <div class="panel panel-primary" style="margin-top: 8px; max-width: 300px;">
-            <div class="panel-heading">MyResults - Chart</div>
-            <div class="panel-body">
+    <div class="float-left" id="resultsChartDiv">
+        <div class="card border-primary mp-card" id="resultsChartCard">
+            <div class="card-header bg-primary">MyResults - Chart</div>
+            <div class="card-body">
                 @if (!Model.Results.Any())
                 {
                     <text>No data to display.</text>
@@ -197,58 +228,58 @@
 </div>
 
 <!-- MyLogs Panel -->
-<div class="container">
+<div class="container float-left mp-margin-top">
     <div>
+        <hr/>
+        <h4 class="mp-bold">MyLogs</h4>
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewLogModal">
-            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> New Log
+            <i class="fa fa-plus-circle"></i> New Log
         </button>
-        <div class="panel panel-primary" style="margin-top: 8px; max-width: 1000px;" id="LogsPanel">
-            <div class="panel-heading">MyLogs</div>
-            <table class="table table-bordered" id="logs" data-student-id="@Model.Student.Id" style="width: 100%">
-                <thead>
-                <tr style="background-color: #18bc9c;">
-                    <th style="color: whitesmoke;">Date</th>
-                    <th style="color: whitesmoke;">Author</th>
-                    <th style="color: whitesmoke;">Type</th>
-                    <th style="color: whitesmoke;">Message</th>
-                    <th style="color: whitesmoke; min-width: 70px;">Actions</th>
-                </tr>
-                </thead>
-            </table>
-        </div>
+        <table class="table table-bordered mp-table mp-log-table" id="logs" data-student-id="@Model.Student.Id">
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Author</th>
+                <th>Type</th>
+                <th>Message</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+        </table>
     </div>
 </div>
 
 <!-- MyDocuments Panel -->
-<div class="container">
+<div class="container float-left mp-margin-top">
     <div>
+        <hr/>
+        <h4 class="mp-bold">MyDocuments</h4>
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewDocumentModal">
-            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add Document
+            <i class="fa fa-plus-circle"></i> Add Document
         </button>
-        <div class="panel panel-primary" style="margin-top: 8px; width: 1000px;" id="DocumentsPanel">
-            <div class="panel-heading">MyDocuments</div>
-            <table class="table table-bordered" id="documents" data-student-id="@Model.Student.Id">
-                <thead>
-                <tr style="background-color: #18bc9c;">
-                    <th style="color: whitesmoke;">Description</th>
-                    <th style="color: whitesmoke;">Date</th>
-                    <th style="color: whitesmoke;">Actions</th>
-                </tr>
-                </thead>
-            </table>
-        </div>
+        <table class="table table-bordered mp-table mp-document-table mp-table-link" id="documents" data-student-id="@Model.Student.Id">
+            <thead>
+            <tr>
+                <th>Description</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+        </table>
     </div>
 </div>
 
 <!-- New Logs Form -->
 <div id="NewLogModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog" role="document">
 
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">New Log - @Model.Student.LastName, @Model.Student.FirstName</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "NewLogForm"}))
             {
@@ -260,7 +291,7 @@
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(l => l.Log.Message)
-                        @Html.TextAreaFor(l => l.Log.Message, new {@class = "form-control", style = "max-width:500px", Name = "Message"})
+                        @Html.TextAreaFor(l => l.Log.Message, new {@class = "form-control mp-log-message-box", Name = "Message"})
                         @Html.ValidationMessageFor(l => l.Log.Message)
                     </div>
                     <div class="form-group">
@@ -288,8 +319,10 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">New Log - @Model.Student.LastName, @Model.Student.FirstName</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
 
             @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "EditLogForm"}))
@@ -301,7 +334,7 @@
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(l => l.Log.Message)
-                        @Html.TextAreaFor(l => l.Log.Message, new {@class = "form-control", style = "max-width:500px;", id = "EditLogMessageControl", Name = "Message"})
+                        @Html.TextAreaFor(l => l.Log.Message, new {@class = "form-control mp-log-message-box", id = "EditLogMessageControl", Name = "Message"})
                     </div>
                     <div class="form-group">
                         @Html.HiddenFor(l => l.Log.Student, new {Value = Model.Student.Id, Name = "Student"})
@@ -329,8 +362,10 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Edit Details - @Model.Student.LastName, @Model.Student.FirstName</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             @using (Html.BeginForm("SaveStudent", "Staff"))
             {
@@ -367,13 +402,16 @@
     </div>
 </div>
 
+<!--New Documents Form-->
 <div id="NewDocumentModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Add Document - @Model.Student.LastName, @Model.Student.FirstName</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "newDocumentForm"}))
             {
@@ -389,7 +427,7 @@
                         @Html.ValidationMessageFor(x => x.Upload.Document.Url)
                     </div>
                     <div class="form-group">
-                        @Html.HiddenFor(x => x.Upload.Student, new {@class = "form-control", Value = Model.Student.Id, Name="Student"})
+                        @Html.HiddenFor(x => x.Upload.Student, new {@class = "form-control", Value = Model.Student.Id, Name = "Student"})
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -521,51 +559,52 @@
                         {
                             data: "id",
                             render: function(data) {
-                                return "<button type='button' class='btn btn-xs btn-warning js-edit' data-log-id=" +
+                                return "<button type='button' class='btn btn-xs btn-warning mp-btn-action-left js-edit' data-log-id=" +
                                     data +
-                                    "><span class='glyphicon glyphicon-pencil' aria-hidden='true'></span></button> " +
-                                    "<button type='button' class='btn btn-xs btn-danger js-delete' data-log-id=" +
+                                    "><i class=\"far fa-edit\"></i></button> " +
+                                    "<button type='button' class='btn btn-xs btn-danger mp-btn-action-right js-delete' data-log-id=" +
                                     data +
-                                    "><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span></button>";
+                                    "><i class=\"far fa-trash-alt\"></i></button>";
                             }
                         }
                     ],
                     paging: false,
                     ordering: false,
                     searching: false,
+                    responsive: true,
                     info: false,
                     "createdRow": function(row, data, dataIndex) {
                         if (data.logType.name === "Academic Support") {
-                            $(row).addClass("logAcademicSupport");
+                            $(row).addClass("mp-log-academic-support");
                         }
 
                         if (data.logType.name === "Behaviour Log") {
-                            $(row).addClass("logBehaviour");
+                            $(row).addClass("mp-log-behaviour");
                         }
 
                         if (data.logType.name === "EOY Report") {
-                            $(row).addClass("logEoy");
+                            $(row).addClass("mp-log-eoy");
                         }
 
                         if (data.logType.name === "Praise") {
-                            $(row).addClass("logPraise");
+                            $(row).addClass("mp-log-praise");
                         }
 
                         if (data.logType.name === "SEN Note") {
-                            $(row).addClass("logSen");
+                            $(row).addClass("mp-log-sen");
                         }
 
                         if (data.logType.name === "Student Feed") {
-                            $(row).addClass("logStudent");
+                            $(row).addClass("mp-log-student-feed");
                         }
 
                         if (data.logType.name === "Tutor Note") {
-                            $(row).addClass("logTutor");
+                            $(row).addClass("mp-log-tutor-note");
                         }
 
 
                         if (data.logType.name === "Medical Event") {
-                            $(row).addClass("logMedical");
+                            $(row).addClass("mp-log-medical-event");
                         }
                     },
                     "language": {
@@ -602,18 +641,19 @@
                     {
                         data: "id",
                         render: function(data) {
-                            return "<button type='button' class='btn btn-xs btn-warning js-edit' data-document-id=" +
+                            return "<button type='button' class='btn btn-xs btn-warning mp-btn-action-left js-edit' data-document-id=" +
                                 data +
-                                "><span class='glyphicon glyphicon-pencil' aria-hidden='true'></span></button> " +
-                                "<button type='button' class='btn btn-xs btn-danger js-delete' data-document-id=" +
+                                "><i class=\"far fa-edit\"></i></button> " +
+                                "<button type='button' class='btn btn-xs btn-danger mp-btn-action-right js-delete' data-document-id=" +
                                 data +
-                                "><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span></button>";
+                                "><i class=\"far fa-trash-alt\"></i></button>";
                         }
                     }
                 ],
                 paging: false,
                 ordering: false,
                 searching: false,
+                responsive: true,
                 info: false,
                 "language": {
                     "emptyTable": "No documents to display"
@@ -669,31 +709,31 @@
                 var logType = $(this).find(".logtype").html();
 
                 if (logType === "Academic Support") {
-                    $(log).addClass("logAcademicSupport");
+                    $(log).addClass("mp-log-academic-support");
                 }
 
                 if (logType === "Behaviour Log") {
-                    $(log).addClass("logBehaviour");
+                    $(log).addClass("mp-log-behaviour");
                 }
 
                 if (logType === "EOY Report") {
-                    $(log).addClass("logEoy");
+                    $(log).addClass("mp-log-eoy");
                 }
 
                 if (logType === "Praise") {
-                    $(log).addClass("logPraise");
+                    $(log).addClass("mp-log-praise");
                 }
 
                 if (logType === "SEN Note") {
-                    $(log).addClass("logSen");
+                    $(log).addClass("mp-log-sen");
                 }
 
                 if (logType === "Student Feed") {
-                    $(log).addClass("logStudent");
+                    $(log).addClass("mp-log-student-feed");
                 }
 
                 if (logType === "Tutor Note") {
-                    $(log).addClass("logTutor");
+                    $(log).addClass("mp-log-tutor-note");
                 }
             });
 

@@ -4,21 +4,34 @@
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<h2>@Model.Staff.Title @Model.Staff.FirstName.Substring(0, 1) @Model.Staff.LastName</h2>
-<hr />
+<div class="container float-left" id="title">
+    <h2 class="mp-page-title">@Model.Staff.Title @Model.Staff.FirstName.Substring(0, 1) @Model.Staff.LastName</h2>
+    <hr/>
+</div>
+
+
+<div class="container float-left" id="container-1">
+
+    @if (User.IsInRole("SeniorStaff"))
+    {
+        <button type="button" class="btn btn-warning mp-btn-top-auto" id="EditDetailsButton" data-toggle="modal" data-target="#EditDetailsForm">
+
+            <i class="far fa-id-card"></i> Edit Details
+
+        </button>
+        <hr/>
+    }
+
+</div>
+
 <!-- MyDetails Panel -->
-<div class="container" id="Details">
-    <div style="float: left;">
-        @if (User.IsInRole("SeniorStaff"))
-        {
-            <button type="button" class="btn btn-warning" id="EditDetailsButton" data-toggle="modal" data-target="#EditDetailsForm">
-                <span class="glyphicon glyphicon-list" aria-hidden="true"></span> Edit Details
-            </button>
-        }
-        <div class="panel panel-primary" style="margin-top: 8px; max-width: 300px;">
-            <div class="panel-heading">MyDetails</div>
-            <div class="panel-body">
-                <table class="table-condensed">
+<div class="container float-left mp-shrink-width" id="details">
+    <div>
+
+        <div class="card border-primary mp-card">
+            <div class="card-header bg-primary">MyDetails</div>
+            <div class="card-body">
+                <table class="table-condensed mp-table-condensed">
                     <tr>
                         <td>
                             <b>Title</b>
@@ -48,69 +61,44 @@
         </div>
     </div>
 </div>
-<div class="container">
+
+<div class="container float-left mp-margin-top">
     <div>
+        <hr/>
+        <h4 class="mp-bold">MyTraining</h4>
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#CertModal">
-            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> New Certificate
+            <i class="fa fa-plus-circle"></i> New Certificate
         </button>
-        <div class="panel panel-primary" style="margin-top: 8px; max-width: 1000px;">
-            <div class="panel-heading">MyTraining</div>
-            @if (!Model.TrainingCertificates.Any())
-            {
-                <text>
-                    <div class="panel-body">No training certificates to display.</div></text>
-            }
-            else
-            {
-                <table class="table table-bordered" id="certs">
-                    <thead>
-                        <tr style="background-color: #18bc9c;">
-                            <th style="color: whitesmoke;">Course</th>
-                            <th style="color: whitesmoke;">Description</th>
-                            <th style="color: whitesmoke;">Status</th>
-                            <th style="color: whitesmoke; min-width: 70px;">Edit</th>
-                        </tr>
-                    </thead>
-                    @foreach (var certificate in Model.TrainingCertificates)
-                    {
-                        <tr>
-                            <td>@certificate.TrainingCourse.Code</td>
-                            <td>@certificate.TrainingCourse.Description</td>
-                            <td>@certificate.TrainingStatus.Name</td>
-                            <td>
-                                <button type="button" class="btn btn-warning btn-xs">
-                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                                </button>
-                                <button data-staff-id="@certificate.Staff" data-course-id="@certificate.Course" type="button" class="btn btn-danger btn-xs js-delete">
-                                    <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
-                                </button>
-                            </td>
-                        </tr>
-                    }
-                </table>
-            }
-        </div>
+        <table class="table table-bordered mp-table" id="certs" data-staff-id="@Model.Staff.Id">
+            <thead>
+            <tr>
+                <th>Course</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+        </table>
     </div>
 </div>
 
 <!-- MyDocuments Panel -->
-<div class="container">
+<div class="container float-left mp-margin-top">
     <div>
+        <hr />
+        <h4 class="mp-bold">MyDocuments</h4>
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewDocumentModal">
-            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add Document
+            <i class="fa fa-plus-circle"></i> Add Document
         </button>
-        <div class="panel panel-primary" style="margin-top: 8px; width: 1000px;" id="DocumentsPanel">
-            <div class="panel-heading">MyDocuments</div>
-            <table class="table table-bordered" id="documents" data-staff-id="@Model.Staff.Id">
-                <thead>
-                    <tr style="background-color: #18bc9c;">
-                        <th style="color: whitesmoke;">Description</th>
-                        <th style="color: whitesmoke;">Date</th>
-                        <th style="color: whitesmoke;">Actions</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
+        <table class="table table-bordered mp-table mp-table-link" id="documents" data-staff-id="@Model.Staff.Id">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+        </table>
     </div>
 </div>
 
@@ -124,19 +112,19 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">New Certificate - @Model.Staff.LastName, @Model.Staff.FirstName</h4>
             </div>
-            @using (Html.BeginForm("CreateCertificate", "Staff"))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "newCertForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.LabelFor(l => l.TrainingCertificate.Course)
-                        @Html.DropDownListFor(l => l.TrainingCertificate.Course, new SelectList(Model.TrainingCourses, "Id", "Description"), "Select Course", new { @class = "form-control" })
+                        @Html.DropDownListFor(l => l.TrainingCertificate.Course, new SelectList(Model.TrainingCourses, "Id", "Description"), "Select Course", new {@class = "form-control"})
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(l => l.TrainingCertificate.Status)
-                        @Html.DropDownListFor(l => l.TrainingCertificate.Status, new SelectList(Model.TrainingStatuses, "Id", "Name"), "Select Status", new { @class = "form-control" })
+                        @Html.DropDownListFor(l => l.TrainingCertificate.Status, new SelectList(Model.TrainingStatuses, "Id", "Name"), "Select Status", new {@class = "form-control"})
                     </div>
                     <div class="form-group">
-                        @Html.HiddenFor(l => l.TrainingCertificate.Staff, new { Value = Model.Staff.Id })
+                        @Html.HiddenFor(l => l.TrainingCertificate.Staff, new {Value = Model.Staff.Id})
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -157,21 +145,21 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Add Document - @Model.Staff.LastName, @Model.Staff.FirstName</h4>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "newDocumentForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "newDocumentForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.LabelFor(x => x.Upload.Document.Description)
-                        @Html.TextBoxFor(x => x.Upload.Document.Description, new { @class = "form-control", Name = "Document.Description" })
+                        @Html.TextBoxFor(x => x.Upload.Document.Description, new {@class = "form-control", Name = "Document.Description"})
                         @Html.ValidationMessageFor(x => x.Upload.Document.Description)
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(x => x.Upload.Document.Url)
-                        @Html.TextBoxFor(x => x.Upload.Document.Url, new { @class = "form-control", Name = "Document.Url" })
+                        @Html.TextBoxFor(x => x.Upload.Document.Url, new {@class = "form-control", Name = "Document.Url"})
                         @Html.ValidationMessageFor(x => x.Upload.Document.Url)
                     </div>
                     <div class="form-group">
-                        @Html.HiddenFor(x => x.Upload.StaffId, new { @class = "form-control", Value = Model.Staff.Id, Name = "StaffId" })
+                        @Html.HiddenFor(x => x.Upload.StaffId, new {@class = "form-control", Value = Model.Staff.Id, Name = "StaffId"})
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -187,28 +175,28 @@
 {
     <script>
         //When Page Has Loaded, Prepare Scripts
-        $(document).ready(function () {
+        $(document).ready(function() {
             //Clear Modal When Closed
             $('#CertModal').on('hidden.bs.modal',
-                function () {
+                function() {
                     $(this).find('form').trigger('reset');
                 });
 
             //Delete Log When Button Clicked
             $("#certs").on("click",
                 ".js-delete",
-                function () {
+                function() {
                     var button = $(this);
                     bootbox.confirm("Are you sure you wish to delete this certificate?",
-                        function (result) {
+                        function(result) {
                             if (result) {
                                 $.ajax({
                                     url: "/api/certificates/certificate/" +
-                                    button.attr("data-staff-id") +
-                                    "/" +
-                                    button.attr("data-course-id"),
+                                        button.attr("data-staff-id") +
+                                        "/" +
+                                        button.attr("data-course-id"),
                                     method: "DELETE",
-                                    success: function () {
+                                    success: function() {
                                         location.reload();
                                     }
                                 });
@@ -246,10 +234,10 @@
                         render: function(data) {
                             return "<button type='button' class='btn btn-xs btn-warning js-edit' data-document-id=" +
                                 data +
-                                "><span class='glyphicon glyphicon-pencil' aria-hidden='true'></span></button> " +
+                                "><i class=\"far fa-edit\"></i></button> " +
                                 "<button type='button' class='btn btn-xs btn-danger js-delete' data-document-id=" +
                                 data +
-                                "><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span></button>";
+                                "><i class=\"far fa-trash-alt\"></i></button>";
                         }
                     }
                 ],
@@ -257,8 +245,60 @@
                 ordering: false,
                 searching: false,
                 info: false,
+                responsive: true,
                 "language": {
                     "emptyTable": "No documents to display"
+                }
+            });
+
+            $("#certs").DataTable({
+                ajax: {
+                    url: "/api/staff/certificates/fetch/" + $("#documents").attr("data-staff-id"),
+                    dataSrc: "",
+                    method: "GET"
+                },
+                columns: [
+                    {
+                        data: "trainingCourse.code"
+                    },
+                    {
+                        data: "trainingCourse.description"
+                    },
+                    {
+                        data: "trainingStatus.name"
+                    },
+                    {
+                        data: "course",
+                        render: function(data) {
+                            return "<button type='button' class='btn btn-xs btn-warning js-edit' data-document-id=" +
+                                data +
+                                "><i class=\"far fa-edit\"></i></button> " +
+                                "<button type='button' class='btn btn-xs btn-danger js-delete' data-document-id=" +
+                                data +
+                                "><i class=\"far fa-trash-alt\"></i></button>";
+                        }
+                    }
+                ],
+                paging: false,
+                ordering: false,
+                searching: false,
+                responsive: true,
+                info: false,
+                "language": {
+                    "emptyTable": "No certificates to display"
+                },
+                "createdRow": function(row, data, dataIndex) {
+                    if (data.trainingStatus.name === "Completed") {
+                        $(row).addClass("mp-cert-completed");
+                    }
+
+                    if (data.trainingStatus.name === "Pending") {
+                        $(row).addClass("mp-cert-pending");
+                    }
+
+                    if (data.trainingStatus.name === "Failed") {
+                        $(row).addClass("mp-cert-failed");
+                    }
                 }
             });
 
@@ -311,13 +351,13 @@
 
         //Edit Details Not Yet Available
         $("#EditDetailsButton").on("click",
-            function () {
+            function() {
                 toastr.warning("This feature is not yet available");
             });
 
-        
+
     </script>
 
-    @Scripts.Render("~/bundles/jqueryval");
+    @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/staff")
 }

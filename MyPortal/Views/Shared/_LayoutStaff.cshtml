@@ -9,16 +9,17 @@
 
 </head>
 <body>
-@Html.Partial("_NavBarStaff"))
-
+@Html.Partial("_NavBarStaff")
 <div class="container body-content">
     @RenderBody()
-    <hr/>
-    <footer>
-        <p>
-            <b>Version:</b> @ViewContext.Controller.GetType().Assembly.GetName().Version.ToString()</p>
-        <p>&copy; @DateTime.Now.Year - Rowan Richards</p>
-    </footer>
+    <div class="container float-left">
+        <hr/>
+        <footer>
+            <p>
+                <b>Version:</b> @ViewContext.Controller.GetType().Assembly.GetName().Version.ToString()</p>
+            <p>&copy; @DateTime.Now.Year - Rowan Richards</p>
+        </footer>
+    </div>
 </div>
 
 @Scripts.Render("~/bundles/lib")

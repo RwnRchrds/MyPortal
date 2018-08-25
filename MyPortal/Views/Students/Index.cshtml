@@ -1,4 +1,5 @@
-﻿@model MyPortal.ViewModels.StudentDetailsViewModel
+﻿@using Microsoft.AspNet.Identity
+@model MyPortal.ViewModels.StudentDetailsViewModel
 @{
     ViewBag.Title = "Student Details";
     Layout = "~/Views/Shared/_LayoutStudent.cshtml";
@@ -6,107 +7,121 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 
-<h2>@Model.Student.LastName, @Model.Student.FirstName</h2>
+<div class="container float-left">
+    <h2 class="mp-page-title">@Model.Student.LastName, @Model.Student.FirstName</h2>
+    <hr/>
+</div>
 
-<hr/>
+<body>  
 
-<body>
-    <!-- MyDetails Panel -->
-    <div class="container" id="Details">
-        <div style="float: left;">
-            <div class="panel panel-primary" style="margin-top: 8px; width: 300px;">
-                <div class="panel-heading">MyDetails</div>
-                <div class="panel-body">
-                    <table class="table-condensed">
-                        <tr>
-                            <td>
-                                <b>First Name</b>
-                            </td>
-                            <td>@Model.Student.FirstName</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b>Last Name</b>
-                            </td>
-                            <td>@Model.Student.LastName</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b>Year Group</b>
-                            </td>
-                            <td>@Model.Student.YearGroup1.Name</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b>Reg Group</b>
-                            </td>
-                            <td>@Model.Student.RegGroup1.Name</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b>Reg Tutor</b>
-                            </td>
-                            <td>@Model.Student.RegGroup1.Staff.Title @Model.Student.RegGroup1.Staff.FirstName.Substring(0, 1) @Model.Student.RegGroup1.Staff.LastName</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b>Head of Year</b>
-                            </td>
-                            <td>@Model.Student.YearGroup1.Staff.Title @Model.Student.YearGroup1.Staff.FirstName.Substring(0, 1) @Model.Student.YearGroup1.Staff.LastName</td>
-                        </tr>
-                    </table>
-                    <hr />
-                    <h4><b>Balance:</b> £@Model.Student.AccountBalance</h4>
-                </div>
+<!--CARD CONTAINER-->
+<div class="container float-left" id="container-2">
+    <!--Student Details Card-->
+    <div class="float-left" id="detailsDiv">
+
+        <div class="card border-primary mp-card" id="detailsCard">
+
+            <div class="card-header bg-primary">MyDetails</div>
+
+            <div class="card-body">
+
+                <!--Student Details Table-->
+                <table class="table-condensed mp-table-condensed">
+                    <tr>
+                        <td>
+                            <b>First Name</b>
+                        </td>
+                        <td>@Model.Student.FirstName</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Last Name</b>
+                        </td>
+                        <td>@Model.Student.LastName</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Year Group</b>
+                        </td>
+                        <td>@Model.Student.YearGroup1.Name</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Reg Group</b>
+                        </td>
+                        <td>@Model.Student.RegGroup1.Name</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Reg Tutor</b>
+                        </td>
+                        <td>@Model.Student.RegGroup1.Staff.Title @Model.Student.RegGroup1.Staff.FirstName.Substring(0, 1) @Model.Student.RegGroup1.Staff.LastName</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Head of Year</b>
+                        </td>
+                        <td>@Model.Student.YearGroup1.Staff.Title @Model.Student.YearGroup1.Staff.FirstName.Substring(0, 1) @Model.Student.YearGroup1.Staff.LastName</td>
+                    </tr>
+                </table>
+
+            </div>
+
+            <!--Student Details Footer (Account Balance)-->
+            <div class="card-footer bg-transparent border-primary">
+
+                <h5><b>Balance:</b> £@Model.Student.AccountBalance</h5>
+
             </div>
         </div>
+    </div>
 
-        <!-- MyResults Panel -->
-        <div style="float: left; margin-left: 20px;" id="Results">
-            <div class="panel panel-primary" style="margin-top: 8px; width: 300px;">
-                <div class="panel-heading">MyResults</div>
+    <!-- MyResults Table Card -->
+    <div class="float-left" id="resultsTableDiv">
+        <div class="card border-primary mp-card" id="resultsTableCard">
+            <div class="card-header bg-primary">MyResults</div>
+            @if (!Model.Results.Any())
+            {
+                {
+                    <text>
+                        <div class="card-body">No results to display.</div></text>
+                }
+            }
+            else
+            {
+                <table class="table table-condensed table-bordered mp-table" id="resultsTable">
+                    <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Result</th>
+                    </tr>
+                    </thead>
+                    @foreach (var result in Model.Results)
+                    {
+                        <tr>
+                            <td>@result.Subject1.Name</td>
+                            <td>@result.Value</td>
+                        </tr>
+                    }
+                </table>
+            }
+        </div>
+    </div>
+
+    <!-- MyResults Chart Panel -->
+    <div class="float-left" id="resultsChartDiv">
+        <div class="card border-primary mp-card" id="resultsChartCard">
+            <div class="card-header bg-primary">MyResults - Chart</div>
+            <div class="card-body">
                 @if (!Model.Results.Any())
                 {
-                    {
-                        <text>
-                            <div class="panel-body">No results to display.</div></text>
-                    }
+                    <text>No data to display.</text>
                 }
                 else
                 {
-                    <table class="table table-condensed table-bordered">
-                        <thead>
-                            <tr style="background-color: #18bc9c">
-                                <th style="color: whitesmoke">Subject</th>
-                                <th style="color: whitesmoke">Result</th>
-                            </tr>
-                        </thead>
-                        @foreach (var result in Model.Results)
-                        {
-                            <tr>
-                                <td>@result.Subject1.Name</td>
-                                <td>@result.Value</td>
-                            </tr>
-                        }
-                    </table>
-                }
-            </div>
-        </div>
+                    <canvas id="resultsChart" style="height: 300px; width: 300px;"></canvas>
 
-        <!-- MyResults Chart Panel -->
-        <div style="float: left; margin-left: 20px;" id="Chart">
-            <div class="panel panel-primary" style="margin-top: 8px; width: 300px;">
-                <div class="panel-heading">MyResults - Chart</div>
-                <div class="panel-body">
-                    @if (!Model.Results.Any())
-                    {
-                        <text>No data to display.</text>
-                    }
-                    else
-                    {
-                        <canvas id="resultsChart" style="height: 300px; width: 300px;"></canvas>
-
-                        <script>
+                    <script>
                         var ctx = document.getElementById('resultsChart').getContext('2d');
                         var chart = new Chart(ctx,
                             {
@@ -179,51 +194,46 @@
                                     }
                                 }
                             });
-                        </script>
-                    }
-                </div>
+                    </script>
+                }
             </div>
-        </div>
-    </div>
-
-    <!-- MyLogs Panel -->
-    <div class="container">
-        <div>
-            <div class="panel panel-primary" style="margin-top: 8px; width: 1000px;" id="LogsPanel">
-                <div class="panel-heading">MyLogs</div>
-                <table class="table table-bordered" id="logs" data-student-id="@Model.Student.Id">
-                    <thead>
-                        <tr style="background-color: #18bc9c;">
-                            <th style="color: whitesmoke;">Date</th>
-                            <th style="color: whitesmoke;">Author</th>
-                            <th style="color: whitesmoke;">Type</th>
-                            <th style="color: whitesmoke;">Message</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- MyDocuments Panel -->
-<div class="container">
-    <div>
-        <div class="panel panel-primary" style="margin-top: 8px; width: 1000px;" id="DocumentsPanel">
-            <div class="panel-heading">MyDocuments</div>
-            <table class="table table-bordered" id="documents" data-student-id="@Model.Student.Id">
-                <thead>
-                <tr style="background-color: #18bc9c;">
-                    <th style="color: whitesmoke;">Description</th>
-                    <th style="color: whitesmoke;">Date</th>
-                </tr>
-                </thead>
-            </table>
         </div>
     </div>
 </div>
 
+<!-- MyLogs Panel -->
+<div class="container float-left mp-margin-top">
+    <div>
+        <hr/>
+        <h4 class="mp-bold">MyLogs</h4>
+        <table class="table table-bordered mp-table mp-log-table" id="logs" data-student-id="@Model.Student.Id">
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Author</th>
+                <th>Type</th>
+                <th>Message</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
 
-
+<!-- MyDocuments Panel -->
+<div class="container float-left mp-margin-top">
+    <div>
+        <hr/>
+        <h4 class="mp-bold">MyDocuments</h4>
+        <table class="table table-bordered mp-table mp-document-table mp-table-link" id="documents" data-student-id="@Model.Student.Id">
+            <thead>
+            <tr>
+                <th>Description</th>
+                <th>Date</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
 </body>
 
 @section scripts
@@ -269,35 +279,35 @@
                     info: false,
                     "createdRow": function(row, data, dataIndex) {
                         if (data.logType.name === "Academic Support") {
-                            $(row).addClass("logAcademicSupport");
+                            $(row).addClass("mp-log-academic-support");
                         }
 
                         if (data.logType.name === "Behaviour Log") {
-                            $(row).addClass("logBehaviour");
+                            $(row).addClass("mp-log-behaviour");
                         }
 
                         if (data.logType.name === "EOY Report") {
-                            $(row).addClass("logEoy");
+                            $(row).addClass("mp-log-eoy");
                         }
 
                         if (data.logType.name === "Praise") {
-                            $(row).addClass("logPraise");
+                            $(row).addClass("mp-log-praise");
                         }
 
                         if (data.logType.name === "SEN Note") {
-                            $(row).addClass("logSen");
+                            $(row).addClass("mp-log-sen");
                         }
 
                         if (data.logType.name === "Student Feed") {
-                            $(row).addClass("logStudent");
+                            $(row).addClass("mp-log-student-feed");
                         }
 
                         if (data.logType.name === "Tutor Note") {
-                            $(row).addClass("logTutor");
+                            $(row).addClass("mp-log-tutor-note");
                         }
 
                         if (data.logType.name === "Medical Event") {
-                            $(row).addClass("logMedical");
+                            $(row).addClass("mp-log-medical-event");
                         }
                     },
                     "language": {

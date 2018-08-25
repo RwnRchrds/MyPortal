@@ -10,65 +10,65 @@ namespace MyPortal.App_Start
     {
         public MappingProfile()
         {
-            Mapper.CreateMap<Student, StudentDto>();
-            Mapper.CreateMap<StudentDto, Student>();
+            CreateMap<Student, StudentDto>();
+            CreateMap<StudentDto, Student>();
 
-            Mapper.CreateMap<LogDto, Log>();
-            Mapper.CreateMap<Log, LogDto>();
+            CreateMap<LogDto, Log>();
+            CreateMap<Log, LogDto>();
 
-            Mapper.CreateMap<YearGroupDto, YearGroup>();
-            Mapper.CreateMap<YearGroup, YearGroupDto>();
+            CreateMap<YearGroupDto, YearGroup>();
+            CreateMap<YearGroup, YearGroupDto>();
 
-            Mapper.CreateMap<RegGroupDto, RegGroup>();
-            Mapper.CreateMap<RegGroup, RegGroupDto>();
+            CreateMap<RegGroupDto, RegGroup>();
+            CreateMap<RegGroup, RegGroupDto>();
 
-            Mapper.CreateMap<StaffDto, Staff>();
-            Mapper.CreateMap<Staff, StaffDto>();
+            CreateMap<StaffDto, Staff>();
+            CreateMap<Staff, StaffDto>();
 
-            Mapper.CreateMap<TrainingCertificateDto, TrainingCertificate>();
-            Mapper.CreateMap<TrainingCertificate, TrainingCertificateDto>();
+            CreateMap<TrainingCertificateDto, TrainingCertificate>();
+            CreateMap<TrainingCertificate, TrainingCertificateDto>();
 
-            Mapper.CreateMap<TrainingCourseDto, TrainingCourse>();
-            Mapper.CreateMap<TrainingCourse, TrainingCourseDto>();
+            CreateMap<TrainingCourseDto, TrainingCourse>();
+            CreateMap<TrainingCourse, TrainingCourseDto>();
 
-            Mapper.CreateMap<UserDto, IdentityUser>();
-            Mapper.CreateMap<IdentityUser, UserDto>();
+            CreateMap<UserDto, IdentityUser>();
+            CreateMap<IdentityUser, UserDto>();
 
-            Mapper.CreateMap<RoleDto, IdentityRole>();
-            Mapper.CreateMap<IdentityRole, RoleDto>();
+            CreateMap<RoleDto, IdentityRole>();
+            CreateMap<IdentityRole, RoleDto>();
 
-            Mapper.CreateMap<RegGroupDto, RegGroup>();
-            Mapper.CreateMap<RegGroup, RegGroupDto>();
+            CreateMap<RegGroupDto, RegGroup>();
+            CreateMap<RegGroup, RegGroupDto>();
 
-            Mapper.CreateMap<ResultDto, Result>();
-            Mapper.CreateMap<Result, ResultDto>();
+            CreateMap<ResultDto, Result>();
+            CreateMap<Result, ResultDto>();
 
-            Mapper.CreateMap<SubjectDto, Subject>();
-            Mapper.CreateMap<Subject, SubjectDto>();
+            CreateMap<SubjectDto, Subject>();
+            CreateMap<Subject, SubjectDto>();
 
-            Mapper.CreateMap<LogTypeDto, LogType>();
-            Mapper.CreateMap<LogType, LogTypeDto>();
+            CreateMap<LogTypeDto, LogType>();
+            CreateMap<LogType, LogTypeDto>();
 
-            Mapper.CreateMap<ProductDto, Product>();
-            Mapper.CreateMap<Product, ProductDto>();
+            CreateMap<ProductDto, Product>();
+            CreateMap<Product, ProductDto>();
 
-            Mapper.CreateMap<SaleDto, Sale>();
-            Mapper.CreateMap<Sale, SaleDto>();
+            CreateMap<SaleDto, Sale>();
+            CreateMap<Sale, SaleDto>();
 
-            Mapper.CreateMap<BasketItemDto, BasketItem>();
-            Mapper.CreateMap<BasketItem, BasketItemDto>();
+            CreateMap<BasketItemDto, BasketItem>();
+            CreateMap<BasketItem, BasketItemDto>();
 
-            Mapper.CreateMap<TrainingStatusDto, TrainingStatus>();
-            Mapper.CreateMap<TrainingStatus, TrainingStatusDto>();
+            CreateMap<TrainingStatusDto, TrainingStatus>();
+            CreateMap<TrainingStatus, TrainingStatusDto>();
 
-            Mapper.CreateMap<DocumentDto, Document>();
-            Mapper.CreateMap<Document, DocumentDto>();
+            CreateMap<DocumentDto, Document>();
+            CreateMap<Document, DocumentDto>();
 
-            Mapper.CreateMap<StudentDocumentDto, StudentDocument>();
-            Mapper.CreateMap<StudentDocument, StudentDocumentDto>();
+            CreateMap<StudentDocumentDto, StudentDocument>();
+            CreateMap<StudentDocument, StudentDocumentDto>();
 
-            Mapper.CreateMap<StaffDocumentDto, StaffDocument>();
-            Mapper.CreateMap<StaffDocument, StaffDocumentDto>();
+            CreateMap<StaffDocumentDto, StaffDocument>();
+            CreateMap<StaffDocument, StaffDocumentDto>();
         }
     }
 }

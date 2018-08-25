@@ -23,9 +23,16 @@ namespace MyPortal.Controllers.Api
             _context.Dispose();
         }
 
-        [Route("api/certificates/{staff}")]
+        [HttpGet]
+        [Route("api/staff/certificates/fetch/{staff}")]
         public IEnumerable<TrainingCertificateDto> GetCertificates(string staff)
         {
+
+            var staffInDb = _context.Staff.Single(x => x.Id == staff);
+
+            if (staffInDb == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
             return _context.TrainingCertificates
                 .Where(c => c.Staff == staff)
                 .ToList()
@@ -33,6 +40,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [Route("api/staff/certificates/create")]
         public TrainingCertificateDto CreateTrainingCertificate(TrainingCertificateDto trainingCertificateDto)
         {
             if (!ModelState.IsValid)
@@ -46,7 +54,24 @@ namespace MyPortal.Controllers.Api
             return trainingCertificateDto;
         }
 
-        [Route("api/certificates/certificate/{staff}/{course}")]
+        [HttpPost]
+        [Route("api/staff/certificates/update")]
+        public IHttpActionResult UpdateCertificate(TrainingCertificateDto data)
+        {
+            var certInDb = _context.TrainingCertificates.Single(x => x.Staff == data.Staff && x.Course == data.Course);
+
+            if (certInDb == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            certInDb.Status = data.Status;
+
+            _context.SaveChanges();
+
+            return Ok("Certificate updated");
+        }
+
+        [HttpDelete]
+        [Route("api/staff/certificates/delete/{staff}/{course}")]
         public IHttpActionResult DeleteCertificate(string staff, int course)
         {
             var certInDb = _context.TrainingCertificates.SingleOrDefault(l => l.Staff == staff && l.Course == course);

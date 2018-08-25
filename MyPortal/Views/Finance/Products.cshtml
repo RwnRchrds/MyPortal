@@ -4,27 +4,33 @@
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<h2>Products</h2>
-<hr/>
+<div class="container float-left">
+    <h2 class="mp-page-title">Products</h2>
+    <hr/>
+</div>
 
-@if (User.IsInRole("Finance"))
-{
-    <button type="button" class="btn btn-success" style="margin-bottom: 8px;" data-toggle="modal" data-target="#NewProductModal">New Product</button>
-    <br/>
-}
+<div class="container float-left">
+    @if (User.IsInRole("Finance"))
+    {
+        <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#NewProductModal">New Product</button>
+        <hr/>
+    }
+</div>
 
-<table class="table table-bordered table-hover" id="products">
-    <thead>
-    <tr>
-        <th>Description</th>
-        <th>Price</th>
-        <th>On Store</th>
-        <th>One Time</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody></tbody>
-</table>
+<div class="container float-left">
+    <table class="table table-bordered table-hover mp-table" id="products">
+        <thead>
+        <tr>
+            <th>Description</th>
+            <th>Price</th>
+            <th>On Store</th>
+            <th>One Time</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
 
 <div id="NewProductModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -78,8 +84,8 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Edit Product</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
             @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "editProductForm"}))
             {
@@ -93,7 +99,9 @@
                     <div class="form-group">
                         @Html.LabelFor(x => x.Product.Price)
                         <div class="input-group">
-                            <span class="input-group-addon" id="basic-addon" style="font-weight: bold;">£</span>
+                            <div class="input-group-prepend">
+                                <span class="input-group-text mp-bold" id="basic-addon">£</span>
+                            </div>                            
                             @Html.TextBoxFor(x => x.Product.Price, new {@class = "form-control", Name = "Price", id = "editPriceControl"})
                         </div>
                         @Html.ValidationMessageFor(x => x.Product.Price)
@@ -160,10 +168,10 @@
                             render: function(data) {
                                 return "<button type='button' class='btn btn-xs btn-warning js-edit' data-product-id=" +
                                     data +
-                                    "><span class='glyphicon glyphicon-pencil' aria-hidden='true'></span></button> " +
+                                    "><i class=\"far fa-edit\"></i></button> " +
                                     "<button type='button' class='btn btn-xs btn-danger js-delete' data-product-id=" +
                                     data +
-                                    "><span class='glyphicon glyphicon-ban-circle' aria-hidden='true'></span></button>";
+                                    "><i class=\"far fa-trash-alt\"></i></button>";
                             }
                         }
                     ],

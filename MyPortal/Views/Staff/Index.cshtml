@@ -4,15 +4,20 @@
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<h2>@Model.CurrentUser.Title @Model.CurrentUser.FirstName.Substring(0, 1) @Model.CurrentUser.LastName</h2>
-<hr/>
+<div class="container float-left">
+    <h2 class="mp-page-title">@Model.CurrentUser.Title @Model.CurrentUser.FirstName.Substring(0, 1) @Model.CurrentUser.LastName</h2>
+    <hr />
+</div>
+
+
 <!-- MyDetails Panel -->
-<div class="container" id="Details">
-    <div style="float: left;">
-        <div class="panel panel-primary" style="margin-top: 8px; width: 300px;">
-            <div class="panel-heading">MyDetails</div>
-            <div class="panel-body">
-                <table class="table-condensed">
+<div class="container float-left mp-shrink-width" id="details">
+    <div>
+
+        <div class="card border-primary mp-card">
+            <div class="card-header bg-primary">MyDetails</div>
+            <div class="card-body">
+                <table class="table-condensed mp-table-condensed">
                     <tr>
                         <td>
                             <b>Title</b>
@@ -41,52 +46,37 @@
             </div>
         </div>
     </div>
-    <div style="float: left;">
-        <div class="panel panel-primary" style="margin-top: 8px; width: 1000px;">
-            <div class="panel-heading">MyTraining</div>
-            @if (!Model.TrainingCertificates.Any())
-            {
-                <text>
-                    <div class="panel-body">No training certificates to display.</div></text>
-            }
-            else
-            {
-                <table class="table table-bordered" id="logs">
-                    <thead>
-                    <tr style="background-color: #18bc9c;">
-                        <th style="color: whitesmoke;">Course</th>
-                        <th style="color: whitesmoke;">Description</th>
-                        <th style="color: whitesmoke;">Status</th>
-                    </tr>
-                    </thead>
-                    @foreach (var certificate in Model.TrainingCertificates)
-                    {
-                        <tr>
-                            <td>@certificate.TrainingCourse.Code</td>
-                            <td>@certificate.TrainingCourse.Description</td>
-                            <td>@certificate.TrainingStatus.Name</td>
-                        </tr>
-                    }
-                </table>
-            }
-        </div>
+</div>
+
+<div class="container float-left mp-margin-top">
+    <div>
+        <hr />
+        <h4 class="mp-bold">MyTraining</h4>
+        <table class="table table-bordered mp-table" id="certs" data-staff-id="@Model.CurrentUser.Id">
+            <thead>
+                <tr>
+                    <th>Course</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+        </table>
     </div>
 </div>
 
 <!-- MyDocuments Panel -->
-<div class="container">
+<div class="container float-left mp-margin-top">
     <div>
-        <div class="panel panel-primary" style="margin-top: 8px; width: 1000px;" id="DocumentsPanel">
-            <div class="panel-heading">MyDocuments</div>
-            <table class="table table-bordered" id="documents" data-staff-id="@Model.CurrentUser.Id">
-                <thead>
-                <tr style="background-color: #18bc9c;">
-                    <th style="color: whitesmoke;">Description</th>
-                    <th style="color: whitesmoke;">Date</th>
+        <hr />
+        <h4 class="mp-bold">MyDocuments</h4>
+        <table class="table table-bordered mp-table mp-table-link" id="documents" data-staff-id="@Model.CurrentUser.Id">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Date</th>
                 </tr>
-                </thead>
-            </table>
-        </div>
+            </thead>
+        </table>
     </div>
 </div>
 
@@ -103,7 +93,7 @@
                 columns: [
                     {
                         data: "document1.description",
-                        render: function(data, type, document) {
+                        render: function (data, type, document) {
                             return "<a href='" +
                                 document.document1.url +
                                 "' target='_blank'>" +
@@ -114,7 +104,7 @@
                     },
                     {
                         data: "document1.date",
-                        render: function(data) {
+                        render: function (data) {
                             var date = new Date(data);
                             return date.toLocaleDateString();
                         }
@@ -126,6 +116,46 @@
                 info: false,
                 "language": {
                     "emptyTable": "No documents to display"
+                }
+            });
+
+            $("#certs").DataTable({
+                ajax: {
+                    url: "/api/staff/certificates/fetch/" + $("#documents").attr("data-staff-id"),
+                    dataSrc: "",
+                    method: "GET"
+                },
+                columns: [
+                    {
+                        data: "trainingCourse.code"
+                    },
+                    {
+                        data: "trainingCourse.description"
+                    },
+                    {
+                        data: "trainingStatus.name"
+                    }                  
+                ],
+                paging: false,
+                ordering: false,
+                searching: false,
+                responsive: true,
+                info: false,
+                "language": {
+                    "emptyTable": "No certificates to display"
+                },
+                "createdRow": function(row, data, dataIndex) {
+                    if (data.trainingStatus.name === "Completed") {
+                        $(row).addClass("mp-cert-completed");
+                    }
+
+                    if (data.trainingStatus.name === "Pending") {
+                        $(row).addClass("mp-cert-pending");
+                    }
+
+                    if (data.trainingStatus.name === "Failed") {
+                        $(row).addClass("mp-cert-failed");
+                    }
                 }
             });
         });

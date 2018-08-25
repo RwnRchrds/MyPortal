@@ -4,21 +4,25 @@
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<h2>Accounts</h2>
-<hr/>
+<div class="container float-left">
+    <h2 class="mp-page-title">Accounts</h2>
+    <hr/>
+</div>
 
-<table class="table table-bordered table-hover" id="students">
-    <thead>
-    <tr>
-        <th>Student</th>
-        <th>Year Group</th>
-        <th>Reg Group</th>
-        <th>Balance</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody></tbody>
-</table>
+<div class="container float-left">
+    <table class="table table-bordered table-hover mp-table" id="students">
+        <thead>
+        <tr>
+            <th>Student</th>
+            <th>Year Group</th>
+            <th>Reg Group</th>
+            <th>Balance</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
 
 <div id="CreditModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -26,8 +30,8 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title" style="color: green">Credit Account</h4>
+                <h4 class="modal-title mp-title-credit">Credit Account</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
             </div>
             @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "CreditForm"}))
             {
@@ -35,7 +39,9 @@
                     <div class="form-group">
                         @Html.LabelFor(x => x.BalanceAdjustment.Amount)
                         <div class="input-group">
-                            <span class="input-group-addon" id="basic-addon" style="font-weight: bold;">£</span>
+                            <div class="input-group-prepend">
+                                <span class="input-group-text mp-bold" id="basic-addon">£</span>
+                            </div>                            
                             @Html.TextBoxFor(x => x.BalanceAdjustment.Amount, new {@class = "form-control", Name = "Amount"})
                         </div>
                         @Html.ValidationMessageFor(x => x.BalanceAdjustment.Amount)
@@ -60,8 +66,8 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title" style="color: red">Debit Account</h4>
+                <h4 class="modal-title mp-title-debit">Debit Account</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
             </div>
             @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "DebitForm"}))
             {
@@ -69,7 +75,9 @@
                     <div class="form-group">
                         @Html.LabelFor(x => x.BalanceAdjustment.Amount)
                         <div class="input-group">
-                            <span class="input-group-addon" id="basic-addon" style="font-weight: bold;">£</span>
+                            <div class="input-group-prepend">
+                                <span class="input-group-text mp-bold" id="basic-addon">£</span>
+                            </div>                            
                             @Html.TextBoxFor(x => x.BalanceAdjustment.Amount, new {@class = "form-control", Name = "Amount"})
                         </div>
                         @Html.ValidationMessageFor(x => x.BalanceAdjustment.Amount)
@@ -119,12 +127,12 @@
                         {
                             data: "id",
                             render: function(data) {
-                                return "<button type='button' class='btn btn-xs btn-danger js-debit' data-student-id=" +
+                                return "<button type='button' class='btn btn-danger js-debit mp-btn-size' data-student-id=" +
                                     data +
-                                    "><span class='glyphicon glyphicon-minus' aria-hidden='true'></span></button> " +
-                                    "<button type='button' class='btn btn-xs btn-success js-credit' data-student-id=" +
+                                    "><i class=\"fas fa-minus\"></i></button> " +
+                                    "<button type='button' class='btn btn-success js-credit mp-btn-size' data-student-id=" +
                                     data +
-                                    "><span class='glyphicon glyphicon-plus' aria-hidden='true'></span></button>";
+                                    "><i class=\"fas fa-plus\"></i></button>";
                             }
                         }
                     ]

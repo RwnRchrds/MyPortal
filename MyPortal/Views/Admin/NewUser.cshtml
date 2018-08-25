@@ -4,34 +4,39 @@
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<h2>New User</h2>
-<hr/>
+<div class="container float-left">
+    <h2 class="mp-page-title">New User</h2>
+    <hr/>
+</div>
+
 <body>
-@using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "newUserForm"}))
-{
-    <div class="form-group">
-        @Html.LabelFor(x => x.Id)
-        @Html.TextBoxFor(x => x.Id, new {@class = "form-control"})
-        @Html.ValidationMessageFor(x => x.Id)
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(x => x.Username)
-        @Html.TextBoxFor(x => x.Username, new {@class = "form-control"})
-        @Html.ValidationMessageFor(x => x.Username)
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(x => x.Password)
-        @Html.PasswordFor(x => x.Password, new {@class = "form-control"})
-        @Html.ValidationMessageFor(x => x.Password)
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(x => x.ConfirmPassword)
-        @Html.PasswordFor(x => x.ConfirmPassword, new {@class = "form-control"})
-        @Html.ValidationMessageFor(x => x.ConfirmPassword)
-    </div>
-    <button type="button" class="btn btn-primary" id="backButton">Back</button>
-    <button type="submit" class="btn btn-primary">Save</button>
-}
+<div class="container float-left">
+    @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "newUserForm"}))
+    {
+        <div class="form-group">
+            @Html.LabelFor(x => x.Id)
+            @Html.TextBoxFor(x => x.Id, new {@class = "form-control"})
+            @Html.ValidationMessageFor(x => x.Id)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.Username)
+            @Html.TextBoxFor(x => x.Username, new {@class = "form-control"})
+            @Html.ValidationMessageFor(x => x.Username)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.Password)
+            @Html.PasswordFor(x => x.Password, new {@class = "form-control"})
+            @Html.ValidationMessageFor(x => x.Password)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.ConfirmPassword)
+            @Html.PasswordFor(x => x.ConfirmPassword, new {@class = "form-control"})
+            @Html.ValidationMessageFor(x => x.ConfirmPassword)
+        </div>
+        <button type="button" class="btn btn-primary" id="backButton">Back</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+    }
+</div>
 </body>
 
 @section scripts

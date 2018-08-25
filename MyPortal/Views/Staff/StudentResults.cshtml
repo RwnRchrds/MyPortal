@@ -4,23 +4,30 @@
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<h2>Assessment Results - @Model.Student.LastName, @Model.Student.FirstName</h2>
+<div class="container float-left">
 
-<hr/>
+    <h2 class="mp-page-title">Assessment Results - @Model.Student.LastName, @Model.Student.FirstName</h2>
 
-<div class="container">
-    <div>
-        @Html.DropDownList("SelectedResultSet", new SelectList(Model.ResultSets, "Id", "Name", Model.CurrentResultSetId), new {@class = "form-control", Name = "ResultSet", id = "selectedResultSet"})
-        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewResultModal" style="margin-top: 8px;">
-            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> New Result
-        </button>
-        <div class="panel panel-primary" style="margin-top: 8px; max-width: 1000px;" id="ResultsPanel">
-            <div class="panel-heading">MyResults</div>
-            <table class="table table-bordered" id="results" data-student-id="@Model.Student.Id">
+    <hr/>
+
+</div>
+<div class="container float-left">
+    <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#NewResultModal">
+        <i class="fas fa-plus-circle"></i> New Result
+    </button>
+    <hr/>
+</div>
+
+<div class="container float-left">
+    <div class="container">
+        <div>
+            @Html.Label("Result Set")
+            @Html.DropDownList("SelectedResultSet", new SelectList(Model.ResultSets, "Id", "Name", Model.CurrentResultSetId), new {@class = "form-control", Name = "ResultSet", id = "selectedResultSet"})
+            <table class="table table-bordered mp-table" id="results" data-student-id="@Model.Student.Id">
                 <thead>
-                <tr style="background-color: #18bc9c;">
-                    <th style="color: whitesmoke;">Subject</th>
-                    <th style="color: whitesmoke;">Result</th>
+                <tr>
+                    <th>Subject</th>
+                    <th>Result</th>
                 </tr>
                 </thead>
             </table>
@@ -94,6 +101,7 @@
                 paging: false,
                 ordering: false,
                 searching: false,
+                responsive: true,
                 info: false,
                 "language": {
                     "emptyTable": "No results to display"
