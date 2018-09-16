@@ -66,7 +66,7 @@
     <div>
         <hr/>
         <h4 class="mp-bold">MyTraining</h4>
-        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#CertModal">
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewCertModal">
             <i class="fa fa-plus-circle"></i> New Certificate
         </button>
         <table class="table table-bordered mp-table" id="certs" data-staff-id="@Model.Staff.Id">
@@ -103,7 +103,7 @@
 </div>
 
 <!-- New Certificate Form -->
-<div id="CertModal" class="modal fade" role="dialog">
+<div id="NewCertModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
         <!--content-->
@@ -119,14 +119,14 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.LabelFor(l => l.TrainingCertificate.Course)
-                        @Html.DropDownListFor(l => l.TrainingCertificate.Course, new SelectList(Model.TrainingCourses, "Id", "Description"), "Select Course", new {@class = "form-control"})
+                        @Html.DropDownListFor(l => l.TrainingCertificate.Course, new SelectList(Model.TrainingCourses, "Id", "Description"), "Select Course", new {@class = "form-control", Name="Course"})
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(l => l.TrainingCertificate.Status)
-                        @Html.DropDownListFor(l => l.TrainingCertificate.Status, new SelectList(Model.TrainingStatuses, "Id", "Name"), "Select Status", new {@class = "form-control"})
+                        @Html.DropDownListFor(l => l.TrainingCertificate.Status, new SelectList(Model.TrainingStatuses, "Id", "Name"), "Select Status", new {@class = "form-control", Name="Status"})
                     </div>
                     <div class="form-group">
-                        @Html.HiddenFor(l => l.TrainingCertificate.Staff, new {Value = Model.Staff.Id})
+                        @Html.HiddenFor(l => l.TrainingCertificate.Staff, new {Value = Model.Staff.Id, Name="Staff"})
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -181,7 +181,12 @@
         //When Page Has Loaded, Prepare Scripts
         $(document).ready(function() {
             //Clear Modal When Closed
-            $('#CertModal').on('hidden.bs.modal',
+            $('#NewCertModal').on('hidden.bs.modal',
+                function() {
+                    $(this).find('form').trigger('reset');
+                });
+
+            $('#NewDocumentModal').on('hidden.bs.modal',
                 function() {
                     $(this).find('form').trigger('reset');
                 });
@@ -195,13 +200,17 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: "/api/certificates/certificate/" +
-                                        button.attr("data-staff-id") +
+                                    url: "/api/staff/certificates/delete/" +
+                                        $("#certs").attr("data-staff-id") +
                                         "/" +
                                         button.attr("data-course-id"),
                                     method: "DELETE",
-                                    success: function() {
-                                        location.reload();
+                                    success: function(a) {
+                                        toastr.success(a);
+                                        $("#certs").DataTable().ajax.reload();
+                                    },
+                                    error: function(a) {
+                                        toastr.error(a.responseJSON);
                                     }
                                 });
                             }
@@ -257,7 +266,7 @@
 
             $("#certs").DataTable({
                 ajax: {
-                    url: "/api/staff/certificates/fetch/" + $("#documents").attr("data-staff-id"),
+                    url: "/api/staff/certificates/fetch/" + $("#certs").attr("data-staff-id"),
                     dataSrc: "",
                     method: "GET"
                 },
@@ -274,10 +283,10 @@
                     {
                         data: "course",
                         render: function(data) {
-                            return "<button type='button' class='btn btn-xs btn-warning js-edit' data-document-id=" +
+                            return "<button type='button' class='btn btn-xs btn-warning js-edit' data-course-id=" +
                                 data +
                                 "><i class=\"far fa-edit\"></i></button> " +
-                                "<button type='button' class='btn btn-xs btn-danger js-delete' data-document-id=" +
+                                "<button type='button' class='btn btn-xs btn-danger js-delete' data-course-id=" +
                                 data +
                                 "><i class=\"far fa-trash-alt\"></i></button>";
                         }
@@ -322,6 +331,30 @@
                             $("#NewDocumentModal").modal('hide');
                             toastr.success(result);
                             $("#documents").DataTable().ajax.reload();
+                        },
+                        error: function(result) {
+                            toastr.error(result.responseJSON);
+                            form.reset();
+                        }
+                    });
+                });
+
+            $("#newCertForm").on("submit",
+                function(e) {
+
+                    e.preventDefault();
+
+                    var form = $("#newCertForm");
+                    var data = form.serialize();
+
+                    $.ajax({
+                        url: "/api/staff/certificates/create",
+                        data: data,
+                        method: "POST",
+                        success: function(result) {
+                            $("#NewCertModal").modal('hide');
+                            toastr.success(result);
+                            $("#certs").DataTable().ajax.reload();
                         },
                         error: function(result) {
                             toastr.error(result.responseJSON);
