@@ -11,8 +11,9 @@ namespace MyPortal.Models
         {
             Logs = new HashSet<Log>();
         }
-
-        [Display(Name = "ID")] public int Id { get; set; }
+    
+        [Display(Name = "ID")] 
+        public int Id { get; set; }
 
         [Required]
         [StringLength(255)]

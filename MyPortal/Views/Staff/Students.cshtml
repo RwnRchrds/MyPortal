@@ -4,24 +4,31 @@
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<h2>Students</h2>
-<hr/>
+<div class="container float-left">
+    <h2 class="mp-page-title">Students</h2>
+    <hr/>
+</div>
 
-@if (User.IsInRole("SeniorStaff"))
-{
-    @Html.ActionLink("New Student", "NewStudent", "Staff", null, new {@class = "btn btn-success", style = "margin-bottom: 8px;"})
-}
+<div class="container float-left">
+    @if (User.IsInRole("SeniorStaff"))
+    {
+        @Html.ActionLink("New Student", "NewStudent", "Staff", null, new {@class = "btn btn-success"})
+        <hr/>
+    }
+</div>
 
-<table class="table table-bordered table-hover mp-table" id="students">
-    <thead>
-    <tr>
-        <th>Student</th>
-        <th>Year Group</th>
-        <th>Reg Group</th>
-    </tr>
-    </thead>
-    <tbody></tbody>
-</table>
+<div class="float-left container">
+    <table class="table table-bordered table-hover mp-table mp-table-link" id="students">
+        <thead>
+        <tr>
+            <th>Student</th>
+            <th>Year Group</th>
+            <th>Reg Group</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
 
 @section scripts
 {

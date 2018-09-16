@@ -180,6 +180,19 @@ namespace MyPortal.Controllers.Api
             return documents;
         }
 
+        [HttpGet]
+        [Route("api/students/documents/document/{documentId}")]
+        public DocumentDto GetDocument(int documentId)
+        {      
+            var document = _context.StudentDocuments
+                .SingleOrDefault(x => x.Id == documentId);             
+            
+            if (document == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            return Mapper.Map<Document, DocumentDto>(document.Document1);
+        }
+
         [HttpPost]
         [Route("api/students/documents/add")]
         public IHttpActionResult AddDocument(StudentDocumentUpload data)
@@ -192,6 +205,8 @@ namespace MyPortal.Controllers.Api
             var document = data.Document;
 
             document.IsGeneral = false;
+
+            document.Approved = true;
 
             document.Date = DateTime.Now;
 
@@ -246,7 +261,7 @@ namespace MyPortal.Controllers.Api
             var documentInDb = _context.Documents.Single(x => x.Id == data.Id);
 
             if (documentInDb == null)
-                return Content(HttpStatusCode.NotFound, "Upload not found");
+                return Content(HttpStatusCode.NotFound, "Document not found");
 
             var isUriValid = Uri.TryCreate(data.Url, UriKind.Absolute, out var uriResult)
                           && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
@@ -257,6 +272,7 @@ namespace MyPortal.Controllers.Api
             documentInDb.Description = data.Description;
             documentInDb.Url = data.Url;
             documentInDb.IsGeneral = false;
+            documentInDb.Approved = true;
 
             _context.SaveChanges();
 

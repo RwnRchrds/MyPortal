@@ -14,11 +14,16 @@ namespace MyPortal.Models
             TrainingCertificates = new HashSet<TrainingCertificate>();
         }
 
-        [Display(Name = "ID")] public int Id { get; set; }
+        [Display(Name = "ID")] 
+        public int Id { get; set; }
 
-        [StringLength(255)] public string Code { get; set; }
+        [Required]
+        [StringLength(255)] 
+        public string Code { get; set; }
 
-        [StringLength(1000)] public string Description { get; set; }
+        [Required]
+        [StringLength(1000)] 
+        public string Description { get; set; }
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TrainingCertificate> TrainingCertificates { get; set; }

@@ -38,8 +38,10 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">New Product</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="false"></span>&times;
+                </button>
             </div>
             @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "newProductForm"}))
             {
@@ -52,7 +54,9 @@
                     <div class="form-group">
                         @Html.LabelFor(x => x.Product.Price)
                         <div class="input-group">
-                            <span class="input-group-addon" id="basic-addon" style="font-weight: bold;">£</span>
+                            <div class="input-group-prepend">
+                                <span class="input-group-text mp-bold" id="basic-addon">£</span>
+                            </div>
                             @Html.TextBoxFor(x => x.Product.Price, new {@class = "form-control", Name = "Price"})
                         </div>
                         @Html.ValidationMessageFor(x => x.Product.Price)
@@ -251,7 +255,7 @@
                         success: function(result) {
                             $("#editIdControl").val(result["id"]);
                             $("#editDescriptionControl").val(result["description"]);
-                            $("#editPriceControl").val(result["price"]);
+                            $("#editPriceControl").val(result["price"].toFixed(2));
                             $("#editVisibleControl").attr("checked", (result["visible"]));
                             $("#editOnceOnlyControl").attr("checked", (result["onceOnly"]));
                         },

@@ -39,7 +39,8 @@ namespace MyPortal.Models
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
-        [Display(Name = "Is a Tutor?")] public bool IsTutor { get; set; }
+        [Display(Name = "Is a Tutor?")] 
+        public bool IsTutor { get; set; }
 
 
         public int? Count { get; set; }

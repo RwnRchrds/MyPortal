@@ -6,12 +6,18 @@ namespace MyPortal.Models
 {
     public class Sale
     {
-        [Display(Name = "ID")] public int Id { get; set; }
+        [Display(Name = "ID")] 
+        public int Id { get; set; }
 
-        [Display(Name = "Student")] public int Student { get; set; }
+        [Required]
+        [Display(Name = "Student")] 
+        public int Student { get; set; }
 
-        [Display(Name = "Product")] public int Product { get; set; }
+        [Required]
+        [Display(Name = "Product")] 
+        public int Product { get; set; }
 
+        [Required]
         [Display(Name = "Date")]
         [Column(TypeName = "date")]
         public DateTime Date { get; set; }

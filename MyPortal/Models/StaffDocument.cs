@@ -6,9 +6,11 @@ namespace MyPortal.Models
     {
         public int Id { get; set; }
 
+        [Required]
         [StringLength(3)]
         public string Staff { get; set; }
 
+        [Required]
         public int Document { get; set; }
 
         public virtual Document Document1 { get; set; }

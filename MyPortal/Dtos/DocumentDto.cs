@@ -9,5 +9,6 @@ namespace MyPortal.Dtos
         public string Url { get; set; }
         public bool IsGeneral { get; set; }
         public DateTime Date { get; set; }
+        public bool Approved { get; set; }
     }
 }

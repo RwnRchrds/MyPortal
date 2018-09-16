@@ -17,13 +17,23 @@ namespace MyPortal.Models
 
         public int Id { get; set; }
 
-        [Required] [StringLength(255)] public string Description { get; set; }
+        [Required] 
+        [StringLength(255)] 
+        public string Description { get; set; }
 
-        [Required] [StringLength(255)] public string Url { get; set; }
+        [Required] 
+        [StringLength(255)] 
+        public string Url { get; set; }
 
+        [Required]
         public bool IsGeneral { get; set; }
 
-        [Column(TypeName = "date")] public DateTime Date { get; set; }
+        [Required]
+        [Column(TypeName = "date")] 
+        public DateTime Date { get; set; }
+
+        [Required]
+        public bool Approved { get; set; }
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<StaffDocument> StaffDocuments { get; set; }

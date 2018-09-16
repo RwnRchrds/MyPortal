@@ -8,13 +8,20 @@ namespace MyPortal.Models
     {
         public int Id { get; set; }
 
-        [Column(TypeName = "date")] public DateTime Date { get; set; }
+        [Column(TypeName = "date")] 
+        public DateTime Date { get; set; }
 
-        [Required] [StringLength(3)] public string Observee { get; set; }
+        [Required] 
+        [StringLength(3)] 
+        public string Observee { get; set; }
 
-        [Required] [StringLength(3)] public string Observer { get; set; }
+        [Required] 
+        [StringLength(3)] 
+        public string Observer { get; set; }
 
-        [Required] [StringLength(255)] public string Outcome { get; set; }
+        [Required] 
+        [StringLength(255)] 
+        public string Outcome { get; set; }
 
         public virtual Staff Staff { get; set; }
 

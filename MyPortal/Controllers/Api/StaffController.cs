@@ -95,6 +95,8 @@ namespace MyPortal.Controllers.Api
 
             document.IsGeneral = false;
 
+            document.Approved = true;
+
             document.Date = DateTime.Now;
 
             var isUriValid = Uri.TryCreate(document.Url, UriKind.Absolute, out var uriResult)
@@ -159,6 +161,7 @@ namespace MyPortal.Controllers.Api
             documentInDb.Description = data.Description;
             documentInDb.Url = data.Url;
             documentInDb.IsGeneral = false;
+            documentInDb.Approved = true;
 
             _context.SaveChanges();
 

@@ -31,13 +31,20 @@ namespace MyPortal.Models
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
-        [Display(Name = "4Matrix ID")] public int? FourMId { get; set; }
+        [Display(Name = "4Matrix ID")] 
+        public int? FourMId { get; set; }
 
-        [Display(Name = "Reg Group")] public int RegGroup { get; set; }
+        [Display(Name = "Reg Group")] 
+        public int RegGroup { get; set; }
 
-        [Display(Name = "Year Group")] public int YearGroup { get; set; }
+        [Display(Name = "Year Group")] 
+        public int YearGroup { get; set; }
 
-        [Display(Name = "Account Balance")] public decimal AccountBalance { get; set; }
+        [Display(Name = "Account Balance")] 
+        public decimal AccountBalance { get; set; }
+
+        [Display(Name = "MIS ID")]
+        public string MisId { get; set; }
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BasketItem> BasketItems { get; set; }

@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<div class="container float-left" id="title">  
+<div class="container float-left" id="title">
 
     <h2 class="mp-page-title">Controlled Documents</h2>
     <hr />
@@ -23,21 +23,24 @@
 <div class="container float-left">
     <table class="table table-bordered table-hover mp-table mp-table-link" id="documents" access="staff">
         <thead>
-        <tr>
-            <th>Description</th>
-            <th>Date</th>
-            @if (User.IsInRole("SeniorStaff"))
-            {
-                <th>Actions</th>
-            }
-        </tr>
+            <tr>
+                <th>Description</th>
+                <th>Date</th>
+                @if (User.IsInRole("SeniorStaff"))
+                {
+                    <th>Status</th>
+                    <th>Actions</th>
+                }
+            </tr>
         </thead>
         <tbody></tbody>
     </table>
 </div>
 
 
-<div id="NewDocumentModal" class="modal fade" role="dialog">
+@if (User.IsInRole("SeniorStaff"))
+{
+    <div id="NewDocumentModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <!--content-->
             <div class="modal-content">
@@ -58,6 +61,11 @@
                             @Html.TextBoxFor(x => x.Document.Url, new { @class = "form-control", Name = "Url" })
                             @Html.ValidationMessageFor(x => x.Document.Url)
                         </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.Document.Approved)
+                            @Html.CheckBoxFor(x => x.Document.Approved, new {Name = "Approved"})
+                            @Html.ValidationMessageFor(x => x.Document.Approved)
+                        </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary">Save</button>
@@ -68,147 +76,245 @@
         </div>
     </div>
 
-    @section scripts
+    <div id="EditDocumentModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!--content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add Controlled Document</h4>
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
+                </div>
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "editDocumentForm" }))
+                {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Document.Description)
+                        @Html.TextBoxFor(x => x.Document.Description, new { @class = "form-control", Name = "Description", id = "EditDocumentDescriptionControl" })
+                        @Html.ValidationMessageFor(x => x.Document.Description)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Document.Url)
+                        @Html.TextBoxFor(x => x.Document.Url, new { @class = "form-control", Name = "Url", id = "EditDocumentUrlControl" })
+                        @Html.ValidationMessageFor(x => x.Document.Url)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Document.Approved)
+                        @Html.CheckBoxFor(x => x.Document.Approved, new { Name = "Approved", id="EditDocumentApprovedControl" })
+                        @Html.ValidationMessageFor(x => x.Document.Approved)
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(x => x.Document.Id, new { Name = "Id", id = "EditDocumentIdControl" })
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+
+@section scripts
 {
-        @if (User.IsInRole("SeniorStaff"))
-        {
-            <script>
-                $(document).ready(function () {
-                    $("#documents").DataTable({
-                        ajax: {
-                            url: "/api/documents",
-                            dataSrc: ""
-                        },
-                        columns: [
-                            {
-                                data: "description",
-                                render: function (data, type, document) {
-                                    return "<a href='" +
-                                        document.url +
-                                        "' target='_blank'>" +
-                                        document.description +
-                                        "</a>";
-                                }
-                            },
-                            {
-                                data: "date",
-                                render: function (data) {
-                                    var date = new Date(data);
-                                    return date.toLocaleDateString();
-                                }
-                            },
-                            {
-                                data: "id",
-                                render: function (data) {
-                                    return "<button type='button' class='btn btn-xs btn-warning js-edit' data-document-id=" +
-                                        data +
-                                        "><i class=\"far fa-edit\"></i></button> " +
-                                        "<button type='button' class='btn btn-xs btn-danger js-delete' data-document-id=" +
-                                        data +
-                                        "><i class=\"far fa-trash-alt\"></i></button>";
-                                }
-                            }
-                        ],
-                        "language": {
-                            "emptyTable": "No documents to display"
-                        }
-                    });
-                });
-            </script>
-        }
-
-        @if (!User.IsInRole("SeniorStaff") && User.IsInRole("Staff"))
-        {
-            <script>
-                $(document).ready(function () {
-                    $("#documents").DataTable({
-                        ajax: {
-                            url: "/api/documents",
-                            dataSrc: ""
-                        },
-                        columns: [
-                            {
-                                data: "description",
-                                render: function (data, type, document) {
-                                    return "<a href='" +
-                                        document.url +
-                                        "' target='_blank'>" +
-                                        document.description +
-                                        "</a>";
-                                }
-                            },
-                            {
-                                data: "date",
-                                render: function (data) {
-                                    var date = new Date(data);
-                                    return date.toLocaleDateString();
-                                }
-                            }
-                        ],
-                        "language": {
-                            "emptyTable": "No documents to display"
-                        }
-                    });
-                });
-            </script>
-        }
-
+    @if (User.IsInRole("SeniorStaff"))
+    {
         <script>
             $(document).ready(function () {
-                $("#newDocumentForm").on("submit",
-                    function (e) {
-
-                        e.preventDefault();
-
-                        var form = $("#newDocumentForm");
-                        var data = form.serialize();
-
-                        $.ajax({
-                            url: "/api/documents/add",
-                            data: data,
-                            method: "POST",
-                            success: function (result) {
-                                $("#NewDocumentModal").modal('hide');
-                                toastr.success(result);
-                                $("#documents").DataTable().ajax.reload();
-                            },
-                            error: function (result) {
-                                toastr.error(result.responseJSON);
-                                form.reset();
+                $("#documents").DataTable({
+                    ajax: {
+                        url: "/api/documents",
+                        dataSrc: ""
+                    },
+                    columns: [
+                        {
+                            data: "description",
+                            render: function (data, type, document) {
+                                return "<a href='" +
+                                    document.url +
+                                    "' target='_blank'>" +
+                                    document.description +
+                                    "</a>";
                             }
-                        });
-                    });
-
-                $('#NewDocumentModal').on('hidden.bs.modal',
-                    function () {
-                        $(this).find('form').trigger('reset');
-                    });
-
-                $("#documents").on("click",
-                    ".js-delete",
-                    function () {
-                        var button = $(this);
-                        bootbox.confirm("Are you sure you wish to delete this document?",
-                            function (result) {
-                                if (result) {
-                                    $.ajax({
-                                        url: "/api/documents/remove/" + button.attr("data-document-id"),
-                                        method: "DELETE",
-                                        success: function (ajaxResult) {
-                                            $("#documents").DataTable().ajax.reload();
-                                            toastr.success(ajaxResult);
-                                        },
-                                        error: function (ajaxResult) {
-                                            toastr.error(ajaxResult.responseJSON);
-                                        }
-                                    });
-                                }
-                            });
-                    });
+                        },
+                        {
+                            data: "date",
+                            render: function (data) {
+                                var date = new Date(data);
+                                return date.toLocaleDateString();
+                            }
+                        },
+                        {
+                            data: "approved",
+                            render: function(data) {
+                                if (data === true) {return "Approved"}
+                                if (data === false) {return "Pending Approval"}
+                            }
+                        },
+                        {
+                            data: "id",
+                            render: function (data) {
+                                return "<button type='button' class='btn btn-xs btn-warning js-edit' data-document-id=" +
+                                    data +
+                                    "><i class=\"far fa-edit\"></i></button> " +
+                                    "<button type='button' class='btn btn-xs btn-danger js-delete' data-document-id=" +
+                                    data +
+                                    "><i class=\"far fa-trash-alt\"></i></button>";
+                            }
+                        }
+                    ],
+                    "language": {
+                        "emptyTable": "No documents to display"
+                    }
+                });
             });
         </script>
-
-
-        @Scripts.Render("~/bundles/staff")
     }
+
+    @if (!User.IsInRole("SeniorStaff") && User.IsInRole("Staff"))
+    {
+        <script>
+            $(document).ready(function () {
+                $("#documents").DataTable({
+                    ajax: {
+                        url: "/api/documents/approved",
+                        dataSrc: ""
+                    },
+                    columns: [
+                        {
+                            data: "description",
+                            render: function (data, type, document) {
+                                return "<a href='" +
+                                    document.url +
+                                    "' target='_blank'>" +
+                                    document.description +
+                                    "</a>";
+                            }
+                        },
+                        {
+                            data: "date",
+                            render: function (data) {
+                                var date = new Date(data);
+                                return date.toLocaleDateString();
+                            }
+                        }
+                    ],
+                    "language": {
+                        "emptyTable": "No documents to display"
+                    }
+                });
+            });
+        </script>
+    }
+
+    <script>
+        $(document).ready(function () {
+            $("#newDocumentForm").on("submit",
+                function (e) {
+
+                    e.preventDefault();
+
+                    var form = $("#newDocumentForm");
+                    var data = form.serialize();
+
+                    $.ajax({
+                        url: "/api/documents/add",
+                        data: data,
+                        method: "POST",
+                        success: function (result) {
+                            $("#NewDocumentModal").modal('hide');
+                            toastr.success(result);
+                            $("#documents").DataTable().ajax.reload();
+                        },
+                        error: function (result) {
+                            toastr.error(result.responseJSON);
+                            form.reset();
+                        }
+                    });
+                });
+
+            $("#editDocumentForm").on("submit",
+                function (e) {
+
+                    e.preventDefault();
+
+                    var form = $("#editDocumentForm");
+                    var data = form.serialize();
+
+                    $.ajax({
+                        url: "/api/documents/edit",
+                        data: data,
+                        method: "POST",
+                        success: function (result) {
+                            $("#EditDocumentModal").modal('hide');
+                            toastr.success(result);
+                            $("#documents").DataTable().ajax.reload();
+                        },
+                        error: function (result) {
+                            toastr.error(result.responseJSON);
+                            form.reset();
+                        }
+                    });
+                });
+
+            $('#NewDocumentModal').on('hidden.bs.modal',
+                function () {
+                    $(this).find('form').trigger('reset');
+                });
+
+            $('#EditDocumentModal').on('hidden.bs.modal',
+                function () {
+                    $(this).find('form').trigger('reset');
+                });
+
+            $("#documents").on("click",
+                ".js-edit",
+                function() {
+                    var button = $(this);
+                    var docId = button.attr("data-document-id");
+                    $.ajax({
+                        url: "/api/documents/document/" + docId,
+                        method: "GET",
+                        success: function(result) {
+                            $("#EditDocumentDescriptionControl").val(result["description"]);
+                            $("#EditDocumentUrlControl").val(result["url"]);
+                            $("#EditDocumentIdControl").val(result["id"]);
+                            $("#EditDocumentApprovedControl").attr("checked", result["approved"]);
+                        },
+                        error: function() {
+                            toastr.error("Failed to load document data");
+                        }
+                    });
+                    $("#EditDocumentModal").modal('toggle');
+                });
+
+            $("#documents").on("click",
+                ".js-delete",
+                function () {
+                    var button = $(this);
+                    bootbox.confirm("Are you sure you wish to delete this document?",
+                        function (result) {
+                            if (result) {
+                                $.ajax({
+                                    url: "/api/documents/remove/" + button.attr("data-document-id"),
+                                    method: "DELETE",
+                                    success: function (ajaxResult) {
+                                        $("#documents").DataTable().ajax.reload();
+                                        toastr.success(ajaxResult);
+                                    },
+                                    error: function (ajaxResult) {
+                                        toastr.error(ajaxResult.responseJSON);
+                                    }
+                                });
+                            }
+                        });
+                });
+        });
+    </script>
+
+
+    @Scripts.Render("~/bundles/staff")
+}
 

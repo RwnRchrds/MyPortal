@@ -438,6 +438,43 @@
         </div>
     </div>
 </div>
+
+<!--Edit Documents Form-->
+<div id="EditDocumentModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Document - @Model.Student.LastName, @Model.Student.FirstName</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "editDocumentForm" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Upload.Document.Description)
+                        @Html.TextBoxFor(x => x.Upload.Document.Description, new { @class = "form-control", Name = "Description", id = "EditDocumentDescriptionControl" })
+                        @Html.ValidationMessageFor(x => x.Upload.Document.Description)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Upload.Document.Url)
+                        @Html.TextBoxFor(x => x.Upload.Document.Url, new { @class = "form-control", Name = "Url", id = "EditDocumentUrlControl" })
+                        @Html.ValidationMessageFor(x => x.Upload.Document.Url)
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(x => x.Upload.Document.Id, new {Name = "Id", id = "EditDocumentIdControl"})
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
 </body>
 
 @section scripts
@@ -682,6 +719,27 @@
                     });
                 });
 
+            //Edit Document Form Submit
+            $("#editDocumentForm").on("submit",
+                function(e) {
+
+                    e.preventDefault();
+
+                    $.ajax({
+                        url: "/api/students/documents/edit",
+                        data: $("#editDocumentForm").serialize(),
+                        method: "POST",
+                        success: function(result) {
+                            $("#EditDocumentModal").modal('hide');
+                            toastr.success(result);
+                            $("#documents").DataTable().ajax.reload();
+                        },
+                        error: function(result) {
+                            toastr.error(result.responseJSON);
+                        }
+                    });
+                });
+
             //Open Form When Edit Log Button Clicked
             $("#logs").on("click",
                 ".js-edit",
@@ -697,10 +755,31 @@
                             $("#EditLogIdControl").val(result["id"]);
                         },
                         error: function() {
-                            toastr.error("Could Not Load Form");
+                            toastr.error("Failed to load log data");
                         }
                     });
                     $("#EditLogModal").modal('toggle');
+                });
+
+            //Open Form When Edit Document Button Clicked
+            $("#documents").on("click",
+                ".js-edit",
+                function() {
+                    var button = $(this);
+                    var docId = button.attr("data-document-id");
+                    $.ajax({
+                        url: "/api/students/documents/document/" + docId,
+                        method: "GET",
+                        success: function(result) {
+                            $("#EditDocumentDescriptionControl").val(result["description"]);
+                            $("#EditDocumentUrlControl").val(result["url"]);
+                            $("#EditDocumentIdControl").val(result["id"]);
+                        },
+                        error: function() {
+                            toastr.error("Failed to load document data");
+                        }
+                    });
+                    $("#EditDocumentModal").modal('toggle');
                 });
 
             //Colour Code Logs
@@ -739,6 +818,21 @@
 
             //Clear Modal When Closed
             $('#NewLogModal').on('hidden.bs.modal',
+                function() {
+                    $(this).find('form').trigger('reset');
+                });
+
+            $('#EditLogModal').on('hidden.bs.modal',
+                function() {
+                    $(this).find('form').trigger('reset');
+                });
+
+            $('#NewDocumentModal').on('hidden.bs.modal',
+                function() {
+                    $(this).find('form').trigger('reset');
+                });
+
+            $('#EditDocumentModal').on('hidden.bs.modal',
                 function() {
                     $(this).find('form').trigger('reset');
                 });

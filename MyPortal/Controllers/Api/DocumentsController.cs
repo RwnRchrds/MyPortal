@@ -27,11 +27,22 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [Route("api/documents")]
-        [Authorize(Roles="Staff, SeniorStaff")]
+        [Authorize(Roles="SeniorStaff")]
         public IEnumerable<DocumentDto> GetDocuments()
         {
             return _context.Documents
                 .Where(x => x.IsGeneral)
+                .ToList()
+                .Select(Mapper.Map<Document, DocumentDto>);
+        }
+
+        [HttpGet]
+        [Route("api/documents/approved")]
+        [Authorize(Roles = "Staff, SeniorStaff")]
+        public IEnumerable<DocumentDto> GetApprovedDocuments()
+        {
+            return _context.Documents
+                .Where(x => x.IsGeneral && x.Approved)
                 .ToList()
                 .Select(Mapper.Map<Document, DocumentDto>);
         }
@@ -69,7 +80,7 @@ namespace MyPortal.Controllers.Api
             _context.Documents.Add(document);
             _context.SaveChanges();
 
-            return Ok("Upload added");
+            return Ok("Document added");
         }
 
         [HttpDelete]
@@ -85,7 +96,7 @@ namespace MyPortal.Controllers.Api
             _context.Documents.Remove(documentToRemove);
             _context.SaveChanges();
 
-            return Ok("Upload removed");
+            return Ok("Document removed");
         }
 
         [HttpPost]
@@ -107,10 +118,11 @@ namespace MyPortal.Controllers.Api
             documentInDb.Description = data.Description;
             documentInDb.Url = data.Url;
             documentInDb.IsGeneral = true;
+            documentInDb.Approved = data.Approved;
 
             _context.SaveChanges();
 
-            return Ok("Upload updated");
+            return Ok("Document updated");
         }
 
 

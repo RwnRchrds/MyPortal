@@ -27,7 +27,9 @@ namespace MyPortal.Models
         [Display(Name = "Reg Tutor")]
         public string Tutor { get; set; }
 
-        [Display(Name = "Year Group")] public int YearGroup { get; set; }
+        [Required]
+        [Display(Name = "Year Group")] 
+        public int YearGroup { get; set; }
 
         public virtual Staff Staff { get; set; }
 
