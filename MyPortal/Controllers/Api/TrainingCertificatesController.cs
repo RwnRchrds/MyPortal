@@ -41,17 +41,17 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("api/staff/certificates/create")]
-        public TrainingCertificateDto CreateTrainingCertificate(TrainingCertificateDto trainingCertificateDto)
+        public IHttpActionResult CreateTrainingCertificate(TrainingCertificateDto trainingCertificateDto)
         {
             if (!ModelState.IsValid)
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+                return Content(HttpStatusCode.BadRequest, "Invalid data");
 
             var cert = Mapper.Map<TrainingCertificateDto, TrainingCertificate>(trainingCertificateDto);
 
             _context.TrainingCertificates.Add(cert);
             _context.SaveChanges();
 
-            return trainingCertificateDto;
+            return Ok("Certificate added");
         }
 
         [HttpPost]
