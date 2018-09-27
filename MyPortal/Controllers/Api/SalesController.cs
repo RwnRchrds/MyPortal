@@ -25,12 +25,23 @@ namespace MyPortal.Controllers.Api
             _context.Dispose();
         }
 
+        //GET ALL SALES
         [HttpGet]
         [Route("api/sales")]
         public IEnumerable<SaleDto> GetSales()
         {
             return _context.Sales
                 .OrderByDescending(x => x.Date)
+                .ToList()
+                .Select(Mapper.Map<Sale, SaleDto>);
+        }
+
+        //GET UNPROCESSED SALES
+        [HttpGet]
+        [Route("api/sales/pending")]
+        public IEnumerable<SaleDto> GetPendingSales()
+        {
+            return _context.Sales.Where(x => x.Processed == false)
                 .ToList()
                 .Select(Mapper.Map<Sale, SaleDto>);
         }
@@ -73,8 +84,45 @@ namespace MyPortal.Controllers.Api
             return Ok("Sale refunded");
         }
 
+        //TEST BALANCE
+        [HttpPost]
+        [Route("api/sales/query")]
+        public bool AssessBalance(int student, int product)
+        {
+            var productToQuery = _context.Products.Single(x => x.Id == product);
+
+            var studentToQuery = _context.Students.Single(x => x.Id == student);
+
+            if (productToQuery == null || studentToQuery == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            return studentToQuery.AccountBalance >= productToQuery.Price;
+        }
+
+        //NEW SALE
+        [HttpPost]
+        [Route("api/sales/new")]
+        public IHttpActionResult NewSale(SaleDto sale)
+        {
+            var student = _context.Students.SingleOrDefault(x => x.Id == sale.Student);
+
+            var product = _context.Products.SingleOrDefault(x => x.Id == sale.Product);
+
+            if (student == null)
+                return Content(HttpStatusCode.NotFound, "Student not found");
+
+            if (product == null)
+                return Content(HttpStatusCode.NotFound, "Product not found");
+
+            student.AccountBalance -= product.Price;
+
+            _context.Sales.Add(Mapper.Map<SaleDto, Sale>(sale));
+
+            return Ok("Sale completed");
+        }
+
         //Processes a Sale for ONE Product
-        public void NewSale(SaleDto sale)
+        public void InvokeSale(SaleDto sale)
         {
             var student = _context.Students.SingleOrDefault(x => x.Id == sale.Student);
 
@@ -125,7 +173,7 @@ namespace MyPortal.Controllers.Api
                     Date = DateTime.Today
                 };
 
-                NewSale(sale);
+                InvokeSale(sale);
             }
 
             //Remove items from student's basket once transaction has completed

@@ -15,10 +15,13 @@
     @if (User.IsInRole("SeniorStaff"))
     {
         <button type="button" class="btn btn-warning mp-btn-top-auto" id="EditDetailsButton" data-toggle="modal" data-target="#EditDetailsForm">
-
             <i class="far fa-id-card"></i> Edit Details
-
         </button>
+
+        <button type="button" class="btn btn-danger mp-btn-top-auto" id="DeleteStaffButton" data-toggle="modal" data-staff-id="@Model.Staff.Code">
+            <i class="fas fa-user-slash"></i> Delete Staff
+        </button>
+
         <hr/>
     }
 
@@ -54,7 +57,7 @@
                         <td>
                             <b>Staff Code</b>
                         </td>
-                        <td>@Model.Staff.Id</td>
+                        <td>@Model.Staff.Code</td>
                     </tr>
                 </table>
             </div>
@@ -69,7 +72,7 @@
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewCertModal">
             <i class="fa fa-plus-circle"></i> New Certificate
         </button>
-        <table class="table table-bordered mp-table" id="certs" data-staff-id="@Model.Staff.Id">
+        <table class="table table-bordered mp-table" id="certs" data-staff-id="@Model.Staff.Code">
             <thead>
             <tr>
                 <th>Course</th>
@@ -90,7 +93,7 @@
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewDocumentModal">
             <i class="fa fa-plus-circle"></i> Add Document
         </button>
-        <table class="table table-bordered mp-table mp-table-link" id="documents" data-staff-id="@Model.Staff.Id">
+        <table class="table table-bordered mp-table mp-table-link" id="documents" data-staff-id="@Model.Staff.Code">
             <thead>
                 <tr>
                     <th>Description</th>
@@ -126,7 +129,7 @@
                         @Html.DropDownListFor(l => l.TrainingCertificate.Status, new SelectList(Model.TrainingStatuses, "Id", "Name"), "Select Status", new {@class = "form-control", Name="Status"})
                     </div>
                     <div class="form-group">
-                        @Html.HiddenFor(l => l.TrainingCertificate.Staff, new {Value = Model.Staff.Id, Name="Staff"})
+                        @Html.HiddenFor(l => l.TrainingCertificate.Staff, new {Value = Model.Staff.Code, Name="Staff"})
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -163,7 +166,7 @@
                         @Html.ValidationMessageFor(x => x.Upload.Document.Url)
                     </div>
                     <div class="form-group">
-                        @Html.HiddenFor(x => x.Upload.StaffId, new {@class = "form-control", Value = Model.Staff.Id, Name = "StaffId"})
+                        @Html.HiddenFor(x => x.Upload.StaffId, new {@class = "form-control", Value = Model.Staff.Code, Name = "StaffId"})
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -208,6 +211,27 @@
                                     success: function(a) {
                                         toastr.success(a);
                                         $("#certs").DataTable().ajax.reload();
+                                    },
+                                    error: function(a) {
+                                        toastr.error(a.responseJSON);
+                                    }
+                                });
+                            }
+                        });
+                });
+
+            $("#DeleteStaffButton").on("click",
+                function() {
+                    var button = $(this);
+                    bootbox.confirm("Are you sure you wish to delete this staff member?",
+                        function(result) {
+                            if (result) {
+                                $.ajax({
+                                    url: "/api/staff/delete/" + button.attr("data-staff-id"),
+                                    method: "DELETE",
+                                    success: function(a) {
+                                        location.replace("/Staff/Staff");
+                                        toastr.success(a);
                                     },
                                     error: function(a) {
                                         toastr.error(a.responseJSON);

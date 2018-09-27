@@ -29,14 +29,11 @@ namespace MyPortal.Controllers
         {
             var staffId = User.Identity.GetUserId();
 
-            var staff = _context.Staff.SingleOrDefault(s => s.Id == staffId);
-
-            var certificates = _context.TrainingCertificates.Where(c => c.Staff == staffId).ToList();
+            var staff = _context.Staff.SingleOrDefault(s => s.Code == staffId);
 
             var viewModel = new StaffHomeViewModel
             {
-                CurrentUser = staff,
-                TrainingCertificates = certificates
+                CurrentUser = staff
             };
 
             return View(viewModel);
@@ -54,8 +51,8 @@ namespace MyPortal.Controllers
         [Authorize(Roles = "SeniorStaff")]
         public ActionResult Staff()
         {
-            var staff = _context.Staff.ToList();
-            return View(staff);
+            var viewModel = new NewStaffViewModel();
+            return View(viewModel);
         }
 
         // Menu | Students | X --> Student Details (for Student X)
@@ -140,7 +137,7 @@ namespace MyPortal.Controllers
         [Route("Staff/Staff/{id}")]
         public ActionResult StaffDetails(string id)
         {
-            var staff = _context.Staff.SingleOrDefault(s => s.Id == id);
+            var staff = _context.Staff.SingleOrDefault(s => s.Code == id);
 
             if (staff == null)
                 return HttpNotFound();

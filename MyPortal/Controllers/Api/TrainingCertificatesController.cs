@@ -28,7 +28,7 @@ namespace MyPortal.Controllers.Api
         public IEnumerable<TrainingCertificateDto> GetCertificates(string staff)
         {
 
-            var staffInDb = _context.Staff.Single(x => x.Id == staff);
+            var staffInDb = _context.Staff.Single(x => x.Code == staff);
 
             if (staffInDb == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);

@@ -1,5 +1,7 @@
-﻿using System.Web.Mvc;
+﻿using System.Linq;
+using System.Web.Mvc;
 using MyPortal.Models;
+using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers
 {
@@ -35,7 +37,6 @@ namespace MyPortal.Controllers
         {
             return View();
         }
-
-        //TODO: Dinner Money
+        
     }
 }

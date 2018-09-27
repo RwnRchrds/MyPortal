@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
@@ -8,11 +11,11 @@ using MyPortal.Models;
 namespace MyPortal.Controllers.Api
 {
     [Authorize]
-    public class RegGroupsController : ApiController
+    public class YearGroupsController : ApiController
     {
         private readonly MyPortalDbContext _context;
 
-        public RegGroupsController()
+        public YearGroupsController()
         {
             _context = new MyPortalDbContext();
         }
@@ -22,13 +25,13 @@ namespace MyPortal.Controllers.Api
             _context.Dispose();
         }
 
-        [Route("api/regGroups/{yearGroup}")]
-        public IEnumerable<RegGroupDto> GetRegGroups(int yearGroup)
+        [HttpGet]
+        [Route("api/yearGroups/fetch")]
+        public IEnumerable<YearGroupDto> GetYearGroups()
         {
-            return _context.RegGroups
-                .Where(x => x.YearGroup == yearGroup)
+            return _context.YearGroups
                 .ToList()
-                .Select(Mapper.Map<RegGroup, RegGroupDto>);
+                .Select(Mapper.Map<YearGroup, YearGroupDto>);
         }
     }
 }

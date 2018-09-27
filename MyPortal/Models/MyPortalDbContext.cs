@@ -112,7 +112,7 @@ namespace MyPortal.Models
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Staff>()
-                .Property(e => e.Id)
+                .Property(e => e.Code)
                 .IsUnicode(false);
 
             modelBuilder.Entity<Staff>()

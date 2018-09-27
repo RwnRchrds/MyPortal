@@ -21,9 +21,14 @@ namespace MyPortal.Models
             YearGroups = new HashSet<YearGroup>();
         }
 
-        [StringLength(3)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Display(Name = "ID")]
-        public string Id { get; set; }
+        public int Id { get; set; }
+
+        [Key]
+        [StringLength(3)]
+        [Display(Name = "Code")]
+        public string Code { get; set; }
 
         [StringLength(255)]
         [Display(Name = "Title")]
@@ -38,12 +43,6 @@ namespace MyPortal.Models
         [StringLength(255)]
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
-
-        [Display(Name = "Is a Tutor?")] 
-        public bool IsTutor { get; set; }
-
-
-        public int? Count { get; set; }
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Log> Logs { get; set; }

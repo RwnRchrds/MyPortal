@@ -224,6 +224,7 @@
     <Compile Include="Controllers\Api\TrainingCertificatesController.cs" />
     <Compile Include="Controllers\Api\TrainingCoursesController.cs" />
     <Compile Include="Controllers\Api\UsersController.cs" />
+    <Compile Include="Controllers\Api\YearGroupsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\FinanceController.cs" />
@@ -292,9 +293,11 @@
     <Compile Include="Models\TrainingStatus.cs" />
     <Compile Include="Models\YearGroup.cs" />
     <Compile Include="ViewModels\AccountsViewModel.cs" />
+    <Compile Include="ViewModels\DinnerMoneyViewModel.cs" />
     <Compile Include="ViewModels\DocumentsViewModel.cs" />
     <Compile Include="ViewModels\NewProductViewModel.cs" />
     <Compile Include="ViewModels\NewSaleViewModel.cs" />
+    <Compile Include="ViewModels\NewStaffViewModel.cs" />
     <Compile Include="ViewModels\NewStudentViewModel.cs" />
     <Compile Include="ViewModels\NewUserViewModel.cs" />
     <Compile Include="ViewModels\RandomStudentViewModel.cs" />

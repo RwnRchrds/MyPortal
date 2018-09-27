@@ -22,6 +22,10 @@ namespace MyPortal.Models
         [Column(TypeName = "date")]
         public DateTime Date { get; set; }
 
+        [Required]
+        [Display(Name = "Processed")]
+        public bool Processed { get; set; }
+
         public virtual Product Product1 { get; set; }
 
         public virtual Student Student1 { get; set; }

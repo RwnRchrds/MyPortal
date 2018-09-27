@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MyPortal.Models.Staff>
+﻿@model MyPortal.ViewModels.NewStaffViewModel
 @{
     ViewBag.Title = "Staff";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
@@ -10,23 +10,103 @@
 </div>
 
 <div class="container float-left">
+    <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#NewStaffModal">New Staff</button>
+    <hr/>
+</div>
+
+<div class="container float-left">
     <table class="table table-bordered table-hover mp-table mp-table-link" id="staff">
         <thead>
-            <tr>
-                <th>Staff</th>
-            </tr>
+        <tr>
+            <th>Staff</th>
+        </tr>
         </thead>
         <tbody></tbody>
     </table>
+</div>
+
+<div id="NewStaffModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New Staff</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="false"></span>&times;
+                </button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "newStaffForm" }))
+            {
+            <div class="modal-body">
+                <div class="form-group">
+                    @Html.LabelFor(x => x.Staff.Title)
+                    @Html.DropDownListFor(x => x.Staff.Title, new SelectList(Model.Titles), "Select Title",  new { @class = "form-control", Name = "Title" })
+                    @Html.ValidationMessageFor(x => x.Staff.Title)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.Staff.FirstName)
+                    @Html.TextBoxFor(x => x.Staff.FirstName, new { @class = "form-control", Name = "FirstName" })
+                    @Html.ValidationMessageFor(x => x.Staff.FirstName)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.Staff.LastName)
+                    @Html.TextBoxFor(x => x.Staff.LastName, new { @class = "form-control", Name = "LastName" })
+                    @Html.ValidationMessageFor(x => x.Staff.LastName)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.Staff.Code)
+                    @Html.TextBoxFor(x => x.Staff.Code, new { @class = "form-control", Name = "Code" })
+                    @Html.ValidationMessageFor(x => x.Staff.Code)
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+            }
+
+        </div>
+    </div>
 </div>
 
 @section scripts
 {
     <script>
         $(document).ready(function() {
+
+            $("#newStaffForm").on("submit",
+                function (e) {
+
+                    e.preventDefault();
+
+                    var form = $("#newStaffForm");
+                    var data = form.serialize();
+
+                    $.ajax({
+                        url: "/api/staff/new",
+                        data: data,
+                        method: "POST",
+                        success: function (result) {
+                            $("#NewStaffModal").modal('hide');
+                            toastr.success(result);
+                            $("#staff").DataTable().ajax.reload();
+                        },
+                        error: function (result) {
+                            toastr.error(result.responseJSON);
+                            form.reset();
+                        }
+                    });
+                });
+
+            $('#NewStaffModal').on('hidden.bs.modal',
+                function () {
+                    $(this).find('form').trigger('reset');
+                });
+
             $("#staff").DataTable({
                 ajax: {
-                    url: "/api/staff",
+                    url: "/api/staff/fetch",
                     dataSrc: ""
                 },
                 columns: [
@@ -34,7 +114,7 @@
                         data: "firstName",
                         render: function(data, type, staff) {
                             return "<a href='/Staff/Staff/" +
-                                staff.id +
+                                staff.code +
                                 "'>" +
                                 staff.lastName +
                                 ", " +

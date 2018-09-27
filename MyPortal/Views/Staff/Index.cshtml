@@ -40,7 +40,7 @@
                         <td>
                             <b>Staff Code</b>
                         </td>
-                        <td>@Model.CurrentUser.Id</td>
+                        <td>@Model.CurrentUser.Code</td>
                     </tr>
                 </table>
             </div>
@@ -52,7 +52,7 @@
     <div>
         <hr />
         <h4 class="mp-bold">MyTraining</h4>
-        <table class="table table-bordered mp-table" id="certs" data-staff-id="@Model.CurrentUser.Id">
+        <table class="table table-bordered mp-table" id="certs" data-staff-id="@Model.CurrentUser.Code">
             <thead>
                 <tr>
                     <th>Course</th>
@@ -69,7 +69,7 @@
     <div>
         <hr />
         <h4 class="mp-bold">MyDocuments</h4>
-        <table class="table table-bordered mp-table mp-table-link" id="documents" data-staff-id="@Model.CurrentUser.Id">
+        <table class="table table-bordered mp-table mp-table-link" id="documents" data-staff-id="@Model.CurrentUser.Code">
             <thead>
                 <tr>
                     <th>Description</th>
