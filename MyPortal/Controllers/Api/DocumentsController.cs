@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using AutoMapper;
+using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Models;
 
@@ -73,6 +74,12 @@ namespace MyPortal.Controllers.Api
             if (!IsUriValid)
                 return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
 
+            var currentUserId = User.Identity.GetUserId();
+
+            var userProfile = _context.Staff.Single(x => x.UserId == currentUserId);
+
+            document.UploaderId = userProfile.Id;
+            
             document.IsGeneral = true;
 
             document.Date = DateTime.Now;

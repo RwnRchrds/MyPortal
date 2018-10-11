@@ -43,25 +43,25 @@
                         <td>
                             <b>Year Group</b>
                         </td>
-                        <td>@Model.Student.YearGroup1.Name</td>
+                        <td>@Model.Student.YearGroup.Name</td>
                     </tr>
                     <tr>
                         <td>
                             <b>Reg Group</b>
                         </td>
-                        <td>@Model.Student.RegGroup1.Name</td>
+                        <td>@Model.Student.RegGroup.Name</td>
                     </tr>
                     <tr>
                         <td>
                             <b>Reg Tutor</b>
                         </td>
-                        <td>@Model.Student.RegGroup1.Staff.Title @Model.Student.RegGroup1.Staff.FirstName.Substring(0, 1) @Model.Student.RegGroup1.Staff.LastName</td>
+                        <td>@Model.Student.RegGroup.Staff.Title @Model.Student.RegGroup.Staff.FirstName.Substring(0, 1) @Model.Student.RegGroup.Staff.LastName</td>
                     </tr>
                     <tr>
                         <td>
                             <b>Head of Year</b>
                         </td>
-                        <td>@Model.Student.YearGroup1.Staff.Title @Model.Student.YearGroup1.Staff.FirstName.Substring(0, 1) @Model.Student.YearGroup1.Staff.LastName</td>
+                        <td>@Model.Student.YearGroup.Staff.Title @Model.Student.YearGroup.Staff.FirstName.Substring(0, 1) @Model.Student.YearGroup.Staff.LastName</td>
                     </tr>
                 </table>
 
@@ -99,7 +99,7 @@
                     @foreach (var result in Model.Results)
                     {
                         <tr>
-                            <td>@result.Subject1.Name</td>
+                            <td>@result.Subject.Name</td>
                             <td>@result.Value</td>
                         </tr>
                     }

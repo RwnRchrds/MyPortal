@@ -2,6 +2,6 @@
 {
     public class Checkout
     {
-        public int studentId { get; set; }
+        public int StudentId { get; set; }
     }
 }
