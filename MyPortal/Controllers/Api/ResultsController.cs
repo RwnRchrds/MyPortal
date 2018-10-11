@@ -28,7 +28,7 @@ namespace MyPortal.Controllers.Api
         public IHttpActionResult AddResult(ResultDto data)
         {
             var resultInDb = _context.Results.SingleOrDefault(x =>
-                x.Student == data.Student && x.Subject == data.Subject && x.ResultSet == data.ResultSet);
+                x.StudentId == data.StudentId && x.SubjectId == data.SubjectId && x.ResultSetId == data.ResultSetId);
 
             if (resultInDb != null)
                 return Content(HttpStatusCode.BadRequest, "Result already exists");
@@ -44,7 +44,7 @@ namespace MyPortal.Controllers.Api
         public IEnumerable<ResultDto> GetResults(int student, int resultset)
         {
             var results = _context.Results
-                .Where(r => r.Student == student && r.ResultSet == resultset)
+                .Where(r => r.StudentId == student && r.ResultSetId == resultset)
                 .ToList()
                 .Select(Mapper.Map<Result, ResultDto>);
 

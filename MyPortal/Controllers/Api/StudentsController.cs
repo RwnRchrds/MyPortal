@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Web.Http;
 using AutoMapper;
+using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Models;
 using MyPortal.Models.Misc;
@@ -30,8 +31,8 @@ namespace MyPortal.Controllers.Api
         public IEnumerable<StudentDto> GetStudents()
         {
             return _context.Students
-                .Include(s => s.YearGroup1)
-                .Include(s => s.RegGroup1)
+                .Include(s => s.YearGroup)
+                .Include(s => s.RegGroup)
                 .ToList()
                 .Select(Mapper.Map<Student, StudentDto>);
         }
@@ -80,9 +81,8 @@ namespace MyPortal.Controllers.Api
             Mapper.Map(studentDto, studentInDb);
             studentInDb.FirstName = studentDto.FirstName;
             studentInDb.LastName = studentDto.LastName;
-            studentInDb.FourMId = studentDto.FourMId;
-            studentInDb.RegGroup = studentDto.RegGroup;
-            studentInDb.YearGroup = studentDto.YearGroup;
+            studentInDb.RegGroupId = studentDto.RegGroupId;
+            studentInDb.YearGroupId = studentDto.YearGroupId;
             studentInDb.AccountBalance = studentDto.AccountBalance;
 
             _context.SaveChanges();
@@ -173,7 +173,7 @@ namespace MyPortal.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
             var documents = _context.StudentDocuments
-                .Where(x => x.Student == studentId)
+                .Where(x => x.StudentId == studentId)
                 .ToList()
                 .Select(Mapper.Map<StudentDocument, StudentDocumentDto>);
 
@@ -190,7 +190,7 @@ namespace MyPortal.Controllers.Api
             if (document == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            return Mapper.Map<Document, DocumentDto>(document.Document1);
+            return Mapper.Map<Document, DocumentDto>(document.Document);
         }
 
         [HttpPost]
@@ -203,6 +203,12 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.NotFound, "Student not found");
 
             var document = data.Document;
+
+            var currentUserId = User.Identity.GetUserId();
+
+            var userProfile = _context.Staff.Single(x => x.UserId == currentUserId);
+
+            document.UploaderId = userProfile.Id;
 
             document.IsGeneral = false;
 
@@ -221,8 +227,8 @@ namespace MyPortal.Controllers.Api
 
             var studentDocument = new StudentDocument()
             {
-                Document = document.Id,
-                Student = data.Student
+                DocumentId = document.Id,
+                StudentId = data.Student
             };
 
             _context.StudentDocuments.Add(studentDocument);
@@ -240,7 +246,7 @@ namespace MyPortal.Controllers.Api
             if (studentDocument == null)
                 return Content(HttpStatusCode.NotFound, "Document not found");
 
-            var attachedDocument = studentDocument.Document1;
+            var attachedDocument = studentDocument.Document;
 
             if (attachedDocument == null)
                 return Content(HttpStatusCode.BadRequest, "No document attached");
@@ -277,6 +283,17 @@ namespace MyPortal.Controllers.Api
             _context.SaveChanges();
 
             return Ok("Document updated");
+        }
+
+        [HttpGet]
+        [Route("api/students/yearGroup/{yearGroupId}")]
+        public IEnumerable<StudentDto> GetStudentsFromYear(int yearGroupId)
+        {
+            return _context.Students
+                .Where(x => x.YearGroupId == yearGroupId)
+                .OrderBy(x => x.LastName)
+                .ToList()
+                .Select(Mapper.Map<Student, StudentDto>);
         }
     }
 }

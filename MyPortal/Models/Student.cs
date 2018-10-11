@@ -1,13 +1,14 @@
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics.CodeAnalysis;
-
 namespace MyPortal.Models
 {
-    public class Student
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
+
+    public partial class Student
     {
-        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Student()
         {
             BasketItems = new HashSet<BasketItem>();
@@ -17,7 +18,6 @@ namespace MyPortal.Models
             StudentDocuments = new HashSet<StudentDocument>();
         }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Display(Name = "ID")]
         public int Id { get; set; }
 
@@ -31,38 +31,48 @@ namespace MyPortal.Models
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
-        [Display(Name = "4Matrix ID")] 
-        public int? FourMId { get; set; }
+        [StringLength(320)]
+        [Display(Name = "Email Address")]
+        public string Email { get; set; }
 
-        [Display(Name = "Reg Group")] 
-        public int RegGroup { get; set; }
+        [Display(Name = "Reg Group")]
+        public int RegGroupId { get; set; }
 
-        [Display(Name = "Year Group")] 
-        public int YearGroup { get; set; }
+        [Display(Name = "Year Group")]
+        public int YearGroupId { get; set; }
 
-        [Display(Name = "Account Balance")] 
+        [StringLength(10)]
+        [Display(Name = "Candidate Number")]
+        public string CandidateNumber { get; set; }
+
+        [Display(Name = "Account Balance")]
         public decimal AccountBalance { get; set; }
 
+        [StringLength(255)]
         [Display(Name = "MIS ID")]
         public string MisId { get; set; }
 
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        [StringLength(128)]
+        [Display(Name = "User ID")]
+        public string UserId { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BasketItem> BasketItems { get; set; }
 
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Log> Logs { get; set; }
 
-        public virtual RegGroup RegGroup1 { get; set; }
+        public virtual RegGroup RegGroup { get; set; }
 
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Result> Results { get; set; }
 
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Sale> Sales { get; set; }
 
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<StudentDocument> StudentDocuments { get; set; }
 
-        public virtual YearGroup YearGroup1 { get; set; }
+        public virtual YearGroup YearGroup { get; set; }
     }
 }

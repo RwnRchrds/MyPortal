@@ -1,0 +1,147 @@
+﻿@model MyPortal.ViewModels.SaleEntryViewModel
+@{
+    ViewBag.Title = "Sale Entry";
+    Layout = "~/Views/Shared/_LayoutStaff.cshtml";
+}
+
+<div class="container float-left">
+    <h2 class="mp-page-title">Sale Entry</h2>
+    <hr/>
+</div>
+
+<div class="container float-left">
+    @Html.Label("Product")
+    @Html.DropDownListFor(x => x.Sale.Product, new SelectList(Model.Products,"Id","Description"), "", new { @class = "form-control", Name = "Product", id = "productSelect" })
+    <p class="text-primary mp-bold" data-price id="price"></p>
+</div>
+
+<div class="container float-left">
+    <div class="form-group">
+        <label>Year Group</label>
+        <select class="form-control" id="yearGroupSelect">
+        </select>
+    </div>
+</div>
+
+<div class="container float-left">
+    <div class="form-group" id="selectStudentArea">
+        <label>Student</label>
+        <select class="form-control disabled d-none" id="studentSelect">
+        </select>
+    </div>
+</div>
+
+<div class="container float-left">
+    <button class="btn btn-success d-none" id="submitButton">Make Sale</button>
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+            //Gets Year Groups and Inserts Options into Dropdown
+            $.ajax({
+                url: "/api/yearGroups/fetch",
+                method: "GET",          
+                complete: function(data) {
+                    $("#yearGroupSelect").empty();
+                    $(data.responseJSON).each(function(i, yearGroup) {
+                        var divData = "<option value=" +
+                            data.responseJSON[i].id +
+                            ">" +
+                            data.responseJSON[i].name +
+                            "</option>";
+                        $(divData).appendTo('#yearGroupSelect');
+                    });
+                    $("#yearGroupSelect").val("");
+                }
+            });
+
+            $("#yearGroupSelect").on("change",
+                function() {
+                    $.ajax({
+                        url: "/api/students/yearGroup/" + $("#yearGroupSelect").val(),
+                        method: "GET",
+                        complete: function(data) {
+                            $("#studentSelect").empty();
+                            $(data.responseJSON).each(function(i, student) {
+                                var divData = "<option value=" +
+                                    data.responseJSON[i].id +
+                                    ">" +
+                                    data.responseJSON[i].lastName + ", " + data.responseJSON[i].firstName + 
+                                    "</option>";
+                                $(divData).appendTo('#studentSelect');
+                            });
+                            $("#studentSelect").val("");
+                        }
+                    });
+                    $("#studentSelect").removeClass("d-none");
+                    $("#studentSelect").removeClass("disabled");
+                });
+
+            $("#productSelect").on("change",
+                function() {
+                    $.ajax({
+                        url: "/api/products/price/" + $("#productSelect").val(),
+                        method: "GET",
+                        success: function(data) {
+                            $("#price").text("Price: £" + data.toFixed(2));
+                        }
+                    });
+                });
+
+            $("#studentSelect").on("change",
+                function() {
+                    $("#submitButton").removeClass("d-none");
+                });
+
+            function makeSale() {
+                var student = $("#studentSelect").val();
+                var product = $("#productSelect").val();
+
+                $.ajax({
+                    url: "/api/sales/new",
+                    method: "POST",
+                    data: JSON.stringify({ Student: student, Product: product }),
+                    success: function(e) {
+                        toastr.success(e);
+                    },
+                    error: function(e) {
+                        toastr.error(e.responseJSON);
+                    }
+                });
+            }
+
+            $("#submitButton").on("click",
+                function() {
+                    $.ajax({
+                        url: "/api/sales/query",
+                        method: "POST",
+                        data: JSON.stringify({ Student: $("#studentSelect").val(), Product: $("#productSelect").val() }),
+                        success: function(data) {
+                            if (!data) {
+                                bootbox.confirm("Student has insufficient funds. Do you wish to proceed with the sale?"),
+                                    function(result) {
+                                        makeSale();
+                                    }
+                            }
+
+                            if (data) {
+                                makeSale();
+                            }
+                        },
+                        error: function(e) {
+                            toastr.error(e.responseJSON);
+                        }
+                    });
+                });
+
+
+        });        
+    </script>   
+    
+    @Scripts.Render("~/bundles/staff")
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+

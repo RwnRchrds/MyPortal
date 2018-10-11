@@ -10,6 +10,6 @@ namespace MyPortal.Dtos
 
         [Required] [StringLength(255)] public string Name { get; set; }
 
-        [Required] [StringLength(3)] public string Head { get; set; }
+        [Required] [StringLength(3)] public int HeadId { get; set; }
     }
 }

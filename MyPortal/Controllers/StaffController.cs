@@ -67,7 +67,7 @@ namespace MyPortal.Controllers
 
             //var logs = _context.Logs.Where(l => l.Student == id).OrderByDescending(x => x.Date).ToList();
 
-            var results = _context.Results.Where(r => r.Student == id && r.ResultSet1.IsCurrent).ToList();
+            var results = _context.Results.Where(r => r.StudentId == id && r.ResultSet.IsCurrent).ToList();
 
             var logTypes = _context.LogTypes.ToList();
 
@@ -79,7 +79,7 @@ namespace MyPortal.Controllers
 
             var subjects = _context.Subjects.ToList();
 
-            var upperSchool = student.YearGroup == 11 || student.YearGroup == 10;
+            var upperSchool = student.YearGroupId == 11 || student.YearGroupId == 10;
 
             var chartData = GetChartData(results, upperSchool);
 
@@ -135,14 +135,14 @@ namespace MyPortal.Controllers
         //Accessible by [SeniorStaff] only
         [Authorize(Roles = "SeniorStaff")]
         [Route("Staff/Staff/{id}")]
-        public ActionResult StaffDetails(string id)
+        public ActionResult StaffDetails(int id)
         {
-            var staff = _context.Staff.SingleOrDefault(s => s.Code == id);
+            var staff = _context.Staff.SingleOrDefault(s => s.Id == id);
 
             if (staff == null)
                 return HttpNotFound();
 
-            var certificates = _context.TrainingCertificates.Where(c => c.Staff == id).ToList();
+            var certificates = _context.TrainingCertificates.Where(c => c.StaffId == id).ToList();
 
             var courses = _context.TrainingCourses.ToList();
 
@@ -280,7 +280,7 @@ namespace MyPortal.Controllers
             {
                 var logInDb = _context.Logs.Single(l => l.Id == log.Id);
 
-                logInDb.Author = log.Author;
+                logInDb.AuthorId = log.AuthorId;
                 logInDb.Date = log.Date;
                 logInDb.Message = log.Message;
             }

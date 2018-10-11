@@ -69,25 +69,25 @@
                         <td>
                             <b>Year Group</b>
                         </td>
-                        <td>@Model.Student.YearGroup1.Name</td>
+                        <td>@Model.Student.YearGroup.Name</td>
                     </tr>
                     <tr>
                         <td>
                             <b>Reg Group</b>
                         </td>
-                        <td>@Model.Student.RegGroup1.Name</td>
+                        <td>@Model.Student.RegGroup.Name</td>
                     </tr>
                     <tr>
                         <td>
                             <b>Reg Tutor</b>
                         </td>
-                        <td>@Model.Student.RegGroup1.Staff.Title @Model.Student.RegGroup1.Staff.FirstName.Substring(0, 1) @Model.Student.RegGroup1.Staff.LastName</td>
+                        <td>@Model.Student.RegGroup.Staff.Title @Model.Student.RegGroup.Staff.FirstName.Substring(0, 1) @Model.Student.RegGroup.Staff.LastName</td>
                     </tr>
                     <tr>
                         <td>
                             <b>Head of Year</b>
                         </td>
-                        <td>@Model.Student.YearGroup1.Staff.Title @Model.Student.YearGroup1.Staff.FirstName.Substring(0, 1) @Model.Student.YearGroup1.Staff.LastName</td>
+                        <td>@Model.Student.YearGroup.Staff.Title @Model.Student.YearGroup.Staff.FirstName.Substring(0, 1) @Model.Student.YearGroup.Staff.LastName</td>
                     </tr>
                 </table>
 
@@ -125,7 +125,7 @@
                     @foreach (var result in Model.Results)
                     {
                         <tr>
-                            <td>@result.Subject1.Name</td>
+                            <td>@result.Subject.Name</td>
                             <td>@result.Value</td>
                         </tr>
                     }
@@ -285,9 +285,9 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @Html.LabelFor(l => l.Log.Type)
-                        @Html.DropDownListFor(l => l.Log.Type, new SelectList(Model.LogTypes, "Id", "Name"), "Select Log Type", new {@class = "form-control", Name = "Type"})
-                        @Html.ValidationMessageFor(l => l.Log.Type)
+                        @Html.LabelFor(l => l.Log.TypeId)
+                        @Html.DropDownListFor(l => l.Log.TypeId, new SelectList(Model.LogTypes, "Id", "Name"), "Select Log Type", new {@class = "form-control", Name = "TypeId"})
+                        @Html.ValidationMessageFor(l => l.Log.TypeId)
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(l => l.Log.Message)
@@ -295,11 +295,7 @@
                         @Html.ValidationMessageFor(l => l.Log.Message)
                     </div>
                     <div class="form-group">
-                        @Html.HiddenFor(l => l.Log.Student, new {Value = Model.Student.Id, Name = "Student"})
-                    </div>
-                    <div class="form-group">
-                        @Html.HiddenFor(l => l.Log.Date, new {Value = DateTime.Now, Name = "Date"})
-                        @Html.HiddenFor(l => l.Log.Author, new {Value = User.Identity.GetUserId(), Name = "Author"})
+                        @Html.HiddenFor(l => l.Log.StudentId, new {Value = Model.Student.Id, Name = "StudentId"})
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -329,8 +325,8 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @Html.LabelFor(l => l.Log.Type)
-                        @Html.DropDownListFor(l => l.Log.Type, new SelectList(Model.LogTypes, "Id", "Name"), "Select Log Type", new {@class = "form-control", id = "EditLogTypeControl", Name = "Type"})
+                        @Html.LabelFor(l => l.Log.TypeId)
+                        @Html.DropDownListFor(l => l.Log.TypeId, new SelectList(Model.LogTypes, "Id", "Name"), "Select Log Type", new {@class = "form-control", id = "EditLogTypeControl", Name = "Type"})
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(l => l.Log.Message)
@@ -338,11 +334,6 @@
                     </div>
                     <div class="form-group">
                         @Html.HiddenFor(l => l.Log.Student, new {Value = Model.Student.Id, Name = "Student"})
-                    </div>
-                    <div class="form-group">
-                        @Html.HiddenFor(l => l.Log.Id, new {id = "EditLogIdControl", Name = "Id"})
-                        @Html.HiddenFor(l => l.Log.Date, new {Value = DateTime.Now, Name = "Date"})
-                        @Html.HiddenFor(l => l.Log.Author, new {Value = User.Identity.GetUserId(), Name = "Author"})
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -658,18 +649,18 @@
                 },
                 columns: [
                     {
-                        data: "document1.description",
+                        data: "document.description",
                         render: function(data, type, document) {
                             return "<a href='" +
-                                document.document1.url +
+                                document.document.url +
                                 "' target='_blank'>" +
-                                document.document1.description +
+                                document.document.description +
                                 "</a>";
                         }
 
                     },
                     {
-                        data: "document1.date",
+                        data: "document.date",
                         render: function(data) {
                             var date = new Date(data);
                             return date.toLocaleDateString();

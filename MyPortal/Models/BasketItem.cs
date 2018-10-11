@@ -1,22 +1,24 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace MyPortal.Models
 {
-    [Table("BasketItem")]
-    public class BasketItem
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
+
+    public partial class BasketItem
     {
-        [Display(Name = "ID")] 
+        [Display(Name = "ID")]
         public int Id { get; set; }
 
-        [Display(Name = "Student")] 
-        public int Student { get; set; }
+        [Display(Name = "Student")]
+        public int StudentId { get; set; }
 
-        [Display(Name = "Product")] 
-        public int Product { get; set; }
+        [Display(Name = "Product")]
+        public int ProductId { get; set; }
 
-        public virtual Product Product1 { get; set; }
+        public virtual Product Product { get; set; }
 
-        public virtual Student Student1 { get; set; }
+        public virtual Student Student { get; set; }
     }
 }

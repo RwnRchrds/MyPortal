@@ -1,33 +1,29 @@
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace MyPortal.Models
 {
-    public class Sale
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
+
+    public partial class Sale
     {
-        [Display(Name = "ID")] 
+        [Display(Name = "ID")]
         public int Id { get; set; }
 
-        [Required]
-        [Display(Name = "Student")] 
-        public int Student { get; set; }
+        [Display(Name = "Student")]
+        public int StudentId { get; set; }
 
-        [Required]
-        [Display(Name = "Product")] 
-        public int Product { get; set; }
+        [Display(Name = "Product")]
+        public int ProductId { get; set; }
 
-        [Required]
-        [Display(Name = "Date")]
         [Column(TypeName = "date")]
         public DateTime Date { get; set; }
 
-        [Required]
-        [Display(Name = "Processed")]
         public bool Processed { get; set; }
 
-        public virtual Product Product1 { get; set; }
+        public virtual Product Product { get; set; }
 
-        public virtual Student Student1 { get; set; }
+        public virtual Student Student { get; set; }
     }
 }

@@ -10,8 +10,8 @@ namespace MyPortal.Dtos
 
         [Required] [StringLength(3)] public string Name { get; set; }
 
-        [Required] [StringLength(3)] public string Tutor { get; set; }
+        [Required] [StringLength(3)] public int TutorId { get; set; }
 
-        [Required] public int YearGroup { get; set; }
+        [Required] public int YearGroupId { get; set; }
     }
 }

@@ -1,13 +1,14 @@
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics.CodeAnalysis;
-
 namespace MyPortal.Models
 {
-    public class RegGroup
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
+
+    public partial class RegGroup
     {
-        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public RegGroup()
         {
             Students = new HashSet<Student>();
@@ -18,22 +19,20 @@ namespace MyPortal.Models
         public int Id { get; set; }
 
         [Required]
-        [StringLength(3)]
-        [Display(Name = "Name")]
+        [StringLength(10)]
         public string Name { get; set; }
 
-        [Required]
-        [StringLength(3)]
-        [Display(Name = "Reg Tutor")]
-        public string Tutor { get; set; }
+        [Display(Name = "Tutor")]
+        public int TutorId { get; set; }
 
-        [Required]
-        [Display(Name = "Year Group")] 
-        public int YearGroup { get; set; }
+        [Display(Name = "Year Group")]
+        public int YearGroupId { get; set; }
 
         public virtual Staff Staff { get; set; }
 
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual YearGroup YearGroup { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Student> Students { get; set; }
     }
 }

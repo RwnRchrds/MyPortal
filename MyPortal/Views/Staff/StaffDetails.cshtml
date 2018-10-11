@@ -18,7 +18,7 @@
             <i class="far fa-id-card"></i> Edit Details
         </button>
 
-        <button type="button" class="btn btn-danger mp-btn-top-auto" id="DeleteStaffButton" data-toggle="modal" data-staff-id="@Model.Staff.Code">
+        <button type="button" class="btn btn-danger mp-btn-top-auto" id="DeleteStaffButton" data-toggle="modal" data-staff-id="@Model.Staff.Id">
             <i class="fas fa-user-slash"></i> Delete Staff
         </button>
 
@@ -72,7 +72,7 @@
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewCertModal">
             <i class="fa fa-plus-circle"></i> New Certificate
         </button>
-        <table class="table table-bordered mp-table" id="certs" data-staff-id="@Model.Staff.Code">
+        <table class="table table-bordered mp-table" id="certs" data-staff-id="@Model.Staff.Id">
             <thead>
             <tr>
                 <th>Course</th>
@@ -93,7 +93,7 @@
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewDocumentModal">
             <i class="fa fa-plus-circle"></i> Add Document
         </button>
-        <table class="table table-bordered mp-table mp-table-link" id="documents" data-staff-id="@Model.Staff.Code">
+        <table class="table table-bordered mp-table mp-table-link" id="documents" data-staff-id="@Model.Staff.Id">
             <thead>
                 <tr>
                     <th>Description</th>
@@ -121,15 +121,15 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @Html.LabelFor(l => l.TrainingCertificate.Course)
-                        @Html.DropDownListFor(l => l.TrainingCertificate.Course, new SelectList(Model.TrainingCourses, "Id", "Description"), "Select Course", new {@class = "form-control", Name="Course"})
+                        @Html.LabelFor(l => l.TrainingCertificate.CourseId)
+                        @Html.DropDownListFor(l => l.TrainingCertificate.CourseId, new SelectList(Model.TrainingCourses, "Id", "Description"), "Select Course", new {@class = "form-control", Name="Course"})
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(l => l.TrainingCertificate.Status)
-                        @Html.DropDownListFor(l => l.TrainingCertificate.Status, new SelectList(Model.TrainingStatuses, "Id", "Name"), "Select Status", new {@class = "form-control", Name="Status"})
+                        @Html.LabelFor(l => l.TrainingCertificate.StatusId)
+                        @Html.DropDownListFor(l => l.TrainingCertificate.StatusId, new SelectList(Model.TrainingStatuses, "Id", "Name"), "Select Status", new {@class = "form-control", Name="Status"})
                     </div>
                     <div class="form-group">
-                        @Html.HiddenFor(l => l.TrainingCertificate.Staff, new {Value = Model.Staff.Code, Name="Staff"})
+                        @Html.HiddenFor(l => l.TrainingCertificate.StaffId, new {Value = Model.Staff.Code, Name="Staff"})
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>

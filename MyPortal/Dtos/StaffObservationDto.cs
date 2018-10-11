@@ -15,10 +15,10 @@ namespace MyPortal.Dtos
         public DateTime Date { get; set; }
         
         [Required]
-        public string Observee { get; set; }
+        public int ObserveeId { get; set; }
         
         [Required]
-        public string Observer { get; set; }
+        public int ObserverId { get; set; }
         
         [Required]
         public string Outcome { get; set; }

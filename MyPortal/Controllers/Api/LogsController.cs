@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
 using AutoMapper;
+using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Models;
 
@@ -27,7 +29,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/logs/{student}")]
         public IEnumerable<LogDto> GetLogs(int student)
         {
-            return _context.Logs.Where(l => l.Student == student)
+            return _context.Logs.Where(l => l.StudentId == student)
                 .OrderByDescending(x => x.Date)
                 .ToList()
                 .Select(Mapper.Map<Log, LogDto>);
@@ -49,6 +51,14 @@ namespace MyPortal.Controllers.Api
         [Route("api/logs/new")]
         public IHttpActionResult CreateLog(LogDto data)
         {
+            var currentUserId = User.Identity.GetUserId();
+
+            var userProfile = _context.Staff.Single(x => x.UserId == currentUserId);           
+
+            data.AuthorId = userProfile.Id;
+
+            data.Date = DateTime.Now;
+
             if (!ModelState.IsValid)
                 return Content(HttpStatusCode.BadRequest, "Invalid data");
 
@@ -73,7 +83,7 @@ namespace MyPortal.Controllers.Api
 
             //var c = Mapper.Map(logDto, logInDb);
 
-            logInDb.Type = logDto.Type;
+            logInDb.TypeId = logDto.TypeId;
             logInDb.Message = logDto.Message;
 
             _context.SaveChanges();

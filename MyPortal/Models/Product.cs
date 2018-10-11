@@ -1,42 +1,39 @@
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
-
 namespace MyPortal.Models
 {
-    public class Product
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
+
+    public partial class Product
     {
-        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Product()
         {
             BasketItems = new HashSet<BasketItem>();
             Sales = new HashSet<Sale>();
         }
 
-        [Display(Name = "ID")] 
+        [Display(Name = "ID")]
         public int Id { get; set; }
 
         [Required]
         [StringLength(255)]
-        [Display(Name = "Description")]
         public string Description { get; set; }
 
-        [Required]
-        [Display(Name = "Price")] 
         public decimal Price { get; set; }
 
-        [Required]
-        [Display(Name = "Available on Store")] 
+        [Display(Name = "Available on Store")]
         public bool Visible { get; set; }
 
-        [Required]
-        [Display(Name = "One-Time Purchase")] 
+        [Display(Name = "One-Time Purchase")]
         public bool OnceOnly { get; set; }
 
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BasketItem> BasketItems { get; set; }
 
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Sale> Sales { get; set; }
     }
 }

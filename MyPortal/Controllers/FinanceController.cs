@@ -35,7 +35,18 @@ namespace MyPortal.Controllers
         [Route("Staff/Finance/Sales")]
         public ActionResult Sales()
         {
-            return View();
+            var viewModel = new SalesViewModel();
+            return View(viewModel);
+        }
+
+        [Route("Staff/Finance/Sales/New")]
+        public ActionResult SaleEntry()
+        {
+            var viewModel = new SaleEntryViewModel()
+            {
+                Products = _context.Products
+            };
+            return View(viewModel);
         }
         
     }

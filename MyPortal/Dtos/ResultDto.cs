@@ -2,10 +2,10 @@
 {
     public class ResultDto
     {
-        public int ResultSet { get; set; }
-        public int Subject { get; set; }
+        public int ResultSetId { get; set; }
+        public int SubjectId { get; set; }
         public string Value { get; set; }
-        public int Student { get; set; }
-        public SubjectDto Subject1 { get; set; }
+        public int StudentId { get; set; }
+        public SubjectDto Subject { get; set; }
     }
 }

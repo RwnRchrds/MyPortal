@@ -26,7 +26,7 @@ namespace MyPortal.Controllers.Api
         public IEnumerable<RegGroupDto> GetRegGroups(int yearGroup)
         {
             return _context.RegGroups
-                .Where(x => x.YearGroup == yearGroup)
+                .Where(x => x.YearGroupId == yearGroup)
                 .ToList()
                 .Select(Mapper.Map<RegGroup, RegGroupDto>);
         }

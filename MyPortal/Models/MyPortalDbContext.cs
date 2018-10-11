@@ -1,8 +1,11 @@
-﻿using System.Data.Entity;
-
 namespace MyPortal.Models
 {
-    public class MyPortalDbContext : DbContext
+    using System;
+    using System.Data.Entity;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Linq;
+
+    public partial class MyPortalDbContext : DbContext
     {
         public MyPortalDbContext()
             : base("name=MyPortalDbContext")
@@ -41,22 +44,8 @@ namespace MyPortal.Models
 
             modelBuilder.Entity<Document>()
                 .HasMany(e => e.StaffDocuments)
-                .WithRequired(e => e.Document1)
-                .HasForeignKey(e => e.Document);
-
-            modelBuilder.Entity<Document>()
-                .HasMany(e => e.StudentDocuments)
-                .WithRequired(e => e.Document1)
-                .HasForeignKey(e => e.Document)
+                .WithRequired(e => e.Document)
                 .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Log>()
-                .Property(e => e.Author)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Log>()
-                .Property(e => e.Message)
-                .IsUnicode(false);
 
             modelBuilder.Entity<LogType>()
                 .Property(e => e.Name)
@@ -65,7 +54,7 @@ namespace MyPortal.Models
             modelBuilder.Entity<LogType>()
                 .HasMany(e => e.Logs)
                 .WithRequired(e => e.LogType)
-                .HasForeignKey(e => e.Type)
+                .HasForeignKey(e => e.TypeId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Product>()
@@ -78,14 +67,12 @@ namespace MyPortal.Models
 
             modelBuilder.Entity<Product>()
                 .HasMany(e => e.BasketItems)
-                .WithRequired(e => e.Product1)
-                .HasForeignKey(e => e.Product)
+                .WithRequired(e => e.Product)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Product>()
                 .HasMany(e => e.Sales)
-                .WithRequired(e => e.Product1)
-                .HasForeignKey(e => e.Product)
+                .WithRequired(e => e.Product)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<RegGroup>()
@@ -93,13 +80,13 @@ namespace MyPortal.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<RegGroup>()
-                .Property(e => e.Tutor)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<RegGroup>()
                 .HasMany(e => e.Students)
-                .WithRequired(e => e.RegGroup1)
-                .HasForeignKey(e => e.RegGroup);
+                .WithRequired(e => e.RegGroup)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Result>()
+                .Property(e => e.Value)
+                .IsUnicode(false);
 
             modelBuilder.Entity<ResultSet>()
                 .Property(e => e.Name)
@@ -107,8 +94,7 @@ namespace MyPortal.Models
 
             modelBuilder.Entity<ResultSet>()
                 .HasMany(e => e.Results)
-                .WithRequired(e => e.ResultSet1)
-                .HasForeignKey(e => e.ResultSet)
+                .WithRequired(e => e.ResultSet)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Staff>()
@@ -128,63 +114,64 @@ namespace MyPortal.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<Staff>()
+                .Property(e => e.JobTitle)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Staff>()
+                .Property(e => e.Email)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Staff>()
+                .HasMany(e => e.Documents)
+                .WithRequired(e => e.Staff)
+                .HasForeignKey(e => e.UploaderId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Staff>()
                 .HasMany(e => e.Logs)
                 .WithRequired(e => e.Staff)
-                .HasForeignKey(e => e.Author)
+                .HasForeignKey(e => e.AuthorId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Staff>()
                 .HasMany(e => e.RegGroups)
                 .WithRequired(e => e.Staff)
-                .HasForeignKey(e => e.Tutor)
+                .HasForeignKey(e => e.TutorId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Staff>()
                 .HasMany(e => e.StaffDocuments)
-                .WithRequired(e => e.Staff1)
-                .HasForeignKey(e => e.Staff);
+                .WithRequired(e => e.Staff)
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Staff>()
                 .HasMany(e => e.StaffObservations)
                 .WithRequired(e => e.Staff)
-                .HasForeignKey(e => e.Observee)
+                .HasForeignKey(e => e.ObserveeId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Staff>()
                 .HasMany(e => e.StaffObservations1)
                 .WithRequired(e => e.Staff1)
-                .HasForeignKey(e => e.Observer)
+                .HasForeignKey(e => e.ObserverId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Staff>()
                 .HasMany(e => e.Subjects)
                 .WithRequired(e => e.Staff)
-                .HasForeignKey(e => e.Leader)
+                .HasForeignKey(e => e.LeaderId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Staff>()
                 .HasMany(e => e.TrainingCertificates)
-                .WithRequired(e => e.Staff1)
-                .HasForeignKey(e => e.Staff)
+                .WithRequired(e => e.Staff)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Staff>()
                 .HasMany(e => e.YearGroups)
                 .WithRequired(e => e.Staff)
-                .HasForeignKey(e => e.Head)
+                .HasForeignKey(e => e.HeadId)
                 .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<StaffDocument>()
-                .Property(e => e.Staff)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<StaffObservation>()
-                .Property(e => e.Observee)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<StaffObservation>()
-                .Property(e => e.Observer)
-                .IsUnicode(false);
 
             modelBuilder.Entity<StaffObservation>()
                 .Property(e => e.Outcome)
@@ -199,35 +186,44 @@ namespace MyPortal.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<Student>()
+                .Property(e => e.Email)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Student>()
+                .Property(e => e.CandidateNumber)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Student>()
                 .Property(e => e.AccountBalance)
                 .HasPrecision(10, 2);
 
             modelBuilder.Entity<Student>()
+                .Property(e => e.MisId)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Student>()
                 .HasMany(e => e.BasketItems)
-                .WithRequired(e => e.Student1)
-                .HasForeignKey(e => e.Student)
+                .WithRequired(e => e.Student)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Student>()
                 .HasMany(e => e.Logs)
-                .WithRequired(e => e.Student1)
-                .HasForeignKey(e => e.Student);
+                .WithRequired(e => e.Student)
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Student>()
                 .HasMany(e => e.Results)
-                .WithRequired(e => e.Student1)
-                .HasForeignKey(e => e.Student);
+                .WithRequired(e => e.Student)
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Student>()
                 .HasMany(e => e.Sales)
-                .WithRequired(e => e.Student1)
-                .HasForeignKey(e => e.Student)
+                .WithRequired(e => e.Student)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Student>()
                 .HasMany(e => e.StudentDocuments)
-                .WithRequired(e => e.Student1)
-                .HasForeignKey(e => e.Student)
+                .WithRequired(e => e.Student)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Subject>()
@@ -235,18 +231,9 @@ namespace MyPortal.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<Subject>()
-                .Property(e => e.Leader)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Subject>()
                 .HasMany(e => e.Results)
-                .WithRequired(e => e.Subject1)
-                .HasForeignKey(e => e.Subject)
+                .WithRequired(e => e.Subject)
                 .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<TrainingCertificate>()
-                .Property(e => e.Staff)
-                .IsUnicode(false);
 
             modelBuilder.Entity<TrainingCourse>()
                 .Property(e => e.Code)
@@ -259,7 +246,7 @@ namespace MyPortal.Models
             modelBuilder.Entity<TrainingCourse>()
                 .HasMany(e => e.TrainingCertificates)
                 .WithRequired(e => e.TrainingCourse)
-                .HasForeignKey(e => e.Course)
+                .HasForeignKey(e => e.CourseId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<TrainingStatus>()
@@ -268,21 +255,23 @@ namespace MyPortal.Models
 
             modelBuilder.Entity<TrainingStatus>()
                 .HasMany(e => e.TrainingCertificates)
-                .WithOptional(e => e.TrainingStatus)
-                .HasForeignKey(e => e.Status);
+                .WithRequired(e => e.TrainingStatus)
+                .HasForeignKey(e => e.StatusId)
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<YearGroup>()
                 .Property(e => e.Name)
                 .IsUnicode(false);
 
             modelBuilder.Entity<YearGroup>()
-                .Property(e => e.Head)
-                .IsUnicode(false);
+                .HasMany(e => e.RegGroups)
+                .WithRequired(e => e.YearGroup)
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<YearGroup>()
                 .HasMany(e => e.Students)
-                .WithRequired(e => e.YearGroup1)
-                .HasForeignKey(e => e.YearGroup);
+                .WithRequired(e => e.YearGroup)
+                .WillCascadeOnDelete(false);
         }
     }
 }

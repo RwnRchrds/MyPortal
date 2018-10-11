@@ -36,12 +36,12 @@ namespace MyPortal.Controllers
             if (student == null)
                 return HttpNotFound();
 
-            var logs = _context.Logs.Where(l => l.Student == currentUser).OrderByDescending(x => x.Date).ToList();
+            var logs = _context.Logs.Where(l => l.StudentId == currentUser).OrderByDescending(x => x.Date).ToList();
 
-            var results = _context.Results.Where(r => r.Student == currentUser && r.ResultSet1.IsCurrent)
+            var results = _context.Results.Where(r => r.StudentId == currentUser && r.ResultSet.IsCurrent)
                 .ToList();
 
-            var upperSchool = student.YearGroup == 11 || student.YearGroup == 10;
+            var upperSchool = student.YearGroupId == 11 || student.YearGroupId == 10;
 
             var chartData = StaffController.GetChartData(results, upperSchool);
 

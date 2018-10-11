@@ -30,6 +30,7 @@ namespace MyPortal.Controllers.Api
         public IEnumerable<YearGroupDto> GetYearGroups()
         {
             return _context.YearGroups
+                .OrderBy(x => x.Id)
                 .ToList()
                 .Select(Mapper.Map<YearGroup, YearGroupDto>);
         }

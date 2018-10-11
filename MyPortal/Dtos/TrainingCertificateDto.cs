@@ -8,14 +8,14 @@ namespace MyPortal.Dtos
         [Key]
         [Column(Order = 0)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int Course { get; set; }
+        public int CourseId { get; set; }
 
         [Key]
         [Column(Order = 1)]
         [StringLength(3)]
-        public string Staff { get; set; }
+        public int StaffId { get; set; }
 
-        [Required] public int Status { get; set; }
+        [Required] public int StatusId { get; set; }
 
         public TrainingCourseDto TrainingCourse { get; set; }
         public TrainingStatusDto TrainingStatus { get; set; }

@@ -25,16 +25,16 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [Route("api/staff/certificates/fetch/{staff}")]
-        public IEnumerable<TrainingCertificateDto> GetCertificates(string staff)
+        public IEnumerable<TrainingCertificateDto> GetCertificates(int staff)
         {
 
-            var staffInDb = _context.Staff.Single(x => x.Code == staff);
+            var staffInDb = _context.Staff.Single(x => x.Id == staff);
 
             if (staffInDb == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
             return _context.TrainingCertificates
-                .Where(c => c.Staff == staff)
+                .Where(c => c.StaffId == staff)
                 .ToList()
                 .Select(Mapper.Map<TrainingCertificate, TrainingCertificateDto>);
         }
@@ -58,12 +58,12 @@ namespace MyPortal.Controllers.Api
         [Route("api/staff/certificates/update")]
         public IHttpActionResult UpdateCertificate(TrainingCertificateDto data)
         {
-            var certInDb = _context.TrainingCertificates.Single(x => x.Staff == data.Staff && x.Course == data.Course);
+            var certInDb = _context.TrainingCertificates.Single(x => x.StaffId == data.StaffId && x.CourseId == data.CourseId);
 
             if (certInDb == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            certInDb.Status = data.Status;
+            certInDb.StatusId = data.StatusId;
 
             _context.SaveChanges();
 
@@ -72,9 +72,9 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [Route("api/staff/certificates/delete/{staff}/{course}")]
-        public IHttpActionResult DeleteCertificate(string staff, int course)
+        public IHttpActionResult DeleteCertificate(int staff, int course)
         {
-            var certInDb = _context.TrainingCertificates.SingleOrDefault(l => l.Staff == staff && l.Course == course);
+            var certInDb = _context.TrainingCertificates.SingleOrDefault(l => l.StaffId == staff && l.CourseId == course);
 
             if (certInDb == null)
                 return Content(HttpStatusCode.NotFound, "Certificate not found");

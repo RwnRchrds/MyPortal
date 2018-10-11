@@ -5,8 +5,7 @@ namespace MyPortal.Dtos
 {
     public class StaffDto
     {
-        [StringLength(3)] 
-        public string Id { get; set; }
+        public int Id { get; set; }
         
         [Required] 
         public string Code { get; set; }    
@@ -23,5 +22,17 @@ namespace MyPortal.Dtos
         [StringLength(255)]
         [DisplayName("Last Name")]
         public string LastName { get; set; }
+
+        [StringLength(255)]
+        [Display(Name = "Job Title")]
+        public string JobTitle { get; set; }
+
+        [StringLength(320)]
+        [Display(Name = "Email Address")]
+        public string Email { get; set; }
+
+        [StringLength(128)]
+        [Display(Name = "User ID")]
+        public string UserId { get; set; }
     }
 }

@@ -3,9 +3,9 @@
     public class StaffDocumentDto
     {
         public int Id { get; set; }
-        public string Staff { get; set; }
-        public int Document { get; set; }
-        public DocumentDto Document1 { get; set; }
-        public StaffDto Staff1 { get; set; }
+        public int StaffId { get; set; }
+        public int DocumentId { get; set; }
+        public DocumentDto Document { get; set; }
+        public StaffDto Staff { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿@{
+﻿@model MyPortal.ViewModels.SalesViewModel
+@{
     ViewBag.Title = "Sales";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
@@ -9,12 +10,23 @@
 </div>
 
 <div class="container float-left">
+    <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal">Sale Entry</button>
+    <hr />
+</div>
+
+<div class="container float-left">
+    @Html.Label("View Sales")
+    @Html.DropDownList("SelectedStatus", new SelectList(Model.Status, "Pending Only"), new { @class = "form-control", Name = "SaleStatus", id = "selectedStatus" })
+</div>
+
+<div class="container float-left mp-margin-top">
     <table class="table table-bordered table-hover mp-table" id="sales">
         <thead>
         <tr>
             <th>Date</th>
             <th>Student</th>
             <th>Product</th>
+            <th>Status</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -27,9 +39,18 @@
     <script>
         $(document).ready(function() {
 
+            function loadSales() {
+                var status = $("#selectedStatus").val();
+
+            var url = "/api/sales";
+
+            if (status === "All") {
+                url = "/api/sales/all";
+            }
+
             $("#sales").DataTable({
                 ajax: {
-                    url: "/api/sales",
+                    url: url,
                     dataSrc: ""
                 },
                 columns: [
@@ -50,11 +71,21 @@
                         data: "product1.description"
                     },
                     {
+                        data: "processed",
+                        render: function(data) {
+                            if (data === true) {return "Processed"}
+                            if (data === false) {return "Pending"}
+                        }
+                    },
+                    {
                         data: "id",
                         render: function(data) {
                             return "<button type='button' class='btn btn-xs btn-warning js-refund' data-sale-id=" +
                                 data +
                                 "><i class=\"fas fa-reply\"></i></button> " +
+                                "<button type='button' class='btn btn-xs btn-success js-complete' data-sale-id=" +
+                                data +
+                                "><i class=\"fas fa-check\"></i></button>" +
                                 "<button type='button' class='btn btn-xs btn-danger js-delete' data-sale-id=" +
                                 data +
                                 "><i class=\"far fa-trash-alt\"></i></button>";
@@ -66,6 +97,15 @@
                 }
 
             });
+            }
+
+            loadSales();
+
+            $("#selectedStatus").on("change",
+                function() {
+                    $("#sales").DataTable().destroy();
+                    loadSales();
+                });
 
             //Delete Sale When Button Clicked
             $("#sales").on("click",
@@ -84,6 +124,29 @@
                                     },
                                     error: function() {
                                         toastr.error("Could not delete sale");
+                                    }
+                                });
+                            }
+                        });
+                });
+
+            //Mark Sale Processed When Button Clicked
+            $("#sales").on("click",
+                ".js-complete",
+                function() {
+                    var button = $(this);
+                    bootbox.confirm("Are you sure you wish to mark this sale as processed?",
+                        function(result) {
+                            if (result) {
+                                $.ajax({
+                                    url: "/api/sales/complete/" + button.attr("data-sale-id"),
+                                    method: "POST",
+                                    success: function(a) {
+                                        $("#sales").DataTable().ajax.reload();
+                                        toastr.success(a);
+                                    },
+                                    error: function(e) {
+                                        toastr.error(e.responseJSON);
                                     }
                                 });
                             }

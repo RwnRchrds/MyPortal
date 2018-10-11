@@ -8,11 +8,11 @@ namespace MyPortal.Dtos
     {
         public int Id { get; set; }
 
-        public int Type { get; set; }
+        public int TypeId { get; set; }
 
-        [Required] [StringLength(3)] public string Author { get; set; }
+        public int AuthorId { get; set; }
 
-        public int Student { get; set; }
+        public int StudentId { get; set; }
 
         [Required] [StringLength(4000)] public string Message { get; set; }
 
@@ -22,6 +22,6 @@ namespace MyPortal.Dtos
 
         public StaffDto Staff { get; set; }
 
-        public StudentDto Student1 { get; set; }
+        public StudentDto Student { get; set; }
     }
 }

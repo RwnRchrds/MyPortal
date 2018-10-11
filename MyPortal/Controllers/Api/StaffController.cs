@@ -62,7 +62,7 @@ namespace MyPortal.Controllers.Api
 
             _context.SaveChanges();
 
-            staffDto.Id = staff.Code;
+            staffDto.Id = staff.Id;
 
             return Ok("Staff member added");
         }
@@ -71,7 +71,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/staff/edit")]
         public IHttpActionResult EditStaff(StaffDto data)
         {
-            var staffInDb = _context.Staff.SingleOrDefault(x => x.Code == data.Id);
+            var staffInDb = _context.Staff.SingleOrDefault(x => x.Id == data.Id);
 
             if (_context.Staff.Any(x => x.Code == data.Code))
                 return Content(HttpStatusCode.BadRequest, "Staff code has already been used");
@@ -92,31 +92,31 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [Route("api/staff/delete/{staffCode}")]
-        public IHttpActionResult DeleteStaff(string staffCode)
-        {
-            if (staffCode == User.Identity.GetUserId())
-                return Content(HttpStatusCode.BadRequest, "Cannot delete current user");
-
-            if (_context.Subjects.Any(x => x.Leader == staffCode))
+        public IHttpActionResult DeleteStaff(int staffId)
+        {                
+            if (_context.Subjects.Any(x => x.LeaderId == staffId))
                 return Content(HttpStatusCode.BadRequest, "Staff member is leader of subject");
 
-            if (_context.YearGroups.Any(x => x.Head == staffCode))
+            if (_context.YearGroups.Any(x => x.HeadId == staffId))
                 return Content(HttpStatusCode.BadRequest,"Staff member is head of year");
 
-            var staffInDb = _context.Staff.Single(x => x.Code == staffCode);
+            var staffInDb = _context.Staff.Single(x => x.Id == staffId);
 
             if (staffInDb == null)
                 return Content(HttpStatusCode.NotFound, "Staff member not found");
 
-            var ownedLogs = _context.Logs.Where(x => x.Author == staffCode);
+            if (staffInDb.UserId == User.Identity.GetUserId())
+                return Content(HttpStatusCode.BadRequest, "Cannot delete current user");
 
-            var ownedCertificates = _context.TrainingCertificates.Where(x => x.Staff == staffCode);
+            var ownedLogs = _context.Logs.Where(x => x.AuthorId == staffId);
 
-            var ownedObservations = _context.StaffObservations.Where(x => x.Observee == staffCode);
+            var ownedCertificates = _context.TrainingCertificates.Where(x => x.StaffId == staffId);
 
-            var ownedObservationsAsObserver = _context.StaffObservations.Where(x => x.Observer == staffCode);
+            var ownedObservations = _context.StaffObservations.Where(x => x.ObserveeId == staffId);
 
-            var ownedDocuments = _context.StaffDocuments.Where(x => x.Staff == staffCode);
+            var ownedObservationsAsObserver = _context.StaffObservations.Where(x => x.ObserverId == staffId);
+
+            var ownedDocuments = _context.StaffDocuments.Where(x => x.StaffId == staffId);
 
             _context.Logs.RemoveRange(ownedLogs);
             _context.TrainingCertificates.RemoveRange(ownedCertificates);
@@ -125,7 +125,7 @@ namespace MyPortal.Controllers.Api
 
             foreach (var document in ownedDocuments)
             {
-                var attachment = document.Document1;
+                var attachment = document.Document;
 
                 _context.StaffDocuments.Remove(document);
                 _context.Documents.Remove(attachment);
@@ -141,15 +141,15 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [Route("api/staff/documents/fetch/{staffId}")]
-        public IEnumerable<StaffDocumentDto> GetDocuments(string staffId)
+        public IEnumerable<StaffDocumentDto> GetDocuments(int staffId)
         {
-            var staff = _context.Staff.SingleOrDefault(s => s.Code == staffId);
+            var staff = _context.Staff.SingleOrDefault(s => s.Id == staffId);
 
             if (staff == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
             var documents = _context.StaffDocuments
-                .Where(x => x.Staff == staffId)
+                .Where(x => x.StaffId == staffId)
                 .ToList()
                 .Select(Mapper.Map<StaffDocument, StaffDocumentDto>);
 
@@ -160,7 +160,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/staff/documents/add")]
         public IHttpActionResult AddDocument(StaffDocumentUpload data)
         {
-            var staff = _context.Staff.SingleOrDefault(x => x.Code == data.StaffId);
+            var staff = _context.Staff.SingleOrDefault(x => x.Id == data.StaffId);
 
             if (staff == null)
                 return Content(HttpStatusCode.NotFound, "Staff not found");
@@ -184,8 +184,8 @@ namespace MyPortal.Controllers.Api
 
             var staffDocument = new StaffDocument()
             {
-                Document = document.Id,
-                Staff = data.StaffId
+                DocumentId = document.Id,
+                StaffId = data.StaffId
             };
 
             _context.StaffDocuments.Add(staffDocument);
@@ -203,7 +203,7 @@ namespace MyPortal.Controllers.Api
             if (staffDocument == null)
                 return Content(HttpStatusCode.NotFound, "Document not found");
 
-            var attachedDocument = staffDocument.Document1;
+            var attachedDocument = staffDocument.Document;
 
             if (attachedDocument == null)
                 return Content(HttpStatusCode.BadRequest, "No document attached");
@@ -248,15 +248,15 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [Route("api/staff/observations/fetch/{staffId}")]
-        public IEnumerable<StaffObservationDto> GetObservations(string staffId)
+        public IEnumerable<StaffObservationDto> GetObservations(int staffId)
         {
-            var staff = _context.Staff.Single(x => x.Code == staffId);
+            var staff = _context.Staff.Single(x => x.Id == staffId);
 
             if (staff == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
             var observations = _context.StaffObservations
-                .Where(x => x.Observee == staffId)
+                .Where(x => x.ObserveeId == staffId)
                 .ToList()
                 .Select(Mapper.Map<StaffObservation, StaffObservationDto>);
 
@@ -273,9 +273,9 @@ namespace MyPortal.Controllers.Api
             if (!ModelState.IsValid)
                 return Content(HttpStatusCode.BadRequest, "Invalid data");
             
-            var observee = _context.Staff.Single(x => x.Code == data.Observee);
+            var observee = _context.Staff.Single(x => x.Id == data.ObserveeId);
 
-            var observer = _context.Staff.Single(x => x.Code == data.Observer);
+            var observer = _context.Staff.Single(x => x.Id == data.ObserverId);
 
             if (observee == null || observer == null)
                 return Content(HttpStatusCode.NotFound, "Staff member not found");
