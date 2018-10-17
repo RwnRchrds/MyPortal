@@ -16,9 +16,9 @@ namespace MyPortal.Dtos
         [Display(Name = "Email Address")]
         public string Email { get; set; }
 
-        [Required] [StringLength(3)] public int RegGroupId { get; set; }
+        [Required] public int RegGroupId { get; set; }
 
-        [Required] [StringLength(50)] public int YearGroupId { get; set; }
+        [Required] public int YearGroupId { get; set; }
 
         [StringLength(10)]
         [Display(Name = "Candidate Number")]

@@ -232,6 +232,8 @@
     <Compile Include="Controllers\StudentsController.cs" />
     <Compile Include="Dtos\BasketItemDto.cs" />
     <Compile Include="Dtos\DocumentDto.cs" />
+    <Compile Include="Dtos\GradeDto.cs" />
+    <Compile Include="Dtos\GradeSetDto.cs" />
     <Compile Include="Dtos\Identity\RoleDto.cs" />
     <Compile Include="Dtos\Identity\UserDto.cs" />
     <Compile Include="Dtos\LogDto.cs" />
@@ -261,6 +263,8 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\BasketItem.cs" />
     <Compile Include="Models\Document.cs" />
+    <Compile Include="Models\Grade.cs" />
+    <Compile Include="Models\GradeSet.cs" />
     <Compile Include="Models\Log.cs" />
     <Compile Include="Models\LogType.cs" />
     <Compile Include="Models\Misc\BalanceAdjustment.cs" />

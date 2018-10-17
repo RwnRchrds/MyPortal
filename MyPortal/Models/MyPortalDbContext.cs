@@ -14,6 +14,8 @@ namespace MyPortal.Models
 
         public virtual DbSet<BasketItem> BasketItems { get; set; }
         public virtual DbSet<Document> Documents { get; set; }
+        public virtual DbSet<Grade> Grades { get; set; }
+        public virtual DbSet<GradeSet> GradeSets { get; set; }
         public virtual DbSet<Log> Logs { get; set; }
         public virtual DbSet<LogType> LogTypes { get; set; }
         public virtual DbSet<Product> Products { get; set; }
@@ -45,6 +47,19 @@ namespace MyPortal.Models
             modelBuilder.Entity<Document>()
                 .HasMany(e => e.StaffDocuments)
                 .WithRequired(e => e.Document)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Grade>()
+                .Property(e => e.GradeValue)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<GradeSet>()
+                .Property(e => e.Name)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<GradeSet>()
+                .HasMany(e => e.Grades)
+                .WithRequired(e => e.GradeSet)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<LogType>()

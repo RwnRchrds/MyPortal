@@ -122,14 +122,14 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.LabelFor(l => l.TrainingCertificate.CourseId)
-                        @Html.DropDownListFor(l => l.TrainingCertificate.CourseId, new SelectList(Model.TrainingCourses, "Id", "Description"), "Select Course", new {@class = "form-control", Name="Course"})
+                        @Html.DropDownListFor(l => l.TrainingCertificate.CourseId, new SelectList(Model.TrainingCourses, "Id", "Description"), "Select Course", new {@class = "form-control", Name="CourseId"})
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(l => l.TrainingCertificate.StatusId)
-                        @Html.DropDownListFor(l => l.TrainingCertificate.StatusId, new SelectList(Model.TrainingStatuses, "Id", "Name"), "Select Status", new {@class = "form-control", Name="Status"})
+                        @Html.DropDownListFor(l => l.TrainingCertificate.StatusId, new SelectList(Model.TrainingStatuses, "Id", "Name"), "Select Status", new {@class = "form-control", Name="StatusId"})
                     </div>
                     <div class="form-group">
-                        @Html.HiddenFor(l => l.TrainingCertificate.StaffId, new {Value = Model.Staff.Code, Name="Staff"})
+                        @Html.HiddenFor(l => l.TrainingCertificate.StaffId, new {Value = Model.Staff.Id, Name="StaffId"})
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -166,7 +166,7 @@
                         @Html.ValidationMessageFor(x => x.Upload.Document.Url)
                     </div>
                     <div class="form-group">
-                        @Html.HiddenFor(x => x.Upload.StaffId, new {@class = "form-control", Value = Model.Staff.Code, Name = "StaffId"})
+                        @Html.HiddenFor(x => x.Upload.StaffId, new {@class = "form-control", Value = Model.Staff.Id, Name = "StaffId"})
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -249,18 +249,18 @@
                 },
                 columns: [
                     {
-                        data: "document1.description",
+                        data: "document.description",
                         render: function(data, type, document) {
                             return "<a href='" +
-                                document.document1.url +
+                                document.document.url +
                                 "' target='_blank'>" +
-                                document.document1.description +
+                                document.document.description +
                                 "</a>";
                         }
 
                     },
                     {
-                        data: "document1.date",
+                        data: "document.date",
                         render: function(data) {
                             var date = new Date(data);
                             return date.toLocaleDateString();
@@ -305,7 +305,7 @@
                         data: "trainingStatus.name"
                     },
                     {
-                        data: "course",
+                        data: "courseId",
                         render: function(data) {
                             return "<button type='button' class='btn btn-xs btn-warning js-edit' data-course-id=" +
                                 data +

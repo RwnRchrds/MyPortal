@@ -69,6 +69,12 @@ namespace MyPortal.App_Start
 
             CreateMap<StaffDocumentDto, StaffDocument>();
             CreateMap<StaffDocument, StaffDocumentDto>();
+
+            CreateMap<GradeSetDto, GradeSet>();
+            CreateMap<GradeSet, GradeSetDto>();
+
+            CreateMap<GradeDto, Grade>();
+            CreateMap<Grade, GradeDto>();
         }
     }
 }

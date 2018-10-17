@@ -12,7 +12,6 @@ namespace MyPortal.Dtos
 
         [Key]
         [Column(Order = 1)]
-        [StringLength(3)]
         public int StaffId { get; set; }
 
         [Required] public int StatusId { get; set; }
