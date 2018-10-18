@@ -35,44 +35,16 @@ namespace MyPortal.Controllers
         {
             if (User.IsInRole("SeniorStaff") || User.IsInRole("Staff"))
             {
-                var userId = User.Identity.GetUserId();
-                var userProfile = _context.Staff.Single(x => x.UserId == userId);
-
-                return userProfile == null ? RedirectToAction("NoProfile", "Home") : RedirectToAction("Index", "Staff");
+                RedirectToAction("Index", "Staff");
             }
 
             if (User.IsInRole("Student"))
             {
-                var userId = User.Identity.GetUserId();
-                var userProfile = _context.Students.Single(x => x.UserId == userId);
-
-                return userProfile == null ? RedirectToAction("NoProfile", "Home") : RedirectToAction("Index", "Staff");
+                RedirectToAction("Index", "Students");
             }
 
             return RedirectToAction("Login", "Account");
         }
 
-        [Authorize]
-        [Route("User/NoProfile")]
-        public ActionResult NoProfile()
-        {
-            if (User.IsInRole("SeniorStaff") || User.IsInRole("Staff"))
-            {
-                var userId = User.Identity.GetUserId();
-                var userProfile = _context.Staff.Single(x => x.UserId == userId);
-
-                return userProfile == null ? RedirectToAction("NoProfile", "Home") : RedirectToAction("Index", "Staff");
-            }
-
-            if (User.IsInRole("Student"))
-            {
-                var userId = User.Identity.GetUserId();
-                var userProfile = _context.Students.Single(x => x.UserId == userId);
-
-                return userProfile == null ? RedirectToAction("NoProfile", "Home") : RedirectToAction("Index", "Staff");
-            }
-
-            return View();
-        }
     }
 }

@@ -1,0 +1,16 @@
+﻿@using Microsoft.AspNet.Identity
+
+@{
+    ViewBag.Title = "NoProfileIndex";
+    Layout = "~/Views/Shared/_LayoutStaff.cshtml";
+}
+
+<div class="container float-left">
+    <h2 class="mp-page-title">User: @User.Identity.GetUserId()</h2>
+    <hr />
+</div>
+
+<div class="container float-left">
+    <p class="text-primary">Your user account has no personal profile associated. Please see IT support to attach your profile to see personalised information here.</p>
+</div>
+

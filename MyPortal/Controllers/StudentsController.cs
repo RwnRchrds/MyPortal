@@ -34,7 +34,7 @@ namespace MyPortal.Controllers
             var student = _context.Students.SingleOrDefault(s => s.Id == currentUser);
 
             if (student == null)
-                return HttpNotFound();
+                return View("~/Views/Students/NoProfileIndex.cshtml");
 
             var logs = _context.Logs.Where(l => l.StudentId == currentUser).OrderByDescending(x => x.Date).ToList();
 

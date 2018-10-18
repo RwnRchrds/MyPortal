@@ -31,6 +31,9 @@ namespace MyPortal.Controllers
 
             var staff = _context.Staff.SingleOrDefault(s => s.Code == staffId);
 
+            if (staff == null)
+                return View("~/Views/Staff/NoProfileIndex.cshtml");
+
             var viewModel = new StaffHomeViewModel
             {
                 CurrentUser = staff
