@@ -29,21 +29,19 @@ namespace MyPortal.Controllers
         // Student Landing Page
         public ActionResult Index()
         {
-            var currentUser = int.Parse(User.Identity.GetUserId());
+            var userId = User.Identity.GetUserId();
 
-            var student = _context.Students.SingleOrDefault(s => s.Id == currentUser);
+            var student = _context.Students.SingleOrDefault(s => s.UserId == userId);
 
             if (student == null)
                 return View("~/Views/Students/NoProfileIndex.cshtml");
 
-            var logs = _context.Logs.Where(l => l.StudentId == currentUser).OrderByDescending(x => x.Date).ToList();
+            var logs = _context.Logs.Where(l => l.StudentId == student.Id).OrderByDescending(x => x.Date).ToList();
 
-            var results = _context.Results.Where(r => r.StudentId == currentUser && r.ResultSet.IsCurrent)
+            var results = _context.Results.Where(r => r.StudentId == student.Id && r.ResultSet.IsCurrent)
                 .ToList();
 
             var upperSchool = student.YearGroupId == 11 || student.YearGroupId == 10;
-
-            var chartData = StaffController.GetChartData(results, upperSchool);
 
             var viewModel = new StudentDetailsViewModel
             {
@@ -51,7 +49,6 @@ namespace MyPortal.Controllers
                 Student = student,
                 Results = results,
                 IsUpperSchool = upperSchool,
-                ChartData = chartData
             };
             return View(viewModel);
         }
@@ -60,16 +57,21 @@ namespace MyPortal.Controllers
         [System.Web.Mvc.Route("Students/Results")]
         public ActionResult Results()
         {
-            var currentUser = int.Parse(User.Identity.GetUserId());
+            var userId = User.Identity.GetUserId();
 
-            var student = _context.Students.SingleOrDefault(s => s.Id == currentUser);
+            var student = _context.Students.SingleOrDefault(s => s.UserId == userId);
 
             if (student == null)
                 return HttpNotFound();
 
             var resultSets = _context.ResultSets.ToList();
 
-            var currentResultSetId = _context.ResultSets.SingleOrDefault(r => r.IsCurrent).Id;
+            var currentResultSet = _context.ResultSets.Single(x => x.IsCurrent);
+
+            if (currentResultSet == null)
+                return Content("No result sets exist in database");
+
+            var currentResultSetId = currentResultSet.Id;
 
             var viewModel = new StudentResultsViewModel
             {
@@ -85,9 +87,9 @@ namespace MyPortal.Controllers
         [System.Web.Mvc.Route("Students/Store")]
         public ActionResult Store()
         {
-            var currentUser = int.Parse(User.Identity.GetUserId());
+            var userId = User.Identity.GetUserId();
 
-            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == currentUser);
+            var studentInDb = _context.Students.SingleOrDefault(s => s.UserId == userId);
 
             if (studentInDb == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);

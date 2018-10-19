@@ -162,7 +162,9 @@ namespace MyPortal.Controllers.Api
         {
             var staff = _context.Staff.SingleOrDefault(x => x.Id == data.StaffId);
 
-            var uploader = _context.Staff.SingleOrDefault(x => x.UserId == User.Identity.GetUserId());
+            var uploaderId = User.Identity.GetUserId();
+
+            var uploader = _context.Staff.SingleOrDefault(x => x.UserId == uploaderId);
 
             if (staff == null)
                 return Content(HttpStatusCode.NotFound, "Staff not found");

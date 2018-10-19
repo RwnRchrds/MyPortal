@@ -41,11 +41,14 @@ namespace MyPortal.Controllers
 
         [Route("Staff/Finance/Sales/New")]
         public ActionResult SaleEntry()
-        {
+        {           
+            var products = _context.Products.OrderBy(x => x.Description).ToList();
+
             var viewModel = new SaleEntryViewModel()
             {
-                Products = _context.Products
+                Products = products
             };
+
             return View(viewModel);
         }
         

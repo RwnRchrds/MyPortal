@@ -10,6 +10,5 @@ namespace MyPortal.ViewModels
         public List<Log> Logs { get; set; }
         public IEnumerable<Result> Results { get; set; }
         public bool IsUpperSchool { get; set; }
-        public ChartData ChartData { get; set; }
     }
 }

@@ -84,15 +84,12 @@ namespace MyPortal.Controllers
 
             var upperSchool = student.YearGroupId == 11 || student.YearGroupId == 10;
 
-            var chartData = GetChartData(results, upperSchool);
-
             var viewModel = new StudentDetailsViewModel
             {
                 //Logs = logs,
                 Student = student,
                 Results = results,
                 IsUpperSchool = upperSchool,
-                ChartData = chartData,
                 LogTypes = logTypes,
                 YearGroups = yearGroups,
                 RegGroups = regGroups,
@@ -201,72 +198,6 @@ namespace MyPortal.Controllers
         public ActionResult Documents()
         {
             return View();
-        }
-
-        // Generates chart data for Student Details view
-        public static ChartData GetChartData(List<Result> results, bool upperSchool)
-        {
-            var data = new ChartData
-            {
-                L1 = 0,
-                L2 = 0,
-                L3 = 0,
-                L4 = 0,
-                L5 = 0,
-                L6 = 0,
-                L7 = 0,
-                L8 = 0,
-                L9 = 0
-            };
-
-
-            if (upperSchool)
-                foreach (var result in results)
-                    switch (result.Value)
-                    {
-                        case "A*":
-                            data.L1++;
-                            break;
-                        case "A":
-                            data.L2++;
-                            break;
-                        case "B":
-                            data.L3++;
-                            break;
-                        case "C":
-                            data.L4++;
-                            break;
-                        case "D":
-                            data.L5++;
-                            break;
-                        case "E":
-                            data.L6++;
-                            break;
-                        case "F":
-                            data.L7++;
-                            break;
-                        case "G":
-                            data.L8++;
-                            break;
-                        case "U":
-                            data.L9++;
-                            break;
-                    }
-            else
-                foreach (var result in results)
-                {
-                    if (result.Value.Contains("E")) data.L1++;
-                    if (result.Value.Contains("8")) data.L2++;
-                    if (result.Value.Contains("7")) data.L3++;
-                    if (result.Value.Contains("6")) data.L4++;
-                    if (result.Value.Contains("5")) data.L5++;
-                    if (result.Value.Contains("4")) data.L6++;
-                    if (result.Value.Contains("3")) data.L7++;
-                    if (result.Value.Contains("2")) data.L8++;
-                    if (result.Value.Contains("1")) data.L9++;
-                }
-
-            return data;
         }
 
         // HTTP POST request for saving/creating logs using HTML form 

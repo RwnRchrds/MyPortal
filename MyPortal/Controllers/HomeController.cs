@@ -35,12 +35,12 @@ namespace MyPortal.Controllers
         {
             if (User.IsInRole("SeniorStaff") || User.IsInRole("Staff"))
             {
-                RedirectToAction("Index", "Staff");
+                return RedirectToAction("Index", "Staff");
             }
 
             if (User.IsInRole("Student"))
             {
-                RedirectToAction("Index", "Students");
+                return RedirectToAction("Index", "Students");
             }
 
             return RedirectToAction("Login", "Account");
