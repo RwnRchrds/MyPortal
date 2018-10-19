@@ -10,16 +10,29 @@
         <h2 class="mp-page-title">@Model.User.Id - @Model.User.UserName</h2>
         <hr />
     </div>
-
+    
 <div class="container float-left">
+    
+    <button type="button" class="btn btn-success mp-btn-top-auto" id="AttachPerson" data-toggle="modal" data-target="#AttachPersonModal">
+        <i class="fas fa-user-tag"></i> Attach Profile
+    </button>
+    
+    <button type="button" class="btn btn-danger mp-btn-top-auto" data-user-id="@Model.User.Id" id="DetachPerson">
+        <i class="fas fa-user-times"></i> Detach Profile
+    </button>
+
+</div>
+
+<div class="container float-left mp-margin-top">
 
     <button type="button" class="btn btn-success mp-btn-top-auto" id="AddRole" data-toggle="modal" data-target="#AddRoleModal">
         <i class="fa fa-plus-circle"></i> Add Role
     </button>
-
+    
     <button type="button" class="btn btn-warning mp-btn-top-auto" data-toggle="modal" data-target="#ResetPasswordModal" id="ResetPassword">
         <i class="fas fa-key"></i> Reset Password
     </button>
+
 
     <button type="button" class="btn btn-danger mp-btn-top-auto" data-user-id="@Model.User.Id" id="DeleteUser">
         <i class="fas fa-user-slash"></i> Delete User

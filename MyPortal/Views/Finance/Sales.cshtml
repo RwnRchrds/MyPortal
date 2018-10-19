@@ -10,7 +10,7 @@
 </div>
 
 <div class="container float-left">
-    <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal">Sale Entry</button>
+    <button type="button" class="btn btn-success mp-btn-top-auto" id="newSaleButton">Sale Entry</button>
     <hr />
 </div>
 
@@ -26,6 +26,7 @@
             <th>Date</th>
             <th>Student</th>
             <th>Product</th>
+            <th>Paid</th>
             <th>Status</th>
             <th>Actions</th>
         </tr>
@@ -71,6 +72,10 @@
                         data: "product.description"
                     },
                     {
+                        data: "amountPaid",
+                        render: $.fn.dataTable.render.number(',', '.', 2, '£')
+                    },
+                    {
                         data: "processed",
                         render: function(data) {
                             if (data === true) {return "Processed"}
@@ -105,6 +110,11 @@
                 function() {
                     $("#sales").DataTable().destroy();
                     loadSales();
+                });
+
+            $("#newSaleButton").on("click",
+                function() {
+                    location.replace("/Staff/Finance/Sales/New");
                 });
 
             //Delete Sale When Button Clicked

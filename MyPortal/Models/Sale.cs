@@ -20,6 +20,8 @@ namespace MyPortal.Models
         [Column(TypeName = "date")]
         public DateTime Date { get; set; }
 
+        public decimal AmountPaid { get; set; }
+
         public bool Processed { get; set; }
 
         public virtual Product Product { get; set; }

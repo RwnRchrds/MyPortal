@@ -25,15 +25,17 @@
 
 <div class="container float-left">
     <div class="form-group" id="selectStudentArea">
-        <label>Student</label>
+        <label class="d-none" id="studentLabel">Student</label>
         <select class="form-control disabled d-none" id="studentSelect">
         </select>
     </div>
 </div>
 
 <div class="container float-left">
+    <button type="button" class="btn btn-primary" id="backButton">Back</button>
     <button class="btn btn-success d-none" id="submitButton">Make Sale</button>
 </div>
+
 
 @section scripts
 {
@@ -59,24 +61,27 @@
 
             $("#yearGroupSelect").on("change",
                 function() {
-                    $.ajax({
-                        url: "/api/students/yearGroup/" + $("#yearGroupSelect").val(),
-                        method: "GET",
-                        complete: function(data) {
-                            $("#studentSelect").empty();
-                            $(data.responseJSON).each(function(i, student) {
-                                var divData = "<option value=" +
-                                    data.responseJSON[i].id +
-                                    ">" +
-                                    data.responseJSON[i].lastName + ", " + data.responseJSON[i].firstName + 
-                                    "</option>";
-                                $(divData).appendTo('#studentSelect');
-                            });
-                            $("#studentSelect").val("");
-                        }
-                    });
-                    $("#studentSelect").removeClass("d-none");
-                    $("#studentSelect").removeClass("disabled");
+                    if ($("#yearGroupSelect").val() !== "") {
+                        $.ajax({
+                            url: "/api/students/yearGroup/" + $("#yearGroupSelect").val(),
+                            method: "GET",
+                            complete: function(data) {
+                                $("#studentSelect").empty();
+                                $(data.responseJSON).each(function(i, student) {
+                                    var divData = "<option value=" +
+                                        data.responseJSON[i].id +
+                                        ">" +
+                                        data.responseJSON[i].lastName + ", " + data.responseJSON[i].firstName + 
+                                        "</option>";
+                                    $(divData).appendTo('#studentSelect');
+                                });
+                                $("#studentSelect").val("");
+                            }
+                        });
+                        $("#studentSelect").removeClass("d-none");
+                        $("#studentSelect").removeClass("disabled");
+                        $("#studentLabel").removeClass("d-none");
+                    }
                 });
 
             $("#productSelect").on("change",
@@ -92,17 +97,20 @@
 
             $("#studentSelect").on("change",
                 function() {
+                    if ($("#studentSelect").val() !== "")
                     $("#submitButton").removeClass("d-none");
                 });
 
-            function makeSale() {
-                var student = $("#studentSelect").val();
-                var product = $("#productSelect").val();
+            $("#backButton").on("click",
+                function() {
+                    location.replace("/Staff/Finance/Sales");
+                });
 
+            function makeSale() {
                 $.ajax({
                     url: "/api/sales/new",
                     method: "POST",
-                    data: JSON.stringify({ Student: student, Product: product }),
+                    data: ({ studentId: $("#studentSelect").val(), productId: $("#productSelect").val() }),
                     success: function(e) {
                         toastr.success(e);
                     },
@@ -112,26 +120,42 @@
                 });
             }
 
+            function resetForm() {
+                $("#studentSelect").val("");
+                $("#studentLabel").addClass("d-none");
+                $("#studentSelect").addClass("d-none");
+                $("#studentSelect").addClass("disabled");
+                $("#submitButton").addClass("d-none");
+                $("#yearGroupSelect").val("");
+            }
+
             $("#submitButton").on("click",
-                function() {
+                function() {                    
                     $.ajax({
                         url: "/api/sales/query",
                         method: "POST",
-                        data: JSON.stringify({ Student: $("#studentSelect").val(), Product: $("#productSelect").val() }),
+                        data: ({ studentId: $("#studentSelect").val(), productId: $("#productSelect").val() }),
                         success: function(data) {
                             if (!data) {
-                                bootbox.confirm("Student has insufficient funds. Do you wish to proceed with the sale?"),
+                                bootbox.confirm("Student has insufficient funds. Do you wish to proceed with the sale?",
                                     function(result) {
-                                        makeSale();
-                                    }
+                                        if (result) {
+                                            makeSale();
+                                            resetForm();
+                                        } else {
+                                            resetForm();
+                                        }
+                                    });
                             }
 
                             if (data) {
                                 makeSale();
+                                resetForm();
                             }
                         },
                         error: function(e) {
                             toastr.error(e.responseJSON);
+                            resetForm();
                         }
                     });
                 });

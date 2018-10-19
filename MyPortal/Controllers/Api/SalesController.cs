@@ -84,7 +84,7 @@ namespace MyPortal.Controllers.Api
             if (saleInDb == null)
                 return Content(HttpStatusCode.NotFound, "Sale not found");
 
-            var amount = saleInDb.Product.Price;
+            var amount = saleInDb.AmountPaid;
 
             var student = saleInDb.Student;
 
@@ -153,7 +153,10 @@ namespace MyPortal.Controllers.Api
 
             student.AccountBalance -= product.Price;
 
+            sale.AmountPaid = product.Price;
+
             _context.Sales.Add(Mapper.Map<SaleDto, Sale>(sale));
+            _context.SaveChanges();
 
             return Ok("Sale completed");
         }
@@ -172,6 +175,8 @@ namespace MyPortal.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.BadRequest);*/
 
             student.AccountBalance -= product.Price;
+
+            sale.AmountPaid = product.Price;
 
             _context.Sales.Add(Mapper.Map<SaleDto, Sale>(sale));
         }

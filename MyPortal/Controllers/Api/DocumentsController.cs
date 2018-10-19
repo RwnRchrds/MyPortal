@@ -76,9 +76,9 @@ namespace MyPortal.Controllers.Api
 
             var currentUserId = User.Identity.GetUserId();
 
-            var userProfile = _context.Staff.Single(x => x.UserId == currentUserId);
+            var uploader = _context.Staff.Single(x => x.UserId == currentUserId);
 
-            document.UploaderId = userProfile.Id;
+            document.UploaderId = uploader.Id;
             
             document.IsGeneral = true;
 

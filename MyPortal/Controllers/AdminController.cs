@@ -55,7 +55,7 @@ namespace MyPortal.Controllers
 
             var userRoles = _userManager.GetRolesAsync(id).Result;
 
-            var roles = _identity.Roles.ToList();
+            var roles = _identity.Roles.Where(x => x.Name!= "Student" || x.Name!= "Staff").ToList();
 
             var viewModel = new UserDetailsViewModel
             {

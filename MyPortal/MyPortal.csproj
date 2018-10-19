@@ -277,6 +277,7 @@
     <Compile Include="Models\Misc\ShoppingBasket.cs" />
     <Compile Include="Models\Misc\StaffDocumentUpload.cs" />
     <Compile Include="Models\Misc\StudentDocumentUpload.cs" />
+    <Compile Include="Models\Misc\UserProfile.cs" />
     <Compile Include="Models\Misc\UserRoleModel.cs" />
     <Compile Include="Models\MyPortalDbContext.cs" />
     <Compile Include="Models\Product.cs" />

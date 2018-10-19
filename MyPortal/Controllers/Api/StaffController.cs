@@ -162,8 +162,13 @@ namespace MyPortal.Controllers.Api
         {
             var staff = _context.Staff.SingleOrDefault(x => x.Id == data.StaffId);
 
+            var uploader = _context.Staff.SingleOrDefault(x => x.UserId == User.Identity.GetUserId());
+
             if (staff == null)
                 return Content(HttpStatusCode.NotFound, "Staff not found");
+
+            if (uploader == null)
+                return Content(HttpStatusCode.BadRequest, "Uploader not found");
 
             var document = data.Document;
 
@@ -172,6 +177,8 @@ namespace MyPortal.Controllers.Api
             document.Approved = true;
 
             document.Date = DateTime.Now;
+
+            document.UploaderId = uploader.Id;
 
             var isUriValid = Uri.TryCreate(document.Url, UriKind.Absolute, out var uriResult)
                              && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
