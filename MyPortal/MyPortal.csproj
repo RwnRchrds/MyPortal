@@ -312,6 +312,7 @@
     <Compile Include="ViewModels\StudentDetailsViewModel.cs" />
     <Compile Include="ViewModels\StudentHomeViewModel.cs" />
     <Compile Include="ViewModels\StudentResultsViewModel.cs" />
+    <Compile Include="ViewModels\StudentSalesHistoryViewModel.cs" />
     <Compile Include="ViewModels\StudentStoreViewModel.cs" />
     <Compile Include="ViewModels\UserDetailsViewModel.cs" />
   </ItemGroup>
@@ -716,6 +717,7 @@
     <Content Include="Views\Finance\SaleEntry.cshtml" />
     <Content Include="Views\Staff\NoProfileIndex.cshtml" />
     <Content Include="Views\Students\NoProfileIndex.cshtml" />
+    <Content Include="Views\Students\SalesHistory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

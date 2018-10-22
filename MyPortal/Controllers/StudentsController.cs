@@ -101,5 +101,24 @@ namespace MyPortal.Controllers
 
             return View(viewModel);
         }
+
+        //Sales History
+        [System.Web.Mvc.Route("Students/SalesHistory")]
+        public ActionResult SalesHistory()
+        {
+            var userId = User.Identity.GetUserId();
+
+            var studentInDb = _context.Students.SingleOrDefault(s => s.UserId == userId);
+
+            if (studentInDb == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            var viewModel = new StudentSalesHistoryViewModel
+            {
+                Student = studentInDb
+            };
+
+            return View(viewModel);
+        }
     }
 }

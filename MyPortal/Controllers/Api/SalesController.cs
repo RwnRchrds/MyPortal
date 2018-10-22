@@ -48,6 +48,18 @@ namespace MyPortal.Controllers.Api
                 .Select(Mapper.Map<Sale, SaleDto>);
         }
 
+        //GET SALE FOR STUDENT
+        [HttpGet]
+        [Route("api/sales/student")]
+        public IEnumerable<SaleDto> GetSalesForStudent(int studentId)
+        {
+            return _context.Sales
+                .Where(x => x.StudentId == studentId)
+                .OrderByDescending(x => x.Date)
+                .ToList()
+                .Select(Mapper.Map<Sale, SaleDto>);
+        }
+
         //GET UNPROCESSED SALES
         [HttpGet]
         [Route("api/sales/pending")]
