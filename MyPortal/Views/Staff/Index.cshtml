@@ -1,6 +1,6 @@
 ﻿@model MyPortal.ViewModels.StaffHomeViewModel
 @{
-    ViewBag.Title = "Home";
+    ViewBag.Title = "Home: " + @Model.CurrentUser.Title + " " + Model.CurrentUser.FirstName.Substring(0, 1) + " " + Model.CurrentUser.LastName;
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 

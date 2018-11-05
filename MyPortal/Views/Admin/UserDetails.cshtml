@@ -1,6 +1,6 @@
 ﻿@model MyPortal.ViewModels.UserDetailsViewModel
 @{
-    ViewBag.Title = "UserDetails";
+    ViewBag.Title = "User Details: " + @Model.User.UserName;
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
