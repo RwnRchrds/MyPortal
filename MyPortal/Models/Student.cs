@@ -32,6 +32,7 @@ namespace MyPortal.Models
         public string LastName { get; set; }
 
         [StringLength(320)]
+        [EmailAddress]
         [Display(Name = "Email Address")]
         public string Email { get; set; }
 

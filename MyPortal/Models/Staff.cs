@@ -49,6 +49,7 @@ namespace MyPortal.Models
         public string JobTitle { get; set; }
 
         [StringLength(320)]
+        [EmailAddress]
         [Display(Name = "Email Address")]
         public string Email { get; set; }
 
