@@ -31,6 +31,7 @@ namespace MyPortal.Controllers.Api
         public IEnumerable<StaffDto> GetStaff()
         {
             return _context.Staff
+                .OrderBy(x => x.LastName)
                 .ToList()
                 .Select(Mapper.Map<Staff, StaffDto>);
         }
@@ -91,7 +92,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpDelete]
-        [Route("api/staff/delete/{staffCode}")]
+        [Route("api/staff/delete/{staffId}")]
         public IHttpActionResult DeleteStaff(int staffId)
         {                
             if (_context.Subjects.Any(x => x.LeaderId == staffId))

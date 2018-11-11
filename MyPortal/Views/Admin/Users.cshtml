@@ -21,7 +21,6 @@
     <table class="table table-bordered table-hover mp-table mp-table-link" id="users">
         <thead>
         <tr>
-            <th>ID</th>
             <th>Username</th>
         </tr>
         </thead>
@@ -42,13 +41,10 @@
                 },
                 columns: [
                     {
-                        data: "id",
-                        render: function(data, type, user) {
-                            return "<a href='/Staff/Admin/Users/" + user.id + "'>" + user.id + "</a>";
+                        data: "userName",
+                        render: function (data, type, user) {
+                            return "<a href='/Staff/Admin/Users/" + user.id + "'>" + user.userName + "</a>";
                         }
-                    },
-                    {
-                        data: "userName"
                     }
                 ]
 

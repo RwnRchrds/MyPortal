@@ -53,7 +53,12 @@ namespace MyPortal.Controllers.Api
         {
             var currentUserId = User.Identity.GetUserId();
 
-            var userProfile = _context.Staff.Single(x => x.UserId == currentUserId);           
+            var userProfile = _context.Staff.SingleOrDefault(x => x.UserId == currentUserId);
+
+            if (userProfile == null)
+            {
+                return Content(HttpStatusCode.BadRequest, "User does not have a profile");
+            }
 
             data.AuthorId = userProfile.Id;
 

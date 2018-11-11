@@ -27,9 +27,9 @@ namespace MyPortal.Controllers
         // Staff Landing Page
         public ActionResult Index()
         {
-            var staffId = User.Identity.GetUserId();
+            var userId = User.Identity.GetUserId();
 
-            var staff = _context.Staff.SingleOrDefault(s => s.Code == staffId);
+            var staff = _context.Staff.SingleOrDefault(s => s.UserId == userId);
 
             if (staff == null)
                 return View("~/Views/Staff/NoProfileIndex.cshtml");

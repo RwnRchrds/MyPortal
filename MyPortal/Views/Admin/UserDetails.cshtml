@@ -1,22 +1,22 @@
 ﻿@model MyPortal.ViewModels.UserDetailsViewModel
 @{
-    ViewBag.Title = "User Details: " + @Model.User.UserName;
+    ViewBag.Title = "User Details: " + Model.User.UserName;
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
 <body>
 
-    <div class="container float-left">
-        <h2 class="mp-page-title">@Model.User.Id - @Model.User.UserName</h2>
-        <hr />
-    </div>
-    
 <div class="container float-left">
-    
-    <button type="button" class="btn btn-success mp-btn-top-auto" id="AttachPerson" data-toggle="modal" data-target="#AttachPersonModal">
+    <h2 class="mp-page-title">@Model.User.UserName</h2>
+    <hr/>
+</div>
+
+<div class="container float-left">
+
+    <button type="button" class="btn btn-success mp-btn-top-auto" data-user-id="@Model.User.Id" id="AttachPerson" data-toggle="modal" data-target="#AttachPersonModal">
         <i class="fas fa-user-tag"></i> Attach Profile
     </button>
-    
+
     <button type="button" class="btn btn-danger mp-btn-top-auto" data-user-id="@Model.User.Id" id="DetachPerson">
         <i class="fas fa-user-times"></i> Detach Profile
     </button>
@@ -28,7 +28,7 @@
     <button type="button" class="btn btn-success mp-btn-top-auto" id="AddRole" data-toggle="modal" data-target="#AddRoleModal">
         <i class="fa fa-plus-circle"></i> Add Role
     </button>
-    
+
     <button type="button" class="btn btn-warning mp-btn-top-auto" data-toggle="modal" data-target="#ResetPasswordModal" id="ResetPassword">
         <i class="fas fa-key"></i> Reset Password
     </button>
@@ -49,12 +49,6 @@
                 <div class="card-header bg-primary">User Details</div>
                 <div class="card-body">
                     <table class="table-condensed mp-table-condensed">
-                        <tr>
-                            <td>
-                                <b>User ID</b>
-                            </td>
-                            <td>@Model.User.Id</td>
-                        </tr>
                         <tr>
                             <td>
                                 <b>Username</b>
@@ -118,7 +112,9 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Reset Password - @Model.User.UserName</h4>
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "ResetPasswordForm"}))
                 {
@@ -148,7 +144,9 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Add Role - @Model.User.UserName</h4>
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "AddRoleForm"}))
                 {
@@ -169,6 +167,55 @@
             </div>
         </div>
     </div>
+
+    <div id="AttachPersonModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!--content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Attach Person - @Model.User.UserName</h4>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "AttachPersonForm"}))
+                {
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label>User Type</label>
+                            <select class="form-control" id="userTypeSelect">
+                                <option selected disabled>Select User Type</option>
+                                <option value="Staff">Staff</option>
+                                <option value="Student">Student</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="d-none" id="studentYearGroupSelectLabel">Year Group</label>
+                            <select class="form-control disabled d-none" id="studentYearGroupSelect">
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="d-none" id="personSelectLabel">Person</label>
+                            <select class="form-control disabled d-none" id="personSelect"></select>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+
+
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+
 </div>
 </body>
 
@@ -185,9 +232,9 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: "/api/users/" +
+                                    url: "/api/users/removerole/" +
                                         button.attr("data-user-id") +
-                                        "/roles/" +
+                                        "/" +
                                         button.attr("data-role-name"),
                                     method: "DELETE",
                                     success: function(result) {
@@ -204,12 +251,12 @@
 
             $("#DeleteUser").on("click",
                 function() {
-                    var button = $(this);
+                    var button = $("#DeleteUser");
                     bootbox.confirm("Are you sure you want to DELETE this user?",
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: "/api/users/" + button.attr("data-user-id") + "/delete",
+                                    url: "/api/users/delete/" + button.attr("data-user-id"),
                                     method: "DELETE",
                                     success: function(result) {
                                         location.replace("/Staff/Admin/Users");
@@ -269,9 +316,178 @@
                     });
                 });
 
+            $("#DetachPerson").on("click",
+                function() {
+                    bootbox.confirm("Are you sure you wish to detach the personal profile from this user?",
+                        function(result) {
+                            if (result) {
+                                var data = { Id: $("#DetachPerson").attr("data-user-id") };
+                                $.ajax({
+                                    url: "/api/users/detach",
+                                    data: data,
+                                    method: "POST",
+                                    success: function(result) {
+                                        toastr.success(result);
+                                        location.reload();
+                                    },
+                                    error: function(result) {
+                                        toastr.error(result.responseJSON);
+                                    }
+                                });
+                            }
+                        });
+
+                });
+
             $('#ResetPasswordModal').on('hidden.bs.modal',
                 function() {
                     $(this).find('form').trigger('reset');
+                });
+
+            $('#AttachPersonModal').on('hidden.bs.modal',
+                function() {
+                    $(this).find('form').trigger('reset');
+                    $("#studentYearGroupSelectLabel").addClass("d-none");
+                    $("#studentYearGroupSelect").addClass("disabled");
+                    $("#studentYearGroupSelect").addClass("d-none");
+
+                    $("#personSelectLabel").addClass("d-none");
+                    $("#personSelect").addClass("disabled");
+                    $("#personSelect").addClass("d-none");
+                });
+
+            $("#userTypeSelect").on("change",
+                function() {
+
+                    $("#studentYearGroupSelectLabel").addClass("d-none");
+                    $("#studentYearGroupSelect").addClass("disabled");
+                    $("#studentYearGroupSelect").addClass("d-none");
+
+                    $("#personSelectLabel").addClass("d-none");
+                    $("#personSelect").addClass("disabled");
+                    $("#personSelect").addClass("d-none");
+
+                    if ($("#userTypeSelect").val() !== "") {
+                        if ($("#userTypeSelect").val() === "Staff") {
+                            $.ajax({
+                                url: "/api/staff/fetch",
+                                method: "GET",
+                                complete: function(data) {
+                                    $("#personSelect").empty();
+                                    $(data.responseJSON).each(function(i, student) {
+                                        var divData = "<option value=" +
+                                            data.responseJSON[i].id +
+                                            ">" +
+                                            data.responseJSON[i].lastName +
+                                            ", " +
+                                            data.responseJSON[i].firstName +
+                                            "</option>";
+                                        $(divData).appendTo('#personSelect');
+                                    });
+                                    $("#personSelect").val("");
+                                    $("#personSelect").removeClass("disabled");
+                                    $("#personSelectLabel").removeClass("d-none");
+                                    $("#personSelect").removeClass("d-none");
+                                }
+                            });
+                        }
+
+                        if ($("#userTypeSelect").val() === "Student") {
+                            $.ajax({
+                                url: "/api/yearGroups/fetch",
+                                method: "GET",          
+                                complete: function(data) {
+                                    $("#yearGroupSelect").empty();
+                                    $(data.responseJSON).each(function(i, yearGroup) {
+                                        var divData = "<option value=" +
+                                            data.responseJSON[i].id +
+                                            ">" +
+                                            data.responseJSON[i].name +
+                                            "</option>";
+                                        $(divData).appendTo('#studentYearGroupSelect');
+                                    });
+                                    $("#studentYearGroupSelect").val("");
+                                    $("#studentYearGroupSelect").removeClass("disabled");
+                                    $("#studentYearGroupSelectLabel").removeClass("d-none");
+                                    $("#studentYearGroupSelect").removeClass("d-none");
+                                }
+                            });
+                        }
+                    }
+
+                });
+
+            $("#studentYearGroupSelect").on("change",
+                function() {
+                    if ($("#studentYearGroupSelect").val() !== "") {
+                        $.ajax({
+                            url: "/api/students/yearGroup/" + $("#studentYearGroupSelect").val(),
+                            method: "GET",
+                            complete: function(data) {
+                                $("#personSelect").empty();
+                                $(data.responseJSON).each(function(i, student) {
+                                    var divData = "<option value=" +
+                                        data.responseJSON[i].id +
+                                        ">" +
+                                        data.responseJSON[i].lastName +
+                                        ", " +
+                                        data.responseJSON[i].firstName +
+                                        "</option>";
+                                    $(divData).appendTo('#personSelect');
+                                });
+                                $("#personSelect").val("");
+                                $("#personSelect").removeClass("disabled");
+                                $("#personSelectLabel").removeClass("d-none");
+                                $("#personSelect").removeClass("d-none");
+                            }
+                        });
+                    }
+                });
+
+            $("#AttachPersonForm").on("submit",
+                function(e) {
+
+                    e.preventDefault();
+
+                    if ($("#userTypeSelect").val() === "Student") {
+                        var data = {
+                            UserId: $("#AttachPerson").attr("data-user-id"),
+                            RoleName: "Student",
+                            PersonId: $("#personSelect").val()
+                        }
+                        $.ajax({
+                            url: "/api/users/attach",
+                            data: data,
+                            method: "POST",
+                            success: function(result) {
+                                location.reload();
+                            },
+                            error: function(result) {
+                                $("#AttachPersonModal").modal('hide');
+                                toastr.error(result.responseJSON);
+                            }
+                        });
+                    }
+
+                    if ($("#userTypeSelect").val() === "Staff") {
+                        var data = {
+                            UserId: $("#AttachPerson").attr("data-user-id"),
+                            RoleName: "Staff",
+                            PersonId: $("#personSelect").val()
+                        }
+                        $.ajax({
+                            url: "/api/users/attach",
+                            data: data,
+                            method: "POST",
+                            success: function (result) {
+                                location.reload();
+                            },
+                            error: function (result) {
+                                $("#AttachPersonModal").modal('hide');
+                                toastr.error(result.responseJSON);
+                            }
+                        });
+                    }
                 });
         });
     </script>
