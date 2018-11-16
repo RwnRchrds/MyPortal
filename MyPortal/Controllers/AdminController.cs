@@ -49,19 +49,34 @@ namespace MyPortal.Controllers
             var user = _identity.Users
                 .SingleOrDefault(x => x.Id == id);
 
-
             if (user == null)
                 return HttpNotFound();
 
             var userRoles = _userManager.GetRolesAsync(id).Result;
 
-            var roles = _identity.Roles.Where(x => x.Name!= "Student" || x.Name!= "Staff").ToList();
+            var roles = _identity.Roles.OrderBy(x => x.Name).ToList();
+
+            var attachedProfile = "";
+
+            var studentProfile = _context.Students.SingleOrDefault(x => x.UserId == user.Id);
+            var staffProfile = _context.Staff.SingleOrDefault(x => x.UserId == user.Id);
+
+            if (studentProfile != null)
+            {
+                attachedProfile = studentProfile.LastName + ", " + studentProfile.FirstName + " (Student)";
+            }
+
+            else if (staffProfile != null)
+            {
+                attachedProfile = staffProfile.LastName + ", " + staffProfile.FirstName + " (Staff)";
+            }
 
             var viewModel = new UserDetailsViewModel
             {
                 User = user,
                 UserRoles = userRoles,
-                Roles = roles
+                Roles = roles,
+                AttachedProfileName = attachedProfile
             };
 
             return View(viewModel);

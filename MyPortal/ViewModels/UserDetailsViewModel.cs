@@ -11,5 +11,6 @@ namespace MyPortal.ViewModels
         public IEnumerable<IdentityRole> Roles { get; set; }
         public ChangePasswordModel ChangePassword { get; set; }
         public UserRoleModel ChangeRole { get; set; }
+        public string AttachedProfileName { get; set; }
     }
 }

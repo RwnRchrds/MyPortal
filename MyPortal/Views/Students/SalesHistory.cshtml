@@ -1,11 +1,11 @@
 ﻿@model MyPortal.ViewModels.StudentSalesHistoryViewModel
 @{
-    ViewBag.Title = "Sales History";
+    ViewBag.Title = "MySales History: " + Model.Student.LastName + ", " + Model.Student.FirstName;
     Layout = "~/Views/Shared/_LayoutStudent.cshtml";
 }
 
 <div class="container float-left">
-    <h2 class="mp-page-title">Sales History</h2>
+    <h2 class="mp-page-title">MySales History</h2>
     <hr/>
 </div>
 

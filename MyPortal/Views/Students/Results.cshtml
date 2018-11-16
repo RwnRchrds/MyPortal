@@ -1,6 +1,6 @@
 ﻿@model MyPortal.ViewModels.StudentResultsViewModel
 @{
-    ViewBag.Title = "MyResults";
+    ViewBag.Title = "MyResults: " + Model.Student.LastName + ", " + Model.Student.FirstName;
     Layout = "~/Views/Shared/_LayoutStudent.cshtml";
 }
 

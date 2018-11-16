@@ -96,10 +96,13 @@ namespace MyPortal.Controllers.Api
         public IHttpActionResult DeleteStaff(int staffId)
         {                
             if (_context.Subjects.Any(x => x.LeaderId == staffId))
-                return Content(HttpStatusCode.BadRequest, "Staff member is leader of subject");
+                return Content(HttpStatusCode.BadRequest, "Cannot delete a subject leader");
 
             if (_context.YearGroups.Any(x => x.HeadId == staffId))
-                return Content(HttpStatusCode.BadRequest,"Staff member is head of year");
+                return Content(HttpStatusCode.BadRequest,"Cannot delete a head of year");
+
+            if (_context.RegGroups.Any(x => x.TutorId == staffId))
+                return Content(HttpStatusCode.BadRequest, "Cannot delete a reg tutor");
 
             var staffInDb = _context.Staff.Single(x => x.Id == staffId);
 
@@ -107,7 +110,7 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.NotFound, "Staff member not found");
 
             if (staffInDb.UserId == User.Identity.GetUserId())
-                return Content(HttpStatusCode.BadRequest, "Cannot delete current user");
+                return Content(HttpStatusCode.BadRequest, "Cannot delete the current user");
 
             var ownedLogs = _context.Logs.Where(x => x.AuthorId == staffId);
 

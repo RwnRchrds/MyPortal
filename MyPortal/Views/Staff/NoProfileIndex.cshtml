@@ -1,12 +1,12 @@
 ﻿@using Microsoft.AspNet.Identity
 
 @{
-    ViewBag.Title = "NoProfileIndex";
+    ViewBag.Title = "Home: " + @User.Identity.GetUserName();
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
 <div class="container float-left">
-    <h2 class="mp-page-title">User: @User.Identity.GetUserId()</h2>
+    <h2 class="mp-page-title">@User.Identity.GetUserName()</h2>
     <hr />
 </div>
 

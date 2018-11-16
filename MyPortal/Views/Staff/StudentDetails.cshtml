@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNet.Identity
 @model MyPortal.ViewModels.StudentDetailsViewModel
 @{
-    ViewBag.Title = "Student Details";
+    ViewBag.Title = "Student Details: " + Model.Student.LastName + ", " + Model.Student.FirstName;
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
@@ -23,7 +23,7 @@
 
     @if (User.IsInRole("SeniorStaff"))
     {
-        <button type="button" class="btn btn-warning mp-btn-top" data-toggle="modal" data-target="#EditDetailsForm">
+        <button type="button" class="btn btn-warning mp-btn-top" data-toggle="modal" data-target="#EditDetailsModal">
 
             <i class="far fa-id-card"></i> Edit Details
 
@@ -234,14 +234,15 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.LabelFor(l => l.Log.TypeId)
-                        @Html.DropDownListFor(l => l.Log.TypeId, new SelectList(Model.LogTypes, "Id", "Name"), "Select Log Type", new {@class = "form-control", id = "EditLogTypeControl", Name = "Type"})
+                        @Html.DropDownListFor(l => l.Log.TypeId, new SelectList(Model.LogTypes, "Id", "Name"), "Select Log Type", new {@class = "form-control", id = "EditLogTypeControl", Name = "TypeId"})
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(l => l.Log.Message)
                         @Html.TextAreaFor(l => l.Log.Message, new {@class = "form-control mp-log-message-box", id = "EditLogMessageControl", Name = "Message"})
                     </div>
                     <div class="form-group">
-                        @Html.HiddenFor(l => l.Log.Student, new {Value = Model.Student.Id, Name = "Student"})
+                        @Html.HiddenFor(l => l.Log.StudentId, new {Value = Model.Student.Id, Name = "StudentId"})
+                        @Html.HiddenFor(l => l.Log.Id, new {Name = "Id", id = "EditLogIdControl"})
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -255,7 +256,7 @@
 </div>
 
 <!-- Edit Details Form -->
-<div id="EditDetailsForm" class="modal fade" role="dialog">
+<div id="EditDetailsModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
         <!--content-->
@@ -271,23 +272,23 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.LabelFor(s => s.Student.FirstName)
-                        @Html.TextBoxFor(s => s.Student.FirstName, new {@class = "form-control"})
+                        @Html.TextBoxFor(s => s.Student.FirstName, new {@class = "form-control", id = "editDetailsFirstNameControl"})
                         @Html.ValidationMessageFor(s => s.Student.FirstName)
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(s => s.Student.LastName)
-                        @Html.TextBoxFor(s => s.Student.LastName, new {@class = "form-control"})
+                        @Html.TextBoxFor(s => s.Student.LastName, new {@class = "form-control", id = "editDetailsLastNameControl"})
                         @Html.ValidationMessageFor(s => s.Student.LastName)
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(s => s.Student.YearGroup)
-                        @Html.DropDownListFor(s => s.Student.YearGroup, new SelectList(Model.YearGroups, "Id", "Name"), new {@class = "form-control", id = "yearGroupList"})
-                        @Html.ValidationMessageFor(s => s.Student.YearGroup)
+                        @Html.DropDownListFor(s => s.Student.YearGroupId, new SelectList(Model.YearGroups, "Id", "Name"), new {@class = "form-control", id = "editDetailsYearGroupControl"})
+                        @Html.ValidationMessageFor(s => s.Student.YearGroupId)
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(s => s.Student.RegGroup)
-                        @Html.DropDownListFor(s => s.Student.RegGroup, new SelectList(Model.RegGroups, "Id", "Name"), "Select Reg Group", new {@class = "form-control", id = "regGroupList"})
-                        @Html.ValidationMessageFor(s => s.Student.RegGroup)
+                        @Html.DropDownListFor(s => s.Student.RegGroupId, new SelectList(Model.RegGroups, "Id", "Name"), "Select Reg Group", new {@class = "form-control", id = "editDetailsRegGroupControl"})
+                        @Html.ValidationMessageFor(s => s.Student.RegGroupId)
                     </div>
                     @Html.HiddenFor(s => s.Student.Id)
                     <div class="modal-footer">
@@ -649,7 +650,7 @@
                         url: "/api/logs/log/" + logId,
                         method: "GET",
                         success: function(result) {
-                            $("#EditLogTypeControl").val(result["type"]);
+                            $("#EditLogTypeControl").val(result["typeId"]);
                             $("#EditLogMessageControl").val(result["message"]);
                             $("#EditLogIdControl").val(result["id"]);
                         },
@@ -734,6 +735,14 @@
             $('#EditDocumentModal').on('hidden.bs.modal',
                 function() {
                     $(this).find('form').trigger('reset');
+                });
+
+            $('#EditDetailsModal').on('hidden.bs.modal',
+                function() {
+                    $("#editDetailsFirstNameControl").val("@Model.Student.FirstName");
+                    $("#editDetailsLastNameControl").val("@Model.Student.LastName");
+                    $("#editDetailsYearGroupControl").val("@Model.Student.YearGroupId");
+                    $("#editDetailsRegGroupControl").val("@Model.Student.RegGroupId");
                 });
 
             $('#EditLogModal').on('hidden.bs.modal',

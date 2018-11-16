@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNet.Identity
 @model MyPortal.ViewModels.StudentDetailsViewModel
 @{
-    ViewBag.Title = "Student Details";
+    ViewBag.Title = "Home: " + Model.Student.LastName + ", " + Model.Student.FirstName;
     Layout = "~/Views/Shared/_LayoutStudent.cshtml";
 }
 

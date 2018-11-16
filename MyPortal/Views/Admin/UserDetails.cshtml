@@ -12,6 +12,17 @@
 </div>
 
 <div class="container float-left">
+    @if (Model.AttachedProfileName == "")
+    {
+        <p class="text-danger">No user profile attached</p>
+    }
+    else
+    {
+        <p class="text-success">User profile attached: @Model.AttachedProfileName</p>
+    }
+</div>
+
+<div class="container float-left">
 
     <button type="button" class="btn btn-success mp-btn-top-auto" data-user-id="@Model.User.Id" id="AttachPerson" data-toggle="modal" data-target="#AttachPersonModal">
         <i class="fas fa-user-tag"></i> Attach Profile
