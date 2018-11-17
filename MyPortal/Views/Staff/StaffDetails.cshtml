@@ -142,6 +142,43 @@
     </div>
 </div>
 
+<div id="EditCertModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Certificate - @Model.Staff.LastName, @Model.Staff.FirstName</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true"></span>&times;
+                </button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "EditCertForm" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(l => l.TrainingCertificate.CourseId)
+                        @Html.TextBox("display", null, new { @class = "form-control", id = "EditCertCourseDisplay", @readonly = "" })
+                        @Html.HiddenFor(l => l.TrainingCertificate.CourseId, new { id = "EditCertCourseControl", Name = "CourseId" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(l => l.TrainingCertificate.StatusId)
+                        @Html.DropDownListFor(l => l.TrainingCertificate.StatusId, new SelectList(Model.TrainingStatuses, "Id", "Name"), "Select Status", new { @class = "form-control", Name = "StatusId", id = "EditCertStatusControl" })
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(l => l.TrainingCertificate.StaffId, new { Value = Model.Staff.Id, Name = "StaffId", id = "EditCertStaffControl" })
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
 <div id="NewDocumentModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <!--content-->
@@ -194,6 +231,11 @@
                     $(this).find('form').trigger('reset');
                 });
 
+            $('#EditCertModal').on('hidden.bs.modal',
+                function () {
+                    $(this).find('form').trigger('reset');
+                });
+
             //Delete Log When Button Clicked
             $("#certs").on("click",
                 ".js-delete",
@@ -240,6 +282,52 @@
                                 });
                             }
                         });
+                });
+
+            $("#certs").on("click",
+                ".js-edit",
+                function () {
+                    var button = $(this);
+                    var courseId = button.attr("data-course-id");
+                    var staffId = "@Model.Staff.Id";
+                    $.ajax({
+                        url: "/api/staff/certificates/fetch/" + staffId + "/" + courseId,
+                        method: "GET",
+                        success: function (result) {     
+                            $("#EditCertCourseDisplay").val(result["trainingCourse"].description);
+                            $("#EditCertCourseControl").val(result["courseId"]);
+                            $("#EditCertStatusControl").val(result["statusId"]);
+                            $("#EditCertStaffControl").val(result["staffId"]);
+                        },
+                        error: function () {
+                            toastr.error("Failed to load certificate data");
+                        }
+                    });
+                    $("#EditCertModal").modal('toggle');
+                });
+
+            $("#EditCertForm").on("submit",
+                function (e) {
+
+                    e.preventDefault();
+
+                    var form = $("#EditCertForm");
+                    var data = form.serialize();
+
+                    $.ajax({
+                        url: "/api/staff/certificates/update",
+                        data: data,
+                        method: "POST",
+                        success: function (result) {
+                            $("#EditCertModal").modal('hide');
+                            toastr.success(result);
+                            $("#certs").DataTable().ajax.reload();
+                        },
+                        error: function (result) {
+                            toastr.error(result.responseJSON);
+                            form.reset();
+                        }
+                    });
                 });
 
             $("#documents").DataTable({

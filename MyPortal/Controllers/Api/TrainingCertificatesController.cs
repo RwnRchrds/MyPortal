@@ -39,6 +39,18 @@ namespace MyPortal.Controllers.Api
                 .Select(Mapper.Map<TrainingCertificate, TrainingCertificateDto>);
         }
 
+        [HttpGet]
+        [Route("api/staff/certificates/fetch/{staffId}/{courseId}")]
+        public TrainingCertificateDto GetCertificate(int staffId, int courseId)
+        {
+            var certInDb = _context.TrainingCertificates.Single(x => x.StaffId == staffId && x.CourseId == courseId);
+
+            if (certInDb == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            return Mapper.Map<TrainingCertificate, TrainingCertificateDto>(certInDb);
+        }
+
         [HttpPost]
         [Route("api/staff/certificates/create")]
         public IHttpActionResult CreateTrainingCertificate(TrainingCertificateDto trainingCertificateDto)
