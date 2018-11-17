@@ -245,7 +245,7 @@ namespace MyPortal.Controllers.Api
 
             if (await _userManager.IsInRoleAsync(user.Id, "Student"))
             {
-                var personInDb = _context.Staff.Single(x => x.UserId == user.Id);
+                var personInDb = _context.Students.Single(x => x.UserId == user.Id);
                 personInDb.UserId = null;
                 _context.SaveChanges();
 
