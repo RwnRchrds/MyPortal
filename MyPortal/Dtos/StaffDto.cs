@@ -34,5 +34,9 @@ namespace MyPortal.Dtos
         [StringLength(128)]
         [Display(Name = "User ID")]
         public string UserId { get; set; }
+
+        [StringLength(50)]
+        [Display(Name = "Phone Number")]
+        public string Phone { get; set; }
     }
 }

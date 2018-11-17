@@ -74,17 +74,19 @@ namespace MyPortal.Controllers.Api
         {
             var staffInDb = _context.Staff.SingleOrDefault(x => x.Id == data.Id);
 
-            if (_context.Staff.Any(x => x.Code == data.Code))
-                return Content(HttpStatusCode.BadRequest, "Staff code has already been used");
-
             if (staffInDb == null)
                 return Content(HttpStatusCode.NotFound, "Staff member not found");
 
+            if (_context.Staff.Any(x => x.Code == data.Code) && staffInDb.Code != data.Code)
+                return Content(HttpStatusCode.BadRequest, "Staff code has already been used");
 
             staffInDb.FirstName = data.FirstName;
             staffInDb.LastName = data.LastName;
             staffInDb.Title = data.Title;
             staffInDb.Code = data.Code;
+            staffInDb.Email = data.Email;
+            staffInDb.JobTitle = data.JobTitle;
+            staffInDb.Phone = data.Phone;
 
             _context.SaveChanges();
 

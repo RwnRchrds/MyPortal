@@ -59,6 +59,21 @@
                     @Html.TextBoxFor(x => x.Staff.Code, new { @class = "form-control", Name = "Code" })
                     @Html.ValidationMessageFor(x => x.Staff.Code)
                 </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.Staff.JobTitle)
+                    @Html.TextBoxFor(x => x.Staff.JobTitle, new {@class = "form-control", Name = "JobTitle"})
+                    @Html.ValidationMessageFor(x => x.Staff.JobTitle)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.Staff.Email)
+                    @Html.TextBoxFor(x => x.Staff.Email, new {@class = "form-control", Name = "Email"})
+                    @Html.ValidationMessageFor(x => x.Staff.Email)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.Staff.Phone)
+                    @Html.TextBoxFor(x => x.Staff.Phone, new {@class = "form-control", Name = "Phone"})
+                    @Html.ValidationMessageFor(x => x.Staff.Phone)
+                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Save</button>

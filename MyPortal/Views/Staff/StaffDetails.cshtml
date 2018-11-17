@@ -14,7 +14,7 @@
 
     @if (User.IsInRole("SeniorStaff"))
     {
-        <button type="button" class="btn btn-warning mp-btn-top-auto" id="EditDetailsButton" data-toggle="modal" data-target="#EditDetailsForm">
+        <button type="button" class="btn btn-warning mp-btn-top-auto" id="EditDetailsButton" data-staff-id="@Model.Staff.Id">
             <i class="far fa-id-card"></i> Edit Details
         </button>
 
@@ -58,6 +58,24 @@
                             <b>Staff Code</b>
                         </td>
                         <td>@Model.Staff.Code</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Job Title</b>
+                        </td>
+                        <td>@Model.Staff.JobTitle</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Email</b>
+                        </td>
+                        <td>@Model.Staff.Email</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Phone</b>
+                        </td>
+                        <td>@Model.Staff.Phone</td>
                     </tr>
                 </table>
             </div>
@@ -179,6 +197,67 @@
     </div>
 </div>
 
+<div id="EditStaffModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New Staff</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="false"></span>&times;
+                </button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "EditStaffForm" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Staff.Title)
+                        @Html.DropDownListFor(x => x.Staff.Title, new SelectList(Model.Titles), "Select Title", new { @class = "form-control", Name = "Title", id = "EditStaffTitle" })
+                        @Html.ValidationMessageFor(x => x.Staff.Title)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Staff.FirstName)
+                        @Html.TextBoxFor(x => x.Staff.FirstName, new { @class = "form-control", Name = "FirstName", id = "EditStaffFirstName" })
+                        @Html.ValidationMessageFor(x => x.Staff.FirstName)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Staff.LastName)
+                        @Html.TextBoxFor(x => x.Staff.LastName, new { @class = "form-control", Name = "LastName", id = "EditStaffLastName" })
+                        @Html.ValidationMessageFor(x => x.Staff.LastName)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Staff.Code)
+                        @Html.TextBoxFor(x => x.Staff.Code, new { @class = "form-control", Name = "Code", id = "EditStaffCode" })
+                        @Html.ValidationMessageFor(x => x.Staff.Code)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Staff.JobTitle)
+                        @Html.TextBoxFor(x => x.Staff.JobTitle, new { @class = "form-control", Name = "JobTitle", id = "EditStaffJobTitle" })
+                        @Html.ValidationMessageFor(x => x.Staff.JobTitle)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Staff.Email)
+                        @Html.TextBoxFor(x => x.Staff.Email, new { @class = "form-control", Name = "Email", id = "EditStaffEmail" })
+                        @Html.ValidationMessageFor(x => x.Staff.Email)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Staff.Phone)
+                        @Html.TextBoxFor(x => x.Staff.Phone, new { @class = "form-control", Name = "Phone", id = "EditStaffPhone" })
+                        @Html.ValidationMessageFor(x => x.Staff.Phone)
+                        @Html.HiddenFor(x => x.Staff.Id, new {@class = "form-control", Name = "Id", id = "EditStaffId"})
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
 <div id="NewDocumentModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <!--content-->
@@ -222,6 +301,11 @@
         $(document).ready(function() {
             //Clear Modal When Closed
             $('#NewCertModal').on('hidden.bs.modal',
+                function() {
+                    $(this).find('form').trigger('reset');
+                });
+
+            $('#EditStaffModal').on('hidden.bs.modal',
                 function() {
                     $(this).find('form').trigger('reset');
                 });
@@ -306,6 +390,20 @@
                     $("#EditCertModal").modal('toggle');
                 });
 
+            $("#EditDetailsButton").on("click",
+                function () {
+                    $("#EditStaffTitle").val("@Model.Staff.Title");
+                    $("#EditStaffFirstName").val("@Model.Staff.FirstName");
+                    $("#EditStaffLastName").val("@Model.Staff.LastName");
+                    $("#EditStaffCode").val("@Model.Staff.Code");
+                    $("#EditStaffJobTitle").val("@Model.Staff.JobTitle");
+                    $("#EditStaffEmail").val("@Model.Staff.Email");
+                    $("#EditStaffPhone").val("@Model.Staff.Phone");
+                    $("#EditStaffId").val("@Model.Staff.Id");
+
+                    $("#EditStaffModal").modal('toggle');
+                });
+
             $("#EditCertForm").on("submit",
                 function (e) {
 
@@ -322,6 +420,29 @@
                             $("#EditCertModal").modal('hide');
                             toastr.success(result);
                             $("#certs").DataTable().ajax.reload();
+                        },
+                        error: function (result) {
+                            toastr.error(result.responseJSON);
+                            form.reset();
+                        }
+                    });
+                });
+
+            $("#EditStaffForm").on("submit",
+                function (e) {
+
+                    e.preventDefault();
+
+                    var form = $("#EditStaffForm");
+                    var data = form.serialize();
+
+                    $.ajax({
+                        url: "/api/staff/edit",
+                        data: data,
+                        method: "POST",
+                        success: function (result) {
+                            $("#EditStaffModal").modal('hide');
+                            location.reload();
                         },
                         error: function (result) {
                             toastr.error(result.responseJSON);
@@ -498,14 +619,6 @@
                         });
                 });
         });
-
-        //Edit Details Not Yet Available
-        $("#EditDetailsButton").on("click",
-            function() {
-                toastr.warning("This feature is not yet available");
-            });
-
-
     </script>
 
     @Scripts.Render("~/bundles/jqueryval")

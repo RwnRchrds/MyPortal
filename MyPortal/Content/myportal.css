@@ -90,7 +90,11 @@
 
 
 .mp-table-condensed {
-    width: 210px;
+    width: 390px;
+}
+
+.mp-table-condensed td:first-of-type {
+    width: 100px;
 }
 
 
@@ -121,7 +125,7 @@
 .mp-card {
     margin-top: 8px;
     margin-right: 20px;
-    width: 250px;
+    width: 400px;
 }
 
 .mp-btn-top-auto {
