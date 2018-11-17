@@ -314,6 +314,7 @@
     <Compile Include="ViewModels\StudentResultsViewModel.cs" />
     <Compile Include="ViewModels\StudentSalesHistoryViewModel.cs" />
     <Compile Include="ViewModels\StudentStoreViewModel.cs" />
+    <Compile Include="ViewModels\TrainingCoursesViewModel.cs" />
     <Compile Include="ViewModels\UserDetailsViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
