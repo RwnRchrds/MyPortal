@@ -1,5 +1,4 @@
-﻿@using Microsoft.AspNet.Identity
-@model MyPortal.ViewModels.StudentDetailsViewModel
+﻿@model MyPortal.ViewModels.StudentDetailsViewModel
 @{
     ViewBag.Title = "Student Details: " + Model.Student.LastName + ", " + Model.Student.FirstName;
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
@@ -7,374 +6,376 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 
-<!--TITLE [STUDENT NAME]-->
-<div class="container float-left" id="title">  
+<!-- #region Title -->
+<div class="container float-left" id="title">
 
     <h2 class="mp-page-title">@Model.Student.LastName, @Model.Student.FirstName</h2>
 
     <hr/>
 
 </div>
+<!-- #endregion -->
 
 <body>
+    <!--#region Top of Page Buttons-->
+    <div class="container float-left" id="container-1">
 
-<!--BUTTONS AT TOP OF PAGE-->
-<div class="container float-left" id="container-1">
+        @if (User.IsInRole("SeniorStaff"))
+        {
+            <button type="button" class="btn btn-warning mp-btn-top" data-toggle="modal" data-target="#EditDetailsModal">
 
-    @if (User.IsInRole("SeniorStaff"))
-    {
-        <button type="button" class="btn btn-warning mp-btn-top" data-toggle="modal" data-target="#EditDetailsModal">
+                <i class="far fa-id-card"></i> Edit Details
 
-            <i class="far fa-id-card"></i> Edit Details
+            </button>
+        }
+
+        <button type="button" class="btn btn-warning mp-btn-top" id="ViewResultsButton" data-student-id="@Model.Student.Id">
+
+            <i class="far fa-chart-bar"></i> View Results
 
         </button>
-    }
 
-    <button type="button" class="btn btn-warning mp-btn-top" id="ViewResultsButton" data-student-id="@Model.Student.Id">
+        <hr />
 
-        <i class="far fa-chart-bar"></i> View Results
-
-    </button>
-    
-    <hr />
-
-</div>
-
-<!--CARD CONTAINER-->
-<div class="container float-left" id="container-2">
-    <!--Student Details Card-->
-    <div class="float-left" id="detailsDiv">
-
-        <div class="card border-primary mp-card" id="detailsCard">
-
-            <div class="card-header bg-primary">MyDetails</div>
-
-            <div class="card-body">
-                
-                <!--Student Details Table-->
-                <table class="table-condensed mp-table-condensed">
-                    <tr>
-                        <td>
-                            <b>First Name</b>
-                        </td>
-                        <td>@Model.Student.FirstName</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>Last Name</b>
-                        </td>
-                        <td>@Model.Student.LastName</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>Year Group</b>
-                        </td>
-                        <td>@Model.Student.YearGroup.Name</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>Reg Group</b>
-                        </td>
-                        <td>@Model.Student.RegGroup.Name</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>Reg Tutor</b>
-                        </td>
-                        <td>@Model.Student.RegGroup.Staff.Title @Model.Student.RegGroup.Staff.FirstName.Substring(0, 1) @Model.Student.RegGroup.Staff.LastName</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>Head of Year</b>
-                        </td>
-                        <td>@Model.Student.YearGroup.Staff.Title @Model.Student.YearGroup.Staff.FirstName.Substring(0, 1) @Model.Student.YearGroup.Staff.LastName</td>
-                    </tr>
-                </table>
-
-            </div>
-            
-            <!--Student Details Footer (Account Balance)-->
-            <div class="card-footer bg-transparent border-primary">
-
-                <h5><b>Balance:</b> £@Model.Student.AccountBalance</h5>
-
-            </div>
-        </div>
     </div>
+    <!--#endregion-->
+    <!-- #region Card Container-->
+    <div class="container float-left" id="container-2">
+        <!--#region Student Details Card-->
+        <div class="float-left" id="detailsDiv">
 
-    <!-- MyResults Table Card -->
-    <div class="float-left" id="resultsTableDiv">
-        <div class="card border-primary mp-card" id="resultsTableCard">
-            <div class="card-header bg-primary">MyResults</div>
-            @if (!Model.Results.Any())
-            {
-                {
-                    <text>
-                        <div class="card-body">No results to display.</div></text>
-                }
-            }
-            else
-            {
-                <table class="table table-condensed table-bordered mp-table" id="resultsTable">
-                    <thead>
-                    <tr>
-                        <th>Subject</th>
-                        <th>Result</th>
-                    </tr>
-                    </thead>
-                    @foreach (var result in Model.Results)
-                    {
+            <div class="card border-primary mp-card" id="detailsCard">
+
+                <div class="card-header bg-primary">MyDetails</div>
+
+                <div class="card-body">
+
+                    <!--Student Details Table-->
+                    <table class="table-condensed mp-table-condensed">
                         <tr>
-                            <td>@result.Subject.Name</td>
-                            <td>@result.Value</td>
+                            <td>
+                                <b>First Name</b>
+                            </td>
+                            <td>@Model.Student.FirstName</td>
                         </tr>
+                        <tr>
+                            <td>
+                                <b>Last Name</b>
+                            </td>
+                            <td>@Model.Student.LastName</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Year Group</b>
+                            </td>
+                            <td>@Model.Student.YearGroup.Name</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Reg Group</b>
+                            </td>
+                            <td>@Model.Student.RegGroup.Name</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Reg Tutor</b>
+                            </td>
+                            <td>@Model.Student.RegGroup.Staff.Title @Model.Student.RegGroup.Staff.FirstName.Substring(0, 1) @Model.Student.RegGroup.Staff.LastName</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Head of Year</b>
+                            </td>
+                            <td>@Model.Student.YearGroup.Staff.Title @Model.Student.YearGroup.Staff.FirstName.Substring(0, 1) @Model.Student.YearGroup.Staff.LastName</td>
+                        </tr>
+                    </table>
+
+                </div>
+
+                <!--Student Details Footer (Account Balance)-->
+                <div class="card-footer bg-transparent border-primary">
+
+                    <h5><b>Balance:</b> £@Model.Student.AccountBalance</h5>
+
+                </div>
+            </div>
+        </div>
+        <!--#endregion-->
+        <!-- #region MyResults Table Card -->
+        <div class="float-left" id="resultsTableDiv">
+            <div class="card border-primary mp-card" id="resultsTableCard">
+                <div class="card-header bg-primary">MyResults</div>
+                @if (!Model.Results.Any())
+                {
+                    {
+                        <text>
+                            <div class="card-body">No results to display.</div></text>
                     }
-                </table>
-            }
-        </div>
-    </div>
-</div>
-
-<!-- MyLogs Panel -->
-<div class="container float-left mp-margin-top">
-    <div>
-        <hr/>
-        <h4 class="mp-bold">MyLogs</h4>
-        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewLogModal">
-            <i class="fa fa-plus-circle"></i> New Log
-        </button>
-        <table class="table table-bordered mp-table mp-log-table" id="logs" data-student-id="@Model.Student.Id">
-            <thead>
-            <tr>
-                <th>Date</th>
-                <th>Author</th>
-                <th>Type</th>
-                <th>Message</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-        </table>
-    </div>
-</div>
-
-<!-- MyDocuments Panel -->
-<div class="container float-left mp-margin-top">
-    <div>
-        <hr/>
-        <h4 class="mp-bold">MyDocuments</h4>
-        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewDocumentModal">
-            <i class="fa fa-plus-circle"></i> Add Document
-        </button>
-        <table class="table table-bordered mp-table mp-document-table mp-table-link" id="documents" data-student-id="@Model.Student.Id">
-            <thead>
-            <tr>
-                <th>Description</th>
-                <th>Date</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-        </table>
-    </div>
-</div>
-
-<!-- New Logs Form -->
-<div id="NewLogModal" class="modal fade" role="dialog">
-    <div class="modal-dialog" role="document">
-
-        <!--content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">New Log - @Model.Student.LastName, @Model.Student.FirstName</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                }
+                else
+                {
+                    <table class="table table-condensed table-bordered mp-table" id="resultsTable">
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>Result</th>
+                            </tr>
+                        </thead>
+                        @foreach (var result in Model.Results)
+                        {
+                            <tr>
+                                <td>@result.Subject.Name</td>
+                                <td>@result.Value</td>
+                            </tr>
+                        }
+                    </table>
+                }
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "NewLogForm"}))
-            {
-                <div class="modal-body">
-                    <div class="form-group">
-                        @Html.LabelFor(l => l.Log.TypeId)
-                        @Html.DropDownListFor(l => l.Log.TypeId, new SelectList(Model.LogTypes, "Id", "Name"), "Select Log Type", new {@class = "form-control", Name = "TypeId"})
-                        @Html.ValidationMessageFor(l => l.Log.TypeId)
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(l => l.Log.Message)
-                        @Html.TextAreaFor(l => l.Log.Message, new {@class = "form-control mp-log-message-box", Name = "Message"})
-                        @Html.ValidationMessageFor(l => l.Log.Message)
-                    </div>
-                    <div class="form-group">
-                        @Html.HiddenFor(l => l.Log.StudentId, new {Value = Model.Student.Id, Name = "StudentId"})
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
-                </div>
-            }
-
+        </div>
+        <!--#endregion-->
+    </div>
+    <!--#endregion-->
+    <!-- #region MyLogs Panel -->
+    <div class="container float-left mp-margin-top">
+        <div>
+            <hr />
+            <h4 class="mp-bold">MyLogs</h4>
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewLogModal">
+                <i class="fa fa-plus-circle"></i> New Log
+            </button>
+            <table class="table table-bordered mp-table mp-log-table" id="logs" data-student-id="@Model.Student.Id">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Author</th>
+                        <th>Type</th>
+                        <th>Message</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+            </table>
         </div>
     </div>
-</div>
+    <!-- #endregion-->
+    <!-- #region MyDocuments Panel -->
+    <div class="container float-left mp-margin-top">
+        <div>
+            <hr />
+            <h4 class="mp-bold">MyDocuments</h4>
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewDocumentModal">
+                <i class="fa fa-plus-circle"></i> Add Document
+            </button>
+            <table class="table table-bordered mp-table mp-document-table mp-table-link" id="documents" data-student-id="@Model.Student.Id">
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+    <!--#endregion-->
+    <!-- #region New Logs Form -->
+    <div id="NewLogModal" class="modal fade" role="dialog">
+        <div class="modal-dialog" role="document">
 
-<!-- Edit Logs Form -->
-<div id="EditLogModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
+            <!--content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">New Log - @Model.Student.LastName, @Model.Student.FirstName</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "NewLogForm" }))
+                {
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @Html.LabelFor(l => l.Log.TypeId)
+                            @Html.DropDownListFor(l => l.Log.TypeId, new SelectList(Model.LogTypes, "Id", "Name"), "Select Log Type", new { @class = "form-control", Name = "TypeId" })
+                            @Html.ValidationMessageFor(l => l.Log.TypeId)
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(l => l.Log.Message)
+                            @Html.TextAreaFor(l => l.Log.Message, new { @class = "form-control mp-log-message-box", Name = "Message" })
+                            @Html.ValidationMessageFor(l => l.Log.Message)
+                        </div>
+                        <div class="form-group">
+                            @Html.HiddenFor(l => l.Log.StudentId, new { Value = Model.Student.Id, Name = "StudentId" })
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                }
 
-        <!--content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">New Log - @Model.Student.LastName, @Model.Student.FirstName</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
             </div>
-
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "EditLogForm"}))
-            {
-                <div class="modal-body">
-                    <div class="form-group">
-                        @Html.LabelFor(l => l.Log.TypeId)
-                        @Html.DropDownListFor(l => l.Log.TypeId, new SelectList(Model.LogTypes, "Id", "Name"), "Select Log Type", new {@class = "form-control", id = "EditLogTypeControl", Name = "TypeId"})
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(l => l.Log.Message)
-                        @Html.TextAreaFor(l => l.Log.Message, new {@class = "form-control mp-log-message-box", id = "EditLogMessageControl", Name = "Message"})
-                    </div>
-                    <div class="form-group">
-                        @Html.HiddenFor(l => l.Log.StudentId, new {Value = Model.Student.Id, Name = "StudentId"})
-                        @Html.HiddenFor(l => l.Log.Id, new {Name = "Id", id = "EditLogIdControl"})
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" id="EditLogSave" class="btn btn-primary">Save</button>
-                    </div>
-                </div>
-            }
-
         </div>
     </div>
-</div>
+    <!--#endregion-->
+    <!-- #region Edit Logs Form -->
+    <div id="EditLogModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
 
-<!-- Edit Details Form -->
-<div id="EditDetailsModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
+            <!--content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">New Log - @Model.Student.LastName, @Model.Student.FirstName</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
 
-        <!--content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Edit Details - @Model.Student.LastName, @Model.Student.FirstName</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "EditLogForm" }))
+                {
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @Html.LabelFor(l => l.Log.TypeId)
+                            @Html.DropDownListFor(l => l.Log.TypeId, new SelectList(Model.LogTypes, "Id", "Name"), "Select Log Type", new { @class = "form-control", id = "EditLogTypeControl", Name = "TypeId" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(l => l.Log.Message)
+                            @Html.TextAreaFor(l => l.Log.Message, new { @class = "form-control mp-log-message-box", id = "EditLogMessageControl", Name = "Message" })
+                        </div>
+                        <div class="form-group">
+                            @Html.HiddenFor(l => l.Log.StudentId, new { Value = Model.Student.Id, Name = "StudentId" })
+                            @Html.HiddenFor(l => l.Log.Id, new { Name = "Id", id = "EditLogIdControl" })
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                            <button type="submit" id="EditLogSave" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                }
+
             </div>
-            @using (Html.BeginForm("SaveStudent", "Staff"))
-            {
-                <div class="modal-body">
-                    <div class="form-group">
-                        @Html.LabelFor(s => s.Student.FirstName)
-                        @Html.TextBoxFor(s => s.Student.FirstName, new {@class = "form-control", id = "editDetailsFirstNameControl"})
-                        @Html.ValidationMessageFor(s => s.Student.FirstName)
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(s => s.Student.LastName)
-                        @Html.TextBoxFor(s => s.Student.LastName, new {@class = "form-control", id = "editDetailsLastNameControl"})
-                        @Html.ValidationMessageFor(s => s.Student.LastName)
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(s => s.Student.YearGroup)
-                        @Html.DropDownListFor(s => s.Student.YearGroupId, new SelectList(Model.YearGroups, "Id", "Name"), new {@class = "form-control", id = "editDetailsYearGroupControl"})
-                        @Html.ValidationMessageFor(s => s.Student.YearGroupId)
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(s => s.Student.RegGroup)
-                        @Html.DropDownListFor(s => s.Student.RegGroupId, new SelectList(Model.RegGroups, "Id", "Name"), "Select Reg Group", new {@class = "form-control", id = "editDetailsRegGroupControl"})
-                        @Html.ValidationMessageFor(s => s.Student.RegGroupId)
-                    </div>
-                    @Html.HiddenFor(s => s.Student.Id)
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
-                </div>
-            }
-
         </div>
     </div>
-</div>
+    <!--#endregion-->
+    <!-- #region Edit Details Form -->
+    <div id="EditDetailsModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
 
-<!--New Documents Form-->
-<div id="NewDocumentModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <!--content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Add Document - @Model.Student.LastName, @Model.Student.FirstName</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+            <!--content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Details - @Model.Student.LastName, @Model.Student.FirstName</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                @using (Html.BeginForm("SaveStudent", "Staff"))
+                {
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @Html.LabelFor(s => s.Student.FirstName)
+                            @Html.TextBoxFor(s => s.Student.FirstName, new { @class = "form-control", id = "editDetailsFirstNameControl" })
+                            @Html.ValidationMessageFor(s => s.Student.FirstName)
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(s => s.Student.LastName)
+                            @Html.TextBoxFor(s => s.Student.LastName, new { @class = "form-control", id = "editDetailsLastNameControl" })
+                            @Html.ValidationMessageFor(s => s.Student.LastName)
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(s => s.Student.YearGroup)
+                            @Html.DropDownListFor(s => s.Student.YearGroupId, new SelectList(Model.YearGroups, "Id", "Name"), new { @class = "form-control", id = "editDetailsYearGroupControl" })
+                            @Html.ValidationMessageFor(s => s.Student.YearGroupId)
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(s => s.Student.RegGroup)
+                            @Html.DropDownListFor(s => s.Student.RegGroupId, new SelectList(Model.RegGroups, "Id", "Name"), "Select Reg Group", new { @class = "form-control", id = "editDetailsRegGroupControl" })
+                            @Html.ValidationMessageFor(s => s.Student.RegGroupId)
+                        </div>
+                        @Html.HiddenFor(s => s.Student.Id)
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                }
+
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "newDocumentForm"}))
-            {
-                <div class="modal-body">
-                    <div class="form-group">
-                        @Html.LabelFor(x => x.Upload.Document.Description)
-                        @Html.TextBoxFor(x => x.Upload.Document.Description, new {@class = "form-control", Name = "Document.Description"})
-                        @Html.ValidationMessageFor(x => x.Upload.Document.Description)
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(x => x.Upload.Document.Url)
-                        @Html.TextBoxFor(x => x.Upload.Document.Url, new {@class = "form-control", Name = "Document.Url"})
-                        @Html.ValidationMessageFor(x => x.Upload.Document.Url)
-                    </div>
-                    <div class="form-group">
-                        @Html.HiddenFor(x => x.Upload.Student, new {@class = "form-control", Value = Model.Student.Id, Name = "Student"})
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
-                </div>
-            }
         </div>
     </div>
-</div>
-
-<!--Edit Documents Form-->
-<div id="EditDocumentModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <!--content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Edit Document - @Model.Student.LastName, @Model.Student.FirstName</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+    <!--#endregion-->
+    <!-- #region New Documents Form-->
+    <div id="NewDocumentModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!--content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add Document - @Model.Student.LastName, @Model.Student.FirstName</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "newDocumentForm" }))
+                {
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.Upload.Document.Description)
+                            @Html.TextBoxFor(x => x.Upload.Document.Description, new { @class = "form-control", Name = "Document.Description" })
+                            @Html.ValidationMessageFor(x => x.Upload.Document.Description)
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.Upload.Document.Url)
+                            @Html.TextBoxFor(x => x.Upload.Document.Url, new { @class = "form-control", Name = "Document.Url" })
+                            @Html.ValidationMessageFor(x => x.Upload.Document.Url)
+                        </div>
+                        <div class="form-group">
+                            @Html.HiddenFor(x => x.Upload.Student, new { @class = "form-control", Value = Model.Student.Id, Name = "Student" })
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                }
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "editDocumentForm" }))
-            {
-                <div class="modal-body">
-                    <div class="form-group">
-                        @Html.LabelFor(x => x.Upload.Document.Description)
-                        @Html.TextBoxFor(x => x.Upload.Document.Description, new { @class = "form-control", Name = "Description", id = "EditDocumentDescriptionControl" })
-                        @Html.ValidationMessageFor(x => x.Upload.Document.Description)
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(x => x.Upload.Document.Url)
-                        @Html.TextBoxFor(x => x.Upload.Document.Url, new { @class = "form-control", Name = "Url", id = "EditDocumentUrlControl" })
-                        @Html.ValidationMessageFor(x => x.Upload.Document.Url)
-                    </div>
-                    <div class="form-group">
-                        @Html.HiddenFor(x => x.Upload.Document.Id, new {Name = "Id", id = "EditDocumentIdControl"})
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
-                </div>
-            }
         </div>
     </div>
-</div>
+    <!--#endregion-->
+    <!-- #region Edit Documents Form-->
+    <div id="EditDocumentModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!--content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Document - @Model.Student.LastName, @Model.Student.FirstName</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "editDocumentForm" }))
+                {
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.Upload.Document.Description)
+                            @Html.TextBoxFor(x => x.Upload.Document.Description, new { @class = "form-control", Name = "Description", id = "EditDocumentDescriptionControl" })
+                            @Html.ValidationMessageFor(x => x.Upload.Document.Description)
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.Upload.Document.Url)
+                            @Html.TextBoxFor(x => x.Upload.Document.Url, new { @class = "form-control", Name = "Url", id = "EditDocumentUrlControl" })
+                            @Html.ValidationMessageFor(x => x.Upload.Document.Url)
+                        </div>
+                        <div class="form-group">
+                            @Html.HiddenFor(x => x.Upload.Document.Id, new { Name = "Id", id = "EditDocumentIdControl" })
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <!--#endregion-->
 </body>
 
 @section scripts

@@ -48,7 +48,7 @@ namespace MyPortal.Controllers
                 Logs = logs,
                 Student = student,
                 Results = results,
-                IsUpperSchool = upperSchool,
+                IsUpperSchool = upperSchool
             };
             return View(viewModel);
         }

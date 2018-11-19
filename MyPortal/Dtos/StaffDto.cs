@@ -6,12 +6,10 @@ namespace MyPortal.Dtos
     public class StaffDto
     {
         public int Id { get; set; }
-        
-        [Required] 
-        public string Code { get; set; }    
 
-        [StringLength(255)] 
-        public string Title { get; set; }
+        [Required] public string Code { get; set; }
+
+        [StringLength(255)] public string Title { get; set; }
 
         [Required]
         [StringLength(255)]

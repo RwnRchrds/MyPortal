@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Web.Http;
 using AutoMapper;
-using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Models;
@@ -55,7 +54,7 @@ namespace MyPortal.Controllers.Api
         public IHttpActionResult CreateStaff(StaffDto staffDto)
         {
             if (!ModelState.IsValid)
-                return Content(HttpStatusCode.BadRequest,"Invalid data");
+                return Content(HttpStatusCode.BadRequest, "Invalid data");
 
             var staff = Mapper.Map<StaffDto, Staff>(staffDto);
             _context.Staff
@@ -96,12 +95,12 @@ namespace MyPortal.Controllers.Api
         [HttpDelete]
         [Route("api/staff/delete/{staffId}")]
         public IHttpActionResult DeleteStaff(int staffId)
-        {                
+        {
             if (_context.Subjects.Any(x => x.LeaderId == staffId))
                 return Content(HttpStatusCode.BadRequest, "Cannot delete a subject leader");
 
             if (_context.YearGroups.Any(x => x.HeadId == staffId))
-                return Content(HttpStatusCode.BadRequest,"Cannot delete a head of year");
+                return Content(HttpStatusCode.BadRequest, "Cannot delete a head of year");
 
             if (_context.RegGroups.Any(x => x.TutorId == staffId))
                 return Content(HttpStatusCode.BadRequest, "Cannot delete a reg tutor");
@@ -197,7 +196,7 @@ namespace MyPortal.Controllers.Api
             _context.Documents.Add(document);
             _context.SaveChanges();
 
-            var staffDocument = new StaffDocument()
+            var staffDocument = new StaffDocument
             {
                 DocumentId = document.Id,
                 StaffId = data.StaffId
@@ -242,7 +241,7 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.NotFound, "Upload not found");
 
             var isUriValid = Uri.TryCreate(data.Url, UriKind.Absolute, out var uriResult)
-                          && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+                             && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 
             if (!isUriValid)
                 return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
@@ -282,12 +281,11 @@ namespace MyPortal.Controllers.Api
         [Route("api/staff/observations/add")]
         public IHttpActionResult AddObservation(StaffObservationDto data)
         {
-
             data.Date = DateTime.Now;
 
             if (!ModelState.IsValid)
                 return Content(HttpStatusCode.BadRequest, "Invalid data");
-            
+
             var observee = _context.Staff.Single(x => x.Id == data.ObserveeId);
 
             var observer = _context.Staff.Single(x => x.Id == data.ObserverId);

@@ -23,6 +23,7 @@ namespace MyPortal.Controllers.Api
             _context.Dispose();
         }
 
+        #region Individual Student Results Management
         [HttpPost]
         [Route("api/results/new")]
         public IHttpActionResult AddResult(ResultDto data)
@@ -50,5 +51,10 @@ namespace MyPortal.Controllers.Api
 
             return results;
         }
+        #endregion
+
+        #region Gradebook Results Management
+
+        #endregion
     }
 }

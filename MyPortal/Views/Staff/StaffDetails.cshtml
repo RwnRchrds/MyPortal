@@ -106,18 +106,18 @@
 <!-- MyDocuments Panel -->
 <div class="container float-left mp-margin-top">
     <div>
-        <hr />
+        <hr/>
         <h4 class="mp-bold">MyDocuments</h4>
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewDocumentModal">
             <i class="fa fa-plus-circle"></i> Add Document
         </button>
         <table class="table table-bordered mp-table mp-table-link" id="documents" data-staff-id="@Model.Staff.Id">
             <thead>
-                <tr>
-                    <th>Description</th>
-                    <th>Date</th>
-                    <th>Actions</th>
-                </tr>
+            <tr>
+                <th>Description</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
             </thead>
         </table>
     </div>
@@ -135,19 +135,19 @@
                     <span aria-hidden="true"></span>&times;
                 </button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "newCertForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "newCertForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.LabelFor(l => l.TrainingCertificate.CourseId)
-                        @Html.DropDownListFor(l => l.TrainingCertificate.CourseId, new SelectList(Model.TrainingCourses, "Id", "Description"), "Select Course", new {@class = "form-control", Name="CourseId"})
+                        @Html.DropDownListFor(l => l.TrainingCertificate.CourseId, new SelectList(Model.TrainingCourses, "Id", "Description"), "Select Course", new {@class = "form-control", Name = "CourseId"})
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(l => l.TrainingCertificate.StatusId)
-                        @Html.DropDownListFor(l => l.TrainingCertificate.StatusId, new SelectList(Model.TrainingStatuses, "Id", "Name"), "Select Status", new {@class = "form-control", Name="StatusId"})
+                        @Html.DropDownListFor(l => l.TrainingCertificate.StatusId, new SelectList(Model.TrainingStatuses, "Id", "Name"), "Select Status", new {@class = "form-control", Name = "StatusId"})
                     </div>
                     <div class="form-group">
-                        @Html.HiddenFor(l => l.TrainingCertificate.StaffId, new {Value = Model.Staff.Id, Name="StaffId"})
+                        @Html.HiddenFor(l => l.TrainingCertificate.StaffId, new {Value = Model.Staff.Id, Name = "StaffId"})
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -171,20 +171,20 @@
                     <span aria-hidden="true"></span>&times;
                 </button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "EditCertForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "EditCertForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.LabelFor(l => l.TrainingCertificate.CourseId)
-                        @Html.TextBox("display", null, new { @class = "form-control", id = "EditCertCourseDisplay", @readonly = "" })
-                        @Html.HiddenFor(l => l.TrainingCertificate.CourseId, new { id = "EditCertCourseControl", Name = "CourseId" })
+                        @Html.TextBox("display", null, new {@class = "form-control", id = "EditCertCourseDisplay", @readonly = ""})
+                        @Html.HiddenFor(l => l.TrainingCertificate.CourseId, new {id = "EditCertCourseControl", Name = "CourseId"})
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(l => l.TrainingCertificate.StatusId)
-                        @Html.DropDownListFor(l => l.TrainingCertificate.StatusId, new SelectList(Model.TrainingStatuses, "Id", "Name"), "Select Status", new { @class = "form-control", Name = "StatusId", id = "EditCertStatusControl" })
+                        @Html.DropDownListFor(l => l.TrainingCertificate.StatusId, new SelectList(Model.TrainingStatuses, "Id", "Name"), "Select Status", new {@class = "form-control", Name = "StatusId", id = "EditCertStatusControl"})
                     </div>
                     <div class="form-group">
-                        @Html.HiddenFor(l => l.TrainingCertificate.StaffId, new { Value = Model.Staff.Id, Name = "StaffId", id = "EditCertStaffControl" })
+                        @Html.HiddenFor(l => l.TrainingCertificate.StaffId, new {Value = Model.Staff.Id, Name = "StaffId", id = "EditCertStaffControl"})
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -208,42 +208,42 @@
                     <span aria-hidden="false"></span>&times;
                 </button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "EditStaffForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "EditStaffForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.LabelFor(x => x.Staff.Title)
-                        @Html.DropDownListFor(x => x.Staff.Title, new SelectList(Model.Titles), "Select Title", new { @class = "form-control", Name = "Title", id = "EditStaffTitle" })
+                        @Html.DropDownListFor(x => x.Staff.Title, new SelectList(Model.Titles), "Select Title", new {@class = "form-control", Name = "Title", id = "EditStaffTitle"})
                         @Html.ValidationMessageFor(x => x.Staff.Title)
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(x => x.Staff.FirstName)
-                        @Html.TextBoxFor(x => x.Staff.FirstName, new { @class = "form-control", Name = "FirstName", id = "EditStaffFirstName" })
+                        @Html.TextBoxFor(x => x.Staff.FirstName, new {@class = "form-control", Name = "FirstName", id = "EditStaffFirstName"})
                         @Html.ValidationMessageFor(x => x.Staff.FirstName)
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(x => x.Staff.LastName)
-                        @Html.TextBoxFor(x => x.Staff.LastName, new { @class = "form-control", Name = "LastName", id = "EditStaffLastName" })
+                        @Html.TextBoxFor(x => x.Staff.LastName, new {@class = "form-control", Name = "LastName", id = "EditStaffLastName"})
                         @Html.ValidationMessageFor(x => x.Staff.LastName)
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(x => x.Staff.Code)
-                        @Html.TextBoxFor(x => x.Staff.Code, new { @class = "form-control", Name = "Code", id = "EditStaffCode" })
+                        @Html.TextBoxFor(x => x.Staff.Code, new {@class = "form-control", Name = "Code", id = "EditStaffCode"})
                         @Html.ValidationMessageFor(x => x.Staff.Code)
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(x => x.Staff.JobTitle)
-                        @Html.TextBoxFor(x => x.Staff.JobTitle, new { @class = "form-control", Name = "JobTitle", id = "EditStaffJobTitle" })
+                        @Html.TextBoxFor(x => x.Staff.JobTitle, new {@class = "form-control", Name = "JobTitle", id = "EditStaffJobTitle"})
                         @Html.ValidationMessageFor(x => x.Staff.JobTitle)
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(x => x.Staff.Email)
-                        @Html.TextBoxFor(x => x.Staff.Email, new { @class = "form-control", Name = "Email", id = "EditStaffEmail" })
+                        @Html.TextBoxFor(x => x.Staff.Email, new {@class = "form-control", Name = "Email", id = "EditStaffEmail"})
                         @Html.ValidationMessageFor(x => x.Staff.Email)
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(x => x.Staff.Phone)
-                        @Html.TextBoxFor(x => x.Staff.Phone, new { @class = "form-control", Name = "Phone", id = "EditStaffPhone" })
+                        @Html.TextBoxFor(x => x.Staff.Phone, new {@class = "form-control", Name = "Phone", id = "EditStaffPhone"})
                         @Html.ValidationMessageFor(x => x.Staff.Phone)
                         @Html.HiddenFor(x => x.Staff.Id, new {@class = "form-control", Name = "Id", id = "EditStaffId"})
                     </div>
@@ -316,7 +316,7 @@
                 });
 
             $('#EditCertModal').on('hidden.bs.modal',
-                function () {
+                function() {
                     $(this).find('form').trigger('reset');
                 });
 
@@ -370,20 +370,20 @@
 
             $("#certs").on("click",
                 ".js-edit",
-                function () {
+                function() {
                     var button = $(this);
                     var courseId = button.attr("data-course-id");
                     var staffId = "@Model.Staff.Id";
                     $.ajax({
                         url: "/api/staff/certificates/fetch/" + staffId + "/" + courseId,
                         method: "GET",
-                        success: function (result) {     
+                        success: function(result) {
                             $("#EditCertCourseDisplay").val(result["trainingCourse"].description);
                             $("#EditCertCourseControl").val(result["courseId"]);
                             $("#EditCertStatusControl").val(result["statusId"]);
                             $("#EditCertStaffControl").val(result["staffId"]);
                         },
-                        error: function () {
+                        error: function() {
                             toastr.error("Failed to load certificate data");
                         }
                     });
@@ -391,7 +391,7 @@
                 });
 
             $("#EditDetailsButton").on("click",
-                function () {
+                function() {
                     $("#EditStaffTitle").val("@Model.Staff.Title");
                     $("#EditStaffFirstName").val("@Model.Staff.FirstName");
                     $("#EditStaffLastName").val("@Model.Staff.LastName");
@@ -405,7 +405,7 @@
                 });
 
             $("#EditCertForm").on("submit",
-                function (e) {
+                function(e) {
 
                     e.preventDefault();
 
@@ -416,12 +416,12 @@
                         url: "/api/staff/certificates/update",
                         data: data,
                         method: "POST",
-                        success: function (result) {
+                        success: function(result) {
                             $("#EditCertModal").modal('hide');
                             toastr.success(result);
                             $("#certs").DataTable().ajax.reload();
                         },
-                        error: function (result) {
+                        error: function(result) {
                             toastr.error(result.responseJSON);
                             form.reset();
                         }
@@ -429,7 +429,7 @@
                 });
 
             $("#EditStaffForm").on("submit",
-                function (e) {
+                function(e) {
 
                     e.preventDefault();
 
@@ -440,11 +440,11 @@
                         url: "/api/staff/edit",
                         data: data,
                         method: "POST",
-                        success: function (result) {
+                        success: function(result) {
                             $("#EditStaffModal").modal('hide');
                             location.reload();
                         },
-                        error: function (result) {
+                        error: function(result) {
                             toastr.error(result.responseJSON);
                             form.reset();
                         }

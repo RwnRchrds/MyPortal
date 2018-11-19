@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
@@ -28,7 +27,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [Route("api/documents")]
-        [Authorize(Roles="SeniorStaff")]
+        [Authorize(Roles = "SeniorStaff")]
         public IEnumerable<DocumentDto> GetDocuments()
         {
             return _context.Documents
@@ -49,7 +48,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Route("api/documents/document/{documentId}")]        
+        [Route("api/documents/document/{documentId}")]
         public DocumentDto GetDocument(int documentId)
         {
             var document = _context.Documents
@@ -63,7 +62,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("api/documents/add")]
-        [Authorize(Roles="Staff, SeniorStaff")]
+        [Authorize(Roles = "Staff, SeniorStaff")]
         public IHttpActionResult AddDocument(DocumentDto documentDto)
         {
             var document = Mapper.Map<DocumentDto, Document>(documentDto);
@@ -79,7 +78,7 @@ namespace MyPortal.Controllers.Api
             var uploader = _context.Staff.Single(x => x.UserId == currentUserId);
 
             document.UploaderId = uploader.Id;
-            
+
             document.IsGeneral = true;
 
             document.Date = DateTime.Now;
@@ -91,7 +90,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpDelete]
-        [Authorize(Roles="Staff, SeniorStaff")]
+        [Authorize(Roles = "Staff, SeniorStaff")]
         [Route("api/documents/remove/{documentId}")]
         public IHttpActionResult RemoveDocument(int documentId)
         {
@@ -107,7 +106,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [Authorize(Roles="Staff, SeniorStaff")]
+        [Authorize(Roles = "Staff, SeniorStaff")]
         [Route("api/documents/edit")]
         public IHttpActionResult UpdateDocument(DocumentDto data)
         {
@@ -131,7 +130,5 @@ namespace MyPortal.Controllers.Api
 
             return Ok("Document updated");
         }
-
-
     }
 }

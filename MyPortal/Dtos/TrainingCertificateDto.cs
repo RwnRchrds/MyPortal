@@ -10,9 +10,7 @@ namespace MyPortal.Dtos
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int CourseId { get; set; }
 
-        [Key]
-        [Column(Order = 1)]
-        public int StaffId { get; set; }
+        [Key] [Column(Order = 1)] public int StaffId { get; set; }
 
         [Required] public int StatusId { get; set; }
 

@@ -1,11 +1,8 @@
+using System.Data.Entity;
+
 namespace MyPortal.Models
 {
-    using System;
-    using System.Data.Entity;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Linq;
-
-    public partial class MyPortalDbContext : DbContext
+    public class MyPortalDbContext : DbContext
     {
         public MyPortalDbContext()
             : base("name=MyPortalDbContext")

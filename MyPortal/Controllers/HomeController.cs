@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
+﻿using System.Web.Mvc;
 using MyPortal.Models;
 
 namespace MyPortal.Controllers
@@ -8,7 +6,6 @@ namespace MyPortal.Controllers
     [AllowAnonymous]
     public class HomeController : Controller
     {
-
         private readonly MyPortalDbContext _context;
 
         public HomeController()
@@ -33,18 +30,11 @@ namespace MyPortal.Controllers
         [Route("User/Home")]
         public ActionResult Home()
         {
-            if (User.IsInRole("SeniorStaff") || User.IsInRole("Staff"))
-            {
-                return RedirectToAction("Index", "Staff");
-            }
+            if (User.IsInRole("SeniorStaff") || User.IsInRole("Staff")) return RedirectToAction("Index", "Staff");
 
-            if (User.IsInRole("Student"))
-            {
-                return RedirectToAction("Index", "Students");
-            }
+            if (User.IsInRole("Student")) return RedirectToAction("Index", "Students");
 
             return RedirectToAction("Login", "Account");
         }
-
     }
 }

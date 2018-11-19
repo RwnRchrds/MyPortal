@@ -9,5 +9,10 @@ namespace MyPortal.Models.Misc
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm Password")]
+        public string Confirm { get; set; }
     }
 }

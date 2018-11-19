@@ -62,14 +62,10 @@ namespace MyPortal.Controllers
             var staffProfile = _context.Staff.SingleOrDefault(x => x.UserId == user.Id);
 
             if (studentProfile != null)
-            {
                 attachedProfile = studentProfile.LastName + ", " + studentProfile.FirstName + " (Student)";
-            }
 
             else if (staffProfile != null)
-            {
                 attachedProfile = staffProfile.LastName + ", " + staffProfile.FirstName + " (Staff)";
-            }
 
             var viewModel = new UserDetailsViewModel
             {

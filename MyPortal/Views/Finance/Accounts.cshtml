@@ -3,12 +3,13 @@
     ViewBag.Title = "Accounts";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
-
+<!--#region Title-->
 <div class="container float-left">
     <h2 class="mp-page-title">Accounts</h2>
     <hr/>
 </div>
-
+<!--#endregion-->
+<!--#region Accounts Table-->
 <div class="container float-left">
     <table class="table table-bordered table-hover mp-table" id="students">
         <thead>
@@ -23,7 +24,8 @@
         <tbody></tbody>
     </table>
 </div>
-
+<!--#endregion-->
+<!--#region Credit Modal-->
 <div id="CreditModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
@@ -31,7 +33,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title mp-title-credit">Credit Account</h4>
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "CreditForm"}))
             {
@@ -41,7 +45,7 @@
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text mp-bold" id="basic-addon">£</span>
-                            </div>                            
+                            </div>
                             @Html.TextBoxFor(x => x.BalanceAdjustment.Amount, new {@class = "form-control", Name = "Amount"})
                         </div>
                         @Html.ValidationMessageFor(x => x.BalanceAdjustment.Amount)
@@ -59,7 +63,8 @@
         </div>
     </div>
 </div>
-
+<!--#endregion-->
+<!--#region Debit Modal-->
 <div id="DebitModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
@@ -67,7 +72,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title mp-title-debit">Debit Account</h4>
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "DebitForm"}))
             {
@@ -77,7 +84,7 @@
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text mp-bold" id="basic-addon">£</span>
-                            </div>                            
+                            </div>
                             @Html.TextBoxFor(x => x.BalanceAdjustment.Amount, new {@class = "form-control", Name = "Amount"})
                         </div>
                         @Html.ValidationMessageFor(x => x.BalanceAdjustment.Amount)
@@ -95,6 +102,7 @@
         </div>
     </div>
 </div>
+<!--#endregion-->
 
 @section scripts
 {

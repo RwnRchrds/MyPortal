@@ -148,10 +148,9 @@ namespace MyPortal.Controllers.Api
         [Route("api/sales/new")]
         public IHttpActionResult NewSale(SaleDto sale)
         {
-
             sale.Date = DateTime.Now;
 
-            sale.Processed = true;            
+            sale.Processed = true;
 
             var student = _context.Students.SingleOrDefault(x => x.Id == sale.StudentId);
 

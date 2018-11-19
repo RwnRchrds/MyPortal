@@ -1,12 +1,9 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace MyPortal.Models
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
-
-    public partial class TrainingCertificate
+    public class TrainingCertificate
     {
         [Key]
         [Column(Order = 0)]
@@ -20,8 +17,7 @@ namespace MyPortal.Models
         [Display(Name = "Staff")]
         public int StaffId { get; set; }
 
-        [Display(Name = "Status")]
-        public int StatusId { get; set; }
+        [Display(Name = "Status")] public int StatusId { get; set; }
 
         public virtual Staff Staff { get; set; }
 

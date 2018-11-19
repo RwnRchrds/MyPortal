@@ -5,79 +5,59 @@
 }
 
 <body>
+    <!--#region Title-->
+    <div class="container float-left">
+        <h2 class="mp-page-title">@Model.User.UserName</h2>
+        <hr />
+    </div>
+    <!--#endregion-->
+    <!--#region Attached Profile Text-->
+    <div class="container float-left">
+        @if (Model.AttachedProfileName == "")
+        {
+            <p class="text-danger">No user profile attached</p>
+        }
+        else
+        {
+            <p class="text-success">User profile attached: @Model.AttachedProfileName</p>
+        }
+    </div>
+    <!--#endregion-->
+    <!--#region Buttons at Top of Page-->
+    <div class="container float-left">
 
-<div class="container float-left">
-    <h2 class="mp-page-title">@Model.User.UserName</h2>
-    <hr/>
-</div>
+        <button type="button" class="btn btn-success mp-btn-top-auto" data-user-id="@Model.User.Id" id="AttachPerson" data-toggle="modal" data-target="#AttachPersonModal">
+            <i class="fas fa-user-tag"></i> Attach Profile
+        </button>
 
-<div class="container float-left">
-    @if (Model.AttachedProfileName == "")
-    {
-        <p class="text-danger">No user profile attached</p>
-    }
-    else
-    {
-        <p class="text-success">User profile attached: @Model.AttachedProfileName</p>
-    }
-</div>
+        <button type="button" class="btn btn-danger mp-btn-top-auto" data-user-id="@Model.User.Id" id="DetachPerson">
+            <i class="fas fa-user-times"></i> Detach Profile
+        </button>
 
-<div class="container float-left">
+    </div>
 
-    <button type="button" class="btn btn-success mp-btn-top-auto" data-user-id="@Model.User.Id" id="AttachPerson" data-toggle="modal" data-target="#AttachPersonModal">
-        <i class="fas fa-user-tag"></i> Attach Profile
-    </button>
+    <div class="container float-left mp-margin-top">
 
-    <button type="button" class="btn btn-danger mp-btn-top-auto" data-user-id="@Model.User.Id" id="DetachPerson">
-        <i class="fas fa-user-times"></i> Detach Profile
-    </button>
+        <button type="button" class="btn btn-success mp-btn-top-auto" id="AddRole" data-toggle="modal" data-target="#AddRoleModal">
+            <i class="fa fa-plus-circle"></i> Add Role
+        </button>
 
-</div>
-
-<div class="container float-left mp-margin-top">
-
-    <button type="button" class="btn btn-success mp-btn-top-auto" id="AddRole" data-toggle="modal" data-target="#AddRoleModal">
-        <i class="fa fa-plus-circle"></i> Add Role
-    </button>
-
-    <button type="button" class="btn btn-warning mp-btn-top-auto" data-toggle="modal" data-target="#ResetPasswordModal" id="ResetPassword">
-        <i class="fas fa-key"></i> Reset Password
-    </button>
+        <button type="button" class="btn btn-warning mp-btn-top-auto" data-toggle="modal" data-target="#ResetPasswordModal" id="ResetPassword">
+            <i class="fas fa-key"></i> Reset Password
+        </button>
 
 
-    <button type="button" class="btn btn-danger mp-btn-top-auto" data-user-id="@Model.User.Id" id="DeleteUser">
-        <i class="fas fa-user-slash"></i> Delete User
-    </button>
+        <button type="button" class="btn btn-danger mp-btn-top-auto" data-user-id="@Model.User.Id" id="DeleteUser">
+            <i class="fas fa-user-slash"></i> Delete User
+        </button>
 
-    <hr/>
+        <hr />
 
-</div>
+    </div>
+<!--#endregion-->
+    <!--#region User Roles Table-->
 <div class="container float-left">
     <div class="container" id="details">
-        <div class="float-left">
-            <!--USER DETAILS PANEL-->
-            <div class="card border-primary mp-card">
-                <div class="card-header bg-primary">User Details</div>
-                <div class="card-body">
-                    <table class="table-condensed mp-table-condensed">
-                        <tr>
-                            <td>
-                                <b>Username</b>
-                            </td>
-                            <td>@Model.User.UserName</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b>Access Failed Count</b>
-                            </td>
-                            <td>@Model.User.AccessFailedCount</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- USER ROLES PANEL -->
         <div class="float-left" id="Results">
             <div class="card border-primary mp-card">
                 <div class="card-header bg-primary">User Roles</div>
@@ -94,7 +74,7 @@
                         <thead>
                         <tr style="background-color: #18bc9c">
                             <th style="color: whitesmoke">Role</th>
-                            <th style="color: whitesmoke">Remove</th>
+                            <th style="color: whitesmoke">Actions</th>
                         </tr>
                         </thead>
                         @foreach (var role in Model.UserRoles)
@@ -113,9 +93,9 @@
             </div>
         </div>
     </div>
-
-
-    <!-- Reset Password Modal -->
+</div>
+<!--#endregion-->
+    <!-- #region Reset Password Modal -->
     <div id="ResetPasswordModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
 
@@ -127,14 +107,20 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "ResetPasswordForm"}))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "ResetPasswordForm" }))
                 {
                     <div class="modal-body">
                         <div class="form-group">
                             @Html.LabelFor(p => p.ChangePassword.Password)
-                            @Html.PasswordFor(p => p.ChangePassword.Password, new {@class = "form-control", id = "enteredPassword", Name = "Password"})
+                            @Html.PasswordFor(p => p.ChangePassword.Password, new { @class = "form-control", id = "enteredPassword", Name = "Password" })
+                            @Html.ValidationMessageFor(p => p.ChangePassword.Password)
 
-                            @Html.HiddenFor(u => u.ChangePassword.UserId, new {Value = Model.User.Id, id = "userIdControl", Name = "UserId"})
+                            @Html.HiddenFor(u => u.ChangePassword.UserId, new { Value = Model.User.Id, id = "userIdControl", Name = "UserId" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(p => p.ChangePassword.Confirm)
+                            @Html.PasswordFor(p => p.ChangePassword.Confirm, new { @class = "form-control", id = "confirmPassword", Name = "Confirm" })
+                            @Html.ValidationMessageFor(p => p.ChangePassword.Confirm)
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -146,8 +132,8 @@
             </div>
         </div>
     </div>
-
-    <!-- Add Role Modal -->
+    <!--#endregion-->
+    <!-- #region Add Role Modal -->
     <div id="AddRoleModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
 
@@ -159,14 +145,14 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "AddRoleForm"}))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "AddRoleForm" }))
                 {
                     <div class="modal-body">
                         <div class="form-group">
                             @Html.LabelFor(r => r.ChangeRole.RoleName)
-                            @Html.DropDownListFor(r => r.ChangeRole.RoleName, new SelectList(Model.Roles, "Name", "Name"), "Select Role", new {@class = "form-control", Name = "RoleName"})
+                            @Html.DropDownListFor(r => r.ChangeRole.RoleName, new SelectList(Model.Roles, "Name", "Name"), "Select Role", new { @class = "form-control", Name = "RoleName" })
 
-                            @Html.HiddenFor(u => u.ChangePassword.UserId, new {Value = Model.User.Id, Name = "UserId"})
+                            @Html.HiddenFor(u => u.ChangePassword.UserId, new { Value = Model.User.Id, Name = "UserId" })
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -178,7 +164,8 @@
             </div>
         </div>
     </div>
-
+    <!--#endregion-->
+    <!--#region Attach Person Modal-->
     <div id="AttachPersonModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
 
@@ -190,7 +177,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "AttachPersonForm"}))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "AttachPersonForm" }))
                 {
                     <div class="modal-body">
 
@@ -205,8 +192,7 @@
 
                         <div class="form-group">
                             <label class="d-none" id="studentYearGroupSelectLabel">Year Group</label>
-                            <select class="form-control disabled d-none" id="studentYearGroupSelect">
-                            </select>
+                            <select class="form-control disabled d-none" id="studentYearGroupSelect"></select>
                         </div>
 
                         <div class="form-group">
@@ -226,8 +212,7 @@
             </div>
         </div>
     </div>
-
-</div>
+    <!--#endregion-->
 </body>
 
 @section scripts
@@ -406,7 +391,7 @@
                         if ($("#userTypeSelect").val() === "Student") {
                             $.ajax({
                                 url: "/api/yearGroups/fetch",
-                                method: "GET",          
+                                method: "GET",
                                 complete: function(data) {
                                     $("#yearGroupSelect").empty();
                                     $(data.responseJSON).each(function(i, yearGroup) {
@@ -465,7 +450,7 @@
                             UserId: $("#AttachPerson").attr("data-user-id"),
                             RoleName: "Student",
                             PersonId: $("#personSelect").val()
-                        }
+                        };
                         $.ajax({
                             url: "/api/users/attach",
                             data: data,
@@ -485,15 +470,15 @@
                             UserId: $("#AttachPerson").attr("data-user-id"),
                             RoleName: "Staff",
                             PersonId: $("#personSelect").val()
-                        }
+                        };
                         $.ajax({
                             url: "/api/users/attach",
                             data: data,
                             method: "POST",
-                            success: function (result) {
+                            success: function(result) {
                                 location.reload();
                             },
-                            error: function (result) {
+                            error: function(result) {
                                 $("#AttachPersonModal").modal('hide');
                                 toastr.error(result.responseJSON);
                             }

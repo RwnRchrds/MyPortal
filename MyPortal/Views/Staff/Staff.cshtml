@@ -36,49 +36,49 @@
                     <span aria-hidden="false"></span>&times;
                 </button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "newStaffForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "newStaffForm"}))
             {
-            <div class="modal-body">
-                <div class="form-group">
-                    @Html.LabelFor(x => x.Staff.Title)
-                    @Html.DropDownListFor(x => x.Staff.Title, new SelectList(Model.Titles), "Select Title",  new { @class = "form-control", Name = "Title" })
-                    @Html.ValidationMessageFor(x => x.Staff.Title)
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Staff.Title)
+                        @Html.DropDownListFor(x => x.Staff.Title, new SelectList(Model.Titles), "Select Title", new {@class = "form-control", Name = "Title"})
+                        @Html.ValidationMessageFor(x => x.Staff.Title)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Staff.FirstName)
+                        @Html.TextBoxFor(x => x.Staff.FirstName, new {@class = "form-control", Name = "FirstName"})
+                        @Html.ValidationMessageFor(x => x.Staff.FirstName)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Staff.LastName)
+                        @Html.TextBoxFor(x => x.Staff.LastName, new {@class = "form-control", Name = "LastName"})
+                        @Html.ValidationMessageFor(x => x.Staff.LastName)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Staff.Code)
+                        @Html.TextBoxFor(x => x.Staff.Code, new {@class = "form-control", Name = "Code"})
+                        @Html.ValidationMessageFor(x => x.Staff.Code)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Staff.JobTitle)
+                        @Html.TextBoxFor(x => x.Staff.JobTitle, new {@class = "form-control", Name = "JobTitle"})
+                        @Html.ValidationMessageFor(x => x.Staff.JobTitle)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Staff.Email)
+                        @Html.TextBoxFor(x => x.Staff.Email, new {@class = "form-control", Name = "Email"})
+                        @Html.ValidationMessageFor(x => x.Staff.Email)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Staff.Phone)
+                        @Html.TextBoxFor(x => x.Staff.Phone, new {@class = "form-control", Name = "Phone"})
+                        @Html.ValidationMessageFor(x => x.Staff.Phone)
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
                 </div>
-                <div class="form-group">
-                    @Html.LabelFor(x => x.Staff.FirstName)
-                    @Html.TextBoxFor(x => x.Staff.FirstName, new { @class = "form-control", Name = "FirstName" })
-                    @Html.ValidationMessageFor(x => x.Staff.FirstName)
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(x => x.Staff.LastName)
-                    @Html.TextBoxFor(x => x.Staff.LastName, new { @class = "form-control", Name = "LastName" })
-                    @Html.ValidationMessageFor(x => x.Staff.LastName)
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(x => x.Staff.Code)
-                    @Html.TextBoxFor(x => x.Staff.Code, new { @class = "form-control", Name = "Code" })
-                    @Html.ValidationMessageFor(x => x.Staff.Code)
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(x => x.Staff.JobTitle)
-                    @Html.TextBoxFor(x => x.Staff.JobTitle, new {@class = "form-control", Name = "JobTitle"})
-                    @Html.ValidationMessageFor(x => x.Staff.JobTitle)
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(x => x.Staff.Email)
-                    @Html.TextBoxFor(x => x.Staff.Email, new {@class = "form-control", Name = "Email"})
-                    @Html.ValidationMessageFor(x => x.Staff.Email)
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(x => x.Staff.Phone)
-                    @Html.TextBoxFor(x => x.Staff.Phone, new {@class = "form-control", Name = "Phone"})
-                    @Html.ValidationMessageFor(x => x.Staff.Phone)
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </div>
             }
 
         </div>
@@ -91,7 +91,7 @@
         $(document).ready(function() {
 
             $("#newStaffForm").on("submit",
-                function (e) {
+                function(e) {
 
                     e.preventDefault();
 
@@ -102,12 +102,12 @@
                         url: "/api/staff/new",
                         data: data,
                         method: "POST",
-                        success: function (result) {
+                        success: function(result) {
                             $("#NewStaffModal").modal('hide');
                             toastr.success(result);
                             $("#staff").DataTable().ajax.reload();
                         },
-                        error: function (result) {
+                        error: function(result) {
                             toastr.error(result.responseJSON);
                             form.reset();
                         }
@@ -115,7 +115,7 @@
                 });
 
             $('#NewStaffModal').on('hidden.bs.modal',
-                function () {
+                function() {
                     $(this).find('form').trigger('reset');
                 });
 

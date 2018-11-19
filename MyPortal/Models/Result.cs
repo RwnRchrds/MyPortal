@@ -1,12 +1,9 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace MyPortal.Models
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
-
-    public partial class Result
+    public class Result
     {
         [Key]
         [Column(Order = 0)]
@@ -26,9 +23,7 @@ namespace MyPortal.Models
         [Display(Name = "Subject")]
         public int SubjectId { get; set; }
 
-        [Required]
-        [StringLength(50)]
-        public string Value { get; set; }
+        [Required] [StringLength(50)] public string Value { get; set; }
 
         public virtual ResultSet ResultSet { get; set; }
 

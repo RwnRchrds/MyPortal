@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 
 namespace MyPortal.ViewModels
 {
@@ -9,7 +6,7 @@ namespace MyPortal.ViewModels
     {
         public SalesViewModel()
         {
-            Status = new List<string>() {"All","Pending Only"};    
+            Status = new List<string> {"All", "Pending Only"};
         }
 
         public IEnumerable<string> Status { get; set; }

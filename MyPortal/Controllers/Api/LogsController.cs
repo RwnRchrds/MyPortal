@@ -55,10 +55,7 @@ namespace MyPortal.Controllers.Api
 
             var userProfile = _context.Staff.SingleOrDefault(x => x.UserId == currentUserId);
 
-            if (userProfile == null)
-            {
-                return Content(HttpStatusCode.BadRequest, "User does not have a profile");
-            }
+            if (userProfile == null) return Content(HttpStatusCode.BadRequest, "User does not have a profile");
 
             data.AuthorId = userProfile.Id;
 

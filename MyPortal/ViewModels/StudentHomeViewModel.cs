@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using MyPortal.Models;
-using MyPortal.Models.Misc;
 
 namespace MyPortal.ViewModels
 {

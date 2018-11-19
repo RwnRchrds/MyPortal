@@ -27,12 +27,23 @@ namespace MyPortal.Controllers.Api
             _context.Dispose();
         }
 
-        [Authorize(Roles="Staff, SeniorStaff")]
+        [Authorize(Roles = "Staff, SeniorStaff")]
         public IEnumerable<StudentDto> GetStudents()
         {
             return _context.Students
                 .Include(s => s.YearGroup)
                 .Include(s => s.RegGroup)
+                .OrderBy(x => x.LastName)
+                .ToList()
+                .Select(Mapper.Map<Student, StudentDto>);
+        }
+
+        [Authorize(Roles = "Staff, SeniorStaff")]
+        public IEnumerable<StudentDto> GetStudentsByRegGroup(int regGroupId)
+        {
+            return _context.Students
+                .Where(x => x.RegGroupId == regGroupId)
+                .OrderBy(x => x.LastName)
                 .ToList()
                 .Select(Mapper.Map<Student, StudentDto>);
         }
@@ -49,7 +60,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [Authorize(Roles="Staff, SeniorStaff")]
+        [Authorize(Roles = "Staff, SeniorStaff")]
         public StudentDto CreateStudent(StudentDto studentDto)
         {
             if (!ModelState.IsValid)
@@ -66,8 +77,8 @@ namespace MyPortal.Controllers.Api
             return studentDto;
         }
 
-        [HttpPut]   
-        [Authorize(Roles="Staff, SeniorStaff")]
+        [HttpPut]
+        [Authorize(Roles = "Staff, SeniorStaff")]
         public IHttpActionResult UpdateStudent(int id, StudentDto studentDto)
         {
             if (studentDto == null)
@@ -91,7 +102,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpDelete]
-        [Authorize(Roles="Staff, SeniorStaff")]
+        [Authorize(Roles = "Staff, SeniorStaff")]
         public IHttpActionResult DeleteStudent(int id)
         {
             var studentInDb = _context.Students.SingleOrDefault(s => s.Id == id);
@@ -107,7 +118,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("api/students/credit")]
-        [Authorize(Roles="Staff, SeniorStaff")]
+        [Authorize(Roles = "Staff, SeniorStaff")]
         public IHttpActionResult CreditAccount(BalanceAdjustment data)
         {
             if (data.Amount <= 0)
@@ -128,7 +139,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("api/students/debit")]
-        [Authorize(Roles="Staff, SeniorStaff")]
+        [Authorize(Roles = "Staff, SeniorStaff")]
         public IHttpActionResult DebitAccount(BalanceAdjustment data)
         {
             if (data.Amount <= 0)
@@ -183,10 +194,10 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [Route("api/students/documents/document/{documentId}")]
         public DocumentDto GetDocument(int documentId)
-        {      
+        {
             var document = _context.StudentDocuments
-                .SingleOrDefault(x => x.Id == documentId);             
-            
+                .SingleOrDefault(x => x.Id == documentId);
+
             if (document == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
@@ -228,7 +239,7 @@ namespace MyPortal.Controllers.Api
             _context.Documents.Add(document);
             _context.SaveChanges();
 
-            var studentDocument = new StudentDocument()
+            var studentDocument = new StudentDocument
             {
                 DocumentId = document.Id,
                 StudentId = data.Student
@@ -273,7 +284,7 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.NotFound, "Document not found");
 
             var isUriValid = Uri.TryCreate(data.Url, UriKind.Absolute, out var uriResult)
-                          && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+                             && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 
             if (!isUriValid)
                 return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");

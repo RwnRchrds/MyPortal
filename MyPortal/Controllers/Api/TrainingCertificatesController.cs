@@ -27,7 +27,6 @@ namespace MyPortal.Controllers.Api
         [Route("api/staff/certificates/fetch/{staff}")]
         public IEnumerable<TrainingCertificateDto> GetCertificates(int staff)
         {
-
             var staffInDb = _context.Staff.Single(x => x.Id == staff);
 
             if (staffInDb == null)
@@ -70,7 +69,8 @@ namespace MyPortal.Controllers.Api
         [Route("api/staff/certificates/update")]
         public IHttpActionResult UpdateCertificate(TrainingCertificateDto data)
         {
-            var certInDb = _context.TrainingCertificates.Single(x => x.StaffId == data.StaffId && x.CourseId == data.CourseId);
+            var certInDb =
+                _context.TrainingCertificates.Single(x => x.StaffId == data.StaffId && x.CourseId == data.CourseId);
 
             if (certInDb == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -86,7 +86,8 @@ namespace MyPortal.Controllers.Api
         [Route("api/staff/certificates/delete/{staff}/{course}")]
         public IHttpActionResult DeleteCertificate(int staff, int course)
         {
-            var certInDb = _context.TrainingCertificates.SingleOrDefault(l => l.StaffId == staff && l.CourseId == course);
+            var certInDb =
+                _context.TrainingCertificates.SingleOrDefault(l => l.StaffId == staff && l.CourseId == course);
 
             if (certInDb == null)
                 return Content(HttpStatusCode.NotFound, "Certificate not found");

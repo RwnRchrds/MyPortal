@@ -4,19 +4,22 @@
 }
 
 <body>
+<!--#region Title-->
 <div class="container float-left">
     <h2 class="mp-page-title">Users</h2>
-    <hr />
+    <hr/>
 </div>
-
+<!--#endregion-->
+<!--#region Buttons at Top of Page-->
 <div class="container float-left">
     @if (User.IsInRole("Admin"))
     {
-        @Html.ActionLink("New User", "NewUser", "Admin", null, new { @class = "btn btn-success" })
-        <hr />
+        @Html.ActionLink("New User", "NewUser", "Admin", null, new {@class = "btn btn-success"})
+        <hr/>
     }
 </div>
-
+<!--#endregion-->
+<!--#region Users Table-->
 <div class="container float-left">
     <table class="table table-bordered table-hover mp-table mp-table-link" id="users">
         <thead>
@@ -27,6 +30,7 @@
         <tbody></tbody>
     </table>
 </div>
+<!--#endregion-->
 </body>
 
 @section scripts
@@ -42,7 +46,7 @@
                 columns: [
                     {
                         data: "userName",
-                        render: function (data, type, user) {
+                        render: function(data, type, user) {
                             return "<a href='/Staff/Admin/Users/" + user.id + "'>" + user.userName + "</a>";
                         }
                     }

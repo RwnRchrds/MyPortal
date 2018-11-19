@@ -4,7 +4,7 @@
         @Html.ActionLink("MyPortal", "Index", "Home", new {area = ""}, new {@class = "navbar-brand"})
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav mr-auto">
-                <li>@Html.ActionLink("Home", "Index", "Staff", null, new { @class = "nav-link" })</li>
+                <li>@Html.ActionLink("Home", "Index", "Staff", null, new {@class = "nav-link"})</li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="menuDropdownLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Menu
@@ -14,23 +14,23 @@
                         @Html.ActionLink("Students", "Students", "Staff", null, new {@class = "dropdown-item"})
                         @if (User.IsInRole("SeniorStaff"))
                         {
-                            @Html.ActionLink("Staff", "Staff", "Staff", null, new {@class = "dropdown-item" })
+                            @Html.ActionLink("Staff", "Staff", "Staff", null, new {@class = "dropdown-item"})
                         }
-                        @Html.ActionLink("Documents", "Documents", "Staff", null, new {@class = "dropdown-item" })
-                        @Html.ActionLink("Training Courses", "TrainingCourses", "Staff", null, new {@class = "dropdown-item" })
+                        @Html.ActionLink("Documents", "Documents", "Staff", null, new {@class = "dropdown-item"})
+                        @Html.ActionLink("Training Courses", "TrainingCourses", "Staff", null, new {@class = "dropdown-item"})
                         @if (User.IsInRole("Admin"))
                         {
                             <div class="dropdown-divider"></div>
                             <h6 class="dropdown-header">Admin</h6>
-                            @Html.ActionLink("Users", "Users", "Admin", null, new {@class = "dropdown-item" })
+                            @Html.ActionLink("Users", "Users", "Admin", null, new {@class = "dropdown-item"})
                         }
                         @if (User.IsInRole("Finance"))
                         {
                             <div class="dropdown-divider"></div>
                             <h6 class="dropdown-header">Finance</h6>
-                            @Html.ActionLink("Accounts", "Accounts", "Finance", null, new {@class = "dropdown-item" })
-                            @Html.ActionLink("Products", "Products", "Finance", null, new {@class = "dropdown-item" })
-                            @Html.ActionLink("Sales", "Sales", "Finance", null, new {@class = "dropdown-item" })
+                            @Html.ActionLink("Accounts", "Accounts", "Finance", null, new {@class = "dropdown-item"})
+                            @Html.ActionLink("Products", "Products", "Finance", null, new {@class = "dropdown-item"})
+                            @Html.ActionLink("Sales", "Sales", "Finance", null, new {@class = "dropdown-item"})
                         }
                     </div>
                 </li>

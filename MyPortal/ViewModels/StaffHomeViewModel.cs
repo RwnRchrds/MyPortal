@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using MyPortal.Models;
+﻿using MyPortal.Models;
 
 namespace MyPortal.ViewModels
 {
