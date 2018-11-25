@@ -10,13 +10,13 @@ namespace MyPortal
             bundles.Add(new ScriptBundle("~/bundles/lib").Include(
                 "~/Scripts/jquery-{version}.js",
                 "~/Scripts/bootstrap.min.js",
-                "~/scripts/bootbox.min.js",
+                "~/Scripts/bootbox.min.js",
                 "~/Scripts/respond.min.js",
-                "~/scripts/toastr.min.js",
-                "~/scripts/datatables/jquery.datatables.min.js",
-                "~/scripts/datatables/datatables.bootstrap4.min.js",
-                "~/scripts/datatables/datatables.responsive.min.js",
-                "~/scripts/datatables/responsive.bootstrap4.min.js"
+                "~/Scripts/toastr.min.js",
+                "~/Scripts/datatables/jquery.datatables.min.js",
+                "~/Scripts/datatables/datatables.bootstrap4.min.js",
+                "~/Scripts/datatables/datatables.responsive.min.js",
+                "~/Scripts/datatables/responsive.bootstrap4.min.js"
             ));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
@@ -35,8 +35,8 @@ namespace MyPortal
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/bootstrap-flatly.css",
-                "~/content/datatables/css/datatables.bootstrap4.min.css",
-                "~/content/datatables/css/responsive.bootstrap4.min.css",
+                "~/Content/datatables/css/datatables.bootstrap4.min.css",
+                "~/Content/datatables/css/responsive.bootstrap4.min.css",
                 "~/content/toastr.min.css",
                 "~/content/myportal.css",
                 "~/content/fontawesome.min.css",

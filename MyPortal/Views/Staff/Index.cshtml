@@ -80,6 +80,24 @@
     </div>
 </div>
 
+<!--#region MyObservations Panel-->
+<div class="container float-left mp-margin-top">
+    <div>
+        <hr />
+        <h4 class="mp-bold">MyObservations</h4>
+        <table class="table table-bordered mp-table mp-table-link" id="observations" data-staff-id="@Model.CurrentUser.Id">
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Observed By</th>
+                <th>Outcome</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<!--#endregion-->
+
 @section scripts
 {
     <script>
@@ -156,6 +174,62 @@
                     if (data.trainingStatus.name === "Failed") {
                         $(row).addClass("mp-cert-failed");
                     }
+                }
+            });
+
+            $("#observations").DataTable({
+                ajax: {
+                    url: "/api/staff/observations/fetch/" + $("#observations").attr("data-staff-id"),
+                    dataSrc: "",
+                    method: "GET"
+                },
+                columns: [
+                    {
+                        data: "date",
+                        render: function (data) {
+                            var date = new Date(data);
+                            return date.toLocaleDateString();
+                        }
+
+                    },
+                    {
+                        data: "staff1.lastname",
+                        render: function (data, type, observation) {
+                            return observation.staff1.title +
+                                " " +
+                                observation.staff1.firstName.substring(0, 1) +
+                                " " +
+                                observation.staff1.lastName;
+                        }
+                    },
+                    {
+                        data: "outcome"
+                    }
+                ],
+                paging: false,
+                ordering: false,
+                searching: false,
+                info: false,
+                responsive: true,
+                "createdRow": function (row, data, dataIndex) {
+                    if (data.outcome === "Inadequate") {
+                        $(row).addClass("mp-observation-inadequate");
+                    }
+
+                    if (data.outcome === "Satisfactory") {
+                        $(row).addClass("mp-observation-satisfactory");
+                    }
+
+                    if (data.outcome === "Good") {
+                        $(row).addClass("mp-observation-good");
+                    }
+
+                    if (data.outcome === "Outstanding") {
+                        $(row).addClass("mp-observation-outstanding");
+                    }
+                },
+                "language": {
+                    "emptyTable": "No observations to display"
                 }
             });
         });

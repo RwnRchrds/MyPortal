@@ -10,14 +10,17 @@ namespace MyPortal.ViewModels
         public StaffDetailsViewModel()
         {
             Titles = new List<string> {"Mr", "Miss", "Mrs", "Ms", "Mx", "Prof", "Sir", "Dr", "Lady", "Lord"};
+            ObservationOutcomes = new List<string>{"Outstanding","Good","Satisfactory","Inadequate"};
         }
 
         public Staff Staff { get; set; }
         public IEnumerable<TrainingCertificate> TrainingCertificates { get; set; }
         public TrainingCertificateDto TrainingCertificate { get; set; }
+        public StaffObservationDto StaffObservation { get; set; }
+        public IEnumerable<string> ObservationOutcomes { get; set; }
         public IEnumerable<TrainingCourse> TrainingCourses { get; set; }
         public IEnumerable<TrainingStatus> TrainingStatuses { get; set; }
         public IEnumerable<string> Titles { get; set; }
-        public StaffDocumentUpload Upload { get; set; }
+        public StaffDocumentDto Upload { get; set; }
     }
 }

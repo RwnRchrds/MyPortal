@@ -3,42 +3,42 @@
     ViewBag.Title = "Sales";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
+<body>
+    <!--#region Title-->
+    <div class="container float-left">
+        <h2 class="mp-page-title">Sales</h2>
+        <hr />
+    </div>
+    <!--#endregion-->
+    <!--#region Buttons at Top-->
+    <div class="container float-left">
+        <button type="button" class="btn btn-success mp-btn-top-auto" id="newSaleButton">Sale Entry</button>
+        <hr />
+    </div>
+    <!--#endregion-->
+    <!--#region Sales Table + Selector-->
+    <div class="container float-left">
+        @Html.Label("View Sales")
+        @Html.DropDownList("SelectedStatus", new SelectList(Model.Status, "Pending Only"), new { @class = "form-control", Name = "SaleStatus", id = "selectedStatus" })
+    </div>
 
-<!--#region Title-->
-<div class="container float-left">
-    <h2 class="mp-page-title">Sales</h2>
-    <hr />
-</div>
-<!--#endregion-->
-<!--#region Buttons at Top-->
-<div class="container float-left">
-    <button type="button" class="btn btn-success mp-btn-top-auto" id="newSaleButton">Sale Entry</button>
-    <hr />
-</div>
-<!--#endregion-->
-<!--#region Sales Table + Selector-->
-<div class="container float-left">
-    @Html.Label("View Sales")
-    @Html.DropDownList("SelectedStatus", new SelectList(Model.Status, "Pending Only"), new { @class = "form-control", Name = "SaleStatus", id = "selectedStatus" })
-</div>
-
-<div class="container float-left mp-margin-top">
-    <table class="table table-bordered table-hover mp-table" id="sales">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Student</th>
-                <th>Product</th>
-                <th>Paid</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-</div>
-<!--#endregion-->
-
+    <div class="container float-left mp-margin-top">
+        <table class="table table-bordered table-hover mp-table" id="sales">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Student</th>
+                    <th>Product</th>
+                    <th>Paid</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <!--#endregion-->
+</body>
 @section scripts
 {
     <script>

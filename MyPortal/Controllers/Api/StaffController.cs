@@ -161,9 +161,21 @@ namespace MyPortal.Controllers.Api
             return documents;
         }
 
+        [HttpGet]
+        [Route("api/staff/documents/document/{documentId}")]
+        public StaffDocumentDto GetDocument(int documentId)
+        {
+            var document = _context.StaffDocuments.SingleOrDefault(x => x.Id == documentId);
+
+            if (document == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            return Mapper.Map<StaffDocument, StaffDocumentDto>(document);
+        }
+
         [HttpPost]
         [Route("api/staff/documents/add")]
-        public IHttpActionResult AddDocument(StaffDocumentUpload data)
+        public IHttpActionResult AddDocument(StaffDocumentDto data)
         {
             var staff = _context.Staff.SingleOrDefault(x => x.Id == data.StaffId);
 
@@ -177,32 +189,27 @@ namespace MyPortal.Controllers.Api
             if (uploader == null)
                 return Content(HttpStatusCode.BadRequest, "Uploader not found");
 
-            var document = data.Document;
+            data.Document.IsGeneral = false;
 
-            document.IsGeneral = false;
+            data.Document.Approved = true;
 
-            document.Approved = true;
+            data.Document.Date = DateTime.Now;
 
-            document.Date = DateTime.Now;
+            data.Document.UploaderId = uploader.Id;
 
-            document.UploaderId = uploader.Id;
-
-            var isUriValid = Uri.TryCreate(document.Url, UriKind.Absolute, out var uriResult)
+            var isUriValid = Uri.TryCreate(data.Document.Url, UriKind.Absolute, out var uriResult)
                              && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 
             if (!isUriValid)
                 return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
 
-            _context.Documents.Add(document);
-            _context.SaveChanges();
+            var staffDocument = Mapper.Map<StaffDocumentDto, StaffDocument>(data);
 
-            var staffDocument = new StaffDocument
-            {
-                DocumentId = document.Id,
-                StaffId = data.StaffId
-            };
+            var document = staffDocument.Document;
 
+            _context.Documents.Add(document);       
             _context.StaffDocuments.Add(staffDocument);
+            
             _context.SaveChanges();
 
             return Ok("Document added");
@@ -233,23 +240,23 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("api/staff/documents/edit")]
-        public IHttpActionResult UpdateDocument(DocumentDto data)
+        public IHttpActionResult UpdateDocument(StaffDocumentDto data)
         {
-            var documentInDb = _context.Documents.Single(x => x.Id == data.Id);
+            var staffDocumentInDb = _context.StaffDocuments.Single(x => x.Id == data.Id);
 
-            if (documentInDb == null)
+            if (staffDocumentInDb == null)
                 return Content(HttpStatusCode.NotFound, "Upload not found");
 
-            var isUriValid = Uri.TryCreate(data.Url, UriKind.Absolute, out var uriResult)
+            var isUriValid = Uri.TryCreate(data.Document.Url, UriKind.Absolute, out var uriResult)
                              && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 
             if (!isUriValid)
                 return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
 
-            documentInDb.Description = data.Description;
-            documentInDb.Url = data.Url;
-            documentInDb.IsGeneral = false;
-            documentInDb.Approved = true;
+            staffDocumentInDb.Document.Description = data.Document.Description;
+            staffDocumentInDb.Document.Url = data.Document.Url;
+            staffDocumentInDb.Document.IsGeneral = false;
+            staffDocumentInDb.Document.Approved = true;
 
             _context.SaveChanges();
 
@@ -277,21 +284,35 @@ namespace MyPortal.Controllers.Api
             return observations;
         }
 
+        [HttpGet]
+        [Route("api/staff/observations/observation/{observationId}")]
+        public StaffObservationDto GetObservation(int observationId)
+        {
+            var observation = _context.StaffObservations.SingleOrDefault(x => x.Id == observationId);
+
+            if (observation == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            return Mapper.Map<StaffObservation, StaffObservationDto>(observation);
+        }
+
         [HttpPost]
         [Route("api/staff/observations/add")]
         public IHttpActionResult AddObservation(StaffObservationDto data)
         {
+
             data.Date = DateTime.Now;
 
-            if (!ModelState.IsValid)
-                return Content(HttpStatusCode.BadRequest, "Invalid data");
+            var currentUserId = User.Identity.GetUserId();
+
+            var observer = _context.Staff.SingleOrDefault(x => x.UserId == currentUserId);
 
             var observee = _context.Staff.Single(x => x.Id == data.ObserveeId);
 
-            var observer = _context.Staff.Single(x => x.Id == data.ObserverId);
-
             if (observee == null || observer == null)
                 return Content(HttpStatusCode.NotFound, "Staff member not found");
+
+            data.ObserverId = observer.Id;
 
             var observationToAdd = Mapper.Map<StaffObservationDto, StaffObservation>(data);
 
