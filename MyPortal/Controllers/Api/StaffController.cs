@@ -312,6 +312,9 @@ namespace MyPortal.Controllers.Api
             if (observee == null || observer == null)
                 return Content(HttpStatusCode.NotFound, "Staff member not found");
 
+            if (observee.Id == observer.Id)
+                return Content(HttpStatusCode.BadRequest, "Cannot add an observation for yourself");
+
             data.ObserverId = observer.Id;
 
             var observationToAdd = Mapper.Map<StaffObservationDto, StaffObservation>(data);
