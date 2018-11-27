@@ -15,12 +15,12 @@ namespace MyPortal.ViewModels
 
         public Staff Staff { get; set; }
         public IEnumerable<TrainingCertificate> TrainingCertificates { get; set; }
-        public TrainingCertificateDto TrainingCertificate { get; set; }
-        public StaffObservationDto StaffObservation { get; set; }
+        public TrainingCertificate TrainingCertificate { get; set; }
+        public StaffObservation StaffObservation { get; set; }
         public IEnumerable<string> ObservationOutcomes { get; set; }
         public IEnumerable<TrainingCourse> TrainingCourses { get; set; }
         public IEnumerable<TrainingStatus> TrainingStatuses { get; set; }
         public IEnumerable<string> Titles { get; set; }
-        public StaffDocumentDto Upload { get; set; }
+        public StaffDocument Upload { get; set; }
     }
 }

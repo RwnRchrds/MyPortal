@@ -1,7 +1,7 @@
 ﻿@using MyPortal.Controllers.Api
 @model MyPortal.ViewModels.StaffDetailsViewModel
 @{
-    ViewBag.Title = "Staff Details";
+    ViewBag.Title = "Staff Details: " + Model.Staff.LastName + ", " + Model.Staff.FirstName;
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 <body>
@@ -162,12 +162,12 @@
                 {
                     <div class="modal-body">
                         <div class="form-group">
-                            @Html.LabelFor(l => l.TrainingCertificate.CourseId)
+                            @Html.LabelFor(l => l.TrainingCertificate.TrainingCourse)
                             @Html.DropDownListFor(l => l.TrainingCertificate.CourseId, new SelectList(Model.TrainingCourses, "Id", "Description"), "Select Course", new { @class = "form-control", Name = "CourseId" })
                             @Html.ValidationMessageFor(x => x.TrainingCertificate.CourseId)
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(l => l.TrainingCertificate.StatusId)
+                            @Html.LabelFor(l => l.TrainingCertificate.TrainingStatus)
                             @Html.DropDownListFor(l => l.TrainingCertificate.StatusId, new SelectList(Model.TrainingStatuses, "Id", "Name"), "Select Status", new { @class = "form-control", Name = "StatusId" })
                             @Html.ValidationMessageFor(l => l.TrainingCertificate.StatusId)
                         </div>

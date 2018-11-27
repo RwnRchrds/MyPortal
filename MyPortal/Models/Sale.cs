@@ -14,6 +14,7 @@ namespace MyPortal.Models
 
         [Column(TypeName = "date")] public DateTime Date { get; set; }
 
+        [Display(Name = "Amount Paid")]
         public decimal AmountPaid { get; set; }
 
         public bool Processed { get; set; }
