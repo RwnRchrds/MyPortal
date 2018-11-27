@@ -1,4 +1,5 @@
-﻿@model MyPortal.ViewModels.StaffDetailsViewModel
+﻿@using MyPortal.Controllers.Api
+@model MyPortal.ViewModels.StaffDetailsViewModel
 @{
     ViewBag.Title = "Staff Details";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
@@ -157,16 +158,18 @@
                         <span aria-hidden="true"></span>&times;
                     </button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "newCertForm" }))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/staff/certificates/create", HttpMethod = "POST", OnSuccess = "createCertificateSuccess", OnFailure = "createCertificateError"}, new { id = "newCertForm" }))
                 {
                     <div class="modal-body">
                         <div class="form-group">
                             @Html.LabelFor(l => l.TrainingCertificate.CourseId)
                             @Html.DropDownListFor(l => l.TrainingCertificate.CourseId, new SelectList(Model.TrainingCourses, "Id", "Description"), "Select Course", new { @class = "form-control", Name = "CourseId" })
+                            @Html.ValidationMessageFor(x => x.TrainingCertificate.CourseId)
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(l => l.TrainingCertificate.StatusId)
                             @Html.DropDownListFor(l => l.TrainingCertificate.StatusId, new SelectList(Model.TrainingStatuses, "Id", "Name"), "Select Status", new { @class = "form-control", Name = "StatusId" })
+                            @Html.ValidationMessageFor(l => l.TrainingCertificate.StatusId)
                         </div>
                         <div class="form-group">
                             @Html.HiddenFor(l => l.TrainingCertificate.StaffId, new { Value = Model.Staff.Id, Name = "StaffId" })
@@ -194,7 +197,7 @@
                         <span aria-hidden="true"></span>&times;
                     </button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "newObservationForm" }))
+                @using (Ajax.BeginForm(null,null, new AjaxOptions { Url = "/api/staff/observations/add", HttpMethod = "POST", OnSuccess = "createObservationSuccess", OnFailure = "createObservationError"}, new { id = "newObservationForm"}))
                 {
                     <div class="modal-body">
                         <div class="form-group">
@@ -227,7 +230,7 @@
                         <span aria-hidden="true"></span>&times;
                     </button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "EditCertForm" }))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/staff/certificates/update", HttpMethod = "POST", OnSuccess = "editCertificateSuccess", OnFailure = "editCertificateError"}, new { id = "EditCertForm" }))
                 {
                     <div class="modal-body">
                         <div class="form-group">
@@ -265,7 +268,7 @@
                         <span aria-hidden="false"></span>&times;
                     </button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "EditStaffForm" }))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/staff/edit", HttpMethod = "POST", OnSuccess = "editStaffSuccess", OnFailure = "editStaffError"}, new { id = "EditStaffForm" }))
                 {
                     <div class="modal-body">
                         <div class="form-group">
@@ -326,7 +329,7 @@
                         <span aria-hidden="true"></span>&times;
                     </button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "newDocumentForm" }))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/staff/documents/add", HttpMethod = "POST", OnSuccess = "createDocumentSuccess", OnFailure = "createDocumentError"}, new { id = "newDocumentForm" }))
                 {
                     <div class="modal-body">
                         <div class="form-group">
@@ -363,7 +366,7 @@
                         <span aria-hidden="true"></span>&times;
                     </button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "editDocumentForm" }))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/staff/documents/edit", HttpMethod = "POST", OnSuccess = "editDocumentSuccess", OnFailure = "editDocumentError"}, new { id = "editDocumentForm" }))
                 {
                     <div class="modal-body">
                         <div class="form-group">
@@ -402,7 +405,7 @@
                         <span aria-hidden="true"></span>&times;
                     </button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "editObservationForm" }))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/staff/observations/update", HttpMethod = "POST", OnSuccess = "editObservationSuccess", OnFailure = "editObservationError"}, new { id = "editObservationForm" }))
                 {
                     <div class="modal-body">
                         <div class="form-group">
@@ -433,90 +436,219 @@
     <script>
         //When Page Has Loaded, Prepare Scripts
         $(document).ready(function() {           
+            
             //Clear Modal When Closed
-            $('#NewCertModal').on('hidden.bs.modal',
+            $('.modal').on('hidden.bs.modal',
                 function() {
                     $(this).find('form').trigger('reset');
                 });
 
-            $('#EditStaffModal').on('hidden.bs.modal',
+            //#region Top Buttons
+            $("#EditDetailsButton").on("click",
                 function() {
-                    $(this).find('form').trigger('reset');
-                });
+                    $("#EditStaffTitle").val("@Model.Staff.Title");
+                    $("#EditStaffFirstName").val("@Model.Staff.FirstName");
+                    $("#EditStaffLastName").val("@Model.Staff.LastName");
+                    $("#EditStaffCode").val("@Model.Staff.Code");
+                    $("#EditStaffJobTitle").val("@Model.Staff.JobTitle");
+                    $("#EditStaffEmail").val("@Model.Staff.Email");
+                    $("#EditStaffPhone").val("@Model.Staff.Phone");
+                    $("#EditStaffId").val("@Model.Staff.Id");
 
-            $('#NewDocumentModal').on('hidden.bs.modal',
-                function() {
-                    $(this).find('form').trigger('reset');
-                });
-
-            $('#EditCertModal').on('hidden.bs.modal',
-                function() {
-                    $(this).find('form').trigger('reset');
-                });
-
-            $('#NewObservationModal').on('hidden.bs.modal',
-                function () {
-                    $(this).find('form').trigger('reset');
-                });
-
-            $('#EditObservationModal').on('hidden.bs.modal',
-                function () {
-                    $(this).find('form').trigger('reset');
-                });
-
-            $('#EditDocumentModal').on('hidden.bs.modal',
-                function () {
-                    $(this).find('form').trigger('reset');
-                });
-
-            //Delete Log When Button Clicked
-            $("#certs").on("click",
-                ".js-delete",
-                function() {
-                    var button = $(this);
-                    bootbox.confirm("Are you sure you wish to delete this certificate?",
-                        function(result) {
-                            if (result) {
-                                $.ajax({
-                                    url: "/api/staff/certificates/delete/" +
-                                        $("#certs").attr("data-staff-id") +
-                                        "/" +
-                                        button.attr("data-course-id"),
-                                    method: "DELETE",
-                                    success: function(a) {
-                                        toastr.success(a);
-                                        $("#certs").DataTable().ajax.reload();
-                                    },
-                                    error: function(a) {
-                                        toastr.error(a.responseJSON);
-                                    }
-                                });
-                            }
-                        });
+                    $("#EditStaffModal").modal('toggle');
                 });
 
             $("#DeleteStaffButton").on("click",
-                function() {
+                function () {
                     var button = $(this);
                     bootbox.confirm("Are you sure you wish to delete this staff member?" +
                         "\nThis will delete all items associated with this staff member.",
-                        function(result) {
+                        function (result) {
                             if (result) {
                                 $.ajax({
                                     url: "/api/staff/delete/" + button.attr("data-staff-id"),
                                     method: "DELETE",
-                                    success: function(a) {
+                                    success: function (a) {
                                         location.replace("/Staff/Staff");
                                         toastr.success(a);
                                     },
-                                    error: function(a) {
+                                    error: function (a) {
                                         toastr.error(a.responseJSON);
                                     }
                                 });
                             }
                         });
                 });
+            //#endregion
 
+            //#region DataTables
+            $("#documents").DataTable({
+                ajax: {
+                    url: "/api/staff/documents/fetch/" + $("#documents").attr("data-staff-id"),
+                    dataSrc: "",
+                    method: "GET"
+                },
+                columns: [
+                    {
+                        data: "document.description",
+                        render: function (data, type, document) {
+                            return "<a href='" +
+                                document.document.url +
+                                "' target='_blank'>" +
+                                document.document.description +
+                                "</a>";
+                        }
+
+                    },
+                    {
+                        data: "document.date",
+                        render: function (data) {
+                            var date = new Date(data);
+                            return date.toLocaleDateString();
+                        }
+                    },
+                    {
+                        data: "id",
+                        render: function (data) {
+                            return "<button type='button' class='btn btn-xs btn-warning js-edit' data-document-id=" +
+                                data +
+                                "><i class=\"far fa-edit\"></i></button> " +
+                                "<button type='button' class='btn btn-xs btn-danger js-delete' data-document-id=" +
+                                data +
+                                "><i class=\"far fa-trash-alt\"></i></button>";
+                        }
+                    }
+                ],
+                paging: false,
+                ordering: false,
+                searching: false,
+                info: false,
+                responsive: true,
+                "language": {
+                    "emptyTable": "No documents to display"
+                }
+            });
+
+            $("#observations").DataTable({
+                ajax: {
+                    url: "/api/staff/observations/fetch/" + $("#observations").attr("data-staff-id"),
+                    dataSrc: "",
+                    method: "GET"
+                },
+                columns: [
+                    {
+                        data: "date",
+                        render: function (data) {
+                            var date = new Date(data);
+                            return date.toLocaleDateString();
+                        }
+
+                    },
+                    {
+                        data: "staff1.lastname",
+                        render: function (data, type, observation) {
+                            return observation.staff1.title +
+                                " " +
+                                observation.staff1.firstName.substring(0, 1) +
+                                " " +
+                                observation.staff1.lastName;
+                        }
+                    },
+                    {
+                        data: "outcome"
+                    },
+                    {
+                        data: "id",
+                        render: function (data) {
+                            return "<button type='button' class='btn btn-xs btn-warning mp-btn-action-left js-edit' data-observation-id=" +
+                                data +
+                                "><i class=\"far fa-edit\"></i></button> " +
+                                "<button type='button' class='btn btn-xs btn-danger mp-btn-action-right js-delete' data-observation-id=" +
+                                data +
+                                "><i class=\"far fa-trash-alt\"></i></button>";
+                        }
+                    }
+                ],
+                paging: false,
+                ordering: false,
+                searching: false,
+                info: false,
+                responsive: true,
+                "createdRow": function (row, data, dataIndex) {
+                    if (data.outcome === "Inadequate") {
+                        $(row).addClass("mp-observation-inadequate");
+                    }
+
+                    if (data.outcome === "Satisfactory") {
+                        $(row).addClass("mp-observation-satisfactory");
+                    }
+
+                    if (data.outcome === "Good") {
+                        $(row).addClass("mp-observation-good");
+                    }
+
+                    if (data.outcome === "Outstanding") {
+                        $(row).addClass("mp-observation-outstanding");
+                    }
+                },
+                "language": {
+                    "emptyTable": "No observations to display"
+                }
+            });
+
+            $("#certs").DataTable({
+                ajax: {
+                    url: "/api/staff/certificates/fetch/" + $("#certs").attr("data-staff-id"),
+                    dataSrc: "",
+                    method: "GET"
+                },
+                columns: [
+                    {
+                        data: "trainingCourse.code"
+                    },
+                    {
+                        data: "trainingCourse.description"
+                    },
+                    {
+                        data: "trainingStatus.name"
+                    },
+                    {
+                        data: "courseId",
+                        render: function (data) {
+                            return "<button type='button' class='btn btn-xs btn-warning js-edit' data-course-id=" +
+                                data +
+                                "><i class=\"far fa-edit\"></i></button> " +
+                                "<button type='button' class='btn btn-xs btn-danger js-delete' data-course-id=" +
+                                data +
+                                "><i class=\"far fa-trash-alt\"></i></button>";
+                        }
+                    }
+                ],
+                paging: false,
+                ordering: false,
+                searching: false,
+                responsive: true,
+                info: false,
+                "language": {
+                    "emptyTable": "No certificates to display"
+                },
+                "createdRow": function (row, data, dataIndex) {
+                    if (data.trainingStatus.name === "Completed") {
+                        $(row).addClass("mp-cert-completed");
+                    }
+
+                    if (data.trainingStatus.name === "Pending") {
+                        $(row).addClass("mp-cert-pending");
+                    }
+
+                    if (data.trainingStatus.name === "Failed") {
+                        $(row).addClass("mp-cert-failed");
+                    }
+                }
+            });
+            //#endregion            
+
+            //#region JS Edits
             $("#certs").on("click",
                 ".js-edit",
                 function() {
@@ -581,353 +713,9 @@
                     });
                     $("#EditObservationModal").modal('toggle');
                 });
-
-            $("#EditDetailsButton").on("click",
-                function() {
-                    $("#EditStaffTitle").val("@Model.Staff.Title");
-                    $("#EditStaffFirstName").val("@Model.Staff.FirstName");
-                    $("#EditStaffLastName").val("@Model.Staff.LastName");
-                    $("#EditStaffCode").val("@Model.Staff.Code");
-                    $("#EditStaffJobTitle").val("@Model.Staff.JobTitle");
-                    $("#EditStaffEmail").val("@Model.Staff.Email");
-                    $("#EditStaffPhone").val("@Model.Staff.Phone");
-                    $("#EditStaffId").val("@Model.Staff.Id");
-
-                    $("#EditStaffModal").modal('toggle');
-                });
-
-            $("#EditCertForm").on("submit",
-                function(e) {
-
-                    e.preventDefault();
-
-                    var form = $("#EditCertForm");
-                    var data = form.serialize();
-
-                    $.ajax({
-                        url: "/api/staff/certificates/update",
-                        data: data,
-                        method: "POST",
-                        success: function(result) {
-                            $("#EditCertModal").modal('hide');
-                            toastr.success(result);
-                            $("#certs").DataTable().ajax.reload();
-                        },
-                        error: function(result) {
-                            toastr.error(result.responseJSON);
-                            form.reset();
-                        }
-                    });
-                });
-
-            $("#EditStaffForm").on("submit",
-                function(e) {
-
-                    e.preventDefault();
-
-                    var form = $("#EditStaffForm");
-                    var data = form.serialize();
-
-                    $.ajax({
-                        url: "/api/staff/edit",
-                        data: data,
-                        method: "POST",
-                        success: function(result) {
-                            $("#EditStaffModal").modal('hide');
-                            location.reload();
-                        },
-                        error: function(result) {
-                            toastr.error(result.responseJSON);
-                            form.reset();
-                        }
-                    });
-                });
-
-            $("#documents").DataTable({
-                ajax: {
-                    url: "/api/staff/documents/fetch/" + $("#documents").attr("data-staff-id"),
-                    dataSrc: "",
-                    method: "GET"
-                },
-                columns: [
-                    {
-                        data: "document.description",
-                        render: function(data, type, document) {
-                            return "<a href='" +
-                                document.document.url +
-                                "' target='_blank'>" +
-                                document.document.description +
-                                "</a>";
-                        }
-
-                    },
-                    {
-                        data: "document.date",
-                        render: function(data) {
-                            var date = new Date(data);
-                            return date.toLocaleDateString();
-                        }
-                    },
-                    {
-                        data: "id",
-                        render: function(data) {
-                            return "<button type='button' class='btn btn-xs btn-warning js-edit' data-document-id=" +
-                                data +
-                                "><i class=\"far fa-edit\"></i></button> " +
-                                "<button type='button' class='btn btn-xs btn-danger js-delete' data-document-id=" +
-                                data +
-                                "><i class=\"far fa-trash-alt\"></i></button>";
-                        }
-                    }
-                ],
-                paging: false,
-                ordering: false,
-                searching: false,
-                info: false,
-                responsive: true,
-                "language": {
-                    "emptyTable": "No documents to display"
-                }
-            });
-
-            $("#observations").DataTable({
-                ajax: {
-                    url: "/api/staff/observations/fetch/" + $("#observations").attr("data-staff-id"),
-                    dataSrc: "",
-                    method: "GET"
-                },
-                columns: [
-                    {
-                        data: "date",
-                        render: function (data) {
-                            var date = new Date(data);
-                            return date.toLocaleDateString();
-                        }
-
-                    },
-                    {
-                        data: "staff1.lastname",
-                        render: function (data, type, observation) {
-                            return observation.staff1.title +
-                                " " +
-                                observation.staff1.firstName.substring(0, 1) +
-                                " " +
-                                observation.staff1.lastName;
-                        }
-                    },
-                    {
-                        data: "outcome"                        
-                    },
-                    {
-                        data: "id",
-                        render: function(data) {
-                            return "<button type='button' class='btn btn-xs btn-warning mp-btn-action-left js-edit' data-observation-id=" +
-                                data +
-                                "><i class=\"far fa-edit\"></i></button> " +
-                                "<button type='button' class='btn btn-xs btn-danger mp-btn-action-right js-delete' data-observation-id=" +
-                                data +
-                                "><i class=\"far fa-trash-alt\"></i></button>";
-                        }
-                    }
-                ],
-                paging: false,
-                ordering: false,
-                searching: false,
-                info: false,
-                responsive: true,
-                "createdRow": function(row, data, dataIndex) {
-                    if (data.outcome === "Inadequate") {
-                        $(row).addClass("mp-observation-inadequate");
-                    }
-
-                    if (data.outcome === "Satisfactory") {
-                        $(row).addClass("mp-observation-satisfactory");
-                    }
-
-                    if (data.outcome === "Good") {
-                        $(row).addClass("mp-observation-good");
-                    }
-
-                    if (data.outcome === "Outstanding") {
-                        $(row).addClass("mp-observation-outstanding");
-                    }
-                },
-                "language": {
-                    "emptyTable": "No observations to display"
-                }
-            });
-
-            $("#certs").DataTable({
-                ajax: {
-                    url: "/api/staff/certificates/fetch/" + $("#certs").attr("data-staff-id"),
-                    dataSrc: "",
-                    method: "GET"
-                },
-                columns: [
-                    {
-                        data: "trainingCourse.code"
-                    },
-                    {
-                        data: "trainingCourse.description"
-                    },
-                    {
-                        data: "trainingStatus.name"
-                    },
-                    {
-                        data: "courseId",
-                        render: function(data) {
-                            return "<button type='button' class='btn btn-xs btn-warning js-edit' data-course-id=" +
-                                data +
-                                "><i class=\"far fa-edit\"></i></button> " +
-                                "<button type='button' class='btn btn-xs btn-danger js-delete' data-course-id=" +
-                                data +
-                                "><i class=\"far fa-trash-alt\"></i></button>";
-                        }
-                    }
-                ],
-                paging: false,
-                ordering: false,
-                searching: false,
-                responsive: true,
-                info: false,
-                "language": {
-                    "emptyTable": "No certificates to display"
-                },
-                "createdRow": function(row, data, dataIndex) {
-                    if (data.trainingStatus.name === "Completed") {
-                        $(row).addClass("mp-cert-completed");
-                    }
-
-                    if (data.trainingStatus.name === "Pending") {
-                        $(row).addClass("mp-cert-pending");
-                    }
-
-                    if (data.trainingStatus.name === "Failed") {
-                        $(row).addClass("mp-cert-failed");
-                    }
-                }
-            });
-
-            $("#newDocumentForm").on("submit",
-                function(e) {
-
-                    e.preventDefault();
-
-                    var form = $("#newDocumentForm");
-                    var data = form.serialize();
-
-                    $.ajax({
-                        url: "/api/staff/documents/add",
-                        data: data,
-                        method: "POST",
-                        success: function(result) {
-                            $("#NewDocumentModal").modal('hide');
-                            toastr.success(result);
-                            $("#documents").DataTable().ajax.reload();
-                        },
-                        error: function(result) {
-                            toastr.error(result.responseJSON);
-                            form.reset();
-                        }
-                    });
-                });
-
-            $("#editDocumentForm").on("submit",
-                function (e) {
-
-                    e.preventDefault();
-
-                    var form = $("#editDocumentForm");
-                    var data = form.serialize();
-
-                    $.ajax({
-                        url: "/api/staff/documents/edit",
-                        data: data,
-                        method: "POST",
-                        success: function (result) {
-                            $("#EditDocumentModal").modal('hide');
-                            toastr.success(result);
-                            $("#documents").DataTable().ajax.reload();
-                        },
-                        error: function (result) {
-                            toastr.error(result.responseJSON);
-                            form.reset();
-                        }
-                    });
-                });
-
-            $("#newCertForm").on("submit",
-                function(e) {
-
-                    e.preventDefault();
-
-                    var form = $("#newCertForm");
-                    var data = form.serialize();
-
-                    $.ajax({
-                        url: "/api/staff/certificates/create",
-                        data: data,
-                        method: "POST",
-                        success: function(result) {
-                            $("#NewCertModal").modal('hide');
-                            toastr.success(result);
-                            $("#certs").DataTable().ajax.reload();
-                        },
-                        error: function(result) {
-                            toastr.error(result.responseJSON);
-                            form.reset();
-                        }
-                    });
-                });
-
-            $("#newObservationForm").on("submit",
-                function (e) {
-
-                    e.preventDefault();
-
-                    var form = $("#newObservationForm");
-                    var data = form.serialize();
-
-                    $.ajax({
-                        url: "/api/staff/observations/add",
-                        data: data,
-                        method: "POST",
-                        success: function (result) {
-                            $("#NewObservationModal").modal('hide');
-                            toastr.success(result);
-                            $("#observations").DataTable().ajax.reload();
-                        },
-                        error: function (result) {
-                            toastr.error(result.responseJSON);
-                            form.reset();
-                        }
-                    });
-                });
-
-            $("#editObservationForm").on("submit",
-                function (e) {
-
-                    e.preventDefault();
-
-                    var form = $("#editObservationForm");
-                    var data = form.serialize();
-
-                    $.ajax({
-                        url: "/api/staff/observations/update",
-                        data: data,
-                        method: "POST",
-                        success: function (result) {
-                            $("#EditObservationModal").modal('hide');
-                            toastr.success(result);
-                            $("#observations").DataTable().ajax.reload();
-                        },
-                        error: function (result) {
-                            toastr.error(result.responseJSON);
-                            form.reset();
-                        }
-                    });
-                });
-
+            //#endregion
+                                                                
+            //#region JS Deletes
             $("#documents").on("click",
                 ".js-delete",
                 function() {
@@ -944,6 +732,32 @@
                                     },
                                     error: function(ajaxResult) {
                                         toastr.error(ajaxResult.responseJSON);
+                                    }
+                                });
+                            }
+                        });
+                });
+
+            //Delete Log When Button Clicked
+            $("#certs").on("click",
+                ".js-delete",
+                function () {
+                    var button = $(this);
+                    bootbox.confirm("Are you sure you wish to delete this certificate?",
+                        function (result) {
+                            if (result) {
+                                $.ajax({
+                                    url: "/api/staff/certificates/delete/" +
+                                        $("#certs").attr("data-staff-id") +
+                                        "/" +
+                                        button.attr("data-course-id"),
+                                    method: "DELETE",
+                                    success: function (a) {
+                                        toastr.success(a);
+                                        $("#certs").DataTable().ajax.reload();
+                                    },
+                                    error: function (a) {
+                                        toastr.error(a.responseJSON);
                                     }
                                 });
                             }
@@ -971,7 +785,81 @@
                             }
                         });
                 });
+            //#endregion
         });
+
+        //#region Create Observation
+        function createObservationSuccess(result) {
+            $("#NewObservationModal").modal('hide');
+            toastr.success(result);
+            $("#observations").DataTable().ajax.reload();
+        }
+        
+        function createObservationError(result) {
+            $("#NewObservationModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+        //#endregion
+        //#region Edit Observation
+        function editObservationSuccess(result) {
+            $("#EditObservationModal").modal('hide');
+            toastr.success(result);
+            $("#observations").DataTable().ajax.reload();
+        }
+
+        function editObservationError(result) {
+            $("#EditObservationModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+        //#endregion
+        //#region Create Document
+        function createDocumentSuccess(result) {
+            $("#NewDocumentModal").modal('hide');
+            toastr.success(result);
+            $("#documents").DataTable.ajax.reload();
+        }
+
+        function createDocumentError(result) {
+            $("#NewDocumentModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+        //#endregion
+        //#region Edit Document
+        function editDocumentSuccess(result) {
+            $("#EditDocumentModal").modal('hide');
+            toastr.success(result);
+            $("#documents").DataTable.ajax.reload();
+        }
+
+        function editDocumentError(result) {
+            $("#EditDocumentModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+        //#endregion
+        //#region Create Certificate
+        function createCertificateSuccess(result) {
+            $("#NewCertModal").modal('hide');
+            toastr.success(result);
+            $("#certs").DataTable.ajax.reload();
+        }
+
+        function createCertificateError(result) {
+            $("#NewCertModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+        //#endregion
+        //#region Edit Staff
+        function editStaffSuccess(result) {
+            $("#EditDetailsModal").modal('hide');
+            toastr.success(result);
+            location.reload();
+        }
+
+        function editStaffError(result) {
+            $("#EditDetailsModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+        //#endregion
     </script>
 
     @Scripts.Render("~/bundles/jqueryval")

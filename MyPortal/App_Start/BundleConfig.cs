@@ -9,6 +9,7 @@ namespace MyPortal
         {
             bundles.Add(new ScriptBundle("~/bundles/lib").Include(
                 "~/Scripts/jquery-{version}.js",
+                "~/Scripts/jquery.unobtrusive-ajax.js",
                 "~/Scripts/bootstrap.min.js",
                 "~/Scripts/bootbox.min.js",
                 "~/Scripts/respond.min.js",
@@ -16,7 +17,7 @@ namespace MyPortal
                 "~/Scripts/datatables/jquery.datatables.min.js",
                 "~/Scripts/datatables/datatables.bootstrap4.min.js",
                 "~/Scripts/datatables/datatables.responsive.min.js",
-                "~/Scripts/datatables/responsive.bootstrap4.min.js"
+                "~/Scripts/datatables/responsive.bootstrap4.min.js"             
             ));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
