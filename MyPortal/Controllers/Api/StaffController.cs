@@ -370,6 +370,7 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.BadRequest, "Cannot modify an observation for yourself");
 
             observationInDb.Outcome = data.Outcome;
+            observationInDb.ObserverId = userStaffProfile.Id;
 
             _context.SaveChanges();
 
