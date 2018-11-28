@@ -36,7 +36,7 @@
                     <span aria-hidden="false"></span>&times;
                 </button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "newStaffForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/staff/new", HttpMethod = "POST", OnSuccess = "newStaffSuccess", OnFailure = "newStaffFailure"}, new {id = "newStaffForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -88,33 +88,8 @@
 @section scripts
 {
     <script>
-        $(document).ready(function() {
-
-            $("#newStaffForm").on("submit",
-                function(e) {
-
-                    e.preventDefault();
-
-                    var form = $("#newStaffForm");
-                    var data = form.serialize();
-
-                    $.ajax({
-                        url: "/api/staff/new",
-                        data: data,
-                        method: "POST",
-                        success: function(result) {
-                            $("#NewStaffModal").modal('hide');
-                            toastr.success(result);
-                            $("#staff").DataTable().ajax.reload();
-                        },
-                        error: function(result) {
-                            toastr.error(result.responseJSON);
-                            form.reset();
-                        }
-                    });
-                });
-
-            $('#NewStaffModal').on('hidden.bs.modal',
+        $(document).ready(function() {            
+            $('.modal').on('hidden.bs.modal',
                 function() {
                     $(this).find('form').trigger('reset');
                 });
@@ -144,7 +119,20 @@
                 }
             });
         });
+
+        function newStaffSuccess(result) {
+            $("#NewStaffModal").modal('hide');
+            $("#staff").DataTable().ajax.reload();
+            toastr.success(result);
+        }
+
+        function newStaffFailure(result) {
+            $("#NewStaffModal").modal('hide');
+            $("#staff").DataTable().ajax.reload();
+            toastr.error(result.responseJSON);
+        }
     </script>
 
     @Scripts.Render("~/bundles/staff")
+    @Scripts.Render("~/bundles/jqueryval")
 }

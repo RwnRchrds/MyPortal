@@ -47,7 +47,7 @@
                         <span aria-hidden="false"></span>&times;
                     </button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "newProductForm" }))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/products/new", HttpMethod = "POST", OnSuccess = "newProductSuccess", OnFailure = "newProductFailure"}, new { id = "newProductForm" }))
                 {
                     <div class="modal-body">
                         <div class="form-group">
@@ -96,7 +96,7 @@
                     <h4 class="modal-title">Edit Product</h4>
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "editProductForm" }))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/products/edit", HttpMethod = "POST", OnSuccess = "editProductSuccess", OnFailure = "editProductFailure"}, new { id = "editProductForm" }))
                 {
                     <div class="modal-body">
                         <div class="form-group">
@@ -215,42 +215,12 @@
                                 });
                             }
                         });
-                });
+                });            
 
-            $("#newProductForm").on("submit",
-                function(e) {
-
-                    e.preventDefault();
-
-                    var form = $("#newProductForm");
-                    var data = form.serialize();
-
-                    $.ajax({
-                        url: "/api/products/new",
-                        data: data,
-                        method: "POST",
-                        success: function(result) {
-                            $("#NewProductModal").modal('hide');
-                            toastr.success(result);
-                            $("#products").DataTable().ajax.reload();
-                        },
-                        error: function(result) {
-                            toastr.error(result.responseJSON);
-                            form.reset();
-                        }
-                    });
-                });
-
-            $('#NewProductModal').on('hidden.bs.modal',
+            $('.modal').on('hidden.bs.modal',
                 function() {
                     $(this).find('form').trigger('reset');
                 });
-
-            $('#EditProductModal').on('hidden.bs.modal',
-                function() {
-                    $(this).find('form').trigger('reset');
-                });
-
             //Open Form When Edit Product Button Clicked
             $("#products").on("click",
                 ".js-edit",
@@ -272,31 +242,31 @@
                         }
                     });
                     $("#EditProductModal").modal('toggle');
-                });
-
-            //Edit Product Form Submit
-            $("#editProductForm").on("submit",
-                function(e) {
-
-                    e.preventDefault();
-
-                    $.ajax({
-                        url: "/api/products/edit",
-                        data: $("#editProductForm").serialize(),
-                        method: "POST",
-                        success: function(result) {
-                            $("#EditProductModal").modal('hide');
-                            toastr.success(result);
-                            $("#products").DataTable().ajax.reload();
-                        },
-                        error: function(result) {
-                            toastr.error(result.responseJSON);
-                        }
-
-                    });
-                });
+                });            
 
             loadProducts();
         });
+
+        function newProductSuccess(result) {
+            $("#NewProductModal").modal('hide');
+            $("#products").DataTable().ajax.reload();
+            toastr.success(result);
+        }
+
+        function newProductFailure(result) {
+            $("#NewProductModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+
+        function editProductSuccess(result) {
+            $("#EditProductModal").modal('hide');
+            $("#products").DataTable().ajax.reload();
+            toastr.success(result);
+        }
+
+        function editProductFailure(result) {
+            $("#EditProductModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
     </script>
 }

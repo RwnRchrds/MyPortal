@@ -106,7 +106,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "ResetPasswordForm" }))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/users/resetpassword", HttpMethod = "POST", OnSuccess = "resetPasswordSuccess", OnFailure = "resetPasswordFailure"}, new { id = "ResetPasswordForm" }))
                 {
                     <div class="modal-body">
                         <div class="form-group">
@@ -144,7 +144,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "AddRoleForm" }))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/users/addrole", HttpMethod = "POST", OnSuccess = "addRoleSuccess", OnFailure = "addRoleFailure"}, new { id = "AddRoleForm" }))
                 {
                     <div class="modal-body">
                         <div class="form-group">
@@ -263,53 +263,7 @@
                                 });
                             }
                         });
-                });
-
-            $("#ResetPasswordForm").on("submit",
-                function(e) {
-
-                    e.preventDefault();
-
-                    var form = $("#ResetPasswordForm");
-
-                    $.ajax({
-                        url: "/api/users/resetpassword",
-                        data: form.serialize(),
-                        method: "POST",
-                        success: function(result) {
-                            $("#ResetPasswordModal").modal('toggle');
-                            toastr.success(result);
-                        },
-                        error: function(result) {
-                            $("#ResetPasswordModal").modal('toggle');
-                            toastr.error(result.responseJSON);
-                        }
-
-                    });
-                });
-
-            $("#AddRoleForm").on("submit",
-                function(e) {
-
-                    e.preventDefault();
-
-                    var form = $("#AddRoleForm");
-
-                    $.ajax({
-                        url: "/api/users/addrole",
-                        data: form.serialize(),
-                        method: "POST",
-                        success: function(result) {
-                            $("#AddRoleModal").modal('toggle');
-                            toastr.success(result);
-                            location.reload();
-                        },
-                        error: function(result) {
-                            $("#AddRoleModal").modal('toggle');
-                            toastr.error(result.responseJSON);
-                        }
-                    });
-                });
+                });                       
 
             $("#DetachPerson").on("click",
                 function() {
@@ -444,6 +398,8 @@
 
                     e.preventDefault();
 
+                    $("#AttachPersonForm").validate();
+
                     if ($("#userTypeSelect").val() === "Student") {
                         var data = {
                             UserId: $("#AttachPerson").attr("data-user-id"),
@@ -485,6 +441,27 @@
                     }
                 });
         });
+
+        function resetPasswordSuccess(result) {
+            $("#ResetPasswordModal").modal('hide');
+            toastr.success(result);
+        }
+
+        function resetPasswordFailure(result) {
+            $("#ResetPasswordModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+
+        function addRoleSuccess(result) {
+            $("#AddRoleModal").modal('hide');
+            toastr.success(result);
+            location.reload();
+        }
+
+        function addRoleFailure(result) {
+            $("#AddRoleModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
     </script>
 
     @Scripts.Render("~/bundles/jqueryval")

@@ -48,7 +48,7 @@
                     <h4 class="modal-title">Add Controlled Document</h4>
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "newDocumentForm"}))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/documents/add", HttpMethod = "POST", OnSuccess = "newDocumentSuccess", OnFailure = "newDocumentFailure"}, new {id = "newDocumentForm"}))
                 {
                     <div class="modal-body">
                         <div class="form-group">
@@ -84,7 +84,7 @@
                     <h4 class="modal-title">Add Controlled Document</h4>
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "editDocumentForm"}))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/documents/edit", HttpMethod = "POST", OnSuccess = "editDocumentSuccess", OnFailure = "editDocumentFailure"}, new {id = "editDocumentForm"}))
                 {
                     <div class="modal-body">
                         <div class="form-group">
@@ -150,10 +150,10 @@
                             data: "approved",
                             render: function(data) {
                                 if (data === true) {
-                                    return "Approved"
+                                    return "Approved";
                                 }
                                 if (data === false) {
-                                    return "Pending Approval"
+                                    return "Pending Approval";
                                 }
                             }
                         },
@@ -214,61 +214,8 @@
     }
 
     <script>
-        $(document).ready(function() {
-            $("#newDocumentForm").on("submit",
-                function(e) {
-
-                    e.preventDefault();
-
-                    var form = $("#newDocumentForm");
-                    var data = form.serialize();
-
-                    $.ajax({
-                        url: "/api/documents/add",
-                        data: data,
-                        method: "POST",
-                        success: function(result) {
-                            $("#NewDocumentModal").modal('hide');
-                            toastr.success(result);
-                            $("#documents").DataTable().ajax.reload();
-                        },
-                        error: function(result) {
-                            toastr.error(result.responseJSON);
-                            form.reset();
-                        }
-                    });
-                });
-
-            $("#editDocumentForm").on("submit",
-                function(e) {
-
-                    e.preventDefault();
-
-                    var form = $("#editDocumentForm");
-                    var data = form.serialize();
-
-                    $.ajax({
-                        url: "/api/documents/edit",
-                        data: data,
-                        method: "POST",
-                        success: function(result) {
-                            $("#EditDocumentModal").modal('hide');
-                            toastr.success(result);
-                            $("#documents").DataTable().ajax.reload();
-                        },
-                        error: function(result) {
-                            toastr.error(result.responseJSON);
-                            form.reset();
-                        }
-                    });
-                });
-
-            $('#NewDocumentModal').on('hidden.bs.modal',
-                function() {
-                    $(this).find('form').trigger('reset');
-                });
-
-            $('#EditDocumentModal').on('hidden.bs.modal',
+        $(document).ready(function() {                       
+            $('.modal').on('hidden.bs.modal',
                 function() {
                     $(this).find('form').trigger('reset');
                 });
@@ -316,6 +263,28 @@
                         });
                 });
         });
+
+        function newDocumentSuccess(result) {
+            $("#NewDocumentModal").modal('hide');
+            $("#documents").DataTable().ajax.reload();
+            toastr.success(result);
+        }
+
+        function newDocumentFailure(result) {
+            $("#NewDocumentModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+
+        function editDocumentSuccess(result) {
+            $("#EditDocumentModal").modal('hide');
+            $("#documents").DataTable().ajax.reload();
+            toastr.success(result);
+        }
+
+        function editDocumentFailure(result) {
+            $("#EditDocumentModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
     </script>
 
 

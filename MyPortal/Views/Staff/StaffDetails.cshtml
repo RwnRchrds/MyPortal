@@ -816,7 +816,7 @@
         function createDocumentSuccess(result) {
             $("#NewDocumentModal").modal('hide');
             toastr.success(result);
-            $("#documents").DataTable.ajax.reload();
+            $("#documents").DataTable().ajax.reload();
         }
 
         function createDocumentError(result) {
@@ -828,7 +828,7 @@
         function editDocumentSuccess(result) {
             $("#EditDocumentModal").modal('hide');
             toastr.success(result);
-            $("#documents").DataTable.ajax.reload();
+            $("#documents").DataTable().ajax.reload();
         }
 
         function editDocumentError(result) {
@@ -840,11 +840,22 @@
         function createCertificateSuccess(result) {
             $("#NewCertModal").modal('hide');
             toastr.success(result);
-            $("#certs").DataTable.ajax.reload();
+            $("#certs").DataTable().ajax.reload();
         }
 
         function createCertificateError(result) {
             $("#NewCertModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+
+        function editCertificateSuccess(result) {
+            $("#EditCertModal").modal('hide');
+            toastr.success(result);
+            $("#certs").DataTable().ajax.reload();
+        }
+
+        function editCertificateError(result) {
+            $("#EditCertModal").modal('hide');
             toastr.error(result.responseJSON);
         }
         //#endregion

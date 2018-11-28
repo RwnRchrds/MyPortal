@@ -12,7 +12,7 @@
     <!-- #endregion -->
     <!--#region New User Form-->
     <div class="container float-left">
-        @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "newUserForm" }))
+        @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/users/new", HttpMethod = "POST", OnSuccess = "newUserSuccess", OnFailure = "newUserFailure"}, new { id = "newUserForm" }))
         {
             <div class="form-group">
                 @Html.LabelFor(x => x.Username)
@@ -40,34 +40,21 @@
 {
     <script>
         $(document).ready(function() {
-            $("#newUserForm").on("submit",
-                function(e) {
-
-                    e.preventDefault();
-
-                    var form = $("#newUserForm");
-                    var data = form.serialize();
-
-                    $.ajax({
-                        url: "/api/users/new",
-                        data: data,
-                        method: "POST",
-                        success: function(result) {
-                            toastr.success(result);
-                            location.replace("/Staff/Admin/Users");
-                        },
-                        error: function(result) {
-                            toastr.error(result.responseJSON);
-                            form.reset();
-                        }
-                    });
-                });
-
             $("#backButton").on("click",
                 function() {
                     location.replace("/Staff/Admin/Users");
                 });
-        })
+        });
+
+        function newUserSuccess(result) {
+            toastr.success(result);
+            location.replace("/Staff/Admin/Users");
+        }
+
+        function newUserFailure(result) {
+            toastr.error(result.responseJSON);
+            $("#newUserForm").reset();
+        }
     </script>
 
     @Scripts.Render("~/bundles/jqueryval")

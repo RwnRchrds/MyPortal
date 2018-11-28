@@ -189,7 +189,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "NewLogForm" }))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/logs/new", HttpMethod = "POST", OnSuccess = "newLogSuccess", OnFailure = "newLogFailure"}, new { id = "NewLogForm" }))
                 {
                     <div class="modal-body">
                         <div class="form-group">
@@ -229,7 +229,7 @@
                     </button>
                 </div>
 
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "EditLogForm" }))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/logs/log/edit", HttpMethod = "POST", OnSuccess = "editLogSuccess", OnFailure = "editLogFailure"}, new { id = "EditLogForm" }))
                 {
                     <div class="modal-body">
                         <div class="form-group">
@@ -313,7 +313,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "newDocumentForm" }))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/students/documents/add", HttpMethod = "POST", OnSuccess = "newDocumentSuccess", OnFailure = "newDocumentFailure"}, new { id = "newDocumentForm" }))
                 {
                     <div class="modal-body">
                         <div class="form-group">
@@ -350,7 +350,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "editDocumentForm" }))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/students/documents/edit", HttpMethod = "POST", OnSuccess = "editDocumentSuccess", OnFailure = "editDocumentFailure"}, new { id = "editDocumentForm" }))
                 {
                     <div class="modal-body">
                         <div class="form-group">
@@ -407,31 +407,7 @@
                                 });
                             }
                         });
-                });
-
-            $("#newDocumentForm").on("submit",
-                function(e) {
-
-                    e.preventDefault();
-
-                    var form = $("#newDocumentForm");
-                    var data = form.serialize();
-
-                    $.ajax({
-                        url: "/api/students/documents/add",
-                        data: data,
-                        method: "POST",
-                        success: function(result) {
-                            $("#NewDocumentModal").modal('hide');
-                            toastr.success(result);
-                            $("#documents").DataTable().ajax.reload();
-                        },
-                        error: function(result) {
-                            toastr.error(result.responseJSON);
-                            form.reset();
-                        }
-                    });
-                });
+                });            
 
             $("#documents").on("click",
                 ".js-delete",
@@ -455,7 +431,7 @@
                         });
                 });
 
-            $('#NewDocumentModal').on('hidden.bs.modal',
+            $('.modal').on('hidden.bs.modal',
                 function() {
                     $(this).find('form').trigger('reset');
                 });
@@ -596,50 +572,7 @@
                 "language": {
                     "emptyTable": "No documents to display"
                 }
-            });
-
-            //Edit Log Form Submit
-            $("#EditLogForm").on("submit",
-                function(e) {
-
-                    e.preventDefault();
-
-                    $.ajax({
-                        url: "/api/logs/log/edit",
-                        data: $("#EditLogForm").serialize(),
-                        method: "POST",
-                        success: function(result) {
-                            $("#EditLogModal").modal('hide');
-                            toastr.success(result);
-                            $("#logs").DataTable().ajax.reload();
-                        },
-                        error: function(result) {
-                            toastr.error(result.responseJSON);
-                        }
-
-                    });
-                });
-
-            //Edit Document Form Submit
-            $("#editDocumentForm").on("submit",
-                function(e) {
-
-                    e.preventDefault();
-
-                    $.ajax({
-                        url: "/api/students/documents/edit",
-                        data: $("#editDocumentForm").serialize(),
-                        method: "POST",
-                        success: function(result) {
-                            $("#EditDocumentModal").modal('hide');
-                            toastr.success(result);
-                            $("#documents").DataTable().ajax.reload();
-                        },
-                        error: function(result) {
-                            toastr.error(result.responseJSON);
-                        }
-                    });
-                });
+            });                       
 
             //Open Form When Edit Log Button Clicked
             $("#logs").on("click",
@@ -715,28 +648,7 @@
                 if (logType === "Tutor Note") {
                     $(log).addClass("mp-log-tutor-note");
                 }
-            });
-
-            //Clear Modal When Closed
-            $('#NewLogModal').on('hidden.bs.modal',
-                function() {
-                    $(this).find('form').trigger('reset');
-                });
-
-            $('#EditLogModal').on('hidden.bs.modal',
-                function() {
-                    $(this).find('form').trigger('reset');
-                });
-
-            $('#NewDocumentModal').on('hidden.bs.modal',
-                function() {
-                    $(this).find('form').trigger('reset');
-                });
-
-            $('#EditDocumentModal').on('hidden.bs.modal',
-                function() {
-                    $(this).find('form').trigger('reset');
-                });
+            });          
 
             $('#EditDetailsModal').on('hidden.bs.modal',
                 function() {
@@ -746,42 +658,60 @@
                     $("#editDetailsRegGroupControl").val("@Model.Student.RegGroupId");
                 });
 
-            $('#EditLogModal').on('hidden.bs.modal',
-                function() {
-                    $(this).find('form').trigger('reset');
-                });
-
             //View Results
             $("#ViewResultsButton").on("click",
                 function() {
                     var button = $(this);
                     location.replace("/Staff/Students/" + button.attr("data-student-id") + "/Results");
-                });
-
-            //New Log Form Submit
-            $("#NewLogForm").on("submit",
-                function(e) {
-
-                    e.preventDefault();
-
-                    $.ajax({
-                        url: "/api/logs/new",
-                        data: $("#NewLogForm").serialize(),
-                        method: "POST",
-                        success: function(result) {
-                            $("#NewLogModal").modal('hide');
-                            toastr.success(result);
-                            $("#logs").DataTable().ajax.reload();
-                        },
-                        error: function(result) {
-                            toastr.error(result.responseJSON);
-                        }
-                    });
-                });
+                });            
 
             //---FUNCTION CALLS---
             loadLogTable();
         });
+
+        function newDocumentSuccess(result) {
+            $("#NewDocumentModal").modal('hide');
+            $("#documents").DataTable().ajax.reload();
+            toastr.success(result);
+        }
+
+        function newDocumentFailure(result) {
+            $("#NewDocumentModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+
+        function editDocumentSuccess(result) {
+            $("#EditDocumentModal").modal('hide');
+            $("#documents").DataTable().ajax.reload();
+            toastr.success(result);
+        }
+
+        function editDocumentFailure(result) {
+            $("#EditDocumentModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+
+        function editLogSuccess(result) {
+            $("#EditLogModal").modal('hide');
+            $("#logs").DataTable().ajax.reload();
+            toastr.success(result);
+        }
+
+        function editLogFailure(result) {
+            $("#EditLogModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+
+        function newLogSuccess(result) {
+            $("#NewLogModal").modal('hide');
+            $("#logs").DataTable().ajax.reload();
+            toastr.success(result);
+        }
+
+        function newLogFailure(result) {
+            $("#NewLogModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
     </script>
 
     @Scripts.Render("~/bundles/staff")

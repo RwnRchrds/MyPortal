@@ -38,7 +38,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "CreditForm" }))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/students/credit", HttpMethod = "POST", OnSuccess = "creditSuccess", OnFailure = "creditFailure"}, new { id = "CreditForm" }))
                 {
                     <div class="modal-body">
                         <div class="form-group">
@@ -77,7 +77,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "DebitForm" }))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/students/debit", HttpMethod = "POST", OnSuccess = "debitSuccess", OnFailure = "debitFailure"}, new { id = "DebitForm" }))
                 {
                     <div class="modal-body">
                         <div class="form-group">
@@ -170,50 +170,7 @@
                     $("#studentIdControlDebit").val(studentId);
 
                     $("#DebitModal").modal('toggle');
-                });
-
-            //Credit on Submit
-            $("#CreditForm").on("submit",
-                function(e) {
-                    e.preventDefault();
-
-                    $.ajax({
-                        url: "/api/students/credit",
-                        data: $("#CreditForm").serialize(),
-                        method: "POST",
-                        success: function(result) {
-                            $("#CreditModal").modal('hide');
-                            console.log(result);
-                            toastr.success(result);
-                            $("#students").DataTable().ajax.reload();
-                        },
-                        error: function(result) {
-                            $("#CreditModal").modal('hide');
-                            toastr.error(result.responseJSON);
-                        }
-                    });
-                });
-
-            //Debit on Submit
-            $("#DebitForm").on("submit",
-                function(e) {
-                    e.preventDefault();
-
-                    $.ajax({
-                        url: "/api/students/debit",
-                        data: $("#DebitForm").serialize(),
-                        method: "POST",
-                        success: function(result) {
-                            $("#DebitModal").modal('hide');
-                            toastr.success(result);
-                            $("#students").DataTable().ajax.reload();
-                        },
-                        error: function(result) {
-                            $("#CreditModal").modal('hide');
-                            toastr.error(result.responseJSON);
-                        }
-                    });
-                });
+                });                      
 
             //Clear Modal When Closed
             $('#CreditModal').on('hidden.bs.modal',
@@ -227,6 +184,28 @@
 
             loadAccounts();
         });
+
+        function creditSuccess(result) {
+            $("#CreditModal").modal('hide');
+            $("#students").DataTable().ajax.reload();
+            toastr.success(result);
+        }
+
+        function creditFailure(result) {
+            $("#CreditModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+
+        function debitSuccess(result) {
+            $("#DebitModal").modal('hide');
+            $("#students").DataTable().ajax.reload();
+            toastr.success(result);
+        }
+
+        function debitFailure(result) {
+            $("#DebitModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
     </script>
 
     @Scripts.Render("~/bundles/staff")
