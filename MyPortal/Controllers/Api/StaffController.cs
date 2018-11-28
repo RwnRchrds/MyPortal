@@ -331,8 +331,18 @@ namespace MyPortal.Controllers.Api
         {
             var observationToRemove = _context.StaffObservations.Single(x => x.Id == observationId);
 
+            var currentUserId = User.Identity.GetUserId();
+
+            var userStaffProfile = _context.Staff.SingleOrDefault(x => x.UserId == currentUserId);
+
+            if (userStaffProfile == null)
+                return Content(HttpStatusCode.NotFound, "Current user profile not found");
+
             if (observationToRemove == null)
                 return Content(HttpStatusCode.NotFound, "Observation not found");
+
+            if (observationToRemove.ObserveeId == userStaffProfile.Id)
+                return Content(HttpStatusCode.BadRequest, "Cannot remove an observation for yourself");
 
             _context.StaffObservations.Remove(observationToRemove);
             _context.SaveChanges();
@@ -346,8 +356,18 @@ namespace MyPortal.Controllers.Api
         {
             var observationInDb = _context.StaffObservations.Single(x => x.Id == data.Id);
 
+            var currentUserId = User.Identity.GetUserId();
+
+            var userStaffProfile = _context.Staff.SingleOrDefault(x => x.UserId == currentUserId);
+
+            if (userStaffProfile == null)
+                return Content(HttpStatusCode.NotFound, "Current user profile not found");
+
             if (observationInDb == null)
                 return Content(HttpStatusCode.NotFound, "Observation not found");
+
+            if (observationInDb.ObserveeId == userStaffProfile.Id)
+                return Content(HttpStatusCode.BadRequest, "Cannot modify an observation for yourself");
 
             observationInDb.Outcome = data.Outcome;
 
