@@ -200,12 +200,17 @@
                 @using (Ajax.BeginForm(null,null, new AjaxOptions { Url = "/api/staff/observations/add", HttpMethod = "POST", OnSuccess = "createObservationSuccess", OnFailure = "createObservationError"}, new { id = "newObservationForm"}))
                 {
                     <div class="modal-body">
+                            <div class="form-group">
+                                <label>Observed By</label>
+                                <select class="form-control" id="observerSelect" name="ObserverId">                                    
+                                </select>
+                            </div>
                         <div class="form-group">
                             @Html.LabelFor(l => l.StaffObservation.Outcome)
-                            @Html.DropDownListFor(l => l.StaffObservation.Outcome, new SelectList(Model.ObservationOutcomes), "Select Outcome", new { @class = "form-control", Name = "Outcome" })
+                            @Html.DropDownListFor(l => l.StaffObservation.Outcome, new SelectList(Model.ObservationOutcomes), "Select Outcome", new {@class = "form-control", Name = "Outcome"})
                         </div>
                         <div class="form-group">
-                            @Html.HiddenFor(l => l.StaffObservation.ObserveeId, new { Value = Model.Staff.Id, Name = "ObserveeId" })
+                            @Html.HiddenFor(l => l.StaffObservation.ObserveeId, new {Value = Model.Staff.Id, Name = "ObserveeId"})
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -443,6 +448,8 @@
                     $(this).find('form').trigger('reset');
                 });
 
+            populateObserverSelection();            
+
             //#region Top Buttons
             $("#EditDetailsButton").on("click",
                 function() {
@@ -668,6 +675,7 @@
                             toastr.error("Failed to load certificate data");
                         }
                     });
+                    populateObserverSelection();
                     $("#EditCertModal").modal('toggle');
                 });
 
@@ -857,6 +865,29 @@
         function editCertificateError(result) {
             $("#EditCertModal").modal('hide');
             toastr.error(result.responseJSON);
+        }
+
+        function populateObserverSelection() {
+            $.ajax({
+                url: "/api/staff/fetch",
+                method: "GET",
+                complete: function (data) {
+                    $("#observerSelect").empty();
+                    var divInit = "<option value class=\"hidden disabled\">Select Observer</option>";
+                    $(data.responseJSON).each(function (i, staff) {
+                        var divData = "<option value=" +
+                            data.responseJSON[i].id +
+                            ">" +
+                            data.responseJSON[i].lastName +
+                            ", " +
+                            data.responseJSON[i].firstName +
+                            "</option>";
+                        $(divInit).appendTo("#observerSelect");
+                        $(divData).appendTo("#observerSelect");
+                        $("#observerSelect").val($("#observerSelect option:first").val());
+                    });
+                }
+            });
         }
         //#endregion
         //#region Edit Staff

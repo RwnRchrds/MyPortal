@@ -305,14 +305,16 @@ namespace MyPortal.Controllers.Api
 
             var currentUserId = User.Identity.GetUserId();
 
-            var observer = _context.Staff.SingleOrDefault(x => x.UserId == currentUserId);
+            var userPerson = _context.Staff.SingleOrDefault(x => x.UserId == currentUserId);
+
+            var observer = _context.Staff.SingleOrDefault(x => x.Id == data.ObserverId);
 
             var observee = _context.Staff.Single(x => x.Id == data.ObserveeId);
 
             if (observee == null || observer == null)
                 return Content(HttpStatusCode.NotFound, "Staff member not found");
 
-            if (observee.Id == observer.Id)
+            if (observee.Id == userPerson.Id)
                 return Content(HttpStatusCode.BadRequest, "Cannot add an observation for yourself");
 
             data.ObserverId = observer.Id;
@@ -358,6 +360,8 @@ namespace MyPortal.Controllers.Api
 
             var currentUserId = User.Identity.GetUserId();
 
+            var observer = _context.Staff.SingleOrDefault(x => x.Id == data.ObserverId);
+
             var userStaffProfile = _context.Staff.SingleOrDefault(x => x.UserId == currentUserId);
 
             if (userStaffProfile == null)
@@ -370,7 +374,7 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.BadRequest, "Cannot modify an observation for yourself");
 
             observationInDb.Outcome = data.Outcome;
-            observationInDb.ObserverId = userStaffProfile.Id;
+            observationInDb.ObserverId = observer.Id;
 
             _context.SaveChanges();
 

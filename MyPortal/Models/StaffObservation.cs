@@ -10,9 +10,13 @@ namespace MyPortal.Models
 
         [Column(TypeName = "date")] public DateTime Date { get; set; }
 
-        [Display(Name = "Observee")] public int ObserveeId { get; set; }
+        [Display(Name = "Observee")] 
+        [Required]
+        public int ObserveeId { get; set; }
 
-        [Display(Name = "Observer")] public int ObserverId { get; set; }
+        [Display(Name = "Observer")] 
+        [Required]
+        public int ObserverId { get; set; }
 
         [Required] [StringLength(255)] public string Outcome { get; set; }
 

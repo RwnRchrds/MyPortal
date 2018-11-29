@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Web.Http;
 using AutoMapper;
+using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Models;
 
@@ -57,6 +58,15 @@ namespace MyPortal.Controllers.Api
             if (!ModelState.IsValid)
                 return Content(HttpStatusCode.BadRequest, "Invalid data");
 
+            var userId = User.Identity.GetUserId();
+
+            var userPerson = _context.Staff.SingleOrDefault(x => x.UserId == userId);
+
+            if (trainingCertificateDto.StaffId == userPerson.Id)
+            {
+                return Content(HttpStatusCode.BadRequest, "Cannot add a certificate for yourself");
+            }
+
             var cert = Mapper.Map<TrainingCertificateDto, TrainingCertificate>(trainingCertificateDto);
 
             _context.TrainingCertificates.Add(cert);
@@ -75,6 +85,15 @@ namespace MyPortal.Controllers.Api
             if (certInDb == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
+            var userId = User.Identity.GetUserId();
+
+            var userPerson = _context.Staff.SingleOrDefault(x => x.UserId == userId);
+
+            if (data.StaffId == userPerson.Id)
+            {
+                return Content(HttpStatusCode.BadRequest, "Cannot modify a certificate for yourself");
+            }
+
             certInDb.StatusId = data.StatusId;
 
             _context.SaveChanges();
@@ -91,6 +110,15 @@ namespace MyPortal.Controllers.Api
 
             if (certInDb == null)
                 return Content(HttpStatusCode.NotFound, "Certificate not found");
+
+            var userId = User.Identity.GetUserId();
+
+            var userPerson = _context.Staff.SingleOrDefault(x => x.UserId == userId);
+
+            if (staff == userPerson.Id)
+            {
+                return Content(HttpStatusCode.BadRequest, "Cannot remove a certificate for yourself");
+            }
 
             _context.TrainingCertificates.Remove(certInDb);
             _context.SaveChanges();
