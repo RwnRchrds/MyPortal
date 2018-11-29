@@ -104,7 +104,28 @@
             </table>
         </div>
     </div>
-    <!--#endregion-->
+<!--#endregion-->
+<!--#region MyObservations Panel-->
+<div class="container float-left mp-margin-top">
+    <div>
+        <hr />
+        <h4 class="mp-bold">MyObservations</h4>
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewObservationModal">
+            <i class="fa fa-plus-circle"></i> Add Observation
+        </button>
+        <table class="table table-bordered mp-table mp-table-link" id="observations" data-staff-id="@Model.Staff.Id">
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Observed By</th>
+                <th>Outcome</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<!--#endregion-->
     <!--#region MyDocuments Panel -->
     <div class="container float-left mp-margin-top">
         <div>
@@ -118,27 +139,6 @@
                     <tr>
                         <th>Description</th>
                         <th>Date</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-    </div>
-    <!--#endregion-->
-    <!--#region MyObservations Panel-->
-    <div class="container float-left mp-margin-top">
-        <div>
-            <hr />
-            <h4 class="mp-bold">MyObservations</h4>
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewObservationModal">
-                <i class="fa fa-plus-circle"></i> Add Observation
-            </button>
-            <table class="table table-bordered mp-table mp-table-link" id="observations" data-staff-id="@Model.Staff.Id">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Observed By</th>
-                        <th>Outcome</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -874,6 +874,7 @@
                 complete: function (data) {
                     $("#observerSelect").empty();
                     var divInit = "<option value class=\"hidden disabled\">Select Observer</option>";
+                    $(divInit).appendTo("#observerSelect");
                     $(data.responseJSON).each(function (i, staff) {
                         var divData = "<option value=" +
                             data.responseJSON[i].id +
@@ -882,10 +883,10 @@
                             ", " +
                             data.responseJSON[i].firstName +
                             "</option>";
-                        $(divInit).appendTo("#observerSelect");
+
                         $(divData).appendTo("#observerSelect");
-                        $("#observerSelect").val($("#observerSelect option:first").val());
                     });
+                    $("#observerSelect").val($("#observerSelect option:first").val());
                 }
             });
         }

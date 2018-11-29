@@ -6,7 +6,7 @@
 
 <div class="container float-left">
     <h2 class="mp-page-title">@Model.CurrentUser.Title @Model.CurrentUser.FirstName.Substring(0, 1) @Model.CurrentUser.LastName</h2>
-    <hr/>
+    <hr />
 </div>
 
 
@@ -50,31 +50,15 @@
 
 <div class="container float-left mp-margin-top">
     <div>
-        <hr/>
+        <hr />
         <h4 class="mp-bold">MyTraining</h4>
         <table class="table table-bordered mp-table" id="certs" data-staff-id="@Model.CurrentUser.Id">
             <thead>
-            <tr>
-                <th>Course</th>
-                <th>Description</th>
-                <th>Status</th>
-            </tr>
-            </thead>
-        </table>
-    </div>
-</div>
-
-<!-- MyDocuments Panel -->
-<div class="container float-left mp-margin-top">
-    <div>
-        <hr/>
-        <h4 class="mp-bold">MyDocuments</h4>
-        <table class="table table-bordered mp-table mp-table-link" id="documents" data-staff-id="@Model.CurrentUser.Id">
-            <thead>
-            <tr>
-                <th>Description</th>
-                <th>Date</th>
-            </tr>
+                <tr>
+                    <th>Course</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                </tr>
             </thead>
         </table>
     </div>
@@ -87,21 +71,37 @@
         <h4 class="mp-bold">MyObservations</h4>
         <table class="table table-bordered mp-table mp-table-link" id="observations" data-staff-id="@Model.CurrentUser.Id">
             <thead>
-            <tr>
-                <th>Date</th>
-                <th>Observed By</th>
-                <th>Outcome</th>
-            </tr>
+                <tr>
+                    <th>Date</th>
+                    <th>Observed By</th>
+                    <th>Outcome</th>
+                </tr>
             </thead>
         </table>
     </div>
 </div>
 <!--#endregion-->
 
+<!-- MyDocuments Panel -->
+<div class="container float-left mp-margin-top">
+    <div>
+        <hr />
+        <h4 class="mp-bold">MyDocuments</h4>
+        <table class="table table-bordered mp-table mp-table-link" id="documents" data-staff-id="@Model.CurrentUser.Id">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
 @section scripts
 {
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $("#documents").DataTable({
                 ajax: {
                     url: "/api/staff/documents/fetch/" + $("#documents").attr("data-staff-id"),
@@ -111,7 +111,7 @@
                 columns: [
                     {
                         data: "document.description",
-                        render: function(data, type, document) {
+                        render: function (data, type, document) {
                             return "<a href='" +
                                 document.document.url +
                                 "' target='_blank'>" +
@@ -122,7 +122,7 @@
                     },
                     {
                         data: "document.date",
-                        render: function(data) {
+                        render: function (data) {
                             var date = new Date(data);
                             return date.toLocaleDateString();
                         }
@@ -162,7 +162,7 @@
                 "language": {
                     "emptyTable": "No certificates to display"
                 },
-                "createdRow": function(row, data, dataIndex) {
+                "createdRow": function (row, data, dataIndex) {
                     if (data.trainingStatus.name === "Completed") {
                         $(row).addClass("mp-cert-completed");
                     }
