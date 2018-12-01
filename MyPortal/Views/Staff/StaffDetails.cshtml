@@ -105,7 +105,7 @@
         </div>
     </div>
 <!--#endregion-->
-<!--#region MyObservations Panel-->
+    <!--#region MyObservations Panel-->
 <div class="container float-left mp-margin-top">
     <div>
         <hr />
@@ -202,7 +202,7 @@
                     <div class="modal-body">
                             <div class="form-group">
                                 <label>Observed By</label>
-                                <select class="form-control" id="observerSelect" name="ObserverId">                                    
+                                <select class="form-control" id="newObserverSelect" name="ObserverId">                                    
                                 </select>
                             </div>
                         <div class="form-group">
@@ -405,7 +405,7 @@
             <!--content-->
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">New Observation - @Model.Staff.LastName, @Model.Staff.FirstName</h4>
+                    <h4 class="modal-title">Edit Observation - @Model.Staff.LastName, @Model.Staff.FirstName</h4>
                     <button type="button" class="close" data-dismiss="modal">
                         <span aria-hidden="true"></span>&times;
                     </button>
@@ -414,6 +414,9 @@
                 {
                     <div class="modal-body">
                         <div class="form-group">
+                            <label>Observed By</label>
+                            <select class="form-control" id="editObserverSelect" name="ObserverId">                                    
+                            </select>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(l => l.StaffObservation.Outcome)
@@ -713,7 +716,7 @@
                             $("#EditObservationOutcome").val(result["outcome"]);
                             $("#EditObservationObservee").val(result["observeeId"]);
                             $("#EditObservationId").val(result["id"]);
-                            $("#observations").DataTable().ajax.reload();
+                            populateEditObserverSelection();
                         },
                         error: function () {
                             toastr.error("Failed to load certificate data");
@@ -844,7 +847,7 @@
             toastr.error(result.responseJSON);
         }
         //#endregion
-        //#region Create Certificate
+
         function createCertificateSuccess(result) {
             $("#NewCertModal").modal('hide');
             toastr.success(result);
@@ -867,12 +870,12 @@
             toastr.error(result.responseJSON);
         }
 
-        function populateObserverSelection() {
+        function populateNewObserverSelection() {
             $.ajax({
                 url: "/api/staff/fetch",
                 method: "GET",
                 complete: function (data) {
-                    $("#observerSelect").empty();
+                    $("#newObserverSelect").empty();
                     var divInit = "<option value class=\"hidden disabled\">Select Observer</option>";
                     $(divInit).appendTo("#observerSelect");
                     $(data.responseJSON).each(function (i, staff) {
@@ -884,13 +887,36 @@
                             data.responseJSON[i].firstName +
                             "</option>";
 
-                        $(divData).appendTo("#observerSelect");
+                        $(divData).appendTo("#newObserverSelect");
                     });
-                    $("#observerSelect").val($("#observerSelect option:first").val());
+                    $("#newObserverSelect").val($("#newObserverSelect option:first").val());
                 }
             });
         }
-        //#endregion
+
+        function populateEditObserverSelection() {
+            $.ajax({
+                url: "/api/staff/fetch",
+                method: "GET",
+                complete: function (data) {
+                    $("#editObserverSelect").empty();
+                    var divInit = "<option value class=\"hidden disabled\">Select Observer</option>";
+                    $(divInit).appendTo("#editObserverSelect");
+                    $(data.responseJSON).each(function (i, staff) {
+                        var divData = "<option value=" +
+                            data.responseJSON[i].id +
+                            ">" +
+                            data.responseJSON[i].lastName +
+                            ", " +
+                            data.responseJSON[i].firstName +
+                            "</option>";
+
+                        $(divData).appendTo("#observerSelect");
+                    });
+                    $("#editObserverSelect").val($("#editObserverSelect option:first").val());
+                }
+            });
+        }
         //#region Edit Staff
         function editStaffSuccess(result) {
             $("#EditDetailsModal").modal('hide');
