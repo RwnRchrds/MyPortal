@@ -451,7 +451,7 @@
                     $(this).find('form').trigger('reset');
                 });
 
-            populateObserverSelection();            
+            populateNewObserverSelection();           
 
             //#region Top Buttons
             $("#EditDetailsButton").on("click",
@@ -678,7 +678,7 @@
                             toastr.error("Failed to load certificate data");
                         }
                     });
-                    populateObserverSelection();
+                    populateEditObserverSelection();
                     $("#EditCertModal").modal('toggle');
                 });
 

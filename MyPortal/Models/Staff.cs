@@ -51,6 +51,7 @@ namespace MyPortal.Models
         public string Email { get; set; }
 
         [StringLength(50)]
+        [Phone]
         [Display(Name = "Phone Number")]
         public string Phone { get; set; }
 
