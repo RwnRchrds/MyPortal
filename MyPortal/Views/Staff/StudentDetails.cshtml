@@ -379,7 +379,7 @@
 </body>
 
 @section scripts
-{
+{    
     <script>
         //When Page Has Loaded, Prepare Scripts
         $(document).ready(function() {
@@ -437,11 +437,9 @@
                 });
 
             //Load Logs Table
-            function loadLogTable() {
-                var logsTable = $("#logs");
                 $("#logs").DataTable({
                     ajax: {
-                        url: "/api/logs/" + logsTable.attr("data-student-id"),
+                        url: "/api/logs/" + $("#logs").attr("data-student-id"),
                         dataSrc: "",
                         method: "GET"
                     },
@@ -525,7 +523,6 @@
                         "emptyTable": "No logs to display"
                     }
                 });
-            }
 
             $("#documents").DataTable({
                 ajax: {
@@ -664,9 +661,6 @@
                     var button = $(this);
                     location.replace("/Staff/Students/" + button.attr("data-student-id") + "/Results");
                 });            
-
-            //---FUNCTION CALLS---
-            loadLogTable();
         });
 
         function newDocumentSuccess(result) {
@@ -705,7 +699,7 @@
         function newLogSuccess(result) {
             $("#NewLogModal").modal('hide');
             $("#logs").DataTable().ajax.reload();
-            toastr.success(result);
+            toastr.success(result);   
         }
 
         function newLogFailure(result) {
