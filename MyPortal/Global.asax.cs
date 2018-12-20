@@ -19,7 +19,8 @@ namespace MyPortal
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
-
+        
+        #if !DEBUG
         protected void Application_BeginRequest()
         {
             if (Request.Url.Scheme != "http") return;
@@ -27,5 +28,6 @@ namespace MyPortal
             Response.Status = "301 Moved Permanently";
             Response.AddHeader("Location", path);
         }
+        #endif        
     }
 }
