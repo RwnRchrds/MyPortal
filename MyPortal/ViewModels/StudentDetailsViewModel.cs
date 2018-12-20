@@ -14,6 +14,7 @@ namespace MyPortal.ViewModels
         public Log Log { get; set; }
         public IEnumerable<YearGroup> YearGroups { get; set; }
         public IEnumerable<RegGroup> RegGroups { get; set; }
+        
         public Result Result { get; set; }
         public IEnumerable<ResultSet> ResultSets { get; set; }
         public IEnumerable<Subject> Subjects { get; set; }

@@ -116,14 +116,10 @@ namespace MyPortal.Controllers.Api
 
             switch (data.RoleName)
             {
-                case "Admin":
-                    if (!await _userManager.IsInRoleAsync(data.UserId, "SeniorStaff"))
-                        return Content(HttpStatusCode.BadRequest, "User must be a member of SeniorStaff");
-                    break;
-                case "Finance":
-                    if (!await _userManager.IsInRoleAsync(data.UserId, "SeniorStaff"))
-                        return Content(HttpStatusCode.BadRequest, "User must be a member of SeniorStaff");
-                    break;
+                case "Admin" when !await _userManager.IsInRoleAsync(data.UserId, "SeniorStaff"):
+                    return Content(HttpStatusCode.BadRequest, "User must be a member of SeniorStaff");
+                case "Finance" when !await _userManager.IsInRoleAsync(data.UserId, "SeniorStaff"):
+                    return Content(HttpStatusCode.BadRequest, "User must be a member of SeniorStaff");
             }
 
             switch (data.RoleName)
@@ -151,6 +147,8 @@ namespace MyPortal.Controllers.Api
                         return Content(HttpStatusCode.BadRequest, "User is already member of staff role");
 
                     break;
+                default:
+                    return Content(HttpStatusCode.NotFound, "Role not found");
             }
 
             if (await _userManager.IsInRoleAsync(data.UserId, data.RoleName))
