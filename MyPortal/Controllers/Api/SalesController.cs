@@ -214,7 +214,7 @@ namespace MyPortal.Controllers.Api
             var totalCost = basket.Sum(x => x.Product.Price);
 
             if (totalCost > student.AccountBalance)
-                return Content(HttpStatusCode.BadRequest, "Insufficient Funds");
+                return Content(HttpStatusCode.BadRequest, "Insufficient funds");
 
             //Process sales for each item
             foreach (var item in basket)

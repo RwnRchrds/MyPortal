@@ -1,3 +1,4 @@
+using System.Data.Common;
 using System.Data.Entity;
 
 namespace MyPortal.Models
@@ -6,6 +7,10 @@ namespace MyPortal.Models
     {
         public MyPortalDbContext()
             : base("name=MyPortalDbContext")
+        {
+        }
+
+        public MyPortalDbContext(DbConnection connection) : base(connection, true)
         {
         }
 
