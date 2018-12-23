@@ -34,13 +34,22 @@ namespace MyPortal.UnitTests
 
             _controller = new BasketItemsController(_context);
         }
+        
+        [OneTimeTearDown]
+        public void Clear()
+        {
+            _controller.Dispose();
+            _context.Dispose();
+        }
 
         [Test]
         public void GetBasketItems_ReturnsItems()
         {
-            var studentId = _context.Students.SingleOrDefault(x => x.FirstName == "Aaron").Id;
+            var student = _context.Students.SingleOrDefault(x => x.FirstName == "Aaron");
+            
+            Assert.IsNotNull(student);
 
-            var result = _controller.GetBasketItems(studentId);
+            var result = _controller.GetBasketItems(student.Id);           
 
             Assert.AreEqual(3, result.Count());
             Assert.AreEqual("Art Pack", result.First().Product.Description);
@@ -49,9 +58,11 @@ namespace MyPortal.UnitTests
         [Test]
         public void GetTotal_ReturnsBasketTotal()
         {
-            var studentId = _context.Students.SingleOrDefault(x => x.FirstName == "Aaron").Id;
+            var student = _context.Students.SingleOrDefault(x => x.FirstName == "Aaron");
+            
+            Assert.IsNotNull(student);
 
-            var result = _controller.GetTotal(studentId);
+            var result = _controller.GetTotal(student.Id);
 
             Assert.AreEqual(22.50m,result);
         }
@@ -59,15 +70,17 @@ namespace MyPortal.UnitTests
         [Test]
         public void AddToBasket_AddsItemToBasket()
         {
-            var studentId = _context.Students.SingleOrDefault(x => x.FirstName == "Dorothy").Id;
+            var student = _context.Students.SingleOrDefault(x => x.FirstName == "Dorothy");
+            
+            Assert.IsNotNull(student);
 
-            var initial = _context.BasketItems.Count(x => x.StudentId == studentId);
+            var initial = _context.BasketItems.Count(x => x.StudentId == student.Id);
 
             var product = _context.Products.SingleOrDefault(x => x.Description == "Art Pack");
 
-            _controller.AddToBasket(new BasketItemDto() {ProductId = product.Id, StudentId = studentId});
+            _controller.AddToBasket(new BasketItemDto() {ProductId = product.Id, StudentId = student.Id});
 
-            var result = _context.BasketItems.Count(x => x.StudentId == studentId);
+            var result = _context.BasketItems.Count(x => x.StudentId == student.Id);
             
             Assert.AreEqual(initial + 1, result);
         }
@@ -75,24 +88,21 @@ namespace MyPortal.UnitTests
         [Test]
         public void RemoveFromBasket_RemovesItemFromBasket()
         {
-            var studentId = _context.Students.SingleOrDefault(x => x.FirstName == "Aaron").Id;
+            var student = _context.Students.SingleOrDefault(x => x.FirstName == "Aaron");
+            
+            Assert.IsNotNull(student);
 
-            var initial = _context.BasketItems.Count(x => x.StudentId == studentId);
+            var initial = _context.BasketItems.Count(x => x.StudentId == student.Id);
 
-            var item = _context.BasketItems.FirstOrDefault(x => x.StudentId == studentId);
+            var item = _context.BasketItems.FirstOrDefault(x => x.StudentId == student.Id);
+            
+            Assert.IsNotNull(item);
 
             _controller.RemoveFromBasket(item.Id);
 
-            var result = _context.BasketItems.Count(x => x.StudentId == studentId);
+            var result = _context.BasketItems.Count(x => x.StudentId == student.Id);
             
             Assert.AreEqual(initial - 1, result); 
-        }
-
-        [OneTimeTearDown]
-        public void Clear()
-        {
-            _controller.Dispose();
-            _context.Dispose();
-        }
+        }        
     }
 }

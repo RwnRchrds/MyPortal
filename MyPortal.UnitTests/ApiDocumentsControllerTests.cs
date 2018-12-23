@@ -1,5 +1,6 @@
 using System;
 using System.Data.Common;
+using System.Data.Entity.Core.Metadata.Edm;
 using System.Linq;
 using AutoMapper;
 using Effort;
@@ -32,7 +33,14 @@ namespace MyPortal.UnitTests
             ContextControl.InitialiseMaps();
 
             _controller = new DocumentsController(_context);
-        }       
+        }
+        
+        [OneTimeTearDown]
+        public void Clear()
+        {
+            _controller.Dispose();
+            _context.Dispose();
+        }
 
         [Test]
         public void GetDocuments_ReturnsAllGeneralDocuments()
@@ -54,6 +62,8 @@ namespace MyPortal.UnitTests
         public void GetDocument_ReturnsCorrectDocument()
         {
             var document = _context.Documents.SingleOrDefault(x => x.Description == "Doc1");
+            
+            Assert.IsNotNull(document);
 
             var result = _controller.GetDocument(document.Id);
             
@@ -66,6 +76,8 @@ namespace MyPortal.UnitTests
             var init = _context.Documents.Count();
 
             var uploader = _context.Staff.SingleOrDefault(x => x.FirstName == "Lily");
+            
+            Assert.IsNotNull(uploader);
             
             var document = new Document()
             {
@@ -80,6 +92,7 @@ namespace MyPortal.UnitTests
             var newDocument = _context.Documents.SingleOrDefault(x => x.Url == "http://ftp.test.com/DocAdd");
             
             Assert.AreEqual(init + 1, result);
+            Assert.IsNotNull(newDocument);
             Assert.AreEqual(true, newDocument.IsGeneral);
             Assert.AreEqual(false, newDocument.Approved);
         }
@@ -90,6 +103,8 @@ namespace MyPortal.UnitTests
             var init = _context.Documents.Count();
 
             var document = _context.Documents.SingleOrDefault(x => x.Description == "Doc1");
+            
+            Assert.IsNotNull(document);
 
             _controller.RemoveDocument(document.Id);
 
@@ -97,12 +112,23 @@ namespace MyPortal.UnitTests
             
             Assert.AreEqual(init - 1, result);
         }
-        
-        [OneTimeTearDown]
-        public void Clear()
+
+        [Test]
+        public void UpdateDocument_UpdatesDocument()
         {
-            _controller.Dispose();
-            _context.Dispose();
-        }
+            var document = _context.Documents.SingleOrDefault(x => x.Description == "Doc2");
+            
+            Assert.IsNotNull(document);
+
+            document.Description = "Doc2Update";
+            document.Url = "http://ftp.test.com/doc2update";
+
+            _controller.UpdateDocument(Mapper.Map<Document, DocumentDto>(document));
+
+            var result = _context.Documents.SingleOrDefault(x => x.Description == "Doc2Update");
+            
+            Assert.IsNotNull(result);
+            Assert.AreEqual("http://ftp.test.com/doc2update", result.Url);
+        }               
     }
 }

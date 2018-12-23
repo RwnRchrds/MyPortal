@@ -20,6 +20,11 @@ namespace MyPortal.Controllers.Api
             _context = new MyPortalDbContext();
         }
 
+        public LogsController(MyPortalDbContext context)
+        {
+            _context = context;
+        }
+
         protected override void Dispose(bool disposing)
         {
             _context.Dispose();
@@ -51,13 +56,30 @@ namespace MyPortal.Controllers.Api
         [Route("api/logs/new")]
         public IHttpActionResult CreateLog(LogDto data)
         {
-            var currentUserId = User.Identity.GetUserId();
+            var currentUserId = User.Identity.GetUserId();            
+            
+            var authorId = data.AuthorId;
 
-            var userProfile = _context.Staff.SingleOrDefault(x => x.UserId == currentUserId);
+            if (authorId == 0)
+            {
+                authorId = Convert.ToInt32(User.Identity.GetUserId());
+                var userProfile = _context.Staff.SingleOrDefault(x => x.UserId == currentUserId);
+                if (userProfile == null) return Content(HttpStatusCode.BadRequest, "User does not have a profile");
+                data.AuthorId = userProfile.Id;
+            }
+            
+            var author = _context.Staff.SingleOrDefault(x => x.UserId == authorId.ToString());
 
-            if (userProfile == null) return Content(HttpStatusCode.BadRequest, "User does not have a profile");
+            if (authorId != 0)
+            {
+                author = _context.Staff.SingleOrDefault(x => x.Id == authorId);
+                if (author != null) data.AuthorId = author.Id;
+            }
 
-            data.AuthorId = userProfile.Id;
+            if (author == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Staff member not found");
+            }                        
 
             data.Date = DateTime.Now;
 
