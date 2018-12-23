@@ -5,6 +5,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Effort;
 using MyPortal.Dtos;
 using MyPortal.Models;
 
@@ -12,8 +13,11 @@ namespace MyPortal.UnitTests
 {
     public class ContextControl
     {
-        public static void Populate(MyPortalDbContext context)
+        public static MyPortalDbContext GetTestData()
         {
+            var effortConnection = DbConnectionFactory.CreateTransient();
+            var context = new MyPortalDbContext(effortConnection);
+            
             var basketItems = new List<BasketItem>
             {
                 new BasketItem() { Id = 1, StudentId = 1, ProductId = 1},
@@ -23,7 +27,10 @@ namespace MyPortal.UnitTests
 
             var documents = new List<Document>
             {
-
+                new Document() {Description = "Doc1", Url = "http://ftp.test.com/doc1", Date = DateTime.Today, IsGeneral = true, Approved = true, UploaderId = 1},
+                new Document() {Description = "Doc2", Url = "http://ftp.test.com/doc2", Date = DateTime.Today, IsGeneral = true, Approved = true, UploaderId = 1},
+                new Document() {Description = "Doc3", Url = "http://ftp.test.com/doc3", Date = DateTime.Today, IsGeneral = true, Approved = false, UploaderId = 1},
+                new Document() {Description = "Doc4", Url = "http://ftp.test.com/doc4", Date = DateTime.Today, IsGeneral = false, Approved = true, UploaderId = 1}
             };
 
             var grades = new List<Grade>
@@ -158,6 +165,8 @@ namespace MyPortal.UnitTests
             context.YearGroups.AddRange(yearGroups);
 
             context.SaveChanges();
+
+            return context;
         }
 
         public static void InitialiseMaps()

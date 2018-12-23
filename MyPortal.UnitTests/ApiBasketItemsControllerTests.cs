@@ -21,18 +21,18 @@ namespace MyPortal.UnitTests
         public void TestFixtureSetup()
         {
             Effort.Provider.EffortProviderConfiguration.RegisterProvider();
-            DbConnection effortConnection = DbConnectionFactory.CreatePersistent("MyPortalDbContext");
-            _context = new MyPortalDbContext(effortConnection);
-            ContextControl.Populate(_context);
-            ContextControl.InitialiseMaps();
-
-            _controller = new BasketItemsController(_context);
         }
 
         [SetUp]
         public void Setup()
         {
             EffortProviderFactory.ResetDb();
+            
+            Mapper.Reset();
+            _context = ContextControl.GetTestData();
+            ContextControl.InitialiseMaps();
+
+            _controller = new BasketItemsController(_context);
         }
 
         [Test]
@@ -79,8 +79,6 @@ namespace MyPortal.UnitTests
 
             var initial = _context.BasketItems.Count(x => x.StudentId == studentId);
 
-            var product = _context.Products.SingleOrDefault(x => x.Description == "Art Pack");
-
             var item = _context.BasketItems.FirstOrDefault(x => x.StudentId == studentId);
 
             _controller.RemoveFromBasket(item.Id);
@@ -88,6 +86,13 @@ namespace MyPortal.UnitTests
             var result = _context.BasketItems.Count(x => x.StudentId == studentId);
             
             Assert.AreEqual(initial - 1, result); 
+        }
+
+        [OneTimeTearDown]
+        public void Clear()
+        {
+            _controller.Dispose();
+            _context.Dispose();
         }
     }
 }

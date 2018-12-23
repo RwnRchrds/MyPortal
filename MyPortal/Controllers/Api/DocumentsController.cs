@@ -20,6 +20,11 @@ namespace MyPortal.Controllers.Api
             _context = new MyPortalDbContext();
         }
 
+        public DocumentsController(MyPortalDbContext context)
+        {
+            _context = context;
+        }
+
         protected override void Dispose(bool disposing)
         {
             _context.Dispose();
@@ -71,11 +76,26 @@ namespace MyPortal.Controllers.Api
                              && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 
             if (!IsUriValid)
-                return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
+                return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");           
 
-            var currentUserId = User.Identity.GetUserId();
+            var uploaderId = documentDto.UploaderId;
 
-            var uploader = _context.Staff.Single(x => x.UserId == currentUserId);
+            if (uploaderId == 0)
+            {
+                uploaderId = Convert.ToInt32(User.Identity.GetUserId());
+            }
+            
+            var uploader = _context.Staff.SingleOrDefault(x => x.UserId == uploaderId.ToString());
+
+            if (uploaderId != 0)
+            {
+                uploader = _context.Staff.SingleOrDefault(x => x.Id == uploaderId);
+            }
+
+            if (uploader == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Staff member not found");
+            }
 
             document.UploaderId = uploader.Id;
 
