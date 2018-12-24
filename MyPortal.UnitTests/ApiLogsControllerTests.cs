@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 using AutoMapper;
 using MyPortal.Controllers.Api;
 using MyPortal.Dtos;
@@ -86,6 +87,40 @@ namespace MyPortal.UnitTests
             
             Assert.AreEqual(init + 1, result);
             Assert.AreEqual(initForStudent + 1, result2);
+        }
+
+        [Test]
+        public void UpdateLog_UpdatesLog()
+        {
+            var log = _context.Logs.SingleOrDefault(x => x.Message == "Test3");
+            
+            Assert.IsNotNull(log);
+
+            log.Message = "Hello World";
+
+            _controller.UpdateLog(Mapper.Map<Log, LogDto>(log));
+
+            var result = _context.Logs.SingleOrDefault(x => x.Id == log.Id);
+            
+            Assert.IsNotNull(result);
+            
+            Assert.AreEqual("Hello World", result.Message);
+        }
+
+        [Test]
+        public void DeleteLog_DeletesLog()
+        {
+            var init = _context.Logs.Count();
+
+            var log = _context.Logs.SingleOrDefault(x => x.Message == "Test2");
+            
+            Assert.IsNotNull(log);
+
+            _controller.DeleteLog(log.Id);
+
+            var result = _context.Logs.Count();
+            
+            Assert.AreEqual(init - 1, result);
         }
     }
 }
