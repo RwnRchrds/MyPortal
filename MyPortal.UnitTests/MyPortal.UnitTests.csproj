@@ -83,6 +83,7 @@
   <ItemGroup>
     <Compile Include="ApiDocumentsControllerTests.cs" />
     <Compile Include="ApiLogsControllerTests.cs" />
+    <Compile Include="ApiProductsControllerTests.cs" />
     <Compile Include="ContextControl.cs" />
     <Compile Include="EffortProviderFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

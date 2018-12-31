@@ -18,6 +18,11 @@ namespace MyPortal.Controllers.Api
             _context = new MyPortalDbContext();
         }
 
+        public ProductsController(MyPortalDbContext context)
+        {
+            _context = context;
+        }
+
         protected override void Dispose(bool disposing)
         {
             _context.Dispose();

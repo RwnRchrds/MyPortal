@@ -74,6 +74,10 @@ namespace MyPortal.UnitTests
                 new Product
                 {
                     Id = 2, Description = "School Dinner", OnceOnly = false, Visible = true, Price = (decimal) 1.50
+                },
+                new Product
+                {
+                    Description = "School Trip", OnceOnly = true, Visible = true, Price = (decimal) 100.00
                 }
             };
 
