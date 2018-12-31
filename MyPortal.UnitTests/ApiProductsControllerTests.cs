@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Effort;
@@ -65,6 +66,57 @@ namespace MyPortal.UnitTests
             Assert.IsNotNull(result);
 
             Assert.AreEqual(expected.Price, result.Price);
+        }
+
+        [Test]
+        public void NewProduct_CreatesProduct()
+        {
+            var newProduct = new Product {Description = "Test", Price = 0.99m, Visible = true, OnceOnly = false};
+
+            var init = _context.Products.Count();
+
+            _controller.NewProduct(Mapper.Map<Product, ProductDto>(newProduct));
+
+            var result = _context.Products.Count();
+            
+            Assert.AreEqual(init + 1, result);
+        }
+
+        [Test]
+        public void UpdateProduct_UpdatesProduct()
+        {
+            var product = _context.Products.SingleOrDefault(x => x.Description == "Art Pack");
+            
+            Assert.IsNotNull(product);
+            
+            product.Price = 5000.00m;
+            product.Description = "Art Learning Pack";
+            product.OnceOnly = true;
+
+            _controller.UpdateProduct(Mapper.Map<Product, ProductDto>(product));
+
+            var result = _context.Products.SingleOrDefault(x => x.Id == product.Id);
+            
+            Assert.IsNotNull(result);            
+            Assert.AreEqual(5000.00m, result.Price);
+            Assert.AreEqual("Art Learning Pack", result.Description);
+            Assert.AreEqual(true, result.OnceOnly);
+        }
+
+        [Test]
+        public void DeleteProduct_RemovesProduct()
+        {
+            var init = _context.Products.Count();
+            
+            var product = _context.Products.SingleOrDefault(x => x.Description == "School Trip");
+            
+            Assert.IsNotNull(product);
+
+            _controller.DeleteProduct(product.Id);
+
+            var result = _context.Products.Count();
+            
+            Assert.AreEqual(init - 1, result);
         }
     }
 }
