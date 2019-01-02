@@ -89,12 +89,16 @@ namespace MyPortal.UnitTests
                 new RegGroup {Id = 4, Name = "11A", YearGroupId = 4, TutorId = 1}
             };
 
-            var results = new List<Result>();
+            var results = new List<Result>
+            {
+                new Result {StudentId = 1, SubjectId = 1, ResultSetId = 1, Value = "A"},
+                new Result {StudentId = 1, SubjectId = 2, ResultSetId = 1, Value = "C"}
+            };
 
             var resultSets = new List<ResultSet>
             {
-                new ResultSet() {Name = "Current", IsCurrent = true},
-                new ResultSet() {Name = "Old", IsCurrent = false}
+                new ResultSet() {Id = 1, Name = "Current", IsCurrent = true},
+                new ResultSet() {Id = 2, Name = "Old", IsCurrent = false}
             };
 
             var sales = new List<Sale>();
@@ -154,7 +158,12 @@ namespace MyPortal.UnitTests
 
             var studentDocuments = new List<StudentDocument>();
 
-            var subjects = new List<Subject>();
+            var subjects = new List<Subject>
+            {
+                new Subject {Name = "English", LeaderId = 3},
+                new Subject {Name = "Maths", LeaderId = 3},
+                new Subject {Name = "Science", LeaderId = 3}
+            };
 
             var trainingCertificates = new List<TrainingCertificate>();
 

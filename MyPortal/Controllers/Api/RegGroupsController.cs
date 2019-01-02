@@ -17,6 +17,11 @@ namespace MyPortal.Controllers.Api
             _context = new MyPortalDbContext();
         }
 
+        public RegGroupsController(MyPortalDbContext context)
+        {
+            _context = context;
+        }
+
         protected override void Dispose(bool disposing)
         {
             _context.Dispose();
