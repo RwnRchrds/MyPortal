@@ -55,25 +55,21 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [Route("api/logs/new")]
         public IHttpActionResult CreateLog(LogDto data)
-        {
-            var currentUserId = User.Identity.GetUserId();            
-            
+        {                                    
             var authorId = data.AuthorId;
+
+            var author = new Staff();
 
             if (authorId == 0)
             {
-                authorId = Convert.ToInt32(User.Identity.GetUserId());
-                var userProfile = _context.Staff.SingleOrDefault(x => x.UserId == currentUserId);
-                if (userProfile == null) return Content(HttpStatusCode.BadRequest, "User does not have a profile");
-                data.AuthorId = userProfile.Id;
-            }
-            
-            var author = _context.Staff.SingleOrDefault(x => x.UserId == authorId.ToString());
+                var userId = User.Identity.GetUserId();
+                author = _context.Staff.SingleOrDefault(x => x.UserId == userId);
+                if (author == null) return Content(HttpStatusCode.BadRequest, "User does not have a personnel profile");
+            }                       
 
             if (authorId != 0)
             {
                 author = _context.Staff.SingleOrDefault(x => x.Id == authorId);
-                if (author != null) data.AuthorId = author.Id;
             }
 
             if (author == null)
@@ -82,6 +78,7 @@ namespace MyPortal.Controllers.Api
             }                        
 
             data.Date = DateTime.Now;
+            data.AuthorId = author.Id;
 
             if (!ModelState.IsValid)
                 return Content(HttpStatusCode.BadRequest, "Invalid data");

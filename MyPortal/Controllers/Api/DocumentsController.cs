@@ -76,16 +76,18 @@ namespace MyPortal.Controllers.Api
                              && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 
             if (!IsUriValid)
-                return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");           
+                return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
+            
+            var uploader = new Staff();
 
             var uploaderId = documentDto.UploaderId;
 
             if (uploaderId == 0)
             {
-                uploaderId = Convert.ToInt32(User.Identity.GetUserId());
-            }
-            
-            var uploader = _context.Staff.SingleOrDefault(x => x.UserId == uploaderId.ToString());
+                var userId = User.Identity.GetUserId();
+                uploader = _context.Staff.SingleOrDefault(x => x.UserId == userId);
+                if (uploader == null) return Content(HttpStatusCode.BadRequest, "User does not have a personnel profile");
+            }            
 
             if (uploaderId != 0)
             {
