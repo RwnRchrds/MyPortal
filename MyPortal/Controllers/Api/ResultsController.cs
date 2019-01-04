@@ -18,6 +18,11 @@ namespace MyPortal.Controllers.Api
             _context = new MyPortalDbContext();
         }
 
+        public ResultsController(MyPortalDbContext context)
+        {
+            _context = context;
+        }
+
         protected override void Dispose(bool disposing)
         {
             _context.Dispose();
@@ -42,10 +47,10 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [Route("api/results/fetch")]
-        public IEnumerable<ResultDto> GetResults(int student, int resultset)
+        public IEnumerable<ResultDto> GetResults(int student, int resultSet)
         {
             var results = _context.Results
-                .Where(r => r.StudentId == student && r.ResultSetId == resultset)
+                .Where(r => r.StudentId == student && r.ResultSetId == resultSet)
                 .ToList()
                 .Select(Mapper.Map<Result, ResultDto>);
 
