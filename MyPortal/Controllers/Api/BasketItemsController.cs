@@ -82,7 +82,7 @@ namespace MyPortal.Controllers.Api
                     x.StudentId == data.StudentId && x.ProductId == data.ProductId && x.Product.OnceOnly);
 
             if (purchased.Any() || inBasket.Any())
-                return Content(HttpStatusCode.BadRequest, "This item cannot be purchased more than once");
+                return Content(HttpStatusCode.BadRequest, "This product cannot be purchased more than once");
 
             var itemToAdd = new BasketItem
             {

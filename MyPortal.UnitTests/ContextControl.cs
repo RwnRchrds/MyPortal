@@ -17,8 +17,9 @@ namespace MyPortal.UnitTests
             var basketItems = new List<BasketItem>
             {
                 new BasketItem {Id = 1, StudentId = 1, ProductId = 1},
-                new BasketItem {Id = 1, ProductId = 1, StudentId = 1},
-                new BasketItem {Id = 3, ProductId = 1, StudentId = 1}
+                new BasketItem {Id = 2, ProductId = 1, StudentId = 1},
+                new BasketItem {Id = 3, ProductId = 1, StudentId = 1},
+                new BasketItem {Id = 4, ProductId = 3, StudentId = 3}
             };
 
             var documents = new List<Document>
@@ -73,11 +74,15 @@ namespace MyPortal.UnitTests
                 },
                 new Product
                 {
-                    Id = 2, Description = "School Dinner", OnceOnly = false, Visible = true, Price = (decimal) 1.50
+                    Id = 2, Description = "School Dinner", OnceOnly = false, Visible = false, Price = (decimal) 1.50
                 },
                 new Product
                 {
-                    Description = "School Trip", OnceOnly = true, Visible = true, Price = (decimal) 100.00
+                    Id = 3, Description = "School Trip", OnceOnly = true, Visible = true, Price = (decimal) 100.00
+                },
+                new Product()
+                {
+                    Id = 4, Description = "Delete Me", OnceOnly = false, Visible = true, Price = 35.99m
                 }
             };
 

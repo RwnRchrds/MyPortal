@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Data.Common;
 using System.Linq;
+using System.Net;
+using System.Threading;
+using System.Web.Http;
+using System.Web.Http.Results;
 using AutoMapper;
 using MyPortal.Controllers.Api;
 using MyPortal.Models;
@@ -49,7 +53,7 @@ namespace MyPortal.UnitTests
             
             Assert.IsNotNull(student);
 
-            var result = _controller.GetBasketItems(student.Id);           
+            var result = _controller.GetBasketItems(student.Id).ToList();                       
 
             Assert.AreEqual(3, result.Count());
             Assert.AreEqual("Art Pack", result.First().Product.Description);
@@ -77,12 +81,96 @@ namespace MyPortal.UnitTests
             var initial = _context.BasketItems.Count(x => x.StudentId == student.Id);
 
             var product = _context.Products.SingleOrDefault(x => x.Description == "Art Pack");
+            
+            Assert.IsNotNull(product);
 
             _controller.AddToBasket(new BasketItemDto() {ProductId = product.Id, StudentId = student.Id});
 
             var result = _context.BasketItems.Count(x => x.StudentId == student.Id);
             
             Assert.AreEqual(initial + 1, result);
+        }
+
+        [Test]
+        public void AddToBasket_StudentDoesNotExist_ReturnsNotFound()
+        {
+            var studentId = 9999;
+            
+            var product = _context.Products.SingleOrDefault(x => x.Description == "Art Pack");
+            Assert.IsNotNull(product);
+            
+            var item = new BasketItem{StudentId = studentId, ProductId = product.Id};
+
+            var actionResult = _controller.AddToBasket(Mapper.Map<BasketItem, BasketItemDto>(item));
+
+            var result = actionResult as NegotiatedContentResult<string>;
+            
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<NegotiatedContentResult<string>>(actionResult);
+            Assert.AreEqual(HttpStatusCode.NotFound, result.StatusCode);
+            Assert.AreEqual("Student not found", result.Content);            
+        }
+
+        [Test]
+        public void AddToBasket_ProductDoesNotExist_ReturnsNotFound()
+        {
+            var productId = 9999;
+
+            var student = _context.Students.SingleOrDefault(x => x.FirstName == "Dorothy");
+            Assert.IsNotNull(student);
+            
+            var item = new BasketItem(){StudentId = student.Id, ProductId = productId};
+
+            var actionResult = _controller.AddToBasket(Mapper.Map<BasketItem, BasketItemDto>(item));
+
+            var result = actionResult as NegotiatedContentResult<string>;
+            
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<NegotiatedContentResult<string>>(actionResult);
+            Assert.AreEqual(HttpStatusCode.NotFound, result.StatusCode);
+            Assert.AreEqual("Product not found", result.Content);
+        }
+
+        [Test]
+        public void AddToBasket_ProductNotAvailable_ReturnsBadRequest()
+        {
+            var product = _context.Products.SingleOrDefault(x => x.Description == "School Dinner");
+            Assert.IsNotNull(product);
+
+            var student = _context.Students.SingleOrDefault(x => x.FirstName == "Dorothy");
+            Assert.IsNotNull(student);
+            
+            var item = new BasketItem {StudentId = student.Id, ProductId = product.Id};
+
+            var actionResult = _controller.AddToBasket(Mapper.Map<BasketItem, BasketItemDto>(item));
+
+            var result = actionResult as NegotiatedContentResult<string>;
+            
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<NegotiatedContentResult<string>>(actionResult);
+            Assert.AreEqual(HttpStatusCode.BadRequest, result.StatusCode);
+            Assert.AreEqual("Product not available", result.Content);
+        }
+
+        [Test]
+        public void AddToBasket_ProductOnceOnly_ReturnsBadRequest()
+        {
+            var product = _context.Products.SingleOrDefault(x => x.Description == "School Trip");
+            Assert.IsNotNull(product);
+
+            var student = _context.Students.SingleOrDefault(x => x.FirstName == "John");
+            Assert.IsNotNull(student);
+            
+            var item = new BasketItem {ProductId = product.Id, StudentId = student.Id};
+
+            var actionResult = _controller.AddToBasket(Mapper.Map<BasketItem, BasketItemDto>(item));
+
+            var result = actionResult as NegotiatedContentResult<string>;
+            
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<NegotiatedContentResult<string>>(result);
+            Assert.AreEqual(HttpStatusCode.BadRequest, result.StatusCode);
+            Assert.AreEqual("This product cannot be purchased more than once", result.Content);
         }
 
         [Test]
@@ -103,6 +191,21 @@ namespace MyPortal.UnitTests
             var result = _context.BasketItems.Count(x => x.StudentId == student.Id);
             
             Assert.AreEqual(initial - 1, result); 
-        }        
+        }
+
+        [Test]
+        public void RemoveFromBasket_ItemDoesNotExist_ReturnsNotFound()
+        {
+            var itemId = 9999;
+
+            var actionResult = _controller.RemoveFromBasket(itemId);
+
+            var result = actionResult as NegotiatedContentResult<string>;
+            
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<NegotiatedContentResult<string>>(result);
+            Assert.AreEqual(HttpStatusCode.NotFound, result.StatusCode);
+            Assert.AreEqual("Item not found", result.Content);
+        }
     }
 }

@@ -49,7 +49,7 @@ namespace MyPortal.UnitTests
         {
             var result = _controller.GetProducts();
 
-            Assert.AreEqual(3, result.Count());
+            Assert.AreEqual(4, result.Count());
         }
 
         [Test]
@@ -108,7 +108,7 @@ namespace MyPortal.UnitTests
         {
             var init = _context.Products.Count();
             
-            var product = _context.Products.SingleOrDefault(x => x.Description == "School Trip");
+            var product = _context.Products.SingleOrDefault(x => x.Description == "Delete Me");
             
             Assert.IsNotNull(product);
 
