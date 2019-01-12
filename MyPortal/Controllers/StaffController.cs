@@ -1,4 +1,8 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
+using System.Net;
+using System.Web;
+using System.Web.Http;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using MyPortal.Models;
@@ -7,7 +11,7 @@ using MyPortal.ViewModels;
 namespace MyPortal.Controllers
 {
     //MyPortal Staff Controller --> Controller Methods for Staff Areas
-    [Authorize(Roles = "Staff, SeniorStaff")]
+    [System.Web.Mvc.Authorize(Roles = "Staff, SeniorStaff")]
     public class StaffController : Controller
     {
         private readonly MyPortalDbContext _context;
@@ -49,7 +53,7 @@ namespace MyPortal.Controllers
 
         // Menu | Staff --> Staff List (All)
         // Accessible by [SeniorStaff] only
-        [Authorize(Roles = "SeniorStaff")]
+        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
         public ActionResult Staff()
         {
             var viewModel = new NewStaffViewModel();
@@ -58,7 +62,7 @@ namespace MyPortal.Controllers
 
         // Menu | Students | X --> Student Details (for Student X)
         //Accessible by [Staff] or [SeniorStaff]
-        [Route("Staff/Students/{id}")]
+        [System.Web.Mvc.Route("Staff/Students/{id}")]
         public ActionResult StudentDetails(int id)
         {
             var student = _context.Students.SingleOrDefault(s => s.Id == id);
@@ -100,7 +104,7 @@ namespace MyPortal.Controllers
 
         //Menu | Students | X | [View Results] --> Student Results (for Student X)
         //Accessible by [Staff] or [SeniorStaff]
-        [Route("Staff/Students/{id}/Results")]
+        [System.Web.Mvc.Route("Staff/Students/{id}/Results")]
         public ActionResult StudentResults(int id)
         {
             var student = _context.Students.SingleOrDefault(s => s.Id == id);
@@ -131,8 +135,8 @@ namespace MyPortal.Controllers
 
         // Menu | Staff | X --> Student Details (for Staff X)
         //Accessible by [SeniorStaff] only
-        [Authorize(Roles = "SeniorStaff")]
-        [Route("Staff/Staff/{id}")]
+        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
+        [System.Web.Mvc.Route("Staff/Staff/{id}")]
         public ActionResult StaffDetails(int id)
         {
             var staff = _context.Staff.SingleOrDefault(s => s.Id == id);
@@ -159,8 +163,8 @@ namespace MyPortal.Controllers
 
         // Menu | Students | New Student --> New Student form
         // Accessible by [SeniorStaff] only
-        [Authorize(Roles = "SeniorStaff")]
-        [Route("Staff/Students/New")]
+        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
+        [System.Web.Mvc.Route("Staff/Students/New")]
         public ActionResult NewStudent()
         {
             var yearGroups = _context.YearGroups.ToList();
@@ -184,8 +188,8 @@ namespace MyPortal.Controllers
 
         // Menu | Training Courses | New Course --> New Course Form
         // Accessible by [SeniorStaff] only
-        [Authorize(Roles = "SeniorStaff")]
-        [Route("Staff/TrainingCourses/New")]
+        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
+        [System.Web.Mvc.Route("Staff/TrainingCourses/New")]
         public ActionResult NewCourse()
         {
             return View();
@@ -200,7 +204,7 @@ namespace MyPortal.Controllers
 
         // HTTP POST request for saving/creating logs using HTML form 
         // TODO: [REPLACE WITH AJAX REQUEST]
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public ActionResult SaveLog(Log log)
         {
             if (log.Id == 0)
@@ -222,7 +226,7 @@ namespace MyPortal.Controllers
         }
 
         // HTTP POST request for creating certificates using HTML form
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public ActionResult CreateCertificate(TrainingCertificate trainingCertificate)
         {
             _context.TrainingCertificates.Add(trainingCertificate);
@@ -232,7 +236,7 @@ namespace MyPortal.Controllers
         }
 
         // HTTP POST request for creating students using HTML form
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CreateStudent(Student student)
         {
@@ -254,7 +258,7 @@ namespace MyPortal.Controllers
         }
 
         // HTTP POST request for creating training courses using HTML form
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CreateCourse(TrainingCourse course)
         {
@@ -267,7 +271,7 @@ namespace MyPortal.Controllers
         }
 
         // HTTP POST request for updating student details using HTML form
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public ActionResult SaveStudent(Student student)
         {
             var studentInDb = _context.Students.Single(l => l.Id == student.Id);
@@ -281,6 +285,32 @@ namespace MyPortal.Controllers
             return RedirectToAction("StudentDetails", "Staff", new {id = student.Id});
         }
 
-        // TODO: Markbook
+        [System.Web.Mvc.Route("Staff/Data/Results/Import")]
+        public ActionResult ImportResults()
+        {
+            var resultSets = _context.ResultSets.OrderBy(x => x.Name).ToList();
+            var fileExists = System.IO.File.Exists(@"C:/MyPortal/Files/Results/import.csv");
+            var viewModel = new ImportResultsViewModel
+            {
+                ResultSets = resultSets,
+                FileExists = fileExists
+            };
+
+            return View(viewModel);
+        }
+
+        [System.Web.Mvc.HttpPost]
+        public ActionResult UploadResults(HttpPostedFileBase file)
+        {
+
+            if (file.ContentLength > 0 && Path.GetExtension(file.FileName) == ".csv")
+            {
+                var fileName = "import.csv";
+                var path = @"C:/MyPortal/Files/Results/import.csv";
+                file.SaveAs(path);
+            }
+
+            return RedirectToAction("ImportResults");
+        }
     }
 }

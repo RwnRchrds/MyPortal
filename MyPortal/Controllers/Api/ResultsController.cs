@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -65,16 +66,25 @@ namespace MyPortal.Controllers.Api
 
         #endregion
 
-        public IHttpActionResult UploadResults(HttpPostedFileBase file, int resultSetId)
+        [Route("api/results/import/{resultSetId}")]
+        public IHttpActionResult UploadResults(int resultSetId)
         {
-            if (file == null || Path.GetExtension(file.FileName) != ".csv")
+            if (!File.Exists(@"C:/MyPortal/Files/Results/import.csv"))
             {
-                return Content(HttpStatusCode.BadRequest, "Invalid results file");
+                return Content(HttpStatusCode.NotFound, "File not found");
+            }
+            
+            var stream = new FileStream(@"C:/MyPortal/Files/Results/import.csv", FileMode.Open);
+            var subjects = _context.Subjects.OrderBy(x => x.Name).ToList();
+            var numResults = 0;
+            var resultSet = _context.ResultSets.SingleOrDefault(x => x.Id == resultSetId);
+
+            if (resultSet == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Result set not found");
             }
 
-            var subjects = _context.Subjects.OrderBy(x => x.Name).ToList();
-
-            using (var reader = new StreamReader(file.FileName))
+            using (var reader = new StreamReader(stream))
             {
                 reader.ReadLine();
                 while (!reader.EndOfStream)
@@ -84,22 +94,31 @@ namespace MyPortal.Controllers.Api
                     var values = line.Split(',');
                     for (int i = 0; i < subjects.Count; i++)
                     {
-                        var student = _context.Students.SingleOrDefault(x => x.MisId == values[4]);
+                        var studentMisId = values[4];
+                        var student = _context.Students.SingleOrDefault(x => x.MisId == studentMisId);
                         if (student == null) continue;
                         var result = new Result
                         {
                             StudentId = student.Id,
-                            ResultSetId = resultSetId,
+                            ResultSetId = resultSet.Id,
                             SubjectId = subjects[i].Id,
                             Value = values[5 + i]
                         };
+
+                        if (result.Value.Equals("")) continue;
                         _context.Results.Add(result);
+                        numResults++;
                     }
                 }
             }
+            
+            stream.Dispose();
+            
+            var guid = Guid.NewGuid();
+            File.Move(@"C:/MyPortal/Files/Results/import.csv",@"C:/MyPortal/Files/Results/"+guid+"_IMPORTED.csv");
 
             _context.SaveChanges();
-            return Ok("Results imported");
+            return Ok(numResults + " results found and imported");
         }
     }
 }

@@ -18,6 +18,12 @@
                         }
                         @Html.ActionLink("Documents", "Documents", "Staff", null, new {@class = "dropdown-item"})
                         @Html.ActionLink("Training Courses", "TrainingCourses", "Staff", null, new {@class = "dropdown-item"})
+                        @if (User.IsInRole("SeniorStaff"))
+                        {
+                            <div class="dropdown-divider"></div>
+                            <h6 class="dropdown-header">Data</h6>
+                            @Html.ActionLink("Import Results", "ImportResults", "Staff", null, new{@class = "dropdown-item"})
+                        }
                         @if (User.IsInRole("Admin"))
                         {
                             <div class="dropdown-divider"></div>

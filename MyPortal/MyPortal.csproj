@@ -299,6 +299,7 @@
     <Compile Include="ViewModels\AccountsViewModel.cs" />
     <Compile Include="ViewModels\DinnerMoneyViewModel.cs" />
     <Compile Include="ViewModels\DocumentsViewModel.cs" />
+    <Compile Include="ViewModels\ImportResultsViewModel.cs" />
     <Compile Include="ViewModels\NewProductViewModel.cs" />
     <Compile Include="ViewModels\NewSaleViewModel.cs" />
     <Compile Include="ViewModels\NewStaffViewModel.cs" />
@@ -721,10 +722,11 @@
     <Content Include="Views\Staff\NoProfileIndex.cshtml" />
     <Content Include="Views\Students\NoProfileIndex.cshtml" />
     <Content Include="Views\Students\SalesHistory.cshtml" />
-    <Content Include="Views\Staff\UploadResults.cshtml" />
+    <Content Include="Views\Staff\ImportResults.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="App_Data\Results" />
     <Folder Include="Models\Validation\" />
   </ItemGroup>
   <ItemGroup>

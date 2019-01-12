@@ -1,0 +1,103 @@
+﻿@model MyPortal.ViewModels.ImportResultsViewModel
+@{
+    ViewBag.Title = "Upload Results";
+    Layout = "~/Views/Shared/_LayoutStaff.cshtml";
+}
+
+<body>
+
+<div class="container float-left">
+    <h2 class="mp-page-title">Upload and Import Results</h2>
+    <hr/>
+</div>
+
+<div class="container float-left">
+    <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#UploadModal">Upload Results</button>
+    <hr/>
+</div>
+
+<div class="container float-left">
+    @if (!Model.FileExists)
+    {
+        <p class="text-danger">Results file not uploaded.</p>
+    }
+    @if (Model.FileExists)
+    {
+        <p class="text-success">Results file found. Please select the correct result set before importing.</p>
+    }
+</div>
+
+@if (Model.FileExists)
+{
+    <div class="container float-left">
+        <div class="form-group">
+            @Html.Label("Result Set")
+            @Html.DropDownListFor(x => x.ResultSet, new SelectList(Model.ResultSets, "Id", "Name"), "Select Result Set", new {@class = "form-control", Name = "resultSetId", id = "resultSetSelect"})
+        </div>        
+        <button type="button" class="btn btn-primary" disabled id="btnImport">Import</button>
+    </div>
+}
+
+<div id="UploadModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Upload Results File</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
+            </div>
+            <form action="@Url.Action("UploadResults","Staff")" method="post" enctype="multipart/form-data">
+  
+                <label for="file">Results File</label>
+                <input type="file" name="file" id="file" accept=".csv" class="form-control"/>
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+</body>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+            $("#resultSetSelect").on("change",
+                function() {
+                    if ($("#resultSetSelect").val() !== "") {
+                        $("#btnImport").prop("disabled", false);
+                    } 
+                    if ($("#resultSetSelect").val() === "") {
+                        $("#btnImport").prop("disabled", true);
+                    }
+                });
+            
+            $("#btnImport").on("click",
+                function () {
+                    $.ajax({
+                        url: "/api/results/import/" + $("#resultSetSelect").val(),
+                        method: "POST",                        
+                        success: function (e) {
+                            toastr.success(e);
+                        },
+                        error: function (e) {
+                            toastr.error(e.responseJSON);
+                            resetForm();
+                        }
+                    });
+                });
+            $(document).ajaxStart(function() {
+                toastr.options.timeOut = 0;
+                toastr.options.extendedTimeOut = 0;
+                toastr.info("Please wait", "Importing results...");
+            });
+            $(document).ajaxStop(function() {
+                toastr.options.timeOut = 10;
+                toastr.options.extendedTimeOut = 10;
+            });
+        });
+    </script>
+}
+
