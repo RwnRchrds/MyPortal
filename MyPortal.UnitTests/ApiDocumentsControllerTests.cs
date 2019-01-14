@@ -2,6 +2,8 @@ using System;
 using System.Data.Common;
 using System.Data.Entity.Core.Metadata.Edm;
 using System.Linq;
+using System.Net;
+using System.Web.Http.Results;
 using AutoMapper;
 using Effort;
 using MyPortal.Controllers.Api;
@@ -95,6 +97,49 @@ namespace MyPortal.UnitTests
             Assert.IsNotNull(newDocument);
             Assert.AreEqual(true, newDocument.IsGeneral);
             Assert.AreEqual(false, newDocument.Approved);
+        }
+
+        [Test]
+        public void AddDocument_DocumentUriInvalid_ReturnsBadRequest()
+        {
+            var uploader = _context.Staff.SingleOrDefault(x => x.FirstName == "Lily");
+            Assert.IsNotNull(uploader);
+            
+            var document = new Document
+            {                
+                Url = "TEST", Description = "Add Document Test", Date = DateTime.Today, Approved = false,
+                UploaderId = uploader.Id
+            };
+
+            var actionResult = _controller.AddDocument(Mapper.Map<Document, DocumentDto>(document));                        
+            
+            var result = actionResult as NegotiatedContentResult<string>;
+            
+            Assert.IsNotNull(result);            
+            Assert.IsInstanceOf<NegotiatedContentResult<string>>(result);
+            Assert.AreEqual(HttpStatusCode.BadRequest, result.StatusCode);
+            Assert.AreEqual("The URL entered is not valid", result.Content);
+        }
+
+        [Test]
+        public void AddDocument_StaffDoesNotExist_ReturnsNotFound()
+        {
+            const int uploaderId = 9999;
+
+            var document = new Document
+            {
+                Url = "http://ftp.test.com/DocAdd", Description = "Add Document Test", Date = DateTime.Today,
+                Approved = false, UploaderId = uploaderId
+            };
+
+            var actionResult = _controller.AddDocument(Mapper.Map<Document, DocumentDto>(document));
+
+            var result = actionResult as NegotiatedContentResult<string>;
+            
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<NegotiatedContentResult<string>>(result);
+            Assert.AreEqual(HttpStatusCode.NotFound, result.StatusCode);
+            Assert.AreEqual("Staff member not found", result.Content);
         }
 
         [Test]

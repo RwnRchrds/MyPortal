@@ -71,6 +71,7 @@ namespace MyPortal.Controllers.Api
             _context.Dispose();
         }
 
+        //Gets approved general documents only
         [HttpGet]
         [Route("api/documents/approved")]
         [Authorize(Roles = "Staff, SeniorStaff")]
@@ -95,6 +96,7 @@ namespace MyPortal.Controllers.Api
             return Mapper.Map<Document, DocumentDto>(document);
         }
 
+        //Returns all (general) documents --> Including unapproved
         [HttpGet]
         [Route("api/documents")]
         [Authorize(Roles = "SeniorStaff")]
