@@ -302,13 +302,10 @@ namespace MyPortal.Controllers
         [System.Web.Mvc.HttpPost]
         public ActionResult UploadResults(HttpPostedFileBase file)
         {
-
-            if (file.ContentLength > 0 && Path.GetExtension(file.FileName) == ".csv")
-            {
-                var fileName = "import.csv";
-                var path = @"C:/MyPortal/Files/Results/import.csv";
-                file.SaveAs(path);
-            }
+            if (file.ContentLength <= 0 || Path.GetExtension(file.FileName) != ".csv")
+                return RedirectToAction("ImportResults");
+            const string path = @"C:/MyPortal/Files/Results/import.csv";
+            file.SaveAs(path);
 
             return RedirectToAction("ImportResults");
         }
