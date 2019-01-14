@@ -76,7 +76,7 @@ namespace MyPortal.UnitTests
             
             Assert.IsNotNull(student);
 
-            var newLog = new Log()
+            var newLog = new Log
                 {Date = DateTime.Now, Message = "CreateLog", TypeId = 1, AuthorId = 1, StudentId = student.Id};
 
             _controller.CreateLog(Mapper.Map<Log, LogDto>(newLog));

@@ -25,19 +25,55 @@ namespace MyPortal.Controllers.Api
             _context = context;
         }
 
+        [HttpPost]
+        [Route("api/logs/new")]
+        public IHttpActionResult CreateLog(LogDto data)
+        {
+            var authorId = data.AuthorId;
+
+            var author = new Staff();
+
+            if (authorId == 0)
+            {
+                var userId = User.Identity.GetUserId();
+                author = _context.Staff.SingleOrDefault(x => x.UserId == userId);
+                if (author == null) return Content(HttpStatusCode.BadRequest, "User does not have a personnel profile");
+            }
+
+            if (authorId != 0) author = _context.Staff.SingleOrDefault(x => x.Id == authorId);
+
+            if (author == null) return Content(HttpStatusCode.NotFound, "Staff member not found");
+
+            data.Date = DateTime.Now;
+            data.AuthorId = author.Id;
+
+            if (!ModelState.IsValid)
+                return Content(HttpStatusCode.BadRequest, "Invalid data");
+
+            var log = Mapper.Map<LogDto, Log>(data);
+            _context.Logs.Add(log);
+            _context.SaveChanges();
+
+            return Ok("Log created");
+        }
+
+        [Route("api/logs/log/{id}")]
+        public IHttpActionResult DeleteLog(int id)
+        {
+            var logInDb = _context.Logs.SingleOrDefault(l => l.Id == id);
+
+            if (logInDb == null)
+                return Content(HttpStatusCode.NotFound, "Log does not exist");
+
+            _context.Logs.Remove(logInDb);
+            _context.SaveChanges();
+
+            return Ok("Log deleted");
+        }
+
         protected override void Dispose(bool disposing)
         {
             _context.Dispose();
-        }
-
-        [HttpGet]
-        [Route("api/logs/{student}")]
-        public IEnumerable<LogDto> GetLogs(int student)
-        {
-            return _context.Logs.Where(l => l.StudentId == student)
-                .OrderByDescending(x => x.Date)
-                .ToList()
-                .Select(Mapper.Map<Log, LogDto>);
         }
 
         [HttpGet]
@@ -52,42 +88,14 @@ namespace MyPortal.Controllers.Api
             return Mapper.Map<Log, LogDto>(log);
         }
 
-        [HttpPost]
-        [Route("api/logs/new")]
-        public IHttpActionResult CreateLog(LogDto data)
-        {                                    
-            var authorId = data.AuthorId;
-
-            var author = new Staff();
-
-            if (authorId == 0)
-            {
-                var userId = User.Identity.GetUserId();
-                author = _context.Staff.SingleOrDefault(x => x.UserId == userId);
-                if (author == null) return Content(HttpStatusCode.BadRequest, "User does not have a personnel profile");
-            }                       
-
-            if (authorId != 0)
-            {
-                author = _context.Staff.SingleOrDefault(x => x.Id == authorId);
-            }
-
-            if (author == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Staff member not found");
-            }                        
-
-            data.Date = DateTime.Now;
-            data.AuthorId = author.Id;
-
-            if (!ModelState.IsValid)
-                return Content(HttpStatusCode.BadRequest, "Invalid data");
-
-            var log = Mapper.Map<LogDto, Log>(data);
-            _context.Logs.Add(log);
-            _context.SaveChanges();
-
-            return Ok("Log created");
+        [HttpGet]
+        [Route("api/logs/{student}")]
+        public IEnumerable<LogDto> GetLogs(int student)
+        {
+            return _context.Logs.Where(l => l.StudentId == student)
+                .OrderByDescending(x => x.Date)
+                .ToList()
+                .Select(Mapper.Map<Log, LogDto>);
         }
 
         [Route("api/logs/log/edit")]
@@ -110,20 +118,6 @@ namespace MyPortal.Controllers.Api
             _context.SaveChanges();
 
             return Ok("Log updated");
-        }
-
-        [Route("api/logs/log/{id}")]
-        public IHttpActionResult DeleteLog(int id)
-        {
-            var logInDb = _context.Logs.SingleOrDefault(l => l.Id == id);
-
-            if (logInDb == null)
-                return Content(HttpStatusCode.NotFound, "Log does not exist");
-
-            _context.Logs.Remove(logInDb);
-            _context.SaveChanges();
-
-            return Ok("Log deleted");
         }
     }
 }

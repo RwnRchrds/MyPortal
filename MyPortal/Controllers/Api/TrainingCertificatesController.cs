@@ -19,38 +19,6 @@ namespace MyPortal.Controllers.Api
             _context = new MyPortalDbContext();
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            _context.Dispose();
-        }
-
-        [HttpGet]
-        [Route("api/staff/certificates/fetch/{staff}")]
-        public IEnumerable<TrainingCertificateDto> GetCertificates(int staff)
-        {
-            var staffInDb = _context.Staff.Single(x => x.Id == staff);
-
-            if (staffInDb == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            return _context.TrainingCertificates
-                .Where(c => c.StaffId == staff)
-                .ToList()
-                .Select(Mapper.Map<TrainingCertificate, TrainingCertificateDto>);
-        }
-
-        [HttpGet]
-        [Route("api/staff/certificates/fetch/{staffId}/{courseId}")]
-        public TrainingCertificateDto GetCertificate(int staffId, int courseId)
-        {
-            var certInDb = _context.TrainingCertificates.Single(x => x.StaffId == staffId && x.CourseId == courseId);
-
-            if (certInDb == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            return Mapper.Map<TrainingCertificate, TrainingCertificateDto>(certInDb);
-        }
-
         [HttpPost]
         [Route("api/staff/certificates/create")]
         public IHttpActionResult CreateTrainingCertificate(TrainingCertificateDto trainingCertificateDto)
@@ -63,9 +31,7 @@ namespace MyPortal.Controllers.Api
             var userPerson = _context.Staff.SingleOrDefault(x => x.UserId == userId);
 
             if (trainingCertificateDto.StaffId == userPerson.Id)
-            {
                 return Content(HttpStatusCode.BadRequest, "Cannot add a certificate for yourself");
-            }
 
             var cert = Mapper.Map<TrainingCertificateDto, TrainingCertificate>(trainingCertificateDto);
 
@@ -73,32 +39,6 @@ namespace MyPortal.Controllers.Api
             _context.SaveChanges();
 
             return Ok("Certificate added");
-        }
-
-        [HttpPost]
-        [Route("api/staff/certificates/update")]
-        public IHttpActionResult UpdateCertificate(TrainingCertificateDto data)
-        {
-            var certInDb =
-                _context.TrainingCertificates.Single(x => x.StaffId == data.StaffId && x.CourseId == data.CourseId);
-
-            if (certInDb == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            var userId = User.Identity.GetUserId();
-
-            var userPerson = _context.Staff.SingleOrDefault(x => x.UserId == userId);
-
-            if (data.StaffId == userPerson.Id)
-            {
-                return Content(HttpStatusCode.BadRequest, "Cannot modify a certificate for yourself");
-            }
-
-            certInDb.StatusId = data.StatusId;
-
-            _context.SaveChanges();
-
-            return Ok("Certificate updated");
         }
 
         [HttpDelete]
@@ -116,14 +56,68 @@ namespace MyPortal.Controllers.Api
             var userPerson = _context.Staff.SingleOrDefault(x => x.UserId == userId);
 
             if (staff == userPerson.Id)
-            {
                 return Content(HttpStatusCode.BadRequest, "Cannot remove a certificate for yourself");
-            }
 
             _context.TrainingCertificates.Remove(certInDb);
             _context.SaveChanges();
 
             return Ok("Certificate deleted");
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _context.Dispose();
+        }
+
+        [HttpGet]
+        [Route("api/staff/certificates/fetch/{staffId}/{courseId}")]
+        public TrainingCertificateDto GetCertificate(int staffId, int courseId)
+        {
+            var certInDb = _context.TrainingCertificates.Single(x => x.StaffId == staffId && x.CourseId == courseId);
+
+            if (certInDb == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            return Mapper.Map<TrainingCertificate, TrainingCertificateDto>(certInDb);
+        }
+
+        [HttpGet]
+        [Route("api/staff/certificates/fetch/{staff}")]
+        public IEnumerable<TrainingCertificateDto> GetCertificates(int staff)
+        {
+            var staffInDb = _context.Staff.Single(x => x.Id == staff);
+
+            if (staffInDb == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            return _context.TrainingCertificates
+                .Where(c => c.StaffId == staff)
+                .ToList()
+                .Select(Mapper.Map<TrainingCertificate, TrainingCertificateDto>);
+        }
+
+        [HttpPost]
+        [Route("api/staff/certificates/update")]
+        public IHttpActionResult UpdateCertificate(TrainingCertificateDto data)
+        {
+            var certInDb =
+                _context.TrainingCertificates.Single(x => x.StaffId == data.StaffId && x.CourseId == data.CourseId);
+
+            if (certInDb == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            var userId = User.Identity.GetUserId();
+
+            var userPerson = _context.Staff.SingleOrDefault(x => x.UserId == userId);
+
+            if (data.StaffId == userPerson.Id)
+                return Content(HttpStatusCode.BadRequest, "Cannot modify a certificate for yourself");
+
+            certInDb.StatusId = data.StatusId;
+
+            _context.SaveChanges();
+
+            return Ok("Certificate updated");
         }
     }
 }

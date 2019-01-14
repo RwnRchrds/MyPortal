@@ -79,7 +79,7 @@ namespace MyPortal.UnitTests
             
             Assert.IsNotNull(uploader);
             
-            var document = new Document()
+            var document = new Document
             {
                 Url = "http://ftp.test.com/DocAdd", Description = "Add Document Test", Date = DateTime.Today,
                 Approved = false, UploaderId = uploader.Id

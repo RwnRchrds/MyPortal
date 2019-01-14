@@ -23,38 +23,6 @@ namespace MyPortal.Controllers.Api
             _context = context;
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            _context.Dispose();
-        }
-
-        //GET BASKET ITEMS
-        [HttpGet]
-        [Route("api/basket")]
-        public IEnumerable<BasketItemDto> GetBasketItems(int student)
-        {
-            return _context.BasketItems
-                .Where(x => x.StudentId == student)
-                .OrderBy(x => x.Product.Description)
-                .ToList()
-                .Select(Mapper.Map<BasketItem, BasketItemDto>);
-        }
-
-        //GET BASKET TOTAL
-        [HttpGet]
-        [Route("api/basket/total")]
-        public decimal GetTotal(int student)
-        {
-            var allItems = _context.BasketItems.Where(x => x.StudentId == student);
-
-            if (!allItems.Any())
-                return 0.00m;
-
-            var total = allItems.Sum(x => x.Product.Price);
-
-            return total;
-        }
-
         //ADD TO BASKET
         [HttpPost]
         [Route("api/basket/add")]
@@ -94,6 +62,38 @@ namespace MyPortal.Controllers.Api
             _context.SaveChanges();
 
             return Ok("Item added to basket");
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _context.Dispose();
+        }
+
+        //GET BASKET ITEMS
+        [HttpGet]
+        [Route("api/basket")]
+        public IEnumerable<BasketItemDto> GetBasketItems(int student)
+        {
+            return _context.BasketItems
+                .Where(x => x.StudentId == student)
+                .OrderBy(x => x.Product.Description)
+                .ToList()
+                .Select(Mapper.Map<BasketItem, BasketItemDto>);
+        }
+
+        //GET BASKET TOTAL
+        [HttpGet]
+        [Route("api/basket/total")]
+        public decimal GetTotal(int student)
+        {
+            var allItems = _context.BasketItems.Where(x => x.StudentId == student);
+
+            if (!allItems.Any())
+                return 0.00m;
+
+            var total = allItems.Sum(x => x.Product.Price);
+
+            return total;
         }
 
         //REMOVE FROM BASKET

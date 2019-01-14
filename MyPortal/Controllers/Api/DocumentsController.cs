@@ -25,20 +25,50 @@ namespace MyPortal.Controllers.Api
             _context = context;
         }
 
+        [HttpPost]
+        [Route("api/documents/add")]
+        [Authorize(Roles = "Staff, SeniorStaff")]
+        public IHttpActionResult AddDocument(DocumentDto documentDto)
+        {
+            var document = Mapper.Map<DocumentDto, Document>(documentDto);
+
+            var IsUriValid = Uri.TryCreate(document.Url, UriKind.Absolute, out var uriResult)
+                             && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+
+            if (!IsUriValid)
+                return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
+
+            var uploader = new Staff();
+
+            var uploaderId = documentDto.UploaderId;
+
+            if (uploaderId == 0)
+            {
+                var userId = User.Identity.GetUserId();
+                uploader = _context.Staff.SingleOrDefault(x => x.UserId == userId);
+                if (uploader == null)
+                    return Content(HttpStatusCode.BadRequest, "User does not have a personnel profile");
+            }
+
+            if (uploaderId != 0) uploader = _context.Staff.SingleOrDefault(x => x.Id == uploaderId);
+
+            if (uploader == null) return Content(HttpStatusCode.NotFound, "Staff member not found");
+
+            document.UploaderId = uploader.Id;
+
+            document.IsGeneral = true;
+
+            document.Date = DateTime.Now;
+
+            _context.Documents.Add(document);
+            _context.SaveChanges();
+
+            return Ok("Document added");
+        }
+
         protected override void Dispose(bool disposing)
         {
             _context.Dispose();
-        }
-
-        [HttpGet]
-        [Route("api/documents")]
-        [Authorize(Roles = "SeniorStaff")]
-        public IEnumerable<DocumentDto> GetDocuments()
-        {
-            return _context.Documents
-                .Where(x => x.IsGeneral)
-                .ToList()
-                .Select(Mapper.Map<Document, DocumentDto>);
         }
 
         [HttpGet]
@@ -65,50 +95,15 @@ namespace MyPortal.Controllers.Api
             return Mapper.Map<Document, DocumentDto>(document);
         }
 
-        [HttpPost]
-        [Route("api/documents/add")]
-        [Authorize(Roles = "Staff, SeniorStaff")]
-        public IHttpActionResult AddDocument(DocumentDto documentDto)
+        [HttpGet]
+        [Route("api/documents")]
+        [Authorize(Roles = "SeniorStaff")]
+        public IEnumerable<DocumentDto> GetDocuments()
         {
-            var document = Mapper.Map<DocumentDto, Document>(documentDto);
-
-            var IsUriValid = Uri.TryCreate(document.Url, UriKind.Absolute, out var uriResult)
-                             && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
-
-            if (!IsUriValid)
-                return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
-            
-            var uploader = new Staff();
-
-            var uploaderId = documentDto.UploaderId;
-
-            if (uploaderId == 0)
-            {
-                var userId = User.Identity.GetUserId();
-                uploader = _context.Staff.SingleOrDefault(x => x.UserId == userId);
-                if (uploader == null) return Content(HttpStatusCode.BadRequest, "User does not have a personnel profile");
-            }            
-
-            if (uploaderId != 0)
-            {
-                uploader = _context.Staff.SingleOrDefault(x => x.Id == uploaderId);
-            }
-
-            if (uploader == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Staff member not found");
-            }
-
-            document.UploaderId = uploader.Id;
-
-            document.IsGeneral = true;
-
-            document.Date = DateTime.Now;
-
-            _context.Documents.Add(document);
-            _context.SaveChanges();
-
-            return Ok("Document added");
+            return _context.Documents
+                .Where(x => x.IsGeneral)
+                .ToList()
+                .Select(Mapper.Map<Document, DocumentDto>);
         }
 
         [HttpDelete]

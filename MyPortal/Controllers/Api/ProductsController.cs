@@ -23,20 +23,55 @@ namespace MyPortal.Controllers.Api
             _context = context;
         }
 
+        //DELETE PRODUCT
+        [HttpDelete]
+        [Route("api/products/{id}")]
+        public IHttpActionResult DeleteProduct(int id)
+        {
+            var productInDb = _context.Products.SingleOrDefault(p => p.Id == id);
+
+            if (productInDb == null)
+                return Content(HttpStatusCode.NotFound, "Product not found");
+
+            _context.Products.Remove(productInDb);
+            _context.SaveChanges();
+
+            return Ok("Product deleted");
+        }
+
         protected override void Dispose(bool disposing)
         {
             _context.Dispose();
         }
 
-        //GET ALL PRODUCTS
+        //STORE: GET AVAILABLE PRODUCTS
         [HttpGet]
-        [Route("api/products")]
-        public IEnumerable<ProductDto> GetProducts()
+        [Route("api/products/store")]
+        public IEnumerable<ProductDto> GetAvailableProducts(int student)
         {
+            var purchased = _context.Sales.Where(a => a.StudentId == student);
+
+            var inBasket = _context.BasketItems.Where(a => a.StudentId == student);
+
             return _context.Products
+                .Where(x => !x.OnceOnly && x.Visible || x.Visible && purchased.All(p => p.ProductId != x.Id) &&
+                            inBasket.All(b => b.ProductId != x.Id))
                 .OrderBy(x => x.Description)
                 .ToList()
                 .Select(Mapper.Map<Product, ProductDto>);
+        }
+
+        //GET PRICE
+        [HttpGet]
+        [Route("api/products/price/{productId}")]
+        public decimal GetPrice(int productId)
+        {
+            var productInDb = _context.Products.Single(x => x.Id == productId);
+
+            if (productInDb == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            return productInDb.Price;
         }
 
         //GET SINGLE PRODUCT
@@ -50,6 +85,17 @@ namespace MyPortal.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
             return Mapper.Map<Product, ProductDto>(product);
+        }
+
+        //GET ALL PRODUCTS
+        [HttpGet]
+        [Route("api/products")]
+        public IEnumerable<ProductDto> GetProducts()
+        {
+            return _context.Products
+                .OrderBy(x => x.Description)
+                .ToList()
+                .Select(Mapper.Map<Product, ProductDto>);
         }
 
         //NEW PRODUCT
@@ -87,52 +133,6 @@ namespace MyPortal.Controllers.Api
             _context.SaveChanges();
 
             return Ok("Product updated");
-        }
-
-        //DELETE PRODUCT
-        [HttpDelete]
-        [Route("api/products/{id}")]
-        public IHttpActionResult DeleteProduct(int id)
-        {
-            var productInDb = _context.Products.SingleOrDefault(p => p.Id == id);
-
-            if (productInDb == null)
-                return Content(HttpStatusCode.NotFound, "Product not found");
-
-            _context.Products.Remove(productInDb);
-            _context.SaveChanges();
-
-            return Ok("Product deleted");
-        }
-
-        //STORE: GET AVAILABLE PRODUCTS
-        [HttpGet]
-        [Route("api/products/store")]
-        public IEnumerable<ProductDto> GetAvailableProducts(int student)
-        {
-            var purchased = _context.Sales.Where(a => a.StudentId == student);
-
-            var inBasket = _context.BasketItems.Where(a => a.StudentId == student);
-
-            return _context.Products
-                .Where(x => !x.OnceOnly && x.Visible || x.Visible && purchased.All(p => p.ProductId != x.Id) &&
-                            inBasket.All(b => b.ProductId != x.Id))
-                .OrderBy(x => x.Description)
-                .ToList()
-                .Select(Mapper.Map<Product, ProductDto>);
-        }
-
-        //GET PRICE
-        [HttpGet]
-        [Route("api/products/price/{productId}")]
-        public decimal GetPrice(int productId)
-        {
-            var productInDb = _context.Products.Single(x => x.Id == productId);
-
-            if (productInDb == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            return productInDb.Price;
         }
     }
 }

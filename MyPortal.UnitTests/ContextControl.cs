@@ -52,18 +52,18 @@ namespace MyPortal.UnitTests
 
             var logs = new List<Log>
             {
-                new Log() {Date = DateTime.Now, AuthorId = 3, Message = "Test", StudentId = 3, TypeId = 1},
-                new Log() {Date = DateTime.Now, AuthorId = 3, Message = "Test2", StudentId = 3, TypeId = 2},
-                new Log() {Date = DateTime.Today, AuthorId = 3, Message = "Test3", StudentId = 3, TypeId = 3},
-                new Log() {Date = DateTime.Today, AuthorId = 3, Message = "Test4", StudentId = 3, TypeId = 4}
+                new Log {Date = DateTime.Now, AuthorId = 3, Message = "Test", StudentId = 3, TypeId = 1},
+                new Log {Date = DateTime.Now, AuthorId = 3, Message = "Test2", StudentId = 3, TypeId = 2},
+                new Log {Date = DateTime.Today, AuthorId = 3, Message = "Test3", StudentId = 3, TypeId = 3},
+                new Log {Date = DateTime.Today, AuthorId = 3, Message = "Test4", StudentId = 3, TypeId = 4}
             };
 
             var logTypes = new List<LogType>
             {
-                new LogType(){Name = "Type 1"},
-                new LogType() {Name = "Type 2"},
-                new LogType() {Name = "Type 3"},
-                new LogType() {Name = "Type 4"}
+                new LogType {Name = "Type 1"},
+                new LogType {Name = "Type 2"},
+                new LogType {Name = "Type 3"},
+                new LogType {Name = "Type 4"}
             };
 
             var products = new List<Product>
@@ -80,7 +80,7 @@ namespace MyPortal.UnitTests
                 {
                     Id = 3, Description = "School Trip", OnceOnly = true, Visible = true, Price = (decimal) 100.00
                 },
-                new Product()
+                new Product
                 {
                     Id = 4, Description = "Delete Me", OnceOnly = false, Visible = true, Price = 35.99m
                 }
@@ -102,8 +102,8 @@ namespace MyPortal.UnitTests
 
             var resultSets = new List<ResultSet>
             {
-                new ResultSet() {Id = 1, Name = "Current", IsCurrent = true},
-                new ResultSet() {Id = 2, Name = "Old", IsCurrent = false}
+                new ResultSet {Id = 1, Name = "Current", IsCurrent = true},
+                new ResultSet {Id = 2, Name = "Old", IsCurrent = false}
             };
 
             var sales = new List<Sale>();

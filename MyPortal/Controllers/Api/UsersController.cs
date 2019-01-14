@@ -30,79 +30,6 @@ namespace MyPortal.Controllers.Api
             _context = new MyPortalDbContext();
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            _identity.Dispose();
-            _userManager.Dispose();
-            _context.Dispose();
-        }
-
-        //GET Users From Database
-        [HttpGet]
-        [Route("api/users")]
-        public IEnumerable<UserDto> GetUsers()
-        {
-            return _identity.Users.ToList().Select(Mapper.Map<IdentityUser, UserDto>);
-        }
-
-        //Remove Users From a Role
-        [Route("api/users/removeRole/{userId}/{roleName}")]
-        [HttpDelete]
-        public async Task<IHttpActionResult> RemoveFromRole(string userId, string roleName)
-        {
-            var userIsAttached = _context.Students.Any(x => x.UserId == userId) ||
-                                 _context.Staff.Any(x => x.UserId == userId);
-            var userInDb = _identity.Users.FirstOrDefault(user => user.Id == userId);
-            if (userInDb == null)
-                return Content(HttpStatusCode.NotFound, "User not found");
-
-            //get user's assigned roles
-            var userRoles = await _userManager.GetRolesAsync(userId);
-
-            //check for role to be removed
-            var roleToRemove =
-                userRoles.FirstOrDefault(role => role.Equals(roleName, StringComparison.InvariantCultureIgnoreCase));
-            if (roleToRemove == null)
-                return Content(HttpStatusCode.NotFound, "User is not in role");
-
-            if (userIsAttached && (roleName == "Staff" || roleName == "Student"))
-                return Content(HttpStatusCode.BadRequest,
-                    "User cannot be removed from a primary role while attached to a person");
-
-            var result = await _userManager.RemoveFromRoleAsync(userId, roleToRemove);
-            if (result.Succeeded)
-                return Ok();
-
-            return BadRequest();
-        }
-
-        //Change a User's Password
-        [HttpPost]
-        [Route("api/users/resetPassword")]
-        public async Task<IHttpActionResult> ChangePassword([FromBody] ChangePasswordModel data)
-        {
-            if (data.Password != data.Confirm)
-                return Content(HttpStatusCode.BadRequest, "Passwords do not match");
-
-            var userInDb = _identity.Users.FirstOrDefault(user => user.Id == data.UserId);
-            if (userInDb == null)
-                return Content(HttpStatusCode.NotFound, "User not found");
-
-            var removePassword = await _userManager.RemovePasswordAsync(data.UserId);
-
-            if (removePassword.Succeeded)
-            {
-                var addNewPassword = await _userManager.AddPasswordAsync(data.UserId, data.Password);
-
-                if (addNewPassword.Succeeded)
-                    return Ok("Password reset");
-
-                return BadRequest();
-            }
-
-            return BadRequest();
-        }
-
         //Add a role to a user
         [HttpPost]
         [Route("api/users/addRole")]
@@ -213,6 +140,55 @@ namespace MyPortal.Controllers.Api
             return BadRequest();
         }
 
+        //Change a User's Password
+        [HttpPost]
+        [Route("api/users/resetPassword")]
+        public async Task<IHttpActionResult> ChangePassword([FromBody] ChangePasswordModel data)
+        {
+            if (data.Password != data.Confirm)
+                return Content(HttpStatusCode.BadRequest, "Passwords do not match");
+
+            var userInDb = _identity.Users.FirstOrDefault(user => user.Id == data.UserId);
+            if (userInDb == null)
+                return Content(HttpStatusCode.NotFound, "User not found");
+
+            var removePassword = await _userManager.RemovePasswordAsync(data.UserId);
+
+            if (removePassword.Succeeded)
+            {
+                var addNewPassword = await _userManager.AddPasswordAsync(data.UserId, data.Password);
+
+                if (addNewPassword.Succeeded)
+                    return Ok("Password reset");
+
+                return BadRequest();
+            }
+
+            return BadRequest();
+        }
+
+        //Delete user
+        [HttpDelete]
+        [Route("api/users/delete/{userId}")]
+        public async Task<IHttpActionResult> DeleteUser(string userId)
+        {
+            var userInDb = _identity.Users.FirstOrDefault(x => x.Id == userId);
+
+            if (userInDb == null)
+                return Content(HttpStatusCode.NotFound, "User not found");
+
+            var userRoles = await _userManager.GetRolesAsync(userId);
+
+            foreach (var role in userRoles) await _userManager.RemoveFromRoleAsync(userId, role);
+
+            var result = await _userManager.DeleteAsync(userInDb);
+
+            if (result.Succeeded)
+                return Ok("User deleted");
+
+            return BadRequest();
+        }
+
         //Detach User from Personal Profile
         [HttpPost]
         [Route("api/users/detach")]
@@ -253,6 +229,21 @@ namespace MyPortal.Controllers.Api
             return BadRequest();
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            _identity.Dispose();
+            _userManager.Dispose();
+            _context.Dispose();
+        }
+
+        //GET Users From Database
+        [HttpGet]
+        [Route("api/users")]
+        public IEnumerable<UserDto> GetUsers()
+        {
+            return _identity.Users.ToList().Select(Mapper.Map<IdentityUser, UserDto>);
+        }
+
         //New user
         [HttpPost]
         [Route("api/users/new")]
@@ -278,24 +269,33 @@ namespace MyPortal.Controllers.Api
             return BadRequest();
         }
 
-        //Delete user
+        //Remove Users From a Role
+        [Route("api/users/removeRole/{userId}/{roleName}")]
         [HttpDelete]
-        [Route("api/users/delete/{userId}")]
-        public async Task<IHttpActionResult> DeleteUser(string userId)
+        public async Task<IHttpActionResult> RemoveFromRole(string userId, string roleName)
         {
-            var userInDb = _identity.Users.FirstOrDefault(x => x.Id == userId);
-
+            var userIsAttached = _context.Students.Any(x => x.UserId == userId) ||
+                                 _context.Staff.Any(x => x.UserId == userId);
+            var userInDb = _identity.Users.FirstOrDefault(user => user.Id == userId);
             if (userInDb == null)
                 return Content(HttpStatusCode.NotFound, "User not found");
 
+            //get user's assigned roles
             var userRoles = await _userManager.GetRolesAsync(userId);
 
-            foreach (var role in userRoles) await _userManager.RemoveFromRoleAsync(userId, role);
+            //check for role to be removed
+            var roleToRemove =
+                userRoles.FirstOrDefault(role => role.Equals(roleName, StringComparison.InvariantCultureIgnoreCase));
+            if (roleToRemove == null)
+                return Content(HttpStatusCode.NotFound, "User is not in role");
 
-            var result = await _userManager.DeleteAsync(userInDb);
+            if (userIsAttached && (roleName == "Staff" || roleName == "Student"))
+                return Content(HttpStatusCode.BadRequest,
+                    "User cannot be removed from a primary role while attached to a person");
 
+            var result = await _userManager.RemoveFromRoleAsync(userId, roleToRemove);
             if (result.Succeeded)
-                return Ok("User deleted");
+                return Ok();
 
             return BadRequest();
         }

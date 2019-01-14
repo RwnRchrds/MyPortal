@@ -20,9 +20,50 @@ namespace MyPortal.Controllers.Api
             _context = new MyPortalDbContext();
         }
 
+        //TEST BALANCE
+        [HttpPost]
+        [Route("api/sales/query")]
+        public bool AssessBalance(SaleDto sale)
+        {
+            var productToQuery = _context.Products.SingleOrDefault(x => x.Id == sale.ProductId);
+
+            var studentToQuery = _context.Students.SingleOrDefault(x => x.Id == sale.StudentId);
+
+            if (productToQuery == null || studentToQuery == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            return studentToQuery.AccountBalance >= productToQuery.Price;
+        }
+
+        //DELETE SALE
+        [HttpDelete]
+        [Route("api/sales/delete/{id}")]
+        public IHttpActionResult DeleteSale(int id)
+        {
+            var saleInDb = _context.Sales.SingleOrDefault(p => p.Id == id);
+
+            if (saleInDb == null)
+                return Content(HttpStatusCode.NotFound, "Sale not found");
+
+            _context.Sales.Remove(saleInDb);
+            _context.SaveChanges();
+
+            return Ok("Sale deleted");
+        }
+
         protected override void Dispose(bool disposing)
         {
             _context.Dispose();
+        }
+
+        //GET UNPROCESSED SALES
+        [HttpGet]
+        [Route("api/sales/pending")]
+        public IEnumerable<SaleDto> GetPendingSales()
+        {
+            return _context.Sales.Where(x => x.Processed == false)
+                .ToList()
+                .Select(Mapper.Map<Sale, SaleDto>);
         }
 
         //GET ALL SALES
@@ -31,18 +72,6 @@ namespace MyPortal.Controllers.Api
         public IEnumerable<SaleDto> GetSales()
         {
             return _context.Sales
-                .OrderByDescending(x => x.Date)
-                .ToList()
-                .Select(Mapper.Map<Sale, SaleDto>);
-        }
-
-        //GET UNPROCESSED SALES
-        [HttpGet]
-        [Route("api/sales")]
-        public IEnumerable<SaleDto> GetUnprocessedSales()
-        {
-            return _context.Sales
-                .Where(x => x.Processed == false)
                 .OrderByDescending(x => x.Date)
                 .ToList()
                 .Select(Mapper.Map<Sale, SaleDto>);
@@ -62,50 +91,34 @@ namespace MyPortal.Controllers.Api
 
         //GET UNPROCESSED SALES
         [HttpGet]
-        [Route("api/sales/pending")]
-        public IEnumerable<SaleDto> GetPendingSales()
+        [Route("api/sales")]
+        public IEnumerable<SaleDto> GetUnprocessedSales()
         {
-            return _context.Sales.Where(x => x.Processed == false)
+            return _context.Sales
+                .Where(x => x.Processed == false)
+                .OrderByDescending(x => x.Date)
                 .ToList()
                 .Select(Mapper.Map<Sale, SaleDto>);
         }
 
-        //DELETE SALE
-        [HttpDelete]
-        [Route("api/sales/delete/{id}")]
-        public IHttpActionResult DeleteSale(int id)
+        //Processes a Sale for ONE Product
+        public void InvokeSale(SaleDto sale)
         {
-            var saleInDb = _context.Sales.SingleOrDefault(p => p.Id == id);
+            var student = _context.Students.SingleOrDefault(x => x.Id == sale.StudentId);
 
-            if (saleInDb == null)
-                return Content(HttpStatusCode.NotFound, "Sale not found");
+            var product = _context.Products.SingleOrDefault(x => x.Id == sale.ProductId);
 
-            _context.Sales.Remove(saleInDb);
-            _context.SaveChanges();
+            if (student == null || product == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            return Ok("Sale deleted");
-        }
+            /*if (product.Price > student.AccountBalance)
+                throw new HttpResponseException(HttpStatusCode.BadRequest);*/
 
-        //REFUND SALE
-        [HttpDelete]
-        [Route("api/sales/refund/{id}")]
-        public IHttpActionResult RefundSale(int id)
-        {
-            var saleInDb = _context.Sales.SingleOrDefault(p => p.Id == id);
+            student.AccountBalance -= product.Price;
 
-            if (saleInDb == null)
-                return Content(HttpStatusCode.NotFound, "Sale not found");
+            sale.AmountPaid = product.Price;
 
-            var amount = saleInDb.AmountPaid;
-
-            var student = saleInDb.Student;
-
-            student.AccountBalance += amount;
-
-            _context.Sales.Remove(saleInDb);
-            _context.SaveChanges();
-
-            return Ok("Sale refunded");
+            _context.Sales.Add(Mapper.Map<SaleDto, Sale>(sale));
         }
 
         //MARK SALE AS PROCESSED
@@ -126,21 +139,6 @@ namespace MyPortal.Controllers.Api
             _context.SaveChanges();
 
             return Ok("Sale marked as processed");
-        }
-
-        //TEST BALANCE
-        [HttpPost]
-        [Route("api/sales/query")]
-        public bool AssessBalance(SaleDto sale)
-        {
-            var productToQuery = _context.Products.SingleOrDefault(x => x.Id == sale.ProductId);
-
-            var studentToQuery = _context.Students.SingleOrDefault(x => x.Id == sale.StudentId);
-
-            if (productToQuery == null || studentToQuery == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            return studentToQuery.AccountBalance >= productToQuery.Price;
         }
 
         //NEW SALE
@@ -170,26 +168,6 @@ namespace MyPortal.Controllers.Api
             _context.SaveChanges();
 
             return Ok("Sale completed");
-        }
-
-        //Processes a Sale for ONE Product
-        public void InvokeSale(SaleDto sale)
-        {
-            var student = _context.Students.SingleOrDefault(x => x.Id == sale.StudentId);
-
-            var product = _context.Products.SingleOrDefault(x => x.Id == sale.ProductId);
-
-            if (student == null || product == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            /*if (product.Price > student.AccountBalance)
-                throw new HttpResponseException(HttpStatusCode.BadRequest);*/
-
-            student.AccountBalance -= product.Price;
-
-            sale.AmountPaid = product.Price;
-
-            _context.Sales.Add(Mapper.Map<SaleDto, Sale>(sale));
         }
 
         //STORE: NEW PURCHASE (From Student Side)
@@ -235,6 +213,28 @@ namespace MyPortal.Controllers.Api
             _context.SaveChanges();
 
             return Ok("Purchase completed");
+        }
+
+        //REFUND SALE
+        [HttpDelete]
+        [Route("api/sales/refund/{id}")]
+        public IHttpActionResult RefundSale(int id)
+        {
+            var saleInDb = _context.Sales.SingleOrDefault(p => p.Id == id);
+
+            if (saleInDb == null)
+                return Content(HttpStatusCode.NotFound, "Sale not found");
+
+            var amount = saleInDb.AmountPaid;
+
+            var student = saleInDb.Student;
+
+            student.AccountBalance += amount;
+
+            _context.Sales.Remove(saleInDb);
+            _context.SaveChanges();
+
+            return Ok("Sale refunded");
         }
     }
 }

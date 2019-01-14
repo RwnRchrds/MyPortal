@@ -84,7 +84,7 @@ namespace MyPortal.UnitTests
             
             Assert.IsNotNull(product);
 
-            _controller.AddToBasket(new BasketItemDto() {ProductId = product.Id, StudentId = student.Id});
+            _controller.AddToBasket(new BasketItemDto {ProductId = product.Id, StudentId = student.Id});
 
             var result = _context.BasketItems.Count(x => x.StudentId == student.Id);
             
@@ -99,7 +99,7 @@ namespace MyPortal.UnitTests
             var product = _context.Products.SingleOrDefault(x => x.Description == "Art Pack");
             Assert.IsNotNull(product);
             
-            var item = new BasketItem{StudentId = studentId, ProductId = product.Id};
+            var item = new BasketItem {StudentId = studentId, ProductId = product.Id};
 
             var actionResult = _controller.AddToBasket(Mapper.Map<BasketItem, BasketItemDto>(item));
 
@@ -119,7 +119,7 @@ namespace MyPortal.UnitTests
             var student = _context.Students.SingleOrDefault(x => x.FirstName == "Dorothy");
             Assert.IsNotNull(student);
             
-            var item = new BasketItem(){StudentId = student.Id, ProductId = productId};
+            var item = new BasketItem {StudentId = student.Id, ProductId = productId};
 
             var actionResult = _controller.AddToBasket(Mapper.Map<BasketItem, BasketItemDto>(item));
 
