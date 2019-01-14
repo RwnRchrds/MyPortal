@@ -89,13 +89,18 @@
                     });
                 });
             $(document).ajaxStart(function() {
+                $("#btnImport").prop("disabled", true);
                 toastr.options.timeOut = 0;
                 toastr.options.extendedTimeOut = 0;
                 toastr.info("Please wait", "Importing results...");
+                window.onbeforeunload = function() {
+                    return true;
+                };
             });
             $(document).ajaxStop(function() {
                 toastr.options.timeOut = 10;
                 toastr.options.extendedTimeOut = 10;
+                window.onbeforeunload = null;
             });
         });
     </script>

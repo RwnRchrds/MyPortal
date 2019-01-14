@@ -69,15 +69,15 @@ namespace MyPortal.Controllers.Api
         [Route("api/results/import/{resultSetId}")]
         public IHttpActionResult UploadResults(int resultSetId)
         {
-            if (!File.Exists(@"C:/MyPortal/Files/Results/import.csv"))
+            if (!File.Exists(@"C:\MyPortal\Files\Results\import.csv"))
             {
                 return Content(HttpStatusCode.NotFound, "File not found");
             }
             
-            var stream = new FileStream(@"C:/MyPortal/Files/Results/import.csv", FileMode.Open);
+            var stream = new FileStream(@"C:\MyPortal\Files\Results\import.csv", FileMode.Open);
             var subjects = _context.Subjects.OrderBy(x => x.Name).ToList();
             var numResults = 0;
-            var resultSet = _context.ResultSets.SingleOrDefault(x => x.Id == resultSetId);
+            var resultSet = _context.ResultSets.SingleOrDefault(x => x.Id == resultSetId);                       
 
             if (resultSet == null)
             {
