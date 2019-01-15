@@ -35,9 +35,9 @@ namespace MyPortal.Controllers
             base.Dispose(disposing);
         }
 
-        // Admin | Users --> Users List (All)
-        [Route("Staff/Admin/Users")]
-        public ActionResult Users()
+        // Admin | Users | New User --> New User Form
+        [Route("Staff/Admin/Users/New")]
+        public ActionResult NewUser()
         {
             return View();
         }
@@ -78,9 +78,9 @@ namespace MyPortal.Controllers
             return View(viewModel);
         }
 
-        // Admin | Users | New User --> New User Form
-        [Route("Staff/Admin/Users/New")]
-        public ActionResult NewUser()
+        // Admin | Users --> Users List (All)
+        [Route("Staff/Admin/Users")]
+        public ActionResult Users()
         {
             return View();
         }

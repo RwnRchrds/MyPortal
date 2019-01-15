@@ -6,6 +6,9 @@
     <title>MyPortal - @ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    @{
+        var version = @ViewContext.Controller.GetType().Assembly.GetName().Version;
+    }
 
 </head>
 <body>
@@ -17,7 +20,7 @@
         <hr/>
         <footer>
             <p>
-                <b>Version:</b> @ViewContext.Controller.GetType().Assembly.GetName().Version.ToString()
+                <b>Version:</b> @version.Major.ToString().@version.Minor.ToString().@version.Build.ToString()
             </p>
             <p>&copy; @DateTime.Now.Year - Rowan Richards</p>
         </footer>

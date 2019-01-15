@@ -1,8 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
-using System.Net;
 using System.Web;
-using System.Web.Http;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using MyPortal.Models;
@@ -11,7 +9,7 @@ using MyPortal.ViewModels;
 namespace MyPortal.Controllers
 {
     //MyPortal Staff Controller --> Controller Methods for Staff Areas
-    [System.Web.Mvc.Authorize(Roles = "Staff, SeniorStaff")]
+    [Authorize(Roles = "Staff, SeniorStaff")]
     public class StaffController : Controller
     {
         private readonly MyPortalDbContext _context;
@@ -21,9 +19,75 @@ namespace MyPortal.Controllers
             _context = new MyPortalDbContext();
         }
 
+        // HTTP POST request for creating certificates using HTML form
+        [HttpPost]
+        public ActionResult CreateCertificate(TrainingCertificate trainingCertificate)
+        {
+            _context.TrainingCertificates.Add(trainingCertificate);
+            _context.SaveChanges();
+
+            return RedirectToAction("StaffDetails", "Staff", new {id = trainingCertificate.Staff});
+        }
+
+        // HTTP POST request for creating training courses using HTML form
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateCourse(TrainingCourse course)
+        {
+            if (!ModelState.IsValid) return View("NewCourse");
+
+            _context.TrainingCourses.Add(course);
+            _context.SaveChanges();
+
+            return RedirectToAction("TrainingCourses", "Staff");
+        }
+
+        // HTTP POST request for creating students using HTML form
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateStudent(Student student)
+        {
+            if (!ModelState.IsValid)
+            {
+                var viewModel = new NewStudentViewModel
+                {
+                    Student = student,
+                    RegGroups = _context.RegGroups.ToList(),
+                    YearGroups = _context.YearGroups.ToList()
+                };
+                return View("NewStudent", viewModel);
+            }
+
+            _context.Students.Add(student);
+            _context.SaveChanges();
+
+            return RedirectToAction("Students", "Staff");
+        }
+
         protected override void Dispose(bool disposing)
         {
             _context.Dispose();
+        }
+
+        // Menu | Documents --> General Controlled Documents List (All)
+        //Accessible by [Staff] or [SeniorStaff]
+        public ActionResult Documents()
+        {
+            return View();
+        }
+
+        [Route("Staff/Data/Results/Import")]
+        public ActionResult ImportResults()
+        {
+            var resultSets = _context.ResultSets.OrderBy(x => x.Name).ToList();
+            var fileExists = System.IO.File.Exists(@"C:/MyPortal/Files/Results/import.csv");
+            var viewModel = new ImportResultsViewModel
+            {
+                ResultSets = resultSets,
+                FileExists = fileExists
+            };
+
+            return View(viewModel);
         }
 
         // Staff Landing Page
@@ -44,25 +108,111 @@ namespace MyPortal.Controllers
             return View(viewModel);
         }
 
-        // Menu | Students --> Students List (All)
-        // Accessible by [Staff] or [SeniorStaff]
-        public ActionResult Students()
+        // Menu | Training Courses | New Course --> New Course Form
+        // Accessible by [SeniorStaff] only
+        [Authorize(Roles = "SeniorStaff")]
+        [Route("Staff/TrainingCourses/New")]
+        public ActionResult NewCourse()
         {
             return View();
         }
 
+        // Menu | Students | New Student --> New Student form
+        // Accessible by [SeniorStaff] only
+        [Authorize(Roles = "SeniorStaff")]
+        [Route("Staff/Students/New")]
+        public ActionResult NewStudent()
+        {
+            var yearGroups = _context.YearGroups.ToList();
+            var regGroups = _context.RegGroups.ToList();
+
+            var viewModel = new NewStudentViewModel
+            {
+                RegGroups = regGroups,
+                YearGroups = yearGroups
+            };
+
+            return View(viewModel);
+        }
+
+        // HTTP POST request for saving/creating logs using HTML form 
+        // TODO: [REPLACE WITH AJAX REQUEST]
+        [HttpPost]
+        public ActionResult SaveLog(Log log)
+        {
+            if (log.Id == 0)
+            {
+                _context.Logs.Add(log);
+            }
+
+            else
+            {
+                var logInDb = _context.Logs.Single(l => l.Id == log.Id);
+
+                logInDb.AuthorId = log.AuthorId;
+                logInDb.Date = log.Date;
+                logInDb.Message = log.Message;
+            }
+
+            _context.SaveChanges();
+            return RedirectToAction("StudentDetails", "Staff", new {id = log.Student});
+        }
+
+        // HTTP POST request for updating student details using HTML form
+        [HttpPost]
+        public ActionResult SaveStudent(Student student)
+        {
+            var studentInDb = _context.Students.Single(l => l.Id == student.Id);
+
+            studentInDb.FirstName = student.FirstName;
+            studentInDb.LastName = student.LastName;
+            studentInDb.YearGroup = student.YearGroup;
+            studentInDb.RegGroup = student.RegGroup;
+
+            _context.SaveChanges();
+            return RedirectToAction("StudentDetails", "Staff", new {id = student.Id});
+        }
+
         // Menu | Staff --> Staff List (All)
         // Accessible by [SeniorStaff] only
-        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
+        [Authorize(Roles = "SeniorStaff")]
         public ActionResult Staff()
         {
             var viewModel = new NewStaffViewModel();
             return View(viewModel);
         }
 
+        // Menu | Staff | X --> Student Details (for Staff X)
+        //Accessible by [SeniorStaff] only
+        [Authorize(Roles = "SeniorStaff")]
+        [Route("Staff/Staff/{id}")]
+        public ActionResult StaffDetails(int id)
+        {
+            var staff = _context.Staff.SingleOrDefault(s => s.Id == id);
+
+            if (staff == null)
+                return HttpNotFound();
+
+            var certificates = _context.TrainingCertificates.Where(c => c.StaffId == id).ToList();
+
+            var courses = _context.TrainingCourses.ToList();
+
+            var statuses = _context.TrainingStatuses.ToList();
+
+            var viewModel = new StaffDetailsViewModel
+            {
+                Staff = staff,
+                TrainingCertificates = certificates,
+                TrainingCourses = courses,
+                TrainingStatuses = statuses
+            };
+
+            return View(viewModel);
+        }
+
         // Menu | Students | X --> Student Details (for Student X)
         //Accessible by [Staff] or [SeniorStaff]
-        [System.Web.Mvc.Route("Staff/Students/{id}")]
+        [Route("Staff/Students/{id}")]
         public ActionResult StudentDetails(int id)
         {
             var student = _context.Students.SingleOrDefault(s => s.Id == id);
@@ -104,7 +254,7 @@ namespace MyPortal.Controllers
 
         //Menu | Students | X | [View Results] --> Student Results (for Student X)
         //Accessible by [Staff] or [SeniorStaff]
-        [System.Web.Mvc.Route("Staff/Students/{id}/Results")]
+        [Route("Staff/Students/{id}/Results")]
         public ActionResult StudentResults(int id)
         {
             var student = _context.Students.SingleOrDefault(s => s.Id == id);
@@ -133,50 +283,11 @@ namespace MyPortal.Controllers
             return View(viewModel);
         }
 
-        // Menu | Staff | X --> Student Details (for Staff X)
-        //Accessible by [SeniorStaff] only
-        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("Staff/Staff/{id}")]
-        public ActionResult StaffDetails(int id)
+        // Menu | Students --> Students List (All)
+        // Accessible by [Staff] or [SeniorStaff]
+        public ActionResult Students()
         {
-            var staff = _context.Staff.SingleOrDefault(s => s.Id == id);
-
-            if (staff == null)
-                return HttpNotFound();
-
-            var certificates = _context.TrainingCertificates.Where(c => c.StaffId == id).ToList();
-
-            var courses = _context.TrainingCourses.ToList();
-
-            var statuses = _context.TrainingStatuses.ToList();
-
-            var viewModel = new StaffDetailsViewModel
-            {
-                Staff = staff,
-                TrainingCertificates = certificates,
-                TrainingCourses = courses,
-                TrainingStatuses = statuses
-            };
-
-            return View(viewModel);
-        }
-
-        // Menu | Students | New Student --> New Student form
-        // Accessible by [SeniorStaff] only
-        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("Staff/Students/New")]
-        public ActionResult NewStudent()
-        {
-            var yearGroups = _context.YearGroups.ToList();
-            var regGroups = _context.RegGroups.ToList();
-
-            var viewModel = new NewStudentViewModel
-            {
-                RegGroups = regGroups,
-                YearGroups = yearGroups
-            };
-
-            return View(viewModel);
+            return View();
         }
 
         // Menu | Training Courses --> Training Courses List (All)
@@ -186,120 +297,7 @@ namespace MyPortal.Controllers
             return View();
         }
 
-        // Menu | Training Courses | New Course --> New Course Form
-        // Accessible by [SeniorStaff] only
-        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("Staff/TrainingCourses/New")]
-        public ActionResult NewCourse()
-        {
-            return View();
-        }
-
-        // Menu | Documents --> General Controlled Documents List (All)
-        //Accessible by [Staff] or [SeniorStaff]
-        public ActionResult Documents()
-        {
-            return View();
-        }
-
-        // HTTP POST request for saving/creating logs using HTML form 
-        // TODO: [REPLACE WITH AJAX REQUEST]
-        [System.Web.Mvc.HttpPost]
-        public ActionResult SaveLog(Log log)
-        {
-            if (log.Id == 0)
-            {
-                _context.Logs.Add(log);
-            }
-
-            else
-            {
-                var logInDb = _context.Logs.Single(l => l.Id == log.Id);
-
-                logInDb.AuthorId = log.AuthorId;
-                logInDb.Date = log.Date;
-                logInDb.Message = log.Message;
-            }
-
-            _context.SaveChanges();
-            return RedirectToAction("StudentDetails", "Staff", new {id = log.Student});
-        }
-
-        // HTTP POST request for creating certificates using HTML form
-        [System.Web.Mvc.HttpPost]
-        public ActionResult CreateCertificate(TrainingCertificate trainingCertificate)
-        {
-            _context.TrainingCertificates.Add(trainingCertificate);
-            _context.SaveChanges();
-
-            return RedirectToAction("StaffDetails", "Staff", new {id = trainingCertificate.Staff});
-        }
-
-        // HTTP POST request for creating students using HTML form
-        [System.Web.Mvc.HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult CreateStudent(Student student)
-        {
-            if (!ModelState.IsValid)
-            {
-                var viewModel = new NewStudentViewModel
-                {
-                    Student = student,
-                    RegGroups = _context.RegGroups.ToList(),
-                    YearGroups = _context.YearGroups.ToList()
-                };
-                return View("NewStudent", viewModel);
-            }
-
-            _context.Students.Add(student);
-            _context.SaveChanges();
-
-            return RedirectToAction("Students", "Staff");
-        }
-
-        // HTTP POST request for creating training courses using HTML form
-        [System.Web.Mvc.HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult CreateCourse(TrainingCourse course)
-        {
-            if (!ModelState.IsValid) return View("NewCourse");
-
-            _context.TrainingCourses.Add(course);
-            _context.SaveChanges();
-
-            return RedirectToAction("TrainingCourses", "Staff");
-        }
-
-        // HTTP POST request for updating student details using HTML form
-        [System.Web.Mvc.HttpPost]
-        public ActionResult SaveStudent(Student student)
-        {
-            var studentInDb = _context.Students.Single(l => l.Id == student.Id);
-
-            studentInDb.FirstName = student.FirstName;
-            studentInDb.LastName = student.LastName;
-            studentInDb.YearGroup = student.YearGroup;
-            studentInDb.RegGroup = student.RegGroup;
-
-            _context.SaveChanges();
-            return RedirectToAction("StudentDetails", "Staff", new {id = student.Id});
-        }
-
-        [System.Web.Mvc.Route("Staff/Data/Results/Import")]
-        public ActionResult ImportResults()
-        {
-            var resultSets = _context.ResultSets.OrderBy(x => x.Name).ToList();
-            var fileExists = System.IO.File.Exists(@"C:/MyPortal/Files/Results/import.csv");
-            var viewModel = new ImportResultsViewModel
-            {
-                ResultSets = resultSets,
-                FileExists = fileExists
-            };
-
-            return View(viewModel);
-        }
-
-        [System.Web.Mvc.HttpPost]
+        [HttpPost]
         public ActionResult UploadResults(HttpPostedFileBase file)
         {
             if (file.ContentLength <= 0 || Path.GetExtension(file.FileName) != ".csv")

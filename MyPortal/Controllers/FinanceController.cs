@@ -15,6 +15,12 @@ namespace MyPortal.Controllers
             _context = new MyPortalDbContext();
         }
 
+        [Route("Staff/Finance/Accounts")]
+        public ActionResult Accounts()
+        {
+            return View();
+        }
+
         protected override void Dispose(bool disposing)
         {
             _context.Dispose();
@@ -24,19 +30,6 @@ namespace MyPortal.Controllers
         public ActionResult Products()
         {
             return View();
-        }
-
-        [Route("Staff/Finance/Accounts")]
-        public ActionResult Accounts()
-        {
-            return View();
-        }
-
-        [Route("Staff/Finance/Sales")]
-        public ActionResult Sales()
-        {
-            var viewModel = new SalesViewModel();
-            return View(viewModel);
         }
 
         [Route("Staff/Finance/Sales/New")]
@@ -49,6 +42,13 @@ namespace MyPortal.Controllers
                 Products = products
             };
 
+            return View(viewModel);
+        }
+
+        [Route("Staff/Finance/Sales")]
+        public ActionResult Sales()
+        {
+            var viewModel = new SalesViewModel();
             return View(viewModel);
         }
     }

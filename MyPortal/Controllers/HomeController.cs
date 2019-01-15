@@ -18,14 +18,6 @@ namespace MyPortal.Controllers
             _context.Dispose();
         }
 
-        public ActionResult Index()
-        {
-            if (System.Web.HttpContext.Current.User != null &&
-                System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
-                return RedirectToAction("Home", "Home");
-            return View();
-        }
-
         [Authorize]
         [Route("User/Home")]
         public ActionResult Home()
@@ -35,6 +27,14 @@ namespace MyPortal.Controllers
             if (User.IsInRole("Student")) return RedirectToAction("Index", "Students");
 
             return RedirectToAction("Login", "Account");
+        }
+
+        public ActionResult Index()
+        {
+            if (System.Web.HttpContext.Current.User != null &&
+                System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
+                return RedirectToAction("Home", "Home");
+            return View();
         }
     }
 }
