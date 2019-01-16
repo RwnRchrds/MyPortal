@@ -27,13 +27,19 @@ namespace MyPortal.Controllers.Api
             _context.Dispose();
         }
 
-        [Route("api/regGroups/{yearGroup}")]
+        [Route("api/regGroups/yearGroup/{yearGroup}")]
         public IEnumerable<RegGroupDto> GetRegGroups(int yearGroup)
         {
             return _context.RegGroups
                 .Where(x => x.YearGroupId == yearGroup)
                 .ToList()
                 .Select(Mapper.Map<RegGroup, RegGroupDto>);
+        }
+
+        [Route("api/regGroups/all")]
+        public IEnumerable<RegGroupDto> GetRegGroups()
+        {
+            return _context.RegGroups.ToList().Select(Mapper.Map<RegGroup, RegGroupDto>);
         }
     }
 }

@@ -217,10 +217,12 @@
     <Compile Include="Controllers\Api\ProductsController.cs" />
     <Compile Include="Controllers\Api\RegGroupsController.cs" />
     <Compile Include="Controllers\Api\ResultsController.cs" />
+    <Compile Include="Controllers\Api\ResultSetsController.cs" />
     <Compile Include="Controllers\Api\RolesController.cs" />
     <Compile Include="Controllers\Api\SalesController.cs" />
     <Compile Include="Controllers\Api\StaffController.cs" />
     <Compile Include="Controllers\Api\StudentsController.cs" />
+    <Compile Include="Controllers\Api\SubjectsController.cs" />
     <Compile Include="Controllers\Api\TrainingCertificatesController.cs" />
     <Compile Include="Controllers\Api\TrainingCoursesController.cs" />
     <Compile Include="Controllers\Api\UsersController.cs" />

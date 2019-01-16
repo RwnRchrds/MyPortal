@@ -1,0 +1,124 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Security.Cryptography.X509Certificates;
+using System.Web.Http;
+using AutoMapper;
+using Microsoft.Ajax.Utilities;
+using MyPortal.Dtos;
+using MyPortal.Models;
+
+namespace MyPortal.Controllers.Api
+{
+    public class ResultSetsController : ApiController
+    {
+        private readonly MyPortalDbContext _context;
+
+        public ResultSetsController()
+        {
+            _context = new MyPortalDbContext();
+        }
+
+        public ResultSetsController(MyPortalDbContext context)
+        {
+            _context = context;
+        }
+
+        [HttpGet]
+        [Route("api/resultSets/all")]
+        public IEnumerable<ResultSetDto> GetResultSets()
+        {
+            return _context.ResultSets.OrderBy(x => x.Name).ToList().Select(Mapper.Map<ResultSet, ResultSetDto>);
+        }
+
+        [HttpPost]
+        [Route("api/resultSets/new")]
+        public IHttpActionResult CreateResultSet(ResultSetDto data)
+        {
+            if (data.Name.IsNullOrWhiteSpace() || !ModelState.IsValid)
+            {
+                return Content(HttpStatusCode.BadRequest, "Invalid Data");
+            }
+
+            var rsToAdd = Mapper.Map<ResultSetDto, ResultSet>(data);
+
+            var currentRsExists = _context.ResultSets.Any(x => x.IsCurrent) && _context.ResultSets.Any();
+
+            if (!currentRsExists)
+            {
+                rsToAdd.IsCurrent = true;
+            }
+
+            _context.ResultSets.Add(rsToAdd);
+            _context.SaveChanges();
+            return Ok("Result set created");
+        }
+
+        [HttpPost]
+        [Route("api/resultSets/update")]
+        public IHttpActionResult UpdateResultSet(ResultSetDto data)
+        {
+            var resultSet = _context.ResultSets.SingleOrDefault(x => x.Id == data.Id);
+
+            if (resultSet == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Result set not found");
+            }
+
+            resultSet.Name = data.Name;
+
+            _context.SaveChanges();
+            return Ok("Result set updated");
+        }
+        
+        [HttpDelete]
+        [Route("api/resultSets/delete/{resultSetId}")]
+        public IHttpActionResult DeleteResultSet(int resultSetId)
+        {
+            var resultSet = _context.ResultSets.SingleOrDefault(x => x.Id == resultSetId);
+
+            if (resultSet == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Result set not found");
+            }
+
+            _context.ResultSets.Remove(resultSet);
+            _context.SaveChanges();
+            return Ok("Result set deleted");
+        }
+        
+        
+
+        [HttpPost]
+        [Route("api/resultSets/setCurrent/{resultSetId}")]
+        public IHttpActionResult SetCurrent(int resultSetId)
+        {
+            var resultSet = _context.ResultSets.SingleOrDefault(x => x.Id == resultSetId);
+
+            if (resultSet == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Result set not found");
+            }
+
+            var currentCount = _context.ResultSets.Count(x => x.IsCurrent);
+
+            if (currentCount != 1)
+            {
+                return Content(HttpStatusCode.BadRequest, "Database has lost integrity");
+            }
+
+            var currentResultSet = _context.ResultSets.SingleOrDefault(x => x.IsCurrent);
+
+            if (currentResultSet == null)
+            {
+                return Content(HttpStatusCode.BadRequest, "Could not find current result set");
+            }
+
+            currentResultSet.IsCurrent = false;
+            resultSet.IsCurrent = true;
+
+            _context.SaveChanges();
+            return Ok("Result set set as current");
+        }
+    }
+}
