@@ -43,6 +43,9 @@ namespace MyPortal.App_Start
             CreateMap<ResultDto, Result>();
             CreateMap<Result, ResultDto>();
 
+            CreateMap<ResultSet, ResultSetDto>();
+            CreateMap<ResultSetDto, ResultSet>();
+
             CreateMap<SubjectDto, Subject>();
             CreateMap<Subject, SubjectDto>();
 

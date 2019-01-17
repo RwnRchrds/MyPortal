@@ -310,6 +310,7 @@ namespace MyPortal.Controllers
 
         // Menu | Result Sets --> Result Sets List (All)
         [Authorize(Roles = "SeniorStaff")]
+        [Route("Staff/Data/ResultSets")]
         public ActionResult ResultSets()
         {
             return View();

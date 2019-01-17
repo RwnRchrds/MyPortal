@@ -81,7 +81,7 @@
             <!--content-->
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Add Controlled Document</h4>
+                    <h4 class="modal-title">Edit Controlled Document</h4>
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
                 </div>
                 @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/documents/edit", HttpMethod = "POST", OnSuccess = "editDocumentSuccess", OnFailure = "editDocumentFailure"}, new {id = "editDocumentForm"}))

@@ -31,6 +31,20 @@ namespace MyPortal.Controllers.Api
             return _context.ResultSets.OrderBy(x => x.Name).ToList().Select(Mapper.Map<ResultSet, ResultSetDto>);
         }
 
+        [HttpGet]
+        [Route("api/resultSets/byId/{resultSetId}")]
+        public ResultSetDto GetResultSet(int resultSetId)
+        {
+            var resultSet = _context.ResultSets.SingleOrDefault(x => x.Id == resultSetId);
+
+            if (resultSet == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return Mapper.Map<ResultSet, ResultSetDto>(resultSet);
+        }
+
         [HttpPost]
         [Route("api/resultSets/new")]
         public IHttpActionResult CreateResultSet(ResultSetDto data)
@@ -82,6 +96,11 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.NotFound, "Result set not found");
             }
 
+            if (resultSet.IsCurrent)
+            {
+                return Content(HttpStatusCode.BadRequest, "Cannot delete current result set");
+            }
+
             _context.ResultSets.Remove(resultSet);
             _context.SaveChanges();
             return Ok("Result set deleted");
@@ -98,6 +117,11 @@ namespace MyPortal.Controllers.Api
             if (resultSet == null)
             {
                 return Content(HttpStatusCode.NotFound, "Result set not found");
+            }
+
+            if (resultSet.IsCurrent)
+            {
+                return Content(HttpStatusCode.BadRequest, "Result set is already marked as current");
             }
 
             var currentCount = _context.ResultSets.Count(x => x.IsCurrent);
@@ -118,7 +142,7 @@ namespace MyPortal.Controllers.Api
             resultSet.IsCurrent = true;
 
             _context.SaveChanges();
-            return Ok("Result set set as current");
+            return Ok("Result set marked as current");
         }
     }
 }

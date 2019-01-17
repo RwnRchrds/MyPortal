@@ -308,6 +308,7 @@
     <Compile Include="ViewModels\NewStudentViewModel.cs" />
     <Compile Include="ViewModels\NewUserViewModel.cs" />
     <Compile Include="ViewModels\RandomStudentViewModel.cs" />
+    <Compile Include="ViewModels\ResultSetsViewModel.cs" />
     <Compile Include="ViewModels\SaleEntryViewModel.cs" />
     <Compile Include="ViewModels\SalesViewModel.cs" />
     <Compile Include="ViewModels\StaffDetailsViewModel.cs" />
