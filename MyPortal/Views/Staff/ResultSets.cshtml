@@ -6,6 +6,7 @@
 <body>
 <div class="container float-left">
     <h2 class="mp-page-title">Result Sets</h2>
+    <hr />
 </div>
 
 <div class="container float-left">
@@ -23,6 +24,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Status</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -33,26 +35,19 @@
 @section scripts
 {
     <script>
-        $(document).ready(function () {
-            $("#students").DataTable({
+        $(document).ready(function() {
+            $("#resultSets").DataTable({
                 ajax: {
                     url: "/api/resultSets/all",
                     dataSrc: ""
                 },
                 columns: [
                     {
-                        data: "name",
-                        render: function (data, type, resultSet) {
-                            return "<a href='/Staff/Students/" +
-                                resultSet.id +
-                                "'>" +
-                                resultSet.name +
-                                "</a>";
-                        }
-                    },                    
+                        data: "name"                                               
+                    },
                     {
                         data: "isCurrent",
-                        render: function (data) {
+                        render: function(data) {
                             if (data === true) {
                                 return "Current";
                             }
@@ -60,9 +55,21 @@
                                 return "Active";
                             }
                         }
+                    },
+                    {
+                        data: "id",
+                        render: function(data) {
+                            return "<button type='button' class='btn btn-xs btn-warning mp-btn-action-left js-edit' data-set-id=" +
+                                data +
+                                "><i class=\"far fa-edit\"></i></button> " +
+                                "<button type='button' class='btn btn-xs btn-danger mp-btn-action-right js-delete' data-set-id=" +
+                                data +
+                                "><i class=\"far fa-trash-alt\"></i></button>";
+                        }
                     }
                 ]
             });
         });
     </script>
+}
 
