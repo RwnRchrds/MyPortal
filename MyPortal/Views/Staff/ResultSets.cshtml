@@ -205,13 +205,13 @@
             toastr.error(result.responseJSON);
         }
 
-        function editDocumentSuccess(result) {
+        function editResultSetSuccess(result) {
             $("#EditResultSetModal").modal('hide');
             $("#resultSets").DataTable().ajax.reload();
             toastr.success(result);
         }
 
-        function editDocumentFailure(result) {
+        function editResultSetFailure(result) {
             $("#EditResultSetModal").modal('hide');
             toastr.error(result.responseJSON);
         }
