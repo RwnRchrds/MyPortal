@@ -307,5 +307,13 @@ namespace MyPortal.Controllers
 
             return RedirectToAction("ImportResults");
         }
+
+        // Menu | Result Sets --> Result Sets List (All)
+        [Authorize(Roles = "SeniorStaff")]
+        public ActionResult ResultSets()
+        {
+            return View();
+        }
+
     }
 }

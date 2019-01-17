@@ -725,10 +725,10 @@
     <Content Include="Views\Students\NoProfileIndex.cshtml" />
     <Content Include="Views\Students\SalesHistory.cshtml" />
     <Content Include="Views\Staff\ImportResults.cshtml" />
+    <Content Include="Views\Staff\ResultSets.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
-    <Folder Include="App_Data\Results" />
+    <Folder Include="App_Data\Results\" />
     <Folder Include="Models\Validation\" />
   </ItemGroup>
   <ItemGroup>
