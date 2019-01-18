@@ -1,0 +1,204 @@
+@model MyPortal.ViewModels.SubjectsViewModel
+@{
+    ViewBag.Title = "Result Sets";
+    Layout = "~/Views/Shared/_LayoutStaff.cshtml";
+}
+
+<body>
+    <div class="container float-left">
+        <h2 class="mp-page-title">Subjects</h2>
+        <hr />
+    </div>
+
+    <div class="container float-left">
+        @if (User.IsInRole("SeniorStaff"))
+        {
+            <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#NewResultSetModal">New Subject</button>
+            <hr />
+        }
+
+    </div>
+
+    <div class="container float-left">
+        <table class="table table-bordered table-hover mp-table mp-table-link" id="subjects">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Leader</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div id="NewResultSetModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!--content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add Result Set</h4>
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
+                </div>
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/subjects/new", HttpMethod = "POST", OnSuccess = "newSubjectSuccess", OnFailure = "newSubjectFailure" }, new { id = "newResultSetForm" }))
+                {
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.Subject.Name)
+                            @Html.TextBoxFor(x => x.Subject.Name, new { @class = "form-control", Name = "Name" })
+                            @Html.ValidationMessageFor(x => x.Subject.Name)
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(l => l.Subject.LeaderId)
+                            @Html.DropDownListFor(l => l.Subject.LeaderId, new SelectList(Model.Staff, "Id", "LastName" + ", " + "FirstName"), "Select Subject Leader", new { @class = "form-control", Name = "LeaderId" })
+                            @Html.ValidationMessageFor(l => l.Subject.LeaderId)
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div id="EditResultSetModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!--content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Result Set</h4>
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
+                </div>
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/subjects/update", HttpMethod = "POST", OnSuccess = "editSubjectSuccess", OnFailure = "editSubjectFailure" }, new { id = "editResultSetForm" }))
+                {
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.Subject.Name)
+                            @Html.TextBoxFor(x => x.Subject.Name, new { @class = "form-control", Name = "Name", id = "EditSubjectControl" })
+                            @Html.ValidationMessageFor(x => x.Subject.Name)
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(l => l.Subject.LeaderId)
+                            @Html.DropDownListFor(l => l.Subject.LeaderId, new SelectList(Model.Staff, "Id", "LastName" + ", " + "FirstName"), "Select Subject Leader", new { @class = "form-control", Name = "LeaderId", id = "EditSubjectStaffControl" })
+                            @Html.ValidationMessageFor(l => l.Subject.LeaderId)
+                        </div>
+                        <div class="form-group">
+                            @Html.HiddenFor(x => x.Subject.Id, new { Name = "Id", id = "EditSubjectIdControl" })
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</body>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+            $("#resultSets").DataTable({
+                ajax: {
+                    url: "/api/subjects/all",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "name"                                               
+                    },
+                    {
+                        data: "staff.lastName",
+                        render: function(data, type, log) {
+                            return log.staff.title +
+                                " " +
+                                log.staff.firstName.substring(0, 1) +
+                                " " +
+                                log.staff.lastName;
+                        }
+                    },
+                    {
+                        data: "id",
+                        render: function(data) {
+                            return "<button type='button' class='btn btn-xs btn-warning mp-btn-action-left js-edit' data-subject-id=" +
+                                data +
+                                "><i class=\"far fa-edit\"></i></button> " +                                                                 
+                                "<button type='button' class='btn btn-xs btn-danger mp-btn-action-right js-delete' data-subject-id=" +
+                                data +
+                                "><i class=\"far fa-trash-alt\"></i></button>";
+                        }
+                    }
+                ]
+            });
+
+            $("#subjects").on("click",
+                ".js-edit",
+                function () {
+                    var button = $(this);
+                    var subjectId = button.attr("data-subject-id");
+                    $.ajax({
+                        url: "/api/subjects/byId/" + subjectId,
+                        method: "GET",
+                        success: function (result) {
+                            $("#EditSubjectNameControl").val(result["name"]);
+                            $("#EditSubjectStaffControl").val(result["leaderId"]);
+                            $("#EditSubjectIdControl").val(result["id"]);
+                        },
+                        error: function () {
+                            toastr.error("Failed to load subject data");
+                        }
+                    });
+                    $("#EditResultSetModal").modal('toggle');
+                });            
+
+            $("#subjects").on("click",
+                ".js-delete",
+                function () {
+                    var button = $(this);
+                    bootbox.confirm("Are you sure you wish to delete this subject?",
+                        function (result) {
+                            if (result) {
+                                $.ajax({
+                                    url: "/api/subjects/delete/" + button.attr("data-subject-id"),
+                                    method: "DELETE",
+                                    success: function (a) {
+                                        $("#subjects").DataTable().ajax.reload();
+                                        toastr.success(a);
+                                    },
+                                    error: function (e) {
+                                        toastr.error(e.responseJSON);
+                                    }
+                                });
+                            }
+                        });
+                });
+
+        });
+
+        function newSubjectSuccess(result) {
+            $("#NewSubjectModal").modal('hide');
+            $("#subjects").DataTable().ajax.reload();
+            toastr.success(result);
+        }
+
+        function newSubjectFailure(result) {
+            $("#NewSubjectModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+
+        function editSubjectSuccess(result) {
+            $("#EditSubjectModal").modal('hide');
+            $("#subjects").DataTable().ajax.reload();
+            toastr.success(result);
+        }
+
+        function editSubjectFailure(result) {
+            $("#EditSubjectModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+    </script>
+}

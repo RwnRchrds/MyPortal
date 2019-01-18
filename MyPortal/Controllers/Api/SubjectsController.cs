@@ -30,6 +30,20 @@ namespace MyPortal.Controllers.Api
             return _context.Subjects.OrderBy(x => x.Name).ToList().Select(Mapper.Map<Subject, SubjectDto>);
         }
 
+        [HttpGet]
+        [Route("api/subjects/byId/{subjectId}")]
+        public SubjectDto GetSubject(int subjectId)
+        {
+            var subject = _context.Subjects.SingleOrDefault(x => x.Id == subjectId);
+
+            if (subject == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return Mapper.Map<Subject, SubjectDto>(subject);
+        }
+
         [HttpPost]
         [Route("api/subjects/new")]
         public IHttpActionResult CreateSubject(SubjectDto data)

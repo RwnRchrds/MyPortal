@@ -315,6 +315,17 @@ namespace MyPortal.Controllers
         {
             return View();
         }
+        
+        // Menu | Subjects --> Subjects List (All)
+        [Authorize(Roles = "SeniorStaff")]
+        [Route("Staff/Data/Subjects")]
+        public ActionResult Subjects()
+        {
+            var viewModel = new SubjectsViewModel();
+            viewModel.Staff = _context.Staff.ToList();
+
+            return View(viewModel);
+        }
 
     }
 }
