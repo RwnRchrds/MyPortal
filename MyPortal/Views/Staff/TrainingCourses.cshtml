@@ -6,28 +6,28 @@
 
 <div class="container float-left">
     <h2 class="mp-page-title">Training Courses</h2>
-    <hr/>
+    <hr />
 </div>
 
 <div class="container float-left">
     @if (User.IsInRole("SeniorStaff"))
     {
-        @Html.ActionLink("New Course", "NewCourse", "Staff", null, new {@class = "btn btn-success", style = "margin-bottom: 8px;"})
-        <hr/>
+        @Html.ActionLink("New Course", "NewCourse", "Staff", null, new { @class = "btn btn-success", style = "margin-bottom: 8px;" })
+        <hr />
     }
 </div>
 
 <div class="container float-left">
     <table class="table table-bordered table-hover mp-table" id="courses">
         <thead>
-        <tr>
-            <th>Code</th>
-            <th>Description</th>
-            @if (User.IsInRole("SeniorStaff"))
-            {
-                <th>Actions</th>
-            }
-        </tr>
+            <tr>
+                <th>Code</th>
+                <th>Description</th>
+                @if (User.IsInRole("SeniorStaff"))
+                {
+                    <th>Actions</th>
+                }
+            </tr>
         </thead>
         <tbody></tbody>
     </table>
@@ -44,21 +44,21 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "EditCourseForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "EditCourseForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.LabelFor(l => l.Course.Code)
-                        @Html.TextBoxFor(x => x.Course.Code, new {@class = "form-control", id = "EditCourseCodeControl", Name = "Code"})
+                        @Html.TextBoxFor(x => x.Course.Code, new { @class = "form-control", id = "EditCourseCodeControl", Name = "Code" })
                         @Html.ValidationMessageFor(l => l.Course.Code)
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(l => l.Course.Description)
-                        @Html.TextBoxFor(l => l.Course.Description, new {@class = "form-control", id = "EditCourseDescriptionControl", Name = "Description"})
+                        @Html.TextBoxFor(l => l.Course.Description, new { @class = "form-control", id = "EditCourseDescriptionControl", Name = "Description" })
                         @Html.ValidationMessageFor(l => l.Course.Description)
                     </div>
                     <div class="form-group">
-                        @Html.HiddenFor(l => l.Course.Id, new {id = "EditCourseIdControl", Name = "Id"})
+                        @Html.HiddenFor(l => l.Course.Id, new { id = "EditCourseIdControl", Name = "Id" })
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -77,7 +77,7 @@
     @if (User.IsInRole("SeniorStaff"))
     {
         <script>
-            $(document).ready(function() {
+            $(document).ready(function () {
 
                 $("#courses").DataTable({
                     ajax: {
@@ -93,7 +93,7 @@
                         },
                         {
                             data: "id",
-                            render: function(data) {
+                            render: function (data) {
                                 return "<button type='button' class='btn btn-xs btn-warning js-edit' data-course-id=" +
                                     data +
                                     "><i class=\"far fa-edit\"></i></button> " +
@@ -106,7 +106,7 @@
                 });
 
                 $("#EditCourseForm").on("submit",
-                    function(e) {
+                    function (e) {
 
                         e.preventDefault();
 
@@ -114,12 +114,12 @@
                             url: "/api/courses/edit",
                             data: $("#EditCourseForm").serialize(),
                             method: "POST",
-                            success: function(result) {
+                            success: function (result) {
                                 $("#EditCourseModal").modal('hide');
                                 toastr.success(result);
                                 $("#courses").DataTable().ajax.reload();
                             },
-                            error: function(result) {
+                            error: function (result) {
                                 toastr.error(result.responseJSON);
                             }
 
@@ -127,24 +127,24 @@
                     });
 
                 $('#EditCourseModal').on('hidden.bs.modal',
-                    function() {
+                    function () {
                         $(this).find('form').trigger('reset');
                     });
 
                 $("#courses").on("click",
                     ".js-edit",
-                    function() {
+                    function () {
                         var button = $(this);
                         var courseId = button.attr("data-course-id");
                         $.ajax({
                             url: "/api/courses/fetch/" + courseId,
                             method: "GET",
-                            success: function(result) {
+                            success: function (result) {
                                 $("#EditCourseCodeControl").val(result["code"]);
                                 $("#EditCourseDescriptionControl").val(result["description"]);
                                 $("#EditCourseIdControl").val(result["id"]);
                             },
-                            error: function() {
+                            error: function () {
                                 toastr.error("Failed to load course data");
                             }
                         });
@@ -153,19 +153,19 @@
 
                 $("#courses").on("click",
                     ".js-delete",
-                    function() {
+                    function () {
                         var button = $(this);
                         bootbox.confirm("Are you sure you wish to delete this course?",
-                            function(result) {
+                            function (result) {
                                 if (result) {
                                     $.ajax({
                                         url: "/api/courses/remove/" + button.attr("data-course-id"),
                                         method: "DELETE",
-                                        success: function(ajaxResult) {
+                                        success: function (ajaxResult) {
                                             $("#courses").DataTable().ajax.reload();
                                             toastr.success(ajaxResult);
                                         },
-                                        error: function(ajaxResult) {
+                                        error: function (ajaxResult) {
                                             toastr.error(ajaxResult.responseJSON);
                                         }
                                     });
@@ -180,7 +180,7 @@
     @if (!User.IsInRole("SeniorStaff") && User.IsInRole("Staff"))
     {
         <script>
-            $(document).ready(function() {
+            $(document).ready(function () {
                 $("#courses").DataTable({
                     ajax: {
                         url: "/api/courses",
@@ -199,6 +199,6 @@
         </script>
     }
 
-
+    @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/staff")
 }

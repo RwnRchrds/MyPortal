@@ -18,6 +18,8 @@ namespace MyPortal.Models
 
         [Display(Name = "Head of Department")] public int LeaderId { get; set; }
 
+        [Required] public string Code { get; set; }
+
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Result> Results { get; set; }
 

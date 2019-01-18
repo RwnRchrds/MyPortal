@@ -322,7 +322,7 @@ namespace MyPortal.Controllers
         public ActionResult Subjects()
         {
             var viewModel = new SubjectsViewModel();
-            viewModel.Staff = _context.Staff.ToList();
+            viewModel.Staff = _context.Staff.OrderBy(x => x.LastName).ToList();
 
             return View(viewModel);
         }
