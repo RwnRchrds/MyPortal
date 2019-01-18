@@ -165,9 +165,9 @@ namespace MyPortal.UnitTests
 
             var subjects = new List<Subject>
             {
-                new Subject {Name = "English", LeaderId = 3},
-                new Subject {Name = "Maths", LeaderId = 3},
-                new Subject {Name = "Science", LeaderId = 3}
+                new Subject {Name = "English", LeaderId = 3, Code = "En"},
+                new Subject {Name = "Maths", LeaderId = 3, Code = "Ma"},
+                new Subject {Name = "Science", LeaderId = 3, Code = "Sc"}
             };
 
             var trainingCertificates = new List<TrainingCertificate>();
