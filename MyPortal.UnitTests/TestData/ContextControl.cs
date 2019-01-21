@@ -5,7 +5,7 @@ using Effort;
 using MyPortal.Dtos;
 using MyPortal.Models;
 
-namespace MyPortal.UnitTests
+namespace MyPortal.UnitTests.TestData
 {
     public class ContextControl
     {
@@ -14,6 +14,7 @@ namespace MyPortal.UnitTests
             var effortConnection = DbConnectionFactory.CreateTransient();
             var context = new MyPortalDbContext(effortConnection);
 
+            #region BasketItems
             var basketItems = new List<BasketItem>
             {
                 new BasketItem {Id = 1, StudentId = 1, ProductId = 1},
@@ -21,7 +22,9 @@ namespace MyPortal.UnitTests
                 new BasketItem {Id = 3, ProductId = 1, StudentId = 1},
                 new BasketItem {Id = 4, ProductId = 3, StudentId = 3}
             };
+            #endregion
 
+            #region Documents
             var documents = new List<Document>
             {
                 new Document
@@ -45,11 +48,17 @@ namespace MyPortal.UnitTests
                     Approved = true, UploaderId = 1
                 }
             };
+            #endregion
 
+            #region Grades
             var grades = new List<Grade>();
+            #endregion
 
+            #region GradeSets
             var gradeSets = new List<GradeSet>();
+            #endregion
 
+            #region Logs
             var logs = new List<Log>
             {
                 new Log {Date = DateTime.Now, AuthorId = 3, Message = "Test", StudentId = 3, TypeId = 1},
@@ -57,7 +66,9 @@ namespace MyPortal.UnitTests
                 new Log {Date = DateTime.Today, AuthorId = 3, Message = "Test3", StudentId = 3, TypeId = 3},
                 new Log {Date = DateTime.Today, AuthorId = 3, Message = "Test4", StudentId = 3, TypeId = 4}
             };
+            #endregion
 
+            #region LogTypes
             var logTypes = new List<LogType>
             {
                 new LogType {Name = "Type 1"},
@@ -65,7 +76,9 @@ namespace MyPortal.UnitTests
                 new LogType {Name = "Type 3"},
                 new LogType {Name = "Type 4"}
             };
+            #endregion
 
+            #region Products
             var products = new List<Product>
             {
                 new Product
@@ -85,7 +98,9 @@ namespace MyPortal.UnitTests
                     Id = 4, Description = "Delete Me", OnceOnly = false, Visible = true, Price = 35.99m
                 }
             };
+            #endregion
 
+            #region RegGroups
             var regGroups = new List<RegGroup>
             {
                 new RegGroup {Id = 1, Name = "1A", TutorId = 1, YearGroupId = 1},
@@ -93,21 +108,29 @@ namespace MyPortal.UnitTests
                 new RegGroup {Id = 3, Name = "7A", YearGroupId = 3, TutorId = 1},
                 new RegGroup {Id = 4, Name = "11A", YearGroupId = 4, TutorId = 1}
             };
+            #endregion
 
+            #region Results
             var results = new List<Result>
             {
                 new Result {StudentId = 1, SubjectId = 1, ResultSetId = 1, Value = "A"},
                 new Result {StudentId = 1, SubjectId = 2, ResultSetId = 1, Value = "C"}
             };
+            #endregion
 
+            #region ResultSets
             var resultSets = new List<ResultSet>
             {
                 new ResultSet {Id = 1, Name = "Current", IsCurrent = true},
                 new ResultSet {Id = 2, Name = "Old", IsCurrent = false}
             };
+            #endregion
 
+            #region Sales
             var sales = new List<Sale>();
+            #endregion
 
+            #region Staff
             var staff = new List<Staff>
             {
                 new Staff
@@ -132,7 +155,9 @@ namespace MyPortal.UnitTests
                     Email = "wto@test.com", JobTitle = "Test SLT"
                 }
             };
+            #endregion
 
+            #region StaffDocuments
             var staffDocuments = new List<StaffDocument>();
 
             var staffObservations = new List<StaffObservation>();
@@ -160,22 +185,34 @@ namespace MyPortal.UnitTests
                     AccountBalance = (decimal) 100.00, Email = "betty@test.com", CandidateNumber = "6452"
                 }
             };
+            #endregion
 
+            #region StudentDocuments
             var studentDocuments = new List<StudentDocument>();
+            #endregion
 
+            #region Subjects
             var subjects = new List<Subject>
             {
                 new Subject {Name = "English", LeaderId = 3, Code = "En"},
                 new Subject {Name = "Maths", LeaderId = 3, Code = "Ma"},
                 new Subject {Name = "Science", LeaderId = 3, Code = "Sc"}
             };
+            #endregion
 
+            #region TrainingCertificates
             var trainingCertificates = new List<TrainingCertificate>();
+            #endregion
 
+            #region TrainingCourses
             var trainingCourses = new List<TrainingCourse>();
+            #endregion
 
+            #region TrainingStatuses
             var trainingStatuses = new List<TrainingStatus>();
+            #endregion
 
+            #region YearGroups
             var yearGroups = new List<YearGroup>
             {
                 new YearGroup {Id = 1, Name = "Year 1", KeyStage = 1, HeadId = 3},
@@ -183,6 +220,7 @@ namespace MyPortal.UnitTests
                 new YearGroup {Id = 3, Name = "Year 7", HeadId = 3, KeyStage = 3},
                 new YearGroup {Id = 4, Name = "Year 11", HeadId = 3, KeyStage = 4}
             };
+            #endregion
 
             context.BasketItems.AddRange(basketItems);
             context.Documents.AddRange(documents);

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
+﻿using System.Data.Common;
 using System.Data.Entity.Infrastructure;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MyPortal.UnitTests
+namespace MyPortal.UnitTests.TestData
 {
     public class EffortProviderFactory : IDbConnectionFactory
     {

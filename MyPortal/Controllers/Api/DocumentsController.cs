@@ -116,7 +116,7 @@ namespace MyPortal.Controllers.Api
             var documentToRemove = _context.Documents.Single(x => x.Id == documentId);
 
             if (documentToRemove == null)
-                return Content(HttpStatusCode.NotFound, "Upload not found");
+                return Content(HttpStatusCode.NotFound, "Document not found");
 
             _context.Documents.Remove(documentToRemove);
             _context.SaveChanges();
@@ -132,7 +132,7 @@ namespace MyPortal.Controllers.Api
             var documentInDb = _context.Documents.Single(x => x.Id == data.Id);
 
             if (documentInDb == null)
-                return Content(HttpStatusCode.NotFound, "Upload not found");
+                return Content(HttpStatusCode.NotFound, "Document not found");
 
             var isUriValid = Uri.TryCreate(data.Url, UriKind.Absolute, out var uriResult)
                              && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);

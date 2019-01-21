@@ -1,17 +1,16 @@
 using System;
-using System.Data.Common;
-using System.Data.Entity.Core.Metadata.Edm;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Web.Http.Results;
 using AutoMapper;
-using Effort;
 using MyPortal.Controllers.Api;
 using MyPortal.Dtos;
 using MyPortal.Models;
+using MyPortal.UnitTests.TestData;
 using NUnit.Framework;
 
-namespace MyPortal.UnitTests
+namespace MyPortal.UnitTests.ApiTests
 {
     [TestFixture]
     public class ApiDocumentsControllerTests
@@ -159,6 +158,20 @@ namespace MyPortal.UnitTests
         }
 
         [Test]
+        public void RemoveDocument_DocumentDoesNotExist_ReturnsNotFound()
+        {
+            const int documentId = 9999;
+
+            var actionResult = _controller.RemoveDocument(documentId);
+
+            var result = actionResult as NegotiatedContentResult<string>;
+            
+            Assert.IsNotNull(result);
+            Assert.AreEqual(HttpStatusCode.NotFound, result.StatusCode);
+            Assert.AreEqual("Document not found", result.Content);
+        }
+
+        [Test]
         public void UpdateDocument_UpdatesDocument()
         {
             var document = _context.Documents.SingleOrDefault(x => x.Description == "Doc2");
@@ -174,6 +187,47 @@ namespace MyPortal.UnitTests
             
             Assert.IsNotNull(result);
             Assert.AreEqual("http://ftp.test.com/doc2update", result.Url);
-        }               
+        }
+
+        [Test]
+        public void UpdateDocument_DocumentDoesNotExist_ReturnsNotFound()
+        {
+            const int documentId = 9999;
+            
+            var document = new DocumentDto
+            {
+                Id = 9999,
+                Url = "http://ftp.test.com/docUpdate",
+                Description = "Test",
+                Approved = false,
+                IsGeneral = true,
+                UploaderId = 3,
+                Date = DateTime.Today
+            };
+
+            var actionResult = _controller.UpdateDocument(document);
+            var result = actionResult as NegotiatedContentResult<string>;
+            
+            Assert.IsNotNull(result);
+            Assert.AreEqual(HttpStatusCode.NotFound, result.StatusCode);
+            Assert.AreEqual("Document not found", result.Content);
+        }
+
+        [Test]
+        public void UpdateDocument_DocumentUriInvalid_ReturnsBadRequest()
+        {
+            var document = _context.Documents.SingleOrDefault(x => x.Description == "Doc2");
+            
+            Assert.IsNotNull(document);
+
+            document.Url = "false-uri";
+
+            var actionResult = _controller.UpdateDocument(Mapper.Map<Document, DocumentDto>(document));
+            var result = actionResult as NegotiatedContentResult<string>;
+            
+            Assert.IsNotNull(result);
+            Assert.AreEqual(HttpStatusCode.BadRequest, result.StatusCode);
+            Assert.AreEqual("The URL entered is not valid", result.Content);
+        }
     }
 }

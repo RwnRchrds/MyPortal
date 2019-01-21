@@ -1,19 +1,14 @@
-﻿using System;
-using System.Data.Common;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
-using System.Threading;
-using System.Web.Http;
 using System.Web.Http.Results;
 using AutoMapper;
 using MyPortal.Controllers.Api;
-using MyPortal.Models;
-using Effort;
 using MyPortal.Dtos;
+using MyPortal.Models;
+using MyPortal.UnitTests.TestData;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 
-namespace MyPortal.UnitTests
+namespace MyPortal.UnitTests.ApiTests
 {
     [TestFixture]
     public class ApiBasketItemsControllerTests

@@ -1,14 +1,13 @@
 using System;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
 using AutoMapper;
 using MyPortal.Controllers.Api;
 using MyPortal.Dtos;
 using MyPortal.Models;
+using MyPortal.UnitTests.TestData;
 using NUnit.Framework;
 
-namespace MyPortal.UnitTests
+namespace MyPortal.UnitTests.ApiTests
 {
     [TestFixture]
     public class ApiLogsControllerTests

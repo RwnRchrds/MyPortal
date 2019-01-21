@@ -2,15 +2,15 @@ using System.Linq;
 using AutoMapper;
 using MyPortal.Controllers.Api;
 using MyPortal.Models;
-using Effort;
+using MyPortal.UnitTests.TestData;
 using NUnit.Framework;
 
-namespace MyPortal.UnitTests
+namespace MyPortal.UnitTests.ApiTests
 {
     [TestFixture]
-    public class ApiRegGroupsControllerTests
+    public class ApiResultsControllerTests
     {
-        private RegGroupsController _controller;
+        private ResultsController _controller;
         private MyPortalDbContext _context;
 
         [OneTimeSetUp]
@@ -28,7 +28,7 @@ namespace MyPortal.UnitTests
             _context = ContextControl.GetTestData();
             ContextControl.InitialiseMaps();
 
-            _controller = new RegGroupsController(_context);
+            _controller = new ResultsController(_context);
         }
         
         [OneTimeTearDown]
@@ -39,15 +39,18 @@ namespace MyPortal.UnitTests
         }
 
         [Test]
-        public void GetRegGroups_ReturnsRegGroups()
+        public void GetResults_ReturnsResultsForStudent()
         {
-            var yearGroup = _context.YearGroups.SingleOrDefault(x => x.Name == "Year 7");
+            var student = _context.Students.SingleOrDefault(x => x.FirstName == "Aaron");
+
+            var resultSet = _context.ResultSets.SingleOrDefault(x => x.Name == "Current");
             
-            Assert.IsNotNull(yearGroup);
+            Assert.IsNotNull(student);
+            Assert.IsNotNull(resultSet);
+
+            var result = _controller.GetResults(student.Id, resultSet.Id);
             
-            var result = _controller.GetRegGroups(yearGroup.Id).Count();
-            
-            Assert.AreEqual(1, result);
+            Assert.AreEqual(2, result.Count());
         }
     }
 }

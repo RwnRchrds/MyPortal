@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using Effort;
+﻿using System.Linq;
 using AutoMapper;
 using MyPortal.Controllers.Api;
 using MyPortal.Dtos;
 using MyPortal.Models;
+using MyPortal.UnitTests.TestData;
 using NUnit.Framework;
 
-namespace MyPortal.UnitTests
+namespace MyPortal.UnitTests.ApiTests
 {
     [TestFixture]
     public class ApiProductsControllerTests
