@@ -113,7 +113,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/documents/remove/{documentId}")]
         public IHttpActionResult RemoveDocument(int documentId)
         {
-            var documentToRemove = _context.Documents.Single(x => x.Id == documentId);
+            var documentToRemove = _context.Documents.SingleOrDefault(x => x.Id == documentId);
 
             if (documentToRemove == null)
                 return Content(HttpStatusCode.NotFound, "Document not found");
@@ -129,7 +129,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/documents/edit")]
         public IHttpActionResult UpdateDocument(DocumentDto data)
         {
-            var documentInDb = _context.Documents.Single(x => x.Id == data.Id);
+            var documentInDb = _context.Documents.SingleOrDefault(x => x.Id == data.Id);
 
             if (documentInDb == null)
                 return Content(HttpStatusCode.NotFound, "Document not found");

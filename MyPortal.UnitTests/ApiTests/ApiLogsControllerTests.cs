@@ -1,5 +1,8 @@
 using System;
 using System.Linq;
+using System.Net;
+using System.Web.Http;
+using System.Web.Http.Results;
 using AutoMapper;
 using MyPortal.Controllers.Api;
 using MyPortal.Dtos;
@@ -63,6 +66,15 @@ namespace MyPortal.UnitTests.ApiTests
             var result = _controller.GetLog(log.Id);
             
             Assert.AreEqual(3, result.TypeId);
+        }
+
+        [Test]
+        public void GetLog_LogDoesNotExist_ReturnsNotFound()
+        {
+            const int logId = 9999;
+
+            var ex = Assert.Throws<HttpResponseException>(() => _controller.GetLog(logId));
+            Assert.AreEqual(HttpStatusCode.NotFound,ex.Response.StatusCode);
         }
 
         [Test]
