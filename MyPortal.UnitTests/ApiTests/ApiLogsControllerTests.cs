@@ -101,6 +101,58 @@ namespace MyPortal.UnitTests.ApiTests
         }
 
         [Test]
+        public void CreateLog_StaffMemberDoesNotExist_ReturnsNotFound()
+        {
+            var student = _context.Students.SingleOrDefault(x => x.FirstName == "Dorothy");
+
+            var logType = _context.LogTypes.SingleOrDefault(x => x.Name == "Type 3");
+            
+            Assert.IsNotNull(logType);
+            Assert.IsNotNull(student);
+
+            var log = new Log
+            {
+                Date = DateTime.Today,
+                AuthorId = 9999,
+                StudentId = student.Id,
+                Message = "Test",
+                TypeId = logType.Id,
+            };
+
+            var actionResult = _controller.CreateLog(Mapper.Map<Log, LogDto>(log));
+
+            var result = actionResult as NegotiatedContentResult<string>;
+            
+            Assert.IsNotNull(result);
+            Assert.AreEqual(HttpStatusCode.NotFound, result.StatusCode);
+            Assert.AreEqual("Staff member not found", result.Content);
+        }
+
+        /*[Test]
+        public void CreateLog_InvalidData_ReturnsBadRequest()
+        {
+            var logType = _context.LogTypes.SingleOrDefault(x => x.Name == "Type 2");
+            
+            Assert.IsNotNull(logType);
+            
+            var log = new Log
+            {
+                Date = DateTime.Today,
+                AuthorId = 3,
+                StudentId = 1,
+                TypeId = logType.Id,
+            };
+
+            var actionResult = _controller.CreateLog(Mapper.Map<Log, LogDto>(log));
+
+            var result = actionResult as NegotiatedContentResult<string>;
+            
+            Assert.IsNotNull(result);
+            Assert.AreEqual(HttpStatusCode.BadRequest, result.StatusCode);
+            Assert.AreEqual("Invalid data", result.Content);
+        }*/
+
+        [Test]
         public void UpdateLog_UpdatesLog()
         {
             var log = _context.Logs.SingleOrDefault(x => x.Message == "Test3");

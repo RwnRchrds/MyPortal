@@ -191,9 +191,7 @@ namespace MyPortal.UnitTests.ApiTests
 
         [Test]
         public void UpdateDocument_DocumentDoesNotExist_ReturnsNotFound()
-        {
-            const int documentId = 9999;
-            
+        {                       
             var document = new DocumentDto
             {
                 Id = 9999,
