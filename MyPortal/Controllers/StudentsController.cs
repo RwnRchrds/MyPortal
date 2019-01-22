@@ -34,21 +34,15 @@ namespace MyPortal.Controllers
             var student = _context.Students.SingleOrDefault(s => s.UserId == userId);
 
             if (student == null)
-                return View("~/Views/Students/NoProfileIndex.cshtml");
-
-            var logs = _context.Logs.Where(l => l.StudentId == student.Id).OrderByDescending(x => x.Date).ToList();
+                return View("~/Views/Students/NoProfileIndex.cshtml");            
 
             var results = _context.Results.Where(r => r.StudentId == student.Id && r.ResultSet.IsCurrent)
-                .ToList();
-
-            var upperSchool = student.YearGroupId == 11 || student.YearGroupId == 10;
+                .ToList();            
 
             var viewModel = new StudentDetailsViewModel
-            {
-                Logs = logs,
+            {                
                 Student = student,
-                Results = results,
-                IsUpperSchool = upperSchool
+                Results = results,                
             };
             return View(viewModel);
         }

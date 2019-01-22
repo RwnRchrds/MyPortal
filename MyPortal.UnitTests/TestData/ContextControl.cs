@@ -159,30 +159,34 @@ namespace MyPortal.UnitTests.TestData
 
             #region StaffDocuments
             var staffDocuments = new List<StaffDocument>();
+            #endregion
 
+            #region StaffObservations
             var staffObservations = new List<StaffObservation>();
+            #endregion
 
+            #region Students
             var students = new List<Student>
             {
                 new Student
                 {
                     Id = 1, FirstName = "Aaron", LastName = "Aardvark", YearGroupId = 3, Email = "aardvark1@test.com",
-                    AccountBalance = (decimal) 200.00, CandidateNumber = "1234", RegGroupId = 3
+                    AccountBalance = (decimal) 200.00, CandidateNumber = "1234", RegGroupId = 3, Gender = "M"
                 },
                 new Student
                 {
                     Id = 2, FirstName = "Dorothy", LastName = "Perkins", YearGroupId = 1, Email = "dperkins1@test.com",
-                    CandidateNumber = "5678", AccountBalance = (decimal) 10.00, RegGroupId = 1
+                    CandidateNumber = "5678", AccountBalance = (decimal) 10.00, RegGroupId = 1, Gender = "F"
                 },
                 new Student
                 {
                     Id = 3, FirstName = "John", LastName = "Appleseed", YearGroupId = 2, RegGroupId = 2,
-                    Email = "aappleseed1@test.com", AccountBalance = (decimal) 0.00, CandidateNumber = "7821"
+                    Email = "aappleseed1@test.com", AccountBalance = (decimal) 0.00, CandidateNumber = "7821", Gender = "X"
                 },
                 new Student
                 {
                     Id = 4, FirstName = "Betty", LastName = "Newbie", YearGroupId = 4, RegGroupId = 4,
-                    AccountBalance = (decimal) 100.00, Email = "betty@test.com", CandidateNumber = "6452"
+                    AccountBalance = (decimal) 100.00, Email = "betty@test.com", CandidateNumber = "6452", Gender = "F"
                 }
             };
             #endregion

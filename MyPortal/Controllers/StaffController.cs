@@ -232,16 +232,13 @@ namespace MyPortal.Controllers
 
             var resultSets = _context.ResultSets.ToList();
 
-            var subjects = _context.Subjects.ToList();
-
-            var upperSchool = student.YearGroupId == 11 || student.YearGroupId == 10;
+            var subjects = _context.Subjects.ToList();            
 
             var viewModel = new StudentDetailsViewModel
             {
                 //Logs = logs,
                 Student = student,
-                Results = results,
-                IsUpperSchool = upperSchool,
+                Results = results,                
                 LogTypes = logTypes,
                 YearGroups = yearGroups,
                 RegGroups = regGroups,

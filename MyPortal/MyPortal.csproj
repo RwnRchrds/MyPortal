@@ -275,6 +275,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Misc\Checkout.cs" />
+    <Compile Include="Models\Misc\Gender.cs" />
     <Compile Include="Models\Misc\ShoppingBasket.cs" />
     <Compile Include="Models\Misc\StaffDocumentUpload.cs" />
     <Compile Include="Models\Misc\StudentDocumentUpload.cs" />

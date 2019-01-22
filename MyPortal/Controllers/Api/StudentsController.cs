@@ -301,6 +301,7 @@ namespace MyPortal.Controllers.Api
             Mapper.Map(studentDto, studentInDb);
             studentInDb.FirstName = studentDto.FirstName;
             studentInDb.LastName = studentDto.LastName;
+            studentInDb.Gender = studentDto.Gender;
             studentInDb.RegGroupId = studentDto.RegGroupId;
             studentInDb.YearGroupId = studentDto.YearGroupId;
             studentInDb.AccountBalance = studentDto.AccountBalance;

@@ -27,15 +27,19 @@ namespace MyPortal.Models
         [StringLength(255)]
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
+        
+        [Required]
+        [StringLength(1)]
+        public string Gender { get; set; }
 
         [StringLength(320)]
         [EmailAddress]
         [Display(Name = "Email Address")]
         public string Email { get; set; }
 
-        [Display(Name = "Reg Group")] public int RegGroupId { get; set; }
+        [Required] [Display(Name = "Reg Group")] public int RegGroupId { get; set; }
 
-        [Display(Name = "Year Group")] public int YearGroupId { get; set; }
+        [Required] [Display(Name = "Year Group")] public int YearGroupId { get; set; }
 
         [StringLength(10)]
         [Display(Name = "Candidate Number")]

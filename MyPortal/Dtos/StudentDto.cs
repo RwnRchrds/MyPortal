@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Dtos
@@ -11,6 +12,8 @@ namespace MyPortal.Dtos
         [Required] [StringLength(255)] public string FirstName { get; set; }
 
         [Required] [StringLength(255)] public string LastName { get; set; }
+        
+        [Required] [StringLength(1)] public string Gender { get; set; }
 
         [StringLength(320)]
         [Display(Name = "Email Address")]
