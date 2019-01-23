@@ -282,30 +282,30 @@
                     <div class="modal-body">
                         <div class="form-group">
                             @Html.LabelFor(s => s.Student.FirstName)
-                            @Html.TextBoxFor(s => s.Student.FirstName, new { @class = "form-control", id = "editDetailsFirstNameControl" })
+                            @Html.TextBoxFor(s => s.Student.FirstName, new { @class = "form-control", Name = "FirstName", id = "editDetailsFirstNameControl"})
                             @Html.ValidationMessageFor(s => s.Student.FirstName)
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(s => s.Student.LastName)
-                            @Html.TextBoxFor(s => s.Student.LastName, new { @class = "form-control", id = "editDetailsLastNameControl" })
+                            @Html.TextBoxFor(s => s.Student.LastName, new { @class = "form-control", Name = "LastName", id = "editDetailsLastNameControl" })
                             @Html.ValidationMessageFor(s => s.Student.LastName)
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(s => s.Student.Gender)
-                            @Html.DropDownListFor(s => s.Student.Gender, new SelectList(Model.Genders, "Value", "Name"), "Select Gender", new { @class = "form-control", id = "editDetailsYearGroupControl" })
+                            @Html.DropDownListFor(s => s.Student.Gender, new SelectList(Model.Genders, "Value", "Name"), "Select Gender", new { @class = "form-control", Name = "Gender", id = "editDetailsYearGroupControl" })
                             @Html.ValidationMessageFor(s => s.Student.Gender)
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(s => s.Student.YearGroupId)
-                            @Html.DropDownListFor(s => s.Student.YearGroupId, new SelectList(Model.YearGroups, "Id", "Name"), "Select Year Group", new { @class = "form-control", id = "editDetailsYearGroupControl" })
+                            @Html.DropDownListFor(s => s.Student.YearGroupId, new SelectList(Model.YearGroups, "Id", "Name"), "Select Year Group", new { @class = "form-control", Name = "YearGroupId", id = "editDetailsYearGroupControl" })
                             @Html.ValidationMessageFor(s => s.Student.YearGroupId)
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(s => s.Student.RegGroupId)
-                            @Html.DropDownListFor(s => s.Student.RegGroupId, new SelectList(Model.RegGroups, "Id", "Name"), "Select Reg Group", new { @class = "form-control", id = "editDetailsRegGroupControl" })
+                            @Html.DropDownListFor(s => s.Student.RegGroupId, new SelectList(Model.RegGroups, "Id", "Name"), "Select Reg Group", new { @class = "form-control", Name = "RegGroupId", id = "editDetailsRegGroupControl" })
                             @Html.ValidationMessageFor(s => s.Student.RegGroupId)
                         </div>
-                        @Html.HiddenFor(s => s.Student.Id)
+                        @Html.HiddenFor(s => s.Student.Id, new {Name = "Id", id = "editDetailsIdControl"})
                         <div class="modal-footer">
                             <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary">Save</button>

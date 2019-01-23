@@ -17,17 +17,7 @@ namespace MyPortal.Controllers
         public StaffController()
         {
             _context = new MyPortalDbContext();
-        }
-
-        // HTTP POST request for creating certificates using HTML form
-        [HttpPost]
-        public ActionResult CreateCertificate(TrainingCertificate trainingCertificate)
-        {
-            _context.TrainingCertificates.Add(trainingCertificate);
-            _context.SaveChanges();
-
-            return RedirectToAction("StaffDetails", "Staff", new {id = trainingCertificate.Staff});
-        }
+        }        
 
         // HTTP POST request for creating training courses using HTML form
         [HttpPost]
@@ -133,30 +123,7 @@ namespace MyPortal.Controllers
             };
 
             return View(viewModel);
-        }
-
-        // HTTP POST request for saving/creating logs using HTML form 
-        // TODO: [REPLACE WITH AJAX REQUEST]
-        [HttpPost]
-        public ActionResult SaveLog(Log log)
-        {
-            if (log.Id == 0)
-            {
-                _context.Logs.Add(log);
-            }
-
-            else
-            {
-                var logInDb = _context.Logs.Single(l => l.Id == log.Id);
-
-                logInDb.AuthorId = log.AuthorId;
-                logInDb.Date = log.Date;
-                logInDb.Message = log.Message;
-            }
-
-            _context.SaveChanges();
-            return RedirectToAction("StudentDetails", "Staff", new {id = log.Student});
-        }
+        }        
 
         // HTTP POST request for updating student details using HTML form
         [HttpPost]
@@ -166,8 +133,9 @@ namespace MyPortal.Controllers
 
             studentInDb.FirstName = student.FirstName;
             studentInDb.LastName = student.LastName;
-            studentInDb.YearGroup = student.YearGroup;
-            studentInDb.RegGroup = student.RegGroup;
+            studentInDb.Gender = student.Gender;            
+            studentInDb.YearGroupId = student.YearGroupId;
+            studentInDb.RegGroupId = student.RegGroupId;
 
             _context.SaveChanges();
             return RedirectToAction("StudentDetails", "Staff", new {id = student.Id});
