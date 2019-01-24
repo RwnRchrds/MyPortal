@@ -33,7 +33,7 @@
             </button>
         }
 
-        <button type="button" class="btn btn-warning mp-btn-top" id="ViewResultsButton" data-student-id="@Model.Student.Id">
+        <button type="button" class="btn btn-primary mp-btn-top" id="ViewResultsButton" data-student-id="@Model.Student.Id">
 
             <i class="far fa-chart-bar"></i> View Results
 
@@ -482,8 +482,42 @@
                         },
                         {
                             data: "message",
-                            "render": function(data, type, row){
-                                return data.replace(/\n/g, "<br/>");
+                            render: function(data){
+                                
+                                if ("@Model.Student.Gender" === "M") {
+                                    return data.replace(/\n/g, "<br/>")
+                                        .replace("<name>", "@Model.Student.FirstName")
+                                        .replace("<he>", "he")
+                                        .replace("<him>", "him")
+                                        .replace("<his>", "his")
+                                        .replace("<himself>", "himself")
+                                        .replace(/</g, "&lt;")
+                                        .replace(/>/g, "&gt;");
+                                }
+                                
+                                if ("@Model.Student.Gender" === "F") {
+                                    return data.replace(/\n/g, "<br/>")
+                                        .replace("<name>", "@Model.Student.FirstName")
+                                        .replace("<he>", "she")
+                                        .replace("<him>", "her")
+                                        .replace("<his>", "her")
+                                        .replace("<himself>", "herself")
+                                        .replace(/</g, "&lt;")
+                                        .replace(/>/g, "&gt;");                                        
+                                }
+                                
+                                if ("@Model.Student.Gender" === "X") {
+                                    return data.replace(/\n/g, "<br/>")
+                                        .replace("<name>", "@Model.Student.FirstName")
+                                        .replace("<he>", "they")
+                                        .replace("<him>", "them")
+                                        .replace("<his>", "their")
+                                        .replace("<himself>", "themselves")
+                                        .replace(/</g, "&lt;")
+                                        .replace(/>/g, "&gt;");                                        
+                                }
+                                
+                                return data;
                             }
                         },
                         {

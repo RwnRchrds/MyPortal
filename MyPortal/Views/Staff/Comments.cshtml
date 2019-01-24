@@ -1,0 +1,227 @@
+@model MyPortal.ViewModels.CommentsViewModel
+
+@{
+    ViewBag.Title = "Comments";
+    Layout = "~/Views/Shared/_LayoutStaff.cshtml";
+}
+
+<body>
+<div class="container float-left">
+    <h2 class="mp-page-title">Comments</h2>
+    <hr/>
+</div>
+
+<div class="container float-left">
+    <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#NewCommentModal">New Comment</button>
+    <hr/>
+</div>
+
+<div class="container float-left">
+    @Html.Label("Comment Bank")
+    @Html.DropDownList("SelectedStatus", new SelectList(Model.CommentBanks, "Id", "Name"), "Select Comment Bank",  new { @class = "form-control", Name = "Id", id = "selectedBank" })
+</div>
+
+<div class="container float-left mp-margin-top">
+    <table class="table table-bordered table-hover mp-table" id="comments">
+        <thead>
+        <tr>
+            <th>Comment</th>
+            <th>Comment Bank</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div id="NewCommentModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New Comment</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/comments/create", HttpMethod = "POST", OnSuccess = "newCommentSuccess", OnFailure = "newCommentFailure" }, new { id = "newCommentForm" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Comment.CommentBankId)
+                        @Html.DropDownListFor(l => l.Comment.CommentBankId, new SelectList(Model.CommentBanks, "Id", "Name"), "Select Comment Bank", new { @class = "form-control", Name = "CommentBankId" })
+                        @Html.ValidationMessageFor(x => x.Comment.CommentBankId)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Comment.Value)
+                        @Html.TextAreaFor(x => x.Comment.Value, new {@class = "form-control", Name = "Value"})
+                        @Html.ValidationMessageFor(x => x.Comment.Value)
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="EditCommentModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Comment</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/comments/update", HttpMethod = "POST", OnSuccess = "editCommentSuccess", OnFailure = "editCommentFailure" }, new { id = "editCommentForm" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Comment.CommentBankId)
+                        @Html.DropDownListFor(l => l.Comment.CommentBankId, new SelectList(Model.CommentBanks, "Id", "Name"), "Select Comment Bank", new { @class = "form-control", Name = "CommentBankId" , id = "editCommentBankControl" })
+                        @Html.ValidationMessageFor(x => x.Comment.CommentBankId)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Comment.Value)
+                        @Html.TextAreaFor(x => x.Comment.Value, new {@class = "form-control", Name = "Value", id = "editCommentValueControl"})
+                        @Html.ValidationMessageFor(x => x.Comment.Value)
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(x => x.Comment.Id, new {id = "editCommentIdControl", Name = "Id"})
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+</body>
+
+@section scripts
+{
+    <script>
+        function loadComments() {
+                var commentBank = $("#selectedBank").val();
+                
+                if (commentBank === "") {
+                    $("#comments").addClass("hidden");
+                    return;
+                }
+
+                var url = "/api/comments/byBank/" + commentBank;
+
+                $("#comments").DataTable({
+                    ajax: {
+                        url: url,
+                        dataSrc: ""
+                    },
+                    columns: [
+                        {
+                            data: "value",
+                            render: function(data) {
+                                return data.replace(/</g, "&lt;")
+                                    .replace(/>/g, "&gt;");
+                            }
+                        },
+                        {
+                            data: "commentBank.name"
+                        },
+                        {
+                            data: "id",
+                            render: function (data) {
+                                return "<button type='button' class='btn btn-xs btn-warning js-edit' data-comment-id=" +
+                                    data +
+                                    "><i class=\"fas fa-edit\"></i></button> " +        
+                                    "<button type='button' class='btn btn-xs btn-danger js-delete' data-comment-id=" +
+                                    data +
+                                    "><i class=\"far fa-trash-alt\"></i></button>";
+                            }
+                        }
+                    ],
+                    "language": {
+                        "emptyTable": "No comments to display"
+                    }
+                });
+            }
+
+        $(document).ready(function() {
+            $('.modal').on('hidden.bs.modal',
+                function () {
+                    $(this).find('form').trigger('reset');
+                });
+            
+            $("#selectedBank").on("change",
+                function() {
+                    $("#comments").DataTable().destroy();
+                    loadComments();
+                });
+                
+            $("#comments").on("click",
+                ".js-edit",
+                function () {
+                    var button = $(this);
+                    var setId = button.attr("data-comment-id");
+                    $.ajax({
+                        url: "/api/comments/byId/" + setId,
+                        method: "GET",
+                        success: function (result) {
+                            $("#editCommentBankControl").val(result["commentBankId"]);
+                            $("#editCommentValueControl").val(result["value"]);
+                            $("#editCommentIdControl").val(result["id"]);
+                        },
+                        error: function () {
+                            toastr.error("Failed to load comment data");
+                        }
+                    });
+                    $("#EditCommentModal").modal('toggle');
+                });
+            
+            $("#comments").on("click",
+                ".js-delete",
+                function () {
+                    var button = $(this);
+                    bootbox.confirm("Are you sure you wish to delete this comment?",
+                        function (result) {
+                            if (result) {
+                                $.ajax({
+                                    url: "/api/Comments/delete/" + button.attr("data-comment-id"),
+                                    method: "DELETE",
+                                    success: function (a) {
+                                        $("#comments").DataTable().ajax.reload();
+                                        toastr.success(a);
+                                    },
+                                    error: function (e) {
+                                        toastr.error(e.responseJSON);
+                                    }
+                                });
+                            }
+                        });
+                });
+        });
+        
+        function newCommentSuccess(result) {
+            $("#NewCommentModal").modal('hide');
+            $("#comments").DataTable().ajax.reload();
+            toastr.success(result);
+        }
+
+        function newCommentFailure(result) {
+            $("#NewCommentModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+
+        function editCommentSuccess(result) {
+            $("#EditCommentModal").modal('hide');
+            $("#comments").DataTable().ajax.reload();
+            toastr.success(result);
+        }
+
+        function editCommentFailure(result) {
+            $("#EditCommentModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+    </script>
+}

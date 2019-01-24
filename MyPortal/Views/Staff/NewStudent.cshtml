@@ -35,12 +35,12 @@
         <div class="form-group">
             @Html.LabelFor(s => s.Student.YearGroupId)
             @Html.DropDownListFor(s => s.Student.YearGroupId, new SelectList(Model.YearGroups, "Id", "Name"), "Select Year Group", new {@class = "form-control"})
-            @Html.ValidationMessageFor(s => s.Student.YearGroup)
+            @Html.ValidationMessageFor(s => s.Student.YearGroupId)
         </div>
         <div class="form-group">
             @Html.LabelFor(s => s.Student.RegGroupId)
             @Html.DropDownListFor(s => s.Student.RegGroupId, new SelectList(Model.RegGroups, "Id", "Name"), "Select Reg Group", new {@class = "form-control"})
-            @Html.ValidationMessageFor(s => s.Student.RegGroup)
+            @Html.ValidationMessageFor(s => s.Student.RegGroupId)
         </div>
         <div class="form-group">
             @Html.LabelFor(s => s.Student.CandidateNumber)

@@ -213,6 +213,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\Api\BasketItemsController.cs" />
     <Compile Include="Controllers\Api\CommentBanksController.cs" />
+    <Compile Include="Controllers\Api\CommentsController.cs" />
     <Compile Include="Controllers\Api\DocumentsController.cs" />
     <Compile Include="Controllers\Api\LogsController.cs" />
     <Compile Include="Controllers\Api\ProductsController.cs" />
@@ -306,6 +307,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\AccountsViewModel.cs" />
     <Compile Include="ViewModels\CommentBanksViewModel.cs" />
+    <Compile Include="ViewModels\CommentsViewModel.cs" />
     <Compile Include="ViewModels\DinnerMoneyViewModel.cs" />
     <Compile Include="ViewModels\DocumentsViewModel.cs" />
     <Compile Include="ViewModels\ImportResultsViewModel.cs" />
@@ -657,6 +659,7 @@
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
     <Content Include="Views\Staff\CommentBanks.cshtml" />
+    <Content Include="Views\Staff\Comments.cshtml" />
     <Content Include="Views\Staff\Subjects.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

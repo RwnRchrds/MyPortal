@@ -292,6 +292,17 @@ namespace MyPortal.Controllers
             return View();
         }
         
+        //Menu | Comments --> Comments List (All)
+        [Authorize(Roles = "SeniorStaff")]
+        [Route("Staff/Data/Comments")]
+        public ActionResult Comments()
+        {
+            var viewModel = new CommentsViewModel();
+            viewModel.CommentBanks = _context.CommentBanks.OrderBy(x => x.Name).ToList();
+
+            return View(viewModel);
+        }
+        
         // Menu | Subjects --> Subjects List (All)
         [Authorize(Roles = "SeniorStaff")]
         [Route("Staff/Data/Subjects")]
@@ -301,7 +312,7 @@ namespace MyPortal.Controllers
             viewModel.Staff = _context.Staff.OrderBy(x => x.LastName).ToList();
 
             return View(viewModel);
-        }
+        }        
 
     }
 }

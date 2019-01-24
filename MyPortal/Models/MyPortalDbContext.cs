@@ -39,11 +39,7 @@ namespace MyPortal.Models
         public virtual DbSet<YearGroup> YearGroups { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Comment>()
-                .Property(e => e.Value)
-                .IsUnicode(false);
-            
+        {            
             modelBuilder.Entity<CommentBank>()
                 .Property(e => e.Name)
                 .IsUnicode(false);
