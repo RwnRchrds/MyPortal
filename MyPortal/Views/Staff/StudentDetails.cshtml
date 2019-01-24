@@ -481,7 +481,10 @@
                             data: "logType.name"
                         },
                         {
-                            data: "message"
+                            data: "message",
+                            "render": function(data, type, row){
+                                return data.split(", ").join("<br/><br/>");
+                            }
                         },
                         {
                             data: "id",

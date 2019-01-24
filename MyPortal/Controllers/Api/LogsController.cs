@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Web.Http;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
@@ -84,6 +85,8 @@ namespace MyPortal.Controllers.Api
 
             if (log == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            log.Message = Regex.Replace(log.Message, "\n", ",");
 
             return Mapper.Map<Log, LogDto>(log);
         }
