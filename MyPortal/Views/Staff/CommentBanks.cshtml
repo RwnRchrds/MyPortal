@@ -180,6 +180,8 @@
         function editCommentBankFailure(result) {
             $("#EditCommentBankModal").modal('hide');
             toastr.error(result.responseJSON);
-        }
+        }        
     </script>
+    @Scripts.Render("~/bundles/jqueryval")
+}
 }

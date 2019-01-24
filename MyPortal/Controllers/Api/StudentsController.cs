@@ -284,9 +284,9 @@ namespace MyPortal.Controllers.Api
 
         [HttpPut]
         [Authorize(Roles = "Staff, SeniorStaff")]
-        public IHttpActionResult UpdateStudent(int id, Student studentDto)
+        public IHttpActionResult UpdateStudent(int id, Student student)
         {
-            if (studentDto == null)
+            if (student == null || !ModelState.IsValid)
                 return Content(HttpStatusCode.BadRequest, "Invalid request data");
 
             var studentInDb = _context.Students.SingleOrDefault(s => s.Id == id);
@@ -294,13 +294,13 @@ namespace MyPortal.Controllers.Api
             if (studentInDb == null)
                 return Content(HttpStatusCode.NotFound, "Student not found");
 
-            Mapper.Map(studentDto, studentInDb);
-            studentInDb.FirstName = studentDto.FirstName;
-            studentInDb.LastName = studentDto.LastName;
-            studentInDb.Gender = studentDto.Gender;
-            studentInDb.RegGroupId = studentDto.RegGroupId;
-            studentInDb.YearGroupId = studentDto.YearGroupId;
-            studentInDb.AccountBalance = studentDto.AccountBalance;
+            Mapper.Map(student, studentInDb);
+            studentInDb.FirstName = student.FirstName;
+            studentInDb.LastName = student.LastName;
+            studentInDb.Gender = student.Gender;
+            studentInDb.RegGroupId = student.RegGroupId;
+            studentInDb.YearGroupId = student.YearGroupId;
+            studentInDb.AccountBalance = student.AccountBalance;
 
             _context.SaveChanges();
 

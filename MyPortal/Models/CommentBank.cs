@@ -13,7 +13,7 @@ namespace MyPortal.Models
             Comments = new HashSet<Comment>();
         }
         
-        public int Id { get; set; }
+        [Display(Name = "ID")] public int Id { get; set; }
         
         [Required] public string Name { get; set; }
         
