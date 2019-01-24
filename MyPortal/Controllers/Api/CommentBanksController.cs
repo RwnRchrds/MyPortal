@@ -33,7 +33,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [System.Web.Http.HttpGet]
-        [System.Web.Mvc.Route("api/commentBanks/fetch/{commentBankId}")]
+        [System.Web.Mvc.Route("api/commentBanks/byId/{commentBankId}")]
         public CommentBankDto GetCommentBank(int id)
         {
             var commentBankInDb = _context.CommentBanks.SingleOrDefault(x => x.Id == id);

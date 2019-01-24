@@ -2,7 +2,10 @@
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using AutoMapper;
 using Microsoft.AspNet.Identity;
+using MyPortal.Controllers.Api;
+using MyPortal.Dtos;
 using MyPortal.Models;
 using MyPortal.ViewModels;
 
@@ -42,8 +45,8 @@ namespace MyPortal.Controllers
                 var viewModel = new NewStudentViewModel
                 {
                     Student = student,
-                    RegGroups = _context.RegGroups.ToList(),
-                    YearGroups = _context.YearGroups.ToList()
+                    RegGroups = new RegGroupsController().GetRegGroups().Select(Mapper.Map<RegGroupDto, RegGroup>),
+                    YearGroups = new YearGroupsController().GetYearGroups().Select(Mapper.Map<YearGroupDto, YearGroup>)
                 };
                 return View("NewStudent", viewModel);
             }
@@ -277,6 +280,14 @@ namespace MyPortal.Controllers
         [Authorize(Roles = "SeniorStaff")]
         [Route("Staff/Data/ResultSets")]
         public ActionResult ResultSets()
+        {
+            return View();
+        }
+        
+        // Menu | Comment Banks --> Comment Banks List (All)
+        [Authorize(Roles = "SeniorStadff")]
+        [Route("Staff/Data/CommentBanks")]
+        public ActionResult CommentBanks()
         {
             return View();
         }

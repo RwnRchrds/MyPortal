@@ -7,16 +7,12 @@
 <body>
     <div class="container float-left">
         <h2 class="mp-page-title">Result Sets</h2>
-        <hr />
+        <hr/>
     </div>
 
     <div class="container float-left">
-        @if (User.IsInRole("SeniorStaff"))
-        {
-            <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#NewResultSetModal">New Result Set</button>
-            <hr />
-        }
-
+        <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#NewResultSetModal">New Result Set</button>
+        <hr/>
     </div>
 
     <div class="container float-left">
@@ -126,7 +122,10 @@
                                 "><i class=\"far fa-trash-alt\"></i></button>";
                         }
                     }
-                ]
+                ],
+                "language": {
+                    "emptyTable": "No result sets to display"
+                }
             });
 
             $("#resultSets").on("click",
@@ -200,7 +199,7 @@
             toastr.success(result);
         }
 
-        function newDocumentFailure(result) {
+        function newResultSetFailure(result) {
             $("#NewResultSetModal").modal('hide');
             toastr.error(result.responseJSON);
         }

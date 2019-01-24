@@ -305,6 +305,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\AccountsViewModel.cs" />
+    <Compile Include="ViewModels\CommentBanksViewModel.cs" />
     <Compile Include="ViewModels\DinnerMoneyViewModel.cs" />
     <Compile Include="ViewModels\DocumentsViewModel.cs" />
     <Compile Include="ViewModels\ImportResultsViewModel.cs" />
@@ -655,6 +656,7 @@
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
+    <Content Include="Views\Staff\CommentBanks.cshtml" />
     <Content Include="Views\Staff\Subjects.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

@@ -1,0 +1,169 @@
+@model MyPortal.ViewModels.CommentBanksViewModel
+
+@{
+    ViewBag.Title = "Comment Banks";
+    Layout = "~/Views/Shared/_LayoutStaff.cshtml";
+}
+
+<div class="container float-left">
+    <h2 class="mp-page-title">Comment Banks</h2>
+    <hr/>
+</div>
+
+<div class="container float-left">
+    <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#NewCommentBankModal">New Comment Bank</button>
+    <hr/>
+</div>
+
+<div class="container float-left">
+    <table class="table table-bordered table-hover mp-table mp-table-link" id="commentBanks">
+        <thead>
+        <tr>
+            <th>Name</th>            
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div id="NewCommentBankModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New Comment Bank</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/commentBanks/new", HttpMethod = "POST", OnSuccess = "newCommentBankSuccess", OnFailure = "newCommentBankFailure" }, new { id = "newResultSetForm" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.CommentBank.Name)
+                        @Html.TextBoxFor(x => x.CommentBank.Name, new { @class = "form-control", Name = "Name" })
+                        @Html.ValidationMessageFor(x => x.CommentBank.Name)
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="EditCommentBankModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Comment Bank</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/commentBanks/update", HttpMethod = "POST", OnSuccess = "editCommentBankSuccess", OnFailure = "editCommentBankFailure" }, new { id = "newResultSetForm" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.CommentBank.Name)
+                        @Html.TextBoxFor(x => x.CommentBank.Name, new { @class = "form-control", Name = "Name", id = "editCommentBankNameControl" })
+                        @Html.ValidationMessageFor(x => x.CommentBank.Name)
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(x => x.CommentBank.Id, new {id = "editCommentBankIdControl"})
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#commentBanks").DataTable({
+                ajax: {
+                    url: "/api/commentBanks/all",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "name"
+                    }                   
+                ],
+                "language": {
+                    "emptyTable": "No comment banks to display"
+                }
+            });
+
+            $("#commentBanks").on("click",
+                ".js-edit",
+                function () {
+                    var button = $(this);
+                    var bankId = button.attr("data-set-id");
+                    $.ajax({
+                        url: "/api/commentBanks/byId/" + bankId,
+                        method: "GET",
+                        success: function (result) {
+                            $("#EditCommentBankNameControl").val(result["name"]);
+                            $("#EditCommentBankIdControl").val(result["id"]);
+                        },
+                        error: function () {
+                            toastr.error("Failed to load comment bank data");
+                        }
+                    });
+                    $("#EditResultSetModal").modal('toggle');
+                });            
+
+            $("#commentBanks").on("click",
+                ".js-delete",
+                function () {
+                    var button = $(this);
+                    bootbox.confirm("Are you sure you wish to delete this comment bank and its comments?",
+                        function (result) {
+                            if (result) {
+                                $.ajax({
+                                    url: "/api/commentBanks/delete/" + button.attr("data-set-id"),
+                                    method: "DELETE",
+                                    success: function (a) {
+                                        $("#resultSets").DataTable().ajax.reload();
+                                        toastr.success(a);
+                                    },
+                                    error: function (e) {
+                                        toastr.error(e.responseJSON);
+                                    }
+                                });
+                            }
+                        });
+                });
+
+        });
+
+        function newCommentBankSuccess(result) {
+            $("#NewResultSetModal").modal('hide');
+            $("#resultSets").DataTable().ajax.reload();
+            toastr.success(result);
+        }
+
+        function newCommentBankFailure(result) {
+            $("#NewResultSetModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+
+        function editCommentBankSuccess(result) {
+            $("#EditResultSetModal").modal('hide');
+            $("#resultSets").DataTable().ajax.reload();
+            toastr.success(result);
+        }
+
+        function editCommentBankFailure(result) {
+            $("#EditResultSetModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+    </script>
+}
