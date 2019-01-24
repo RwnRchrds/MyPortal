@@ -86,8 +86,6 @@ namespace MyPortal.Controllers.Api
             if (log == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            log.Message = Regex.Replace(log.Message, "\n", ",");
-
             return Mapper.Map<Log, LogDto>(log);
         }
 

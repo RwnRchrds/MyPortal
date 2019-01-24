@@ -37,7 +37,9 @@ namespace MyPortal.Models
         [Display(Name = "Email Address")]
         public string Email { get; set; }
 
-        [Required] [Display(Name = "Reg Group")] public int RegGroupId { get; set; }
+        [Required] 
+        [Display(Name = "Reg Group")] 
+        public int RegGroupId { get; set; }
 
         [Required] [Display(Name = "Year Group")] public int YearGroupId { get; set; }
 
