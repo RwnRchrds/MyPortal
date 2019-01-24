@@ -70,7 +70,7 @@ namespace MyPortal.UnitTests.ApiTests
 
             var init = _context.Products.Count();
 
-            _controller.NewProduct(Mapper.Map<Product, ProductDto>(newProduct));
+            _controller.NewProduct((newProduct));
 
             var result = _context.Products.Count();
             
@@ -88,7 +88,7 @@ namespace MyPortal.UnitTests.ApiTests
             product.Description = "Art Learning Pack";
             product.OnceOnly = true;
 
-            _controller.UpdateProduct(Mapper.Map<Product, ProductDto>(product));
+            _controller.UpdateProduct((product));
 
             var result = _context.Products.SingleOrDefault(x => x.Id == product.Id);
             

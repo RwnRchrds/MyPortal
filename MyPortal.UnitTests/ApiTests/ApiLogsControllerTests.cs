@@ -90,7 +90,7 @@ namespace MyPortal.UnitTests.ApiTests
             var newLog = new Log
                 {Date = DateTime.Now, Message = "CreateLog", TypeId = 1, AuthorId = 1, StudentId = student.Id};
 
-            _controller.CreateLog(Mapper.Map<Log, LogDto>(newLog));
+            _controller.CreateLog((newLog));
 
             var result = _context.Logs.Count();
 
@@ -119,7 +119,7 @@ namespace MyPortal.UnitTests.ApiTests
                 TypeId = logType.Id,
             };
 
-            var actionResult = _controller.CreateLog(Mapper.Map<Log, LogDto>(log));
+            var actionResult = _controller.CreateLog((log));
 
             var result = actionResult as NegotiatedContentResult<string>;
             
@@ -161,7 +161,7 @@ namespace MyPortal.UnitTests.ApiTests
 
             log.Message = "Hello World";
 
-            _controller.UpdateLog(Mapper.Map<Log, LogDto>(log));
+            _controller.UpdateLog((log));
 
             var result = _context.Logs.SingleOrDefault(x => x.Id == log.Id);
             

@@ -86,7 +86,7 @@ namespace MyPortal.UnitTests.ApiTests
                 Approved = false, UploaderId = uploader.Id
             };
 
-            _controller.AddDocument(Mapper.Map<Document, DocumentDto>(document));
+            _controller.AddDocument((document));
 
             var result = _context.Documents.Count();
 
@@ -110,7 +110,7 @@ namespace MyPortal.UnitTests.ApiTests
                 UploaderId = uploader.Id
             };
 
-            var actionResult = _controller.AddDocument(Mapper.Map<Document, DocumentDto>(document));                        
+            var actionResult = _controller.AddDocument((document));                        
             
             var result = actionResult as NegotiatedContentResult<string>;
             
@@ -131,7 +131,7 @@ namespace MyPortal.UnitTests.ApiTests
                 Approved = false, UploaderId = uploaderId
             };
 
-            var actionResult = _controller.AddDocument(Mapper.Map<Document, DocumentDto>(document));
+            var actionResult = _controller.AddDocument((document));
 
             var result = actionResult as NegotiatedContentResult<string>;
             
@@ -181,7 +181,7 @@ namespace MyPortal.UnitTests.ApiTests
             document.Description = "Doc2Update";
             document.Url = "http://ftp.test.com/doc2update";
 
-            _controller.UpdateDocument(Mapper.Map<Document, DocumentDto>(document));
+            _controller.UpdateDocument((document));
 
             var result = _context.Documents.SingleOrDefault(x => x.Description == "Doc2Update");
             
@@ -192,7 +192,7 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void UpdateDocument_DocumentDoesNotExist_ReturnsNotFound()
         {                       
-            var document = new DocumentDto
+            var document = new Document
             {
                 Id = 9999,
                 Url = "http://ftp.test.com/docUpdate",
@@ -220,7 +220,7 @@ namespace MyPortal.UnitTests.ApiTests
 
             document.Url = "false-uri";
 
-            var actionResult = _controller.UpdateDocument(Mapper.Map<Document, DocumentDto>(document));
+            var actionResult = _controller.UpdateDocument((document));
             var result = actionResult as NegotiatedContentResult<string>;
             
             Assert.IsNotNull(result);

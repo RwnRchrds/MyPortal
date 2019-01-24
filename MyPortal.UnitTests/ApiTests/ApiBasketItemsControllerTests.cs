@@ -79,7 +79,7 @@ namespace MyPortal.UnitTests.ApiTests
             
             Assert.IsNotNull(product);
 
-            _controller.AddToBasket(new BasketItemDto {ProductId = product.Id, StudentId = student.Id});
+            _controller.AddToBasket(new BasketItem {ProductId = product.Id, StudentId = student.Id});
 
             var result = _context.BasketItems.Count(x => x.StudentId == student.Id);
             
@@ -96,7 +96,7 @@ namespace MyPortal.UnitTests.ApiTests
             
             var item = new BasketItem {StudentId = studentId, ProductId = product.Id};
 
-            var actionResult = _controller.AddToBasket(Mapper.Map<BasketItem, BasketItemDto>(item));
+            var actionResult = _controller.AddToBasket((item));
 
             var result = actionResult as NegotiatedContentResult<string>;
             
@@ -116,7 +116,7 @@ namespace MyPortal.UnitTests.ApiTests
             
             var item = new BasketItem {StudentId = student.Id, ProductId = productId};
 
-            var actionResult = _controller.AddToBasket(Mapper.Map<BasketItem, BasketItemDto>(item));
+            var actionResult = _controller.AddToBasket((item));
 
             var result = actionResult as NegotiatedContentResult<string>;
             
@@ -137,7 +137,7 @@ namespace MyPortal.UnitTests.ApiTests
             
             var item = new BasketItem {StudentId = student.Id, ProductId = product.Id};
 
-            var actionResult = _controller.AddToBasket(Mapper.Map<BasketItem, BasketItemDto>(item));
+            var actionResult = _controller.AddToBasket((item));
 
             var result = actionResult as NegotiatedContentResult<string>;
             
@@ -158,7 +158,7 @@ namespace MyPortal.UnitTests.ApiTests
             
             var item = new BasketItem {ProductId = product.Id, StudentId = student.Id};
 
-            var actionResult = _controller.AddToBasket(Mapper.Map<BasketItem, BasketItemDto>(item));
+            var actionResult = _controller.AddToBasket((item));
 
             var result = actionResult as NegotiatedContentResult<string>;
             
