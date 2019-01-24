@@ -285,7 +285,7 @@ namespace MyPortal.Controllers
         }
         
         // Menu | Comment Banks --> Comment Banks List (All)
-        [Authorize(Roles = "SeniorStadff")]
+        [Authorize(Roles = "SeniorStaff")]
         [Route("Staff/Data/CommentBanks")]
         public ActionResult CommentBanks()
         {

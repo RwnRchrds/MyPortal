@@ -35,7 +35,7 @@
                 <h4 class="modal-title">New Comment Bank</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/commentBanks/new", HttpMethod = "POST", OnSuccess = "newCommentBankSuccess", OnFailure = "newCommentBankFailure" }, new { id = "newResultSetForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/commentBanks/create", HttpMethod = "POST", OnSuccess = "newCommentBankSuccess", OnFailure = "newCommentBankFailure" }, new { id = "newResultSetForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -70,7 +70,7 @@
                         @Html.ValidationMessageFor(x => x.CommentBank.Name)
                     </div>
                     <div class="form-group">
-                        @Html.HiddenFor(x => x.CommentBank.Id, new {id = "editCommentBankIdControl"})
+                        @Html.HiddenFor(x => x.CommentBank.Id, new {Name = "Id", id = "editCommentBankIdControl"})
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -94,7 +94,18 @@
                 columns: [
                     {
                         data: "name"
-                    }                   
+                    },
+                    {
+                        data: "id",
+                        render: function(data) {
+                            return "<button type='button' class='btn btn-xs btn-warning mp-btn-action-left js-edit' data-bank-id=" +
+                                data +
+                                "><i class=\"far fa-edit\"></i></button> " +                                
+                                "<button type='button' class='btn btn-xs btn-danger mp-btn-action-right js-delete' data-bank-id=" +
+                                data +
+                                "><i class=\"far fa-trash-alt\"></i></button>";
+                        }
+                    }
                 ],
                 "language": {
                     "emptyTable": "No comment banks to display"
@@ -105,19 +116,19 @@
                 ".js-edit",
                 function () {
                     var button = $(this);
-                    var bankId = button.attr("data-set-id");
+                    var bankId = button.attr("data-bank-id");
                     $.ajax({
                         url: "/api/commentBanks/byId/" + bankId,
                         method: "GET",
                         success: function (result) {
-                            $("#EditCommentBankNameControl").val(result["name"]);
-                            $("#EditCommentBankIdControl").val(result["id"]);
+                            $("#editCommentBankNameControl").val(result["name"]);
+                            $("#editCommentBankIdControl").val(result["id"]);
                         },
                         error: function () {
                             toastr.error("Failed to load comment bank data");
                         }
                     });
-                    $("#EditResultSetModal").modal('toggle');
+                    $("#EditCommentBankModal").modal('toggle');
                 });            
 
             $("#commentBanks").on("click",
@@ -128,10 +139,10 @@
                         function (result) {
                             if (result) {
                                 $.ajax({
-                                    url: "/api/commentBanks/delete/" + button.attr("data-set-id"),
+                                    url: "/api/commentBanks/delete/" + button.attr("data-bank-id"),
                                     method: "DELETE",
                                     success: function (a) {
-                                        $("#resultSets").DataTable().ajax.reload();
+                                        $("#commentBanks").DataTable().ajax.reload();
                                         toastr.success(a);
                                     },
                                     error: function (e) {
@@ -145,24 +156,24 @@
         });
 
         function newCommentBankSuccess(result) {
-            $("#NewResultSetModal").modal('hide');
-            $("#resultSets").DataTable().ajax.reload();
+            $("#NewCommentBankModal").modal('hide');
+            $("#commentBanks").DataTable().ajax.reload();
             toastr.success(result);
         }
 
         function newCommentBankFailure(result) {
-            $("#NewResultSetModal").modal('hide');
+            $("#NewCommentBankModal").modal('hide');
             toastr.error(result.responseJSON);
         }
 
         function editCommentBankSuccess(result) {
-            $("#EditResultSetModal").modal('hide');
-            $("#resultSets").DataTable().ajax.reload();
+            $("#EditCommentBankModal").modal('hide');
+            $("#commentBanks").DataTable().ajax.reload();
             toastr.success(result);
         }
 
         function editCommentBankFailure(result) {
-            $("#EditResultSetModal").modal('hide');
+            $("#EditCommentBankModal").modal('hide');
             toastr.error(result.responseJSON);
         }
     </script>

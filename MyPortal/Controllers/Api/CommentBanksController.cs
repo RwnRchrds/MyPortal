@@ -26,14 +26,14 @@ namespace MyPortal.Controllers.Api
         }
 
         [System.Web.Http.HttpGet]
-        [System.Web.Mvc.Route("api/commentBanks/all")]
+        [System.Web.Http.Route("api/commentBanks/all")]
         public IEnumerable<CommentBankDto> GetCommentBanks()
         {
             return _context.CommentBanks.ToList().Select(Mapper.Map<CommentBank, CommentBankDto>);
         }
 
         [System.Web.Http.HttpGet]
-        [System.Web.Mvc.Route("api/commentBanks/byId/{commentBankId}")]
+        [System.Web.Http.Route("api/commentBanks/byId/{id}")]
         public CommentBankDto GetCommentBank(int id)
         {
             var commentBankInDb = _context.CommentBanks.SingleOrDefault(x => x.Id == id);
@@ -47,7 +47,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [System.Web.Http.HttpPost]
-        [System.Web.Mvc.Route("api/commentBanks/create")]
+        [System.Web.Http.Route("api/commentBanks/create")]
         public IHttpActionResult CreateCommentBank(CommentBankDto commentBank)
         {
             if (!ModelState.IsValid)
@@ -61,7 +61,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [System.Web.Http.HttpPost]
-        [System.Web.Mvc.Route("api/commentBanks/update")]
+        [System.Web.Http.Route("api/commentBanks/update")]
         public IHttpActionResult UpdateCommentBank(CommentBankDto commentBank)
         {
             var commentBankInDb = _context.CommentBanks.SingleOrDefault(x => x.Id == commentBank.Id);
@@ -78,7 +78,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [System.Web.Http.HttpDelete]
-        [System.Web.Http.Route("api/commentBanks/delete")]
+        [System.Web.Http.Route("api/commentBanks/delete/{id}")]
         public IHttpActionResult DeleteCommentBank(int id)
         {
             var commentBank = _context.CommentBanks.SingleOrDefault(x => x.Id == id);
