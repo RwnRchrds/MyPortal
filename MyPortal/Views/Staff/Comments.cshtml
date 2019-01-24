@@ -12,7 +12,7 @@
 </div>
 
 <div class="container float-left">
-    <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#NewCommentModal">New Comment</button>
+    <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" onclick="openNewCommentModal()">New Comment</button>
     <hr/>
 </div>
 
@@ -47,7 +47,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.LabelFor(x => x.Comment.CommentBankId)
-                        @Html.DropDownListFor(l => l.Comment.CommentBankId, new SelectList(Model.CommentBanks, "Id", "Name"), "Select Comment Bank", new { @class = "form-control", Name = "CommentBankId" })
+                        @Html.DropDownListFor(l => l.Comment.CommentBankId, new SelectList(Model.CommentBanks, "Id", "Name"), "Select Comment Bank", new { @class = "form-control", Name = "CommentBankId", id = "newCommentBankControl" })
                         @Html.ValidationMessageFor(x => x.Comment.CommentBankId)
                     </div>
                     <div class="form-group">
@@ -222,6 +222,15 @@
         function editCommentFailure(result) {
             $("#EditCommentModal").modal('hide');
             toastr.error(result.responseJSON);
+        }
+
+        function openNewCommentModal() {
+            var commentBank = $("#selectedBank").val();
+
+            if (commentBank !== "") {
+                $("#newCommentBankControl").val(commentBank);
+                $("#NewCommentModal").modal('toggle');
+            }
         }
     </script>
 }
