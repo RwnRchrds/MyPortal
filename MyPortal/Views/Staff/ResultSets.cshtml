@@ -88,6 +88,10 @@
 {
     <script>
         $(document).ready(function () {
+            $('.modal').on('hidden.bs.modal',
+                function () {
+                    $(this).find('form').trigger('reset');
+                });
             $("#resultSets").DataTable({
                 ajax: {
                     url: "/api/resultSets/all",

@@ -64,7 +64,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("api/courses/edit")]
-        public IHttpActionResult UpdateCourse(TrainingCourseDto course)
+        public IHttpActionResult UpdateCourse(TrainingCourse course)
         {
             var courseInDb = _context.TrainingCourses.Single(x => x.Id == course.Id);
 

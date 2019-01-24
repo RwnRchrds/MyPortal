@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.UI.WebControls;
 using AutoMapper;
+using Microsoft.Ajax.Utilities;
 using MyPortal.Dtos;
 using MyPortal.Models;
 
@@ -48,21 +49,26 @@ namespace MyPortal.Controllers.Api
 
         [System.Web.Http.HttpPost]
         [System.Web.Http.Route("api/commentBanks/create")]
-        public IHttpActionResult CreateCommentBank(CommentBankDto commentBank)
+        public IHttpActionResult CreateCommentBank(CommentBank commentBank)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || commentBank.Name.IsNullOrWhiteSpace())
             {
                 return Content(HttpStatusCode.BadRequest, "Invalid data");
             }
 
-            _context.CommentBanks.Add(Mapper.Map<CommentBankDto, CommentBank>(commentBank));
+            if (_context.CommentBanks.Any(x => x.Name == commentBank.Name))
+            {
+                return Content(HttpStatusCode.BadRequest, "Comment bank already exists");
+            }
+
+            _context.CommentBanks.Add((commentBank));
             _context.SaveChanges();
             return Ok("Comment bank added");
         }
 
         [System.Web.Http.HttpPost]
         [System.Web.Http.Route("api/commentBanks/update")]
-        public IHttpActionResult UpdateCommentBank(CommentBankDto commentBank)
+        public IHttpActionResult UpdateCommentBank(CommentBank commentBank)
         {
             var commentBankInDb = _context.CommentBanks.SingleOrDefault(x => x.Id == commentBank.Id);
 

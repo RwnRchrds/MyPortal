@@ -27,7 +27,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("api/logs/new")]
-        public IHttpActionResult CreateLog(LogDto data)
+        public IHttpActionResult CreateLog(Log data)
         {
             var authorId = data.AuthorId;
 
@@ -50,7 +50,7 @@ namespace MyPortal.Controllers.Api
             if (!ModelState.IsValid)
                 return Content(HttpStatusCode.BadRequest, "Invalid data");
 
-            var log = Mapper.Map<LogDto, Log>(data);
+            var log = (data);
             _context.Logs.Add(log);
             _context.SaveChanges();
 
@@ -100,20 +100,20 @@ namespace MyPortal.Controllers.Api
 
         [Route("api/logs/log/edit")]
         [HttpPost]
-        public IHttpActionResult UpdateLog(LogDto logDto)
+        public IHttpActionResult UpdateLog(Log log)
         {
-            if (logDto == null)
+            if (log == null)
                 return Content(HttpStatusCode.BadRequest, "No valid data was received");
 
-            var logInDb = _context.Logs.SingleOrDefault(l => l.Id == logDto.Id);
+            var logInDb = _context.Logs.SingleOrDefault(l => l.Id == log.Id);
 
             if (logInDb == null)
                 return Content(HttpStatusCode.NotFound, "Log not found");
 
             //var c = Mapper.Map(logDto, logInDb);
 
-            logInDb.TypeId = logDto.TypeId;
-            logInDb.Message = logDto.Message;
+            logInDb.TypeId = log.TypeId;
+            logInDb.Message = log.Message;
 
             _context.SaveChanges();
 

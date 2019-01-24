@@ -71,20 +71,16 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Authorize(Roles = "Staff, SeniorStaff")]
-        public StudentDto CreateStudent(StudentDto studentDto)
+        public IHttpActionResult CreateStudent(Student student)
         {
             if (!ModelState.IsValid)
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
-
-            var student = Mapper.Map<StudentDto, Student>(studentDto);
+            
             _context.Students
                 .Add(student);
 
             _context.SaveChanges();
-
-            studentDto.Id = student.Id;
-
-            return studentDto;
+            return Ok("Student added");
         }
 
         [HttpPost]
@@ -263,7 +259,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("api/students/documents/edit")]
-        public IHttpActionResult UpdateDocument(DocumentDto data)
+        public IHttpActionResult UpdateDocument(Document data)
         {
             var documentInDb = _context.Documents.Single(x => x.Id == data.Id);
 
@@ -288,7 +284,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPut]
         [Authorize(Roles = "Staff, SeniorStaff")]
-        public IHttpActionResult UpdateStudent(int id, StudentDto studentDto)
+        public IHttpActionResult UpdateStudent(int id, Student studentDto)
         {
             if (studentDto == null)
                 return Content(HttpStatusCode.BadRequest, "Invalid request data");

@@ -22,7 +22,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("api/staff/documents/add")]
-        public IHttpActionResult AddDocument(StaffDocumentDto data)
+        public IHttpActionResult AddDocument(StaffDocument data)
         {
             var staff = _context.Staff.SingleOrDefault(x => x.Id == data.StaffId);
 
@@ -50,7 +50,7 @@ namespace MyPortal.Controllers.Api
             if (!isUriValid)
                 return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
 
-            var staffDocument = Mapper.Map<StaffDocumentDto, StaffDocument>(data);
+            var staffDocument = (data);
 
             var document = staffDocument.Document;
 
@@ -64,7 +64,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("api/staff/observations/add")]
-        public IHttpActionResult AddObservation(StaffObservationDto data)
+        public IHttpActionResult AddObservation(StaffObservation data)
         {
             data.Date = DateTime.Now;
 
@@ -84,7 +84,7 @@ namespace MyPortal.Controllers.Api
 
             data.ObserverId = observer.Id;
 
-            var observationToAdd = Mapper.Map<StaffObservationDto, StaffObservation>(data);
+            var observationToAdd = (data);
 
             _context.StaffObservations.Add(observationToAdd);
             _context.SaveChanges();
@@ -94,12 +94,12 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("api/staff/new")]
-        public IHttpActionResult CreateStaff(StaffDto staffDto)
+        public IHttpActionResult CreateStaff(Staff staffDto)
         {
             if (!ModelState.IsValid)
                 return Content(HttpStatusCode.BadRequest, "Invalid data");
 
-            var staff = Mapper.Map<StaffDto, Staff>(staffDto);
+            var staff = (staffDto);
             _context.Staff
                 .Add(staff);
 
@@ -167,7 +167,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("api/staff/edit")]
-        public IHttpActionResult EditStaff(StaffDto data)
+        public IHttpActionResult EditStaff(Staff data)
         {
             var staffInDb = _context.Staff.SingleOrDefault(x => x.Id == data.Id);
 
@@ -327,7 +327,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("api/staff/documents/edit")]
-        public IHttpActionResult UpdateDocument(StaffDocumentDto data)
+        public IHttpActionResult UpdateDocument(StaffDocument data)
         {
             var staffDocumentInDb = _context.StaffDocuments.Single(x => x.Id == data.Id);
 
@@ -352,7 +352,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("api/staff/observations/update")]
-        public IHttpActionResult UpdateObservation(StaffObservationDto data)
+        public IHttpActionResult UpdateObservation(StaffObservation data)
         {
             var observationInDb = _context.StaffObservations.Single(x => x.Id == data.Id);
 

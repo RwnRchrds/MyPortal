@@ -47,14 +47,14 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("api/resultSets/new")]
-        public IHttpActionResult CreateResultSet(ResultSetDto data)
+        public IHttpActionResult CreateResultSet(ResultSet data)
         {
             if (data.Name.IsNullOrWhiteSpace() || !ModelState.IsValid)
             {
                 return Content(HttpStatusCode.BadRequest, "Invalid Data");
             }
 
-            var rsToAdd = Mapper.Map<ResultSetDto, ResultSet>(data);
+            var rsToAdd = (data);
 
             var currentRsExists = _context.ResultSets.Any(x => x.IsCurrent) && _context.ResultSets.Any();
 
@@ -70,7 +70,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("api/resultSets/update")]
-        public IHttpActionResult UpdateResultSet(ResultSetDto data)
+        public IHttpActionResult UpdateResultSet(ResultSet data)
         {
             var resultSet = _context.ResultSets.SingleOrDefault(x => x.Id == data.Id);
 

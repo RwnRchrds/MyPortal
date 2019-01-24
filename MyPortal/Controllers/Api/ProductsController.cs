@@ -101,9 +101,9 @@ namespace MyPortal.Controllers.Api
         //NEW PRODUCT
         [HttpPost]
         [Route("api/products/new")]
-        public IHttpActionResult NewProduct(ProductDto data)
+        public IHttpActionResult NewProduct(Product data)
         {
-            var product = Mapper.Map<ProductDto, Product>(data);
+            var product = (data);
 
             _context.Products.Add(product);
             _context.SaveChanges();
@@ -114,7 +114,7 @@ namespace MyPortal.Controllers.Api
         //UPDATE PRODUCT
         [HttpPost]
         [Route("api/products/edit")]
-        public IHttpActionResult UpdateProduct(ProductDto product)
+        public IHttpActionResult UpdateProduct(Product product)
         {
             if (product == null)
                 return Content(HttpStatusCode.BadRequest, "Invalid request data");

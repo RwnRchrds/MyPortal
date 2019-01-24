@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace MyPortal.Dtos
 {
     public class CommentBankDto

@@ -144,7 +144,7 @@ namespace MyPortal.Controllers.Api
         //NEW SALE
         [HttpPost]
         [Route("api/sales/new")]
-        public IHttpActionResult NewSale(SaleDto sale)
+        public IHttpActionResult NewSale(Sale sale)
         {
             sale.Date = DateTime.Now;
 
@@ -164,7 +164,7 @@ namespace MyPortal.Controllers.Api
 
             sale.AmountPaid = product.Price;
 
-            _context.Sales.Add(Mapper.Map<SaleDto, Sale>(sale));
+            _context.Sales.Add((sale));
             _context.SaveChanges();
 
             return Ok("Sale completed");

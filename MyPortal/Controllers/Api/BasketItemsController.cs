@@ -26,7 +26,7 @@ namespace MyPortal.Controllers.Api
         //ADD TO BASKET
         [HttpPost]
         [Route("api/basket/add")]
-        public IHttpActionResult AddToBasket(BasketItemDto data)
+        public IHttpActionResult AddToBasket(BasketItem data)
         {
             var studentQuery = _context.Students.SingleOrDefault(x => x.Id == data.StudentId);
 

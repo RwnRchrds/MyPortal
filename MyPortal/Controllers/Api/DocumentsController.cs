@@ -28,10 +28,8 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [Route("api/documents/add")]
         [Authorize(Roles = "Staff, SeniorStaff")]
-        public IHttpActionResult AddDocument(DocumentDto documentDto)
+        public IHttpActionResult AddDocument(Document document)
         {
-            var document = Mapper.Map<DocumentDto, Document>(documentDto);
-
             var IsUriValid = Uri.TryCreate(document.Url, UriKind.Absolute, out var uriResult)
                              && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 
@@ -40,7 +38,7 @@ namespace MyPortal.Controllers.Api
 
             var uploader = new Staff();
 
-            var uploaderId = documentDto.UploaderId;
+            var uploaderId = document.UploaderId;
 
             if (uploaderId == 0)
             {
@@ -127,7 +125,7 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [Authorize(Roles = "Staff, SeniorStaff")]
         [Route("api/documents/edit")]
-        public IHttpActionResult UpdateDocument(DocumentDto data)
+        public IHttpActionResult UpdateDocument(Document data)
         {
             var documentInDb = _context.Documents.SingleOrDefault(x => x.Id == data.Id);
 

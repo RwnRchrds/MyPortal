@@ -21,7 +21,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("api/staff/certificates/create")]
-        public IHttpActionResult CreateTrainingCertificate(TrainingCertificateDto trainingCertificateDto)
+        public IHttpActionResult CreateTrainingCertificate(TrainingCertificate trainingCertificateDto)
         {
             if (!ModelState.IsValid)
                 return Content(HttpStatusCode.BadRequest, "Invalid data");
@@ -33,7 +33,7 @@ namespace MyPortal.Controllers.Api
             if (trainingCertificateDto.StaffId == userPerson.Id)
                 return Content(HttpStatusCode.BadRequest, "Cannot add a certificate for yourself");
 
-            var cert = Mapper.Map<TrainingCertificateDto, TrainingCertificate>(trainingCertificateDto);
+            var cert = (trainingCertificateDto);
 
             _context.TrainingCertificates.Add(cert);
             _context.SaveChanges();
@@ -98,7 +98,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("api/staff/certificates/update")]
-        public IHttpActionResult UpdateCertificate(TrainingCertificateDto data)
+        public IHttpActionResult UpdateCertificate(TrainingCertificate data)
         {
             var certInDb =
                 _context.TrainingCertificates.Single(x => x.StaffId == data.StaffId && x.CourseId == data.CourseId);

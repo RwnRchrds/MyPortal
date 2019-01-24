@@ -86,6 +86,11 @@
 {
     <script>
         $(document).ready(function () {
+            $('.modal').on('hidden.bs.modal',
+                function () {
+                    $(this).find('form').trigger('reset');
+                });
+            
             $("#commentBanks").DataTable({
                 ajax: {
                     url: "/api/commentBanks/all",

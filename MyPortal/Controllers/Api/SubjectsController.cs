@@ -46,14 +46,14 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("api/subjects/new")]
-        public IHttpActionResult CreateSubject(SubjectDto data)
+        public IHttpActionResult CreateSubject(Subject data)
         {
             if (data.Name.IsNullOrWhiteSpace() || !ModelState.IsValid)
             {
                 return Content(HttpStatusCode.BadRequest, "Invalid data");
             }
 
-            var subjectToAdd = Mapper.Map<SubjectDto, Subject>(data);
+            var subjectToAdd = (data);
 
             _context.Subjects.Add(subjectToAdd);
             _context.SaveChanges();
@@ -62,7 +62,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("api/subjects/update")]
-        public IHttpActionResult UpdateSubject(SubjectDto data)
+        public IHttpActionResult UpdateSubject(Subject data)
         {
             var subjectInDb = _context.Subjects.SingleOrDefault(x => x.Id == data.Id);
 
