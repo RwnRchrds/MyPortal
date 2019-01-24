@@ -78,6 +78,12 @@ namespace MyPortal.App_Start
 
             CreateMap<GradeDto, Grade>();
             CreateMap<Grade, GradeDto>();
+
+            CreateMap<CommentBankDto, CommentBank>();
+            CreateMap<CommentBank, CommentBankDto>();
+
+            CreateMap<CommentDto, Comment>();
+            CreateMap<Comment, CommentDto>();
         }
     }
 }

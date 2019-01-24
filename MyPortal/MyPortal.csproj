@@ -212,6 +212,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\Api\BasketItemsController.cs" />
+    <Compile Include="Controllers\Api\CommentBanksController.cs" />
     <Compile Include="Controllers\Api\DocumentsController.cs" />
     <Compile Include="Controllers\Api\LogsController.cs" />
     <Compile Include="Controllers\Api\ProductsController.cs" />
@@ -233,6 +234,8 @@
     <Compile Include="Controllers\StaffController.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
     <Compile Include="Dtos\BasketItemDto.cs" />
+    <Compile Include="Dtos\CommentBankDto.cs" />
+    <Compile Include="Dtos\CommentDto.cs" />
     <Compile Include="Dtos\DocumentDto.cs" />
     <Compile Include="Dtos\GradeDto.cs" />
     <Compile Include="Dtos\GradeSetDto.cs" />
@@ -264,6 +267,8 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\BasketItem.cs" />
+    <Compile Include="Models\Comment.cs" />
+    <Compile Include="Models\CommentBank.cs" />
     <Compile Include="Models\Document.cs" />
     <Compile Include="Models\Grade.cs" />
     <Compile Include="Models\GradeSet.cs" />

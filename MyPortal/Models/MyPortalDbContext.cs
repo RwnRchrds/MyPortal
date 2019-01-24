@@ -15,6 +15,8 @@ namespace MyPortal.Models
         }
 
         public virtual DbSet<BasketItem> BasketItems { get; set; }
+        public virtual DbSet<Comment> Comments { get; set; }
+        public virtual DbSet<CommentBank> CommentBanks { get; set; }
         public virtual DbSet<Document> Documents { get; set; }
         public virtual DbSet<Grade> Grades { get; set; }
         public virtual DbSet<GradeSet> GradeSets { get; set; }
@@ -38,10 +40,23 @@ namespace MyPortal.Models
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Comment>()
+                .Property(e => e.Value)
+                .IsUnicode(false);
+            
+            modelBuilder.Entity<CommentBank>()
+                .Property(e => e.Name)
+                .IsUnicode(false);
+            
+            modelBuilder.Entity<CommentBank>()
+                .HasMany(e => e.Comments)
+                .WithRequired(e => e.CommentBank)
+                .WillCascadeOnDelete(false);
+            
             modelBuilder.Entity<Document>()
                 .Property(e => e.Description)
                 .IsUnicode(false);
-
+            
             modelBuilder.Entity<Document>()
                 .Property(e => e.Url)
                 .IsUnicode(false);
