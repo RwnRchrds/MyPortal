@@ -110,7 +110,7 @@
     <div>
         <hr />
         <h4 class="mp-bold">MyObservations</h4>
-        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewObservationModal">
+        <button type="button" class="btn btn-success" onclick="populateNewObserverSelection()">
             <i class="fa fa-plus-circle"></i> Add Observation
         </button>
         <table class="table table-bordered mp-table mp-table-link" id="observations" data-staff-id="@Model.Staff.Id" data-current-id="@Model.CurrentStaffId">
@@ -449,9 +449,7 @@
             $('.modal').on('hidden.bs.modal',
                 function() {
                     $(this).find('form').trigger('reset');
-                });
-
-            populateNewObserverSelection();           
+                });          
 
             //#region Top Buttons
             $("#EditDetailsButton").on("click",
@@ -715,8 +713,8 @@
                             $("#EditObservationDate").val(result["date"].toLocaleDateString);
                             $("#EditObservationOutcome").val(result["outcome"]);
                             $("#EditObservationObservee").val(result["observeeId"]);
-                            $("#EditObservationId").val(result["id"]);
-                            populateEditObserverSelection();
+                            populateEditObserverSelection(result["observerId"]);
+                            $("#EditObservationId").val(result["id"]);                            
                         },
                         error: function () {
                             toastr.error("Failed to load certificate data");
@@ -889,16 +887,17 @@
 
                         $(divData).appendTo("#newObserverSelect");
                     });
-                    if ($("#observations".attr("data-current-id")) !== 0) {
-                        $("#newObserverSelect").val($("#observations".attr("data-current-id")));
+                    if ($("#observations").attr("data-current-id") !== 0) {
+                        $("#newObserverSelect").val($("#observations").attr("data-current-id"));
+                        $("#NewObservationModal").modal('toggle');
                         return;
                     }
-                    $("#newObserverSelect").val($("#newObserverSelect option:first").val());
+                    $("#NewObservationModal").modal('toggle');
                 }
             });
         }
 
-        function populateEditObserverSelection() {
+        function populateEditObserverSelection(observer) {
             $.ajax({
                 url: "/api/staff/fetch",
                 method: "GET",
@@ -915,7 +914,8 @@
                             data.responseJSON[i].firstName +
                             "</option>";
 
-                        $(divData).appendTo("#editobserverSelect");
+                        $(divData).appendTo("#editObserverSelect");
+                        $("#editObserverSelect").val(observer);
                     });
                 }
             });
