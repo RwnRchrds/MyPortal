@@ -164,6 +164,17 @@ namespace MyPortal.Controllers
             if (staff == null)
                 return HttpNotFound();
 
+            var userId = User.Identity.GetUserId();
+
+            var currentStaffId = 0;
+
+            var currentUser = _context.Staff.SingleOrDefault(x => x.UserId == userId);
+
+            if (currentUser != null)
+            {
+                currentStaffId = currentUser.Id;
+            }
+
             var certificates = _context.TrainingCertificates.Where(c => c.StaffId == id).ToList();
 
             var courses = _context.TrainingCourses.ToList();
@@ -175,7 +186,8 @@ namespace MyPortal.Controllers
                 Staff = staff,
                 TrainingCertificates = certificates,
                 TrainingCourses = courses,
-                TrainingStatuses = statuses
+                TrainingStatuses = statuses,
+                CurrentStaffId = currentStaffId
             };
 
             return View(viewModel);

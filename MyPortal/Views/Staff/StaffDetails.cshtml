@@ -113,7 +113,7 @@
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewObservationModal">
             <i class="fa fa-plus-circle"></i> Add Observation
         </button>
-        <table class="table table-bordered mp-table mp-table-link" id="observations" data-staff-id="@Model.Staff.Id">
+        <table class="table table-bordered mp-table mp-table-link" id="observations" data-staff-id="@Model.Staff.Id" data-current-id="@Model.CurrentStaffId">
             <thead>
             <tr>
                 <th>Date</th>
@@ -877,7 +877,7 @@
                 complete: function (data) {
                     $("#newObserverSelect").empty();
                     var divInit = "<option value class=\"hidden disabled\">Select Observer</option>";
-                    $(divInit).appendTo("#observerSelect");
+                    $(divInit).appendTo("#newObserverSelect");
                     $(data.responseJSON).each(function (i, staff) {
                         var divData = "<option value=" +
                             data.responseJSON[i].id +
@@ -889,6 +889,10 @@
 
                         $(divData).appendTo("#newObserverSelect");
                     });
+                    if ($("#observations".attr("data-current-id")) !== 0) {
+                        $("#newObserverSelect").val($("#observations".attr("data-current-id")));
+                        return;
+                    }
                     $("#newObserverSelect").val($("#newObserverSelect option:first").val());
                 }
             });
@@ -911,9 +915,8 @@
                             data.responseJSON[i].firstName +
                             "</option>";
 
-                        $(divData).appendTo("#observerSelect");
+                        $(divData).appendTo("#editobserverSelect");
                     });
-                    $("#editObserverSelect").val($("#editObserverSelect option:first").val());
                 }
             });
         }

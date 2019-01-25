@@ -14,6 +14,7 @@ namespace MyPortal.ViewModels
         }
 
         public Staff Staff { get; set; }
+        public int CurrentStaffId { get; set; }
         public IEnumerable<TrainingCertificate> TrainingCertificates { get; set; }
         public TrainingCertificate TrainingCertificate { get; set; }
         public StaffObservation StaffObservation { get; set; }
