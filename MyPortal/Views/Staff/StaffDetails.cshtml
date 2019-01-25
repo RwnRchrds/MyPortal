@@ -90,7 +90,7 @@
             <hr />
             <h4 class="mp-bold">MyTraining</h4>
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewCertModal">
-                <i class="fa fa-plus-circle"></i> Add Certificate
+                <i class="fa fa-plus-circle"></i> New Certificate
             </button>
             <table class="table table-bordered mp-table" id="certs" data-staff-id="@Model.Staff.Id">
                 <thead>
@@ -111,7 +111,7 @@
         <hr />
         <h4 class="mp-bold">MyObservations</h4>
         <button type="button" class="btn btn-success" onclick="populateNewObserverSelection()">
-            <i class="fa fa-plus-circle"></i> Add Observation
+            <i class="fa fa-plus-circle"></i> New Observation
         </button>
         <table class="table table-bordered mp-table mp-table-link" id="observations" data-staff-id="@Model.Staff.Id" data-current-id="@Model.CurrentStaffId">
             <thead>
@@ -132,7 +132,7 @@
             <hr />
             <h4 class="mp-bold">MyDocuments</h4>
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewDocumentModal">
-                <i class="fa fa-plus-circle"></i> Add Document
+                <i class="fa fa-plus-circle"></i> New Document
             </button>
             <table class="table table-bordered mp-table mp-table-link" id="documents" data-staff-id="@Model.Staff.Id">
                 <thead>
@@ -329,7 +329,7 @@
             <!--content-->
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Add Document - @Model.Staff.LastName, @Model.Staff.FirstName</h4>
+                    <h4 class="modal-title">New Document - @Model.Staff.LastName, @Model.Staff.FirstName</h4>
                     <button type="button" class="close" data-dismiss="modal">
                         <span aria-hidden="true"></span>&times;
                     </button>
@@ -777,7 +777,7 @@
                 ".js-delete",
                 function () {
                     var button = $(this);
-                    bootbox.confirm("Are you sure you wish to delete this document?",
+                    bootbox.confirm("Are you sure you wish to delete this observation?",
                         function (result) {
                             if (result) {
                                 $.ajax({

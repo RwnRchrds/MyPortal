@@ -37,7 +37,7 @@
             <!--content-->
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Add Subject</h4>
+                    <h4 class="modal-title">New Subject</h4>
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
                 </div>
                 @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/subjects/new", HttpMethod = "POST", OnSuccess = "newSubjectSuccess", OnFailure = "newSubjectFailure" }, new { id = "newResultSetForm" }))
