@@ -178,55 +178,56 @@
                     },
                     {
                         data: "message",
-                         render: function(data){
-                                
-                                if ("@Model.Student.Gender" === "M") {
-                                    return data.replace("<name>", "@Model.Student.FirstName")
-                                        .replace("<he>", "he")
-                                        .replace("<He>", "He")
-                                        .replace("<him>", "him")
-                                        .replace("<Him>", "Him")
-                                        .replace("<his>", "his")
-                                        .replace("<His>", "His")
-                                        .replace("<himself>", "himself")
-                                        .replace("<Himself>", "Himself")
-                                        .replace(/</g, "&lt;")
-                                        .replace(/>/g, "&gt;")
-                                        .replace(/\n/g, "<br/>");
-                                }
-                                
-                                if ("@Model.Student.Gender" === "F") {
-                                    return data.replace("<name>", "@Model.Student.FirstName")
-                                        .replace("<he>", "she")
-                                        .replace("<He>", "She")
-                                        .replace("<him>", "her")
-                                        .replace("<Him>", "Her")
-                                        .replace("<his>", "his")
-                                        .replace("<His>", "Her")
-                                        .replace("<himself>", "herself")
-                                        .replace("<Himself>", "Herself")
-                                        .replace(/</g, "&lt;")
-                                        .replace(/>/g, "&gt;")
-                                        .replace(/\n/g, "<br/>");                                        
-                                }
-                                
-                                if ("@Model.Student.Gender" === "X") {
-                                    return data.replace("<name>", "@Model.Student.FirstName")
-                                        .replace("<he>", "they")
-                                        .replace("<He>", "They")
-                                        .replace("<him>", "them")
-                                        .replace("<Him>", "Them")
-                                        .replace("<his>", "their")
-                                        .replace("<His>", "Their")
-                                        .replace("<himself>", "themselves")
-                                        .replace("<Himself>", "Themselves")
-                                        .replace(/</g, "&lt;")
-                                        .replace(/>/g, "&gt;")
-                                        .replace(/\n/g, "<br/>");                                        
-                                }
-                                
-                                return data;
+                        render: function(data) {
+
+                            if ("@Model.Student.Gender" === "M") {
+                                return data.replace("<name>", "@Model.Student.FirstName")
+                                    .replace("<he>", "he")
+                                    .replace("<He>", "He")
+                                    .replace("<him>", "him")
+                                    .replace("<Him>", "Him")
+                                    .replace("<his>", "his")
+                                    .replace("<His>", "His")
+                                    .replace("<himself>", "himself")
+                                    .replace("<Himself>", "Himself")
+                                    .replace(/</g, "&lt;")
+                                    .replace(/>/g, "&gt;")
+                                    .replace(/\n/g, "<br/>");
                             }
+
+                            if ("@Model.Student.Gender" === "F") {
+                                return data.replace("<name>", "@Model.Student.FirstName")
+                                    .replace("<he>", "she")
+                                    .replace("<He>", "She")
+                                    .replace("<him>", "her")
+                                    .replace("<Him>", "Her")
+                                    .replace("<his>", "his")
+                                    .replace("<His>", "Her")
+                                    .replace("<himself>", "herself")
+                                    .replace("<Himself>", "Herself")
+                                    .replace(/</g, "&lt;")
+                                    .replace(/>/g, "&gt;")
+                                    .replace(/\n/g, "<br/>");
+                            }
+
+                            if ("@Model.Student.Gender" === "X") {
+                                return data.replace("<name>", "@Model.Student.FirstName")
+                                    .replace("<he>", "they")
+                                    .replace("<He>", "They")
+                                    .replace("<him>", "them")
+                                    .replace("<Him>", "Them")
+                                    .replace("<his>", "their")
+                                    .replace("<His>", "Their")
+                                    .replace("<himself>", "themselves")
+                                    .replace("<Himself>", "Themselves")
+                                    .replace(/</g, "&lt;")
+                                    .replace(/>/g, "&gt;")
+                                    .replace(/\n/g, "<br/>");
+                            }
+
+                            return data;
+                        }
+                    }
                 ],
                 paging: false,
                 ordering: false,
@@ -241,8 +242,8 @@
                         $(row).addClass("mp-log-behaviour");
                     }
 
-                    if (data.logType.name === "EOY Report") {
-                        $(row).addClass("mp-log-eoy");
+                    if (data.logType.name === "Report") {
+                        $(row).addClass("mp-log-report");
                     }
 
                     if (data.logType.name === "Praise") {
