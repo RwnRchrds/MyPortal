@@ -215,7 +215,9 @@ namespace MyPortal.Controllers
 
             var resultSets = _context.ResultSets.ToList();
 
-            var subjects = _context.Subjects.ToList();            
+            var subjects = _context.Subjects.ToList();
+
+            var commentBanks = _context.CommentBanks.ToList();
 
             var viewModel = new StudentDetailsViewModel
             {
@@ -226,7 +228,8 @@ namespace MyPortal.Controllers
                 YearGroups = yearGroups,
                 RegGroups = regGroups,
                 ResultSets = resultSets,
-                Subjects = subjects
+                Subjects = subjects,
+                CommentBanks = commentBanks
             };
 
             return View(viewModel);

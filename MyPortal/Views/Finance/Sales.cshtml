@@ -116,7 +116,7 @@
 
             $("#selectedStatus").on("change",
                 function () {
-                    $("#sales").DataTable().destroy();
+                    $("#sales").DataTable().clear().destroy();
                     loadSales();
                 });
 

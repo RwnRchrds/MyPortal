@@ -155,7 +155,7 @@
             
             $("#selectedBank").on("change",
                 function() {
-                    $("#comments").DataTable().destroy();
+                    $("#comments").DataTable().clear().destroy();
                     loadComments();
                 });
                 

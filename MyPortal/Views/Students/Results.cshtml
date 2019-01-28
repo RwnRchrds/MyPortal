@@ -60,7 +60,7 @@
 
             $("#selectedResultSet").on("change",
                 function() {
-                    $("#results").DataTable().destroy();
+                    $("#results").DataTable().clear().destroy();
                     var resultset = $("#selectedResultSet").val();
                     $("#results").DataTable({
                         ajax: {

@@ -202,18 +202,20 @@
                 @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/logs/new", HttpMethod = "POST", OnSuccess = "newLogSuccess", OnFailure = "newLogFailure"}, new { id = "NewLogForm" }))
                 {
                     <div class="modal-body">
+                        <button type="button" class="btn btn-sm btn-success" id="addComment"><i class="fa fa-plus-circle"></i> Add Comment</button>
+                        <hr/>
                         <div class="form-group">
                             @Html.LabelFor(l => l.Log.TypeId)
-                            @Html.DropDownListFor(l => l.Log.TypeId, new SelectList(Model.LogTypes, "Id", "Name"), "Select Log Type", new { @class = "form-control", Name = "TypeId" })
+                            @Html.DropDownListFor(l => l.Log.TypeId, new SelectList(Model.LogTypes, "Id", "Name"), "Select Log Type", new {@class = "form-control", Name = "TypeId"})
                             @Html.ValidationMessageFor(l => l.Log.TypeId)
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(l => l.Log.Message)
-                            @Html.TextAreaFor(l => l.Log.Message, new { @class = "form-control mp-log-message-box", Name = "Message" })
+                        </div>                        
+                        <div class="form-group">                            
+                            @Html.LabelFor(l => l.Log.Message)                            
+                            @Html.TextAreaFor(l => l.Log.Message, new {@class = "form-control mp-log-message-box", Name = "Message", id = "newLogMessageControl"})
                             @Html.ValidationMessageFor(l => l.Log.Message)
                         </div>
                         <div class="form-group">
-                            @Html.HiddenFor(l => l.Log.StudentId, new { Value = Model.Student.Id, Name = "StudentId" })
+                            @Html.HiddenFor(l => l.Log.StudentId, new {Value = Model.Student.Id, Name = "StudentId"})
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -390,6 +392,42 @@
             </div>
         </div>
     </div>
+    
+    <div id="AddCommentModal" class="modal fade" role="dialog">
+        <div class="modal-dialog" role="document">
+
+            <!--content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add Comment to Log</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>                
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.Label("Comment Bank")
+                        @Html.DropDownList("SelectedStatus", new SelectList(Model.CommentBanks, "Id", "Name"), "Select Comment Bank", new {@class = "form-control", Name = "Id", id = "selectedBank"})
+                    </div>
+                    
+                    <div class="container">
+                        <table class="table table-bordered table-hover mp-table" id="comments">
+                            <thead>
+                            <tr>
+                                <th>Comment</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" data-dismiss="modal">Back</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!--#endregion-->
 </body>
 
@@ -448,7 +486,45 @@
 
             $('.modal').on('hidden.bs.modal',
                 function() {
-                    $(this).find('form').trigger('reset');
+                    $(this).find('form').trigger('reset');                    
+                });
+
+            $("#AddCommentModal").on('hidden.bs.modal',
+                function() {                    
+                    $("#comments").DataTable().clear().destroy();
+                    $("#selectedBank").prop("selectedIndex",0);
+                });
+
+            $("#NewLogModal").on('hidden.bs.modal',
+                function() {
+                    $("#newLogMessageControl").val("");
+                });
+
+            $("#addComment").on("click",
+                function() {
+                    $("#AddCommentModal").modal('toggle');
+                });
+            
+            $('#AddCommentModal').on('shown.bs.modal',
+                function() {
+                    loadComments();
+                });
+
+            $("#comments").on("click",
+                ".js-add",
+                function() {
+                    var message = $(this).parent().siblings(":first").text();
+                    $("#newLogMessageControl").val(function(i, val) {
+                        return val + message;
+                    });
+                    toastr.success("Added to log");
+                    $("#AddCommentModal").modal('hide');
+                });
+            
+            $("#selectedBank").on("change",
+                function() {
+                    $("#comments").DataTable().clear().destroy();
+                    loadComments();
                 });
 
             //Load Logs Table
@@ -485,15 +561,15 @@
                             render: function(data){
                                 
                                 if ("@Model.Student.Gender" === "M") {
-                                    return data.replace("<name>", "@Model.Student.FirstName")
-                                        .replace("<he>", "he")
-                                        .replace("<He>", "He")
-                                        .replace("<him>", "him")
-                                        .replace("<Him>", "Him")
-                                        .replace("<his>", "his")
-                                        .replace("<His>", "His")
-                                        .replace("<himself>", "himself")
-                                        .replace("<Himself>", "Himself")
+                                    return data.replace(/<name>/g, "@Model.Student.FirstName")
+                                        .replace(/<he>/g, "he")
+                                        .replace(/<He>/g, "He")
+                                        .replace(/<him>/g, "him")
+                                        .replace(/<Him>/g, "Him")
+                                        .replace(/<his>/g, "his")
+                                        .replace(/<His>/g, "His")
+                                        .replace(/<himself>/g, "himself")
+                                        .replace(/<Himself>/g, "Himself")
                                         .replace(/</g, "&lt;")
                                         .replace(/>/g, "&gt;")
                                         .replace(/\n/g, "<br/>");
@@ -501,14 +577,14 @@
                                 
                                 if ("@Model.Student.Gender" === "F") {
                                     return data.replace("<name>", "@Model.Student.FirstName")
-                                        .replace("<he>", "she")
-                                        .replace("<He>", "She")
-                                        .replace("<him>", "her")
-                                        .replace("<Him>", "Her")
-                                        .replace("<his>", "her")
-                                        .replace("<His>", "Her")
-                                        .replace("<himself>", "herself")
-                                        .replace("<Himself>", "Herself")
+                                        .replace(/<he>/g, "she")
+                                        .replace(/<He>/g, "She")
+                                        .replace(/<him>/g, "her")
+                                        .replace(/<Him>/g, "Her")
+                                        .replace(/<his>/g, "her")
+                                        .replace(/<His>/g, "Her")
+                                        .replace(/<himself>/g, "herself")
+                                        .replace(/<Himself>/g, "Herself")
                                         .replace(/</g, "&lt;")
                                         .replace(/>/g, "&gt;")
                                         .replace(/\n/g, "<br/>");                                        
@@ -516,14 +592,14 @@
                                 
                                 if ("@Model.Student.Gender" === "X") {
                                     return data.replace("<name>", "@Model.Student.FirstName")
-                                        .replace("<he>", "they")
-                                        .replace("<He>", "They")
-                                        .replace("<him>", "them")
-                                        .replace("<Him>", "Them")
-                                        .replace("<his>", "their")
-                                        .replace("<His>", "Their")
-                                        .replace("<himself>", "themselves")
-                                        .replace("<Himself>", "Themselves")
+                                        .replace(/<he>/g, "they")
+                                        .replace(/<He>/g, "They")
+                                        .replace(/<him>/g, "them")
+                                        .replace(/<Him>/g, "Them")
+                                        .replace(/<his>/g, "their")
+                                        .replace(/<His>/g, "Their")
+                                        .replace(/<himself>/g, "themselves")
+                                        .replace(/<Himself>/g, "Themselves")
                                         .replace(/</g, "&lt;")
                                         .replace(/>/g, "&gt;")
                                         .replace(/\n/g, "<br/>");                                        
@@ -770,6 +846,53 @@
             $("#NewLogModal").modal('hide');
             toastr.error(result.responseJSON);
         }
+        
+        function loadComments() {
+                        var commentBank = $("#selectedBank").val();
+                        
+                        if (commentBank === "") {
+                            $("#comments").hide();
+                            return;
+                        }
+        
+                        var url = "/api/comments/byBank/" + commentBank;
+        
+                        $("#comments").DataTable({
+                            ajax: {
+                                url: url,
+                                dataSrc: ""
+                            },
+                            columns: [
+                                {
+                                    data: "value",
+                                    render: function(data) {
+                                        return data.replace(/</g, "&lt;")
+                                            .replace(/>/g, "&gt;");
+                                    }
+                                },
+                                {
+                                    data: "id",
+                                    render: function (data) {
+                                        return "<button type='button' class='btn btn-xs btn-success js-add' data-comment-id=" +
+                                            data +
+                                            "><i class=\"fas fa-plus\"></i></button>"
+                                    }
+                                }
+                            ],
+                            paging: true,
+                            ordering: false,
+                            searching: false,
+                            responsive: true,
+                            info: false,
+                            lengthChange: false,
+                            pageLength: 5,
+                            "language": {
+                                "emptyTable": "No comments to display"
+                            }
+                        });
+                        
+                        $("#comments").show();
+                    }
     </script>
 
     @Scripts.Render("~/bundles/staff")

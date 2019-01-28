@@ -24,6 +24,7 @@ namespace MyPortal.ViewModels
         public IEnumerable<ResultSet> ResultSets { get; set; }
         public IEnumerable<Subject> Subjects { get; set; }
         public IEnumerable<Gender> Genders { get; set; }
+        public IEnumerable<CommentBank> CommentBanks { get; set; }
         public StudentDocumentUpload Upload { get; set; }
     }
 }
