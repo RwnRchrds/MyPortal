@@ -202,13 +202,14 @@
                 @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/logs/new", HttpMethod = "POST", OnSuccess = "newLogSuccess", OnFailure = "newLogFailure"}, new { id = "NewLogForm" }))
                 {
                     <div class="modal-body">
-                        <button type="button" class="btn btn-sm btn-success" id="addComment"><i class="fa fa-plus-circle"></i> Add Comment</button>
-                        <hr/>
                         <div class="form-group">
                             @Html.LabelFor(l => l.Log.TypeId)
                             @Html.DropDownListFor(l => l.Log.TypeId, new SelectList(Model.LogTypes, "Id", "Name"), "Select Log Type", new {@class = "form-control", Name = "TypeId"})
                             @Html.ValidationMessageFor(l => l.Log.TypeId)
-                        </div>                        
+                        </div>
+                        <hr/>
+                        <button type="button" class="btn btn-sm btn-success" id="addComment"><i class="fa fa-plus-circle"></i> Add Comment</button>
+                        <hr/>
                         <div class="form-group">                            
                             @Html.LabelFor(l => l.Log.Message)                            
                             @Html.TextAreaFor(l => l.Log.Message, new {@class = "form-control mp-log-message-box", Name = "Message", id = "newLogMessageControl"})
@@ -517,7 +518,7 @@
                     $("#newLogMessageControl").val(function(i, val) {
                         return val + message;
                     });
-                    toastr.success("Added to log");
+                    toastr.success("Added comment to log");
                     $("#AddCommentModal").modal('hide');
                 });
             

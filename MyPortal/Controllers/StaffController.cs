@@ -207,17 +207,17 @@ namespace MyPortal.Controllers
 
             var results = _context.Results.Where(r => r.StudentId == id && r.ResultSet.IsCurrent).ToList();
 
-            var logTypes = _context.LogTypes.ToList();
+            var logTypes = _context.LogTypes.OrderBy(x => x.Name).ToList();
 
-            var yearGroups = _context.YearGroups.ToList();
+            var yearGroups = _context.YearGroups.OrderBy(x => x.Name).ToList();
 
-            var regGroups = _context.RegGroups.ToList();
+            var regGroups = _context.RegGroups.OrderBy(x => x.Name).ToList();
 
-            var resultSets = _context.ResultSets.ToList();
+            var resultSets = _context.ResultSets.OrderBy(x => x.Name).ToList();
 
-            var subjects = _context.Subjects.ToList();
+            var subjects = _context.Subjects.OrderBy(x => x.Name).ToList();
 
-            var commentBanks = _context.CommentBanks.ToList();
+            var commentBanks = _context.CommentBanks.OrderBy(x => x.Name).ToList();
 
             var viewModel = new StudentDetailsViewModel
             {
@@ -244,9 +244,9 @@ namespace MyPortal.Controllers
 
             var currentResultSet = _context.ResultSets.SingleOrDefault(r => r.IsCurrent);
 
-            var resultSets = _context.ResultSets.ToList();
+            var resultSets = _context.ResultSets.OrderBy(x => x.Name).ToList();
 
-            var subjects = _context.Subjects.ToList();
+            var subjects = _context.Subjects.OrderBy(x => x.Name).ToList();
 
             if (student == null)
                 return HttpNotFound();
