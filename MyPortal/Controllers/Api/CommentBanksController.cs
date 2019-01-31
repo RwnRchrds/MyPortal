@@ -30,7 +30,7 @@ namespace MyPortal.Controllers.Api
         [System.Web.Http.Route("api/commentBanks/all")]
         public IEnumerable<CommentBankDto> GetCommentBanks()
         {
-            return _context.CommentBanks.ToList().Select(Mapper.Map<CommentBank, CommentBankDto>);
+            return _context.CommentBanks.OrderBy(x => x.Name).ToList().Select(Mapper.Map<CommentBank, CommentBankDto>);
         }
 
         [System.Web.Http.HttpGet]
