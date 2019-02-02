@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Net;
 using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
@@ -30,6 +32,60 @@ namespace MyPortal.Controllers.Api
                 .OrderBy(x => x.Id)
                 .ToList()
                 .Select(Mapper.Map<YearGroup, YearGroupDto>);
+        }
+
+        [HttpPost]
+        [Route("api/yearGroups/create")]
+        public IHttpActionResult CreateYearGroup(YearGroup yearGroup)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Content(HttpStatusCode.BadRequest, "Invalid data");
+            }
+
+            _context.YearGroups.Add(yearGroup);
+            return Ok("Year group added");
+        }
+
+        [HttpPost]
+        [Route("api/yearGroups/update")]
+        public IHttpActionResult UpdateYearGroup(YearGroup yearGroup)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Content(HttpStatusCode.BadRequest, "Invalid data");
+            }
+
+            var yearGroupInDb = _context.YearGroups.SingleOrDefault(x => x.Id == yearGroup.Id);
+
+            if (yearGroupInDb == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Year group not found");
+            }
+
+            yearGroupInDb.Name = yearGroup.Name;
+            yearGroupInDb.HeadId = yearGroup.HeadId;
+
+            _context.SaveChanges();
+
+            return Ok("Year group updated");
+        }
+
+        [HttpDelete]
+        [Route("api/yearGroups/delete/{id}")]
+        public IHttpActionResult DeleteYearGroup(int id)
+        {
+            var yearGroupInDb = _context.YearGroups.SingleOrDefault(x => x.Id == id);
+
+            if (yearGroupInDb == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Year group not found");
+            }
+
+            _context.YearGroups.Remove(yearGroupInDb);
+            _context.SaveChanges();
+
+            return Ok("Year group deleted");
         }
     }
 }
