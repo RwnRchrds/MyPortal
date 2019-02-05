@@ -14,7 +14,7 @@
         <div>
             @Html.Label("Result Set")
             @Html.DropDownList("SelectedResultSet", new SelectList(Model.ResultSets, "Id", "Name", Model.CurrentResultSetId), new {@class = "form-control", Name = "ResultSet", id = "selectedResultSet"})
-            <table class="table table-bordered mp-table" id="results" data-student-id="@Model.Student.Id">
+            <table class="table table-sm table-bordered mp-table" id="results" data-student-id="@Model.Student.Id">
                 <thead>
                 <tr>
                     <th>Subject</th>

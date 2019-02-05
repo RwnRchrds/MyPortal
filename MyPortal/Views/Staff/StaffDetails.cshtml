@@ -92,7 +92,7 @@
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewCertModal">
                 <i class="fa fa-plus-circle"></i> New Certificate
             </button>
-            <table class="table table-bordered mp-table" id="certs" data-staff-id="@Model.Staff.Id">
+            <table class="table table-sm table-bordered mp-table" id="certs" data-staff-id="@Model.Staff.Id">
                 <thead>
                     <tr>
                         <th>Course</th>
@@ -113,7 +113,7 @@
         <button type="button" class="btn btn-success" onclick="populateNewObserverSelection()">
             <i class="fa fa-plus-circle"></i> New Observation
         </button>
-        <table class="table table-bordered mp-table mp-table-link" id="observations" data-staff-id="@Model.Staff.Id" data-current-id="@Model.CurrentStaffId">
+        <table class="table table-sm table-bordered mp-table mp-table-link" id="observations" data-staff-id="@Model.Staff.Id" data-current-id="@Model.CurrentStaffId">
             <thead>
             <tr>
                 <th>Date</th>
@@ -134,7 +134,7 @@
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewDocumentModal">
                 <i class="fa fa-plus-circle"></i> New Document
             </button>
-            <table class="table table-bordered mp-table mp-table-link" id="documents" data-staff-id="@Model.Staff.Id">
+            <table class="table table-sm table-bordered mp-table mp-table-link" id="documents" data-staff-id="@Model.Staff.Id">
                 <thead>
                     <tr>
                         <th>Description</th>
