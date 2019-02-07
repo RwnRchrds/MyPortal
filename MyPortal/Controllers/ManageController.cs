@@ -310,7 +310,10 @@ namespace MyPortal.Controllers
 
         private void AddErrors(IdentityResult result)
         {
-            foreach (var error in result.Errors) ModelState.AddModelError("", error);
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error);
+            }
         }
 
         private bool HasPassword()

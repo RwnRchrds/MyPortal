@@ -95,7 +95,9 @@ namespace MyPortal.Controllers.Api
         public async Task<IHttpActionResult> AttachPerson([FromBody] UserProfile data)
         {
             if (data.RoleName != "Staff" && data.RoleName != "Student")
+            {
                 return Content(HttpStatusCode.BadRequest, "User can only be assigned student or staff as primary role");
+            }                
 
             var userInDb = _identity.Users.FirstOrDefault(u => u.Id == data.UserId);
             var roleToAdd = _identity.Roles.FirstOrDefault(r => r.Name == data.RoleName);

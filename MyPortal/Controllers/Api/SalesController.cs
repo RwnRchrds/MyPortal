@@ -223,7 +223,9 @@ namespace MyPortal.Controllers.Api
             var saleInDb = _context.Sales.SingleOrDefault(p => p.Id == id);
 
             if (saleInDb == null)
+            {
                 return Content(HttpStatusCode.NotFound, "Sale not found");
+            }                
 
             var amount = saleInDb.AmountPaid;
 

@@ -7,7 +7,7 @@ using MyPortal.Models;
 
 namespace MyPortal.UnitTests.TestData
 {
-    public class ContextControl
+    public static class ContextControl
     {
         public static MyPortalDbContext GetTestData()
         {

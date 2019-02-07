@@ -175,7 +175,9 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.NotFound, "Staff member not found");
 
             if (_context.Staff.Any(x => x.Code == data.Code) && staffInDb.Code != data.Code)
+            {
                 return Content(HttpStatusCode.BadRequest, "Staff code has already been used");
+            }                
 
             staffInDb.FirstName = data.FirstName;
             staffInDb.LastName = data.LastName;

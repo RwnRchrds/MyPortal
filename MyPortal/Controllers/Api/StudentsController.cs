@@ -74,7 +74,9 @@ namespace MyPortal.Controllers.Api
         public IHttpActionResult CreateStudent(Student student)
         {
             if (!ModelState.IsValid)
+            {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }                
             
             _context.Students
                 .Add(student);
@@ -292,7 +294,9 @@ namespace MyPortal.Controllers.Api
             var studentInDb = _context.Students.SingleOrDefault(s => s.Id == id);
 
             if (studentInDb == null)
+            {
                 return Content(HttpStatusCode.NotFound, "Student not found");
+            }                
 
             Mapper.Map(student, studentInDb);
             studentInDb.FirstName = student.FirstName;

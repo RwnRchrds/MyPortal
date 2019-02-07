@@ -89,7 +89,9 @@ namespace MyPortal.Controllers.Api
                 .Single(x => x.Id == documentId);
 
             if (document == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);   
+            }                
 
             return Mapper.Map<Document, DocumentDto>(document);
         }
@@ -130,7 +132,9 @@ namespace MyPortal.Controllers.Api
             var documentInDb = _context.Documents.SingleOrDefault(x => x.Id == data.Id);
 
             if (documentInDb == null)
+            {
                 return Content(HttpStatusCode.NotFound, "Document not found");
+            }                
 
             var isUriValid = Uri.TryCreate(data.Url, UriKind.Absolute, out var uriResult)
                              && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);

@@ -36,7 +36,9 @@ namespace MyPortal.Controllers.Api
             var productToAdd = _context.Products.SingleOrDefault(x => x.Id == data.ProductId);
 
             if (productToAdd == null)
+            {
                 return Content(HttpStatusCode.NotFound, "Product not found");
+            }                
 
             if (!productToAdd.Visible)
                 return Content(HttpStatusCode.BadRequest, "Product not available");
@@ -104,7 +106,9 @@ namespace MyPortal.Controllers.Api
             var itemInDb = _context.BasketItems.SingleOrDefault(x => x.Id == id);
 
             if (itemInDb == null)
+            {
                 return Content(HttpStatusCode.NotFound, "Item not found");
+            }                
 
             _context.BasketItems.Remove(itemInDb);
             _context.SaveChanges();
