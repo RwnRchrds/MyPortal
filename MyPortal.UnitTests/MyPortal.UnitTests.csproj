@@ -88,6 +88,7 @@
     <Compile Include="ApiTests\ApiProductsControllerTests.cs" />
     <Compile Include="ApiTests\ApiRegGroupsControllerTests.cs" />
     <Compile Include="ApiTests\ApiResultsControllerTests.cs" />
+    <Compile Include="ApiTests\ApiCommentBanksControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestData\ContextControl.cs" />
     <Compile Include="TestData\EffortProviderFactory.cs" />

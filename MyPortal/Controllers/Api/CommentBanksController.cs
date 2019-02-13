@@ -93,6 +93,13 @@ namespace MyPortal.Controllers.Api
             {
                 return Content(HttpStatusCode.NotFound, "Comment bank not found");
             }
+            
+            var comments = _context.Comments.Where(x => x.CommentBankId == id);
+
+            if (comments.Any())
+            {
+                _context.Comments.RemoveRange(comments);
+            }
 
             _context.CommentBanks.Remove(commentBank);
             _context.SaveChanges();

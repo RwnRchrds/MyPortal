@@ -23,6 +23,27 @@ namespace MyPortal.UnitTests.TestData
                 new BasketItem {Id = 4, ProductId = 3, StudentId = 3}
             };
             #endregion
+            
+            #region CommentBanks
+
+            var commentBanks = new List<CommentBank>
+            {
+                new CommentBank {Name = "Opening", Id = 1},
+                new CommentBank {Name = "Middle", Id = 2},
+                new CommentBank {Name = "Closing", Id = 3}
+            };
+            #endregion
+            
+            #region Comments
+
+            var comments = new List<Comment>
+            {
+               new Comment {CommentBankId = 1, Value = "Hello"},
+               new Comment {CommentBankId = 2, Value = "<he> works very hard"},
+               new Comment {CommentBankId = 2, Value = "<he> needs to improve his work"},
+               new Comment {CommentBankId = 3, Value = "Thank you"}
+            };
+            #endregion
 
             #region Documents
             var documents = new List<Document>
@@ -227,6 +248,8 @@ namespace MyPortal.UnitTests.TestData
             #endregion
 
             context.BasketItems.AddRange(basketItems);
+            context.CommentBanks.AddRange(commentBanks);
+            context.Comments.AddRange(comments);
             context.Documents.AddRange(documents);
             context.Grades.AddRange(grades);
             context.GradeSets.AddRange(gradeSets);
