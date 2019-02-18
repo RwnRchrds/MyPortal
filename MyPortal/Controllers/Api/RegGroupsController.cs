@@ -109,5 +109,19 @@ namespace MyPortal.Controllers.Api
 
             return Ok("Reg group deleted");
         }
+
+        [HttpGet]
+        [Route("api/regGroups/hasStudents/{id}")]
+        public bool RegGroupHasStudents(int id)
+        {
+            var regGroupInDb = _context.RegGroups.SingleOrDefault(x => x.Id == id);
+
+            if (regGroupInDb == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return regGroupInDb.Students.Any();
+        }
     }
 }

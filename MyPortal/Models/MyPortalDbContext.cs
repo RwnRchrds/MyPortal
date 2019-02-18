@@ -174,13 +174,13 @@ namespace MyPortal.Models
 
             modelBuilder.Entity<Staff>()
                 .HasMany(e => e.StaffObservations)
-                .WithRequired(e => e.Staff)
+                .WithRequired(e => e.Observee)
                 .HasForeignKey(e => e.ObserveeId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Staff>()
-                .HasMany(e => e.StaffObservations1)
-                .WithRequired(e => e.Staff1)
+                .HasMany(e => e.StaffObservationsObserved)
+                .WithRequired(e => e.Observer)
                 .HasForeignKey(e => e.ObserverId)
                 .WillCascadeOnDelete(false);
 

@@ -16,7 +16,7 @@ namespace MyPortal.Models
             RegGroups = new HashSet<RegGroup>();
             StaffDocuments = new HashSet<StaffDocument>();
             StaffObservations = new HashSet<StaffObservation>();
-            StaffObservations1 = new HashSet<StaffObservation>();
+            StaffObservationsObserved = new HashSet<StaffObservation>();
             Subjects = new HashSet<Subject>();
             TrainingCertificates = new HashSet<TrainingCertificate>();
             YearGroups = new HashSet<YearGroup>();
@@ -75,7 +75,7 @@ namespace MyPortal.Models
         public virtual ICollection<StaffObservation> StaffObservations { get; set; }
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<StaffObservation> StaffObservations1 { get; set; }
+        public virtual ICollection<StaffObservation> StaffObservationsObserved { get; set; }
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Subject> Subjects { get; set; }

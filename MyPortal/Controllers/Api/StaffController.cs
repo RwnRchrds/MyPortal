@@ -380,5 +380,33 @@ namespace MyPortal.Controllers.Api
 
             return Ok("Observation updated");
         }
+        
+        [HttpGet]
+        [Route("api/staff/hasLogs/{id}")]
+        public bool StaffHasLogs(int id)
+        {
+            var staffInDb = _context.Staff.SingleOrDefault(x => x.Id == id);
+
+            if (staffInDb == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return staffInDb.Logs.Any();
+        }
+        
+        [HttpGet]
+        [Route("api/staff/hasDocuments/{id}")]
+        public bool StaffHasDocuments(int id)
+        {
+            var staffInDb = _context.Staff.SingleOrDefault(x => x.Id == id);
+
+            if (staffInDb == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return staffInDb.StaffDocuments.Any();
+        }
     }
 }

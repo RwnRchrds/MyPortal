@@ -105,5 +105,19 @@ namespace MyPortal.Controllers.Api
             _context.SaveChanges();
             return Ok("Comment bank deleted");
         }
+
+        [System.Web.Http.HttpGet]
+        [System.Web.Mvc.Route("api/commentBanks/hasComments/{id}")]
+        public bool CommentBankHasComments(int id)
+        {
+            var commentBank = _context.CommentBanks.SingleOrDefault(x => x.Id == id);
+
+            if (commentBank == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return commentBank.Comments.Any();
+        }
     }
 }

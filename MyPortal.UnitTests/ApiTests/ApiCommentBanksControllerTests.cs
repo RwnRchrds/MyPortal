@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Net;
+using System.Web.Http;
 using System.Web.Http.Results;
 using AutoMapper;
 using MyPortal.Controllers.Api;
@@ -46,6 +47,28 @@ namespace MyPortal.UnitTests.ApiTests
             var result = _controller.GetCommentBanks();
             
             Assert.AreEqual(3, result.Count());
+        }
+
+        [Test]
+        public void GetCommentBank_ReturnsCommentBank()
+        {
+            var commentBank = _context.CommentBanks.SingleOrDefault(x => x.Name == "Opening");
+            
+            Assert.IsNotNull(commentBank);
+
+            var result = _controller.GetCommentBank(commentBank.Id);
+            
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Opening", result.Name);
+        }
+
+        [Test]
+        public void GetCommentBank_CommentBankDoesNotExist_ReturnsNotFound()
+        {
+            const int commentBankId = 9999;
+
+            var ex = Assert.Throws<HttpResponseException>(() => _controller.GetCommentBank(commentBankId));
+            Assert.AreEqual(HttpStatusCode.NotFound, ex.Response.StatusCode);
         }
 
         [Test]
@@ -143,6 +166,27 @@ namespace MyPortal.UnitTests.ApiTests
             Assert.IsNotNull(result);
             Assert.AreEqual(HttpStatusCode.NotFound, result.StatusCode);
             Assert.AreEqual("Comment bank not found", result.Content);
+        }
+
+        [Test]
+        public void CommentBankHasComments_ReturnsTrue()
+        {
+            var commentBank = _context.CommentBanks.SingleOrDefault(x => x.Name == "Opening");
+            
+            Assert.IsNotNull(commentBank);
+
+            var result = _controller.CommentBankHasComments(commentBank.Id);
+            
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void CommentBankHasComments_CommentBankDoesNotExist_ReturnsNotFound()
+        {
+            const int commentBankId = 9999;
+
+            var ex = Assert.Throws<HttpResponseException>(() => _controller.CommentBankHasComments(commentBankId));            
+            Assert.AreEqual(HttpStatusCode.NotFound, ex.Response.StatusCode);
         }
     }
 }

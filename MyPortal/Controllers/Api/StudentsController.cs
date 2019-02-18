@@ -286,12 +286,12 @@ namespace MyPortal.Controllers.Api
 
         [HttpPut]
         [Authorize(Roles = "Staff, SeniorStaff")]
-        public IHttpActionResult UpdateStudent(int id, Student student)
+        public IHttpActionResult UpdateStudent(Student student)
         {
             if (student == null || !ModelState.IsValid)
                 return Content(HttpStatusCode.BadRequest, "Invalid request data");
 
-            var studentInDb = _context.Students.SingleOrDefault(s => s.Id == id);
+            var studentInDb = _context.Students.SingleOrDefault(s => s.Id == student.Id);
 
             if (studentInDb == null)
             {
@@ -309,6 +309,76 @@ namespace MyPortal.Controllers.Api
             _context.SaveChanges();
 
             return Ok("Student updated");
+        }
+
+        [HttpGet]
+        [Route("api/students/hasLogs/{id}")]
+        public bool StudentHasLogs(int id)
+        {
+            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == id);
+
+            if (studentInDb == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return studentInDb.Logs.Any();
+        }
+        
+        [HttpGet]
+        [Route("api/students/hasResults/{id}")]
+        public bool StudentHasResults(int id)
+        {
+            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == id);
+
+            if (studentInDb == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return studentInDb.Results.Any();
+        }
+        
+        [HttpGet]
+        [Route("api/students/hasBasketItems/{id}")]
+        public bool StudentHasBasketItems(int id)
+        {
+            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == id);
+
+            if (studentInDb == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return studentInDb.BasketItems.Any();
+        }
+        
+        [HttpGet]
+        [Route("api/students/hasDocuments/{id}")]
+        public bool StudentHasDocuments(int id)
+        {
+            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == id);
+
+            if (studentInDb == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return studentInDb.StudentDocuments.Any();
+        }
+        
+        [HttpGet]
+        [Route("api/students/hasSales/{id}")]
+        public bool StudentHasSales(int id)
+        {
+            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == id);
+
+            if (studentInDb == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return studentInDb.Sales.Any();
         }
     }
 }

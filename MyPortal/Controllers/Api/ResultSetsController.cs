@@ -144,5 +144,19 @@ namespace MyPortal.Controllers.Api
             _context.SaveChanges();
             return Ok("Result set marked as current");
         }
+
+        [HttpGet]
+        [Route("api/resultSets/hasResults/{id}")]
+        public bool ResultSetHasResults(int id)
+        {
+            var resultSet = _context.ResultSets.SingleOrDefault(x => x.Id == id);
+
+            if (resultSet == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+            
+            return resultSet.Results.Any();
+        }
     }
 }

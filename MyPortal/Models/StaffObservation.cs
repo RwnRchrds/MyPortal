@@ -20,8 +20,8 @@ namespace MyPortal.Models
 
         [Required] [StringLength(255)] public string Outcome { get; set; }
 
-        public virtual Staff Staff { get; set; }
+        public virtual Staff Observee { get; set; }
 
-        public virtual Staff Staff1 { get; set; }
+        public virtual Staff Observer { get; set; }
     }
 }
