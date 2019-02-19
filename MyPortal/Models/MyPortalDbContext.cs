@@ -20,6 +20,7 @@ namespace MyPortal.Models
         public virtual DbSet<Document> Documents { get; set; }
         public virtual DbSet<Grade> Grades { get; set; }
         public virtual DbSet<GradeSet> GradeSets { get; set; }
+        public virtual DbSet<LessonPlan> LessonPlans { get; set; }
         public virtual DbSet<Log> Logs { get; set; }
         public virtual DbSet<LogType> LogTypes { get; set; }
         public virtual DbSet<Product> Products { get; set; }
@@ -32,6 +33,7 @@ namespace MyPortal.Models
         public virtual DbSet<StaffObservation> StaffObservations { get; set; }
         public virtual DbSet<StudentDocument> StudentDocuments { get; set; }
         public virtual DbSet<Student> Students { get; set; }
+        public virtual DbSet<StudyTopic> StudyTopics { get; set; }
         public virtual DbSet<Subject> Subjects { get; set; }
         public virtual DbSet<TrainingCertificate> TrainingCertificates { get; set; }
         public virtual DbSet<TrainingCourse> TrainingCourses { get; set; }
@@ -254,12 +256,26 @@ namespace MyPortal.Models
                 .WithRequired(e => e.Student)
                 .WillCascadeOnDelete(false);
 
+            modelBuilder.Entity<StudyTopic>()
+                .Property(e => e.Name)
+                .IsUnicode(false);
+            
+            modelBuilder.Entity<StudyTopic>()
+                .HasMany(e => e.LessonPlans)
+                .WithRequired(e => e.StudyTopic)
+                .WillCascadeOnDelete(false);
+
             modelBuilder.Entity<Subject>()
                 .Property(e => e.Name)
                 .IsUnicode(false);
 
             modelBuilder.Entity<Subject>()
                 .HasMany(e => e.Results)
+                .WithRequired(e => e.Subject)
+                .WillCascadeOnDelete(false);
+            
+            modelBuilder.Entity<Subject>()
+                .HasMany(e => e.StudyTopics)
                 .WithRequired(e => e.Subject)
                 .WillCascadeOnDelete(false);
 
@@ -298,6 +314,11 @@ namespace MyPortal.Models
 
             modelBuilder.Entity<YearGroup>()
                 .HasMany(e => e.Students)
+                .WithRequired(e => e.YearGroup)
+                .WillCascadeOnDelete(false);
+            
+            modelBuilder.Entity<YearGroup>()
+                .HasMany(e => e.StudyTopics)
                 .WithRequired(e => e.YearGroup)
                 .WillCascadeOnDelete(false);
         }

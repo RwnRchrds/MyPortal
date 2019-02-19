@@ -13,6 +13,7 @@ namespace MyPortal.Models
         {
             RegGroups = new HashSet<RegGroup>();
             Students = new HashSet<Student>();
+            StudyTopics = new HashSet<StudyTopic>();
         }
 
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -32,5 +33,8 @@ namespace MyPortal.Models
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Student> Students { get; set; }
+        
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<StudyTopic> StudyTopics { get; set; }
     }
 }

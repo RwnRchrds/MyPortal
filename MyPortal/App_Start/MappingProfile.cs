@@ -84,6 +84,9 @@ namespace MyPortal.App_Start
 
             CreateMap<CommentDto, Comment>();
             CreateMap<Comment, CommentDto>();
+
+            CreateMap<StudyTopic, StudyTopicDto>();
+            CreateMap<StudyTopicDto, StudyTopic>();
         }
     }
 }

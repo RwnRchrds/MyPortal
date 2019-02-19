@@ -78,6 +78,13 @@ namespace MyPortal.UnitTests.TestData
             #region GradeSets
             var gradeSets = new List<GradeSet>();
             #endregion
+            
+            #region LessonPlans
+            var lessonPlans = new List<LessonPlan>
+            {
+                
+            };
+            #endregion
 
             #region Logs
             var logs = new List<Log>
@@ -215,6 +222,13 @@ namespace MyPortal.UnitTests.TestData
             #region StudentDocuments
             var studentDocuments = new List<StudentDocument>();
             #endregion
+            
+            #region StudyTopics
+            var studyTopics = new List<StudyTopic>
+            {
+                
+            };
+            #endregion
 
             #region Subjects
             var subjects = new List<Subject>
@@ -253,6 +267,7 @@ namespace MyPortal.UnitTests.TestData
             context.Documents.AddRange(documents);
             context.Grades.AddRange(grades);
             context.GradeSets.AddRange(gradeSets);
+            context.LessonPlans.AddRange(lessonPlans);
             context.Logs.AddRange(logs);
             context.LogTypes.AddRange(logTypes);
             context.Products.AddRange(products);
@@ -265,6 +280,7 @@ namespace MyPortal.UnitTests.TestData
             context.StaffObservations.AddRange(staffObservations);
             context.Students.AddRange(students);
             context.StudentDocuments.AddRange(studentDocuments);
+            context.StudyTopics.AddRange(studyTopics);
             context.Subjects.AddRange(subjects);
             context.TrainingCertificates.AddRange(trainingCertificates);
             context.TrainingCourses.AddRange(trainingCourses);
@@ -339,6 +355,18 @@ namespace MyPortal.UnitTests.TestData
 
                 cfg.CreateMap<GradeDto, Grade>();
                 cfg.CreateMap<Grade, GradeDto>();
+
+                cfg.CreateMap<Comment, CommentDto>();
+                cfg.CreateMap<CommentDto, Comment>();
+
+                cfg.CreateMap<CommentBankDto, CommentBank>();
+                cfg.CreateMap<CommentBank, CommentBankDto>();
+
+                cfg.CreateMap<StudyTopic, StudyTopicDto>();
+                cfg.CreateMap<StudyTopicDto, StudyTopic>();
+
+                cfg.CreateMap<LessonPlan, LessonPlanDto>();
+                cfg.CreateMap<LessonPlanDto, LessonPlan>();
             });
         }
     }

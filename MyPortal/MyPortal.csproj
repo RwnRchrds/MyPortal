@@ -242,6 +242,7 @@
     <Compile Include="Dtos\GradeSetDto.cs" />
     <Compile Include="Dtos\Identity\RoleDto.cs" />
     <Compile Include="Dtos\Identity\UserDto.cs" />
+    <Compile Include="Dtos\LessonPlanDto.cs" />
     <Compile Include="Dtos\LogDto.cs" />
     <Compile Include="Dtos\LogTypeDto.cs" />
     <Compile Include="Dtos\ProductDto.cs" />
@@ -254,6 +255,7 @@
     <Compile Include="Dtos\StaffObservationDto.cs" />
     <Compile Include="Dtos\StudentDocumentDto.cs" />
     <Compile Include="Dtos\StudentDto.cs" />
+    <Compile Include="Dtos\StudyTopicDto.cs" />
     <Compile Include="Dtos\SubjectDto.cs" />
     <Compile Include="Dtos\TrainingCertificateDto.cs" />
     <Compile Include="Dtos\TrainingCourseDto.cs" />
@@ -273,6 +275,7 @@
     <Compile Include="Models\Document.cs" />
     <Compile Include="Models\Grade.cs" />
     <Compile Include="Models\GradeSet.cs" />
+    <Compile Include="Models\LessonPlan.cs" />
     <Compile Include="Models\Log.cs" />
     <Compile Include="Models\LogType.cs" />
     <Compile Include="Models\Misc\BalanceAdjustment.cs" />
@@ -298,6 +301,7 @@
     <Compile Include="Models\StaffObservation.cs" />
     <Compile Include="Models\Student.cs" />
     <Compile Include="Models\StudentDocument.cs" />
+    <Compile Include="Models\StudyTopic.cs" />
     <Compile Include="Models\Subject.cs" />
     <Compile Include="Models\TrainingCertificate.cs" />
     <Compile Include="Models\TrainingCourse.cs" />

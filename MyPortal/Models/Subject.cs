@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
+using System.Security.Policy;
 
 namespace MyPortal.Models
 {
@@ -12,6 +13,7 @@ namespace MyPortal.Models
         public Subject()
         {
             Results = new HashSet<Result>();
+            StudyTopics = new HashSet<StudyTopic>();
         }
 
         [Display(Name = "ID")] public int Id { get; set; }
@@ -24,6 +26,9 @@ namespace MyPortal.Models
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Result> Results { get; set; }
+        
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<StudyTopic> StudyTopics { get; set; }
 
         public virtual Staff Staff { get; set; }
     }
