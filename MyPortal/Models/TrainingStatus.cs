@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace MyPortal.Models
 {
-    [Table("TrainingStatuses")]
+    [Table("Personnel_TrainingStatuses")]   
     public class TrainingStatus
     {
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

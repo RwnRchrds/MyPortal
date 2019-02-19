@@ -1,7 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Models
 {
+    [Table("Finance_BasketItems")]
     public class BasketItem
     {
         [Display(Name = "ID")] public int Id { get; set; }

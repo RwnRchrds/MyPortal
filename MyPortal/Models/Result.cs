@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Models
 {
+    [Table("Assessment_Results")]
     public class Result
     {
         [Key]

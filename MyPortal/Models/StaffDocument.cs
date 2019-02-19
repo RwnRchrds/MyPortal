@@ -1,7 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Models
 {
+    [Table("Core_Documents_Staff")]
     public class StaffDocument
     {
         [Display(Name = "ID")] public int Id { get; set; }

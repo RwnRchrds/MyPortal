@@ -1,10 +1,12 @@
 using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 
 namespace MyPortal.Models
 {
+    [Table("Reporting_CommentBanks")]
     public class CommentBank
     {
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

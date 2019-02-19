@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace MyPortal.Models
 {
+    [Table("Pastoral_RegGroups")]
     public class RegGroup
     {
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

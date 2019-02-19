@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace MyPortal.Models
 {
+    [Table("Core_Documents")]
     public class Document
     {
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

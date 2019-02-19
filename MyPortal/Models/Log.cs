@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Models
 {
+    [Table("Reporting_Logs")]
     public class Log
     {
         [Display(Name = "ID")] public int Id { get; set; }

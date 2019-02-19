@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Models
 {
+    [Table("Personnel_Observations")]
     public class StaffObservation
     {
         [Display(Name = "ID")] public int Id { get; set; }
