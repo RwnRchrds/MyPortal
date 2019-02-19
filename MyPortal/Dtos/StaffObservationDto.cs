@@ -15,8 +15,8 @@ namespace MyPortal.Dtos
 
         [Required] public string Outcome { get; set; }
 
-        public StaffDto Staff { get; set; }
+        public StaffDto Observee { get; set; }
 
-        public StaffDto Staff1 { get; set; }
+        public StaffDto Observer { get; set; }
     }
 }
