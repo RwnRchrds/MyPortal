@@ -224,6 +224,7 @@
     <Compile Include="Controllers\Api\SalesController.cs" />
     <Compile Include="Controllers\Api\StaffController.cs" />
     <Compile Include="Controllers\Api\StudentsController.cs" />
+    <Compile Include="Controllers\Api\StudyTopicsController.cs" />
     <Compile Include="Controllers\Api\SubjectsController.cs" />
     <Compile Include="Controllers\Api\TrainingCertificatesController.cs" />
     <Compile Include="Controllers\Api\TrainingCoursesController.cs" />
@@ -331,6 +332,7 @@
     <Compile Include="ViewModels\StudentResultsViewModel.cs" />
     <Compile Include="ViewModels\StudentSalesHistoryViewModel.cs" />
     <Compile Include="ViewModels\StudentStoreViewModel.cs" />
+    <Compile Include="ViewModels\StudyTopicsViewModel.cs" />
     <Compile Include="ViewModels\SubjectsViewModel.cs" />
     <Compile Include="ViewModels\TrainingCoursesViewModel.cs" />
     <Compile Include="ViewModels\UserDetailsViewModel.cs" />
@@ -664,6 +666,7 @@
     <Content Include="Scripts\umd\popper.min.js" />
     <Content Include="Views\Staff\CommentBanks.cshtml" />
     <Content Include="Views\Staff\Comments.cshtml" />
+    <Content Include="Views\Staff\StudyTopics.cshtml" />
     <Content Include="Views\Staff\Subjects.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

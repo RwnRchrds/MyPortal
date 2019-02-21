@@ -35,7 +35,7 @@
                 <h4 class="modal-title">New Comment Bank</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/commentBanks/create", HttpMethod = "POST", OnSuccess = "newCommentBankSuccess", OnFailure = "newCommentBankFailure" }, new { id = "newResultSetForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/commentBanks/create", HttpMethod = "POST", OnSuccess = "newCommentBankSuccess", OnFailure = "newCommentBankFailure" }, new { id = "newCommentBankForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">

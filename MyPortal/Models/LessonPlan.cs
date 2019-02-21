@@ -11,9 +11,11 @@ namespace MyPortal.Models
 
         [Display(Name = "Study Topic")]
         public int StudyTopicId { get; set; }
+        
+        [Required] public string Title { get; set; }
 
         [Required]
-        public string Content { get; set; }
+        public string PlanContent { get; set; }
 
         public virtual StudyTopic StudyTopic { get; set; }
     }

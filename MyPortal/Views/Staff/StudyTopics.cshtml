@@ -1,0 +1,215 @@
+@model MyPortal.ViewModels.StudyTopicsViewModel
+
+@{
+    ViewBag.Title = "Study Topics";
+    Layout = "~/Views/Shared/_LayoutStaff.cshtml";
+}
+
+<div class="container float-left">
+    <h2 class="mp-page-title">Study Topics</h2>
+    <hr/>
+</div>
+
+<div class="container float-left">
+    <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#NewStudyTopicModal">New Study Topic</button>
+    <hr/>
+</div>
+
+<div class="container float-left">
+    <table class="table table-bordered table-hover mp-table mp-table-link" id="studyTopics">
+        <thead>
+        <tr>
+            <th>Name</th>            
+            <th>Subject</th>
+            <th>Year Group</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div id="NewStudyTopicModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New Study Topic</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/studyTopics/create", HttpMethod = "POST", OnSuccess = "newStudyTopicSuccess", OnFailure = "newStudyTopicFailure" }, new { id = "newStudyTopicForm" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.StudyTopic.Name)
+                        @Html.TextBoxFor(x => x.StudyTopic.Name, new { @class = "form-control", Name = "Name" })
+                        @Html.ValidationMessageFor(x => x.StudyTopic.Name)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.StudyTopic.SubjectId)
+                        @Html.DropDownListFor(x => x.StudyTopic.SubjectId, new SelectList(Model.Subjects, "Id", "Name"), "Select Subject", new {@class = "form-control", Name = "SubjectId"})
+                        @Html.ValidationMessageFor(x => x.StudyTopic.SubjectId)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.StudyTopic.YearGroupId)
+                        @Html.DropDownListFor(x => x.StudyTopic.YearGroupId, new SelectList(Model.YearGroups, "Id", "Name"), "Select Year Group", new {@class = "form-control", Name = "YearGroupId"})
+                        @Html.ValidationMessageFor(x => x.StudyTopic.YearGroupId)
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="EditStudyTopicModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New Study Topic</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/studyTopics/update", HttpMethod = "POST", OnSuccess = "editStudyTopicSuccess", OnFailure = "editStudyTopicFailure" }, new { id = "editStudyTopicForm" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.StudyTopic.Name)
+                        @Html.TextBoxFor(x => x.StudyTopic.Name, new { @class = "form-control", Name = "Name", id = "editStudyTopicNameControl" })
+                        @Html.ValidationMessageFor(x => x.StudyTopic.Name)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.StudyTopic.SubjectId)
+                        @Html.DropDownListFor(x => x.StudyTopic.SubjectId, new SelectList(Model.Subjects, "Id", "Name"), "Select Subject", new {@class = "form-control", Name = "SubjectId", id = "editStudyTopicSubjectControl"})
+                        @Html.ValidationMessageFor(x => x.StudyTopic.SubjectId)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.StudyTopic.YearGroupId)
+                        @Html.DropDownListFor(x => x.StudyTopic.YearGroupId, new SelectList(Model.YearGroups, "Id", "Name"), "Select Year Group", new {@class = "form-control", Name = "YearGroupId", id = "editStudyTopicYearGroupControl"})
+                        @Html.ValidationMessageFor(x => x.StudyTopic.YearGroupId)
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(x => x.StudyTopic.Id, new { Name = "Id", id = "editStudyTopicIdControl" })
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+@Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function() {
+            $('.modal').on('hidden.bs.modal',
+                function() {
+                    $(this).find('form').trigger('reset');
+                });
+
+            $("#studyTopics").DataTable({
+                ajax: {
+                    url: "/api/studyTopics/fetch/all",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "name"
+                    },
+                    {
+                        data: "subject.name"
+                    },
+                    {
+                        data: "yearGroup.name"
+                    },
+                    {
+                        data: "id",
+                        render: function(data) {
+                            return "<button type='button' class='btn btn-xs btn-warning mp-btn-action-left js-edit' data-topic-id=" +
+                                data +
+                                "><i class=\"far fa-edit\"></i></button> " +
+                                "<button type='button' class='btn btn-xs btn-danger mp-btn-action-right js-delete' data-topic-id=" +
+                                data +
+                                "><i class=\"far fa-trash-alt\"></i></button>";
+                        }
+                    }
+                ],
+                "language": {
+                    "emptyTable": "No study topics to display"
+                }
+            });
+
+            $("#studyTopics").on("click",
+                ".js-edit",
+                function() {
+                    var button = $(this);
+                    var topicId = button.attr("data-topic-id");
+                    $.ajax({
+                        url: "/api/studyTopics/fetch/byId/" + topicId,
+                        method: "GET",
+                        success: function(result) {
+                            $("#editStudyTopicNameControl").val(result["name"]);
+                            $("#editStudyTopicSubjectControl").val(result["subjectId"]);
+                            $("#editStudyTopicYearGroupControl").val(result["yearGroupId"]);
+                            $("#editStudyTopicIdControl").val(result["id"]);
+                        },
+                        error: function() {
+                            toastr.error("Failed to load study topic data");
+                        }
+                    });
+                    $("#EditStudyTopicModal").modal('toggle');
+                });
+
+            $("#studyTopics").on("click",
+                ".js-delete",
+                function() {
+                    var button = $(this);
+                    bootbox.confirm("Are you sure you wish to delete this study topic and its lesson plans?",
+                        function(result) {
+                            if (result) {
+                                $.ajax({
+                                    url: "/api/studyTopics/delete/" + button.attr("data-topic-id"),
+                                    method: "DELETE",
+                                    success: function(a) {
+                                        $("#studyTopics").DataTable().ajax.reload();
+                                        toastr.success(a);
+                                    },
+                                    error: function(e) {
+                                        toastr.error(e.responseJSON);
+                                    }
+                                });
+                            }
+                        });
+                });
+        });
+        
+        function newStudyTopicSuccess(result) {
+            $("#NewStudyTopicModal").modal('hide');
+            $("#studyTopics").DataTable().ajax.reload();
+            toastr.success(result);
+        }
+
+        function newStudyTopicFailure(result) {
+            $("#NewStudyTopicModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+
+        function editStudyTopicSuccess(result) {
+            $("#EditStudyTopicModal").modal('hide');
+            $("#studyTopics").DataTable().ajax.reload();
+            toastr.success(result);
+        }
+
+        function editStudyTopicFailure(result) {
+            $("#EditStudyTopicModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }        
+    </script>
+}

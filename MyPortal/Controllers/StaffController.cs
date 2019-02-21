@@ -327,7 +327,24 @@ namespace MyPortal.Controllers
             viewModel.Staff = _context.Staff.OrderBy(x => x.LastName).ToList();
 
             return View(viewModel);
-        }        
+        }
+        
+        // Menu | Study Topics --> Study Topics List (All)
+        [Authorize(Roles = "SeniorStaff")]
+        [Route("Staff/Data/StudyTopics")]
+        public ActionResult StudyTopics()
+        {
+            var viewModel = new StudyTopicsViewModel();
+
+            var subjects = _context.Subjects.OrderBy(x => x.Name).ToList();
+
+            var yearGroups = _context.YearGroups.OrderBy(x => x.Name).ToList();
+
+            viewModel.Subjects = subjects;
+            viewModel.YearGroups = yearGroups;
+
+            return View(viewModel);
+        }
 
     }
 }

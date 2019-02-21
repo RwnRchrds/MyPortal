@@ -17,9 +17,11 @@ namespace MyPortal.Models
         [Display(Name="ID")]
         public int Id { get; set; }
 
+        [Required]
         [Display(Name = "Subject")]
         public int SubjectId { get; set; }
 
+        [Required]
         [Display(Name = "Year Group")]
         public int YearGroupId { get; set; }
 
