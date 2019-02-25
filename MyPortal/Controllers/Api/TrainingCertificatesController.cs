@@ -88,7 +88,9 @@ namespace MyPortal.Controllers.Api
             var staffInDb = _context.Staff.Single(x => x.Id == staff);
 
             if (staffInDb == null)
+            {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
+            }               
 
             return _context.TrainingCertificates
                 .Where(c => c.StaffId == staff)
@@ -104,14 +106,18 @@ namespace MyPortal.Controllers.Api
                 _context.TrainingCertificates.Single(x => x.StaffId == data.StaffId && x.CourseId == data.CourseId);
 
             if (certInDb == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);   
+            }                
 
             var userId = User.Identity.GetUserId();
 
             var userPerson = _context.Staff.SingleOrDefault(x => x.UserId == userId);
 
-            if (data.StaffId == userPerson.Id)
-                return Content(HttpStatusCode.BadRequest, "Cannot modify a certificate for yourself");
+            if (userPerson != null && data.StaffId == userPerson.Id)
+            {
+                return Content(HttpStatusCode.BadRequest, "Cannot modify a certificate for yourself");   
+            }                
 
             certInDb.StatusId = data.StatusId;
 

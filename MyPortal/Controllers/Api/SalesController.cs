@@ -109,7 +109,9 @@ namespace MyPortal.Controllers.Api
             var product = _context.Products.SingleOrDefault(x => x.Id == sale.ProductId);
 
             if (student == null || product == null)
+            {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
+            }                
 
             /*if (product.Price > student.AccountBalance)
                 throw new HttpResponseException(HttpStatusCode.BadRequest);*/
@@ -132,8 +134,10 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.NotFound, "Sale not found");
 
             if (saleInDb.Processed)
+            {
                 return Content(HttpStatusCode.BadRequest, "Sale already marked as processed");
-
+            }
+                
             saleInDb.Processed = true;
 
             _context.SaveChanges();
@@ -155,10 +159,14 @@ namespace MyPortal.Controllers.Api
             var product = _context.Products.SingleOrDefault(x => x.Id == sale.ProductId);
 
             if (student == null)
+            {
                 return Content(HttpStatusCode.NotFound, "Student not found");
+            }
 
             if (product == null)
+            {
                 return Content(HttpStatusCode.NotFound, "Product not found");
+            }                
 
             student.AccountBalance -= product.Price;
 
@@ -179,20 +187,27 @@ namespace MyPortal.Controllers.Api
             var student = _context.Students.SingleOrDefault(x => x.Id == data.StudentId);
 
             if (student == null)
+            {
                 return Content(HttpStatusCode.NotFound, "Student not found");
+            }
+                
 
             //Obtain items from student's shopping basket
             var basket = _context.BasketItems.Where(x => x.StudentId == data.StudentId);
 
             //Check there are actually items in the basket
             if (!basket.Any())
+            {
                 return Content(HttpStatusCode.BadRequest, "There are no items in your basket");
+            }                
 
             //Check student has enough money to afford all items
             var totalCost = basket.Sum(x => x.Product.Price);
 
             if (totalCost > student.AccountBalance)
+            {
                 return Content(HttpStatusCode.BadRequest, "Insufficient funds");
+            }                
 
             //Process sales for each item
             foreach (var item in basket)

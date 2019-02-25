@@ -103,8 +103,8 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         public IHttpActionResult UpdateLog(Log log)
         {
-            if (log == null)
-                return Content(HttpStatusCode.BadRequest, "No valid data was received");
+            if (!ModelState.IsValid)
+                return Content(HttpStatusCode.BadRequest, "Invalid data");
 
             var logInDb = _context.Logs.SingleOrDefault(l => l.Id == log.Id);
 

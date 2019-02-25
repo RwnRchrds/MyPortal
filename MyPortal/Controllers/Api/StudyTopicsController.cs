@@ -22,15 +22,15 @@ namespace MyPortal.Controllers.Api
             _context = context;
         }
 
-        [System.Web.Http.HttpGet]
-        [System.Web.Http.Route("api/studyTopics/fetch/all")]
+        [HttpGet]
+        [Route("api/studyTopics/fetch/all")]
         public IEnumerable<StudyTopicDto> GetStudyTopics()
         {
             return _context.StudyTopics.ToList().Select(Mapper.Map<StudyTopic, StudyTopicDto>);
         }
 
-        [System.Web.Http.HttpGet]
-        [System.Web.Http.Route("api/studyTopics/fetch/byId/{id}")]
+        [HttpGet]
+        [Route("api/studyTopics/fetch/byId/{id}")]
         public StudyTopicDto GetStudyTopic(int id)
         {
             var studyTopic = _context.StudyTopics.SingleOrDefault(x => x.Id == id);

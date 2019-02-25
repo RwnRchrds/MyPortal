@@ -69,7 +69,10 @@ namespace MyPortal.Controllers.Api
                             Value = values[5 + i]
                         };
 
-                        if (result.Value.Equals("")) continue;
+                        if (result.Value.Equals(""))
+                        {
+                            continue;
+                        }
                         _context.Results.Add(result);
                         numResults++;
                     }

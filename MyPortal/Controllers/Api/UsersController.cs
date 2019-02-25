@@ -39,7 +39,9 @@ namespace MyPortal.Controllers.Api
             var roleToAdd = _identity.Roles.FirstOrDefault(r => r.Name == data.RoleName);
 
             if (userInDb == null || roleToAdd == null)
-                return Content(HttpStatusCode.BadRequest, "User or role does not exist");
+            {
+                return Content(HttpStatusCode.BadRequest, "User or role does not exist");   
+            }                
 
             switch (data.RoleName)
             {
@@ -54,24 +56,34 @@ namespace MyPortal.Controllers.Api
                 case "SeniorStaff":
                 case "Admin":
                     if (await _userManager.IsInRoleAsync(data.UserId, "Student"))
-                        return Content(HttpStatusCode.BadRequest, "Students cannot be added to staff roles");
+                    {
+                        return Content(HttpStatusCode.BadRequest, "Students cannot be added to staff roles");   
+                    }                        
                     break;
 
                 case "Student":
                     if (await _userManager.IsInRoleAsync(data.UserId, "Staff"))
+                    {
                         return Content(HttpStatusCode.BadRequest, "Staff user cannot be added to student role");
+                    }
 
                     if (await _userManager.IsInRoleAsync(data.UserId, "Student"))
-                        return Content(HttpStatusCode.BadRequest, "User is already member of student role");
+                    {
+                        return Content(HttpStatusCode.BadRequest, "User is already member of student role");   
+                    }                        
 
                     break;
 
                 case "Staff":
                     if (await _userManager.IsInRoleAsync(data.UserId, "Student"))
-                        return Content(HttpStatusCode.BadRequest, "Student user cannot be added to staff role");
+                    {
+                        return Content(HttpStatusCode.BadRequest, "Student user cannot be added to staff role");   
+                    }
 
                     if (await _userManager.IsInRoleAsync(data.UserId, "Staff"))
-                        return Content(HttpStatusCode.BadRequest, "User is already member of staff role");
+                    {
+                        return Content(HttpStatusCode.BadRequest, "User is already member of staff role");   
+                    }                        
 
                     break;
                 default:
@@ -79,12 +91,16 @@ namespace MyPortal.Controllers.Api
             }
 
             if (await _userManager.IsInRoleAsync(data.UserId, data.RoleName))
-                return Content(HttpStatusCode.BadRequest, "User is already in role");
+            {
+                return Content(HttpStatusCode.BadRequest, "User is already in role");                   
+            }                
 
             var result = await _userManager.AddToRoleAsync(data.UserId, data.RoleName);
 
             if (result.Succeeded)
-                return Ok("Role added");
+            {
+                return Ok("Role added");   
+            }                           
 
             return BadRequest();
         }
@@ -105,13 +121,19 @@ namespace MyPortal.Controllers.Api
                                  _context.Staff.Any(x => x.UserId == data.UserId);
 
             if (userInDb == null)
-                return Content(HttpStatusCode.BadRequest, "User not found");
+            {
+                return Content(HttpStatusCode.BadRequest, "User not found");   
+            }
 
             if (roleToAdd == null)
-                return Content(HttpStatusCode.BadRequest, "Role not found");
+            {
+                return Content(HttpStatusCode.BadRequest, "Role not found");   
+            }
 
             if (userIsAttached)
-                return Content(HttpStatusCode.BadRequest, "User is already attached to a person");
+            {
+                return Content(HttpStatusCode.BadRequest, "User is already attached to a person");   
+            }                
 
             if (data.RoleName == "Staff")
             {
@@ -120,7 +142,9 @@ namespace MyPortal.Controllers.Api
                 await _userManager.AddToRoleAsync(data.UserId, "Staff");
                 var personInDb = _context.Staff.Single(x => x.Id == data.PersonId);
                 if (personInDb.UserId != null)
-                    return Content(HttpStatusCode.BadRequest, "Another user is already attached to this person");
+                {
+                    return Content(HttpStatusCode.BadRequest, "Another user is already attached to this person");   
+                }                    
                 personInDb.UserId = userInDb.Id;
                 _context.SaveChanges();
                 return Ok("User assigned to person");
@@ -133,7 +157,9 @@ namespace MyPortal.Controllers.Api
                 await _userManager.AddToRoleAsync(data.UserId, "Student");
                 var personInDb = _context.Students.Single(x => x.Id == data.PersonId);
                 if (personInDb.UserId != null)
-                    return Content(HttpStatusCode.BadRequest, "Another user is already attached to this person");
+                {
+                    return Content(HttpStatusCode.BadRequest, "Another user is already attached to this person");   
+                }                    
                 personInDb.UserId = userInDb.Id;
                 _context.SaveChanges();
                 return Ok("User assigned to person");
@@ -148,11 +174,17 @@ namespace MyPortal.Controllers.Api
         public async Task<IHttpActionResult> ChangePassword([FromBody] ChangePasswordModel data)
         {
             if (data.Password != data.Confirm)
+            {
                 return Content(HttpStatusCode.BadRequest, "Passwords do not match");
+            }
+                            
 
             var userInDb = _identity.Users.FirstOrDefault(user => user.Id == data.UserId);
+            
             if (userInDb == null)
-                return Content(HttpStatusCode.NotFound, "User not found");
+            {
+                return Content(HttpStatusCode.NotFound, "User not found");   
+            }                
 
             var removePassword = await _userManager.RemovePasswordAsync(data.UserId);
 
@@ -161,7 +193,9 @@ namespace MyPortal.Controllers.Api
                 var addNewPassword = await _userManager.AddPasswordAsync(data.UserId, data.Password);
 
                 if (addNewPassword.Succeeded)
-                    return Ok("Password reset");
+                {
+                    return Ok("Password reset");   
+                }                    
 
                 return BadRequest();
             }
@@ -177,16 +211,23 @@ namespace MyPortal.Controllers.Api
             var userInDb = _identity.Users.FirstOrDefault(x => x.Id == userId);
 
             if (userInDb == null)
-                return Content(HttpStatusCode.NotFound, "User not found");
+            {
+                return Content(HttpStatusCode.NotFound, "User not found");   
+            }                
 
             var userRoles = await _userManager.GetRolesAsync(userId);
 
-            foreach (var role in userRoles) await _userManager.RemoveFromRoleAsync(userId, role);
+            foreach (var role in userRoles)
+            {
+                await _userManager.RemoveFromRoleAsync(userId, role);
+            }
 
             var result = await _userManager.DeleteAsync(userInDb);
 
             if (result.Succeeded)
-                return Ok("User deleted");
+            {
+                return Ok("User deleted");                   
+            }                
 
             return BadRequest();
         }
@@ -200,7 +241,9 @@ namespace MyPortal.Controllers.Api
                                  _context.Staff.Any(x => x.UserId == user.Id);
 
             if (!userIsAttached)
-                return Content(HttpStatusCode.BadRequest, "User is not attached to a person");
+            {
+                return Content(HttpStatusCode.BadRequest, "User is not attached to a person");   
+            }                
 
             if (await _userManager.IsInRoleAsync(user.Id, "Staff"))
             {
@@ -212,7 +255,9 @@ namespace MyPortal.Controllers.Api
                 var result = await _userManager.RemoveFromRolesAsync(user.Id, roles.ToArray());
 
                 if (result.Succeeded)
-                    return Ok("User detached from person");
+                {
+                    return Ok("User detached from person");   
+                }                    
             }
 
             if (await _userManager.IsInRoleAsync(user.Id, "Student"))
@@ -225,7 +270,10 @@ namespace MyPortal.Controllers.Api
                 var result = await _userManager.RemoveFromRolesAsync(user.Id, roles.ToArray());
 
                 if (result.Succeeded)
+                {
                     return Ok("User detached from person");
+                }
+                                    
             }
 
             return BadRequest();
@@ -254,7 +302,10 @@ namespace MyPortal.Controllers.Api
             data.Id = Guid.NewGuid().ToString();
 
             if (data.Username.IsNullOrWhiteSpace() || data.Password.IsNullOrWhiteSpace())
+            {
                 return Content(HttpStatusCode.BadRequest, "Invalid Data");
+            }
+                            
 
             var user = new ApplicationUser
             {
@@ -266,7 +317,9 @@ namespace MyPortal.Controllers.Api
             var result = await _userManager.CreateAsync(user, data.Password);
 
             if (result.Succeeded)
-                return Ok("User added");
+            {
+                return Ok("User added");   
+            }                
 
             return BadRequest();
         }
@@ -280,7 +333,9 @@ namespace MyPortal.Controllers.Api
                                  _context.Staff.Any(x => x.UserId == userId);
             var userInDb = _identity.Users.FirstOrDefault(user => user.Id == userId);
             if (userInDb == null)
-                return Content(HttpStatusCode.NotFound, "User not found");
+            {
+                return Content(HttpStatusCode.NotFound, "User not found");   
+            }                
 
             //get user's assigned roles
             var userRoles = await _userManager.GetRolesAsync(userId);
@@ -289,15 +344,22 @@ namespace MyPortal.Controllers.Api
             var roleToRemove =
                 userRoles.FirstOrDefault(role => role.Equals(roleName, StringComparison.InvariantCultureIgnoreCase));
             if (roleToRemove == null)
-                return Content(HttpStatusCode.NotFound, "User is not in role");
+            {
+                return Content(HttpStatusCode.NotFound, "User is not in role");   
+            }
 
             if (userIsAttached && (roleName == "Staff" || roleName == "Student"))
+            {
                 return Content(HttpStatusCode.BadRequest,
-                    "User cannot be removed from a primary role while attached to a person");
+                    "User cannot be removed from a primary role while attached to a person");   
+            }                
 
             var result = await _userManager.RemoveFromRoleAsync(userId, roleToRemove);
+            
             if (result.Succeeded)
-                return Ok();
+            {
+                return Ok();   
+            }                
 
             return BadRequest();
         }

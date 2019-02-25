@@ -25,10 +25,14 @@ namespace MyPortal.Controllers.Api
             var courseInDb = _context.TrainingCourses.Single(x => x.Id == courseId);
 
             if (courseInDb == null)
-                return Content(HttpStatusCode.NotFound, "Training course not found");
+            {
+                return Content(HttpStatusCode.NotFound, "Training course not found");   
+            }
 
             if (courseInDb.TrainingCertificates.Any())
-                return Content(HttpStatusCode.BadRequest, "Cannot delete course that has issued certificates");
+            {
+                return Content(HttpStatusCode.BadRequest, "Cannot delete course that has issued certificates");   
+            }                
 
             _context.TrainingCourses.Remove(courseInDb);
             _context.SaveChanges();
@@ -48,7 +52,9 @@ namespace MyPortal.Controllers.Api
             var courseInDb = _context.TrainingCourses.Single(x => x.Id == courseId);
 
             if (courseInDb == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);   
+            }                
 
             return Mapper.Map<TrainingCourse, TrainingCourseDto>(courseInDb);
         }
@@ -69,7 +75,9 @@ namespace MyPortal.Controllers.Api
             var courseInDb = _context.TrainingCourses.Single(x => x.Id == course.Id);
 
             if (courseInDb == null)
-                return Content(HttpStatusCode.NotFound, "Training course not found");
+            {
+                return Content(HttpStatusCode.NotFound, "Training course not found");                      
+            }                
 
             courseInDb.Code = course.Code;
             courseInDb.Description = course.Description;

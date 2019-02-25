@@ -108,16 +108,16 @@ namespace MyPortal.UnitTests.ApiTests
             Assert.AreEqual(initialAmount + 1, finalAmount);
         }
 
-        /*[Test]
-        public void CreateComment_InvalidData_ReturnsBadRequest()
-        {
-            var comment = new Comment {Value = "Test"};
-
-            var result = _controller.CreateComment(comment) as NegotiatedContentResult<string>;
-            
-            Assert.AreEqual(HttpStatusCode.BadRequest, result.StatusCode);
-            Assert.AreEqual("Invalid data", result.Content);
-        }*/
+//        [Test]
+//        public void CreateComment_InvalidData_ReturnsBadRequest()
+//        {
+//            var comment = new Comment {Value = "Test"};
+//
+//            var result = _controller.CreateComment(comment) as NegotiatedContentResult<string>;
+//            
+//            Assert.AreEqual(HttpStatusCode.BadRequest, result.StatusCode);
+//            Assert.AreEqual("Invalid data", result.Content);
+//        }
 
         [Test]
         public void UpdateComment_UpdatesComment()
