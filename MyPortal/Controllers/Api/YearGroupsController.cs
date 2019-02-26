@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
@@ -38,10 +37,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/yearGroups/create")]
         public IHttpActionResult CreateYearGroup(YearGroup yearGroup)
         {
-            if (!ModelState.IsValid)
-            {
-                return Content(HttpStatusCode.BadRequest, "Invalid data");
-            }
+            if (!ModelState.IsValid) return Content(HttpStatusCode.BadRequest, "Invalid data");
 
             _context.YearGroups.Add(yearGroup);
             return Ok("Year group added");
@@ -51,17 +47,11 @@ namespace MyPortal.Controllers.Api
         [Route("api/yearGroups/update")]
         public IHttpActionResult UpdateYearGroup(YearGroup yearGroup)
         {
-            if (!ModelState.IsValid)
-            {
-                return Content(HttpStatusCode.BadRequest, "Invalid data");
-            }
+            if (!ModelState.IsValid) return Content(HttpStatusCode.BadRequest, "Invalid data");
 
             var yearGroupInDb = _context.YearGroups.SingleOrDefault(x => x.Id == yearGroup.Id);
 
-            if (yearGroupInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Year group not found");
-            }
+            if (yearGroupInDb == null) return Content(HttpStatusCode.NotFound, "Year group not found");
 
             yearGroupInDb.Name = yearGroup.Name;
             yearGroupInDb.HeadId = yearGroup.HeadId;
@@ -77,10 +67,7 @@ namespace MyPortal.Controllers.Api
         {
             var yearGroupInDb = _context.YearGroups.SingleOrDefault(x => x.Id == id);
 
-            if (yearGroupInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Year group not found");
-            }
+            if (yearGroupInDb == null) return Content(HttpStatusCode.NotFound, "Year group not found");
 
             _context.YearGroups.Remove(yearGroupInDb);
             _context.SaveChanges();

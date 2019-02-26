@@ -4,45 +4,46 @@
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 <body>
-    <!--#region Title-->
-    <div class="container float-left">
-        <h2 class="mp-page-title">Sales</h2>
-        <hr />
-    </div>
-    <!--#endregion-->
-    <!--#region Buttons at Top-->
-    <div class="container float-left">
-        <button type="button" class="btn btn-success mp-btn-top-auto" id="newSaleButton">Sale Entry</button>
-        <hr />
-    </div>
-    <!--#endregion-->
-    <!--#region Sales Table + Selector-->
-    <div class="container float-left">
-        @Html.Label("View Sales")
-        @Html.DropDownList("SelectedStatus", new SelectList(Model.Status, "Pending Only"), new { @class = "form-control", Name = "SaleStatus", id = "selectedStatus" })
-    </div>
+<!--#region Title-->
+<div class="container float-left">
+    <h2 class="mp-page-title">Sales</h2>
+    <hr/>
+</div>
+<!--#endregion-->
+<!--#region Buttons at Top-->
+<div class="container float-left">
+    <button type="button" class="btn btn-success mp-btn-top-auto" id="newSaleButton">Sale Entry</button>
+    <hr/>
+</div>
+<!--#endregion-->
+<!--#region Sales Table + Selector-->
+<div class="container float-left">
+    @Html.Label("View Sales")
+    @Html.DropDownList("SelectedStatus", new SelectList(Model.Status, "Pending Only"), new {@class = "form-control", Name = "SaleStatus", id = "selectedStatus"})
+</div>
 
-    <div class="container float-left mp-margin-top">
-        <table class="table table-bordered table-hover mp-table" id="sales">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Student</th>
-                    <th>Product</th>
-                    <th>Paid</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-    <!--#endregion-->
+<div class="container float-left mp-margin-top">
+    <table class="table table-bordered table-hover mp-table" id="sales">
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Student</th>
+            <th>Product</th>
+            <th>Paid</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+<!--#endregion-->
 </body>
+
 @section scripts
 {
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
 
             function loadSales() {
                 var status = $("#selectedStatus").val();
@@ -61,14 +62,14 @@
                     columns: [
                         {
                             data: "date",
-                            render: function (data) {
+                            render: function(data) {
                                 var date = new Date(data);
                                 return date.toLocaleDateString();
                             }
                         },
                         {
                             data: "student.firstName",
-                            render: function (data, type, sale) {
+                            render: function(data, type, sale) {
                                 return sale.student.lastName + ", " + sale.student.firstName;
                             }
                         },
@@ -81,7 +82,7 @@
                         },
                         {
                             data: "processed",
-                            render: function (data) {
+                            render: function(data) {
                                 if (data === true) {
                                     return "Processed";
                                 }
@@ -92,7 +93,7 @@
                         },
                         {
                             data: "id",
-                            render: function (data) {
+                            render: function(data) {
                                 return "<button type='button' class='btn btn-xs btn-warning js-refund' data-sale-id=" +
                                     data +
                                     "><i class=\"fas fa-reply\"></i></button> " +
@@ -115,32 +116,32 @@
             loadSales();
 
             $("#selectedStatus").on("change",
-                function () {
+                function() {
                     $("#sales").DataTable().clear().destroy();
                     loadSales();
                 });
 
             $("#newSaleButton").on("click",
-                function () {
+                function() {
                     location.replace("/Staff/Finance/Sales/New");
                 });
 
             //Delete Sale When Button Clicked
             $("#sales").on("click",
                 ".js-delete",
-                function () {
+                function() {
                     var button = $(this);
                     bootbox.confirm("Are you sure you wish to delete this sale?",
-                        function (result) {
+                        function(result) {
                             if (result) {
                                 $.ajax({
                                     url: "/api/sales/delete/" + button.attr("data-sale-id"),
                                     method: "DELETE",
-                                    success: function () {
+                                    success: function() {
                                         $("#sales").DataTable().ajax.reload();
                                         toastr.success("Sale deleted");
                                     },
-                                    error: function () {
+                                    error: function() {
                                         toastr.error("Could not delete sale");
                                     }
                                 });
@@ -151,19 +152,19 @@
             //Mark Sale Processed When Button Clicked
             $("#sales").on("click",
                 ".js-complete",
-                function () {
+                function() {
                     var button = $(this);
                     bootbox.confirm("Are you sure you wish to mark this sale as processed?",
-                        function (result) {
+                        function(result) {
                             if (result) {
                                 $.ajax({
                                     url: "/api/sales/complete/" + button.attr("data-sale-id"),
                                     method: "POST",
-                                    success: function (a) {
+                                    success: function(a) {
                                         $("#sales").DataTable().ajax.reload();
                                         toastr.success(a);
                                     },
-                                    error: function (e) {
+                                    error: function(e) {
                                         toastr.error(e.responseJSON);
                                     }
                                 });
@@ -174,19 +175,19 @@
             //Refund Sale When Button Clicked
             $("#sales").on("click",
                 ".js-refund",
-                function () {
+                function() {
                     var button = $(this);
                     bootbox.confirm("Are you sure you wish to refund this sale?",
-                        function (result) {
+                        function(result) {
                             if (result) {
                                 $.ajax({
                                     url: "/api/sales/refund/" + button.attr("data-sale-id"),
                                     method: "DELETE",
-                                    success: function () {
+                                    success: function() {
                                         $("#sales").DataTable().ajax.reload();
                                         toastr.success("Sale refunded");
                                     },
-                                    error: function () {
+                                    error: function() {
                                         toastr.error("Could not refund sale");
                                     }
                                 });

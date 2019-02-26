@@ -51,10 +51,7 @@ namespace MyPortal.Controllers.Api
         {
             var regGroup = _context.RegGroups.SingleOrDefault(x => x.Id == id);
 
-            if (regGroup == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
+            if (regGroup == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
             return Mapper.Map<RegGroup, RegGroupDto>(regGroup);
         }
@@ -63,10 +60,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/regGroups/create")]
         public IHttpActionResult CreateRegGroup(RegGroup regGroup)
         {
-            if (!ModelState.IsValid)
-            {
-                return Content(HttpStatusCode.BadRequest, "Invalid data");
-            }
+            if (!ModelState.IsValid) return Content(HttpStatusCode.BadRequest, "Invalid data");
 
             _context.RegGroups.Add(regGroup);
             _context.SaveChanges();
@@ -80,10 +74,7 @@ namespace MyPortal.Controllers.Api
         {
             var regGroupInDb = _context.RegGroups.SingleOrDefault(x => x.Id == regGroup.Id);
 
-            if (regGroupInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Reg group not found");
-            }
+            if (regGroupInDb == null) return Content(HttpStatusCode.NotFound, "Reg group not found");
 
             regGroupInDb.Name = regGroup.Name;
             regGroupInDb.TutorId = regGroup.TutorId;
@@ -99,10 +90,7 @@ namespace MyPortal.Controllers.Api
         {
             var regGroupInDb = _context.RegGroups.SingleOrDefault(x => x.Id == id);
 
-            if (regGroupInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Reg group not found");
-            }
+            if (regGroupInDb == null) return Content(HttpStatusCode.NotFound, "Reg group not found");
 
             _context.RegGroups.Remove(regGroupInDb);
             _context.SaveChanges();
@@ -116,10 +104,7 @@ namespace MyPortal.Controllers.Api
         {
             var regGroupInDb = _context.RegGroups.SingleOrDefault(x => x.Id == id);
 
-            if (regGroupInDb == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
+            if (regGroupInDb == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
             return regGroupInDb.Students.Any();
         }

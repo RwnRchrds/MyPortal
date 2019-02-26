@@ -33,10 +33,8 @@ namespace MyPortal.Controllers.Api
         [Route("api/results/import/{resultSetId}")]
         public IHttpActionResult UploadResults(int resultSetId)
         {
-            if (!File.Exists((@"C:\MyPortal\Files\Results\import.csv")))
-            {
+            if (!File.Exists(@"C:\MyPortal\Files\Results\import.csv"))
                 return Content(HttpStatusCode.NotFound, "File not found");
-            }                
 
             var stream = new FileStream(@"C:\MyPortal\Files\Results\import.csv", FileMode.Open);
             var subjects = _context.Subjects.OrderBy(x => x.Name).ToList();
@@ -57,10 +55,7 @@ namespace MyPortal.Controllers.Api
                     {
                         var studentMisId = values[4];
                         var student = _context.Students.SingleOrDefault(x => x.MisId == studentMisId);
-                        if (student == null)
-                        {
-                            continue;
-                        }
+                        if (student == null) continue;
                         var result = new Result
                         {
                             StudentId = student.Id,
@@ -69,10 +64,7 @@ namespace MyPortal.Controllers.Api
                             Value = values[5 + i]
                         };
 
-                        if (result.Value.Equals(""))
-                        {
-                            continue;
-                        }
+                        if (result.Value.Equals("")) continue;
                         _context.Results.Add(result);
                         numResults++;
                     }

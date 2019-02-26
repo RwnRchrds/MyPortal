@@ -5,91 +5,91 @@
 }
 
 <body>
-    <div class="container float-left">
-        <h2 class="mp-page-title">Result Sets</h2>
-        <hr/>
-    </div>
+<div class="container float-left">
+    <h2 class="mp-page-title">Result Sets</h2>
+    <hr/>
+</div>
 
-    <div class="container float-left">
-        <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#NewResultSetModal">New Result Set</button>
-        <hr/>
-    </div>
+<div class="container float-left">
+    <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#NewResultSetModal">New Result Set</button>
+    <hr/>
+</div>
 
-    <div class="container float-left">
-        <table class="table table-bordered table-hover mp-table mp-table-link" id="resultSets">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
+<div class="container float-left">
+    <table class="table table-bordered table-hover mp-table mp-table-link" id="resultSets">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
 
-    <div id="NewResultSetModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <!--content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">New Result Set</h4>
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
-                </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/resultSets/new", HttpMethod = "POST", OnSuccess = "newResultSetSuccess", OnFailure = "newResultSetFailure" }, new { id = "newResultSetForm" }))
-                {
-                    <div class="modal-body">
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.ResultSet.Name)
-                            @Html.TextBoxFor(x => x.ResultSet.Name, new { @class = "form-control", Name = "Name" })
-                            @Html.ValidationMessageFor(x => x.ResultSet.Name)
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                    </div>
-                }
+<div id="NewResultSetModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New Result Set</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/resultSets/new", HttpMethod = "POST", OnSuccess = "newResultSetSuccess", OnFailure = "newResultSetFailure"}, new {id = "newResultSetForm"}))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.ResultSet.Name)
+                        @Html.TextBoxFor(x => x.ResultSet.Name, new {@class = "form-control", Name = "Name"})
+                        @Html.ValidationMessageFor(x => x.ResultSet.Name)
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
         </div>
     </div>
+</div>
 
-    <div id="EditResultSetModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <!--content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Edit Result Set</h4>
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
-                </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/resultSets/update", HttpMethod = "POST", OnSuccess = "editResultSetSuccess", OnFailure = "editResultSetFailure" }, new { id = "editResultSetForm" }))
-                {
-                    <div class="modal-body">
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.ResultSet.Name)
-                            @Html.TextBoxFor(x => x.ResultSet.Name, new { @class = "form-control", Name = "Name", id = "EditResultSetNameControl" })
-                            @Html.ValidationMessageFor(x => x.ResultSet.Name)
-                        </div>
-                        <div class="form-group">
-                            @Html.HiddenFor(x => x.ResultSet.Id, new { Name = "Id", id = "EditResultSetIdControl" })
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                    </div>
-                }
+<div id="EditResultSetModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Result Set</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/resultSets/update", HttpMethod = "POST", OnSuccess = "editResultSetSuccess", OnFailure = "editResultSetFailure"}, new {id = "editResultSetForm"}))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.ResultSet.Name)
+                        @Html.TextBoxFor(x => x.ResultSet.Name, new {@class = "form-control", Name = "Name", id = "EditResultSetNameControl"})
+                        @Html.ValidationMessageFor(x => x.ResultSet.Name)
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(x => x.ResultSet.Id, new {Name = "Id", id = "EditResultSetIdControl"})
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
         </div>
     </div>
+</div>
 </body>
 
 @section scripts
 {
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('.modal').on('hidden.bs.modal',
-                function () {
+                function() {
                     $(this).find('form').trigger('reset');
                 });
             $("#resultSets").DataTable({
@@ -103,7 +103,7 @@
                     },
                     {
                         data: "isCurrent",
-                        render: function (data) {
+                        render: function(data) {
                             if (data === true) {
                                 return "Current";
                             }
@@ -114,7 +114,7 @@
                     },
                     {
                         data: "id",
-                        render: function (data) {
+                        render: function(data) {
                             return "<button type='button' class='btn btn-xs btn-warning mp-btn-action-left js-edit' data-set-id=" +
                                 data +
                                 "><i class=\"far fa-edit\"></i></button> " +
@@ -134,17 +134,17 @@
 
             $("#resultSets").on("click",
                 ".js-edit",
-                function () {
+                function() {
                     var button = $(this);
                     var setId = button.attr("data-set-id");
                     $.ajax({
                         url: "/api/resultSets/byId/" + setId,
                         method: "GET",
-                        success: function (result) {
+                        success: function(result) {
                             $("#EditResultSetNameControl").val(result["name"]);
                             $("#EditResultSetIdControl").val(result["id"]);
                         },
-                        error: function () {
+                        error: function() {
                             toastr.error("Failed to load result set data");
                         }
                     });
@@ -153,19 +153,19 @@
 
             $("#resultSets").on("click",
                 ".js-current",
-                function () {
+                function() {
                     var button = $(this);
                     bootbox.confirm("Are you sure you wish to mark this result set as current?",
-                        function (result) {
+                        function(result) {
                             if (result) {
                                 $.ajax({
                                     url: "/api/resultSets/setCurrent/" + button.attr("data-set-id"),
                                     method: "POST",
-                                    success: function (a) {
+                                    success: function(a) {
                                         $("#resultSets").DataTable().ajax.reload();
                                         toastr.success(a);
                                     },
-                                    error: function (e) {
+                                    error: function(e) {
                                         toastr.error(e.responseJSON);
                                     }
                                 });
@@ -175,19 +175,19 @@
 
             $("#resultSets").on("click",
                 ".js-delete",
-                function () {
+                function() {
                     var button = $(this);
                     bootbox.confirm("Are you sure you wish to delete this result set?",
-                        function (result) {
+                        function(result) {
                             if (result) {
                                 $.ajax({
                                     url: "/api/resultSets/delete/" + button.attr("data-set-id"),
                                     method: "DELETE",
-                                    success: function (a) {
+                                    success: function(a) {
                                         $("#resultSets").DataTable().ajax.reload();
                                         toastr.success(a);
                                     },
-                                    error: function (e) {
+                                    error: function(e) {
                                         toastr.error(e.responseJSON);
                                     }
                                 });
@@ -221,4 +221,3 @@
     </script>
     @Scripts.Render("~/bundles/jqueryval")
 }
-

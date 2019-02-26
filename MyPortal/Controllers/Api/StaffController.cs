@@ -30,15 +30,9 @@ namespace MyPortal.Controllers.Api
 
             var uploader = _context.Staff.SingleOrDefault(x => x.UserId == uploaderId);
 
-            if (staff == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Staff not found");
-            }
+            if (staff == null) return Content(HttpStatusCode.NotFound, "Staff not found");
 
-            if (uploader == null)
-            {
-                return Content(HttpStatusCode.BadRequest, "Uploader not found");
-            }                
+            if (uploader == null) return Content(HttpStatusCode.BadRequest, "Uploader not found");
 
             data.Document.IsGeneral = false;
 
@@ -51,12 +45,9 @@ namespace MyPortal.Controllers.Api
             var isUriValid = Uri.TryCreate(data.Document.Url, UriKind.Absolute, out var uriResult)
                              && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 
-            if (!isUriValid)
-            {
-                return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
-            }                
+            if (!isUriValid) return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
 
-            var staffDocument = (data);
+            var staffDocument = data;
 
             var document = staffDocument.Document;
 
@@ -82,19 +73,14 @@ namespace MyPortal.Controllers.Api
 
             var observee = _context.Staff.Single(x => x.Id == data.ObserveeId);
 
-            if (observee == null || observer == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Staff member not found");
-            }
+            if (observee == null || observer == null) return Content(HttpStatusCode.NotFound, "Staff member not found");
 
             if (observee.Id == userPerson.Id)
-            {
                 return Content(HttpStatusCode.BadRequest, "Cannot add an observation for yourself");
-            }                
 
             data.ObserverId = observer.Id;
 
-            var observationToAdd = (data);
+            var observationToAdd = data;
 
             _context.StaffObservations.Add(observationToAdd);
             _context.SaveChanges();
@@ -106,12 +92,9 @@ namespace MyPortal.Controllers.Api
         [Route("api/staff/new")]
         public IHttpActionResult CreateStaff(Staff staffDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return Content(HttpStatusCode.BadRequest, "Invalid data");
-            }               
+            if (!ModelState.IsValid) return Content(HttpStatusCode.BadRequest, "Invalid data");
 
-            var staff = (staffDto);
+            var staff = staffDto;
             _context.Staff
                 .Add(staff);
 
@@ -127,31 +110,20 @@ namespace MyPortal.Controllers.Api
         public IHttpActionResult DeleteStaff(int staffId)
         {
             if (_context.Subjects.Any(x => x.LeaderId == staffId))
-            {
                 return Content(HttpStatusCode.BadRequest, "Cannot delete a subject leader");
-            }
 
             if (_context.YearGroups.Any(x => x.HeadId == staffId))
-            {
                 return Content(HttpStatusCode.BadRequest, "Cannot delete a head of year");
-            }
 
             if (_context.RegGroups.Any(x => x.TutorId == staffId))
-            {
-                return Content(HttpStatusCode.BadRequest, "Cannot delete a reg tutor");   
-            }                
+                return Content(HttpStatusCode.BadRequest, "Cannot delete a reg tutor");
 
             var staffInDb = _context.Staff.Single(x => x.Id == staffId);
 
-            if (staffInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Staff member not found");   
-            }
+            if (staffInDb == null) return Content(HttpStatusCode.NotFound, "Staff member not found");
 
             if (staffInDb.UserId == User.Identity.GetUserId())
-            {
-                return Content(HttpStatusCode.BadRequest, "Cannot delete the current user");   
-            }                
+                return Content(HttpStatusCode.BadRequest, "Cannot delete the current user");
 
             var ownedLogs = _context.Logs.Where(x => x.AuthorId == staffId);
 
@@ -193,15 +165,10 @@ namespace MyPortal.Controllers.Api
         {
             var staffInDb = _context.Staff.SingleOrDefault(x => x.Id == data.Id);
 
-            if (staffInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Staff member not found");   
-            }                
+            if (staffInDb == null) return Content(HttpStatusCode.NotFound, "Staff member not found");
 
             if (_context.Staff.Any(x => x.Code == data.Code) && staffInDb.Code != data.Code)
-            {
                 return Content(HttpStatusCode.BadRequest, "Staff code has already been used");
-            }                
 
             staffInDb.FirstName = data.FirstName;
             staffInDb.LastName = data.LastName;
@@ -222,10 +189,7 @@ namespace MyPortal.Controllers.Api
         {
             var document = _context.StaffDocuments.SingleOrDefault(x => x.Id == documentId);
 
-            if (document == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }            
+            if (document == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
             return Mapper.Map<StaffDocument, StaffDocumentDto>(document);
         }
@@ -238,10 +202,7 @@ namespace MyPortal.Controllers.Api
         {
             var staff = _context.Staff.SingleOrDefault(s => s.Id == staffId);
 
-            if (staff == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);   
-            }                
+            if (staff == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
             var documents = _context.StaffDocuments
                 .Where(x => x.StaffId == staffId)
@@ -257,10 +218,7 @@ namespace MyPortal.Controllers.Api
         {
             var observation = _context.StaffObservations.SingleOrDefault(x => x.Id == observationId);
 
-            if (observation == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);   
-            }                           
+            if (observation == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
             return Mapper.Map<StaffObservation, StaffObservationDto>(observation);
         }
@@ -303,10 +261,7 @@ namespace MyPortal.Controllers.Api
         {
             var staff = _context.Staff.SingleOrDefault(s => s.Code == id);
 
-            if (staff == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);   
-            }                
+            if (staff == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
             return Mapper.Map<Staff, StaffDto>(staff);
         }
@@ -317,17 +272,11 @@ namespace MyPortal.Controllers.Api
         {
             var staffDocument = _context.StaffDocuments.Single(x => x.Id == documentId);
 
-            if (staffDocument == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Document not found");
-            }
-                
+            if (staffDocument == null) return Content(HttpStatusCode.NotFound, "Document not found");
+
             var attachedDocument = staffDocument.Document;
 
-            if (attachedDocument == null)
-            {
-                return Content(HttpStatusCode.BadRequest, "No document attached");   
-            }                
+            if (attachedDocument == null) return Content(HttpStatusCode.BadRequest, "No document attached");
 
             _context.StaffDocuments.Remove(staffDocument);
 
@@ -348,20 +297,12 @@ namespace MyPortal.Controllers.Api
 
             var userStaffProfile = _context.Staff.SingleOrDefault(x => x.UserId == currentUserId);
 
-            if (userStaffProfile == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Current user profile not found");   
-            }
+            if (userStaffProfile == null) return Content(HttpStatusCode.NotFound, "Current user profile not found");
 
-            if (observationToRemove == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Observation not found");   
-            }
+            if (observationToRemove == null) return Content(HttpStatusCode.NotFound, "Observation not found");
 
             if (observationToRemove.ObserveeId == userStaffProfile.Id)
-            {
-                return Content(HttpStatusCode.BadRequest, "Cannot remove an observation for yourself");   
-            }                
+                return Content(HttpStatusCode.BadRequest, "Cannot remove an observation for yourself");
 
             _context.StaffObservations.Remove(observationToRemove);
             _context.SaveChanges();
@@ -375,18 +316,12 @@ namespace MyPortal.Controllers.Api
         {
             var staffDocumentInDb = _context.StaffDocuments.Single(x => x.Id == data.Id);
 
-            if (staffDocumentInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Upload not found");
-            }                
+            if (staffDocumentInDb == null) return Content(HttpStatusCode.NotFound, "Upload not found");
 
             var isUriValid = Uri.TryCreate(data.Document.Url, UriKind.Absolute, out var uriResult)
                              && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 
-            if (!isUriValid)
-            {
-                return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
-            }            
+            if (!isUriValid) return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
 
             staffDocumentInDb.Document.Description = data.Document.Description;
             staffDocumentInDb.Document.Url = data.Document.Url;
@@ -410,20 +345,12 @@ namespace MyPortal.Controllers.Api
 
             var userStaffProfile = _context.Staff.SingleOrDefault(x => x.UserId == currentUserId);
 
-            if (userStaffProfile == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Current user profile not found");   
-            }
+            if (userStaffProfile == null) return Content(HttpStatusCode.NotFound, "Current user profile not found");
 
-            if (observationInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Observation not found");   
-            }
+            if (observationInDb == null) return Content(HttpStatusCode.NotFound, "Observation not found");
 
             if (observationInDb.ObserveeId == userStaffProfile.Id)
-            {
-                return Content(HttpStatusCode.BadRequest, "Cannot modify an observation for yourself");   
-            }                
+                return Content(HttpStatusCode.BadRequest, "Cannot modify an observation for yourself");
 
             observationInDb.Outcome = data.Outcome;
             observationInDb.ObserverId = observer.Id;
@@ -432,31 +359,25 @@ namespace MyPortal.Controllers.Api
 
             return Ok("Observation updated");
         }
-        
+
         [HttpGet]
         [Route("api/staff/hasLogs/{id}")]
         public bool StaffHasLogs(int id)
         {
             var staffInDb = _context.Staff.SingleOrDefault(x => x.Id == id);
 
-            if (staffInDb == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
+            if (staffInDb == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
             return staffInDb.Logs.Any();
         }
-        
+
         [HttpGet]
         [Route("api/staff/hasDocuments/{id}")]
         public bool StaffHasDocuments(int id)
         {
             var staffInDb = _context.Staff.SingleOrDefault(x => x.Id == id);
 
-            if (staffInDb == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
+            if (staffInDb == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
             return staffInDb.StaffDocuments.Any();
         }

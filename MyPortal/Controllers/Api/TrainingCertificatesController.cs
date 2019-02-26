@@ -33,7 +33,7 @@ namespace MyPortal.Controllers.Api
             if (trainingCertificateDto.StaffId == userPerson.Id)
                 return Content(HttpStatusCode.BadRequest, "Cannot add a certificate for yourself");
 
-            var cert = (trainingCertificateDto);
+            var cert = trainingCertificateDto;
 
             _context.TrainingCertificates.Add(cert);
             _context.SaveChanges();
@@ -87,10 +87,7 @@ namespace MyPortal.Controllers.Api
         {
             var staffInDb = _context.Staff.Single(x => x.Id == staff);
 
-            if (staffInDb == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }               
+            if (staffInDb == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
             return _context.TrainingCertificates
                 .Where(c => c.StaffId == staff)
@@ -105,19 +102,14 @@ namespace MyPortal.Controllers.Api
             var certInDb =
                 _context.TrainingCertificates.Single(x => x.StaffId == data.StaffId && x.CourseId == data.CourseId);
 
-            if (certInDb == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);   
-            }                
+            if (certInDb == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
             var userId = User.Identity.GetUserId();
 
             var userPerson = _context.Staff.SingleOrDefault(x => x.UserId == userId);
 
             if (userPerson != null && data.StaffId == userPerson.Id)
-            {
-                return Content(HttpStatusCode.BadRequest, "Cannot modify a certificate for yourself");   
-            }                
+                return Content(HttpStatusCode.BadRequest, "Cannot modify a certificate for yourself");
 
             certInDb.StatusId = data.StatusId;
 

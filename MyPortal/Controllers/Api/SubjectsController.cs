@@ -36,10 +36,7 @@ namespace MyPortal.Controllers.Api
         {
             var subject = _context.Subjects.SingleOrDefault(x => x.Id == subjectId);
 
-            if (subject == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
+            if (subject == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
             return Mapper.Map<Subject, SubjectDto>(subject);
         }
@@ -49,11 +46,9 @@ namespace MyPortal.Controllers.Api
         public IHttpActionResult CreateSubject(Subject data)
         {
             if (data.Name.IsNullOrWhiteSpace() || !ModelState.IsValid)
-            {
                 return Content(HttpStatusCode.BadRequest, "Invalid data");
-            }
 
-            var subjectToAdd = (data);
+            var subjectToAdd = data;
 
             _context.Subjects.Add(subjectToAdd);
             _context.SaveChanges();
@@ -66,10 +61,7 @@ namespace MyPortal.Controllers.Api
         {
             var subjectInDb = _context.Subjects.SingleOrDefault(x => x.Id == data.Id);
 
-            if (subjectInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Subject not found");                
-            }
+            if (subjectInDb == null) return Content(HttpStatusCode.NotFound, "Subject not found");
 
             subjectInDb.Name = data.Name;
             subjectInDb.LeaderId = data.LeaderId;
@@ -83,10 +75,7 @@ namespace MyPortal.Controllers.Api
         {
             var subjectInDb = _context.Subjects.SingleOrDefault(x => x.Id == subjectId);
 
-            if (subjectInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Subject not found");
-            }
+            if (subjectInDb == null) return Content(HttpStatusCode.NotFound, "Subject not found");
 
             _context.Results.RemoveRange(subjectInDb.Results);
             _context.Subjects.Remove(subjectInDb);

@@ -1,114 +1,113 @@
-﻿@using MyPortal.Controllers.Api
-@model MyPortal.ViewModels.StaffDetailsViewModel
+﻿@model MyPortal.ViewModels.StaffDetailsViewModel
 @{
     ViewBag.Title = "Staff Details: " + Model.Staff.LastName + ", " + Model.Staff.FirstName;
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 <body>
-    <!--#region Title-->
-    <div class="container float-left" id="title">
-        <h2 class="mp-page-title">@Model.Staff.Title @Model.Staff.FirstName.Substring(0, 1) @Model.Staff.LastName</h2>
-        <hr />
-    </div>
-    <!--#endregion-->
-    <!--#region Buttons at Top of Page-->
-    <div class="container float-left" id="container-1">
+<!--#region Title-->
+<div class="container float-left" id="title">
+    <h2 class="mp-page-title">@Model.Staff.Title @Model.Staff.FirstName.Substring(0, 1) @Model.Staff.LastName</h2>
+    <hr/>
+</div>
+<!--#endregion-->
+<!--#region Buttons at Top of Page-->
+<div class="container float-left" id="container-1">
 
-        @if (User.IsInRole("SeniorStaff"))
-        {
-            <button type="button" class="btn btn-warning mp-btn-top-auto" id="EditDetailsButton" data-staff-id="@Model.Staff.Id">
-                <i class="far fa-id-card"></i> Edit Details
-            </button>
+    @if (User.IsInRole("SeniorStaff"))
+    {
+        <button type="button" class="btn btn-warning mp-btn-top-auto" id="EditDetailsButton" data-staff-id="@Model.Staff.Id">
+            <i class="far fa-id-card"></i> Edit Details
+        </button>
 
-            <button type="button" class="btn btn-danger mp-btn-top-auto" id="DeleteStaffButton" data-toggle="modal" data-staff-id="@Model.Staff.Id">
-                <i class="fas fa-user-slash"></i> Delete Staff
-            </button>
+        <button type="button" class="btn btn-danger mp-btn-top-auto" id="DeleteStaffButton" data-toggle="modal" data-staff-id="@Model.Staff.Id">
+            <i class="fas fa-user-slash"></i> Delete Staff
+        </button>
 
-            <hr />
-        }
-    </div>
-    <!--#endregion-->
-    <!--#region MyDetails Panel -->
-    <div class="container float-left mp-shrink-width" id="details">
-        <div>
+        <hr/>
+    }
+</div>
+<!--#endregion-->
+<!--#region MyDetails Panel -->
+<div class="container float-left mp-shrink-width" id="details">
+    <div>
 
-            <div class="card border-primary mp-card">
-                <div class="card-header bg-primary">MyDetails</div>
-                <div class="card-body">
-                    <table class="table-condensed mp-table-condensed">
-                        <tr>
-                            <td>
-                                <b>Title</b>
-                            </td>
-                            <td>@Model.Staff.Title</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b>First Name</b>
-                            </td>
-                            <td>@Model.Staff.FirstName</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b>Last Name</b>
-                            </td>
-                            <td>@Model.Staff.LastName</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b>Staff Code</b>
-                            </td>
-                            <td>@Model.Staff.Code</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b>Job Title</b>
-                            </td>
-                            <td>@Model.Staff.JobTitle</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b>Email</b>
-                            </td>
-                            <td>@Model.Staff.Email</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b>Phone</b>
-                            </td>
-                            <td>@Model.Staff.Phone</td>
-                        </tr>
-                    </table>
-                </div>
+        <div class="card border-primary mp-card">
+            <div class="card-header bg-primary">MyDetails</div>
+            <div class="card-body">
+                <table class="table-condensed mp-table-condensed">
+                    <tr>
+                        <td>
+                            <b>Title</b>
+                        </td>
+                        <td>@Model.Staff.Title</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>First Name</b>
+                        </td>
+                        <td>@Model.Staff.FirstName</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Last Name</b>
+                        </td>
+                        <td>@Model.Staff.LastName</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Staff Code</b>
+                        </td>
+                        <td>@Model.Staff.Code</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Job Title</b>
+                        </td>
+                        <td>@Model.Staff.JobTitle</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Email</b>
+                        </td>
+                        <td>@Model.Staff.Email</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Phone</b>
+                        </td>
+                        <td>@Model.Staff.Phone</td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>
-    <!--#endregion-->
-    <!--#region Certificate Table-->
-    <div class="container float-left mp-margin-top">
-        <div>
-            <hr />
-            <h4 class="mp-bold">MyTraining</h4>
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewCertModal">
-                <i class="fa fa-plus-circle"></i> New Certificate
-            </button>
-            <table class="table table-sm table-bordered mp-table" id="certs" data-staff-id="@Model.Staff.Id">
-                <thead>
-                    <tr>
-                        <th>Course</th>
-                        <th>Description</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-    </div>
+</div>
 <!--#endregion-->
-    <!--#region MyObservations Panel-->
+<!--#region Certificate Table-->
 <div class="container float-left mp-margin-top">
     <div>
-        <hr />
+        <hr/>
+        <h4 class="mp-bold">MyTraining</h4>
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewCertModal">
+            <i class="fa fa-plus-circle"></i> New Certificate
+        </button>
+        <table class="table table-sm table-bordered mp-table" id="certs" data-staff-id="@Model.Staff.Id">
+            <thead>
+            <tr>
+                <th>Course</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<!--#endregion-->
+<!--#region MyObservations Panel-->
+<div class="container float-left mp-margin-top">
+    <div>
+        <hr/>
         <h4 class="mp-bold">MyObservations</h4>
         <button type="button" class="btn btn-success" onclick="populateNewObserverSelection()">
             <i class="fa fa-plus-circle"></i> New Observation
@@ -126,330 +125,330 @@
     </div>
 </div>
 <!--#endregion-->
-    <!--#region MyDocuments Panel -->
-    <div class="container float-left mp-margin-top">
-        <div>
-            <hr />
-            <h4 class="mp-bold">MyDocuments</h4>
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewDocumentModal">
-                <i class="fa fa-plus-circle"></i> New Document
-            </button>
-            <table class="table table-sm table-bordered mp-table mp-table-link" id="documents" data-staff-id="@Model.Staff.Id">
-                <thead>
-                    <tr>
-                        <th>Description</th>
-                        <th>Date</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
+<!--#region MyDocuments Panel -->
+<div class="container float-left mp-margin-top">
+    <div>
+        <hr/>
+        <h4 class="mp-bold">MyDocuments</h4>
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewDocumentModal">
+            <i class="fa fa-plus-circle"></i> New Document
+        </button>
+        <table class="table table-sm table-bordered mp-table mp-table-link" id="documents" data-staff-id="@Model.Staff.Id">
+            <thead>
+            <tr>
+                <th>Description</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+        </table>
     </div>
-    <!--#endregion-->
-    <!--#region New Certificate Modal -->
-    <div id="NewCertModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
+</div>
+<!--#endregion-->
+<!--#region New Certificate Modal -->
+<div id="NewCertModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
 
-            <!--content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">New Certificate - @Model.Staff.LastName, @Model.Staff.FirstName</h4>
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true"></span>&times;
-                    </button>
-                </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/staff/certificates/create", HttpMethod = "POST", OnSuccess = "createCertificateSuccess", OnFailure = "createCertificateError"}, new { id = "newCertForm" }))
-                {
-                    <div class="modal-body">
-                        <div class="form-group">
-                            @Html.LabelFor(l => l.TrainingCertificate.TrainingCourse)
-                            @Html.DropDownListFor(l => l.TrainingCertificate.CourseId, new SelectList(Model.TrainingCourses, "Id", "Description"), "Select Course", new { @class = "form-control", Name = "CourseId" })
-                            @Html.ValidationMessageFor(x => x.TrainingCertificate.CourseId)
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(l => l.TrainingCertificate.TrainingStatus)
-                            @Html.DropDownListFor(l => l.TrainingCertificate.StatusId, new SelectList(Model.TrainingStatuses, "Id", "Name"), "Select Status", new { @class = "form-control", Name = "StatusId" })
-                            @Html.ValidationMessageFor(l => l.TrainingCertificate.StatusId)
-                        </div>
-                        <div class="form-group">
-                            @Html.HiddenFor(l => l.TrainingCertificate.StaffId, new { Value = Model.Staff.Id, Name = "StaffId" })
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                    </div>
-                }
-
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New Certificate - @Model.Staff.LastName, @Model.Staff.FirstName</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true"></span>&times;
+                </button>
             </div>
-        </div>
-    </div>
-    <!--#endregion-->
-    <!--#region New Observation Modal -->
-    <div id="NewObservationModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-
-            <!--content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">New Observation - @Model.Staff.LastName, @Model.Staff.FirstName</h4>
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true"></span>&times;
-                    </button>
-                </div>
-                @using (Ajax.BeginForm(null,null, new AjaxOptions { Url = "/api/staff/observations/add", HttpMethod = "POST", OnSuccess = "createObservationSuccess", OnFailure = "createObservationError"}, new { id = "newObservationForm"}))
-                {
-                    <div class="modal-body">
-                            <div class="form-group">
-                                <label>Observed By</label>
-                                <select class="form-control" id="newObserverSelect" name="ObserverId">                                    
-                                </select>
-                            </div>
-                        <div class="form-group">
-                            @Html.LabelFor(l => l.StaffObservation.Outcome)
-                            @Html.DropDownListFor(l => l.StaffObservation.Outcome, new SelectList(Model.ObservationOutcomes), "Select Outcome", new {@class = "form-control", Name = "Outcome"})
-                        </div>
-                        <div class="form-group">
-                            @Html.HiddenFor(l => l.StaffObservation.ObserveeId, new {Value = Model.Staff.Id, Name = "ObserveeId"})
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/staff/certificates/create", HttpMethod = "POST", OnSuccess = "createCertificateSuccess", OnFailure = "createCertificateError"}, new {id = "newCertForm"}))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(l => l.TrainingCertificate.TrainingCourse)
+                        @Html.DropDownListFor(l => l.TrainingCertificate.CourseId, new SelectList(Model.TrainingCourses, "Id", "Description"), "Select Course", new {@class = "form-control", Name = "CourseId"})
+                        @Html.ValidationMessageFor(x => x.TrainingCertificate.CourseId)
                     </div>
-                }
-
-            </div>
-        </div>
-    </div>
-    <!--#endregion-->
-    <!--#region Edit Certificate Modal-->
-    <div id="EditCertModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-
-            <!--content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Edit Certificate - @Model.Staff.LastName, @Model.Staff.FirstName</h4>
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true"></span>&times;
-                    </button>
-                </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/staff/certificates/update", HttpMethod = "POST", OnSuccess = "editCertificateSuccess", OnFailure = "editCertificateError"}, new { id = "EditCertForm" }))
-                {
-                    <div class="modal-body">
-                        <div class="form-group">
-                            @Html.LabelFor(l => l.TrainingCertificate.CourseId)
-                            @Html.TextBox("display", null, new { @class = "form-control", id = "EditCertCourseDisplay", @readonly = "" })
-                            @Html.HiddenFor(l => l.TrainingCertificate.CourseId, new { id = "EditCertCourseControl", Name = "CourseId" })
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(l => l.TrainingCertificate.StatusId)
-                            @Html.DropDownListFor(l => l.TrainingCertificate.StatusId, new SelectList(Model.TrainingStatuses, "Id", "Name"), "Select Status", new { @class = "form-control", Name = "StatusId", id = "EditCertStatusControl" })
-                        </div>
-                        <div class="form-group">
-                            @Html.HiddenFor(l => l.TrainingCertificate.StaffId, new { Value = Model.Staff.Id, Name = "StaffId", id = "EditCertStaffControl" })
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
+                    <div class="form-group">
+                        @Html.LabelFor(l => l.TrainingCertificate.TrainingStatus)
+                        @Html.DropDownListFor(l => l.TrainingCertificate.StatusId, new SelectList(Model.TrainingStatuses, "Id", "Name"), "Select Status", new {@class = "form-control", Name = "StatusId"})
+                        @Html.ValidationMessageFor(l => l.TrainingCertificate.StatusId)
                     </div>
-                }
-
-            </div>
-        </div>
-    </div>
-    <!--#endregion-->
-    <!--#region Edit Staff Modal-->
-    <div id="EditStaffModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-
-            <!--content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">New Staff</h4>
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="false"></span>&times;
-                    </button>
-                </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/staff/edit", HttpMethod = "POST", OnSuccess = "editStaffSuccess", OnFailure = "editStaffError"}, new { id = "EditStaffForm" }))
-                {
-                    <div class="modal-body">
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.Staff.Title)
-                            @Html.DropDownListFor(x => x.Staff.Title, new SelectList(Model.Titles), "Select Title", new { @class = "form-control", Name = "Title", id = "EditStaffTitle" })
-                            @Html.ValidationMessageFor(x => x.Staff.Title)
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.Staff.FirstName)
-                            @Html.TextBoxFor(x => x.Staff.FirstName, new { @class = "form-control", Name = "FirstName", id = "EditStaffFirstName" })
-                            @Html.ValidationMessageFor(x => x.Staff.FirstName)
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.Staff.LastName)
-                            @Html.TextBoxFor(x => x.Staff.LastName, new { @class = "form-control", Name = "LastName", id = "EditStaffLastName" })
-                            @Html.ValidationMessageFor(x => x.Staff.LastName)
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.Staff.Code)
-                            @Html.TextBoxFor(x => x.Staff.Code, new { @class = "form-control", Name = "Code", id = "EditStaffCode" })
-                            @Html.ValidationMessageFor(x => x.Staff.Code)
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.Staff.JobTitle)
-                            @Html.TextBoxFor(x => x.Staff.JobTitle, new { @class = "form-control", Name = "JobTitle", id = "EditStaffJobTitle" })
-                            @Html.ValidationMessageFor(x => x.Staff.JobTitle)
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.Staff.Email)
-                            @Html.TextBoxFor(x => x.Staff.Email, new { @class = "form-control", Name = "Email", id = "EditStaffEmail" })
-                            @Html.ValidationMessageFor(x => x.Staff.Email)
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.Staff.Phone)
-                            @Html.TextBoxFor(x => x.Staff.Phone, new { @class = "form-control", Name = "Phone", id = "EditStaffPhone" })
-                            @Html.ValidationMessageFor(x => x.Staff.Phone)
-                            @Html.HiddenFor(x => x.Staff.Id, new { @class = "form-control", Name = "Id", id = "EditStaffId" })
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(l => l.TrainingCertificate.StaffId, new {Value = Model.Staff.Id, Name = "StaffId"})
                     </div>
-                }
-
-            </div>
-        </div>
-    </div>
-    <!--#endregion-->
-    <!--#region New Document Modal-->
-    <div id="NewDocumentModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <!--content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">New Document - @Model.Staff.LastName, @Model.Staff.FirstName</h4>
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true"></span>&times;
-                    </button>
-                </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/staff/documents/add", HttpMethod = "POST", OnSuccess = "createDocumentSuccess", OnFailure = "createDocumentError"}, new { id = "newDocumentForm" }))
-                {
-                    <div class="modal-body">
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.Upload.Document.Description)
-                            @Html.TextBoxFor(x => x.Upload.Document.Description, new { @class = "form-control", Name = "Document.Description" })
-                            @Html.ValidationMessageFor(x => x.Upload.Document.Description)
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.Upload.Document.Url)
-                            @Html.TextBoxFor(x => x.Upload.Document.Url, new { @class = "form-control", Name = "Document.Url" })
-                            @Html.ValidationMessageFor(x => x.Upload.Document.Url)
-                        </div>
-                        <div class="form-group">
-                            @Html.HiddenFor(x => x.Upload.StaffId, new { @class = "form-control", Value = Model.Staff.Id, Name = "StaffId" })
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
                     </div>
-                }
-            </div>
-        </div>
-    </div>
-    <!--#endregion-->
-    <!--#region Edit Document Modal-->
-    <div id="EditDocumentModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <!--content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Edit Document - @Model.Staff.LastName, @Model.Staff.FirstName</h4>
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true"></span>&times;
-                    </button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/staff/documents/edit", HttpMethod = "POST", OnSuccess = "editDocumentSuccess", OnFailure = "editDocumentError"}, new { id = "editDocumentForm" }))
-                {
-                    <div class="modal-body">
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.Upload.Document.Description)
-                            @Html.TextBoxFor(x => x.Upload.Document.Description, new { @class = "form-control", Name = "Document.Description", id = "EditDocumentDescription" })
-                            @Html.ValidationMessageFor(x => x.Upload.Document.Description)
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.Upload.Document.Url)
-                            @Html.TextBoxFor(x => x.Upload.Document.Url, new { @class = "form-control", Name = "Document.Url", id = "EditDocumentUrl" })
-                            @Html.ValidationMessageFor(x => x.Upload.Document.Url)
-                        </div>
-                        <div class="form-group">
-                            @Html.HiddenFor(x => x.Upload.StaffId, new { @class = "form-control", Value = Model.Staff.Id, Name = "StaffId", id = "EditDocumentStaffId" })
-                            @Html.HiddenFor(x => x.Upload.Id, new { @class = "form-control", Name = "Id", id = "EditDocumentId" })
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                    </div>
-                }
-            </div>
+            }
+
         </div>
     </div>
-    <!--#endregion-->
-    <!--#region Edit Observation Modal -->
-    <div id="EditObservationModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
+</div>
+<!--#endregion-->
+<!--#region New Observation Modal -->
+<div id="NewObservationModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
 
-            <!--content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Edit Observation - @Model.Staff.LastName, @Model.Staff.FirstName</h4>
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true"></span>&times;
-                    </button>
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New Observation - @Model.Staff.LastName, @Model.Staff.FirstName</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true"></span>&times;
+                </button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/staff/observations/add", HttpMethod = "POST", OnSuccess = "createObservationSuccess", OnFailure = "createObservationError"}, new {id = "newObservationForm"}))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Observed By</label>
+                        <select class="form-control" id="newObserverSelect" name="ObserverId">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(l => l.StaffObservation.Outcome)
+                        @Html.DropDownListFor(l => l.StaffObservation.Outcome, new SelectList(Model.ObservationOutcomes), "Select Outcome", new {@class = "form-control", Name = "Outcome"})
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(l => l.StaffObservation.ObserveeId, new {Value = Model.Staff.Id, Name = "ObserveeId"})
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/staff/observations/update", HttpMethod = "POST", OnSuccess = "editObservationSuccess", OnFailure = "editObservationError"}, new { id = "editObservationForm" }))
-                {
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label>Observed By</label>
-                            <select class="form-control" id="editObserverSelect" name="ObserverId">                                    
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(l => l.StaffObservation.Outcome)
-                            @Html.DropDownListFor(l => l.StaffObservation.Outcome, new SelectList(Model.ObservationOutcomes), "Select Outcome", new { @class = "form-control", Name = "Outcome", id = "EditObservationOutcome" })
-                        </div>
-                        <div class="form-group">
-                            @Html.HiddenFor(l => l.StaffObservation.ObserveeId, new { Value = Model.Staff.Id, Name = "ObserveeId", id = "EditObservationObservee" })
-                            @Html.HiddenFor(x => x.StaffObservation.Id, new { Name = "Id", id = "EditObservationId" })
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                    </div>
-                }
+            }
 
-            </div>
         </div>
     </div>
-    <!--#endregion-->
+</div>
+<!--#endregion-->
+<!--#region Edit Certificate Modal-->
+<div id="EditCertModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Certificate - @Model.Staff.LastName, @Model.Staff.FirstName</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true"></span>&times;
+                </button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/staff/certificates/update", HttpMethod = "POST", OnSuccess = "editCertificateSuccess", OnFailure = "editCertificateError"}, new {id = "EditCertForm"}))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(l => l.TrainingCertificate.CourseId)
+                        @Html.TextBox("display", null, new {@class = "form-control", id = "EditCertCourseDisplay", @readonly = ""})
+                        @Html.HiddenFor(l => l.TrainingCertificate.CourseId, new {id = "EditCertCourseControl", Name = "CourseId"})
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(l => l.TrainingCertificate.StatusId)
+                        @Html.DropDownListFor(l => l.TrainingCertificate.StatusId, new SelectList(Model.TrainingStatuses, "Id", "Name"), "Select Status", new {@class = "form-control", Name = "StatusId", id = "EditCertStatusControl"})
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(l => l.TrainingCertificate.StaffId, new {Value = Model.Staff.Id, Name = "StaffId", id = "EditCertStaffControl"})
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+<!--#endregion-->
+<!--#region Edit Staff Modal-->
+<div id="EditStaffModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New Staff</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="false"></span>&times;
+                </button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/staff/edit", HttpMethod = "POST", OnSuccess = "editStaffSuccess", OnFailure = "editStaffError"}, new {id = "EditStaffForm"}))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Staff.Title)
+                        @Html.DropDownListFor(x => x.Staff.Title, new SelectList(Model.Titles), "Select Title", new {@class = "form-control", Name = "Title", id = "EditStaffTitle"})
+                        @Html.ValidationMessageFor(x => x.Staff.Title)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Staff.FirstName)
+                        @Html.TextBoxFor(x => x.Staff.FirstName, new {@class = "form-control", Name = "FirstName", id = "EditStaffFirstName"})
+                        @Html.ValidationMessageFor(x => x.Staff.FirstName)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Staff.LastName)
+                        @Html.TextBoxFor(x => x.Staff.LastName, new {@class = "form-control", Name = "LastName", id = "EditStaffLastName"})
+                        @Html.ValidationMessageFor(x => x.Staff.LastName)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Staff.Code)
+                        @Html.TextBoxFor(x => x.Staff.Code, new {@class = "form-control", Name = "Code", id = "EditStaffCode"})
+                        @Html.ValidationMessageFor(x => x.Staff.Code)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Staff.JobTitle)
+                        @Html.TextBoxFor(x => x.Staff.JobTitle, new {@class = "form-control", Name = "JobTitle", id = "EditStaffJobTitle"})
+                        @Html.ValidationMessageFor(x => x.Staff.JobTitle)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Staff.Email)
+                        @Html.TextBoxFor(x => x.Staff.Email, new {@class = "form-control", Name = "Email", id = "EditStaffEmail"})
+                        @Html.ValidationMessageFor(x => x.Staff.Email)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Staff.Phone)
+                        @Html.TextBoxFor(x => x.Staff.Phone, new {@class = "form-control", Name = "Phone", id = "EditStaffPhone"})
+                        @Html.ValidationMessageFor(x => x.Staff.Phone)
+                        @Html.HiddenFor(x => x.Staff.Id, new {@class = "form-control", Name = "Id", id = "EditStaffId"})
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+<!--#endregion-->
+<!--#region New Document Modal-->
+<div id="NewDocumentModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New Document - @Model.Staff.LastName, @Model.Staff.FirstName</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true"></span>&times;
+                </button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/staff/documents/add", HttpMethod = "POST", OnSuccess = "createDocumentSuccess", OnFailure = "createDocumentError"}, new {id = "newDocumentForm"}))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Upload.Document.Description)
+                        @Html.TextBoxFor(x => x.Upload.Document.Description, new {@class = "form-control", Name = "Document.Description"})
+                        @Html.ValidationMessageFor(x => x.Upload.Document.Description)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Upload.Document.Url)
+                        @Html.TextBoxFor(x => x.Upload.Document.Url, new {@class = "form-control", Name = "Document.Url"})
+                        @Html.ValidationMessageFor(x => x.Upload.Document.Url)
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(x => x.Upload.StaffId, new {@class = "form-control", Value = Model.Staff.Id, Name = "StaffId"})
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!--#endregion-->
+<!--#region Edit Document Modal-->
+<div id="EditDocumentModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Document - @Model.Staff.LastName, @Model.Staff.FirstName</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true"></span>&times;
+                </button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/staff/documents/edit", HttpMethod = "POST", OnSuccess = "editDocumentSuccess", OnFailure = "editDocumentError"}, new {id = "editDocumentForm"}))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Upload.Document.Description)
+                        @Html.TextBoxFor(x => x.Upload.Document.Description, new {@class = "form-control", Name = "Document.Description", id = "EditDocumentDescription"})
+                        @Html.ValidationMessageFor(x => x.Upload.Document.Description)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Upload.Document.Url)
+                        @Html.TextBoxFor(x => x.Upload.Document.Url, new {@class = "form-control", Name = "Document.Url", id = "EditDocumentUrl"})
+                        @Html.ValidationMessageFor(x => x.Upload.Document.Url)
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(x => x.Upload.StaffId, new {@class = "form-control", Value = Model.Staff.Id, Name = "StaffId", id = "EditDocumentStaffId"})
+                        @Html.HiddenFor(x => x.Upload.Id, new {@class = "form-control", Name = "Id", id = "EditDocumentId"})
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!--#endregion-->
+<!--#region Edit Observation Modal -->
+<div id="EditObservationModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Observation - @Model.Staff.LastName, @Model.Staff.FirstName</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true"></span>&times;
+                </button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/staff/observations/update", HttpMethod = "POST", OnSuccess = "editObservationSuccess", OnFailure = "editObservationError"}, new {id = "editObservationForm"}))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Observed By</label>
+                        <select class="form-control" id="editObserverSelect" name="ObserverId">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(l => l.StaffObservation.Outcome)
+                        @Html.DropDownListFor(l => l.StaffObservation.Outcome, new SelectList(Model.ObservationOutcomes), "Select Outcome", new {@class = "form-control", Name = "Outcome", id = "EditObservationOutcome"})
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(l => l.StaffObservation.ObserveeId, new {Value = Model.Staff.Id, Name = "ObserveeId", id = "EditObservationObservee"})
+                        @Html.HiddenFor(x => x.StaffObservation.Id, new {Name = "Id", id = "EditObservationId"})
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+<!--#endregion-->
 </body>
 
 @section scripts
 {
     <script>
         //When Page Has Loaded, Prepare Scripts
-        $(document).ready(function() {           
-            
+        $(document).ready(function() {
+
             //Clear Modal When Closed
             $('.modal').on('hidden.bs.modal',
                 function() {
                     $(this).find('form').trigger('reset');
-                });          
+                });
 
             //#region Top Buttons
             $("#EditDetailsButton").on("click",
@@ -467,20 +466,20 @@
                 });
 
             $("#DeleteStaffButton").on("click",
-                function () {
+                function() {
                     var button = $(this);
                     bootbox.confirm("Are you sure you wish to delete this staff member?" +
                         "\nThis will delete all items associated with this staff member.",
-                        function (result) {
+                        function(result) {
                             if (result) {
                                 $.ajax({
                                     url: "/api/staff/delete/" + button.attr("data-staff-id"),
                                     method: "DELETE",
-                                    success: function (a) {
+                                    success: function(a) {
                                         location.replace("/Staff/Staff");
                                         toastr.success(a);
                                     },
-                                    error: function (a) {
+                                    error: function(a) {
                                         toastr.error(a.responseJSON);
                                     }
                                 });
@@ -499,7 +498,7 @@
                 columns: [
                     {
                         data: "document.description",
-                        render: function (data, type, document) {
+                        render: function(data, type, document) {
                             return "<a href='" +
                                 document.document.url +
                                 "' target='_blank'>" +
@@ -510,14 +509,14 @@
                     },
                     {
                         data: "document.date",
-                        render: function (data) {
+                        render: function(data) {
                             var date = new Date(data);
                             return date.toLocaleDateString();
                         }
                     },
                     {
                         data: "id",
-                        render: function (data) {
+                        render: function(data) {
                             return "<button type='button' class='btn btn-xs btn-warning js-edit' data-document-id=" +
                                 data +
                                 "><i class=\"far fa-edit\"></i></button> " +
@@ -546,7 +545,7 @@
                 columns: [
                     {
                         data: "date",
-                        render: function (data) {
+                        render: function(data) {
                             var date = new Date(data);
                             return date.toLocaleDateString();
                         }
@@ -554,7 +553,7 @@
                     },
                     {
                         data: "observer.lastname",
-                        render: function (data, type, observation) {
+                        render: function(data, type, observation) {
                             return observation.observer.title +
                                 " " +
                                 observation.observer.firstName.substring(0, 1) +
@@ -567,7 +566,7 @@
                     },
                     {
                         data: "id",
-                        render: function (data) {
+                        render: function(data) {
                             return "<button type='button' class='btn btn-xs btn-warning mp-btn-action-left js-edit' data-observation-id=" +
                                 data +
                                 "><i class=\"far fa-edit\"></i></button> " +
@@ -582,7 +581,7 @@
                 searching: false,
                 info: false,
                 responsive: true,
-                "createdRow": function (row, data, dataIndex) {
+                "createdRow": function(row, data, dataIndex) {
                     if (data.outcome === "Inadequate") {
                         $(row).addClass("mp-observation-inadequate");
                     }
@@ -622,7 +621,7 @@
                     },
                     {
                         data: "courseId",
-                        render: function (data) {
+                        render: function(data) {
                             return "<button type='button' class='btn btn-xs btn-warning js-edit' data-course-id=" +
                                 data +
                                 "><i class=\"far fa-edit\"></i></button> " +
@@ -640,7 +639,7 @@
                 "language": {
                     "emptyTable": "No certificates to display"
                 },
-                "createdRow": function (row, data, dataIndex) {
+                "createdRow": function(row, data, dataIndex) {
                     if (data.trainingStatus.name === "Completed") {
                         $(row).addClass("mp-cert-completed");
                     }
@@ -703,27 +702,27 @@
 
             $("#observations").on("click",
                 ".js-edit",
-                function () {
+                function() {
                     var button = $(this);
                     var observationId = button.attr("data-observation-id");
                     $.ajax({
                         url: "/api/staff/observations/observation/" + observationId,
                         method: "GET",
-                        success: function (result) {
+                        success: function(result) {
                             $("#EditObservationDate").val(result["date"].toLocaleDateString);
                             $("#EditObservationOutcome").val(result["outcome"]);
                             $("#EditObservationObservee").val(result["observeeId"]);
                             populateEditObserverSelection(result["observerId"]);
-                            $("#EditObservationId").val(result["id"]);                            
+                            $("#EditObservationId").val(result["id"]);
                         },
-                        error: function () {
+                        error: function() {
                             toastr.error("Failed to load certificate data");
                         }
                     });
                     $("#EditObservationModal").modal('toggle');
                 });
             //#endregion
-                                                                
+
             //#region JS Deletes
             $("#documents").on("click",
                 ".js-delete",
@@ -750,10 +749,10 @@
             //Delete Log When Button Clicked
             $("#certs").on("click",
                 ".js-delete",
-                function () {
+                function() {
                     var button = $(this);
                     bootbox.confirm("Are you sure you wish to delete this certificate?",
-                        function (result) {
+                        function(result) {
                             if (result) {
                                 $.ajax({
                                     url: "/api/staff/certificates/delete/" +
@@ -761,11 +760,11 @@
                                         "/" +
                                         button.attr("data-course-id"),
                                     method: "DELETE",
-                                    success: function (a) {
+                                    success: function(a) {
                                         toastr.success(a);
                                         $("#certs").DataTable().ajax.reload();
                                     },
-                                    error: function (a) {
+                                    error: function(a) {
                                         toastr.error(a.responseJSON);
                                     }
                                 });
@@ -775,19 +774,19 @@
 
             $("#observations").on("click",
                 ".js-delete",
-                function () {
+                function() {
                     var button = $(this);
                     bootbox.confirm("Are you sure you wish to delete this observation?",
-                        function (result) {
+                        function(result) {
                             if (result) {
                                 $.ajax({
                                     url: "/api/staff/observations/remove/" + button.attr("data-observation-id"),
                                     method: "DELETE",
-                                    success: function (ajaxResult) {
+                                    success: function(ajaxResult) {
                                         $("#observations").DataTable().ajax.reload();
                                         toastr.success(ajaxResult);
                                     },
-                                    error: function (ajaxResult) {
+                                    error: function(ajaxResult) {
                                         toastr.error(ajaxResult.responseJSON);
                                     }
                                 });
@@ -803,11 +802,12 @@
             toastr.success(result);
             $("#observations").DataTable().ajax.reload();
         }
-        
+
         function createObservationError(result) {
             $("#NewObservationModal").modal('hide');
             toastr.error(result.responseJSON);
         }
+
         //#endregion
         //#region Edit Observation
         function editObservationSuccess(result) {
@@ -820,6 +820,7 @@
             $("#EditObservationModal").modal('hide');
             toastr.error(result.responseJSON);
         }
+
         //#endregion
         //#region Create Document
         function createDocumentSuccess(result) {
@@ -832,6 +833,7 @@
             $("#NewDocumentModal").modal('hide');
             toastr.error(result.responseJSON);
         }
+
         //#endregion
         //#region Edit Document
         function editDocumentSuccess(result) {
@@ -872,11 +874,11 @@
             $.ajax({
                 url: "/api/staff/fetch",
                 method: "GET",
-                complete: function (data) {
+                complete: function(data) {
                     $("#newObserverSelect").empty();
                     var divInit = "<option value class=\"hidden disabled\">Select Observer</option>";
                     $(divInit).appendTo("#newObserverSelect");
-                    $(data.responseJSON).each(function (i, staff) {
+                    $(data.responseJSON).each(function(i, staff) {
                         var divData = "<option value=" +
                             data.responseJSON[i].id +
                             ">" +
@@ -901,11 +903,11 @@
             $.ajax({
                 url: "/api/staff/fetch",
                 method: "GET",
-                complete: function (data) {
+                complete: function(data) {
                     $("#editObserverSelect").empty();
                     var divInit = "<option value class=\"hidden disabled\">Select Observer</option>";
                     $(divInit).appendTo("#editObserverSelect");
-                    $(data.responseJSON).each(function (i, staff) {
+                    $(data.responseJSON).each(function(i, staff) {
                         var divData = "<option value=" +
                             data.responseJSON[i].id +
                             ">" +
@@ -920,6 +922,7 @@
                 }
             });
         }
+
         //#region Edit Staff
         function editStaffSuccess(result) {
             $("#EditDetailsModal").modal('hide');

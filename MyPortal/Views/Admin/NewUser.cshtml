@@ -4,36 +4,36 @@
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 <body>
-    <!-- #region Title-->
-    <div class="container float-left">
-        <h2 class="mp-page-title">New User</h2>
-        <hr />
-    </div>
-    <!-- #endregion -->
-    <!--#region New User Form-->
-    <div class="container float-left">
-        @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/users/new", HttpMethod = "POST", OnSuccess = "newUserSuccess", OnFailure = "newUserFailure"}, new { id = "newUserForm" }))
-        {
-            <div class="form-group">
-                @Html.LabelFor(x => x.Username)
-                @Html.TextBoxFor(x => x.Username, new { @class = "form-control" })
-                @Html.ValidationMessageFor(x => x.Username)
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(x => x.Password)
-                @Html.PasswordFor(x => x.Password, new { @class = "form-control" })
-                @Html.ValidationMessageFor(x => x.Password)
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(x => x.ConfirmPassword)
-                @Html.PasswordFor(x => x.ConfirmPassword, new { @class = "form-control" })
-                @Html.ValidationMessageFor(x => x.ConfirmPassword)
-            </div>
-            <button type="button" class="btn btn-primary" id="backButton">Back</button>
-            <button type="submit" class="btn btn-primary">Save</button>
-        }
-    </div>
-    <!--#endregion-->
+<!-- #region Title-->
+<div class="container float-left">
+    <h2 class="mp-page-title">New User</h2>
+    <hr/>
+</div>
+<!-- #endregion -->
+<!--#region New User Form-->
+<div class="container float-left">
+    @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/users/new", HttpMethod = "POST", OnSuccess = "newUserSuccess", OnFailure = "newUserFailure"}, new {id = "newUserForm"}))
+    {
+        <div class="form-group">
+            @Html.LabelFor(x => x.Username)
+            @Html.TextBoxFor(x => x.Username, new {@class = "form-control"})
+            @Html.ValidationMessageFor(x => x.Username)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.Password)
+            @Html.PasswordFor(x => x.Password, new {@class = "form-control"})
+            @Html.ValidationMessageFor(x => x.Password)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.ConfirmPassword)
+            @Html.PasswordFor(x => x.ConfirmPassword, new {@class = "form-control"})
+            @Html.ValidationMessageFor(x => x.ConfirmPassword)
+        </div>
+        <button type="button" class="btn btn-primary" id="backButton">Back</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+    }
+</div>
+<!--#endregion-->
 </body>
 
 @section scripts

@@ -30,22 +30,13 @@ namespace MyPortal.Controllers.Api
         {
             var studentQuery = _context.Students.SingleOrDefault(x => x.Id == data.StudentId);
 
-            if (studentQuery == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Student not found");
-            }                
+            if (studentQuery == null) return Content(HttpStatusCode.NotFound, "Student not found");
 
             var productToAdd = _context.Products.SingleOrDefault(x => x.Id == data.ProductId);
 
-            if (productToAdd == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Product not found");
-            }
+            if (productToAdd == null) return Content(HttpStatusCode.NotFound, "Product not found");
 
-            if (!productToAdd.Visible)
-            {
-                return Content(HttpStatusCode.BadRequest, "Product not available");
-            }                
+            if (!productToAdd.Visible) return Content(HttpStatusCode.BadRequest, "Product not available");
 
             var purchased =
                 _context.Sales.Where(x =>
@@ -56,9 +47,7 @@ namespace MyPortal.Controllers.Api
                     x.StudentId == data.StudentId && x.ProductId == data.ProductId && x.Product.OnceOnly);
 
             if (purchased.Any() || inBasket.Any())
-            {
                 return Content(HttpStatusCode.BadRequest, "This product cannot be purchased more than once");
-            }                
 
             var itemToAdd = new BasketItem
             {
@@ -96,10 +85,7 @@ namespace MyPortal.Controllers.Api
         {
             var allItems = _context.BasketItems.Where(x => x.StudentId == student);
 
-            if (!allItems.Any())
-            {
-                return 0.00m;
-            }                
+            if (!allItems.Any()) return 0.00m;
 
             var total = allItems.Sum(x => x.Product.Price);
 
@@ -113,10 +99,7 @@ namespace MyPortal.Controllers.Api
         {
             var itemInDb = _context.BasketItems.SingleOrDefault(x => x.Id == id);
 
-            if (itemInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Item not found");
-            }                
+            if (itemInDb == null) return Content(HttpStatusCode.NotFound, "Item not found");
 
             _context.BasketItems.Remove(itemInDb);
             _context.SaveChanges();

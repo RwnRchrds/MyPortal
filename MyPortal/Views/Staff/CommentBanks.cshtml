@@ -19,7 +19,7 @@
     <table class="table table-bordered table-hover mp-table mp-table-link" id="commentBanks">
         <thead>
         <tr>
-            <th>Name</th>            
+            <th>Name</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -35,12 +35,12 @@
                 <h4 class="modal-title">New Comment Bank</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/commentBanks/create", HttpMethod = "POST", OnSuccess = "newCommentBankSuccess", OnFailure = "newCommentBankFailure" }, new { id = "newCommentBankForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/commentBanks/create", HttpMethod = "POST", OnSuccess = "newCommentBankSuccess", OnFailure = "newCommentBankFailure"}, new {id = "newCommentBankForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.LabelFor(x => x.CommentBank.Name)
-                        @Html.TextBoxFor(x => x.CommentBank.Name, new { @class = "form-control", Name = "Name" })
+                        @Html.TextBoxFor(x => x.CommentBank.Name, new {@class = "form-control", Name = "Name"})
                         @Html.ValidationMessageFor(x => x.CommentBank.Name)
                     </div>
                     <div class="modal-footer">
@@ -61,12 +61,12 @@
                 <h4 class="modal-title">Edit Comment Bank</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/commentBanks/update", HttpMethod = "POST", OnSuccess = "editCommentBankSuccess", OnFailure = "editCommentBankFailure" }, new { id = "newResultSetForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/commentBanks/update", HttpMethod = "POST", OnSuccess = "editCommentBankSuccess", OnFailure = "editCommentBankFailure"}, new {id = "newResultSetForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.LabelFor(x => x.CommentBank.Name)
-                        @Html.TextBoxFor(x => x.CommentBank.Name, new { @class = "form-control", Name = "Name", id = "editCommentBankNameControl" })
+                        @Html.TextBoxFor(x => x.CommentBank.Name, new {@class = "form-control", Name = "Name", id = "editCommentBankNameControl"})
                         @Html.ValidationMessageFor(x => x.CommentBank.Name)
                     </div>
                     <div class="form-group">
@@ -85,12 +85,12 @@
 @section scripts
 {
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('.modal').on('hidden.bs.modal',
-                function () {
+                function() {
                     $(this).find('form').trigger('reset');
                 });
-            
+
             $("#commentBanks").DataTable({
                 ajax: {
                     url: "/api/commentBanks/all",
@@ -105,7 +105,7 @@
                         render: function(data) {
                             return "<button type='button' class='btn btn-xs btn-warning mp-btn-action-left js-edit' data-bank-id=" +
                                 data +
-                                "><i class=\"far fa-edit\"></i></button> " +                                
+                                "><i class=\"far fa-edit\"></i></button> " +
                                 "<button type='button' class='btn btn-xs btn-danger mp-btn-action-right js-delete' data-bank-id=" +
                                 data +
                                 "><i class=\"far fa-trash-alt\"></i></button>";
@@ -119,38 +119,38 @@
 
             $("#commentBanks").on("click",
                 ".js-edit",
-                function () {
+                function() {
                     var button = $(this);
                     var bankId = button.attr("data-bank-id");
                     $.ajax({
                         url: "/api/commentBanks/byId/" + bankId,
                         method: "GET",
-                        success: function (result) {
+                        success: function(result) {
                             $("#editCommentBankNameControl").val(result["name"]);
                             $("#editCommentBankIdControl").val(result["id"]);
                         },
-                        error: function () {
+                        error: function() {
                             toastr.error("Failed to load comment bank data");
                         }
                     });
                     $("#EditCommentBankModal").modal('toggle');
-                });            
+                });
 
             $("#commentBanks").on("click",
                 ".js-delete",
-                function () {
+                function() {
                     var button = $(this);
                     bootbox.confirm("Are you sure you wish to delete this comment bank and its comments?",
-                        function (result) {
+                        function(result) {
                             if (result) {
                                 $.ajax({
                                     url: "/api/commentBanks/delete/" + button.attr("data-bank-id"),
                                     method: "DELETE",
-                                    success: function (a) {
+                                    success: function(a) {
                                         $("#commentBanks").DataTable().ajax.reload();
                                         toastr.success(a);
                                     },
-                                    error: function (e) {
+                                    error: function(e) {
                                         toastr.error(e.responseJSON);
                                     }
                                 });
@@ -180,7 +180,7 @@
         function editCommentBankFailure(result) {
             $("#EditCommentBankModal").modal('hide');
             toastr.error(result.responseJSON);
-        }        
+        }
     </script>
     @Scripts.Render("~/bundles/jqueryval")
 }

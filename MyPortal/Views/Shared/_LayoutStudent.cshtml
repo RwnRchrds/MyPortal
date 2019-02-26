@@ -7,7 +7,7 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @{
-        var version = @ViewContext.Controller.GetType().Assembly.GetName().Version;
+        var version = ViewContext.Controller.GetType().Assembly.GetName().Version;
     }
 
 </head>

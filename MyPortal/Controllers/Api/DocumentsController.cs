@@ -33,10 +33,7 @@ namespace MyPortal.Controllers.Api
             var IsUriValid = Uri.TryCreate(document.Url, UriKind.Absolute, out var uriResult)
                              && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 
-            if (!IsUriValid)
-            {
-                return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
-            }                
+            if (!IsUriValid) return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
 
             var uploader = new Staff();
 
@@ -47,20 +44,12 @@ namespace MyPortal.Controllers.Api
                 var userId = User.Identity.GetUserId();
                 uploader = _context.Staff.SingleOrDefault(x => x.UserId == userId);
                 if (uploader == null)
-                {
                     return Content(HttpStatusCode.BadRequest, "User does not have a personnel profile");
-                }
             }
 
-            if (uploaderId != 0)
-            {
-                uploader = _context.Staff.SingleOrDefault(x => x.Id == uploaderId);
-            }
+            if (uploaderId != 0) uploader = _context.Staff.SingleOrDefault(x => x.Id == uploaderId);
 
-            if (uploader == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Staff member not found");
-            }
+            if (uploader == null) return Content(HttpStatusCode.NotFound, "Staff member not found");
 
             document.UploaderId = uploader.Id;
 
@@ -98,10 +87,7 @@ namespace MyPortal.Controllers.Api
             var document = _context.Documents
                 .Single(x => x.Id == documentId);
 
-            if (document == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);   
-            }                
+            if (document == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
             return Mapper.Map<Document, DocumentDto>(document);
         }
@@ -125,10 +111,7 @@ namespace MyPortal.Controllers.Api
         {
             var documentToRemove = _context.Documents.SingleOrDefault(x => x.Id == documentId);
 
-            if (documentToRemove == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Document not found");
-            }                
+            if (documentToRemove == null) return Content(HttpStatusCode.NotFound, "Document not found");
 
             _context.Documents.Remove(documentToRemove);
             _context.SaveChanges();
@@ -143,18 +126,12 @@ namespace MyPortal.Controllers.Api
         {
             var documentInDb = _context.Documents.SingleOrDefault(x => x.Id == data.Id);
 
-            if (documentInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Document not found");
-            }                
+            if (documentInDb == null) return Content(HttpStatusCode.NotFound, "Document not found");
 
             var isUriValid = Uri.TryCreate(data.Url, UriKind.Absolute, out var uriResult)
                              && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 
-            if (!isUriValid)
-            {
-                return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
-            }                
+            if (!isUriValid) return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
 
             documentInDb.Description = data.Description;
             documentInDb.Url = data.Url;

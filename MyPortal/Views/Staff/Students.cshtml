@@ -7,15 +7,15 @@
 <!--#region Title-->
 <div class="container float-left">
     <h2 class="mp-page-title">Students</h2>
-    <hr />
+    <hr/>
 </div>
 <!--#endregion-->
 <!--#region Buttons at Top of Page-->
 <div class="container float-left">
     @if (User.IsInRole("SeniorStaff"))
     {
-        @Html.ActionLink("New Student", "NewStudent", "Staff", null, new { @class = "btn btn-success" })
-        <hr />
+        @Html.ActionLink("New Student", "NewStudent", "Staff", null, new {@class = "btn btn-success"})
+        <hr/>
     }
 </div>
 <!--#endregion-->
@@ -23,11 +23,11 @@
 <div class="float-left container">
     <table class="table table-bordered table-hover mp-table mp-table-link" id="students">
         <thead>
-            <tr>
-                <th>Student</th>
-                <th>Year Group</th>
-                <th>Reg Group</th>
-            </tr>
+        <tr>
+            <th>Student</th>
+            <th>Year Group</th>
+            <th>Reg Group</th>
+        </tr>
         </thead>
         <tbody></tbody>
     </table>
@@ -37,7 +37,7 @@
 @section scripts
 {
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $("#students").DataTable({
                 ajax: {
                     url: "/api/students",
@@ -46,7 +46,7 @@
                 columns: [
                     {
                         data: "firstName",
-                        render: function (data, type, student) {
+                        render: function(data, type, student) {
                             return "<a href='/Staff/Students/" +
                                 student.id +
                                 "'>" +

@@ -30,10 +30,7 @@ namespace MyPortal.Controllers.Api
         {
             var productInDb = _context.Products.SingleOrDefault(p => p.Id == id);
 
-            if (productInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Product not found");
-            }
+            if (productInDb == null) return Content(HttpStatusCode.NotFound, "Product not found");
 
             _context.Products.Remove(productInDb);
             _context.SaveChanges();
@@ -70,10 +67,7 @@ namespace MyPortal.Controllers.Api
         {
             var productInDb = _context.Products.Single(x => x.Id == productId);
 
-            if (productInDb == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }                
+            if (productInDb == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
             return productInDb.Price;
         }
@@ -85,10 +79,7 @@ namespace MyPortal.Controllers.Api
         {
             var product = _context.Products.SingleOrDefault(x => x.Id == id);
 
-            if (product == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }                
+            if (product == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
             return Mapper.Map<Product, ProductDto>(product);
         }
@@ -109,7 +100,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/products/new")]
         public IHttpActionResult NewProduct(Product data)
         {
-            var product = (data);
+            var product = data;
 
             _context.Products.Add(product);
             _context.SaveChanges();
@@ -122,17 +113,11 @@ namespace MyPortal.Controllers.Api
         [Route("api/products/edit")]
         public IHttpActionResult UpdateProduct(Product product)
         {
-            if (product == null)
-            {
-                return Content(HttpStatusCode.BadRequest, "Invalid request data");
-            }                
+            if (product == null) return Content(HttpStatusCode.BadRequest, "Invalid request data");
 
             var productInDb = _context.Products.SingleOrDefault(x => x.Id == product.Id);
 
-            if (productInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Product not found");      
-            }                
+            if (productInDb == null) return Content(HttpStatusCode.NotFound, "Product not found");
 
             Mapper.Map(product, productInDb);
             productInDb.OnceOnly = product.OnceOnly;

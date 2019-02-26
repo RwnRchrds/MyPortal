@@ -49,10 +49,7 @@ namespace MyPortal.Controllers.Api
         {
             var comment = _context.Comments.SingleOrDefault(x => x.Id == id);
 
-            if (comment == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
+            if (comment == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
             return Mapper.Map<Comment, CommentDto>(comment);
         }
@@ -61,10 +58,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/comments/create")]
         public IHttpActionResult CreateComment(Comment comment)
         {
-            if (!ModelState.IsValid)
-            {
-                return Content(HttpStatusCode.BadRequest, "Invalid data");
-            }
+            if (!ModelState.IsValid) return Content(HttpStatusCode.BadRequest, "Invalid data");
 
             _context.Comments.Add(comment);
             _context.SaveChanges();
@@ -75,23 +69,17 @@ namespace MyPortal.Controllers.Api
         [Route("api/comments/update")]
         public IHttpActionResult UpdateComment(Comment comment)
         {
-            if (!ModelState.IsValid)
-            {
-                return Content(HttpStatusCode.BadRequest, "Invalid data");
-            }
-                       
+            if (!ModelState.IsValid) return Content(HttpStatusCode.BadRequest, "Invalid data");
+
             var commentInDb = _context.Comments.SingleOrDefault(x => x.Id == comment.Id);
 
-            if (commentInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Comment not found");
-            }
+            if (commentInDb == null) return Content(HttpStatusCode.NotFound, "Comment not found");
 
             commentInDb.Value = comment.Value;
             commentInDb.CommentBankId = comment.CommentBankId;
 
             _context.SaveChanges();
-            
+
             return Ok("Comment updated");
         }
 
@@ -101,16 +89,12 @@ namespace MyPortal.Controllers.Api
         {
             var comment = _context.Comments.SingleOrDefault(x => x.Id == id);
 
-            if (comment == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Comment not found");
-            }
+            if (comment == null) return Content(HttpStatusCode.NotFound, "Comment not found");
 
             _context.Comments.Remove(comment);
             _context.SaveChanges();
 
             return Ok("Comment deleted");
         }
-
     }
 }

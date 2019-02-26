@@ -33,7 +33,7 @@
         <div class="form-group">
             @Html.Label("Result Set")
             @Html.DropDownListFor(x => x.ResultSet, new SelectList(Model.ResultSets, "Id", "Name"), "Select Result Set", new {@class = "form-control", Name = "resultSetId", id = "resultSetSelect"})
-        </div>        
+        </div>
         <button type="button" class="btn btn-primary" disabled id="btnImport">Import</button>
     </div>
 }
@@ -56,7 +56,7 @@
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
-                </div>                                
+                </div>
             </form>
         </div>
     </div>
@@ -73,21 +73,21 @@
                 function() {
                     if ($("#resultSetSelect").val() !== "") {
                         $("#btnImport").prop("disabled", false);
-                    } 
+                    }
                     if ($("#resultSetSelect").val() === "") {
                         $("#btnImport").prop("disabled", true);
                     }
                 });
-            
+
             $("#btnImport").on("click",
-                function () {
+                function() {
                     $.ajax({
                         url: "/api/results/import/" + $("#resultSetSelect").val(),
-                        method: "POST",                        
-                        success: function (e) {
+                        method: "POST",
+                        success: function(e) {
                             toastr.success(e);
                         },
-                        error: function (e) {
+                        error: function(e) {
                             toastr.error(e.responseJSON);
                             resetForm();
                         }
@@ -110,4 +110,3 @@
         });
     </script>
 }
-

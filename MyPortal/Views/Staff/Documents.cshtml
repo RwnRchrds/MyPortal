@@ -7,7 +7,7 @@
 <div class="container float-left" id="title">
 
     <h2 class="mp-page-title">Controlled Documents</h2>
-    <hr />
+    <hr/>
 
 </div>
 
@@ -15,7 +15,7 @@
     @if (User.IsInRole("SeniorStaff"))
     {
         <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#NewDocumentModal">New Document</button>
-        <hr />
+        <hr/>
     }
 
 </div>
@@ -23,15 +23,15 @@
 <div class="container float-left">
     <table class="table table-bordered table-hover mp-table mp-table-link" id="documents" access="staff">
         <thead>
-            <tr>
-                <th>Description</th>
-                <th>Date</th>
-                @if (User.IsInRole("SeniorStaff"))
-                {
-                    <th>Status</th>
-                    <th>Actions</th>
-                }
-            </tr>
+        <tr>
+            <th>Description</th>
+            <th>Date</th>
+            @if (User.IsInRole("SeniorStaff"))
+            {
+                <th>Status</th>
+                <th>Actions</th>
+            }
+        </tr>
         </thead>
         <tbody></tbody>
     </table>
@@ -48,22 +48,22 @@
                     <h4 class="modal-title">New Controlled Document</h4>
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/documents/add", HttpMethod = "POST", OnSuccess = "newDocumentSuccess", OnFailure = "newDocumentFailure" }, new { id = "newDocumentForm" }))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/documents/add", HttpMethod = "POST", OnSuccess = "newDocumentSuccess", OnFailure = "newDocumentFailure"}, new {id = "newDocumentForm"}))
                 {
                     <div class="modal-body">
                         <div class="form-group">
                             @Html.LabelFor(x => x.Document.Description)
-                            @Html.TextBoxFor(x => x.Document.Description, new { @class = "form-control", Name = "Description" })
+                            @Html.TextBoxFor(x => x.Document.Description, new {@class = "form-control", Name = "Description"})
                             @Html.ValidationMessageFor(x => x.Document.Description)
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(x => x.Document.Url)
-                            @Html.TextBoxFor(x => x.Document.Url, new { @class = "form-control", Name = "Url" })
+                            @Html.TextBoxFor(x => x.Document.Url, new {@class = "form-control", Name = "Url"})
                             @Html.ValidationMessageFor(x => x.Document.Url)
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(x => x.Document.Approved)
-                            @Html.CheckBoxFor(x => x.Document.Approved, new { Name = "Approved" })
+                            @Html.CheckBoxFor(x => x.Document.Approved, new {Name = "Approved"})
                             @Html.ValidationMessageFor(x => x.Document.Approved)
                         </div>
                         <div class="modal-footer">
@@ -84,26 +84,26 @@
                     <h4 class="modal-title">Edit Controlled Document</h4>
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/documents/edit", HttpMethod = "POST", OnSuccess = "editDocumentSuccess", OnFailure = "editDocumentFailure" }, new { id = "editDocumentForm" }))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/documents/edit", HttpMethod = "POST", OnSuccess = "editDocumentSuccess", OnFailure = "editDocumentFailure"}, new {id = "editDocumentForm"}))
                 {
                     <div class="modal-body">
                         <div class="form-group">
                             @Html.LabelFor(x => x.Document.Description)
-                            @Html.TextBoxFor(x => x.Document.Description, new { @class = "form-control", Name = "Description", id = "EditDocumentDescriptionControl" })
+                            @Html.TextBoxFor(x => x.Document.Description, new {@class = "form-control", Name = "Description", id = "EditDocumentDescriptionControl"})
                             @Html.ValidationMessageFor(x => x.Document.Description)
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(x => x.Document.Url)
-                            @Html.TextBoxFor(x => x.Document.Url, new { @class = "form-control", Name = "Url", id = "EditDocumentUrlControl" })
+                            @Html.TextBoxFor(x => x.Document.Url, new {@class = "form-control", Name = "Url", id = "EditDocumentUrlControl"})
                             @Html.ValidationMessageFor(x => x.Document.Url)
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(x => x.Document.Approved)
-                            @Html.CheckBoxFor(x => x.Document.Approved, new { Name = "Approved", id = "EditDocumentApprovedControl" })
+                            @Html.CheckBoxFor(x => x.Document.Approved, new {Name = "Approved", id = "EditDocumentApprovedControl"})
                             @Html.ValidationMessageFor(x => x.Document.Approved)
                         </div>
                         <div class="form-group">
-                            @Html.HiddenFor(x => x.Document.Id, new { Name = "Id", id = "EditDocumentIdControl" })
+                            @Html.HiddenFor(x => x.Document.Id, new {Name = "Id", id = "EditDocumentIdControl"})
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -122,7 +122,7 @@
     @if (User.IsInRole("SeniorStaff"))
     {
         <script>
-            $(document).ready(function () {
+            $(document).ready(function() {
                 $("#documents").DataTable({
                     ajax: {
                         url: "/api/documents",
@@ -131,7 +131,7 @@
                     columns: [
                         {
                             data: "description",
-                            render: function (data, type, document) {
+                            render: function(data, type, document) {
                                 return "<a href='" +
                                     document.url +
                                     "' target='_blank'>" +
@@ -141,14 +141,14 @@
                         },
                         {
                             data: "date",
-                            render: function (data) {
+                            render: function(data) {
                                 var date = new Date(data);
                                 return date.toLocaleDateString();
                             }
                         },
                         {
                             data: "approved",
-                            render: function (data) {
+                            render: function(data) {
                                 if (data === true) {
                                     return "Approved";
                                 }
@@ -159,7 +159,7 @@
                         },
                         {
                             data: "id",
-                            render: function (data) {
+                            render: function(data) {
                                 return "<button type='button' class='btn btn-xs btn-warning js-edit' data-document-id=" +
                                     data +
                                     "><i class=\"far fa-edit\"></i></button> " +
@@ -180,7 +180,7 @@
     @if (!User.IsInRole("SeniorStaff") && User.IsInRole("Staff"))
     {
         <script>
-            $(document).ready(function () {
+            $(document).ready(function() {
                 $("#documents").DataTable({
                     ajax: {
                         url: "/api/documents/approved",
@@ -189,7 +189,7 @@
                     columns: [
                         {
                             data: "description",
-                            render: function (data, type, document) {
+                            render: function(data, type, document) {
                                 return "<a href='" +
                                     document.url +
                                     "' target='_blank'>" +
@@ -199,7 +199,7 @@
                         },
                         {
                             data: "date",
-                            render: function (data) {
+                            render: function(data) {
                                 var date = new Date(data);
                                 return date.toLocaleDateString();
                             }
@@ -214,27 +214,27 @@
     }
 
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('.modal').on('hidden.bs.modal',
-                function () {
+                function() {
                     $(this).find('form').trigger('reset');
                 });
 
             $("#documents").on("click",
                 ".js-edit",
-                function () {
+                function() {
                     var button = $(this);
                     var docId = button.attr("data-document-id");
                     $.ajax({
                         url: "/api/documents/document/" + docId,
                         method: "GET",
-                        success: function (result) {
+                        success: function(result) {
                             $("#EditDocumentDescriptionControl").val(result["description"]);
                             $("#EditDocumentUrlControl").val(result["url"]);
                             $("#EditDocumentIdControl").val(result["id"]);
                             $("#EditDocumentApprovedControl").attr("checked", result["approved"]);
                         },
-                        error: function () {
+                        error: function() {
                             toastr.error("Failed to load document data");
                         }
                     });
@@ -243,19 +243,19 @@
 
             $("#documents").on("click",
                 ".js-delete",
-                function () {
+                function() {
                     var button = $(this);
                     bootbox.confirm("Are you sure you wish to delete this document?",
-                        function (result) {
+                        function(result) {
                             if (result) {
                                 $.ajax({
                                     url: "/api/documents/remove/" + button.attr("data-document-id"),
                                     method: "DELETE",
-                                    success: function (ajaxResult) {
+                                    success: function(ajaxResult) {
                                         $("#documents").DataTable().ajax.reload();
                                         toastr.success(ajaxResult);
                                     },
-                                    error: function (ajaxResult) {
+                                    error: function(ajaxResult) {
                                         toastr.error(ajaxResult.responseJSON);
                                     }
                                 });

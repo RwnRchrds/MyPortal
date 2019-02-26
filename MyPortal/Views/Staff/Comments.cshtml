@@ -18,7 +18,7 @@
 
 <div class="container float-left">
     @Html.Label("Comment Bank")
-    @Html.DropDownList("SelectedStatus", new SelectList(Model.CommentBanks, "Id", "Name"), "Select Comment Bank",  new { @class = "form-control", Name = "Id", id = "selectedBank" })
+    @Html.DropDownList("SelectedStatus", new SelectList(Model.CommentBanks, "Id", "Name"), "Select Comment Bank", new {@class = "form-control", Name = "Id", id = "selectedBank"})
 </div>
 
 <div class="container float-left mp-margin-top">
@@ -42,12 +42,12 @@
                 <h4 class="modal-title">New Comment</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/comments/create", HttpMethod = "POST", OnSuccess = "newCommentSuccess", OnFailure = "newCommentFailure" }, new { id = "newCommentForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/comments/create", HttpMethod = "POST", OnSuccess = "newCommentSuccess", OnFailure = "newCommentFailure"}, new {id = "newCommentForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.LabelFor(x => x.Comment.CommentBankId)
-                        @Html.DropDownListFor(l => l.Comment.CommentBankId, new SelectList(Model.CommentBanks, "Id", "Name"), "Select Comment Bank", new { @class = "form-control", Name = "CommentBankId", id = "newCommentBankControl" })
+                        @Html.DropDownListFor(l => l.Comment.CommentBankId, new SelectList(Model.CommentBanks, "Id", "Name"), "Select Comment Bank", new {@class = "form-control", Name = "CommentBankId", id = "newCommentBankControl"})
                         @Html.ValidationMessageFor(x => x.Comment.CommentBankId)
                     </div>
                     <div class="form-group">
@@ -73,12 +73,12 @@
                 <h4 class="modal-title">Edit Comment</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/comments/update", HttpMethod = "POST", OnSuccess = "editCommentSuccess", OnFailure = "editCommentFailure" }, new { id = "editCommentForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/comments/update", HttpMethod = "POST", OnSuccess = "editCommentSuccess", OnFailure = "editCommentFailure"}, new {id = "editCommentForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.LabelFor(x => x.Comment.CommentBankId)
-                        @Html.DropDownListFor(l => l.Comment.CommentBankId, new SelectList(Model.CommentBanks, "Id", "Name"), "Select Comment Bank", new { @class = "form-control", Name = "CommentBankId" , id = "editCommentBankControl" })
+                        @Html.DropDownListFor(l => l.Comment.CommentBankId, new SelectList(Model.CommentBanks, "Id", "Name"), "Select Comment Bank", new {@class = "form-control", Name = "CommentBankId", id = "editCommentBankControl"})
                         @Html.ValidationMessageFor(x => x.Comment.CommentBankId)
                     </div>
                     <div class="form-group">
@@ -104,96 +104,96 @@
 {
     <script>
         function loadComments() {
-                var commentBank = $("#selectedBank").val();
-                
-                if (commentBank === "") {
-                    $("#comments").addClass("hidden");
-                    return;
-                }
+            var commentBank = $("#selectedBank").val();
 
-                var url = "/api/comments/byBank/" + commentBank;
-
-                $("#comments").DataTable({
-                    ajax: {
-                        url: url,
-                        dataSrc: ""
-                    },
-                    columns: [
-                        {
-                            data: "value",
-                            render: function(data) {
-                                return data.replace(/</g, "&lt;")
-                                    .replace(/>/g, "&gt;");
-                            }
-                        },
-                        {
-                            data: "commentBank.name"
-                        },
-                        {
-                            data: "id",
-                            render: function (data) {
-                                return "<button type='button' class='btn btn-xs btn-warning js-edit' data-comment-id=" +
-                                    data +
-                                    "><i class=\"fas fa-edit\"></i></button> " +        
-                                    "<button type='button' class='btn btn-xs btn-danger js-delete' data-comment-id=" +
-                                    data +
-                                    "><i class=\"far fa-trash-alt\"></i></button>";
-                            }
-                        }
-                    ],
-                    "language": {
-                        "emptyTable": "No comments to display"
-                    }
-                });
+            if (commentBank === "") {
+                $("#comments").addClass("hidden");
+                return;
             }
+
+            var url = "/api/comments/byBank/" + commentBank;
+
+            $("#comments").DataTable({
+                ajax: {
+                    url: url,
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "value",
+                        render: function(data) {
+                            return data.replace(/</g, "&lt;")
+                                .replace(/>/g, "&gt;");
+                        }
+                    },
+                    {
+                        data: "commentBank.name"
+                    },
+                    {
+                        data: "id",
+                        render: function(data) {
+                            return "<button type='button' class='btn btn-xs btn-warning js-edit' data-comment-id=" +
+                                data +
+                                "><i class=\"fas fa-edit\"></i></button> " +
+                                "<button type='button' class='btn btn-xs btn-danger js-delete' data-comment-id=" +
+                                data +
+                                "><i class=\"far fa-trash-alt\"></i></button>";
+                        }
+                    }
+                ],
+                "language": {
+                    "emptyTable": "No comments to display"
+                }
+            });
+        }
 
         $(document).ready(function() {
             $('.modal').on('hidden.bs.modal',
-                function () {
+                function() {
                     $(this).find('form').trigger('reset');
                 });
-            
+
             $("#selectedBank").on("change",
                 function() {
                     $("#comments").DataTable().clear().destroy();
                     loadComments();
                 });
-                
+
             $("#comments").on("click",
                 ".js-edit",
-                function () {
+                function() {
                     var button = $(this);
                     var setId = button.attr("data-comment-id");
                     $.ajax({
                         url: "/api/comments/byId/" + setId,
                         method: "GET",
-                        success: function (result) {
+                        success: function(result) {
                             $("#editCommentBankControl").val(result["commentBankId"]);
                             $("#editCommentValueControl").val(result["value"]);
                             $("#editCommentIdControl").val(result["id"]);
                         },
-                        error: function () {
+                        error: function() {
                             toastr.error("Failed to load comment data");
                         }
                     });
                     $("#EditCommentModal").modal('toggle');
                 });
-            
+
             $("#comments").on("click",
                 ".js-delete",
-                function () {
+                function() {
                     var button = $(this);
                     bootbox.confirm("Are you sure you wish to delete this comment?",
-                        function (result) {
+                        function(result) {
                             if (result) {
                                 $.ajax({
                                     url: "/api/Comments/delete/" + button.attr("data-comment-id"),
                                     method: "DELETE",
-                                    success: function (a) {
+                                    success: function(a) {
                                         $("#comments").DataTable().ajax.reload();
                                         toastr.success(a);
                                     },
-                                    error: function (e) {
+                                    error: function(e) {
                                         toastr.error(e.responseJSON);
                                     }
                                 });
@@ -201,7 +201,7 @@
                         });
                 });
         });
-        
+
         function newCommentSuccess(result) {
             $("#NewCommentModal").modal('hide');
             $("#comments").DataTable().ajax.reload();

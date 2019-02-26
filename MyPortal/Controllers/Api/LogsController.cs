@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text.RegularExpressions;
 using System.Web.Http;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
@@ -51,7 +50,7 @@ namespace MyPortal.Controllers.Api
             if (!ModelState.IsValid)
                 return Content(HttpStatusCode.BadRequest, "Invalid data");
 
-            var log = (data);
+            var log = data;
             _context.Logs.Add(log);
             _context.SaveChanges();
 

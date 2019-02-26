@@ -108,10 +108,7 @@ namespace MyPortal.Controllers.Api
 
             var product = _context.Products.SingleOrDefault(x => x.Id == sale.ProductId);
 
-            if (student == null || product == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }                
+            if (student == null || product == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
             /*if (product.Price > student.AccountBalance)
                 throw new HttpResponseException(HttpStatusCode.BadRequest);*/
@@ -133,11 +130,8 @@ namespace MyPortal.Controllers.Api
             if (saleInDb == null)
                 return Content(HttpStatusCode.NotFound, "Sale not found");
 
-            if (saleInDb.Processed)
-            {
-                return Content(HttpStatusCode.BadRequest, "Sale already marked as processed");
-            }
-                
+            if (saleInDb.Processed) return Content(HttpStatusCode.BadRequest, "Sale already marked as processed");
+
             saleInDb.Processed = true;
 
             _context.SaveChanges();
@@ -158,21 +152,15 @@ namespace MyPortal.Controllers.Api
 
             var product = _context.Products.SingleOrDefault(x => x.Id == sale.ProductId);
 
-            if (student == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Student not found");
-            }
+            if (student == null) return Content(HttpStatusCode.NotFound, "Student not found");
 
-            if (product == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Product not found");
-            }                
+            if (product == null) return Content(HttpStatusCode.NotFound, "Product not found");
 
             student.AccountBalance -= product.Price;
 
             sale.AmountPaid = product.Price;
 
-            _context.Sales.Add((sale));
+            _context.Sales.Add(sale);
             _context.SaveChanges();
 
             return Ok("Sale completed");
@@ -186,28 +174,19 @@ namespace MyPortal.Controllers.Api
             //Check student actually exists
             var student = _context.Students.SingleOrDefault(x => x.Id == data.StudentId);
 
-            if (student == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Student not found");
-            }
-                
+            if (student == null) return Content(HttpStatusCode.NotFound, "Student not found");
+
 
             //Obtain items from student's shopping basket
             var basket = _context.BasketItems.Where(x => x.StudentId == data.StudentId);
 
             //Check there are actually items in the basket
-            if (!basket.Any())
-            {
-                return Content(HttpStatusCode.BadRequest, "There are no items in your basket");
-            }                
+            if (!basket.Any()) return Content(HttpStatusCode.BadRequest, "There are no items in your basket");
 
             //Check student has enough money to afford all items
             var totalCost = basket.Sum(x => x.Product.Price);
 
-            if (totalCost > student.AccountBalance)
-            {
-                return Content(HttpStatusCode.BadRequest, "Insufficient funds");
-            }                
+            if (totalCost > student.AccountBalance) return Content(HttpStatusCode.BadRequest, "Insufficient funds");
 
             //Process sales for each item
             foreach (var item in basket)
@@ -237,10 +216,7 @@ namespace MyPortal.Controllers.Api
         {
             var saleInDb = _context.Sales.SingleOrDefault(p => p.Id == id);
 
-            if (saleInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Sale not found");
-            }                
+            if (saleInDb == null) return Content(HttpStatusCode.NotFound, "Sale not found");
 
             var amount = saleInDb.AmountPaid;
 

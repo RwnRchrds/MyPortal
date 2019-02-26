@@ -19,7 +19,7 @@
     <table class="table table-bordered table-hover mp-table mp-table-link" id="studyTopics">
         <thead>
         <tr>
-            <th>Name</th>            
+            <th>Name</th>
             <th>Subject</th>
             <th>Year Group</th>
             <th>Actions</th>
@@ -37,12 +37,12 @@
                 <h4 class="modal-title">New Study Topic</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/studyTopics/create", HttpMethod = "POST", OnSuccess = "newStudyTopicSuccess", OnFailure = "newStudyTopicFailure" }, new { id = "newStudyTopicForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/studyTopics/create", HttpMethod = "POST", OnSuccess = "newStudyTopicSuccess", OnFailure = "newStudyTopicFailure"}, new {id = "newStudyTopicForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.LabelFor(x => x.StudyTopic.Name)
-                        @Html.TextBoxFor(x => x.StudyTopic.Name, new { @class = "form-control", Name = "Name" })
+                        @Html.TextBoxFor(x => x.StudyTopic.Name, new {@class = "form-control", Name = "Name"})
                         @Html.ValidationMessageFor(x => x.StudyTopic.Name)
                     </div>
                     <div class="form-group">
@@ -73,12 +73,12 @@
                 <h4 class="modal-title">New Study Topic</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/studyTopics/update", HttpMethod = "POST", OnSuccess = "editStudyTopicSuccess", OnFailure = "editStudyTopicFailure" }, new { id = "editStudyTopicForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/studyTopics/update", HttpMethod = "POST", OnSuccess = "editStudyTopicSuccess", OnFailure = "editStudyTopicFailure"}, new {id = "editStudyTopicForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.LabelFor(x => x.StudyTopic.Name)
-                        @Html.TextBoxFor(x => x.StudyTopic.Name, new { @class = "form-control", Name = "Name", id = "editStudyTopicNameControl" })
+                        @Html.TextBoxFor(x => x.StudyTopic.Name, new {@class = "form-control", Name = "Name", id = "editStudyTopicNameControl"})
                         @Html.ValidationMessageFor(x => x.StudyTopic.Name)
                     </div>
                     <div class="form-group">
@@ -92,7 +92,7 @@
                         @Html.ValidationMessageFor(x => x.StudyTopic.YearGroupId)
                     </div>
                     <div class="form-group">
-                        @Html.HiddenFor(x => x.StudyTopic.Id, new { Name = "Id", id = "editStudyTopicIdControl" })
+                        @Html.HiddenFor(x => x.StudyTopic.Id, new {Name = "Id", id = "editStudyTopicIdControl"})
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -106,7 +106,7 @@
 
 @section scripts
 {
-@Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jqueryval")
     <script>
         $(document).ready(function() {
             $('.modal').on('hidden.bs.modal',
@@ -189,7 +189,7 @@
                         });
                 });
         });
-        
+
         function newStudyTopicSuccess(result) {
             $("#NewStudyTopicModal").modal('hide');
             $("#studyTopics").DataTable().ajax.reload();
@@ -210,6 +210,6 @@
         function editStudyTopicFailure(result) {
             $("#EditStudyTopicModal").modal('hide');
             toastr.error(result.responseJSON);
-        }        
+        }
     </script>
 }

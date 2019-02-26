@@ -5,113 +5,113 @@
 }
 
 <body>
-    <div class="container float-left">
-        <h2 class="mp-page-title">Subjects</h2>
-        <hr />
-    </div>
+<div class="container float-left">
+    <h2 class="mp-page-title">Subjects</h2>
+    <hr/>
+</div>
 
-    <div class="container float-left">
-        @if (User.IsInRole("SeniorStaff"))
-        {
-            <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#NewSubjectModal">New Subject</button>
-            <hr />
-        }
+<div class="container float-left">
+    @if (User.IsInRole("SeniorStaff"))
+    {
+        <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#NewSubjectModal">New Subject</button>
+        <hr/>
+    }
 
-    </div>
+</div>
 
-    <div class="container float-left">
-        <table class="table table-bordered table-hover mp-table mp-table-link" id="subjects">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Leader</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
+<div class="container float-left">
+    <table class="table table-bordered table-hover mp-table mp-table-link" id="subjects">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Leader</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
 
-    <div id="NewSubjectModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <!--content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">New Subject</h4>
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
-                </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/subjects/new", HttpMethod = "POST", OnSuccess = "newSubjectSuccess", OnFailure = "newSubjectFailure" }, new { id = "newResultSetForm" }))
-                {
-                    <div class="modal-body">
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.Subject.Code)
-                            @Html.TextBoxFor(x => x.Subject.Code, new { @class = "form-control", Name = "Code" })
-                            @Html.ValidationMessageFor(x => x.Subject.Code)
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.Subject.Name)
-                            @Html.TextBoxFor(x => x.Subject.Name, new { @class = "form-control", Name = "Name" })
-                            @Html.ValidationMessageFor(x => x.Subject.Name)
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(l => l.Subject.LeaderId)
-                            @Html.DropDownListFor(l => l.Subject.LeaderId, new SelectList(from x in Model.Staff select new { Id = x.Id, FullName = x.LastName + ", " + x.FirstName }, "Id", "FullName"), "Select Subject Leader", new { @class = "form-control", Name = "LeaderId" })
-                            @Html.ValidationMessageFor(l => l.Subject.LeaderId)
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                    </div>
-                }
+<div id="NewSubjectModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New Subject</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/subjects/new", HttpMethod = "POST", OnSuccess = "newSubjectSuccess", OnFailure = "newSubjectFailure"}, new {id = "newResultSetForm"}))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Subject.Code)
+                        @Html.TextBoxFor(x => x.Subject.Code, new {@class = "form-control", Name = "Code"})
+                        @Html.ValidationMessageFor(x => x.Subject.Code)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Subject.Name)
+                        @Html.TextBoxFor(x => x.Subject.Name, new {@class = "form-control", Name = "Name"})
+                        @Html.ValidationMessageFor(x => x.Subject.Name)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(l => l.Subject.LeaderId)
+                        @Html.DropDownListFor(l => l.Subject.LeaderId, new SelectList(from x in Model.Staff select new {x.Id, FullName = x.LastName + ", " + x.FirstName}, "Id", "FullName"), "Select Subject Leader", new {@class = "form-control", Name = "LeaderId"})
+                        @Html.ValidationMessageFor(l => l.Subject.LeaderId)
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
         </div>
     </div>
+</div>
 
-    <div id="EditSubjectModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <!--content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Edit Subject</h4>
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
-                </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/subjects/update", HttpMethod = "POST", OnSuccess = "editSubjectSuccess", OnFailure = "editSubjectFailure" }, new { id = "editResultSetForm" }))
-                {
-                    <div class="modal-body">
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.Subject.Code)
-                            @Html.TextBoxFor(x => x.Subject.Code, new { @class = "form-control", Name = "Code", id = "EditSubjectCodeControl" })
-                            @Html.ValidationMessageFor(x => x.Subject.Code)
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.Subject.Name)
-                            @Html.TextBoxFor(x => x.Subject.Name, new { @class = "form-control", Name = "Name", id = "EditSubjectNameControl" })
-                            @Html.ValidationMessageFor(x => x.Subject.Name)
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(l => l.Subject.LeaderId)
-                            @Html.DropDownListFor(l => l.Subject.LeaderId, new SelectList(from x in Model.Staff select new { Id = x.Id, FullName = x.LastName + ", " + x.FirstName }, "Id", "FullName"), "Select Subject Leader", new { @class = "form-control", Name = "LeaderId", id = "EditSubjectStaffControl" })
-                            @Html.ValidationMessageFor(l => l.Subject.LeaderId)
-                        </div>
-                        <div class="form-group">
-                            @Html.HiddenFor(x => x.Subject.Id, new { Name = "Id", id = "EditSubjectIdControl" })
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                    </div>
-                }
+<div id="EditSubjectModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Subject</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/subjects/update", HttpMethod = "POST", OnSuccess = "editSubjectSuccess", OnFailure = "editSubjectFailure"}, new {id = "editResultSetForm"}))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Subject.Code)
+                        @Html.TextBoxFor(x => x.Subject.Code, new {@class = "form-control", Name = "Code", id = "EditSubjectCodeControl"})
+                        @Html.ValidationMessageFor(x => x.Subject.Code)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Subject.Name)
+                        @Html.TextBoxFor(x => x.Subject.Name, new {@class = "form-control", Name = "Name", id = "EditSubjectNameControl"})
+                        @Html.ValidationMessageFor(x => x.Subject.Name)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(l => l.Subject.LeaderId)
+                        @Html.DropDownListFor(l => l.Subject.LeaderId, new SelectList(from x in Model.Staff select new {x.Id, FullName = x.LastName + ", " + x.FirstName}, "Id", "FullName"), "Select Subject Leader", new {@class = "form-control", Name = "LeaderId", id = "EditSubjectStaffControl"})
+                        @Html.ValidationMessageFor(l => l.Subject.LeaderId)
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(x => x.Subject.Id, new {Name = "Id", id = "EditSubjectIdControl"})
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
         </div>
     </div>
+</div>
 </body>
 
 @section scripts
 {
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $("#subjects").DataTable({
                 ajax: {
                     url: "/api/subjects/all",
@@ -123,7 +123,7 @@
                     },
                     {
                         data: "staff.lastName",
-                        render: function (data, type, log) {
+                        render: function(data, type, log) {
                             return log.staff.title +
                                 " " +
                                 log.staff.firstName.substring(0, 1) +
@@ -133,7 +133,7 @@
                     },
                     {
                         data: "id",
-                        render: function (data) {
+                        render: function(data) {
                             return "<button type='button' class='btn btn-xs btn-warning mp-btn-action-left js-edit' data-subject-id=" +
                                 data +
                                 "><i class=\"far fa-edit\"></i></button> " +
@@ -147,19 +147,19 @@
 
             $("#subjects").on("click",
                 ".js-edit",
-                function () {
+                function() {
                     var button = $(this);
                     var subjectId = button.attr("data-subject-id");
                     $.ajax({
                         url: "/api/subjects/byId/" + subjectId,
                         method: "GET",
-                        success: function (result) {
+                        success: function(result) {
                             $("#EditSubjectCodeControl").val(result["code"]);
                             $("#EditSubjectNameControl").val(result["name"]);
                             $("#EditSubjectStaffControl").val(result["leaderId"]);
                             $("#EditSubjectIdControl").val(result["id"]);
                         },
-                        error: function () {
+                        error: function() {
                             toastr.error("Failed to load subject data");
                         }
                     });
@@ -168,19 +168,19 @@
 
             $("#subjects").on("click",
                 ".js-delete",
-                function () {
+                function() {
                     var button = $(this);
                     bootbox.confirm("Are you sure you wish to delete this subject?",
-                        function (result) {
+                        function(result) {
                             if (result) {
                                 $.ajax({
                                     url: "/api/subjects/delete/" + button.attr("data-subject-id"),
                                     method: "DELETE",
-                                    success: function (a) {
+                                    success: function(a) {
                                         $("#subjects").DataTable().ajax.reload();
                                         toastr.success(a);
                                     },
-                                    error: function (e) {
+                                    error: function(e) {
                                         toastr.error(e.responseJSON);
                                     }
                                 });

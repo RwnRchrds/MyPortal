@@ -4,107 +4,108 @@
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 <body>
-    <!--#region Title-->
-    <div class="container float-left">
-        <h2 class="mp-page-title">Accounts</h2>
-        <hr />
-    </div>
-    <!--#endregion-->
-    <!--#region Accounts Table-->
-    <div class="container float-left">
-        <table class="table table-bordered table-hover mp-table" id="students">
-            <thead>
-                <tr>
-                    <th>Student</th>
-                    <th>Year Group</th>
-                    <th>Reg Group</th>
-                    <th>Balance</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-    <!--#endregion-->
-    <!--#region Credit Modal-->
-    <div id="CreditModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
+<!--#region Title-->
+<div class="container float-left">
+    <h2 class="mp-page-title">Accounts</h2>
+    <hr/>
+</div>
+<!--#endregion-->
+<!--#region Accounts Table-->
+<div class="container float-left">
+    <table class="table table-bordered table-hover mp-table" id="students">
+        <thead>
+        <tr>
+            <th>Student</th>
+            <th>Year Group</th>
+            <th>Reg Group</th>
+            <th>Balance</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+<!--#endregion-->
+<!--#region Credit Modal-->
+<div id="CreditModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
 
-            <!--content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title mp-title-credit">Credit Account</h4>
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/students/credit", HttpMethod = "POST", OnSuccess = "creditSuccess", OnFailure = "creditFailure"}, new { id = "CreditForm" }))
-                {
-                    <div class="modal-body">
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.BalanceAdjustment.Amount)
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text mp-bold" id="basic-addon">£</span>
-                                </div>
-                                @Html.TextBoxFor(x => x.BalanceAdjustment.Amount, new { @class = "form-control", Name = "Amount" })
-                            </div>
-                            @Html.ValidationMessageFor(x => x.BalanceAdjustment.Amount)
-                        </div>
-                        <div class="form-group">
-                            @Html.HiddenFor(x => x.BalanceAdjustment.Student, new { Name = "Student", id = "studentIdControlCredit" })
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                    </div>
-                }
-
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title mp-title-credit">Credit Account</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/students/credit", HttpMethod = "POST", OnSuccess = "creditSuccess", OnFailure = "creditFailure"}, new {id = "CreditForm"}))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.BalanceAdjustment.Amount)
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text mp-bold" id="basic-addon">£</span>
+                            </div>
+                            @Html.TextBoxFor(x => x.BalanceAdjustment.Amount, new {@class = "form-control", Name = "Amount"})
+                        </div>
+                        @Html.ValidationMessageFor(x => x.BalanceAdjustment.Amount)
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(x => x.BalanceAdjustment.Student, new {Name = "Student", id = "studentIdControlCredit"})
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+
         </div>
     </div>
-    <!--#endregion-->
-    <!--#region Debit Modal-->
-    <div id="DebitModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
+</div>
+<!--#endregion-->
+<!--#region Debit Modal-->
+<div id="DebitModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
 
-            <!--content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title mp-title-debit">Debit Account</h4>
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/students/debit", HttpMethod = "POST", OnSuccess = "debitSuccess", OnFailure = "debitFailure"}, new { id = "DebitForm" }))
-                {
-                    <div class="modal-body">
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.BalanceAdjustment.Amount)
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text mp-bold" id="basic-addon">£</span>
-                                </div>
-                                @Html.TextBoxFor(x => x.BalanceAdjustment.Amount, new { @class = "form-control", Name = "Amount" })
-                            </div>
-                            @Html.ValidationMessageFor(x => x.BalanceAdjustment.Amount)
-                        </div>
-                        <div class="form-group">
-                            @Html.HiddenFor(x => x.BalanceAdjustment.Student, new { Name = "Student", id = "studentIdControlDebit" })
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                    </div>
-                }
-
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title mp-title-debit">Debit Account</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/students/debit", HttpMethod = "POST", OnSuccess = "debitSuccess", OnFailure = "debitFailure"}, new {id = "DebitForm"}))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.BalanceAdjustment.Amount)
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text mp-bold" id="basic-addon">£</span>
+                            </div>
+                            @Html.TextBoxFor(x => x.BalanceAdjustment.Amount, new {@class = "form-control", Name = "Amount"})
+                        </div>
+                        @Html.ValidationMessageFor(x => x.BalanceAdjustment.Amount)
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(x => x.BalanceAdjustment.Student, new {Name = "Student", id = "studentIdControlDebit"})
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+
         </div>
     </div>
-    <!--#endregion-->
+</div>
+<!--#endregion-->
 </body>
+
 @section scripts
 {
     <script>
@@ -170,7 +171,7 @@
                     $("#studentIdControlDebit").val(studentId);
 
                     $("#DebitModal").modal('toggle');
-                });                      
+                });
 
             //Clear Modal When Closed
             $('#CreditModal').on('hidden.bs.modal',
