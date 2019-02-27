@@ -37,18 +37,29 @@ namespace MyPortal.Controllers.Api
             {
                 var userId = User.Identity.GetUserId();
                 author = _context.Staff.SingleOrDefault(x => x.UserId == userId);
-                if (author == null) return Content(HttpStatusCode.BadRequest, "User does not have a personnel profile");
+                if (author == null)
+                {
+                    return Content(HttpStatusCode.BadRequest, "User does not have a personnel profile");
+                }
             }
 
-            if (authorId != 0) author = _context.Staff.SingleOrDefault(x => x.Id == authorId);
+            if (authorId != 0)
+            {
+                author = _context.Staff.SingleOrDefault(x => x.Id == authorId);
+            }
 
-            if (author == null) return Content(HttpStatusCode.NotFound, "Staff member not found");
+            if (author == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Staff member not found");
+            }
 
             data.Date = DateTime.Now;
             data.AuthorId = author.Id;
 
             if (!ModelState.IsValid)
+            {
                 return Content(HttpStatusCode.BadRequest, "Invalid data");
+            }
 
             var log = data;
             _context.Logs.Add(log);
@@ -63,7 +74,9 @@ namespace MyPortal.Controllers.Api
             var logInDb = _context.Logs.SingleOrDefault(l => l.Id == id);
 
             if (logInDb == null)
+            {
                 return Content(HttpStatusCode.NotFound, "Log does not exist");
+            }
 
             _context.Logs.Remove(logInDb);
             _context.SaveChanges();
@@ -83,7 +96,9 @@ namespace MyPortal.Controllers.Api
             var log = _context.Logs.SingleOrDefault(l => l.Id == id);
 
             if (log == null)
+            {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
 
             return Mapper.Map<Log, LogDto>(log);
         }
@@ -103,12 +118,16 @@ namespace MyPortal.Controllers.Api
         public IHttpActionResult UpdateLog(Log log)
         {
             if (!ModelState.IsValid)
+            {
                 return Content(HttpStatusCode.BadRequest, "Invalid data");
+            }
 
             var logInDb = _context.Logs.SingleOrDefault(l => l.Id == log.Id);
 
             if (logInDb == null)
+            {
                 return Content(HttpStatusCode.NotFound, "Log not found");
+            }
 
             //var c = Mapper.Map(logDto, logInDb);
 

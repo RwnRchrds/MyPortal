@@ -24,14 +24,18 @@ namespace MyPortal.Controllers.Api
         public IHttpActionResult CreateTrainingCertificate(TrainingCertificate trainingCertificateDto)
         {
             if (!ModelState.IsValid)
+            {
                 return Content(HttpStatusCode.BadRequest, "Invalid data");
+            }
 
             var userId = User.Identity.GetUserId();
 
             var userPerson = _context.Staff.SingleOrDefault(x => x.UserId == userId);
 
             if (trainingCertificateDto.StaffId == userPerson.Id)
+            {
                 return Content(HttpStatusCode.BadRequest, "Cannot add a certificate for yourself");
+            }
 
             var cert = trainingCertificateDto;
 
@@ -49,14 +53,18 @@ namespace MyPortal.Controllers.Api
                 _context.TrainingCertificates.SingleOrDefault(l => l.StaffId == staff && l.CourseId == course);
 
             if (certInDb == null)
+            {
                 return Content(HttpStatusCode.NotFound, "Certificate not found");
+            }
 
             var userId = User.Identity.GetUserId();
 
             var userPerson = _context.Staff.SingleOrDefault(x => x.UserId == userId);
 
             if (staff == userPerson.Id)
+            {
                 return Content(HttpStatusCode.BadRequest, "Cannot remove a certificate for yourself");
+            }
 
             _context.TrainingCertificates.Remove(certInDb);
             _context.SaveChanges();
@@ -76,7 +84,9 @@ namespace MyPortal.Controllers.Api
             var certInDb = _context.TrainingCertificates.Single(x => x.StaffId == staffId && x.CourseId == courseId);
 
             if (certInDb == null)
+            {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
 
             return Mapper.Map<TrainingCertificate, TrainingCertificateDto>(certInDb);
         }
@@ -87,7 +97,10 @@ namespace MyPortal.Controllers.Api
         {
             var staffInDb = _context.Staff.Single(x => x.Id == staff);
 
-            if (staffInDb == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+            if (staffInDb == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
 
             return _context.TrainingCertificates
                 .Where(c => c.StaffId == staff)
@@ -102,14 +115,19 @@ namespace MyPortal.Controllers.Api
             var certInDb =
                 _context.TrainingCertificates.Single(x => x.StaffId == data.StaffId && x.CourseId == data.CourseId);
 
-            if (certInDb == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+            if (certInDb == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
 
             var userId = User.Identity.GetUserId();
 
             var userPerson = _context.Staff.SingleOrDefault(x => x.UserId == userId);
 
             if (userPerson != null && data.StaffId == userPerson.Id)
+            {
                 return Content(HttpStatusCode.BadRequest, "Cannot modify a certificate for yourself");
+            }
 
             certInDb.StatusId = data.StatusId;
 

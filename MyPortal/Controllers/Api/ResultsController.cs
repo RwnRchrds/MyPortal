@@ -34,14 +34,19 @@ namespace MyPortal.Controllers.Api
         public IHttpActionResult UploadResults(int resultSetId)
         {
             if (!File.Exists(@"C:\MyPortal\Files\Results\import.csv"))
+            {
                 return Content(HttpStatusCode.NotFound, "File not found");
+            }
 
             var stream = new FileStream(@"C:\MyPortal\Files\Results\import.csv", FileMode.Open);
             var subjects = _context.Subjects.OrderBy(x => x.Name).ToList();
             var numResults = 0;
             var resultSet = _context.ResultSets.SingleOrDefault(x => x.Id == resultSetId);
 
-            if (resultSet == null) return Content(HttpStatusCode.NotFound, "Result set not found");
+            if (resultSet == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Result set not found");
+            }
 
             using (var reader = new StreamReader(stream))
             {
@@ -49,13 +54,21 @@ namespace MyPortal.Controllers.Api
                 while (!reader.EndOfStream)
                 {
                     var line = reader.ReadLine();
-                    if (line == null) continue;
+                    if (line == null)
+                    {
+                        continue;
+                    }
+
                     var values = line.Split(',');
                     for (var i = 0; i < subjects.Count; i++)
                     {
                         var studentMisId = values[4];
                         var student = _context.Students.SingleOrDefault(x => x.MisId == studentMisId);
-                        if (student == null) continue;
+                        if (student == null)
+                        {
+                            continue;
+                        }
+
                         var result = new Result
                         {
                             StudentId = student.Id,
@@ -64,7 +77,11 @@ namespace MyPortal.Controllers.Api
                             Value = values[5 + i]
                         };
 
-                        if (result.Value.Equals("")) continue;
+                        if (result.Value.Equals(""))
+                        {
+                            continue;
+                        }
+
                         _context.Results.Add(result);
                         numResults++;
                     }
@@ -90,7 +107,9 @@ namespace MyPortal.Controllers.Api
                 x.StudentId == data.StudentId && x.SubjectId == data.SubjectId && x.ResultSetId == data.ResultSetId);
 
             if (resultInDb != null)
+            {
                 return Content(HttpStatusCode.BadRequest, "Result already exists");
+            }
 
             _context.Results.Add(Mapper.Map<ResultDto, Result>(data));
             _context.SaveChanges();

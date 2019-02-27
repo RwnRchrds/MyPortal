@@ -29,7 +29,9 @@ namespace MyPortal.Controllers.Api
             var student = _context.Students.SingleOrDefault(x => x.Id == data.Student);
 
             if (student == null)
+            {
                 return Content(HttpStatusCode.NotFound, "Student not found");
+            }
 
             var document = data.Document;
 
@@ -37,7 +39,10 @@ namespace MyPortal.Controllers.Api
 
             var uploader = _context.Staff.Single(x => x.UserId == currentUserId);
 
-            if (uploader == null) return Content(HttpStatusCode.BadRequest, "Uploader not found");
+            if (uploader == null)
+            {
+                return Content(HttpStatusCode.BadRequest, "Uploader not found");
+            }
 
             document.UploaderId = uploader.Id;
 
@@ -50,7 +55,10 @@ namespace MyPortal.Controllers.Api
             var isUriValid = Uri.TryCreate(document.Url, UriKind.Absolute, out var uriResult)
                              && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 
-            if (!isUriValid) return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
+            if (!isUriValid)
+            {
+                return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
+            }
 
             _context.Documents.Add(document);
             _context.SaveChanges();
@@ -71,7 +79,10 @@ namespace MyPortal.Controllers.Api
         [Authorize(Roles = "Staff, SeniorStaff")]
         public IHttpActionResult CreateStudent(Student student)
         {
-            if (!ModelState.IsValid) throw new HttpResponseException(HttpStatusCode.BadRequest);
+            if (!ModelState.IsValid)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
 
             _context.Students
                 .Add(student);
@@ -85,11 +96,17 @@ namespace MyPortal.Controllers.Api
         [Authorize(Roles = "Staff, SeniorStaff")]
         public IHttpActionResult CreditAccount(BalanceAdjustment data)
         {
-            if (data.Amount <= 0) return Content(HttpStatusCode.BadRequest, "Cannot credit negative amount");
+            if (data.Amount <= 0)
+            {
+                return Content(HttpStatusCode.BadRequest, "Cannot credit negative amount");
+            }
 
             var studentInDb = _context.Students.SingleOrDefault(s => s.Id == data.Student);
 
-            if (studentInDb == null) return Content(HttpStatusCode.NotFound, "Student not found");
+            if (studentInDb == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Student not found");
+            }
 
             studentInDb.AccountBalance += data.Amount;
 
@@ -103,14 +120,22 @@ namespace MyPortal.Controllers.Api
         [Authorize(Roles = "Staff, SeniorStaff")]
         public IHttpActionResult DebitAccount(BalanceAdjustment data)
         {
-            if (data.Amount <= 0) return Content(HttpStatusCode.BadRequest, "Cannot debit negative amount");
+            if (data.Amount <= 0)
+            {
+                return Content(HttpStatusCode.BadRequest, "Cannot debit negative amount");
+            }
 
             var studentInDb = _context.Students.SingleOrDefault(s => s.Id == data.Student);
 
-            if (studentInDb == null) return Content(HttpStatusCode.NotFound, "Student not found");
+            if (studentInDb == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Student not found");
+            }
 
             if (studentInDb.AccountBalance < data.Amount)
+            {
                 return Content(HttpStatusCode.BadRequest, "Insufficient Funds");
+            }
 
             studentInDb.AccountBalance -= data.Amount;
 
@@ -125,7 +150,10 @@ namespace MyPortal.Controllers.Api
         {
             var studentInDb = _context.Students.SingleOrDefault(s => s.Id == id);
 
-            if (studentInDb == null) return Content(HttpStatusCode.NotFound, "Student not found");
+            if (studentInDb == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Student not found");
+            }
 
             _context.Students.Remove(studentInDb);
             _context.SaveChanges();
@@ -146,7 +174,10 @@ namespace MyPortal.Controllers.Api
         {
             var studentInDb = _context.Students.SingleOrDefault(x => x.Id == student);
 
-            if (studentInDb == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+            if (studentInDb == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
 
             return studentInDb.AccountBalance;
         }
@@ -158,7 +189,10 @@ namespace MyPortal.Controllers.Api
             var document = _context.StudentDocuments
                 .SingleOrDefault(x => x.Id == documentId);
 
-            if (document == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+            if (document == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
 
             return Mapper.Map<Document, DocumentDto>(document.Document);
         }
@@ -169,7 +203,10 @@ namespace MyPortal.Controllers.Api
         {
             var student = _context.Students.SingleOrDefault(s => s.Id == studentId);
 
-            if (student == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+            if (student == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
 
             var documents = _context.StudentDocuments
                 .Where(x => x.StudentId == studentId)
@@ -184,7 +221,10 @@ namespace MyPortal.Controllers.Api
         {
             var student = _context.Students.SingleOrDefault(s => s.Id == id);
 
-            if (student == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+            if (student == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
 
             return Mapper.Map<Student, StudentDto>(student);
         }
@@ -227,11 +267,17 @@ namespace MyPortal.Controllers.Api
         {
             var studentDocument = _context.StudentDocuments.SingleOrDefault(x => x.Id == documentId);
 
-            if (studentDocument == null) return Content(HttpStatusCode.NotFound, "Document not found");
+            if (studentDocument == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Document not found");
+            }
 
             var attachedDocument = studentDocument.Document;
 
-            if (attachedDocument == null) return Content(HttpStatusCode.BadRequest, "No document attached");
+            if (attachedDocument == null)
+            {
+                return Content(HttpStatusCode.BadRequest, "No document attached");
+            }
 
             _context.StudentDocuments.Remove(studentDocument);
 
@@ -242,18 +288,94 @@ namespace MyPortal.Controllers.Api
             return Ok("Document deleted");
         }
 
+        [HttpGet]
+        [Route("api/students/hasBasketItems/{id}")]
+        public bool StudentHasBasketItems(int id)
+        {
+            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == id);
+
+            if (studentInDb == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return studentInDb.BasketItems.Any();
+        }
+
+        [HttpGet]
+        [Route("api/students/hasDocuments/{id}")]
+        public bool StudentHasDocuments(int id)
+        {
+            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == id);
+
+            if (studentInDb == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return studentInDb.StudentDocuments.Any();
+        }
+
+        [HttpGet]
+        [Route("api/students/hasLogs/{id}")]
+        public bool StudentHasLogs(int id)
+        {
+            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == id);
+
+            if (studentInDb == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return studentInDb.Logs.Any();
+        }
+
+        [HttpGet]
+        [Route("api/students/hasResults/{id}")]
+        public bool StudentHasResults(int id)
+        {
+            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == id);
+
+            if (studentInDb == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return studentInDb.Results.Any();
+        }
+
+        [HttpGet]
+        [Route("api/students/hasSales/{id}")]
+        public bool StudentHasSales(int id)
+        {
+            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == id);
+
+            if (studentInDb == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return studentInDb.Sales.Any();
+        }
+
         [HttpPost]
         [Route("api/students/documents/edit")]
         public IHttpActionResult UpdateDocument(Document data)
         {
             var documentInDb = _context.Documents.Single(x => x.Id == data.Id);
 
-            if (documentInDb == null) return Content(HttpStatusCode.NotFound, "Document not found");
+            if (documentInDb == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Document not found");
+            }
 
             var isUriValid = Uri.TryCreate(data.Url, UriKind.Absolute, out var uriResult)
                              && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 
-            if (!isUriValid) return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
+            if (!isUriValid)
+            {
+                return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
+            }
 
             documentInDb.Description = data.Description;
             documentInDb.Url = data.Url;
@@ -270,11 +392,16 @@ namespace MyPortal.Controllers.Api
         public IHttpActionResult UpdateStudent(Student student)
         {
             if (student == null || !ModelState.IsValid)
+            {
                 return Content(HttpStatusCode.BadRequest, "Invalid request data");
+            }
 
             var studentInDb = _context.Students.SingleOrDefault(s => s.Id == student.Id);
 
-            if (studentInDb == null) return Content(HttpStatusCode.NotFound, "Student not found");
+            if (studentInDb == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Student not found");
+            }
 
             Mapper.Map(student, studentInDb);
             studentInDb.FirstName = student.FirstName;
@@ -287,61 +414,6 @@ namespace MyPortal.Controllers.Api
             _context.SaveChanges();
 
             return Ok("Student updated");
-        }
-
-        [HttpGet]
-        [Route("api/students/hasLogs/{id}")]
-        public bool StudentHasLogs(int id)
-        {
-            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == id);
-
-            if (studentInDb == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            return studentInDb.Logs.Any();
-        }
-
-        [HttpGet]
-        [Route("api/students/hasResults/{id}")]
-        public bool StudentHasResults(int id)
-        {
-            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == id);
-
-            if (studentInDb == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            return studentInDb.Results.Any();
-        }
-
-        [HttpGet]
-        [Route("api/students/hasBasketItems/{id}")]
-        public bool StudentHasBasketItems(int id)
-        {
-            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == id);
-
-            if (studentInDb == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            return studentInDb.BasketItems.Any();
-        }
-
-        [HttpGet]
-        [Route("api/students/hasDocuments/{id}")]
-        public bool StudentHasDocuments(int id)
-        {
-            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == id);
-
-            if (studentInDb == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            return studentInDb.StudentDocuments.Any();
-        }
-
-        [HttpGet]
-        [Route("api/students/hasSales/{id}")]
-        public bool StudentHasSales(int id)
-        {
-            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == id);
-
-            if (studentInDb == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            return studentInDb.Sales.Any();
         }
     }
 }

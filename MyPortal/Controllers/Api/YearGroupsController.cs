@@ -18,6 +18,36 @@ namespace MyPortal.Controllers.Api
             _context = new MyPortalDbContext();
         }
 
+        [HttpPost]
+        [Route("api/yearGroups/create")]
+        public IHttpActionResult CreateYearGroup(YearGroup yearGroup)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Content(HttpStatusCode.BadRequest, "Invalid data");
+            }
+
+            _context.YearGroups.Add(yearGroup);
+            return Ok("Year group added");
+        }
+
+        [HttpDelete]
+        [Route("api/yearGroups/delete/{id}")]
+        public IHttpActionResult DeleteYearGroup(int id)
+        {
+            var yearGroupInDb = _context.YearGroups.SingleOrDefault(x => x.Id == id);
+
+            if (yearGroupInDb == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Year group not found");
+            }
+
+            _context.YearGroups.Remove(yearGroupInDb);
+            _context.SaveChanges();
+
+            return Ok("Year group deleted");
+        }
+
         protected override void Dispose(bool disposing)
         {
             _context.Dispose();
@@ -34,24 +64,20 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [Route("api/yearGroups/create")]
-        public IHttpActionResult CreateYearGroup(YearGroup yearGroup)
-        {
-            if (!ModelState.IsValid) return Content(HttpStatusCode.BadRequest, "Invalid data");
-
-            _context.YearGroups.Add(yearGroup);
-            return Ok("Year group added");
-        }
-
-        [HttpPost]
         [Route("api/yearGroups/update")]
         public IHttpActionResult UpdateYearGroup(YearGroup yearGroup)
         {
-            if (!ModelState.IsValid) return Content(HttpStatusCode.BadRequest, "Invalid data");
+            if (!ModelState.IsValid)
+            {
+                return Content(HttpStatusCode.BadRequest, "Invalid data");
+            }
 
             var yearGroupInDb = _context.YearGroups.SingleOrDefault(x => x.Id == yearGroup.Id);
 
-            if (yearGroupInDb == null) return Content(HttpStatusCode.NotFound, "Year group not found");
+            if (yearGroupInDb == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Year group not found");
+            }
 
             yearGroupInDb.Name = yearGroup.Name;
             yearGroupInDb.HeadId = yearGroup.HeadId;
@@ -59,20 +85,6 @@ namespace MyPortal.Controllers.Api
             _context.SaveChanges();
 
             return Ok("Year group updated");
-        }
-
-        [HttpDelete]
-        [Route("api/yearGroups/delete/{id}")]
-        public IHttpActionResult DeleteYearGroup(int id)
-        {
-            var yearGroupInDb = _context.YearGroups.SingleOrDefault(x => x.Id == id);
-
-            if (yearGroupInDb == null) return Content(HttpStatusCode.NotFound, "Year group not found");
-
-            _context.YearGroups.Remove(yearGroupInDb);
-            _context.SaveChanges();
-
-            return Ok("Year group deleted");
         }
     }
 }

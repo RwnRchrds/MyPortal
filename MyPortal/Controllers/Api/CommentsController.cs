@@ -22,6 +22,51 @@ namespace MyPortal.Controllers.Api
             _context = context;
         }
 
+        [HttpPost]
+        [Route("api/comments/create")]
+        public IHttpActionResult CreateComment(Comment comment)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Content(HttpStatusCode.BadRequest, "Invalid data");
+            }
+
+            _context.Comments.Add(comment);
+            _context.SaveChanges();
+            return Ok("Comment added");
+        }
+
+        [HttpDelete]
+        [Route("api/comments/delete/{id}")]
+        public IHttpActionResult DeleteComment(int id)
+        {
+            var comment = _context.Comments.SingleOrDefault(x => x.Id == id);
+
+            if (comment == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Comment not found");
+            }
+
+            _context.Comments.Remove(comment);
+            _context.SaveChanges();
+
+            return Ok("Comment deleted");
+        }
+
+        [HttpGet]
+        [Route("api/comments/byId/{id}")]
+        public CommentDto GetCommentById(int id)
+        {
+            var comment = _context.Comments.SingleOrDefault(x => x.Id == id);
+
+            if (comment == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return Mapper.Map<Comment, CommentDto>(comment);
+        }
+
         [HttpGet]
         [Route("api/comments/all")]
         public IEnumerable<CommentDto> GetComments()
@@ -43,37 +88,21 @@ namespace MyPortal.Controllers.Api
                 .Select(Mapper.Map<Comment, CommentDto>);
         }
 
-        [HttpGet]
-        [Route("api/comments/byId/{id}")]
-        public CommentDto GetCommentById(int id)
-        {
-            var comment = _context.Comments.SingleOrDefault(x => x.Id == id);
-
-            if (comment == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            return Mapper.Map<Comment, CommentDto>(comment);
-        }
-
-        [HttpPost]
-        [Route("api/comments/create")]
-        public IHttpActionResult CreateComment(Comment comment)
-        {
-            if (!ModelState.IsValid) return Content(HttpStatusCode.BadRequest, "Invalid data");
-
-            _context.Comments.Add(comment);
-            _context.SaveChanges();
-            return Ok("Comment added");
-        }
-
         [HttpPost]
         [Route("api/comments/update")]
         public IHttpActionResult UpdateComment(Comment comment)
         {
-            if (!ModelState.IsValid) return Content(HttpStatusCode.BadRequest, "Invalid data");
+            if (!ModelState.IsValid)
+            {
+                return Content(HttpStatusCode.BadRequest, "Invalid data");
+            }
 
             var commentInDb = _context.Comments.SingleOrDefault(x => x.Id == comment.Id);
 
-            if (commentInDb == null) return Content(HttpStatusCode.NotFound, "Comment not found");
+            if (commentInDb == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Comment not found");
+            }
 
             commentInDb.Value = comment.Value;
             commentInDb.CommentBankId = comment.CommentBankId;
@@ -81,20 +110,6 @@ namespace MyPortal.Controllers.Api
             _context.SaveChanges();
 
             return Ok("Comment updated");
-        }
-
-        [HttpDelete]
-        [Route("api/comments/delete/{id}")]
-        public IHttpActionResult DeleteComment(int id)
-        {
-            var comment = _context.Comments.SingleOrDefault(x => x.Id == id);
-
-            if (comment == null) return Content(HttpStatusCode.NotFound, "Comment not found");
-
-            _context.Comments.Remove(comment);
-            _context.SaveChanges();
-
-            return Ok("Comment deleted");
         }
     }
 }
