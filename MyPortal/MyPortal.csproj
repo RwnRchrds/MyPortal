@@ -215,6 +215,7 @@
     <Compile Include="Controllers\Api\CommentBanksController.cs" />
     <Compile Include="Controllers\Api\CommentsController.cs" />
     <Compile Include="Controllers\Api\DocumentsController.cs" />
+    <Compile Include="Controllers\Api\LessonPlansController.cs" />
     <Compile Include="Controllers\Api\LogsController.cs" />
     <Compile Include="Controllers\Api\ProductsController.cs" />
     <Compile Include="Controllers\Api\RegGroupsController.cs" />

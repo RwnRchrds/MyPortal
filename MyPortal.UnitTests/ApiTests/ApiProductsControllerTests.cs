@@ -1,4 +1,7 @@
 ﻿using System.Linq;
+using System.Net;
+using System.Runtime.InteropServices;
+using System.Web.Http.Results;
 using AutoMapper;
 using MyPortal.Controllers.Api;
 using MyPortal.Dtos;
@@ -48,7 +51,7 @@ namespace MyPortal.UnitTests.ApiTests
         }
 
         [Test]
-        public void GetProduct_ReturnsCorrectProduct()
+        public void GetProduct_ReturnsProduct()
         {
             var product = _context.Products.SingleOrDefault(x => x.Description == "School Trip");
 
@@ -59,7 +62,6 @@ namespace MyPortal.UnitTests.ApiTests
             var result = _controller.GetProduct(product.Id);
 
             Assert.IsNotNull(result);
-
             Assert.AreEqual(expected.Price, result.Price);
         }
 
@@ -74,6 +76,8 @@ namespace MyPortal.UnitTests.ApiTests
 
             var result = _context.Products.Count();
             
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<NegotiatedContentResult<string>>(result);
             Assert.AreEqual(init + 1, result);
         }
 
@@ -92,7 +96,8 @@ namespace MyPortal.UnitTests.ApiTests
 
             var result = _context.Products.SingleOrDefault(x => x.Id == product.Id);
             
-            Assert.IsNotNull(result);            
+            Assert.IsNotNull(result);      
+            Assert.IsInstanceOf<OkNegotiatedContentResult<string>>(result);
             Assert.AreEqual(5000.00m, result.Price);
             Assert.AreEqual("Art Learning Pack", result.Description);
             Assert.AreEqual(true, result.OnceOnly);
@@ -111,7 +116,21 @@ namespace MyPortal.UnitTests.ApiTests
 
             var result = _context.Products.Count();
             
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<OkNegotiatedContentResult<string>>(result);
             Assert.AreEqual(init - 1, result);
+        }
+
+        [Test]
+        public void DeleteProduct_ProductDoesNotExist_ReturnsNotFound()
+        {
+            const int productId = 9999;
+
+            var result = _controller.DeleteProduct(productId) as NegotiatedContentResult<string>;
+            
+            Assert.IsNotNull(result);
+            Assert.AreEqual(HttpStatusCode.NotFound, result.StatusCode);
+            Assert.AreEqual("Product not found", result.Content);
         }
     }
 }
