@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Net;
 using System.Web;
+using System.Web.Http;
 using System.Web.Mvc;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
@@ -12,7 +14,7 @@ using MyPortal.ViewModels;
 namespace MyPortal.Controllers
 {
     //MyPortal Staff Controller --> Controller Methods for Staff Areas
-    [Authorize(Roles = "Staff, SeniorStaff")]
+    [System.Web.Mvc.Authorize(Roles = "Staff, SeniorStaff")]
     public class StaffController : Controller
     {
         private readonly MyPortalDbContext _context;
@@ -23,7 +25,7 @@ namespace MyPortal.Controllers
         }        
 
         // HTTP POST request for creating training courses using HTML form
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CreateCourse(TrainingCourse course)
         {
@@ -36,7 +38,7 @@ namespace MyPortal.Controllers
         }
 
         // HTTP POST request for creating students using HTML form
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CreateStudent(Student student)
         {
@@ -69,7 +71,7 @@ namespace MyPortal.Controllers
             return View();
         }
 
-        [Route("Staff/Data/Results/Import")]
+        [System.Web.Mvc.Route("Staff/Data/Results/Import")]
         public ActionResult ImportResults()
         {
             var resultSets = _context.ResultSets.OrderBy(x => x.Name).ToList();
@@ -103,8 +105,8 @@ namespace MyPortal.Controllers
 
         // Menu | Training Courses | New Course --> New Course Form
         // Accessible by [SeniorStaff] only
-        [Authorize(Roles = "SeniorStaff")]
-        [Route("Staff/TrainingCourses/New")]
+        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
+        [System.Web.Mvc.Route("Staff/TrainingCourses/New")]
         public ActionResult NewCourse()
         {
             return View();
@@ -112,8 +114,8 @@ namespace MyPortal.Controllers
 
         // Menu | Students | New Student --> New Student form
         // Accessible by [SeniorStaff] only
-        [Authorize(Roles = "SeniorStaff")]
-        [Route("Staff/Students/New")]
+        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
+        [System.Web.Mvc.Route("Staff/Students/New")]
         public ActionResult NewStudent()
         {
             var yearGroups = _context.YearGroups.ToList();
@@ -129,7 +131,7 @@ namespace MyPortal.Controllers
         }        
 
         // HTTP POST request for updating student details using HTML form
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public ActionResult SaveStudent(Student student)
         {
             var studentInDb = _context.Students.Single(l => l.Id == student.Id);
@@ -146,7 +148,7 @@ namespace MyPortal.Controllers
 
         // Menu | Staff --> Staff List (All)
         // Accessible by [SeniorStaff] only
-        [Authorize(Roles = "SeniorStaff")]
+        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
         public ActionResult Staff()
         {
             var viewModel = new NewStaffViewModel();
@@ -155,8 +157,8 @@ namespace MyPortal.Controllers
 
         // Menu | Staff | X --> Student Details (for Staff X)
         //Accessible by [SeniorStaff] only
-        [Authorize(Roles = "SeniorStaff")]
-        [Route("Staff/Staff/{id}")]
+        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
+        [System.Web.Mvc.Route("Staff/Staff/{id}")]
         public ActionResult StaffDetails(int id)
         {
             var staff = _context.Staff.SingleOrDefault(s => s.Id == id);
@@ -195,7 +197,7 @@ namespace MyPortal.Controllers
 
         // Menu | Students | X --> Student Details (for Student X)
         //Accessible by [Staff] or [SeniorStaff]
-        [Route("Staff/Students/{id}")]
+        [System.Web.Mvc.Route("Staff/Students/{id}")]
         public ActionResult StudentDetails(int id)
         {
             var student = _context.Students.SingleOrDefault(s => s.Id == id);
@@ -237,7 +239,7 @@ namespace MyPortal.Controllers
 
         //Menu | Students | X | [View Results] --> Student Results (for Student X)
         //Accessible by [Staff] or [SeniorStaff]
-        [Route("Staff/Students/{id}/Results")]
+        [System.Web.Mvc.Route("Staff/Students/{id}/Results")]
         public ActionResult StudentResults(int id)
         {
             var student = _context.Students.SingleOrDefault(s => s.Id == id);
@@ -280,7 +282,7 @@ namespace MyPortal.Controllers
             return View();
         }
 
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         public ActionResult UploadResults(HttpPostedFileBase file)
         {
             if (file.ContentLength <= 0 || Path.GetExtension(file.FileName) != ".csv")
@@ -292,24 +294,24 @@ namespace MyPortal.Controllers
         }
 
         // Menu | Result Sets --> Result Sets List (All)
-        [Authorize(Roles = "SeniorStaff")]
-        [Route("Staff/Data/ResultSets")]
+        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
+        [System.Web.Mvc.Route("Staff/Data/ResultSets")]
         public ActionResult ResultSets()
         {
             return View();
         }
         
         // Menu | Comment Banks --> Comment Banks List (All)
-        [Authorize(Roles = "SeniorStaff")]
-        [Route("Staff/Data/CommentBanks")]
+        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
+        [System.Web.Mvc.Route("Staff/Data/CommentBanks")]
         public ActionResult CommentBanks()
         {
             return View();
         }
         
         //Menu | Comments --> Comments List (All)
-        [Authorize(Roles = "SeniorStaff")]
-        [Route("Staff/Data/Comments")]
+        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
+        [System.Web.Mvc.Route("Staff/Data/Comments")]
         public ActionResult Comments()
         {
             var viewModel = new CommentsViewModel();
@@ -319,8 +321,8 @@ namespace MyPortal.Controllers
         }
         
         // Menu | Subjects --> Subjects List (All)
-        [Authorize(Roles = "SeniorStaff")]
-        [Route("Staff/Data/Subjects")]
+        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
+        [System.Web.Mvc.Route("Staff/Data/Subjects")]
         public ActionResult Subjects()
         {
             var viewModel = new SubjectsViewModel();
@@ -330,8 +332,8 @@ namespace MyPortal.Controllers
         }
         
         // Menu | Study Topics --> Study Topics List (All)
-        [Authorize(Roles = "SeniorStaff")]
-        [Route("Staff/Data/StudyTopics")]
+        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
+        [System.Web.Mvc.Route("Staff/Data/StudyTopics")]
         public ActionResult StudyTopics()
         {
             var viewModel = new StudyTopicsViewModel();
@@ -347,7 +349,7 @@ namespace MyPortal.Controllers
         }
         
         //Menu | Lesson Plans --> Lesson Plans List (All)
-        [Route("Staff/Curriculum/LessonPlans")]
+        [System.Web.Mvc.Route("Staff/Curriculum/LessonPlans")]
         public ActionResult LessonPlans()
         {
             var viewModel = new LessonPlansViewModel();
@@ -355,6 +357,24 @@ namespace MyPortal.Controllers
             var studyTopics = _context.StudyTopics.OrderBy(x => x.Name).ToList();
 
             viewModel.StudyTopics = studyTopics;
+
+            return View(viewModel);
+        }
+        
+        //Menu | Lesson Plans | X --> Lesson Plan Details for Lesson Plan X
+        [System.Web.Mvc.Route("Staff/Curriculum/LessonPlans/View/{id}")]
+        public ActionResult LessonPlanDetails(int id)
+        {
+            var lessonPlan = _context.LessonPlans.SingleOrDefault(x => x.Id == id);
+
+            if (lessonPlan == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+            
+            var viewModel = new LessonPlanDetailsViewModel();
+
+            viewModel.LessonPlan = lessonPlan;
 
             return View(viewModel);
         }

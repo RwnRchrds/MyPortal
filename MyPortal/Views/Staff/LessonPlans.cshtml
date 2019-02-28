@@ -7,6 +7,7 @@
 
 <div class="container float-left">
     <h2 class="mp-page-title">Lesson Plans</h2>
+    <hr/>
 </div>
 
 <div class="container float-left">
@@ -164,6 +165,13 @@
                     });
                     $("#EditLessonPlanModal").modal('toggle');
                 });
+                
+            $("#lessonPlans").on("click",
+                ".js-view",
+                function() {
+                    var button = $(this);
+                    location.href = "/Staff/Curriculum/LessonPlans/View/" + button.attr("data-plan-id");
+                });
 
             $("#lessonPlans").on("click",
                 ".js-delete",
@@ -213,7 +221,10 @@
                     {
                         data: "id",
                         render: function(data) {
-                            return "<button type='button' class='btn btn-xs btn-warning js-edit' data-plan-id=" +
+                            return "<button type='button' class='btn btn-xs btn-success js-view' data-plan-id=" +
+                                data +
+                                "><i class=\"fas fa-glasses\"></i></button> " + 
+                                "<button type='button' class='btn btn-xs btn-warning js-edit' data-plan-id=" +
                                 data +
                                 "><i class=\"fas fa-edit\"></i></button> " +
                                 "<button type='button' class='btn btn-xs btn-danger js-delete' data-plan-id=" +

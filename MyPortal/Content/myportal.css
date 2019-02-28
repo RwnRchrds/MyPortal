@@ -105,3 +105,11 @@
 .mp-title-credit { color: limegreen; }
 
 .mp-title-debit { color: crimson; }
+
+.mp-text-section {
+    background-color: #ecf0f1;
+    border-radius: 0.3rem;
+    margin-bottom: 2rem;
+    padding: 0.5rem 1rem;
+    white-space: pre-line;
+}

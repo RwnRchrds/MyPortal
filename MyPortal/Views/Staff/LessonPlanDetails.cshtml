@@ -1,25 +1,34 @@
 @model MyPortal.ViewModels.LessonPlanDetailsViewModel
 
 @{
-    ViewBag.Title = "Lesson Plan View";
+    ViewBag.Title = "Lesson Plan: " + Model.LessonPlan.Title;
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
 <div class="container float-left">
     <h2 class="mp-page-title">Lesson Plan: @Model.LessonPlan.Title</h2>
+    <hr/>
 </div>
 
 <div class="container float-left">
-    <h3>Learning Objectives</h3>
-    <p>@Model.LessonPlan.LearningObjectives</p>
+    <h4>Learning Objectives</h4>
+    <div class="mp-text-section">
+        <p>@Model.LessonPlan.LearningObjectives</p>
+    </div>    
 </div>
 
 <div class="container float-left">
-    <h3>Lesson Plan Content</h3>
-    <p>@Model.LessonPlan.PlanContent</p>
+    <h4>Lesson Plan Content</h4>
+    <div class="mp-text-section">
+        <p>@Model.LessonPlan.PlanContent</p>
+    </div>    
 </div>
 
 <div class="container float-left">
-    <h3>Homework</h3>
-    <p>@Model.LessonPlan.Homework</p>
+    <h4>Homework</h4>
+    <div class="mp-text-section">
+        <p>@Model.LessonPlan.Homework</p>
+    </div> 
 </div>
+
+@Html.ActionLink("Back", "LessonPlans", "Staff", null, new {@class = "btn btn-primary"})
