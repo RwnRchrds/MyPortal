@@ -72,13 +72,13 @@ namespace MyPortal.UnitTests.ApiTests
 
             var init = _context.Products.Count();
 
-            _controller.NewProduct((newProduct));
+            var result = _controller.NewProduct((newProduct));
 
-            var result = _context.Products.Count();
+            var count = _context.Products.Count();
             
             Assert.IsNotNull(result);
-            Assert.IsInstanceOf<NegotiatedContentResult<string>>(result);
-            Assert.AreEqual(init + 1, result);
+            Assert.IsInstanceOf<OkNegotiatedContentResult<string>>(result);
+            Assert.AreEqual(init + 1, count);
         }
 
         [Test]
@@ -92,15 +92,16 @@ namespace MyPortal.UnitTests.ApiTests
             product.Description = "Art Learning Pack";
             product.OnceOnly = true;
 
-            _controller.UpdateProduct((product));
+           var result = _controller.UpdateProduct((product));
 
-            var result = _context.Products.SingleOrDefault(x => x.Id == product.Id);
+            var checkProduct = _context.Products.SingleOrDefault(x => x.Id == product.Id);
             
-            Assert.IsNotNull(result);      
+            Assert.IsNotNull(checkProduct);
+            Assert.IsNotNull(result);
             Assert.IsInstanceOf<OkNegotiatedContentResult<string>>(result);
-            Assert.AreEqual(5000.00m, result.Price);
-            Assert.AreEqual("Art Learning Pack", result.Description);
-            Assert.AreEqual(true, result.OnceOnly);
+            Assert.AreEqual(5000.00m, checkProduct.Price);
+            Assert.AreEqual("Art Learning Pack", checkProduct.Description);
+            Assert.AreEqual(true, checkProduct.OnceOnly);
         }
 
         [Test]
@@ -112,13 +113,13 @@ namespace MyPortal.UnitTests.ApiTests
             
             Assert.IsNotNull(product);
 
-            _controller.DeleteProduct(product.Id);
+            var result = _controller.DeleteProduct(product.Id);
 
-            var result = _context.Products.Count();
-            
+            var count = _context.Products.Count();
+                        
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<OkNegotiatedContentResult<string>>(result);
-            Assert.AreEqual(init - 1, result);
+            Assert.AreEqual(init - 1, count);
         }
 
         [Test]

@@ -24,8 +24,8 @@ namespace MyPortal.Controllers.Api
             _context = context;
         }
 
-        [System.Web.Http.HttpGet]
-        [System.Web.Http.Route("api/lessonPlans/all")]
+        [HttpGet]
+        [Route("api/lessonPlans/all")]
         public IEnumerable<LessonPlanDto> GetLessonPlans()
         {
             return _context.LessonPlans.OrderBy(x => x.Title).ToList().Select(Mapper.Map<LessonPlan, LessonPlanDto>);
@@ -43,6 +43,14 @@ namespace MyPortal.Controllers.Api
             }
 
             return Mapper.Map<LessonPlan, LessonPlanDto>(lessonPlan);
+        }
+
+        [HttpGet]
+        [Route("api/lessonPlans/byTopic/{id}")]
+        public IEnumerable<LessonPlanDto> GetLessonPlansByTopic(int id)
+        {
+            return _context.LessonPlans.Where(x => x.StudyTopicId == id).OrderBy(x => x.Title).ToList()
+                .Select(Mapper.Map<LessonPlan, LessonPlanDto>);
         }
 
         [HttpPost]
@@ -74,6 +82,8 @@ namespace MyPortal.Controllers.Api
             planInDb.Title = plan.Title;
             planInDb.PlanContent = plan.PlanContent;
             planInDb.StudyTopicId = plan.StudyTopicId;
+            planInDb.LearningObjectives = plan.LearningObjectives;
+            planInDb.Homework = plan.Homework;
 
             _context.SaveChanges();
 

@@ -1,0 +1,25 @@
+@model MyPortal.ViewModels.LessonPlanDetailsViewModel
+
+@{
+    ViewBag.Title = "Lesson Plan View";
+    Layout = "~/Views/Shared/_LayoutStaff.cshtml";
+}
+
+<div class="container float-left">
+    <h2 class="mp-page-title">Lesson Plan: @Model.LessonPlan.Title</h2>
+</div>
+
+<div class="container float-left">
+    <h3>Learning Objectives</h3>
+    <p>@Model.LessonPlan.LearningObjectives</p>
+</div>
+
+<div class="container float-left">
+    <h3>Lesson Plan Content</h3>
+    <p>@Model.LessonPlan.PlanContent</p>
+</div>
+
+<div class="container float-left">
+    <h3>Homework</h3>
+    <p>@Model.LessonPlan.Homework</p>
+</div>

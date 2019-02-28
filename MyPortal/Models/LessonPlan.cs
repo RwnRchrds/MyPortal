@@ -13,9 +13,17 @@ namespace MyPortal.Models
         public int StudyTopicId { get; set; }
         
         [Required] public string Title { get; set; }
+        
+        [Required] 
+        [Display(Name = "Learning Objectives")]
+            public string LearningObjectives { get; set; }
 
         [Required]
+        [Display(Name = "Lesson Content")]
         public string PlanContent { get; set; }
+        
+        [Required]
+        public string Homework { get; set; }
 
         public virtual StudyTopic StudyTopic { get; set; }
     }

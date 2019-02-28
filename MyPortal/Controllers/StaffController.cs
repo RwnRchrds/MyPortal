@@ -345,6 +345,19 @@ namespace MyPortal.Controllers
 
             return View(viewModel);
         }
+        
+        //Menu | Lesson Plans --> Lesson Plans List (All)
+        [Route("Staff/Curriculum/LessonPlans")]
+        public ActionResult LessonPlans()
+        {
+            var viewModel = new LessonPlansViewModel();
+
+            var studyTopics = _context.StudyTopics.OrderBy(x => x.Name).ToList();
+
+            viewModel.StudyTopics = studyTopics;
+
+            return View(viewModel);
+        }
 
     }
 }

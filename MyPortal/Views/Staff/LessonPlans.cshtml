@@ -1,0 +1,263 @@
+@model MyPortal.ViewModels.LessonPlansViewModel
+
+@{
+    ViewBag.Title = "Lesson Plans";
+    Layout = "~/Views/Shared/_LayoutStaff.cshtml";
+}
+
+<div class="container float-left">
+    <h2 class="mp-page-title">Lesson Plans</h2>
+</div>
+
+<div class="container float-left">
+    <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" onclick="openNewLessonPlanModal()">New Lesson Plan</button>
+    <hr/>
+</div>
+
+<div class="container float-left">
+    @Html.Label("Study Topic")
+    @Html.DropDownList("SelectedTopic", new SelectList(Model.StudyTopics, "Id", "Name"), "Select Study Topic", new {@class = "form-control", Name = "Id", id = "selectedTopic"})
+</div>
+
+<div class="container float-left mp-margin-top">
+    <table class="table table-bordered table-hover mp-table" id="lessonPlans">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Study Topic</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div id="NewLessonPlanModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New Lesson Plan</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/lessonPlans/create", HttpMethod = "POST", OnSuccess = "newLessonPlanSuccess", OnFailure = "newLessonPlanFailure"}, new {id = "newLessonPlanForm"}))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.LessonPlan.StudyTopic)
+                        @Html.DropDownListFor(l => l.LessonPlan.StudyTopicId, new SelectList(Model.StudyTopics, "Id", "Name"), "Select Study Topic", new {@class = "form-control", Name = "StudyTopicId", id = "newStudyTopicControl"})
+                        @Html.ValidationMessageFor(x => x.LessonPlan.StudyTopicId)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.LessonPlan.Title)
+                        @Html.TextBoxFor(x => x.LessonPlan.Title, new {@class = "form-control", Name = "Title"})
+                        @Html.ValidationMessageFor(x => x.LessonPlan.Title)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.LessonPlan.LearningObjectives)
+                        @Html.TextAreaFor(x => x.LessonPlan.LearningObjectives, new {@class = "form-control", Name = "LearningObjectives"})
+                        @Html.ValidationMessageFor(x => x.LessonPlan.LearningObjectives)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.LessonPlan.PlanContent)
+                        @Html.TextAreaFor(x => x.LessonPlan.PlanContent, new {@class = "form-control", Name = "PlanContent"})
+                        @Html.ValidationMessageFor(x => x.LessonPlan.PlanContent)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.LessonPlan.Homework)
+                        @Html.TextAreaFor(x => x.LessonPlan.Homework, new {@class = "form-control", Name = "Homework"})
+                        @Html.ValidationMessageFor(x => x.LessonPlan.Homework)
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="EditLessonPlanModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Lesson Plan</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/lessonPlans/update", HttpMethod = "POST", OnSuccess = "editLessonPlanSuccess", OnFailure = "editLessonPlanFailure"}, new {id = "editLessonPlanForm"}))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.LessonPlan.StudyTopic)
+                        @Html.DropDownListFor(l => l.LessonPlan.StudyTopicId, new SelectList(Model.StudyTopics, "Id", "Name"), "Select Comment Bank", new {@class = "form-control", Name = "StudyTopicId", id = "editStudyTopicControl"})
+                        @Html.ValidationMessageFor(x => x.LessonPlan.StudyTopicId)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.LessonPlan.Title)
+                        @Html.TextBoxFor(x => x.LessonPlan.Title, new {@class = "form-control", Name = "Title", id = "editTitleControl"})
+                        @Html.ValidationMessageFor(x => x.LessonPlan.Title)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.LessonPlan.LearningObjectives)
+                        @Html.TextAreaFor(x => x.LessonPlan.LearningObjectives, new {@class = "form-control", Name = "LearningObjectives", id = "editLearningObjectivesControl"})
+                        @Html.ValidationMessageFor(x => x.LessonPlan.LearningObjectives)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.LessonPlan.PlanContent)
+                        @Html.TextAreaFor(x => x.LessonPlan.PlanContent, new {@class = "form-control", Name = "PlanContent", id = "editPlanContentControl"})
+                        @Html.ValidationMessageFor(x => x.LessonPlan.PlanContent)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.LessonPlan.Homework)
+                        @Html.TextAreaFor(x => x.LessonPlan.Homework, new {@class = "form-control", Name = "Homework", id = "editHomeworkControl"})
+                        @Html.ValidationMessageFor(x => x.LessonPlan.Homework)
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(x => x.LessonPlan.Id, new {Name = "Id", id = "editIdControl"})
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+            $('.modal').on('hidden.bs.modal',
+                function() {
+                    $(this).find('form').trigger('reset');
+                });
+
+            $("#selectedTopic").on("change",
+                function() {
+                    $("#lessonPlans").DataTable().clear().destroy();
+                    loadLessonPlans();
+                });
+
+            $("#lessonPlans").on("click",
+                ".js-edit",
+                function() {
+                    var button = $(this);
+                    var planId = button.attr("data-plan-id");
+                    $.ajax({
+                        url: "/api/lessonPlans/byId/" + planId,
+                        method: "GET",
+                        success: function(result) {
+                            $("#editStudyTopicControl").val(result["studyTopicId"]);
+                            $("#editTitleControl").val(result["title"]);
+                            $("#editLearningObjectivesControl").val(result["learningObjectives"]);
+                            $("#editPlanContentControl").val(result["planContent"]);
+                            $("#editHomeworkControl").val(result["homework"]);
+                            $("#editIdControl").val(result["id"]);
+                        },
+                        error: function() {
+                            toastr.error("Failed to load lesson plan data");
+                        }
+                    });
+                    $("#EditLessonPlanModal").modal('toggle');
+                });
+
+            $("#lessonPlans").on("click",
+                ".js-delete",
+                function() {
+                    var button = $(this);
+                    bootbox.confirm("Are you sure you wish to delete this lesson plan?",
+                        function(result) {
+                            if (result) {
+                                $.ajax({
+                                    url: "/api/lessonPlans/delete/" + button.attr("data-plan-id"),
+                                    method: "DELETE",
+                                    success: function(a) {
+                                        $("#lessonPlans").DataTable().ajax.reload();
+                                        toastr.success(a);
+                                    },
+                                    error: function(e) {
+                                        toastr.error(e.responseJSON);
+                                    }
+                                });
+                            }
+                        });
+                });
+        });
+        
+        function loadLessonPlans() {
+            var studyTopic = $("#selectedTopic").val();
+
+            if (studyTopic === "") {
+                $("#lessonPlans").addClass("hidden");
+                return;
+            }
+
+            var url = "/api/lessonPlans/byTopic/" + studyTopic;
+
+            $("#lessonPlans").DataTable({
+                ajax: {
+                    url: url,
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "title"
+                    },
+                    {
+                        data: "studyTopic.name"
+                    },
+                    {
+                        data: "id",
+                        render: function(data) {
+                            return "<button type='button' class='btn btn-xs btn-warning js-edit' data-plan-id=" +
+                                data +
+                                "><i class=\"fas fa-edit\"></i></button> " +
+                                "<button type='button' class='btn btn-xs btn-danger js-delete' data-plan-id=" +
+                                data +
+                                "><i class=\"far fa-trash-alt\"></i></button>";
+                        }
+                    }
+                ],
+                "language": {
+                    "emptyTable": "No lesson plans to display"
+                }
+            });
+        }
+        
+        function newLessonPlanSuccess(result) {
+            $("#NewLessonPlanModal").modal('hide');
+            $("#lessonPlans").DataTable().ajax.reload();
+            toastr.success(result);
+        }
+
+        function newLessonPlanFailure(result) {
+            $("#NewLessonPlanModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+
+        function editLessonPlanSuccess(result) {
+            $("#EditLessonPlanModal").modal('hide');
+            $("#lessonPlans").DataTable().ajax.reload();
+            toastr.success(result);
+        }
+
+        function editLessonPlanFailure(result) {
+            $("#EditLessonPlanModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+        
+        function openNewLessonPlanModal() {
+            var commentBank = $("#selectedTopic").val();
+
+            if (commentBank !== "") {
+                $("#newStudyTopicControl").val(commentBank);
+                $("#NewLessonPlanModal").modal('toggle');
+            }
+        }
+    </script>
+}
+

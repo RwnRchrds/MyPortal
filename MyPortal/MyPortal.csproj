@@ -317,6 +317,8 @@
     <Compile Include="ViewModels\DinnerMoneyViewModel.cs" />
     <Compile Include="ViewModels\DocumentsViewModel.cs" />
     <Compile Include="ViewModels\ImportResultsViewModel.cs" />
+    <Compile Include="ViewModels\LessonPlanDetailsViewModel.cs" />
+    <Compile Include="ViewModels\LessonPlansViewModel.cs" />
     <Compile Include="ViewModels\NewProductViewModel.cs" />
     <Compile Include="ViewModels\NewSaleViewModel.cs" />
     <Compile Include="ViewModels\NewStaffViewModel.cs" />
@@ -667,6 +669,8 @@
     <Content Include="Scripts\umd\popper.min.js" />
     <Content Include="Views\Staff\CommentBanks.cshtml" />
     <Content Include="Views\Staff\Comments.cshtml" />
+    <Content Include="Views\Staff\LessonPlanDetails.cshtml" />
+    <Content Include="Views\Staff\LessonPlans.cshtml" />
     <Content Include="Views\Staff\StudyTopics.cshtml" />
     <Content Include="Views\Staff\Subjects.cshtml" />
     <Content Include="Web.config" />
