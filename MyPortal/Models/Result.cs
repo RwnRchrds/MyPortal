@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Models.Validation;
 
 namespace MyPortal.Models
 {
@@ -24,7 +25,10 @@ namespace MyPortal.Models
         [Display(Name = "Subject")]
         public int SubjectId { get; set; }
 
-        [Required] [StringLength(50)] public string Value { get; set; }
+        [Required] 
+        [StringLength(50)]
+        [ActiveGradeSet]
+        public string Value { get; set; }
 
         public virtual ResultSet ResultSet { get; set; }
 

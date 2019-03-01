@@ -54,7 +54,7 @@ namespace MyPortal.Controllers.Api
                 case "Finance":    
                     if (await _userManager.IsInRoleAsync(data.UserId, "Student"))
                     {
-                        return Content(HttpStatusCode.BadRequest, "Student user cannot be added to staff role");
+                        return Content(HttpStatusCode.BadRequest, "Student user cannot be added to a staff role");
                     }
 
                     if (!await _userManager.IsInRoleAsync(data.UserId, "SeniorStaff"))
@@ -67,7 +67,7 @@ namespace MyPortal.Controllers.Api
                 case "SeniorStaff":
                     if (await _userManager.IsInRoleAsync(data.UserId, "Student"))
                     {
-                        return Content(HttpStatusCode.BadRequest, "Student user cannot be added to staff role");
+                        return Content(HttpStatusCode.BadRequest, "Student user cannot be added to a staff role");
                     }
 
                     break;
@@ -75,12 +75,7 @@ namespace MyPortal.Controllers.Api
                 case "Student":
                     if (await _userManager.IsInRoleAsync(data.UserId, "Staff"))
                     {
-                        return Content(HttpStatusCode.BadRequest, "Staff user cannot be added to student role");
-                    }
-
-                    if (await _userManager.IsInRoleAsync(data.UserId, "Student"))
-                    {
-                        return Content(HttpStatusCode.BadRequest, "User is already member of this role");
+                        return Content(HttpStatusCode.BadRequest, "Staff user cannot be added to a student role");
                     }
 
                     break;
@@ -88,12 +83,7 @@ namespace MyPortal.Controllers.Api
                 case "Staff":
                     if (await _userManager.IsInRoleAsync(data.UserId, "Student"))
                     {
-                        return Content(HttpStatusCode.BadRequest, "Student user cannot be added to staff role");
-                    }
-
-                    if (await _userManager.IsInRoleAsync(data.UserId, "Staff"))
-                    {
-                        return Content(HttpStatusCode.BadRequest, "User is already member of this role");
+                        return Content(HttpStatusCode.BadRequest, "Student user cannot be added to a staff role");
                     }
 
                     break;              
@@ -104,14 +94,14 @@ namespace MyPortal.Controllers.Api
 
             if (await _userManager.IsInRoleAsync(data.UserId, data.RoleName))
             {
-                return Content(HttpStatusCode.BadRequest, "User is already in role");
+                return Content(HttpStatusCode.BadRequest, "User is already in this role");
             }
 
             var result = await _userManager.AddToRoleAsync(data.UserId, data.RoleName);
 
             if (result.Succeeded)
             {
-                return Ok("Role added");
+                return Ok("User added to role");
             }
 
             return BadRequest();
@@ -160,7 +150,7 @@ namespace MyPortal.Controllers.Api
 
                 personInDb.UserId = userInDb.Id;
                 _context.SaveChanges();
-                return Ok("User assigned to person");
+                return Ok("User attached to person");
             }
 
             if (data.RoleName == "Student")
@@ -176,7 +166,7 @@ namespace MyPortal.Controllers.Api
 
                 personInDb.UserId = userInDb.Id;
                 _context.SaveChanges();
-                return Ok("User assigned to person");
+                return Ok("User attached to person");
             }
 
             return BadRequest();

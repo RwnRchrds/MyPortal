@@ -308,6 +308,7 @@
     <Compile Include="Models\TrainingCertificate.cs" />
     <Compile Include="Models\TrainingCourse.cs" />
     <Compile Include="Models\TrainingStatus.cs" />
+    <Compile Include="Models\Validation\ActiveGradeSet.cs" />
     <Compile Include="Models\YearGroup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />

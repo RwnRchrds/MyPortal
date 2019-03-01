@@ -12,7 +12,7 @@
 
 </div>
 <div class="container float-left">
-    <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#NewResultModal">
+    <button type="button" class="btn btn-success mp-btn-top-auto" onclick="openNewResultModal()">
         <i class="fas fa-plus-circle"></i> New Result
     </button>
     <hr/>
@@ -40,28 +40,28 @@
         <!--CONTENT-->
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">New Result - @Model.Student.LastName, @Model.Student.FirstName</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, null, new {id = "NewResultForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url="/api/results/create", HttpMethod = "POST", OnSuccess = "newResultSuccess", OnFailure = "newResultFailure"}, new {id = "newResultForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.LabelFor(x => x.Result.ResultSetId)
-                        @Html.DropDownListFor(x => x.Result.ResultSetId, new SelectList(Model.ResultSets, "Id", "Name", Model.ResultSets.SingleOrDefault(y => y.IsCurrent).Id), new {@class = "form-control", Name = "ResultSet"})
+                        @Html.DropDownListFor(x => x.Result.ResultSetId, new SelectList(Model.ResultSets, "Id", "Name", "Select Result Set"), new {@class = "form-control", Name = "ResultSetId", id = "newResultSetControl"})
                         @Html.ValidationMessageFor(x => x.Result.ResultSetId)
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(x => x.Result.SubjectId)
-                        @Html.DropDownListFor(x => x.Result.SubjectId, new SelectList(Model.Subjects, "Id", "Name"), "Select a Subject", new {@class = "form-control", Name = "Subject"})
+                        @Html.DropDownListFor(x => x.Result.SubjectId, new SelectList(Model.Subjects, "Id", "Name"), "Select a Subject", new {@class = "form-control", Name = "SubjectId"})
                         @Html.ValidationMessageFor(x => x.Result.SubjectId)
-                    </div>
+                    </div>                    
                     <div class="form-group">
                         @Html.LabelFor(x => x.Result.Value)
                         @Html.TextBoxFor(x => x.Result.Value, new {@class = "form-control", Name = "Value"})
                         @Html.ValidationMessageFor(x => x.Result.Value)
                     </div>
-                    @Html.HiddenFor(x => x.Result.Student, new {Value = Model.Student.Id, Name = "Student"})
+                    @Html.HiddenFor(x => x.Result.StudentId, new {Value = Model.Student.Id, Name = "StudentId"})
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Save</button>
@@ -112,34 +112,29 @@
                 function() {
                     $("#results").DataTable().ajax.reload();
                 });
-
-
-            //New Result Submit
-            $("#NewResultForm").on("submit",
-                function(e) {
-                    var form = $("#NewResultForm");
-
-                    e.preventDefault();
-
-                    $.ajax({
-                        url: "/api/results/new",
-                        data: form.serialize(),
-                        method: "POST",
-                        success: function(result) {
-                            toastr.success(result);
-                            $("#NewResultModal").modal('toggle');
-                        },
-                        error: function(result) {
-                            toastr.error(result.responseJSON);
-                        }
-                    });
-                });
+            
 
             $("#backButton").on("click",
                 function() {
                     location.replace("/Staff/Students/" + $("#backButton").attr("data-student-id"));
                 });
         });
+        
+        function openNewResultModal() {
+            $("#newResultSetControl").val($("#selectedResultSet").val());
+            $("#NewResultModal").modal('toggle');
+        }
+        
+        function newResultSuccess(result) {
+            $("#NewResultModal").modal('hide');
+            toastr.success(result);
+            $("#results").DataTable().ajax.reload();
+        }
+        
+        function newResultFailure(result) {
+            $("#NewResultModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
     </script>
 
     @Scripts.Render("~/bundles/staff")

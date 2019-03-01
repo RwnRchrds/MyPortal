@@ -10,5 +10,6 @@ namespace MyPortal.ViewModels
         public int CurrentResultSetId { get; set; }
         public Result Result { get; set; }
         public IEnumerable<Subject> Subjects { get; set; }
+        public IEnumerable<GradeSet> GradeSets { get; set; }
     }
 }

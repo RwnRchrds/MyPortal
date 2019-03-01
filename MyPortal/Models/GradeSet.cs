@@ -21,6 +21,8 @@ namespace MyPortal.Models
 
         public bool IsKs4 { get; set; }
 
+        public bool Active { get; set; }
+
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Grade> Grades { get; set; }
     }

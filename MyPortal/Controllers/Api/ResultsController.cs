@@ -100,9 +100,14 @@ namespace MyPortal.Controllers.Api
         #region Individual Student Results Management
 
         [HttpPost]
-        [Route("api/results/new")]
+        [Route("api/results/create")]
         public IHttpActionResult AddResult(ResultDto data)
         {
+            if (!ModelState.IsValid)
+            {
+                return Content(HttpStatusCode.BadRequest, "Invalid data");
+            }
+            
             var resultInDb = _context.Results.SingleOrDefault(x =>
                 x.StudentId == data.StudentId && x.SubjectId == data.SubjectId && x.ResultSetId == data.ResultSetId);
 
