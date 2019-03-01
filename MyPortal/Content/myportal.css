@@ -113,3 +113,21 @@
     padding: 0.5rem 1rem;
     white-space: pre-line;
 }
+
+.mp-input-long {
+    max-width: 600px;
+}
+
+.mp-textarea-lg {
+    max-width: 600px;
+    min-height: 330px;
+}
+
+.mp-textarea-long {
+    max-width: 600px;
+    min-height: 50px;
+}
+
+.mp-textarea {
+    min-height: 46px;
+}

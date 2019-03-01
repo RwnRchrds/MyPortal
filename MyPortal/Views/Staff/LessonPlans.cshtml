@@ -34,7 +34,7 @@
 </div>
 
 <div id="NewLessonPlanModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
@@ -45,28 +45,28 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @Html.LabelFor(x => x.LessonPlan.StudyTopic)
-                        @Html.DropDownListFor(l => l.LessonPlan.StudyTopicId, new SelectList(Model.StudyTopics, "Id", "Name"), "Select Study Topic", new {@class = "form-control", Name = "StudyTopicId", id = "newStudyTopicControl"})
+                        @Html.LabelFor(x => x.LessonPlan.StudyTopicId)
+                        @Html.DropDownListFor(l => l.LessonPlan.StudyTopicId, new SelectList(Model.StudyTopics, "Id", "Name"), "Select Study Topic", new {@class = "form-control mp-input-long", Name = "StudyTopicId", id = "newStudyTopicControl"})
                         @Html.ValidationMessageFor(x => x.LessonPlan.StudyTopicId)
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(x => x.LessonPlan.Title)
-                        @Html.TextBoxFor(x => x.LessonPlan.Title, new {@class = "form-control", Name = "Title"})
+                        @Html.TextBoxFor(x => x.LessonPlan.Title, new {@class = "form-control mp-input-long", Name = "Title"})
                         @Html.ValidationMessageFor(x => x.LessonPlan.Title)
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(x => x.LessonPlan.LearningObjectives)
-                        @Html.TextAreaFor(x => x.LessonPlan.LearningObjectives, new {@class = "form-control", Name = "LearningObjectives"})
+                        @Html.TextAreaFor(x => x.LessonPlan.LearningObjectives, new {@class = "form-control mp-textarea-long", Name = "LearningObjectives"})
                         @Html.ValidationMessageFor(x => x.LessonPlan.LearningObjectives)
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(x => x.LessonPlan.PlanContent)
-                        @Html.TextAreaFor(x => x.LessonPlan.PlanContent, new {@class = "form-control", Name = "PlanContent"})
+                        @Html.TextAreaFor(x => x.LessonPlan.PlanContent, new {@class = "form-control mp-textarea-lg", Name = "PlanContent"})
                         @Html.ValidationMessageFor(x => x.LessonPlan.PlanContent)
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(x => x.LessonPlan.Homework)
-                        @Html.TextAreaFor(x => x.LessonPlan.Homework, new {@class = "form-control", Name = "Homework"})
+                        @Html.TextAreaFor(x => x.LessonPlan.Homework, new {@class = "form-control mp-textarea-long", Name = "Homework"})
                         @Html.ValidationMessageFor(x => x.LessonPlan.Homework)
                     </div>
                     <div class="modal-footer">
@@ -80,7 +80,7 @@
 </div>
 
 <div id="EditLessonPlanModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
@@ -91,28 +91,28 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @Html.LabelFor(x => x.LessonPlan.StudyTopic)
-                        @Html.DropDownListFor(l => l.LessonPlan.StudyTopicId, new SelectList(Model.StudyTopics, "Id", "Name"), "Select Comment Bank", new {@class = "form-control", Name = "StudyTopicId", id = "editStudyTopicControl"})
+                        @Html.LabelFor(x => x.LessonPlan.StudyTopicId)
+                        @Html.DropDownListFor(l => l.LessonPlan.StudyTopicId, new SelectList(Model.StudyTopics, "Id", "Name"), "Select Comment Bank", new {@class = "form-control mp-input-long", Name = "StudyTopicId", id = "editStudyTopicControl"})
                         @Html.ValidationMessageFor(x => x.LessonPlan.StudyTopicId)
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(x => x.LessonPlan.Title)
-                        @Html.TextBoxFor(x => x.LessonPlan.Title, new {@class = "form-control", Name = "Title", id = "editTitleControl"})
+                        @Html.TextBoxFor(x => x.LessonPlan.Title, new {@class = "form-control mp-input-long", Name = "Title", id = "editTitleControl"})
                         @Html.ValidationMessageFor(x => x.LessonPlan.Title)
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(x => x.LessonPlan.LearningObjectives)
-                        @Html.TextAreaFor(x => x.LessonPlan.LearningObjectives, new {@class = "form-control", Name = "LearningObjectives", id = "editLearningObjectivesControl"})
+                        @Html.TextAreaFor(x => x.LessonPlan.LearningObjectives, new {@class = "form-control mp-textarea-long", Name = "LearningObjectives", id = "editLearningObjectivesControl"})
                         @Html.ValidationMessageFor(x => x.LessonPlan.LearningObjectives)
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(x => x.LessonPlan.PlanContent)
-                        @Html.TextAreaFor(x => x.LessonPlan.PlanContent, new {@class = "form-control", Name = "PlanContent", id = "editPlanContentControl"})
+                        @Html.TextAreaFor(x => x.LessonPlan.PlanContent, new {@class = "form-control mp-textarea-lg", Name = "PlanContent", id = "editPlanContentControl"})
                         @Html.ValidationMessageFor(x => x.LessonPlan.PlanContent)
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(x => x.LessonPlan.Homework)
-                        @Html.TextAreaFor(x => x.LessonPlan.Homework, new {@class = "form-control", Name = "Homework", id = "editHomeworkControl"})
+                        @Html.TextAreaFor(x => x.LessonPlan.Homework, new {@class = "form-control mp-textarea-long", Name = "Homework", id = "editHomeworkControl"})
                         @Html.ValidationMessageFor(x => x.LessonPlan.Homework)
                     </div>
                     <div class="form-group">
