@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Web.Http;
 using AutoMapper;
+using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Models;
 
@@ -61,6 +62,32 @@ namespace MyPortal.Controllers.Api
             {
                 return Content(HttpStatusCode.BadRequest, "Invalid data");
             }
+            
+            var authorId = plan.AuthorId;
+
+            var author = new Staff();
+
+            if (authorId == 0)
+            {
+                var userId = User.Identity.GetUserId();
+                author = _context.Staff.SingleOrDefault(x => x.UserId == userId);
+                if (author == null)
+                {
+                    return Content(HttpStatusCode.BadRequest, "User does not have a personnel profile");
+                }
+            }
+
+            if (authorId != 0)
+            {
+                author = _context.Staff.SingleOrDefault(x => x.Id == authorId);
+            }
+
+            if (author == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Staff member not found");
+            }
+
+            plan.AuthorId = author.Id;
 
             _context.LessonPlans.Add(plan);
             _context.SaveChanges();

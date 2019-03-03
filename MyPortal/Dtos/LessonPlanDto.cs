@@ -8,7 +8,9 @@ namespace MyPortal.Dtos
         public string LearningObjectives { get; set; }
         public string PlanContent { get; set; }
         public string Homework { get; set; }
-
+        public int AuthorId { get; set; }
+        
         public StudyTopicDto StudyTopic { get; set; }
+        public StaffDto Author { get; set; }
     }
 }

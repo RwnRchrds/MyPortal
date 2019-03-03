@@ -26,6 +26,7 @@
         <tr>
             <th>Title</th>
             <th>Study Topic</th>
+            <th>Author</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -217,6 +218,16 @@
                     },
                     {
                         data: "studyTopic.name"
+                    },
+                    {
+                        data: "author.code",
+                        render: function(data, type, plan) {
+                            return plan.author.title +
+                                " " +
+                                plan.author.firstName.substring(0, 1) +
+                                " " +
+                                plan.author.lastName;
+                        }
                     },
                     {
                         data: "id",

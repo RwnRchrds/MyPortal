@@ -162,6 +162,12 @@ namespace MyPortal.Models
                 .WithRequired(e => e.Staff)
                 .HasForeignKey(e => e.AuthorId)
                 .WillCascadeOnDelete(false);
+            
+            modelBuilder.Entity<Staff>()
+                .HasMany(e => e.LessonPlans)
+                .WithRequired(e => e.Author)
+                .HasForeignKey(e => e.AuthorId)
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Staff>()
                 .HasMany(e => e.RegGroups)

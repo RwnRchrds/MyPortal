@@ -24,7 +24,10 @@ namespace MyPortal.Models
         
         [Required]
         public string Homework { get; set; }
+                 
+        public int AuthorId { get; set; }
 
         public virtual StudyTopic StudyTopic { get; set; }
+        public virtual Staff Author { get; set; }
     }
 }
