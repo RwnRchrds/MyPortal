@@ -18,11 +18,6 @@ namespace MyPortal.Controllers.Api
             _identity = new ApplicationDbContext();
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            _identity.Dispose();
-        }
-
         [HttpGet]
         [Route("api/roles")]
         public IEnumerable<RoleDto> GetRoles()

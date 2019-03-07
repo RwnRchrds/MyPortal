@@ -72,10 +72,6 @@ namespace MyPortal.Controllers.Api
             return Ok("Certificate deleted");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            _context.Dispose();
-        }
 
         [HttpGet]
         [Route("api/staff/certificates/fetch/{staffId}/{courseId}")]

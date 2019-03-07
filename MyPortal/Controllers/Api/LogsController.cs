@@ -84,11 +84,6 @@ namespace MyPortal.Controllers.Api
             return Ok("Log deleted");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            _context.Dispose();
-        }
-
         [HttpGet]
         [Route("api/logs/log/{id}")]
         public LogDto GetLog(int id)

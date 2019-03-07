@@ -48,11 +48,6 @@ namespace MyPortal.Controllers.Api
             return Ok("Year group deleted");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            _context.Dispose();
-        }
-
         [HttpGet]
         [Route("api/yearGroups/fetch")]
         public IEnumerable<YearGroupDto> GetYearGroups()

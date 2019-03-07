@@ -72,11 +72,6 @@ namespace MyPortal.Controllers.Api
             return Ok("Item added to basket");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            _context.Dispose();
-        }
-
         //GET BASKET ITEMS
         [HttpGet]
         [Route("api/basket")]

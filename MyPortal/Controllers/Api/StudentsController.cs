@@ -22,7 +22,24 @@ namespace MyPortal.Controllers.Api
             _context = new MyPortalDbContext();
         }
 
+        public void AuthenticateStudentRequest(int id)
+        {
+                var userId = User.Identity.GetUserId();
+                var studentUser = _context.Students.SingleOrDefault(x => x.UserId == userId);
+
+                if (studentUser == null)
+                {
+                    throw new HttpResponseException(HttpStatusCode.BadRequest);
+                }
+
+                if (studentUser.Id != id)
+                {
+                    throw new HttpResponseException(HttpStatusCode.BadRequest);
+                }
+        }
+
         [HttpPost]
+        [Authorize(Roles = "Staff, SeniorStaff")]
         [Route("api/students/documents/add")]
         public IHttpActionResult AddDocument(StudentDocumentUpload data)
         {
@@ -161,18 +178,17 @@ namespace MyPortal.Controllers.Api
             return Ok("Student deleted");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            _context.Dispose();
-        }
-
         //GET ACCOUNT BALANCE
         [HttpGet]
-        [Authorize]
         [Route("api/students/balance")]
-        public decimal GetBalance(int student)
+        public decimal GetBalance(int studentId)
         {
-            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == student);
+            if (User.IsInRole("Student"))
+            {
+                AuthenticateStudentRequest(studentId);
+            }
+            
+            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == studentId);
 
             if (studentInDb == null)
             {
@@ -201,6 +217,11 @@ namespace MyPortal.Controllers.Api
         [Route("api/students/documents/fetch/{studentId}")]
         public IEnumerable<StudentDocumentDto> GetDocuments(int studentId)
         {
+            if (User.IsInRole("Student"))
+            {
+                AuthenticateStudentRequest(studentId);
+            }
+            
             var student = _context.Students.SingleOrDefault(s => s.Id == studentId);
 
             if (student == null)
@@ -217,8 +238,14 @@ namespace MyPortal.Controllers.Api
         }
 
         [Authorize]
+        [Route("api/students/{id}")]
         public StudentDto GetStudent(int id)
         {
+            if (User.IsInRole("Student"))
+            {
+                AuthenticateStudentRequest(id);
+            }
+            
             var student = _context.Students.SingleOrDefault(s => s.Id == id);
 
             if (student == null)

@@ -55,11 +55,6 @@ namespace MyPortal.Controllers.Api
             return Ok("Reg group deleted");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            _context.Dispose();
-        }
-
         [HttpGet]
         [Route("api/regGroups/byId/{id}")]
         public RegGroupDto GetRegGroup(int id)

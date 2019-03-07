@@ -74,11 +74,6 @@ namespace MyPortal.Controllers.Api
             return Ok("Document added");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            _context.Dispose();
-        }
-
         //Gets approved general documents only
         [HttpGet]
         [Route("api/documents/approved")]

@@ -55,10 +55,6 @@ namespace MyPortal.Controllers.Api
             return Ok("Sale deleted");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            _context.Dispose();
-        }
 
         //GET UNPROCESSED SALES
         [HttpGet]

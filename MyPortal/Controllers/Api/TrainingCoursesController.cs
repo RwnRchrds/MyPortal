@@ -40,10 +40,6 @@ namespace MyPortal.Controllers.Api
             return Ok("Training course deleted");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            _context.Dispose();
-        }
 
         [HttpGet]
         [Route("api/courses/fetch/{courseId}")]

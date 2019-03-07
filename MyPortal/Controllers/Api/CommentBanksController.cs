@@ -21,12 +21,7 @@ namespace MyPortal.Controllers.Api
         public CommentBanksController(MyPortalDbContext context)
         {
             _context = context;
-        }
-        
-        protected override void Dispose(bool disposing)
-        {
-            _context.Dispose();
-        }
+        }       
 
         [HttpGet]
         [System.Web.Mvc.Route("api/commentBanks/hasComments/{id}")]

@@ -25,11 +25,6 @@ namespace MyPortal.Controllers.Api
             _context = context;
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            _context.Dispose();
-        }
-
         [Route("api/results/import/{resultSetId}")]
         public IHttpActionResult UploadResults(int resultSetId)
         {

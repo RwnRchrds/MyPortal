@@ -41,11 +41,6 @@ namespace MyPortal.Controllers.Api
             return Ok("Product deleted");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            _context.Dispose();
-        }
-
         //STORE: GET AVAILABLE PRODUCTS
         [HttpGet]
         [Route("api/products/store")]

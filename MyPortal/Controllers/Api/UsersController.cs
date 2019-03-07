@@ -282,13 +282,6 @@ namespace MyPortal.Controllers.Api
             return BadRequest();
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            _identity.Dispose();
-            _userManager.Dispose();
-            _context.Dispose();
-        }
-
         //GET Users From Database
         [HttpGet]
         [Route("api/users")]

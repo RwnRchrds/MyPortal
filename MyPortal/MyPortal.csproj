@@ -271,6 +271,7 @@
       <DependentUpon>201803051926258_InitialModel.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Authorisation\AuthoriseStudent.cs" />
     <Compile Include="Models\BasketItem.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\CommentBank.cs" />

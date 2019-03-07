@@ -182,11 +182,6 @@ namespace MyPortal.Controllers.Api
             return Ok("Staff member deleted");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            _context.Dispose();
-        }
-
         [HttpPost]
         [Route("api/staff/edit")]
         public IHttpActionResult EditStaff(Staff data)
