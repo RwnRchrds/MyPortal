@@ -27,7 +27,7 @@ namespace MyPortal.Models
 
         [Required] 
         [StringLength(50)]
-        [ActiveGradeSet]
+//        [ActiveGradeSet]
         public string Value { get; set; }
 
         public virtual ResultSet ResultSet { get; set; }
