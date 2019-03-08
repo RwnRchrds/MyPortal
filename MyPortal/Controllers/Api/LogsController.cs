@@ -25,6 +25,11 @@ namespace MyPortal.Controllers.Api
             _context = context;
         }
 
+        /// <summary>
+        /// Adds a new log to the database.
+        /// </summary>
+        /// <param name="data">The log to add to the database.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/logs/new")]
         public IHttpActionResult CreateLog(Log data)
@@ -68,6 +73,11 @@ namespace MyPortal.Controllers.Api
             return Ok("Log created");
         }
 
+        /// <summary>
+        /// Deletes the specified log from the database.
+        /// </summary>
+        /// <param name="id">The ID of the log to delete.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [Route("api/logs/log/{id}")]
         public IHttpActionResult DeleteLog(int id)
         {
@@ -84,6 +94,12 @@ namespace MyPortal.Controllers.Api
             return Ok("Log deleted");
         }
 
+        /// <summary>
+        /// Gets the specified log from the database.
+        /// </summary>
+        /// <param name="id">The ID of the log to fetch.</param>
+        /// <returns>Returns a DTO of the specified log.</returns>
+        /// <exception cref="HttpResponseException">Thrown when the log is not found.</exception>
         [HttpGet]
         [Route("api/logs/log/{id}")]
         public LogDto GetLog(int id)
@@ -98,16 +114,26 @@ namespace MyPortal.Controllers.Api
             return Mapper.Map<Log, LogDto>(log);
         }
 
+        /// <summary>
+        /// Get all logs for the specified student.
+        /// </summary>
+        /// <param name="studentId">The ID of the student to fetch logs for.</param>
+        /// <returns>Returns a list of DTOs of logs for students.</returns>
         [HttpGet]
-        [Route("api/logs/{student}")]
-        public IEnumerable<LogDto> GetLogs(int student)
+        [Route("api/logs/{studentId}")]
+        public IEnumerable<LogDto> GetLogs(int studentId)
         {
-            return _context.Logs.Where(l => l.StudentId == student)
+            return _context.Logs.Where(l => l.StudentId == studentId)
                 .OrderByDescending(x => x.Date)
                 .ToList()
                 .Select(Mapper.Map<Log, LogDto>);
         }
 
+        /// <summary>
+        /// Updates the log in the database.
+        /// </summary>
+        /// <param name="log">The log to be updated in the database.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [Route("api/logs/log/edit")]
         [HttpPost]
         public IHttpActionResult UpdateLog(Log log)

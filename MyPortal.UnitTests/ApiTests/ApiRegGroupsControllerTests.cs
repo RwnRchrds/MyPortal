@@ -45,7 +45,7 @@ namespace MyPortal.UnitTests.ApiTests
             
             Assert.IsNotNull(yearGroup);
             
-            var result = _controller.GetRegGroups(yearGroup.Id).Count();
+            var result = _controller.GetRegGroupsByYearGroup(yearGroup.Id).Count();
             
             Assert.AreEqual(1, result);
         }

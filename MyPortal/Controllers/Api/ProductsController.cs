@@ -23,7 +23,11 @@ namespace MyPortal.Controllers.Api
             _context = context;
         }
 
-        //DELETE PRODUCT
+        /// <summary>
+        /// Deletes the specified product from the database.
+        /// </summary>
+        /// <param name="id">The ID of the product to delete.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpDelete]
         [Route("api/products/{id}")]
         public IHttpActionResult DeleteProduct(int id)
@@ -41,7 +45,11 @@ namespace MyPortal.Controllers.Api
             return Ok("Product deleted");
         }
 
-        //STORE: GET AVAILABLE PRODUCTS
+        /// <summary>
+        /// Gets the products available to buy for the specified student.
+        /// </summary>
+        /// <param name="student">The ID of the student to get products for.</param>
+        /// <returns>Returns a list of DTOs of products available to buy for the specified student.</returns>
         [HttpGet]
         [Route("api/products/store")]
         public IEnumerable<ProductDto> GetAvailableProducts(int student)
@@ -58,7 +66,12 @@ namespace MyPortal.Controllers.Api
                 .Select(Mapper.Map<Product, ProductDto>);
         }
 
-        //GET PRICE
+        /// <summary>
+        /// Gets the price of the specified product.
+        /// </summary>
+        /// <param name="productId">The ID of the product.</param>
+        /// <returns>Returns a decimal of the price of the product.</returns>
+        /// <exception cref="HttpResponseException"></exception>
         [HttpGet]
         [Route("api/products/price/{productId}")]
         public decimal GetPrice(int productId)
@@ -73,7 +86,12 @@ namespace MyPortal.Controllers.Api
             return productInDb.Price;
         }
 
-        //GET SINGLE PRODUCT
+        /// <summary>
+        /// Get the specified product.
+        /// </summary>
+        /// <param name="id">The ID of the product.</param>
+        /// <returns>Returns a DTO of the specified product</returns>
+        /// <exception cref="HttpResponseException"></exception>
         [HttpGet]
         [Route("api/products/{id}")]
         public ProductDto GetProduct(int id)
@@ -88,7 +106,10 @@ namespace MyPortal.Controllers.Api
             return Mapper.Map<Product, ProductDto>(product);
         }
 
-        //GET ALL PRODUCTS
+        /// <summary>
+        /// Gets a list of all products.
+        /// </summary>
+        /// <returns>Returns a list of DTOs of all products.</returns>
         [HttpGet]
         [Route("api/products")]
         public IEnumerable<ProductDto> GetProducts()
@@ -99,7 +120,11 @@ namespace MyPortal.Controllers.Api
                 .Select(Mapper.Map<Product, ProductDto>);
         }
 
-        //NEW PRODUCT
+        /// <summary>
+        /// Creates a new product.
+        /// </summary>
+        /// <param name="data">The product to add to the database.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/products/new")]
         public IHttpActionResult NewProduct(Product data)
@@ -112,7 +137,11 @@ namespace MyPortal.Controllers.Api
             return Ok("Product added");
         }
 
-        //UPDATE PRODUCT
+        /// <summary>
+        /// Updates the specified product.
+        /// </summary>
+        /// <param name="product">The product to update.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/products/edit")]
         public IHttpActionResult UpdateProduct(Product product)

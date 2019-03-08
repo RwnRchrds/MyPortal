@@ -25,6 +25,11 @@ namespace MyPortal.Controllers.Api
             _context = context;
         }
 
+        /// <summary>
+        /// Adds a general document to the database.
+        /// </summary>
+        /// <param name="document">The document to add to the database.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/documents/add")]
         [Authorize(Roles = "Staff, SeniorStaff")]
@@ -74,7 +79,10 @@ namespace MyPortal.Controllers.Api
             return Ok("Document added");
         }
 
-        //Gets approved general documents only
+        /// <summary>
+        /// Gets approved documents only from the database
+        /// </summary>
+        /// <returns>Returns a list of DTOs of approved documents.</returns>
         [HttpGet]
         [Route("api/documents/approved")]
         [Authorize(Roles = "Staff, SeniorStaff")]
@@ -86,6 +94,12 @@ namespace MyPortal.Controllers.Api
                 .Select(Mapper.Map<Document, DocumentDto>);
         }
 
+        /// <summary>
+        /// Gets the document with the specified ID from the database.
+        /// </summary>
+        /// <param name="documentId">The ID of the document to fetch.</param>
+        /// <returns>Returns a DTO of the specified document.</returns>
+        /// <exception cref="HttpResponseException">Thrown when document is not found.</exception>
         [HttpGet]
         [Route("api/documents/document/{documentId}")]
         public DocumentDto GetDocument(int documentId)
@@ -101,7 +115,10 @@ namespace MyPortal.Controllers.Api
             return Mapper.Map<Document, DocumentDto>(document);
         }
 
-        //Returns all (general) documents --> Including unapproved
+        /// <summary>
+        /// Gets all documents from the database, including those that are unapproved.
+        /// </summary>
+        /// <returns>Returns a list of DTOs of all documents.</returns>
         [HttpGet]
         [Route("api/documents")]
         [Authorize(Roles = "SeniorStaff")]
@@ -113,6 +130,11 @@ namespace MyPortal.Controllers.Api
                 .Select(Mapper.Map<Document, DocumentDto>);
         }
 
+        /// <summary>
+        /// Deletes the specified document from the database.
+        /// </summary>
+        /// <param name="documentId">The ID of the document to delete.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpDelete]
         [Authorize(Roles = "Staff, SeniorStaff")]
         [Route("api/documents/remove/{documentId}")]
@@ -131,6 +153,11 @@ namespace MyPortal.Controllers.Api
             return Ok("Document removed");
         }
 
+        /// <summary>
+        /// Updates the document in the database.
+        /// </summary>
+        /// <param name="data">The document to update in the database.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Authorize(Roles = "Staff, SeniorStaff")]
         [Route("api/documents/edit")]

@@ -25,6 +25,10 @@ namespace MyPortal.Controllers.Api
             _context = context;
         }
 
+        /// <summary>
+        /// Gets all lesson plans from the database (in alphabetical order).
+        /// </summary>
+        /// <returns>Returns a list of DTOs of all lesson plans from the database.</returns>
         [HttpGet]
         [Route("api/lessonPlans/all")]
         public IEnumerable<LessonPlanDto> GetLessonPlans()
@@ -32,6 +36,12 @@ namespace MyPortal.Controllers.Api
             return _context.LessonPlans.OrderBy(x => x.Title).ToList().Select(Mapper.Map<LessonPlan, LessonPlanDto>);
         }
 
+        /// <summary>
+        /// Gets lesson plan from the database with the specified ID.
+        /// </summary>
+        /// <param name="id">ID of the lesson plan to fetch from the database.</param>
+        /// <returns></returns>
+        /// <exception cref="HttpResponseException"></exception>
         [HttpGet]
         [Route("api/lessonPlans/byId/{id}")]
         public LessonPlanDto GetLessonPlanById(int id)
@@ -46,6 +56,11 @@ namespace MyPortal.Controllers.Api
             return Mapper.Map<LessonPlan, LessonPlanDto>(lessonPlan);
         }
 
+        /// <summary>
+        /// Gets lesson plans from the specified study topic.
+        /// </summary>
+        /// <param name="id">The ID of the study topic to get lesson plans from.</param>
+        /// <returns>Returns a list of DTOs of lesson plans from the specified study topic.</returns>
         [HttpGet]
         [Route("api/lessonPlans/byTopic/{id}")]
         public IEnumerable<LessonPlanDto> GetLessonPlansByTopic(int id)
@@ -54,6 +69,11 @@ namespace MyPortal.Controllers.Api
                 .Select(Mapper.Map<LessonPlan, LessonPlanDto>);
         }
 
+        /// <summary>
+        /// Adds a lesson plan to the database.
+        /// </summary>
+        /// <param name="plan">The lesson plan to add to the database</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/lessonPlans/create")]
         public IHttpActionResult CreateLessonPlan(LessonPlan plan)
@@ -95,6 +115,11 @@ namespace MyPortal.Controllers.Api
             return Ok("Lesson plan added");
         }
 
+        /// <summary>
+        /// Updates the lesson plan specified.
+        /// </summary>
+        /// <param name="plan">Lesson plan to update in the database.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/lessonPlans/update")]
         public IHttpActionResult UpdateLessonPlan(LessonPlan plan)
@@ -117,6 +142,11 @@ namespace MyPortal.Controllers.Api
             return Ok("Lesson plan updated");
         }
 
+        /// <summary>
+        /// Deletes the specified lesson plan from the database.
+        /// </summary>
+        /// <param name="id">The ID of the lesson plan to delete.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpDelete]
         [Route("api/lessonPlans/delete/{id}")]
         public IHttpActionResult DeleteLessonPlan(int id)

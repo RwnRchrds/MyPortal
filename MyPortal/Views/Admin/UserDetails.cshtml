@@ -323,7 +323,7 @@
                                 method: "GET",
                                 complete: function(data) {
                                     $("#personSelect").empty();
-                                    $(data.responseJSON).each(function(i, student) {
+                                    $(data.responseJSON).each(function(i) {
                                         var divData = "<option value=" +
                                             data.responseJSON[i].id +
                                             ">" +
@@ -347,7 +347,7 @@
                                 method: "GET",
                                 complete: function(data) {
                                     $("#yearGroupSelect").empty();
-                                    $(data.responseJSON).each(function(i, yearGroup) {
+                                    $(data.responseJSON).each(function(i) {
                                         var divData = "<option value=" +
                                             data.responseJSON[i].id +
                                             ">" +
@@ -374,7 +374,7 @@
                             method: "GET",
                             complete: function(data) {
                                 $("#personSelect").empty();
-                                $(data.responseJSON).each(function(i, student) {
+                                $(data.responseJSON).each(function(i) {
                                     var divData = "<option value=" +
                                         data.responseJSON[i].id +
                                         ">" +
@@ -400,8 +400,9 @@
 
                     $("#AttachPersonForm").validate();
 
+                    var data;
                     if ($("#userTypeSelect").val() === "Student") {
-                        var data = {
+                        data = {
                             UserId: $("#AttachPerson").attr("data-user-id"),
                             RoleName: "Student",
                             PersonId: $("#personSelect").val()
@@ -410,7 +411,7 @@
                             url: "/api/users/attach",
                             data: data,
                             method: "POST",
-                            success: function(result) {
+                            success: function() {
                                 location.reload();
                             },
                             error: function(result) {
@@ -421,7 +422,7 @@
                     }
 
                     if ($("#userTypeSelect").val() === "Staff") {
-                        var data = {
+                        data = {
                             UserId: $("#AttachPerson").attr("data-user-id"),
                             RoleName: "Staff",
                             PersonId: $("#personSelect").val()
@@ -430,7 +431,7 @@
                             url: "/api/users/attach",
                             data: data,
                             method: "POST",
-                            success: function(result) {
+                            success: function() {
                                 location.reload();
                             },
                             error: function(result) {

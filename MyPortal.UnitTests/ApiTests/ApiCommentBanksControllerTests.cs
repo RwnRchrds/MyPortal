@@ -56,7 +56,7 @@ namespace MyPortal.UnitTests.ApiTests
             
             Assert.IsNotNull(commentBank);
 
-            var result = _controller.GetCommentBank(commentBank.Id);
+            var result = _controller.GetCommentBankById(commentBank.Id);
             
             Assert.IsNotNull(result);
             Assert.AreEqual("Opening", result.Name);
@@ -67,7 +67,7 @@ namespace MyPortal.UnitTests.ApiTests
         {
             const int commentBankId = 9999;
 
-            var ex = Assert.Throws<HttpResponseException>(() => _controller.GetCommentBank(commentBankId));
+            var ex = Assert.Throws<HttpResponseException>(() => _controller.GetCommentBankById(commentBankId));
             Assert.AreEqual(HttpStatusCode.NotFound, ex.Response.StatusCode);
         }
 

@@ -5,7 +5,6 @@ using System.Web.Http;
 using System.Web.Http.Results;
 using AutoMapper;
 using MyPortal.Controllers.Api;
-using MyPortal.Dtos;
 using MyPortal.Models;
 using MyPortal.UnitTests.TestData;
 using NUnit.Framework;

@@ -1,11 +1,9 @@
 using System;
 using System.Linq;
 using System.Net;
-using System.Runtime.InteropServices;
 using System.Web.Http.Results;
 using AutoMapper;
 using MyPortal.Controllers.Api;
-using MyPortal.Dtos;
 using MyPortal.Models;
 using MyPortal.UnitTests.TestData;
 using NUnit.Framework;

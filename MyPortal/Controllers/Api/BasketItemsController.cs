@@ -23,7 +23,11 @@ namespace MyPortal.Controllers.Api
             _context = context;
         }
 
-        //ADD TO BASKET
+/// <summary>
+/// Adds a basket item to student's basket.
+/// </summary>
+/// <param name="data">The basket item to add to the database</param>
+/// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/basket/add")]
         public IHttpActionResult AddToBasket(BasketItem data)
@@ -72,7 +76,11 @@ namespace MyPortal.Controllers.Api
             return Ok("Item added to basket");
         }
 
-        //GET BASKET ITEMS
+/// <summary>
+/// Gets a list of basket items for the specified student.
+/// </summary>
+/// <param name="student">The ID of the student to fetch basket items for.</param>
+/// <returns>Returns a list of DTOs of basket items for the student.</returns>
         [HttpGet]
         [Route("api/basket")]
         public IEnumerable<BasketItemDto> GetBasketItems(int student)
@@ -84,7 +92,11 @@ namespace MyPortal.Controllers.Api
                 .Select(Mapper.Map<BasketItem, BasketItemDto>);
         }
 
-        //GET BASKET TOTAL
+/// <summary>
+/// Gets the total price of all the items in the specified student's basket.
+/// </summary>
+/// <param name="student"></param>
+/// <returns>Returns a decimal of the total price.</returns>
         [HttpGet]
         [Route("api/basket/total")]
         public decimal GetTotal(int student)
@@ -101,7 +113,11 @@ namespace MyPortal.Controllers.Api
             return total;
         }
 
-        //REMOVE FROM BASKET
+/// <summary>
+/// Removes a basket item from the student's basket.
+/// </summary>
+/// <param name="id">The ID of the item to remove from the basket.</param>
+/// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpDelete]
         [Route("api/basket/remove/{id}")]
         public IHttpActionResult RemoveFromBasket(int id)

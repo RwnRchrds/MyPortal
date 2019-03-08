@@ -4,7 +4,7 @@ using MyPortal.Dtos;
 using MyPortal.Dtos.Identity;
 using MyPortal.Models;
 
-namespace MyPortal.App_Start
+namespace MyPortal
 {
     public class MappingProfile : Profile
     {

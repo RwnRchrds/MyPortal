@@ -23,6 +23,11 @@ namespace MyPortal.Controllers.Api
             _context = context;
         }
 
+        /// <summary>
+        /// Creates registration group.
+        /// </summary>
+        /// <param name="regGroup">The registration group to add to the database.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/regGroups/create")]
         public IHttpActionResult CreateRegGroup(RegGroup regGroup)
@@ -38,6 +43,11 @@ namespace MyPortal.Controllers.Api
             return Ok("Reg group created");
         }
 
+        /// <summary>
+        /// Deletes the specified registration group.
+        /// </summary>
+        /// <param name="id">The ID of the registration group to delete.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpDelete]
         [Route("api/regGroups/delete/{id}")]
         public IHttpActionResult DeleteRegGroup(int id)
@@ -55,9 +65,15 @@ namespace MyPortal.Controllers.Api
             return Ok("Reg group deleted");
         }
 
+        /// <summary>
+        /// Gets registration group with the specified ID.
+        /// </summary>
+        /// <param name="id">The ID of the registration group.</param>
+        /// <returns>Returns a DTO of the specified registration group.</returns>
+        /// <exception cref="HttpResponseException"></exception>
         [HttpGet]
         [Route("api/regGroups/byId/{id}")]
-        public RegGroupDto GetRegGroup(int id)
+        public RegGroupDto GetRegGroupById(int id)
         {
             var regGroup = _context.RegGroups.SingleOrDefault(x => x.Id == id);
 
@@ -69,9 +85,14 @@ namespace MyPortal.Controllers.Api
             return Mapper.Map<RegGroup, RegGroupDto>(regGroup);
         }
 
+        /// <summary>
+        /// Gets a list of registration groups from the specified year group.
+        /// </summary>
+        /// <param name="yearGroup">The ID of the year group to get registration groups.</param>
+        /// <returns>Returns a list of DTOs of registration groups from the specified year group.</returns>
         [HttpGet]
         [Route("api/regGroups/byYearGroup/{yearGroup}")]
-        public IEnumerable<RegGroupDto> GetRegGroups(int yearGroup)
+        public IEnumerable<RegGroupDto> GetRegGroupsByYearGroup(int yearGroup)
         {
             return _context.RegGroups
                 .Where(x => x.YearGroupId == yearGroup)
@@ -79,6 +100,10 @@ namespace MyPortal.Controllers.Api
                 .Select(Mapper.Map<RegGroup, RegGroupDto>);
         }
 
+        /// <summary>
+        /// Gets a list of all registration groups.
+        /// </summary>
+        /// <returns>Returns a list of DTOs of all registration groups.</returns>
         [HttpGet]
         [Route("api/regGroups/all")]
         public IEnumerable<RegGroupDto> GetRegGroups()
@@ -86,6 +111,12 @@ namespace MyPortal.Controllers.Api
             return _context.RegGroups.ToList().Select(Mapper.Map<RegGroup, RegGroupDto>);
         }
 
+        /// <summary>
+        /// Checks whether a a registration group has any assigned students.
+        /// </summary>
+        /// <param name="id">The ID of the registration group to check.</param>
+        /// <returns>Returns true if the registration group contains students.</returns>
+        /// <exception cref="HttpResponseException">Thrown when the registration group is not found.</exception>
         [HttpGet]
         [Route("api/regGroups/hasStudents/{id}")]
         public bool RegGroupHasStudents(int id)
@@ -100,6 +131,11 @@ namespace MyPortal.Controllers.Api
             return regGroupInDb.Students.Any();
         }
 
+        /// <summary>
+        /// Updates the specified registration group.
+        /// </summary>
+        /// <param name="regGroup">The registration group to update.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/regGroups/update")]
         public IHttpActionResult UpdateRegGroup(RegGroup regGroup)
