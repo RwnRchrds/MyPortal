@@ -271,7 +271,6 @@
       <DependentUpon>201803051926258_InitialModel.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\Authorisation\AuthoriseStudent.cs" />
     <Compile Include="Models\BasketItem.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\CommentBank.cs" />
@@ -757,6 +756,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Results\" />
+    <Folder Include="Models\Authorisation" />
     <Folder Include="Models\Validation\" />
   </ItemGroup>
   <ItemGroup>

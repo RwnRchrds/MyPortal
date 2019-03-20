@@ -22,22 +22,33 @@ namespace MyPortal.Controllers.Api
             _context = new MyPortalDbContext();
         }
 
+        /// <summary>
+        /// Checks that the current student user's ID matches the requested student's ID.
+        /// </summary>
+        /// <param name="id">The ID of the student request.</param>
+        /// <exception cref="HttpResponseException">Thrown if the student is not found or if the requested student does not match the current user.</exception>
         public void AuthenticateStudentRequest(int id)
         {
                 var userId = User.Identity.GetUserId();
                 var studentUser = _context.Students.SingleOrDefault(x => x.UserId == userId);
+                var requestedStudent = _context.Students.SingleOrDefault(x => x.Id == id);
 
-                if (studentUser == null)
+                if (studentUser == null || requestedStudent == null)
                 {
-                    throw new HttpResponseException(HttpStatusCode.BadRequest);
+                    throw new HttpResponseException(HttpStatusCode.NotFound);
                 }
 
-                if (studentUser.Id != id)
+                if (studentUser.Id != requestedStudent.Id)
                 {
                     throw new HttpResponseException(HttpStatusCode.BadRequest);
                 }
         }
 
+        /// <summary>
+        /// Adds a document to the specified student student.
+        /// </summary>
+        /// <param name="data">The student document object to add</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Authorize(Roles = "Staff, SeniorStaff")]
         [Route("api/students/documents/add")]
@@ -92,6 +103,12 @@ namespace MyPortal.Controllers.Api
             return Ok("Document added");
         }
 
+        /// <summary>
+        /// Adds a student.
+        /// </summary>
+        /// <param name="student">The student object to add.</param>
+        /// <returns></returns>
+        /// <exception cref="HttpResponseException">Thrown when the model state is invalid.</exception>
         [HttpPost]
         [Authorize(Roles = "Staff, SeniorStaff")]
         public IHttpActionResult CreateStudent(Student student)
@@ -108,6 +125,11 @@ namespace MyPortal.Controllers.Api
             return Ok("Student added");
         }
 
+        /// <summary>
+        /// Credits (increases) the student's account balance by the specified amount.
+        /// </summary>
+        /// <param name="data">The balance adjustment object to credit the account.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/students/credit")]
         [Authorize(Roles = "Staff, SeniorStaff")]
@@ -132,6 +154,11 @@ namespace MyPortal.Controllers.Api
             return Ok("Account credited");
         }
 
+        /// <summary>
+        /// Debits (decreases) the student's account balance by the specified amount.
+        /// </summary>
+        /// <param name="data">The balance adjustment object to debit the account.</param>
+        /// <returns></returns>
         [HttpPost]
         [Route("api/students/debit")]
         [Authorize(Roles = "Staff, SeniorStaff")]
@@ -161,6 +188,11 @@ namespace MyPortal.Controllers.Api
             return Ok("Account debited");
         }
 
+        /// <summary>
+        /// Deletes the specified student.
+        /// </summary>
+        /// <param name="id">The ID of the student to delete.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpDelete]
         [Authorize(Roles = "Staff, SeniorStaff")]
         public IHttpActionResult DeleteStudent(int id)
@@ -178,7 +210,12 @@ namespace MyPortal.Controllers.Api
             return Ok("Student deleted");
         }
 
-        //GET ACCOUNT BALANCE
+        /// <summary>
+        /// Gets the account balance for the specified student
+        /// </summary>
+        /// <param name="studentId">The ID of the student to query the balance for.</param>
+        /// <returns>Returns the specified student's account balance.</returns>
+        /// <exception cref="HttpResponseException">Thrown when the student is not found.</exception>
         [HttpGet]
         [Route("api/students/balance")]
         public decimal GetBalance(int studentId)
@@ -198,6 +235,12 @@ namespace MyPortal.Controllers.Api
             return studentInDb.AccountBalance;
         }
 
+        /// <summary>
+        /// Fetches the specified document.
+        /// </summary>
+        /// <param name="documentId">The ID of the document to fetch.</param>
+        /// <returns>Returns a DTO of the specified document.</returns>
+        /// <exception cref="HttpResponseException">Thrown when the document is not found.</exception>
         [HttpGet]
         [Route("api/students/documents/document/{documentId}")]
         public DocumentDto GetDocument(int documentId)
@@ -210,9 +253,20 @@ namespace MyPortal.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
+            if (User.IsInRole("Student"))
+            {
+                AuthenticateStudentRequest(document.StudentId);
+            }
+
             return Mapper.Map<Document, DocumentDto>(document.Document);
         }
 
+        /// <summary>
+        /// Gets a list of documents for the specified student.
+        /// </summary>
+        /// <param name="studentId">The ID of the student to fetch documents for.</param>
+        /// <returns>Returns a list of DTOs of documents for the specified student.</returns>
+        /// <exception cref="HttpResponseException">Thrown when the student is not found.</exception>
         [HttpGet]
         [Route("api/students/documents/fetch/{studentId}")]
         public IEnumerable<StudentDocumentDto> GetDocuments(int studentId)
@@ -237,6 +291,12 @@ namespace MyPortal.Controllers.Api
             return documents;
         }
 
+        /// <summary>
+        /// Fetches the specified student.
+        /// </summary>
+        /// <param name="id">The ID of the student to fetch.</param>
+        /// <returns>Returns a DTO of the specified student.</returns>
+        /// <exception cref="HttpResponseException">Thrown when the student is not found.</exception>
         [Authorize]
         [Route("api/students/{id}")]
         public StudentDto GetStudent(int id)
@@ -256,6 +316,10 @@ namespace MyPortal.Controllers.Api
             return Mapper.Map<Student, StudentDto>(student);
         }
 
+        /// <summary>
+        /// Gets a list of all students.
+        /// </summary>
+        /// <returns>Returns a list of DTOs of all students.</returns>
         [Authorize(Roles = "Staff, SeniorStaff")]
         public IEnumerable<StudentDto> GetStudents()
         {
@@ -267,6 +331,11 @@ namespace MyPortal.Controllers.Api
                 .Select(Mapper.Map<Student, StudentDto>);
         }
 
+        /// <summary>
+        /// Gets a list of all students in the specified registration group.
+        /// </summary>
+        /// <param name="regGroupId">The ID of the registration group to fetch students from.</param>
+        /// <returns>Returns a list of DTOs of students in the specified registration group.</returns>
         [Authorize(Roles = "Staff, SeniorStaff")]
         public IEnumerable<StudentDto> GetStudentsByRegGroup(int regGroupId)
         {
@@ -277,7 +346,13 @@ namespace MyPortal.Controllers.Api
                 .Select(Mapper.Map<Student, StudentDto>);
         }
 
+        /// <summary>
+        /// Gets a list of all students in the specified year group.
+        /// </summary>
+        /// <param name="yearGroupId">The ID of the year group to fetch students from.</param>
+        /// <returns>Returns a list of DTOs of students in the specified year group.</returns>
         [HttpGet]
+        [Authorize(Roles = "Staff, SeniorStaff")]
         [Route("api/students/yearGroup/{yearGroupId}")]
         public IEnumerable<StudentDto> GetStudentsFromYear(int yearGroupId)
         {
@@ -288,7 +363,13 @@ namespace MyPortal.Controllers.Api
                 .Select(Mapper.Map<Student, StudentDto>);
         }
 
+        /// <summary>
+        /// Deletes the specified document.
+        /// </summary>
+        /// <param name="documentId">The ID of the document to delete.</param>
+        /// <returns>Returns a NegotiatedContentResult stating whether or not the action was successful.</returns>
         [HttpDelete]
+        [Authorize(Roles = "Staff, SeniorStaff")]
         [Route("api/students/documents/remove/{documentId}")]
         public IHttpActionResult RemoveDocument(int documentId)
         {
@@ -319,6 +400,11 @@ namespace MyPortal.Controllers.Api
         [Route("api/students/hasBasketItems/{id}")]
         public bool StudentHasBasketItems(int id)
         {
+            if (User.IsInRole("Student"))
+            {
+                AuthenticateStudentRequest(id);
+            }
+            
             var studentInDb = _context.Students.SingleOrDefault(x => x.Id == id);
 
             if (studentInDb == null)
@@ -333,6 +419,11 @@ namespace MyPortal.Controllers.Api
         [Route("api/students/hasDocuments/{id}")]
         public bool StudentHasDocuments(int id)
         {
+            if (User.IsInRole("Student"))
+            {
+                AuthenticateStudentRequest(id);
+            }
+            
             var studentInDb = _context.Students.SingleOrDefault(x => x.Id == id);
 
             if (studentInDb == null)
@@ -347,6 +438,11 @@ namespace MyPortal.Controllers.Api
         [Route("api/students/hasLogs/{id}")]
         public bool StudentHasLogs(int id)
         {
+            if (User.IsInRole("Student"))
+            {
+                AuthenticateStudentRequest(id);
+            }
+            
             var studentInDb = _context.Students.SingleOrDefault(x => x.Id == id);
 
             if (studentInDb == null)
@@ -361,6 +457,11 @@ namespace MyPortal.Controllers.Api
         [Route("api/students/hasResults/{id}")]
         public bool StudentHasResults(int id)
         {
+            if (User.IsInRole("Student"))
+            {
+                AuthenticateStudentRequest(id);
+            }
+            
             var studentInDb = _context.Students.SingleOrDefault(x => x.Id == id);
 
             if (studentInDb == null)
@@ -375,6 +476,11 @@ namespace MyPortal.Controllers.Api
         [Route("api/students/hasSales/{id}")]
         public bool StudentHasSales(int id)
         {
+            if (User.IsInRole("Student"))
+            {
+                AuthenticateStudentRequest(id);
+            }
+            
             var studentInDb = _context.Students.SingleOrDefault(x => x.Id == id);
 
             if (studentInDb == null)
@@ -386,6 +492,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [Authorize(Roles = "Staff, SeniorStaff")]
         [Route("api/students/documents/edit")]
         public IHttpActionResult UpdateDocument(Document data)
         {
