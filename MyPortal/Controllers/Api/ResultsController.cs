@@ -25,6 +25,13 @@ namespace MyPortal.Controllers.Api
             _context = context;
         }
 
+        #region Results Import
+        
+        /// <summary>
+        /// Uploads results from a CSV import file.
+        /// </summary>
+        /// <param name="resultSetId">The result set to insert results into.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [Route("api/results/import/{resultSetId}")]
         public IHttpActionResult UploadResults(int resultSetId)
         {
@@ -92,8 +99,15 @@ namespace MyPortal.Controllers.Api
             return Ok(numResults + " results found and imported");
         }
 
+            #endregion               
+
         #region Individual Student Results Management
 
+        /// <summary>
+        /// Adds result to student.
+        /// </summary>
+        /// <param name="data">Result to add</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/results/create")]
         public IHttpActionResult AddResult(ResultDto data)
@@ -117,6 +131,12 @@ namespace MyPortal.Controllers.Api
             return Ok("Result added");
         }
 
+        /// <summary>
+        /// Gets results for a student from the specified result set.
+        /// </summary>
+        /// <param name="student">The ID of the student to fetch results for.</param>
+        /// <param name="resultSet">The ID of the result set to fetch results from.</param>
+        /// <returns>Returns a list of DTOs of results for a student for the specified result set.</returns>
         [HttpGet]
         [Route("api/results/fetch")]
         public IEnumerable<ResultDto> GetResults(int student, int resultSet)

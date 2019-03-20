@@ -23,6 +23,11 @@ namespace MyPortal.Controllers.Api
             _context = context;
         }
 
+        /// <summary>
+        /// Adds a new result set.
+        /// </summary>
+        /// <param name="data">The result set to add.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/resultSets/new")]
         public IHttpActionResult CreateResultSet(ResultSet data)
@@ -46,6 +51,11 @@ namespace MyPortal.Controllers.Api
             return Ok("Result set created");
         }
 
+        /// <summary>
+        /// Deletes the specified result set.
+        /// </summary>
+        /// <param name="resultSetId">The ID of the result set to delete.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpDelete]
         [Route("api/resultSets/delete/{resultSetId}")]
         public IHttpActionResult DeleteResultSet(int resultSetId)
@@ -67,6 +77,12 @@ namespace MyPortal.Controllers.Api
             return Ok("Result set deleted");
         }
 
+        /// <summary>
+        /// Gets the specified result set.
+        /// </summary>
+        /// <param name="resultSetId">The ID of the specified result set.</param>
+        /// <returns>Returns a DTO of the specified result set.</returns>
+        /// <exception cref="HttpResponseException">Thrown when the result set is not found.</exception>
         [HttpGet]
         [Route("api/resultSets/byId/{resultSetId}")]
         public ResultSetDto GetResultSet(int resultSetId)
@@ -81,6 +97,10 @@ namespace MyPortal.Controllers.Api
             return Mapper.Map<ResultSet, ResultSetDto>(resultSet);
         }
 
+        /// <summary>
+        /// Gets all result sets.
+        /// </summary>
+        /// <returns>Returns a list of DTOs of all result sets.</returns>
         [HttpGet]
         [Route("api/resultSets/all")]
         public IEnumerable<ResultSetDto> GetResultSets()
@@ -88,6 +108,12 @@ namespace MyPortal.Controllers.Api
             return _context.ResultSets.OrderBy(x => x.Name).ToList().Select(Mapper.Map<ResultSet, ResultSetDto>);
         }
 
+        /// <summary>
+        /// Checks if the specified result set contains any results.
+        /// </summary>
+        /// <param name="id">The ID of the result set to check.</param>
+        /// <returns>Returns a boolean value indicating whether the result set contains any results.</returns>
+        /// <exception cref="HttpResponseException">Thrown when the result set is not found.</exception>
         [HttpGet]
         [Route("api/resultSets/hasResults/{id}")]
         public bool ResultSetHasResults(int id)
@@ -103,6 +129,11 @@ namespace MyPortal.Controllers.Api
         }
 
 
+        /// <summary>
+        /// Sets the specified result as the current result set.
+        /// </summary>
+        /// <param name="resultSetId">The ID of the result set to mark as current.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/resultSets/setCurrent/{resultSetId}")]
         public IHttpActionResult SetCurrent(int resultSetId)
@@ -140,6 +171,11 @@ namespace MyPortal.Controllers.Api
             return Ok("Result set marked as current");
         }
 
+        /// <summary>
+        /// Updates the specified result set.
+        /// </summary>
+        /// <param name="data">The result set to update.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/resultSets/update")]
         public IHttpActionResult UpdateResultSet(ResultSet data)

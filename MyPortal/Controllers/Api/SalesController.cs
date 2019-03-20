@@ -20,7 +20,12 @@ namespace MyPortal.Controllers.Api
             _context = new MyPortalDbContext();
         }
 
-        //TEST BALANCE
+        /// <summary>
+        /// Checks whether the student has enough funds to purchase an item.
+        /// </summary>
+        /// <param name="sale">The sale with the</param>
+        /// <returns>Returns a boolean value indicating whether the student has enough funds to purchase the item.</returns>
+        /// <exception cref="HttpResponseException">Thrown when the product or student is not found.</exception>
         [HttpPost]
         [Route("api/sales/query")]
         public bool AssessBalance(SaleDto sale)
@@ -37,7 +42,11 @@ namespace MyPortal.Controllers.Api
             return studentToQuery.AccountBalance >= productToQuery.Price;
         }
 
-        //DELETE SALE
+        /// <summary>
+        /// Deletes the specified sale.
+        /// </summary>
+        /// <param name="id">The ID of the sale to delete.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpDelete]
         [Route("api/sales/delete/{id}")]
         public IHttpActionResult DeleteSale(int id)
@@ -56,7 +65,10 @@ namespace MyPortal.Controllers.Api
         }
 
 
-        //GET UNPROCESSED SALES
+        /// <summary>
+        /// Gets a list of sales that have not been marked as completed.
+        /// </summary>
+        /// <returns>Returns a list of DTOs of sales that have not been marked as completed.</returns>
         [HttpGet]
         [Route("api/sales/pending")]
         public IEnumerable<SaleDto> GetPendingSales()
@@ -66,7 +78,10 @@ namespace MyPortal.Controllers.Api
                 .Select(Mapper.Map<Sale, SaleDto>);
         }
 
-        //GET ALL SALES
+        /// <summary>
+        /// Gets a list of all sales
+        /// </summary>
+        /// <returns>Returns a list of DTOs of all sales.</returns>
         [HttpGet]
         [Route("api/sales/all")]
         public IEnumerable<SaleDto> GetSales()
@@ -77,7 +92,11 @@ namespace MyPortal.Controllers.Api
                 .Select(Mapper.Map<Sale, SaleDto>);
         }
 
-        //GET SALE FOR STUDENT
+        /// <summary>
+        /// Gets a list of sales for a particular student.
+        /// </summary>
+        /// <param name="studentId">The ID of the student to fetch sales for.</param>
+        /// <returns>Returns a list of DTOs of sales for the specified student</returns>
         [HttpGet]
         [Route("api/sales/student")]
         public IEnumerable<SaleDto> GetSalesForStudent(int studentId)
@@ -89,7 +108,10 @@ namespace MyPortal.Controllers.Api
                 .Select(Mapper.Map<Sale, SaleDto>);
         }
 
-        //GET UNPROCESSED SALES
+        /// <summary>
+        /// Gets a list of sales that have not been marked as completed.
+        /// </summary>
+        /// <returns>Returns a list of DTOs of sales that have not been marked as completed.</returns>
         [HttpGet]
         [Route("api/sales")]
         public IEnumerable<SaleDto> GetUnprocessedSales()
@@ -101,7 +123,11 @@ namespace MyPortal.Controllers.Api
                 .Select(Mapper.Map<Sale, SaleDto>);
         }
 
-        //Processes a Sale for ONE Product
+        /// <summary>
+        /// Creates a sale for one product.
+        /// </summary>
+        /// <param name="sale">The sale to create.</param>
+        /// <exception cref="HttpResponseException">Thrown if the student or product is not found.</exception>
         public void InvokeSale(SaleDto sale)
         {
             var student = _context.Students.SingleOrDefault(x => x.Id == sale.StudentId);
@@ -123,7 +149,11 @@ namespace MyPortal.Controllers.Api
             _context.Sales.Add(Mapper.Map<SaleDto, Sale>(sale));
         }
 
-        //MARK SALE AS PROCESSED
+        /// <summary>
+        /// Marks a sale as processed (completed).
+        /// </summary>
+        /// <param name="id">The ID of the sale to mark as processed.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/sales/complete/{id}")]
         public IHttpActionResult MarkSaleProcessed(int id)
@@ -147,7 +177,11 @@ namespace MyPortal.Controllers.Api
             return Ok("Sale marked as processed");
         }
 
-        //NEW SALE
+        /// <summary>
+        /// Creates a sale.
+        /// </summary>
+        /// <param name="sale">The sale to create.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/sales/new")]
         public IHttpActionResult NewSale(Sale sale)
@@ -180,7 +214,11 @@ namespace MyPortal.Controllers.Api
             return Ok("Sale completed");
         }
 
-        //STORE: NEW PURCHASE (From Student Side)
+        /// <summary>
+        /// Processes a purchase made by a student using the online store.
+        /// </summary>
+        /// <param name="data">The checkout object to process the sale for.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/sales/purchase")]
         public IHttpActionResult Purchase(Checkout data)
@@ -232,7 +270,11 @@ namespace MyPortal.Controllers.Api
             return Ok("Purchase completed");
         }
 
-        //REFUND SALE
+        /// <summary>
+        /// Refunds the specified sale to the student.
+        /// </summary>
+        /// <param name="id">The ID of the sale to refund.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpDelete]
         [Route("api/sales/refund/{id}")]
         public IHttpActionResult RefundSale(int id)

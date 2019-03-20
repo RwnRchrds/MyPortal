@@ -18,6 +18,10 @@ namespace MyPortal.Controllers.Api
             _identity = new ApplicationDbContext();
         }
 
+        /// <summary>
+        /// Gets all roles
+        /// </summary>
+        /// <returns>Returns a list of DTOs of all roles.</returns>
         [HttpGet]
         [Route("api/roles")]
         public IEnumerable<RoleDto> GetRoles()

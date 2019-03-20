@@ -20,6 +20,11 @@ namespace MyPortal.Controllers.Api
             _context = new MyPortalDbContext();
         }
 
+        /// <summary>
+        /// Adds a document and attaches it to the specified staff member.
+        /// </summary>
+        /// <param name="data">The StaffDocument object to add.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/staff/documents/add")]
         public IHttpActionResult AddDocument(StaffDocument data)
@@ -68,6 +73,11 @@ namespace MyPortal.Controllers.Api
             return Ok("Document added");
         }
 
+        /// <summary>
+        /// Adds a staff observation for the specified staff member.
+        /// </summary>
+        /// <param name="data">The staff observation object to add.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/staff/observations/add")]
         public IHttpActionResult AddObservation(StaffObservation data)
@@ -102,6 +112,11 @@ namespace MyPortal.Controllers.Api
             return Ok("Observation added");
         }
 
+        /// <summary>
+        /// Adds a staff member.
+        /// </summary>
+        /// <param name="staffDto">The DTO of the staff member to add.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/staff/new")]
         public IHttpActionResult CreateStaff(Staff staffDto)
@@ -122,6 +137,11 @@ namespace MyPortal.Controllers.Api
             return Ok("Staff member added");
         }
 
+        /// <summary>
+        /// Deletes the specified staff member.
+        /// </summary>
+        /// <param name="staffId">The ID of the staff member to delete.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpDelete]
         [Route("api/staff/delete/{staffId}")]
         public IHttpActionResult DeleteStaff(int staffId)
@@ -153,22 +173,22 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.BadRequest, "Cannot delete the current user");
             }
 
-            var ownedLogs = _context.Logs.Where(x => x.AuthorId == staffId);
+            var logsWritten = _context.Logs.Where(x => x.AuthorId == staffId);
 
-            var ownedCertificates = _context.TrainingCertificates.Where(x => x.StaffId == staffId);
+            var ownCertificates = _context.TrainingCertificates.Where(x => x.StaffId == staffId);
 
-            var ownedObservations = _context.StaffObservations.Where(x => x.ObserveeId == staffId);
+            var ownObservations = _context.StaffObservations.Where(x => x.ObserveeId == staffId);
 
-            var ownedObservationsAsObserver = _context.StaffObservations.Where(x => x.ObserverId == staffId);
+            var observedObservations = _context.StaffObservations.Where(x => x.ObserverId == staffId);
 
-            var ownedDocuments = _context.StaffDocuments.Where(x => x.StaffId == staffId);
+            var ownDocuments = _context.StaffDocuments.Where(x => x.StaffId == staffId);
 
-            _context.Logs.RemoveRange(ownedLogs);
-            _context.TrainingCertificates.RemoveRange(ownedCertificates);
-            _context.StaffObservations.RemoveRange(ownedObservations);
-            _context.StaffObservations.RemoveRange(ownedObservationsAsObserver);
+            _context.Logs.RemoveRange(logsWritten);
+            _context.TrainingCertificates.RemoveRange(ownCertificates);
+            _context.StaffObservations.RemoveRange(ownObservations);
+            _context.StaffObservations.RemoveRange(observedObservations);
 
-            foreach (var document in ownedDocuments)
+            foreach (var document in ownDocuments)
             {
                 var attachment = document.Document;
 
@@ -182,6 +202,11 @@ namespace MyPortal.Controllers.Api
             return Ok("Staff member deleted");
         }
 
+        /// <summary>
+        /// Edits the specified staff member.
+        /// </summary>
+        /// <param name="data">The staff object to edit.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/staff/edit")]
         public IHttpActionResult EditStaff(Staff data)
@@ -211,6 +236,12 @@ namespace MyPortal.Controllers.Api
             return Ok("Staff member updated");
         }
 
+        /// <summary>
+        /// Fetches the specified document.
+        /// </summary>
+        /// <param name="documentId">The ID of the document to fetch.</param>
+        /// <returns>Returns a DTO of the staff document with the specified ID.</returns>
+        /// <exception cref="HttpResponseException"></exception>
         [HttpGet]
         [Route("api/staff/documents/document/{documentId}")]
         public StaffDocumentDto GetDocument(int documentId)
@@ -227,6 +258,12 @@ namespace MyPortal.Controllers.Api
 
         // --[STAFF DOCUMENTS]--
 
+        /// <summary>
+        /// Fetches documents for the specified staff member.
+        /// </summary>
+        /// <param name="staffId">The ID of the staff member to fetch.</param>
+        /// <returns>Returns a list of DTOs of documents for the specified staff member.</returns>
+        /// <exception cref="HttpResponseException"></exception>
         [HttpGet]
         [Route("api/staff/documents/fetch/{staffId}")]
         public IEnumerable<StaffDocumentDto> GetDocuments(int staffId)
@@ -246,6 +283,12 @@ namespace MyPortal.Controllers.Api
             return documents;
         }
 
+        /// <summary>
+        /// Gets the staff observation with the specified ID.
+        /// </summary>
+        /// <param name="observationId"></param>
+        /// <returns>Returns a DTO of the staff observation with the specified ID.</returns>
+        /// <exception cref="HttpResponseException">Thrown when staff member is not found.</exception>
         [HttpGet]
         [Route("api/staff/observations/observation/{observationId}")]
         public StaffObservationDto GetObservation(int observationId)
@@ -258,12 +301,14 @@ namespace MyPortal.Controllers.Api
             }
 
             return Mapper.Map<StaffObservation, StaffObservationDto>(observation);
-        }
+        }        
 
-
-        // --[STAFF OBSERVATIONS]--
-
-
+        /// <summary>
+        /// Gets all observations for the specified staff member.
+        /// </summary>
+        /// <param name="staffId">The ID of the staff member to fetch observations for.</param>
+        /// <returns>Returns a list of DTOs of observations for the specified staff member.</returns>
+        /// <exception cref="HttpResponseException">Thrown when staff member is not found.</exception>
         [HttpGet]
         [Route("api/staff/observations/fetch/{staffId}")]
         public IEnumerable<StaffObservationDto> GetObservations(int staffId)
@@ -283,6 +328,10 @@ namespace MyPortal.Controllers.Api
             return observations;
         }
 
+        /// <summary>
+        /// Gets a list of all staff.
+        /// </summary>
+        /// <returns>Returns a list of DTOs of all staff.</returns>
         [Route("api/staff/fetch")]
         public IEnumerable<StaffDto> GetStaff()
         {
@@ -290,11 +339,14 @@ namespace MyPortal.Controllers.Api
                 .OrderBy(x => x.LastName)
                 .ToList()
                 .Select(Mapper.Map<Staff, StaffDto>);
-        }
+        }        
 
-        // --[STAFF DETAILS]--
-
-
+        /// <summary>
+        /// Gets the staff member with the specified ID.
+        /// </summary>
+        /// <param name="id">The ID of the staff member to fetch.</param>
+        /// <returns>Returns a DTO of the specified staff member.</returns>
+        /// <exception cref="HttpResponseException">Thrown when the staff member is not found.</exception>
         [Route("api/staff/fetch/{id}")]
         public StaffDto GetStaffMember(string id)
         {
@@ -308,6 +360,11 @@ namespace MyPortal.Controllers.Api
             return Mapper.Map<Staff, StaffDto>(staff);
         }
 
+        /// <summary>
+        /// Deletes the specified document.
+        /// </summary>
+        /// <param name="documentId">The ID of the document to delete.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpDelete]
         [Route("api/staff/documents/remove/{documentId}")]
         public IHttpActionResult RemoveDocument(int documentId)
@@ -335,6 +392,11 @@ namespace MyPortal.Controllers.Api
             return Ok("Document deleted");
         }
 
+        /// <summary>
+        /// Deletes the specified observation.
+        /// </summary>
+        /// <param name="observationId">The ID of the observation to delete.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpDelete]
         [Route("api/staff/observations/remove/{observationId}")]
         public IHttpActionResult RemoveObservation(int observationId)
@@ -366,6 +428,12 @@ namespace MyPortal.Controllers.Api
             return Ok("Observation removed");
         }
 
+        /// <summary>
+        /// Checks whether a staff member has any documents.
+        /// </summary>
+        /// <param name="id">The ID of the staff member to check.</param>
+        /// <returns>Returns true if staff member has documents.</returns>
+        /// <exception cref="HttpResponseException">Thrown when the staff member is not found.</exception>
         [HttpGet]
         [Route("api/staff/hasDocuments/{id}")]
         public bool StaffHasDocuments(int id)
@@ -380,6 +448,12 @@ namespace MyPortal.Controllers.Api
             return staffInDb.StaffDocuments.Any();
         }
 
+        /// <summary>
+        /// Checks whether a staff member has written any logs.
+        /// </summary>
+        /// <param name="id">The ID of the staff member to check.</param>
+        /// <returns>Returns true if staff member has logs.</returns>
+        /// <exception cref="HttpResponseException">Thrown when the staff member is not found.</exception>
         [HttpGet]
         [Route("api/staff/hasLogs/{id}")]
         public bool StaffHasLogs(int id)
@@ -394,6 +468,11 @@ namespace MyPortal.Controllers.Api
             return staffInDb.Logs.Any();
         }
 
+        /// <summary>
+        /// Updates the specified document.
+        /// </summary>
+        /// <param name="data">The document object to update.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/staff/documents/edit")]
         public IHttpActionResult UpdateDocument(StaffDocument data)
@@ -423,6 +502,11 @@ namespace MyPortal.Controllers.Api
             return Ok("Document updated");
         }
 
+        /// <summary>
+        /// Updates the specified observation
+        /// </summary>
+        /// <param name="data">The staff observation object to update.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/staff/observations/update")]
         public IHttpActionResult UpdateObservation(StaffObservation data)

@@ -55,6 +55,20 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [Route("api/studyTopics/hasLessonPlans/{id}")]
+        public bool HasLessonPlans(int id)
+        {
+            var studyTopic = _context.StudyTopics.SingleOrDefault(x => x.Id == id);
+
+            if (studyTopic == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return studyTopic.LessonPlans.Any();
+        }
+        
+        [HttpGet]
         [Route("api/studyTopics/fetch/byId/{id}")]
         public StudyTopicDto GetStudyTopic(int id)
         {

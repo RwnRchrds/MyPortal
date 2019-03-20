@@ -170,23 +170,52 @@
             $("#studyTopics").on("click",
                 ".js-delete",
                 function() {
-                    var button = $(this);
-                    bootbox.confirm("Are you sure you wish to delete this study topic and its lesson plans?",
-                        function(result) {
-                            if (result) {
-                                $.ajax({
-                                    url: "/api/studyTopics/delete/" + button.attr("data-topic-id"),
-                                    method: "DELETE",
-                                    success: function(a) {
-                                        $("#studyTopics").DataTable().ajax.reload();
-                                        toastr.success(a);
-                                    },
-                                    error: function(e) {
-                                        toastr.error(e.responseJSON);
-                                    }
-                                });
+                    $.ajax({
+                        url: "/api/studyTopics/hasLessonPlans/" + button.attr("data-topic-id"),
+                        method: "GET",
+                        success: function(a) {
+                            if (!a) {
+                                bootbox.confirm("Are you sure you wish to delete this study topic?",
+                                    function(result) {
+                                        if (result) {
+                                            $.ajax({
+                                                url: "/api/studyTopics/delete/" + button.attr("data-topic-id"),
+                                                method: "DELETE",
+                                                success: function(a) {
+                                                    $("#studyTopics").DataTable().ajax.reload();
+                                                    toastr.success(a);
+                                                },
+                                                error: function(e) {
+                                                    toastr.error(e.responseJSON);
+                                                }
+                                            });
+                                        }
+                                    });
                             }
-                        });
+                            
+                            if (a) {
+                                bootbox.confirm("This study topic has lesson plans! Are you sure you wish to delete it?",
+                                    function(result) {
+                                        if (result) {
+                                            $.ajax({
+                                                url: "/api/studyTopics/delete/" + button.attr("data-topic-id"),
+                                                method: "DELETE",
+                                                success: function(a) {
+                                                    $("#studyTopics").DataTable().ajax.reload();
+                                                    toastr.success(a);
+                                                },
+                                                error: function(e) {
+                                                    toastr.error(e.responseJSON);
+                                                }
+                                            });
+                                        }
+                                    });
+                            }
+                        },
+                        error: function(e) {
+                            toastr.error(e.responseJSON);
+                        }
+                    });
                 });
         });
 
