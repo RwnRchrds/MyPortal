@@ -5,6 +5,7 @@ using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 
 namespace MyPortal.Controllers.Api
 {
@@ -30,14 +31,14 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/comments/create")]
-        public IHttpActionResult CreateComment(Comment comment)
+        public IHttpActionResult CreateComment(ProfileComment comment)
         {
             if (!ModelState.IsValid)
             {
                 return Content(HttpStatusCode.BadRequest, "Invalid data");
             }
 
-            _context.Comments.Add(comment);
+            _context.ProfileComments.Add(comment);
             _context.SaveChanges();
             return Ok("Comment added");
         }
@@ -51,14 +52,14 @@ namespace MyPortal.Controllers.Api
         [Route("api/comments/delete/{id}")]
         public IHttpActionResult DeleteComment(int id)
         {
-            var comment = _context.Comments.SingleOrDefault(x => x.Id == id);
+            var comment = _context.ProfileComments.SingleOrDefault(x => x.Id == id);
 
             if (comment == null)
             {
                 return Content(HttpStatusCode.NotFound, "Comment not found");
             }
 
-            _context.Comments.Remove(comment);
+            _context.ProfileComments.Remove(comment);
             _context.SaveChanges();
 
             return Ok("Comment deleted");
@@ -72,16 +73,16 @@ namespace MyPortal.Controllers.Api
         /// <exception cref="HttpResponseException"></exception>
         [HttpGet]
         [Route("api/comments/byId/{id}")]
-        public CommentDto GetCommentById(int id)
+        public ProfileCommentDto GetCommentById(int id)
         {
-            var comment = _context.Comments.SingleOrDefault(x => x.Id == id);
+            var comment = _context.ProfileComments.SingleOrDefault(x => x.Id == id);
 
             if (comment == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return Mapper.Map<Comment, CommentDto>(comment);
+            return Mapper.Map<ProfileComment, ProfileCommentDto>(comment);
         }
 
         /// <summary>
@@ -90,12 +91,12 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns a list of all DTOs of all comments.</returns>
         [HttpGet]
         [Route("api/comments/all")]
-        public IEnumerable<CommentDto> GetComments()
+        public IEnumerable<ProfileCommentDto> GetComments()
         {
-            return _context.Comments
+            return _context.ProfileComments
                 .OrderBy(x => x.Value)
                 .ToList()
-                .Select(Mapper.Map<Comment, CommentDto>);
+                .Select(Mapper.Map<ProfileComment, ProfileCommentDto>);
         }
 
         /// <summary>
@@ -105,13 +106,13 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns a list of DTOs of comments from the comment bank.</returns>
         [HttpGet]
         [Route("api/comments/byBank/{id}")]
-        public IEnumerable<CommentDto> GetCommentsByCommentBank(int id)
+        public IEnumerable<ProfileCommentDto> GetCommentsByCommentBank(int id)
         {
-            return _context.Comments
+            return _context.ProfileComments
                 .Where(x => x.CommentBankId == id)
                 .OrderBy(x => x.Value)
                 .ToList()
-                .Select(Mapper.Map<Comment, CommentDto>);
+                .Select(Mapper.Map<ProfileComment, ProfileCommentDto>);
         }
 
         /// <summary>
@@ -121,14 +122,14 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/comments/update")]
-        public IHttpActionResult UpdateComment(Comment comment)
+        public IHttpActionResult UpdateComment(ProfileComment comment)
         {
             if (!ModelState.IsValid)
             {
                 return Content(HttpStatusCode.BadRequest, "Invalid data");
             }
 
-            var commentInDb = _context.Comments.SingleOrDefault(x => x.Id == comment.Id);
+            var commentInDb = _context.ProfileComments.SingleOrDefault(x => x.Id == comment.Id);
 
             if (commentInDb == null)
             {

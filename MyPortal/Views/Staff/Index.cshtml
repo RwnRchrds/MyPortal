@@ -110,7 +110,7 @@
                 },
                 columns: [
                     {
-                        data: "document.description",
+                        data: "coreDocument.description",
                         render: function(data, type, document) {
                             return "<a href='" +
                                 document.document.url +
@@ -121,7 +121,7 @@
 
                     },
                     {
-                        data: "document.date",
+                        data: "coreDocument.date",
                         render: function(data) {
                             var date = new Date(data);
                             return date.toLocaleDateString();
@@ -145,13 +145,13 @@
                 },
                 columns: [
                     {
-                        data: "trainingCourse.code"
+                        data: "personnelTrainingCourse.code"
                     },
                     {
-                        data: "trainingCourse.description"
+                        data: "personnelTrainingCourse.description"
                     },
                     {
-                        data: "trainingStatus.name"
+                        data: "personnelTrainingStatus.name"
                     }
                 ],
                 paging: false,
@@ -163,15 +163,15 @@
                     "emptyTable": "No certificates to display"
                 },
                 "createdRow": function(row, data, dataIndex) {
-                    if (data.trainingStatus.name === "Completed") {
+                    if (data.personnelTrainingStatus.name === "Completed") {
                         $(row).addClass("mp-cert-completed");
                     }
 
-                    if (data.trainingStatus.name === "Pending") {
+                    if (data.personnelTrainingStatus.name === "Pending") {
                         $(row).addClass("mp-cert-pending");
                     }
 
-                    if (data.trainingStatus.name === "Failed") {
+                    if (data.personnelTrainingStatus.name === "Failed") {
                         $(row).addClass("mp-cert-failed");
                     }
                 }
@@ -193,7 +193,7 @@
 
                     },
                     {
-                        data: "staff1.lastname",
+                        data: "observer.lastname",
                         render: function(data, type, observation) {
                             return observation.observer.title +
                                 " " +

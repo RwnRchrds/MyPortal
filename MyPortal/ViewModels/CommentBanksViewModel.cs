@@ -1,9 +1,10 @@
 using MyPortal.Models;
+using MyPortal.Models.Database;
 
 namespace MyPortal.ViewModels
 {
     public class CommentBanksViewModel
     {
-        public CommentBank CommentBank { get; set; }    
+        public ProfileCommentBank CommentBank { get; set; }    
     }
 }

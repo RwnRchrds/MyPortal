@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers
@@ -35,7 +36,7 @@ namespace MyPortal.Controllers
         [Route("Staff/Finance/Sales/New")]
         public ActionResult SaleEntry()
         {
-            var products = _context.Products.OrderBy(x => x.Description).ToList();
+            var products = _context.FinanceProducts.OrderBy(x => x.Description).ToList();
 
             var viewModel = new SaleEntryViewModel
             {

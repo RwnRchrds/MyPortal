@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
 
 namespace MyPortal.ViewModels
@@ -10,9 +11,9 @@ namespace MyPortal.ViewModels
         {
             Genders = Gender.GetGenderOptions();
         }
-        public IEnumerable<YearGroup> YearGroups { get; set; }
-        public IEnumerable<RegGroup> RegGroups { get; set; }
+        public IEnumerable<PastoralYearGroup> YearGroups { get; set; }
+        public IEnumerable<PastoralRegGroup> RegGroups { get; set; }
         public IEnumerable<Gender> Genders { get; set; }
-        public Student Student { get; set; }
+        public CoreStudent Student { get; set; }
     }
 }

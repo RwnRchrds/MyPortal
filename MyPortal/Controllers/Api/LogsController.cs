@@ -7,6 +7,7 @@ using AutoMapper;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 
 namespace MyPortal.Controllers.Api
 {
@@ -32,16 +33,16 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/logs/new")]
-        public IHttpActionResult CreateLog(Log data)
+        public IHttpActionResult CreateLog(ProfileLog data)
         {
             var authorId = data.AuthorId;
 
-            var author = new Staff();
+            var author = new CoreStaffMember();
 
             if (authorId == 0)
             {
                 var userId = User.Identity.GetUserId();
-                author = _context.Staff.SingleOrDefault(x => x.UserId == userId);
+                author = _context.CoreStaff.SingleOrDefault(x => x.UserId == userId);
                 if (author == null)
                 {
                     return Content(HttpStatusCode.BadRequest, "User does not have a personnel profile");
@@ -50,7 +51,7 @@ namespace MyPortal.Controllers.Api
 
             if (authorId != 0)
             {
-                author = _context.Staff.SingleOrDefault(x => x.Id == authorId);
+                author = _context.CoreStaff.SingleOrDefault(x => x.Id == authorId);
             }
 
             if (author == null)
@@ -67,7 +68,7 @@ namespace MyPortal.Controllers.Api
             }
 
             var log = data;
-            _context.Logs.Add(log);
+            _context.ProfileLogs.Add(log);
             _context.SaveChanges();
 
             return Ok("Log created");
@@ -81,14 +82,14 @@ namespace MyPortal.Controllers.Api
         [Route("api/logs/log/{id}")]
         public IHttpActionResult DeleteLog(int id)
         {
-            var logInDb = _context.Logs.SingleOrDefault(l => l.Id == id);
+            var logInDb = _context.ProfileLogs.SingleOrDefault(l => l.Id == id);
 
             if (logInDb == null)
             {
                 return Content(HttpStatusCode.NotFound, "Log does not exist");
             }
 
-            _context.Logs.Remove(logInDb);
+            _context.ProfileLogs.Remove(logInDb);
             _context.SaveChanges();
 
             return Ok("Log deleted");
@@ -102,16 +103,16 @@ namespace MyPortal.Controllers.Api
         /// <exception cref="HttpResponseException">Thrown when the log is not found.</exception>
         [HttpGet]
         [Route("api/logs/log/{id}")]
-        public LogDto GetLog(int id)
+        public ProfileLogDto GetLog(int id)
         {
-            var log = _context.Logs.SingleOrDefault(l => l.Id == id);
+            var log = _context.ProfileLogs.SingleOrDefault(l => l.Id == id);
 
             if (log == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return Mapper.Map<Log, LogDto>(log);
+            return Mapper.Map<ProfileLog, ProfileLogDto>(log);
         }
 
         /// <summary>
@@ -121,12 +122,12 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns a list of DTOs of logs for students.</returns>
         [HttpGet]
         [Route("api/logs/{studentId}")]
-        public IEnumerable<LogDto> GetLogs(int studentId)
+        public IEnumerable<ProfileLogDto> GetLogs(int studentId)
         {
-            return _context.Logs.Where(l => l.StudentId == studentId)
+            return _context.ProfileLogs.Where(l => l.StudentId == studentId)
                 .OrderByDescending(x => x.Date)
                 .ToList()
-                .Select(Mapper.Map<Log, LogDto>);
+                .Select(Mapper.Map<ProfileLog, ProfileLogDto>);
         }
 
         /// <summary>
@@ -136,14 +137,14 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [Route("api/logs/log/edit")]
         [HttpPost]
-        public IHttpActionResult UpdateLog(Log log)
+        public IHttpActionResult UpdateLog(ProfileLog log)
         {
             if (!ModelState.IsValid)
             {
                 return Content(HttpStatusCode.BadRequest, "Invalid data");
             }
 
-            var logInDb = _context.Logs.SingleOrDefault(l => l.Id == log.Id);
+            var logInDb = _context.ProfileLogs.SingleOrDefault(l => l.Id == log.Id);
 
             if (logInDb == null)
             {

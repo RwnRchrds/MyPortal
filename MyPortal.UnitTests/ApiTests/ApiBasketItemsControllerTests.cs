@@ -4,6 +4,7 @@ using System.Web.Http.Results;
 using AutoMapper;
 using MyPortal.Controllers.Api;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 using MyPortal.UnitTests.TestData;
 using NUnit.Framework;
 
@@ -43,20 +44,20 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void GetBasketItems_ReturnsItems()
         {
-            var student = _context.Students.SingleOrDefault(x => x.FirstName == "Aaron");
+            var student = _context.CoreStudents.SingleOrDefault(x => x.FirstName == "Aaron");
             
             Assert.IsNotNull(student);
 
             var result = _controller.GetBasketItems(student.Id).ToList();                       
 
             Assert.AreEqual(3, result.Count());
-            Assert.AreEqual("Art Pack", result.First().Product.Description);
+            Assert.AreEqual("Art Pack", result.First().FinanceProduct.Description);
         }
 
         [Test]
         public void GetTotal_ReturnsBasketTotal()
         {
-            var student = _context.Students.SingleOrDefault(x => x.FirstName == "Aaron");
+            var student = _context.CoreStudents.SingleOrDefault(x => x.FirstName == "Aaron");
             
             Assert.IsNotNull(student);
 
@@ -68,19 +69,19 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void AddToBasket_AddsItemToBasket()
         {
-            var student = _context.Students.SingleOrDefault(x => x.FirstName == "Dorothy");
+            var student = _context.CoreStudents.SingleOrDefault(x => x.FirstName == "Dorothy");
             
             Assert.IsNotNull(student);
 
-            var initial = _context.BasketItems.Count(x => x.StudentId == student.Id);
+            var initial = _context.FinanceBasketItems.Count(x => x.StudentId == student.Id);
 
-            var product = _context.Products.SingleOrDefault(x => x.Description == "Art Pack");
+            var product = _context.FinanceProducts.SingleOrDefault(x => x.Description == "Art Pack");
             
             Assert.IsNotNull(product);
 
-            _controller.AddToBasket(new BasketItem {ProductId = product.Id, StudentId = student.Id});
+            _controller.AddToBasket(new FinanceBasketItem {ProductId = product.Id, StudentId = student.Id});
 
-            var result = _context.BasketItems.Count(x => x.StudentId == student.Id);
+            var result = _context.FinanceBasketItems.Count(x => x.StudentId == student.Id);
             
             Assert.AreEqual(initial + 1, result);
         }
@@ -90,10 +91,10 @@ namespace MyPortal.UnitTests.ApiTests
         {
             var studentId = 9999;
             
-            var product = _context.Products.SingleOrDefault(x => x.Description == "Art Pack");
+            var product = _context.FinanceProducts.SingleOrDefault(x => x.Description == "Art Pack");
             Assert.IsNotNull(product);
             
-            var item = new BasketItem {StudentId = studentId, ProductId = product.Id};
+            var item = new FinanceBasketItem {StudentId = studentId, ProductId = product.Id};
 
             var actionResult = _controller.AddToBasket((item));
 
@@ -110,10 +111,10 @@ namespace MyPortal.UnitTests.ApiTests
         {
             var productId = 9999;
 
-            var student = _context.Students.SingleOrDefault(x => x.FirstName == "Dorothy");
+            var student = _context.CoreStudents.SingleOrDefault(x => x.FirstName == "Dorothy");
             Assert.IsNotNull(student);
             
-            var item = new BasketItem {StudentId = student.Id, ProductId = productId};
+            var item = new FinanceBasketItem {StudentId = student.Id, ProductId = productId};
 
             var actionResult = _controller.AddToBasket((item));
 
@@ -128,13 +129,13 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void AddToBasket_ProductNotAvailable_ReturnsBadRequest()
         {
-            var product = _context.Products.SingleOrDefault(x => x.Description == "School Dinner");
+            var product = _context.FinanceProducts.SingleOrDefault(x => x.Description == "School Dinner");
             Assert.IsNotNull(product);
 
-            var student = _context.Students.SingleOrDefault(x => x.FirstName == "Dorothy");
+            var student = _context.CoreStudents.SingleOrDefault(x => x.FirstName == "Dorothy");
             Assert.IsNotNull(student);
             
-            var item = new BasketItem {StudentId = student.Id, ProductId = product.Id};
+            var item = new FinanceBasketItem {StudentId = student.Id, ProductId = product.Id};
 
             var actionResult = _controller.AddToBasket((item));
 
@@ -149,13 +150,13 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void AddToBasket_ProductOnceOnly_ReturnsBadRequest()
         {
-            var product = _context.Products.SingleOrDefault(x => x.Description == "School Trip");
+            var product = _context.FinanceProducts.SingleOrDefault(x => x.Description == "School Trip");
             Assert.IsNotNull(product);
 
-            var student = _context.Students.SingleOrDefault(x => x.FirstName == "John");
+            var student = _context.CoreStudents.SingleOrDefault(x => x.FirstName == "John");
             Assert.IsNotNull(student);
             
-            var item = new BasketItem {ProductId = product.Id, StudentId = student.Id};
+            var item = new FinanceBasketItem {ProductId = product.Id, StudentId = student.Id};
 
             var actionResult = _controller.AddToBasket((item));
 
@@ -170,19 +171,19 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void RemoveFromBasket_RemovesItemFromBasket()
         {
-            var student = _context.Students.SingleOrDefault(x => x.FirstName == "Aaron");
+            var student = _context.CoreStudents.SingleOrDefault(x => x.FirstName == "Aaron");
             
             Assert.IsNotNull(student);
 
-            var initial = _context.BasketItems.Count(x => x.StudentId == student.Id);
+            var initial = _context.FinanceBasketItems.Count(x => x.StudentId == student.Id);
 
-            var item = _context.BasketItems.FirstOrDefault(x => x.StudentId == student.Id);
+            var item = _context.FinanceBasketItems.FirstOrDefault(x => x.StudentId == student.Id);
             
             Assert.IsNotNull(item);
 
             _controller.RemoveFromBasket(item.Id);
 
-            var result = _context.BasketItems.Count(x => x.StudentId == student.Id);
+            var result = _context.FinanceBasketItems.Count(x => x.StudentId == student.Id);
             
             Assert.AreEqual(initial - 1, result); 
         }

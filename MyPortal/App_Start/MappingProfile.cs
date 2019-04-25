@@ -2,7 +2,7 @@
 using Microsoft.AspNet.Identity.EntityFramework;
 using MyPortal.Dtos;
 using MyPortal.Dtos.Identity;
-using MyPortal.Models;
+using MyPortal.Models.Database;
 
 namespace MyPortal
 {
@@ -10,26 +10,26 @@ namespace MyPortal
     {
         public MappingProfile()
         {
-            CreateMap<Student, StudentDto>();
-            CreateMap<StudentDto, Student>();
+            CreateMap<CoreStudent, CoreStudentDto>();
+            CreateMap<CoreStudentDto, CoreStudent>();
 
-            CreateMap<LogDto, Log>();
-            CreateMap<Log, LogDto>();
+            CreateMap<ProfileLogDto, ProfileLog>();
+            CreateMap<ProfileLog, ProfileLogDto>();
 
-            CreateMap<YearGroupDto, YearGroup>();
-            CreateMap<YearGroup, YearGroupDto>();
+            CreateMap<PastoralYearGroupDto, PastoralYearGroup>();
+            CreateMap<PastoralYearGroup, PastoralYearGroupDto>();
 
-            CreateMap<RegGroupDto, RegGroup>();
-            CreateMap<RegGroup, RegGroupDto>();
+            CreateMap<PastoralRegGroupDto, PastoralRegGroup>();
+            CreateMap<PastoralRegGroup, PastoralRegGroupDto>();
 
-            CreateMap<StaffDto, Staff>();
-            CreateMap<Staff, StaffDto>();
+            CreateMap<CoreStaffMemberDto, CoreStaffMember>();
+            CreateMap<CoreStaffMember, CoreStaffMemberDto>();
 
-            CreateMap<TrainingCertificateDto, TrainingCertificate>();
-            CreateMap<TrainingCertificate, TrainingCertificateDto>();
+            CreateMap<PersonnelTrainingCertificateDto, PersonnelTrainingCertificate>();
+            CreateMap<PersonnelTrainingCertificate, PersonnelTrainingCertificateDto>();
 
-            CreateMap<TrainingCourseDto, TrainingCourse>();
-            CreateMap<TrainingCourse, TrainingCourseDto>();
+            CreateMap<PersonnelTrainingCourseDto, PersonnelTrainingCourse>();
+            CreateMap<PersonnelTrainingCourse, PersonnelTrainingCourseDto>();
 
             CreateMap<UserDto, IdentityUser>();
             CreateMap<IdentityUser, UserDto>();
@@ -37,56 +37,56 @@ namespace MyPortal
             CreateMap<RoleDto, IdentityRole>();
             CreateMap<IdentityRole, RoleDto>();
 
-            CreateMap<RegGroupDto, RegGroup>();
-            CreateMap<RegGroup, RegGroupDto>();
+            CreateMap<PastoralRegGroupDto, PastoralRegGroup>();
+            CreateMap<PastoralRegGroup, PastoralRegGroupDto>();
 
-            CreateMap<ResultDto, Result>();
-            CreateMap<Result, ResultDto>();
+            CreateMap<AssessmentResultDto, AssessmentResult>();
+            CreateMap<AssessmentResult, AssessmentResultDto>();
 
-            CreateMap<ResultSet, ResultSetDto>();
-            CreateMap<ResultSetDto, ResultSet>();
+            CreateMap<AssessmentResultSet, AssessmentResultSetDto>();
+            CreateMap<AssessmentResultSetDto, AssessmentResultSet>();
 
-            CreateMap<SubjectDto, Subject>();
-            CreateMap<Subject, SubjectDto>();
+            CreateMap<CurriculumSubjectDto, CurriculumSubject>();
+            CreateMap<CurriculumSubject, CurriculumSubjectDto>();
 
-            CreateMap<LogTypeDto, LogType>();
-            CreateMap<LogType, LogTypeDto>();
+            CreateMap<ProfileLogTypeDto, ProfileLogType>();
+            CreateMap<ProfileLogType, ProfileLogTypeDto>();
 
-            CreateMap<ProductDto, Product>();
-            CreateMap<Product, ProductDto>();
+            CreateMap<FinanceProductDto, FinanceProduct>();
+            CreateMap<FinanceProduct, FinanceProductDto>();
 
-            CreateMap<SaleDto, Sale>();
-            CreateMap<Sale, SaleDto>();
+            CreateMap<FinanceSaleDto, FinanceSale>();
+            CreateMap<FinanceSale, FinanceSaleDto>();
 
-            CreateMap<BasketItemDto, BasketItem>();
-            CreateMap<BasketItem, BasketItemDto>();
+            CreateMap<FinanceBasketItemDto, FinanceBasketItem>();
+            CreateMap<FinanceBasketItem, FinanceBasketItemDto>();
 
-            CreateMap<TrainingStatusDto, TrainingStatus>();
-            CreateMap<TrainingStatus, TrainingStatusDto>();
+            CreateMap<PersonnelTrainingStatusDto, PersonnelTrainingStatus>();
+            CreateMap<PersonnelTrainingStatus, PersonnelTrainingStatusDto>();
 
-            CreateMap<DocumentDto, Document>();
-            CreateMap<Document, DocumentDto>();
+            CreateMap<CoreDocumentDto, CoreDocument>();
+            CreateMap<CoreDocument, CoreDocumentDto>();
 
-            CreateMap<StudentDocumentDto, StudentDocument>();
-            CreateMap<StudentDocument, StudentDocumentDto>();
+            CreateMap<CoreStudentDocumentDto, CoreStudentDocument>();
+            CreateMap<CoreStudentDocument, CoreStudentDocumentDto>();
 
-            CreateMap<StaffDocumentDto, StaffDocument>();
-            CreateMap<StaffDocument, StaffDocumentDto>();
+            CreateMap<CoreStaffDocumentDto, CoreStaffDocument>();
+            CreateMap<CoreStaffDocument, CoreStaffDocumentDto>();
 
-            CreateMap<GradeSetDto, GradeSet>();
-            CreateMap<GradeSet, GradeSetDto>();
+            CreateMap<AssessmentGradeSetDto, AssessmentGradeSet>();
+            CreateMap<AssessmentGradeSet, AssessmentGradeSetDto>();
 
-            CreateMap<GradeDto, Grade>();
-            CreateMap<Grade, GradeDto>();
+            CreateMap<AssessmentGradeDto, AssessmentGrade>();
+            CreateMap<AssessmentGrade, AssessmentGradeDto>();
 
-            CreateMap<CommentBankDto, CommentBank>();
-            CreateMap<CommentBank, CommentBankDto>();
+            CreateMap<ProfileCommentBankDto, ProfileCommentBank>();
+            CreateMap<ProfileCommentBank, ProfileCommentBankDto>();
 
-            CreateMap<CommentDto, Comment>();
-            CreateMap<Comment, CommentDto>();
+            CreateMap<ProfileCommentDto, ProfileComment>();
+            CreateMap<ProfileComment, ProfileCommentDto>();
 
-            CreateMap<StudyTopic, StudyTopicDto>();
-            CreateMap<StudyTopicDto, StudyTopic>();
+            CreateMap<CurriculumStudyTopic, CurriculumStudyTopicDto>();
+            CreateMap<CurriculumStudyTopicDto, CurriculumStudyTopic>();
         }
     }
 }

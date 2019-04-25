@@ -1,6 +1,6 @@
 @model MyPortal.ViewModels.SubjectsViewModel
 @{
-    ViewBag.Title = "Result Sets";
+    ViewBag.Title = "Subjects";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
@@ -122,13 +122,13 @@
                         data: "name"
                     },
                     {
-                        data: "staff.lastName",
-                        render: function(data, type, log) {
-                            return log.staff.title +
+                        data: "leader.lastName",
+                        render: function(data, type, subject) {
+                            return subject.leader.title +
                                 " " +
-                                log.staff.firstName.substring(0, 1) +
+                                subject.leader.firstName.substring(0, 1) +
                                 " " +
-                                log.staff.lastName;
+                                subject.leader.lastName;
                         }
                     },
                     {

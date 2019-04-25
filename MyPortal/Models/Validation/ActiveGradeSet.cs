@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using MyPortal.Models.Database;
 
 namespace MyPortal.Models.Validation
 {
@@ -15,11 +16,11 @@ namespace MyPortal.Models.Validation
         
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var result = (Result) validationContext.ObjectInstance;
+            var result = (AssessmentResult) validationContext.ObjectInstance;
 
-            var validGrades = _context.Grades.Where(x => x.GradeSet.Active).ToList();
+            var validGrades = _context.AssessmentGrades.Where(x => x.AssessmentGradeSet.Active).ToList();
 
-            return validGrades.Any(x => x.GradeValue == result.Value) 
+            return validGrades.Any(x => x.Grade == result.Value) 
                 ? ValidationResult.Success 
                 : new ValidationResult("Result grade is not valid");
         }

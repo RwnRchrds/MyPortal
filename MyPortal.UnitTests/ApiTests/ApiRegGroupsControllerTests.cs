@@ -2,6 +2,7 @@ using System.Linq;
 using AutoMapper;
 using MyPortal.Controllers.Api;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 using MyPortal.UnitTests.TestData;
 using NUnit.Framework;
 
@@ -41,7 +42,7 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void GetRegGroups_ReturnsRegGroups()
         {
-            var yearGroup = _context.YearGroups.SingleOrDefault(x => x.Name == "Year 7");
+            var yearGroup = _context.PastoralYearGroups.SingleOrDefault(x => x.Name == "Year 7");
             
             Assert.IsNotNull(yearGroup);
             

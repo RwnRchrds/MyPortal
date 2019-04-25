@@ -1,9 +1,10 @@
 using MyPortal.Models;
+using MyPortal.Models.Database;
 
 namespace MyPortal.ViewModels
 {
     public class LessonPlanDetailsViewModel
     {
-        public LessonPlan LessonPlan { get; set; }    
+        public CurriculumLessonPlan LessonPlan { get; set; }    
     }
 }

@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers
@@ -58,8 +59,8 @@ namespace MyPortal.Controllers
 
             var attachedProfile = "";
 
-            var studentProfile = _context.Students.SingleOrDefault(x => x.UserId == user.Id);
-            var staffProfile = _context.Staff.SingleOrDefault(x => x.UserId == user.Id);
+            var studentProfile = _context.CoreStudents.SingleOrDefault(x => x.UserId == user.Id);
+            var staffProfile = _context.CoreStaff.SingleOrDefault(x => x.UserId == user.Id);
 
             if (studentProfile != null)
                 attachedProfile = studentProfile.LastName + ", " + studentProfile.FirstName + " (Student)";

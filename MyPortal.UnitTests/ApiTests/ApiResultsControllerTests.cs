@@ -2,6 +2,7 @@ using System.Linq;
 using AutoMapper;
 using MyPortal.Controllers.Api;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 using MyPortal.UnitTests.TestData;
 using NUnit.Framework;
 
@@ -41,9 +42,9 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void GetResults_ReturnsResultsForStudent()
         {
-            var student = _context.Students.SingleOrDefault(x => x.FirstName == "Aaron");
+            var student = _context.CoreStudents.SingleOrDefault(x => x.FirstName == "Aaron");
 
-            var resultSet = _context.ResultSets.SingleOrDefault(x => x.Name == "Current");
+            var resultSet = _context.AssessmentResultSets.SingleOrDefault(x => x.Name == "Current");
             
             Assert.IsNotNull(student);
             Assert.IsNotNull(resultSet);

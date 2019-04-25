@@ -42,25 +42,25 @@
                         <td>
                             <b>Year Group</b>
                         </td>
-                        <td>@Model.Student.YearGroup.Name</td>
+                        <td>@Model.Student.PastoralYearGroup.Name</td>
                     </tr>
                     <tr>
                         <td>
                             <b>Reg Group</b>
                         </td>
-                        <td>@Model.Student.RegGroup.Name</td>
+                        <td>@Model.Student.PastoralRegGroup.Name</td>
                     </tr>
                     <tr>
                         <td>
                             <b>Reg Tutor</b>
                         </td>
-                        <td>@Model.Student.RegGroup.Staff.Title @Model.Student.RegGroup.Staff.FirstName.Substring(0, 1) @Model.Student.RegGroup.Staff.LastName</td>
+                        <td>@Model.Student.PastoralRegGroup.Tutor.Title @Model.Student.PastoralRegGroup.Tutor.FirstName.Substring(0, 1) @Model.Student.PastoralRegGroup.Tutor.LastName</td>
                     </tr>
                     <tr>
                         <td>
                             <b>Head of Year</b>
                         </td>
-                        <td>@Model.Student.YearGroup.Staff.Title @Model.Student.YearGroup.Staff.FirstName.Substring(0, 1) @Model.Student.YearGroup.Staff.LastName</td>
+                        <td>@Model.Student.PastoralYearGroup.CoreStaffMember.Title @Model.Student.PastoralYearGroup.CoreStaffMember.FirstName.Substring(0, 1) @Model.Student.PastoralYearGroup.CoreStaffMember.LastName</td>
                     </tr>
                 </table>
 
@@ -98,7 +98,7 @@
                     @foreach (var result in Model.Results)
                     {
                         <tr>
-                            <td>@result.Subject.Name</td>
+                            <td>@result.CurriculumSubject.Name</td>
                             <td>@result.Value</td>
                         </tr>
                     }
@@ -164,7 +164,7 @@
 
                     },
                     {
-                        data: "staff.lastName",
+                        data: "coreStaffMember.lastName",
                         render: function(data, type, log) {
                             return log.staff.title +
                                 " " +
@@ -174,7 +174,7 @@
                         }
                     },
                     {
-                        data: "logType.name"
+                        data: "profileLogType.name"
                     },
                     {
                         data: "message",

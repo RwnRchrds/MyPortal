@@ -5,6 +5,7 @@ using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 
 namespace MyPortal.Controllers.Api
 {
@@ -20,14 +21,14 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("api/yearGroups/create")]
-        public IHttpActionResult CreateYearGroup(YearGroup yearGroup)
+        public IHttpActionResult CreateYearGroup(PastoralYearGroup yearGroup)
         {
             if (!ModelState.IsValid)
             {
                 return Content(HttpStatusCode.BadRequest, "Invalid data");
             }
 
-            _context.YearGroups.Add(yearGroup);
+            _context.PastoralYearGroups.Add(yearGroup);
             return Ok("Year group added");
         }
 
@@ -35,14 +36,14 @@ namespace MyPortal.Controllers.Api
         [Route("api/yearGroups/delete/{id}")]
         public IHttpActionResult DeleteYearGroup(int id)
         {
-            var yearGroupInDb = _context.YearGroups.SingleOrDefault(x => x.Id == id);
+            var yearGroupInDb = _context.PastoralYearGroups.SingleOrDefault(x => x.Id == id);
 
             if (yearGroupInDb == null)
             {
                 return Content(HttpStatusCode.NotFound, "Year group not found");
             }
 
-            _context.YearGroups.Remove(yearGroupInDb);
+            _context.PastoralYearGroups.Remove(yearGroupInDb);
             _context.SaveChanges();
 
             return Ok("Year group deleted");
@@ -50,24 +51,24 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [Route("api/yearGroups/fetch")]
-        public IEnumerable<YearGroupDto> GetYearGroups()
+        public IEnumerable<PastoralYearGroupDto> GetYearGroups()
         {
-            return _context.YearGroups
+            return _context.PastoralYearGroups
                 .OrderBy(x => x.Id)
                 .ToList()
-                .Select(Mapper.Map<YearGroup, YearGroupDto>);
+                .Select(Mapper.Map<PastoralYearGroup, PastoralYearGroupDto>);
         }
 
         [HttpPost]
         [Route("api/yearGroups/update")]
-        public IHttpActionResult UpdateYearGroup(YearGroup yearGroup)
+        public IHttpActionResult UpdateYearGroup(PastoralYearGroup yearGroup)
         {
             if (!ModelState.IsValid)
             {
                 return Content(HttpStatusCode.BadRequest, "Invalid data");
             }
 
-            var yearGroupInDb = _context.YearGroups.SingleOrDefault(x => x.Id == yearGroup.Id);
+            var yearGroupInDb = _context.PastoralYearGroups.SingleOrDefault(x => x.Id == yearGroup.Id);
 
             if (yearGroupInDb == null)
             {

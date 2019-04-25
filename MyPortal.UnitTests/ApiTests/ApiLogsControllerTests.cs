@@ -6,6 +6,7 @@ using System.Web.Http.Results;
 using AutoMapper;
 using MyPortal.Controllers.Api;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 using MyPortal.UnitTests.TestData;
 using NUnit.Framework;
 
@@ -45,7 +46,7 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void GetLogs_GetsLogsForStudent()
         {
-            var student = _context.Students.SingleOrDefault(x => x.FirstName == "John");
+            var student = _context.CoreStudents.SingleOrDefault(x => x.FirstName == "John");
             
             Assert.IsNotNull(student);
 
@@ -58,7 +59,7 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void GetLog_ReturnsLog()
         {
-            var log = _context.Logs.SingleOrDefault(x => x.Message == "Test3");
+            var log = _context.ProfileLogs.SingleOrDefault(x => x.Message == "Test3");
             
             Assert.IsNotNull(log);
 
@@ -79,21 +80,21 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void CreateLog_CreatesNewLog()
         {
-            var init = _context.Logs.Count();
+            var init = _context.ProfileLogs.Count();
             
-            var student = _context.Students.SingleOrDefault(x => x.FirstName == "Aaron");
-            var initForStudent = _context.Logs.Count(x => x.StudentId == student.Id);
+            var student = _context.CoreStudents.SingleOrDefault(x => x.FirstName == "Aaron");
+            var initForStudent = _context.ProfileLogs.Count(x => x.StudentId == student.Id);
             
             Assert.IsNotNull(student);
 
-            var newLog = new Log
+            var newLog = new ProfileLog
                 {Date = DateTime.Now, Message = "CreateLog", TypeId = 1, AuthorId = 1, StudentId = student.Id};
 
             _controller.CreateLog((newLog));
 
-            var result = _context.Logs.Count();
+            var result = _context.ProfileLogs.Count();
 
-            var result2 = _context.Logs.Count(x => x.StudentId == student.Id);
+            var result2 = _context.ProfileLogs.Count(x => x.StudentId == student.Id);
             
             Assert.AreEqual(init + 1, result);
             Assert.AreEqual(initForStudent + 1, result2);
@@ -102,14 +103,14 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void CreateLog_StaffMemberDoesNotExist_ReturnsNotFound()
         {
-            var student = _context.Students.SingleOrDefault(x => x.FirstName == "Dorothy");
+            var student = _context.CoreStudents.SingleOrDefault(x => x.FirstName == "Dorothy");
 
-            var logType = _context.LogTypes.SingleOrDefault(x => x.Name == "Type 3");
+            var logType = _context.ProfileLogTypes.SingleOrDefault(x => x.Name == "Type 3");
             
             Assert.IsNotNull(logType);
             Assert.IsNotNull(student);
 
-            var log = new Log
+            var log = new ProfileLog
             {
                 Date = DateTime.Today,
                 AuthorId = 9999,
@@ -154,7 +155,7 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void UpdateLog_UpdatesLog()
         {
-            var log = _context.Logs.SingleOrDefault(x => x.Message == "Test3");
+            var log = _context.ProfileLogs.SingleOrDefault(x => x.Message == "Test3");
             
             Assert.IsNotNull(log);
 
@@ -162,7 +163,7 @@ namespace MyPortal.UnitTests.ApiTests
 
             _controller.UpdateLog((log));
 
-            var result = _context.Logs.SingleOrDefault(x => x.Id == log.Id);
+            var result = _context.ProfileLogs.SingleOrDefault(x => x.Id == log.Id);
             
             Assert.IsNotNull(result);
             
@@ -172,15 +173,15 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void DeleteLog_DeletesLog()
         {
-            var init = _context.Logs.Count();
+            var init = _context.ProfileLogs.Count();
 
-            var log = _context.Logs.SingleOrDefault(x => x.Message == "Test2");
+            var log = _context.ProfileLogs.SingleOrDefault(x => x.Message == "Test2");
             
             Assert.IsNotNull(log);
 
             _controller.DeleteLog(log.Id);
 
-            var result = _context.Logs.Count();
+            var result = _context.ProfileLogs.Count();
             
             Assert.AreEqual(init - 1, result);
         }

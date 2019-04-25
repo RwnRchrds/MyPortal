@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using MyPortal.Dtos;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
 
 namespace MyPortal.ViewModels
@@ -13,15 +14,15 @@ namespace MyPortal.ViewModels
             ObservationOutcomes = new List<string>{"Outstanding","Good","Satisfactory","Inadequate"};
         }
 
-        public Staff Staff { get; set; }
+        public CoreStaffMember Staff { get; set; }
         public int CurrentStaffId { get; set; }
-        public IEnumerable<TrainingCertificate> TrainingCertificates { get; set; }
-        public TrainingCertificate TrainingCertificate { get; set; }
-        public StaffObservation StaffObservation { get; set; }
+        public IEnumerable<PersonnelTrainingCertificate> TrainingCertificates { get; set; }
+        public PersonnelTrainingCertificate TrainingCertificate { get; set; }
+        public PersonnelObservation PersonnelObservation { get; set; }
         public IEnumerable<string> ObservationOutcomes { get; set; }
-        public IEnumerable<TrainingCourse> TrainingCourses { get; set; }
-        public IEnumerable<TrainingStatus> TrainingStatuses { get; set; }
+        public IEnumerable<PersonnelTrainingCourse> TrainingCourses { get; set; }
+        public IEnumerable<PersonnelTrainingStatus> TrainingStatuses { get; set; }
         public IEnumerable<string> Titles { get; set; }
-        public StaffDocument Upload { get; set; }
+        public CoreStaffDocument Upload { get; set; }
     }
 }

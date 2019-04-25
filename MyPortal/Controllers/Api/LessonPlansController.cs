@@ -8,6 +8,7 @@ using AutoMapper;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 
 namespace MyPortal.Controllers.Api
 {
@@ -31,9 +32,9 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns a list of DTOs of all lesson plans from the database.</returns>
         [HttpGet]
         [Route("api/lessonPlans/all")]
-        public IEnumerable<LessonPlanDto> GetLessonPlans()
+        public IEnumerable<CurriculumLessonPlanDto> GetLessonPlans()
         {
-            return _context.LessonPlans.OrderBy(x => x.Title).ToList().Select(Mapper.Map<LessonPlan, LessonPlanDto>);
+            return _context.CurriculumLessonPlans.OrderBy(x => x.Title).ToList().Select(Mapper.Map<CurriculumLessonPlan, CurriculumLessonPlanDto>);
         }
 
         /// <summary>
@@ -44,16 +45,16 @@ namespace MyPortal.Controllers.Api
         /// <exception cref="HttpResponseException"></exception>
         [HttpGet]
         [Route("api/lessonPlans/byId/{id}")]
-        public LessonPlanDto GetLessonPlanById(int id)
+        public CurriculumLessonPlanDto GetLessonPlanById(int id)
         {
-            var lessonPlan = _context.LessonPlans.SingleOrDefault(x => x.Id == id);
+            var lessonPlan = _context.CurriculumLessonPlans.SingleOrDefault(x => x.Id == id);
 
             if (lessonPlan == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return Mapper.Map<LessonPlan, LessonPlanDto>(lessonPlan);
+            return Mapper.Map<CurriculumLessonPlan, CurriculumLessonPlanDto>(lessonPlan);
         }
 
         /// <summary>
@@ -63,10 +64,10 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns a list of DTOs of lesson plans from the specified study topic.</returns>
         [HttpGet]
         [Route("api/lessonPlans/byTopic/{id}")]
-        public IEnumerable<LessonPlanDto> GetLessonPlansByTopic(int id)
+        public IEnumerable<CurriculumLessonPlanDto> GetLessonPlansByTopic(int id)
         {
-            return _context.LessonPlans.Where(x => x.StudyTopicId == id).OrderBy(x => x.Title).ToList()
-                .Select(Mapper.Map<LessonPlan, LessonPlanDto>);
+            return _context.CurriculumLessonPlans.Where(x => x.StudyTopicId == id).OrderBy(x => x.Title).ToList()
+                .Select(Mapper.Map<CurriculumLessonPlan, CurriculumLessonPlanDto>);
         }
 
         /// <summary>
@@ -76,7 +77,7 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/lessonPlans/create")]
-        public IHttpActionResult CreateLessonPlan(LessonPlan plan)
+        public IHttpActionResult CreateLessonPlan(CurriculumLessonPlan plan)
         {
             if (!ModelState.IsValid)
             {
@@ -85,12 +86,12 @@ namespace MyPortal.Controllers.Api
             
             var authorId = plan.AuthorId;
 
-            var author = new Staff();
+            var author = new CoreStaffMember();
 
             if (authorId == 0)
             {
                 var userId = User.Identity.GetUserId();
-                author = _context.Staff.SingleOrDefault(x => x.UserId == userId);
+                author = _context.CoreStaff.SingleOrDefault(x => x.UserId == userId);
                 if (author == null)
                 {
                     return Content(HttpStatusCode.BadRequest, "User does not have a personnel profile");
@@ -99,7 +100,7 @@ namespace MyPortal.Controllers.Api
 
             if (authorId != 0)
             {
-                author = _context.Staff.SingleOrDefault(x => x.Id == authorId);
+                author = _context.CoreStaff.SingleOrDefault(x => x.Id == authorId);
             }
 
             if (author == null)
@@ -109,7 +110,7 @@ namespace MyPortal.Controllers.Api
 
             plan.AuthorId = author.Id;
 
-            _context.LessonPlans.Add(plan);
+            _context.CurriculumLessonPlans.Add(plan);
             _context.SaveChanges();
 
             return Ok("Lesson plan added");
@@ -122,9 +123,9 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/lessonPlans/update")]
-        public IHttpActionResult UpdateLessonPlan(LessonPlan plan)
+        public IHttpActionResult UpdateLessonPlan(CurriculumLessonPlan plan)
         {
-            var planInDb = _context.LessonPlans.SingleOrDefault(x => x.Id == plan.Id);
+            var planInDb = _context.CurriculumLessonPlans.SingleOrDefault(x => x.Id == plan.Id);
 
             if (planInDb == null)
             {
@@ -151,14 +152,14 @@ namespace MyPortal.Controllers.Api
         [Route("api/lessonPlans/delete/{id}")]
         public IHttpActionResult DeleteLessonPlan(int id)
         {
-            var plan = _context.LessonPlans.SingleOrDefault(x => x.Id == id);
+            var plan = _context.CurriculumLessonPlans.SingleOrDefault(x => x.Id == id);
 
             if (plan == null)
             {
                 return Content(HttpStatusCode.NotFound, "Lesson plan not found");
             }
 
-            _context.LessonPlans.Remove(plan);
+            _context.CurriculumLessonPlans.Remove(plan);
             _context.SaveChanges();
 
             return Ok("Lesson plan deleted");

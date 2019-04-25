@@ -1,0 +1,31 @@
+namespace MyPortal.Dtos
+{
+    public class CoreStudentDto
+    {
+        public int Id { get; set; }
+
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
+
+        public string Gender { get; set; }
+
+        public string Email { get; set; }
+
+        public int RegGroupId { get; set; }
+
+        public int YearGroupId { get; set; }
+
+        public string CandidateNumber { get; set; }
+
+        public decimal AccountBalance { get; set; }
+
+        public string MisId { get; set; }
+
+        public string UserId { get; set; }
+
+        public PastoralRegGroupDto PastoralRegGroup { get; set; }
+
+        public PastoralYearGroupDto PastoralYearGroup { get; set; }
+    }
+}

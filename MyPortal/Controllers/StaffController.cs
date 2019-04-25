@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using MyPortal.Controllers.Api;
 using MyPortal.Dtos;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers
@@ -27,11 +28,11 @@ namespace MyPortal.Controllers
         // HTTP POST request for creating training courses using HTML form
         [System.Web.Mvc.HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateCourse(TrainingCourse course)
+        public ActionResult CreateCourse(PersonnelTrainingCourse course)
         {
             if (!ModelState.IsValid) return View("NewCourse");
 
-            _context.TrainingCourses.Add(course);
+            _context.PersonnelTrainingCourses.Add(course);
             _context.SaveChanges();
 
             return RedirectToAction("TrainingCourses", "Staff");
@@ -40,20 +41,20 @@ namespace MyPortal.Controllers
         // HTTP POST request for creating students using HTML form
         [System.Web.Mvc.HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateStudent(Student student)
+        public ActionResult CreateStudent(CoreStudent student)
         {
             if (!ModelState.IsValid)
             {
                 var viewModel = new NewStudentViewModel
                 {
                     Student = student,
-                    RegGroups = new RegGroupsController().GetRegGroups().Select(Mapper.Map<RegGroupDto, RegGroup>),
-                    YearGroups = new YearGroupsController().GetYearGroups().Select(Mapper.Map<YearGroupDto, YearGroup>)
+                    RegGroups = new RegGroupsController().GetRegGroups().ToList().Select(Mapper.Map<PastoralRegGroupDto, PastoralRegGroup>),
+                    YearGroups = new YearGroupsController().GetYearGroups().ToList().Select(Mapper.Map<PastoralYearGroupDto, PastoralYearGroup>)
                 };
                 return View("NewStudent", viewModel);
             }
 
-            _context.Students.Add(student);
+            _context.CoreStudents.Add(student);
             _context.SaveChanges();
 
             return RedirectToAction("Students", "Staff");
@@ -74,7 +75,7 @@ namespace MyPortal.Controllers
         [System.Web.Mvc.Route("Staff/Data/Results/Import")]
         public ActionResult ImportResults()
         {
-            var resultSets = _context.ResultSets.OrderBy(x => x.Name).ToList();
+            var resultSets = _context.AssessmentResultSets.OrderBy(x => x.Name).ToList();
             var fileExists = System.IO.File.Exists(@"C:/MyPortal/Files/Results/import.csv");
             var viewModel = new ImportResultsViewModel
             {
@@ -90,7 +91,7 @@ namespace MyPortal.Controllers
         {
             var userId = User.Identity.GetUserId();
 
-            var staff = _context.Staff.SingleOrDefault(s => s.UserId == userId);
+            var staff = _context.CoreStaff.SingleOrDefault(s => s.UserId == userId);
 
             if (staff == null)
                 return View("~/Views/Staff/NoProfileIndex.cshtml");
@@ -118,8 +119,8 @@ namespace MyPortal.Controllers
         [System.Web.Mvc.Route("Staff/Students/New")]
         public ActionResult NewStudent()
         {
-            var yearGroups = _context.YearGroups.ToList();
-            var regGroups = _context.RegGroups.ToList();
+            var yearGroups = _context.PastoralYearGroups.ToList();
+            var regGroups = _context.PastoralRegGroups.ToList();
 
             var viewModel = new NewStudentViewModel
             {
@@ -132,9 +133,9 @@ namespace MyPortal.Controllers
 
         // HTTP POST request for updating student details using HTML form
         [System.Web.Mvc.HttpPost]
-        public ActionResult SaveStudent(Student student)
+        public ActionResult SaveStudent(CoreStudent student)
         {
-            var studentInDb = _context.Students.Single(l => l.Id == student.Id);
+            var studentInDb = _context.CoreStudents.Single(l => l.Id == student.Id);
 
             studentInDb.FirstName = student.FirstName;
             studentInDb.LastName = student.LastName;
@@ -161,7 +162,7 @@ namespace MyPortal.Controllers
         [System.Web.Mvc.Route("Staff/Staff/{id}")]
         public ActionResult StaffDetails(int id)
         {
-            var staff = _context.Staff.SingleOrDefault(s => s.Id == id);
+            var staff = _context.CoreStaff.SingleOrDefault(s => s.Id == id);
 
             if (staff == null)
                 return HttpNotFound();
@@ -170,18 +171,18 @@ namespace MyPortal.Controllers
 
             var currentStaffId = 0;
 
-            var currentUser = _context.Staff.SingleOrDefault(x => x.UserId == userId);
+            var currentUser = _context.CoreStaff.SingleOrDefault(x => x.UserId == userId);
 
             if (currentUser != null)
             {
                 currentStaffId = currentUser.Id;
             }
 
-            var certificates = _context.TrainingCertificates.Where(c => c.StaffId == id).ToList();
+            var certificates = _context.PersonnelTrainingCertificates.Where(c => c.StaffId == id).ToList();
 
-            var courses = _context.TrainingCourses.ToList();
+            var courses = _context.PersonnelTrainingCourses.ToList();
 
-            var statuses = _context.TrainingStatuses.ToList();
+            var statuses = _context.PersonnelTrainingStatuses.ToList();
 
             var viewModel = new StaffDetailsViewModel
             {
@@ -200,26 +201,26 @@ namespace MyPortal.Controllers
         [System.Web.Mvc.Route("Staff/Students/{id}")]
         public ActionResult StudentDetails(int id)
         {
-            var student = _context.Students.SingleOrDefault(s => s.Id == id);
+            var student = _context.CoreStudents.SingleOrDefault(s => s.Id == id);
 
             if (student == null)
                 return HttpNotFound();
 
             //var logs = _context.Logs.Where(l => l.Student == id).OrderByDescending(x => x.Date).ToList();
 
-            var results = _context.Results.Where(r => r.StudentId == id && r.ResultSet.IsCurrent).ToList();
+            var results = _context.AssessmentResults.Where(r => r.StudentId == id && r.AssessmentResultSet.IsCurrent).ToList();
 
-            var logTypes = _context.LogTypes.OrderBy(x => x.Name).ToList();
+            var logTypes = _context.ProfileLogTypes.OrderBy(x => x.Name).ToList();
 
-            var yearGroups = _context.YearGroups.OrderBy(x => x.Name).ToList();
+            var yearGroups = _context.PastoralYearGroups.OrderBy(x => x.Name).ToList();
 
-            var regGroups = _context.RegGroups.OrderBy(x => x.Name).ToList();
+            var regGroups = _context.PastoralRegGroups.OrderBy(x => x.Name).ToList();
 
-            var resultSets = _context.ResultSets.OrderBy(x => x.Name).ToList();
+            var resultSets = _context.AssessmentResultSets.OrderBy(x => x.Name).ToList();
 
-            var subjects = _context.Subjects.OrderBy(x => x.Name).ToList();
+            var subjects = _context.CurriculumSubjects.OrderBy(x => x.Name).ToList();
 
-            var commentBanks = _context.CommentBanks.OrderBy(x => x.Name).ToList();
+            var commentBanks = _context.ProfileCommentBanks.OrderBy(x => x.Name).ToList();
 
             var viewModel = new StudentDetailsViewModel
             {
@@ -242,13 +243,13 @@ namespace MyPortal.Controllers
         [System.Web.Mvc.Route("Staff/Students/{id}/Results")]
         public ActionResult StudentResults(int id)
         {
-            var student = _context.Students.SingleOrDefault(s => s.Id == id);
+            var student = _context.CoreStudents.SingleOrDefault(s => s.Id == id);
 
-            var currentResultSet = _context.ResultSets.SingleOrDefault(r => r.IsCurrent);
+            var currentResultSet = _context.AssessmentResultSets.SingleOrDefault(r => r.IsCurrent);
 
-            var resultSets = _context.ResultSets.OrderBy(x => x.Name).ToList();
+            var resultSets = _context.AssessmentResultSets.OrderBy(x => x.Name).ToList();
 
-            var subjects = _context.Subjects.OrderBy(x => x.Name).ToList();
+            var subjects = _context.CurriculumSubjects.OrderBy(x => x.Name).ToList();
 
             if (student == null)
                 return HttpNotFound();
@@ -315,7 +316,7 @@ namespace MyPortal.Controllers
         public ActionResult Comments()
         {
             var viewModel = new CommentsViewModel();
-            viewModel.CommentBanks = _context.CommentBanks.OrderBy(x => x.Name).ToList();
+            viewModel.CommentBanks = _context.ProfileCommentBanks.OrderBy(x => x.Name).ToList();
 
             return View(viewModel);
         }
@@ -326,7 +327,7 @@ namespace MyPortal.Controllers
         public ActionResult Subjects()
         {
             var viewModel = new SubjectsViewModel();
-            viewModel.Staff = _context.Staff.OrderBy(x => x.LastName).ToList();
+            viewModel.Staff = _context.CoreStaff.OrderBy(x => x.LastName).ToList();
 
             return View(viewModel);
         }
@@ -338,9 +339,9 @@ namespace MyPortal.Controllers
         {
             var viewModel = new StudyTopicsViewModel();
 
-            var subjects = _context.Subjects.OrderBy(x => x.Name).ToList();
+            var subjects = _context.CurriculumSubjects.OrderBy(x => x.Name).ToList();
 
-            var yearGroups = _context.YearGroups.OrderBy(x => x.Name).ToList();
+            var yearGroups = _context.PastoralYearGroups.OrderBy(x => x.Name).ToList();
 
             viewModel.Subjects = subjects;
             viewModel.YearGroups = yearGroups;
@@ -354,7 +355,7 @@ namespace MyPortal.Controllers
         {
             var viewModel = new LessonPlansViewModel();
 
-            var studyTopics = _context.StudyTopics.OrderBy(x => x.Name).ToList();
+            var studyTopics = _context.CurriculumStudyTopics.OrderBy(x => x.Name).ToList();
 
             viewModel.StudyTopics = studyTopics;
 
@@ -365,7 +366,7 @@ namespace MyPortal.Controllers
         [System.Web.Mvc.Route("Staff/Curriculum/LessonPlans/View/{id}")]
         public ActionResult LessonPlanDetails(int id)
         {
-            var lessonPlan = _context.LessonPlans.SingleOrDefault(x => x.Id == id);
+            var lessonPlan = _context.CurriculumLessonPlans.SingleOrDefault(x => x.Id == id);
 
             if (lessonPlan == null)
             {

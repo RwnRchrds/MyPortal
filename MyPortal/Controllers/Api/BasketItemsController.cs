@@ -5,6 +5,7 @@ using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 
 namespace MyPortal.Controllers.Api
 {
@@ -30,16 +31,16 @@ namespace MyPortal.Controllers.Api
 /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/basket/add")]
-        public IHttpActionResult AddToBasket(BasketItem data)
+        public IHttpActionResult AddToBasket(FinanceBasketItem data)
         {
-            var studentQuery = _context.Students.SingleOrDefault(x => x.Id == data.StudentId);
+            var studentQuery = _context.CoreStudents.SingleOrDefault(x => x.Id == data.StudentId);
 
             if (studentQuery == null)
             {
                 return Content(HttpStatusCode.NotFound, "Student not found");
             }
 
-            var productToAdd = _context.Products.SingleOrDefault(x => x.Id == data.ProductId);
+            var productToAdd = _context.FinanceProducts.SingleOrDefault(x => x.Id == data.ProductId);
 
             if (productToAdd == null)
             {
@@ -52,25 +53,25 @@ namespace MyPortal.Controllers.Api
             }
 
             var purchased =
-                _context.Sales.Where(x =>
-                    x.StudentId == data.StudentId && x.ProductId == data.ProductId && x.Product.OnceOnly);
+                _context.FinanceSales.Where(x =>
+                    x.StudentId == data.StudentId && x.ProductId == data.ProductId && x.FinanceProduct.OnceOnly);
 
             var inBasket =
-                _context.BasketItems.Where(x =>
-                    x.StudentId == data.StudentId && x.ProductId == data.ProductId && x.Product.OnceOnly);
+                _context.FinanceBasketItems.Where(x =>
+                    x.StudentId == data.StudentId && x.ProductId == data.ProductId && x.FinanceProduct.OnceOnly);
 
             if (purchased.Any() || inBasket.Any())
             {
                 return Content(HttpStatusCode.BadRequest, "This product cannot be purchased more than once");
             }
 
-            var itemToAdd = new BasketItem
+            var itemToAdd = new FinanceBasketItem
             {
                 ProductId = data.ProductId,
                 StudentId = data.StudentId
             };
 
-            _context.BasketItems.Add(itemToAdd);
+            _context.FinanceBasketItems.Add(itemToAdd);
             _context.SaveChanges();
 
             return Ok("Item added to basket");
@@ -83,13 +84,13 @@ namespace MyPortal.Controllers.Api
 /// <returns>Returns a list of DTOs of basket items for the student.</returns>
         [HttpGet]
         [Route("api/basket")]
-        public IEnumerable<BasketItemDto> GetBasketItems(int student)
+        public IEnumerable<FinanceBasketItemDto> GetBasketItems(int student)
         {
-            return _context.BasketItems
+            return _context.FinanceBasketItems
                 .Where(x => x.StudentId == student)
-                .OrderBy(x => x.Product.Description)
+                .OrderBy(x => x.FinanceProduct.Description)
                 .ToList()
-                .Select(Mapper.Map<BasketItem, BasketItemDto>);
+                .Select(Mapper.Map<FinanceBasketItem, FinanceBasketItemDto>);
         }
 
 /// <summary>
@@ -101,14 +102,14 @@ namespace MyPortal.Controllers.Api
         [Route("api/basket/total")]
         public decimal GetTotal(int student)
         {
-            var allItems = _context.BasketItems.Where(x => x.StudentId == student);
+            var allItems = _context.FinanceBasketItems.Where(x => x.StudentId == student);
 
             if (!allItems.Any())
             {
                 return 0.00m;
             }
 
-            var total = allItems.Sum(x => x.Product.Price);
+            var total = allItems.Sum(x => x.FinanceProduct.Price);
 
             return total;
         }
@@ -122,14 +123,14 @@ namespace MyPortal.Controllers.Api
         [Route("api/basket/remove/{id}")]
         public IHttpActionResult RemoveFromBasket(int id)
         {
-            var itemInDb = _context.BasketItems.SingleOrDefault(x => x.Id == id);
+            var itemInDb = _context.FinanceBasketItems.SingleOrDefault(x => x.Id == id);
 
             if (itemInDb == null)
             {
                 return Content(HttpStatusCode.NotFound, "Item not found");
             }
 
-            _context.BasketItems.Remove(itemInDb);
+            _context.FinanceBasketItems.Remove(itemInDb);
             _context.SaveChanges();
 
             return Ok("Item removed from basket");
