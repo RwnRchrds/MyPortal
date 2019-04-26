@@ -17,6 +17,8 @@ namespace MyPortal.Models.Database
 
         public int StudentId { get; set; }
 
+        public int AcademicYearId { get; set; }
+
         [Required]
         public string Message { get; set; }
 
@@ -26,6 +28,8 @@ namespace MyPortal.Models.Database
         public virtual CoreStaffMember CoreStaffMember { get; set; }
 
         public virtual CoreStudent CoreStudent { get; set; }
+
+        public virtual CurriculumAcademicYear CurriculumAcademicYear { get; set; }
 
         public virtual ProfileLogType ProfileLogType { get; set; }
     }

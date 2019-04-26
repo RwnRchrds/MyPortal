@@ -15,6 +15,8 @@ namespace MyPortal.Models.Database
 
         public int ProductId { get; set; }
 
+        public int AcademicYearId { get; set; }
+
         [Column(TypeName = "date")]
         public DateTime Date { get; set; }
 
@@ -23,6 +25,8 @@ namespace MyPortal.Models.Database
         public bool Processed { get; set; }
 
         public virtual CoreStudent CoreStudent { get; set; }
+
+        public virtual CurriculumAcademicYear CurriculumAcademicYear { get; set; }
 
         public virtual FinanceProduct FinanceProduct { get; set; }
     }

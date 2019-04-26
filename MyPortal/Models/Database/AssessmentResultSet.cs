@@ -17,6 +17,8 @@ namespace MyPortal.Models.Database
 
         public int Id { get; set; }
 
+        public int AcademicYearId { get; set; }
+
         [Required]
         [StringLength(255)]
         public string Name { get; set; }
@@ -25,5 +27,7 @@ namespace MyPortal.Models.Database
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AssessmentResult> AssessmentResults { get; set; }
+
+        public virtual CurriculumAcademicYear CurriculumAcademicYear { get; set; }
     }
 }

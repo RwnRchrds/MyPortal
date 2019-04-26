@@ -211,9 +211,11 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\Api\AttendanceWeeksController.cs" />
     <Compile Include="Controllers\Api\BasketItemsController.cs" />
     <Compile Include="Controllers\Api\CommentBanksController.cs" />
     <Compile Include="Controllers\Api\CommentsController.cs" />
+    <Compile Include="Controllers\Api\CurriculumAcademicYearsController.cs" />
     <Compile Include="Controllers\Api\DocumentsController.cs" />
     <Compile Include="Controllers\Api\LessonPlansController.cs" />
     <Compile Include="Controllers\Api\LogsController.cs" />
@@ -276,6 +278,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\SystemHelper.cs" />
+    <Compile Include="Helpers\UserHelper.cs" />
+    <Compile Include="Helpers\DateTimeHelper.cs" />
     <Compile Include="Migrations\201803051926258_InitialModel.cs" />
     <Compile Include="Migrations\201803051926258_InitialModel.Designer.cs">
       <DependentUpon>201803051926258_InitialModel.cs</DependentUpon>
@@ -776,6 +781,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Results\" />
+    <Folder Include="Dtos\ViewDtos\" />
     <Folder Include="Models\Authorisation\" />
   </ItemGroup>
   <ItemGroup>

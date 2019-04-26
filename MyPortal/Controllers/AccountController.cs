@@ -1,21 +1,31 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 using System.Web;
+using System.Web.Http;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 
 namespace MyPortal.Controllers
 {
-    [Authorize]
+    [System.Web.Mvc.Authorize]
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private readonly ApplicationDbContext _identity;
+        private readonly MyPortalDbContext _context;
 
         public AccountController()
         {
+            _identity = new ApplicationDbContext();
+            _context = new MyPortalDbContext();
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
@@ -38,7 +48,7 @@ namespace MyPortal.Controllers
 
         //
         // GET: /Account/ConfirmEmail
-        [AllowAnonymous]
+        [System.Web.Mvc.AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(string userId, string code)
         {
             if (userId == null || code == null) return View("Error");
@@ -68,7 +78,7 @@ namespace MyPortal.Controllers
 
         //
         // GET: /Account/Login
-        [AllowAnonymous]
+        [System.Web.Mvc.AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
@@ -77,8 +87,8 @@ namespace MyPortal.Controllers
 
         //
         // POST: /Account/Login
-        [HttpPost]
-        [AllowAnonymous]
+        [System.Web.Mvc.HttpPost]
+        [System.Web.Mvc.AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
@@ -94,6 +104,8 @@ namespace MyPortal.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+                    var userName = model.Username;
+                    SetDefaultAcademicYear(userName);
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -106,7 +118,7 @@ namespace MyPortal.Controllers
 
         //
         // POST: /Account/LogOff
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
@@ -116,16 +128,39 @@ namespace MyPortal.Controllers
 
         //
         // GET: /Account/ResetPassword
-        [AllowAnonymous]
+        [System.Web.Mvc.AllowAnonymous]
         public ActionResult ResetPassword(string code)
         { 
             return code == null ? View("Error") : View();
         }
 
+        public void SetDefaultAcademicYear(string userName)
+        {
+            var user = _identity.Users.SingleOrDefault(x => x.UserName == userName);
+
+            if (user == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            var academicYear =
+                _context.CurriculumAcademicYears.SingleOrDefault(x =>
+                    x.FirstDate <= DateTime.Now && x.LastDate >= DateTime.Now);
+
+            if (academicYear == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            user.SelectedAcademicYearId = academicYear.Id;
+
+            _identity.SaveChanges();
+        }
+
         //
         // POST: /Account/ResetPassword
-        [HttpPost]
-        [AllowAnonymous]
+        [System.Web.Mvc.HttpPost]
+        [System.Web.Mvc.AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
         {
@@ -140,7 +175,7 @@ namespace MyPortal.Controllers
 
         //
         // GET: /Account/ResetPasswordConfirmation
-        [AllowAnonymous]
+        [System.Web.Mvc.AllowAnonymous]
         public ActionResult ResetPasswordConfirmation()
         {
             return View();

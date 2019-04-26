@@ -20,7 +20,7 @@
                 <table class="table-condensed mp-table-condensed">
                     <tr>
                         <td>
-                            <b>Title</b>
+                            <b>Title</b>                            
                         </td>
                         <td>@Model.CurrentUser.Title</td>
                     </tr>
@@ -113,9 +113,9 @@
                         data: "coreDocument.description",
                         render: function(data, type, document) {
                             return "<a href='" +
-                                document.document.url +
+                                document.coreDocument.url +
                                 "' target='_blank'>" +
-                                document.document.description +
+                                document.coreDocument.description +
                                 "</a>";
                         }
 

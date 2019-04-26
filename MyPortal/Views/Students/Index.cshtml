@@ -166,11 +166,11 @@
                     {
                         data: "coreStaffMember.lastName",
                         render: function(data, type, log) {
-                            return log.staff.title +
+                            return log.coreStaffMember.title +
                                 " " +
-                                log.staff.firstName.substring(0, 1) +
+                                log.coreStaffMember.firstName.substring(0, 1) +
                                 " " +
-                                log.staff.lastName;
+                                log.coreStaffMember.lastName;
                         }
                     },
                     {
@@ -234,35 +234,35 @@
                 searching: false,
                 info: false,
                 "createdRow": function(row, data, dataIndex) {
-                    if (data.logType.name === "Academic Support") {
+                    if (data.profileLogType.name === "Academic Support") {
                         $(row).addClass("mp-log-academic-support");
                     }
 
-                    if (data.logType.name === "Behaviour Log") {
+                    if (data.profileLogType.name === "Behaviour Log") {
                         $(row).addClass("mp-log-behaviour");
                     }
 
-                    if (data.logType.name === "Report") {
+                    if (data.profileLogType.name === "Report") {
                         $(row).addClass("mp-log-report");
                     }
 
-                    if (data.logType.name === "Praise") {
+                    if (data.profileLogType.name === "Praise") {
                         $(row).addClass("mp-log-praise");
                     }
 
-                    if (data.logType.name === "SEN Note") {
+                    if (data.profileLogType.name === "SEN Note") {
                         $(row).addClass("mp-log-sen");
                     }
 
-                    if (data.logType.name === "Student Feed") {
+                    if (data.profileLogType.name === "Student Feed") {
                         $(row).addClass("mp-log-student-feed");
                     }
 
-                    if (data.logType.name === "Tutor Note") {
+                    if (data.profileLogType.name === "Tutor Note") {
                         $(row).addClass("mp-log-tutor-note");
                     }
 
-                    if (data.logType.name === "Medical Event") {
+                    if (data.profileLogType.name === "Medical Event") {
                         $(row).addClass("mp-log-medical-event");
                     }
                 },
@@ -279,12 +279,12 @@
                 },
                 columns: [
                     {
-                        data: "document.description",
+                        data: "coreDocument.description",
                         render: function(data, type, document) {
                             return "<a href='" +
-                                document.document.url +
+                                document.coreDocument.url +
                                 "' target='_blank'>" +
-                                document.document.description +
+                                document.coreDocument.description +
                                 "</a>";
                         }
 

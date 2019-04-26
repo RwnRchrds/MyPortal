@@ -5,6 +5,7 @@ using System.Net;
 using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
+using MyPortal.Helpers;
 using MyPortal.Models;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
@@ -74,7 +75,8 @@ namespace MyPortal.Controllers.Api
         [Route("api/sales/pending")]
         public IEnumerable<FinanceSaleDto> GetPendingSales()
         {
-            return _context.FinanceSales.Where(x => x.Processed == false)
+            var academicYearId = SystemHelper.GetCurrentOrSelectedAcademicYearId(User);
+            return _context.FinanceSales.Where(x => x.Processed == false && x.AcademicYearId == academicYearId)
                 .ToList()
                 .Select(Mapper.Map<FinanceSale, FinanceSaleDto>);
         }
@@ -87,7 +89,9 @@ namespace MyPortal.Controllers.Api
         [Route("api/sales/all")]
         public IEnumerable<FinanceSaleDto> GetSales()
         {
+            var academicYearId = SystemHelper.GetCurrentOrSelectedAcademicYearId(User);
             return _context.FinanceSales
+                .Where(x => x.AcademicYearId == academicYearId)
                 .OrderByDescending(x => x.Date)
                 .ToList()
                 .Select(Mapper.Map<FinanceSale, FinanceSaleDto>);
@@ -102,8 +106,9 @@ namespace MyPortal.Controllers.Api
         [Route("api/sales/student")]
         public IEnumerable<FinanceSaleDto> GetSalesForStudent(int studentId)
         {
+            var academicYearId = SystemHelper.GetCurrentOrSelectedAcademicYearId(User);
             return _context.FinanceSales
-                .Where(x => x.StudentId == studentId)
+                .Where(x => x.StudentId == studentId && x.AcademicYearId == academicYearId)
                 .OrderByDescending(x => x.Date)
                 .ToList()
                 .Select(Mapper.Map<FinanceSale, FinanceSaleDto>);
@@ -117,8 +122,9 @@ namespace MyPortal.Controllers.Api
         [Route("api/sales")]
         public IEnumerable<FinanceSaleDto> GetUnprocessedSales()
         {
+            var academicYearId = SystemHelper.GetCurrentOrSelectedAcademicYearId(User);
             return _context.FinanceSales
-                .Where(x => x.Processed == false)
+                .Where(x => x.Processed == false && x.AcademicYearId == academicYearId)
                 .OrderByDescending(x => x.Date)
                 .ToList()
                 .Select(Mapper.Map<FinanceSale, FinanceSaleDto>);
@@ -129,8 +135,8 @@ namespace MyPortal.Controllers.Api
         /// </summary>
         /// <param name="sale">The sale to create.</param>
         /// <exception cref="HttpResponseException">Thrown if the student or product is not found.</exception>
-        public void InvokeSale(FinanceSaleDto sale)
-        {
+        public void InvokeSale(FinanceSale sale)
+        {            
             var student = _context.CoreStudents.SingleOrDefault(x => x.Id == sale.StudentId);
 
             var product = _context.FinanceProducts.SingleOrDefault(x => x.Id == sale.ProductId);
@@ -145,9 +151,9 @@ namespace MyPortal.Controllers.Api
 
             student.AccountBalance -= product.Price;
 
-            sale.AmountPaid = product.Price;
+            sale.AmountPaid = product.Price;            
 
-            _context.FinanceSales.Add(Mapper.Map<FinanceSaleDto, FinanceSale>(sale));
+            _context.FinanceSales.Add(sale);
         }
 
         /// <summary>
@@ -187,6 +193,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/sales/new")]
         public IHttpActionResult NewSale(FinanceSale sale)
         {
+            var academicYearId = SystemHelper.GetCurrentOrSelectedAcademicYearId(User);
             sale.Date = DateTime.Now;
 
             sale.Processed = true;
@@ -208,6 +215,7 @@ namespace MyPortal.Controllers.Api
             student.AccountBalance -= product.Price;
 
             sale.AmountPaid = product.Price;
+            sale.AcademicYearId = academicYearId;
 
             _context.FinanceSales.Add(sale);
             _context.SaveChanges();
@@ -224,6 +232,12 @@ namespace MyPortal.Controllers.Api
         [Route("api/sales/purchase")]
         public IHttpActionResult Purchase(Checkout data)
         {
+            var academicYearId = SystemHelper.GetCurrentOrSelectedAcademicYearId(User);
+            if (User.IsInRole("Student"))
+            {
+                new StudentsController().AuthenticateStudentRequest(data.StudentId);
+            }
+
             //Check student actually exists
             var student = _context.CoreStudents.SingleOrDefault(x => x.Id == data.StudentId);
 
@@ -253,11 +267,12 @@ namespace MyPortal.Controllers.Api
             //Process sales for each item
             foreach (var item in basket)
             {
-                var sale = new FinanceSaleDto
+                var sale = new FinanceSale
                 {
                     StudentId = data.StudentId,
                     ProductId = item.ProductId,
-                    Date = DateTime.Today
+                    Date = DateTime.Today,
+                    AcademicYearId = academicYearId
                 };
 
                 InvokeSale(sale);

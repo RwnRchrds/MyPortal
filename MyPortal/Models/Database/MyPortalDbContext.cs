@@ -324,6 +324,24 @@ namespace MyPortal.Models.Database
                 .HasForeignKey(e => e.AcademicYearId)
                 .WillCascadeOnDelete(false);
 
+            modelBuilder.Entity<CurriculumAcademicYear>()
+                .HasMany(e => e.ProfileLogs)
+                .WithRequired(e => e.CurriculumAcademicYear)
+                .HasForeignKey(e => e.AcademicYearId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<CurriculumAcademicYear>()
+                .HasMany(e => e.FinanceSales)
+                .WithRequired(e => e.CurriculumAcademicYear)
+                .HasForeignKey(e => e.AcademicYearId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<CurriculumAcademicYear>()
+                .HasMany(e => e.AssessmentResultSets)
+                .WithRequired(e => e.CurriculumAcademicYear)
+                .HasForeignKey(e => e.AcademicYearId)
+                .WillCascadeOnDelete(false);
+
             modelBuilder.Entity<CurriculumClass>()
                 .Property(e => e.Name)
                 .IsUnicode(false);

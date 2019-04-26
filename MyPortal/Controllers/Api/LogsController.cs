@@ -6,6 +6,7 @@ using System.Web.Http;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
+using MyPortal.Helpers;
 using MyPortal.Models;
 using MyPortal.Models.Database;
 
@@ -29,13 +30,14 @@ namespace MyPortal.Controllers.Api
         /// <summary>
         /// Adds a new log to the database.
         /// </summary>
-        /// <param name="data">The log to add to the database.</param>
+        /// <param name="log">The log to add to the database.</param>
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/logs/new")]
-        public IHttpActionResult CreateLog(ProfileLog data)
+        public IHttpActionResult CreateLog(ProfileLog log)
         {
-            var authorId = data.AuthorId;
+            var academicYearId = SystemHelper.GetCurrentOrSelectedAcademicYearId(User);
+            var authorId = log.AuthorId;
 
             var author = new CoreStaffMember();
 
@@ -59,15 +61,15 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.NotFound, "Staff member not found");
             }
 
-            data.Date = DateTime.Now;
-            data.AuthorId = author.Id;
+            log.Date = DateTime.Now;
+            log.AuthorId = author.Id;
+            log.AcademicYearId = academicYearId;
 
             if (!ModelState.IsValid)
             {
                 return Content(HttpStatusCode.BadRequest, "Invalid data");
             }
 
-            var log = data;
             _context.ProfileLogs.Add(log);
             _context.SaveChanges();
 
@@ -124,7 +126,13 @@ namespace MyPortal.Controllers.Api
         [Route("api/logs/{studentId}")]
         public IEnumerable<ProfileLogDto> GetLogs(int studentId)
         {
-            return _context.ProfileLogs.Where(l => l.StudentId == studentId)
+            if (User.IsInRole("Student"))
+            {
+                new StudentsController().AuthenticateStudentRequest(studentId);
+            }
+
+            var academicYearId = SystemHelper.GetCurrentOrSelectedAcademicYearId(User);
+            return _context.ProfileLogs.Where(l => l.StudentId == studentId && l.AcademicYearId == academicYearId)
                 .OrderByDescending(x => x.Date)
                 .ToList()
                 .Select(Mapper.Map<ProfileLog, ProfileLogDto>);
