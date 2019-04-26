@@ -19,7 +19,8 @@ namespace MyPortal.Helpers
 
         public static ApplicationUser GetApplicationUser(this IPrincipal user)
         {
-            var applicationUser = _identity.Users.SingleOrDefault(x => x.Id == user.Identity.GetUserId());
+            var userId = user.Identity.GetUserId();
+            var applicationUser = _identity.Users.SingleOrDefault(x => x.Id == userId);
 
             return applicationUser;
         }
@@ -30,6 +31,20 @@ namespace MyPortal.Helpers
             var applicationUser = _identity.Users.SingleOrDefault(x => x.Id == userId);
 
             return applicationUser?.SelectedAcademicYearId;
+        }
+
+        public static void ChangeSelectedAcademicYear(this IPrincipal user, int academicYearId)
+        {
+            var applicationUser = GetApplicationUser(user);
+
+            if (applicationUser == null)
+            {
+                throw new Exception("User not found");
+            }
+
+            applicationUser.SelectedAcademicYearId = academicYearId;
+
+            _identity.SaveChanges();
         }
     }
 }

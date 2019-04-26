@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using MyPortal.Helpers;
 using MyPortal.Models;
 using MyPortal.Models.Database;
 
@@ -143,16 +144,9 @@ namespace MyPortal.Controllers
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            var academicYear =
-                _context.CurriculumAcademicYears.SingleOrDefault(x =>
-                    x.FirstDate <= DateTime.Now && x.LastDate >= DateTime.Now);
+            var academicYearId = SystemHelper.GetCurrentAcademicYearId();
 
-            if (academicYear == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            user.SelectedAcademicYearId = academicYear.Id;
+            user.SelectedAcademicYearId = academicYearId;
 
             _identity.SaveChanges();
         }

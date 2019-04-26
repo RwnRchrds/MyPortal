@@ -93,12 +93,15 @@ namespace MyPortal.Controllers
 
             var staff = _context.CoreStaff.SingleOrDefault(s => s.UserId == userId);
 
+            var academicYears = _context.CurriculumAcademicYears.ToList().OrderByDescending(x => x.FirstDate);
+
             if (staff == null)
                 return View("~/Views/Staff/NoProfileIndex.cshtml");
 
             var viewModel = new StaffHomeViewModel
             {
-                CurrentUser = staff
+                CurrentUser = staff,
+                CurriculumAcademicYears = academicYears
             };
 
             return View(viewModel);
