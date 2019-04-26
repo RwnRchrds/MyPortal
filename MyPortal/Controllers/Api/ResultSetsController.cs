@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.Ajax.Utilities;
 using MyPortal.Dtos;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 
 namespace MyPortal.Controllers.Api
 {
@@ -30,7 +31,7 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/resultSets/new")]
-        public IHttpActionResult CreateResultSet(ResultSet data)
+        public IHttpActionResult CreateResultSet(AssessmentResultSet data)
         {
             if (data.Name.IsNullOrWhiteSpace() || !ModelState.IsValid)
             {
@@ -39,14 +40,14 @@ namespace MyPortal.Controllers.Api
 
             var rsToAdd = data;
 
-            var currentRsExists = _context.ResultSets.Any(x => x.IsCurrent) && _context.ResultSets.Any();
+            var currentRsExists = _context.AssessmentResultSets.Any(x => x.IsCurrent) && _context.AssessmentResultSets.Any();
 
             if (!currentRsExists)
             {
                 rsToAdd.IsCurrent = true;
             }
 
-            _context.ResultSets.Add(rsToAdd);
+            _context.AssessmentResultSets.Add(rsToAdd);
             _context.SaveChanges();
             return Ok("Result set created");
         }
@@ -60,7 +61,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/resultSets/delete/{resultSetId}")]
         public IHttpActionResult DeleteResultSet(int resultSetId)
         {
-            var resultSet = _context.ResultSets.SingleOrDefault(x => x.Id == resultSetId);
+            var resultSet = _context.AssessmentResultSets.SingleOrDefault(x => x.Id == resultSetId);
 
             if (resultSet == null)
             {
@@ -72,7 +73,7 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.BadRequest, "Cannot delete current result set");
             }
 
-            _context.ResultSets.Remove(resultSet);
+            _context.AssessmentResultSets.Remove(resultSet);
             _context.SaveChanges();
             return Ok("Result set deleted");
         }
@@ -85,16 +86,16 @@ namespace MyPortal.Controllers.Api
         /// <exception cref="HttpResponseException">Thrown when the result set is not found.</exception>
         [HttpGet]
         [Route("api/resultSets/byId/{resultSetId}")]
-        public ResultSetDto GetResultSet(int resultSetId)
+        public AssessmentResultSetDto GetResultSet(int resultSetId)
         {
-            var resultSet = _context.ResultSets.SingleOrDefault(x => x.Id == resultSetId);
+            var resultSet = _context.AssessmentResultSets.SingleOrDefault(x => x.Id == resultSetId);
 
             if (resultSet == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return Mapper.Map<ResultSet, ResultSetDto>(resultSet);
+            return Mapper.Map<AssessmentResultSet, AssessmentResultSetDto>(resultSet);
         }
 
         /// <summary>
@@ -103,9 +104,9 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns a list of DTOs of all result sets.</returns>
         [HttpGet]
         [Route("api/resultSets/all")]
-        public IEnumerable<ResultSetDto> GetResultSets()
+        public IEnumerable<AssessmentResultSetDto> GetResultSets()
         {
-            return _context.ResultSets.OrderBy(x => x.Name).ToList().Select(Mapper.Map<ResultSet, ResultSetDto>);
+            return _context.AssessmentResultSets.OrderBy(x => x.Name).ToList().Select(Mapper.Map<AssessmentResultSet, AssessmentResultSetDto>);
         }
 
         /// <summary>
@@ -118,14 +119,14 @@ namespace MyPortal.Controllers.Api
         [Route("api/resultSets/hasResults/{id}")]
         public bool ResultSetHasResults(int id)
         {
-            var resultSet = _context.ResultSets.SingleOrDefault(x => x.Id == id);
+            var resultSet = _context.AssessmentResultSets.SingleOrDefault(x => x.Id == id);
 
             if (resultSet == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return resultSet.Results.Any();
+            return resultSet.AssessmentResults.Any();
         }
 
 
@@ -138,7 +139,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/resultSets/setCurrent/{resultSetId}")]
         public IHttpActionResult SetCurrent(int resultSetId)
         {
-            var resultSet = _context.ResultSets.SingleOrDefault(x => x.Id == resultSetId);
+            var resultSet = _context.AssessmentResultSets.SingleOrDefault(x => x.Id == resultSetId);
 
             if (resultSet == null)
             {
@@ -150,14 +151,14 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.BadRequest, "Result set is already marked as current");
             }
 
-            var currentCount = _context.ResultSets.Count(x => x.IsCurrent);
+            var currentCount = _context.AssessmentResultSets.Count(x => x.IsCurrent);
 
             if (currentCount != 1)
             {
                 return Content(HttpStatusCode.BadRequest, "Database has lost integrity");
             }
 
-            var currentResultSet = _context.ResultSets.SingleOrDefault(x => x.IsCurrent);
+            var currentResultSet = _context.AssessmentResultSets.SingleOrDefault(x => x.IsCurrent);
 
             if (currentResultSet == null)
             {
@@ -178,9 +179,9 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/resultSets/update")]
-        public IHttpActionResult UpdateResultSet(ResultSet data)
+        public IHttpActionResult UpdateResultSet(AssessmentResultSet data)
         {
-            var resultSet = _context.ResultSets.SingleOrDefault(x => x.Id == data.Id);
+            var resultSet = _context.AssessmentResultSets.SingleOrDefault(x => x.Id == data.Id);
 
             if (resultSet == null)
             {

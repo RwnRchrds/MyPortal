@@ -161,12 +161,12 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @Html.LabelFor(l => l.TrainingCertificate.TrainingCourse)
+                        @Html.LabelFor(l => l.TrainingCertificate.PersonnelTrainingCourse)
                         @Html.DropDownListFor(l => l.TrainingCertificate.CourseId, new SelectList(Model.TrainingCourses, "Id", "Description"), "Select Course", new {@class = "form-control", Name = "CourseId"})
                         @Html.ValidationMessageFor(x => x.TrainingCertificate.CourseId)
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(l => l.TrainingCertificate.TrainingStatus)
+                        @Html.LabelFor(l => l.TrainingCertificate.PersonnelTrainingStatus)
                         @Html.DropDownListFor(l => l.TrainingCertificate.StatusId, new SelectList(Model.TrainingStatuses, "Id", "Name"), "Select Status", new {@class = "form-control", Name = "StatusId"})
                         @Html.ValidationMessageFor(l => l.TrainingCertificate.StatusId)
                     </div>
@@ -205,11 +205,11 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(l => l.StaffObservation.Outcome)
-                        @Html.DropDownListFor(l => l.StaffObservation.Outcome, new SelectList(Model.ObservationOutcomes), "Select Outcome", new {@class = "form-control", Name = "Outcome"})
+                        @Html.LabelFor(l => l.PersonnelObservation.Outcome)
+                        @Html.DropDownListFor(l => l.PersonnelObservation.Outcome, new SelectList(Model.ObservationOutcomes), "Select Outcome", new {@class = "form-control", Name = "Outcome"})
                     </div>
                     <div class="form-group">
-                        @Html.HiddenFor(l => l.StaffObservation.ObserveeId, new {Value = Model.Staff.Id, Name = "ObserveeId"})
+                        @Html.HiddenFor(l => l.PersonnelObservation.ObserveeId, new {Value = Model.Staff.Id, Name = "ObserveeId"})
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -337,14 +337,14 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Upload.Document.Description)
-                        @Html.TextBoxFor(x => x.Upload.Document.Description, new {@class = "form-control", Name = "Document.Description"})
-                        @Html.ValidationMessageFor(x => x.Upload.Document.Description)
+                        @Html.LabelFor(x => x.Upload.CoreDocument.Description)
+                        @Html.TextBoxFor(x => x.Upload.CoreDocument.Description, new {@class = "form-control", Name = "Document.Description"})
+                        @Html.ValidationMessageFor(x => x.Upload.CoreDocument.Description)
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Upload.Document.Url)
-                        @Html.TextBoxFor(x => x.Upload.Document.Url, new {@class = "form-control", Name = "Document.Url"})
-                        @Html.ValidationMessageFor(x => x.Upload.Document.Url)
+                        @Html.LabelFor(x => x.Upload.CoreDocument.Url)
+                        @Html.TextBoxFor(x => x.Upload.CoreDocument.Url, new {@class = "form-control", Name = "Document.Url"})
+                        @Html.ValidationMessageFor(x => x.Upload.CoreDocument.Url)
                     </div>
                     <div class="form-group">
                         @Html.HiddenFor(x => x.Upload.StaffId, new {@class = "form-control", Value = Model.Staff.Id, Name = "StaffId"})
@@ -374,14 +374,14 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Upload.Document.Description)
-                        @Html.TextBoxFor(x => x.Upload.Document.Description, new {@class = "form-control", Name = "Document.Description", id = "EditDocumentDescription"})
-                        @Html.ValidationMessageFor(x => x.Upload.Document.Description)
+                        @Html.LabelFor(x => x.Upload.CoreDocument.Description)
+                        @Html.TextBoxFor(x => x.Upload.CoreDocument.Description, new {@class = "form-control", Name = "Document.Description", id = "EditDocumentDescription"})
+                        @Html.ValidationMessageFor(x => x.Upload.CoreDocument.Description)
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Upload.Document.Url)
-                        @Html.TextBoxFor(x => x.Upload.Document.Url, new {@class = "form-control", Name = "Document.Url", id = "EditDocumentUrl"})
-                        @Html.ValidationMessageFor(x => x.Upload.Document.Url)
+                        @Html.LabelFor(x => x.Upload.CoreDocument.Url)
+                        @Html.TextBoxFor(x => x.Upload.CoreDocument.Url, new {@class = "form-control", Name = "Document.Url", id = "EditDocumentUrl"})
+                        @Html.ValidationMessageFor(x => x.Upload.CoreDocument.Url)
                     </div>
                     <div class="form-group">
                         @Html.HiddenFor(x => x.Upload.StaffId, new {@class = "form-control", Value = Model.Staff.Id, Name = "StaffId", id = "EditDocumentStaffId"})
@@ -418,12 +418,12 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(l => l.StaffObservation.Outcome)
-                        @Html.DropDownListFor(l => l.StaffObservation.Outcome, new SelectList(Model.ObservationOutcomes), "Select Outcome", new {@class = "form-control", Name = "Outcome", id = "EditObservationOutcome"})
+                        @Html.LabelFor(l => l.PersonnelObservation.Outcome)
+                        @Html.DropDownListFor(l => l.PersonnelObservation.Outcome, new SelectList(Model.ObservationOutcomes), "Select Outcome", new {@class = "form-control", Name = "Outcome", id = "EditObservationOutcome"})
                     </div>
                     <div class="form-group">
-                        @Html.HiddenFor(l => l.StaffObservation.ObserveeId, new {Value = Model.Staff.Id, Name = "ObserveeId", id = "EditObservationObservee"})
-                        @Html.HiddenFor(x => x.StaffObservation.Id, new {Name = "Id", id = "EditObservationId"})
+                        @Html.HiddenFor(l => l.PersonnelObservation.ObserveeId, new {Value = Model.Staff.Id, Name = "ObserveeId", id = "EditObservationObservee"})
+                        @Html.HiddenFor(x => x.PersonnelObservation.Id, new {Name = "Id", id = "EditObservationId"})
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -497,18 +497,18 @@
                 },
                 columns: [
                     {
-                        data: "document.description",
+                        data: "coreDocument.description",
                         render: function(data, type, document) {
                             return "<a href='" +
-                                document.document.url +
+                                document.coreDocument.url +
                                 "' target='_blank'>" +
-                                document.document.description +
+                                document.coreDocument.description +
                                 "</a>";
                         }
 
                     },
                     {
-                        data: "document.date",
+                        data: "coreDocument.date",
                         render: function(data) {
                             var date = new Date(data);
                             return date.toLocaleDateString();
@@ -611,13 +611,13 @@
                 },
                 columns: [
                     {
-                        data: "trainingCourse.code"
+                        data: "personnelTrainingCourse.code"
                     },
                     {
-                        data: "trainingCourse.description"
+                        data: "personnelTrainingCourse.description"
                     },
                     {
-                        data: "trainingStatus.name"
+                        data: "personnelTrainingStatus.name"
                     },
                     {
                         data: "courseId",
@@ -640,15 +640,15 @@
                     "emptyTable": "No certificates to display"
                 },
                 "createdRow": function(row, data, dataIndex) {
-                    if (data.trainingStatus.name === "Completed") {
+                    if (data.personnelTrainingStatus.name === "Completed") {
                         $(row).addClass("mp-cert-completed");
                     }
 
-                    if (data.trainingStatus.name === "Pending") {
+                    if (data.personnelTrainingStatus.name === "Pending") {
                         $(row).addClass("mp-cert-pending");
                     }
 
-                    if (data.trainingStatus.name === "Failed") {
+                    if (data.personnelTrainingStatus.name === "Failed") {
                         $(row).addClass("mp-cert-failed");
                     }
                 }

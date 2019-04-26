@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 
 namespace MyPortal.ViewModels
 {
     public class CommentsViewModel
     {
-        public IEnumerable<CommentBank> CommentBanks { get; set; }
-        public Comment Comment { get; set; }
+        public IEnumerable<ProfileCommentBank> CommentBanks { get; set; }
+        public ProfileComment Comment { get; set; }
     }
 }

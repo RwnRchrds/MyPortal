@@ -13,7 +13,7 @@
 <!--#region New Sale Form-->
 <div class="container float-left">
     @Html.Label("Product")
-    @Html.DropDownListFor(x => x.Sale.Product, new SelectList(Model.Products, "Id", "Description"), "", new {@class = "form-control", Name = "Product", id = "productSelect"})
+    @Html.DropDownListFor(x => x.Sale.FinanceProduct, new SelectList(Model.Products, "Id", "Description"), "", new {@class = "form-control", Name = "Product", id = "productSelect"})
     <p class="text-primary mp-bold" data-price id="price"></p>
 </div>
 

@@ -5,6 +5,7 @@ using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 
 namespace MyPortal.Controllers.Api
 {
@@ -30,14 +31,14 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/regGroups/create")]
-        public IHttpActionResult CreateRegGroup(RegGroup regGroup)
+        public IHttpActionResult CreateRegGroup(PastoralRegGroup regGroup)
         {
             if (!ModelState.IsValid)
             {
                 return Content(HttpStatusCode.BadRequest, "Invalid data");
             }
 
-            _context.RegGroups.Add(regGroup);
+            _context.PastoralRegGroups.Add(regGroup);
             _context.SaveChanges();
 
             return Ok("Reg group created");
@@ -52,14 +53,14 @@ namespace MyPortal.Controllers.Api
         [Route("api/regGroups/delete/{id}")]
         public IHttpActionResult DeleteRegGroup(int id)
         {
-            var regGroupInDb = _context.RegGroups.SingleOrDefault(x => x.Id == id);
+            var regGroupInDb = _context.PastoralRegGroups.SingleOrDefault(x => x.Id == id);
 
             if (regGroupInDb == null)
             {
                 return Content(HttpStatusCode.NotFound, "Reg group not found");
             }
 
-            _context.RegGroups.Remove(regGroupInDb);
+            _context.PastoralRegGroups.Remove(regGroupInDb);
             _context.SaveChanges();
 
             return Ok("Reg group deleted");
@@ -73,16 +74,16 @@ namespace MyPortal.Controllers.Api
         /// <exception cref="HttpResponseException"></exception>
         [HttpGet]
         [Route("api/regGroups/byId/{id}")]
-        public RegGroupDto GetRegGroupById(int id)
+        public PastoralRegGroupDto GetRegGroupById(int id)
         {
-            var regGroup = _context.RegGroups.SingleOrDefault(x => x.Id == id);
+            var regGroup = _context.PastoralRegGroups.SingleOrDefault(x => x.Id == id);
 
             if (regGroup == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return Mapper.Map<RegGroup, RegGroupDto>(regGroup);
+            return Mapper.Map<PastoralRegGroup, PastoralRegGroupDto>(regGroup);
         }
 
         /// <summary>
@@ -92,12 +93,12 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns a list of DTOs of registration groups from the specified year group.</returns>
         [HttpGet]
         [Route("api/regGroups/byYearGroup/{yearGroup}")]
-        public IEnumerable<RegGroupDto> GetRegGroupsByYearGroup(int yearGroup)
+        public IEnumerable<PastoralRegGroupDto> GetRegGroupsByYearGroup(int yearGroup)
         {
-            return _context.RegGroups
+            return _context.PastoralRegGroups
                 .Where(x => x.YearGroupId == yearGroup)
                 .ToList()
-                .Select(Mapper.Map<RegGroup, RegGroupDto>);
+                .Select(Mapper.Map<PastoralRegGroup, PastoralRegGroupDto>);
         }
 
         /// <summary>
@@ -106,9 +107,9 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns a list of DTOs of all registration groups.</returns>
         [HttpGet]
         [Route("api/regGroups/all")]
-        public IEnumerable<RegGroupDto> GetRegGroups()
+        public IEnumerable<PastoralRegGroupDto> GetRegGroups()
         {
-            return _context.RegGroups.ToList().Select(Mapper.Map<RegGroup, RegGroupDto>);
+            return _context.PastoralRegGroups.ToList().Select(Mapper.Map<PastoralRegGroup, PastoralRegGroupDto>);
         }
 
         /// <summary>
@@ -121,7 +122,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/regGroups/hasStudents/{id}")]
         public bool RegGroupHasStudents(int id)
         {
-            var regGroupInDb = _context.RegGroups.SingleOrDefault(x => x.Id == id);
+            var regGroupInDb = _context.PastoralRegGroups.SingleOrDefault(x => x.Id == id);
 
             if (regGroupInDb == null)
             {
@@ -138,9 +139,9 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/regGroups/update")]
-        public IHttpActionResult UpdateRegGroup(RegGroup regGroup)
+        public IHttpActionResult UpdateRegGroup(PastoralRegGroup regGroup)
         {
-            var regGroupInDb = _context.RegGroups.SingleOrDefault(x => x.Id == regGroup.Id);
+            var regGroupInDb = _context.PastoralRegGroups.SingleOrDefault(x => x.Id == regGroup.Id);
 
             if (regGroupInDb == null)
             {

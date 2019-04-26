@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 
 namespace MyPortal.Controllers.Api
 {
@@ -21,7 +22,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("api/staff/certificates/create")]
-        public IHttpActionResult CreateTrainingCertificate(TrainingCertificate trainingCertificateDto)
+        public IHttpActionResult CreateTrainingCertificate(PersonnelTrainingCertificate trainingCertificateDto)
         {
             if (!ModelState.IsValid)
             {
@@ -30,7 +31,7 @@ namespace MyPortal.Controllers.Api
 
             var userId = User.Identity.GetUserId();
 
-            var userPerson = _context.Staff.SingleOrDefault(x => x.UserId == userId);
+            var userPerson = _context.CoreStaff.SingleOrDefault(x => x.UserId == userId);
 
             if (trainingCertificateDto.StaffId == userPerson.Id)
             {
@@ -39,7 +40,7 @@ namespace MyPortal.Controllers.Api
 
             var cert = trainingCertificateDto;
 
-            _context.TrainingCertificates.Add(cert);
+            _context.PersonnelTrainingCertificates.Add(cert);
             _context.SaveChanges();
 
             return Ok("Certificate added");
@@ -50,7 +51,7 @@ namespace MyPortal.Controllers.Api
         public IHttpActionResult DeleteCertificate(int staff, int course)
         {
             var certInDb =
-                _context.TrainingCertificates.SingleOrDefault(l => l.StaffId == staff && l.CourseId == course);
+                _context.PersonnelTrainingCertificates.SingleOrDefault(l => l.StaffId == staff && l.CourseId == course);
 
             if (certInDb == null)
             {
@@ -59,14 +60,14 @@ namespace MyPortal.Controllers.Api
 
             var userId = User.Identity.GetUserId();
 
-            var userPerson = _context.Staff.SingleOrDefault(x => x.UserId == userId);
+            var userPerson = _context.CoreStaff.SingleOrDefault(x => x.UserId == userId);
 
             if (staff == userPerson.Id)
             {
                 return Content(HttpStatusCode.BadRequest, "Cannot remove a certificate for yourself");
             }
 
-            _context.TrainingCertificates.Remove(certInDb);
+            _context.PersonnelTrainingCertificates.Remove(certInDb);
             _context.SaveChanges();
 
             return Ok("Certificate deleted");
@@ -75,41 +76,41 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [Route("api/staff/certificates/fetch/{staffId}/{courseId}")]
-        public TrainingCertificateDto GetCertificate(int staffId, int courseId)
+        public PersonnelTrainingCertificateDto GetCertificate(int staffId, int courseId)
         {
-            var certInDb = _context.TrainingCertificates.Single(x => x.StaffId == staffId && x.CourseId == courseId);
+            var certInDb = _context.PersonnelTrainingCertificates.Single(x => x.StaffId == staffId && x.CourseId == courseId);
 
             if (certInDb == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return Mapper.Map<TrainingCertificate, TrainingCertificateDto>(certInDb);
+            return Mapper.Map<PersonnelTrainingCertificate, PersonnelTrainingCertificateDto>(certInDb);
         }
 
         [HttpGet]
         [Route("api/staff/certificates/fetch/{staff}")]
-        public IEnumerable<TrainingCertificateDto> GetCertificates(int staff)
+        public IEnumerable<PersonnelTrainingCertificateDto> GetCertificates(int staff)
         {
-            var staffInDb = _context.Staff.Single(x => x.Id == staff);
+            var staffInDb = _context.CoreStaff.Single(x => x.Id == staff);
 
             if (staffInDb == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return _context.TrainingCertificates
+            return _context.PersonnelTrainingCertificates
                 .Where(c => c.StaffId == staff)
                 .ToList()
-                .Select(Mapper.Map<TrainingCertificate, TrainingCertificateDto>);
+                .Select(Mapper.Map<PersonnelTrainingCertificate, PersonnelTrainingCertificateDto>);
         }
 
         [HttpPost]
         [Route("api/staff/certificates/update")]
-        public IHttpActionResult UpdateCertificate(TrainingCertificate data)
+        public IHttpActionResult UpdateCertificate(PersonnelTrainingCertificate data)
         {
             var certInDb =
-                _context.TrainingCertificates.Single(x => x.StaffId == data.StaffId && x.CourseId == data.CourseId);
+                _context.PersonnelTrainingCertificates.Single(x => x.StaffId == data.StaffId && x.CourseId == data.CourseId);
 
             if (certInDb == null)
             {
@@ -118,7 +119,7 @@ namespace MyPortal.Controllers.Api
 
             var userId = User.Identity.GetUserId();
 
-            var userPerson = _context.Staff.SingleOrDefault(x => x.UserId == userId);
+            var userPerson = _context.CoreStaff.SingleOrDefault(x => x.UserId == userId);
 
             if (userPerson != null && data.StaffId == userPerson.Id)
             {

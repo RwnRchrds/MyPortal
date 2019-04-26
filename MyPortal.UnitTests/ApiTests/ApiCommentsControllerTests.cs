@@ -7,6 +7,7 @@ using MyPortal.Controllers.Api;
 using MyPortal.Models;
 using MyPortal.UnitTests.TestData;
 using AutoMapper;
+using MyPortal.Models.Database;
 
 namespace MyPortal.UnitTests.ApiTests
 {
@@ -53,7 +54,7 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void GetCommentsByCommentBank_GetsComments()
         {
-            var commentBank = _context.CommentBanks.SingleOrDefault(x => x.Name == "Middle");
+            var commentBank = _context.ProfileCommentBanks.SingleOrDefault(x => x.Name == "Middle");
 
             var result = _controller.GetCommentsByCommentBank(commentBank.Id);
 
@@ -64,14 +65,14 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void GetCommentById_GetsComment()
         {
-            var comment = _context.Comments.SingleOrDefault(x => x.Value == "Hello");
+            var comment = _context.ProfileComments.SingleOrDefault(x => x.Value == "Hello");
 
             Assert.IsNotNull(comment);
 
             var result = _controller.GetCommentById(comment.Id);
 
             Assert.AreEqual("Hello", result.Value);
-            Assert.AreEqual("Opening", result.CommentBank.Name);
+            Assert.AreEqual("Opening", result.ProfileCommentBank.Name);
         }
 
         [Test]
@@ -87,17 +88,17 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void CreateComment_CreatesComment()
         {
-            var commentBank = _context.CommentBanks.SingleOrDefault(x => x.Name == "Opening");
+            var commentBank = _context.ProfileCommentBanks.SingleOrDefault(x => x.Name == "Opening");
 
             Assert.IsNotNull(commentBank);
 
-            var comment = new Comment {CommentBankId = commentBank.Id, Value = "Greetings!"};
+            var comment = new ProfileComment {CommentBankId = commentBank.Id, Value = "Greetings!"};
 
-            var initialAmount = _context.Comments.Count();
+            var initialAmount = _context.ProfileComments.Count();
 
             var result = _controller.CreateComment(comment);
 
-            var finalAmount = _context.Comments.Count();
+            var finalAmount = _context.ProfileComments.Count();
 
             Assert.IsInstanceOf<OkNegotiatedContentResult<string>>(result);
             Assert.AreEqual(initialAmount + 1, finalAmount);
@@ -117,7 +118,7 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void UpdateComment_UpdatesComment()
         {
-            var comment = _context.Comments.SingleOrDefault(x => x.Value == "Hello");
+            var comment = _context.ProfileComments.SingleOrDefault(x => x.Value == "Hello");
 
             Assert.IsNotNull(comment);
 
@@ -131,7 +132,7 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void UpdateComment_CommentDoesNotExist_ReturnsNotFound()
         {
-            var comment = new Comment { Id = 9999, Value = "Hello!"};
+            var comment = new ProfileComment { Id = 9999, Value = "Hello!"};
 
             var result = _controller.UpdateComment(comment) as NegotiatedContentResult<string>;
 
@@ -143,15 +144,15 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void DeleteComment_DeletesComment()
         {
-            var comment = _context.Comments.SingleOrDefault(x => x.Value == "Hello");
+            var comment = _context.ProfileComments.SingleOrDefault(x => x.Value == "Hello");
 
             Assert.IsNotNull(comment);
 
-            var initialAmount = _context.Comments.Count();
+            var initialAmount = _context.ProfileComments.Count();
 
             var result = _controller.DeleteComment(comment.Id);
 
-            var finalAmount = _context.Comments.Count();
+            var finalAmount = _context.ProfileComments.Count();
 
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<OkNegotiatedContentResult<string>>(result);

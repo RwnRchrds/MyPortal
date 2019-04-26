@@ -1,9 +1,10 @@
 ﻿using MyPortal.Models;
+using MyPortal.Models.Database;
 
 namespace MyPortal.ViewModels
 {
     public class NewProductViewModel
     {
-        public Product Product { get; set; }
+        public FinanceProduct Product { get; set; }
     }
 }

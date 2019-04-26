@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 
 namespace MyPortal.ViewModels
 {
     public class StudentResultsViewModel
     {
-        public Student Student { get; set; }
-        public IEnumerable<ResultSet> ResultSets { get; set; }
+        public CoreStudent Student { get; set; }
+        public IEnumerable<AssessmentResultSet> ResultSets { get; set; }
         public int CurrentResultSetId { get; set; }
-        public Result Result { get; set; }
-        public IEnumerable<Subject> Subjects { get; set; }
-        public IEnumerable<GradeSet> GradeSets { get; set; }
+        public AssessmentResult Result { get; set; }
+        public IEnumerable<CurriculumSubject> Subjects { get; set; }
+        public IEnumerable<AssessmentGradeSet> GradeSets { get; set; }
     }
 }

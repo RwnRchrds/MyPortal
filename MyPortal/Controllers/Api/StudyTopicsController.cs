@@ -5,6 +5,7 @@ using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 
 namespace MyPortal.Controllers.Api
 {
@@ -24,14 +25,14 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("api/studyTopics/create")]
-        public IHttpActionResult CreateStudyTopic(StudyTopic studyTopic)
+        public IHttpActionResult CreateStudyTopic(CurriculumStudyTopic studyTopic)
         {
             if (!ModelState.IsValid)
             {
                 return Content(HttpStatusCode.BadRequest, "Invalid data");
             }
 
-            _context.StudyTopics.Add(studyTopic);
+            _context.CurriculumStudyTopics.Add(studyTopic);
             _context.SaveChanges();
 
             return Ok("Study topic added");
@@ -41,14 +42,14 @@ namespace MyPortal.Controllers.Api
         [Route("api/studyTopics/delete/{id}")]
         public IHttpActionResult DeleteStudyTopic(int id)
         {
-            var studyTopic = _context.StudyTopics.SingleOrDefault(x => x.Id == id);
+            var studyTopic = _context.CurriculumStudyTopics.SingleOrDefault(x => x.Id == id);
 
             if (studyTopic == null)
             {
                 return Content(HttpStatusCode.NotFound, "Study topic not found");
             }
 
-            _context.StudyTopics.Remove(studyTopic);
+            _context.CurriculumStudyTopics.Remove(studyTopic);
             _context.SaveChanges();
 
             return Ok("Study topic deleted");
@@ -58,7 +59,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/studyTopics/hasLessonPlans/{id}")]
         public bool HasLessonPlans(int id)
         {
-            var studyTopic = _context.StudyTopics.SingleOrDefault(x => x.Id == id);
+            var studyTopic = _context.CurriculumStudyTopics.SingleOrDefault(x => x.Id == id);
 
             if (studyTopic == null)
             {
@@ -70,35 +71,35 @@ namespace MyPortal.Controllers.Api
         
         [HttpGet]
         [Route("api/studyTopics/fetch/byId/{id}")]
-        public StudyTopicDto GetStudyTopic(int id)
+        public CurriculumStudyTopicDto GetStudyTopic(int id)
         {
-            var studyTopic = _context.StudyTopics.SingleOrDefault(x => x.Id == id);
+            var studyTopic = _context.CurriculumStudyTopics.SingleOrDefault(x => x.Id == id);
 
             if (studyTopic == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return Mapper.Map<StudyTopic, StudyTopicDto>(studyTopic);
+            return Mapper.Map<CurriculumStudyTopic, CurriculumStudyTopicDto>(studyTopic);
         }
 
         [HttpGet]
         [Route("api/studyTopics/fetch/all")]
-        public IEnumerable<StudyTopicDto> GetStudyTopics()
+        public IEnumerable<CurriculumStudyTopicDto> GetStudyTopics()
         {
-            return _context.StudyTopics.ToList().Select(Mapper.Map<StudyTopic, StudyTopicDto>);
+            return _context.CurriculumStudyTopics.ToList().Select(Mapper.Map<CurriculumStudyTopic, CurriculumStudyTopicDto>);
         }
 
         [HttpPost]
         [Route("api/studyTopics/update")]
-        public IHttpActionResult UpdateStudyTopic(StudyTopic studyTopic)
+        public IHttpActionResult UpdateStudyTopic(CurriculumStudyTopic studyTopic)
         {
             if (!ModelState.IsValid)
             {
                 return Content(HttpStatusCode.BadRequest, "Invalid data");
             }
 
-            var studyTopicInDb = _context.StudyTopics.SingleOrDefault(x => x.Id == studyTopic.Id);
+            var studyTopicInDb = _context.CurriculumStudyTopics.SingleOrDefault(x => x.Id == studyTopic.Id);
 
             if (studyTopicInDb == null)
             {

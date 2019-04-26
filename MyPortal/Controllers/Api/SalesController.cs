@@ -5,7 +5,9 @@ using System.Net;
 using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
+using MyPortal.Helpers;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
 
 namespace MyPortal.Controllers.Api
@@ -28,11 +30,11 @@ namespace MyPortal.Controllers.Api
         /// <exception cref="HttpResponseException">Thrown when the product or student is not found.</exception>
         [HttpPost]
         [Route("api/sales/query")]
-        public bool AssessBalance(SaleDto sale)
+        public bool AssessBalance(FinanceSaleDto sale)
         {
-            var productToQuery = _context.Products.SingleOrDefault(x => x.Id == sale.ProductId);
+            var productToQuery = _context.FinanceProducts.SingleOrDefault(x => x.Id == sale.ProductId);
 
-            var studentToQuery = _context.Students.SingleOrDefault(x => x.Id == sale.StudentId);
+            var studentToQuery = _context.CoreStudents.SingleOrDefault(x => x.Id == sale.StudentId);
 
             if (productToQuery == null || studentToQuery == null)
             {
@@ -51,14 +53,14 @@ namespace MyPortal.Controllers.Api
         [Route("api/sales/delete/{id}")]
         public IHttpActionResult DeleteSale(int id)
         {
-            var saleInDb = _context.Sales.SingleOrDefault(p => p.Id == id);
+            var saleInDb = _context.FinanceSales.SingleOrDefault(p => p.Id == id);
 
             if (saleInDb == null)
             {
                 return Content(HttpStatusCode.NotFound, "Sale not found");
             }
 
-            _context.Sales.Remove(saleInDb);
+            _context.FinanceSales.Remove(saleInDb);
             _context.SaveChanges();
 
             return Ok("Sale deleted");
@@ -71,11 +73,12 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns a list of DTOs of sales that have not been marked as completed.</returns>
         [HttpGet]
         [Route("api/sales/pending")]
-        public IEnumerable<SaleDto> GetPendingSales()
+        public IEnumerable<FinanceSaleDto> GetPendingSales()
         {
-            return _context.Sales.Where(x => x.Processed == false)
+            var academicYearId = SystemHelper.GetCurrentOrSelectedAcademicYearId(User);
+            return _context.FinanceSales.Where(x => x.Processed == false && x.AcademicYearId == academicYearId)
                 .ToList()
-                .Select(Mapper.Map<Sale, SaleDto>);
+                .Select(Mapper.Map<FinanceSale, FinanceSaleDto>);
         }
 
         /// <summary>
@@ -84,12 +87,14 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns a list of DTOs of all sales.</returns>
         [HttpGet]
         [Route("api/sales/all")]
-        public IEnumerable<SaleDto> GetSales()
+        public IEnumerable<FinanceSaleDto> GetSales()
         {
-            return _context.Sales
+            var academicYearId = SystemHelper.GetCurrentOrSelectedAcademicYearId(User);
+            return _context.FinanceSales
+                .Where(x => x.AcademicYearId == academicYearId)
                 .OrderByDescending(x => x.Date)
                 .ToList()
-                .Select(Mapper.Map<Sale, SaleDto>);
+                .Select(Mapper.Map<FinanceSale, FinanceSaleDto>);
         }
 
         /// <summary>
@@ -99,13 +104,14 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns a list of DTOs of sales for the specified student</returns>
         [HttpGet]
         [Route("api/sales/student")]
-        public IEnumerable<SaleDto> GetSalesForStudent(int studentId)
+        public IEnumerable<FinanceSaleDto> GetSalesForStudent(int studentId)
         {
-            return _context.Sales
-                .Where(x => x.StudentId == studentId)
+            var academicYearId = SystemHelper.GetCurrentOrSelectedAcademicYearId(User);
+            return _context.FinanceSales
+                .Where(x => x.StudentId == studentId && x.AcademicYearId == academicYearId)
                 .OrderByDescending(x => x.Date)
                 .ToList()
-                .Select(Mapper.Map<Sale, SaleDto>);
+                .Select(Mapper.Map<FinanceSale, FinanceSaleDto>);
         }
 
         /// <summary>
@@ -114,13 +120,14 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns a list of DTOs of sales that have not been marked as completed.</returns>
         [HttpGet]
         [Route("api/sales")]
-        public IEnumerable<SaleDto> GetUnprocessedSales()
+        public IEnumerable<FinanceSaleDto> GetUnprocessedSales()
         {
-            return _context.Sales
-                .Where(x => x.Processed == false)
+            var academicYearId = SystemHelper.GetCurrentOrSelectedAcademicYearId(User);
+            return _context.FinanceSales
+                .Where(x => x.Processed == false && x.AcademicYearId == academicYearId)
                 .OrderByDescending(x => x.Date)
                 .ToList()
-                .Select(Mapper.Map<Sale, SaleDto>);
+                .Select(Mapper.Map<FinanceSale, FinanceSaleDto>);
         }
 
         /// <summary>
@@ -128,11 +135,11 @@ namespace MyPortal.Controllers.Api
         /// </summary>
         /// <param name="sale">The sale to create.</param>
         /// <exception cref="HttpResponseException">Thrown if the student or product is not found.</exception>
-        public void InvokeSale(SaleDto sale)
-        {
-            var student = _context.Students.SingleOrDefault(x => x.Id == sale.StudentId);
+        public void InvokeSale(FinanceSale sale)
+        {            
+            var student = _context.CoreStudents.SingleOrDefault(x => x.Id == sale.StudentId);
 
-            var product = _context.Products.SingleOrDefault(x => x.Id == sale.ProductId);
+            var product = _context.FinanceProducts.SingleOrDefault(x => x.Id == sale.ProductId);
 
             if (student == null || product == null)
             {
@@ -144,9 +151,9 @@ namespace MyPortal.Controllers.Api
 
             student.AccountBalance -= product.Price;
 
-            sale.AmountPaid = product.Price;
+            sale.AmountPaid = product.Price;            
 
-            _context.Sales.Add(Mapper.Map<SaleDto, Sale>(sale));
+            _context.FinanceSales.Add(sale);
         }
 
         /// <summary>
@@ -158,7 +165,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/sales/complete/{id}")]
         public IHttpActionResult MarkSaleProcessed(int id)
         {
-            var saleInDb = _context.Sales.Single(x => x.Id == id);
+            var saleInDb = _context.FinanceSales.Single(x => x.Id == id);
 
             if (saleInDb == null)
             {
@@ -184,15 +191,16 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/sales/new")]
-        public IHttpActionResult NewSale(Sale sale)
+        public IHttpActionResult NewSale(FinanceSale sale)
         {
+            var academicYearId = SystemHelper.GetCurrentOrSelectedAcademicYearId(User);
             sale.Date = DateTime.Now;
 
             sale.Processed = true;
 
-            var student = _context.Students.SingleOrDefault(x => x.Id == sale.StudentId);
+            var student = _context.CoreStudents.SingleOrDefault(x => x.Id == sale.StudentId);
 
-            var product = _context.Products.SingleOrDefault(x => x.Id == sale.ProductId);
+            var product = _context.FinanceProducts.SingleOrDefault(x => x.Id == sale.ProductId);
 
             if (student == null)
             {
@@ -207,8 +215,9 @@ namespace MyPortal.Controllers.Api
             student.AccountBalance -= product.Price;
 
             sale.AmountPaid = product.Price;
+            sale.AcademicYearId = academicYearId;
 
-            _context.Sales.Add(sale);
+            _context.FinanceSales.Add(sale);
             _context.SaveChanges();
 
             return Ok("Sale completed");
@@ -223,8 +232,14 @@ namespace MyPortal.Controllers.Api
         [Route("api/sales/purchase")]
         public IHttpActionResult Purchase(Checkout data)
         {
+            var academicYearId = SystemHelper.GetCurrentOrSelectedAcademicYearId(User);
+            if (User.IsInRole("Student"))
+            {
+                new StudentsController().AuthenticateStudentRequest(data.StudentId);
+            }
+
             //Check student actually exists
-            var student = _context.Students.SingleOrDefault(x => x.Id == data.StudentId);
+            var student = _context.CoreStudents.SingleOrDefault(x => x.Id == data.StudentId);
 
             if (student == null)
             {
@@ -233,7 +248,7 @@ namespace MyPortal.Controllers.Api
 
 
             //Obtain items from student's shopping basket
-            var basket = _context.BasketItems.Where(x => x.StudentId == data.StudentId);
+            var basket = _context.FinanceBasketItems.Where(x => x.StudentId == data.StudentId);
 
             //Check there are actually items in the basket
             if (!basket.Any())
@@ -242,7 +257,7 @@ namespace MyPortal.Controllers.Api
             }
 
             //Check student has enough money to afford all items
-            var totalCost = basket.Sum(x => x.Product.Price);
+            var totalCost = basket.Sum(x => x.FinanceProduct.Price);
 
             if (totalCost > student.AccountBalance)
             {
@@ -252,18 +267,19 @@ namespace MyPortal.Controllers.Api
             //Process sales for each item
             foreach (var item in basket)
             {
-                var sale = new SaleDto
+                var sale = new FinanceSale
                 {
                     StudentId = data.StudentId,
                     ProductId = item.ProductId,
-                    Date = DateTime.Today
+                    Date = DateTime.Today,
+                    AcademicYearId = academicYearId
                 };
 
                 InvokeSale(sale);
             }
 
             //Remove items from student's basket once transaction has completed
-            _context.BasketItems.RemoveRange(basket);
+            _context.FinanceBasketItems.RemoveRange(basket);
 
             _context.SaveChanges();
 
@@ -279,7 +295,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/sales/refund/{id}")]
         public IHttpActionResult RefundSale(int id)
         {
-            var saleInDb = _context.Sales.SingleOrDefault(p => p.Id == id);
+            var saleInDb = _context.FinanceSales.SingleOrDefault(p => p.Id == id);
 
             if (saleInDb == null)
             {
@@ -288,11 +304,11 @@ namespace MyPortal.Controllers.Api
 
             var amount = saleInDb.AmountPaid;
 
-            var student = saleInDb.Student;
+            var student = saleInDb.CoreStudent;
 
             student.AccountBalance += amount;
 
-            _context.Sales.Remove(saleInDb);
+            _context.FinanceSales.Remove(saleInDb);
             _context.SaveChanges();
 
             return Ok("Sale refunded");

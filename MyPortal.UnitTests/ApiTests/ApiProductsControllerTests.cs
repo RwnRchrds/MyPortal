@@ -6,6 +6,7 @@ using AutoMapper;
 using MyPortal.Controllers.Api;
 using MyPortal.Dtos;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 using MyPortal.UnitTests.TestData;
 using NUnit.Framework;
 
@@ -53,11 +54,11 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void GetProduct_ReturnsProduct()
         {
-            var product = _context.Products.SingleOrDefault(x => x.Description == "School Trip");
+            var product = _context.FinanceProducts.SingleOrDefault(x => x.Description == "School Trip");
 
             Assert.IsNotNull(product);
 
-            var expected = Mapper.Map<Product, ProductDto>(product);
+            var expected = Mapper.Map<FinanceProduct, FinanceProductDto>(product);
 
             var result = _controller.GetProduct(product.Id);
 
@@ -68,13 +69,13 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void NewProduct_CreatesProduct()
         {
-            var newProduct = new Product {Description = "Test", Price = 0.99m, Visible = true, OnceOnly = false};
+            var newProduct = new FinanceProduct {Description = "Test", Price = 0.99m, Visible = true, OnceOnly = false};
 
-            var init = _context.Products.Count();
+            var init = _context.FinanceProducts.Count();
 
             var result = _controller.NewProduct((newProduct));
 
-            var count = _context.Products.Count();
+            var count = _context.FinanceProducts.Count();
             
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<OkNegotiatedContentResult<string>>(result);
@@ -84,7 +85,7 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void UpdateProduct_UpdatesProduct()
         {
-            var product = _context.Products.SingleOrDefault(x => x.Description == "Art Pack");
+            var product = _context.FinanceProducts.SingleOrDefault(x => x.Description == "Art Pack");
             
             Assert.IsNotNull(product);
             
@@ -94,7 +95,7 @@ namespace MyPortal.UnitTests.ApiTests
 
            var result = _controller.UpdateProduct((product));
 
-            var checkProduct = _context.Products.SingleOrDefault(x => x.Id == product.Id);
+            var checkProduct = _context.FinanceProducts.SingleOrDefault(x => x.Id == product.Id);
             
             Assert.IsNotNull(checkProduct);
             Assert.IsNotNull(result);
@@ -107,15 +108,15 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void DeleteProduct_RemovesProduct()
         {
-            var init = _context.Products.Count();
+            var init = _context.FinanceProducts.Count();
             
-            var product = _context.Products.SingleOrDefault(x => x.Description == "Delete Me");
+            var product = _context.FinanceProducts.SingleOrDefault(x => x.Description == "Delete Me");
             
             Assert.IsNotNull(product);
 
             var result = _controller.DeleteProduct(product.Id);
 
-            var count = _context.Products.Count();
+            var count = _context.FinanceProducts.Count();
                         
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<OkNegotiatedContentResult<string>>(result);

@@ -1,9 +1,10 @@
 ﻿using MyPortal.Models;
+using MyPortal.Models.Database;
 
 namespace MyPortal.ViewModels
 {
     public class DinnerMoneyViewModel
     {
-        public Product LunchItem { get; set; }
+        public FinanceProduct LunchItem { get; set; }
     }
 }

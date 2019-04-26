@@ -7,6 +7,7 @@ using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 
 namespace MyPortal.Controllers.Api
 {
@@ -41,9 +42,9 @@ namespace MyPortal.Controllers.Api
             }
 
             var stream = new FileStream(@"C:\MyPortal\Files\Results\import.csv", FileMode.Open);
-            var subjects = _context.Subjects.OrderBy(x => x.Name).ToList();
+            var subjects = _context.CurriculumSubjects.OrderBy(x => x.Name).ToList();
             var numResults = 0;
-            var resultSet = _context.ResultSets.SingleOrDefault(x => x.Id == resultSetId);
+            var resultSet = _context.AssessmentResultSets.SingleOrDefault(x => x.Id == resultSetId);
 
             if (resultSet == null)
             {
@@ -65,13 +66,13 @@ namespace MyPortal.Controllers.Api
                     for (var i = 0; i < subjects.Count; i++)
                     {
                         var studentMisId = values[4];
-                        var student = _context.Students.SingleOrDefault(x => x.MisId == studentMisId);
+                        var student = _context.CoreStudents.SingleOrDefault(x => x.MisId == studentMisId);
                         if (student == null)
                         {
                             continue;
                         }
 
-                        var result = new Result
+                        var result = new AssessmentResult
                         {
                             StudentId = student.Id,
                             ResultSetId = resultSet.Id,
@@ -84,7 +85,7 @@ namespace MyPortal.Controllers.Api
                             continue;
                         }
 
-                        _context.Results.Add(result);
+                        _context.AssessmentResults.Add(result);
                         numResults++;
                     }
                 }
@@ -110,14 +111,14 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/results/create")]
-        public IHttpActionResult AddResult(ResultDto data)
+        public IHttpActionResult AddResult(AssessmentResultDto data)
         {
             if (!ModelState.IsValid)
             {
                 return Content(HttpStatusCode.BadRequest, "Invalid data");
             }
             
-            var resultInDb = _context.Results.SingleOrDefault(x =>
+            var resultInDb = _context.AssessmentResults.SingleOrDefault(x =>
                 x.StudentId == data.StudentId && x.SubjectId == data.SubjectId && x.ResultSetId == data.ResultSetId);
 
             if (resultInDb != null)
@@ -125,7 +126,7 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.BadRequest, "Result already exists");
             }
 
-            _context.Results.Add(Mapper.Map<ResultDto, Result>(data));
+            _context.AssessmentResults.Add(Mapper.Map<AssessmentResultDto, AssessmentResult>(data));
             _context.SaveChanges();
 
             return Ok("Result added");
@@ -139,12 +140,12 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns a list of DTOs of results for a student for the specified result set.</returns>
         [HttpGet]
         [Route("api/results/fetch")]
-        public IEnumerable<ResultDto> GetResults(int student, int resultSet)
+        public IEnumerable<AssessmentResultDto> GetResults(int student, int resultSet)
         {
-            var results = _context.Results
+            var results = _context.AssessmentResults
                 .Where(r => r.StudentId == student && r.ResultSetId == resultSet)
                 .ToList()
-                .Select(Mapper.Map<Result, ResultDto>);
+                .Select(Mapper.Map<AssessmentResult, AssessmentResultDto>);
 
             return results;
         }

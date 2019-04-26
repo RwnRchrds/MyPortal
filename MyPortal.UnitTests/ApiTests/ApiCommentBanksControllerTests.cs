@@ -5,6 +5,7 @@ using System.Web.Http.Results;
 using AutoMapper;
 using MyPortal.Controllers.Api;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 using MyPortal.UnitTests.TestData;
 using NUnit.Framework;
 
@@ -52,7 +53,7 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void GetCommentBank_ReturnsCommentBank()
         {
-            var commentBank = _context.CommentBanks.SingleOrDefault(x => x.Name == "Opening");
+            var commentBank = _context.ProfileCommentBanks.SingleOrDefault(x => x.Name == "Opening");
             
             Assert.IsNotNull(commentBank);
 
@@ -74,13 +75,13 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void CreateCommentBank_CreatesCommentBank()
         {
-            var commentBank = new CommentBank { Name = "New" };
+            var commentBank = new ProfileCommentBank { Name = "New" };
 
-            var initialAmount = _context.CommentBanks.Count();
+            var initialAmount = _context.ProfileCommentBanks.Count();
 
             var result = _controller.CreateCommentBank(commentBank);
 
-            var finalAmount = _context.CommentBanks.Count();
+            var finalAmount = _context.ProfileCommentBanks.Count();
             
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<OkNegotiatedContentResult<string>>(result);
@@ -90,7 +91,7 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void CreateCommentBank_CommentBankAlreadyExists_ReturnsBadRequest()
         {
-            var commentBank = new CommentBank {Name = "Opening"};
+            var commentBank = new ProfileCommentBank {Name = "Opening"};
 
             var result = _controller.CreateCommentBank(commentBank) as NegotiatedContentResult<string>;
             
@@ -102,7 +103,7 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void CreateCommentBank_InvalidData_ReturnsBadRequest()
         {
-            var commentBank = new CommentBank();
+            var commentBank = new ProfileCommentBank();
 
             var result = _controller.CreateCommentBank(commentBank) as NegotiatedContentResult<string>;
             
@@ -114,7 +115,7 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void UpdateCommentBank_UpdatesCommentBank()
         {
-            var commentBank = _context.CommentBanks.SingleOrDefault(x => x.Name == "Closing");
+            var commentBank = _context.ProfileCommentBanks.SingleOrDefault(x => x.Name == "Closing");
             
             Assert.IsNotNull(commentBank);
             
@@ -129,7 +130,7 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void UpdateCommentBank_CommentBankDoesNotExist_ReturnsNotFound()
         {
-            var commentBank = new CommentBank{Id = 9999, Name="Ending"};
+            var commentBank = new ProfileCommentBank{Id = 9999, Name="Ending"};
 
             var result = _controller.UpdateCommentBank(commentBank) as NegotiatedContentResult<string>;
             
@@ -141,15 +142,15 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void DeleteCommentBank_DeletesCommentBank()
         {
-            var commentBank = _context.CommentBanks.SingleOrDefault(x => x.Name == "Middle");
+            var commentBank = _context.ProfileCommentBanks.SingleOrDefault(x => x.Name == "Middle");
             
             Assert.IsNotNull(commentBank);
 
-            var initialAmount = _context.CommentBanks.Count();
+            var initialAmount = _context.ProfileCommentBanks.Count();
 
             var result = _controller.DeleteCommentBank(commentBank.Id);
 
-            var finalAmount = _context.CommentBanks.Count();
+            var finalAmount = _context.ProfileCommentBanks.Count();
             
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<OkNegotiatedContentResult<string>>(result);
@@ -171,7 +172,7 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void CommentBankHasComments_ReturnsTrue()
         {
-            var commentBank = _context.CommentBanks.SingleOrDefault(x => x.Name == "Opening");
+            var commentBank = _context.ProfileCommentBanks.SingleOrDefault(x => x.Name == "Opening");
             
             Assert.IsNotNull(commentBank);
 

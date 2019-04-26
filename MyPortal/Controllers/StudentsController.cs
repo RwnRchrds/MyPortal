@@ -4,6 +4,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers
@@ -31,12 +32,12 @@ namespace MyPortal.Controllers
         {
             var userId = User.Identity.GetUserId();
 
-            var student = _context.Students.SingleOrDefault(s => s.UserId == userId);
+            var student = _context.CoreStudents.SingleOrDefault(s => s.UserId == userId);
 
             if (student == null)
                 return View("~/Views/Students/NoProfileIndex.cshtml");            
 
-            var results = _context.Results.Where(r => r.StudentId == student.Id && r.ResultSet.IsCurrent)
+            var results = _context.AssessmentResults.Where(r => r.StudentId == student.Id && r.AssessmentResultSet.IsCurrent)
                 .ToList();            
 
             var viewModel = new StudentDetailsViewModel
@@ -53,14 +54,14 @@ namespace MyPortal.Controllers
         {
             var userId = User.Identity.GetUserId();
 
-            var student = _context.Students.SingleOrDefault(s => s.UserId == userId);
+            var student = _context.CoreStudents.SingleOrDefault(s => s.UserId == userId);
 
             if (student == null)
                 return HttpNotFound();
 
-            var resultSets = _context.ResultSets.ToList();
+            var resultSets = _context.AssessmentResultSets.ToList();
 
-            var currentResultSet = _context.ResultSets.Single(x => x.IsCurrent);
+            var currentResultSet = _context.AssessmentResultSets.Single(x => x.IsCurrent);
 
             if (currentResultSet == null)
                 return Content("No result sets exist in database");
@@ -83,7 +84,7 @@ namespace MyPortal.Controllers
         {
             var userId = User.Identity.GetUserId();
 
-            var studentInDb = _context.Students.SingleOrDefault(s => s.UserId == userId);
+            var studentInDb = _context.CoreStudents.SingleOrDefault(s => s.UserId == userId);
 
             if (studentInDb == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -102,7 +103,7 @@ namespace MyPortal.Controllers
         {
             var userId = User.Identity.GetUserId();
 
-            var studentInDb = _context.Students.SingleOrDefault(s => s.UserId == userId);
+            var studentInDb = _context.CoreStudents.SingleOrDefault(s => s.UserId == userId);
 
             if (studentInDb == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);

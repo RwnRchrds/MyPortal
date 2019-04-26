@@ -5,6 +5,7 @@ using System.Web.Http.Results;
 using AutoMapper;
 using MyPortal.Controllers.Api;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 using MyPortal.UnitTests.TestData;
 using NUnit.Framework;
 
@@ -60,7 +61,7 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void GetDocument_ReturnsCorrectDocument()
         {
-            var document = _context.Documents.SingleOrDefault(x => x.Description == "Doc1");
+            var document = _context.CoreDocuments.SingleOrDefault(x => x.Description == "Doc1");
             
             Assert.IsNotNull(document);
 
@@ -72,13 +73,13 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void AddDocument_AddsNewDocument()
         {
-            var init = _context.Documents.Count();
+            var init = _context.CoreDocuments.Count();
 
-            var uploader = _context.Staff.SingleOrDefault(x => x.FirstName == "Lily");
+            var uploader = _context.CoreStaff.SingleOrDefault(x => x.FirstName == "Lily");
             
             Assert.IsNotNull(uploader);
             
-            var document = new Document
+            var document = new CoreDocument
             {
                 Url = "http://ftp.test.com/DocAdd", Description = "Add Document Test", Date = DateTime.Today,
                 Approved = false, UploaderId = uploader.Id
@@ -86,9 +87,9 @@ namespace MyPortal.UnitTests.ApiTests
 
             _controller.AddDocument((document));
 
-            var result = _context.Documents.Count();
+            var result = _context.CoreDocuments.Count();
 
-            var newDocument = _context.Documents.SingleOrDefault(x => x.Url == "http://ftp.test.com/DocAdd");
+            var newDocument = _context.CoreDocuments.SingleOrDefault(x => x.Url == "http://ftp.test.com/DocAdd");
             
             Assert.AreEqual(init + 1, result);
             Assert.IsNotNull(newDocument);
@@ -99,10 +100,10 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void AddDocument_DocumentUriInvalid_ReturnsBadRequest()
         {
-            var uploader = _context.Staff.SingleOrDefault(x => x.FirstName == "Lily");
+            var uploader = _context.CoreStaff.SingleOrDefault(x => x.FirstName == "Lily");
             Assert.IsNotNull(uploader);
             
-            var document = new Document
+            var document = new CoreDocument
             {                
                 Url = "TEST", Description = "Add Document Test", Date = DateTime.Today, Approved = false,
                 UploaderId = uploader.Id
@@ -123,7 +124,7 @@ namespace MyPortal.UnitTests.ApiTests
         {
             const int uploaderId = 9999;
 
-            var document = new Document
+            var document = new CoreDocument
             {
                 Url = "http://ftp.test.com/DocAdd", Description = "Add Document Test", Date = DateTime.Today,
                 Approved = false, UploaderId = uploaderId
@@ -142,15 +143,15 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void RemoveDocument_RemovesDocument()
         {
-            var init = _context.Documents.Count();
+            var init = _context.CoreDocuments.Count();
 
-            var document = _context.Documents.SingleOrDefault(x => x.Description == "Doc1");
+            var document = _context.CoreDocuments.SingleOrDefault(x => x.Description == "Doc1");
             
             Assert.IsNotNull(document);
 
             _controller.RemoveDocument(document.Id);
 
-            var result = _context.Documents.Count();
+            var result = _context.CoreDocuments.Count();
             
             Assert.AreEqual(init - 1, result);
         }
@@ -172,7 +173,7 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void UpdateDocument_UpdatesDocument()
         {
-            var document = _context.Documents.SingleOrDefault(x => x.Description == "Doc2");
+            var document = _context.CoreDocuments.SingleOrDefault(x => x.Description == "Doc2");
             
             Assert.IsNotNull(document);
 
@@ -181,7 +182,7 @@ namespace MyPortal.UnitTests.ApiTests
 
             _controller.UpdateDocument((document));
 
-            var result = _context.Documents.SingleOrDefault(x => x.Description == "Doc2Update");
+            var result = _context.CoreDocuments.SingleOrDefault(x => x.Description == "Doc2Update");
             
             Assert.IsNotNull(result);
             Assert.AreEqual("http://ftp.test.com/doc2update", result.Url);
@@ -190,7 +191,7 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void UpdateDocument_DocumentDoesNotExist_ReturnsNotFound()
         {                       
-            var document = new Document
+            var document = new CoreDocument
             {
                 Id = 9999,
                 Url = "http://ftp.test.com/docUpdate",
@@ -212,7 +213,7 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void UpdateDocument_DocumentUriInvalid_ReturnsBadRequest()
         {
-            var document = _context.Documents.SingleOrDefault(x => x.Description == "Doc2");
+            var document = _context.CoreDocuments.SingleOrDefault(x => x.Description == "Doc2");
             
             Assert.IsNotNull(document);
 

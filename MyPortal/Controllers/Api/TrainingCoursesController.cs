@@ -5,6 +5,7 @@ using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 
 namespace MyPortal.Controllers.Api
 {
@@ -22,19 +23,19 @@ namespace MyPortal.Controllers.Api
         [Route("api/courses/remove/{courseId}")]
         public IHttpActionResult DeleteCourse(int courseId)
         {
-            var courseInDb = _context.TrainingCourses.Single(x => x.Id == courseId);
+            var courseInDb = _context.PersonnelTrainingCourses.Single(x => x.Id == courseId);
 
             if (courseInDb == null)
             {
                 return Content(HttpStatusCode.NotFound, "Training course not found");
             }
 
-            if (courseInDb.TrainingCertificates.Any())
+            if (courseInDb.PersonnelTrainingCertificates.Any())
             {
                 return Content(HttpStatusCode.BadRequest, "Cannot delete course that has issued certificates");
             }
 
-            _context.TrainingCourses.Remove(courseInDb);
+            _context.PersonnelTrainingCourses.Remove(courseInDb);
             _context.SaveChanges();
 
             return Ok("Training course deleted");
@@ -43,32 +44,32 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [Route("api/courses/fetch/{courseId}")]
-        public TrainingCourseDto GetCourse(int courseId)
+        public PersonnelTrainingCourseDto GetCourse(int courseId)
         {
-            var courseInDb = _context.TrainingCourses.Single(x => x.Id == courseId);
+            var courseInDb = _context.PersonnelTrainingCourses.Single(x => x.Id == courseId);
 
             if (courseInDb == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return Mapper.Map<TrainingCourse, TrainingCourseDto>(courseInDb);
+            return Mapper.Map<PersonnelTrainingCourse, PersonnelTrainingCourseDto>(courseInDb);
         }
 
         [HttpGet]
         [Route("api/courses")]
-        public IEnumerable<TrainingCourseDto> GetCourses()
+        public IEnumerable<PersonnelTrainingCourseDto> GetCourses()
         {
-            return _context.TrainingCourses
+            return _context.PersonnelTrainingCourses
                 .ToList()
-                .Select(Mapper.Map<TrainingCourse, TrainingCourseDto>);
+                .Select(Mapper.Map<PersonnelTrainingCourse, PersonnelTrainingCourseDto>);
         }
 
         [HttpPost]
         [Route("api/courses/edit")]
-        public IHttpActionResult UpdateCourse(TrainingCourse course)
+        public IHttpActionResult UpdateCourse(PersonnelTrainingCourse course)
         {
-            var courseInDb = _context.TrainingCourses.Single(x => x.Id == course.Id);
+            var courseInDb = _context.PersonnelTrainingCourses.Single(x => x.Id == course.Id);
 
             if (courseInDb == null)
             {

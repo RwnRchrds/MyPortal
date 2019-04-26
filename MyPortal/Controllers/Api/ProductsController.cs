@@ -5,6 +5,7 @@ using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 
 namespace MyPortal.Controllers.Api
 {
@@ -32,14 +33,14 @@ namespace MyPortal.Controllers.Api
         [Route("api/products/{id}")]
         public IHttpActionResult DeleteProduct(int id)
         {
-            var productInDb = _context.Products.SingleOrDefault(p => p.Id == id);
+            var productInDb = _context.FinanceProducts.SingleOrDefault(p => p.Id == id);
 
             if (productInDb == null)
             {
                 return Content(HttpStatusCode.NotFound, "Product not found");
             }
 
-            _context.Products.Remove(productInDb);
+            _context.FinanceProducts.Remove(productInDb);
             _context.SaveChanges();
 
             return Ok("Product deleted");
@@ -52,18 +53,18 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns a list of DTOs of products available to buy for the specified student.</returns>
         [HttpGet]
         [Route("api/products/store")]
-        public IEnumerable<ProductDto> GetAvailableProducts(int student)
+        public IEnumerable<FinanceProductDto> GetAvailableProducts(int student)
         {
-            var purchased = _context.Sales.Where(a => a.StudentId == student);
+            var purchased = _context.FinanceSales.Where(a => a.StudentId == student);
 
-            var inBasket = _context.BasketItems.Where(a => a.StudentId == student);
+            var inBasket = _context.FinanceBasketItems.Where(a => a.StudentId == student);
 
-            return _context.Products
+            return _context.FinanceProducts
                 .Where(x => !x.OnceOnly && x.Visible || x.Visible && purchased.All(p => p.ProductId != x.Id) &&
                             inBasket.All(b => b.ProductId != x.Id))
                 .OrderBy(x => x.Description)
                 .ToList()
-                .Select(Mapper.Map<Product, ProductDto>);
+                .Select(Mapper.Map<FinanceProduct, FinanceProductDto>);
         }
 
         /// <summary>
@@ -76,7 +77,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/products/price/{productId}")]
         public decimal GetPrice(int productId)
         {
-            var productInDb = _context.Products.Single(x => x.Id == productId);
+            var productInDb = _context.FinanceProducts.Single(x => x.Id == productId);
 
             if (productInDb == null)
             {
@@ -94,16 +95,16 @@ namespace MyPortal.Controllers.Api
         /// <exception cref="HttpResponseException"></exception>
         [HttpGet]
         [Route("api/products/{id}")]
-        public ProductDto GetProduct(int id)
+        public FinanceProductDto GetProduct(int id)
         {
-            var product = _context.Products.SingleOrDefault(x => x.Id == id);
+            var product = _context.FinanceProducts.SingleOrDefault(x => x.Id == id);
 
             if (product == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return Mapper.Map<Product, ProductDto>(product);
+            return Mapper.Map<FinanceProduct, FinanceProductDto>(product);
         }
 
         /// <summary>
@@ -112,12 +113,12 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns a list of DTOs of all products.</returns>
         [HttpGet]
         [Route("api/products")]
-        public IEnumerable<ProductDto> GetProducts()
+        public IEnumerable<FinanceProductDto> GetProducts()
         {
-            return _context.Products
+            return _context.FinanceProducts
                 .OrderBy(x => x.Description)
                 .ToList()
-                .Select(Mapper.Map<Product, ProductDto>);
+                .Select(Mapper.Map<FinanceProduct, FinanceProductDto>);
         }
 
         /// <summary>
@@ -127,11 +128,11 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/products/new")]
-        public IHttpActionResult NewProduct(Product data)
+        public IHttpActionResult NewProduct(FinanceProduct data)
         {
             var product = data;
 
-            _context.Products.Add(product);
+            _context.FinanceProducts.Add(product);
             _context.SaveChanges();
 
             return Ok("Product added");
@@ -144,14 +145,14 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/products/edit")]
-        public IHttpActionResult UpdateProduct(Product product)
+        public IHttpActionResult UpdateProduct(FinanceProduct product)
         {
             if (product == null)
             {
                 return Content(HttpStatusCode.BadRequest, "Invalid request data");
             }
 
-            var productInDb = _context.Products.SingleOrDefault(x => x.Id == product.Id);
+            var productInDb = _context.FinanceProducts.SingleOrDefault(x => x.Id == product.Id);
 
             if (productInDb == null)
             {

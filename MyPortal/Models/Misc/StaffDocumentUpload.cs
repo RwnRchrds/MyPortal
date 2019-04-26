@@ -1,8 +1,10 @@
-﻿namespace MyPortal.Models.Misc
+﻿using MyPortal.Models.Database;
+
+namespace MyPortal.Models.Misc
 {
     public class StaffDocumentUpload
     {
-        public Document Document { get; set; }
+        public CoreDocument Document { get; set; }
         public int StaffId { get; set; }
     }
 }

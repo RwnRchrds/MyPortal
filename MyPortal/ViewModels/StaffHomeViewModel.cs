@@ -1,9 +1,12 @@
-﻿using MyPortal.Models;
+﻿using System.Collections.Generic;
+using MyPortal.Models;
+using MyPortal.Models.Database;
 
 namespace MyPortal.ViewModels
 {
     public class StaffHomeViewModel
     {
-        public Staff CurrentUser { get; set; }
+        public CoreStaffMember CurrentUser { get; set; }
+        public IEnumerable<CurriculumAcademicYear> CurriculumAcademicYears { get; set; }
     }
 }

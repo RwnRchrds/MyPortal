@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.Ajax.Utilities;
 using MyPortal.Dtos;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 
 namespace MyPortal.Controllers.Api
 {
@@ -34,14 +35,14 @@ namespace MyPortal.Controllers.Api
         [System.Web.Mvc.Route("api/commentBanks/hasComments/{id}")]
         public bool CommentBankHasComments(int id)
         {
-            var commentBank = _context.CommentBanks.SingleOrDefault(x => x.Id == id);
+            var commentBank = _context.ProfileCommentBanks.SingleOrDefault(x => x.Id == id);
 
             if (commentBank == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return commentBank.Comments.Any();
+            return commentBank.ProfileComments.Any();
         }
 
 /// <summary>
@@ -51,19 +52,19 @@ namespace MyPortal.Controllers.Api
 /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/commentBanks/create")]
-        public IHttpActionResult CreateCommentBank(CommentBank commentBank)
+        public IHttpActionResult CreateCommentBank(ProfileCommentBank commentBank)
         {
             if (!ModelState.IsValid || commentBank.Name.IsNullOrWhiteSpace())
             {
                 return Content(HttpStatusCode.BadRequest, "Invalid data");
             }
 
-            if (_context.CommentBanks.Any(x => x.Name == commentBank.Name))
+            if (_context.ProfileCommentBanks.Any(x => x.Name == commentBank.Name))
             {
                 return Content(HttpStatusCode.BadRequest, "Comment bank already exists");
             }
 
-            _context.CommentBanks.Add(commentBank);
+            _context.ProfileCommentBanks.Add(commentBank);
             _context.SaveChanges();
             return Ok("Comment bank added");
         }
@@ -77,21 +78,21 @@ namespace MyPortal.Controllers.Api
         [Route("api/commentBanks/delete/{id}")]
         public IHttpActionResult DeleteCommentBank(int id)
         {
-            var commentBank = _context.CommentBanks.SingleOrDefault(x => x.Id == id);
+            var commentBank = _context.ProfileCommentBanks.SingleOrDefault(x => x.Id == id);
 
             if (commentBank == null)
             {
                 return Content(HttpStatusCode.NotFound, "Comment bank not found");
             }
 
-            var comments = _context.Comments.Where(x => x.CommentBankId == id);
+            var comments = _context.ProfileComments.Where(x => x.CommentBankId == id);
 
             if (comments.Any())
             {
-                _context.Comments.RemoveRange(comments);
+                _context.ProfileComments.RemoveRange(comments);
             }
 
-            _context.CommentBanks.Remove(commentBank);
+            _context.ProfileCommentBanks.Remove(commentBank);
             _context.SaveChanges();
             return Ok("Comment bank deleted");
         }
@@ -104,16 +105,16 @@ namespace MyPortal.Controllers.Api
 /// <exception cref="HttpResponseException">Thrown when comment bank is not found.</exception>
         [HttpGet]
         [Route("api/commentBanks/byId/{id}")]
-        public CommentBankDto GetCommentBankById(int id)
+        public ProfileCommentBankDto GetCommentBankById(int id)
         {
-            var commentBankInDb = _context.CommentBanks.SingleOrDefault(x => x.Id == id);
+            var commentBankInDb = _context.ProfileCommentBanks.SingleOrDefault(x => x.Id == id);
 
             if (commentBankInDb == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return Mapper.Map<CommentBank, CommentBankDto>(commentBankInDb);
+            return Mapper.Map<ProfileCommentBank, ProfileCommentBankDto>(commentBankInDb);
         }
 
 /// <summary>
@@ -122,10 +123,11 @@ namespace MyPortal.Controllers.Api
 /// <returns>Returns a list of DTOs of all comment banks.</returns>
         [HttpGet]
         [Route("api/commentBanks/all")]
-        public IEnumerable<CommentBankDto> GetCommentBanks()
-        {
-            return _context.CommentBanks.OrderBy(x => x.Name).ToList().Select(Mapper.Map<CommentBank, CommentBankDto>);
-        }
+        public IEnumerable<ProfileCommentBankDto> GetCommentBanks()
+{
+    return _context.ProfileCommentBanks.OrderBy(x => x.Name).ToList()
+        .Select(Mapper.Map<ProfileCommentBank, ProfileCommentBankDto>);
+}
 
 /// <summary>
 /// Updates a comment bank in the database.
@@ -134,9 +136,9 @@ namespace MyPortal.Controllers.Api
 /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/commentBanks/update")]
-        public IHttpActionResult UpdateCommentBank(CommentBank commentBank)
+        public IHttpActionResult UpdateCommentBank(ProfileCommentBank commentBank)
         {
-            var commentBankInDb = _context.CommentBanks.SingleOrDefault(x => x.Id == commentBank.Id);
+            var commentBankInDb = _context.ProfileCommentBanks.SingleOrDefault(x => x.Id == commentBank.Id);
 
             if (commentBankInDb == null)
             {

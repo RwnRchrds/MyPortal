@@ -8,6 +8,7 @@ using AutoMapper;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
 
 namespace MyPortal.Controllers.Api
@@ -30,8 +31,8 @@ namespace MyPortal.Controllers.Api
         public void AuthenticateStudentRequest(int id)
         {
                 var userId = User.Identity.GetUserId();
-                var studentUser = _context.Students.SingleOrDefault(x => x.UserId == userId);
-                var requestedStudent = _context.Students.SingleOrDefault(x => x.Id == id);
+                var studentUser = _context.CoreStudents.SingleOrDefault(x => x.UserId == userId);
+                var requestedStudent = _context.CoreStudents.SingleOrDefault(x => x.Id == id);
 
                 if (studentUser == null || requestedStudent == null)
                 {
@@ -54,7 +55,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/students/documents/add")]
         public IHttpActionResult AddDocument(StudentDocumentUpload data)
         {
-            var student = _context.Students.SingleOrDefault(x => x.Id == data.Student);
+            var student = _context.CoreStudents.SingleOrDefault(x => x.Id == data.Student);
 
             if (student == null)
             {
@@ -65,7 +66,7 @@ namespace MyPortal.Controllers.Api
 
             var currentUserId = User.Identity.GetUserId();
 
-            var uploader = _context.Staff.Single(x => x.UserId == currentUserId);
+            var uploader = _context.CoreStaff.Single(x => x.UserId == currentUserId);
 
             if (uploader == null)
             {
@@ -88,16 +89,16 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
             }
 
-            _context.Documents.Add(document);
+            _context.CoreDocuments.Add(document);
             _context.SaveChanges();
 
-            var studentDocument = new StudentDocument
+            var studentDocument = new CoreStudentDocument
             {
                 DocumentId = document.Id,
                 StudentId = data.Student
             };
 
-            _context.StudentDocuments.Add(studentDocument);
+            _context.CoreStudentDocuments.Add(studentDocument);
             _context.SaveChanges();
 
             return Ok("Document added");
@@ -111,14 +112,14 @@ namespace MyPortal.Controllers.Api
         /// <exception cref="HttpResponseException">Thrown when the model state is invalid.</exception>
         [HttpPost]
         [Authorize(Roles = "Staff, SeniorStaff")]
-        public IHttpActionResult CreateStudent(Student student)
+        public IHttpActionResult CreateStudent(CoreStudent student)
         {
             if (!ModelState.IsValid)
             {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
-            _context.Students
+            _context.CoreStudents
                 .Add(student);
 
             _context.SaveChanges();
@@ -140,7 +141,7 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.BadRequest, "Cannot credit negative amount");
             }
 
-            var studentInDb = _context.Students.SingleOrDefault(s => s.Id == data.Student);
+            var studentInDb = _context.CoreStudents.SingleOrDefault(s => s.Id == data.Student);
 
             if (studentInDb == null)
             {
@@ -169,7 +170,7 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.BadRequest, "Cannot debit negative amount");
             }
 
-            var studentInDb = _context.Students.SingleOrDefault(s => s.Id == data.Student);
+            var studentInDb = _context.CoreStudents.SingleOrDefault(s => s.Id == data.Student);
 
             if (studentInDb == null)
             {
@@ -197,14 +198,14 @@ namespace MyPortal.Controllers.Api
         [Authorize(Roles = "Staff, SeniorStaff")]
         public IHttpActionResult DeleteStudent(int id)
         {
-            var studentInDb = _context.Students.SingleOrDefault(s => s.Id == id);
+            var studentInDb = _context.CoreStudents.SingleOrDefault(s => s.Id == id);
 
             if (studentInDb == null)
             {
                 return Content(HttpStatusCode.NotFound, "Student not found");
             }
 
-            _context.Students.Remove(studentInDb);
+            _context.CoreStudents.Remove(studentInDb);
             _context.SaveChanges();
 
             return Ok("Student deleted");
@@ -225,7 +226,7 @@ namespace MyPortal.Controllers.Api
                 AuthenticateStudentRequest(studentId);
             }
             
-            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == studentId);
+            var studentInDb = _context.CoreStudents.SingleOrDefault(x => x.Id == studentId);
 
             if (studentInDb == null)
             {
@@ -243,9 +244,9 @@ namespace MyPortal.Controllers.Api
         /// <exception cref="HttpResponseException">Thrown when the document is not found.</exception>
         [HttpGet]
         [Route("api/students/documents/document/{documentId}")]
-        public DocumentDto GetDocument(int documentId)
+        public CoreDocumentDto GetDocument(int documentId)
         {
-            var document = _context.StudentDocuments
+            var document = _context.CoreStudentDocuments
                 .SingleOrDefault(x => x.Id == documentId);
 
             if (document == null)
@@ -258,7 +259,7 @@ namespace MyPortal.Controllers.Api
                 AuthenticateStudentRequest(document.StudentId);
             }
 
-            return Mapper.Map<Document, DocumentDto>(document.Document);
+            return Mapper.Map<CoreDocument, CoreDocumentDto>(document.CoreDocument);
         }
 
         /// <summary>
@@ -269,24 +270,24 @@ namespace MyPortal.Controllers.Api
         /// <exception cref="HttpResponseException">Thrown when the student is not found.</exception>
         [HttpGet]
         [Route("api/students/documents/fetch/{studentId}")]
-        public IEnumerable<StudentDocumentDto> GetDocuments(int studentId)
+        public IEnumerable<CoreStudentDocumentDto> GetDocuments(int studentId)
         {
             if (User.IsInRole("Student"))
             {
                 AuthenticateStudentRequest(studentId);
             }
             
-            var student = _context.Students.SingleOrDefault(s => s.Id == studentId);
+            var student = _context.CoreStudents.SingleOrDefault(s => s.Id == studentId);
 
             if (student == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            var documents = _context.StudentDocuments
+            var documents = _context.CoreStudentDocuments
                 .Where(x => x.StudentId == studentId)
                 .ToList()
-                .Select(Mapper.Map<StudentDocument, StudentDocumentDto>);
+                .Select(Mapper.Map<CoreStudentDocument, CoreStudentDocumentDto>);
 
             return documents;
         }
@@ -299,21 +300,21 @@ namespace MyPortal.Controllers.Api
         /// <exception cref="HttpResponseException">Thrown when the student is not found.</exception>
         [Authorize]
         [Route("api/students/{id}")]
-        public StudentDto GetStudent(int id)
+        public CoreStudentDto GetStudent(int id)
         {
             if (User.IsInRole("Student"))
             {
                 AuthenticateStudentRequest(id);
             }
             
-            var student = _context.Students.SingleOrDefault(s => s.Id == id);
+            var student = _context.CoreStudents.SingleOrDefault(s => s.Id == id);
 
             if (student == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return Mapper.Map<Student, StudentDto>(student);
+            return Mapper.Map<CoreStudent, CoreStudentDto>(student);
         }
 
         /// <summary>
@@ -321,14 +322,14 @@ namespace MyPortal.Controllers.Api
         /// </summary>
         /// <returns>Returns a list of DTOs of all students.</returns>
         [Authorize(Roles = "Staff, SeniorStaff")]
-        public IEnumerable<StudentDto> GetStudents()
+        public IEnumerable<CoreStudentDto> GetStudents()
         {
-            return _context.Students
-                .Include(s => s.YearGroup)
-                .Include(s => s.RegGroup)
+            return _context.CoreStudents
+                .Include(s => s.PastoralYearGroup)
+                .Include(s => s.PastoralRegGroup)
                 .OrderBy(x => x.LastName)
                 .ToList()
-                .Select(Mapper.Map<Student, StudentDto>);
+                .Select(Mapper.Map<CoreStudent, CoreStudentDto>);
         }
 
         /// <summary>
@@ -337,13 +338,13 @@ namespace MyPortal.Controllers.Api
         /// <param name="regGroupId">The ID of the registration group to fetch students from.</param>
         /// <returns>Returns a list of DTOs of students in the specified registration group.</returns>
         [Authorize(Roles = "Staff, SeniorStaff")]
-        public IEnumerable<StudentDto> GetStudentsByRegGroup(int regGroupId)
+        public IEnumerable<CoreStudentDto> GetStudentsByRegGroup(int regGroupId)
         {
-            return _context.Students
+            return _context.CoreStudents
                 .Where(x => x.RegGroupId == regGroupId)
                 .OrderBy(x => x.LastName)
                 .ToList()
-                .Select(Mapper.Map<Student, StudentDto>);
+                .Select(Mapper.Map<CoreStudent, CoreStudentDto>);
         }
 
         /// <summary>
@@ -354,13 +355,13 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [Authorize(Roles = "Staff, SeniorStaff")]
         [Route("api/students/yearGroup/{yearGroupId}")]
-        public IEnumerable<StudentDto> GetStudentsFromYear(int yearGroupId)
+        public IEnumerable<CoreStudentDto> GetStudentsFromYear(int yearGroupId)
         {
-            return _context.Students
+            return _context.CoreStudents
                 .Where(x => x.YearGroupId == yearGroupId)
                 .OrderBy(x => x.LastName)
                 .ToList()
-                .Select(Mapper.Map<Student, StudentDto>);
+                .Select(Mapper.Map<CoreStudent, CoreStudentDto>);
         }
 
         /// <summary>
@@ -373,23 +374,23 @@ namespace MyPortal.Controllers.Api
         [Route("api/students/documents/remove/{documentId}")]
         public IHttpActionResult RemoveDocument(int documentId)
         {
-            var studentDocument = _context.StudentDocuments.SingleOrDefault(x => x.Id == documentId);
+            var studentDocument = _context.CoreStudentDocuments.SingleOrDefault(x => x.Id == documentId);
 
             if (studentDocument == null)
             {
                 return Content(HttpStatusCode.NotFound, "Document not found");
             }
 
-            var attachedDocument = studentDocument.Document;
+            var attachedDocument = studentDocument.CoreDocument;
 
             if (attachedDocument == null)
             {
                 return Content(HttpStatusCode.BadRequest, "No document attached");
             }
 
-            _context.StudentDocuments.Remove(studentDocument);
+            _context.CoreStudentDocuments.Remove(studentDocument);
 
-            _context.Documents.Remove(attachedDocument);
+            _context.CoreDocuments.Remove(attachedDocument);
 
             _context.SaveChanges();
 
@@ -405,14 +406,14 @@ namespace MyPortal.Controllers.Api
                 AuthenticateStudentRequest(id);
             }
             
-            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == id);
+            var studentInDb = _context.CoreStudents.SingleOrDefault(x => x.Id == id);
 
             if (studentInDb == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return studentInDb.BasketItems.Any();
+            return studentInDb.FinanceBasketItems.Any();
         }
 
         [HttpGet]
@@ -424,14 +425,14 @@ namespace MyPortal.Controllers.Api
                 AuthenticateStudentRequest(id);
             }
             
-            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == id);
+            var studentInDb = _context.CoreStudents.SingleOrDefault(x => x.Id == id);
 
             if (studentInDb == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return studentInDb.StudentDocuments.Any();
+            return studentInDb.CoreStudentDocuments.Any();
         }
 
         [HttpGet]
@@ -443,14 +444,14 @@ namespace MyPortal.Controllers.Api
                 AuthenticateStudentRequest(id);
             }
             
-            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == id);
+            var studentInDb = _context.CoreStudents.SingleOrDefault(x => x.Id == id);
 
             if (studentInDb == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return studentInDb.Logs.Any();
+            return studentInDb.ProfileLogs.Any();
         }
 
         [HttpGet]
@@ -462,14 +463,14 @@ namespace MyPortal.Controllers.Api
                 AuthenticateStudentRequest(id);
             }
             
-            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == id);
+            var studentInDb = _context.CoreStudents.SingleOrDefault(x => x.Id == id);
 
             if (studentInDb == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return studentInDb.Results.Any();
+            return studentInDb.AssessmentResults.Any();
         }
 
         [HttpGet]
@@ -481,22 +482,22 @@ namespace MyPortal.Controllers.Api
                 AuthenticateStudentRequest(id);
             }
             
-            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == id);
+            var studentInDb = _context.CoreStudents.SingleOrDefault(x => x.Id == id);
 
             if (studentInDb == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return studentInDb.Sales.Any();
+            return studentInDb.FinanceSales.Any();
         }
 
         [HttpPost]
         [Authorize(Roles = "Staff, SeniorStaff")]
         [Route("api/students/documents/edit")]
-        public IHttpActionResult UpdateDocument(Document data)
+        public IHttpActionResult UpdateDocument(CoreDocument data)
         {
-            var documentInDb = _context.Documents.Single(x => x.Id == data.Id);
+            var documentInDb = _context.CoreDocuments.Single(x => x.Id == data.Id);
 
             if (documentInDb == null)
             {
@@ -523,14 +524,14 @@ namespace MyPortal.Controllers.Api
 
         [HttpPut]
         [Authorize(Roles = "Staff, SeniorStaff")]
-        public IHttpActionResult UpdateStudent(Student student)
+        public IHttpActionResult UpdateStudent(CoreStudent student)
         {
             if (student == null || !ModelState.IsValid)
             {
                 return Content(HttpStatusCode.BadRequest, "Invalid request data");
             }
 
-            var studentInDb = _context.Students.SingleOrDefault(s => s.Id == student.Id);
+            var studentInDb = _context.CoreStudents.SingleOrDefault(s => s.Id == student.Id);
 
             if (studentInDb == null)
             {

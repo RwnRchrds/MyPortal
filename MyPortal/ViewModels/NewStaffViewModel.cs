@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using MyPortal.Models;
+using MyPortal.Models.Database;
 
 namespace MyPortal.ViewModels
 {
@@ -10,7 +11,7 @@ namespace MyPortal.ViewModels
             Titles = new List<string> {"Mr", "Miss", "Mrs", "Ms", "Mx", "Prof", "Sir", "Dr", "Lady", "Lord"};
         }
 
-        public Staff Staff { get; set; }
+        public CoreStaffMember Staff { get; set; }
         public IEnumerable<string> Titles { get; set; }
     }
 }
