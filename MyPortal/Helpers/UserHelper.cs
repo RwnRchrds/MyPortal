@@ -30,7 +30,12 @@ namespace MyPortal.Helpers
             var userId = user.Identity.GetUserId();
             var applicationUser = _identity.Users.SingleOrDefault(x => x.Id == userId);
 
-            return applicationUser?.SelectedAcademicYearId;
+            if (applicationUser == null)
+            {
+                throw new Exception("User not found.");
+            }
+
+            return applicationUser.SelectedAcademicYearId;
         }
 
         public static void ChangeSelectedAcademicYear(this IPrincipal user, int academicYearId)

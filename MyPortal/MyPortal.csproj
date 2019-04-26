@@ -278,6 +278,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\AttendanceHelper.cs" />
     <Compile Include="Helpers\SystemHelper.cs" />
     <Compile Include="Helpers\UserHelper.cs" />
     <Compile Include="Helpers\DateTimeHelper.cs" />
@@ -322,6 +323,7 @@
     <Compile Include="Models\Database\ProfileComment.cs" />
     <Compile Include="Models\Database\ProfileLog.cs" />
     <Compile Include="Models\Database\ProfileLogType.cs" />
+    <Compile Include="Models\Misc\AttendanceRegister.cs" />
     <Compile Include="Models\Misc\BalanceAdjustment.cs" />
     <Compile Include="Models\Misc\ChangePasswordModel.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
