@@ -13,7 +13,16 @@ namespace MyPortal.UnitTests.TestData
         public static MyPortalDbContext GetTestData()
         {
             var effortConnection = DbConnectionFactory.CreateTransient();
-            var context = new MyPortalDbContext(effortConnection);
+            var context = new MyPortalDbContext(effortConnection);            
+
+            #region CurriculumAcademicYears
+
+            var academicYears = new List<CurriculumAcademicYear>
+            {
+                new CurriculumAcademicYear
+                    {FirstDate = DateTime.Parse("01/01/2019"), LastDate = DateTime.Parse("01/01/2020"), Id = 1, Name = "First"}
+            };
+            #endregion
 
             #region FinanceBasketItems
             var basketItems = new List<FinanceBasketItem>
@@ -90,20 +99,20 @@ namespace MyPortal.UnitTests.TestData
             #region ProfileLogs
             var logs = new List<ProfileLog>
             {
-                new ProfileLog {Date = DateTime.Now, AuthorId = 3, Message = "Test", StudentId = 3, TypeId = 1},
-                new ProfileLog {Date = DateTime.Now, AuthorId = 3, Message = "Test2", StudentId = 3, TypeId = 2},
-                new ProfileLog {Date = DateTime.Today, AuthorId = 3, Message = "Test3", StudentId = 3, TypeId = 3},
-                new ProfileLog {Date = DateTime.Today, AuthorId = 3, Message = "Test4", StudentId = 3, TypeId = 4}
+                new ProfileLog {Date = DateTime.Now, AuthorId = 3, Message = "Test", StudentId = 3, TypeId = 1, AcademicYearId = 1},
+                new ProfileLog {Date = DateTime.Now, AuthorId = 3, Message = "Test2", StudentId = 3, TypeId = 2, AcademicYearId = 1},
+                new ProfileLog {Date = DateTime.Today, AuthorId = 3, Message = "Test3", StudentId = 3, TypeId = 3, AcademicYearId = 1},
+                new ProfileLog {Date = DateTime.Today, AuthorId = 3, Message = "Test4", StudentId = 3, TypeId = 4, AcademicYearId = 1}
             };
             #endregion
 
             #region ProfileLogTypes
             var logTypes = new List<ProfileLogType>
             {
-                new ProfileLogType {Name = "Type 1"},
-                new ProfileLogType {Name = "Type 2"},
-                new ProfileLogType {Name = "Type 3"},
-                new ProfileLogType {Name = "Type 4"}
+                new ProfileLogType {Name = "Type 1", Id = 1},
+                new ProfileLogType {Name = "Type 2", Id = 2},
+                new ProfileLogType {Name = "Type 3", Id = 3},
+                new ProfileLogType {Name = "Type 4", Id = 4}
             };
             #endregion
 
@@ -150,8 +159,8 @@ namespace MyPortal.UnitTests.TestData
             #region AssessmentResultSets
             var resultSets = new List<AssessmentResultSet>
             {
-                new AssessmentResultSet {Id = 1, Name = "Current", IsCurrent = true},
-                new AssessmentResultSet {Id = 2, Name = "Old", IsCurrent = false}
+                new AssessmentResultSet {Id = 1, Name = "Current", IsCurrent = true, AcademicYearId = 1},
+                new AssessmentResultSet {Id = 2, Name = "Old", IsCurrent = false, AcademicYearId = 1}
             };
             #endregion
 
@@ -200,7 +209,7 @@ namespace MyPortal.UnitTests.TestData
                 new CoreStudent
                 {
                     Id = 1, FirstName = "Aaron", LastName = "Aardvark", YearGroupId = 3, Email = "aardvark1@test.com",
-                    AccountBalance = (decimal) 200.00, CandidateNumber = "1234", RegGroupId = 3, Gender = "M"
+                    AccountBalance = (decimal) 200.00, CandidateNumber = "1234", RegGroupId = 3, Gender = "M", 
                 },
                 new CoreStudent
                 {
@@ -262,6 +271,7 @@ namespace MyPortal.UnitTests.TestData
             };
             #endregion
 
+            context.CurriculumAcademicYears.AddRange(academicYears);
             context.FinanceBasketItems.AddRange(basketItems);
             context.ProfileCommentBanks.AddRange(commentBanks);
             context.ProfileComments.AddRange(comments);

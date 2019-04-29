@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Net;
+using System.Security.Principal;
 using System.Web.Http;
 using System.Web.Http.Results;
 using AutoMapper;
@@ -31,9 +32,9 @@ namespace MyPortal.UnitTests.ApiTests
             
             Mapper.Reset();
             _context = ContextControl.GetTestData();
-            ContextControl.InitialiseMaps();
+            ContextControl.InitialiseMaps();                     
 
-            _controller = new LogsController(_context);
+            _controller = new LogsController(_context);           
         }
         
         [OneTimeTearDown]
@@ -50,9 +51,9 @@ namespace MyPortal.UnitTests.ApiTests
             
             Assert.IsNotNull(student);
 
-            var result = _controller.GetLogs(student.Id);           
+            var result = _controller.GetLogs(student.Id).ToList();           
             
-            Assert.AreEqual(4, result.Count());
+            Assert.AreEqual(4, result.Count);
             Assert.AreEqual(student.Id, result.First().StudentId);
         }
 
@@ -84,11 +85,13 @@ namespace MyPortal.UnitTests.ApiTests
             
             var student = _context.CoreStudents.SingleOrDefault(x => x.FirstName == "Aaron");
             var initForStudent = _context.ProfileLogs.Count(x => x.StudentId == student.Id);
+            var academicYear = _context.CurriculumAcademicYears.SingleOrDefault(x => x.Name == "First");
             
+            Assert.IsNotNull(academicYear);
             Assert.IsNotNull(student);
 
             var newLog = new ProfileLog
-                {Date = DateTime.Now, Message = "CreateLog", TypeId = 1, AuthorId = 1, StudentId = student.Id};
+                {Date = DateTime.Now, Message = "CreateLog", TypeId = 1, AuthorId = 1, StudentId = student.Id, AcademicYearId = academicYear.Id};
 
             _controller.CreateLog((newLog));
 
@@ -106,7 +109,10 @@ namespace MyPortal.UnitTests.ApiTests
             var student = _context.CoreStudents.SingleOrDefault(x => x.FirstName == "Dorothy");
 
             var logType = _context.ProfileLogTypes.SingleOrDefault(x => x.Name == "Type 3");
+
+            var academicYear = _context.CurriculumAcademicYears.SingleOrDefault(x => x.Name == "First");
             
+            Assert.IsNotNull(academicYear);
             Assert.IsNotNull(logType);
             Assert.IsNotNull(student);
 
@@ -117,6 +123,7 @@ namespace MyPortal.UnitTests.ApiTests
                 StudentId = student.Id,
                 Message = "Test",
                 TypeId = logType.Id,
+                AcademicYearId = academicYear.Id
             };
 
             var actionResult = _controller.CreateLog((log));

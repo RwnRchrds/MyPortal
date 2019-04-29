@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.Principal;
 using System.Web.Http;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
@@ -25,6 +26,12 @@ namespace MyPortal.Controllers.Api
         public LogsController(MyPortalDbContext context)
         {
             _context = context;
+        }
+
+        public LogsController(MyPortalDbContext context, IPrincipal user)
+        {
+            _context = context;
+            User = user;
         }
 
         /// <summary>

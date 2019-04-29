@@ -11,6 +11,7 @@ namespace MyPortal.Dtos
         public DateTime Beginning { get; set; }
 
         public bool IsHoliday { get; set; }
+        public bool IsNonTimetable { get; set; }
 
         public CurriculumAcademicYearDto CurriculumAcademicYear { get; set; }
     }

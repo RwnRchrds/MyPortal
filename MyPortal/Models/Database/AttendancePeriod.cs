@@ -22,9 +22,15 @@ namespace MyPortal.Models.Database
         [StringLength(3)]
         public string Weekday { get; set; }
 
+        public string Name { get; set; }
+
         public TimeSpan StartTime { get; set; }
 
         public TimeSpan EndTime { get; set; }
+
+        public bool IsAm { get; set; }
+
+        public bool IsPm { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AttendanceMark> AttendanceMarks { get; set; }

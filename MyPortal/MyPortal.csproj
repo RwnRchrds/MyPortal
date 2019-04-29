@@ -216,6 +216,7 @@
     <Compile Include="Controllers\Api\CommentBanksController.cs" />
     <Compile Include="Controllers\Api\CommentsController.cs" />
     <Compile Include="Controllers\Api\CurriculumAcademicYearsController.cs" />
+    <Compile Include="Controllers\Api\CurriculumClassesController.cs" />
     <Compile Include="Controllers\Api\DocumentsController.cs" />
     <Compile Include="Controllers\Api\LessonPlansController.cs" />
     <Compile Include="Controllers\Api\LogsController.cs" />
@@ -331,6 +332,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Misc\Checkout.cs" />
     <Compile Include="Models\Misc\Gender.cs" />
+    <Compile Include="Models\Misc\RegisterLookup.cs" />
     <Compile Include="Models\Misc\ShoppingBasket.cs" />
     <Compile Include="Models\Misc\StaffDocumentUpload.cs" />
     <Compile Include="Models\Misc\StudentDocumentUpload.cs" />
@@ -340,6 +342,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\AccountsViewModel.cs" />
+    <Compile Include="ViewModels\RegistersViewModel.cs" />
     <Compile Include="ViewModels\CommentBanksViewModel.cs" />
     <Compile Include="ViewModels\CommentsViewModel.cs" />
     <Compile Include="ViewModels\DinnerMoneyViewModel.cs" />
@@ -695,12 +698,12 @@
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
-    <Content Include="Views\Staff\CommentBanks.cshtml" />
-    <Content Include="Views\Staff\Comments.cshtml" />
-    <Content Include="Views\Staff\LessonPlanDetails.cshtml" />
-    <Content Include="Views\Staff\LessonPlans.cshtml" />
-    <Content Include="Views\Staff\StudyTopics.cshtml" />
-    <Content Include="Views\Staff\Subjects.cshtml" />
+    <Content Include="Views\Staff\Profile\CommentBanks.cshtml" />
+    <Content Include="Views\Staff\Profile\Comments.cshtml" />
+    <Content Include="Views\Staff\Curriculum\LessonPlanDetails.cshtml" />
+    <Content Include="Views\Staff\Curriculum\LessonPlans.cshtml" />
+    <Content Include="Views\Staff\Curriculum\StudyTopics.cshtml" />
+    <Content Include="Views\Staff\Curriculum\Subjects.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -727,27 +730,27 @@
     <Content Include="Views\Students\Index.cshtml" />
     <Content Include="Views\Staff\Index.cshtml" />
     <Content Include="Views\Shared\_NavBar.cshtml" />
-    <Content Include="Views\Staff\Students.cshtml" />
-    <Content Include="Views\Staff\StudentDetails.cshtml" />
+    <Content Include="Views\Staff\Core\Students.cshtml" />
+    <Content Include="Views\Staff\Core\StudentDetails.cshtml" />
     <Content Include="Views\Shared\_NavBarStudent.cshtml" />
     <Content Include="Views\Shared\_LayoutStudent.cshtml" />
     <Content Include="Views\Shared\_LayoutStaff.cshtml" />
     <Content Include="Views\Shared\_NavBarStaff.cshtml" />
-    <Content Include="Views\Staff\Staff.cshtml" />
-    <Content Include="Views\Staff\StaffDetails.cshtml" />
-    <Content Include="Views\Staff\NewStudent.cshtml" />
-    <Content Include="Views\Staff\TrainingCourses.cshtml" />
-    <Content Include="Views\Staff\NewCourse.cshtml" />
+    <Content Include="Views\Staff\Core\Staff.cshtml" />
+    <Content Include="Views\Staff\Core\StaffDetails.cshtml" />
+    <Content Include="Views\Staff\Core\NewStudent.cshtml" />
+    <Content Include="Views\Staff\Personnel\TrainingCourses.cshtml" />
+    <Content Include="Views\Staff\Personnel\NewTrainingCourse.cshtml" />
     <Content Include="Views\Admin\Users.cshtml" />
     <Content Include="Views\Admin\UserDetails.cshtml" />
     <Content Include="Views\Admin\NewUser.cshtml" />
-    <Content Include="Views\Staff\StudentResults.cshtml" />
+    <Content Include="Views\Staff\Core\StudentResults.cshtml" />
     <Content Include="Views\Students\Results.cshtml" />
     <Content Include="Views\Students\Store.cshtml" />
     <Content Include="Views\Finance\Accounts.cshtml" />
     <Content Include="Views\Finance\Products.cshtml" />
     <Content Include="Views\Finance\Sales.cshtml" />
-    <Content Include="Views\Staff\Documents.cshtml" />
+    <Content Include="Views\Staff\Core\Documents.cshtml" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
     <Content Include="Scripts\umd\popper.min.js.map" />
@@ -778,13 +781,18 @@
     <Content Include="Views\Staff\NoProfileIndex.cshtml" />
     <Content Include="Views\Students\NoProfileIndex.cshtml" />
     <Content Include="Views\Students\SalesHistory.cshtml" />
-    <Content Include="Views\Staff\ImportResults.cshtml" />
-    <Content Include="Views\Staff\ResultSets.cshtml" />
+    <Content Include="Views\Staff\Assessment\ImportResults.cshtml" />
+    <Content Include="Views\Staff\Assessment\ResultSets.cshtml" />
+    <Content Include="Views\Staff\Attendance\Registers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Results\" />
     <Folder Include="Dtos\ViewDtos\" />
     <Folder Include="Models\Authorisation\" />
+    <Folder Include="Views\Staff\Admission\" />
+    <Folder Include="Views\Staff\Behaviour\" />
+    <Folder Include="Views\Staff\Homework\" />
+    <Folder Include="Views\Staff\Medical\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

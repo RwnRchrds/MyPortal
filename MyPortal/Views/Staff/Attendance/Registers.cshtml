@@ -1,0 +1,154 @@
+﻿@model MyPortal.ViewModels.RegistersViewModel
+@{
+    ViewBag.Title = "Registers";
+    Layout = "~/Views/Shared/_LayoutStaff.cshtml";
+}
+
+<div class="container float-left">
+    <h2 class="mp-page-title">Registers</h2>
+    <hr/>
+</div>
+
+<div class="container float-left" id="registerSelectors" data-current-user-id="@Model.CurrentUser.Id">
+    <div class="form-group">
+        @Html.Label("Date")
+        @Html.TextBox("Date", null, new {id = "selectedDate", @class = "form-control register-selector"})
+    </div>
+    <div class="form-group">
+        @Html.Label("Teacher")
+        <select class="form-control register-selector" id="selectedTeacher"></select>
+    </div>
+    
+    <button type="button" class="btn btn-success" id="buttonSearch">Search Lessons</button>
+</div>
+
+<!--#region Registers Panel-->
+<div class="container float-left mp-margin-top">
+    <div>
+        <hr/>
+        <h4 class="mp-bold" id="registersFor"></h4>
+        <table class="table table-sm table-bordered table-hover mp-table mp-table-link" id="classes">
+            <thead>
+            <tr>
+                <th>Period</th>
+                <th>Lesson/Session</th>
+                <th>Time</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<!--#endregion-->
+
+@section scripts
+{
+    <script>        
+        $(document).ready(function () {
+            $('.modal').on('hidden.bs.modal',
+                function() {
+                    $(this).find('form').trigger('reset');
+                });
+
+            $.ajax({
+                url: "/api/staff/fetch",
+                method: "GET",
+                complete: function(data) {
+                    $("#selectedTeacher").empty();
+                    $(data.responseJSON).each(function(i) {
+                        var divData = "<option value=" +
+                            data.responseJSON[i].id +
+                            ">" +
+                            data.responseJSON[i].lastName +
+                            ", " +
+                            data.responseJSON[i].firstName +
+                            "</option>";
+                        $(divData).appendTo('#selectedTeacher');
+                        var currentUserId = $("#registerSelectors").attr("data-current-user-id");          
+
+                        $("#selectedTeacher").val(currentUserId);
+                        $("#selectedDate").val(parseToday());
+                    });
+                }
+            });
+
+            $("#buttonSearch").on("click",
+                function() {
+                    var selDate = parseDate($("#selectedDate").val());
+                    var selTeacher = $("#selectedTeacher").val();
+                    loadClasses(selTeacher, selDate);
+                });
+        });
+
+        function loadClasses(teacher, selectedDate) {
+
+            var url = "/api/curriculum/classes/byTeacher/" + teacher + "/" + selectedDate;
+
+            $("#classes").DataTable().clear().destroy();
+
+            $("#classes").DataTable({
+                ajax: {
+                    url: url,
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "attendancePeriod.name"
+                    },
+                    {
+                        data: "curriculumClass.name"
+                    },
+                    {
+                        data: "attendancePeriod.startTime",
+                        render: function (data, type, attendanceClass) {
+                            return attendanceClass.attendancePeriod.startTime +
+                                " - " +
+                                attendanceClass.attendancePeriod.endTime;
+                        }
+                    },
+                    {
+                        data: "id",
+                        render: function (data) {
+                            return "<button type='button' class='btn btn-xs btn-success js-takeRegister' data-comment-id=" +
+                                data +
+                                "><i class=\"fas fa-clipboard-check\"></i></button> ";
+                        }
+                    }
+                ],
+                paging: false,
+                ordering: false,
+                searching: false,
+                "language": {
+                    "emptyTable": "No lessons to display"
+                }
+            });
+        }
+
+        function parseToday() {
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1;
+
+            var yyyy = today.getFullYear();
+            if (dd < 10) {
+                dd = '0' + dd;
+            }
+            if (mm < 10) {
+                mm = '0' + mm;
+            }
+
+            today = dd + '-' + mm + '-' + yyyy;
+
+            return today.toString();
+        }
+
+        function parseDate(dateString) {
+            var day = dateString.substring(0, 2);
+            var month = dateString.substring(3, 5);
+            var year = dateString.substring(6, 10);
+
+            return year + "" + month + "" + day;
+        }
+
+    </script>
+}

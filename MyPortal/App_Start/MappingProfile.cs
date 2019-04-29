@@ -87,6 +87,12 @@ namespace MyPortal
 
             CreateMap<CurriculumStudyTopic, CurriculumStudyTopicDto>();
             CreateMap<CurriculumStudyTopicDto, CurriculumStudyTopic>();
+
+            CreateMap<CurriculumClass, CurriculumClassDto>();
+            CreateMap<CurriculumClassDto, CurriculumClass>();
+
+            CreateMap<CurriculumClassPeriod, CurriculumClassPeriodDto>();
+            CreateMap<CurriculumClassPeriodDto, CurriculumClassPeriod>();
         }
     }
 }

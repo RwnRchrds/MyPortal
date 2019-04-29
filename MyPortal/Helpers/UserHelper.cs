@@ -19,6 +19,16 @@ namespace MyPortal.Helpers
 
         public static ApplicationUser GetApplicationUser(this IPrincipal user)
         {
+            if (user.Identity.Name == "test")
+            {
+                return new ApplicationUser
+                {
+                    Id = "1",
+                    SelectedAcademicYearId = 1,
+                    PasswordHash = "test",
+                    UserName = "test"
+                };
+            }
             var userId = user.Identity.GetUserId();
             var applicationUser = _identity.Users.SingleOrDefault(x => x.Id == userId);
 

@@ -30,7 +30,7 @@ namespace MyPortal.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreateCourse(PersonnelTrainingCourse course)
         {
-            if (!ModelState.IsValid) return View("NewCourse");
+            if (!ModelState.IsValid) return View("~/Views/Staff/Personnel/NewTrainingCourse.cshtml");
 
             _context.PersonnelTrainingCourses.Add(course);
             _context.SaveChanges();
@@ -51,7 +51,7 @@ namespace MyPortal.Controllers
                     RegGroups = new RegGroupsController().GetRegGroups().ToList().Select(Mapper.Map<PastoralRegGroupDto, PastoralRegGroup>),
                     YearGroups = new YearGroupsController().GetYearGroups().ToList().Select(Mapper.Map<PastoralYearGroupDto, PastoralYearGroup>)
                 };
-                return View("NewStudent", viewModel);
+                return View("~/Views/Staff/Core/NewStudent.cshtml", viewModel);
             }
 
             _context.CoreStudents.Add(student);
@@ -69,10 +69,10 @@ namespace MyPortal.Controllers
         //Accessible by [Staff] or [SeniorStaff]
         public ActionResult Documents()
         {
-            return View();
+            return View("~/Views/Staff/Core/Documents.cshtml");
         }
 
-        [System.Web.Mvc.Route("Staff/Data/Results/Import")]
+        [System.Web.Mvc.Route("Staff/Assessment/Results/Import")]
         public ActionResult ImportResults()
         {
             var resultSets = _context.AssessmentResultSets.OrderBy(x => x.Name).ToList();
@@ -83,7 +83,7 @@ namespace MyPortal.Controllers
                 FileExists = fileExists
             };
 
-            return View(viewModel);
+            return View("~/Views/Staff/Assessment/ImportResults.cshtml", viewModel);
         }
 
         // Staff Landing Page
@@ -110,16 +110,16 @@ namespace MyPortal.Controllers
         // Menu | Training Courses | New Course --> New Course Form
         // Accessible by [SeniorStaff] only
         [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("Staff/TrainingCourses/New")]
+        [System.Web.Mvc.Route("Staff/Personnel/TrainingCourses/New")]
         public ActionResult NewCourse()
         {
-            return View();
+            return View("~/Views/Staff/Personnel/NewTrainingCourse.cshtml");
         }
 
         // Menu | Students | New Student --> New Student form
         // Accessible by [SeniorStaff] only
         [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("Staff/Students/New")]
+        [System.Web.Mvc.Route("Staff/Core/Students/New")]
         public ActionResult NewStudent()
         {
             var yearGroups = _context.PastoralYearGroups.ToList();
@@ -131,7 +131,7 @@ namespace MyPortal.Controllers
                 YearGroups = yearGroups
             };
 
-            return View(viewModel);
+            return View("~/Views/Staff/Core/NewStudent.cshtml",viewModel);
         }        
 
         // HTTP POST request for updating student details using HTML form
@@ -156,13 +156,13 @@ namespace MyPortal.Controllers
         public ActionResult Staff()
         {
             var viewModel = new NewStaffViewModel();
-            return View(viewModel);
+            return View("~/Views/Staff/Core/Staff.cshtml", viewModel);
         }
 
         // Menu | Staff | X --> Student Details (for Staff X)
         //Accessible by [SeniorStaff] only
         [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("Staff/Staff/{id}")]
+        [System.Web.Mvc.Route("Staff/Core/Staff/{id}")]
         public ActionResult StaffDetails(int id)
         {
             var staff = _context.CoreStaff.SingleOrDefault(s => s.Id == id);
@@ -196,12 +196,12 @@ namespace MyPortal.Controllers
                 CurrentStaffId = currentStaffId
             };
 
-            return View(viewModel);
+            return View("~/Views/Staff/Core/StaffDetails.cshtml", viewModel);
         }
 
         // Menu | Students | X --> Student Details (for Student X)
         //Accessible by [Staff] or [SeniorStaff]
-        [System.Web.Mvc.Route("Staff/Students/{id}")]
+        [System.Web.Mvc.Route("Staff/Core/Students/{id}")]
         public ActionResult StudentDetails(int id)
         {
             var student = _context.CoreStudents.SingleOrDefault(s => s.Id == id);
@@ -238,12 +238,12 @@ namespace MyPortal.Controllers
                 CommentBanks = commentBanks
             };
 
-            return View(viewModel);
+            return View("~/Views/Staff/Core/StudentDetails.cshtml", viewModel);
         }
 
         //Menu | Students | X | [View Results] --> Student Results (for Student X)
         //Accessible by [Staff] or [SeniorStaff]
-        [System.Web.Mvc.Route("Staff/Students/{id}/Results")]
+        [System.Web.Mvc.Route("Staff/Core/Students/{id}/Results")]
         public ActionResult StudentResults(int id)
         {
             var student = _context.CoreStudents.SingleOrDefault(s => s.Id == id);
@@ -269,21 +269,21 @@ namespace MyPortal.Controllers
                 Subjects = subjects
             };
 
-            return View(viewModel);
+            return View("~/Views/Staff/Core/StudentResults.cshtml", viewModel);
         }
 
         // Menu | Students --> Students List (All)
         // Accessible by [Staff] or [SeniorStaff]
         public ActionResult Students()
         {
-            return View();
+            return View("~/Views/Staff/Core/Students.cshtml");
         }
 
         // Menu | Training Courses --> Training Courses List (All)
         //[Authorize(Roles = "SeniorStaff")]
         public ActionResult TrainingCourses()
         {
-            return View();
+            return View("~/Views/Staff/Personnel/TrainingCourses.cshtml");
         }
 
         [System.Web.Mvc.HttpPost]
@@ -299,45 +299,45 @@ namespace MyPortal.Controllers
 
         // Menu | Result Sets --> Result Sets List (All)
         [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("Staff/Data/ResultSets")]
+        [System.Web.Mvc.Route("Staff/Assessment/ResultSets")]
         public ActionResult ResultSets()
         {
-            return View();
+            return View("~/Views/Staff/Assessment/ResultSets.cshtml");
         }
         
         // Menu | Comment Banks --> Comment Banks List (All)
         [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("Staff/Data/CommentBanks")]
+        [System.Web.Mvc.Route("Staff/Profile/CommentBanks")]
         public ActionResult CommentBanks()
         {
-            return View();
+            return View("~/Views/Staff/Profile/CommentBanks.cshtml");
         }
         
         //Menu | Comments --> Comments List (All)
         [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("Staff/Data/Comments")]
+        [System.Web.Mvc.Route("Staff/Profile/Comments")]
         public ActionResult Comments()
         {
             var viewModel = new CommentsViewModel();
             viewModel.CommentBanks = _context.ProfileCommentBanks.OrderBy(x => x.Name).ToList();
 
-            return View(viewModel);
+            return View("~/Views/Staff/Profile/Comments.cshtml", viewModel);
         }
         
         // Menu | Subjects --> Subjects List (All)
         [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("Staff/Data/Subjects")]
+        [System.Web.Mvc.Route("Staff/Curriculum/Subjects")]
         public ActionResult Subjects()
         {
             var viewModel = new SubjectsViewModel();
             viewModel.Staff = _context.CoreStaff.OrderBy(x => x.LastName).ToList();
 
-            return View(viewModel);
+            return View("~/Views/Staff/Curriculum/Subjects.cshtml", viewModel);
         }
         
         // Menu | Study Topics --> Study Topics List (All)
         [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("Staff/Data/StudyTopics")]
+        [System.Web.Mvc.Route("Staff/Curriculum/StudyTopics")]
         public ActionResult StudyTopics()
         {
             var viewModel = new StudyTopicsViewModel();
@@ -349,7 +349,7 @@ namespace MyPortal.Controllers
             viewModel.Subjects = subjects;
             viewModel.YearGroups = yearGroups;
 
-            return View(viewModel);
+            return View("~/Views/Staff/Curriculum/StudyTopics.cshtml", viewModel);
         }
         
         //Menu | Lesson Plans --> Lesson Plans List (All)
@@ -362,7 +362,7 @@ namespace MyPortal.Controllers
 
             viewModel.StudyTopics = studyTopics;
 
-            return View(viewModel);
+            return View("~/Views/Staff/Curriculum/LessonPlans.cshtml", viewModel);
         }
         
         //Menu | Lesson Plans | X --> Lesson Plan Details for Lesson Plan X
@@ -380,7 +380,28 @@ namespace MyPortal.Controllers
 
             viewModel.LessonPlan = lessonPlan;
 
-            return View(viewModel);
+            return View("~/Views/Staff/Curriculum/LessonPlanDetails.cshtml", viewModel);
+        }
+
+        [System.Web.Mvc.Route("Staff/Attendance/Registers")]
+        public ActionResult Registers()
+        {
+            var userId = User.Identity.GetUserId();
+            CoreStaffMember currentUser = null;
+            
+            if (userId != null)
+            {
+                currentUser = _context.CoreStaff.SingleOrDefault(x => x.UserId == userId);
+            }
+
+            var staffMembers = _context.CoreStaff.ToList().OrderBy(x => x.LastName);
+
+            var viewModel = new RegistersViewModel();
+
+            viewModel.CurrentUser = currentUser;
+            viewModel.StaffMembers = staffMembers;
+
+            return View("~/Views/Staff/Attendance/Registers.cshtml", viewModel);
         }
 
     }

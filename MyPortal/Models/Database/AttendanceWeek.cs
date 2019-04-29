@@ -17,6 +17,7 @@ namespace MyPortal.Models.Database
         public DateTime Beginning { get; set; }
 
         public bool IsHoliday { get; set; }
+        public bool IsNonTimetable { get; set; }
 
         public virtual CurriculumAcademicYear CurriculumAcademicYear { get; set; }
     }
