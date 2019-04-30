@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
@@ -35,6 +36,18 @@ namespace MyPortal.Controllers.Api
 
             var date = new DateTime(year, month, day);
             var weekBeginning = date.StartOfWeek();
+
+            var academicYear = _context.CurriculumAcademicYears.SingleOrDefault(x => x.Id == academicYearId);
+
+            if (academicYear == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            if (weekBeginning < academicYear.FirstDate || weekBeginning > academicYear.LastDate)
+            {
+                return new List<CurriculumClassPeriodDto>();
+            }
 
             var currentWeek = _context.AttendanceWeeks.SingleOrDefault(x => x.Beginning == weekBeginning && x.AcademicYearId == academicYearId);
 

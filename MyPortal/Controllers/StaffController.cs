@@ -404,5 +404,37 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/Attendance/Registers.cshtml", viewModel);
         }
 
+        [System.Web.Mvc.Route("Staff/Attendance/TakeRegister/{weekId}/{periodId}/{classId}")]
+        public ActionResult TakeRegister(int weekId, int periodId, int classId)
+        {            
+            var viewModel = new TakeRegisterViewModel();
+            var attendanceWeek = _context.AttendanceWeeks.SingleOrDefault(x => x.Id == weekId);
+            var attendancePeriod = _context.AttendancePeriods.SingleOrDefault(x => x.Id == periodId);
+            var curriculumClass = _context.CurriculumClasses.SingleOrDefault(x => x.Id == classId);
+
+            if (attendanceWeek == null | attendancePeriod == null | curriculumClass == null)
+            {
+                return RedirectToAction("Registers");
+            }
+
+            var classPeriods = _context.CurriculumClassPeriods.Where(x => x.ClassId == curriculumClass.Id);
+
+            var validRegister = !attendanceWeek.IsHoliday && !attendanceWeek.IsNonTimetable &&
+                                classPeriods.Any(x => x.PeriodId == attendancePeriod.Id);
+
+            if (!validRegister)
+            {
+                return RedirectToAction("Registers");
+            }
+
+            viewModel.Class = curriculumClass;
+            viewModel.Period = attendancePeriod;
+            viewModel.WeekId = attendanceWeek.Id;
+
+            viewModel.Periods = _context.AttendancePeriods.Where(x => x.Weekday == attendancePeriod.Weekday);
+
+            return View("~/Views/Staff/Attendance/TakeRegister.cshtml", viewModel);
+        }
+
     }
 }

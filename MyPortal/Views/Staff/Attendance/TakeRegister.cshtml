@@ -1,0 +1,32 @@
+﻿@model MyPortal.ViewModels.TakeRegisterViewModel
+@{
+    ViewBag.Title = "TakeRegister";
+    Layout = "~/Views/Shared/_LayoutStaff.cshtml";
+}
+
+<div class="container float-left">
+    <h2 class="mp-page-title">Take Register:</h2>
+    <h4> @Model.Class.Name (@Model.Period.Name) - @Model.Class.CoreStaffMember.Title @Model.Class.CoreStaffMember.FirstName.Substring(0, 1) @Model.Class.CoreStaffMember.LastName</h4>
+    <hr />
+</div>
+
+<div class="container float-left">
+    <table class="table table-sm table-bordered table-hover mp-table mp-table-link" id="classes">
+        <thead>
+            <tr>
+                <th>Student</th>
+                @foreach (var period in Model.Periods)
+                {
+                    <th>@period.Name</th>
+                }
+            </tr>
+        </thead>
+    </table>
+
+    <button type="button" class="btn btn-success" id="buttonSearch">Save</button>
+</div>
+
+
+
+
+

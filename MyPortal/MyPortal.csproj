@@ -276,6 +276,7 @@
     <Compile Include="Dtos\ProfileCommentDto.cs" />
     <Compile Include="Dtos\ProfileLogDto.cs" />
     <Compile Include="Dtos\ProfileLogTypeDto.cs" />
+    <Compile Include="Dtos\ViewDtos\StudentDayRegisterDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -368,6 +369,7 @@
     <Compile Include="ViewModels\StudentStoreViewModel.cs" />
     <Compile Include="ViewModels\StudyTopicsViewModel.cs" />
     <Compile Include="ViewModels\SubjectsViewModel.cs" />
+    <Compile Include="ViewModels\TakeRegisterViewModel.cs" />
     <Compile Include="ViewModels\TrainingCoursesViewModel.cs" />
     <Compile Include="ViewModels\UserDetailsViewModel.cs" />
   </ItemGroup>
@@ -784,10 +786,10 @@
     <Content Include="Views\Staff\Assessment\ImportResults.cshtml" />
     <Content Include="Views\Staff\Assessment\ResultSets.cshtml" />
     <Content Include="Views\Staff\Attendance\Registers.cshtml" />
+    <Content Include="Views\Staff\Attendance\TakeRegister.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Results\" />
-    <Folder Include="Dtos\ViewDtos\" />
     <Folder Include="Models\Authorisation\" />
     <Folder Include="Views\Staff\Admission\" />
     <Folder Include="Views\Staff\Behaviour\" />
