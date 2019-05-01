@@ -9,9 +9,9 @@ using NUnit.Framework;
 namespace MyPortal.UnitTests.ApiTests
 {
     [TestFixture]
-    public class ApiRegGroupsControllerTests
+    public class ApiAssessmentResultsControllerTests
     {
-        private RegGroupsController _controller;
+        private ResultsController _controller;
         private MyPortalDbContext _context;
 
         [OneTimeSetUp]
@@ -29,7 +29,7 @@ namespace MyPortal.UnitTests.ApiTests
             _context = ContextControl.GetTestData();
             ContextControl.InitialiseMaps();
 
-            _controller = new RegGroupsController(_context);
+            _controller = new ResultsController(_context);
         }
         
         [OneTimeTearDown]
@@ -40,15 +40,18 @@ namespace MyPortal.UnitTests.ApiTests
         }
 
         [Test]
-        public void GetRegGroups_ReturnsRegGroups()
+        public void GetResults_ReturnsResultsForStudent()
         {
-            var yearGroup = _context.PastoralYearGroups.SingleOrDefault(x => x.Name == "Year 7");
+            var student = _context.CoreStudents.SingleOrDefault(x => x.FirstName == "Aaron");
+
+            var resultSet = _context.AssessmentResultSets.SingleOrDefault(x => x.Name == "Current");
             
-            Assert.IsNotNull(yearGroup);
+            Assert.IsNotNull(student);
+            Assert.IsNotNull(resultSet);
+
+            var result = _controller.GetResults(student.Id, resultSet.Id);
             
-            var result = _controller.GetRegGroupsByYearGroup(yearGroup.Id).Count();
-            
-            Assert.AreEqual(1, result);
+            Assert.AreEqual(2, result.Count());
         }
     }
 }

@@ -11,7 +11,7 @@ using NUnit.Framework;
 namespace MyPortal.UnitTests.ApiTests
 {
     [TestFixture]
-    public class ApiBasketItemsControllerTests
+    public class ApiFinanceBasketItemsControllerTests
     {
         private BasketItemsController _controller;
         private MyPortalDbContext _context;

@@ -13,7 +13,8 @@ namespace MyPortal.UnitTests.TestData
         public static MyPortalDbContext GetTestData()
         {
             var effortConnection = DbConnectionFactory.CreateTransient();
-            var context = new MyPortalDbContext(effortConnection);            
+            var context = new MyPortalDbContext(effortConnection);
+            context.IsDebug = true;
 
             #region CurriculumAcademicYears
 

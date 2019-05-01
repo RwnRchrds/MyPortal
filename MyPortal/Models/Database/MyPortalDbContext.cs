@@ -9,13 +9,16 @@ namespace MyPortal.Models.Database
 
     public partial class MyPortalDbContext : DbContext
     {
+        public bool IsDebug { get; set; }
         public MyPortalDbContext()
             : base("name=MyPortalDbContext")
         {
+            IsDebug = false;
         }
         
         public MyPortalDbContext(DbConnection connection) : base(connection, true)
         {
+            IsDebug = false;
         }
 
         public virtual DbSet<AssessmentGrade> AssessmentGrades { get; set; }

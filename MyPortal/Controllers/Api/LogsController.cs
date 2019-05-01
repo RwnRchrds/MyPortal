@@ -43,7 +43,8 @@ namespace MyPortal.Controllers.Api
         [Route("api/logs/new")]
         public IHttpActionResult CreateLog(ProfileLog log)
         {
-            var academicYearId = SystemHelper.GetCurrentOrSelectedAcademicYearId(User);
+            var academicYearId = ContextHelper.GetAcademicYearId(User, _context);
+
             var authorId = log.AuthorId;
 
             var author = new CoreStaffMember();
@@ -138,7 +139,7 @@ namespace MyPortal.Controllers.Api
                 new StudentsController().AuthenticateStudentRequest(studentId);
             }
 
-            var academicYearId = SystemHelper.GetCurrentOrSelectedAcademicYearId(User);
+            var academicYearId = ContextHelper.GetAcademicYearId(User, _context);
             return _context.ProfileLogs.Where(l => l.StudentId == studentId && l.AcademicYearId == academicYearId)
                 .OrderByDescending(x => x.Date)
                 .ToList()

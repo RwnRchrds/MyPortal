@@ -12,7 +12,7 @@ using MyPortal.Models.Database;
 namespace MyPortal.UnitTests.ApiTests
 {
     [TestFixture]
-    public class ApiCommentsControllerTests
+    public class ApiProfileCommentsControllerTests
     {
         private CommentsController _controller;
         private MyPortalDbContext _context;

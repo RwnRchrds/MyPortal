@@ -12,7 +12,7 @@ using NUnit.Framework;
 namespace MyPortal.UnitTests.ApiTests
 {
     [TestFixture]
-    public class ApiCommentBanksControllerTests
+    public class ApiProfileCommentBanksControllerTests
     {
         private CommentBanksController _controller;
         private MyPortalDbContext _context;
