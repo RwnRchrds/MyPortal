@@ -196,6 +196,12 @@ namespace MyPortal.Models.Database
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<CoreStaffMember>()
+                .HasMany(e => e.CurriculumClasses)
+                .WithRequired(e => e.CoreStaffMember)
+                .HasForeignKey(e => e.TeacherId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<CoreStaffMember>()
                 .HasMany(e => e.CurriculumLessonPlansAuthored)
                 .WithRequired(e => e.Author)
                 .HasForeignKey(e => e.AuthorId)
@@ -281,6 +287,12 @@ namespace MyPortal.Models.Database
             modelBuilder.Entity<CoreStudent>()
                 .HasMany(e => e.AttendanceMarks)
                 .WithRequired(e => e.CoreStudent)
+                .HasForeignKey(e => e.StudentId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<CoreStudent>()
+                .HasMany(e => e.CurriculumClassEnrolments)
+                .WithRequired(e => e.Student)
                 .HasForeignKey(e => e.StudentId)
                 .WillCascadeOnDelete(false);
 

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using AutoMapper;
+using MyPortal.Dtos;
 using MyPortal.Helpers;
 using MyPortal.Models.Database;
 
@@ -59,6 +61,28 @@ namespace MyPortal.Controllers.Api
             _context.SaveChanges();
 
             return Ok("Attendance weeks created");
+        }
+
+        [HttpGet]
+        [Route("api/attendance/weeks/get/byDate/{dateString}")]
+        public AttendanceWeekDto GetWeekByDate(int dateString)
+        {
+            var academicYearId = SystemHelper.GetCurrentOrSelectedAcademicYearId(User);
+            int year = dateString / 10000;
+            int month = ((dateString - (10000 * year)) / 100);
+            int day = (dateString - (10000 * year) - (100 * month));
+
+            var date = new DateTime(year, month, day);
+            var weekBeginning = date.StartOfWeek();
+
+            var selectedWeek = _context.AttendanceWeeks.SingleOrDefault(x => x.Beginning == weekBeginning && x.AcademicYearId == academicYearId);
+
+            if (selectedWeek == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return Mapper.Map<AttendanceWeek, AttendanceWeekDto>(selectedWeek);
         }
     }
 }

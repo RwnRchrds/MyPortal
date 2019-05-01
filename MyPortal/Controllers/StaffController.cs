@@ -67,6 +67,7 @@ namespace MyPortal.Controllers
 
         // Menu | Documents --> General Controlled Documents List (All)
         //Accessible by [Staff] or [SeniorStaff]
+        [System.Web.Mvc.Route("Staff/Core/Documents")]
         public ActionResult Documents()
         {
             return View("~/Views/Staff/Core/Documents.cshtml");
@@ -87,6 +88,7 @@ namespace MyPortal.Controllers
         }
 
         // Staff Landing Page
+        [System.Web.Mvc.Route("Staff/Home")]
         public ActionResult Index()
         {
             var userId = User.Identity.GetUserId();
@@ -152,6 +154,7 @@ namespace MyPortal.Controllers
 
         // Menu | Staff --> Staff List (All)
         // Accessible by [SeniorStaff] only
+        [System.Web.Mvc.Route("Staff/Core/Staff")]
         [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
         public ActionResult Staff()
         {
@@ -274,6 +277,7 @@ namespace MyPortal.Controllers
 
         // Menu | Students --> Students List (All)
         // Accessible by [Staff] or [SeniorStaff]
+        [System.Web.Mvc.Route("Staff/Core/Students")]
         public ActionResult Students()
         {
             return View("~/Views/Staff/Core/Students.cshtml");
@@ -281,6 +285,7 @@ namespace MyPortal.Controllers
 
         // Menu | Training Courses --> Training Courses List (All)
         //[Authorize(Roles = "SeniorStaff")]
+        [System.Web.Mvc.Route("Staff/Personnel/TrainingCourses")]
         public ActionResult TrainingCourses()
         {
             return View("~/Views/Staff/Personnel/TrainingCourses.cshtml");

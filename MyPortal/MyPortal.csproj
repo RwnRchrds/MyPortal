@@ -211,6 +211,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\Api\AttendanceMarksController.cs" />
     <Compile Include="Controllers\Api\AttendanceWeeksController.cs" />
     <Compile Include="Controllers\Api\BasketItemsController.cs" />
     <Compile Include="Controllers\Api\CommentBanksController.cs" />

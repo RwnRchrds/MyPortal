@@ -18,6 +18,7 @@ namespace MyPortal.Models.Database
             FinanceBasketItems = new HashSet<FinanceBasketItem>();
             ProfileLogs = new HashSet<ProfileLog>();
             FinanceSales = new HashSet<FinanceSale>();
+            CurriculumClassEnrolments = new HashSet<CurriculumClassEnrolment>();
         }
 
         public int Id { get; set; }
@@ -69,6 +70,9 @@ namespace MyPortal.Models.Database
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FinanceSale> FinanceSales { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CurriculumClassEnrolment> CurriculumClassEnrolments { get; set; }
 
         public virtual PastoralRegGroup PastoralRegGroup { get; set; }
 

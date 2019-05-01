@@ -1,6 +1,6 @@
 ﻿@model MyPortal.ViewModels.TakeRegisterViewModel
 @{
-    ViewBag.Title = "TakeRegister";
+    ViewBag.Title = "Take Register: " + @Model.Period.Name + " - " + @Model.Class.Name;
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
@@ -11,20 +11,51 @@
 </div>
 
 <div class="container float-left">
-    <table class="table table-sm table-bordered table-hover mp-table mp-table-link" id="classes">
+    <table class="table table-sm table-bordered table-hover mp-table mp-table-link" id="marks">
         <thead>
-            <tr>
-                <th>Student</th>
-                @foreach (var period in Model.Periods)
-                {
-                    <th>@period.Name</th>
-                }
-            </tr>
+        <tr>
+            <th>Student</th>
+            @foreach (var period in Model.Periods)
+            {
+                <th>@period.Name</th>
+            }
+        </tr>
         </thead>
     </table>
 
-    <button type="button" class="btn btn-success" id="buttonSearch">Save</button>
+    <button type="button" class="btn btn-primary" id="buttonBack">Back</button>
+    <button type="button" class="btn btn-primary" id="buttonSearch">Save</button>
 </div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+            $("#buttonBack").on("click",
+                function() {
+                    location.replace("/Staff/Attendance/Registers");
+                });
+
+            $("#marks").DataTable({
+                ajax: {
+                    url: url,
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "attendancePeriod.name"
+                    }
+                ],
+                paging: false,
+                ordering: false,
+                searching: false,
+                "language": {
+                    "emptyTable": "No lessons to display"
+                }
+            });
+        });
+    </script>
+}
 
 
 

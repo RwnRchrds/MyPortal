@@ -27,7 +27,7 @@
     <div>
         <hr/>
         <h4 class="mp-bold" id="registersFor"></h4>
-        <table class="table table-sm table-bordered table-hover mp-table mp-table-link" id="classes">
+        <table class="table table-sm table-bordered table-hover mp-table mp-table-link" id="registers" data-week-id="">
             <thead>
             <tr>
                 <th>Period</th>
@@ -76,17 +76,41 @@
                 function() {
                     var selDate = parseDate($("#selectedDate").val());
                     var selTeacher = $("#selectedTeacher").val();
-                    loadClasses(selTeacher, selDate);
+                    updateWeekId(selDate);
+                    loadRegisters(selTeacher, selDate);
+                });
+
+            $("#registers").on("click",
+                ".js-takeRegister",
+                function() {
+                    var button = $(this);
+                    var weekId = $("#registers").attr("data-week-id");
+                    var periodId = button.attr("data-period-id");
+                    var classId = button.attr("data-class-id");
+                    location.replace("/Staff/Attendance/TakeRegister/" + weekId + "/" + periodId + "/" + classId);
                 });
         });
 
-        function loadClasses(teacher, selectedDate) {
+        function updateWeekId(selectedDate) {
+            $("#registers").attr("data-week-id", "");
+            var url = "/api/attendance/weeks/get/byDate/" + selectedDate;
+
+            $.ajax({
+                url: url,
+                method: "GET",
+                success: function(result) {
+                    $("#registers").attr("data-week-id", result.id);
+                }
+            });
+        }
+
+        function loadRegisters(teacher, selectedDate) {
 
             var url = "/api/curriculum/classes/byTeacher/" + teacher + "/" + selectedDate;
 
-            $("#classes").DataTable().clear().destroy();
+            $("#registers").DataTable().clear().destroy();
 
-            $("#classes").DataTable({
+            $("#registers").DataTable({
                 ajax: {
                     url: url,
                     dataSrc: ""
@@ -108,10 +132,11 @@
                     },
                     {
                         data: "id",
-                        render: function (data) {
-                            return "<button type='button' class='btn btn-xs btn-success js-takeRegister' data-comment-id=" +
-                                data +
-                                "><i class=\"fas fa-clipboard-check\"></i></button> ";
+                        render: function (data, type, attendanceClass) {
+                            return "<button type='button' class='btn btn-xs btn-success js-takeRegister' data-period-id='" +
+                                attendanceClass.attendancePeriod.id +
+                                "' data-class-id='"+attendanceClass.curriculumClass.id+
+                                "'><i class=\"fas fa-clipboard-check\"></i></button> ";
                         }
                     }
                 ],

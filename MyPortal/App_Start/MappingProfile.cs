@@ -93,6 +93,9 @@ namespace MyPortal
 
             CreateMap<CurriculumClassPeriod, CurriculumClassPeriodDto>();
             CreateMap<CurriculumClassPeriodDto, CurriculumClassPeriod>();
+
+            CreateMap<AttendanceWeek, AttendanceWeekDto>();
+            CreateMap<AttendanceWeekDto, AttendanceWeek>();
         }
     }
 }
