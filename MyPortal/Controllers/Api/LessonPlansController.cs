@@ -86,7 +86,7 @@ namespace MyPortal.Controllers.Api
             
             var authorId = plan.AuthorId;
 
-            var author = new CoreStaffMember();
+            var author = new PeopleStaffMember();
 
             if (authorId == 0)
             {

@@ -6,8 +6,8 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Models.Misc
 {
-    public class AttendanceRegister
+    public class ListContainer<T>
     {
-        public IEnumerable<AttendanceMark> Marks { get; set; }
+        public IEnumerable<T> Objects { get; set; }
     }
 }

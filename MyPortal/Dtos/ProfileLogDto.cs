@@ -16,7 +16,7 @@ namespace MyPortal.Dtos
 
         public DateTime Date { get; set; }
 
-        public CoreStaffMemberDto CoreStaffMember { get; set; }
+        public CoreStaffMemberDto Author { get; set; }
 
         public CoreStudentDto CoreStudent { get; set; }
 

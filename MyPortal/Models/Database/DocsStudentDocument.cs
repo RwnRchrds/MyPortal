@@ -6,17 +6,17 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("Core_Documents_Staff")]
-    public partial class CoreStaffDocument
+    [Table("Docs_Documents_Students")]
+    public partial class DocsStudentDocument
     {
         public int Id { get; set; }
 
-        public int StaffId { get; set; }
+        public int StudentId { get; set; }
 
         public int DocumentId { get; set; }
 
-        public virtual CoreDocument CoreDocument { get; set; }
+        public virtual DocsDocument CoreDocument { get; set; }
 
-        public virtual CoreStaffMember Owner { get; set; }
+        public virtual PeopleStudent CoreStudent { get; set; }
     }
 }

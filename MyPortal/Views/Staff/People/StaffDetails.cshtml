@@ -161,12 +161,12 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @Html.LabelFor(l => l.TrainingCertificate.PersonnelTrainingCourse)
+                        @Html.Label("Training Course")
                         @Html.DropDownListFor(l => l.TrainingCertificate.CourseId, new SelectList(Model.TrainingCourses, "Id", "Description"), "Select Course", new {@class = "form-control", Name = "CourseId"})
                         @Html.ValidationMessageFor(x => x.TrainingCertificate.CourseId)
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(l => l.TrainingCertificate.PersonnelTrainingStatus)
+                        @Html.Label("Completion Status")
                         @Html.DropDownListFor(l => l.TrainingCertificate.StatusId, new SelectList(Model.TrainingStatuses, "Id", "Name"), "Select Status", new {@class = "form-control", Name = "StatusId"})
                         @Html.ValidationMessageFor(l => l.TrainingCertificate.StatusId)
                     </div>
@@ -200,12 +200,12 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Observed By</label>
+                        @Html.Label("Observed By")
                         <select class="form-control" id="newObserverSelect" name="ObserverId">
                         </select>
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(l => l.PersonnelObservation.Outcome)
+                        @Html.Label("Overall Outcome")
                         @Html.DropDownListFor(l => l.PersonnelObservation.Outcome, new SelectList(Model.ObservationOutcomes), "Select Outcome", new {@class = "form-control", Name = "Outcome"})
                     </div>
                     <div class="form-group">
@@ -238,12 +238,12 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @Html.LabelFor(l => l.TrainingCertificate.CourseId)
+                        @Html.Label("Training Course")
                         @Html.TextBox("display", null, new {@class = "form-control", id = "EditCertCourseDisplay", @readonly = ""})
                         @Html.HiddenFor(l => l.TrainingCertificate.CourseId, new {id = "EditCertCourseControl", Name = "CourseId"})
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(l => l.TrainingCertificate.StatusId)
+                        @Html.Label("Completion Status")
                         @Html.DropDownListFor(l => l.TrainingCertificate.StatusId, new SelectList(Model.TrainingStatuses, "Id", "Name"), "Select Status", new {@class = "form-control", Name = "StatusId", id = "EditCertStatusControl"})
                     </div>
                     <div class="form-group">
@@ -276,37 +276,37 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Staff.Title)
+                        @Html.Label("Title")
                         @Html.DropDownListFor(x => x.Staff.Title, new SelectList(Model.Titles), "Select Title", new {@class = "form-control", Name = "Title", id = "EditStaffTitle"})
                         @Html.ValidationMessageFor(x => x.Staff.Title)
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Staff.FirstName)
+                        @Html.Label("First Name")
                         @Html.TextBoxFor(x => x.Staff.FirstName, new {@class = "form-control", Name = "FirstName", id = "EditStaffFirstName"})
                         @Html.ValidationMessageFor(x => x.Staff.FirstName)
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Staff.LastName)
+                        @Html.Label("Last Name")
                         @Html.TextBoxFor(x => x.Staff.LastName, new {@class = "form-control", Name = "LastName", id = "EditStaffLastName"})
                         @Html.ValidationMessageFor(x => x.Staff.LastName)
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Staff.Code)
+                        @Html.Label("Staff Code")
                         @Html.TextBoxFor(x => x.Staff.Code, new {@class = "form-control", Name = "Code", id = "EditStaffCode"})
                         @Html.ValidationMessageFor(x => x.Staff.Code)
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Staff.JobTitle)
+                        @Html.Label("Job Title")
                         @Html.TextBoxFor(x => x.Staff.JobTitle, new {@class = "form-control", Name = "JobTitle", id = "EditStaffJobTitle"})
                         @Html.ValidationMessageFor(x => x.Staff.JobTitle)
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Staff.Email)
+                        @Html.Label("Email Address")
                         @Html.TextBoxFor(x => x.Staff.Email, new {@class = "form-control", Name = "Email", id = "EditStaffEmail"})
                         @Html.ValidationMessageFor(x => x.Staff.Email)
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Staff.Phone)
+                        @Html.Label("Phone Number")
                         @Html.TextBoxFor(x => x.Staff.Phone, new {@class = "form-control", Name = "Phone", id = "EditStaffPhone"})
                         @Html.ValidationMessageFor(x => x.Staff.Phone)
                         @Html.HiddenFor(x => x.Staff.Id, new {@class = "form-control", Name = "Id", id = "EditStaffId"})
@@ -337,12 +337,12 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Upload.CoreDocument.Description)
+                        @Html.Label("Description")
                         @Html.TextBoxFor(x => x.Upload.CoreDocument.Description, new {@class = "form-control", Name = "Document.Description"})
                         @Html.ValidationMessageFor(x => x.Upload.CoreDocument.Description)
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Upload.CoreDocument.Url)
+                        @Html.Label("URL")
                         @Html.TextBoxFor(x => x.Upload.CoreDocument.Url, new {@class = "form-control", Name = "Document.Url"})
                         @Html.ValidationMessageFor(x => x.Upload.CoreDocument.Url)
                     </div>
@@ -374,12 +374,12 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Upload.CoreDocument.Description)
+                        @Html.Label("Description")
                         @Html.TextBoxFor(x => x.Upload.CoreDocument.Description, new {@class = "form-control", Name = "Document.Description", id = "EditDocumentDescription"})
                         @Html.ValidationMessageFor(x => x.Upload.CoreDocument.Description)
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Upload.CoreDocument.Url)
+                        @Html.Label("URL")
                         @Html.TextBoxFor(x => x.Upload.CoreDocument.Url, new {@class = "form-control", Name = "Document.Url", id = "EditDocumentUrl"})
                         @Html.ValidationMessageFor(x => x.Upload.CoreDocument.Url)
                     </div>
@@ -418,7 +418,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(l => l.PersonnelObservation.Outcome)
+                        @Html.Label("Overall Outcome")
                         @Html.DropDownListFor(l => l.PersonnelObservation.Outcome, new SelectList(Model.ObservationOutcomes), "Select Outcome", new {@class = "form-control", Name = "Outcome", id = "EditObservationOutcome"})
                     </div>
                     <div class="form-group">

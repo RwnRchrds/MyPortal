@@ -92,7 +92,7 @@ namespace MyPortal.Controllers.Api
             _context.CoreDocuments.Add(document);
             _context.SaveChanges();
 
-            var studentDocument = new CoreStudentDocument
+            var studentDocument = new DocsStudentDocument
             {
                 DocumentId = document.Id,
                 StudentId = data.Student
@@ -112,7 +112,7 @@ namespace MyPortal.Controllers.Api
         /// <exception cref="HttpResponseException">Thrown when the model state is invalid.</exception>
         [HttpPost]
         [Authorize(Roles = "Staff, SeniorStaff")]
-        public IHttpActionResult CreateStudent(CoreStudent student)
+        public IHttpActionResult CreateStudent(PeopleStudent student)
         {
             if (!ModelState.IsValid)
             {
@@ -259,7 +259,7 @@ namespace MyPortal.Controllers.Api
                 AuthenticateStudentRequest(document.StudentId);
             }
 
-            return Mapper.Map<CoreDocument, CoreDocumentDto>(document.CoreDocument);
+            return Mapper.Map<DocsDocument, CoreDocumentDto>(document.CoreDocument);
         }
 
         /// <summary>
@@ -287,7 +287,7 @@ namespace MyPortal.Controllers.Api
             var documents = _context.CoreStudentDocuments
                 .Where(x => x.StudentId == studentId)
                 .ToList()
-                .Select(Mapper.Map<CoreStudentDocument, CoreStudentDocumentDto>);
+                .Select(Mapper.Map<DocsStudentDocument, CoreStudentDocumentDto>);
 
             return documents;
         }
@@ -314,7 +314,7 @@ namespace MyPortal.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return Mapper.Map<CoreStudent, CoreStudentDto>(student);
+            return Mapper.Map<PeopleStudent, CoreStudentDto>(student);
         }
 
         /// <summary>
@@ -329,7 +329,7 @@ namespace MyPortal.Controllers.Api
                 .Include(s => s.PastoralRegGroup)
                 .OrderBy(x => x.LastName)
                 .ToList()
-                .Select(Mapper.Map<CoreStudent, CoreStudentDto>);
+                .Select(Mapper.Map<PeopleStudent, CoreStudentDto>);
         }
 
         /// <summary>
@@ -344,7 +344,7 @@ namespace MyPortal.Controllers.Api
                 .Where(x => x.RegGroupId == regGroupId)
                 .OrderBy(x => x.LastName)
                 .ToList()
-                .Select(Mapper.Map<CoreStudent, CoreStudentDto>);
+                .Select(Mapper.Map<PeopleStudent, CoreStudentDto>);
         }
 
         /// <summary>
@@ -361,7 +361,7 @@ namespace MyPortal.Controllers.Api
                 .Where(x => x.YearGroupId == yearGroupId)
                 .OrderBy(x => x.LastName)
                 .ToList()
-                .Select(Mapper.Map<CoreStudent, CoreStudentDto>);
+                .Select(Mapper.Map<PeopleStudent, CoreStudentDto>);
         }
 
         /// <summary>
@@ -432,7 +432,7 @@ namespace MyPortal.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return studentInDb.CoreStudentDocuments.Any();
+            return studentInDb.DocsStudentDocuments.Any();
         }
 
         [HttpGet]
@@ -495,7 +495,7 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [Authorize(Roles = "Staff, SeniorStaff")]
         [Route("api/students/documents/edit")]
-        public IHttpActionResult UpdateDocument(CoreDocument data)
+        public IHttpActionResult UpdateDocument(DocsDocument data)
         {
             var documentInDb = _context.CoreDocuments.Single(x => x.Id == data.Id);
 
@@ -524,7 +524,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPut]
         [Authorize(Roles = "Staff, SeniorStaff")]
-        public IHttpActionResult UpdateStudent(CoreStudent student)
+        public IHttpActionResult UpdateStudent(PeopleStudent student)
         {
             if (student == null || !ModelState.IsValid)
             {

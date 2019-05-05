@@ -96,7 +96,7 @@
                         <td>
                             <b>Head of Year</b>
                         </td>
-                        <td>@Model.Student.PastoralYearGroup.CoreStaffMember.Title @Model.Student.PastoralYearGroup.CoreStaffMember.FirstName.Substring(0, 1) @Model.Student.PastoralYearGroup.CoreStaffMember.LastName</td>
+                        <td>@Model.Student.PastoralYearGroup.HeadOfYear.Title @Model.Student.PastoralYearGroup.HeadOfYear.FirstName.Substring(0, 1) @Model.Student.PastoralYearGroup.HeadOfYear.LastName</td>
                     </tr>
                 </table>
 
@@ -203,7 +203,7 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @Html.LabelFor(l => l.Log.TypeId)
+                        @Html.Label("Log Type")
                         @Html.DropDownListFor(l => l.Log.TypeId, new SelectList(Model.LogTypes, "Id", "Name"), "Select Log Type", new {@class = "form-control", Name = "TypeId"})
                         @Html.ValidationMessageFor(l => l.Log.TypeId)
                     </div>
@@ -211,7 +211,7 @@
                     <button type="button" class="btn btn-sm btn-success" id="addComment"><i class="fa fa-plus-circle"></i> Add Comment</button>
                     <hr/>
                     <div class="form-group">
-                        @Html.LabelFor(l => l.Log.Message)
+                        @Html.Label("Message")
                         @Html.TextAreaFor(l => l.Log.Message, new {@class = "form-control mp-textarea-lg", Name = "Message", id = "newLogMessageControl"})
                         @Html.ValidationMessageFor(l => l.Log.Message)
                     </div>
@@ -246,11 +246,11 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @Html.LabelFor(l => l.Log.TypeId)
+                        @Html.Label("Log Type")
                         @Html.DropDownListFor(l => l.Log.TypeId, new SelectList(Model.LogTypes, "Id", "Name"), "Select Log Type", new {@class = "form-control", id = "EditLogTypeControl", Name = "TypeId"})
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(l => l.Log.Message)
+                        @Html.Label("Message")
                         @Html.TextAreaFor(l => l.Log.Message, new {@class = "form-control mp-textarea-lg", id = "EditLogMessageControl", Name = "Message"})
                     </div>
                     <div class="form-group">
@@ -284,27 +284,27 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @Html.LabelFor(s => s.Student.FirstName)
+                        @Html.Label("First Name")
                         @Html.TextBoxFor(s => s.Student.FirstName, new {@class = "form-control", Name = "FirstName", id = "editDetailsFirstNameControl"})
                         @Html.ValidationMessageFor(s => s.Student.FirstName)
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(s => s.Student.LastName)
+                        @Html.Label("Last Name")
                         @Html.TextBoxFor(s => s.Student.LastName, new {@class = "form-control", Name = "LastName", id = "editDetailsLastNameControl"})
                         @Html.ValidationMessageFor(s => s.Student.LastName)
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(s => s.Student.Gender)
+                        @Html.Label("Gender")
                         @Html.DropDownListFor(s => s.Student.Gender, new SelectList(Model.Genders, "Value", "Name"), "Select Gender", new {@class = "form-control", Name = "Gender", id = "editDetailsYearGroupControl"})
                         @Html.ValidationMessageFor(s => s.Student.Gender)
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(s => s.Student.YearGroupId)
+                        @Html.Label("Year Group")
                         @Html.DropDownListFor(s => s.Student.YearGroupId, new SelectList(Model.YearGroups, "Id", "Name"), "Select Year Group", new {@class = "form-control", Name = "YearGroupId", id = "editDetailsYearGroupControl"})
                         @Html.ValidationMessageFor(s => s.Student.YearGroupId)
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(s => s.Student.RegGroupId)
+                        @Html.Label("Reg Group")
                         @Html.DropDownListFor(s => s.Student.RegGroupId, new SelectList(Model.RegGroups, "Id", "Name"), "Select Reg Group", new {@class = "form-control", Name = "RegGroupId", id = "editDetailsRegGroupControl"})
                         @Html.ValidationMessageFor(s => s.Student.RegGroupId)
                     </div>
@@ -335,12 +335,12 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Upload.Document.Description)
+                        @Html.Label("Description")
                         @Html.TextBoxFor(x => x.Upload.Document.Description, new {@class = "form-control", Name = "Document.Description"})
                         @Html.ValidationMessageFor(x => x.Upload.Document.Description)
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Upload.Document.Url)
+                        @Html.Label("URL")
                         @Html.TextBoxFor(x => x.Upload.Document.Url, new {@class = "form-control", Name = "Document.Url"})
                         @Html.ValidationMessageFor(x => x.Upload.Document.Url)
                     </div>
@@ -372,12 +372,12 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Upload.Document.Description)
+                        @Html.Label("Description")
                         @Html.TextBoxFor(x => x.Upload.Document.Description, new {@class = "form-control", Name = "Description", id = "EditDocumentDescriptionControl"})
                         @Html.ValidationMessageFor(x => x.Upload.Document.Description)
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Upload.Document.Url)
+                        @Html.Label("URL")
                         @Html.TextBoxFor(x => x.Upload.Document.Url, new {@class = "form-control", Name = "Url", id = "EditDocumentUrlControl"})
                         @Html.ValidationMessageFor(x => x.Upload.Document.Url)
                     </div>
@@ -547,11 +547,11 @@
                     {
                         data: "coreStaffMember.code",
                         render: function(data, type, log) {
-                            return log.coreStaffMember.title +
+                            return log.author.title +
                                 " " +
-                                log.coreStaffMember.firstName.substring(0, 1) +
+                                log.author.firstName.substring(0, 1) +
                                 " " +
-                                log.coreStaffMember.lastName;
+                                log.author.lastName;
                         }
                     },
                     {

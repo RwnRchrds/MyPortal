@@ -4,8 +4,11 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Http;
+using AutoMapper;
+using MyPortal.Dtos;
 using MyPortal.Helpers;
 using MyPortal.Models.Database;
+using MyPortal.Models.Misc;
 
 namespace MyPortal.Controllers.Api
 {
@@ -25,7 +28,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [Route("api/attendance/marks/loadRegister/{weekId}/{periodId}/{classId}")]
-        public IEnumerable<AttendanceMark> LoadRegister(int weekId, int periodId, int classId)
+        public IEnumerable<ListContainer<AttendanceMarkDto>> LoadRegister(int weekId, int periodId, int classId)
         {
             var academicYearId = SystemHelper.GetCurrentOrSelectedAcademicYearId(User);
 
@@ -49,35 +52,42 @@ namespace MyPortal.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            var marks = new List<AttendanceMark>();
+            var studentMarks = new List<ListContainer<AttendanceMarkDto>>();
 
             foreach (var enrolment in registerClass.CurriculumClassEnrolments)
             {
                 var student = enrolment.Student;
+                var marks = new ListContainer<AttendanceMarkDto>();
+                var markList = new List<AttendanceMarkDto>();
 
                 foreach (var period in periodsInDay)
                 {
-                    var mark = new AttendanceMark
-                    {
-                        PeriodId = period.Id,
-                        WeekId = attendanceWeek.Id,
-                        StudentId = student.Id,
-                        Mark = "-"
-                    };
-
-                    var markInDb = _context.AttendanceMarks.SingleOrDefault(x =>
+                    var mark = _context.AttendanceMarks.SingleOrDefault(x =>
                         x.PeriodId == periodId && x.WeekId == attendanceWeek.Id && x.StudentId == student.Id);
-
-                    if (markInDb != null)
-                    {
-                        mark = markInDb;
+                    
+                    if (mark == null)
+                    {                        
+                        mark = new AttendanceRegisterMark
+                        {
+                            PeopleStudent = student,
+                            Mark = "-",
+                            WeekId = weekId,
+                            AttendanceWeek = attendanceWeek,
+                            PeriodId = period.Id,
+                            StudentId = student.Id,
+                            AttendancePeriod = period
+                        };
                     }
-
-                    marks.Add(mark);
+                    
+                    markList.Add(Mapper.Map<AttendanceRegisterMark, AttendanceMarkDto>(mark));
                 }
+
+                marks.Objects = markList.OrderBy(x => x.AttendancePeriod.StartTime);
+                studentMarks.Add(marks);
+
             }
 
-            return marks;
+            return studentMarks.ToList();
         }
     }
 }

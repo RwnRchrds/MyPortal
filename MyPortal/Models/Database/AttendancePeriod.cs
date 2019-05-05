@@ -12,7 +12,7 @@ namespace MyPortal.Models.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public AttendancePeriod()
         {
-            AttendanceMarks = new HashSet<AttendanceMark>();
+            AttendanceRegisterMarks = new HashSet<AttendanceRegisterMark>();
             CurriculumClassPeriods = new HashSet<CurriculumClassPeriod>();
         }
 
@@ -33,7 +33,7 @@ namespace MyPortal.Models.Database
         public bool IsPm { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AttendanceMark> AttendanceMarks { get; set; }
+        public virtual ICollection<AttendanceRegisterMark> AttendanceRegisterMarks { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CurriculumClassPeriod> CurriculumClassPeriods { get; set; }

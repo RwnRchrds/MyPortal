@@ -110,14 +110,14 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @Html.LabelFor(p => p.ChangePassword.Password)
+                        @Html.Label("Password")
                         @Html.PasswordFor(p => p.ChangePassword.Password, new {@class = "form-control", id = "enteredPassword", Name = "Password"})
                         @Html.ValidationMessageFor(p => p.ChangePassword.Password)
 
                         @Html.HiddenFor(u => u.ChangePassword.UserId, new {Value = Model.User.Id, id = "userIdControl", Name = "UserId"})
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(p => p.ChangePassword.Confirm)
+                        @Html.Label("Confirm Password")
                         @Html.PasswordFor(p => p.ChangePassword.Confirm, new {@class = "form-control", id = "confirmPassword", Name = "Confirm"})
                         @Html.ValidationMessageFor(p => p.ChangePassword.Confirm)
                     </div>
@@ -148,7 +148,7 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @Html.LabelFor(r => r.ChangeRole.RoleName)
+                        @Html.Label("Role")
                         @Html.DropDownListFor(r => r.ChangeRole.RoleName, new SelectList(Model.Roles, "Name", "Name"), "Select Role", new {@class = "form-control", Name = "RoleName"})
 
                         @Html.HiddenFor(u => u.ChangePassword.UserId, new {Value = Model.User.Id, Name = "UserId"})

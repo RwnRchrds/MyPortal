@@ -28,7 +28,7 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/staff/documents/add")]
-        public IHttpActionResult AddDocument(CoreStaffDocument data)
+        public IHttpActionResult AddDocument(DocsStaffDocument data)
         {
             var staff = _context.CoreStaff.SingleOrDefault(x => x.Id == data.StaffId);
 
@@ -120,7 +120,7 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/staff/new")]
-        public IHttpActionResult CreateStaff(CoreStaffMember staffDto)
+        public IHttpActionResult CreateStaff(PeopleStaffMember staffDto)
         {
             if (!ModelState.IsValid)
             {
@@ -210,7 +210,7 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/staff/edit")]
-        public IHttpActionResult EditStaff(CoreStaffMember data)
+        public IHttpActionResult EditStaff(PeopleStaffMember data)
         {
             var staffInDb = _context.CoreStaff.SingleOrDefault(x => x.Id == data.Id);
 
@@ -254,7 +254,7 @@ namespace MyPortal.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return Mapper.Map<CoreStaffDocument, CoreStaffDocumentDto>(document);
+            return Mapper.Map<DocsStaffDocument, CoreStaffDocumentDto>(document);
         }
 
         // --[STAFF DOCUMENTS]--
@@ -279,7 +279,7 @@ namespace MyPortal.Controllers.Api
             var documents = _context.CoreStaffDocuments
                 .Where(x => x.StaffId == staffId)
                 .ToList()
-                .Select(Mapper.Map<CoreStaffDocument, CoreStaffDocumentDto>);
+                .Select(Mapper.Map<DocsStaffDocument, CoreStaffDocumentDto>);
 
             return documents;
         }
@@ -339,7 +339,7 @@ namespace MyPortal.Controllers.Api
             return _context.CoreStaff
                 .OrderBy(x => x.LastName)
                 .ToList()
-                .Select(Mapper.Map<CoreStaffMember, CoreStaffMemberDto>);
+                .Select(Mapper.Map<PeopleStaffMember, CoreStaffMemberDto>);
         }        
 
         /// <summary>
@@ -358,7 +358,7 @@ namespace MyPortal.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return Mapper.Map<CoreStaffMember, CoreStaffMemberDto>(staff);
+            return Mapper.Map<PeopleStaffMember, CoreStaffMemberDto>(staff);
         }
 
         /// <summary>
@@ -446,7 +446,7 @@ namespace MyPortal.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return staffInDb.CoreStaffDocuments.Any();
+            return staffInDb.DocsStaffDocuments.Any();
         }
 
         /// <summary>
@@ -476,7 +476,7 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/staff/documents/edit")]
-        public IHttpActionResult UpdateDocument(CoreStaffDocument data)
+        public IHttpActionResult UpdateDocument(DocsStaffDocument data)
         {
             var staffDocumentInDb = _context.CoreStaffDocuments.Single(x => x.Id == data.Id);
 

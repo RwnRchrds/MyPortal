@@ -51,12 +51,12 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Product.Description)
+                        @Html.Label("Description")
                         @Html.TextBoxFor(x => x.Product.Description, new {@class = "form-control", Name = "Description"})
                         @Html.ValidationMessageFor(x => x.Product.Description)
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Product.Price)
+                        @Html.Label("Price")
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text mp-bold" id="basic-addon">£</span>
@@ -101,12 +101,12 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.HiddenFor(x => x.Product.Id, new {Name = "Id", id = "editIdControl"})
-                        @Html.LabelFor(x => x.Product.Description)
+                        @Html.Label("Description")
                         @Html.TextBoxFor(x => x.Product.Description, new {@class = "form-control", Name = "Description", id = "editDescriptionControl"})
                         @Html.ValidationMessageFor(x => x.Product.Description)
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Product.Price)
+                        @Html.Label("Price")
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text mp-bold" id="basic-addon">£</span>

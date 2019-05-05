@@ -25,9 +25,9 @@ namespace MyPortal.Models.Database
         [Column(TypeName = "date")]
         public DateTime Date { get; set; }
 
-        public virtual CoreStaffMember CoreStaffMember { get; set; }
+        public virtual PeopleStaffMember Author { get; set; }
 
-        public virtual CoreStudent CoreStudent { get; set; }
+        public virtual PeopleStudent CoreStudent { get; set; }
 
         public virtual CurriculumAcademicYear CurriculumAcademicYear { get; set; }
 

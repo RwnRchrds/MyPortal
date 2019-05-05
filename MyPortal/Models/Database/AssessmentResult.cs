@@ -30,7 +30,7 @@ namespace MyPortal.Models.Database
 
         public virtual AssessmentResultSet AssessmentResultSet { get; set; }
 
-        public virtual CoreStudent CoreStudent { get; set; }
+        public virtual PeopleStudent PeopleStudent { get; set; }
 
         public virtual CurriculumSubject CurriculumSubject { get; set; }
     }

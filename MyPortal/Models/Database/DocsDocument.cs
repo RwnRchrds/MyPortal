@@ -6,14 +6,14 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("Core_Documents")]
-    public partial class CoreDocument
+    [Table("Docs_Documents")]
+    public partial class DocsDocument
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public CoreDocument()
+        public DocsDocument()
         {
-            CoreStaffDocuments = new HashSet<CoreStaffDocument>();
-            CoreStudentDocuments = new HashSet<CoreStudentDocument>();
+            CoreStaffDocuments = new HashSet<DocsStaffDocument>();
+            CoreStudentDocuments = new HashSet<DocsStudentDocument>();
         }
 
         public int Id { get; set; }
@@ -35,12 +35,12 @@ namespace MyPortal.Models.Database
 
         public bool Approved { get; set; }
 
-        public virtual CoreStaffMember Uploader { get; set; }
+        public virtual PeopleStaffMember Uploader { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CoreStaffDocument> CoreStaffDocuments { get; set; }
+        public virtual ICollection<DocsStaffDocument> CoreStaffDocuments { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CoreStudentDocument> CoreStudentDocuments { get; set; }
+        public virtual ICollection<DocsStudentDocument> CoreStudentDocuments { get; set; }
     }
 }

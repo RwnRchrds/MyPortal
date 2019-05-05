@@ -34,7 +34,7 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [Route("api/documents/add")]
         [Authorize(Roles = "Staff, SeniorStaff")]
-        public IHttpActionResult AddDocument(CoreDocument document)
+        public IHttpActionResult AddDocument(DocsDocument document)
         {
             var IsUriValid = Uri.TryCreate(document.Url, UriKind.Absolute, out var uriResult)
                              && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
@@ -44,7 +44,7 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
             }
 
-            var uploader = new CoreStaffMember();
+            var uploader = new PeopleStaffMember();
 
             var uploaderId = document.UploaderId;
 
@@ -92,7 +92,7 @@ namespace MyPortal.Controllers.Api
             return _context.CoreDocuments
                 .Where(x => x.IsGeneral && x.Approved)
                 .ToList()
-                .Select(Mapper.Map<CoreDocument, CoreDocumentDto>);
+                .Select(Mapper.Map<DocsDocument, CoreDocumentDto>);
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace MyPortal.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return Mapper.Map<CoreDocument, CoreDocumentDto>(document);
+            return Mapper.Map<DocsDocument, CoreDocumentDto>(document);
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace MyPortal.Controllers.Api
             return _context.CoreDocuments
                 .Where(x => x.IsGeneral)
                 .ToList()
-                .Select(Mapper.Map<CoreDocument, CoreDocumentDto>);
+                .Select(Mapper.Map<DocsDocument, CoreDocumentDto>);
         }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [Authorize(Roles = "Staff, SeniorStaff")]
         [Route("api/documents/edit")]
-        public IHttpActionResult UpdateDocument(CoreDocument data)
+        public IHttpActionResult UpdateDocument(DocsDocument data)
         {
             var documentInDb = _context.CoreDocuments.SingleOrDefault(x => x.Id == data.Id);
 

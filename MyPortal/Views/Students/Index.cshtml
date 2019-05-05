@@ -60,7 +60,7 @@
                         <td>
                             <b>Head of Year</b>
                         </td>
-                        <td>@Model.Student.PastoralYearGroup.CoreStaffMember.Title @Model.Student.PastoralYearGroup.CoreStaffMember.FirstName.Substring(0, 1) @Model.Student.PastoralYearGroup.CoreStaffMember.LastName</td>
+                        <td>@Model.Student.PastoralYearGroup.HeadOfYear.Title @Model.Student.PastoralYearGroup.HeadOfYear.FirstName.Substring(0, 1) @Model.Student.PastoralYearGroup.HeadOfYear.LastName</td>
                     </tr>
                 </table>
 
@@ -166,11 +166,11 @@
                     {
                         data: "coreStaffMember.lastName",
                         render: function(data, type, log) {
-                            return log.coreStaffMember.title +
+                            return log.author.title +
                                 " " +
-                                log.coreStaffMember.firstName.substring(0, 1) +
+                                log.author.firstName.substring(0, 1) +
                                 " " +
-                                log.coreStaffMember.lastName;
+                                log.author.lastName;
                         }
                     },
                     {

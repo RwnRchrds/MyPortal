@@ -21,7 +21,7 @@ namespace MyPortal.Models.Database
 
         public int StatusId { get; set; }
 
-        public virtual CoreStaffMember CoreStaffMember { get; set; }
+        public virtual PeopleStaffMember CoreStaffMember { get; set; }
 
         public virtual PersonnelTrainingCourse PersonnelTrainingCourse { get; set; }
 

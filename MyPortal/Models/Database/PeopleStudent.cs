@@ -6,15 +6,15 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("Core_Students")]
-    public partial class CoreStudent
+    [Table("People_Students")]
+    public partial class PeopleStudent
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public CoreStudent()
+        public PeopleStudent()
         {
             AssessmentResults = new HashSet<AssessmentResult>();
-            AttendanceMarks = new HashSet<AttendanceMark>();
-            CoreStudentDocuments = new HashSet<CoreStudentDocument>();
+            AttendanceRegisterMarks = new HashSet<AttendanceRegisterMark>();
+            DocsStudentDocuments = new HashSet<DocsStudentDocument>();
             FinanceBasketItems = new HashSet<FinanceBasketItem>();
             ProfileLogs = new HashSet<ProfileLog>();
             FinanceSales = new HashSet<FinanceSale>();
@@ -57,10 +57,10 @@ namespace MyPortal.Models.Database
         public virtual ICollection<AssessmentResult> AssessmentResults { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AttendanceMark> AttendanceMarks { get; set; }
+        public virtual ICollection<AttendanceRegisterMark> AttendanceRegisterMarks { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CoreStudentDocument> CoreStudentDocuments { get; set; }
+        public virtual ICollection<DocsStudentDocument> DocsStudentDocuments { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FinanceBasketItem> FinanceBasketItems { get; set; }

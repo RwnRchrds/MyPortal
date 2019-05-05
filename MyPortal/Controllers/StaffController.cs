@@ -41,7 +41,7 @@ namespace MyPortal.Controllers
         // HTTP POST request for creating students using HTML form
         [System.Web.Mvc.HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateStudent(CoreStudent student)
+        public ActionResult CreateStudent(PeopleStudent student)
         {
             if (!ModelState.IsValid)
             {
@@ -51,7 +51,7 @@ namespace MyPortal.Controllers
                     RegGroups = new RegGroupsController().GetRegGroups().ToList().Select(Mapper.Map<PastoralRegGroupDto, PastoralRegGroup>),
                     YearGroups = new YearGroupsController().GetYearGroups().ToList().Select(Mapper.Map<PastoralYearGroupDto, PastoralYearGroup>)
                 };
-                return View("~/Views/Staff/Core/NewStudent.cshtml", viewModel);
+                return View("~/Views/Staff/People/NewStudent.cshtml", viewModel);
             }
 
             _context.CoreStudents.Add(student);
@@ -70,7 +70,7 @@ namespace MyPortal.Controllers
         [System.Web.Mvc.Route("Staff/Core/Documents")]
         public ActionResult Documents()
         {
-            return View("~/Views/Staff/Core/Documents.cshtml");
+            return View("~/Views/Staff/Docs/Documents.cshtml");
         }
 
         [System.Web.Mvc.Route("Staff/Assessment/Results/Import")]
@@ -133,12 +133,12 @@ namespace MyPortal.Controllers
                 YearGroups = yearGroups
             };
 
-            return View("~/Views/Staff/Core/NewStudent.cshtml",viewModel);
+            return View("~/Views/Staff/People/NewStudent.cshtml",viewModel);
         }        
 
         // HTTP POST request for updating student details using HTML form
         [System.Web.Mvc.HttpPost]
-        public ActionResult SaveStudent(CoreStudent student)
+        public ActionResult SaveStudent(PeopleStudent student)
         {
             var studentInDb = _context.CoreStudents.Single(l => l.Id == student.Id);
 
@@ -159,7 +159,7 @@ namespace MyPortal.Controllers
         public ActionResult Staff()
         {
             var viewModel = new NewStaffViewModel();
-            return View("~/Views/Staff/Core/Staff.cshtml", viewModel);
+            return View("~/Views/Staff/People/Staff.cshtml", viewModel);
         }
 
         // Menu | Staff | X --> Student Details (for Staff X)
@@ -199,7 +199,7 @@ namespace MyPortal.Controllers
                 CurrentStaffId = currentStaffId
             };
 
-            return View("~/Views/Staff/Core/StaffDetails.cshtml", viewModel);
+            return View("~/Views/Staff/People/StaffDetails.cshtml", viewModel);
         }
 
         // Menu | Students | X --> Student Details (for Student X)
@@ -241,7 +241,7 @@ namespace MyPortal.Controllers
                 CommentBanks = commentBanks
             };
 
-            return View("~/Views/Staff/Core/StudentDetails.cshtml", viewModel);
+            return View("~/Views/Staff/People/StudentDetails.cshtml", viewModel);
         }
 
         //Menu | Students | X | [View Results] --> Student Results (for Student X)
@@ -272,7 +272,7 @@ namespace MyPortal.Controllers
                 Subjects = subjects
             };
 
-            return View("~/Views/Staff/Core/StudentResults.cshtml", viewModel);
+            return View("~/Views/Staff/People/StudentResults.cshtml", viewModel);
         }
 
         // Menu | Students --> Students List (All)
@@ -280,7 +280,7 @@ namespace MyPortal.Controllers
         [System.Web.Mvc.Route("Staff/Core/Students")]
         public ActionResult Students()
         {
-            return View("~/Views/Staff/Core/Students.cshtml");
+            return View("~/Views/Staff/People/Students.cshtml");
         }
 
         // Menu | Training Courses --> Training Courses List (All)
@@ -392,7 +392,7 @@ namespace MyPortal.Controllers
         public ActionResult Registers()
         {
             var userId = User.Identity.GetUserId();
-            CoreStaffMember currentUser = null;
+            PeopleStaffMember currentUser = null;
             
             if (userId != null)
             {

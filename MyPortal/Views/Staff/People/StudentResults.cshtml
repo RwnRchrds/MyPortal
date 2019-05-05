@@ -47,17 +47,17 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Result.ResultSetId)
+                        @Html.Label("Result Set")
                         @Html.DropDownListFor(x => x.Result.ResultSetId, new SelectList(Model.ResultSets, "Id", "Name", "Select Result Set"), new {@class = "form-control", Name = "ResultSetId", id = "newResultSetControl"})
                         @Html.ValidationMessageFor(x => x.Result.ResultSetId)
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Result.SubjectId)
+                        @Html.Label("Subject")
                         @Html.DropDownListFor(x => x.Result.SubjectId, new SelectList(Model.Subjects, "Id", "Name"), "Select a Subject", new {@class = "form-control", Name = "SubjectId"})
                         @Html.ValidationMessageFor(x => x.Result.SubjectId)
                     </div>                    
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Result.Value)
+                        @Html.Label("Value")
                         @Html.TextBoxFor(x => x.Result.Value, new {@class = "form-control", Name = "Value"})
                         @Html.ValidationMessageFor(x => x.Result.Value)
                     </div>

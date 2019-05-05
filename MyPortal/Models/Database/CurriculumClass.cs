@@ -30,7 +30,7 @@ namespace MyPortal.Models.Database
 
         public int? YearGroupId { get; set; }
 
-        public virtual CoreStaffMember CoreStaffMember { get; set; }
+        public virtual PeopleStaffMember CoreStaffMember { get; set; }
 
         public virtual CurriculumAcademicYear CurriculumAcademicYear { get; set; }
 

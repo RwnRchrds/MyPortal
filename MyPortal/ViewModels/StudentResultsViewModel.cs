@@ -6,7 +6,7 @@ namespace MyPortal.ViewModels
 {
     public class StudentResultsViewModel
     {
-        public CoreStudent Student { get; set; }
+        public PeopleStudent Student { get; set; }
         public IEnumerable<AssessmentResultSet> ResultSets { get; set; }
         public int CurrentResultSetId { get; set; }
         public AssessmentResult Result { get; set; }

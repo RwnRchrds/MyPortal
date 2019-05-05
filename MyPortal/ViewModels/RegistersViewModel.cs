@@ -8,7 +8,7 @@ namespace MyPortal.ViewModels
 {
     public class RegistersViewModel
     {
-        public CoreStaffMember CurrentUser { get; set; }
-        public IEnumerable<CoreStaffMember> StaffMembers { get; set; }
+        public PeopleStaffMember CurrentUser { get; set; }
+        public IEnumerable<PeopleStaffMember> StaffMembers { get; set; }
     }
 }

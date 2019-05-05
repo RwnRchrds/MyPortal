@@ -14,7 +14,7 @@ namespace MyPortal.ViewModels
             ObservationOutcomes = new List<string>{"Outstanding","Good","Satisfactory","Inadequate"};
         }
 
-        public CoreStaffMember Staff { get; set; }
+        public PeopleStaffMember Staff { get; set; }
         public int CurrentStaffId { get; set; }
         public IEnumerable<PersonnelTrainingCertificate> TrainingCertificates { get; set; }
         public PersonnelTrainingCertificate TrainingCertificate { get; set; }
@@ -23,6 +23,6 @@ namespace MyPortal.ViewModels
         public IEnumerable<PersonnelTrainingCourse> TrainingCourses { get; set; }
         public IEnumerable<PersonnelTrainingStatus> TrainingStatuses { get; set; }
         public IEnumerable<string> Titles { get; set; }
-        public CoreStaffDocument Upload { get; set; }
+        public DocsStaffDocument Upload { get; set; }
     }
 }

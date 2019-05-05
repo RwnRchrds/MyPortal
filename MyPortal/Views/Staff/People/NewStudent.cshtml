@@ -13,42 +13,42 @@
     @using (Html.BeginForm("CreateStudent", "Staff"))
     {
         <div class="form-group">
-            @Html.LabelFor(s => s.Student.FirstName)
+            @Html.Label("First Name")
             @Html.TextBoxFor(s => s.Student.FirstName, new {@class = "form-control"})
             @Html.ValidationMessageFor(s => s.Student.FirstName)
         </div>
         <div class="form-group">
-            @Html.LabelFor(s => s.Student.LastName)
+            @Html.Label("Last Name")
             @Html.TextBoxFor(s => s.Student.LastName, new {@class = "form-control"})
             @Html.ValidationMessageFor(s => s.Student.LastName)
         </div>
         <div class="form-group">
-            @Html.LabelFor(s => s.Student.Gender)
+            @Html.Label("Gender")
             @Html.DropDownListFor(s => s.Student.Gender, new SelectList(Model.Genders, "Value", "Name"), "Select Gender", new {@class = "form-control"})
             @Html.ValidationMessageFor(s => s.Student.Gender)
         </div>
         <div class="form-group">
-            @Html.LabelFor(s => s.Student.Email)
+            @Html.Label("Email")
             @Html.TextBoxFor(s => s.Student.Email, new {@class = "form-control"})
             @Html.ValidationMessageFor(s => s.Student.Email)
         </div>
         <div class="form-group">
-            @Html.LabelFor(s => s.Student.YearGroupId)
+            @Html.Label("Year Group")
             @Html.DropDownListFor(s => s.Student.YearGroupId, new SelectList(Model.YearGroups, "Id", "Name"), "Select Year Group", new {@class = "form-control"})
             @Html.ValidationMessageFor(s => s.Student.YearGroupId)
         </div>
         <div class="form-group">
-            @Html.LabelFor(s => s.Student.RegGroupId)
+            @Html.Label("Reg Group")
             @Html.DropDownListFor(s => s.Student.RegGroupId, new SelectList(Model.RegGroups, "Id", "Name"), "Select Reg Group", new {@class = "form-control"})
             @Html.ValidationMessageFor(s => s.Student.RegGroupId)
         </div>
         <div class="form-group">
-            @Html.LabelFor(s => s.Student.CandidateNumber)
+            @Html.Label("Candidate Number")
             @Html.TextBoxFor(s => s.Student.CandidateNumber, new {@class = "form-control"})
             @Html.ValidationMessageFor(s => s.Student.CandidateNumber)
         </div>
         <div class="form-group">
-            @Html.LabelFor(s => s.Student.MisId)
+            @Html.Label("MIS ID")
             @Html.TextBoxFor(s => s.Student.MisId, new {@class = "form-control"})
             @Html.ValidationMessageFor(s => s.Student.MisId)
         </div>

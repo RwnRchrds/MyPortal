@@ -46,12 +46,12 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Comment.CommentBankId)
+                        @Html.Label("Comment Bank")
                         @Html.DropDownListFor(l => l.Comment.CommentBankId, new SelectList(Model.CommentBanks, "Id", "Name"), "Select Comment Bank", new {@class = "form-control", Name = "CommentBankId", id = "newCommentBankControl"})
                         @Html.ValidationMessageFor(x => x.Comment.CommentBankId)
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Comment.Value)
+                        @Html.Label("Value")
                         @Html.TextAreaFor(x => x.Comment.Value, new {@class = "form-control", Name = "Value"})
                         @Html.ValidationMessageFor(x => x.Comment.Value)
                     </div>
@@ -77,12 +77,12 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Comment.CommentBankId)
+                        @Html.Label("Comment Bank")
                         @Html.DropDownListFor(l => l.Comment.CommentBankId, new SelectList(Model.CommentBanks, "Id", "Name"), "Select Comment Bank", new {@class = "form-control", Name = "CommentBankId", id = "editCommentBankControl"})
                         @Html.ValidationMessageFor(x => x.Comment.CommentBankId)
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(x => x.Comment.Value)
+                        @Html.Label("Value")
                         @Html.TextAreaFor(x => x.Comment.Value, new {@class = "form-control", Name = "Value", id = "editCommentValueControl"})
                         @Html.ValidationMessageFor(x => x.Comment.Value)
                     </div>

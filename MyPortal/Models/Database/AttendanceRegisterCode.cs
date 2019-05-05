@@ -6,8 +6,8 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("Attendance_Codes")]
-    public partial class AttendanceCode
+    [Table("Attendance_RegisterCodes")]
+    public partial class AttendanceRegisterCode
     {
         public int Id { get; set; }
 
@@ -21,6 +21,6 @@ namespace MyPortal.Models.Database
 
         public int MeaningId { get; set; }
 
-        public virtual AttendanceMeaning AttendanceMeaning { get; set; }
+        public virtual AttendanceRegisterCodeMeaning AttendanceRegisterCodeMeaning { get; set; }
     }
 }

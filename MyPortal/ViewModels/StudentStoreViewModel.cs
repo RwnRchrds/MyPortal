@@ -5,6 +5,6 @@ namespace MyPortal.ViewModels
 {
     public class StudentStoreViewModel
     {
-        public CoreStudent Student { get; set; }
+        public PeopleStudent Student { get; set; }
     }
 }

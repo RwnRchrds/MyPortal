@@ -14,6 +14,6 @@ namespace MyPortal.ViewModels
         public IEnumerable<PastoralYearGroup> YearGroups { get; set; }
         public IEnumerable<PastoralRegGroup> RegGroups { get; set; }
         public IEnumerable<Gender> Genders { get; set; }
-        public CoreStudent Student { get; set; }
+        public PeopleStudent Student { get; set; }
     }
 }

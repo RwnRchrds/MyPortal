@@ -6,14 +6,14 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("Core_Staff")]
-    public partial class CoreStaffMember
+    [Table("People_Staff")]
+    public partial class PeopleStaffMember
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public CoreStaffMember()
+        public PeopleStaffMember()
         {
-            CoreDocuments = new HashSet<CoreDocument>();
-            CoreStaffDocuments = new HashSet<CoreStaffDocument>();
+            DocsDocuments = new HashSet<DocsDocument>();
+            DocsStaffDocuments = new HashSet<DocsStaffDocument>();
             CurriculumClasses = new HashSet<CurriculumClass>();
             CurriculumLessonPlansAuthored = new HashSet<CurriculumLessonPlan>();
             ProfileLogsWritten = new HashSet<ProfileLog>();
@@ -57,10 +57,10 @@ namespace MyPortal.Models.Database
         public string UserId { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CoreDocument> CoreDocuments { get; set; }
+        public virtual ICollection<DocsDocument> DocsDocuments { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CoreStaffDocument> CoreStaffDocuments { get; set; }
+        public virtual ICollection<DocsStaffDocument> DocsStaffDocuments { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CurriculumClass> CurriculumClasses { get; set; }

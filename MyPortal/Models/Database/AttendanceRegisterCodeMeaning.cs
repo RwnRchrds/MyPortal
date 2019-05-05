@@ -6,13 +6,13 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("Attendance_Meanings")]
-    public partial class AttendanceMeaning
+    [Table("Attendance_RegisterCodeMeanings")]
+    public partial class AttendanceRegisterCodeMeaning
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public AttendanceMeaning()
+        public AttendanceRegisterCodeMeaning()
         {
-            AttendanceCodes = new HashSet<AttendanceCode>();
+            AttendanceRegisterCodes = new HashSet<AttendanceRegisterCode>();
         }
 
         public int Id { get; set; }
@@ -21,6 +21,6 @@ namespace MyPortal.Models.Database
         public string Description { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AttendanceCode> AttendanceCodes { get; set; }
+        public virtual ICollection<AttendanceRegisterCode> AttendanceRegisterCodes { get; set; }
     }
 }

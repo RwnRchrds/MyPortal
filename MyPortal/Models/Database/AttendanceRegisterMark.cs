@@ -6,8 +6,8 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("Attendance_Marks")]
-    public partial class AttendanceMark
+    [Table("Attendance_RegisterMarks")]
+    public partial class AttendanceRegisterMark
     {
         public int Id { get; set; }
 
@@ -23,6 +23,8 @@ namespace MyPortal.Models.Database
 
         public virtual AttendancePeriod AttendancePeriod { get; set; }
 
-        public virtual CoreStudent CoreStudent { get; set; }
+        public virtual PeopleStudent PeopleStudent { get; set; }
+
+        public virtual AttendanceWeek AttendanceWeek { get; set; }
     }
 }

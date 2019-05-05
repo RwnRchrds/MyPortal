@@ -16,19 +16,19 @@ namespace MyPortal.Helpers
             _context = new MyPortalDbContext();           
         }
 
-        public static AttendanceMeaning GetMeaning(string code)
+        public static AttendanceRegisterCodeMeaning GetMeaning(string code)
         {
             var codeInDb = _context.AttendanceCodes.SingleOrDefault(x => x.Code == code);
 
-            return codeInDb?.AttendanceMeaning;
+            return codeInDb?.AttendanceRegisterCodeMeaning;
         }
 
-        public static bool VerifyRegisterCodes(AttendanceRegister register)
+        public static bool VerifyRegisterCodes(ListContainer<AttendanceRegisterMark> register)
         {
             var codesVerified = true;
             var codes = _context.AttendanceCodes.ToList();
 
-            foreach (var mark in register.Marks)
+            foreach (var mark in register.Objects)
             {
                 if (codes.All(x => x.Code != mark.Mark))
                 {

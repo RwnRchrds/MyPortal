@@ -17,6 +17,6 @@ namespace MyPortal.Models.Database
 
         public virtual CurriculumClass CurriculumClass { get; set; }
 
-        public virtual CoreStudent Student { get; set; }
+        public virtual PeopleStudent Student { get; set; }
     }
 }

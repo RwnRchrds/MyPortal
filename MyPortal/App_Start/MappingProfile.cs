@@ -10,8 +10,8 @@ namespace MyPortal
     {
         public MappingProfile()
         {
-            CreateMap<CoreStudent, CoreStudentDto>();
-            CreateMap<CoreStudentDto, CoreStudent>();
+            CreateMap<PeopleStudent, CoreStudentDto>();
+            CreateMap<CoreStudentDto, PeopleStudent>();
 
             CreateMap<ProfileLogDto, ProfileLog>();
             CreateMap<ProfileLog, ProfileLogDto>();
@@ -22,8 +22,8 @@ namespace MyPortal
             CreateMap<PastoralRegGroupDto, PastoralRegGroup>();
             CreateMap<PastoralRegGroup, PastoralRegGroupDto>();
 
-            CreateMap<CoreStaffMemberDto, CoreStaffMember>();
-            CreateMap<CoreStaffMember, CoreStaffMemberDto>();
+            CreateMap<CoreStaffMemberDto, PeopleStaffMember>();
+            CreateMap<PeopleStaffMember, CoreStaffMemberDto>();
 
             CreateMap<PersonnelTrainingCertificateDto, PersonnelTrainingCertificate>();
             CreateMap<PersonnelTrainingCertificate, PersonnelTrainingCertificateDto>();
@@ -64,14 +64,14 @@ namespace MyPortal
             CreateMap<PersonnelTrainingStatusDto, PersonnelTrainingStatus>();
             CreateMap<PersonnelTrainingStatus, PersonnelTrainingStatusDto>();
 
-            CreateMap<CoreDocumentDto, CoreDocument>();
-            CreateMap<CoreDocument, CoreDocumentDto>();
+            CreateMap<CoreDocumentDto, DocsDocument>();
+            CreateMap<DocsDocument, CoreDocumentDto>();
 
-            CreateMap<CoreStudentDocumentDto, CoreStudentDocument>();
-            CreateMap<CoreStudentDocument, CoreStudentDocumentDto>();
+            CreateMap<CoreStudentDocumentDto, DocsStudentDocument>();
+            CreateMap<DocsStudentDocument, CoreStudentDocumentDto>();
 
-            CreateMap<CoreStaffDocumentDto, CoreStaffDocument>();
-            CreateMap<CoreStaffDocument, CoreStaffDocumentDto>();
+            CreateMap<CoreStaffDocumentDto, DocsStaffDocument>();
+            CreateMap<DocsStaffDocument, CoreStaffDocumentDto>();
 
             CreateMap<AssessmentGradeSetDto, AssessmentGradeSet>();
             CreateMap<AssessmentGradeSet, AssessmentGradeSetDto>();

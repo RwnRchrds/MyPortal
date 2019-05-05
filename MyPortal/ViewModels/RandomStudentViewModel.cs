@@ -6,7 +6,7 @@ namespace MyPortal.ViewModels
 {
     public class RandomStudentViewModel
     {
-        public CoreStudent Student { get; set; }
+        public PeopleStudent Student { get; set; }
         public List<AssessmentResult> Results { get; set; }
     }
 }

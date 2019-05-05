@@ -52,17 +52,17 @@
                 {
                     <div class="modal-body">
                         <div class="form-group">
-                            @Html.LabelFor(x => x.Document.Description)
+                            @Html.Label("Description")
                             @Html.TextBoxFor(x => x.Document.Description, new {@class = "form-control", Name = "Description"})
                             @Html.ValidationMessageFor(x => x.Document.Description)
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(x => x.Document.Url)
+                            @Html.Label("URL")
                             @Html.TextBoxFor(x => x.Document.Url, new {@class = "form-control", Name = "Url"})
                             @Html.ValidationMessageFor(x => x.Document.Url)
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(x => x.Document.Approved)
+                            @Html.Label("Approved")
                             @Html.CheckBoxFor(x => x.Document.Approved, new {Name = "Approved"})
                             @Html.ValidationMessageFor(x => x.Document.Approved)
                         </div>
@@ -88,17 +88,17 @@
                 {
                     <div class="modal-body">
                         <div class="form-group">
-                            @Html.LabelFor(x => x.Document.Description)
+                            @Html.Label("Description")
                             @Html.TextBoxFor(x => x.Document.Description, new {@class = "form-control", Name = "Description", id = "EditDocumentDescriptionControl"})
                             @Html.ValidationMessageFor(x => x.Document.Description)
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(x => x.Document.Url)
+                            @Html.Label("URL")
                             @Html.TextBoxFor(x => x.Document.Url, new {@class = "form-control", Name = "Url", id = "EditDocumentUrlControl"})
                             @Html.ValidationMessageFor(x => x.Document.Url)
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(x => x.Document.Approved)
+                            @Html.Label("Approved")
                             @Html.CheckBoxFor(x => x.Document.Approved, new {Name = "Approved", id = "EditDocumentApprovedControl"})
                             @Html.ValidationMessageFor(x => x.Document.Approved)
                         </div>
