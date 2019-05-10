@@ -12,7 +12,7 @@ namespace MyPortal.Models.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public PastoralRegGroup()
         {
-            Students = new HashSet<PeopleStudent>();
+            Students = new HashSet<Student>();
         }
 
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -26,10 +26,10 @@ namespace MyPortal.Models.Database
 
         public int YearGroupId { get; set; }
 
-        public virtual PeopleStaffMember Tutor { get; set; }
+        public virtual StaffMember Tutor { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PeopleStudent> Students { get; set; }
+        public virtual ICollection<Student> Students { get; set; }
 
         public virtual PastoralYearGroup PastoralYearGroup { get; set; }
     }

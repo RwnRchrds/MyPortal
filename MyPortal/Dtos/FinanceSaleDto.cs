@@ -16,7 +16,7 @@ namespace MyPortal.Dtos
 
         public bool Processed { get; set; }
 
-        public CoreStudentDto CoreStudent { get; set; }
+        public StudentDto CoreStudent { get; set; }
 
         public FinanceProductDto FinanceProduct { get; set; }
     }

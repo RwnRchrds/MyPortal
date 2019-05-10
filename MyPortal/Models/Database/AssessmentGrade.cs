@@ -15,7 +15,7 @@ namespace MyPortal.Models.Database
 
         [Required]
         [StringLength(255)]
-        public string Grade { get; set; }
+        public string GradeValue { get; set; }
 
         public virtual AssessmentGradeSet AssessmentGradeSet { get; set; }
     }

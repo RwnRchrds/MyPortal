@@ -12,7 +12,7 @@ namespace MyPortal.ViewModels
             Genders = Gender.GetGenderOptions();
         }
         
-        public PeopleStudent Student { get; set; }
+        public Student Student { get; set; }
         //public List<Log> Logs { get; set; }
         public IEnumerable<AssessmentResult> Results { get; set; }
         //public bool IsUpperSchool { get; set; }

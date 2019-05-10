@@ -6,7 +6,7 @@ namespace MyPortal.ViewModels
 {
     public class StaffHomeViewModel
     {
-        public PeopleStaffMember CurrentUser { get; set; }
+        public StaffMember CurrentUser { get; set; }
         public IEnumerable<CurriculumAcademicYear> CurriculumAcademicYears { get; set; }
     }
 }

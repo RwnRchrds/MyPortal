@@ -79,7 +79,7 @@ namespace MyPortal.UnitTests.ApiTests
             
             Assert.IsNotNull(uploader);
             
-            var document = new DocsDocument
+            var document = new Document
             {
                 Url = "http://ftp.test.com/DocAdd", Description = "Add Document Test", Date = DateTime.Today,
                 Approved = false, UploaderId = uploader.Id
@@ -103,7 +103,7 @@ namespace MyPortal.UnitTests.ApiTests
             var uploader = _context.CoreStaff.SingleOrDefault(x => x.FirstName == "Lily");
             Assert.IsNotNull(uploader);
             
-            var document = new DocsDocument
+            var document = new Document
             {                
                 Url = "TEST", Description = "Add Document Test", Date = DateTime.Today, Approved = false,
                 UploaderId = uploader.Id
@@ -124,7 +124,7 @@ namespace MyPortal.UnitTests.ApiTests
         {
             const int uploaderId = 9999;
 
-            var document = new DocsDocument
+            var document = new Document
             {
                 Url = "http://ftp.test.com/DocAdd", Description = "Add Document Test", Date = DateTime.Today,
                 Approved = false, UploaderId = uploaderId
@@ -191,7 +191,7 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void UpdateDocument_DocumentDoesNotExist_ReturnsNotFound()
         {                       
-            var document = new DocsDocument
+            var document = new Document
             {
                 Id = 9999,
                 Url = "http://ftp.test.com/docUpdate",

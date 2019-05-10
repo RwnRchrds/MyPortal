@@ -245,15 +245,16 @@
     <Compile Include="Dtos\AssessmentResultDto.cs" />
     <Compile Include="Dtos\AssessmentResultSetDto.cs" />
     <Compile Include="Dtos\AttendanceCodeDto.cs" />
-    <Compile Include="Dtos\AttendanceMarkDto.cs" />
+    <Compile Include="Dtos\AttendanceRegisterMarkDto.cs" />
     <Compile Include="Dtos\AttendanceMeaningDto.cs" />
     <Compile Include="Dtos\AttendancePeriodDto.cs" />
     <Compile Include="Dtos\AttendanceWeekDto.cs" />
-    <Compile Include="Dtos\DocsDocumentDto.cs" />
-    <Compile Include="Dtos\DocsStaffDocumentDto.cs" />
-    <Compile Include="Dtos\PeopleStaffMemberDto.cs" />
-    <Compile Include="Dtos\DocsStudentDocumentDto.cs" />
-    <Compile Include="Dtos\PeopleStudentDto.cs" />
+    <Compile Include="Dtos\DocumentDto.cs" />
+    <Compile Include="Dtos\LiteDtos\AttendanceRegisterMarkLite.cs" />
+    <Compile Include="Dtos\StaffDocumentDto.cs" />
+    <Compile Include="Dtos\StaffMemberDto.cs" />
+    <Compile Include="Dtos\StudentDocumentDto.cs" />
+    <Compile Include="Dtos\StudentDto.cs" />
     <Compile Include="Dtos\CurriculumAcademicYearDto.cs" />
     <Compile Include="Dtos\CurriculumClassDto.cs" />
     <Compile Include="Dtos\CurriculumClassEnrolmentDto.cs" />
@@ -277,7 +278,7 @@
     <Compile Include="Dtos\ProfileCommentDto.cs" />
     <Compile Include="Dtos\ProfileLogDto.cs" />
     <Compile Include="Dtos\ProfileLogTypeDto.cs" />
-    <Compile Include="Dtos\ViewDtos\StudentDayRegisterDto.cs" />
+    <Compile Include="Dtos\ViewDtos\StudentRegisterMarksDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -308,17 +309,17 @@
     <Compile Include="Models\Database\CurriculumLessonPlanTemplate.cs" />
     <Compile Include="Models\Database\CurriculumStudyTopic.cs" />
     <Compile Include="Models\Database\CurriculumSubject.cs" />
-    <Compile Include="Models\Database\DocsDocument.cs" />
-    <Compile Include="Models\Database\DocsStaffDocument.cs" />
-    <Compile Include="Models\Database\DocsStudentDocument.cs" />
+    <Compile Include="Models\Database\Document.cs" />
+    <Compile Include="Models\Database\StaffDocument.cs" />
+    <Compile Include="Models\Database\StudentDocument.cs" />
     <Compile Include="Models\Database\FinanceBasketItem.cs" />
     <Compile Include="Models\Database\FinanceProduct.cs" />
     <Compile Include="Models\Database\FinanceSale.cs" />
     <Compile Include="Models\Database\MyPortalDbContext.cs" />
     <Compile Include="Models\Database\PastoralRegGroup.cs" />
     <Compile Include="Models\Database\PastoralYearGroup.cs" />
-    <Compile Include="Models\Database\PeopleStaffMember.cs" />
-    <Compile Include="Models\Database\PeopleStudent.cs" />
+    <Compile Include="Models\Database\StaffMember.cs" />
+    <Compile Include="Models\Database\Student.cs" />
     <Compile Include="Models\Database\PersonnelObservation.cs" />
     <Compile Include="Models\Database\PersonnelTrainingCertificate.cs" />
     <Compile Include="Models\Database\PersonnelTrainingCourse.cs" />
@@ -327,7 +328,7 @@
     <Compile Include="Models\Database\ProfileComment.cs" />
     <Compile Include="Models\Database\ProfileLog.cs" />
     <Compile Include="Models\Database\ProfileLogType.cs" />
-    <Compile Include="Models\Misc\AttendanceRegister.cs" />
+    <Compile Include="Models\Misc\ListContainer.cs" />
     <Compile Include="Models\Misc\BalanceAdjustment.cs" />
     <Compile Include="Models\Misc\ChangePasswordModel.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -795,7 +796,7 @@
     <Folder Include="Models\Authorisation\" />
     <Folder Include="Views\Staff\Admission\" />
     <Folder Include="Views\Staff\Behaviour\" />
-    <Folder Include="Views\Staff\Communication" />
+    <Folder Include="Views\Staff\Communication\" />
     <Folder Include="Views\Staff\Homework\" />
     <Folder Include="Views\Staff\Medical\" />
   </ItemGroup>

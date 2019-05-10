@@ -8,7 +8,7 @@ namespace MyPortal.Dtos
 
         public int StatusId { get; set; }
 
-        public CoreStaffMemberDto CoreStaffMember { get; set; }
+        public StaffMemberDto CoreStaffMember { get; set; }
 
         public PersonnelTrainingCourseDto PersonnelTrainingCourse { get; set; }
 

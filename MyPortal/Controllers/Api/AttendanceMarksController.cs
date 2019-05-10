@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Runtime.Serialization;
 using System.Web;
 using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
+using MyPortal.Dtos.LiteDtos;
+using MyPortal.Dtos.ViewDtos;
 using MyPortal.Helpers;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
 
 namespace MyPortal.Controllers.Api
-{
+{    
     public class AttendanceMarksController : ApiController
     {
         private readonly MyPortalDbContext _context;
@@ -27,8 +30,8 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Route("api/attendance/marks/loadRegister/{weekId}/{periodId}/{classId}")]
-        public IEnumerable<ListContainer<AttendanceMarkDto>> LoadRegister(int weekId, int periodId, int classId)
+        [Route("api/attendance/marks/loadRegister/{weekId}/{periodId}")]
+        public IEnumerable<StudentRegisterMarksDto> LoadRegister(int weekId, int periodId)
         {
             var academicYearId = SystemHelper.GetCurrentOrSelectedAcademicYearId(User);
 
@@ -40,54 +43,59 @@ namespace MyPortal.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
-            var currentPeriod = _context.AttendancePeriods.SingleOrDefault(x => x.Id == periodId);
+            var currentPeriod = _context.CurriculumClassPeriods.SingleOrDefault(x => x.Id == periodId);
 
-            var periodsInDay = _context.AttendancePeriods.Where(x => x.Weekday == currentPeriod.Weekday).ToList();
-
-            var registerClass =
-                _context.CurriculumClasses.SingleOrDefault(x => x.AcademicYearId == academicYearId && x.Id == classId);
-
-            if (registerClass == null)
+            if (currentPeriod == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            var studentMarks = new List<ListContainer<AttendanceMarkDto>>();
+            var periodsInDay = _context.AttendancePeriods.Where(x => x.Weekday == currentPeriod.AttendancePeriod.Weekday).ToList();
 
-            foreach (var enrolment in registerClass.CurriculumClassEnrolments)
+            var registerClass =
+                _context.CurriculumClasses.SingleOrDefault(x => x.AcademicYearId == academicYearId && x.Id == currentPeriod.ClassId);
+
+            if (registerClass == null)
             {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }            
+
+            var markList = new List<StudentRegisterMarksDto>();
+
+            foreach (var enrolment in registerClass.Enrolments)
+            {
+                var markObject = new StudentRegisterMarksDto();
                 var student = enrolment.Student;
-                var marks = new ListContainer<AttendanceMarkDto>();
-                var markList = new List<AttendanceMarkDto>();
+                markObject.Student = Mapper.Map<Student, StudentDto>(student);
+                var marks = new List<AttendanceRegisterMark>();
 
                 foreach (var period in periodsInDay)
                 {
                     var mark = _context.AttendanceMarks.SingleOrDefault(x =>
-                        x.PeriodId == periodId && x.WeekId == attendanceWeek.Id && x.StudentId == student.Id);
-                    
-                    if (mark == null)
-                    {                        
-                        mark = new AttendanceRegisterMark
-                        {
-                            PeopleStudent = student,
-                            Mark = "-",
-                            WeekId = weekId,
-                            AttendanceWeek = attendanceWeek,
-                            PeriodId = period.Id,
-                            StudentId = student.Id,
-                            AttendancePeriod = period
-                        };
-                    }
-                    
-                    markList.Add(Mapper.Map<AttendanceRegisterMark, AttendanceMarkDto>(mark));
+                                   x.PeriodId == periodId && x.WeekId == attendanceWeek.Id && x.StudentId == student.Id) ??
+                               new AttendanceRegisterMark
+                               {
+                                   Student = student,
+                                   Mark = "-",
+                                   WeekId = weekId,
+                                   AttendanceWeek = attendanceWeek,
+                                   PeriodId = period.Id,
+                                   StudentId = student.Id,
+                                   AttendancePeriod = period
+                               };
+
+                    marks.Add(mark);
                 }
 
-                marks.Objects = markList.OrderBy(x => x.AttendancePeriod.StartTime);
-                studentMarks.Add(marks);
+                
+                var liteMarks = marks.OrderBy(x => x.AttendancePeriod.StartTime)
+                    .Select(Mapper.Map<AttendanceRegisterMark, AttendanceRegisterMarkLite>);
 
+                markObject.Marks = liteMarks;
+                markList.Add(markObject);
             }
 
-            return studentMarks.ToList();
+            return markList.ToList().OrderBy(x => x.Student.LastName);
         }
     }
 }

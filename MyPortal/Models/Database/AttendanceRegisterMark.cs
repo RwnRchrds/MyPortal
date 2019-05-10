@@ -23,7 +23,7 @@ namespace MyPortal.Models.Database
 
         public virtual AttendancePeriod AttendancePeriod { get; set; }
 
-        public virtual PeopleStudent PeopleStudent { get; set; }
+        public virtual Student Student { get; set; }
 
         public virtual AttendanceWeek AttendanceWeek { get; set; }
     }

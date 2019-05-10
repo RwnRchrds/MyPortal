@@ -5,6 +5,6 @@ namespace MyPortal.ViewModels
 {
     public class DocumentsViewModel
     {
-        public DocsDocument Document { get; set; }
+        public Document Document { get; set; }
     }
 }

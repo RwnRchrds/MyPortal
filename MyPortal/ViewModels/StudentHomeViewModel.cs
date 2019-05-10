@@ -6,7 +6,7 @@ namespace MyPortal.ViewModels
 {
     public class StudentHomeViewModel
     {
-        public PeopleStudent Student { get; set; }
+        public Student Student { get; set; }
         public List<ProfileLog> Logs { get; set; }
         public IEnumerable<AssessmentResult> Results { get; set; }
         public bool IsUpperSchool { get; set; }

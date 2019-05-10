@@ -8,6 +8,6 @@ namespace MyPortal.ViewModels
     public class SubjectsViewModel
     {
         public CurriculumSubject Subject { get; set; }
-        public IEnumerable<PeopleStaffMember> Staff { get; set; }
+        public IEnumerable<StaffMember> Staff { get; set; }
     }
 }

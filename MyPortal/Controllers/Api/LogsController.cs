@@ -47,7 +47,7 @@ namespace MyPortal.Controllers.Api
 
             var authorId = log.AuthorId;
 
-            var author = new PeopleStaffMember();
+            var author = new StaffMember();
 
             if (authorId == 0)
             {

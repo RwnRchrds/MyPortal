@@ -28,7 +28,7 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/staff/documents/add")]
-        public IHttpActionResult AddDocument(DocsStaffDocument data)
+        public IHttpActionResult AddDocument(StaffDocument data)
         {
             var staff = _context.CoreStaff.SingleOrDefault(x => x.Id == data.StaffId);
 
@@ -46,15 +46,15 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.BadRequest, "Uploader not found");
             }
 
-            data.CoreDocument.IsGeneral = false;
+            data.Document.IsGeneral = false;
 
-            data.CoreDocument.Approved = true;
+            data.Document.Approved = true;
 
-            data.CoreDocument.Date = DateTime.Now;
+            data.Document.Date = DateTime.Now;
 
-            data.CoreDocument.UploaderId = uploader.Id;
+            data.Document.UploaderId = uploader.Id;
 
-            var isUriValid = Uri.TryCreate(data.CoreDocument.Url, UriKind.Absolute, out var uriResult)
+            var isUriValid = Uri.TryCreate(data.Document.Url, UriKind.Absolute, out var uriResult)
                              && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 
             if (!isUriValid)
@@ -64,7 +64,7 @@ namespace MyPortal.Controllers.Api
 
             var staffDocument = data;
 
-            var document = staffDocument.CoreDocument;
+            var document = staffDocument.Document;
 
             _context.CoreDocuments.Add(document);
             _context.CoreStaffDocuments.Add(staffDocument);
@@ -120,7 +120,7 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/staff/new")]
-        public IHttpActionResult CreateStaff(PeopleStaffMember staffDto)
+        public IHttpActionResult CreateStaff(StaffMember staffDto)
         {
             if (!ModelState.IsValid)
             {
@@ -191,7 +191,7 @@ namespace MyPortal.Controllers.Api
 
             foreach (var document in ownDocuments)
             {
-                var attachment = document.CoreDocument;
+                var attachment = document.Document;
 
                 _context.CoreStaffDocuments.Remove(document);
                 _context.CoreDocuments.Remove(attachment);
@@ -210,7 +210,7 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/staff/edit")]
-        public IHttpActionResult EditStaff(PeopleStaffMember data)
+        public IHttpActionResult EditStaff(StaffMember data)
         {
             var staffInDb = _context.CoreStaff.SingleOrDefault(x => x.Id == data.Id);
 
@@ -245,7 +245,7 @@ namespace MyPortal.Controllers.Api
         /// <exception cref="HttpResponseException"></exception>
         [HttpGet]
         [Route("api/staff/documents/document/{documentId}")]
-        public CoreStaffDocumentDto GetDocument(int documentId)
+        public StaffDocumentDto GetDocument(int documentId)
         {
             var document = _context.CoreStaffDocuments.SingleOrDefault(x => x.Id == documentId);
 
@@ -254,7 +254,7 @@ namespace MyPortal.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return Mapper.Map<DocsStaffDocument, CoreStaffDocumentDto>(document);
+            return Mapper.Map<StaffDocument, StaffDocumentDto>(document);
         }
 
         // --[STAFF DOCUMENTS]--
@@ -267,7 +267,7 @@ namespace MyPortal.Controllers.Api
         /// <exception cref="HttpResponseException"></exception>
         [HttpGet]
         [Route("api/staff/documents/fetch/{staffId}")]
-        public IEnumerable<CoreStaffDocumentDto> GetDocuments(int staffId)
+        public IEnumerable<StaffDocumentDto> GetDocuments(int staffId)
         {
             var staff = _context.CoreStaff.SingleOrDefault(s => s.Id == staffId);
 
@@ -279,7 +279,7 @@ namespace MyPortal.Controllers.Api
             var documents = _context.CoreStaffDocuments
                 .Where(x => x.StaffId == staffId)
                 .ToList()
-                .Select(Mapper.Map<DocsStaffDocument, CoreStaffDocumentDto>);
+                .Select(Mapper.Map<StaffDocument, StaffDocumentDto>);
 
             return documents;
         }
@@ -334,12 +334,12 @@ namespace MyPortal.Controllers.Api
         /// </summary>
         /// <returns>Returns a list of DTOs of all staff.</returns>
         [Route("api/staff/fetch")]
-        public IEnumerable<CoreStaffMemberDto> GetStaff()
+        public IEnumerable<StaffMemberDto> GetStaff()
         {
             return _context.CoreStaff
                 .OrderBy(x => x.LastName)
                 .ToList()
-                .Select(Mapper.Map<PeopleStaffMember, CoreStaffMemberDto>);
+                .Select(Mapper.Map<StaffMember, StaffMemberDto>);
         }        
 
         /// <summary>
@@ -349,7 +349,7 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns a DTO of the specified staff member.</returns>
         /// <exception cref="HttpResponseException">Thrown when the staff member is not found.</exception>
         [Route("api/staff/fetch/{id}")]
-        public CoreStaffMemberDto GetStaffMember(string id)
+        public StaffMemberDto GetStaffMember(string id)
         {
             var staff = _context.CoreStaff.SingleOrDefault(s => s.Code == id);
 
@@ -358,7 +358,7 @@ namespace MyPortal.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return Mapper.Map<PeopleStaffMember, CoreStaffMemberDto>(staff);
+            return Mapper.Map<StaffMember, StaffMemberDto>(staff);
         }
 
         /// <summary>
@@ -377,7 +377,7 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.NotFound, "Document not found");
             }
 
-            var attachedDocument = staffDocument.CoreDocument;
+            var attachedDocument = staffDocument.Document;
 
             if (attachedDocument == null)
             {
@@ -446,7 +446,7 @@ namespace MyPortal.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return staffInDb.DocsStaffDocuments.Any();
+            return staffInDb.StaffDocuments.Any();
         }
 
         /// <summary>
@@ -476,7 +476,7 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/staff/documents/edit")]
-        public IHttpActionResult UpdateDocument(DocsStaffDocument data)
+        public IHttpActionResult UpdateDocument(StaffDocument data)
         {
             var staffDocumentInDb = _context.CoreStaffDocuments.Single(x => x.Id == data.Id);
 
@@ -485,7 +485,7 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.NotFound, "Upload not found");
             }
 
-            var isUriValid = Uri.TryCreate(data.CoreDocument.Url, UriKind.Absolute, out var uriResult)
+            var isUriValid = Uri.TryCreate(data.Document.Url, UriKind.Absolute, out var uriResult)
                              && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 
             if (!isUriValid)
@@ -493,10 +493,10 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
             }
 
-            staffDocumentInDb.CoreDocument.Description = data.CoreDocument.Description;
-            staffDocumentInDb.CoreDocument.Url = data.CoreDocument.Url;
-            staffDocumentInDb.CoreDocument.IsGeneral = false;
-            staffDocumentInDb.CoreDocument.Approved = true;
+            staffDocumentInDb.Document.Description = data.Document.Description;
+            staffDocumentInDb.Document.Url = data.Document.Url;
+            staffDocumentInDb.Document.IsGeneral = false;
+            staffDocumentInDb.Document.Approved = true;
 
             _context.SaveChanges();
 

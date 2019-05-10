@@ -22,8 +22,8 @@ namespace MyPortal.Models.Database
         [StringLength(255)]
         public string Outcome { get; set; }
 
-        public virtual PeopleStaffMember Observee { get; set; }
+        public virtual StaffMember Observee { get; set; }
 
-        public virtual PeopleStaffMember Observer { get; set; }
+        public virtual StaffMember Observer { get; set; }
     }
 }

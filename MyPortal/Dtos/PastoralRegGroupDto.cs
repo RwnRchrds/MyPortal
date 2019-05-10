@@ -10,7 +10,7 @@ namespace MyPortal.Dtos
 
         public int YearGroupId { get; set; }
 
-        public virtual CoreStaffMemberDto Tutor { get; set; }
+        public virtual StaffMemberDto Tutor { get; set; }
 
         public virtual PastoralYearGroupDto PastoralYearGroup { get; set; }
     }

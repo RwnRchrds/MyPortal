@@ -24,7 +24,7 @@ namespace MyPortal.Models.Database
 
         public bool Processed { get; set; }
 
-        public virtual PeopleStudent CoreStudent { get; set; }
+        public virtual Student CoreStudent { get; set; }
 
         public virtual CurriculumAcademicYear CurriculumAcademicYear { get; set; }
 

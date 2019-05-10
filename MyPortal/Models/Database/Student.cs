@@ -7,18 +7,18 @@ namespace MyPortal.Models.Database
     using System.Data.Entity.Spatial;
 
     [Table("People_Students")]
-    public partial class PeopleStudent
+    public partial class Student
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public PeopleStudent()
+        public Student()
         {
             AssessmentResults = new HashSet<AssessmentResult>();
             AttendanceRegisterMarks = new HashSet<AttendanceRegisterMark>();
-            DocsStudentDocuments = new HashSet<DocsStudentDocument>();
+            StudentDocuments = new HashSet<StudentDocument>();
             FinanceBasketItems = new HashSet<FinanceBasketItem>();
             ProfileLogs = new HashSet<ProfileLog>();
             FinanceSales = new HashSet<FinanceSale>();
-            CurriculumClassEnrolments = new HashSet<CurriculumClassEnrolment>();
+            Enrolments = new HashSet<CurriculumClassEnrolment>();
         }
 
         public int Id { get; set; }
@@ -36,6 +36,7 @@ namespace MyPortal.Models.Database
         public string Gender { get; set; }
 
         [StringLength(320)]
+        [EmailAddress]
         public string Email { get; set; }
 
         public int RegGroupId { get; set; }
@@ -46,6 +47,12 @@ namespace MyPortal.Models.Database
         public string CandidateNumber { get; set; }
 
         public decimal AccountBalance { get; set; }
+
+        public bool FreeSchoolMeals { get; set; }
+
+        public bool PupilPremium { get; set; }
+
+        public bool GiftedAndTalented { get; set; }
 
         [StringLength(255)]
         public string MisId { get; set; }
@@ -60,7 +67,7 @@ namespace MyPortal.Models.Database
         public virtual ICollection<AttendanceRegisterMark> AttendanceRegisterMarks { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DocsStudentDocument> DocsStudentDocuments { get; set; }
+        public virtual ICollection<StudentDocument> StudentDocuments { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FinanceBasketItem> FinanceBasketItems { get; set; }
@@ -72,7 +79,7 @@ namespace MyPortal.Models.Database
         public virtual ICollection<FinanceSale> FinanceSales { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CurriculumClassEnrolment> CurriculumClassEnrolments { get; set; }
+        public virtual ICollection<CurriculumClassEnrolment> Enrolments { get; set; }
 
         public virtual PastoralRegGroup PastoralRegGroup { get; set; }
 

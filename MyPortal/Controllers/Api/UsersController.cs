@@ -121,7 +121,7 @@ namespace MyPortal.Controllers.Api
             var userInDb = _identity.Users.FirstOrDefault(u => u.Id == data.UserId);
             var roleToAdd = _identity.Roles.FirstOrDefault(r => r.Name == data.RoleName);
             var userIsAttached = _context.CoreStudents.Any(x => x.UserId == data.UserId) ||
-                                 _context.CoreStaff.Any(x => x.UserId == data.UserId);
+                                 _context.CoreStaff.Any(x => x.UserId == data.UserId);                       
 
             if (userInDb == null)
             {

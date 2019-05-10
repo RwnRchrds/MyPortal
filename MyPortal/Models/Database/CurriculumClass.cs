@@ -12,7 +12,7 @@ namespace MyPortal.Models.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public CurriculumClass()
         {
-            CurriculumClassEnrolments = new HashSet<CurriculumClassEnrolment>();
+            Enrolments = new HashSet<CurriculumClassEnrolment>();
             CurriculumClassPeriods = new HashSet<CurriculumClassPeriod>();
         }
 
@@ -30,12 +30,12 @@ namespace MyPortal.Models.Database
 
         public int? YearGroupId { get; set; }
 
-        public virtual PeopleStaffMember CoreStaffMember { get; set; }
+        public virtual StaffMember Teacher { get; set; }
 
         public virtual CurriculumAcademicYear CurriculumAcademicYear { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CurriculumClassEnrolment> CurriculumClassEnrolments { get; set; }
+        public virtual ICollection<CurriculumClassEnrolment> Enrolments { get; set; }
 
         public virtual CurriculumSubject CurriculumSubject { get; set; }
 

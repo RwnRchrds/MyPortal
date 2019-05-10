@@ -16,7 +16,7 @@ namespace MyPortal.Dtos
 
         public int AuthorId { get; set; }
 
-        public CoreStaffMemberDto Author { get; set; }
+        public StaffMemberDto Author { get; set; }
 
         public CurriculumStudyTopicDto StudyTopic { get; set; }
     }

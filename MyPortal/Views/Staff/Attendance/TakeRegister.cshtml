@@ -1,12 +1,12 @@
 ﻿@model MyPortal.ViewModels.TakeRegisterViewModel
 @{
-    ViewBag.Title = "Take Register: " + @Model.Period.Name + " - " + @Model.Class.Name;
+    ViewBag.Title = "Take Register: " + @Model.ClassPeriod.AttendancePeriod.Name + " - " + @Model.ClassPeriod.CurriculumClass.Name;
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
 <div class="container float-left">
-    <h2 class="mp-page-title">Take Register:</h2>
-    <h4> @Model.Class.Name (@Model.Period.Name) - @Model.Class.CoreStaffMember.Title @Model.Class.CoreStaffMember.FirstName.Substring(0, 1) @Model.Class.CoreStaffMember.LastName</h4>
+    <h2 class="mp-page-title">Take Register:</h2>    
+    <h4> @Model.ClassPeriod.CurriculumClass.Name (@Model.ClassPeriod.AttendancePeriod.Name) - @Model.ClassPeriod.CurriculumClass.Teacher.Title @Model.ClassPeriod.CurriculumClass.Teacher.FirstName.Substring(0, 1) @Model.ClassPeriod.CurriculumClass.Teacher.LastName</h4>
     <hr />
 </div>
 
@@ -21,8 +21,10 @@
             }
         </tr>
         </thead>
-    </table>
+    </table>       
+</div>
 
+<div class="container float-left">
     <button type="button" class="btn btn-primary" id="buttonBack">Back</button>
     <button type="button" class="btn btn-primary" id="buttonSearch">Save</button>
 </div>
@@ -36,6 +38,8 @@
                     location.replace("/Staff/Attendance/Registers");
                 });
 
+            var url = "/api/attendance/marks/loadRegister/@Model.WeekId/@Model.ClassPeriod.Id"; 
+
             $("#marks").DataTable({
                 ajax: {
                     url: url,
@@ -43,12 +47,64 @@
                 },
                 columns: [
                     {
-                        data: "attendancePeriod.name"
+                        data: "student.id",
+                        render: function(data, type, markObject) {
+                            return markObject.student.lastName + ", " + markObject.student.firstName;
+                        }
+                    },
+                    {
+                        data: "marks",
+                        render: function(data, type, marks) {
+                            return "/";
+                        }
+                    },
+                    {
+                        data: "marks",
+                        render: function (data, type, marks) {
+                            return "/";
+                        }
+                    },
+                    {
+                        data: "marks",
+                        render: function (data, type, marks) {
+                            return "/";
+                        }
+                    },
+                    {
+                        data: "marks",
+                        render: function (data, type, marks) {
+                            return "-";
+                        }
+                    },
+                    {
+                        data: "marks",
+                        render: function (data, type, marks) {
+                            return "-";
+                        }
+                    },
+                    {
+                        data: "marks",
+                        render: function (data, type, marks) {
+                            return "-";
+                        }
+                    },
+                    {
+                        data: "marks",
+                        render: function (data, type, marks) {
+                            return "-";
+                        }
+                    },
+                    {
+                        data: "marks",
+                        render: function (data, type, marks) {
+                            return "-";
+                        }
                     }
                 ],
                 paging: false,
                 ordering: false,
                 searching: false,
+                info: false,
                 "language": {
                     "emptyTable": "No lessons to display"
                 }

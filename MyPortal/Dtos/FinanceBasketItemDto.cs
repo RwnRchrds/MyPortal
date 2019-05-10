@@ -8,7 +8,7 @@ namespace MyPortal.Dtos
 
         public int ProductId { get; set; }
 
-        public CoreStudentDto CoreStudent { get; set; }
+        public StudentDto CoreStudent { get; set; }
 
         public FinanceProductDto FinanceProduct { get; set; }
     }

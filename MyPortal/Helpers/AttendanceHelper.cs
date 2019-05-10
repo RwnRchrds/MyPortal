@@ -30,6 +30,11 @@ namespace MyPortal.Helpers
 
             foreach (var mark in register.Objects)
             {
+                if (!codesVerified)
+                {
+                    break;
+                }
+
                 if (codes.All(x => x.Code != mark.Mark))
                 {
                     codesVerified = false;

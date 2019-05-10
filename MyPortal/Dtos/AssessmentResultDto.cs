@@ -12,7 +12,7 @@ namespace MyPortal.Dtos
 
         public AssessmentResultSetDto AssessmentResultSet { get; set; }
 
-        public CoreStudentDto CoreStudent { get; set; }
+        public StudentDto CoreStudent { get; set; }
 
         public CurriculumSubjectDto CurriculumSubject { get; set; }
     }

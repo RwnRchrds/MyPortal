@@ -10,6 +10,6 @@ namespace MyPortal.Dtos
 
         public string Code { get; set; }
 
-        public CoreStaffMemberDto Leader { get; set; }
+        public StaffMemberDto Leader { get; set; }
     }
 }

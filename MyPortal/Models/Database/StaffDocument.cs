@@ -7,7 +7,7 @@ namespace MyPortal.Models.Database
     using System.Data.Entity.Spatial;
 
     [Table("Docs_Documents_Staff")]
-    public partial class DocsStaffDocument
+    public partial class StaffDocument
     {
         public int Id { get; set; }
 
@@ -15,8 +15,8 @@ namespace MyPortal.Models.Database
 
         public int DocumentId { get; set; }
 
-        public virtual DocsDocument CoreDocument { get; set; }
+        public virtual Document Document { get; set; }
 
-        public virtual PeopleStaffMember Owner { get; set; }
+        public virtual StaffMember Owner { get; set; }
     }
 }

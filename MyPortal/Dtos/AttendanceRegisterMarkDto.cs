@@ -1,6 +1,6 @@
 namespace MyPortal.Dtos
 {
-    public class AttendanceMarkDto
+    public class AttendanceRegisterMarkDto
     {
         public int Id { get; set; }
 
@@ -14,6 +14,6 @@ namespace MyPortal.Dtos
 
         public AttendancePeriodDto AttendancePeriod { get; set; }
 
-        public CoreStudentDto CoreStudent { get; set; }
+        public StudentDto Student { get; set; }
     }
 }

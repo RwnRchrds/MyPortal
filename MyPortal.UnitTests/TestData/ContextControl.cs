@@ -57,24 +57,24 @@ namespace MyPortal.UnitTests.TestData
             #endregion
 
             #region Documents
-            var documents = new List<DocsDocument>
+            var documents = new List<Document>
             {
-                new DocsDocument
+                new Document
                 {
                     Description = "Doc1", Url = "http://ftp.test.com/doc1", Date = DateTime.Today, IsGeneral = true,
                     Approved = true, UploaderId = 1
                 },
-                new DocsDocument
+                new Document
                 {
                     Description = "Doc2", Url = "http://ftp.test.com/doc2", Date = DateTime.Today, IsGeneral = true,
                     Approved = true, UploaderId = 1
                 },
-                new DocsDocument
+                new Document
                 {
                     Description = "Doc3", Url = "http://ftp.test.com/doc3", Date = DateTime.Today, IsGeneral = true,
                     Approved = false, UploaderId = 1
                 },
-                new DocsDocument
+                new Document
                 {
                     Description = "Doc4", Url = "http://ftp.test.com/doc4", Date = DateTime.Today, IsGeneral = false,
                     Approved = true, UploaderId = 1
@@ -170,25 +170,25 @@ namespace MyPortal.UnitTests.TestData
             #endregion
 
             #region CoreStaff
-            var staff = new List<PeopleStaffMember>
+            var staff = new List<StaffMember>
             {
-                new PeopleStaffMember
+                new StaffMember
                 {
                     Id = 1, FirstName = "Georgia", LastName = "Alibi", Code = "GAL", Email = "gal@test.com",
                     JobTitle = "Test Teacher", Title = "Mrs"
                 },
-                new PeopleStaffMember
+                new StaffMember
                 {
                     Id = 2, FirstName = "Chloe", LastName = "Farrar", Code = "CFA", Title = "Mrs",
                     Email = "cfa@test.com", JobTitle = "Test Teacher"
                 },
 
-                new PeopleStaffMember
+                new StaffMember
                 {
                     Id = 3, FirstName = "Lily", LastName = "Sprague", Code = "LSP", Title = "Mrs",
                     JobTitle = "Test SLT", Email = "lsp@test.com"
                 },
-                new PeopleStaffMember
+                new StaffMember
                 {
                     Id = 4, FirstName = "William", LastName = "Townsend", Code = "WTO", Title = "Mr",
                     Email = "wto@test.com", JobTitle = "Test SLT"
@@ -196,8 +196,8 @@ namespace MyPortal.UnitTests.TestData
             };
             #endregion
 
-            #region CoreStaffDocuments
-            var staffDocuments = new List<DocsStaffDocument>();
+            #region StaffDocuments
+            var staffDocuments = new List<StaffDocument>();
             #endregion
 
             #region PersonnelObservations
@@ -205,24 +205,24 @@ namespace MyPortal.UnitTests.TestData
             #endregion
 
             #region CoreStudents
-            var students = new List<PeopleStudent>
+            var students = new List<Student>
             {
-                new PeopleStudent
+                new Student
                 {
                     Id = 1, FirstName = "Aaron", LastName = "Aardvark", YearGroupId = 3, Email = "aardvark1@test.com",
                     AccountBalance = (decimal) 200.00, CandidateNumber = "1234", RegGroupId = 3, Gender = "M", 
                 },
-                new PeopleStudent
+                new Student
                 {
                     Id = 2, FirstName = "Dorothy", LastName = "Perkins", YearGroupId = 1, Email = "dperkins1@test.com",
                     CandidateNumber = "5678", AccountBalance = (decimal) 10.00, RegGroupId = 1, Gender = "F"
                 },
-                new PeopleStudent
+                new Student
                 {
                     Id = 3, FirstName = "John", LastName = "Appleseed", YearGroupId = 2, RegGroupId = 2,
                     Email = "aappleseed1@test.com", AccountBalance = (decimal) 0.00, CandidateNumber = "7821", Gender = "X"
                 },
-                new PeopleStudent
+                new Student
                 {
                     Id = 4, FirstName = "Betty", LastName = "Newbie", YearGroupId = 4, RegGroupId = 4,
                     AccountBalance = (decimal) 100.00, Email = "betty@test.com", CandidateNumber = "6452", Gender = "F"
@@ -230,8 +230,8 @@ namespace MyPortal.UnitTests.TestData
             };
             #endregion
 
-            #region CoreStudentDocuments
-            var studentDocuments = new List<DocsStudentDocument>();
+            #region StudentDocuments
+            var studentDocuments = new List<StudentDocument>();
             #endregion
             
             #region CurriculumStudyTopics
@@ -308,8 +308,8 @@ namespace MyPortal.UnitTests.TestData
         {
             Mapper.Initialize(cfg =>
             {
-                cfg.CreateMap<PeopleStudent, CoreStudentDto>();
-                cfg.CreateMap<CoreStudentDto, PeopleStudent>();
+                cfg.CreateMap<Student, StudentDto>();
+                cfg.CreateMap<StudentDto, Student>();
 
                 cfg.CreateMap<ProfileLogDto, ProfileLog>();
                 cfg.CreateMap<ProfileLog, ProfileLogDto>();
@@ -320,8 +320,8 @@ namespace MyPortal.UnitTests.TestData
                 cfg.CreateMap<PastoralRegGroupDto, PastoralRegGroup>();
                 cfg.CreateMap<PastoralRegGroup, PastoralRegGroupDto>();
 
-                cfg.CreateMap<CoreStaffMemberDto, PeopleStaffMember>();
-                cfg.CreateMap<PeopleStaffMember, CoreStaffMemberDto>();
+                cfg.CreateMap<StaffMemberDto, StaffMember>();
+                cfg.CreateMap<StaffMember, StaffMemberDto>();
 
                 cfg.CreateMap<PersonnelTrainingCertificateDto, PersonnelTrainingCertificate>();
                 cfg.CreateMap<PersonnelTrainingCertificate, PersonnelTrainingCertificateDto>();
@@ -353,14 +353,14 @@ namespace MyPortal.UnitTests.TestData
                 cfg.CreateMap<PersonnelTrainingStatusDto, PersonnelTrainingStatus>();
                 cfg.CreateMap<PersonnelTrainingStatus, PersonnelTrainingStatusDto>();
 
-                cfg.CreateMap<CoreDocumentDto, DocsDocument>();
-                cfg.CreateMap<DocsDocument, CoreDocumentDto>();
+                cfg.CreateMap<DocumentDto, Document>();
+                cfg.CreateMap<Document, DocumentDto>();
 
-                cfg.CreateMap<CoreStudentDocumentDto, DocsStudentDocument>();
-                cfg.CreateMap<DocsStudentDocument, CoreStudentDocumentDto>();
+                cfg.CreateMap<StudentDocumentDto, StudentDocument>();
+                cfg.CreateMap<StudentDocument, StudentDocumentDto>();
 
-                cfg.CreateMap<CoreStaffDocumentDto, DocsStaffDocument>();
-                cfg.CreateMap<DocsStaffDocument, CoreStaffDocumentDto>();
+                cfg.CreateMap<StaffDocumentDto, StaffDocument>();
+                cfg.CreateMap<StaffDocument, StaffDocumentDto>();
 
                 cfg.CreateMap<AssessmentGradeSetDto, AssessmentGradeSet>();
                 cfg.CreateMap<AssessmentGradeSet, AssessmentGradeSetDto>();

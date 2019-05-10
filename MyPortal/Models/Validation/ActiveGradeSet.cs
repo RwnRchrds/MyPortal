@@ -20,7 +20,7 @@ namespace MyPortal.Models.Validation
 
             var validGrades = _context.AssessmentGrades.Where(x => x.AssessmentGradeSet.Active).ToList();
 
-            return validGrades.Any(x => x.Grade == result.Value) 
+            return validGrades.Any(x => x.GradeValue == result.Value) 
                 ? ValidationResult.Success 
                 : new ValidationResult("Result grade is not valid");
         }

@@ -34,7 +34,7 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [Route("api/documents/add")]
         [Authorize(Roles = "Staff, SeniorStaff")]
-        public IHttpActionResult AddDocument(DocsDocument document)
+        public IHttpActionResult AddDocument(Document document)
         {
             var IsUriValid = Uri.TryCreate(document.Url, UriKind.Absolute, out var uriResult)
                              && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
@@ -44,7 +44,7 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
             }
 
-            var uploader = new PeopleStaffMember();
+            var uploader = new StaffMember();
 
             var uploaderId = document.UploaderId;
 
@@ -87,12 +87,12 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [Route("api/documents/approved")]
         [Authorize(Roles = "Staff, SeniorStaff")]
-        public IEnumerable<CoreDocumentDto> GetApprovedDocuments()
+        public IEnumerable<DocumentDto> GetApprovedDocuments()
         {
             return _context.CoreDocuments
                 .Where(x => x.IsGeneral && x.Approved)
                 .ToList()
-                .Select(Mapper.Map<DocsDocument, CoreDocumentDto>);
+                .Select(Mapper.Map<Document, DocumentDto>);
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace MyPortal.Controllers.Api
         /// <exception cref="HttpResponseException">Thrown when document is not found.</exception>
         [HttpGet]
         [Route("api/documents/document/{documentId}")]
-        public CoreDocumentDto GetDocument(int documentId)
+        public DocumentDto GetDocument(int documentId)
         {
             var document = _context.CoreDocuments
                 .Single(x => x.Id == documentId);
@@ -113,7 +113,7 @@ namespace MyPortal.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return Mapper.Map<DocsDocument, CoreDocumentDto>(document);
+            return Mapper.Map<Document, DocumentDto>(document);
         }
 
         /// <summary>
@@ -123,12 +123,12 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [Route("api/documents")]
         [Authorize(Roles = "SeniorStaff")]
-        public IEnumerable<CoreDocumentDto> GetDocuments()
+        public IEnumerable<DocumentDto> GetDocuments()
         {
             return _context.CoreDocuments
                 .Where(x => x.IsGeneral)
                 .ToList()
-                .Select(Mapper.Map<DocsDocument, CoreDocumentDto>);
+                .Select(Mapper.Map<Document, DocumentDto>);
         }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [Authorize(Roles = "Staff, SeniorStaff")]
         [Route("api/documents/edit")]
-        public IHttpActionResult UpdateDocument(DocsDocument data)
+        public IHttpActionResult UpdateDocument(Document data)
         {
             var documentInDb = _context.CoreDocuments.SingleOrDefault(x => x.Id == data.Id);
 

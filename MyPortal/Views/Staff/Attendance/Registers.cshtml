@@ -85,9 +85,8 @@
                 function() {
                     var button = $(this);
                     var weekId = $("#registers").attr("data-week-id");
-                    var periodId = button.attr("data-period-id");
-                    var classId = button.attr("data-class-id");
-                    location.replace("/Staff/Attendance/TakeRegister/" + weekId + "/" + periodId + "/" + classId);
+                    var periodId = button.attr("data-classperiod-id");
+                    location.replace("/Staff/Attendance/TakeRegister/" + weekId + "/" + periodId);
                 });
         });
 
@@ -133,9 +132,8 @@
                     {
                         data: "id",
                         render: function (data, type, attendanceClass) {
-                            return "<button type='button' class='btn btn-xs btn-success js-takeRegister' data-period-id='" +
-                                attendanceClass.attendancePeriod.id +
-                                "' data-class-id='"+attendanceClass.curriculumClass.id+
+                            return "<button type='button' class='btn btn-xs btn-success js-takeRegister' data-classperiod-id='" +
+                                attendanceClass.id +                                
                                 "'><i class=\"fas fa-clipboard-check\"></i></button> ";
                         }
                     }

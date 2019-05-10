@@ -2,6 +2,7 @@
 using Microsoft.AspNet.Identity.EntityFramework;
 using MyPortal.Dtos;
 using MyPortal.Dtos.Identity;
+using MyPortal.Dtos.LiteDtos;
 using MyPortal.Models.Database;
 
 namespace MyPortal
@@ -10,8 +11,8 @@ namespace MyPortal
     {
         public MappingProfile()
         {
-            CreateMap<PeopleStudent, CoreStudentDto>();
-            CreateMap<CoreStudentDto, PeopleStudent>();
+            CreateMap<Student, StudentDto>();
+            CreateMap<StudentDto, Student>();
 
             CreateMap<ProfileLogDto, ProfileLog>();
             CreateMap<ProfileLog, ProfileLogDto>();
@@ -22,8 +23,8 @@ namespace MyPortal
             CreateMap<PastoralRegGroupDto, PastoralRegGroup>();
             CreateMap<PastoralRegGroup, PastoralRegGroupDto>();
 
-            CreateMap<CoreStaffMemberDto, PeopleStaffMember>();
-            CreateMap<PeopleStaffMember, CoreStaffMemberDto>();
+            CreateMap<StaffMemberDto, StaffMember>();
+            CreateMap<StaffMember, StaffMemberDto>();
 
             CreateMap<PersonnelTrainingCertificateDto, PersonnelTrainingCertificate>();
             CreateMap<PersonnelTrainingCertificate, PersonnelTrainingCertificateDto>();
@@ -64,14 +65,14 @@ namespace MyPortal
             CreateMap<PersonnelTrainingStatusDto, PersonnelTrainingStatus>();
             CreateMap<PersonnelTrainingStatus, PersonnelTrainingStatusDto>();
 
-            CreateMap<CoreDocumentDto, DocsDocument>();
-            CreateMap<DocsDocument, CoreDocumentDto>();
+            CreateMap<DocumentDto, Document>();
+            CreateMap<Document, DocumentDto>();
 
-            CreateMap<CoreStudentDocumentDto, DocsStudentDocument>();
-            CreateMap<DocsStudentDocument, CoreStudentDocumentDto>();
+            CreateMap<StudentDocumentDto, StudentDocument>();
+            CreateMap<StudentDocument, StudentDocumentDto>();
 
-            CreateMap<CoreStaffDocumentDto, DocsStaffDocument>();
-            CreateMap<DocsStaffDocument, CoreStaffDocumentDto>();
+            CreateMap<StaffDocumentDto, StaffDocument>();
+            CreateMap<StaffDocument, StaffDocumentDto>();
 
             CreateMap<AssessmentGradeSetDto, AssessmentGradeSet>();
             CreateMap<AssessmentGradeSet, AssessmentGradeSetDto>();
@@ -96,6 +97,12 @@ namespace MyPortal
 
             CreateMap<AttendanceWeek, AttendanceWeekDto>();
             CreateMap<AttendanceWeekDto, AttendanceWeek>();
+
+            CreateMap<AttendanceRegisterMark, AttendanceRegisterMarkDto>();
+            CreateMap<AttendanceRegisterMarkDto, AttendanceRegisterMark>();
+
+            CreateMap<AttendanceRegisterMark, AttendanceRegisterMarkLite>();
+            CreateMap<AttendanceRegisterMarkLite, AttendanceRegisterMark>();
         }
     }
 }

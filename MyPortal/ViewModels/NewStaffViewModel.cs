@@ -11,7 +11,7 @@ namespace MyPortal.ViewModels
             Titles = new List<string> {"Mr", "Miss", "Mrs", "Ms", "Mx", "Prof", "Sir", "Dr", "Lady", "Lord"};
         }
 
-        public PeopleStaffMember Staff { get; set; }
+        public StaffMember Staff { get; set; }
         public IEnumerable<string> Titles { get; set; }
     }
 }

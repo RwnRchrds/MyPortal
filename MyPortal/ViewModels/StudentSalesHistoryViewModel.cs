@@ -5,6 +5,6 @@ namespace MyPortal.ViewModels
 {
     public class StudentSalesHistoryViewModel
     {
-        public PeopleStudent Student { get; set; }
+        public Student Student { get; set; }
     }
 }

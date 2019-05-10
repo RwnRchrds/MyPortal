@@ -338,13 +338,13 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Description")
-                        @Html.TextBoxFor(x => x.Upload.CoreDocument.Description, new {@class = "form-control", Name = "Document.Description"})
-                        @Html.ValidationMessageFor(x => x.Upload.CoreDocument.Description)
+                        @Html.TextBoxFor(x => x.Upload.Document.Description, new {@class = "form-control", Name = "Document.Description"})
+                        @Html.ValidationMessageFor(x => x.Upload.Document.Description)
                     </div>
                     <div class="form-group">
                         @Html.Label("URL")
-                        @Html.TextBoxFor(x => x.Upload.CoreDocument.Url, new {@class = "form-control", Name = "Document.Url"})
-                        @Html.ValidationMessageFor(x => x.Upload.CoreDocument.Url)
+                        @Html.TextBoxFor(x => x.Upload.Document.Url, new {@class = "form-control", Name = "Document.Url"})
+                        @Html.ValidationMessageFor(x => x.Upload.Document.Url)
                     </div>
                     <div class="form-group">
                         @Html.HiddenFor(x => x.Upload.StaffId, new {@class = "form-control", Value = Model.Staff.Id, Name = "StaffId"})
@@ -375,13 +375,13 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Description")
-                        @Html.TextBoxFor(x => x.Upload.CoreDocument.Description, new {@class = "form-control", Name = "Document.Description", id = "EditDocumentDescription"})
-                        @Html.ValidationMessageFor(x => x.Upload.CoreDocument.Description)
+                        @Html.TextBoxFor(x => x.Upload.Document.Description, new {@class = "form-control", Name = "Document.Description", id = "EditDocumentDescription"})
+                        @Html.ValidationMessageFor(x => x.Upload.Document.Description)
                     </div>
                     <div class="form-group">
                         @Html.Label("URL")
-                        @Html.TextBoxFor(x => x.Upload.CoreDocument.Url, new {@class = "form-control", Name = "Document.Url", id = "EditDocumentUrl"})
-                        @Html.ValidationMessageFor(x => x.Upload.CoreDocument.Url)
+                        @Html.TextBoxFor(x => x.Upload.Document.Url, new {@class = "form-control", Name = "Document.Url", id = "EditDocumentUrl"})
+                        @Html.ValidationMessageFor(x => x.Upload.Document.Url)
                     </div>
                     <div class="form-group">
                         @Html.HiddenFor(x => x.Upload.StaffId, new {@class = "form-control", Value = Model.Staff.Id, Name = "StaffId", id = "EditDocumentStaffId"})

@@ -12,7 +12,7 @@ namespace MyPortal.Models.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public PastoralYearGroup()
         {
-            CoreStudents = new HashSet<PeopleStudent>();
+            CoreStudents = new HashSet<Student>();
             CurriculumClasses = new HashSet<CurriculumClass>();
             CurriculumStudyTopics = new HashSet<CurriculumStudyTopic>();
             PastoralRegGroups = new HashSet<PastoralRegGroup>();
@@ -29,10 +29,10 @@ namespace MyPortal.Models.Database
 
         public int KeyStage { get; set; }
 
-        public virtual PeopleStaffMember HeadOfYear { get; set; }
+        public virtual StaffMember HeadOfYear { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PeopleStudent> CoreStudents { get; set; }
+        public virtual ICollection<Student> CoreStudents { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CurriculumClass> CurriculumClasses { get; set; }

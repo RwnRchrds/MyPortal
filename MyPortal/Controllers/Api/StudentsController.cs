@@ -92,7 +92,7 @@ namespace MyPortal.Controllers.Api
             _context.CoreDocuments.Add(document);
             _context.SaveChanges();
 
-            var studentDocument = new DocsStudentDocument
+            var studentDocument = new StudentDocument
             {
                 DocumentId = document.Id,
                 StudentId = data.Student
@@ -112,7 +112,7 @@ namespace MyPortal.Controllers.Api
         /// <exception cref="HttpResponseException">Thrown when the model state is invalid.</exception>
         [HttpPost]
         [Authorize(Roles = "Staff, SeniorStaff")]
-        public IHttpActionResult CreateStudent(PeopleStudent student)
+        public IHttpActionResult CreateStudent(Student student)
         {
             if (!ModelState.IsValid)
             {
@@ -244,7 +244,7 @@ namespace MyPortal.Controllers.Api
         /// <exception cref="HttpResponseException">Thrown when the document is not found.</exception>
         [HttpGet]
         [Route("api/students/documents/document/{documentId}")]
-        public CoreDocumentDto GetDocument(int documentId)
+        public DocumentDto GetDocument(int documentId)
         {
             var document = _context.CoreStudentDocuments
                 .SingleOrDefault(x => x.Id == documentId);
@@ -259,7 +259,7 @@ namespace MyPortal.Controllers.Api
                 AuthenticateStudentRequest(document.StudentId);
             }
 
-            return Mapper.Map<DocsDocument, CoreDocumentDto>(document.CoreDocument);
+            return Mapper.Map<Document, DocumentDto>(document.Document);
         }
 
         /// <summary>
@@ -270,7 +270,7 @@ namespace MyPortal.Controllers.Api
         /// <exception cref="HttpResponseException">Thrown when the student is not found.</exception>
         [HttpGet]
         [Route("api/students/documents/fetch/{studentId}")]
-        public IEnumerable<CoreStudentDocumentDto> GetDocuments(int studentId)
+        public IEnumerable<StudentDocumentDto> GetDocuments(int studentId)
         {
             if (User.IsInRole("Student"))
             {
@@ -287,7 +287,7 @@ namespace MyPortal.Controllers.Api
             var documents = _context.CoreStudentDocuments
                 .Where(x => x.StudentId == studentId)
                 .ToList()
-                .Select(Mapper.Map<DocsStudentDocument, CoreStudentDocumentDto>);
+                .Select(Mapper.Map<StudentDocument, StudentDocumentDto>);
 
             return documents;
         }
@@ -300,7 +300,7 @@ namespace MyPortal.Controllers.Api
         /// <exception cref="HttpResponseException">Thrown when the student is not found.</exception>
         [Authorize]
         [Route("api/students/{id}")]
-        public CoreStudentDto GetStudent(int id)
+        public StaffMemberDto GetStudent(int id)
         {
             if (User.IsInRole("Student"))
             {
@@ -314,7 +314,7 @@ namespace MyPortal.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return Mapper.Map<PeopleStudent, CoreStudentDto>(student);
+            return Mapper.Map<Student, StaffMemberDto>(student);
         }
 
         /// <summary>
@@ -322,14 +322,14 @@ namespace MyPortal.Controllers.Api
         /// </summary>
         /// <returns>Returns a list of DTOs of all students.</returns>
         [Authorize(Roles = "Staff, SeniorStaff")]
-        public IEnumerable<CoreStudentDto> GetStudents()
+        public IEnumerable<StaffMemberDto> GetStudents()
         {
             return _context.CoreStudents
                 .Include(s => s.PastoralYearGroup)
                 .Include(s => s.PastoralRegGroup)
                 .OrderBy(x => x.LastName)
                 .ToList()
-                .Select(Mapper.Map<PeopleStudent, CoreStudentDto>);
+                .Select(Mapper.Map<Student, StaffMemberDto>);
         }
 
         /// <summary>
@@ -338,13 +338,13 @@ namespace MyPortal.Controllers.Api
         /// <param name="regGroupId">The ID of the registration group to fetch students from.</param>
         /// <returns>Returns a list of DTOs of students in the specified registration group.</returns>
         [Authorize(Roles = "Staff, SeniorStaff")]
-        public IEnumerable<CoreStudentDto> GetStudentsByRegGroup(int regGroupId)
+        public IEnumerable<StaffMemberDto> GetStudentsByRegGroup(int regGroupId)
         {
             return _context.CoreStudents
                 .Where(x => x.RegGroupId == regGroupId)
                 .OrderBy(x => x.LastName)
                 .ToList()
-                .Select(Mapper.Map<PeopleStudent, CoreStudentDto>);
+                .Select(Mapper.Map<Student, StaffMemberDto>);
         }
 
         /// <summary>
@@ -355,13 +355,13 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [Authorize(Roles = "Staff, SeniorStaff")]
         [Route("api/students/yearGroup/{yearGroupId}")]
-        public IEnumerable<CoreStudentDto> GetStudentsFromYear(int yearGroupId)
+        public IEnumerable<StaffMemberDto> GetStudentsFromYear(int yearGroupId)
         {
             return _context.CoreStudents
                 .Where(x => x.YearGroupId == yearGroupId)
                 .OrderBy(x => x.LastName)
                 .ToList()
-                .Select(Mapper.Map<PeopleStudent, CoreStudentDto>);
+                .Select(Mapper.Map<Student, StaffMemberDto>);
         }
 
         /// <summary>
@@ -381,7 +381,7 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.NotFound, "Document not found");
             }
 
-            var attachedDocument = studentDocument.CoreDocument;
+            var attachedDocument = studentDocument.Document;
 
             if (attachedDocument == null)
             {
@@ -432,7 +432,7 @@ namespace MyPortal.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return studentInDb.DocsStudentDocuments.Any();
+            return studentInDb.StudentDocuments.Any();
         }
 
         [HttpGet]
@@ -495,7 +495,7 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [Authorize(Roles = "Staff, SeniorStaff")]
         [Route("api/students/documents/edit")]
-        public IHttpActionResult UpdateDocument(DocsDocument data)
+        public IHttpActionResult UpdateDocument(Document data)
         {
             var documentInDb = _context.CoreDocuments.Single(x => x.Id == data.Id);
 
@@ -524,7 +524,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPut]
         [Authorize(Roles = "Staff, SeniorStaff")]
-        public IHttpActionResult UpdateStudent(PeopleStudent student)
+        public IHttpActionResult UpdateStudent(Student student)
         {
             if (student == null || !ModelState.IsValid)
             {

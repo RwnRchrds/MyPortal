@@ -1,6 +1,6 @@
 namespace MyPortal.Dtos
 {
-    public class CoreStudentDocumentDto
+    public class StudentDocumentDto
     {
         public int Id { get; set; }
 
@@ -8,8 +8,8 @@ namespace MyPortal.Dtos
 
         public int DocumentId { get; set; }
 
-        public CoreDocumentDto CoreDocument { get; set; }
+        public DocumentDto Document { get; set; }
 
-        public CoreStudentDto CoreStudent { get; set; }
+        public StudentDto Owner { get; set; }
     }
 }

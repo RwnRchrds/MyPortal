@@ -10,6 +10,6 @@ namespace MyPortal.Dtos
 
         public int KeyStage { get; set; }
 
-        public CoreStaffMemberDto CoreStaffMember { get; set; }
+        public StaffMemberDto CoreStaffMember { get; set; }
     }
 }

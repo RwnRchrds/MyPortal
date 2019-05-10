@@ -28,7 +28,7 @@ namespace MyPortal.Models.Database
 
         public int AuthorId { get; set; }
 
-        public virtual PeopleStaffMember Author { get; set; }
+        public virtual StaffMember Author { get; set; }
 
         public virtual CurriculumStudyTopic StudyTopic { get; set; }
     }

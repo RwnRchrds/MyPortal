@@ -41,7 +41,7 @@ namespace MyPortal.Controllers
         // HTTP POST request for creating students using HTML form
         [System.Web.Mvc.HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateStudent(PeopleStudent student)
+        public ActionResult CreateStudent(Student student)
         {
             if (!ModelState.IsValid)
             {
@@ -67,7 +67,7 @@ namespace MyPortal.Controllers
 
         // Menu | Documents --> General Controlled Documents List (All)
         //Accessible by [Staff] or [SeniorStaff]
-        [System.Web.Mvc.Route("Staff/Core/Documents")]
+        [System.Web.Mvc.Route("Staff/Documents/Documents")]
         public ActionResult Documents()
         {
             return View("~/Views/Staff/Docs/Documents.cshtml");
@@ -121,7 +121,7 @@ namespace MyPortal.Controllers
         // Menu | Students | New Student --> New Student form
         // Accessible by [SeniorStaff] only
         [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("Staff/Core/Students/New")]
+        [System.Web.Mvc.Route("Staff/People/Students/New")]
         public ActionResult NewStudent()
         {
             var yearGroups = _context.PastoralYearGroups.ToList();
@@ -138,7 +138,7 @@ namespace MyPortal.Controllers
 
         // HTTP POST request for updating student details using HTML form
         [System.Web.Mvc.HttpPost]
-        public ActionResult SaveStudent(PeopleStudent student)
+        public ActionResult SaveStudent(Student student)
         {
             var studentInDb = _context.CoreStudents.Single(l => l.Id == student.Id);
 
@@ -154,7 +154,7 @@ namespace MyPortal.Controllers
 
         // Menu | Staff --> Staff List (All)
         // Accessible by [SeniorStaff] only
-        [System.Web.Mvc.Route("Staff/Core/Staff")]
+        [System.Web.Mvc.Route("Staff/People/Staff")]
         [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
         public ActionResult Staff()
         {
@@ -165,7 +165,7 @@ namespace MyPortal.Controllers
         // Menu | Staff | X --> Student Details (for Staff X)
         //Accessible by [SeniorStaff] only
         [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("Staff/Core/Staff/{id}")]
+        [System.Web.Mvc.Route("Staff/People/Staff/{id}")]
         public ActionResult StaffDetails(int id)
         {
             var staff = _context.CoreStaff.SingleOrDefault(s => s.Id == id);
@@ -204,7 +204,7 @@ namespace MyPortal.Controllers
 
         // Menu | Students | X --> Student Details (for Student X)
         //Accessible by [Staff] or [SeniorStaff]
-        [System.Web.Mvc.Route("Staff/Core/Students/{id}")]
+        [System.Web.Mvc.Route("Staff/People/Students/{id}")]
         public ActionResult StudentDetails(int id)
         {
             var student = _context.CoreStudents.SingleOrDefault(s => s.Id == id);
@@ -246,7 +246,7 @@ namespace MyPortal.Controllers
 
         //Menu | Students | X | [View Results] --> Student Results (for Student X)
         //Accessible by [Staff] or [SeniorStaff]
-        [System.Web.Mvc.Route("Staff/Core/Students/{id}/Results")]
+        [System.Web.Mvc.Route("Staff/People/Students/{id}/Results")]
         public ActionResult StudentResults(int id)
         {
             var student = _context.CoreStudents.SingleOrDefault(s => s.Id == id);
@@ -277,7 +277,7 @@ namespace MyPortal.Controllers
 
         // Menu | Students --> Students List (All)
         // Accessible by [Staff] or [SeniorStaff]
-        [System.Web.Mvc.Route("Staff/Core/Students")]
+        [System.Web.Mvc.Route("Staff/People/Students")]
         public ActionResult Students()
         {
             return View("~/Views/Staff/People/Students.cshtml");
@@ -392,7 +392,7 @@ namespace MyPortal.Controllers
         public ActionResult Registers()
         {
             var userId = User.Identity.GetUserId();
-            PeopleStaffMember currentUser = null;
+            StaffMember currentUser = null;
             
             if (userId != null)
             {
@@ -409,34 +409,32 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/Attendance/Registers.cshtml", viewModel);
         }
 
-        [System.Web.Mvc.Route("Staff/Attendance/TakeRegister/{weekId}/{periodId}/{classId}")]
-        public ActionResult TakeRegister(int weekId, int periodId, int classId)
+        [System.Web.Mvc.Route("Staff/Attendance/TakeRegister/{weekId}/{periodId}")]
+        public ActionResult TakeRegister(int weekId, int periodId)
         {            
             var viewModel = new TakeRegisterViewModel();
             var attendanceWeek = _context.AttendanceWeeks.SingleOrDefault(x => x.Id == weekId);
-            var attendancePeriod = _context.AttendancePeriods.SingleOrDefault(x => x.Id == periodId);
-            var curriculumClass = _context.CurriculumClasses.SingleOrDefault(x => x.Id == classId);
+            var classPeriod = _context.CurriculumClassPeriods.SingleOrDefault(x => x.Id == periodId);
 
-            if (attendanceWeek == null | attendancePeriod == null | curriculumClass == null)
+            if (attendanceWeek == null || classPeriod == null)
             {
                 return RedirectToAction("Registers");
             }
 
-            var classPeriods = _context.CurriculumClassPeriods.Where(x => x.ClassId == curriculumClass.Id);
+            var classPeriods = _context.CurriculumClassPeriods.Where(x => x.ClassId == classPeriod.ClassId);
 
             var validRegister = !attendanceWeek.IsHoliday && !attendanceWeek.IsNonTimetable &&
-                                classPeriods.Any(x => x.PeriodId == attendancePeriod.Id);
+                                classPeriods.Any(x => x.PeriodId == classPeriod.PeriodId);
 
             if (!validRegister)
             {
                 return RedirectToAction("Registers");
             }
 
-            viewModel.Class = curriculumClass;
-            viewModel.Period = attendancePeriod;
+            viewModel.ClassPeriod = classPeriod;
             viewModel.WeekId = attendanceWeek.Id;
 
-            viewModel.Periods = _context.AttendancePeriods.Where(x => x.Weekday == attendancePeriod.Weekday);
+            viewModel.Periods = _context.AttendancePeriods.Where(x => x.Weekday == classPeriod.AttendancePeriod.Weekday);
 
             return View("~/Views/Staff/Attendance/TakeRegister.cshtml", viewModel);
         }

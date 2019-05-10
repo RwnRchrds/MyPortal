@@ -30,11 +30,11 @@ namespace MyPortal.Models.Database
         public virtual DbSet<AttendanceRegisterCodeMeaning> AttendanceMeanings { get; set; }
         public virtual DbSet<AttendancePeriod> AttendancePeriods { get; set; }
         public virtual DbSet<AttendanceWeek> AttendanceWeeks { get; set; }
-        public virtual DbSet<DocsDocument> CoreDocuments { get; set; }
-        public virtual DbSet<DocsStaffDocument> CoreStaffDocuments { get; set; }
-        public virtual DbSet<DocsStudentDocument> CoreStudentDocuments { get; set; }
-        public virtual DbSet<PeopleStaffMember> CoreStaff { get; set; }
-        public virtual DbSet<PeopleStudent> CoreStudents { get; set; }
+        public virtual DbSet<Document> CoreDocuments { get; set; }
+        public virtual DbSet<StaffDocument> CoreStaffDocuments { get; set; }
+        public virtual DbSet<StudentDocument> CoreStudentDocuments { get; set; }
+        public virtual DbSet<StaffMember> CoreStaff { get; set; }
+        public virtual DbSet<Student> CoreStudents { get; set; }
         public virtual DbSet<CurriculumAcademicYear> CurriculumAcademicYears { get; set; }
         public virtual DbSet<CurriculumClassEnrolment> CurriculumClassEnrolments { get; set; }
         public virtual DbSet<CurriculumClass> CurriculumClasses { get; set; }
@@ -60,7 +60,7 @@ namespace MyPortal.Models.Database
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<AssessmentGrade>()
-                .Property(e => e.Grade)
+                .Property(e => e.GradeValue)
                 .IsUnicode(false);
 
             modelBuilder.Entity<AssessmentGradeSet>()
@@ -142,188 +142,188 @@ namespace MyPortal.Models.Database
                 .HasForeignKey(e => e.WeekId)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<DocsDocument>()
+            modelBuilder.Entity<Document>()
                 .Property(e => e.Description)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<DocsDocument>()
+            modelBuilder.Entity<Document>()
                 .Property(e => e.Url)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<DocsDocument>()
-                .HasMany(e => e.CoreStaffDocuments)
-                .WithRequired(e => e.CoreDocument)
+            modelBuilder.Entity<Document>()
+                .HasMany(e => e.StaffDocuments)
+                .WithRequired(e => e.Document)
                 .HasForeignKey(e => e.DocumentId)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<DocsDocument>()
-                .HasMany(e => e.CoreStudentDocuments)
-                .WithRequired(e => e.CoreDocument)
+            modelBuilder.Entity<Document>()
+                .HasMany(e => e.StudentDocuments)
+                .WithRequired(e => e.Document)
                 .HasForeignKey(e => e.DocumentId)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<PeopleStaffMember>()
+            modelBuilder.Entity<StaffMember>()
                 .Property(e => e.Code)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<PeopleStaffMember>()
+            modelBuilder.Entity<StaffMember>()
                 .Property(e => e.Title)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<PeopleStaffMember>()
+            modelBuilder.Entity<StaffMember>()
                 .Property(e => e.FirstName)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<PeopleStaffMember>()
+            modelBuilder.Entity<StaffMember>()
                 .Property(e => e.LastName)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<PeopleStaffMember>()
+            modelBuilder.Entity<StaffMember>()
                 .Property(e => e.JobTitle)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<PeopleStaffMember>()
+            modelBuilder.Entity<StaffMember>()
                 .Property(e => e.Email)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<PeopleStaffMember>()
-                .HasMany(e => e.DocsDocuments)
+            modelBuilder.Entity<StaffMember>()
+                .HasMany(e => e.Documents)
                 .WithRequired(e => e.Uploader)
                 .HasForeignKey(e => e.UploaderId)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<PeopleStaffMember>()
-                .HasMany(e => e.DocsStaffDocuments)
+            modelBuilder.Entity<StaffMember>()
+                .HasMany(e => e.StaffDocuments)
                 .WithRequired(e => e.Owner)
                 .HasForeignKey(e => e.StaffId)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<PeopleStaffMember>()
+            modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.CurriculumClasses)
-                .WithRequired(e => e.CoreStaffMember)
+                .WithRequired(e => e.Teacher)
                 .HasForeignKey(e => e.TeacherId)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<PeopleStaffMember>()
+            modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.CurriculumClasses)
-                .WithRequired(e => e.CoreStaffMember)
+                .WithRequired(e => e.Teacher)
                 .HasForeignKey(e => e.TeacherId)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<PeopleStaffMember>()
+            modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.CurriculumLessonPlansAuthored)
                 .WithRequired(e => e.Author)
                 .HasForeignKey(e => e.AuthorId)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<PeopleStaffMember>()
+            modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.ProfileLogsWritten)
                 .WithRequired(e => e.Author)
                 .HasForeignKey(e => e.AuthorId)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<PeopleStaffMember>()
+            modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.PastoralRegGroups)
                 .WithRequired(e => e.Tutor)
                 .HasForeignKey(e => e.TutorId)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<PeopleStaffMember>()
+            modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.PersonnelObservationsOwn)
                 .WithRequired(e => e.Observee)
                 .HasForeignKey(e => e.ObserveeId)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<PeopleStaffMember>()
+            modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.PersonnelObservationsObserved)
                 .WithRequired(e => e.Observer)
                 .HasForeignKey(e => e.ObserverId)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<PeopleStaffMember>()
+            modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.CurriculumSubjectsLeading)
                 .WithRequired(e => e.Leader)
                 .HasForeignKey(e => e.LeaderId)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<PeopleStaffMember>()
+            modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.PersonnelTrainingCertificates)
                 .WithRequired(e => e.CoreStaffMember)
                 .HasForeignKey(e => e.StaffId)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<PeopleStaffMember>()
+            modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.PastoralYearGroups)
                 .WithRequired(e => e.HeadOfYear)
                 .HasForeignKey(e => e.HeadId)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<PeopleStudent>()
+            modelBuilder.Entity<Student>()
                 .Property(e => e.FirstName)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<PeopleStudent>()
+            modelBuilder.Entity<Student>()
                 .Property(e => e.LastName)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<PeopleStudent>()
+            modelBuilder.Entity<Student>()
                 .Property(e => e.Gender)
                 .IsFixedLength()
                 .IsUnicode(false);
 
-            modelBuilder.Entity<PeopleStudent>()
+            modelBuilder.Entity<Student>()
                 .Property(e => e.Email)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<PeopleStudent>()
+            modelBuilder.Entity<Student>()
                 .Property(e => e.CandidateNumber)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<PeopleStudent>()
+            modelBuilder.Entity<Student>()
                 .Property(e => e.AccountBalance)
                 .HasPrecision(10, 2);
 
-            modelBuilder.Entity<PeopleStudent>()
+            modelBuilder.Entity<Student>()
                 .Property(e => e.MisId)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<PeopleStudent>()
+            modelBuilder.Entity<Student>()
                 .HasMany(e => e.AssessmentResults)
-                .WithRequired(e => e.PeopleStudent)
-                .HasForeignKey(e => e.StudentId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<PeopleStudent>()
-                .HasMany(e => e.AttendanceRegisterMarks)
-                .WithRequired(e => e.PeopleStudent)
-                .HasForeignKey(e => e.StudentId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<PeopleStudent>()
-                .HasMany(e => e.CurriculumClassEnrolments)
                 .WithRequired(e => e.Student)
                 .HasForeignKey(e => e.StudentId)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<PeopleStudent>()
-                .HasMany(e => e.DocsStudentDocuments)
-                .WithRequired(e => e.CoreStudent)
+            modelBuilder.Entity<Student>()
+                .HasMany(e => e.AttendanceRegisterMarks)
+                .WithRequired(e => e.Student)
                 .HasForeignKey(e => e.StudentId)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<PeopleStudent>()
+            modelBuilder.Entity<Student>()
+                .HasMany(e => e.Enrolments)
+                .WithRequired(e => e.Student)
+                .HasForeignKey(e => e.StudentId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Student>()
+                .HasMany(e => e.StudentDocuments)
+                .WithRequired(e => e.Owner)
+                .HasForeignKey(e => e.StudentId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Student>()
                 .HasMany(e => e.FinanceBasketItems)
                 .WithRequired(e => e.CoreStudent)
                 .HasForeignKey(e => e.StudentId)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<PeopleStudent>()
+            modelBuilder.Entity<Student>()
                 .HasMany(e => e.ProfileLogs)
                 .WithRequired(e => e.CoreStudent)
                 .HasForeignKey(e => e.StudentId)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<PeopleStudent>()
+            modelBuilder.Entity<Student>()
                 .HasMany(e => e.FinanceSales)
                 .WithRequired(e => e.CoreStudent)
                 .HasForeignKey(e => e.StudentId)
@@ -368,7 +368,7 @@ namespace MyPortal.Models.Database
                 .IsUnicode(false);
 
             modelBuilder.Entity<CurriculumClass>()
-                .HasMany(e => e.CurriculumClassEnrolments)
+                .HasMany(e => e.Enrolments)
                 .WithRequired(e => e.CurriculumClass)
                 .HasForeignKey(e => e.ClassId)
                 .WillCascadeOnDelete(false);

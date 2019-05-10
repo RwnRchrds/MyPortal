@@ -2,7 +2,7 @@ using System;
 
 namespace MyPortal.Dtos
 {
-    public class CoreDocumentDto
+    public class DocumentDto
     {
         public int Id { get; set; }
 
@@ -18,6 +18,6 @@ namespace MyPortal.Dtos
 
         public bool Approved { get; set; }
 
-        public CoreStaffMemberDto Uploader { get; set; }
+        public StaffMemberDto Uploader { get; set; }
     }
 }

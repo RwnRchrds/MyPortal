@@ -1,6 +1,6 @@
 namespace MyPortal.Dtos
 {
-    public class CoreStaffMemberDto
+    public class StaffMemberDto
     {
         public int Id { get; set; }
 
