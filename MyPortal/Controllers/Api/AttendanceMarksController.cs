@@ -72,17 +72,21 @@ namespace MyPortal.Controllers.Api
                 foreach (var period in periodsInDay)
                 {
                     var mark = _context.AttendanceMarks.SingleOrDefault(x =>
-                                   x.PeriodId == periodId && x.WeekId == attendanceWeek.Id && x.StudentId == student.Id) ??
-                               new AttendanceRegisterMark
-                               {
-                                   Student = student,
-                                   Mark = "-",
-                                   WeekId = weekId,
-                                   AttendanceWeek = attendanceWeek,
-                                   PeriodId = period.Id,
-                                   StudentId = student.Id,
-                                   AttendancePeriod = period
-                               };
+                        x.PeriodId == period.Id && x.WeekId == attendanceWeek.Id && x.StudentId == student.Id);
+
+                    if (mark == null)
+                    {
+                        mark = new AttendanceRegisterMark
+                        {
+                            Student = student,
+                            Mark = "-",
+                            WeekId = weekId,
+                            AttendanceWeek = attendanceWeek,
+                            PeriodId = period.Id,
+                            StudentId = student.Id,
+                            AttendancePeriod = period
+                        };
+                    }                               
 
                     marks.Add(mark);
                 }
