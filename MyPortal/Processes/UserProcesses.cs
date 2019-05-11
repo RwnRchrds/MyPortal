@@ -1,18 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
-using System.Web;
 using Microsoft.AspNet.Identity;
 using MyPortal.Models;
 
-namespace MyPortal.Helpers
+namespace MyPortal.Processes
 {    
-    public static class UserHelper
+    public static class UserProcesses
     {
         private static readonly ApplicationDbContext _identity;
 
-        static UserHelper()
+        static UserProcesses()
         {
             _identity = new ApplicationDbContext();
         }

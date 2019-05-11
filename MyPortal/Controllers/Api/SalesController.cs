@@ -5,10 +5,10 @@ using System.Net;
 using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
-using MyPortal.Helpers;
 using MyPortal.Models;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
+using MyPortal.Processes;
 
 namespace MyPortal.Controllers.Api
 {
@@ -75,7 +75,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/sales/pending")]
         public IEnumerable<FinanceSaleDto> GetPendingSales()
         {
-            var academicYearId = ContextHelper.GetAcademicYearId(User, _context);
+            var academicYearId = ContextProcesses.GetAcademicYearId(User, _context);
             return _context.FinanceSales.Where(x => x.Processed == false && x.AcademicYearId == academicYearId)
                 .ToList()
                 .Select(Mapper.Map<FinanceSale, FinanceSaleDto>);
@@ -89,7 +89,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/sales/all")]
         public IEnumerable<FinanceSaleDto> GetSales()
         {
-            var academicYearId = ContextHelper.GetAcademicYearId(User, _context);
+            var academicYearId = ContextProcesses.GetAcademicYearId(User, _context);
             return _context.FinanceSales
                 .Where(x => x.AcademicYearId == academicYearId)
                 .OrderByDescending(x => x.Date)
@@ -106,7 +106,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/sales/student")]
         public IEnumerable<FinanceSaleDto> GetSalesForStudent(int studentId)
         {
-            var academicYearId = ContextHelper.GetAcademicYearId(User, _context);
+            var academicYearId = ContextProcesses.GetAcademicYearId(User, _context);
             return _context.FinanceSales
                 .Where(x => x.StudentId == studentId && x.AcademicYearId == academicYearId)
                 .OrderByDescending(x => x.Date)
@@ -122,7 +122,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/sales")]
         public IEnumerable<FinanceSaleDto> GetUnprocessedSales()
         {
-            var academicYearId = ContextHelper.GetAcademicYearId(User, _context);
+            var academicYearId = ContextProcesses.GetAcademicYearId(User, _context);
             return _context.FinanceSales
                 .Where(x => x.Processed == false && x.AcademicYearId == academicYearId)
                 .OrderByDescending(x => x.Date)
@@ -193,7 +193,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/sales/new")]
         public IHttpActionResult NewSale(FinanceSale sale)
         {
-            var academicYearId = ContextHelper.GetAcademicYearId(User, _context);
+            var academicYearId = ContextProcesses.GetAcademicYearId(User, _context);
             sale.Date = DateTime.Now;
 
             sale.Processed = true;
@@ -232,7 +232,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/sales/purchase")]
         public IHttpActionResult Purchase(Checkout data)
         {
-            var academicYearId = ContextHelper.GetAcademicYearId(User, _context);
+            var academicYearId = ContextProcesses.GetAcademicYearId(User, _context);
             if (User.IsInRole("Student"))
             {
                 new StudentsController().AuthenticateStudentRequest(data.StudentId);

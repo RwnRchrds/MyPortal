@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
-using System.Web;
 using MyPortal.Models.Database;
 
-namespace MyPortal.Helpers
+namespace MyPortal.Processes
 {
-    public static class SystemHelper
+    public static class SystemProcesses
     {
         private static readonly MyPortalDbContext _context;
 
-        static SystemHelper()
+        static SystemProcesses()
         {
             _context = new MyPortalDbContext();
         }

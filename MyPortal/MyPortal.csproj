@@ -282,11 +282,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\AttendanceHelper.cs" />
-    <Compile Include="Helpers\SystemHelper.cs" />
-    <Compile Include="Helpers\ContextHelper.cs" />
-    <Compile Include="Helpers\UserHelper.cs" />
-    <Compile Include="Helpers\DateTimeHelper.cs" />
+    <Compile Include="Processes\AttendanceProcesses.cs" />
+    <Compile Include="Processes\SystemProcesses.cs" />
+    <Compile Include="Processes\ContextProcesses.cs" />
+    <Compile Include="Processes\UserProcesses.cs" />
+    <Compile Include="Processes\DateTimeProcesses.cs" />
     <Compile Include="Migrations\201803051926258_InitialModel.cs" />
     <Compile Include="Migrations\201803051926258_InitialModel.Designer.cs">
       <DependentUpon>201803051926258_InitialModel.cs</DependentUpon>

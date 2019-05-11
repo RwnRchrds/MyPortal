@@ -7,9 +7,9 @@ using System.Web.Http;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
-using MyPortal.Helpers;
 using MyPortal.Models;
 using MyPortal.Models.Database;
+using MyPortal.Processes;
 
 namespace MyPortal.Controllers.Api
 {
@@ -43,7 +43,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/logs/new")]
         public IHttpActionResult CreateLog(ProfileLog log)
         {
-            var academicYearId = ContextHelper.GetAcademicYearId(User, _context);
+            var academicYearId = ContextProcesses.GetAcademicYearId(User, _context);
 
             var authorId = log.AuthorId;
 
@@ -139,7 +139,7 @@ namespace MyPortal.Controllers.Api
                 new StudentsController().AuthenticateStudentRequest(studentId);
             }
 
-            var academicYearId = ContextHelper.GetAcademicYearId(User, _context);
+            var academicYearId = ContextProcesses.GetAcademicYearId(User, _context);
             return _context.ProfileLogs.Where(l => l.StudentId == studentId && l.AcademicYearId == academicYearId)
                 .OrderByDescending(x => x.Date)
                 .ToList()

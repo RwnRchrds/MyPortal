@@ -20,5 +20,7 @@ namespace MyPortal.Dtos.LiteDtos
 
         [DataMember]
         public string Mark { get; set; }
+        
+        [DataMember] public string MeaningCode { get; set; }
     }
 }

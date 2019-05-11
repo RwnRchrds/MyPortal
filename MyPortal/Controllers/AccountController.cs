@@ -9,9 +9,9 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using MyPortal.Helpers;
 using MyPortal.Models;
 using MyPortal.Models.Database;
+using MyPortal.Processes;
 
 namespace MyPortal.Controllers
 {
@@ -144,7 +144,7 @@ namespace MyPortal.Controllers
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            var academicYearId = SystemHelper.GetCurrentAcademicYearId();
+            var academicYearId = SystemProcesses.GetCurrentAcademicYearId();
 
             user.SelectedAcademicYearId = academicYearId;
 

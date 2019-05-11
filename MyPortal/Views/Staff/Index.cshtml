@@ -1,4 +1,4 @@
-﻿@using MyPortal.Helpers
+﻿@using MyPortal.Processes
 @model MyPortal.ViewModels.StaffHomeViewModel
 @{
     ViewBag.Title = "Home: " + Model.CurrentUser.Title + " " + Model.CurrentUser.FirstName.Substring(0, 1) + " " + Model.CurrentUser.LastName;
@@ -119,7 +119,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Academic Year")
-                        @Html.DropDownList("Id", new SelectList(Model.CurriculumAcademicYears, "Id", "Name", SystemHelper.GetCurrentOrSelectedAcademicYearId(User)), new { @class = "form-control", id = "selectedYear" })
+                        @Html.DropDownList("Id", new SelectList(Model.CurriculumAcademicYears, "Id", "Name", SystemProcesses.GetCurrentOrSelectedAcademicYearId(User)), new { @class = "form-control", id = "selectedYear" })
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>

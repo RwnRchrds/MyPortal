@@ -5,9 +5,9 @@ using System.Net;
 using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
-using MyPortal.Helpers;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
+using MyPortal.Processes;
 
 namespace MyPortal.Controllers.Api
 {
@@ -29,7 +29,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/curriculum/classes/byTeacher/{teacherId}/{dateString}")]
         public IEnumerable<CurriculumClassPeriodDto> GetClassesByTeacher(int teacherId, int dateString)
         {
-            var academicYearId = SystemHelper.GetCurrentOrSelectedAcademicYearId(User);
+            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(User);
             int year = dateString / 10000;
             int month = ((dateString - (10000 * year)) / 100);
             int day = (dateString - (10000 * year) - (100 * month));

@@ -6,8 +6,8 @@ using System.Net.Http;
 using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
-using MyPortal.Helpers;
 using MyPortal.Models.Database;
+using MyPortal.Processes;
 
 namespace MyPortal.Controllers.Api
 {
@@ -67,7 +67,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/attendance/weeks/get/byDate/{dateString}")]
         public AttendanceWeekDto GetWeekByDate(int dateString)
         {
-            var academicYearId = SystemHelper.GetCurrentOrSelectedAcademicYearId(User);
+            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(User);
             int year = dateString / 10000;
             int month = ((dateString - (10000 * year)) / 100);
             int day = (dateString - (10000 * year) - (100 * month));

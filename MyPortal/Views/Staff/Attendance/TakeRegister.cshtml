@@ -4,6 +4,12 @@
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
+<style>
+    tr {
+        font-weight: bold;
+    }
+</style>
+
 <div class="container float-left">
     <h2 class="mp-page-title">Take Register:</h2>    
     <h4> @Model.ClassPeriod.CurriculumClass.Name (@Model.ClassPeriod.AttendancePeriod.Name) - @Model.ClassPeriod.CurriculumClass.Teacher.Title @Model.ClassPeriod.CurriculumClass.Teacher.FirstName.Substring(0, 1) @Model.ClassPeriod.CurriculumClass.Teacher.LastName</h4>
@@ -55,7 +61,7 @@
                     {
                         data: "marks",
                         render: function(data, type, markObject) {
-                            return markObject.marks[0].mark;
+                            return "<div data-reg-meaning='" + markObject.marks[0].meaningCode + "'>" + markObject.marks[0].mark + "</div>";
                         }
                     },
                     {

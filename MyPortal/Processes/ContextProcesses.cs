@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
-using System.Web;
 using MyPortal.Models.Database;
 
-namespace MyPortal.Helpers
+namespace MyPortal.Processes
 {
-    public static class ContextHelper
+    public static class ContextProcesses
     {
-        public static int GetAcademicYearId(IPrincipal User, MyPortalDbContext context)
+        public static int GetAcademicYearId(IPrincipal user, MyPortalDbContext context)
         {
             int academicYearId;
 
@@ -25,7 +23,7 @@ namespace MyPortal.Helpers
             }
             else
             {
-                academicYearId = SystemHelper.GetCurrentOrSelectedAcademicYearId(User);
+                academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(user);
             }
 
             return academicYearId;
