@@ -322,14 +322,15 @@ namespace MyPortal.Controllers.Api
         /// </summary>
         /// <returns>Returns a list of DTOs of all students.</returns>
         [Authorize(Roles = "Staff, SeniorStaff")]
-        public IEnumerable<StaffMemberDto> GetStudents()
+        [Route("api/people/students/get/all")]
+        public IEnumerable<StudentDto> GetStudents()
         {
             return _context.CoreStudents
                 .Include(s => s.PastoralYearGroup)
                 .Include(s => s.PastoralRegGroup)
                 .OrderBy(x => x.LastName)
                 .ToList()
-                .Select(Mapper.Map<Student, StaffMemberDto>);
+                .Select(Mapper.Map<Student, StudentDto>);
         }
 
         /// <summary>
@@ -338,13 +339,13 @@ namespace MyPortal.Controllers.Api
         /// <param name="regGroupId">The ID of the registration group to fetch students from.</param>
         /// <returns>Returns a list of DTOs of students in the specified registration group.</returns>
         [Authorize(Roles = "Staff, SeniorStaff")]
-        public IEnumerable<StaffMemberDto> GetStudentsByRegGroup(int regGroupId)
+        public IEnumerable<StudentDto> GetStudentsByRegGroup(int regGroupId)
         {
             return _context.CoreStudents
                 .Where(x => x.RegGroupId == regGroupId)
                 .OrderBy(x => x.LastName)
                 .ToList()
-                .Select(Mapper.Map<Student, StaffMemberDto>);
+                .Select(Mapper.Map<Student, StudentDto>);
         }
 
         /// <summary>
@@ -355,13 +356,13 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [Authorize(Roles = "Staff, SeniorStaff")]
         [Route("api/students/yearGroup/{yearGroupId}")]
-        public IEnumerable<StaffMemberDto> GetStudentsFromYear(int yearGroupId)
+        public IEnumerable<StudentDto> GetStudentsFromYear(int yearGroupId)
         {
             return _context.CoreStudents
                 .Where(x => x.YearGroupId == yearGroupId)
                 .OrderBy(x => x.LastName)
                 .ToList()
-                .Select(Mapper.Map<Student, StaffMemberDto>);
+                .Select(Mapper.Map<Student, StudentDto>);
         }
 
         /// <summary>

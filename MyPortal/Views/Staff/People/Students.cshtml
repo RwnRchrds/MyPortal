@@ -40,14 +40,14 @@
         $(document).ready(function() {
             $("#students").DataTable({
                 ajax: {
-                    url: "/api/students",
+                    url: "/api/people/students/get/all",
                     dataSrc: ""
                 },
                 columns: [
                     {
                         data: "firstName",
                         render: function(data, type, student) {
-                            return "<a href='/Staff/Core/Students/" +
+                            return "<a href='/Staff/People/Students/" +
                                 student.id +
                                 "'>" +
                                 student.lastName +
