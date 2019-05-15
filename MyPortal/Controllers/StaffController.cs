@@ -204,7 +204,7 @@ namespace MyPortal.Controllers
 
         // Menu | Students | X --> Student Details (for Student X)
         //Accessible by [Staff] or [SeniorStaff]
-        [System.Web.Mvc.Route("Staff/People/Students/{id}")]
+        [System.Web.Mvc.Route("Staff/People/Students/{id}", Name = "StudentDetailsRoute")]
         public ActionResult StudentDetails(int id)
         {
             var student = _context.CoreStudents.SingleOrDefault(s => s.Id == id);

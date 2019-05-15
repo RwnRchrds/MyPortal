@@ -22,9 +22,11 @@ namespace MyPortal.Models.Database
         [StringLength(50)]
         public string Name { get; set; }
 
+        [Display(Name="First Date")]
         [Column(TypeName = "date")]
         public DateTime FirstDate { get; set; }
 
+        [Display(Name="Last Date")]
         [Column(TypeName = "date")]
         public DateTime LastDate { get; set; }
 

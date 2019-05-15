@@ -40,7 +40,7 @@
             {
                 <div class="modal-body">
                     <div class="form-group">
-                        @Html.LabelFor(x => x.ResultSet.Name)
+                        @Html.Label("Name")
                         @Html.TextBoxFor(x => x.ResultSet.Name, new {@class = "form-control", Name = "Name"})
                         @Html.ValidationMessageFor(x => x.ResultSet.Name)
                     </div>

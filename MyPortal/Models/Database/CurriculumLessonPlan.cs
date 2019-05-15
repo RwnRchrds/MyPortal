@@ -11,6 +11,7 @@ namespace MyPortal.Models.Database
     {
         public int Id { get; set; }
 
+        [Display(Name="Study Topic")]
         public int StudyTopicId { get; set; }
 
         [Required]
@@ -18,9 +19,11 @@ namespace MyPortal.Models.Database
         public string Title { get; set; }
 
         [Required]
+        [Display(Name="Learning Objectives")]
         public string LearningObjectives { get; set; }
 
         [Required]
+        [Display(Name="Lesson Plan Content")]
         public string PlanContent { get; set; }
 
         [Required]

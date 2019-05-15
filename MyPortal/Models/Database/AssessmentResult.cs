@@ -11,15 +11,18 @@ namespace MyPortal.Models.Database
     {
         [Key]
         [Column(Order = 0)]
+        [Display(Name="Result Set")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ResultSetId { get; set; }
 
         [Key]
         [Column(Order = 1)]
+        [Display(Name="Student")]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int StudentId { get; set; }
 
         [Key]
+        [Display(Name="Subject")]
         [Column(Order = 2)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int SubjectId { get; set; }

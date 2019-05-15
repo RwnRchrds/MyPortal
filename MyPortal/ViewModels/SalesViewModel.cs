@@ -6,7 +6,7 @@ namespace MyPortal.ViewModels
     {
         public SalesViewModel()
         {
-            Status = new List<string> {"All", "Pending Only"};
+            Status = new List<string> {"All", "Pending", "Processed"};
         }
 
         public IEnumerable<string> Status { get; set; }

@@ -14,14 +14,7 @@ namespace MyPortal.Processes
         static AttendanceProcesses()
         {
             _context = new MyPortalDbContext();           
-        }
-
-        public static AttendanceRegisterCodeMeaning GetMeaning(string code)
-        {
-            var codeInDb = _context.AttendanceCodes.SingleOrDefault(x => x.Code == code);
-
-            return codeInDb?.AttendanceRegisterCodeMeaning;
-        }
+        }        
 
         public static bool VerifyAttendanceCodes(ListContainer<AttendanceRegisterMark> register)
         {
@@ -93,5 +86,16 @@ namespace MyPortal.Processes
 
             return liteMarks;
         }
+
+        public static AttendanceRegisterCodeMeaning GetMeaning(string mark)
+        {
+            var codeInDb = _context.AttendanceCodes.SingleOrDefault(x => x.Code == mark);
+
+            return codeInDb?.AttendanceRegisterCodeMeaning;
+        }
+
+        #region Extension Methods
+       
+        #endregion
     }
 }

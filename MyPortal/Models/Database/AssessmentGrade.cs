@@ -11,9 +11,11 @@ namespace MyPortal.Models.Database
     {
         public int Id { get; set; }
 
+        [Display(Name="Grade Set")]
         public int GradeSetId { get; set; }
 
         [Required]
+        [Display(Name="Grade")]
         [StringLength(255)]
         public string GradeValue { get; set; }
 

@@ -72,11 +72,11 @@ namespace MyPortal.Controllers.Api
         /// </summary>
         /// <returns>Returns a list of DTOs of sales that have not been marked as completed.</returns>
         [HttpGet]
-        [Route("api/sales/pending")]
+        [Route("api/sales/processed")]
         public IEnumerable<FinanceSaleDto> GetPendingSales()
         {
             var academicYearId = ContextProcesses.GetAcademicYearId(User, _context);
-            return _context.FinanceSales.Where(x => x.Processed == false && x.AcademicYearId == academicYearId)
+            return _context.FinanceSales.Where(x => x.Processed && x.AcademicYearId == academicYearId)
                 .ToList()
                 .Select(Mapper.Map<FinanceSale, FinanceSaleDto>);
         }

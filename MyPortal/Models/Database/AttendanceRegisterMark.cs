@@ -11,10 +11,13 @@ namespace MyPortal.Models.Database
     {
         public int Id { get; set; }
 
+        [Display(Name="Student")]
         public int StudentId { get; set; }
 
+        [Display(Name="Attendance Week")]
         public int WeekId { get; set; }
 
+        [Display(Name="Attendance Period")]
         public int PeriodId { get; set; }
 
         [Required]

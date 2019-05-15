@@ -21,6 +21,7 @@ namespace MyPortal.Models.Database
         [StringLength(255)]
         public string Name { get; set; }
 
+        [Display(Name="KS4")]
         public bool IsKs4 { get; set; }
 
         public bool Active { get; set; }

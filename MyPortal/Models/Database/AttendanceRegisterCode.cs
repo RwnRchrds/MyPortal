@@ -19,6 +19,7 @@ namespace MyPortal.Models.Database
         [StringLength(50)]
         public string Description { get; set; }
 
+        [Display(Name="Meaning")]
         public int MeaningId { get; set; }
 
         public virtual AttendanceRegisterCodeMeaning AttendanceRegisterCodeMeaning { get; set; }

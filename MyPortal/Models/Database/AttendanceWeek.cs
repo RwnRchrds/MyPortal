@@ -16,12 +16,16 @@ namespace MyPortal.Models.Database
         }
         public int Id { get; set; }
 
+        [Display(Name="Academic Year")]
         public int AcademicYearId { get; set; }
 
         [Column(TypeName = "date")]
         public DateTime Beginning { get; set; }
 
+        [Display(Name="Is Holiday")]
         public bool IsHoliday { get; set; }
+
+        [Display(Name="Is Non-TT")]
         public bool IsNonTimetable { get; set; }
 
         public virtual CurriculumAcademicYear CurriculumAcademicYear { get; set; }

@@ -19,7 +19,7 @@
 <!--#region Sales Table + Selector-->
 <div class="container float-left">
     @Html.Label("View Sales")
-    @Html.DropDownList("SelectedStatus", new SelectList(Model.Status, "Pending Only"), new {@class = "form-control", Name = "SaleStatus", id = "selectedStatus"})
+    @Html.DropDownList("SelectedStatus", new SelectList(Model.Status, "Pending"), new {@class = "form-control", Name = "SaleStatus", id = "selectedStatus"})
 </div>
 
 <div class="container float-left mp-margin-top">
@@ -46,12 +46,16 @@
         $(document).ready(function() {
 
             function loadSales() {
-                var status = $("#selectedStatus").val();
+                var status = $("#selectedStatus").val();                
 
                 var url = "/api/sales";
 
                 if (status === "All") {
-                    url = "/api/sales/all";
+                    url = "/api/sales/all";                    
+                }
+
+                if (status === "Processed") {
+                    url = "/api/sales/processed";                    
                 }
 
                 $("#sales").DataTable({

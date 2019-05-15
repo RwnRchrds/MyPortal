@@ -282,7 +282,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Exceptions\BadRequestException.cs" />
+    <Compile Include="Models\Exceptions\EntityNotFoundException.cs" />
     <Compile Include="Processes\AttendanceProcesses.cs" />
+    <Compile Include="Processes\CurriculumProcesses.cs" />
     <Compile Include="Processes\SystemProcesses.cs" />
     <Compile Include="Processes\ContextProcesses.cs" />
     <Compile Include="Processes\UserProcesses.cs" />

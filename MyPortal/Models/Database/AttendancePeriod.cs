@@ -24,8 +24,10 @@ namespace MyPortal.Models.Database
 
         public string Name { get; set; }
 
+        [Display(Name="Start Time")]
         public TimeSpan StartTime { get; set; }
 
+        [Display(Name="End Time")]
         public TimeSpan EndTime { get; set; }
 
         public bool IsAm { get; set; }
