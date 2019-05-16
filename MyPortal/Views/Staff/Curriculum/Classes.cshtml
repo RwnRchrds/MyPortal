@@ -1,0 +1,215 @@
+﻿@model MyPortal.ViewModels.ClassesViewModel
+@{
+    ViewBag.Title = "Classes";
+    Layout = "~/Views/Shared/_LayoutStaff.cshtml";
+}
+
+<div class="container float-left">
+    <h2 class="mp-page-title">Classes</h2>
+    <hr />
+</div>
+
+<div class="container float-left">
+    @if (User.IsInRole("SeniorStaff"))
+    {
+        <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#newClassModal">New Class</button>
+        <hr />
+    }
+</div>
+
+<div class="container float-left">
+    <table class="table table-bordered table-hover mp-table mp-table-link" id="classes">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Subject</th>
+            <th>Teacher</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div id="newClassModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New Class</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/curriculum/classes/create", HttpMethod = "POST", OnSuccess = "newClassSuccess", OnFailure = "newClassFailure" }, new { id = "newClassForm" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.Label("Name")
+                        @Html.TextBoxFor(x => x.Class.Name, new { @class = "form-control", Name = "Name" })
+                        @Html.ValidationMessageFor(x => x.Class.Name)
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Subject")
+                        @Html.DropDownListFor(l => l.Class.SubjectId, new SelectList(Model.Subjects, "Id", "Name"), "Select Subject", new { @class = "form-control", Name = "SubjectId" })
+                        @Html.ValidationMessageFor(l => l.Class.SubjectId)
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Teacher")
+                        @Html.DropDownListFor(l => l.Class.TeacherId, new SelectList(from x in Model.Staff select new { x.Id, FullName = x.LastName + ", " + x.FirstName }, "Id", "FullName"), "Select Teacher", new { @class = "form-control", Name = "TeacherId" })
+                        @Html.ValidationMessageFor(l => l.Class.TeacherId)
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="editClassModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Class</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/curriculum/classes/update", HttpMethod = "POST", OnSuccess = "editClassSuccess", OnFailure = "editClassFailure" }, new { id = "editClassForm" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.Label("Name")
+                        @Html.TextBoxFor(x => x.Class.Name, new { @class = "form-control", Name = "Name", id="editClassNameControl" })
+                        @Html.ValidationMessageFor(x => x.Class.Name)
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Subject")
+                        @Html.DropDownListFor(l => l.Class.SubjectId, new SelectList(Model.Subjects, "Id", "Name"), "Select Subject", new { @class = "form-control", Name = "SubjectId", id = "editClassSubjectControl" })
+                        @Html.ValidationMessageFor(l => l.Class.SubjectId)
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Teacher")
+                        @Html.DropDownListFor(l => l.Class.TeacherId, new SelectList(from x in Model.Staff select new { x.Id, FullName = x.LastName + ", " + x.FirstName }, "Id", "FullName"), "Select Teacher", new { @class = "form-control", Name = "TeacherId", id = "editClassTeacherControl" })
+                        @Html.ValidationMessageFor(l => l.Class.TeacherId)
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(x => x.Class.Id, new {Name = "Id", id = "editClassIdControl"})
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+            $("#classes").DataTable({
+                ajax: {
+                    url: "/api/curriculum/classes/get/all",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "name"
+                    },
+                    {
+                        data: "curriculumSubject.name"
+                    },
+                    {
+                        data: "teacher.id",
+                        render: function(data, type, currClass) {
+                            return currClass.teacher.title +
+                                " " +
+                                currClass.teacher.firstName.substring(0, 1) +
+                                " " +
+                                currClass.teacher.lastName;
+                        }
+                    },
+                    {
+                        data: "id",
+                        render: function(data) {
+                            return "<button type='button' class='btn btn-xs btn-warning mp-btn-action-left js-edit' data-class-id=" +
+                                data +
+                                "><i class=\"far fa-edit\"></i></button> " +
+                                "<button type='button' class='btn btn-xs btn-danger mp-btn-action-right js-delete' data-class-id=" +
+                                data +
+                                "><i class=\"far fa-trash-alt\"></i></button>";
+                        }
+                    }
+                ]
+            });
+
+            $("#classes").on("click",
+                ".js-edit",
+                function() {
+                    var button = $(this);
+                    var subjectId = button.attr("data-class-id");
+                    $.ajax({
+                        url: "/api/curriculum/classes/get/byId/" + subjectId,
+                        method: "GET",
+                        success: function(result) {
+                            $("#editClassNameControl").val(result["name"]);
+                            $("#editClassSubjectControl").val(result["subjectId"]);
+                            $("#editClassTeacherControl").val(result["teacherId"]);
+                            $("#editClassIdControl").val(result["id"]);
+                        },
+                        error: function() {
+                            toastr.error("Failed to load class data");
+                        }
+                    });
+                    $("#editClassModal").modal('toggle');
+                });
+
+            $("#classes").on("click",
+                ".js-delete",
+                function() {
+                    var button = $(this);
+                    bootbox.confirm("Are you sure you wish to delete this class?",
+                        function(result) {
+                            if (result) {
+                                $.ajax({
+                                    url: "/api/curriculum/classes/delete/" + button.attr("data-class-id"),
+                                    method: "DELETE",
+                                    success: function(a) {
+                                        $("#classes").DataTable().ajax.reload();
+                                        toastr.success(a);
+                                    },
+                                    error: function(e) {
+                                        toastr.error(e.responseJSON);
+                                    }
+                                });
+                            }
+                        });
+                });
+        });
+
+        function newClassSuccess(result) {
+            $("#newClassModal").modal('hide');
+            $("#classes").DataTable().ajax.reload();
+            toastr.success(result);
+        }
+
+        function newSubjectFailure(result) {
+            $("#newClassModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+
+        function editSubjectSuccess(result) {
+            $("#editClassModal").modal('hide');
+            $("#classes").DataTable().ajax.reload();
+            toastr.success(result);
+        }
+
+        function editSubjectFailure(result) {
+            $("#editClassModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+    </script> 
+}

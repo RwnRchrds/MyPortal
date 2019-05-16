@@ -14,7 +14,7 @@ namespace MyPortal.Dtos
 
         public int? YearGroupId { get; set; }
 
-        public StaffMemberDto CoreStaffMember { get; set; }
+        public StaffMemberDto Teacher { get; set; }
 
         public CurriculumAcademicYearDto CurriculumAcademicYear { get; set; }
 

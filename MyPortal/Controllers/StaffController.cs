@@ -439,5 +439,17 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/Attendance/TakeRegister.cshtml", viewModel);
         }
 
+        [System.Web.Mvc.Route("Staff/Curriculum/Classes")]
+        public ActionResult Classes()
+        {
+            var viewModel = new ClassesViewModel();
+
+            viewModel.Staff = _context.CoreStaff.ToList().OrderBy(x => x.LastName);
+
+            viewModel.Subjects = _context.CurriculumSubjects.ToList().OrderBy(x => x.Name);
+
+            return View("~/Views/Staff/Curriculum/Classes.cshtml", viewModel);
+        }
+
     }
 }

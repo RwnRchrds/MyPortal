@@ -349,6 +349,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\AccountsViewModel.cs" />
+    <Compile Include="ViewModels\ClassesViewModel.cs" />
     <Compile Include="ViewModels\RegistersViewModel.cs" />
     <Compile Include="ViewModels\CommentBanksViewModel.cs" />
     <Compile Include="ViewModels\CommentsViewModel.cs" />
@@ -793,6 +794,7 @@
     <Content Include="Views\Staff\Assessment\ResultSets.cshtml" />
     <Content Include="Views\Staff\Attendance\Registers.cshtml" />
     <Content Include="Views\Staff\Attendance\TakeRegister.cshtml" />
+    <Content Include="Views\Staff\Curriculum\Classes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Results\" />

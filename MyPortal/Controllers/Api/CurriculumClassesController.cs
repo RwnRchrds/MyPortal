@@ -127,7 +127,7 @@ namespace MyPortal.Controllers.Api
             return Ok("Class updated");
         }
 
-        [HttpPost]
+        [HttpDelete]
         [Route("api/curriculum/classes/delete/{id}")]
         public IHttpActionResult DeleteClass(int id)
         {
