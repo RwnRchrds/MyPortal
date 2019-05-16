@@ -196,18 +196,18 @@
             toastr.success(result);
         }
 
-        function newSubjectFailure(result) {
+        function newClassFailure(result) {
             $("#newClassModal").modal('hide');
             toastr.error(result.responseJSON);
         }
 
-        function editSubjectSuccess(result) {
+        function editClassSuccess(result) {
             $("#editClassModal").modal('hide');
             $("#classes").DataTable().ajax.reload();
             toastr.success(result);
         }
 
-        function editSubjectFailure(result) {
+        function editClassFailure(result) {
             $("#editClassModal").modal('hide');
             toastr.error(result.responseJSON);
         }

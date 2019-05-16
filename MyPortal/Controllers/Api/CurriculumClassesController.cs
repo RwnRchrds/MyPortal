@@ -94,6 +94,8 @@ namespace MyPortal.Controllers.Api
         [Route("api/curriculum/classes/create")]
         public IHttpActionResult CreateClass(CurriculumClass currClass)
         {
+            currClass.AcademicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(User);
+
             if (!ModelState.IsValid)
             {
                 return Content(HttpStatusCode.BadRequest, "Invalid data");
