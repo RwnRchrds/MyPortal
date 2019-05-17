@@ -91,7 +91,7 @@ namespace MyPortal.Controllers.Api
             if (authorId == 0)
             {
                 var userId = User.Identity.GetUserId();
-                author = _context.CoreStaff.SingleOrDefault(x => x.UserId == userId);
+                author = _context.StaffMembers.SingleOrDefault(x => x.UserId == userId);
                 if (author == null)
                 {
                     return Content(HttpStatusCode.BadRequest, "User does not have a personnel profile");
@@ -100,7 +100,7 @@ namespace MyPortal.Controllers.Api
 
             if (authorId != 0)
             {
-                author = _context.CoreStaff.SingleOrDefault(x => x.Id == authorId);
+                author = _context.StaffMembers.SingleOrDefault(x => x.Id == authorId);
             }
 
             if (author == null)

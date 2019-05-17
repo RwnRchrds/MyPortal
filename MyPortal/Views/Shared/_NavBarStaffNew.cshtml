@@ -1,0 +1,166 @@
+﻿<nav class="navbar navbar-dark bg-dark fixed-top navbar-expand-md">
+    <div class="container">
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=".navbar-collapse">&#x2630;</button>
+        @Html.ActionLink("MyPortal", "Index", "Home", new {area = ""}, new {@class = "navbar-brand"})
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav mr-auto">
+                <li class="nav-item"><a class="nav-link" href="@Url.Action("Index","Home")"><i class="fas fa-home fa-lg"></i></a></li>
+
+                <!--People-->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="peopleDropdownLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-user-friends fa-lg"></i>
+                    </a>
+                    <div class="dropdown-menu nav-app-menu" aria-labelledby="menuDropdownLink">
+                        <h6 class="dropdown-header">People</h6>
+                        @Html.ActionLink("Students", "Students", "Staff", null, new { @class = "dropdown-item" })
+                        @if (User.IsInRole("SeniorStaff"))
+                        {
+                            @Html.ActionLink("Staff", "Staff", "Staff", null, new { @class = "dropdown-item" })
+                        }
+                    </div>
+                </li>
+
+                <!--Personnel-->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="personnelDropdownLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-address-card fa-lg"></i>
+                    </a>
+                    <div class="dropdown-menu nav-app-menu" aria-labelledby="menuDropdownLink">
+                        <h6 class="dropdown-header">Personnel</h6>
+                        @Html.ActionLink("Training Courses", "TrainingCourses", "Staff", null, new { @class = "dropdown-item" })
+                    </div>
+                </li>
+
+                <!--Documents-->
+                <li class="nav-item dropdown ">
+                    <a class="nav-link dropdown-toggle" href="#" id="documentsDropdownLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-file-alt fa-lg"></i>
+                    </a>
+                    <div class="dropdown-menu nav-app-menu" aria-labelledby="menuDropdownLink">
+                        <h6 class="dropdown-header">Documents</h6>
+                        @Html.ActionLink("Documents", "Documents", "Staff", null, new { @class = "dropdown-item" })
+                    </div>
+                </li>
+
+                <!--Assessment-->
+                <li class="nav-item dropdown ">
+                    <a class="nav-link dropdown-toggle" href="#" id="assessmentDropdownLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-tasks fa-lg"></i>
+                    </a>
+                    <div class="dropdown-menu nav-app-menu" aria-labelledby="menuDropdownLink">
+                        <h6 class="dropdown-header">Assessment</h6>
+                        @if (User.IsInRole("SeniorStaff"))
+                        {
+                            @Html.ActionLink("Result Sets", "ResultSets", "Staff", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Import Results", "ImportResults", "Staff", null, new { @class = "dropdown-item" })
+                        }
+
+                    </div>
+                </li>
+
+                <!--Curriculum-->
+                <li class="nav-item dropdown ">
+                    <a class="nav-link dropdown-toggle" href="#" id="curriculumDropdownLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-graduation-cap fa-lg"></i>
+                    </a>
+                    <div class="dropdown-menu nav-app-menu" aria-labelledby="menuDropdownLink">
+                        <h6 class="dropdown-header">Curriculum</h6>
+                        @Html.ActionLink("Lesson Plans", "LessonPlans", "Staff", null, new { @class = "dropdown-item" })
+                        @if (User.IsInRole("SeniorStaff"))
+                        {
+                            @Html.ActionLink("Classes", "Classes", "Staff", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Study Topics", "StudyTopics", "Staff", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Subjects", "Subjects", "Staff", null, new { @class = "dropdown-item" })
+                        }
+                    </div>
+                </li>
+
+                <!--Profiles-->
+                <li class="nav-item dropdown ">
+                    <a class="nav-link dropdown-toggle" href="#" id="profilesDropdownLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-book fa-lg"></i>
+                    </a>
+                    <div class="dropdown-menu nav-app-menu" aria-labelledby="menuDropdownLink">
+                        <h6 class="dropdown-header">Profiles</h6>
+                        @if (User.IsInRole("SeniorStaff"))
+                        {
+                            @Html.ActionLink("Comment Banks", "CommentBanks", "Staff", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Comments", "Comments", "Staff", null, new { @class = "dropdown-item" })
+                        }
+                    </div>
+                </li>
+
+                <!--Attendance-->
+                <li class="nav-item dropdown ">
+                    <a class="nav-link dropdown-toggle" href="#" id="attendanceDropdownLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-clock fa-lg"></i>
+                    </a>
+                    <div class="dropdown-menu nav-app-menu" aria-labelledby="menuDropdownLink">
+                        <h6 class="dropdown-header">Attendance</h6>
+                        @Html.ActionLink("Registers", "Registers", "Staff", null, new { @class = "dropdown-item" })
+                        @if (User.IsInRole("SeniorStaff"))
+                        {
+
+                        }
+                    </div>
+                </li>
+
+                @if (User.IsInRole("Finance"))
+                {
+                    <!--Finance-->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="attendanceDropdownLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-coins fa-lg"></i>
+                        </a>
+                        <div class="dropdown-menu nav-app-menu" aria-labelledby="menuDropdownLink">
+                            <h6 class="dropdown-header">Finance</h6>
+                            @Html.ActionLink("Accounts", "Accounts", "Finance", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Products", "Products", "Finance", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Sales", "Sales", "Finance", null, new { @class = "dropdown-item" })
+                            @if (User.IsInRole("SeniorStaff"))
+                            {
+
+                            }
+                        </div>
+                    </li>
+                }
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <!--Finance-->
+                    <li class="nav-item dropdown ">
+                        <a class="nav-link dropdown-toggle" href="#" id="attendanceDropdownLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-cog fa-lg"></i>
+                        </a>
+                        <div class="dropdown-menu nav-app-menu" aria-labelledby="menuDropdownLink">
+                            <h6 class="dropdown-header">Admin</h6>
+                            @Html.ActionLink("Users", "Users", "Admin", null, new { @class = "dropdown-item" })
+                            @if (User.IsInRole("SeniorStaff"))
+                            {
+
+                            }
+                        </div>
+                    </li>
+                }
+
+                <li class="nav-item dropdown ">
+                    <a class="nav-link dropdown-toggle" href="#" id="vleDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fab fa-google fa-lg"></i>
+                    </a>
+                    <div class="dropdown-menu nav-app-menu" aria-labelledby="vleDropdownMenuLink">
+                        <h6 class="dropdown-header">VLE</h6>
+                        <a class="dropdown-item" href="https://calendar.google.com/a/vle.harrodsschool.co.uk" target="_blank">Calendar</a>
+                        <a class="dropdown-item" href="https://classroom.google.com/a/vle.harrodsschool.co.uk" target="_blank">Classroom</a>
+                        <a class="dropdown-item" href="https://drive.google.com/a/vle.harrodsschool.co.uk" target="_blank">Drive</a>
+                        <a class="dropdown-item" href="https://keep.google.com/a/vle.harrodsschool.co.uk" target="_blank">Keep</a>
+                        <a class="dropdown-item" href="https://mail.google.com/a/vle.harrodsschool.co.uk" target="_blank">Mail</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="https://sites.google.com/vle.harrodsschool.co.uk/directory" target="_blank">VLE Directory</a>
+                    </div>
+                </li>
+            </ul>
+            @Html.Partial("_LoginPartial")
+        </div>
+    </div>
+</nav>

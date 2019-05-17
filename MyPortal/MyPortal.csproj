@@ -212,6 +212,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\Api\AttendanceMarksController.cs" />
+    <Compile Include="Controllers\Api\AttendancePeriodsController.cs" />
     <Compile Include="Controllers\Api\AttendanceWeeksController.cs" />
     <Compile Include="Controllers\Api\BasketItemsController.cs" />
     <Compile Include="Controllers\Api\CommentBanksController.cs" />
@@ -350,6 +351,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\AccountsViewModel.cs" />
     <Compile Include="ViewModels\ClassesViewModel.cs" />
+    <Compile Include="ViewModels\ClassScheduleViewModel.cs" />
     <Compile Include="ViewModels\RegistersViewModel.cs" />
     <Compile Include="ViewModels\CommentBanksViewModel.cs" />
     <Compile Include="ViewModels\CommentsViewModel.cs" />
@@ -691,7 +693,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\MyPortal\FinanceNavBar.js" />
-    <Content Include="Scripts\MyPortal\StaffNavBar.js" />
+    <Content Include="Scripts\MyPortal\NavBar.js" />
     <Content Include="Scripts\MyPortal\StudentNavBar.js" />
     <Content Include="Scripts\popper-utils.js" />
     <Content Include="Scripts\popper-utils.min.js" />
@@ -795,6 +797,8 @@
     <Content Include="Views\Staff\Attendance\Registers.cshtml" />
     <Content Include="Views\Staff\Attendance\TakeRegister.cshtml" />
     <Content Include="Views\Staff\Curriculum\Classes.cshtml" />
+    <Content Include="Views\Staff\Curriculum\ClassSchedule.cshtml" />
+    <None Include="Views\Shared\_NavBarStaffNew.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Results\" />

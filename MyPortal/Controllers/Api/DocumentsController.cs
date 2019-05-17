@@ -51,7 +51,7 @@ namespace MyPortal.Controllers.Api
             if (uploaderId == 0)
             {
                 var userId = User.Identity.GetUserId();
-                uploader = _context.CoreStaff.SingleOrDefault(x => x.UserId == userId);
+                uploader = _context.StaffMembers.SingleOrDefault(x => x.UserId == userId);
                 if (uploader == null)
                 {
                     return Content(HttpStatusCode.BadRequest, "User does not have a personnel profile");
@@ -60,7 +60,7 @@ namespace MyPortal.Controllers.Api
 
             if (uploaderId != 0)
             {
-                uploader = _context.CoreStaff.SingleOrDefault(x => x.Id == uploaderId);
+                uploader = _context.StaffMembers.SingleOrDefault(x => x.Id == uploaderId);
             }
 
             if (uploader == null)
@@ -74,7 +74,7 @@ namespace MyPortal.Controllers.Api
 
             document.Date = DateTime.Now;
 
-            _context.CoreDocuments.Add(document);
+            _context.Documents.Add(document);
             _context.SaveChanges();
 
             return Ok("Document added");
@@ -89,7 +89,7 @@ namespace MyPortal.Controllers.Api
         [Authorize(Roles = "Staff, SeniorStaff")]
         public IEnumerable<DocumentDto> GetApprovedDocuments()
         {
-            return _context.CoreDocuments
+            return _context.Documents
                 .Where(x => x.IsGeneral && x.Approved)
                 .ToList()
                 .Select(Mapper.Map<Document, DocumentDto>);
@@ -105,7 +105,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/documents/document/{documentId}")]
         public DocumentDto GetDocument(int documentId)
         {
-            var document = _context.CoreDocuments
+            var document = _context.Documents
                 .Single(x => x.Id == documentId);
 
             if (document == null)
@@ -125,7 +125,7 @@ namespace MyPortal.Controllers.Api
         [Authorize(Roles = "SeniorStaff")]
         public IEnumerable<DocumentDto> GetDocuments()
         {
-            return _context.CoreDocuments
+            return _context.Documents
                 .Where(x => x.IsGeneral)
                 .ToList()
                 .Select(Mapper.Map<Document, DocumentDto>);
@@ -141,14 +141,14 @@ namespace MyPortal.Controllers.Api
         [Route("api/documents/remove/{documentId}")]
         public IHttpActionResult RemoveDocument(int documentId)
         {
-            var documentToRemove = _context.CoreDocuments.SingleOrDefault(x => x.Id == documentId);
+            var documentToRemove = _context.Documents.SingleOrDefault(x => x.Id == documentId);
 
             if (documentToRemove == null)
             {
                 return Content(HttpStatusCode.NotFound, "Document not found");
             }
 
-            _context.CoreDocuments.Remove(documentToRemove);
+            _context.Documents.Remove(documentToRemove);
             _context.SaveChanges();
 
             return Ok("Document removed");
@@ -164,7 +164,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/documents/edit")]
         public IHttpActionResult UpdateDocument(Document data)
         {
-            var documentInDb = _context.CoreDocuments.SingleOrDefault(x => x.Id == data.Id);
+            var documentInDb = _context.Documents.SingleOrDefault(x => x.Id == data.Id);
 
             if (documentInDb == null)
             {

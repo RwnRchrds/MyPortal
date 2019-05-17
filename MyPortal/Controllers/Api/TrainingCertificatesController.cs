@@ -31,7 +31,7 @@ namespace MyPortal.Controllers.Api
 
             var userId = User.Identity.GetUserId();
 
-            var userPerson = _context.CoreStaff.SingleOrDefault(x => x.UserId == userId);
+            var userPerson = _context.StaffMembers.SingleOrDefault(x => x.UserId == userId);
 
             if (trainingCertificateDto.StaffId == userPerson.Id)
             {
@@ -60,7 +60,7 @@ namespace MyPortal.Controllers.Api
 
             var userId = User.Identity.GetUserId();
 
-            var userPerson = _context.CoreStaff.SingleOrDefault(x => x.UserId == userId);
+            var userPerson = _context.StaffMembers.SingleOrDefault(x => x.UserId == userId);
 
             if (staff == userPerson.Id)
             {
@@ -92,7 +92,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/staff/certificates/fetch/{staff}")]
         public IEnumerable<PersonnelTrainingCertificateDto> GetCertificates(int staff)
         {
-            var staffInDb = _context.CoreStaff.Single(x => x.Id == staff);
+            var staffInDb = _context.StaffMembers.Single(x => x.Id == staff);
 
             if (staffInDb == null)
             {
@@ -119,7 +119,7 @@ namespace MyPortal.Controllers.Api
 
             var userId = User.Identity.GetUserId();
 
-            var userPerson = _context.CoreStaff.SingleOrDefault(x => x.UserId == userId);
+            var userPerson = _context.StaffMembers.SingleOrDefault(x => x.UserId == userId);
 
             if (userPerson != null && data.StaffId == userPerson.Id)
             {

@@ -34,7 +34,7 @@ namespace MyPortal.Controllers.Api
         {
             var productToQuery = _context.FinanceProducts.SingleOrDefault(x => x.Id == sale.ProductId);
 
-            var studentToQuery = _context.CoreStudents.SingleOrDefault(x => x.Id == sale.StudentId);
+            var studentToQuery = _context.Students.SingleOrDefault(x => x.Id == sale.StudentId);
 
             if (productToQuery == null || studentToQuery == null)
             {
@@ -137,7 +137,7 @@ namespace MyPortal.Controllers.Api
         /// <exception cref="HttpResponseException">Thrown if the student or product is not found.</exception>
         public void InvokeSale(FinanceSale sale)
         {            
-            var student = _context.CoreStudents.SingleOrDefault(x => x.Id == sale.StudentId);
+            var student = _context.Students.SingleOrDefault(x => x.Id == sale.StudentId);
 
             var product = _context.FinanceProducts.SingleOrDefault(x => x.Id == sale.ProductId);
 
@@ -198,7 +198,7 @@ namespace MyPortal.Controllers.Api
 
             sale.Processed = true;
 
-            var student = _context.CoreStudents.SingleOrDefault(x => x.Id == sale.StudentId);
+            var student = _context.Students.SingleOrDefault(x => x.Id == sale.StudentId);
 
             var product = _context.FinanceProducts.SingleOrDefault(x => x.Id == sale.ProductId);
 
@@ -239,7 +239,7 @@ namespace MyPortal.Controllers.Api
             }
 
             //Check student actually exists
-            var student = _context.CoreStudents.SingleOrDefault(x => x.Id == data.StudentId);
+            var student = _context.Students.SingleOrDefault(x => x.Id == data.StudentId);
 
             if (student == null)
             {

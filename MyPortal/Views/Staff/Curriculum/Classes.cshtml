@@ -140,7 +140,10 @@
                     {
                         data: "id",
                         render: function(data) {
-                            return "<button type='button' class='btn btn-xs btn-warning mp-btn-action-left js-edit' data-class-id=" +
+                            return "<button type='button' class='btn btn-xs btn-success mp-btn-action-left js-schedule' data-class-id=" +
+                                data +
+                                "><i class=\"fas fa-calendar-alt\"></i></button> " +
+                            "<button type='button' class='btn btn-xs btn-warning mp-btn-action-left js-edit' data-class-id=" +
                                 data +
                                 "><i class=\"far fa-edit\"></i></button> " +
                                 "<button type='button' class='btn btn-xs btn-danger mp-btn-action-right js-delete' data-class-id=" +
@@ -148,7 +151,10 @@
                                 "><i class=\"far fa-trash-alt\"></i></button>";
                         }
                     }
-                ]
+                ],
+                "language": {
+                    "emptyTable": "No classes to display"
+                }
             });
 
             $("#classes").on("click",
@@ -170,6 +176,14 @@
                         }
                     });
                     $("#editClassModal").modal('toggle');
+                });
+
+            $("#classes").on("click",
+                ".js-schedule",
+                function () {
+                    var button = $(this);
+                    var classId = button.attr("data-class-id");
+                    location.replace("/Staff/Curriculum/Classes/Schedule/" + classId);
                 });
 
             $("#classes").on("click",

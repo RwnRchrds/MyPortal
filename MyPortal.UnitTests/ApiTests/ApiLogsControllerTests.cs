@@ -47,7 +47,7 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void GetLogs_GetsLogsForStudent()
         {
-            var student = _context.CoreStudents.SingleOrDefault(x => x.FirstName == "John");
+            var student = _context.Students.SingleOrDefault(x => x.FirstName == "John");
             
             Assert.IsNotNull(student);
 
@@ -83,7 +83,7 @@ namespace MyPortal.UnitTests.ApiTests
         {
             var init = _context.ProfileLogs.Count();
             
-            var student = _context.CoreStudents.SingleOrDefault(x => x.FirstName == "Aaron");
+            var student = _context.Students.SingleOrDefault(x => x.FirstName == "Aaron");
             var initForStudent = _context.ProfileLogs.Count(x => x.StudentId == student.Id);
             var academicYear = _context.CurriculumAcademicYears.SingleOrDefault(x => x.Name == "First");
             
@@ -106,7 +106,7 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void CreateLog_StaffMemberDoesNotExist_ReturnsNotFound()
         {
-            var student = _context.CoreStudents.SingleOrDefault(x => x.FirstName == "Dorothy");
+            var student = _context.Students.SingleOrDefault(x => x.FirstName == "Dorothy");
 
             var logType = _context.ProfileLogTypes.SingleOrDefault(x => x.Name == "Type 3");
 

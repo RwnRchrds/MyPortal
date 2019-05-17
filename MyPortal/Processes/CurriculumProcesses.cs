@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using MyPortal.Dtos.LiteDtos;
 using MyPortal.Models.Database;
 using MyPortal.Models.Exceptions;
 
@@ -18,7 +19,7 @@ namespace MyPortal.Processes
 
         public static void EnrolInClass(int studentId, int classId)
         {
-            var student = _context.CoreStudents.SingleOrDefault(x => x.Id == studentId);
+            var student = _context.Students.SingleOrDefault(x => x.Id == studentId);
 
             var currClass = _context.CurriculumClasses.SingleOrDefault(x => x.Id == classId);
 
@@ -88,12 +89,17 @@ namespace MyPortal.Processes
             }
 
             return isFree;
-        }
+        }       
         
         #region Extension Methods
-        public static bool CheckCanBeDeleted(this CurriculumClass currClass)
+        public static bool HasPeriods(this CurriculumClass currClass)
         {
-            return !currClass.CurriculumClassPeriods.Any() && !currClass.Enrolments.Any();
+            return currClass.CurriculumClassPeriods.Any();
+        }
+
+        public static bool HasEnrolments(this CurriculumClass currClass)
+        {
+            return currClass.Enrolments.Any();
         }
         #endregion
     }

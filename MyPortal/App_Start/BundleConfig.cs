@@ -23,8 +23,8 @@ namespace MyPortal
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                 "~/Scripts/jquery.validate*"));
 
-            bundles.Add(new ScriptBundle("~/bundles/staff").Include(
-                "~/Scripts/MyPortal/StaffNavBar.js"));
+            bundles.Add(new ScriptBundle("~/bundles/navbar").Include(
+                "~/Scripts/MyPortal/NavBar.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/students").Include(
                 "~/Scripts/MyPortal/StudentNavBar.js"));
@@ -43,6 +43,7 @@ namespace MyPortal
                 "~/content/fontawesome.min.css",
                 "~/content/regular.min.css",
                 "~/content/solid.min.css",
+                "~/Content/brands.min.css",
                 "~/Content/site.css"));
         }
     }

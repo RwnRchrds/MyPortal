@@ -59,8 +59,8 @@ namespace MyPortal.Controllers
 
             var attachedProfile = "";
 
-            var studentProfile = _context.CoreStudents.SingleOrDefault(x => x.UserId == user.Id);
-            var staffProfile = _context.CoreStaff.SingleOrDefault(x => x.UserId == user.Id);
+            var studentProfile = _context.Students.SingleOrDefault(x => x.UserId == user.Id);
+            var staffProfile = _context.StaffMembers.SingleOrDefault(x => x.UserId == user.Id);
 
             if (studentProfile != null)
                 attachedProfile = studentProfile.LastName + ", " + studentProfile.FirstName + " (Student)";

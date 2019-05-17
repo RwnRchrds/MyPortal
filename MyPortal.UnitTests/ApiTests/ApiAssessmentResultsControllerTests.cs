@@ -42,7 +42,7 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void GetResults_ReturnsResultsForStudent()
         {
-            var student = _context.CoreStudents.SingleOrDefault(x => x.FirstName == "Aaron");
+            var student = _context.Students.SingleOrDefault(x => x.FirstName == "Aaron");
 
             var resultSet = _context.AssessmentResultSets.SingleOrDefault(x => x.Name == "Current");
             

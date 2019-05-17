@@ -44,7 +44,7 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void GetBasketItems_ReturnsItems()
         {
-            var student = _context.CoreStudents.SingleOrDefault(x => x.FirstName == "Aaron");
+            var student = _context.Students.SingleOrDefault(x => x.FirstName == "Aaron");
             
             Assert.IsNotNull(student);
 
@@ -57,7 +57,7 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void GetTotal_ReturnsBasketTotal()
         {
-            var student = _context.CoreStudents.SingleOrDefault(x => x.FirstName == "Aaron");
+            var student = _context.Students.SingleOrDefault(x => x.FirstName == "Aaron");
             
             Assert.IsNotNull(student);
 
@@ -69,7 +69,7 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void AddToBasket_AddsItemToBasket()
         {
-            var student = _context.CoreStudents.SingleOrDefault(x => x.FirstName == "Dorothy");
+            var student = _context.Students.SingleOrDefault(x => x.FirstName == "Dorothy");
             
             Assert.IsNotNull(student);
 
@@ -111,7 +111,7 @@ namespace MyPortal.UnitTests.ApiTests
         {
             var productId = 9999;
 
-            var student = _context.CoreStudents.SingleOrDefault(x => x.FirstName == "Dorothy");
+            var student = _context.Students.SingleOrDefault(x => x.FirstName == "Dorothy");
             Assert.IsNotNull(student);
             
             var item = new FinanceBasketItem {StudentId = student.Id, ProductId = productId};
@@ -132,7 +132,7 @@ namespace MyPortal.UnitTests.ApiTests
             var product = _context.FinanceProducts.SingleOrDefault(x => x.Description == "School Dinner");
             Assert.IsNotNull(product);
 
-            var student = _context.CoreStudents.SingleOrDefault(x => x.FirstName == "Dorothy");
+            var student = _context.Students.SingleOrDefault(x => x.FirstName == "Dorothy");
             Assert.IsNotNull(student);
             
             var item = new FinanceBasketItem {StudentId = student.Id, ProductId = product.Id};
@@ -153,7 +153,7 @@ namespace MyPortal.UnitTests.ApiTests
             var product = _context.FinanceProducts.SingleOrDefault(x => x.Description == "School Trip");
             Assert.IsNotNull(product);
 
-            var student = _context.CoreStudents.SingleOrDefault(x => x.FirstName == "John");
+            var student = _context.Students.SingleOrDefault(x => x.FirstName == "John");
             Assert.IsNotNull(student);
             
             var item = new FinanceBasketItem {ProductId = product.Id, StudentId = student.Id};
@@ -171,7 +171,7 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void RemoveFromBasket_RemovesItemFromBasket()
         {
-            var student = _context.CoreStudents.SingleOrDefault(x => x.FirstName == "Aaron");
+            var student = _context.Students.SingleOrDefault(x => x.FirstName == "Aaron");
             
             Assert.IsNotNull(student);
 

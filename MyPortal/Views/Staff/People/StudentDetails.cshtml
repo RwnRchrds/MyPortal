@@ -159,7 +159,7 @@
                 <th>Date</th>
                 <th>Author</th>
                 <th>Type</th>
-                <th>Message</th>
+                <th>Reason</th>
                 <th>Actions</th>
             </tr>
             </thead>
@@ -211,8 +211,8 @@
                     <button type="button" class="btn btn-sm btn-success" id="addComment"><i class="fa fa-plus-circle"></i> Add Comment</button>
                     <hr/>
                     <div class="form-group">
-                        @Html.Label("Message")
-                        @Html.TextAreaFor(l => l.Log.Message, new {@class = "form-control mp-textarea-lg", Name = "Message", id = "newLogMessageControl"})
+                        @Html.Label("Reason")
+                        @Html.TextAreaFor(l => l.Log.Message, new {@class = "form-control mp-textarea-lg", Name = "Reason", id = "newLogMessageControl"})
                         @Html.ValidationMessageFor(l => l.Log.Message)
                     </div>
                     <div class="form-group">
@@ -250,8 +250,8 @@
                         @Html.DropDownListFor(l => l.Log.TypeId, new SelectList(Model.LogTypes, "Id", "Name"), "Select Log Type", new {@class = "form-control", id = "EditLogTypeControl", Name = "TypeId"})
                     </div>
                     <div class="form-group">
-                        @Html.Label("Message")
-                        @Html.TextAreaFor(l => l.Log.Message, new {@class = "form-control mp-textarea-lg", id = "EditLogMessageControl", Name = "Message"})
+                        @Html.Label("Reason")
+                        @Html.TextAreaFor(l => l.Log.Message, new {@class = "form-control mp-textarea-lg", id = "EditLogMessageControl", Name = "Reason"})
                     </div>
                     <div class="form-group">
                         @Html.HiddenFor(l => l.Log.StudentId, new {Value = Model.Student.Id, Name = "StudentId"})
@@ -558,7 +558,7 @@
                         data: "profileLogType.name"
                     },
                     {
-                        data: "message",
+                        data: "reason",
                         render: function(data) {
 
                             if ("@Model.Student.Gender" === "M") {

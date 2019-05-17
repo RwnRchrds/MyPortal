@@ -12,21 +12,22 @@
 
 </head>
 <body>
-@Html.Partial("_NavBarStaff")
-<div class="container body-content">
-    @RenderBody()
-    <div class="container float-left">
-        <hr/>
-        <footer>
-            <p>
-                <b>Version:</b> @version.Major.ToString().@version.Minor.ToString().@version.Build.ToString()
-            </p>
-            <p>&copy; @DateTime.Now.Year - Rowan Richards</p>
-        </footer>
+    @Html.Partial("_NavBarStaffNew")
+    <div class="container body-content">
+        @RenderBody()
+        <div class="container float-left">
+            <hr />
+            <footer>
+                <p>
+                    <b>Version:</b> @version.Major.ToString().@version.Minor.ToString().@version.Build.ToString()
+                </p>
+                <p>&copy; @DateTime.Now.Year - Rowan Richards</p>
+            </footer>
+        </div>
     </div>
-</div>
 
-@Scripts.Render("~/bundles/lib")
-@RenderSection("scripts", false)
+    @Scripts.Render("~/bundles/lib")
+    @Scripts.Render("~/bundles/navbar")
+    @RenderSection("scripts", false)
 </body>
 </html>

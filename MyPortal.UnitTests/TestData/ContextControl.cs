@@ -169,7 +169,7 @@ namespace MyPortal.UnitTests.TestData
             var sales = new List<FinanceSale>();
             #endregion
 
-            #region CoreStaff
+            #region StaffMembers
             var staff = new List<StaffMember>
             {
                 new StaffMember
@@ -204,7 +204,7 @@ namespace MyPortal.UnitTests.TestData
             var staffObservations = new List<PersonnelObservation>();
             #endregion
 
-            #region CoreStudents
+            #region Students
             var students = new List<Student>
             {
                 new Student
@@ -276,7 +276,7 @@ namespace MyPortal.UnitTests.TestData
             context.FinanceBasketItems.AddRange(basketItems);
             context.ProfileCommentBanks.AddRange(commentBanks);
             context.ProfileComments.AddRange(comments);
-            context.CoreDocuments.AddRange(documents);
+            context.Documents.AddRange(documents);
             context.AssessmentGrades.AddRange(grades);
             context.AssessmentGradeSets.AddRange(gradeSets);
             context.CurriculumLessonPlans.AddRange(lessonPlans);
@@ -287,11 +287,11 @@ namespace MyPortal.UnitTests.TestData
             context.AssessmentResults.AddRange(results);
             context.AssessmentResultSets.AddRange(resultSets);
             context.FinanceSales.AddRange(sales);
-            context.CoreStaff.AddRange(staff);
-            context.CoreStaffDocuments.AddRange(staffDocuments);
+            context.StaffMembers.AddRange(staff);
+            context.StaffDocuments.AddRange(staffDocuments);
             context.PersonnelObservations.AddRange(staffObservations);
-            context.CoreStudents.AddRange(students);
-            context.CoreStudentDocuments.AddRange(studentDocuments);
+            context.Students.AddRange(students);
+            context.StudentDocuments.AddRange(studentDocuments);
             context.CurriculumStudyTopics.AddRange(studyTopics);
             context.CurriculumSubjects.AddRange(subjects);
             context.PersonnelTrainingCertificates.AddRange(trainingCertificates);

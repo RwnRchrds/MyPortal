@@ -30,11 +30,11 @@ namespace MyPortal.Models.Database
         public virtual DbSet<AttendanceRegisterCodeMeaning> AttendanceMeanings { get; set; }
         public virtual DbSet<AttendancePeriod> AttendancePeriods { get; set; }
         public virtual DbSet<AttendanceWeek> AttendanceWeeks { get; set; }
-        public virtual DbSet<Document> CoreDocuments { get; set; }
-        public virtual DbSet<StaffDocument> CoreStaffDocuments { get; set; }
-        public virtual DbSet<StudentDocument> CoreStudentDocuments { get; set; }
-        public virtual DbSet<StaffMember> CoreStaff { get; set; }
-        public virtual DbSet<Student> CoreStudents { get; set; }
+        public virtual DbSet<Document> Documents { get; set; }
+        public virtual DbSet<StaffDocument> StaffDocuments { get; set; }
+        public virtual DbSet<StudentDocument> StudentDocuments { get; set; }
+        public virtual DbSet<StaffMember> StaffMembers { get; set; }
+        public virtual DbSet<Student> Students { get; set; }
         public virtual DbSet<CurriculumAcademicYear> CurriculumAcademicYears { get; set; }
         public virtual DbSet<CurriculumClassEnrolment> CurriculumClassEnrolments { get; set; }
         public virtual DbSet<CurriculumClass> CurriculumClasses { get; set; }

@@ -5,6 +5,7 @@ using System.Net;
 using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
+using MyPortal.Dtos.LiteDtos;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
 using MyPortal.Processes;
@@ -101,6 +102,11 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.BadRequest, "Invalid data");
             }
 
+            if (_context.CurriculumClasses.Any(x => x.Name == currClass.Name))
+            {
+                return Content(HttpStatusCode.BadRequest, "Class with that name already exists");
+            }
+
             _context.CurriculumClasses.Add(currClass);
 
             _context.SaveChanges();
@@ -140,7 +146,7 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.NotFound, "CLass not found");
             }
 
-            if (currClass.CheckCanBeDeleted())
+            if (!currClass.HasPeriods() && !currClass.HasEnrolments())
             {
                 _context.CurriculumClasses.Remove(currClass);
                 _context.SaveChanges();
@@ -149,6 +155,103 @@ namespace MyPortal.Controllers.Api
             }
 
             return Content(HttpStatusCode.BadRequest, "Class cannot be deleted");
+        }
+
+        [HttpGet]
+        [Route("api/curriculum/classes/schedule/get/{classId}")]
+        public IEnumerable<CurriculumClassPeriodDto> GetSchedule(int classId)
+        {
+            return _context.CurriculumClassPeriods.Where(x => x.ClassId == classId).ToList()
+                .Select(Mapper.Map<CurriculumClassPeriod, CurriculumClassPeriodDto>);
+        }
+
+        [HttpGet]
+        [Route("api/curriculum/classes/schedule/getAssignment/{id}")]
+        public CurriculumClassPeriodDto GetAssignment(int id)
+        {
+            var assignment = _context.CurriculumClassPeriods.SingleOrDefault(x => x.Id == id);
+
+            if (assignment == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return Mapper.Map<CurriculumClassPeriod, CurriculumClassPeriodDto>(assignment);
+        }
+
+        [HttpPost]
+        [Route("api/curriculum/classes/schedule/createAssignment")]
+        public IHttpActionResult CreateTimetableAssignment(CurriculumClassPeriod assignment)
+        {
+            var currClass = _context.CurriculumClasses.SingleOrDefault(x => x.Id == assignment.ClassId);
+
+            if (currClass == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Class not found");
+            }
+
+            if (currClass.HasEnrolments())
+            {
+                return Content(HttpStatusCode.BadRequest, "Cannot modify class schedule while students are enrolled");
+            }
+
+            if (_context.CurriculumClassPeriods.Any(x =>
+                x.ClassId == assignment.ClassId && x.PeriodId == assignment.PeriodId))
+            {
+                return Content(HttpStatusCode.BadRequest, "Class already assigned to this period");
+            }
+
+            _context.CurriculumClassPeriods.Add(assignment);
+            _context.SaveChanges();
+
+            return Ok("Assignment added");
+        }
+
+        [HttpPost]
+        [Route("api/curriculum/classes/schedule/updateAssignment")]
+        public IHttpActionResult UpdateTimetableAssignment(CurriculumClassPeriod assignment)
+        {
+            var assignmentInDb = _context.CurriculumClassPeriods.SingleOrDefault(x => x.Id == assignment.Id);
+
+            var currClass = _context.CurriculumClasses.SingleOrDefault(x => x.Id == assignment.ClassId);
+
+            if (assignmentInDb == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Assignment not found");
+            }
+
+            if (currClass.HasEnrolments())
+            {
+                return Content(HttpStatusCode.BadRequest, "Cannot modify class schedule while students are enrolled");
+            }
+
+            if (_context.CurriculumClassPeriods.Any(x =>
+                x.ClassId == assignment.ClassId && x.PeriodId == assignment.PeriodId))
+            {
+                return Content(HttpStatusCode.BadRequest, "Class already assigned to this period");
+            }
+
+            assignmentInDb.PeriodId = assignment.PeriodId;
+            _context.SaveChanges();
+
+            return Ok("Assignment updated");
+        }
+
+        [HttpDelete]
+        [Route("api/curriculum/classes/schedule/deleteAssignment/{assignmentId}")]
+        public IHttpActionResult DeleteTimetableAssignment(int assignmentId)
+        {
+            var assignmentInDb = _context.CurriculumClassPeriods.SingleOrDefault(x => x.Id == assignmentId);
+
+            if (assignmentInDb == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Assignment not found");
+            }
+
+            _context.CurriculumClassPeriods.Remove(assignmentInDb);
+            _context.SaveChanges();
+
+            return Ok("Assignment deleted");
         }
     }
 }

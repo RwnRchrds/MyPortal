@@ -33,7 +33,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/basket/add")]
         public IHttpActionResult AddToBasket(FinanceBasketItem data)
         {
-            var studentQuery = _context.CoreStudents.SingleOrDefault(x => x.Id == data.StudentId);
+            var studentQuery = _context.Students.SingleOrDefault(x => x.Id == data.StudentId);
 
             if (studentQuery == null)
             {

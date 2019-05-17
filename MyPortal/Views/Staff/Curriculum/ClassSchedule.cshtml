@@ -1,0 +1,199 @@
+﻿@model MyPortal.ViewModels.ClassScheduleViewModel
+@{
+    ViewBag.Title = "ClassSchedule";
+    Layout = "~/Views/Shared/_LayoutStaff.cshtml";
+}
+
+<div class="container float-left">
+    <h2 class="mp-page-title">Schedule for @Model.Class.Name</h2>
+    <hr/>
+</div>
+
+<div class="container float-left">
+    @if (User.IsInRole("SeniorStaff"))
+    {
+        <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#newAssignmentModal">Add Period</button>
+        <hr />
+    }
+</div>
+
+<div class="container float-left">
+    <table class="table table-bordered table-hover mp-table mp-table-link" id="assignments">
+        <thead>
+        <tr>
+            <th>Period</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<button type="button" class="btn btn-primary" id="backButton">Back</button>
+
+<div id="newAssignmentModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Period for Class</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/curriculum/classes/schedule/createAssignment", HttpMethod = "POST", OnSuccess = "newAssignmentSuccess", OnFailure = "newAssignmentFailure" }, new { id = "newAssignmentForm" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.Label("Period")
+                        @Html.DropDownListFor(l => l.Assignment.PeriodId, new SelectList(Model.Periods, "Id", "Name"), "Select Period", new { @class = "form-control", Name = "PeriodId" })
+                        @Html.ValidationMessageFor(l => l.Class.SubjectId)
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(x => x.Class.Id, new {Name = "ClassId"})
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="editAssignmentModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Assignment</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/curriculum/classes/schedule/updateAssignment", HttpMethod = "POST", OnSuccess = "editAssignmentSuccess", OnFailure = "editAssignmentFailure" }, new { id = "editAssignmentForm" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.Label("Period")
+                        @Html.DropDownListFor(l => l.Assignment.PeriodId, new SelectList(Model.Periods, "Id", "Name"), "Select Period", new { @class = "form-control", Name = "PeriodId", id = "editPeriodControl" })
+                        @Html.ValidationMessageFor(l => l.Class.SubjectId)
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(x => x.Class.Id, new { Name = "ClassId", id = "editClassControl" })
+                        @Html.HiddenFor(x => x.Assignment.Id, new {Name = "Id", id = "editIdControl"})
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+            $('.modal').on('hidden.bs.modal',
+                function() {
+                    $(this).find('form').trigger('reset');
+                });
+
+            $("#backButton").on("click",
+                function () {
+                    location.replace("@Url.Action("Classes", "Staff")");
+                });
+
+            $("#assignments").DataTable({
+                ajax: {
+                    url: "/api/curriculum/classes/schedule/get/@Model.Class.Id",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "attendancePeriod.name"
+                    },
+                    {
+                        data: "id",
+                        render: function(data) {
+                            return "<button type='button' class='btn btn-xs btn-warning mp-btn-action-left js-edit' data-assignment-id=" +
+                                data +
+                                "><i class=\"far fa-edit\"></i></button> " +
+                                "<button type='button' class='btn btn-xs btn-danger mp-btn-action-right js-delete' data-assignment-id=" +
+                                data +
+                                "><i class=\"far fa-trash-alt\"></i></button>";
+                        }
+                    }
+                ],
+                "language": {
+                    "emptyTable": "No periods assigned to class"
+                }
+            });
+
+            $("#assignments").on("click",
+                ".js-edit",
+                function() {
+                    var button = $(this);
+                    var assignmentId = button.attr("data-assignment-id");
+                    $.ajax({
+                        url: "/api/curriculum/classes/schedule/getAssignment/" + assignmentId,
+                        method: "GET",
+                        success: function(result) {
+                            $("#editPeriodControl").val(result["periodId"]);
+                            $("#editClassControl").val(result["classId"]);
+                            $("#editIdControl").val(result["id"]);
+                        },
+                        error: function() {
+                            toastr.error("Failed to load assignment data");
+                        }
+                    });
+                    $("#editAssignmentModal").modal('toggle');
+                });
+
+            $("#assignments").on("click",
+                ".js-delete",
+                function() {
+                    var button = $(this);
+                    bootbox.confirm("Are you sure you wish to delete this assignment?",
+                        function(result) {
+                            if (result) {
+                                $.ajax({
+                                    url: "/api/curriculum/classes/schedule/deleteAssignment/" +
+                                        button.attr("data-assignment-id"),
+                                    method: "DELETE",
+                                    success: function(a) {
+                                        $("#assignments").DataTable().ajax.reload();
+                                        toastr.success(a);
+                                    },
+                                    error: function(e) {
+                                        toastr.error(e.responseJSON);
+                                    }
+                                });
+                            }
+                        });
+                });
+        });
+
+        function newAssignmentSuccess(result) {
+            $("#newAssignmentModal").modal('hide');
+            $("#assignments").DataTable().ajax.reload();
+            toastr.success(result);
+        }
+
+        function newAssignmentFailure(result) {
+            $("#newClassModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+
+        function editAssignmentSuccess(result) {
+            $("#editClassModal").modal('hide');
+            $("#classes").DataTable().ajax.reload();
+            toastr.success(result);
+        }
+
+        function editAssignmentFailure(result) {
+            $("#editClassModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+    </script>
+}

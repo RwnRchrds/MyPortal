@@ -66,7 +66,7 @@ namespace MyPortal.Controllers.Api
                     for (var i = 0; i < subjects.Count; i++)
                     {
                         var studentMisId = values[4];
-                        var student = _context.CoreStudents.SingleOrDefault(x => x.MisId == studentMisId);
+                        var student = _context.Students.SingleOrDefault(x => x.MisId == studentMisId);
                         if (student == null)
                         {
                             continue;

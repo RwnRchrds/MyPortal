@@ -31,8 +31,8 @@ namespace MyPortal.Controllers.Api
         public void AuthenticateStudentRequest(int id)
         {
                 var userId = User.Identity.GetUserId();
-                var studentUser = _context.CoreStudents.SingleOrDefault(x => x.UserId == userId);
-                var requestedStudent = _context.CoreStudents.SingleOrDefault(x => x.Id == id);
+                var studentUser = _context.Students.SingleOrDefault(x => x.UserId == userId);
+                var requestedStudent = _context.Students.SingleOrDefault(x => x.Id == id);
 
                 if (studentUser == null || requestedStudent == null)
                 {
@@ -55,7 +55,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/students/documents/add")]
         public IHttpActionResult AddDocument(StudentDocumentUpload data)
         {
-            var student = _context.CoreStudents.SingleOrDefault(x => x.Id == data.Student);
+            var student = _context.Students.SingleOrDefault(x => x.Id == data.Student);
 
             if (student == null)
             {
@@ -66,7 +66,7 @@ namespace MyPortal.Controllers.Api
 
             var currentUserId = User.Identity.GetUserId();
 
-            var uploader = _context.CoreStaff.Single(x => x.UserId == currentUserId);
+            var uploader = _context.StaffMembers.Single(x => x.UserId == currentUserId);
 
             if (uploader == null)
             {
@@ -89,7 +89,7 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
             }
 
-            _context.CoreDocuments.Add(document);
+            _context.Documents.Add(document);
             _context.SaveChanges();
 
             var studentDocument = new StudentDocument
@@ -98,7 +98,7 @@ namespace MyPortal.Controllers.Api
                 StudentId = data.Student
             };
 
-            _context.CoreStudentDocuments.Add(studentDocument);
+            _context.StudentDocuments.Add(studentDocument);
             _context.SaveChanges();
 
             return Ok("Document added");
@@ -119,7 +119,7 @@ namespace MyPortal.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
-            _context.CoreStudents
+            _context.Students
                 .Add(student);
 
             _context.SaveChanges();
@@ -141,7 +141,7 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.BadRequest, "Cannot credit negative amount");
             }
 
-            var studentInDb = _context.CoreStudents.SingleOrDefault(s => s.Id == data.Student);
+            var studentInDb = _context.Students.SingleOrDefault(s => s.Id == data.Student);
 
             if (studentInDb == null)
             {
@@ -170,7 +170,7 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.BadRequest, "Cannot debit negative amount");
             }
 
-            var studentInDb = _context.CoreStudents.SingleOrDefault(s => s.Id == data.Student);
+            var studentInDb = _context.Students.SingleOrDefault(s => s.Id == data.Student);
 
             if (studentInDb == null)
             {
@@ -198,14 +198,14 @@ namespace MyPortal.Controllers.Api
         [Authorize(Roles = "Staff, SeniorStaff")]
         public IHttpActionResult DeleteStudent(int id)
         {
-            var studentInDb = _context.CoreStudents.SingleOrDefault(s => s.Id == id);
+            var studentInDb = _context.Students.SingleOrDefault(s => s.Id == id);
 
             if (studentInDb == null)
             {
                 return Content(HttpStatusCode.NotFound, "Student not found");
             }
 
-            _context.CoreStudents.Remove(studentInDb);
+            _context.Students.Remove(studentInDb);
             _context.SaveChanges();
 
             return Ok("Student deleted");
@@ -226,7 +226,7 @@ namespace MyPortal.Controllers.Api
                 AuthenticateStudentRequest(studentId);
             }
             
-            var studentInDb = _context.CoreStudents.SingleOrDefault(x => x.Id == studentId);
+            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == studentId);
 
             if (studentInDb == null)
             {
@@ -246,7 +246,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/students/documents/document/{documentId}")]
         public DocumentDto GetDocument(int documentId)
         {
-            var document = _context.CoreStudentDocuments
+            var document = _context.StudentDocuments
                 .SingleOrDefault(x => x.Id == documentId);
 
             if (document == null)
@@ -277,14 +277,14 @@ namespace MyPortal.Controllers.Api
                 AuthenticateStudentRequest(studentId);
             }
             
-            var student = _context.CoreStudents.SingleOrDefault(s => s.Id == studentId);
+            var student = _context.Students.SingleOrDefault(s => s.Id == studentId);
 
             if (student == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            var documents = _context.CoreStudentDocuments
+            var documents = _context.StudentDocuments
                 .Where(x => x.StudentId == studentId)
                 .ToList()
                 .Select(Mapper.Map<StudentDocument, StudentDocumentDto>);
@@ -307,7 +307,7 @@ namespace MyPortal.Controllers.Api
                 AuthenticateStudentRequest(id);
             }
             
-            var student = _context.CoreStudents.SingleOrDefault(s => s.Id == id);
+            var student = _context.Students.SingleOrDefault(s => s.Id == id);
 
             if (student == null)
             {
@@ -325,7 +325,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/people/students/get/all")]
         public IEnumerable<StudentDto> GetStudents()
         {
-            return _context.CoreStudents
+            return _context.Students
                 .Include(s => s.PastoralYearGroup)
                 .Include(s => s.PastoralRegGroup)
                 .OrderBy(x => x.LastName)
@@ -341,7 +341,7 @@ namespace MyPortal.Controllers.Api
         [Authorize(Roles = "Staff, SeniorStaff")]
         public IEnumerable<StudentDto> GetStudentsByRegGroup(int regGroupId)
         {
-            return _context.CoreStudents
+            return _context.Students
                 .Where(x => x.RegGroupId == regGroupId)
                 .OrderBy(x => x.LastName)
                 .ToList()
@@ -358,7 +358,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/students/yearGroup/{yearGroupId}")]
         public IEnumerable<StudentDto> GetStudentsFromYear(int yearGroupId)
         {
-            return _context.CoreStudents
+            return _context.Students
                 .Where(x => x.YearGroupId == yearGroupId)
                 .OrderBy(x => x.LastName)
                 .ToList()
@@ -375,7 +375,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/students/documents/remove/{documentId}")]
         public IHttpActionResult RemoveDocument(int documentId)
         {
-            var studentDocument = _context.CoreStudentDocuments.SingleOrDefault(x => x.Id == documentId);
+            var studentDocument = _context.StudentDocuments.SingleOrDefault(x => x.Id == documentId);
 
             if (studentDocument == null)
             {
@@ -389,9 +389,9 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.BadRequest, "No document attached");
             }
 
-            _context.CoreStudentDocuments.Remove(studentDocument);
+            _context.StudentDocuments.Remove(studentDocument);
 
-            _context.CoreDocuments.Remove(attachedDocument);
+            _context.Documents.Remove(attachedDocument);
 
             _context.SaveChanges();
 
@@ -407,7 +407,7 @@ namespace MyPortal.Controllers.Api
                 AuthenticateStudentRequest(id);
             }
             
-            var studentInDb = _context.CoreStudents.SingleOrDefault(x => x.Id == id);
+            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == id);
 
             if (studentInDb == null)
             {
@@ -426,7 +426,7 @@ namespace MyPortal.Controllers.Api
                 AuthenticateStudentRequest(id);
             }
             
-            var studentInDb = _context.CoreStudents.SingleOrDefault(x => x.Id == id);
+            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == id);
 
             if (studentInDb == null)
             {
@@ -445,7 +445,7 @@ namespace MyPortal.Controllers.Api
                 AuthenticateStudentRequest(id);
             }
             
-            var studentInDb = _context.CoreStudents.SingleOrDefault(x => x.Id == id);
+            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == id);
 
             if (studentInDb == null)
             {
@@ -464,7 +464,7 @@ namespace MyPortal.Controllers.Api
                 AuthenticateStudentRequest(id);
             }
             
-            var studentInDb = _context.CoreStudents.SingleOrDefault(x => x.Id == id);
+            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == id);
 
             if (studentInDb == null)
             {
@@ -483,7 +483,7 @@ namespace MyPortal.Controllers.Api
                 AuthenticateStudentRequest(id);
             }
             
-            var studentInDb = _context.CoreStudents.SingleOrDefault(x => x.Id == id);
+            var studentInDb = _context.Students.SingleOrDefault(x => x.Id == id);
 
             if (studentInDb == null)
             {
@@ -498,7 +498,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/students/documents/edit")]
         public IHttpActionResult UpdateDocument(Document data)
         {
-            var documentInDb = _context.CoreDocuments.Single(x => x.Id == data.Id);
+            var documentInDb = _context.Documents.Single(x => x.Id == data.Id);
 
             if (documentInDb == null)
             {
@@ -532,7 +532,7 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.BadRequest, "Invalid request data");
             }
 
-            var studentInDb = _context.CoreStudents.SingleOrDefault(s => s.Id == student.Id);
+            var studentInDb = _context.Students.SingleOrDefault(s => s.Id == student.Id);
 
             if (studentInDb == null)
             {

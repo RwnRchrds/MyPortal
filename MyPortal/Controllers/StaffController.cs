@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -54,7 +55,7 @@ namespace MyPortal.Controllers
                 return View("~/Views/Staff/People/NewStudent.cshtml", viewModel);
             }
 
-            _context.CoreStudents.Add(student);
+            _context.Students.Add(student);
             _context.SaveChanges();
 
             return RedirectToAction("Students", "Staff");
@@ -93,7 +94,7 @@ namespace MyPortal.Controllers
         {
             var userId = User.Identity.GetUserId();
 
-            var staff = _context.CoreStaff.SingleOrDefault(s => s.UserId == userId);
+            var staff = _context.StaffMembers.SingleOrDefault(s => s.UserId == userId);
 
             var academicYears = _context.CurriculumAcademicYears.ToList().OrderByDescending(x => x.FirstDate);
 
@@ -140,7 +141,7 @@ namespace MyPortal.Controllers
         [System.Web.Mvc.HttpPost]
         public ActionResult SaveStudent(Student student)
         {
-            var studentInDb = _context.CoreStudents.Single(l => l.Id == student.Id);
+            var studentInDb = _context.Students.Single(l => l.Id == student.Id);
 
             studentInDb.FirstName = student.FirstName;
             studentInDb.LastName = student.LastName;
@@ -168,7 +169,7 @@ namespace MyPortal.Controllers
         [System.Web.Mvc.Route("Staff/People/Staff/{id}")]
         public ActionResult StaffDetails(int id)
         {
-            var staff = _context.CoreStaff.SingleOrDefault(s => s.Id == id);
+            var staff = _context.StaffMembers.SingleOrDefault(s => s.Id == id);
 
             if (staff == null)
                 return HttpNotFound();
@@ -177,7 +178,7 @@ namespace MyPortal.Controllers
 
             var currentStaffId = 0;
 
-            var currentUser = _context.CoreStaff.SingleOrDefault(x => x.UserId == userId);
+            var currentUser = _context.StaffMembers.SingleOrDefault(x => x.UserId == userId);
 
             if (currentUser != null)
             {
@@ -207,7 +208,7 @@ namespace MyPortal.Controllers
         [System.Web.Mvc.Route("Staff/People/Students/{id}", Name = "StudentDetailsRoute")]
         public ActionResult StudentDetails(int id)
         {
-            var student = _context.CoreStudents.SingleOrDefault(s => s.Id == id);
+            var student = _context.Students.SingleOrDefault(s => s.Id == id);
 
             if (student == null)
                 return HttpNotFound();
@@ -249,7 +250,7 @@ namespace MyPortal.Controllers
         [System.Web.Mvc.Route("Staff/People/Students/{id}/Results")]
         public ActionResult StudentResults(int id)
         {
-            var student = _context.CoreStudents.SingleOrDefault(s => s.Id == id);
+            var student = _context.Students.SingleOrDefault(s => s.Id == id);
 
             var currentResultSet = _context.AssessmentResultSets.SingleOrDefault(r => r.IsCurrent);
 
@@ -335,7 +336,7 @@ namespace MyPortal.Controllers
         public ActionResult Subjects()
         {
             var viewModel = new SubjectsViewModel();
-            viewModel.Staff = _context.CoreStaff.OrderBy(x => x.LastName).ToList();
+            viewModel.Staff = _context.StaffMembers.OrderBy(x => x.LastName).ToList();
 
             return View("~/Views/Staff/Curriculum/Subjects.cshtml", viewModel);
         }
@@ -396,10 +397,10 @@ namespace MyPortal.Controllers
             
             if (userId != null)
             {
-                currentUser = _context.CoreStaff.SingleOrDefault(x => x.UserId == userId);
+                currentUser = _context.StaffMembers.SingleOrDefault(x => x.UserId == userId);
             }
 
-            var staffMembers = _context.CoreStaff.ToList().OrderBy(x => x.LastName);
+            var staffMembers = _context.StaffMembers.ToList().OrderBy(x => x.LastName);
 
             var viewModel = new RegistersViewModel();
 
@@ -444,11 +445,27 @@ namespace MyPortal.Controllers
         {
             var viewModel = new ClassesViewModel();
 
-            viewModel.Staff = _context.CoreStaff.ToList().OrderBy(x => x.LastName);
+            viewModel.Staff = _context.StaffMembers.ToList().OrderBy(x => x.LastName);
 
             viewModel.Subjects = _context.CurriculumSubjects.ToList().OrderBy(x => x.Name);
 
             return View("~/Views/Staff/Curriculum/Classes.cshtml", viewModel);
+        }
+
+        [System.Web.Mvc.Route("Staff/Curriculum/Classes/Schedule/{classId}")]
+        public ActionResult ClassSchedule(int classId)
+        {
+            var viewModel = new ClassScheduleViewModel();
+
+            var currClass = _context.CurriculumClasses.SingleOrDefault(x => x.Id == classId);
+
+            viewModel.Class = currClass ?? throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            var dayIndex = new List<string> {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+            viewModel.Periods = _context.AttendancePeriods.ToList().OrderBy(x => dayIndex.IndexOf(x.Weekday))
+                .ThenBy(x => x.StartTime);
+
+            return View("~/Views/Staff/Curriculum/ClassSchedule.cshtml", viewModel);
         }
 
     }

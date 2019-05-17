@@ -32,7 +32,7 @@ namespace MyPortal.Controllers
         {
             var userId = User.Identity.GetUserId();
 
-            var student = _context.CoreStudents.SingleOrDefault(s => s.UserId == userId);
+            var student = _context.Students.SingleOrDefault(s => s.UserId == userId);
 
             if (student == null)
                 return View("~/Views/Students/NoProfileIndex.cshtml");            
@@ -54,7 +54,7 @@ namespace MyPortal.Controllers
         {
             var userId = User.Identity.GetUserId();
 
-            var student = _context.CoreStudents.SingleOrDefault(s => s.UserId == userId);
+            var student = _context.Students.SingleOrDefault(s => s.UserId == userId);
 
             if (student == null)
                 return HttpNotFound();
@@ -84,7 +84,7 @@ namespace MyPortal.Controllers
         {
             var userId = User.Identity.GetUserId();
 
-            var studentInDb = _context.CoreStudents.SingleOrDefault(s => s.UserId == userId);
+            var studentInDb = _context.Students.SingleOrDefault(s => s.UserId == userId);
 
             if (studentInDb == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -103,7 +103,7 @@ namespace MyPortal.Controllers
         {
             var userId = User.Identity.GetUserId();
 
-            var studentInDb = _context.CoreStudents.SingleOrDefault(s => s.UserId == userId);
+            var studentInDb = _context.Students.SingleOrDefault(s => s.UserId == userId);
 
             if (studentInDb == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);

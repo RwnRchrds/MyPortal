@@ -7,11 +7,11 @@ namespace MyPortal.Models.Exceptions
 {
     public class EntityNotFoundException : Exception
     {
-        public string Message { get; set; }
+        public string Reason { get; set; }
 
-        public EntityNotFoundException(string message)
+        public EntityNotFoundException(string reason)
         {
-            Message = message;
+            Reason = reason;
         }
     }
 }
