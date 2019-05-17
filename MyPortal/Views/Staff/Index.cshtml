@@ -143,18 +143,18 @@
                 },
                 columns: [
                     {
-                        data: "coreDocument.description",
+                        data: "document.description",
                         render: function(data, type, document) {
                             return "<a href='" +
-                                document.coreDocument.url +
+                                document.document.url +
                                 "' target='_blank'>" +
-                                document.coreDocument.description +
+                                document.document.description +
                                 "</a>";
                         }
 
                     },
                     {
-                        data: "coreDocument.date",
+                        data: "document.date",
                         render: function(data) {
                             var date = new Date(data);
                             return date.toLocaleDateString();

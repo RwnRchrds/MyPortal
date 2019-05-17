@@ -98,11 +98,7 @@
                     </a>
                     <div class="dropdown-menu nav-app-menu" aria-labelledby="menuDropdownLink">
                         <h6 class="dropdown-header">Attendance</h6>
-                        @Html.ActionLink("Registers", "Registers", "Staff", null, new { @class = "dropdown-item" })
-                        @if (User.IsInRole("SeniorStaff"))
-                        {
-
-                        }
+                        @Html.ActionLink("Registers", "Registers", "Staff", null, new { @class = "dropdown-item" })                       
                     </div>
                 </li>
 
@@ -117,11 +113,7 @@
                             <h6 class="dropdown-header">Finance</h6>
                             @Html.ActionLink("Accounts", "Accounts", "Finance", null, new { @class = "dropdown-item" })
                             @Html.ActionLink("Products", "Products", "Finance", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Sales", "Sales", "Finance", null, new { @class = "dropdown-item" })
-                            @if (User.IsInRole("SeniorStaff"))
-                            {
-
-                            }
+                            @Html.ActionLink("Sales", "Sales", "Finance", null, new { @class = "dropdown-item" })                           
                         </div>
                     </li>
                 }
@@ -135,11 +127,7 @@
                         </a>
                         <div class="dropdown-menu nav-app-menu" aria-labelledby="menuDropdownLink">
                             <h6 class="dropdown-header">Admin</h6>
-                            @Html.ActionLink("Users", "Users", "Admin", null, new { @class = "dropdown-item" })
-                            @if (User.IsInRole("SeniorStaff"))
-                            {
-
-                            }
+                            @Html.ActionLink("Users", "Users", "Admin", null, new { @class = "dropdown-item" })                           
                         </div>
                     </li>
                 }
