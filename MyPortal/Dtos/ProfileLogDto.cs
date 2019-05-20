@@ -18,7 +18,7 @@ namespace MyPortal.Dtos
 
         public StaffMemberDto Author { get; set; }
 
-        public StudentDto CoreStudent { get; set; }
+        public StudentDto Student { get; set; }
 
         public ProfileLogTypeDto ProfileLogType { get; set; }
     }

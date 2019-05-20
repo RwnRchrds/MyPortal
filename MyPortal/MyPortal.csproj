@@ -798,7 +798,7 @@
     <Content Include="Views\Staff\Attendance\TakeRegister.cshtml" />
     <Content Include="Views\Staff\Curriculum\Classes.cshtml" />
     <Content Include="Views\Staff\Curriculum\ClassSchedule.cshtml" />
-    <None Include="Views\Shared\_NavBarStaffNew.cshtml" />
+    <Content Include="Views\Shared\_NavBarStaffNew.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Results\" />

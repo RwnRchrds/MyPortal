@@ -164,7 +164,7 @@
 
                     },
                     {
-                        data: "coreStaffMember.lastName",
+                        data: "author.code",
                         render: function(data, type, log) {
                             return log.author.title +
                                 " " +
@@ -177,7 +177,7 @@
                         data: "profileLogType.name"
                     },
                     {
-                        data: "reason",
+                        data: "message",
                         render: function(data) {
 
                             if ("@Model.Student.Gender" === "M") {
@@ -279,12 +279,12 @@
                 },
                 columns: [
                     {
-                        data: "coreDocument.description",
+                        data: "document.description",
                         render: function(data, type, document) {
                             return "<a href='" +
-                                document.coreDocument.url +
+                                document.document.url +
                                 "' target='_blank'>" +
-                                document.coreDocument.description +
+                                document.document.description +
                                 "</a>";
                         }
 
