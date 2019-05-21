@@ -24,6 +24,7 @@
     <table class="table table-bordered table-hover mp-table" id="products">
         <thead>
         <tr>
+            <th>Type</th>
             <th>Description</th>
             <th>Price</th>
             <th>On Store</th>
@@ -159,6 +160,9 @@
                         dataSrc: ""
                     },
                     columns: [
+                        {
+                            data: "productType.description"
+                        },
                         {
                             data: "description"
                         },

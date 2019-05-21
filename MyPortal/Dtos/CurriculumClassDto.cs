@@ -6,7 +6,7 @@ namespace MyPortal.Dtos
 
         public int AcademicYearId { get; set; }
 
-        public int SubjectId { get; set; }
+        public int? SubjectId { get; set; }
 
         public string Name { get; set; }
 

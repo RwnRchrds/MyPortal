@@ -103,6 +103,9 @@ namespace MyPortal
 
             CreateMap<AttendanceRegisterMark, AttendanceRegisterMarkLite>();
             CreateMap<AttendanceRegisterMarkLite, AttendanceRegisterMark>();
+
+            CreateMap<FinanceProductType, FinanceProductTypeDto>();
+            CreateMap<FinanceProductTypeDto, FinanceProductType>();
         }
     }
 }

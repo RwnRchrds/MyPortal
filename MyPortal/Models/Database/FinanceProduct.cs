@@ -18,6 +18,8 @@ namespace MyPortal.Models.Database
 
         public int Id { get; set; }
 
+        public int ProductTypeId { get; set; }
+
         [Required]
         [StringLength(255)]
         public string Description { get; set; }
@@ -27,6 +29,8 @@ namespace MyPortal.Models.Database
         public bool Visible { get; set; }
 
         public bool OnceOnly { get; set; }
+
+        public virtual FinanceProductType FinanceProductType { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FinanceBasketItem> FinanceBasketItems { get; set; }

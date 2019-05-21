@@ -253,6 +253,7 @@
     <Compile Include="Dtos\AttendancePeriodDto.cs" />
     <Compile Include="Dtos\AttendanceWeekDto.cs" />
     <Compile Include="Dtos\DocumentDto.cs" />
+    <Compile Include="Dtos\FinanceProductTypeDto.cs" />
     <Compile Include="Dtos\LiteDtos\AttendanceRegisterMarkLite.cs" />
     <Compile Include="Dtos\StaffDocumentDto.cs" />
     <Compile Include="Dtos\StaffMemberDto.cs" />
@@ -285,6 +286,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Database\FinanceProductType.cs" />
     <Compile Include="Models\Exceptions\BadRequestException.cs" />
     <Compile Include="Models\Exceptions\EntityNotFoundException.cs" />
     <Compile Include="Models\Exceptions\PersonNotFreeException.cs" />

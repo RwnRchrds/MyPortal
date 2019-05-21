@@ -41,6 +41,11 @@ namespace MyPortal.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
+            if (studentToQuery.FreeSchoolMeals && productToQuery.FinanceProductType.IsMeal)
+            {
+                return true;
+            }
+
             return studentToQuery.AccountBalance >= productToQuery.Price;
         }
 
@@ -210,6 +215,17 @@ namespace MyPortal.Controllers.Api
             if (product == null)
             {
                 return Content(HttpStatusCode.NotFound, "Product not found");
+            }
+
+            if (student.FreeSchoolMeals && product.FinanceProductType.IsMeal)
+            {
+                sale.AmountPaid = 0.00m;
+                sale.AcademicYearId = academicYearId;
+
+                _context.FinanceSales.Add(sale);
+                _context.SaveChanges();
+
+                return Ok("Sale completed");
             }
 
             student.AccountBalance -= product.Price;

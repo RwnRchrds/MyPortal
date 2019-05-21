@@ -22,7 +22,7 @@ namespace MyPortal.Models.Database
         public int AcademicYearId { get; set; }
 
         [Display(Name="Subject")]
-        public int SubjectId { get; set; }
+        public int? SubjectId { get; set; }
 
         [Required]
         [StringLength(50)]

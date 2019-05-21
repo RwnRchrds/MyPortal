@@ -45,6 +45,7 @@ namespace MyPortal.Models.Database
         public virtual DbSet<CurriculumSubject> CurriculumSubjects { get; set; }
         public virtual DbSet<FinanceBasketItem> FinanceBasketItems { get; set; }
         public virtual DbSet<FinanceProduct> FinanceProducts { get; set; }
+        public virtual DbSet<FinanceProductType> FinanceProductTypes { get; set; }
         public virtual DbSet<FinanceSale> FinanceSales { get; set; }
         public virtual DbSet<PastoralRegGroup> PastoralRegGroups { get; set; }
         public virtual DbSet<PastoralYearGroup> PastoralYearGroups { get; set; }
@@ -409,7 +410,7 @@ namespace MyPortal.Models.Database
 
             modelBuilder.Entity<CurriculumSubject>()
                 .HasMany(e => e.CurriculumClasses)
-                .WithRequired(e => e.CurriculumSubject)
+                .WithOptional(e => e.CurriculumSubject)
                 .HasForeignKey(e => e.SubjectId)
                 .WillCascadeOnDelete(false);
 
@@ -437,6 +438,12 @@ namespace MyPortal.Models.Database
                 .HasMany(e => e.FinanceSales)
                 .WithRequired(e => e.FinanceProduct)
                 .HasForeignKey(e => e.ProductId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<FinanceProductType>()
+                .HasMany(x => x.Products)
+                .WithRequired(x => x.FinanceProductType)
+                .HasForeignKey(x => x.ProductTypeId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<FinanceSale>()

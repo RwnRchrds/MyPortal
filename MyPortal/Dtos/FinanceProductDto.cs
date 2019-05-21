@@ -11,5 +11,7 @@ namespace MyPortal.Dtos
         public bool Visible { get; set; }
 
         public bool OnceOnly { get; set; }
+
+        public virtual FinanceProductTypeDto ProductType { get; set; }
     }
 }
