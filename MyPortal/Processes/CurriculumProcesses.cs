@@ -17,7 +17,7 @@ namespace MyPortal.Processes
             _context = new MyPortalDbContext();           
         }
 
-        public static void EnrolInClass(int studentId, int classId)
+        public static bool StudentCanEnroll(int studentId, int classId)
         {
             var student = _context.Students.SingleOrDefault(x => x.Id == studentId);
 
@@ -39,19 +39,11 @@ namespace MyPortal.Processes
             {
                 if (!PeriodIsFree(student, period.Id))
                 {
-                    throw new BadRequestException("Student is not free during period " + period.Name);
+                    throw new PersonNotFreeException("Student not free during period" + period.Name);
                 }
             }
 
-           var enrolment = new CurriculumClassEnrolment
-           {
-               StudentId = studentId,
-               ClassId = classId
-           };
-
-           _context.CurriculumClassEnrolments.Add(enrolment);
-
-           _context.SaveChanges();
+            return true;
         }
 
         public static IEnumerable<AttendancePeriod> GetPeriodsForClass(int classId)

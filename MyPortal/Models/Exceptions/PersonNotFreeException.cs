@@ -5,9 +5,9 @@ using System.Web;
 
 namespace MyPortal.Models.Exceptions
 {
-    public class EntityNotFoundException : Exception
+    public class PersonNotFreeException : Exception
     {
-        public EntityNotFoundException(string message) : base(message)
+        public PersonNotFreeException(string message) : base(message)
         {
         }
     }

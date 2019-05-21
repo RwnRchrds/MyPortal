@@ -24,19 +24,232 @@ namespace MyPortal.Controllers
         public StaffController()
         {
             _context = new MyPortalDbContext();
-        }        
+        }
 
-        // HTTP POST request for creating training courses using HTML form
-        [System.Web.Mvc.HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult CreateCourse(PersonnelTrainingCourse course)
+        protected override void Dispose(bool disposing)
         {
-            if (!ModelState.IsValid) return View("~/Views/Staff/Personnel/NewTrainingCourse.cshtml");
+            _context.Dispose();
+        }
 
-            _context.PersonnelTrainingCourses.Add(course);
-            _context.SaveChanges();
+        #region Admission
+        #endregion
 
-            return RedirectToAction("TrainingCourses", "Staff");
+        #region Assessment
+
+        [System.Web.Mvc.Route("Staff/Assessment/Results/Import")]
+        public ActionResult ImportResults()
+        {
+            var resultSets = _context.AssessmentResultSets.OrderBy(x => x.Name).ToList();
+            var fileExists = System.IO.File.Exists(@"C:/MyPortal/Files/Results/import.csv");
+            var viewModel = new ImportResultsViewModel
+            {
+                ResultSets = resultSets,
+                FileExists = fileExists
+            };
+
+            return View("~/Views/Staff/Assessment/ImportResults.cshtml", viewModel);
+        }
+
+        [System.Web.Mvc.HttpPost]
+        public ActionResult UploadResults(HttpPostedFileBase file)
+        {
+            if (file.ContentLength <= 0 || Path.GetExtension(file.FileName) != ".csv")
+                return RedirectToAction("ImportResults");
+            const string path = @"C:/MyPortal/Files/Results/import.csv";
+            file.SaveAs(path);
+
+            return RedirectToAction("ImportResults");
+        }
+
+        // Menu | Result Sets --> Result Sets List (All)
+        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
+        [System.Web.Mvc.Route("Staff/Assessment/ResultSets")]
+        public ActionResult ResultSets()
+        {
+            return View("~/Views/Staff/Assessment/ResultSets.cshtml");
+        }
+
+        #endregion
+
+        #region Attendance
+
+        [System.Web.Mvc.Route("Staff/Attendance/Registers")]
+        public ActionResult Registers()
+        {
+            var userId = User.Identity.GetUserId();
+            StaffMember currentUser = null;
+
+            if (userId != null)
+            {
+                currentUser = _context.StaffMembers.SingleOrDefault(x => x.UserId == userId);
+            }
+
+            var staffMembers = _context.StaffMembers.ToList().OrderBy(x => x.LastName);
+
+            var viewModel = new RegistersViewModel();
+
+            viewModel.CurrentUser = currentUser;
+            viewModel.StaffMembers = staffMembers;
+
+            return View("~/Views/Staff/Attendance/Registers.cshtml", viewModel);
+        }
+
+        [System.Web.Mvc.Route("Staff/Attendance/TakeRegister/{weekId}/{periodId}")]
+        public ActionResult TakeRegister(int weekId, int periodId)
+        {
+            var viewModel = new TakeRegisterViewModel();
+            var attendanceWeek = _context.AttendanceWeeks.SingleOrDefault(x => x.Id == weekId);
+            var classPeriod = _context.CurriculumClassPeriods.SingleOrDefault(x => x.Id == periodId);
+
+            if (attendanceWeek == null || classPeriod == null)
+            {
+                return RedirectToAction("Registers");
+            }
+
+            var classPeriods = _context.CurriculumClassPeriods.Where(x => x.ClassId == classPeriod.ClassId);
+
+            var validRegister = !attendanceWeek.IsHoliday && !attendanceWeek.IsNonTimetable &&
+                                classPeriods.Any(x => x.PeriodId == classPeriod.PeriodId);
+
+            if (!validRegister)
+            {
+                return RedirectToAction("Registers");
+            }
+
+            viewModel.ClassPeriod = classPeriod;
+            viewModel.WeekId = attendanceWeek.Id;
+
+            viewModel.Periods = _context.AttendancePeriods.Where(x => x.Weekday == classPeriod.AttendancePeriod.Weekday);
+
+            return View("~/Views/Staff/Attendance/TakeRegister.cshtml", viewModel);
+        }
+
+        #endregion
+
+        #region Behaviour
+        #endregion
+
+        #region Communication
+        #endregion
+
+        #region Curriculum
+
+        // Menu | Subjects --> Subjects List (All)
+        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
+        [System.Web.Mvc.Route("Staff/Curriculum/Subjects")]
+        public ActionResult Subjects()
+        {
+            var viewModel = new SubjectsViewModel();
+            viewModel.Staff = _context.StaffMembers.OrderBy(x => x.LastName).ToList();
+
+            return View("~/Views/Staff/Curriculum/Subjects.cshtml", viewModel);
+        }
+
+        // Menu | Study Topics --> Study Topics List (All)
+        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
+        [System.Web.Mvc.Route("Staff/Curriculum/StudyTopics")]
+        public ActionResult StudyTopics()
+        {
+            var viewModel = new StudyTopicsViewModel();
+
+            var subjects = _context.CurriculumSubjects.OrderBy(x => x.Name).ToList();
+
+            var yearGroups = _context.PastoralYearGroups.OrderBy(x => x.Name).ToList();
+
+            viewModel.Subjects = subjects;
+            viewModel.YearGroups = yearGroups;
+
+            return View("~/Views/Staff/Curriculum/StudyTopics.cshtml", viewModel);
+        }
+
+        //Menu | Lesson Plans --> Lesson Plans List (All)
+        [System.Web.Mvc.Route("Staff/Curriculum/LessonPlans")]
+        public ActionResult LessonPlans()
+        {
+            var viewModel = new LessonPlansViewModel();
+
+            var studyTopics = _context.CurriculumStudyTopics.OrderBy(x => x.Name).ToList();
+
+            viewModel.StudyTopics = studyTopics;
+
+            return View("~/Views/Staff/Curriculum/LessonPlans.cshtml", viewModel);
+        }
+
+        //Menu | Lesson Plans | X --> Lesson Plan Details for Lesson Plan X
+        [System.Web.Mvc.Route("Staff/Curriculum/LessonPlans/View/{id}")]
+        public ActionResult LessonPlanDetails(int id)
+        {
+            var lessonPlan = _context.CurriculumLessonPlans.SingleOrDefault(x => x.Id == id);
+
+            if (lessonPlan == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            var viewModel = new LessonPlanDetailsViewModel();
+
+            viewModel.LessonPlan = lessonPlan;
+
+            return View("~/Views/Staff/Curriculum/LessonPlanDetails.cshtml", viewModel);
+        }
+
+        [System.Web.Mvc.Route("Staff/Curriculum/Classes")]
+        public ActionResult Classes()
+        {
+            var viewModel = new ClassesViewModel();
+
+            viewModel.Staff = _context.StaffMembers.ToList().OrderBy(x => x.LastName);
+
+            viewModel.Subjects = _context.CurriculumSubjects.ToList().OrderBy(x => x.Name);
+
+            return View("~/Views/Staff/Curriculum/Classes.cshtml", viewModel);
+        }
+
+        [System.Web.Mvc.Route("Staff/Curriculum/Classes/Schedule/{classId}")]
+        public ActionResult ClassSchedule(int classId)
+        {
+            var viewModel = new ClassScheduleViewModel();
+
+            var currClass = _context.CurriculumClasses.SingleOrDefault(x => x.Id == classId);
+
+            viewModel.Class = currClass ?? throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            var dayIndex = new List<string> { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
+            viewModel.Periods = _context.AttendancePeriods.ToList().OrderBy(x => dayIndex.IndexOf(x.Weekday))
+                .ThenBy(x => x.StartTime);
+
+            return View("~/Views/Staff/Curriculum/ClassSchedule.cshtml", viewModel);
+        }
+
+        #endregion
+
+        #region Documents
+
+        // Menu | Documents --> General Controlled Documents List (All)
+        //Accessible by [Staff] or [SeniorStaff]
+        [System.Web.Mvc.Route("Staff/Documents/Documents")]
+        public ActionResult Documents()
+        {
+            return View("~/Views/Staff/Docs/Documents.cshtml");
+        }
+
+
+        #endregion
+
+        #region Homework
+        #endregion
+
+        #region Medical
+        #endregion
+
+        #region People
+
+        // Menu | Students --> Students List (All)
+        // Accessible by [Staff] or [SeniorStaff]
+        [System.Web.Mvc.Route("Staff/People/Students")]
+        public ActionResult Students()
+        {
+            return View("~/Views/Staff/People/Students.cshtml");
         }
 
         // HTTP POST request for creating students using HTML form
@@ -61,64 +274,6 @@ namespace MyPortal.Controllers
             return RedirectToAction("Students", "Staff");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            _context.Dispose();
-        }
-
-        // Menu | Documents --> General Controlled Documents List (All)
-        //Accessible by [Staff] or [SeniorStaff]
-        [System.Web.Mvc.Route("Staff/Documents/Documents")]
-        public ActionResult Documents()
-        {
-            return View("~/Views/Staff/Docs/Documents.cshtml");
-        }
-
-        [System.Web.Mvc.Route("Staff/Assessment/Results/Import")]
-        public ActionResult ImportResults()
-        {
-            var resultSets = _context.AssessmentResultSets.OrderBy(x => x.Name).ToList();
-            var fileExists = System.IO.File.Exists(@"C:/MyPortal/Files/Results/import.csv");
-            var viewModel = new ImportResultsViewModel
-            {
-                ResultSets = resultSets,
-                FileExists = fileExists
-            };
-
-            return View("~/Views/Staff/Assessment/ImportResults.cshtml", viewModel);
-        }
-
-        // Staff Landing Page
-        [System.Web.Mvc.Route("Staff/Home")]
-        public ActionResult Index()
-        {
-            var userId = User.Identity.GetUserId();
-
-            var staff = _context.StaffMembers.SingleOrDefault(s => s.UserId == userId);
-
-            var academicYears = _context.CurriculumAcademicYears.ToList().OrderByDescending(x => x.FirstDate);
-
-            if (staff == null)
-                return View("~/Views/Staff/NoProfileIndex.cshtml");
-
-            var viewModel = new StaffHomeViewModel
-            {
-                CurrentUser = staff,
-                CurriculumAcademicYears = academicYears
-            };
-
-            return View(viewModel);
-        }
-
-        // Menu | Training Courses | New Course --> New Course Form
-        // Accessible by [SeniorStaff] only
-        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("Staff/Personnel/TrainingCourses/New")]
-        public ActionResult NewCourse()
-        {
-            return View("~/Views/Staff/Personnel/NewTrainingCourse.cshtml");
-        }
-
         // Menu | Students | New Student --> New Student form
         // Accessible by [SeniorStaff] only
         [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
@@ -134,8 +289,8 @@ namespace MyPortal.Controllers
                 YearGroups = yearGroups
             };
 
-            return View("~/Views/Staff/People/NewStudent.cshtml",viewModel);
-        }        
+            return View("~/Views/Staff/People/NewStudent.cshtml", viewModel);
+        }
 
         // HTTP POST request for updating student details using HTML form
         [System.Web.Mvc.HttpPost]
@@ -145,12 +300,85 @@ namespace MyPortal.Controllers
 
             studentInDb.FirstName = student.FirstName;
             studentInDb.LastName = student.LastName;
-            studentInDb.Gender = student.Gender;            
+            studentInDb.Gender = student.Gender;
             studentInDb.YearGroupId = student.YearGroupId;
             studentInDb.RegGroupId = student.RegGroupId;
 
             _context.SaveChanges();
-            return RedirectToAction("StudentDetails", "Staff", new {id = student.Id});
+            return RedirectToAction("StudentDetails", "Staff", new { id = student.Id });
+        }
+
+        // Menu | Students | X --> Student Details (for Student X)
+        //Accessible by [Staff] or [SeniorStaff]
+        [System.Web.Mvc.Route("Staff/People/Students/{id}", Name = "StudentDetailsRoute")]
+        public ActionResult StudentDetails(int id)
+        {
+            var student = _context.Students.SingleOrDefault(s => s.Id == id);
+
+            if (student == null)
+                return HttpNotFound();
+
+            //var logs = _context.Logs.Where(l => l.Student == id).OrderByDescending(x => x.Date).ToList();
+
+            var results = _context.AssessmentResults.Where(r => r.StudentId == id && r.AssessmentResultSet.IsCurrent).ToList();
+
+            var logTypes = _context.ProfileLogTypes.OrderBy(x => x.Name).ToList();
+
+            var yearGroups = _context.PastoralYearGroups.OrderBy(x => x.Name).ToList();
+
+            var regGroups = _context.PastoralRegGroups.OrderBy(x => x.Name).ToList();
+
+            var resultSets = _context.AssessmentResultSets.OrderBy(x => x.Name).ToList();
+
+            var subjects = _context.CurriculumSubjects.OrderBy(x => x.Name).ToList();
+
+            var commentBanks = _context.ProfileCommentBanks.OrderBy(x => x.Name).ToList();
+
+            var viewModel = new StudentDetailsViewModel
+            {
+                //Logs = logs,
+                Student = student,
+                Results = results,
+                LogTypes = logTypes,
+                YearGroups = yearGroups,
+                RegGroups = regGroups,
+                ResultSets = resultSets,
+                Subjects = subjects,
+                CommentBanks = commentBanks
+            };
+
+            return View("~/Views/Staff/People/StudentDetails.cshtml", viewModel);
+        }
+
+        //Menu | Students | X | [View Results] --> Student Results (for Student X)
+        //Accessible by [Staff] or [SeniorStaff]
+        [System.Web.Mvc.Route("Staff/People/Students/{id}/Results")]
+        public ActionResult StudentResults(int id)
+        {
+            var student = _context.Students.SingleOrDefault(s => s.Id == id);
+
+            var currentResultSet = _context.AssessmentResultSets.SingleOrDefault(r => r.IsCurrent);
+
+            var resultSets = _context.AssessmentResultSets.OrderBy(x => x.Name).ToList();
+
+            var subjects = _context.CurriculumSubjects.OrderBy(x => x.Name).ToList();
+
+            if (student == null)
+                return HttpNotFound();
+
+            if (currentResultSet == null)
+                return Content("ERROR: No Current Result Set Found");
+
+
+            var viewModel = new StudentResultsViewModel
+            {
+                Student = student,
+                CurrentResultSetId = currentResultSet.Id,
+                ResultSets = resultSets,
+                Subjects = subjects
+            };
+
+            return View("~/Views/Staff/People/StudentResults.cshtml", viewModel);
         }
 
         // Menu | Staff --> Staff List (All)
@@ -203,86 +431,9 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/People/StaffDetails.cshtml", viewModel);
         }
 
-        // Menu | Students | X --> Student Details (for Student X)
-        //Accessible by [Staff] or [SeniorStaff]
-        [System.Web.Mvc.Route("Staff/People/Students/{id}", Name = "StudentDetailsRoute")]
-        public ActionResult StudentDetails(int id)
-        {
-            var student = _context.Students.SingleOrDefault(s => s.Id == id);
+        #endregion
 
-            if (student == null)
-                return HttpNotFound();
-
-            //var logs = _context.Logs.Where(l => l.Student == id).OrderByDescending(x => x.Date).ToList();
-
-            var results = _context.AssessmentResults.Where(r => r.StudentId == id && r.AssessmentResultSet.IsCurrent).ToList();
-
-            var logTypes = _context.ProfileLogTypes.OrderBy(x => x.Name).ToList();
-
-            var yearGroups = _context.PastoralYearGroups.OrderBy(x => x.Name).ToList();
-
-            var regGroups = _context.PastoralRegGroups.OrderBy(x => x.Name).ToList();
-
-            var resultSets = _context.AssessmentResultSets.OrderBy(x => x.Name).ToList();
-
-            var subjects = _context.CurriculumSubjects.OrderBy(x => x.Name).ToList();
-
-            var commentBanks = _context.ProfileCommentBanks.OrderBy(x => x.Name).ToList();
-
-            var viewModel = new StudentDetailsViewModel
-            {
-                //Logs = logs,
-                Student = student,
-                Results = results,                
-                LogTypes = logTypes,
-                YearGroups = yearGroups,
-                RegGroups = regGroups,
-                ResultSets = resultSets,
-                Subjects = subjects,
-                CommentBanks = commentBanks
-            };
-
-            return View("~/Views/Staff/People/StudentDetails.cshtml", viewModel);
-        }
-
-        //Menu | Students | X | [View Results] --> Student Results (for Student X)
-        //Accessible by [Staff] or [SeniorStaff]
-        [System.Web.Mvc.Route("Staff/People/Students/{id}/Results")]
-        public ActionResult StudentResults(int id)
-        {
-            var student = _context.Students.SingleOrDefault(s => s.Id == id);
-
-            var currentResultSet = _context.AssessmentResultSets.SingleOrDefault(r => r.IsCurrent);
-
-            var resultSets = _context.AssessmentResultSets.OrderBy(x => x.Name).ToList();
-
-            var subjects = _context.CurriculumSubjects.OrderBy(x => x.Name).ToList();
-
-            if (student == null)
-                return HttpNotFound();
-
-            if (currentResultSet == null)
-                return Content("ERROR: No Current Result Set Found");
-
-
-            var viewModel = new StudentResultsViewModel
-            {
-                Student = student,
-                CurrentResultSetId = currentResultSet.Id,
-                ResultSets = resultSets,
-                Subjects = subjects
-            };
-
-            return View("~/Views/Staff/People/StudentResults.cshtml", viewModel);
-        }
-
-        // Menu | Students --> Students List (All)
-        // Accessible by [Staff] or [SeniorStaff]
-        [System.Web.Mvc.Route("Staff/People/Students")]
-        public ActionResult Students()
-        {
-            return View("~/Views/Staff/People/Students.cshtml");
-        }
+        #region Personnel
 
         // Menu | Training Courses --> Training Courses List (All)
         //[Authorize(Roles = "SeniorStaff")]
@@ -292,25 +443,32 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/Personnel/TrainingCourses.cshtml");
         }
 
+        // HTTP POST request for creating training courses using HTML form
         [System.Web.Mvc.HttpPost]
-        public ActionResult UploadResults(HttpPostedFileBase file)
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateCourse(PersonnelTrainingCourse course)
         {
-            if (file.ContentLength <= 0 || Path.GetExtension(file.FileName) != ".csv")
-                return RedirectToAction("ImportResults");
-            const string path = @"C:/MyPortal/Files/Results/import.csv";
-            file.SaveAs(path);
+            if (!ModelState.IsValid) return View("~/Views/Staff/Personnel/NewTrainingCourse.cshtml");
 
-            return RedirectToAction("ImportResults");
+            _context.PersonnelTrainingCourses.Add(course);
+            _context.SaveChanges();
+
+            return RedirectToAction("TrainingCourses", "Staff");
         }
 
-        // Menu | Result Sets --> Result Sets List (All)
+        // Menu | Training Courses | New Course --> New Course Form
+        // Accessible by [SeniorStaff] only
         [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("Staff/Assessment/ResultSets")]
-        public ActionResult ResultSets()
+        [System.Web.Mvc.Route("Staff/Personnel/TrainingCourses/New")]
+        public ActionResult NewCourse()
         {
-            return View("~/Views/Staff/Assessment/ResultSets.cshtml");
+            return View("~/Views/Staff/Personnel/NewTrainingCourse.cshtml");
         }
-        
+
+        #endregion
+
+        #region Profile
+
         // Menu | Comment Banks --> Comment Banks List (All)
         [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
         [System.Web.Mvc.Route("Staff/Profile/CommentBanks")]
@@ -318,7 +476,7 @@ namespace MyPortal.Controllers
         {
             return View("~/Views/Staff/Profile/CommentBanks.cshtml");
         }
-        
+
         //Menu | Comments --> Comments List (All)
         [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
         [System.Web.Mvc.Route("Staff/Profile/Comments")]
@@ -329,144 +487,29 @@ namespace MyPortal.Controllers
 
             return View("~/Views/Staff/Profile/Comments.cshtml", viewModel);
         }
-        
-        // Menu | Subjects --> Subjects List (All)
-        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("Staff/Curriculum/Subjects")]
-        public ActionResult Subjects()
-        {
-            var viewModel = new SubjectsViewModel();
-            viewModel.Staff = _context.StaffMembers.OrderBy(x => x.LastName).ToList();
 
-            return View("~/Views/Staff/Curriculum/Subjects.cshtml", viewModel);
-        }
-        
-        // Menu | Study Topics --> Study Topics List (All)
-        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("Staff/Curriculum/StudyTopics")]
-        public ActionResult StudyTopics()
-        {
-            var viewModel = new StudyTopicsViewModel();
+        #endregion
 
-            var subjects = _context.CurriculumSubjects.OrderBy(x => x.Name).ToList();
-
-            var yearGroups = _context.PastoralYearGroups.OrderBy(x => x.Name).ToList();
-
-            viewModel.Subjects = subjects;
-            viewModel.YearGroups = yearGroups;
-
-            return View("~/Views/Staff/Curriculum/StudyTopics.cshtml", viewModel);
-        }
-        
-        //Menu | Lesson Plans --> Lesson Plans List (All)
-        [System.Web.Mvc.Route("Staff/Curriculum/LessonPlans")]
-        public ActionResult LessonPlans()
-        {
-            var viewModel = new LessonPlansViewModel();
-
-            var studyTopics = _context.CurriculumStudyTopics.OrderBy(x => x.Name).ToList();
-
-            viewModel.StudyTopics = studyTopics;
-
-            return View("~/Views/Staff/Curriculum/LessonPlans.cshtml", viewModel);
-        }
-        
-        //Menu | Lesson Plans | X --> Lesson Plan Details for Lesson Plan X
-        [System.Web.Mvc.Route("Staff/Curriculum/LessonPlans/View/{id}")]
-        public ActionResult LessonPlanDetails(int id)
-        {
-            var lessonPlan = _context.CurriculumLessonPlans.SingleOrDefault(x => x.Id == id);
-
-            if (lessonPlan == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-            
-            var viewModel = new LessonPlanDetailsViewModel();
-
-            viewModel.LessonPlan = lessonPlan;
-
-            return View("~/Views/Staff/Curriculum/LessonPlanDetails.cshtml", viewModel);
-        }
-
-        [System.Web.Mvc.Route("Staff/Attendance/Registers")]
-        public ActionResult Registers()
+        // Staff Landing Page
+        [System.Web.Mvc.Route("Staff/Home")]
+        public ActionResult Index()
         {
             var userId = User.Identity.GetUserId();
-            StaffMember currentUser = null;
-            
-            if (userId != null)
+
+            var staff = _context.StaffMembers.SingleOrDefault(s => s.UserId == userId);
+
+            var academicYears = _context.CurriculumAcademicYears.ToList().OrderByDescending(x => x.FirstDate);
+
+            if (staff == null)
+                return View("~/Views/Staff/NoProfileIndex.cshtml");
+
+            var viewModel = new StaffHomeViewModel
             {
-                currentUser = _context.StaffMembers.SingleOrDefault(x => x.UserId == userId);
-            }
+                CurrentUser = staff,
+                CurriculumAcademicYears = academicYears
+            };
 
-            var staffMembers = _context.StaffMembers.ToList().OrderBy(x => x.LastName);
-
-            var viewModel = new RegistersViewModel();
-
-            viewModel.CurrentUser = currentUser;
-            viewModel.StaffMembers = staffMembers;
-
-            return View("~/Views/Staff/Attendance/Registers.cshtml", viewModel);
+            return View(viewModel);
         }
-
-        [System.Web.Mvc.Route("Staff/Attendance/TakeRegister/{weekId}/{periodId}")]
-        public ActionResult TakeRegister(int weekId, int periodId)
-        {            
-            var viewModel = new TakeRegisterViewModel();
-            var attendanceWeek = _context.AttendanceWeeks.SingleOrDefault(x => x.Id == weekId);
-            var classPeriod = _context.CurriculumClassPeriods.SingleOrDefault(x => x.Id == periodId);
-
-            if (attendanceWeek == null || classPeriod == null)
-            {
-                return RedirectToAction("Registers");
-            }
-
-            var classPeriods = _context.CurriculumClassPeriods.Where(x => x.ClassId == classPeriod.ClassId);
-
-            var validRegister = !attendanceWeek.IsHoliday && !attendanceWeek.IsNonTimetable &&
-                                classPeriods.Any(x => x.PeriodId == classPeriod.PeriodId);
-
-            if (!validRegister)
-            {
-                return RedirectToAction("Registers");
-            }
-
-            viewModel.ClassPeriod = classPeriod;
-            viewModel.WeekId = attendanceWeek.Id;
-
-            viewModel.Periods = _context.AttendancePeriods.Where(x => x.Weekday == classPeriod.AttendancePeriod.Weekday);
-
-            return View("~/Views/Staff/Attendance/TakeRegister.cshtml", viewModel);
-        }
-
-        [System.Web.Mvc.Route("Staff/Curriculum/Classes")]
-        public ActionResult Classes()
-        {
-            var viewModel = new ClassesViewModel();
-
-            viewModel.Staff = _context.StaffMembers.ToList().OrderBy(x => x.LastName);
-
-            viewModel.Subjects = _context.CurriculumSubjects.ToList().OrderBy(x => x.Name);
-
-            return View("~/Views/Staff/Curriculum/Classes.cshtml", viewModel);
-        }
-
-        [System.Web.Mvc.Route("Staff/Curriculum/Classes/Schedule/{classId}")]
-        public ActionResult ClassSchedule(int classId)
-        {
-            var viewModel = new ClassScheduleViewModel();
-
-            var currClass = _context.CurriculumClasses.SingleOrDefault(x => x.Id == classId);
-
-            viewModel.Class = currClass ?? throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            var dayIndex = new List<string> {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
-            viewModel.Periods = _context.AttendancePeriods.ToList().OrderBy(x => dayIndex.IndexOf(x.Weekday))
-                .ThenBy(x => x.StartTime);
-
-            return View("~/Views/Staff/Curriculum/ClassSchedule.cshtml", viewModel);
-        }
-
     }
 }

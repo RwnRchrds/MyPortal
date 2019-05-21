@@ -7,11 +7,8 @@ namespace MyPortal.Models.Exceptions
 {
     public class BadRequestException : Exception
     {
-        public string Reason { get; set; }
-
-        public BadRequestException(string reason)
+        public BadRequestException(string message) : base(message)
         {
-            Reason = reason;
         }
     }
 }

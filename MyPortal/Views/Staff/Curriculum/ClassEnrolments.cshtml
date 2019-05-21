@@ -1,0 +1,102 @@
+﻿@model MyPortal.ViewModels.ClassEnrolmentsViewModel
+@{
+    ViewBag.Title = "ClassEnrolments";
+}
+
+<div class="container float-left">
+    <h2 class="mp-page-title">Students in @Model.Class.Name</h2>
+    <hr />
+</div>
+
+<div class="container float-left">
+    @if (User.IsInRole("SeniorStaff"))
+    {
+        <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#newEnrolmentModal">Add Student</button>
+        <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#newEnrolGroupModal">Add Reg Group</button>
+        <hr />
+    }
+</div>
+
+<div class="container float-left">
+    <table class="table table-bordered table-hover mp-table mp-table-link" id="enrolments">
+        <thead>
+        <tr>
+            <th>Student</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<button type="button" class="btn btn-primary" id="backButton">Back</button>
+
+<div id="newEnrolmentModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Period for Class</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/curriculum/classes/enrolments/create", HttpMethod = "POST", OnSuccess = "newEnrolmentSuccess", OnFailure = "newEnrolmentFailure" }, new { id = "newEnrolmentForm" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Year Group</label>
+                        <select class="form-control" id="yearGroupSelect"></select>
+                    </div>
+                    <div class="form-group" id="selectStudentArea">
+                        <label class="d-none" id="studentLabel">Student</label>
+                        <select class="form-control disabled d-none" id="studentSelect" name="StudentId"></select>
+                    </div>
+                <div class="form-group">
+                    @Html.HiddenFor(x => x.Class.Id, new {Name = "ClassId"})
+                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="newEnrolGroupModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Period for Class</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/curriculum/classes/enrolments/create", HttpMethod = "POST", OnSuccess = "newEnrolmentSuccess", OnFailure = "newEnrolmentFailure" }, new { id = "newEnrolmentForm" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Reg Group</label>
+                        <select class="form-control" id="regGroupSelect"></select>
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(x => x.Class.Id, new {Name = "ClassId"})
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+
+        });
+    </script>
+}
+

@@ -7,6 +7,7 @@ using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Dtos.LiteDtos;
 using MyPortal.Models.Database;
+using MyPortal.Models.Exceptions;
 using MyPortal.Models.Misc;
 using MyPortal.Processes;
 
@@ -183,6 +184,11 @@ namespace MyPortal.Controllers.Api
         [Route("api/curriculum/classes/schedule/createAssignment")]
         public IHttpActionResult CreateTimetableAssignment(CurriculumClassPeriod assignment)
         {
+            if (!ModelState.IsValid)
+            {
+                return Content(HttpStatusCode.BadRequest, "Invalid data");
+            }
+
             var currClass = _context.CurriculumClasses.SingleOrDefault(x => x.Id == assignment.ClassId);
 
             if (currClass == null)
@@ -211,6 +217,11 @@ namespace MyPortal.Controllers.Api
         [Route("api/curriculum/classes/schedule/updateAssignment")]
         public IHttpActionResult UpdateTimetableAssignment(CurriculumClassPeriod assignment)
         {
+            if (!ModelState.IsValid)
+            {
+                return Content(HttpStatusCode.BadRequest, "Invalid data");
+            }
+
             var assignmentInDb = _context.CurriculumClassPeriods.SingleOrDefault(x => x.Id == assignment.Id);
 
             var currClass = _context.CurriculumClasses.SingleOrDefault(x => x.Id == assignment.ClassId);
@@ -252,6 +263,116 @@ namespace MyPortal.Controllers.Api
             _context.SaveChanges();
 
             return Ok("Assignment deleted");
+        }
+
+        [HttpGet]
+        [Route("api/curriculum/classes/enrolments/get/{classId}")]
+        public IEnumerable<CurriculumClassEnrolmentDto> GetEnrolments(int classId)
+        {
+            return _context.CurriculumClassEnrolments.Where(x => x.ClassId == classId).ToList()
+                .OrderBy(x => x.Student.LastName)
+                .Select(Mapper.Map<CurriculumClassEnrolment, CurriculumClassEnrolmentDto>);
+        }
+
+        [HttpGet]
+        [Route("api/curriculum/classes/enrolments/get/byId/{id}")]
+        public CurriculumClassEnrolmentDto GetEnrolment(int id)
+        {
+            var enrolment = _context.CurriculumClassEnrolments.SingleOrDefault(x => x.Id == id);
+
+            if (enrolment == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return Mapper.Map<CurriculumClassEnrolment, CurriculumClassEnrolmentDto>(enrolment);
+        }
+
+        [HttpPost]
+        [Route("api/curriculum/classes/enrolments/create")]
+        public IHttpActionResult CreateEnrolment(CurriculumClassEnrolment enrolment)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Content(HttpStatusCode.BadRequest, "Invalid data");
+            }
+
+            if (!_context.CurriculumClasses.Any(x => x.Id == enrolment.ClassId))
+            {
+                return Content(HttpStatusCode.NotFound, "Class not found");
+            }
+
+            if (!_context.Students.Any(x => x.Id == enrolment.StudentId))
+            {
+                return Content(HttpStatusCode.NotFound, "Student not found");
+            }
+
+            bool canEnroll;
+
+            try
+            {
+                canEnroll = CurriculumProcesses.StudentCanEnroll(enrolment.StudentId, enrolment.ClassId);
+            }
+            catch (EntityNotFoundException e)
+            {
+                return Content(HttpStatusCode.NotFound, e.Message);
+            }
+            catch (PersonNotFreeException e)
+            {
+                return Content(HttpStatusCode.BadRequest, e.Message);
+            }
+
+            if (canEnroll)
+            {
+                _context.CurriculumClassEnrolments.Add(enrolment);
+                _context.SaveChanges();
+
+                return Ok("Student enrolled in class");
+            }
+
+            return Content(HttpStatusCode.BadRequest, "An unknown error occurred");
+        }
+
+        [HttpPost]
+        [Route("api/curriculum/classes/enrolments/create/group")]
+        public IHttpActionResult EnrolGroup(GroupEnrolment enrolment)
+        {
+            var group = _context.PastoralRegGroups.SingleOrDefault(x => x.Id == enrolment.GroupId);
+
+            if (group == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Group not found");
+            }
+
+            foreach (var student in group.Students)
+            {
+                var studentEnrolment = new CurriculumClassEnrolment
+                {
+                    ClassId = enrolment.ClassId,
+                    StudentId = student.Id
+                };
+
+                CreateEnrolment(studentEnrolment);
+            }
+
+            return Ok("Group enrolled");
+        }
+
+        [HttpDelete]
+        [Route("api/curriculum/classes/enrolments/delete/{id}")]
+        public IHttpActionResult DeleteEnrolment(int id)
+        {
+            var enrolment = _context.CurriculumClassEnrolments.SingleOrDefault(x => x.Id == id);
+
+            if (enrolment == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Enrolment not found");
+            }
+
+            _context.CurriculumClassEnrolments.Remove(enrolment);
+            _context.SaveChanges();
+
+            return Ok("Student unenrolled from class");
         }
     }
 }
