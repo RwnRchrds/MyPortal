@@ -11,6 +11,7 @@ namespace MyPortal.Controllers
 {
     //MyPortal Students Controller --> Controller methods for Student areas
     [System.Web.Mvc.Authorize(Roles = "Student")]
+    [System.Web.Mvc.RoutePrefix("Students")]
     public class StudentsController : Controller
     {
         private readonly MyPortalDbContext _context;
@@ -27,7 +28,50 @@ namespace MyPortal.Controllers
             base.Dispose(disposing);
         }
 
+        #region Store
+
+        //Sales History
+        [System.Web.Mvc.Route("Store/SalesHistory")]
+        public ActionResult SalesHistory()
+        {
+            var userId = User.Identity.GetUserId();
+
+            var studentInDb = _context.Students.SingleOrDefault(s => s.UserId == userId);
+
+            if (studentInDb == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            var viewModel = new StudentSalesHistoryViewModel
+            {
+                Student = studentInDb
+            };
+
+            return View("~/Views/Students/Store/SalesHistory.cshtml", viewModel);
+        }
+
+        //Store Page
+        [System.Web.Mvc.Route("Store/Store")]
+        public ActionResult Store()
+        {
+            var userId = User.Identity.GetUserId();
+
+            var studentInDb = _context.Students.SingleOrDefault(s => s.UserId == userId);
+
+            if (studentInDb == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            var viewModel = new StudentStoreViewModel
+            {
+                Student = studentInDb
+            };
+
+            return View("~/Views/Students/Store/Store.cshtml", viewModel);
+        }
+
+        #endregion
+
         // Student Landing Page
+        [System.Web.Mvc.Route("Home")]
         public ActionResult Index()
         {
             var userId = User.Identity.GetUserId();
@@ -49,7 +93,7 @@ namespace MyPortal.Controllers
         }
 
         //MyResults Page
-        [System.Web.Mvc.Route("Students/Results")]
+        [System.Web.Mvc.Route("Results")]
         public ActionResult Results()
         {
             var userId = User.Identity.GetUserId();
@@ -78,42 +122,5 @@ namespace MyPortal.Controllers
             return View(viewModel);
         }
 
-        //Sales History
-        [System.Web.Mvc.Route("Students/SalesHistory")]
-        public ActionResult SalesHistory()
-        {
-            var userId = User.Identity.GetUserId();
-
-            var studentInDb = _context.Students.SingleOrDefault(s => s.UserId == userId);
-
-            if (studentInDb == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            var viewModel = new StudentSalesHistoryViewModel
-            {
-                Student = studentInDb
-            };
-
-            return View(viewModel);
-        }
-
-        //Store Page
-        [System.Web.Mvc.Route("Students/Store")]
-        public ActionResult Store()
-        {
-            var userId = User.Identity.GetUserId();
-
-            var studentInDb = _context.Students.SingleOrDefault(s => s.UserId == userId);
-
-            if (studentInDb == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            var viewModel = new StudentStoreViewModel
-            {
-                Student = studentInDb
-            };
-
-            return View(viewModel);
-        }
     }
 }

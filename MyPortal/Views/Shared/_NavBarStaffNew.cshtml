@@ -29,6 +29,10 @@
                     <div class="dropdown-menu nav-app-menu" aria-labelledby="menuDropdownLink">
                         <h6 class="dropdown-header">Personnel</h6>
                         @Html.ActionLink("Training Courses", "TrainingCourses", "Staff", null, new { @class = "dropdown-item" })
+                        @if (User.IsInRole("SeniorStaff"))
+                        {
+
+                        }
                     </div>
                 </li>
 
@@ -40,6 +44,10 @@
                     <div class="dropdown-menu nav-app-menu" aria-labelledby="menuDropdownLink">
                         <h6 class="dropdown-header">Documents</h6>
                         @Html.ActionLink("Documents", "Documents", "Staff", null, new { @class = "dropdown-item" })
+                        @if (User.IsInRole("SeniorStaff"))
+                        {
+
+                        }
                     </div>
                 </li>
 
@@ -98,7 +106,11 @@
                     </a>
                     <div class="dropdown-menu nav-app-menu" aria-labelledby="menuDropdownLink">
                         <h6 class="dropdown-header">Attendance</h6>
-                        @Html.ActionLink("Registers", "Registers", "Staff", null, new { @class = "dropdown-item" })                       
+                        @Html.ActionLink("Registers", "Registers", "Staff", null, new { @class = "dropdown-item" })
+                        @if (User.IsInRole("SeniorStaff"))
+                        {
+
+                        }
                     </div>
                 </li>
 

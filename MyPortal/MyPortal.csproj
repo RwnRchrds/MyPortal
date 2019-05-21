@@ -779,7 +779,7 @@
     <Content Include="Views\Admin\NewUser.cshtml" />
     <Content Include="Views\Staff\People\StudentResults.cshtml" />
     <Content Include="Views\Students\Results.cshtml" />
-    <Content Include="Views\Students\Store.cshtml" />
+    <Content Include="Views\Students\Store\Store.cshtml" />
     <Content Include="Views\Finance\Accounts.cshtml" />
     <Content Include="Views\Finance\Products.cshtml" />
     <Content Include="Views\Finance\Sales.cshtml" />
@@ -801,7 +801,7 @@
     <Content Include="Views\Finance\SaleEntry.cshtml" />
     <Content Include="Views\Staff\NoProfileIndex.cshtml" />
     <Content Include="Views\Students\NoProfileIndex.cshtml" />
-    <Content Include="Views\Students\SalesHistory.cshtml" />
+    <Content Include="Views\Students\Store\SalesHistory.cshtml" />
     <Content Include="Views\Staff\Assessment\ImportResults.cshtml" />
     <Content Include="Views\Staff\Assessment\ResultSets.cshtml" />
     <Content Include="Views\Staff\Attendance\Registers.cshtml" />
@@ -819,6 +819,7 @@
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Staff\Curriculum\ClassEnrolments.cshtml" />
+    <Content Include="Views\Shared\_NavBarStudentNew.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Results\" />
