@@ -7,6 +7,7 @@ using MyPortal.ViewModels;
 namespace MyPortal.Controllers
 {
     [Authorize(Roles = "Finance")]
+    [RoutePrefix("Staff")]
     public class FinanceController : Controller
     {
         private readonly MyPortalDbContext _context;
@@ -16,7 +17,7 @@ namespace MyPortal.Controllers
             _context = new MyPortalDbContext();
         }
 
-        [Route("Staff/Finance/Accounts")]
+        [Route("Finance/Accounts")]
         public ActionResult Accounts()
         {
             return View();
@@ -27,13 +28,13 @@ namespace MyPortal.Controllers
             _context.Dispose();
         }
 
-        [Route("Staff/Finance/Products")]
+        [Route("Finance/Products")]
         public ActionResult Products()
         {
             return View();
         }
 
-        [Route("Staff/Finance/Sales/New")]
+        [Route("Finance/Sales/New")]
         public ActionResult SaleEntry()
         {
             var products = _context.FinanceProducts.OrderBy(x => x.Description).ToList();
@@ -46,7 +47,7 @@ namespace MyPortal.Controllers
             return View(viewModel);
         }
 
-        [Route("Staff/Finance/Sales")]
+        [Route("Finance/Sales")]
         public ActionResult Sales()
         {
             var viewModel = new SalesViewModel();

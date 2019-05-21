@@ -12,6 +12,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Controllers.Api
 {
+    [Authorize(Roles = ("Staff"))]
     public class LessonPlansController : ApiController
     {
         private readonly MyPortalDbContext _context;

@@ -11,7 +11,7 @@ using MyPortal.Processes;
 
 namespace MyPortal.Controllers.Api
 {
-    [Authorize]
+    [Authorize(Roles = ("Staff"))]
     public class AttendanceWeeksController : ApiController
     {
         private readonly MyPortalDbContext _context;

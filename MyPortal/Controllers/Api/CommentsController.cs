@@ -9,6 +9,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Controllers.Api
 {
+    [Authorize(Roles = ("Staff"))]
     public class CommentsController : ApiController
     {
         private readonly MyPortalDbContext _context;

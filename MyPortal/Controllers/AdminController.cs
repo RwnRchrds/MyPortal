@@ -10,6 +10,7 @@ namespace MyPortal.Controllers
 {
     //MyPortal Admin Portal Controller --> Controller methods for Admin Portal
     [Authorize(Roles = "Admin")]
+    [RoutePrefix("Staff")]
     public class AdminController : Controller
     {
         private readonly MyPortalDbContext _context;
@@ -37,14 +38,14 @@ namespace MyPortal.Controllers
         }
 
         // Admin | Users | New User --> New User Form
-        [Route("Staff/Admin/Users/New")]
+        [Route("Admin/Users/New")]
         public ActionResult NewUser()
         {
             return View();
         }
 
         // Admin | Users | X --> User Details (for User X)
-        [Route("Staff/Admin/Users/{id}")]
+        [Route("Admin/Users/{id}")]
         public ActionResult UserDetails(string id)
         {
             var user = _identity.Users
@@ -80,7 +81,7 @@ namespace MyPortal.Controllers
         }
 
         // Admin | Users --> Users List (All)
-        [Route("Staff/Admin/Users")]
+        [Route("Admin/Users")]
         public ActionResult Users()
         {
             return View();

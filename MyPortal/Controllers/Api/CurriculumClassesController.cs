@@ -13,6 +13,7 @@ using MyPortal.Processes;
 
 namespace MyPortal.Controllers.Api
 {
+    [Authorize(Roles = ("Staff"))]
     public class CurriculumClassesController : ApiController
     {
         private readonly MyPortalDbContext _context;
