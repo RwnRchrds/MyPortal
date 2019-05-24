@@ -22,6 +22,8 @@ namespace MyPortal.Models.Database
         [Display(Name="Meaning")]
         public int MeaningId { get; set; }
 
+        public bool System { get; set; }
+
         public virtual AttendanceRegisterCodeMeaning AttendanceRegisterCodeMeaning { get; set; }
     }
 }

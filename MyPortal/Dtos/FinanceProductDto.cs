@@ -4,6 +4,8 @@ namespace MyPortal.Dtos
     {
         public int Id { get; set; }
 
+        public int ProductTypeId { get; set; }
+
         public string Description { get; set; }
 
         public decimal Price { get; set; }
@@ -12,6 +14,6 @@ namespace MyPortal.Dtos
 
         public bool OnceOnly { get; set; }
 
-        public virtual FinanceProductTypeDto ProductType { get; set; }
+        public virtual FinanceProductTypeDto FinanceProductType { get; set; }
     }
 }

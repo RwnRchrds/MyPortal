@@ -95,7 +95,42 @@
 {
     <script>
         $(document).ready(function() {
+            $('.modal').on('hidden.bs.modal',
+                function () {
+                    $(this).find('form').trigger('reset');
+                });
 
+            $("#enrolments").DataTable({
+                ajax: {
+                    url: "/api/curriculum/classes/enrolments/get/@Model.Class.Id",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "studentId",
+                        render: function (data, type, enrolment) {
+                            return "<a href='/Staff/People/Students/" +
+                                enrolment.student.id +
+                                "'>" +
+                                enrolment.student.lastName +
+                                ", " +
+                                enrolment.student.firstName +
+                                "</a>";
+                        }
+                    },
+                    {
+                        data: "id",
+                        render: function(data) {
+                            return "<button type='button' class='btn btn-xs btn-danger mp-btn-action-right js-delete' data-enrolment-id=" +
+                                data +
+                                "><i class=\"far fa-trash-alt\"></i></button>";
+                        }
+                    }
+                ],
+                "language": {
+                    "emptyTable": "No students in class"
+                }
+            });
         });
     </script>
 }

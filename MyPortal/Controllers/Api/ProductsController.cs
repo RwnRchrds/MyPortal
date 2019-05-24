@@ -124,13 +124,16 @@ namespace MyPortal.Controllers.Api
         /// <summary>
         /// Creates a new product.
         /// </summary>
-        /// <param name="data">The product to add to the database.</param>
+        /// <param name="product">The product to add to the database.</param>
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/products/new")]
-        public IHttpActionResult NewProduct(FinanceProduct data)
+        public IHttpActionResult NewProduct(FinanceProduct product)
         {
-            var product = data;
+            if (!ModelState.IsValid)
+            {
+                return Content(HttpStatusCode.BadRequest, "Invalid product");
+            }
 
             _context.FinanceProducts.Add(product);
             _context.SaveChanges();
@@ -149,7 +152,7 @@ namespace MyPortal.Controllers.Api
         {
             if (product == null)
             {
-                return Content(HttpStatusCode.BadRequest, "Invalid request data");
+                return Content(HttpStatusCode.BadRequest, "Invalid data");
             }
 
             var productInDb = _context.FinanceProducts.SingleOrDefault(x => x.Id == product.Id);
@@ -159,7 +162,6 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.NotFound, "Product not found");
             }
 
-            Mapper.Map(product, productInDb);
             productInDb.OnceOnly = product.OnceOnly;
             productInDb.Price = product.Price;
             productInDb.Visible = product.Visible;

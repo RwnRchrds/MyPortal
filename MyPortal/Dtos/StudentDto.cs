@@ -21,6 +21,14 @@ namespace MyPortal.Dtos
         public string CandidateNumber { get; set; }
         
         public decimal AccountBalance { get; set; }
+
+        public bool FreeSchoolMeals { get; set; }
+
+        public bool PupilPremium { get; set; }
+
+        public bool GiftedAndTalented { get; set; }
+
+        public int SenStatusId { get; set; }
         
         public string MisId { get; set; }
         
@@ -29,5 +37,7 @@ namespace MyPortal.Dtos
         public PastoralRegGroupDto PastoralRegGroup { get; set; }
         
         public PastoralYearGroupDto PastoralYearGroup { get; set; }
+
+        public SenStatusDto SenStatus { get; set; }
     }
 }

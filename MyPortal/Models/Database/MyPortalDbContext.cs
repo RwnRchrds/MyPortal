@@ -57,6 +57,7 @@ namespace MyPortal.Models.Database
         public virtual DbSet<ProfileComment> ProfileComments { get; set; }
         public virtual DbSet<ProfileLog> ProfileLogs { get; set; }
         public virtual DbSet<ProfileLogType> ProfileLogTypes { get; set; }
+        public virtual DbSet<SenStatus> SenStatuses { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -534,6 +535,15 @@ namespace MyPortal.Models.Database
                 .WithRequired(e => e.ProfileLogType)
                 .HasForeignKey(e => e.TypeId)
                 .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<SenStatus>()
+                .HasMany(x => x.Students)
+                .WithRequired(x => x.SenStatus)
+                .HasForeignKey(x => x.SenStatusId);
+
+            modelBuilder.Entity<SenStatus>()
+                .Property(x => x.Code)
+                .IsUnicode(false);
         }
     }
 }

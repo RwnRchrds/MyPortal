@@ -43,6 +43,8 @@ namespace MyPortal.Models.Database
 
         public int YearGroupId { get; set; }
 
+        public int SenStatusId { get; set; }
+
         [StringLength(10)]
         public string CandidateNumber { get; set; }
 
@@ -84,5 +86,7 @@ namespace MyPortal.Models.Database
         public virtual PastoralRegGroup PastoralRegGroup { get; set; }
 
         public virtual PastoralYearGroup PastoralYearGroup { get; set; }
+
+        public virtual SenStatus SenStatus { get; set; }
     }
 }

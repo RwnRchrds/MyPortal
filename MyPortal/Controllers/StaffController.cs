@@ -222,6 +222,18 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/Curriculum/ClassSchedule.cshtml", viewModel);
         }
 
+        [System.Web.Mvc.Route("Curriculum/Classes/Enrolments/{classId}")]
+        public ActionResult ClassEnrolments(int classId)
+        {
+            var viewModel = new ClassEnrolmentsViewModel();
+
+            var currClass = _context.CurriculumClasses.SingleOrDefault(x => x.Id == classId);
+
+            viewModel.Class = currClass ?? throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            return View("~/Views/Staff/Curriculum/ClassEnrolments.cshtml", viewModel);
+        }
+
         #endregion
 
         #region Documents

@@ -24,8 +24,8 @@
     <table class="table table-bordered table-hover mp-table" id="products">
         <thead>
         <tr>
-            <th>Type</th>
             <th>Description</th>
+            <th>Type</th>
             <th>Price</th>
             <th>On Store</th>
             <th>One Time</th>
@@ -55,6 +55,11 @@
                         @Html.Label("Description")
                         @Html.TextBoxFor(x => x.Product.Description, new {@class = "form-control", Name = "Description"})
                         @Html.ValidationMessageFor(x => x.Product.Description)
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Type")
+                        @Html.DropDownListFor(l => l.Product.ProductTypeId, new SelectList(Model.ProductTypes, "Id", "Description"), "Select Type", new { @class = "form-control", Name = "ProductTypeId" })
+                        @Html.ValidationMessageFor(x => x.Product.ProductTypeId)
                     </div>
                     <div class="form-group">
                         @Html.Label("Price")
@@ -99,38 +104,43 @@
             </div>
             @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/products/edit", HttpMethod = "POST", OnSuccess = "editProductSuccess", OnFailure = "editProductFailure"}, new {id = "editProductForm"}))
             {
-                <div class="modal-body">
-                    <div class="form-group">
-                        @Html.HiddenFor(x => x.Product.Id, new {Name = "Id", id = "editIdControl"})
-                        @Html.Label("Description")
-                        @Html.TextBoxFor(x => x.Product.Description, new {@class = "form-control", Name = "Description", id = "editDescriptionControl"})
-                        @Html.ValidationMessageFor(x => x.Product.Description)
-                    </div>
-                    <div class="form-group">
-                        @Html.Label("Price")
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text mp-bold" id="basic-addon">£</span>
-                            </div>
-                            @Html.TextBoxFor(x => x.Product.Price, new {@class = "form-control", Name = "Price", id = "editPriceControl"})
-                        </div>
-                        @Html.ValidationMessageFor(x => x.Product.Price)
-                    </div>
-                    <div class="checkbox">
-                        <label style="font-weight: bold;">
-                            @Html.CheckBoxFor(x => x.Product.Visible, new {Name = "Visible", id = "editVisibleControl"}) Available on Store
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label style="font-weight: bold;">
-                            @Html.CheckBoxFor(x => x.Product.OnceOnly, new {Name = "OnceOnly", id = "editOnceOnlyControl"}) One-Time Purchase
-                        </label>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    @Html.HiddenFor(x => x.Product.Id, new { Name = "Id", id = "editIdControl" })
+                    @Html.Label("Description")
+                    @Html.TextBoxFor(x => x.Product.Description, new { @class = "form-control", Name = "Description", id = "editDescriptionControl" })
+                    @Html.ValidationMessageFor(x => x.Product.Description)
                 </div>
+                <div class="form-group">
+                    @Html.Label("Type")
+                    @Html.DropDownListFor(l => l.Product.ProductTypeId, new SelectList(Model.ProductTypes, "Id", "Description"), "Select Type", new { @class = "form-control", Name = "ProductTypeId", id = "editTypeControl" })
+                    @Html.ValidationMessageFor(x => x.Product.ProductTypeId)
+                </div>
+                <div class="form-group">
+                    @Html.Label("Price")
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text mp-bold" id="basic-addon">£</span>
+                        </div>
+                        @Html.TextBoxFor(x => x.Product.Price, new { @class = "form-control", Name = "Price", id = "editPriceControl" })
+                    </div>
+                    @Html.ValidationMessageFor(x => x.Product.Price)
+                </div>
+                <div class="checkbox">
+                    <label style="font-weight: bold;">
+                        @Html.CheckBoxFor(x => x.Product.Visible, new { Name = "Visible", id = "editVisibleControl" }) Available on Store
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label style="font-weight: bold;">
+                        @Html.CheckBoxFor(x => x.Product.OnceOnly, new { Name = "OnceOnly", id = "editOnceOnlyControl" }) One-Time Purchase
+                    </label>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
             }
 
         </div>
@@ -161,10 +171,10 @@
                     },
                     columns: [
                         {
-                            data: "productType.description"
+                            data: "description"
                         },
                         {
-                            data: "description"
+                            data: "financeProductType.description"
                         },
                         {
                             data: "price",
@@ -239,6 +249,7 @@
                             $("#editPriceControl").val(result["price"].toFixed(2));
                             $("#editVisibleControl").attr("checked", (result["visible"]));
                             $("#editOnceOnlyControl").attr("checked", (result["onceOnly"]));
+                            $("#editTypeControl").val(result["productTypeId"]);
                         },
                         error: function(result) {
                             toastr.error(result.responseJSON);

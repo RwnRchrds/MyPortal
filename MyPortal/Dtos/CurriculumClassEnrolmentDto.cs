@@ -9,5 +9,7 @@ namespace MyPortal.Dtos
         public int ClassId { get; set; }
 
         public CurriculumClassDto CurriculumClass { get; set; }
+
+        public StudentDto Student { get; set; }
     }
 }

@@ -31,7 +31,11 @@ namespace MyPortal.Controllers
         [Route("Finance/Products")]
         public ActionResult Products()
         {
-            return View();
+            var viewModel = new NewProductViewModel();
+
+            viewModel.ProductTypes = _context.FinanceProductTypes.ToList().OrderBy(x => x.Description);
+
+            return View(viewModel);
         }
 
         [Route("Finance/Sales/New")]

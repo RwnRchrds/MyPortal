@@ -6,6 +6,10 @@
     var gender = Model.Genders.SingleOrDefault(x => x.Value == Model.Student.Gender);
 
     var genderLabel = gender == null ? "Not Specified" : gender.Name;
+
+    var pupilPremium = Model.Student.FreeSchoolMeals ? "Yes" : "No";
+    var giftedTalented = Model.Student.GiftedAndTalented ? "Yes" : "No";
+    var freeSchoolMeals = Model.Student.FreeSchoolMeals ? "Yes" : "No";
 }
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
@@ -56,48 +60,52 @@
 
                 <!--Student Details Table-->
                 <table class="table-condensed mp-table-condensed">
-                    <tr>
-                        <td>
-                            <b>First Name</b>
-                        </td>
-                        <td>@Model.Student.FirstName</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>Last Name</b>
-                        </td>
-                        <td>@Model.Student.LastName</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>Gender</b>
-                        </td>
-                        <td>@genderLabel</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>Year Group</b>
-                        </td>
-                        <td>@Model.Student.PastoralYearGroup.Name</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>Reg Group</b>
-                        </td>
-                        <td>@Model.Student.PastoralRegGroup.Name</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>Reg Tutor</b>
-                        </td>
-                        <td>@Model.Student.PastoralRegGroup.Tutor.Title @Model.Student.PastoralRegGroup.Tutor.FirstName.Substring(0, 1) @Model.Student.PastoralRegGroup.Tutor.LastName</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>Head of Year</b>
-                        </td>
-                        <td>@Model.Student.PastoralYearGroup.HeadOfYear.Title @Model.Student.PastoralYearGroup.HeadOfYear.FirstName.Substring(0, 1) @Model.Student.PastoralYearGroup.HeadOfYear.LastName</td>
-                    </tr>
+                    <div class="row">
+                        <div class="col-lg-3">
+                        <tr>
+                            <td>
+                                <b>First Name</b>
+                            </td>
+                            <td>@Model.Student.FirstName</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Last Name</b>
+                            </td>
+                            <td>@Model.Student.LastName</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Gender</b>
+                            </td>
+                            <td>@genderLabel</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Year Group</b>
+                            </td>
+                            <td>@Model.Student.PastoralYearGroup.Name</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Reg Group</b>
+                            </td>
+                            <td>@Model.Student.PastoralRegGroup.Name</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Reg Tutor</b>
+                            </td>
+                            <td>@Model.Student.PastoralRegGroup.Tutor.Title @Model.Student.PastoralRegGroup.Tutor.FirstName.Substring(0, 1) @Model.Student.PastoralRegGroup.Tutor.LastName</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Head of Year</b>
+                            </td>
+                            <td>@Model.Student.PastoralYearGroup.HeadOfYear.Title @Model.Student.PastoralYearGroup.HeadOfYear.FirstName.Substring(0, 1) @Model.Student.PastoralYearGroup.HeadOfYear.LastName</td>
+                        </tr>
+                    </div>
+                    </div>
                 </table>
 
             </div>
