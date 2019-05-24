@@ -69,7 +69,11 @@ namespace MyPortal.UnitTests.ApiTests
         [Test]
         public void NewProduct_CreatesProduct()
         {
-            var newProduct = new FinanceProduct {Description = "Test", Price = 0.99m, Visible = true, OnceOnly = false};
+            var productType = _context.FinanceProductTypes.SingleOrDefault(x => x.Description == "Test Product");
+
+            Assert.IsNotNull(productType);
+
+            var newProduct = new FinanceProduct {Description = "Test", Price = 0.99m, Visible = true, OnceOnly = false, ProductTypeId = productType.Id};
 
             var init = _context.FinanceProducts.Count();
 
