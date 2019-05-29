@@ -13,6 +13,7 @@
     @if (User.IsInRole("SeniorStaff"))
     {
         <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#newAssignmentModal">Add Period</button>
+        <button type="button" class="btn btn-success mp-btn-top-auto" id="addRegPeriods">Add Reg Periods</button>
         <hr />
     }
 </div>
@@ -166,6 +167,27 @@
                                         toastr.success(a);
                                     },
                                     error: function(e) {
+                                        toastr.error(e.responseJSON);
+                                    }
+                                });
+                            }
+                        });
+                });
+
+            $("#addRegPeriods").on("click",
+                function () {
+                    bootbox.confirm("Are you sure you wish to assign all reg periods?",
+                        function (result) {
+                            if (result) {
+                                $.ajax({
+                                    url: "/api/curriculum/classes/schedule/regPeriods",
+                                    data: {classId: @Model.Class.Id, periodId: 0},
+                                    method: "POST",
+                                    success: function (a) {
+                                        $("#assignments").DataTable().ajax.reload();
+                                        toastr.success(a);
+                                    },
+                                    error: function (e) {
                                         toastr.error(e.responseJSON);
                                     }
                                 });

@@ -215,6 +215,44 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [Route("api/curriculum/classes/schedule/regPeriods")]
+        public IHttpActionResult AssignAllRegPeriods(CurriculumClassPeriod assignment)
+        {
+            assignment.PeriodId = 0;
+
+            var regPeriods = _context.AttendancePeriods.Where(x => x.IsAm || x.IsPm);
+
+            var currClass = _context.CurriculumClasses.SingleOrDefault(x => x.Id == assignment.ClassId);
+
+            if (currClass == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Class not found");
+            }
+
+            if (currClass.HasEnrolments())
+            {
+                return Content(HttpStatusCode.BadRequest, "Cannot modify class schedule while students are enrolled");
+            }
+
+            if (_context.CurriculumClassPeriods.Any(x =>
+                x.ClassId == assignment.ClassId && x.PeriodId == assignment.PeriodId))
+            {
+                return Content(HttpStatusCode.BadRequest, "Class already assigned to this period");
+            }
+
+            foreach (var period in regPeriods)
+            {
+                var newAssignment = new CurriculumClassPeriod {PeriodId = period.Id, ClassId = currClass.Id};
+
+                _context.CurriculumClassPeriods.Add(newAssignment);
+            }
+
+            _context.SaveChanges();
+
+            return Ok("Class assigned to reg periods");
+        }
+
+        [HttpPost]
         [Route("api/curriculum/classes/schedule/updateAssignment")]
         public IHttpActionResult UpdateTimetableAssignment(CurriculumClassPeriod assignment)
         {
@@ -308,7 +346,7 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.NotFound, "Student not found");
             }
 
-            if (!_context.CurriculumClassPeriods.Any(x => x.Id == enrolment.ClassId))
+            if (!_context.CurriculumClassPeriods.Any(x => x.ClassId == enrolment.ClassId))
             {
                 return Content(HttpStatusCode.BadRequest,
                     "Cannot add students to class before schedule has been set up");

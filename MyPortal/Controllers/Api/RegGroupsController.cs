@@ -89,14 +89,14 @@ namespace MyPortal.Controllers.Api
         /// <summary>
         /// Gets a list of registration groups from the specified year group.
         /// </summary>
-        /// <param name="yearGroup">The ID of the year group to get registration groups.</param>
+        /// <param name="yearGroupId">The ID of the year group to get registration groups.</param>
         /// <returns>Returns a list of DTOs of registration groups from the specified year group.</returns>
         [HttpGet]
-        [Route("api/regGroups/byYearGroup/{yearGroup}")]
-        public IEnumerable<PastoralRegGroupDto> GetRegGroupsByYearGroup(int yearGroup)
+        [Route("api/regGroups/byYearGroup/{yearGroupId}")]
+        public IEnumerable<PastoralRegGroupDto> GetRegGroupsByYearGroup(int yearGroupId)
         {
             return _context.PastoralRegGroups
-                .Where(x => x.YearGroupId == yearGroup)
+                .Where(x => x.YearGroupId == yearGroupId)
                 .ToList()
                 .Select(Mapper.Map<PastoralRegGroup, PastoralRegGroupDto>);
         }
@@ -109,7 +109,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/regGroups/all")]
         public IEnumerable<PastoralRegGroupDto> GetRegGroups()
         {
-            return _context.PastoralRegGroups.ToList().Select(Mapper.Map<PastoralRegGroup, PastoralRegGroupDto>);
+            return _context.PastoralRegGroups.ToList().OrderBy(x => x.Name).Select(Mapper.Map<PastoralRegGroup, PastoralRegGroupDto>);
         }
 
         /// <summary>

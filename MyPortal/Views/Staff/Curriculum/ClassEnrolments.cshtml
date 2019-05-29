@@ -100,7 +100,11 @@
             $('.modal').on('hidden.bs.modal',
                 function () {
                     $(this).find('form').trigger('reset');
-                    resetForm();
+                });
+
+            $("#newEnrolIndModal").on('hidden.bs.modal',
+                function() {
+                    resetIndForm();
                 });
 
             $("#backButton").on("click",
@@ -113,7 +117,7 @@
                 method: "GET",
                 complete: function (data) {
                     $("#yearGroupSelect").empty();
-                    $(data.responseJSON).each(function (i, yearGroup) {
+                    $(data.responseJSON).each(function (i) {
                         var divData = "<option value=" +
                             data.responseJSON[i].id +
                             ">" +
@@ -122,6 +126,23 @@
                         $(divData).appendTo('#yearGroupSelect');
                     });
                     $("#yearGroupSelect").val("");
+                }
+            });
+
+            $.ajax({
+                url: "/api/regGroups/all",
+                method: "GET",
+                complete: function (data) {
+                    $("#regGroupSelect").empty();
+                    $(data.responseJSON).each(function (i) {
+                        var divData = "<option value=" +
+                            data.responseJSON[i].id +
+                            ">" +
+                            data.responseJSON[i].name +
+                            "</option>";
+                        $(divData).appendTo('#regGroupSelect');
+                    });
+                    $("#regGroupSelect").val("");
                 }
             });
 
@@ -229,13 +250,16 @@
             toastr.error(result.responseJSON);
         }
 
-        function resetForm() {
+        function resetIndForm() {
             $("#studentSelect").val("");
             $("#studentLabel").addClass("d-none");
             $("#studentSelect").addClass("d-none");
             $("#studentSelect").addClass("disabled");
-            $("#submitButton").addClass("d-none");
             $("#yearGroupSelect").val("");
+        }
+
+        function resetGroupForm() {
+            $("#regGroupSelect").val("");
         }
     </script>
 }
