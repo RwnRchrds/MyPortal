@@ -11,8 +11,8 @@
 <div class="container float-left">
     @if (User.IsInRole("SeniorStaff"))
     {
-        <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#newEnrolmentModal">Add Student</button>
-        <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#newEnrolGroupModal">Add Reg Group</button>
+        <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#newEnrolIndModal">Add Student</button>
+        <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#newEnrolGroupModal">Add Group</button>
         <hr />
     }
 </div>
@@ -31,7 +31,7 @@
 
 <button type="button" class="btn btn-primary" id="backButton">Back</button>
 
-<div id="newEnrolmentModal" class="modal fade" role="dialog">
+<div id="newEnrolIndModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <!--content-->
         <div class="modal-content">
@@ -71,12 +71,12 @@
                 <h4 class="modal-title">Add Period for Class</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/curriculum/classes/enrolments/create", HttpMethod = "POST", OnSuccess = "newEnrolmentSuccess", OnFailure = "newEnrolmentFailure" }, new { id = "newEnrolmentForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/curriculum/classes/enrolments/create/group", HttpMethod = "POST", OnSuccess = "newEnrolmentSuccess", OnFailure = "newEnrolmentFailure" }, new { id = "newEnrolmentForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Reg Group</label>
-                        <select class="form-control" id="regGroupSelect"></select>
+                        <select class="form-control" id="regGroupSelect" name="GroupId"></select>
                     </div>
                     <div class="form-group">
                         @Html.HiddenFor(x => x.Class.Id, new {Name = "ClassId"})
@@ -98,6 +98,50 @@
             $('.modal').on('hidden.bs.modal',
                 function () {
                     $(this).find('form').trigger('reset');
+                });
+
+            $.ajax({
+                url: "/api/yearGroups/fetch",
+                method: "GET",
+                complete: function (data) {
+                    $("#yearGroupSelect").empty();
+                    $(data.responseJSON).each(function (i, yearGroup) {
+                        var divData = "<option value=" +
+                            data.responseJSON[i].id +
+                            ">" +
+                            data.responseJSON[i].name +
+                            "</option>";
+                        $(divData).appendTo('#yearGroupSelect');
+                    });
+                    $("#yearGroupSelect").val("");
+                }
+            });
+
+            $("#yearGroupSelect").on("change",
+                function () {
+                    if ($("#yearGroupSelect").val() !== "") {
+                        $.ajax({
+                            url: "/api/students/yearGroup/" + $("#yearGroupSelect").val(),
+                            method: "GET",
+                            complete: function (data) {
+                                $("#studentSelect").empty();
+                                $(data.responseJSON).each(function (i, student) {
+                                    var divData = "<option value=" +
+                                        data.responseJSON[i].id +
+                                        ">" +
+                                        data.responseJSON[i].lastName +
+                                        ", " +
+                                        data.responseJSON[i].firstName +
+                                        "</option>";
+                                    $(divData).appendTo('#studentSelect');
+                                });
+                                $("#studentSelect").val("");
+                            }
+                        });
+                        $("#studentSelect").removeClass("d-none");
+                        $("#studentSelect").removeClass("disabled");
+                        $("#studentLabel").removeClass("d-none");
+                    }
                 });
 
             $("#enrolments").DataTable({

@@ -23,6 +23,9 @@ namespace MyPortal.Processes
 
             var currClass = _context.CurriculumClasses.SingleOrDefault(x => x.Id == classId);
 
+            var alreadyEnrolled = _context.CurriculumClassEnrolments.SingleOrDefault(x =>
+                x.ClassId == classId && x.StudentId == studentId) != null;
+
             if (student == null)
             {
                 throw new EntityNotFoundException("Student not found");
@@ -33,13 +36,18 @@ namespace MyPortal.Processes
                 throw new EntityNotFoundException("Class not found");
             }
 
+            if (alreadyEnrolled)
+            {
+                throw new PersonNotFreeException(student.LastName + ", " + student.FirstName + " is already enrolled in" + currClass.Name);
+            }
+
             var periods = GetPeriodsForClass(currClass.Id);
 
             foreach (var period in periods)
             {
                 if (!PeriodIsFree(student, period.Id))
                 {
-                    throw new PersonNotFreeException("Student not free during period" + period.Name);
+                    throw new PersonNotFreeException(student.LastName + ", " + student.FirstName + " is not free during period" + period.Name);
                 }
             }
 

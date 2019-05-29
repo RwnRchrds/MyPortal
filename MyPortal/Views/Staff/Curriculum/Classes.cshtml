@@ -122,7 +122,14 @@
                 },
                 columns: [
                     {
-                        data: "name"
+                        data: "id",
+                        render: function(data, type, currClass) {
+                            return "<a href='/Staff/Curriculum/Classes/Enrolments/" +
+                                currClass.id +
+                                "'>" +
+                                currClass.name +
+                                "</a>";
+                        }
                     },
                     {
                         data: "curriculumSubject.name"
