@@ -82,6 +82,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiTests\ApiAttendanceMarksControllerTests.cs" />
     <Compile Include="ApiTests\ApiFinanceBasketItemsControllerTests.cs" />
     <Compile Include="ApiTests\ApiProfileCommentsControllerTests.cs" />
     <Compile Include="ApiTests\ApiCoreDocumentsControllerTests.cs" />

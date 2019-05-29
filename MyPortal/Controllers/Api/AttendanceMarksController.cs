@@ -53,17 +53,9 @@ namespace MyPortal.Controllers.Api
 
             var periodsInDay = _context.AttendancePeriods.Where(x => x.Weekday == currentPeriod.AttendancePeriod.Weekday).ToList();
 
-            var registerClass =
-                _context.CurriculumClasses.SingleOrDefault(x => x.AcademicYearId == academicYearId && x.Id == currentPeriod.ClassId);
-
-            if (registerClass == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }            
-
             var markList = new List<StudentRegisterMarksDto>();
 
-            foreach (var enrolment in registerClass.Enrolments)
+            foreach (var enrolment in currentPeriod.CurriculumClass.Enrolments)
             {
                 var markObject = new StudentRegisterMarksDto();
                 var student = enrolment.Student;
