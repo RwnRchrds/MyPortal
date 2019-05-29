@@ -7,7 +7,6 @@ using System.Web.Http;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
-using MyPortal.Models;
 using MyPortal.Models.Database;
 using MyPortal.Processes;
 
