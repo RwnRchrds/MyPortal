@@ -308,6 +308,20 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.NotFound, "Student not found");
             }
 
+            if (!_context.CurriculumClassPeriods.Any(x => x.Id == enrolment.ClassId))
+            {
+                return Content(HttpStatusCode.BadRequest,
+                    "Cannot add students to class before schedule has been set up");
+            }
+
+            if (_context.CurriculumClassEnrolments.Any(x =>
+                x.ClassId == enrolment.ClassId && x.StudentId == enrolment.StudentId))
+            {
+                return Content(HttpStatusCode.BadRequest,
+                    enrolment.Student.LastName + ", " + enrolment.Student.FirstName + " is already enrolled in " +
+                    enrolment.CurriculumClass.Name);
+            }
+
             bool canEnroll;
 
             try
@@ -373,7 +387,7 @@ namespace MyPortal.Controllers.Api
             _context.CurriculumClassEnrolments.Remove(enrolment);
             _context.SaveChanges();
 
-            return Ok(enrolment.Student.LastName + ", " + enrolment.Student.FirstName + " has unenrolled from " + enrolment.CurriculumClass.Name);
+            return Ok(enrolment.Student.LastName + ", " + enrolment.Student.FirstName + " has been unenrolled from " + enrolment.CurriculumClass.Name);
         }
     }
 }

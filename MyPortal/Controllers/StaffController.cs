@@ -37,6 +37,7 @@ namespace MyPortal.Controllers
 
         #region Assessment
 
+        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
         [System.Web.Mvc.Route("Assessment/Results/Import")]
         public ActionResult ImportResults()
         {
@@ -194,6 +195,7 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/Curriculum/LessonPlanDetails.cshtml", viewModel);
         }
 
+        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
         [System.Web.Mvc.Route("Curriculum/Classes")]
         public ActionResult Classes()
         {
@@ -206,6 +208,7 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/Curriculum/Classes.cshtml", viewModel);
         }
 
+        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
         [System.Web.Mvc.Route("Curriculum/Classes/Schedule/{classId}")]
         public ActionResult ClassSchedule(int classId)
         {
@@ -222,6 +225,7 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/Curriculum/ClassSchedule.cshtml", viewModel);
         }
 
+        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
         [System.Web.Mvc.Route("Curriculum/Classes/Enrolments/{classId}")]
         public ActionResult ClassEnrolments(int classId)
         {
