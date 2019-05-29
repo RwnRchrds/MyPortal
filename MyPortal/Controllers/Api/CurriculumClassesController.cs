@@ -373,7 +373,7 @@ namespace MyPortal.Controllers.Api
             _context.CurriculumClassEnrolments.Remove(enrolment);
             _context.SaveChanges();
 
-            return Ok("Student unenrolled from class");
+            return Ok(enrolment.Student.LastName + ", " + enrolment.Student.FirstName + " has unenrolled from " + enrolment.CurriculumClass.Name);
         }
     }
 }

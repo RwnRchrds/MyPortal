@@ -38,7 +38,7 @@ namespace MyPortal.Processes
 
             if (alreadyEnrolled)
             {
-                throw new PersonNotFreeException(student.LastName + ", " + student.FirstName + " is already enrolled in" + currClass.Name);
+                throw new PersonNotFreeException(student.LastName + ", " + student.FirstName + " is already enrolled in " + currClass.Name);
             }
 
             var periods = GetPeriodsForClass(currClass.Id);
@@ -47,7 +47,7 @@ namespace MyPortal.Processes
             {
                 if (!PeriodIsFree(student, period.Id))
                 {
-                    throw new PersonNotFreeException(student.LastName + ", " + student.FirstName + " is not free during period" + period.Name);
+                    throw new PersonNotFreeException(student.LastName + ", " + student.FirstName + " is not free during period " + period.Name);
                 }
             }
 

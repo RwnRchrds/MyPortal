@@ -1,6 +1,7 @@
 ﻿@model MyPortal.ViewModels.ClassEnrolmentsViewModel
 @{
     ViewBag.Title = "ClassEnrolments";
+    Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
 <div class="container float-left">
@@ -39,7 +40,7 @@
                 <h4 class="modal-title">Add Period for Class</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/curriculum/classes/enrolments/create", HttpMethod = "POST", OnSuccess = "newEnrolmentSuccess", OnFailure = "newEnrolmentFailure" }, new { id = "newEnrolmentForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/curriculum/classes/enrolments/create", HttpMethod = "POST", OnSuccess = "newEnrolIndSuccess", OnFailure = "newEnrolIndFailure" }, new { id = "newEnrolmentForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -71,7 +72,7 @@
                 <h4 class="modal-title">Add Period for Class</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/curriculum/classes/enrolments/create/group", HttpMethod = "POST", OnSuccess = "newEnrolmentSuccess", OnFailure = "newEnrolmentFailure" }, new { id = "newEnrolmentForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/curriculum/classes/enrolments/create/group", HttpMethod = "POST", OnSuccess = "newEnrolGroupSuccess", OnFailure = "newEnrolGroupFailure" }, new { id = "newEnrolmentForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -95,9 +96,16 @@
 {
     <script>
         $(document).ready(function() {
+            
             $('.modal').on('hidden.bs.modal',
                 function () {
                     $(this).find('form').trigger('reset');
+                    resetForm();
+                });
+
+            $("#backButton").on("click",
+                function () {
+                    location.replace("@Url.Action("Classes", "Staff")");
                 });
 
             $.ajax({
@@ -175,7 +183,60 @@
                     "emptyTable": "No students in class"
                 }
             });
+
+            $("#enrolments").on("click",
+                ".js-delete",
+                function () {
+                    var button = $(this);
+                    bootbox.confirm("Are you sure you wish to remove this student from the class?",
+                        function (result) {
+                            if (result) {
+                                $.ajax({
+                                    url: "/api/curriculum/classes/enrolments/delete/" + button.attr("data-enrolment-id"),
+                                    method: "DELETE",
+                                    success: function (a) {
+                                        $("#enrolments").DataTable().ajax.reload();
+                                        toastr.success(a);
+                                    },
+                                    error: function (e) {
+                                        toastr.error(e.responseJSON);
+                                    }
+                                });
+                            }
+                        });
+                });
         });
+
+        function newEnrolIndSuccess(result) {
+            $("#newEnrolIndModal").modal('hide');
+            $("#enrolments").DataTable().ajax.reload();
+            toastr.success(result);
+        }
+
+        function newEnrolIndFailure(result) {
+            $("#newEnrolIndModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+
+        function newEnrolGroupSuccess(result) {
+            $("#newEnrolGroupModal").modal('hide');
+            $("#enrolments").DataTable().ajax.reload();
+            toastr.success(result);
+        }
+
+        function newEnrolGroupFailure(result) {
+            $("#newEnrolGroupModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+
+        function resetForm() {
+            $("#studentSelect").val("");
+            $("#studentLabel").addClass("d-none");
+            $("#studentSelect").addClass("d-none");
+            $("#studentSelect").addClass("disabled");
+            $("#submitButton").addClass("d-none");
+            $("#yearGroupSelect").val("");
+        }
     </script>
 }
 

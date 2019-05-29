@@ -132,7 +132,14 @@
                         }
                     },
                     {
-                        data: "curriculumSubject.name"
+                        data: "subjectId",
+                        render: function(data, type, currClass) {
+                            if (currClass.subjectId == null) {
+                                return "No Subject";
+                            } else {
+                                return currClass.curriculumSubject.Name;
+                            }
+                        }
                     },
                     {
                         data: "teacher.id",
