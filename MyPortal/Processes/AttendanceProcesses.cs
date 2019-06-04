@@ -94,6 +94,48 @@ namespace MyPortal.Processes
             return codeInDb?.AttendanceRegisterCodeMeaning;
         }
 
+        public static AttendanceSummary GetSummary(int studentId, int academicYearId, bool asPercentage = false)
+        {
+            var marksForStudent = _context.AttendanceMarks.Where(x =>
+                x.AttendanceWeek.AcademicYearId == academicYearId && x.StudentId == studentId);
+
+            var summary = new AttendanceSummary();
+
+            foreach (var mark in marksForStudent)
+            {
+                var meaning = GetMeaning(mark.Mark);
+
+                switch (meaning.Code)
+                {
+                    case "P":
+                        summary.Present++;
+                        break;
+                    case "AA":
+                        summary.AuthorisedAbsence++;
+                        break;
+                    case "AEA":
+                        summary.ApprovedEdActivity++;
+                        break;
+                    case "UA":
+                        summary.UnauthorisedAbsence++;
+                        break;
+                    case "ANR":
+                        summary.NotRequired++;
+                        break;
+                    case "L":
+                        summary.Late++;
+                        break;
+                }
+            }
+
+            if (asPercentage)
+            {
+                summary.ConvertToPercentage();
+            }
+
+            return summary;
+        }
+
         #region Extension Methods
        
         #endregion

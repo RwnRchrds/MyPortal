@@ -77,5 +77,27 @@ namespace MyPortal.Controllers.Api
 
             return markList.ToList().OrderBy(x => x.Student.LastName);
         }
+
+        [HttpGet]
+        [Route("api/attendance/summary/raw/{studentId}")]
+        public AttendanceSummary GetRawAttendanceSummary(int studentId)
+        {
+            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(User);
+
+            var summary = AttendanceProcesses.GetSummary(studentId, academicYearId);
+
+            return summary;
+        }
+
+        [HttpGet]
+        [Route("api/attendance/summary/percent/{studentId}")]
+        public AttendanceSummary GetPercentageAttendanceSummary(int studentId)
+        {
+            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(User);
+
+            var summary = AttendanceProcesses.GetSummary(studentId, academicYearId, true);
+
+            return summary;
+        }
     }
 }

@@ -292,6 +292,7 @@
     <Compile Include="Models\Exceptions\BadRequestException.cs" />
     <Compile Include="Models\Exceptions\EntityNotFoundException.cs" />
     <Compile Include="Models\Exceptions\PersonNotFreeException.cs" />
+    <Compile Include="Models\Misc\AttendanceSummary.cs" />
     <Compile Include="Models\Misc\GroupEnrolment.cs" />
     <Compile Include="Processes\AttendanceProcesses.cs" />
     <Compile Include="Processes\CurriculumProcesses.cs" />
