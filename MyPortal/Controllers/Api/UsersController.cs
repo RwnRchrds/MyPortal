@@ -12,6 +12,7 @@ using MyPortal.Dtos.Identity;
 using MyPortal.Models;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
+using MyPortal.Processes;
 using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers.Api
@@ -120,8 +121,8 @@ namespace MyPortal.Controllers.Api
 
             var userInDb = _identity.Users.FirstOrDefault(u => u.Id == data.UserId);
             var roleToAdd = _identity.Roles.FirstOrDefault(r => r.Name == data.RoleName);
-            var userIsAttached = _context.Students.Any(x => x.UserId == data.UserId) ||
-                                 _context.StaffMembers.Any(x => x.UserId == data.UserId);                       
+            var userIsAttached = _context.Students.Any(x => x.Person.UserId == data.UserId) ||
+                                 _context.StaffMembers.Any(x => x.Person.UserId == data.UserId);                       
 
             if (userInDb == null)
             {
@@ -144,12 +145,12 @@ namespace MyPortal.Controllers.Api
                 await _userManager.RemoveFromRolesAsync(data.UserId, roles.ToArray());
                 await _userManager.AddToRoleAsync(data.UserId, "Staff");
                 var personInDb = _context.StaffMembers.Single(x => x.Id == data.PersonId);
-                if (personInDb.UserId != null)
+                if (personInDb.Person.UserId != null)
                 {
                     return Content(HttpStatusCode.BadRequest, "Another user is already attached to this person");
                 }
 
-                personInDb.UserId = userInDb.Id;
+                personInDb.Person.UserId = userInDb.Id;
                 _context.SaveChanges();
                 return Ok("User attached to person");
             }
@@ -160,12 +161,12 @@ namespace MyPortal.Controllers.Api
                 await _userManager.RemoveFromRolesAsync(data.UserId, roles.ToArray());
                 await _userManager.AddToRoleAsync(data.UserId, "Student");
                 var personInDb = _context.Students.Single(x => x.Id == data.PersonId);
-                if (personInDb.UserId != null)
+                if (personInDb.Person.UserId != null)
                 {
                     return Content(HttpStatusCode.BadRequest, "Another user is already attached to this person");
                 }
 
-                personInDb.UserId = userInDb.Id;
+                personInDb.Person.UserId = userInDb.Id;
                 _context.SaveChanges();
                 return Ok("User attached to person");
             }
@@ -242,8 +243,8 @@ namespace MyPortal.Controllers.Api
         [Route("api/users/detach")]
         public async Task<IHttpActionResult> DetachPerson(UserDto user)
         {
-            var userIsAttached = _context.Students.Any(x => x.UserId == user.Id) ||
-                                 _context.StaffMembers.Any(x => x.UserId == user.Id);
+            var userIsAttached = _context.Students.Any(x => x.Person.UserId == user.Id) ||
+                                 _context.StaffMembers.Any(x => x.Person.UserId == user.Id);
 
             if (!userIsAttached)
             {
@@ -252,8 +253,8 @@ namespace MyPortal.Controllers.Api
 
             if (await _userManager.IsInRoleAsync(user.Id, "Staff"))
             {
-                var personInDb = _context.StaffMembers.Single(x => x.UserId == user.Id);
-                personInDb.UserId = null;
+                var personInDb = _context.StaffMembers.Single(x => x.Person.UserId == user.Id);
+                personInDb.Person.UserId = null;
                 _context.SaveChanges();
 
                 var roles = await _userManager.GetRolesAsync(user.Id);
@@ -267,8 +268,8 @@ namespace MyPortal.Controllers.Api
 
             if (await _userManager.IsInRoleAsync(user.Id, "Student"))
             {
-                var personInDb = _context.Students.Single(x => x.UserId == user.Id);
-                personInDb.UserId = null;
+                var personInDb = _context.Students.Single(x => x.Person.UserId == user.Id);
+                personInDb.Person.UserId = null;
                 _context.SaveChanges();
 
                 var roles = await _userManager.GetRolesAsync(user.Id);
@@ -326,8 +327,8 @@ namespace MyPortal.Controllers.Api
         [HttpDelete]
         public async Task<IHttpActionResult> RemoveFromRole(string userId, string roleName)
         {
-            var userIsAttached = _context.Students.Any(x => x.UserId == userId) ||
-                                 _context.StaffMembers.Any(x => x.UserId == userId);
+            var userIsAttached = _context.Students.Any(x => x.Person.UserId == userId) ||
+                                 _context.StaffMembers.Any(x => x.Person.UserId == userId);
             var userInDb = _identity.Users.FirstOrDefault(user => user.Id == userId);
             if (userInDb == null)
             {

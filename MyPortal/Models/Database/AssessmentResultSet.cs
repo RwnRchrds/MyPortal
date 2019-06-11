@@ -6,6 +6,9 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    /// <summary>
+    /// A set of results awarded to students. Result sets usually represent a time-frame eg Spring Term.
+    /// </summary>
     [Table("Assessment_ResultSets")]
     public partial class AssessmentResultSet
     {

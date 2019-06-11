@@ -6,6 +6,9 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    /// <summary>
+    /// A comment that can be used in the creation of a log note.
+    /// </summary>
     [Table("Profile_Comments")]
     public partial class ProfileComment
     {

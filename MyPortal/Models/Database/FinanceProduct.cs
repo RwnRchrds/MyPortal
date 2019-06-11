@@ -6,6 +6,9 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    /// <summary>
+    /// A product available for purchase by students.
+    /// </summary>
     [Table("Finance_Products")]
     public partial class FinanceProduct
     {

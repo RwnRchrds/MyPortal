@@ -6,6 +6,9 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    /// <summary>
+    /// A training course available to staff.
+    /// </summary>
     [Table("Personnel_TrainingCourses")]
     public partial class PersonnelTrainingCourse
     {

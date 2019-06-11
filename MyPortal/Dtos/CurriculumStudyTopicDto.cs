@@ -1,17 +1,26 @@
 namespace MyPortal.Dtos
 {
-    public class CurriculumStudyTopicDto
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
+
+    /// <summary>
+    /// A particular topic for study in the curriculum. A study topic contains lesson plans for delivery.
+    /// </summary>
+    public partial class CurriculumStudyTopicDto
     {
         public int Id { get; set; }
 
         public int SubjectId { get; set; }
 
         public int YearGroupId { get; set; }
-        
+
         public string Name { get; set; }
 
-        public CurriculumSubjectDto CurriculumSubject { get; set; }
+        public virtual CurriculumSubjectDto CurriculumSubject { get; set; }
 
-        public PastoralYearGroupDto PastoralYearGroup { get; set; }
+        public virtual PastoralYearGroupDto PastoralYearGroup { get; set; }
     }
 }

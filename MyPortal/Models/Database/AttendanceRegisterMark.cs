@@ -6,6 +6,9 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    /// <summary>
+    /// An individual mark in the register. Represents a student's whereabouts at a particular period during the week it is recorded.
+    /// </summary>
     [Table("Attendance_RegisterMarks")]
     public partial class AttendanceRegisterMark
     {

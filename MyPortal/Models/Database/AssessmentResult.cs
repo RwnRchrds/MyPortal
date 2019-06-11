@@ -6,6 +6,9 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    /// <summary>
+    /// A result a student has achieved for a particular subject. Results are added to a result set.
+    /// </summary>
     [Table("Assessment_Results")]
     public partial class AssessmentResult
     {

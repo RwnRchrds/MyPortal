@@ -6,6 +6,9 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    /// <summary>
+    /// A set of comments that can be used to create log notes.
+    /// </summary>
     [Table("Profile_CommentBanks")]
     public partial class ProfileCommentBank
     {
@@ -20,6 +23,8 @@ namespace MyPortal.Models.Database
         [Required]
         [StringLength(255)]
         public string Name { get; set; }
+
+        public bool System { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProfileComment> ProfileComments { get; set; }

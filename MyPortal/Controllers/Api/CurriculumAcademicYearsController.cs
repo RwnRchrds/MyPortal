@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
+using MyPortal.Models;
 using MyPortal.Models.Database;
 using MyPortal.Processes;
 
@@ -14,10 +15,12 @@ namespace MyPortal.Controllers.Api
     public class CurriculumAcademicYearsController : ApiController
     {
         private readonly MyPortalDbContext _context;
+        private readonly ApplicationDbContext _identity;
 
         public CurriculumAcademicYearsController()
         {
             _context = new MyPortalDbContext();
+            _identity = new ApplicationDbContext();
         }
 
         public CurriculumAcademicYearsController(MyPortalDbContext context)

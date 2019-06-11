@@ -6,6 +6,9 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    /// <summary>
+    /// A log note for a student.
+    /// </summary>
     [Table("Profile_Logs")]
     public partial class ProfileLog
     {
@@ -19,10 +22,8 @@ namespace MyPortal.Models.Database
 
         public int AcademicYearId { get; set; }
 
-        [Required]
         public string Message { get; set; }
 
-        [Column(TypeName = "date")]
         public DateTime Date { get; set; }
 
         public virtual StaffMember Author { get; set; }

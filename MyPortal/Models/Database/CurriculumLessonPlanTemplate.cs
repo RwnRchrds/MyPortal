@@ -6,6 +6,9 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    /// <summary>
+    /// [NOT IN USE] A generic template for lesson plan creation.
+    /// </summary>
     [Table("Curriculum_LessonPlanTemplates")]
     public partial class CurriculumLessonPlanTemplate
     {

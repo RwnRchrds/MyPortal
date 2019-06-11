@@ -6,6 +6,9 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    /// <summary>
+    /// A student in the system.
+    /// </summary>
     [Table("People_Students")]
     public partial class Student
     {
@@ -14,36 +17,25 @@ namespace MyPortal.Models.Database
         {
             AssessmentResults = new HashSet<AssessmentResult>();
             AttendanceRegisterMarks = new HashSet<AttendanceRegisterMark>();
-            StudentDocuments = new HashSet<StudentDocument>();
+            BehaviourAchievements = new HashSet<BehaviourAchievement>();
+            BehaviourIncidents = new HashSet<BehaviourIncident>();
+            CurriculumClassEnrolments = new HashSet<CurriculumClassEnrolment>();
             FinanceBasketItems = new HashSet<FinanceBasketItem>();
-            ProfileLogs = new HashSet<ProfileLog>();
             FinanceSales = new HashSet<FinanceSale>();
-            Enrolments = new HashSet<CurriculumClassEnrolment>();
+            MedicalEvents = new HashSet<MedicalEvent>();
+            MedicalStudentConditions = new HashSet<MedicalStudentCondition>();
+            SenEvents = new HashSet<SenEvent>();
+            SenProvisions = new HashSet<SenProvision>();
+            ProfileLogs = new HashSet<ProfileLog>();
         }
 
         public int Id { get; set; }
 
-        [Required]
-        [StringLength(255)]
-        public string FirstName { get; set; }
-
-        [Required]
-        [StringLength(255)]
-        public string LastName { get; set; }
-
-        [Required]
-        [StringLength(1)]
-        public string Gender { get; set; }
-
-        [StringLength(320)]
-        [EmailAddress]
-        public string Email { get; set; }
+        public int PersonId { get; set; }
 
         public int RegGroupId { get; set; }
 
         public int YearGroupId { get; set; }
-
-        public int SenStatusId { get; set; }
 
         [StringLength(10)]
         public string CandidateNumber { get; set; }
@@ -52,15 +44,16 @@ namespace MyPortal.Models.Database
 
         public bool FreeSchoolMeals { get; set; }
 
-        public bool PupilPremium { get; set; }
-
         public bool GiftedAndTalented { get; set; }
+
+        public int SenStatusId { get; set; }
+
+        public bool PupilPremium { get; set; }
 
         [StringLength(255)]
         public string MisId { get; set; }
 
-        [StringLength(128)]
-        public string UserId { get; set; }
+        public bool? Deleted { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AssessmentResult> AssessmentResults { get; set; }
@@ -69,24 +62,41 @@ namespace MyPortal.Models.Database
         public virtual ICollection<AttendanceRegisterMark> AttendanceRegisterMarks { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<StudentDocument> StudentDocuments { get; set; }
+        public virtual ICollection<BehaviourAchievement> BehaviourAchievements { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BehaviourIncident> BehaviourIncidents { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CurriculumClassEnrolment> CurriculumClassEnrolments { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FinanceBasketItem> FinanceBasketItems { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProfileLog> ProfileLogs { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FinanceSale> FinanceSales { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CurriculumClassEnrolment> Enrolments { get; set; }
+        public virtual ICollection<MedicalEvent> MedicalEvents { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<MedicalStudentCondition> MedicalStudentConditions { get; set; }
 
         public virtual PastoralRegGroup PastoralRegGroup { get; set; }
 
         public virtual PastoralYearGroup PastoralYearGroup { get; set; }
 
+        public virtual Person Person { get; set; }
+
         public virtual SenStatus SenStatus { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SenEvent> SenEvents { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SenProvision> SenProvisions { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProfileLog> ProfileLogs { get; set; }
     }
 }

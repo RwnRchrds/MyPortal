@@ -3,23 +3,23 @@ using System.Linq;
 using AutoMapper;
 using MyPortal.Dtos.LiteDtos;
 using MyPortal.Models.Database;
+using MyPortal.Models.Exceptions;
 using MyPortal.Models.Misc;
 
 namespace MyPortal.Processes
 {
     public static class AttendanceProcesses
     {
-        private static readonly MyPortalDbContext _context;
 
         static AttendanceProcesses()
         {
-            _context = new MyPortalDbContext();           
+                       
         }        
 
-        public static bool VerifyAttendanceCodes(ListContainer<AttendanceRegisterMark> register)
+        public static bool VerifyAttendanceCodes(this MyPortalDbContext context, ListContainer<AttendanceRegisterMark> register)
         {
             var codesVerified = true;
-            var codes = _context.AttendanceCodes.ToList();
+            var codes = context.AttendanceCodes.ToList();
 
             foreach (var mark in register.Objects)
             {
@@ -37,9 +37,9 @@ namespace MyPortal.Processes
             return codesVerified;
         }
 
-        public static AttendanceRegisterMark GetAttendanceMark(AttendanceWeek attendanceWeek, AttendancePeriod period, Student student)
+        public static AttendanceRegisterMark GetAttendanceMark(MyPortalDbContext context, AttendanceWeek attendanceWeek, AttendancePeriod period, Student student)
         {
-            var mark = _context.AttendanceMarks.SingleOrDefault(x =>
+            var mark = context.AttendanceMarks.SingleOrDefault(x =>
                 x.PeriodId == period.Id && x.WeekId == attendanceWeek.Id && x.StudentId == student.Id);
 
             if (mark == null)
@@ -64,14 +64,14 @@ namespace MyPortal.Processes
             return mark;
         }
 
-        public static IEnumerable<AttendanceRegisterMarkLite> PrepareLiteMarkList(List<AttendanceRegisterMark> marks, bool retrieveMeanings)
+        public static IEnumerable<AttendanceRegisterMarkLite> PrepareLiteMarkList(MyPortalDbContext context, List<AttendanceRegisterMark> marks, bool retrieveMeanings)
         {
             var liteMarks = marks.OrderBy(x => x.AttendancePeriod.StartTime)
                 .Select(Mapper.Map<AttendanceRegisterMark, AttendanceRegisterMarkLite>).ToList();
 
             foreach (var mark in liteMarks)
             {
-                var meaning = GetMeaning(mark.Mark);
+                var meaning = GetMeaning(context, mark.Mark);
 
                 if (meaning == null)
                 {
@@ -87,23 +87,28 @@ namespace MyPortal.Processes
             return liteMarks;
         }
 
-        public static AttendanceRegisterCodeMeaning GetMeaning(string mark)
+        public static AttendanceRegisterCodeMeaning GetMeaning(MyPortalDbContext context, string mark)
         {
-            var codeInDb = _context.AttendanceCodes.SingleOrDefault(x => x.Code == mark);
+            var codeInDb = context.AttendanceCodes.SingleOrDefault(x => x.Code == mark);
 
             return codeInDb?.AttendanceRegisterCodeMeaning;
         }
 
-        public static AttendanceSummary GetSummary(int studentId, int academicYearId, bool asPercentage = false)
+        public static AttendanceSummary GetSummary(MyPortalDbContext context, int studentId, int academicYearId, bool asPercentage = false)
         {
-            var marksForStudent = _context.AttendanceMarks.Where(x =>
+            var marksForStudent = context.AttendanceMarks.Where(x =>
                 x.AttendanceWeek.AcademicYearId == academicYearId && x.StudentId == studentId);
 
             var summary = new AttendanceSummary();
 
             foreach (var mark in marksForStudent)
             {
-                var meaning = GetMeaning(mark.Mark);
+                var meaning = GetMeaning(context, mark.Mark);
+
+                if (meaning == null)
+                {
+                    throw new EntityNotFoundException("Attendance meaning not found for code [" + mark.Mark + "]");
+                }
 
                 switch (meaning.Code)
                 {

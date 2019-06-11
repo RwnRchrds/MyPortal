@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Principal;
+using System.Web.WebSockets;
 using Microsoft.AspNet.Identity;
 using MyPortal.Models;
+using MyPortal.Models.Database;
+using MyPortal.Models.Exceptions;
 
 namespace MyPortal.Processes
 {    
     public static class UserProcesses
     {
         private static readonly ApplicationDbContext _identity;
-
         static UserProcesses()
         {
-            _identity = new ApplicationDbContext();
+           _identity = new ApplicationDbContext(); 
         }
 
         public static ApplicationUser GetApplicationUser(this IPrincipal user)
@@ -48,7 +50,7 @@ namespace MyPortal.Processes
 
         public static void ChangeSelectedAcademicYear(this IPrincipal user, int academicYearId)
         {
-            var applicationUser = GetApplicationUser(user);
+            var applicationUser = user.GetApplicationUser();
 
             if (applicationUser == null)
             {

@@ -1,6 +1,15 @@
 namespace MyPortal.Dtos
 {
-    public class FinanceBasketItemDto
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
+
+    /// <summary>
+    /// Represents a product in a student's basket.
+    /// </summary>
+    public partial class FinanceBasketItemDto
     {
         public int Id { get; set; }
 
@@ -8,8 +17,8 @@ namespace MyPortal.Dtos
 
         public int ProductId { get; set; }
 
-        public StudentDto CoreStudent { get; set; }
+        public virtual StudentDto CoreStudent { get; set; }
 
-        public FinanceProductDto FinanceProduct { get; set; }
+        public virtual FinanceProductDto FinanceProduct { get; set; }
     }
 }

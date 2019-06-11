@@ -6,14 +6,16 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    /// <summary>
+    /// Represents an online document in the system.
+    /// </summary>
     [Table("Docs_Documents")]
     public partial class Document
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Document()
         {
-            StaffDocuments = new HashSet<StaffDocument>();
-            StudentDocuments = new HashSet<StudentDocument>();
+            PersonDocuments = new HashSet<PersonDocument>();
         }
 
         public int Id { get; set; }
@@ -35,12 +37,12 @@ namespace MyPortal.Models.Database
 
         public bool Approved { get; set; }
 
+        public bool Deleted { get; set; }
+
         public virtual StaffMember Uploader { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<StaffDocument> StaffDocuments { get; set; }
+        public virtual ICollection<PersonDocument> PersonDocuments { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<StudentDocument> StudentDocuments { get; set; }
     }
 }

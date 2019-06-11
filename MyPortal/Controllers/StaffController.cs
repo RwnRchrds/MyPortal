@@ -11,6 +11,7 @@ using MyPortal.Controllers.Api;
 using MyPortal.Dtos;
 using MyPortal.Models;
 using MyPortal.Models.Database;
+using MyPortal.Processes;
 using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers
@@ -83,10 +84,10 @@ namespace MyPortal.Controllers
 
             if (userId != null)
             {
-                currentUser = _context.StaffMembers.SingleOrDefault(x => x.UserId == userId);
+                currentUser = _context.StaffMembers.SingleOrDefault(x => x.Person.UserId == userId);
             }
 
-            var staffMembers = _context.StaffMembers.ToList().OrderBy(x => x.LastName);
+            var staffMembers = _context.StaffMembers.ToList().OrderBy(x => x.Person.LastName);
 
             var viewModel = new RegistersViewModel();
 
@@ -142,7 +143,7 @@ namespace MyPortal.Controllers
         public ActionResult Subjects()
         {
             var viewModel = new SubjectsViewModel();
-            viewModel.Staff = _context.StaffMembers.OrderBy(x => x.LastName).ToList();
+            viewModel.Staff = _context.StaffMembers.OrderBy(x => x.Person.LastName).ToList();
 
             return View("~/Views/Staff/Curriculum/Subjects.cshtml", viewModel);
         }
@@ -201,7 +202,7 @@ namespace MyPortal.Controllers
         {
             var viewModel = new ClassesViewModel();
 
-            viewModel.Staff = _context.StaffMembers.ToList().OrderBy(x => x.LastName);
+            viewModel.Staff = _context.StaffMembers.ToList().OrderBy(x => x.Person.LastName);
 
             viewModel.Subjects = _context.CurriculumSubjects.ToList().OrderBy(x => x.Name);
 
@@ -315,9 +316,9 @@ namespace MyPortal.Controllers
         {
             var studentInDb = _context.Students.Single(l => l.Id == student.Id);
 
-            studentInDb.FirstName = student.FirstName;
-            studentInDb.LastName = student.LastName;
-            studentInDb.Gender = student.Gender;
+            studentInDb.Person.FirstName = student.Person.FirstName;
+            studentInDb.Person.LastName = student.Person.LastName;
+            studentInDb.Person.Gender = student.Person.Gender;
             studentInDb.YearGroupId = student.YearGroupId;
             studentInDb.RegGroupId = student.RegGroupId;
 
@@ -423,7 +424,7 @@ namespace MyPortal.Controllers
 
             var currentStaffId = 0;
 
-            var currentUser = _context.StaffMembers.SingleOrDefault(x => x.UserId == userId);
+            var currentUser = _context.StaffMembers.SingleOrDefault(x => x.Person.UserId == userId);
 
             if (currentUser != null)
             {
@@ -513,9 +514,13 @@ namespace MyPortal.Controllers
         {
             var userId = User.Identity.GetUserId();
 
-            var staff = _context.StaffMembers.SingleOrDefault(s => s.UserId == userId);
+            var person = _context.Persons.SingleOrDefault(s => s.UserId == userId);
+
+            var staff = _context.StaffMembers.SingleOrDefault(x => x.PersonId == person.Id);
 
             var academicYears = _context.CurriculumAcademicYears.ToList().OrderByDescending(x => x.FirstDate);
+
+            var selectedAcademicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             if (staff == null)
                 return View("~/Views/Staff/NoProfileIndex.cshtml");
@@ -523,7 +528,8 @@ namespace MyPortal.Controllers
             var viewModel = new StaffHomeViewModel
             {
                 CurrentUser = staff,
-                CurriculumAcademicYears = academicYears
+                CurriculumAcademicYears = academicYears,
+                SelectedAcademicYearId = selectedAcademicYearId
             };
 
             return View(viewModel);

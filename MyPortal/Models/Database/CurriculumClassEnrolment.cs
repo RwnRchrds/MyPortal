@@ -6,6 +6,9 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    /// <summary>
+    /// Represents a student enrolled in a class.
+    /// </summary>
     [Table("Curriculum_ClassEnrolments")]
     public partial class CurriculumClassEnrolment
     {

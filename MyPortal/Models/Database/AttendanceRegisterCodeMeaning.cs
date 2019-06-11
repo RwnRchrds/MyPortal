@@ -6,9 +6,13 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    /// <summary>
+    /// [SYSTEM] Meanings of register codes in the system.
+    /// </summary>
     [Table("Attendance_RegisterCodeMeanings")]
     public partial class AttendanceRegisterCodeMeaning
     {
+        //THIS IS A SYSTEM CLASS AND SHOULD NOT HAVE FEATURES TO ADD, MODIFY OR DELETE DATABASE OBJECTS
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public AttendanceRegisterCodeMeaning()
         {

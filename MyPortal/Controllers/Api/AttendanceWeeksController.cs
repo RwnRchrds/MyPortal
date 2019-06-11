@@ -67,7 +67,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/attendance/weeks/get/byDate/{dateString}")]
         public AttendanceWeekDto GetWeekByDate(int dateString)
         {
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(User);
+            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             int year = dateString / 10000;
             int month = ((dateString - (10000 * year)) / 100);
             int day = (dateString - (10000 * year) - (100 * month));

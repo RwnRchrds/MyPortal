@@ -6,6 +6,9 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    /// <summary>
+    /// Represents the assignment of a period in the week to a class.
+    /// </summary>
     [Table("Curriculum_ClassPeriods")]
     public partial class CurriculumClassPeriod
     {

@@ -6,6 +6,9 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    /// <summary>
+    /// An appraisal/observation carried out by line managers on members of staff.
+    /// </summary>
     [Table("Personnel_Observations")]
     public partial class PersonnelObservation
     {

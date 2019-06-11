@@ -49,35 +49,43 @@ namespace MyPortal.UnitTests.TestData
             #region AttendanceCodes
             context.AttendanceCodes.AddRange(new List<AttendanceRegisterCode>
             {
-
+                new AttendanceRegisterCode {Id = 1, Code = "/", Description = "Present", MeaningId = 1, System = true},
+                new AttendanceRegisterCode {Id = 2, Code = "L", MeaningId = 2, System = true, Description = "Late"},
+                new AttendanceRegisterCode {Id = 3, Code = "O", Description = "Unauthorised Absence", System = true, MeaningId = 3}
             });
             #endregion
 
             #region AttendanceMarks
             context.AttendanceMarks.AddRange(new List<AttendanceRegisterMark>
             {
-
+                new AttendanceRegisterMark {Id = 1, Mark = "/", StudentId = 1, PeriodId = 1, WeekId = 1},
+                new AttendanceRegisterMark {Id = 2, StudentId = 1, PeriodId = 2, WeekId = 1, Mark = "O"}
             });
             #endregion
 
             #region AttendanceMeanings
             context.AttendanceMeanings.AddRange(new List<AttendanceRegisterCodeMeaning>
             {
-
+                new AttendanceRegisterCodeMeaning {Id = 1, Code = "P", Description = "Present"},
+                new AttendanceRegisterCodeMeaning {Id = 2, Code = "L", Description = "Late"},
+                new AttendanceRegisterCodeMeaning {Id = 3, Code="UA", Description = "Unauthorised Absence"}
             });
             #endregion
 
             #region AttendancePeriods
             context.AttendancePeriods.AddRange(new List<AttendancePeriod>
             {
-
+                new AttendancePeriod {Id = 1, IsAm = true, IsPm = false, StartTime = new TimeSpan(8, 0, 0), EndTime = new TimeSpan(9,0,0), Name = "Mon:AM", Weekday = "MON"},
+                new AttendancePeriod {Id = 2, IsAm = false, IsPm = true, StartTime = new TimeSpan(15, 0, 0), EndTime = new TimeSpan(16,0,0), Name = "Mon:PM", Weekday = "MON"},
+                new AttendancePeriod {Id = 3, IsAm = true, IsPm = false, StartTime = new TimeSpan(8, 0, 0), EndTime = new TimeSpan(9,0,0), Name = "Tue:AM", Weekday = "TUE"},
+                new AttendancePeriod {Id = 4, IsAm = false, IsPm = true, StartTime = new TimeSpan(15, 0, 0), EndTime = new TimeSpan(16,0,0), Name = "Tue:PM", Weekday = "TUE"}
             });
             #endregion
 
             #region AttendanceWeeks
             context.AttendanceWeeks.AddRange(new List<AttendanceWeek>
             {
-
+                new AttendanceWeek {AcademicYearId = 1, Beginning = new DateTime(2019,01,07), Id = 1, IsHoliday = false, IsNonTimetable = false}
             });
             #endregion
 
@@ -85,7 +93,7 @@ namespace MyPortal.UnitTests.TestData
             context.CurriculumAcademicYears.AddRange(new List<CurriculumAcademicYear>
             {
                 new CurriculumAcademicYear
-                    {FirstDate = DateTime.Parse("01/01/2019"), LastDate = DateTime.Parse("01/01/2020"), Id = 1, Name = "First"}
+                    {FirstDate = DateTime.Parse("01/01/2019"), LastDate = DateTime.Parse("01/01/2099"), Id = 1, Name = "First"}
             });
             #endregion
 
@@ -307,70 +315,16 @@ namespace MyPortal.UnitTests.TestData
             });
             #endregion
 
-            #region StaffDocuments
-            context.StaffDocuments.AddRange(new List<StaffDocument>
-            {
-
-            });
-            #endregion
-
             #region StaffMembers
             context.StaffMembers.AddRange(new List<StaffMember>
             {
-                new StaffMember
-                {
-                    Id = 1, FirstName = "Georgia", LastName = "Alibi", Code = "GAL", Email = "gal@test.com",
-                    JobTitle = "Test Teacher", Title = "Mrs"
-                },
-                new StaffMember
-                {
-                    Id = 2, FirstName = "Chloe", LastName = "Farrar", Code = "CFA", Title = "Mrs",
-                    Email = "cfa@test.com", JobTitle = "Test Teacher"
-                },
 
-                new StaffMember
-                {
-                    Id = 3, FirstName = "Lily", LastName = "Sprague", Code = "LSP", Title = "Mrs",
-                    JobTitle = "Test SLT", Email = "lsp@test.com"
-                },
-                new StaffMember
-                {
-                    Id = 4, FirstName = "William", LastName = "Townsend", Code = "WTO", Title = "Mr",
-                    Email = "wto@test.com", JobTitle = "Test SLT"
-                }
             });
             #endregion
 
             #region Students
             context.Students.AddRange(new List<Student>
             {
-                new Student
-                {
-                    Id = 1, FirstName = "Aaron", LastName = "Aardvark", YearGroupId = 3, Email = "aardvark1@test.com",
-                    AccountBalance = (decimal) 200.00, CandidateNumber = "1234", RegGroupId = 3, Gender = "M", FreeSchoolMeals = false, GiftedAndTalented = false, PupilPremium = false, SenStatusId = 1
-                },
-                new Student
-                {
-                    Id = 2, FirstName = "Dorothy", LastName = "Perkins", YearGroupId = 1, Email = "dperkins1@test.com",
-                    CandidateNumber = "5678", AccountBalance = (decimal) 10.00, RegGroupId = 1, Gender = "F", FreeSchoolMeals = false, GiftedAndTalented = false, PupilPremium = false, SenStatusId = 1
-                },
-                new Student
-                {
-                    Id = 3, FirstName = "John", LastName = "Appleseed", YearGroupId = 2, RegGroupId = 2,
-                    Email = "aappleseed1@test.com", AccountBalance = (decimal) 0.00, CandidateNumber = "7821", Gender = "X", FreeSchoolMeals = false, GiftedAndTalented = true, PupilPremium = false, SenStatusId = 1
-                },
-                new Student
-                {
-                    Id = 4, FirstName = "Betty", LastName = "Newbie", YearGroupId = 4, RegGroupId = 4,
-                    AccountBalance = (decimal) 100.00, Email = "betty@test.com", CandidateNumber = "6452", Gender = "F", FreeSchoolMeals = true, GiftedAndTalented = false, PupilPremium = false, SenStatusId = 1
-                }
-            });
-            #endregion
-
-            #region StudentDocuments
-            context.StudentDocuments.AddRange(new List<StudentDocument>
-            {
-
             });
             #endregion
 
@@ -430,12 +384,6 @@ namespace MyPortal.UnitTests.TestData
 
                 cfg.CreateMap<DocumentDto, Document>();
                 cfg.CreateMap<Document, DocumentDto>();
-
-                cfg.CreateMap<StudentDocumentDto, StudentDocument>();
-                cfg.CreateMap<StudentDocument, StudentDocumentDto>();
-
-                cfg.CreateMap<StaffDocumentDto, StaffDocument>();
-                cfg.CreateMap<StaffDocument, StaffDocumentDto>();
 
                 cfg.CreateMap<AssessmentGradeSetDto, AssessmentGradeSet>();
                 cfg.CreateMap<AssessmentGradeSet, AssessmentGradeSetDto>();

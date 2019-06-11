@@ -6,6 +6,9 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    /// <summary>
+    /// A certificate awarded to personnel who have completed a training course.
+    /// </summary>
     [Table("Personnel_TrainingCertificates")]
     public partial class PersonnelTrainingCertificate
     {
@@ -21,7 +24,7 @@ namespace MyPortal.Models.Database
 
         public int StatusId { get; set; }
 
-        public virtual StaffMember CoreStaffMember { get; set; }
+        public virtual StaffMember StaffMember { get; set; }
 
         public virtual PersonnelTrainingCourse PersonnelTrainingCourse { get; set; }
 

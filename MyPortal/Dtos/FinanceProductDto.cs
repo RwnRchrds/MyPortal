@@ -1,6 +1,15 @@
 namespace MyPortal.Dtos
 {
-    public class FinanceProductDto
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
+
+    /// <summary>
+    /// A product available for purchase by students.
+    /// </summary>
+    public partial class FinanceProductDto
     {
         public int Id { get; set; }
 

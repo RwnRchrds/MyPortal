@@ -42,7 +42,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/logs/new")]
         public IHttpActionResult CreateLog(ProfileLog log)
         {
-            var academicYearId = ContextProcesses.GetAcademicYearId(User, _context);
+            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             var authorId = log.AuthorId;
 
@@ -51,7 +51,7 @@ namespace MyPortal.Controllers.Api
             if (authorId == 0)
             {
                 var userId = User.Identity.GetUserId();
-                author = _context.StaffMembers.SingleOrDefault(x => x.UserId == userId);
+                author = PeopleProcesses.GetStaffFromUserId(userId, _context);
                 if (author == null)
                 {
                     return Content(HttpStatusCode.BadRequest, "User does not have a personnel profile");
@@ -89,6 +89,7 @@ namespace MyPortal.Controllers.Api
         /// <param name="id">The ID of the log to delete.</param>
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [Route("api/logs/log/{id}")]
+        [HttpDelete]
         public IHttpActionResult DeleteLog(int id)
         {
             var logInDb = _context.ProfileLogs.SingleOrDefault(l => l.Id == id);
@@ -138,7 +139,7 @@ namespace MyPortal.Controllers.Api
                 new StudentsController().AuthenticateStudentRequest(studentId);
             }
 
-            var academicYearId = ContextProcesses.GetAcademicYearId(User, _context);
+            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             return _context.ProfileLogs.Where(l => l.StudentId == studentId && l.AcademicYearId == academicYearId)
                 .OrderByDescending(x => x.Date)
                 .ToList()

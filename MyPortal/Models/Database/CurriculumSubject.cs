@@ -6,6 +6,9 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    /// <summary>
+    /// A list of subjects/courses in the system.
+    /// </summary>
     [Table("Curriculum_Subjects")]
     public partial class CurriculumSubject
     {

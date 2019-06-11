@@ -1,12 +1,12 @@
 ﻿@using MyPortal.Processes
 @model MyPortal.ViewModels.StaffHomeViewModel
 @{
-    ViewBag.Title = "Home: " + Model.CurrentUser.Title + " " + Model.CurrentUser.FirstName.Substring(0, 1) + " " + Model.CurrentUser.LastName;
+    ViewBag.Title = "Home: " + Model.CurrentUser.Person.Title + " " + Model.CurrentUser.Person.FirstName.Substring(0, 1) + " " + Model.CurrentUser.Person.LastName;
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
 <div class="container float-left">
-    <h2 class="mp-page-title">@Model.CurrentUser.Title @Model.CurrentUser.FirstName.Substring(0, 1) @Model.CurrentUser.LastName</h2>
+    <h2 class="mp-page-title">@Model.CurrentUser.Person.Title @Model.CurrentUser.Person.FirstName.Substring(0, 1) @Model.CurrentUser.Person.LastName</h2>
     <hr/>
 </div>
 
@@ -30,19 +30,19 @@
                         <td>
                             <b>Title</b>                            
                         </td>
-                        <td>@Model.CurrentUser.Title</td>
+                        <td>@Model.CurrentUser.Person.Title</td>
                     </tr>
                     <tr>
                         <td>
                             <b>First Name</b>
                         </td>
-                        <td>@Model.CurrentUser.FirstName</td>
+                        <td>@Model.CurrentUser.Person.FirstName</td>
                     </tr>
                     <tr>
                         <td>
                             <b>Last Name</b>
                         </td>
-                        <td>@Model.CurrentUser.LastName</td>
+                        <td>@Model.CurrentUser.Person.LastName</td>
                     </tr>
                     <tr>
                         <td>
@@ -119,7 +119,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Academic Year")
-                        @Html.DropDownList("Id", new SelectList(Model.CurriculumAcademicYears, "Id", "Name", SystemProcesses.GetCurrentOrSelectedAcademicYearId(User)), new { @class = "form-control", id = "selectedYear" })
+                        @Html.DropDownList("Id", new SelectList(Model.CurriculumAcademicYears, "Id", "Name", Model.SelectedAcademicYearId), new { @class = "form-control", id = "selectedYear" })
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>

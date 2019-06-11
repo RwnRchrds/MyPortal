@@ -34,7 +34,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/attendance/marks/loadRegister/{weekId}/{classPeriodId}")]
         public IEnumerable<StudentRegisterMarksDto> LoadRegister(int weekId, int classPeriodId)
         {
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(User);
+            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             var attendanceWeek =
                 _context.AttendanceWeeks.SingleOrDefault(x => x.Id == weekId && x.AcademicYearId == academicYearId);
@@ -64,27 +64,30 @@ namespace MyPortal.Controllers.Api
 
                 foreach (var period in periodsInDay)
                 {
-                    var mark = AttendanceProcesses.GetAttendanceMark(attendanceWeek, period, student);
+                    var mark = AttendanceProcesses.GetAttendanceMark(_context, attendanceWeek, period, student);
 
                     marks.Add(mark);
                 }
 
-                var liteMarks = AttendanceProcesses.PrepareLiteMarkList(marks, true);
+                var liteMarks = AttendanceProcesses.PrepareLiteMarkList(_context, marks, true);
 
                 markObject.Marks = liteMarks;
                 markList.Add(markObject);
             }
 
-            return markList.ToList().OrderBy(x => x.Student.LastName);
+            return markList.ToList().OrderBy(x => x.Student.Person.LastName);
         }
 
         [HttpGet]
         [Route("api/attendance/summary/raw/{studentId}")]
-        public AttendanceSummary GetRawAttendanceSummary(int studentId)
+        public AttendanceSummary GetRawAttendanceSummary(int studentId, int? academicYearId)
         {
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(User);
+            if (academicYearId == null)
+            {
+                academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            }
 
-            var summary = AttendanceProcesses.GetSummary(studentId, academicYearId);
+            var summary = AttendanceProcesses.GetSummary(_context, studentId, (int) academicYearId);
 
             return summary;
         }
@@ -93,9 +96,9 @@ namespace MyPortal.Controllers.Api
         [Route("api/attendance/summary/percent/{studentId}")]
         public AttendanceSummary GetPercentageAttendanceSummary(int studentId)
         {
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(User);
+            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
-            var summary = AttendanceProcesses.GetSummary(studentId, academicYearId, true);
+            var summary = AttendanceProcesses.GetSummary(_context, studentId, academicYearId, true);
 
             return summary;
         }

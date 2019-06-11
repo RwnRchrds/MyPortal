@@ -32,7 +32,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/curriculum/classes/byTeacher/{teacherId}/{dateString}")]
         public IEnumerable<CurriculumClassPeriodDto> GetClassesByTeacher(int teacherId, int dateString)
         {
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(User);
+            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             int year = dateString / 10000;
             int month = ((dateString - (10000 * year)) / 100);
             int day = (dateString - (10000 * year) - (100 * month));
@@ -73,7 +73,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/curriculum/classes/get/all")]
         public IEnumerable<CurriculumClassDto> GetAllClasses()
         {
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(User);
+            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             return _context.CurriculumClasses.Where(x => x.AcademicYearId == academicYearId).ToList()
                 .OrderBy(x => x.Name).Select(Mapper.Map<CurriculumClass, CurriculumClassDto>);
@@ -97,7 +97,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/curriculum/classes/create")]
         public IHttpActionResult CreateClass(CurriculumClass currClass)
         {
-            currClass.AcademicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(User);
+            currClass.AcademicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             if (!ModelState.IsValid)
             {
@@ -309,7 +309,7 @@ namespace MyPortal.Controllers.Api
         public IEnumerable<CurriculumClassEnrolmentDto> GetEnrolments(int classId)
         {
             return _context.CurriculumClassEnrolments.Where(x => x.ClassId == classId).ToList()
-                .OrderBy(x => x.Student.LastName)
+                .OrderBy(x => x.Student.Person.LastName)
                 .Select(Mapper.Map<CurriculumClassEnrolment, CurriculumClassEnrolmentDto>);
         }
 
@@ -356,7 +356,7 @@ namespace MyPortal.Controllers.Api
                 x.ClassId == enrolment.ClassId && x.StudentId == enrolment.StudentId))
             {
                 return Content(HttpStatusCode.BadRequest,
-                    enrolment.Student.LastName + ", " + enrolment.Student.FirstName + " is already enrolled in " +
+                    enrolment.Student.Person.LastName + ", " + enrolment.Student.Person.FirstName + " is already enrolled in " +
                     enrolment.CurriculumClass.Name);
             }
 
@@ -364,7 +364,7 @@ namespace MyPortal.Controllers.Api
 
             try
             {
-                canEnroll = CurriculumProcesses.StudentCanEnroll(enrolment.StudentId, enrolment.ClassId);
+                canEnroll = CurriculumProcesses.StudentCanEnroll(_context, enrolment.StudentId, enrolment.ClassId);
             }
             catch (EntityNotFoundException e)
             {
@@ -425,7 +425,7 @@ namespace MyPortal.Controllers.Api
             _context.CurriculumClassEnrolments.Remove(enrolment);
             _context.SaveChanges();
 
-            return Ok(enrolment.Student.LastName + ", " + enrolment.Student.FirstName + " has been unenrolled from " + enrolment.CurriculumClass.Name);
+            return Ok(enrolment.Student.Person.LastName + ", " + enrolment.Student.Person.FirstName + " has been unenrolled from " + enrolment.CurriculumClass.Name);
         }
     }
 }

@@ -45,22 +45,20 @@
                 },
                 columns: [
                     {
-                        data: "firstName",
+                        data: "id",
                         render: function(data, type, student) {
                             return "<a href='/Staff/People/Students/" +
                                 student.id +
                                 "'>" +
-                                student.lastName +
-                                ", " +
-                                student.firstName +
+                                student.displayName +
                                 "</a>";
                         }
                     },
                     {
-                        data: "pastoralYearGroup.name"
+                        data: "yearGroupName"
                     },
                     {
-                        data: "pastoralRegGroup.name"
+                        data: "regGroupName"
                     }
                 ],
                 "language": {

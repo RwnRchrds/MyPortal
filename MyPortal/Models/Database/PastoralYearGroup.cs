@@ -6,6 +6,9 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    /// <summary>
+    /// A year group in the system.
+    /// </summary>
     [Table("Pastoral_YearGroups")]
     public partial class PastoralYearGroup
     {

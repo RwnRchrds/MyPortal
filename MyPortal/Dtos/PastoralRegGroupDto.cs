@@ -1,6 +1,15 @@
 namespace MyPortal.Dtos
 {
-    public class PastoralRegGroupDto
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
+
+    /// <summary>
+    /// A registration/tutor group in the system.
+    /// </summary>
+    public partial class PastoralRegGroupDto
     {
         public int Id { get; set; }
 

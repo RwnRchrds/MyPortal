@@ -7,17 +7,15 @@ namespace MyPortal.Processes
 {
     public static class SystemProcesses
     {
-        private static readonly MyPortalDbContext _context;
-
         static SystemProcesses()
         {
-            _context = new MyPortalDbContext();
+
         }
 
-        public static int GetCurrentAcademicYearId()
+        public static int GetCurrentAcademicYearId(MyPortalDbContext context)
         {
             var academicYear =
-                _context.CurriculumAcademicYears.SingleOrDefault(x =>
+                context.CurriculumAcademicYears.SingleOrDefault(x =>
                     x.FirstDate <= DateTime.Now && x.LastDate >= DateTime.Now);
 
             if (academicYear == null)
@@ -28,9 +26,9 @@ namespace MyPortal.Processes
             return academicYear.Id;
         }
 
-        public static int GetCurrentOrSelectedAcademicYearId(IPrincipal user)
+        public static int GetCurrentOrSelectedAcademicYearId(MyPortalDbContext context, IPrincipal user)
         {
-            var academicYearId = GetCurrentAcademicYearId();
+            var academicYearId = GetCurrentAcademicYearId(context);
             
             if (user != null && user.IsInRole("Staff"))
             {

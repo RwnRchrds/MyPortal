@@ -7,9 +7,13 @@ using System.Web;
 
 namespace MyPortal.Models.Database
 {
+    /// <summary>
+    /// [SYSTEM] A status of special educational needs a student may have.
+    /// </summary>
     [Table("Sen_Statuses")]
     public partial class SenStatus
     {
+        //THIS IS A SYSTEM CLASS AND SHOULD NOT HAVE FEATURES TO ADD, MODIFY OR DELETE DATABASE OBJECTS
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
             "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public SenStatus()

@@ -68,12 +68,6 @@ namespace MyPortal
             CreateMap<DocumentDto, Document>();
             CreateMap<Document, DocumentDto>();
 
-            CreateMap<StudentDocumentDto, StudentDocument>();
-            CreateMap<StudentDocument, StudentDocumentDto>();
-
-            CreateMap<StaffDocumentDto, StaffDocument>();
-            CreateMap<StaffDocument, StaffDocumentDto>();
-
             CreateMap<AssessmentGradeSetDto, AssessmentGradeSet>();
             CreateMap<AssessmentGradeSet, AssessmentGradeSetDto>();
 

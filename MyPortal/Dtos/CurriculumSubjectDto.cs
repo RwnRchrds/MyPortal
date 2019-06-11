@@ -1,6 +1,15 @@
 namespace MyPortal.Dtos
 {
-    public class CurriculumSubjectDto
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
+
+    /// <summary>
+    /// A list of subjects/courses in the system.
+    /// </summary>
+    public partial class CurriculumSubjectDto
     {
         public int Id { get; set; }
 
@@ -10,6 +19,6 @@ namespace MyPortal.Dtos
 
         public string Code { get; set; }
 
-        public StaffMemberDto Leader { get; set; }
+        public virtual StaffMemberDto Leader { get; set; }
     }
 }

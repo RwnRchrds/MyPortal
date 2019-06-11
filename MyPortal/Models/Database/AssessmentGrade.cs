@@ -6,6 +6,9 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    /// <summary>
+    /// Grades available to use in results.
+    /// </summary>
     [Table("Assessment_Grades")]
     public partial class AssessmentGrade
     {

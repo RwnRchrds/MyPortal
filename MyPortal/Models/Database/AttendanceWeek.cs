@@ -6,6 +6,9 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    /// <summary>
+    /// A week in the calendar in which attendance marks are recorded. Attendance weeks make up an academic year.
+    /// </summary>
     [Table("Attendance_Weeks")]
     public partial class AttendanceWeek
     {

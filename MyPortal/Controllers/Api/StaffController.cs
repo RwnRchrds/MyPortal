@@ -8,6 +8,7 @@ using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Models;
 using MyPortal.Models.Database;
+using MyPortal.Processes;
 
 namespace MyPortal.Controllers.Api
 {
@@ -28,13 +29,13 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/staff/documents/add")]
-        public IHttpActionResult AddDocument(StaffDocument data)
+        public IHttpActionResult AddDocument(PersonDocument data)
         {
-            var staff = _context.StaffMembers.SingleOrDefault(x => x.Id == data.StaffId);
+            var staff = _context.StaffMembers.SingleOrDefault(x => x.PersonId == data.PersonId);
 
             var uploaderId = User.Identity.GetUserId();
 
-            var uploader = _context.StaffMembers.SingleOrDefault(x => x.UserId == uploaderId);
+            var uploader = PeopleProcesses.GetStaffFromUserId(uploaderId, _context);
 
             if (staff == null)
             {
@@ -67,7 +68,7 @@ namespace MyPortal.Controllers.Api
             var document = staffDocument.Document;
 
             _context.Documents.Add(document);
-            _context.StaffDocuments.Add(staffDocument);
+            _context.PersonDocuments.Add(staffDocument);
 
             _context.SaveChanges();
 
@@ -87,7 +88,7 @@ namespace MyPortal.Controllers.Api
 
             var currentUserId = User.Identity.GetUserId();
 
-            var userPerson = _context.StaffMembers.SingleOrDefault(x => x.UserId == currentUserId);
+            var userPerson = PeopleProcesses.GetStaffFromUserId(currentUserId, _context);
 
             var observer = _context.StaffMembers.SingleOrDefault(x => x.Id == data.ObserverId);
 
@@ -169,35 +170,13 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.NotFound, "Staff member not found");
             }
 
-            if (staffInDb.UserId == User.Identity.GetUserId())
+            if (staffInDb.Person.UserId == User.Identity.GetUserId())
             {
                 return Content(HttpStatusCode.BadRequest, "Cannot delete the current user");
             }
 
-            var logsWritten = _context.ProfileLogs.Where(x => x.AuthorId == staffId);
+            staffInDb.Deleted = true;
 
-            var ownCertificates = _context.PersonnelTrainingCertificates.Where(x => x.StaffId == staffId);
-
-            var ownObservations = _context.PersonnelObservations.Where(x => x.ObserveeId == staffId);
-
-            var observedObservations = _context.PersonnelObservations.Where(x => x.ObserverId == staffId);
-
-            var ownDocuments = _context.StaffDocuments.Where(x => x.StaffId == staffId);
-
-            _context.ProfileLogs.RemoveRange(logsWritten);
-            _context.PersonnelTrainingCertificates.RemoveRange(ownCertificates);
-            _context.PersonnelObservations.RemoveRange(ownObservations);
-            _context.PersonnelObservations.RemoveRange(observedObservations);
-
-            foreach (var document in ownDocuments)
-            {
-                var attachment = document.Document;
-
-                _context.StaffDocuments.Remove(document);
-                _context.Documents.Remove(attachment);
-            }
-
-            _context.StaffMembers.Remove(staffInDb);
             _context.SaveChanges();
 
             return Ok("Staff member deleted");
@@ -224,13 +203,11 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.BadRequest, "Staff code has already been used");
             }
 
-            staffInDb.FirstName = data.FirstName;
-            staffInDb.LastName = data.LastName;
-            staffInDb.Title = data.Title;
+            staffInDb.Person.FirstName = data.Person.FirstName;
+            staffInDb.Person.LastName = data.Person.LastName;
+            staffInDb.Person.Title = data.Person.Title;
             staffInDb.Code = data.Code;
-            staffInDb.Email = data.Email;
             staffInDb.JobTitle = data.JobTitle;
-            staffInDb.Phone = data.Phone;
 
             _context.SaveChanges();
 
@@ -245,16 +222,16 @@ namespace MyPortal.Controllers.Api
         /// <exception cref="HttpResponseException"></exception>
         [HttpGet]
         [Route("api/staff/documents/document/{documentId}")]
-        public StaffDocumentDto GetDocument(int documentId)
+        public PersonDocumentDto GetDocument(int documentId)
         {
-            var document = _context.StaffDocuments.SingleOrDefault(x => x.Id == documentId);
+            var document = _context.PersonDocuments.SingleOrDefault(x => x.Id == documentId);
 
             if (document == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return Mapper.Map<StaffDocument, StaffDocumentDto>(document);
+            return Mapper.Map<PersonDocument, PersonDocumentDto>(document);
         }
 
         // --[STAFF DOCUMENTS]--
@@ -267,7 +244,7 @@ namespace MyPortal.Controllers.Api
         /// <exception cref="HttpResponseException"></exception>
         [HttpGet]
         [Route("api/staff/documents/fetch/{staffId}")]
-        public IEnumerable<StaffDocumentDto> GetDocuments(int staffId)
+        public IEnumerable<PersonDocumentDto> GetDocuments(int staffId)
         {
             var staff = _context.StaffMembers.SingleOrDefault(s => s.Id == staffId);
 
@@ -276,10 +253,10 @@ namespace MyPortal.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            var documents = _context.StaffDocuments
-                .Where(x => x.StaffId == staffId)
+            var documents = _context.PersonDocuments
+                .Where(x => x.PersonId == staff.PersonId)
                 .ToList()
-                .Select(Mapper.Map<StaffDocument, StaffDocumentDto>);
+                .Select(Mapper.Map<PersonDocument, PersonDocumentDto>);
 
             return documents;
         }
@@ -337,7 +314,7 @@ namespace MyPortal.Controllers.Api
         public IEnumerable<StaffMemberDto> GetStaff()
         {
             return _context.StaffMembers
-                .OrderBy(x => x.LastName)
+                .OrderBy(x => x.Person.LastName)
                 .ToList()
                 .Select(Mapper.Map<StaffMember, StaffMemberDto>);
         }        
@@ -370,7 +347,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/staff/documents/remove/{documentId}")]
         public IHttpActionResult RemoveDocument(int documentId)
         {
-            var staffDocument = _context.StaffDocuments.Single(x => x.Id == documentId);
+            var staffDocument = _context.PersonDocuments.Single(x => x.Id == documentId);
 
             if (staffDocument == null)
             {
@@ -384,7 +361,7 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.BadRequest, "No document attached");
             }
 
-            _context.StaffDocuments.Remove(staffDocument);
+            _context.PersonDocuments.Remove(staffDocument);
 
             _context.Documents.Remove(attachedDocument);
 
@@ -406,7 +383,7 @@ namespace MyPortal.Controllers.Api
 
             var currentUserId = User.Identity.GetUserId();
 
-            var userStaffProfile = _context.StaffMembers.SingleOrDefault(x => x.UserId == currentUserId);
+            var userStaffProfile = _context.StaffMembers.SingleOrDefault(x => x.Person.UserId == currentUserId);
 
             if (userStaffProfile == null)
             {
@@ -446,7 +423,7 @@ namespace MyPortal.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return staffInDb.StaffDocuments.Any();
+            return staffInDb.Documents.Any();
         }
 
         /// <summary>
@@ -476,9 +453,9 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/staff/documents/edit")]
-        public IHttpActionResult UpdateDocument(StaffDocument data)
+        public IHttpActionResult UpdateDocument(PersonDocument data)
         {
-            var staffDocumentInDb = _context.StaffDocuments.Single(x => x.Id == data.Id);
+            var staffDocumentInDb = _context.PersonDocuments.Single(x => x.Id == data.Id);
 
             if (staffDocumentInDb == null)
             {
@@ -518,7 +495,7 @@ namespace MyPortal.Controllers.Api
 
             var observer = _context.StaffMembers.SingleOrDefault(x => x.Id == data.ObserverId);
 
-            var userStaffProfile = _context.StaffMembers.SingleOrDefault(x => x.UserId == currentUserId);
+            var userStaffProfile = _context.StaffMembers.SingleOrDefault(x => x.Person.UserId == currentUserId);
 
             if (userStaffProfile == null)
             {

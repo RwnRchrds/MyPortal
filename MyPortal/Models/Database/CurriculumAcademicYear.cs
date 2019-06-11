@@ -6,6 +6,9 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    /// <summary>
+    /// Represents an academic year in the system.
+    /// </summary>
     [Table("Curriculum_AcademicYears")]
     public partial class CurriculumAcademicYear
     {
@@ -14,6 +17,11 @@ namespace MyPortal.Models.Database
         {
             AttendanceWeeks = new HashSet<AttendanceWeek>();
             CurriculumClasses = new HashSet<CurriculumClass>();
+            ProfileLogs= new HashSet<ProfileLog>();
+            FinanceSales = new HashSet<FinanceSale>();
+            AssessmentResultSets = new HashSet<AssessmentResultSet>();
+            Achievements = new HashSet<BehaviourAchievement>();
+            BehaviourIncidents = new HashSet<BehaviourIncident>();
         }
 
         public int Id { get; set; }
@@ -44,5 +52,9 @@ namespace MyPortal.Models.Database
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AssessmentResultSet> AssessmentResultSets { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BehaviourAchievement> Achievements { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BehaviourIncident> BehaviourIncidents { get; set; }  
     }
 }

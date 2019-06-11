@@ -28,7 +28,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <TypeScriptToolsVersion>3.0</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -38,6 +38,19 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptJSXEmit>React</TypeScriptJSXEmit>
+    <TypeScriptModuleKind />
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
+    <TypeScriptOutFile />
+    <TypeScriptOutDir />
+    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+    <TypeScriptSourceMap>True</TypeScriptSourceMap>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -247,19 +260,18 @@
     <Compile Include="Dtos\AssessmentGradeSetDto.cs" />
     <Compile Include="Dtos\AssessmentResultDto.cs" />
     <Compile Include="Dtos\AssessmentResultSetDto.cs" />
-    <Compile Include="Dtos\AttendanceCodeDto.cs" />
-    <Compile Include="Dtos\AttendanceRegisterMarkDto.cs" />
-    <Compile Include="Dtos\AttendanceMeaningDto.cs" />
     <Compile Include="Dtos\AttendancePeriodDto.cs" />
+    <Compile Include="Dtos\AttendanceRegisterCodeDto.cs" />
+    <Compile Include="Dtos\AttendanceRegisterCodeMeaningDto.cs" />
+    <Compile Include="Dtos\AttendanceRegisterMarkDto.cs" />
     <Compile Include="Dtos\AttendanceWeekDto.cs" />
-    <Compile Include="Dtos\DocumentDto.cs" />
-    <Compile Include="Dtos\FinanceProductTypeDto.cs" />
-    <Compile Include="Dtos\LiteDtos\AttendanceRegisterMarkLite.cs" />
-    <Compile Include="Dtos\SenStatusDto.cs" />
-    <Compile Include="Dtos\StaffDocumentDto.cs" />
-    <Compile Include="Dtos\StaffMemberDto.cs" />
-    <Compile Include="Dtos\StudentDocumentDto.cs" />
-    <Compile Include="Dtos\StudentDto.cs" />
+    <Compile Include="Dtos\BehaviourAchievementDto.cs" />
+    <Compile Include="Dtos\BehaviourAchievementTypeDto.cs" />
+    <Compile Include="Dtos\BehaviourIncidentDto.cs" />
+    <Compile Include="Dtos\BehaviourLocationDto.cs" />
+    <Compile Include="Dtos\BehaviourTypeDto.cs" />
+    <Compile Include="Dtos\CommunicationLogDto.cs" />
+    <Compile Include="Dtos\CommunicationTypeDto.cs" />
     <Compile Include="Dtos\CurriculumAcademicYearDto.cs" />
     <Compile Include="Dtos\CurriculumClassDto.cs" />
     <Compile Include="Dtos\CurriculumClassEnrolmentDto.cs" />
@@ -268,26 +280,66 @@
     <Compile Include="Dtos\CurriculumLessonPlanTemplateDto.cs" />
     <Compile Include="Dtos\CurriculumStudyTopicDto.cs" />
     <Compile Include="Dtos\CurriculumSubjectDto.cs" />
+    <Compile Include="Dtos\DocumentDto.cs" />
+    <Compile Include="Dtos\DocumentTypeDto.cs" />
     <Compile Include="Dtos\FinanceBasketItemDto.cs" />
     <Compile Include="Dtos\FinanceProductDto.cs" />
+    <Compile Include="Dtos\FinanceProductTypeDto.cs" />
     <Compile Include="Dtos\FinanceSaleDto.cs" />
+    <Compile Include="Dtos\LiteDtos\AttendanceRegisterMarkLite.cs" />
     <Compile Include="Dtos\Identity\RoleDto.cs" />
     <Compile Include="Dtos\Identity\UserDto.cs" />
+    <Compile Include="Dtos\MedicalConditionDto.cs" />
+    <Compile Include="Dtos\MedicalEventDto.cs" />
+    <Compile Include="Dtos\MedicalStudentConditionDto.cs" />
+    <Compile Include="Dtos\PastoralHouseDto.cs" />
     <Compile Include="Dtos\PastoralRegGroupDto.cs" />
     <Compile Include="Dtos\PastoralYearGroupDto.cs" />
+    <Compile Include="Dtos\PersonDto.cs" />
+    <Compile Include="Dtos\PersonDocumentDto.cs" />
     <Compile Include="Dtos\PersonnelObservationDto.cs" />
     <Compile Include="Dtos\PersonnelTrainingCertificateDto.cs" />
     <Compile Include="Dtos\PersonnelTrainingCourseDto.cs" />
     <Compile Include="Dtos\PersonnelTrainingStatusDto.cs" />
-    <Compile Include="Dtos\ProfileCommentBankDto.cs" />
+    <Compile Include="Dtos\PersonTypeDto.cs" />
     <Compile Include="Dtos\ProfileCommentDto.cs" />
+    <Compile Include="Dtos\ProfileCommentBankDto.cs" />
     <Compile Include="Dtos\ProfileLogDto.cs" />
     <Compile Include="Dtos\ProfileLogTypeDto.cs" />
+    <Compile Include="Dtos\SenEventDto.cs" />
+    <Compile Include="Dtos\SenEventTypeDto.cs" />
+    <Compile Include="Dtos\SenProvisionDto.cs" />
+    <Compile Include="Dtos\SenProvisionTypeDto.cs" />
+    <Compile Include="Dtos\SenReviewTypeDto.cs" />
+    <Compile Include="Dtos\SenStatusDto.cs" />
+    <Compile Include="Dtos\SpecialDtos\StudentSearchDto.cs" />
+    <Compile Include="Dtos\StaffMemberDto.cs" />
+    <Compile Include="Dtos\StudentDto.cs" />
     <Compile Include="Dtos\ViewDtos\StudentRegisterMarksDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Database\BehaviourAchievement.cs" />
+    <Compile Include="Models\Database\BehaviourAchievementType.cs" />
+    <Compile Include="Models\Database\BehaviourIncident.cs" />
+    <Compile Include="Models\Database\BehaviourLocation.cs" />
+    <Compile Include="Models\Database\BehaviourType.cs" />
+    <Compile Include="Models\Database\CommunicationLog.cs" />
+    <Compile Include="Models\Database\CommunicationType.cs" />
+    <Compile Include="Models\Database\DocumentType.cs" />
     <Compile Include="Models\Database\FinanceProductType.cs" />
+    <Compile Include="Models\Database\MedicalCondition.cs" />
+    <Compile Include="Models\Database\MedicalEvent.cs" />
+    <Compile Include="Models\Database\MedicalStudentCondition.cs" />
+    <Compile Include="Models\Database\PastoralHouse.cs" />
+    <Compile Include="Models\Database\Person.cs" />
+    <Compile Include="Models\Database\PersonDocument.cs" />
+    <Compile Include="Models\Database\PersonType.cs" />
+    <Compile Include="Models\Database\SenEvent.cs" />
+    <Compile Include="Models\Database\SenEventType.cs" />
+    <Compile Include="Models\Database\SenProvision.cs" />
+    <Compile Include="Models\Database\SenProvisionType.cs" />
+    <Compile Include="Models\Database\SenReviewType.cs" />
     <Compile Include="Models\Database\SenStatus.cs" />
     <Compile Include="Models\Exceptions\BadRequestException.cs" />
     <Compile Include="Models\Exceptions\EntityNotFoundException.cs" />
@@ -296,8 +348,8 @@
     <Compile Include="Models\Misc\GroupEnrolment.cs" />
     <Compile Include="Processes\AttendanceProcesses.cs" />
     <Compile Include="Processes\CurriculumProcesses.cs" />
+    <Compile Include="Processes\PeopleProcesses.cs" />
     <Compile Include="Processes\SystemProcesses.cs" />
-    <Compile Include="Processes\ContextProcesses.cs" />
     <Compile Include="Processes\UserProcesses.cs" />
     <Compile Include="Processes\DateTimeProcesses.cs" />
     <Compile Include="Migrations\201803051926258_InitialModel.cs" />
@@ -323,8 +375,6 @@
     <Compile Include="Models\Database\CurriculumStudyTopic.cs" />
     <Compile Include="Models\Database\CurriculumSubject.cs" />
     <Compile Include="Models\Database\Document.cs" />
-    <Compile Include="Models\Database\StaffDocument.cs" />
-    <Compile Include="Models\Database\StudentDocument.cs" />
     <Compile Include="Models\Database\FinanceBasketItem.cs" />
     <Compile Include="Models\Database\FinanceProduct.cs" />
     <Compile Include="Models\Database\FinanceSale.cs" />

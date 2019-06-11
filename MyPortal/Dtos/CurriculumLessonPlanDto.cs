@@ -1,6 +1,15 @@
 namespace MyPortal.Dtos
 {
-    public class CurriculumLessonPlanDto
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
+
+    /// <summary>
+    /// A lesson plan for a study topic.
+    /// </summary>
+    public partial class CurriculumLessonPlanDto
     {
         public int Id { get; set; }
 
@@ -16,8 +25,8 @@ namespace MyPortal.Dtos
 
         public int AuthorId { get; set; }
 
-        public StaffMemberDto Author { get; set; }
+        public virtual StaffMemberDto Author { get; set; }
 
-        public CurriculumStudyTopicDto StudyTopic { get; set; }
+        public virtual CurriculumStudyTopicDto StudyTopic { get; set; }
     }
 }

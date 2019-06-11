@@ -23,6 +23,6 @@ namespace MyPortal.ViewModels
         public IEnumerable<PersonnelTrainingCourse> TrainingCourses { get; set; }
         public IEnumerable<PersonnelTrainingStatus> TrainingStatuses { get; set; }
         public IEnumerable<string> Titles { get; set; }
-        public StaffDocument Upload { get; set; }
+        public PersonDocument Upload { get; set; }
     }
 }

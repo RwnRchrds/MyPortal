@@ -6,9 +6,13 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    /// <summary>
+    /// [SYSTEM] A category of log notes for students.
+    /// </summary>
     [Table("Profile_LogTypes")]
     public partial class ProfileLogType
     {
+        //THIS IS A SYSTEM CLASS AND SHOULD NOT HAVE FEATURES TO ADD, MODIFY OR DELETE DATABASE OBJECTS
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ProfileLogType()
         {
@@ -20,6 +24,13 @@ namespace MyPortal.Models.Database
         [Required]
         [StringLength(255)]
         public string Name { get; set; }
+
+        public string FaIcon { get; set; }
+
+        [Required]
+        [StringLength(10)]
+        public string HexColour { get; set; }
+        public bool System { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProfileLog> ProfileLogs { get; set; }

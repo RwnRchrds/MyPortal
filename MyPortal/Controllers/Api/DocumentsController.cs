@@ -8,6 +8,7 @@ using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Models;
 using MyPortal.Models.Database;
+using MyPortal.Processes;
 
 namespace MyPortal.Controllers.Api
 {
@@ -51,7 +52,7 @@ namespace MyPortal.Controllers.Api
             if (uploaderId == 0)
             {
                 var userId = User.Identity.GetUserId();
-                uploader = _context.StaffMembers.SingleOrDefault(x => x.UserId == userId);
+                uploader = _context.StaffMembers.SingleOrDefault(x => x.Person.UserId == userId);
                 if (uploader == null)
                 {
                     return Content(HttpStatusCode.BadRequest, "User does not have a personnel profile");

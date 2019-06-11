@@ -10,20 +10,19 @@ namespace MyPortal.Processes
 {
     public static class CurriculumProcesses
     {
-        private static readonly MyPortalDbContext _context;
 
         static CurriculumProcesses()
         {
-            _context = new MyPortalDbContext();           
+         
         }
 
-        public static bool StudentCanEnroll(int studentId, int classId)
+        public static bool StudentCanEnroll(MyPortalDbContext context, int studentId, int classId)
         {
-            var student = _context.Students.SingleOrDefault(x => x.Id == studentId);
+            var student = context.Students.SingleOrDefault(x => x.Id == studentId);
 
-            var currClass = _context.CurriculumClasses.SingleOrDefault(x => x.Id == classId);
+            var currClass = context.CurriculumClasses.SingleOrDefault(x => x.Id == classId);
 
-            var alreadyEnrolled = _context.CurriculumClassEnrolments.SingleOrDefault(x =>
+            var alreadyEnrolled = context.CurriculumClassEnrolments.SingleOrDefault(x =>
                 x.ClassId == classId && x.StudentId == studentId) != null;
 
             if (student == null)
@@ -38,26 +37,26 @@ namespace MyPortal.Processes
 
             if (alreadyEnrolled)
             {
-                throw new PersonNotFreeException(student.LastName + ", " + student.FirstName + " is already enrolled in " + currClass.Name);
+                throw new PersonNotFreeException(student.Person.LastName + ", " + student.Person.FirstName + " is already enrolled in " + currClass.Name);
             }
 
-            var periods = GetPeriodsForClass(currClass.Id);
+            var periods = GetPeriodsForClass(context, currClass.Id);
 
             foreach (var period in periods)
             {
-                if (!PeriodIsFree(student, period.Id))
+                if (!PeriodIsFree(context, student, period.Id))
                 {
-                    throw new PersonNotFreeException(student.LastName + ", " + student.FirstName + " is not free during period " + period.Name);
+                    throw new PersonNotFreeException(student.Person.LastName + ", " + student.Person.FirstName + " is not free during period " + period.Name);
                 }
             }
 
             return true;
         }
 
-        public static IEnumerable<AttendancePeriod> GetPeriodsForClass(int classId)
+        public static IEnumerable<AttendancePeriod> GetPeriodsForClass(MyPortalDbContext context, int classId)
         {
             var periods = new List<AttendancePeriod>();
-            var currClass = _context.CurriculumClasses.SingleOrDefault(x => x.Id == classId);
+            var currClass = context.CurriculumClasses.SingleOrDefault(x => x.Id == classId);
 
             if (currClass == null)
             {
@@ -72,15 +71,15 @@ namespace MyPortal.Processes
             return periods;
         }
 
-        public static bool PeriodIsFree(Student student, int periodId)
+        public static bool PeriodIsFree(MyPortalDbContext context, Student student, int periodId)
         {
             var isFree = true;
 
-            var enrolments = _context.CurriculumClassEnrolments.Where(x => x.StudentId == student.Id).ToList();
+            var enrolments = context.CurriculumClassEnrolments.Where(x => x.StudentId == student.Id).ToList();
 
             foreach (var enrolment in enrolments)
             {
-                var periods = GetPeriodsForClass(enrolment.ClassId);
+                var periods = GetPeriodsForClass(context, enrolment.ClassId);
 
                 if (periods.Any(x => x.Id == periodId))
                 {

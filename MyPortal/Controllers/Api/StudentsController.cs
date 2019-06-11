@@ -7,9 +7,11 @@ using System.Web.Http;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
+using MyPortal.Dtos.SpecialDtos;
 using MyPortal.Models;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
+using MyPortal.Processes;
 
 namespace MyPortal.Controllers.Api
 {
@@ -31,7 +33,7 @@ namespace MyPortal.Controllers.Api
         public void AuthenticateStudentRequest(int id)
         {
                 var userId = User.Identity.GetUserId();
-                var studentUser = _context.Students.SingleOrDefault(x => x.UserId == userId);
+                var studentUser = _context.Students.SingleOrDefault(x => x.Person.UserId == userId);
                 var requestedStudent = _context.Students.SingleOrDefault(x => x.Id == id);
 
                 if (studentUser == null || requestedStudent == null)
@@ -66,7 +68,7 @@ namespace MyPortal.Controllers.Api
 
             var currentUserId = User.Identity.GetUserId();
 
-            var uploader = _context.StaffMembers.Single(x => x.UserId == currentUserId);
+            var uploader = PeopleProcesses.GetStaffFromUserId(currentUserId, _context);
 
             if (uploader == null)
             {
@@ -92,13 +94,13 @@ namespace MyPortal.Controllers.Api
             _context.Documents.Add(document);
             _context.SaveChanges();
 
-            var studentDocument = new StudentDocument
+            var studentDocument = new PersonDocument
             {
                 DocumentId = document.Id,
-                StudentId = data.Student
+                PersonId = student.PersonId
             };
 
-            _context.StudentDocuments.Add(studentDocument);
+            _context.PersonDocuments.Add(studentDocument);
             _context.SaveChanges();
 
             return Ok("Document added");
@@ -246,17 +248,19 @@ namespace MyPortal.Controllers.Api
         [Route("api/students/documents/document/{documentId}")]
         public DocumentDto GetDocument(int documentId)
         {
-            var document = _context.StudentDocuments
+            var document = _context.PersonDocuments
                 .SingleOrDefault(x => x.Id == documentId);
 
-            if (document == null)
+            var student = _context.Students.SingleOrDefault(x => x.PersonId == document.PersonId);
+
+            if (document == null || student == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
             if (User.IsInRole("Student"))
             {
-                AuthenticateStudentRequest(document.StudentId);
+                AuthenticateStudentRequest(student.Id);
             }
 
             return Mapper.Map<Document, DocumentDto>(document.Document);
@@ -270,7 +274,7 @@ namespace MyPortal.Controllers.Api
         /// <exception cref="HttpResponseException">Thrown when the student is not found.</exception>
         [HttpGet]
         [Route("api/students/documents/fetch/{studentId}")]
-        public IEnumerable<StudentDocumentDto> GetDocuments(int studentId)
+        public IEnumerable<PersonDocumentDto> GetDocuments(int studentId)
         {
             if (User.IsInRole("Student"))
             {
@@ -284,10 +288,10 @@ namespace MyPortal.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            var documents = _context.StudentDocuments
-                .Where(x => x.StudentId == studentId)
+            var documents = _context.PersonDocuments
+                .Where(x => x.PersonId == student.PersonId)
                 .ToList()
-                .Select(Mapper.Map<StudentDocument, StudentDocumentDto>);
+                .Select(Mapper.Map<PersonDocument, PersonDocumentDto>);
 
             return documents;
         }
@@ -322,15 +326,21 @@ namespace MyPortal.Controllers.Api
         /// </summary>
         /// <returns>Returns a list of DTOs of all students.</returns>
         [Authorize(Roles = "Staff, SeniorStaff")]
-        [Route("api/people/students/get/all")]
+        [Route("api/people/students/get/all/full")]
         public IEnumerable<StudentDto> GetStudents()
         {
             return _context.Students
-                .Include(s => s.PastoralYearGroup)
-                .Include(s => s.PastoralRegGroup)
-                .OrderBy(x => x.LastName)
+                .OrderBy(x => x.Person.LastName)
                 .ToList()
                 .Select(Mapper.Map<Student, StudentDto>);
+        }
+
+        [Authorize(Roles = "Staff, SeniorStaff")]
+        [Route("api/people/students/get/all")]
+        public IEnumerable<StudentSearchDto> GetStudentsAsSearchDtos()
+        {
+            var list = _context.Students.ToList();
+            return PeopleProcesses.PrepareStudentSearchResults(list);
         }
 
         /// <summary>
@@ -343,7 +353,7 @@ namespace MyPortal.Controllers.Api
         {
             return _context.Students
                 .Where(x => x.RegGroupId == regGroupId)
-                .OrderBy(x => x.LastName)
+                .OrderBy(x => x.Person.LastName)
                 .ToList()
                 .Select(Mapper.Map<Student, StudentDto>);
         }
@@ -360,7 +370,7 @@ namespace MyPortal.Controllers.Api
         {
             return _context.Students
                 .Where(x => x.YearGroupId == yearGroupId)
-                .OrderBy(x => x.LastName)
+                .OrderBy(x => x.Person.LastName)
                 .ToList()
                 .Select(Mapper.Map<Student, StudentDto>);
         }
@@ -375,7 +385,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/students/documents/remove/{documentId}")]
         public IHttpActionResult RemoveDocument(int documentId)
         {
-            var studentDocument = _context.StudentDocuments.SingleOrDefault(x => x.Id == documentId);
+            var studentDocument = _context.PersonDocuments.SingleOrDefault(x => x.Id == documentId);
 
             if (studentDocument == null)
             {
@@ -389,7 +399,7 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.BadRequest, "No document attached");
             }
 
-            _context.StudentDocuments.Remove(studentDocument);
+            _context.PersonDocuments.Remove(studentDocument);
 
             _context.Documents.Remove(attachedDocument);
 
@@ -433,7 +443,7 @@ namespace MyPortal.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return studentInDb.StudentDocuments.Any();
+            return _context.PersonDocuments.Any(x => x.PersonId == studentInDb.PersonId);
         }
 
         [HttpGet]
@@ -540,9 +550,9 @@ namespace MyPortal.Controllers.Api
             }
 
             Mapper.Map(student, studentInDb);
-            studentInDb.FirstName = student.FirstName;
-            studentInDb.LastName = student.LastName;
-            studentInDb.Gender = student.Gender;
+            studentInDb.Person.FirstName = student.Person.FirstName;
+            studentInDb.Person.LastName = student.Person.LastName;
+            studentInDb.Person.Gender = student.Person.Gender;
             studentInDb.RegGroupId = student.RegGroupId;
             studentInDb.YearGroupId = student.YearGroupId;
             studentInDb.AccountBalance = student.AccountBalance;

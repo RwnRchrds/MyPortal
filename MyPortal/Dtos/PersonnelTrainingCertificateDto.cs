@@ -1,6 +1,15 @@
 namespace MyPortal.Dtos
 {
-    public class PersonnelTrainingCertificateDto
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
+
+    /// <summary>
+    /// A certificate awarded to personnel who have completed a training course.
+    /// </summary>
+    public partial class PersonnelTrainingCertificateDto
     {
         public int CourseId { get; set; }
 
@@ -8,10 +17,10 @@ namespace MyPortal.Dtos
 
         public int StatusId { get; set; }
 
-        public StaffMemberDto CoreStaffMember { get; set; }
+        public virtual StaffMemberDto StaffMember { get; set; }
 
-        public PersonnelTrainingCourseDto PersonnelTrainingCourse { get; set; }
+        public virtual PersonnelTrainingCourseDto PersonnelTrainingCourse { get; set; }
 
-        public PersonnelTrainingStatusDto PersonnelTrainingStatus { get; set; }
+        public virtual PersonnelTrainingStatusDto PersonnelTrainingStatus { get; set; }
     }
 }

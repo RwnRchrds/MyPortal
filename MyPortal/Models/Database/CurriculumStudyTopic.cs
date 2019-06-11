@@ -6,6 +6,9 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    /// <summary>
+    /// A particular topic for study in the curriculum. A study topic contains lesson plans for delivery.
+    /// </summary>
     [Table("Curriculum_StudyTopics")]
     public partial class CurriculumStudyTopic
     {

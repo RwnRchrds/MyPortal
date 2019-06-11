@@ -144,7 +144,7 @@ namespace MyPortal.Controllers
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            var academicYearId = SystemProcesses.GetCurrentAcademicYearId();
+            var academicYearId = SystemProcesses.GetCurrentAcademicYearId(_context);
 
             user.SelectedAcademicYearId = academicYearId;
 

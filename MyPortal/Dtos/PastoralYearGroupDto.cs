@@ -1,6 +1,15 @@
 namespace MyPortal.Dtos
 {
-    public class PastoralYearGroupDto
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
+
+    /// <summary>
+    /// A year group in the system.
+    /// </summary>
+    public partial class PastoralYearGroupDto
     {
         public int Id { get; set; }
 
@@ -10,6 +19,6 @@ namespace MyPortal.Dtos
 
         public int KeyStage { get; set; }
 
-        public StaffMemberDto CoreStaffMember { get; set; }
+        public virtual StaffMemberDto HeadOfYear { get; set; }
     }
 }

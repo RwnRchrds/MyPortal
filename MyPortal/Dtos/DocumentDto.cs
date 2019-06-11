@@ -1,8 +1,15 @@
-using System;
-
 namespace MyPortal.Dtos
 {
-    public class DocumentDto
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
+
+    /// <summary>
+    /// Represents an online document in the system.
+    /// </summary>
+    public partial class DocumentDto
     {
         public int Id { get; set; }
 
@@ -18,6 +25,8 @@ namespace MyPortal.Dtos
 
         public bool Approved { get; set; }
 
-        public StaffMemberDto Uploader { get; set; }
+        public bool Deleted { get; set; }
+
+        public virtual StaffMemberDto Uploader { get; set; }
     }
 }

@@ -60,14 +60,14 @@ namespace MyPortal.Controllers
 
             var attachedProfile = "";
 
-            var studentProfile = _context.Students.SingleOrDefault(x => x.UserId == user.Id);
-            var staffProfile = _context.StaffMembers.SingleOrDefault(x => x.UserId == user.Id);
+            var studentProfile = _context.Students.SingleOrDefault(x => x.Person.UserId == user.Id);
+            var staffProfile = _context.StaffMembers.SingleOrDefault(x => x.Person.UserId == user.Id);
 
             if (studentProfile != null)
-                attachedProfile = studentProfile.LastName + ", " + studentProfile.FirstName + " (Student)";
+                attachedProfile = studentProfile.Person.LastName + ", " + studentProfile.Person.FirstName + " (Student)";
 
             else if (staffProfile != null)
-                attachedProfile = staffProfile.LastName + ", " + staffProfile.FirstName + " (Staff)";
+                attachedProfile = staffProfile.Person.LastName + ", " + staffProfile.Person.FirstName + " (Staff)";
 
             var viewModel = new UserDetailsViewModel
             {

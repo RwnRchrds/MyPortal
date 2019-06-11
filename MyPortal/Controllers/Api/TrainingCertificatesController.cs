@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Models;
 using MyPortal.Models.Database;
+using MyPortal.Processes;
 
 namespace MyPortal.Controllers.Api
 {
@@ -31,7 +32,7 @@ namespace MyPortal.Controllers.Api
 
             var userId = User.Identity.GetUserId();
 
-            var userPerson = _context.StaffMembers.SingleOrDefault(x => x.UserId == userId);
+            var userPerson = PeopleProcesses.GetStaffFromUserId(userId, _context);
 
             if (trainingCertificateDto.StaffId == userPerson.Id)
             {
@@ -60,7 +61,7 @@ namespace MyPortal.Controllers.Api
 
             var userId = User.Identity.GetUserId();
 
-            var userPerson = _context.StaffMembers.SingleOrDefault(x => x.UserId == userId);
+            var userPerson = _context.StaffMembers.SingleOrDefault(x => x.Person.UserId == userId);
 
             if (staff == userPerson.Id)
             {
@@ -119,7 +120,7 @@ namespace MyPortal.Controllers.Api
 
             var userId = User.Identity.GetUserId();
 
-            var userPerson = _context.StaffMembers.SingleOrDefault(x => x.UserId == userId);
+            var userPerson = _context.StaffMembers.SingleOrDefault(x => x.Person.UserId == userId);
 
             if (userPerson != null && data.StaffId == userPerson.Id)
             {

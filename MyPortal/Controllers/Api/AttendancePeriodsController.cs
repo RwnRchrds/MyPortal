@@ -33,5 +33,18 @@ namespace MyPortal.Controllers.Api
             return _context.AttendancePeriods.ToList().OrderBy(x => dayIndex.IndexOf(x.Weekday))
                 .ThenBy(x => x.StartTime).Select(Mapper.Map<AttendancePeriod, AttendancePeriodDto>);
         }
+
+        [HttpGet]
+        public AttendancePeriodDto GetPeriod(int periodId)
+        {
+            var period = _context.AttendancePeriods.SingleOrDefault(x => x.Id == periodId);
+
+            if (period == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return Mapper.Map<AttendancePeriod, AttendancePeriodDto>(period);
+        }
     }
 }

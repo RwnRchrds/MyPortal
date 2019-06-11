@@ -1,9 +1,9 @@
 ﻿@model MyPortal.ViewModels.StudentDetailsViewModel
 @{
-    ViewBag.Title = "Student Details: " + Model.Student.LastName + ", " + Model.Student.FirstName;
+    ViewBag.Title = "Student Details: " + Model.Student.Person.LastName + ", " + Model.Student.Person.FirstName;
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 
-    var gender = Model.Genders.SingleOrDefault(x => x.Value == Model.Student.Gender);
+    var gender = Model.Genders.SingleOrDefault(x => x.Value == Model.Student.Person.Gender);
 
     var genderLabel = gender == null ? "Not Specified" : gender.Name;
 
@@ -17,7 +17,7 @@
 <!-- #region Title -->
 <div class="container float-left" id="title">
 
-    <h2 class="mp-page-title">@Model.Student.LastName, @Model.Student.FirstName</h2>
+    <h2 class="mp-page-title">@Model.Student.Person.LastName, @Model.Student.Person.FirstName</h2>
 
     <hr/>
 
@@ -60,19 +60,17 @@
 
                 <!--Student Details Table-->
                 <table class="table-condensed mp-table-condensed">
-                    <div class="row">
-                        <div class="col-lg-3">
-                        <tr>
+                    <tr>
                             <td>
                                 <b>First Name</b>
                             </td>
-                            <td>@Model.Student.FirstName</td>
+                            <td>@Model.Student.Person.FirstName</td>
                         </tr>
                         <tr>
                             <td>
                                 <b>Last Name</b>
                             </td>
-                            <td>@Model.Student.LastName</td>
+                            <td>@Model.Student.Person.LastName</td>
                         </tr>
                         <tr>
                             <td>
@@ -96,16 +94,14 @@
                             <td>
                                 <b>Reg Tutor</b>
                             </td>
-                            <td>@Model.Student.PastoralRegGroup.Tutor.Title @Model.Student.PastoralRegGroup.Tutor.FirstName.Substring(0, 1) @Model.Student.PastoralRegGroup.Tutor.LastName</td>
+                            <td>@Model.Student.PastoralRegGroup.Tutor.Person.Title @Model.Student.PastoralRegGroup.Tutor.Person.FirstName.Substring(0, 1) @Model.Student.PastoralRegGroup.Tutor.Person.LastName</td>
                         </tr>
                         <tr>
                             <td>
                                 <b>Head of Year</b>
                             </td>
-                            <td>@Model.Student.PastoralYearGroup.HeadOfYear.Title @Model.Student.PastoralYearGroup.HeadOfYear.FirstName.Substring(0, 1) @Model.Student.PastoralYearGroup.HeadOfYear.LastName</td>
+                            <td>@Model.Student.PastoralYearGroup.HeadOfYear.Person.Title @Model.Student.PastoralYearGroup.HeadOfYear.Person.FirstName.Substring(0, 1) @Model.Student.PastoralYearGroup.HeadOfYear.Person.LastName</td>
                         </tr>
-                    </div>
-                    </div>
                 </table>
 
             </div>
@@ -202,7 +198,7 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">New Log - @Model.Student.LastName, @Model.Student.FirstName</h4>
+                <h4 class="modal-title">New Log - @Model.Student.Person.LastName, @Model.Student.Person.FirstName</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -244,7 +240,7 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">New Log - @Model.Student.LastName, @Model.Student.FirstName</h4>
+                <h4 class="modal-title">New Log - @Model.Student.Person.LastName, @Model.Student.Person.FirstName</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -283,7 +279,7 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Edit Details - @Model.Student.LastName, @Model.Student.FirstName</h4>
+                <h4 class="modal-title">Edit Details - @Model.Student.Person.LastName, @Model.Student.Person.FirstName</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -293,18 +289,18 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("First Name")
-                        @Html.TextBoxFor(s => s.Student.FirstName, new {@class = "form-control", Name = "FirstName", id = "editDetailsFirstNameControl"})
-                        @Html.ValidationMessageFor(s => s.Student.FirstName)
+                        @Html.TextBoxFor(s => s.Student.Person.FirstName, new {@class = "form-control", Name = "FirstName", id = "editDetailsFirstNameControl"})
+                        @Html.ValidationMessageFor(s => s.Student.Person.FirstName)
                     </div>
                     <div class="form-group">
                         @Html.Label("Last Name")
-                        @Html.TextBoxFor(s => s.Student.LastName, new {@class = "form-control", Name = "LastName", id = "editDetailsLastNameControl"})
-                        @Html.ValidationMessageFor(s => s.Student.LastName)
+                        @Html.TextBoxFor(s => s.Student.Person.LastName, new {@class = "form-control", Name = "LastName", id = "editDetailsLastNameControl"})
+                        @Html.ValidationMessageFor(s => s.Student.Person.LastName)
                     </div>
                     <div class="form-group">
                         @Html.Label("Gender")
-                        @Html.DropDownListFor(s => s.Student.Gender, new SelectList(Model.Genders, "Value", "Name"), "Select Gender", new {@class = "form-control", Name = "Gender", id = "editDetailsYearGroupControl"})
-                        @Html.ValidationMessageFor(s => s.Student.Gender)
+                        @Html.DropDownListFor(s => s.Student.Person.Gender, new SelectList(Model.Genders, "Value", "Name"), "Select Gender", new {@class = "form-control", Name = "Gender", id = "editDetailsYearGroupControl"})
+                        @Html.ValidationMessageFor(s => s.Student.Person.Gender)
                     </div>
                     <div class="form-group">
                         @Html.Label("Year Group")
@@ -334,7 +330,7 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">New Document - @Model.Student.LastName, @Model.Student.FirstName</h4>
+                <h4 class="modal-title">New Document - @Model.Student.Person.LastName, @Model.Student.Person.FirstName</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -371,7 +367,7 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Edit Document - @Model.Student.LastName, @Model.Student.FirstName</h4>
+                <h4 class="modal-title">Edit Document - @Model.Student.Person.LastName, @Model.Student.Person.FirstName</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -555,11 +551,11 @@
                     {
                         data: "author.code",
                         render: function(data, type, log) {
-                            return log.author.title +
+                            return log.author.person.title +
                                 " " +
-                                log.author.firstName.substring(0, 1) +
+                                log.author.person.firstName.substring(0, 1) +
                                 " " +
-                                log.author.lastName;
+                                log.author.person.lastName;
                         }
                     },
                     {
@@ -569,8 +565,8 @@
                         data: "message",
                         render: function(data) {
 
-                            if ("@Model.Student.Gender" === "M") {
-                                return data.replace(/<name>/g, "@Model.Student.FirstName")
+                            if ("@Model.Student.Person.Gender" === "M") {
+                                return data.replace(/<name>/g, "@Model.Student.Person.FirstName")
                                     .replace(/<he>/g, "he")
                                     .replace(/<He>/g, "He")
                                     .replace(/<him>/g, "him")
@@ -584,8 +580,8 @@
                                     .replace(/\n/g, "<br/>");
                             }
 
-                            if ("@Model.Student.Gender" === "F") {
-                                return data.replace("<name>", "@Model.Student.FirstName")
+                            if ("@Model.Student.Person.Gender" === "F") {
+                                return data.replace("<name>", "@Model.Student.Person.FirstName")
                                     .replace(/<he>/g, "she")
                                     .replace(/<He>/g, "She")
                                     .replace(/<him>/g, "her")
@@ -599,8 +595,8 @@
                                     .replace(/\n/g, "<br/>");
                             }
 
-                            if ("@Model.Student.Gender" === "X") {
-                                return data.replace("<name>", "@Model.Student.FirstName")
+                            if ("@Model.Student.Person.Gender" === "X") {
+                                return data.replace("<name>", "@Model.Student.Person.FirstName")
                                     .replace(/<he>/g, "they")
                                     .replace(/<He>/g, "They")
                                     .replace(/<him>/g, "them")
@@ -798,8 +794,8 @@
 
             $('#EditDetailsModal').on('hidden.bs.modal',
                 function() {
-                    $("#editDetailsFirstNameControl").val("@Model.Student.FirstName");
-                    $("#editDetailsLastNameControl").val("@Model.Student.LastName");
+                    $("#editDetailsFirstNameControl").val("@Model.Student.Person.FirstName");
+                    $("#editDetailsLastNameControl").val("@Model.Student.Person.LastName");
                     $("#editDetailsYearGroupControl").val("@Model.Student.YearGroupId");
                     $("#editDetailsRegGroupControl").val("@Model.Student.RegGroupId");
                 });

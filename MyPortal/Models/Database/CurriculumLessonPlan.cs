@@ -6,6 +6,9 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    /// <summary>
+    /// A lesson plan for a study topic.
+    /// </summary>
     [Table("Curriculum_LessonPlans")]
     public partial class CurriculumLessonPlan
     {

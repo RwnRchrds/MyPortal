@@ -6,9 +6,13 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    /// <summary>
+    /// [SYSTEM] Codes available to use when taking the register.
+    /// </summary>
     [Table("Attendance_RegisterCodes")]
     public partial class AttendanceRegisterCode
     {
+        //THIS IS A SYSTEM CLASS AND SHOULD NOT HAVE FEATURES TO ADD, MODIFY OR DELETE DATABASE OBJECTS
         public int Id { get; set; }
 
         [Required]

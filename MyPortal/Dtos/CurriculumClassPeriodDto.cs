@@ -1,6 +1,15 @@
 namespace MyPortal.Dtos
 {
-    public class CurriculumClassPeriodDto
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
+
+    /// <summary>
+    /// Represents the assignment of a period in the week to a class.
+    /// </summary>
+    public partial class CurriculumClassPeriodDto
     {
         public int Id { get; set; }
 
@@ -8,8 +17,8 @@ namespace MyPortal.Dtos
 
         public int PeriodId { get; set; }
 
-        public AttendancePeriodDto AttendancePeriod { get; set; }
+        public virtual AttendancePeriodDto AttendancePeriod { get; set; }
 
-        public CurriculumClassDto CurriculumClass { get; set; }
+        public virtual CurriculumClassDto CurriculumClass { get; set; }
     }
 }

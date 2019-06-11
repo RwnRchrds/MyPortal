@@ -8,5 +8,7 @@ namespace MyPortal.ViewModels
     {
         public StaffMember CurrentUser { get; set; }
         public IEnumerable<CurriculumAcademicYear> CurriculumAcademicYears { get; set; }
+
+        public int SelectedAcademicYearId { get; set; }
     }
 }
