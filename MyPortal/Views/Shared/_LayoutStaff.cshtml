@@ -9,7 +9,12 @@
     @{
         var version = ViewContext.Controller.GetType().Assembly.GetName().Version;
     }
+    
+    <!-- Syncfusion Essential JS 2 Styles -->
+    <link rel="stylesheet" href="https://cdn.syncfusion.com/ej2/material.css" />
 
+    <!-- Syncfusion Essential JS 2 Scripts -->
+    <script src="https://cdn.syncfusion.com/ej2/dist/ej2.min.js"></script>
 </head>
 <body>
     @Html.Partial("_NavBarStaffNew")
@@ -29,5 +34,8 @@
     @Scripts.Render("~/bundles/lib")
     @Scripts.Render("~/bundles/navbar")
     @RenderSection("scripts", false)
+
+    <!-- Syncfusion Essential JS 2 ScriptManager -->
+    @Html.EJS().ScriptManager()
 </body>
 </html>
