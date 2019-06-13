@@ -15,6 +15,7 @@ using MyPortal.Models;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
 using MyPortal.Processes;
+using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
 {
@@ -329,7 +330,7 @@ namespace MyPortal.Controllers.Api
         /// </summary>
         /// <returns>Returns a list of DTOs of all students.</returns>
         [Authorize(Roles = "Staff, SeniorStaff")]
-        [Route("api/people/students/get/all/full")]
+        [Route("api/people/students/get/all")]
         public IEnumerable<StudentDto> GetStudents()
         {
             return _context.Students
@@ -338,19 +339,22 @@ namespace MyPortal.Controllers.Api
                 .Select(Mapper.Map<Student, StudentDto>);
         }
 
-        [HttpGet]
+        [HttpPost]
         [Authorize(Roles = "Staff, SeniorStaff")]
-        [Route("api/people/students/get/all")]
-        public object GetStudentsAsSearchDtos()
+        [Route("api/people/students/get/dataGrid/all")]
+        public IHttpActionResult GetStudentsForDataGrid([FromBody] DataManagerRequest dm)
         {
-            var queryString = Request.GetQueryNameValuePairs().ToList();
+            var students = _context.Students.OrderBy(x => x.Person.LastName).ToList();
+            var list = PeopleProcesses.PrepareStudentSearchResults(students).ToList();
 
-            var skip = Convert.ToInt32(queryString.SingleOrDefault(x => x.Key == "$skip").Value);
-            var take = Convert.ToInt32(queryString.SingleOrDefault(x => x.Key == "$top").Value);
-            var list = _context.Students.ToList();
-            var processedList =  PeopleProcesses.PrepareStudentSearchResults(list).ToList();
+            var result = list.PerformDataOperations(dm);
 
-            return Json(new {Items = processedList.Skip(skip).Take(take), Count = processedList.Count});
+            if (!dm.RequiresCounts)
+            {
+                return Json(result);
+            }
+
+            return Json(new {result = result.Items, count = result.Count});
         }
 
         /// <summary>

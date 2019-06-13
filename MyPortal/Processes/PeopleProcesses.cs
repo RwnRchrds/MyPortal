@@ -48,15 +48,5 @@ namespace MyPortal.Processes
 
             return results.OrderBy(x => x.DisplayName);
         }
-
-        public static ApiResponse<StudentSearchDto> PrepareApiResponseStudentSearchDto(List<StudentSearchDto> items)
-        {
-            var response = new ApiResponse<StudentSearchDto>();
-
-            response.Items = items;
-            response.Count = items.Count;
-
-            return response;
-        }
     }
 }

@@ -131,3 +131,7 @@
 .mp-textarea {
     min-height: 46px;
 }
+
+.mp-bold-text {
+    font-weight: bold;
+}

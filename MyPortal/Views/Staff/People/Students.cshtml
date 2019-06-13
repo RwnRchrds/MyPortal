@@ -22,30 +22,33 @@
 <div class="float-left container">
     @Html.EJS().Grid("Students").DataSource(dataManager =>
     {
-        dataManager.Url("/api/people/students/get/all").CrossDomain(false).Adaptor("WebApiAdaptor"); 
+        dataManager.Url("/api/people/students/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor"); 
 
     }).Columns(col =>
     {
-        col.Field("DisplayName").HeaderText("Name").Width("120").Add();
+        col.Field("DisplayName").HeaderText("Name").Template("#nameTemplate").Width("120").Add();
         col.Field("YearGroupName").HeaderText("Year Group").Width("120").Add();
         col.Field("RegGroupName").HeaderText("Reg Group").Width("120").Add();
-    }).AllowPaging().Load("load").Render()
+    }).AllowPaging().SearchSettings(search => { search.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string>() { "Search" }).PageSettings(pageSettings => pageSettings.PageSize(12)).Render()
 </div>
+
+<style type="text/css" class="cssStyles">
+    .student-name {
+        font-weight: bold;
+    }
+</style>
 
 @section scripts
 {
     <script>
         $(document).ready(function() {
         });
+    </script>
 
-        function load() {
-            var grid = document.getElementById('Students').ej2_instances[0];
-            var rowHeight = grid.getRowHeight();  //height of the each row
-            var gridHeight = grid.height;  //grid height
-            var pageSize = grid.pageSettings.pageSize;   //initial page size
-            var pageResize = (gridHeight - (pageSize * rowHeight)) / rowHeight; //new page size is obtained here
-            grid.pageSettings.pageSize = 15;
-        }
+    <script id="nameTemplate" type="text/x=template">
+               <div class="student-name">
+                   <a href="/Staff/People/Students/${Id}">${DisplayName}</a>
+               </div>
     </script>
 
     @Scripts.Render("~/bundles/staff")
