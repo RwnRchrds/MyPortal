@@ -2,9 +2,9 @@
 
 namespace MyPortal.Models.Misc
 {
-    public class StudentDocumentUpload
+    public class PersonDocumentUpload
     {
         public Document Document { get; set; }
-        public int Student { get; set; }
+        public int PersonId { get; set; }
     }
 }

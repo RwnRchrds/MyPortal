@@ -18,54 +18,34 @@
         <hr/>
     }
 </div>
-<!--#endregion-->
-<!--#region Students Table-->
+
 <div class="float-left container">
-    <table class="table table-bordered table-hover mp-table mp-table-link" id="students">
-        <thead>
-        <tr>
-            <th>Student</th>
-            <th>Year Group</th>
-            <th>Reg Group</th>
-        </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+    @Html.EJS().Grid("Students").DataSource(dataManager =>
+    {
+        dataManager.Url("/api/people/students/get/all").CrossDomain(false).Adaptor("WebApiAdaptor"); 
+
+    }).Columns(col =>
+    {
+        col.Field("DisplayName").HeaderText("Name").Width("120").Add();
+        col.Field("YearGroupName").HeaderText("Year Group").Width("120").Add();
+        col.Field("RegGroupName").HeaderText("Reg Group").Width("120").Add();
+    }).AllowPaging().Load("load").Render()
 </div>
-<!--#endregion-->
 
 @section scripts
 {
     <script>
         $(document).ready(function() {
-            $("#students").DataTable({
-                ajax: {
-                    url: "/api/people/students/get/all",
-                    dataSrc: ""
-                },
-                columns: [
-                    {
-                        data: "id",
-                        render: function(data, type, student) {
-                            return "<a href='/Staff/People/Students/" +
-                                student.id +
-                                "'>" +
-                                student.displayName +
-                                "</a>";
-                        }
-                    },
-                    {
-                        data: "yearGroupName"
-                    },
-                    {
-                        data: "regGroupName"
-                    }
-                ],
-                "language": {
-                    "emptyTable": "No students to display"
-                }
-            });
         });
+
+        function load() {
+            var grid = document.getElementById('Students').ej2_instances[0];
+            var rowHeight = grid.getRowHeight();  //height of the each row
+            var gridHeight = grid.height;  //grid height
+            var pageSize = grid.pageSettings.pageSize;   //initial page size
+            var pageResize = (gridHeight - (pageSize * rowHeight)) / rowHeight; //new page size is obtained here
+            grid.pageSettings.pageSize = 15;
+        }
     </script>
 
     @Scripts.Render("~/bundles/staff")

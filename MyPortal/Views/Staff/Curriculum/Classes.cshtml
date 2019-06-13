@@ -54,7 +54,7 @@
                     </div>
                     <div class="form-group">
                         @Html.Label("Teacher")
-                        @Html.DropDownListFor(l => l.Class.TeacherId, new SelectList(from x in Model.Staff select new { x.Id, FullName = x.LastName + ", " + x.FirstName }, "Id", "FullName"), "Select Teacher", new { @class = "form-control", Name = "TeacherId" })
+                        @Html.DropDownListFor(l => l.Class.TeacherId, new SelectList(from x in Model.Staff select new { x.Id, FullName = x.Person.LastName + ", " + x.Person.FirstName }, "Id", "FullName"), "Select Teacher", new { @class = "form-control", Name = "TeacherId" })
                         @Html.ValidationMessageFor(l => l.Class.TeacherId)
                     </div>
                     <div class="modal-footer">
@@ -90,7 +90,7 @@
                     </div>
                     <div class="form-group">
                         @Html.Label("Teacher")
-                        @Html.DropDownListFor(l => l.Class.TeacherId, new SelectList(from x in Model.Staff select new { x.Id, FullName = x.LastName + ", " + x.FirstName }, "Id", "FullName"), "Select Teacher", new { @class = "form-control", Name = "TeacherId", id = "editClassTeacherControl" })
+                        @Html.DropDownListFor(l => l.Class.TeacherId, new SelectList(from x in Model.Staff select new { x.Id, FullName = x.Person.LastName + ", " + x.Person.FirstName }, "Id", "FullName"), "Select Teacher", new { @class = "form-control", Name = "TeacherId", id = "editClassTeacherControl" })
                         @Html.ValidationMessageFor(l => l.Class.TeacherId)
                     </div>
                     <div class="form-group">

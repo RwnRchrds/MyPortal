@@ -59,9 +59,9 @@
                         var divData = "<option value=" +
                             data.responseJSON[i].id +
                             ">" +
-                            data.responseJSON[i].lastName +
+                            data.responseJSON[i].person.lastName +
                             ", " +
-                            data.responseJSON[i].firstName +
+                            data.responseJSON[i].person.firstName +
                             "</option>";
                         $(divData).appendTo('#selectedTeacher');
                         var currentUserId = $("#registerSelectors").attr("data-current-user-id");          

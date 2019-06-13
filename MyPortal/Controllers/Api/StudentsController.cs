@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Web.Helpers;
 using System.Web.Http;
+using System.Web.Http.Results;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
@@ -55,13 +58,13 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [Authorize(Roles = "Staff, SeniorStaff")]
         [Route("api/students/documents/add")]
-        public IHttpActionResult AddDocument(StudentDocumentUpload data)
+        public IHttpActionResult AddDocument(PersonDocumentUpload data)
         {
-            var student = _context.Students.SingleOrDefault(x => x.Id == data.Student);
+            var person = _context.Persons.SingleOrDefault(x => x.Id == data.PersonId);
 
-            if (student == null)
+            if (person == null)
             {
-                return Content(HttpStatusCode.NotFound, "Student not found");
+                return Content(HttpStatusCode.NotFound, "Person not found");
             }
 
             var document = data.Document;
@@ -97,7 +100,7 @@ namespace MyPortal.Controllers.Api
             var studentDocument = new PersonDocument
             {
                 DocumentId = document.Id,
-                PersonId = student.PersonId
+                PersonId = person.Id
             };
 
             _context.PersonDocuments.Add(studentDocument);
@@ -335,12 +338,19 @@ namespace MyPortal.Controllers.Api
                 .Select(Mapper.Map<Student, StudentDto>);
         }
 
+        [HttpGet]
         [Authorize(Roles = "Staff, SeniorStaff")]
         [Route("api/people/students/get/all")]
-        public IEnumerable<StudentSearchDto> GetStudentsAsSearchDtos()
+        public object GetStudentsAsSearchDtos()
         {
+            var queryString = Request.GetQueryNameValuePairs().ToList();
+
+            var skip = Convert.ToInt32(queryString.SingleOrDefault(x => x.Key == "$skip").Value);
+            var take = Convert.ToInt32(queryString.SingleOrDefault(x => x.Key == "$top").Value);
             var list = _context.Students.ToList();
-            return PeopleProcesses.PrepareStudentSearchResults(list);
+            var processedList =  PeopleProcesses.PrepareStudentSearchResults(list).ToList();
+
+            return Json(new {Items = processedList.Skip(skip).Take(take), Count = processedList.Count});
         }
 
         /// <summary>

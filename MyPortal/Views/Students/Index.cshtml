@@ -1,13 +1,13 @@
 ﻿@model MyPortal.ViewModels.StudentDetailsViewModel
 @{
-    ViewBag.Title = "Home: " + Model.Student.LastName + ", " + Model.Student.FirstName;
+    ViewBag.Title = "Home: " + Model.Student.Person.LastName + ", " + Model.Student.Person.FirstName;
     Layout = "~/Views/Shared/_LayoutStudent.cshtml";
 }
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 
 <div class="container float-left">
-    <h2 class="mp-page-title">@Model.Student.LastName, @Model.Student.FirstName</h2>
+    <h2 class="mp-page-title">@Model.Student.Person.LastName, @Model.Student.Person.FirstName</h2>
     <hr/>
 </div>
 
@@ -30,13 +30,13 @@
                         <td>
                             <b>First Name</b>
                         </td>
-                        <td>@Model.Student.FirstName</td>
+                        <td>@Model.Student.Person.FirstName</td>
                     </tr>
                     <tr>
                         <td>
                             <b>Last Name</b>
                         </td>
-                        <td>@Model.Student.LastName</td>
+                        <td>@Model.Student.Person.LastName</td>
                     </tr>
                     <tr>
                         <td>
@@ -54,13 +54,13 @@
                         <td>
                             <b>Reg Tutor</b>
                         </td>
-                        <td>@Model.Student.PastoralRegGroup.Tutor.Title @Model.Student.PastoralRegGroup.Tutor.FirstName.Substring(0, 1) @Model.Student.PastoralRegGroup.Tutor.LastName</td>
+                        <td>@Model.Student.PastoralRegGroup.Tutor.Person.Title @Model.Student.PastoralRegGroup.Tutor.Person.FirstName.Substring(0, 1) @Model.Student.PastoralRegGroup.Tutor.Person.LastName</td>
                     </tr>
                     <tr>
                         <td>
                             <b>Head of Year</b>
                         </td>
-                        <td>@Model.Student.PastoralYearGroup.HeadOfYear.Title @Model.Student.PastoralYearGroup.HeadOfYear.FirstName.Substring(0, 1) @Model.Student.PastoralYearGroup.HeadOfYear.LastName</td>
+                        <td>@Model.Student.PastoralYearGroup.HeadOfYear.Person.Title @Model.Student.PastoralYearGroup.HeadOfYear.Person.FirstName.Substring(0, 1) @Model.Student.PastoralYearGroup.HeadOfYear.Person.LastName</td>
                     </tr>
                 </table>
 
@@ -180,8 +180,8 @@
                         data: "message",
                         render: function(data) {
 
-                            if ("@Model.Student.Gender" === "M") {
-                                return data.replace(/<name>/g, "@Model.Student.FirstName")
+                            if ("@Model.Student.Person.Gender" === "M") {
+                                return data.replace(/<name>/g, "@Model.Student.Person.FirstName")
                                     .replace(/<he>/g, "he")
                                     .replace(/<He>/g, "He")
                                     .replace(/<him>/g, "him")
@@ -195,8 +195,8 @@
                                     .replace(/\n/g, "<br/>");
                             }
 
-                            if ("@Model.Student.Gender" === "F") {
-                                return data.replace("<name>", "@Model.Student.FirstName")
+                            if ("@Model.Student.Person.Gender" === "F") {
+                                return data.replace("<name>", "@Model.Student.Person.FirstName")
                                     .replace(/<he>/g, "she")
                                     .replace(/<He>/g, "She")
                                     .replace(/<him>/g, "her")
@@ -210,8 +210,8 @@
                                     .replace(/\n/g, "<br/>");
                             }
 
-                            if ("@Model.Student.Gender" === "X") {
-                                return data.replace("<name>", "@Model.Student.FirstName")
+                            if ("@Model.Student.Person.Gender" === "X") {
+                                return data.replace("<name>", "@Model.Student.Person.FirstName")
                                     .replace(/<he>/g, "they")
                                     .replace(/<He>/g, "They")
                                     .replace(/<him>/g, "them")

@@ -350,7 +350,7 @@
                         @Html.ValidationMessageFor(x => x.Upload.Document.Url)
                     </div>
                     <div class="form-group">
-                        @Html.HiddenFor(x => x.Upload.Student, new {@class = "form-control", Value = Model.Student.Id, Name = "Student"})
+                        @Html.HiddenFor(x => x.Upload.PersonId, new {@class = "form-control", Value = Model.Student.Person.Id, Name = "Student"})
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>

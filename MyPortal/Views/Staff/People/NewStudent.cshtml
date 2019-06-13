@@ -14,23 +14,18 @@
     {
         <div class="form-group">
             @Html.Label("First Name")
-            @Html.TextBoxFor(s => s.Student.FirstName, new {@class = "form-control"})
-            @Html.ValidationMessageFor(s => s.Student.FirstName)
+            @Html.TextBoxFor(s => s.Student.Person.FirstName, new {@class = "form-control"})
+            @Html.ValidationMessageFor(s => s.Student.Person.FirstName)
         </div>
         <div class="form-group">
             @Html.Label("Last Name")
-            @Html.TextBoxFor(s => s.Student.LastName, new {@class = "form-control"})
-            @Html.ValidationMessageFor(s => s.Student.LastName)
+            @Html.TextBoxFor(s => s.Student.Person.LastName, new {@class = "form-control"})
+            @Html.ValidationMessageFor(s => s.Student.Person.LastName)
         </div>
         <div class="form-group">
             @Html.Label("Gender")
-            @Html.DropDownListFor(s => s.Student.Gender, new SelectList(Model.Genders, "Value", "Name"), "Select Gender", new {@class = "form-control"})
-            @Html.ValidationMessageFor(s => s.Student.Gender)
-        </div>
-        <div class="form-group">
-            @Html.Label("Email")
-            @Html.TextBoxFor(s => s.Student.Email, new {@class = "form-control"})
-            @Html.ValidationMessageFor(s => s.Student.Email)
+            @Html.DropDownListFor(s => s.Student.Person.Gender, new SelectList(Model.Genders, "Value", "Name"), "Select Gender", new {@class = "form-control"})
+            @Html.ValidationMessageFor(s => s.Student.Person.Gender)
         </div>
         <div class="form-group">
             @Html.Label("Year Group")

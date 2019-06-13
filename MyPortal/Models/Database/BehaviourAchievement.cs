@@ -22,7 +22,6 @@ namespace MyPortal.Models.Database
 
         public int RecordedById { get; set; }
 
-        [Column(TypeName = "date")]
         public DateTime Date { get; set; }
 
         [StringLength(50)]

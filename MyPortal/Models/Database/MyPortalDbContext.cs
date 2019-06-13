@@ -322,6 +322,18 @@ namespace MyPortal.Models.Database
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<StaffMember>()
+                .HasMany(e => e.BehaviourAchievements)
+                .WithRequired(e => e.RecordedBy)
+                .HasForeignKey(e => e.RecordedById)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<StaffMember>()
+                .HasMany(e => e.BehaviourIncidents)
+                .WithRequired(e => e.RecordedByStaff)
+                .HasForeignKey(e => e.RecordedById)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.PersonnelTrainingCertificates)
                 .WithRequired(e => e.StaffMember)
                 .HasForeignKey(e => e.StaffId)
@@ -411,6 +423,18 @@ namespace MyPortal.Models.Database
 
             modelBuilder.Entity<CurriculumAcademicYear>()
                 .HasMany(e => e.AssessmentResultSets)
+                .WithRequired(e => e.CurriculumAcademicYear)
+                .HasForeignKey(e => e.AcademicYearId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<CurriculumAcademicYear>()
+                .HasMany(e => e.Achievements)
+                .WithRequired(e => e.CurriculumAcademicYear)
+                .HasForeignKey(e => e.AcademicYearId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<CurriculumAcademicYear>()
+                .HasMany(e => e.BehaviourIncidents)
                 .WithRequired(e => e.CurriculumAcademicYear)
                 .HasForeignKey(e => e.AcademicYearId)
                 .WillCascadeOnDelete(false);

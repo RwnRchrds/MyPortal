@@ -1,11 +1,11 @@
 ﻿@model MyPortal.ViewModels.StudentResultsViewModel
 @{
-    ViewBag.Title = "MyResults: " + Model.Student.LastName + ", " + Model.Student.FirstName;
+    ViewBag.Title = "MyResults: " + Model.Student.Person.LastName + ", " + Model.Student.Person.FirstName;
     Layout = "~/Views/Shared/_LayoutStudent.cshtml";
 }
 
 <div class="container float-left">
-    <h2 class="mp-page-title">MyResults - @Model.Student.LastName, @Model.Student.FirstName</h2>
+    <h2 class="mp-page-title">MyResults - @Model.Student.Person.LastName, @Model.Student.Person.FirstName</h2>
     <hr/>
 </div>
 

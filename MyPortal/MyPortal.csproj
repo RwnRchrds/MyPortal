@@ -236,6 +236,7 @@
     <Compile Include="Controllers\Api\AttendancePeriodsController.cs" />
     <Compile Include="Controllers\Api\AttendanceWeeksController.cs" />
     <Compile Include="Controllers\Api\BasketItemsController.cs" />
+    <Compile Include="Controllers\Api\BehaviourController.cs" />
     <Compile Include="Controllers\Api\CommentBanksController.cs" />
     <Compile Include="Controllers\Api\CommentsController.cs" />
     <Compile Include="Controllers\Api\CurriculumAcademicYearsController.cs" />
@@ -350,9 +351,11 @@
     <Compile Include="Models\Exceptions\BadRequestException.cs" />
     <Compile Include="Models\Exceptions\EntityNotFoundException.cs" />
     <Compile Include="Models\Exceptions\PersonNotFreeException.cs" />
+    <Compile Include="Models\Misc\ApiResponse.cs" />
     <Compile Include="Models\Misc\AttendanceSummary.cs" />
     <Compile Include="Models\Misc\GroupEnrolment.cs" />
     <Compile Include="Processes\AttendanceProcesses.cs" />
+    <Compile Include="Processes\BehaviourProcesses.cs" />
     <Compile Include="Processes\CurriculumProcesses.cs" />
     <Compile Include="Processes\PeopleProcesses.cs" />
     <Compile Include="Processes\SystemProcesses.cs" />
@@ -407,8 +410,7 @@
     <Compile Include="Models\Misc\Gender.cs" />
     <Compile Include="Models\Misc\RegisterLookup.cs" />
     <Compile Include="Models\Misc\ShoppingBasket.cs" />
-    <Compile Include="Models\Misc\StaffDocumentUpload.cs" />
-    <Compile Include="Models\Misc\StudentDocumentUpload.cs" />
+    <Compile Include="Models\Misc\PersonDocumentUpload.cs" />
     <Compile Include="Models\Misc\UserProfile.cs" />
     <Compile Include="Models\Misc\UserRoleModel.cs" />
     <Compile Include="Models\Validation\ActiveGradeSet.cs" />

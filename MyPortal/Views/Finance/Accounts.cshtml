@@ -119,9 +119,9 @@
                     },
                     columns: [
                         {
-                            data: "firstName",
+                            data: "person.firstName",
                             render: function(data, type, student) {
-                                return student.lastName + ", " + student.firstName;
+                                return student.person.lastName + ", " + student.person.firstName;
                             }
                         },
                         {

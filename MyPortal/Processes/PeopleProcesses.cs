@@ -5,6 +5,7 @@ using System.Web;
 using MyPortal.Dtos.SpecialDtos;
 using MyPortal.Models.Database;
 using MyPortal.Models.Exceptions;
+using MyPortal.Models.Misc;
 
 namespace MyPortal.Processes
 {
@@ -46,6 +47,16 @@ namespace MyPortal.Processes
             }
 
             return results.OrderBy(x => x.DisplayName);
+        }
+
+        public static ApiResponse<StudentSearchDto> PrepareApiResponseStudentSearchDto(List<StudentSearchDto> items)
+        {
+            var response = new ApiResponse<StudentSearchDto>();
+
+            response.Items = items;
+            response.Count = items.Count;
+
+            return response;
         }
     }
 }

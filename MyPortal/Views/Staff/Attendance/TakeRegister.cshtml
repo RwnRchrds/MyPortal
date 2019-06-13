@@ -12,7 +12,7 @@
 
 <div class="container float-left">
     <h2 class="mp-page-title">Take Register:</h2>    
-    <h4> @Model.ClassPeriod.CurriculumClass.Name (@Model.ClassPeriod.AttendancePeriod.Name) - @Model.ClassPeriod.CurriculumClass.Teacher.Title @Model.ClassPeriod.CurriculumClass.Teacher.FirstName.Substring(0, 1) @Model.ClassPeriod.CurriculumClass.Teacher.LastName</h4>
+    <h4> @Model.ClassPeriod.CurriculumClass.Name (@Model.ClassPeriod.AttendancePeriod.Name) - @Model.ClassPeriod.CurriculumClass.Teacher.Person.Title @Model.ClassPeriod.CurriculumClass.Teacher.Person.FirstName.Substring(0, 1) @Model.ClassPeriod.CurriculumClass.Teacher.Person.LastName</h4>
     <hr />
 </div>
 
@@ -55,7 +55,7 @@
                     {
                         data: "student.id",
                         render: function(data, type, markObject) {
-                            return markObject.student.lastName + ", " + markObject.student.firstName;
+                            return markObject.student.person.lastName + ", " + markObject.student.person.firstName;
                         }
                     },
                     {

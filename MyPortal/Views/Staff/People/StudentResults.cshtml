@@ -1,12 +1,12 @@
 ﻿@model MyPortal.ViewModels.StudentResultsViewModel
 @{
-    ViewBag.Title = "Student Results: " + Model.Student.LastName + ", " + Model.Student.FirstName;
+    ViewBag.Title = "Student Results: " + Model.Student.Person.LastName + ", " + Model.Student.Person.FirstName;
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
 <div class="container float-left">
 
-    <h2 class="mp-page-title">Assessment Results - @Model.Student.LastName, @Model.Student.FirstName</h2>
+    <h2 class="mp-page-title">Assessment Results - @Model.Student.Person.LastName, @Model.Student.Person.FirstName</h2>
 
     <hr/>
 
@@ -40,7 +40,7 @@
         <!--CONTENT-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">New Result - @Model.Student.LastName, @Model.Student.FirstName</h4>
+                <h4 class="modal-title">New Result - @Model.Student.Person.LastName, @Model.Student.Person.FirstName</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
             @using (Ajax.BeginForm(null, null, new AjaxOptions {Url="/api/results/create", HttpMethod = "POST", OnSuccess = "newResultSuccess", OnFailure = "newResultFailure"}, new {id = "newResultForm"}))

@@ -1,6 +1,6 @@
 ﻿@model MyPortal.ViewModels.StudentSalesHistoryViewModel
 @{
-    ViewBag.Title = "MySales History: " + Model.Student.LastName + ", " + Model.Student.FirstName;
+    ViewBag.Title = "MySales History: " + Model.Student.Person.LastName + ", " + Model.Student.Person.FirstName;
     Layout = "~/Views/Shared/_LayoutStudent.cshtml";
 }
 
