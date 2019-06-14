@@ -18,6 +18,15 @@ namespace MyPortal.Models.Database
 
         public int HeadId { get; set; }
 
+        public string CssClassName { get; set; }
+
+        public string CssMainColour { get; set; }
+
+        public string CssFontColour { get; set; }
+
         public virtual StaffMember HeadOfHouse { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Student> Students { get; set; }
     }
 }

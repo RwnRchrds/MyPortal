@@ -3,7 +3,9 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using MyPortal.Dtos;
 using MyPortal.Dtos.Identity;
 using MyPortal.Dtos.LiteDtos;
+using MyPortal.Dtos.SpecialDtos;
 using MyPortal.Models.Database;
+using MyPortal.Processes;
 
 namespace MyPortal
 {
@@ -100,6 +102,16 @@ namespace MyPortal
 
             CreateMap<FinanceProductType, FinanceProductTypeDto>();
             CreateMap<FinanceProductTypeDto, FinanceProductType>();
+
+            CreateMap<Student, StudentSearchDto>()
+                .ForMember(dest => dest.DisplayName,
+                    opts => opts.MapFrom(src => PeopleProcesses.GetStudentDisplayName(src)))
+                .ForMember(dest => dest.HouseName,
+                    opts => opts.MapFrom(src => src.House.Name))
+                .ForMember(dest => dest.RegGroupName,
+                    opts => opts.MapFrom(src => src.PastoralRegGroup.Name))
+                .ForMember(dest => dest.YearGroupName,
+                    opts => opts.MapFrom(src => src.PastoralYearGroup.Name));
         }
     }
 }

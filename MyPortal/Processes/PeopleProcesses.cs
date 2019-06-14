@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Microsoft.Ajax.Utilities;
 using MyPortal.Dtos.SpecialDtos;
 using MyPortal.Models.Database;
 using MyPortal.Models.Exceptions;
@@ -40,13 +41,24 @@ namespace MyPortal.Processes
                    Id = student.Id,
                    DisplayName = student.Person.LastName + ", " + student.Person.FirstName,
                    RegGroupName = student.PastoralRegGroup.Name,
-                   YearGroupName = student.PastoralYearGroup.Name
+                   YearGroupName = student.PastoralYearGroup.Name,
+                   HouseName = student.House.Name
                };
+
+               if (result.HouseName.IsNullOrWhiteSpace())
+               {
+                   result.HouseName = "None";
+               }
                
                results.Add(result);
             }
 
             return results.OrderBy(x => x.DisplayName);
+        }
+
+        public static string GetStudentDisplayName(Student student)
+        {
+            return student.Person.LastName + ", " + student.Person.FirstName;
         }
     }
 }

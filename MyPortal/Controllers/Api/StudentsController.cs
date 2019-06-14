@@ -344,10 +344,9 @@ namespace MyPortal.Controllers.Api
         [Route("api/people/students/get/dataGrid/all")]
         public IHttpActionResult GetStudentsForDataGrid([FromBody] DataManagerRequest dm)
         {
-            var students = _context.Students.OrderBy(x => x.Person.LastName).ToList();
-            var list = PeopleProcesses.PrepareStudentSearchResults(students).ToList();
+            var students = _context.Students.OrderBy(x => x.Person.LastName).ToList().Select(Mapper.Map<Student, StudentSearchDto>);
 
-            var result = list.PerformDataOperations(dm);
+            var result = students.PerformDataOperations(dm);
 
             if (!dm.RequiresCounts)
             {

@@ -11,5 +11,6 @@ namespace MyPortal.Dtos.SpecialDtos
         public string DisplayName { get; set; }
         public string RegGroupName { get; set; }
         public string YearGroupName { get; set; }
+        public string HouseName { get; set; }
     }
 }

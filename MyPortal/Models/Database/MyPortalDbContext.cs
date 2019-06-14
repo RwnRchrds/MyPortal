@@ -547,6 +547,12 @@ namespace MyPortal.Models.Database
                 .Property(e => e.Name)
                 .IsUnicode(false);
 
+            modelBuilder.Entity<PastoralHouse>()
+                .HasMany(e => e.Students)
+                .WithRequired(e => e.House)
+                .HasForeignKey(e => e.HouseId)
+                .WillCascadeOnDelete(false);
+
             modelBuilder.Entity<PastoralRegGroup>()
                 .Property(e => e.Name)
                 .IsUnicode(false);

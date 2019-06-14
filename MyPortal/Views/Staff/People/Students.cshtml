@@ -26,9 +26,10 @@
 
     }).Columns(col =>
     {
-        col.Field("DisplayName").HeaderText("Name").Template("#nameTemplate").Width("120").Add();
+        col.Field("DisplayName").HeaderText("Name").Template("#nameTemplate").Width("200").Add();
         col.Field("YearGroupName").HeaderText("Year Group").Width("120").Add();
         col.Field("RegGroupName").HeaderText("Reg Group").Width("120").Add();
+        col.Field("HouseName").HeaderText("House").Width("120").Add();
     }).AllowPaging().SearchSettings(search => { search.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string>() { "Search" }).PageSettings(pageSettings => pageSettings.PageSize(12)).Render()
 </div>
 
@@ -45,10 +46,10 @@
         });
     </script>
 
-    <script id="nameTemplate" type="text/x=template">
-               <div class="student-name">
-                   <a href="/Staff/People/Students/${Id}">${DisplayName}</a>
-               </div>
+    <script type="text/x-jsrender" id="nameTemplate">
+        <div>
+            <span id="Studtext" class="student-name"><a href="/Staff/People/Students/${Id}">${DisplayName}</a></span>
+        </div>
     </script>
 
     @Scripts.Render("~/bundles/staff")

@@ -37,6 +37,8 @@ namespace MyPortal.Models.Database
 
         public int YearGroupId { get; set; }
 
+        public int? HouseId { get; set; }
+
         [StringLength(10)]
         public string CandidateNumber { get; set; }
 
@@ -89,6 +91,8 @@ namespace MyPortal.Models.Database
         public virtual Person Person { get; set; }
 
         public virtual SenStatus SenStatus { get; set; }
+
+        public virtual PastoralHouse House { get; set; }    
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SenEvent> SenEvents { get; set; }
