@@ -135,3 +135,57 @@
 .mp-bold-text {
     font-weight: bold;
 }
+
+.mp-info-block {
+    background-color: #cccccc;
+    width: 150px;
+    height: 150px;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    vertical-align: middle;
+}
+
+.mp-info-block-label {
+    position: relative;
+    top: 8px;
+    text-align: center;
+    font-weight: bold;
+    color: white;
+}
+
+.mp-info-block-detail {
+    position: relative;
+    top: 25px;
+    text-align: center;
+    font-size: 40px;
+    font-weight: bold;
+    color: white;
+}
+
+.mp-background-danger {
+    background-color: rgba(220, 20, 60, 0.8);
+}
+
+.mp-background-warning {
+    background-color: rgba(218, 165, 32, 0.8);
+}
+
+.mp-background-success {
+    background-color: rgba(0, 168, 0, 0.8);
+}
+
+.inline-block {
+    display: inline-block;
+}
+
+.mp-info-block-detail-nodata {
+    position: relative;
+    top: 40px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+}

@@ -26,16 +26,29 @@
 
     }).Columns(col =>
     {
-        col.Field("DisplayName").HeaderText("Name").Template("#nameTemplate").Width("200").Add();
-        col.Field("YearGroupName").HeaderText("Year Group").Width("120").Add();
-        col.Field("RegGroupName").HeaderText("Reg Group").Width("120").Add();
-        col.Field("HouseName").HeaderText("House").Width("120").Add();
+        col.Field("DisplayName").HeaderText("Name").Template("#nameTemplate").Width("300").Add();
+        col.Field("YearGroupName").HeaderText("Year Group").Width("80").Add();
+        col.Field("RegGroupName").HeaderText("Reg Group").Width("80").Add();
+        col.Field("HouseName").HeaderText("House").Width("100").Add();
     }).AllowPaging().SearchSettings(search => { search.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string>() { "Search" }).PageSettings(pageSettings => pageSettings.PageSize(12)).Render()
 </div>
 
 <style type="text/css" class="cssStyles">
     .student-name {
         font-weight: bold;
+    }
+
+    .blob {
+        background-color: #e3165b;
+        height: 27px;
+        width: 29px;
+        border-radius: 14px;
+        text-align: center;
+        color: white;
+    }
+
+    .blob-icon {
+        margin-top: 6px;
     }
 </style>
 
@@ -48,8 +61,8 @@
 
     <script type="text/x-jsrender" id="nameTemplate">
         <div>
-            <span id="Studtext" class="student-name"><a href="/Staff/People/Students/${Id}">${DisplayName}</a></span>
-        </div>
+                <span id="Studtext" class="student-name"><a href="/Staff/People/Students/${Id}">${DisplayName}</a></span>
+        </div>        
     </script>
 
     @Scripts.Render("~/bundles/staff")

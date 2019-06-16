@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -11,6 +12,8 @@ using MyPortal.Controllers.Api;
 using MyPortal.Dtos;
 using MyPortal.Models;
 using MyPortal.Models.Database;
+using MyPortal.Models.Exceptions;
+using MyPortal.Models.Misc;
 using MyPortal.Processes;
 using MyPortal.ViewModels;
 
@@ -352,6 +355,29 @@ namespace MyPortal.Controllers
 
             var commentBanks = _context.ProfileCommentBanks.OrderBy(x => x.Name).ToList();
 
+            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+
+            AttendanceSummary attendanceData;
+            double? attendance = null;
+
+            try
+            {
+                attendanceData = AttendanceProcesses.GetSummary(_context, student.Id, academicYearId, true);
+            }
+            catch (BadRequestException e)
+            {
+                attendanceData = null;
+            }
+
+            if (attendanceData != null)
+            {
+                attendance = attendanceData.Present + attendanceData.Late;
+            } 
+
+            var achievementCount = BehaviourProcesses.GetAchievementPointsCount(student.Id, academicYearId, _context);
+
+            var behaviourCount = BehaviourProcesses.GetBehaviourPointsCount(student.Id, academicYearId, _context);
+
             var viewModel = new StudentDetailsViewModel
             {
                 //Logs = logs,
@@ -362,7 +388,11 @@ namespace MyPortal.Controllers
                 RegGroups = regGroups,
                 ResultSets = resultSets,
                 Subjects = subjects,
-                CommentBanks = commentBanks
+                CommentBanks = commentBanks,
+                BehaviourCount = behaviourCount,
+                AchievementCount = achievementCount,
+                HasAttendaceData = attendance != null,
+                Attendance = attendance
             };
 
             return View("~/Views/Staff/People/StudentDetails.cshtml", viewModel);

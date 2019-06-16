@@ -35,12 +35,19 @@ namespace MyPortal.Models.Misc
                 var totalMarks = Present + AuthorisedAbsence + ApprovedEdActivity + UnauthorisedAbsence + NotRequired +
                                  Late;
 
-                Present = (Present / totalMarks) * 100;
-                AuthorisedAbsence = (AuthorisedAbsence / totalMarks) * 100;
-                ApprovedEdActivity = (ApprovedEdActivity / totalMarks) * 100;
-                UnauthorisedAbsence = (UnauthorisedAbsence / totalMarks) * 100;
-                NotRequired = (NotRequired / totalMarks) * 100;
-                Late = (Late / totalMarks) * 100;
+                var present = (Present / totalMarks) * 100;
+                var authorisedAbsence = (AuthorisedAbsence / totalMarks) * 100;
+                var approvedEdActivity = (ApprovedEdActivity / totalMarks) * 100;
+                var unauthorisedAbsence = (UnauthorisedAbsence / totalMarks) * 100;
+                var notRequired = (NotRequired / totalMarks) * 100;
+                var late = (Late / totalMarks) * 100;
+
+                Present = Math.Round(present, 1);
+                AuthorisedAbsence = Math.Round(authorisedAbsence, 1);
+                ApprovedEdActivity = Math.Round(approvedEdActivity, 1);
+                UnauthorisedAbsence = Math.Round(unauthorisedAbsence, 1);
+                NotRequired = Math.Round(notRequired, 1);
+                Late = Math.Round(late, 1);
 
                 IsPercentage = true;
             }

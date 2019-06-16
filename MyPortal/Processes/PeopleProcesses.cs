@@ -42,14 +42,9 @@ namespace MyPortal.Processes
                    DisplayName = student.Person.LastName + ", " + student.Person.FirstName,
                    RegGroupName = student.PastoralRegGroup.Name,
                    YearGroupName = student.PastoralYearGroup.Name,
-                   HouseName = student.House.Name
+                   HouseName = student.House != null ? student.House.Name : "Not Specified"
                };
 
-               if (result.HouseName.IsNullOrWhiteSpace())
-               {
-                   result.HouseName = "None";
-               }
-               
                results.Add(result);
             }
 

@@ -5,6 +5,9 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using MyPortal.Models;
 using MyPortal.Models.Database;
+using MyPortal.Models.Exceptions;
+using MyPortal.Models.Misc;
+using MyPortal.Processes;
 using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers
@@ -79,15 +82,38 @@ namespace MyPortal.Controllers
             var student = _context.Students.SingleOrDefault(s => s.Person.UserId == userId);
 
             if (student == null)
-                return View("~/Views/Students/NoProfileIndex.cshtml");            
+                return View("~/Views/Students/NoProfileIndex.cshtml");
 
-            var results = _context.AssessmentResults.Where(r => r.StudentId == student.Id && r.AssessmentResultSet.IsCurrent)
-                .ToList();            
+            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+
+            AttendanceSummary attendanceData;
+            double? attendance = null;
+
+            try
+            {
+                attendanceData = AttendanceProcesses.GetSummary(_context, student.Id, academicYearId, true);
+            }
+            catch (BadRequestException e)
+            {
+                attendanceData = null;
+            }
+
+            if (attendanceData != null)
+            {
+                attendance = attendanceData.Present + attendanceData.Late;
+            }
+
+            var achievementCount = BehaviourProcesses.GetAchievementPointsCount(student.Id, academicYearId, _context);
+
+            var behaviourCount = BehaviourProcesses.GetBehaviourPointsCount(student.Id, academicYearId, _context);
 
             var viewModel = new StudentDetailsViewModel
             {                
                 Student = student,
-                Results = results,                
+                BehaviourCount = behaviourCount,
+                AchievementCount = achievementCount,
+                Attendance = attendance,
+                HasAttendaceData = attendance != null,
             };
             return View(viewModel);
         }

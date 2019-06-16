@@ -99,6 +99,11 @@ namespace MyPortal.Processes
             var marksForStudent = context.AttendanceMarks.Where(x =>
                 x.AttendanceWeek.AcademicYearId == academicYearId && x.StudentId == studentId);
 
+            if (!marksForStudent.Any())
+            {
+                throw new BadRequestException("No attendance data.");
+            }
+
             var summary = new AttendanceSummary();
 
             foreach (var mark in marksForStudent)

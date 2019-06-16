@@ -15,6 +15,12 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 
+<style>
+    .overview-card {
+        width: 550px;
+    }
+</style>
+
 <!-- #region Title -->
 <div class="container float-left" id="title">
 
@@ -55,7 +61,7 @@
 
         <div class="card border-primary mp-card" id="detailsCard">
 
-            <div class="card-header bg-primary">MyDetails</div>
+            <div class="card-header bg-primary">Basic Details</div>
 
             <div class="card-body">
 
@@ -118,33 +124,40 @@
     <!--#endregion-->
     <!-- #region MyResults Table Card -->
     <div class="float-left" id="resultsTableDiv">
-        <div class="card border-primary mp-card" id="resultsTableCard">
-            <div class="card-header bg-primary">MyResults</div>
-            @if (!Model.Results.Any())
-            {
-                {
-                    <text>
-                        <div class="card-body">No results to display.</div></text>
-                }
-            }
-            else
-            {
-                <table class="table table-condensed table-bordered mp-table" id="resultsTable">
-                    <thead>
-                    <tr>
-                        <th>Subject</th>
-                        <th>Result</th>
-                    </tr>
-                    </thead>
-                    @foreach (var result in Model.Results)
+        <div class="card border-primary mp-card overview-card" id="summaryCard">
+            <div class="card-header bg-primary">Overview</div>
+            <div class="float-left container">
+                <div class="mp-info-block inline-block" id="attendanceBlock">
+                    @if (Model.HasAttendaceData && Model.Attendance != null)
                     {
-                        <tr>
-                            <td>@result.CurriculumSubject.Name</td>
-                            <td>@result.Value</td>
-                        </tr>
+                        <div class="mp-info-block-label">Attendance</div>
+                        <div class="mp-info-block-detail" data-hasdata="true" id="attendanceDetail">
+                            @Model.Attendance%
+                        </div>
                     }
-                </table>
-            }
+                    @if (!Model.HasAttendaceData || Model.Attendance == null)
+                    {
+                        <div class="mp-info-block-label">Attendance</div>
+                        <div class="mp-info-block-detail-nodata" data-hasdata="false" id="attendanceDetail">
+                            No Data
+                        </div>
+                    }
+                </div>
+
+                <div class="mp-info-block inline-block" id="achievementBlock">
+                    <div class="mp-info-block-label">Achievements</div>
+                    <div class="mp-info-block-detail" id="achievementDetail">
+                        @Model.AchievementCount
+                    </div>
+                </div>
+
+                <div class="mp-info-block inline-block" id="behaviourBlock">
+                    <div class="mp-info-block-label">Behaviour</div>
+                    <div class="mp-info-block-detail" id="behaviourDetail">
+                        @Model.BehaviourCount
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <!--#endregion-->
@@ -444,6 +457,8 @@
         $(document).ready(function() {
 
             //---SCRIPT DEFINITIONS---
+
+            overviewCalc();
 
             //Delete Log When Button Clicked
             $("#logs").on("click",
@@ -898,6 +913,45 @@
             });
 
             $("#comments").show();
+        }
+
+        function overviewCalc() {
+
+            //Attendance Block
+            if ($("#attendanceDetail").attr("data-hasdata") === "true") {
+                if (parseInt($("#attendanceDetail").text()) >= 95) {
+                    $("#attendanceBlock").addClass("mp-background-success");
+                }
+                if (parseInt($("#attendanceDetail").text()) < 95) {
+                    $("#attendanceBlock").addClass("mp-background-warning");
+                }
+                if (parseInt($("#attendanceDetail").text()) < 90) {
+                    $("#attendanceBlock").removeClass("mp-background-warning");
+                    $("#attendanceBlock").addClass("mp-background-danger");
+                }
+            }
+
+            //Achievements Block
+            if (parseInt($("#achievementDetail").text()) < @Model.BehaviourCount) {
+                $("#achievementBlock").addClass("mp-background-danger");
+            }
+            if (parseInt($("#achievementDetail").text()) === @Model.BehaviourCount) {
+                $("#achievementBlock").addClass("mp-background-warning");
+            }
+            if (parseInt($("#achievementDetail").text()) > @Model.BehaviourCount) {
+                $("#achievementBlock").addClass("mp-background=success");
+            }
+
+            //Behaviour Block
+            if (parseInt($("#behaviourDetail").text()) === 0) {
+                $("#behaviourBlock").addClass("mp-background-success");
+            }
+            if (parseInt($("#behaviourDetail").text()) > 0) {
+                $("#behaviourBlock").addClass("mp-background-warning");
+            }
+            if (parseInt($("#behaviourDetail").text()) > 10) {
+                $("#behaviourBlock").addClass("mp-background-danger");
+            }
         }
     </script>
 

@@ -27,5 +27,9 @@ namespace MyPortal.ViewModels
         public IEnumerable<Gender> Genders { get; set; }
         public IEnumerable<ProfileCommentBank> CommentBanks { get; set; }
         public PersonDocumentUpload Upload { get; set; }
+        public bool HasAttendaceData { get; set; }
+        public double? Attendance { get; set; }
+        public int AchievementCount { get; set; }
+        public int BehaviourCount { get; set; }
     }
 }

@@ -32,7 +32,7 @@ namespace MyPortal.Processes
             return achievementPoints - behaviourPoints;
         }
 
-        public static int GetAchievementCount(int studentId, int academicYearId, MyPortalDbContext context)
+        public static int GetAchievementIncidentCount(int studentId, int academicYearId, MyPortalDbContext context)
         {
             var student = context.Students.SingleOrDefault(x => x.Id == studentId);
 
@@ -53,7 +53,7 @@ namespace MyPortal.Processes
             return posPoints;
         }
 
-        public static int GetBehaviourCount(int studentId, int academicYearId, MyPortalDbContext context)
+        public static int GetBehaviourIncidentCount(int studentId, int academicYearId, MyPortalDbContext context)
         {
             var student = context.Students.SingleOrDefault(x => x.Id == studentId);
 
@@ -68,10 +68,66 @@ namespace MyPortal.Processes
 
             if (negPoints < 0)
             {
-                throw new BadRequestException("Cannot have negative achievement count");
+                throw new BadRequestException("Cannot have negative behaviour incident count");
             }
 
             return negPoints;
+        }
+
+        public static int GetAchievementPointsCount(int studentId, int academicYearId, MyPortalDbContext context)
+        {
+            var student = context.Students.SingleOrDefault(x => x.Id == studentId);
+
+            if (student == null)
+            {
+                throw new EntityNotFoundException("Student not found");
+            }
+
+            var points = 0;
+
+            var list =
+                context.BehaviourAchievements.Where(x =>
+                    x.AcademicYearId == academicYearId && x.StudentId == studentId).ToList();
+
+            if (list.Any())
+            {
+                points = list.Sum(x => x.Points);
+            }
+
+            if (points < 0)
+            {
+                throw new BadRequestException("Cannot have negative achievement points count");
+            }
+
+            return points;
+        }
+
+        public static int GetBehaviourPointsCount(int studentId, int academicYearId, MyPortalDbContext context)
+        {
+            var student = context.Students.SingleOrDefault(x => x.Id == studentId);
+
+            if (student == null)
+            {
+                throw new EntityNotFoundException("Student not found");
+            }
+
+            var points = 0;
+
+            var list =
+                context.BehaviourIncidents.Where(x =>
+                    x.AcademicYearId == academicYearId && x.StudentId == studentId).ToList();
+
+            if (list.Any())
+            {
+                points = list.Sum(x => x.Points);
+            }
+
+            if (points < 0)
+            {
+                throw new BadRequestException("Cannot have negative behaviour points count");
+            }
+
+            return points;
         }
     }
 }
