@@ -27,7 +27,6 @@ namespace MyPortal.Models.Database
 
         public string FaIcon { get; set; }
 
-        [Required]
         [StringLength(10)]
         public string HexColour { get; set; }
         public bool System { get; set; }

@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Models.Database;
 using MyPortal.Processes;
+using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
 {
@@ -144,6 +145,24 @@ namespace MyPortal.Controllers.Api
                 .OrderByDescending(x => x.Date)
                 .ToList()
                 .Select(Mapper.Map<ProfileLog, ProfileLogDto>);
+        }
+
+        [HttpPost]
+        [Route("api/profiles/logs/dataGrid/get/{studentId}")]
+        public IHttpActionResult GetLogsForDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
+        {
+            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var logs = _context.ProfileLogs.Where(x => x.AcademicYearId == academicYearId && x.StudentId == studentId)
+                .OrderByDescending(x => x.Date).ToList().Select(Mapper.Map<ProfileLog, ProfileLogDto>);
+
+            var result = logs.PerformDataOperations(dm);
+
+            if (!dm.RequiresCounts)
+            {
+                return Json(result);
+            }
+
+            return Json(new { result = result.Items, count = result.Count });
         }
 
         /// <summary>

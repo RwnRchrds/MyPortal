@@ -527,13 +527,13 @@
 
                     },
                     {
-                        data: "observer.lastname",
+                        data: "observer.person.lastname",
                         render: function(data, type, observation) {
-                            return observation.observer.title +
+                            return observation.observer.person.title +
                                 " " +
-                                observation.observer.firstName.substring(0, 1) +
+                                observation.observer.person.firstName.substring(0, 1) +
                                 " " +
-                                observation.observer.lastName;
+                                observation.observer.person.lastName;
                         }
                     },
                     {
@@ -857,9 +857,9 @@
                         var divData = "<option value=" +
                             data.responseJSON[i].id +
                             ">" +
-                            data.responseJSON[i].lastName +
+                            data.responseJSON[i].person.lastName +
                             ", " +
-                            data.responseJSON[i].firstName +
+                            data.responseJSON[i].person.firstName +
                             "</option>";
 
                         $(divData).appendTo("#newObserverSelect");
@@ -886,9 +886,9 @@
                         var divData = "<option value=" +
                             data.responseJSON[i].id +
                             ">" +
-                            data.responseJSON[i].lastName +
+                            data.responseJSON[i].person.lastName +
                             ", " +
-                            data.responseJSON[i].firstName +
+                            data.responseJSON[i].person.firstName +
                             "</option>";
 
                         $(divData).appendTo("#editObserverSelect");

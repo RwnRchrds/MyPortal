@@ -67,8 +67,18 @@
 
 .mp-btn-action-right { width: 41px; }
 
+.mp-btn-action {
+    width: 41px;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
 
 .mp-btn-top { width: 131px; }
+
+.mp-btn-table {
+    margin-bottom: 8px;
+}
 
 
 .mp-table-condensed { border-spacing: 50px 0; width: 1%; white-space: nowrap;  }

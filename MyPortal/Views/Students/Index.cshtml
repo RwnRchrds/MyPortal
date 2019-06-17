@@ -182,11 +182,11 @@
                     {
                         data: "author.code",
                         render: function(data, type, log) {
-                            return log.author.title +
+                            return log.author.person.title +
                                 " " +
-                                log.author.firstName.substring(0, 1) +
+                                log.author.person.firstName.substring(0, 1) +
                                 " " +
-                                log.author.lastName;
+                                log.author.person.lastName;
                         }
                     },
                     {
