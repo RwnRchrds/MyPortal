@@ -9,6 +9,7 @@ using MyPortal.Dtos;
 using MyPortal.Models;
 using MyPortal.Models.Database;
 using MyPortal.Processes;
+using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
 {
@@ -130,6 +131,24 @@ namespace MyPortal.Controllers.Api
                 .Where(x => x.IsGeneral)
                 .ToList()
                 .Select(Mapper.Map<Document, DocumentDto>);
+        }
+
+        [HttpPost]
+        [Route("api/documents/personal/dataGrid/get/{personId}")]
+        [Authorize]
+        public IHttpActionResult GetDocumentsForPerson([FromBody] DataManagerRequest dm, [FromUri] int personId)
+        {
+            var documents = _context.PersonDocuments.Where(x => x.PersonId == personId && !x.Document.Deleted)
+                .OrderByDescending(x => x.Document.Date).ToList().Select(Mapper.Map<PersonDocument, PersonDocumentDto>);
+
+            var result = documents.PerformDataOperations(dm);
+
+            if (!dm.RequiresCounts)
+            {
+                return Json(result);
+            }
+
+            return Json(new { result = result.Items, count = result.Count });
         }
 
         /// <summary>

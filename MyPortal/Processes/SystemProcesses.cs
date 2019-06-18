@@ -81,5 +81,8 @@ namespace MyPortal.Processes
 
             return new ApiResponse<T> {Count = count, Items = dataSource};
         }
+
+        #region Extension Methods
+        #endregion
     }
 }

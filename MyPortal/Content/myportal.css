@@ -1,21 +1,37 @@
 ﻿/*---MyPortal Custom Styles---*/
 
 /*Log Table Background Colours*/
-.mp-log-academic-support { background-color: #a4dae8; }
+.mp-log-academic-support {
+    background-color: #cef5ff;
+}
 
-.mp-log-behaviour { background-color: #ed7171; }
+.mp-log-behaviour {
+    background-color: #ffa3a3;
+}
 
-.mp-log-report { background-color: #f9f4a4; }
+.mp-log-report {
+    background-color: #fffbbf;
+}
 
-.mp-log-praise { background-color: #99e8a1 }
+.mp-log-praise {
+    background-color: #bfffc5
+}
 
-.mp-log-sen { background-color: #e6baff; }
+.mp-log-sen {
+    background-color: #eed1ff;
+}
 
-.mp-log-student-feed { background-color: #ffd07f; }
+.mp-log-student-feed {
+    background-color: #ffe4b7;
+}
 
-.mp-log-tutor-note { background-color: #ffa0d6; }
+.mp-log-tutor-note {
+    background-color: #ffc1e4;
+}
 
-.mp-log-medical-event { background-color: #dee0d9; }
+.mp-log-medical-event {
+    background-color: #c9ffee;
+}
 
 
 /*Certificate Table Background Colours*/

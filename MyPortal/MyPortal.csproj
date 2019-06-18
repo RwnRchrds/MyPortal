@@ -800,6 +800,8 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\moment.min.js" />
+    <Content Include="Scripts\myportal.js" />
     <Content Include="Scripts\MyPortal\FinanceNavBar.js" />
     <Content Include="Scripts\MyPortal\NavBar.js" />
     <Content Include="Scripts\MyPortal\StudentNavBar.js" />

@@ -21,11 +21,11 @@ namespace MyPortal.Dtos
 
         public int AcademicYearId { get; set; }
 
-        [Required]
         public string Message { get; set; }
 
-        [Column(TypeName = "date")]
         public DateTime Date { get; set; }
+
+        public bool Deleted { get; set; }
 
         public virtual StaffMemberDto Author { get; set; }
 

@@ -55,5 +55,11 @@ namespace MyPortal.Processes
         {
             return student.Person.LastName + ", " + student.Person.FirstName;
         }
+
+        public static string GetStaffDisplayName(StaffMember staffMember)
+        {
+            return staffMember.Person.Title + staffMember.Person.FirstName.Substring(0, 1) +
+                   staffMember.Person.LastName;
+        }
     }
 }

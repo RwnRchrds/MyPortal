@@ -26,6 +26,8 @@ namespace MyPortal.Models.Database
 
         public DateTime Date { get; set; }
 
+        public bool Deleted { get; set; }
+
         public virtual StaffMember Author { get; set; }
 
         public virtual Student CoreStudent { get; set; }

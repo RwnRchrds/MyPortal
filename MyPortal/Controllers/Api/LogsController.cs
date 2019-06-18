@@ -100,7 +100,8 @@ namespace MyPortal.Controllers.Api
                 return Content(HttpStatusCode.NotFound, "Log does not exist");
             }
 
-            _context.ProfileLogs.Remove(logInDb);
+            logInDb.Deleted = true; //Flag log as deleted instead of removing from database.
+            //_context.ProfileLogs.Remove(logInDb);
             _context.SaveChanges();
 
             return Ok("Log deleted");
@@ -152,7 +153,7 @@ namespace MyPortal.Controllers.Api
         public IHttpActionResult GetLogsForDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
-            var logs = _context.ProfileLogs.Where(x => x.AcademicYearId == academicYearId && x.StudentId == studentId)
+            var logs = _context.ProfileLogs.Where(x => x.AcademicYearId == academicYearId && x.StudentId == studentId && !x.Deleted)
                 .OrderByDescending(x => x.Date).ToList().Select(Mapper.Map<ProfileLog, ProfileLogDto>);
 
             var result = logs.PerformDataOperations(dm);
