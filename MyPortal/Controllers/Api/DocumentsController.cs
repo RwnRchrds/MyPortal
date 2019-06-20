@@ -6,6 +6,7 @@ using System.Web.Http;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
+using MyPortal.Dtos.GridDtos;
 using MyPortal.Models;
 using MyPortal.Models.Database;
 using MyPortal.Processes;
@@ -139,7 +140,7 @@ namespace MyPortal.Controllers.Api
         public IHttpActionResult GetDocumentsForPerson([FromBody] DataManagerRequest dm, [FromUri] int personId)
         {
             var documents = _context.PersonDocuments.Where(x => x.PersonId == personId && !x.Document.Deleted)
-                .OrderByDescending(x => x.Document.Date).ToList().Select(Mapper.Map<PersonDocument, PersonDocumentDto>);
+                .OrderByDescending(x => x.Document.Date).ToList().Select(Mapper.Map<PersonDocument, GridPersonDocumentDto>);
 
             var result = documents.PerformDataOperations(dm);
 

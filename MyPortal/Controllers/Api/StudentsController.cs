@@ -10,7 +10,7 @@ using System.Web.Http.Results;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
-using MyPortal.Dtos.SpecialDtos;
+using MyPortal.Dtos.GridDtos;
 using MyPortal.Models;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
@@ -344,7 +344,7 @@ namespace MyPortal.Controllers.Api
         [Route("api/people/students/get/dataGrid/all")]
         public IHttpActionResult GetStudentsForDataGrid([FromBody] DataManagerRequest dm)
         {
-            var students = _context.Students.OrderBy(x => x.Person.LastName).ToList().Select(Mapper.Map<Student, StudentSearchDto>);
+            var students = _context.Students.OrderBy(x => x.Person.LastName).ToList().Select(Mapper.Map<Student, GridStudentDto>);
 
             var result = students.PerformDataOperations(dm);
 

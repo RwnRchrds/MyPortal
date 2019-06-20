@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace MyPortal.Dtos.SpecialDtos
+﻿namespace MyPortal.Dtos.GridDtos
 {
-    public class StudentSearchDto
+    public class GridStudentDto
     {
         public int Id { get; set; }
         public string DisplayName { get; set; }

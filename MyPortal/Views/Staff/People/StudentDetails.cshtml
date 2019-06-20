@@ -196,11 +196,11 @@
             }).Columns(col =>
             {
                 col.Field("Date").HeaderText("Date").Template("#logDateTemplate").Width("110").Add();
-                col.Field("AuthorId").HeaderText("Author").Template("#logAuthorTemplate").Width("150").Add();
-                col.Field("ProfileLogType.Name").HeaderText("Log Type").Template("#logTypeTemplate").Width("150").Add();
+                col.Field("AuthorName").HeaderText("Author").Template("#logAuthorTemplate").Width("150").Add();
+                col.Field("LogTypeName").HeaderText("Log Type").Template("#logTypeTemplate").Width("150").Add();
                 col.Field("Message").HeaderText("Message").Width("400").Template("#logMessageTemplate").Add();
                 col.HeaderText("Actions").Template("#logActionsTemplate").Width("170").Add();
-            }).AllowPaging(false).RowDataBound("logRowDataBound").EnableHover(false).AllowTextWrap().TextWrapSettings(wrap => { wrap.WrapMode(WrapMode.Content); }).GridLines(GridLine.Both).Render()
+            }).AllowPaging(false).EnableHover(false).AllowTextWrap().TextWrapSettings(wrap => { wrap.WrapMode(WrapMode.Content); }).GridLines(GridLine.Both).RowDataBound("logRowDataBound").Render()
 
         </div>
     </div>
@@ -215,23 +215,13 @@
             <button type="button" class="btn btn-success mp-btn-table" data-toggle="modal" data-target="#NewDocumentModal">
                 <i class="fa fa-plus-circle"></i> New Document
             </button>
-            @*<table class="table table-sm table-bordered mp-table mp-document-table mp-table-link" id="documents" data-student-id="@Model.Student.Id">
-                    <thead>
-                        <tr>
-                            <th>Description</th>
-                            <th>Date</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                </table>*@
-
             @Html.EJS().Grid("documents").DataSource(dataManager =>
             {
                 dataManager.Url("/api/documents/personal/dataGrid/get/" + Model.Student.Person.Id).CrossDomain(false).Adaptor("UrlAdaptor");
             }).Columns(col =>
             {
-                col.Field("Document.Description").HeaderText("Description").Template("#docsDescriptionTemplate").Width("300").Add();
-                col.Field("Document.Date").HeaderText("Date").Template("#docsDateTemplate").Width("200").Add();
+                col.Field("Description").HeaderText("Description").Template("#docsDescriptionTemplate").Width("700").Add();
+                col.Field("Date").HeaderText("Date").Template("#docsDateTemplate").Width("110").Add();
                 col.HeaderText("Actions").Template("#logActionsTemplate").Width("170").Add();
             }).AllowPaging(false).EnableHover(false).GridLines(GridLine.Both).Render()
 
@@ -581,53 +571,6 @@
                     loadComments();
                 });
 
-            //$("#documents").DataTable({
-            //    ajax: {
-            //        url: "/api/students/documents/fetch/" + $("#documents").attr("data-student-id"),
-            //        dataSrc: "",
-            //        method: "GET"
-            //    },
-            //    columns: [
-            //        {
-            //            data: "document.description",
-            //            render: function(data, type, document) {
-            //                return "<a href='" +
-            //                    document.document.url +
-            //                    "' target='_blank'>" +
-            //                    document.document.description +
-            //                    "</a>";
-            //            }
-
-            //        },
-            //        {
-            //            data: "document.date",
-            //            render: function(data) {
-            //                var date = new Date(data);
-            //                return date.toLocaleDateString();
-            //            }
-            //        },
-            //        {
-            //            data: "id",
-            //            render: function(data) {
-            //                return "<button type='button' class='btn btn-xs btn-warning mp-btn-action-left js-edit' data-document-id=" +
-            //                    data +
-            //                    "><i class=\"far fa-edit\"></i></button> " +
-            //                    "<button type='button' class='btn btn-xs btn-danger mp-btn-action-right js-delete' data-document-id=" +
-            //                    data +
-            //                    "><i class=\"far fa-trash-alt\"></i></button>";
-            //            }
-            //        }
-            //    ],
-            //    paging: false,
-            //    ordering: false,
-            //    searching: false,
-            //    responsive: true,
-            //    info: false,
-            //    "language": {
-            //        "emptyTable": "No documents to display"
-            //    }
-            //});
-
             //Open Form When Edit Log Button Clicked
             $("#logs").on("click",
                 ".js-edit",
@@ -817,10 +760,6 @@
             }
         }
 
-        function getInitial(firstName) {
-            return firstName.substring(0, 1);
-        }
-
         function formatDate(data) {
             var date = new Date(data);
             return moment(date).format("DD MMM YYYY");
@@ -876,28 +815,28 @@
         }
 
         function logRowDataBound(args) {
-            if (args.data['ProfileLogType'].Name === "Academic Support") {
+            if (args.data['LogTypeName'] === "Academic Support") {
                 args.row.classList.add("mp-log-academic-support");
             }
-            if (args.data['ProfileLogType'].Name === "Behaviour Log") {
+            if (args.data['LogTypeName'] === "Behaviour Log") {
                 args.row.classList.add("mp-log-behaviour");
             }
-            if (args.data['ProfileLogType'].Name === "Report") {
+            if (args.data['LogTypeName'] === "Report") {
                 args.row.classList.add("mp-log-report");
             }
-            if (args.data['ProfileLogType'].Name === "Praise") {
+            if (args.data['LogTypeName'] === "Praise") {
                 args.row.classList.add("mp-log-praise");
             }
-            if (args.data['ProfileLogType'].Name === "SEN Note") {
+            if (args.data['LogTypeName'] === "SEN Note") {
                 args.row.classList.add("mp-log-sen");
             }
-            if (args.data['ProfileLogType'].Name === "Tutor Note") {
+            if (args.data['LogTypeName'] === "Tutor Note") {
                 args.row.classList.add("mp-log-tutor-note");
             }
-            if (args.data['ProfileLogType'].Name === "Medical Event") {
+            if (args.data['LogTypeName'] === "Medical Event") {
                 args.row.classList.add("mp-log-medical-event");
             }
-            if (args.data['ProfileLogType'].Name === "Student Feed") {
+            if (args.data['LogTypeName'] === "Student Feed") {
                 args.row.classList.add("mp-log-student-feed");
             }
         }
@@ -916,7 +855,7 @@
 
     <script type="text/x-jsrender" id="logAuthorTemplate">
         <div>
-            ${Author.Person.Title} ${getInitial(Author.Person.FirstName)} ${Author.Person.LastName}
+            ${AuthorName}
         </div>
     </script>
 
@@ -928,7 +867,7 @@
 
     <script type="text/x-jsrender" id="logTypeTemplate">
         <div>
-            ${ProfileLogType.Name}
+            ${LogTypeName}
         </div>
     </script>
 
@@ -951,14 +890,14 @@
 
     <script type="text/x-jsrender" id="docsDescriptionTemplate">
         <div>
-            <a href="${Document.Url}" target="_blank">${Document.Description}</a>
+            <b><a href="${Url}" target="_blank">${Description}</a></b>
         </div>
     </script>
 
 
     <script type="text/x-jsrender" id="docsDateTemplate">
         <div>
-            <a href="${formatDate(Document.Date.toString())}"
+            ${formatDate(Date.toString())}
         </div>
     </script>
 

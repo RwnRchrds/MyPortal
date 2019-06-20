@@ -7,6 +7,7 @@ using System.Web.Http;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
+using MyPortal.Dtos.GridDtos;
 using MyPortal.Models.Database;
 using MyPortal.Processes;
 using Syncfusion.EJ2.Base;
@@ -154,7 +155,7 @@ namespace MyPortal.Controllers.Api
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             var logs = _context.ProfileLogs.Where(x => x.AcademicYearId == academicYearId && x.StudentId == studentId && !x.Deleted)
-                .OrderByDescending(x => x.Date).ToList().Select(Mapper.Map<ProfileLog, ProfileLogDto>);
+                .OrderByDescending(x => x.Date).ToList().Select(Mapper.Map<ProfileLog, GridLogDto>);
 
             var result = logs.PerformDataOperations(dm);
 

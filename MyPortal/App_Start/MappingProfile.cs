@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNet.Identity.EntityFramework;
 using MyPortal.Dtos;
+using MyPortal.Dtos.GridDtos;
 using MyPortal.Dtos.Identity;
 using MyPortal.Dtos.LiteDtos;
-using MyPortal.Dtos.SpecialDtos;
 using MyPortal.Models.Database;
 using MyPortal.Processes;
 
@@ -103,7 +103,7 @@ namespace MyPortal
             CreateMap<FinanceProductType, FinanceProductTypeDto>();
             CreateMap<FinanceProductTypeDto, FinanceProductType>();
 
-            CreateMap<Student, StudentSearchDto>()
+            CreateMap<Student, GridStudentDto>()
                 .ForMember(dest => dest.DisplayName,
                     opts => opts.MapFrom(src => PeopleProcesses.GetStudentDisplayName(src)))
                 .ForMember(dest => dest.HouseName,
@@ -112,6 +112,34 @@ namespace MyPortal
                     opts => opts.MapFrom(src => src.PastoralRegGroup.Name))
                 .ForMember(dest => dest.YearGroupName,
                     opts => opts.MapFrom(src => src.PastoralYearGroup.Name));
+
+            CreateMap<ProfileLog, GridLogDto>()
+                .ForMember(dest => dest.Id,
+                    opts => opts.MapFrom(src => src.Id))
+                .ForMember(dest => dest.AuthorName,
+                    opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.Author)))
+                .ForMember(dest => dest.Date,
+                    opts => opts.MapFrom(src => src.Date))
+                .ForMember(dest => dest.LogTypeName,
+                    opts => opts.MapFrom(src => src.ProfileLogType.Name))
+                .ForMember(dest => dest.Message,
+                    opts => opts.MapFrom(src => src.Message));
+
+            CreateMap<Document, GridDocumentDto>();
+
+            CreateMap<PersonDocument, GridPersonDocumentDto>()
+                .ForMember(dest => dest.Id,
+                    opts => opts.MapFrom(src => src.Document.Id))
+                .ForMember(dest => dest.Approved,
+                    opts => opts.MapFrom(src => src.Document.Approved))
+                .ForMember(dest => dest.Date,
+                    opts => opts.MapFrom(src => src.Document.Date))
+                .ForMember(dest => dest.Description,
+                    opts => opts.MapFrom(src => src.Document.Description))
+                .ForMember(dest => dest.Url,
+                    opts => opts.MapFrom(src => src.Document.Url))
+                .ForMember(dest => dest.PersonDocumentId,
+                    opts => opts.MapFrom(src => src.Id));
         }
     }
 }

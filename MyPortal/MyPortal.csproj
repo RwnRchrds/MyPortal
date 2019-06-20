@@ -306,6 +306,9 @@
     <Compile Include="Dtos\FinanceProductDto.cs" />
     <Compile Include="Dtos\FinanceProductTypeDto.cs" />
     <Compile Include="Dtos\FinanceSaleDto.cs" />
+    <Compile Include="Dtos\GridDtos\GridDocumentDto.cs" />
+    <Compile Include="Dtos\GridDtos\GridLogDto.cs" />
+    <Compile Include="Dtos\GridDtos\GridPersonDocumentDto.cs" />
     <Compile Include="Dtos\LiteDtos\AttendanceRegisterMarkLite.cs" />
     <Compile Include="Dtos\Identity\RoleDto.cs" />
     <Compile Include="Dtos\Identity\UserDto.cs" />
@@ -332,7 +335,7 @@
     <Compile Include="Dtos\SenProvisionTypeDto.cs" />
     <Compile Include="Dtos\SenReviewTypeDto.cs" />
     <Compile Include="Dtos\SenStatusDto.cs" />
-    <Compile Include="Dtos\SpecialDtos\StudentSearchDto.cs" />
+    <Compile Include="Dtos\GridDtos\GridStudentDto.cs" />
     <Compile Include="Dtos\StaffMemberDto.cs" />
     <Compile Include="Dtos\StudentDto.cs" />
     <Compile Include="Dtos\ViewDtos\StudentRegisterMarksDto.cs" />
