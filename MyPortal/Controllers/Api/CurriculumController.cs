@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Web.Http;
 using AutoMapper;
+using Microsoft.Ajax.Utilities;
+using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
-using MyPortal.Dtos.LiteDtos;
 using MyPortal.Models.Database;
 using MyPortal.Models.Exceptions;
 using MyPortal.Models.Misc;
@@ -13,21 +15,43 @@ using MyPortal.Processes;
 
 namespace MyPortal.Controllers.Api
 {
-    [Authorize(Roles = ("Staff"))]
-    public class CurriculumClassesController : ApiController
+    public class CurriculumController : MyPortalApiController
     {
-        private readonly MyPortalDbContext _context;
-
-        public CurriculumClassesController()
+        #region Academic Years
+        [HttpGet]
+        [Route("api/curriculum/academicYears/get/all")]
+        public IEnumerable<CurriculumAcademicYearDto> GetAcademicYears()
         {
-            _context = new MyPortalDbContext();
+            return _context.CurriculumAcademicYears.ToList().OrderByDescending(x => x.FirstDate)
+                .Select(Mapper.Map<CurriculumAcademicYear, CurriculumAcademicYearDto>);
         }
 
-        public CurriculumClassesController(MyPortalDbContext context)
+        [HttpGet]
+        [Route("api/curriculum/academicYears/get/byId")]
+        public CurriculumAcademicYearDto GetAcademicYear(int id)
         {
-            _context = context;
+            var academicYear = _context.CurriculumAcademicYears.SingleOrDefault(x => x.Id == id);
+
+            if (academicYear == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return Mapper.Map<CurriculumAcademicYear, CurriculumAcademicYearDto>(academicYear);
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Staff")]
+        [Route("api/curriculum/academicYears/select")]    
+        public IHttpActionResult ChangeSelectedAcademicYear(CurriculumAcademicYear year)
+        {
+            User.ChangeSelectedAcademicYear(year.Id);
+            return Ok("Selected academic year changed");
+        }
+
+        #endregion
+
+        #region Classes
         [HttpGet]
         [Route("api/curriculum/classes/byTeacher/{teacherId}/{dateString}")]
         public IEnumerable<CurriculumClassPeriodDto> GetClassesByTeacher(int teacherId, int dateString)
@@ -427,5 +451,318 @@ namespace MyPortal.Controllers.Api
 
             return Ok(enrolment.Student.Person.LastName + ", " + enrolment.Student.Person.FirstName + " has been unenrolled from " + enrolment.CurriculumClass.Name);
         }
+
+        #endregion
+
+        #region Subjects
+        [HttpPost]
+        [Route("api/subjects/new")]
+        public IHttpActionResult CreateSubject(CurriculumSubject data)
+        {
+            if (data.Name.IsNullOrWhiteSpace() || !ModelState.IsValid)
+            {
+                return Content(HttpStatusCode.BadRequest, "Invalid data");
+            }
+
+            var subjectToAdd = data;
+
+            _context.CurriculumSubjects.Add(subjectToAdd);
+            _context.SaveChanges();
+            return Ok("Subject created");
+        }
+
+        [HttpDelete]
+        [Route("api/subjects/delete/{subjectId}")]
+        public IHttpActionResult DeleteSubject(int subjectId)
+        {
+            var subjectInDb = _context.CurriculumSubjects.SingleOrDefault(x => x.Id == subjectId);
+
+            if (subjectInDb == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Subject not found");
+            }
+
+            _context.AssessmentResults.RemoveRange(subjectInDb.AssessmentResults);
+            _context.CurriculumSubjects.Remove(subjectInDb);
+            _context.SaveChanges();
+            return Ok("Subject deleted");
+        }
+
+        [HttpGet]
+        [Route("api/subjects/byId/{subjectId}")]
+        public CurriculumSubjectDto GetSubject(int subjectId)
+        {
+            var subject = _context.CurriculumSubjects.SingleOrDefault(x => x.Id == subjectId);
+
+            if (subject == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return Mapper.Map<CurriculumSubject, CurriculumSubjectDto>(subject);
+        }
+
+        [HttpGet]
+        [Route("api/subjects/all")]
+        public IEnumerable<CurriculumSubjectDto> GetSubjects()
+        {
+            return _context.CurriculumSubjects.OrderBy(x => x.Name).ToList().Select(Mapper.Map<CurriculumSubject, CurriculumSubjectDto>);
+        }
+
+        [HttpPost]
+        [Route("api/subjects/update")]
+        public IHttpActionResult UpdateSubject(CurriculumSubject data)
+        {
+            var subjectInDb = _context.CurriculumSubjects.SingleOrDefault(x => x.Id == data.Id);
+
+            if (subjectInDb == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Subject not found");
+            }
+
+            subjectInDb.Name = data.Name;
+            subjectInDb.LeaderId = data.LeaderId;
+            _context.SaveChanges();
+            return Ok("Subject updated");
+        }
+
+        #endregion
+
+        #region Study Topics
+        [HttpPost]
+        [Route("api/studyTopics/create")]
+        public IHttpActionResult CreateStudyTopic(CurriculumStudyTopic studyTopic)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Content(HttpStatusCode.BadRequest, "Invalid data");
+            }
+
+            _context.CurriculumStudyTopics.Add(studyTopic);
+            _context.SaveChanges();
+
+            return Ok("Study topic added");
+        }
+
+        [HttpDelete]
+        [Route("api/studyTopics/delete/{id}")]
+        public IHttpActionResult DeleteStudyTopic(int id)
+        {
+            var studyTopic = _context.CurriculumStudyTopics.SingleOrDefault(x => x.Id == id);
+
+            if (studyTopic == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Study topic not found");
+            }
+
+            _context.CurriculumStudyTopics.Remove(studyTopic);
+            _context.SaveChanges();
+
+            return Ok("Study topic deleted");
+        }
+
+        [HttpGet]
+        [Route("api/studyTopics/hasLessonPlans/{id}")]
+        public bool HasLessonPlans(int id)
+        {
+            var studyTopic = _context.CurriculumStudyTopics.SingleOrDefault(x => x.Id == id);
+
+            if (studyTopic == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return studyTopic.LessonPlans.Any();
+        }
+        
+        [HttpGet]
+        [Route("api/studyTopics/fetch/byId/{id}")]
+        public CurriculumStudyTopicDto GetStudyTopic(int id)
+        {
+            var studyTopic = _context.CurriculumStudyTopics.SingleOrDefault(x => x.Id == id);
+
+            if (studyTopic == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return Mapper.Map<CurriculumStudyTopic, CurriculumStudyTopicDto>(studyTopic);
+        }
+
+        [HttpGet]
+        [Route("api/studyTopics/fetch/all")]
+        public IEnumerable<CurriculumStudyTopicDto> GetStudyTopics()
+        {
+            return _context.CurriculumStudyTopics.ToList().Select(Mapper.Map<CurriculumStudyTopic, CurriculumStudyTopicDto>);
+        }
+
+        [HttpPost]
+        [Route("api/studyTopics/update")]
+        public IHttpActionResult UpdateStudyTopic(CurriculumStudyTopic studyTopic)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Content(HttpStatusCode.BadRequest, "Invalid data");
+            }
+
+            var studyTopicInDb = _context.CurriculumStudyTopics.SingleOrDefault(x => x.Id == studyTopic.Id);
+
+            if (studyTopicInDb == null)
+            {
+                return Content(HttpStatusCode.BadRequest, "Study topic not found");
+            }
+
+            studyTopicInDb.Name = studyTopic.Name;
+            studyTopicInDb.SubjectId = studyTopic.SubjectId;
+            studyTopicInDb.YearGroupId = studyTopic.YearGroupId;
+
+            _context.SaveChanges();
+
+            return Ok("Study topic updated");
+        }
+
+        #endregion
+
+        #region Lesson Plans
+        /// <summary>
+        /// Gets all lesson plans from the database (in alphabetical order).
+        /// </summary>
+        /// <returns>Returns a list of DTOs of all lesson plans from the database.</returns>
+        [HttpGet]
+        [Route("api/lessonPlans/all")]
+        public IEnumerable<CurriculumLessonPlanDto> GetLessonPlans()
+        {
+            return _context.CurriculumLessonPlans.OrderBy(x => x.Title).ToList().Select(Mapper.Map<CurriculumLessonPlan, CurriculumLessonPlanDto>);
+        }
+
+        /// <summary>
+        /// Gets lesson plan from the database with the specified ID.
+        /// </summary>
+        /// <param name="id">ID of the lesson plan to fetch from the database.</param>
+        /// <returns></returns>
+        /// <exception cref="HttpResponseException"></exception>
+        [HttpGet]
+        [Route("api/lessonPlans/byId/{id}")]
+        public CurriculumLessonPlanDto GetLessonPlanById(int id)
+        {
+            var lessonPlan = _context.CurriculumLessonPlans.SingleOrDefault(x => x.Id == id);
+
+            if (lessonPlan == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return Mapper.Map<CurriculumLessonPlan, CurriculumLessonPlanDto>(lessonPlan);
+        }
+
+        /// <summary>
+        /// Gets lesson plans from the specified study topic.
+        /// </summary>
+        /// <param name="id">The ID of the study topic to get lesson plans from.</param>
+        /// <returns>Returns a list of DTOs of lesson plans from the specified study topic.</returns>
+        [HttpGet]
+        [Route("api/lessonPlans/byTopic/{id}")]
+        public IEnumerable<CurriculumLessonPlanDto> GetLessonPlansByTopic(int id)
+        {
+            return _context.CurriculumLessonPlans.Where(x => x.StudyTopicId == id).OrderBy(x => x.Title).ToList()
+                .Select(Mapper.Map<CurriculumLessonPlan, CurriculumLessonPlanDto>);
+        }
+
+        /// <summary>
+        /// Adds a lesson plan to the database.
+        /// </summary>
+        /// <param name="plan">The lesson plan to add to the database</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
+        [HttpPost]
+        [Route("api/lessonPlans/create")]
+        public IHttpActionResult CreateLessonPlan(CurriculumLessonPlan plan)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Content(HttpStatusCode.BadRequest, "Invalid data");
+            }
+            
+            var authorId = plan.AuthorId;
+
+            var author = new StaffMember();
+
+            if (authorId == 0)
+            {
+                var userId = User.Identity.GetUserId();
+                author = _context.StaffMembers.SingleOrDefault(x => x.Person.UserId == userId);
+                if (author == null)
+                {
+                    return Content(HttpStatusCode.BadRequest, "User does not have a personnel profile");
+                }
+            }
+
+            if (authorId != 0)
+            {
+                author = _context.StaffMembers.SingleOrDefault(x => x.Id == authorId);
+            }
+
+            if (author == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Staff member not found");
+            }
+
+            plan.AuthorId = author.Id;
+
+            _context.CurriculumLessonPlans.Add(plan);
+            _context.SaveChanges();
+
+            return Ok("Lesson plan added");
+        }
+
+        /// <summary>
+        /// Updates the lesson plan specified.
+        /// </summary>
+        /// <param name="plan">Lesson plan to update in the database.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
+        [HttpPost]
+        [Route("api/lessonPlans/update")]
+        public IHttpActionResult UpdateLessonPlan(CurriculumLessonPlan plan)
+        {
+            var planInDb = _context.CurriculumLessonPlans.SingleOrDefault(x => x.Id == plan.Id);
+
+            if (planInDb == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Lesson plan not found");
+            }
+
+            planInDb.Title = plan.Title;
+            planInDb.PlanContent = plan.PlanContent;
+            planInDb.StudyTopicId = plan.StudyTopicId;
+            planInDb.LearningObjectives = plan.LearningObjectives;
+            planInDb.Homework = plan.Homework;
+
+            _context.SaveChanges();
+
+            return Ok("Lesson plan updated");
+        }
+
+        /// <summary>
+        /// Deletes the specified lesson plan from the database.
+        /// </summary>
+        /// <param name="id">The ID of the lesson plan to delete.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
+        [HttpDelete]
+        [Route("api/lessonPlans/delete/{id}")]
+        public IHttpActionResult DeleteLessonPlan(int id)
+        {
+            var plan = _context.CurriculumLessonPlans.SingleOrDefault(x => x.Id == id);
+
+            if (plan == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Lesson plan not found");
+            }
+
+            _context.CurriculumLessonPlans.Remove(plan);
+            _context.SaveChanges();
+
+            return Ok("Lesson plan deleted");
+        }
+
+        #endregion
     }
 }

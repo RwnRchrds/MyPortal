@@ -270,7 +270,7 @@ namespace MyPortal.Controllers
         [System.Web.Mvc.Route("People/Students")]
         public ActionResult Students()
         {
-            return View("~/Views/Staff/People/Students.cshtml");
+            return View("~/Views/Staff/People/Students/Students.cshtml");
         }
 
         // HTTP POST request for creating students using HTML form
@@ -283,10 +283,10 @@ namespace MyPortal.Controllers
                 var viewModel = new NewStudentViewModel
                 {
                     Student = student,
-                    RegGroups = new RegGroupsController().GetRegGroups().ToList().Select(Mapper.Map<PastoralRegGroupDto, PastoralRegGroup>),
-                    YearGroups = new YearGroupsController().GetYearGroups().ToList().Select(Mapper.Map<PastoralYearGroupDto, PastoralYearGroup>)
+                    RegGroups = _context.PastoralRegGroups.ToList(),
+                    YearGroups = _context.PastoralYearGroups.ToList()
                 };
-                return View("~/Views/Staff/People/NewStudent.cshtml", viewModel);
+                return View("~/Views/Staff/People/Students/NewStudent.cshtml", viewModel);
             }
 
             _context.Students.Add(student);
@@ -310,7 +310,7 @@ namespace MyPortal.Controllers
                 YearGroups = yearGroups
             };
 
-            return View("~/Views/Staff/People/NewStudent.cshtml", viewModel);
+            return View("~/Views/Staff/People/Students/NewStudent.cshtml", viewModel);
         }
 
         // HTTP POST request for updating student details using HTML form
@@ -395,7 +395,7 @@ namespace MyPortal.Controllers
                 Attendance = attendance
             };
 
-            return View("~/Views/Staff/People/StudentDetails.cshtml", viewModel);
+            return View("~/Views/Staff/People/Students/StudentDetails.cshtml", viewModel);
         }
 
         //Menu | Students | X | [View Results] --> Student Results (for Student X)
@@ -426,7 +426,34 @@ namespace MyPortal.Controllers
                 Subjects = subjects
             };
 
-            return View("~/Views/Staff/People/StudentResults.cshtml", viewModel);
+            return View("~/Views/Staff/People/Students/StudentResults.cshtml", viewModel);
+        }
+
+        [System.Web.Mvc.Route("People/Students/{id}/Behaviour")]
+        public ActionResult StudentBehaviour(int id)
+        {
+            var student = _context.Students.SingleOrDefault(x => x.Id == id);
+
+            if (student == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            var achievementTypes = _context.BehaviourAchievementTypes.OrderBy(x => x.Description).ToList();
+
+            var behaviourTypes = _context.BehaviourTypes.OrderBy(x => x.Description).ToList();
+
+            var behaviourLocations = _context.BehaviourLocations.OrderBy(x => x.Description).ToList();
+
+            var viewModel = new StudentBehaviourManagementViewModel
+            {
+                AchievementTypes = achievementTypes,
+                BehaviourTypes = behaviourTypes,
+                BehaviourLocations = behaviourLocations,
+                Student = student
+            };
+
+            return View("~/Views/Staff/People/Students/BehaviourManagement.cshtml", viewModel);
         }
 
         // Menu | Staff --> Staff List (All)
@@ -436,7 +463,7 @@ namespace MyPortal.Controllers
         public ActionResult Staff()
         {
             var viewModel = new NewStaffViewModel();
-            return View("~/Views/Staff/People/Staff.cshtml", viewModel);
+            return View("~/Views/Staff/People/Staff/Staff.cshtml", viewModel);
         }
 
         // Menu | Staff | X --> Student Details (for Staff X)
@@ -476,7 +503,7 @@ namespace MyPortal.Controllers
                 CurrentStaffId = currentStaffId
             };
 
-            return View("~/Views/Staff/People/StaffDetails.cshtml", viewModel);
+            return View("~/Views/Staff/People/Staff/StaffDetails.cshtml", viewModel);
         }
 
         #endregion

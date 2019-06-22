@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Microsoft.Ajax.Utilities;
 using MyPortal.Dtos.LiteDtos;
 using MyPortal.Models.Database;
 using MyPortal.Models.Exceptions;
@@ -99,6 +100,23 @@ namespace MyPortal.Processes
         public static bool HasEnrolments(this CurriculumClass currClass)
         {
             return currClass.Enrolments.Any();
+        }
+
+        public static bool IsInAcademicYear(this DateTime date, MyPortalDbContext context, int academicYearId)
+        {
+            var academicYear = context.CurriculumAcademicYears.SingleOrDefault(x => x.Id == academicYearId);
+
+            if (academicYear == null)
+            {
+                throw new EntityNotFoundException("Academic year not found.");
+            }
+
+            if (date >= academicYear.FirstDate && date <= academicYear.LastDate)
+            {
+                return true;
+            }
+
+            return false;
         }
         #endregion
     }

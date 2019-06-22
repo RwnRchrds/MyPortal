@@ -329,7 +329,7 @@ namespace MyPortal.Models.Database
 
             modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.BehaviourIncidents)
-                .WithRequired(e => e.RecordedByStaff)
+                .WithRequired(e => e.RecordedBy)
                 .HasForeignKey(e => e.RecordedById)
                 .WillCascadeOnDelete(false);
 

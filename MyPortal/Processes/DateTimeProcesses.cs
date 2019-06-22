@@ -10,6 +10,16 @@ namespace MyPortal.Processes
             int diff = (7 + (dt.DayOfWeek - DayOfWeek.Monday)) % 7;
             return dt.AddDays(-1 * diff).Date;
         }
+
+        public static bool IsBetween(this DateTime dt, DateTime start, DateTime end)
+        {
+            if (dt >= start && dt <= end)
+            {
+                return true;
+            }
+
+            return false;
+        }
         #endregion
     }
 }

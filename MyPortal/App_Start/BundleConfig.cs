@@ -18,7 +18,8 @@ namespace MyPortal
                 "~/Scripts/datatables/datatables.bootstrap4.min.js",
                 "~/Scripts/datatables/datatables.responsive.min.js",
                 "~/Scripts/datatables/responsive.bootstrap4.min.js",
-                "~/Scripts/moment.min.js"
+                "~/Scripts/moment.min.js",
+                "~/Scripts/myportal.js"
             ));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(

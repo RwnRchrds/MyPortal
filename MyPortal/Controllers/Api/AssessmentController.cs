@@ -1,34 +1,152 @@
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Web.Http;
 using AutoMapper;
 using Microsoft.Ajax.Utilities;
 using MyPortal.Dtos;
-using MyPortal.Models;
 using MyPortal.Models.Database;
 
 namespace MyPortal.Controllers.Api
 {
-    public class ResultSetsController : ApiController
+    public class AssessmentController : MyPortalApiController
     {
-        private readonly MyPortalDbContext _context;
-
-        public ResultSetsController()
+        #region Results
+        #region Results Import
+        
+        /// <summary>
+        /// Uploads results from a CSV import file.
+        /// </summary>
+        /// <param name="resultSetId">The result set to insert results into.</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
+        [Route("api/results/import/{resultSetId}")]
+        public IHttpActionResult UploadResults(int resultSetId)
         {
-            _context = new MyPortalDbContext();
+            if (!File.Exists(@"C:\MyPortal\Files\Results\import.csv"))
+            {
+                return Content(HttpStatusCode.NotFound, "File not found");
+            }
+
+            var stream = new FileStream(@"C:\MyPortal\Files\Results\import.csv", FileMode.Open);
+            var subjects = _context.CurriculumSubjects.OrderBy(x => x.Name).ToList();
+            var numResults = 0;
+            var resultSet = _context.AssessmentResultSets.SingleOrDefault(x => x.Id == resultSetId);
+
+            if (resultSet == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Result set not found");
+            }
+
+            using (var reader = new StreamReader(stream))
+            {
+                reader.ReadLine();
+                while (!reader.EndOfStream)
+                {
+                    var line = reader.ReadLine();
+                    if (line == null)
+                    {
+                        continue;
+                    }
+
+                    var values = line.Split(',');
+                    for (var i = 0; i < subjects.Count; i++)
+                    {
+                        var studentMisId = values[4];
+                        var student = _context.Students.SingleOrDefault(x => x.MisId == studentMisId);
+                        if (student == null)
+                        {
+                            continue;
+                        }
+
+                        var result = new AssessmentResult
+                        {
+                            StudentId = student.Id,
+                            ResultSetId = resultSet.Id,
+                            SubjectId = subjects[i].Id,
+                            Value = values[5 + i]
+                        };
+
+                        if (result.Value.Equals(""))
+                        {
+                            continue;
+                        }
+
+                        _context.AssessmentResults.Add(result);
+                        numResults++;
+                    }
+                }
+            }
+
+            stream.Dispose();
+
+            var guid = Guid.NewGuid();
+            File.Move(@"C:/MyPortal/Files/Results/import.csv", @"C:/MyPortal/Files/Results/" + guid + "_IMPORTED.csv");
+
+            _context.SaveChanges();
+            return Ok(numResults + " results found and imported");
         }
 
-        public ResultSetsController(MyPortalDbContext context)
+            #endregion               
+
+        #region Individual Student Results Management
+
+        /// <summary>
+        /// Adds result to student.
+        /// </summary>
+        /// <param name="data">Result to add</param>
+        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
+        [HttpPost]
+        [Route("api/results/create")]
+        public IHttpActionResult AddResult(AssessmentResultDto data)
         {
-            _context = context;
+            if (!ModelState.IsValid)
+            {
+                return Content(HttpStatusCode.BadRequest, "Invalid data");
+            }
+            
+            var resultInDb = _context.AssessmentResults.SingleOrDefault(x =>
+                x.StudentId == data.StudentId && x.SubjectId == data.SubjectId && x.ResultSetId == data.ResultSetId);
+
+            if (resultInDb != null)
+            {
+                return Content(HttpStatusCode.BadRequest, "Result already exists");
+            }
+
+            _context.AssessmentResults.Add(Mapper.Map<AssessmentResultDto, AssessmentResult>(data));
+            _context.SaveChanges();
+
+            return Ok("Result added");
         }
 
         /// <summary>
-        /// Adds a new result set.
+        /// Gets results for a student from the specified result set.
         /// </summary>
-        /// <param name="data">The result set to add.</param>
-        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
+        /// <param name="student">The ID of the student to fetch results for.</param>
+        /// <param name="resultSet">The ID of the result set to fetch results from.</param>
+        /// <returns>Returns a list of DTOs of results for a student for the specified result set.</returns>
+        [HttpGet]
+        [Route("api/results/fetch")]
+        public IEnumerable<AssessmentResultDto> GetResults(int student, int resultSet)
+        {
+            var results = _context.AssessmentResults
+                .Where(r => r.StudentId == student && r.ResultSetId == resultSet)
+                .ToList()
+                .Select(Mapper.Map<AssessmentResult, AssessmentResultDto>);
+
+            return results;
+        }
+
+        #endregion
+
+        #region Gradebook Results Management
+
+        #endregion
+        #endregion
+
+        #region ResultSets
         [HttpPost]
         [Route("api/resultSets/new")]
         public IHttpActionResult CreateResultSet(AssessmentResultSet data)
@@ -193,5 +311,7 @@ namespace MyPortal.Controllers.Api
             _context.SaveChanges();
             return Ok("Result set updated");
         }
+
+        #endregion
     }
 }

@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Runtime.Serialization;
-using System.Web;
+using System.Net.Http;
 using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
-using MyPortal.Dtos.LiteDtos;
 using MyPortal.Dtos.ViewDtos;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
@@ -15,21 +13,9 @@ using MyPortal.Processes;
 
 namespace MyPortal.Controllers.Api
 {
-    [Authorize(Roles = ("Staff"))]
-    public class AttendanceMarksController : ApiController
+    public class AttendanceController : MyPortalApiController
     {
-        private readonly MyPortalDbContext _context;
-
-        public AttendanceMarksController()
-        {
-            _context = new MyPortalDbContext();
-        }
-
-        public AttendanceMarksController(MyPortalDbContext context)
-        {
-            _context = context;
-        }
-
+        #region Marks
         [HttpGet]
         [Route("api/attendance/marks/loadRegister/{weekId}/{classPeriodId}")]
         public IEnumerable<StudentRegisterMarksDto> LoadRegister(int weekId, int classPeriodId)
@@ -102,5 +88,72 @@ namespace MyPortal.Controllers.Api
 
             return summary;
         }
+
+        #endregion
+
+        #region Periods
+        [HttpGet]
+        [Route("api/attendance/periods/get/all")]
+        public IEnumerable<AttendancePeriodDto> GetAllPeriods()
+        {
+            var dayIndex = new List<string> {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+            return _context.AttendancePeriods.ToList().OrderBy(x => dayIndex.IndexOf(x.Weekday))
+                .ThenBy(x => x.StartTime).Select(Mapper.Map<AttendancePeriod, AttendancePeriodDto>);
+        }
+
+        [HttpGet]
+        public AttendancePeriodDto GetPeriod(int periodId)
+        {
+            var period = _context.AttendancePeriods.SingleOrDefault(x => x.Id == periodId);
+
+            if (period == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return Mapper.Map<AttendancePeriod, AttendancePeriodDto>(period);
+        }
+
+        #endregion Periods
+
+        #region Weeks
+        [HttpPost]
+        [Route("api/attendance/weeks/createBulk")]
+        public IHttpActionResult CreateWeeks(CurriculumAcademicYear academicYear)
+        {
+            var academicYearInDb = _context.CurriculumAcademicYears.SingleOrDefault(x => x.Id == academicYear.Id);
+
+            if (academicYearInDb == null)
+            {
+                return Content(HttpStatusCode.BadRequest, "Academic Year Not Found");
+            }
+
+            var pointer = academicYear.FirstDate;
+            while (pointer < academicYear.LastDate)
+            {
+                var weekBeginning = pointer.StartOfWeek();
+
+                if (_context.AttendanceWeeks.Any(x => x.Beginning == weekBeginning))
+                {
+                    continue;
+                }
+
+                var attendanceWeek = new AttendanceWeek()
+                {
+                    AcademicYearId = academicYear.Id,
+                    Beginning = weekBeginning
+                };
+
+                _context.AttendanceWeeks.Add(attendanceWeek);
+                
+                pointer = weekBeginning.AddDays(7);
+            }
+
+            _context.SaveChanges();
+
+            return Ok("Attendance weeks created");
+        }
+
+        #endregion Weeks
     }
 }

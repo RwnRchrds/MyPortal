@@ -15,20 +15,8 @@ using Syncfusion.EJ2.Base;
 namespace MyPortal.Controllers.Api
 {
     [Authorize]
-    public class DocumentsController : ApiController
+    public class DocumentsController : MyPortalApiController
     {
-        private readonly MyPortalDbContext _context;
-
-        public DocumentsController()
-        {
-            _context = new MyPortalDbContext();
-        }
-
-        public DocumentsController(MyPortalDbContext context)
-        {
-            _context = context;
-        }
-
         /// <summary>
         /// Adds a general document to the database.
         /// </summary>

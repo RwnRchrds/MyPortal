@@ -140,6 +140,22 @@ namespace MyPortal
                     opts => opts.MapFrom(src => src.Document.Url))
                 .ForMember(dest => dest.PersonDocumentId,
                     opts => opts.MapFrom(src => src.Id));
+
+            CreateMap<BehaviourAchievement, GridAchievementDto>()
+                .ForMember(dest => dest.Location,
+                    opts => opts.MapFrom(src => src.BehaviourLocation.Description))
+                .ForMember(dest => dest.TypeName,
+                    opts => opts.MapFrom(src => src.BehaviourAchievementType.Description))
+                .ForMember(dest => dest.RecordedBy,
+                    opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.RecordedBy)));
+
+            CreateMap<BehaviourIncident, GridIncidentDto>()
+                .ForMember(dest => dest.Location,
+                    opts => opts.MapFrom(src => src.BehaviourLocation.Description))
+                .ForMember(dest => dest.TypeName,
+                    opts => opts.MapFrom(src => src.BehaviourType.Description))
+                .ForMember(dest => dest.RecordedBy,
+                    opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.RecordedBy)));
         }
     }
 }

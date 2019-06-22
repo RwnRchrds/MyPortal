@@ -2,36 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Microsoft.Ajax.Utilities;
-using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using MyPortal.Dtos.Identity;
 using MyPortal.Models;
-using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
-using MyPortal.Processes;
 using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers.Api
 {
-    [Authorize]
-    public class UsersController : ApiController
+    public class AdminController : MyPortalIdentityApiController
     {
-        private readonly MyPortalDbContext _context;
-        private readonly ApplicationDbContext _identity;
-        private readonly UserManager<ApplicationUser> _userManager;
-
-        public UsersController()
-        {
-            _identity = new ApplicationDbContext();
-            var store = new UserStore<ApplicationUser>(_identity);
-            _userManager = new UserManager<ApplicationUser>(store);
-            _context = new MyPortalDbContext();
-        }
-
+        #region Users
         //Add a role to a user
         [HttpPost]
         [Route("api/users/addRole")]
@@ -361,5 +347,20 @@ namespace MyPortal.Controllers.Api
 
             return BadRequest();
         }
+
+        #endregion
+
+        #region Roles
+        /// <summary>
+        /// Gets all roles
+        /// </summary>
+        /// <returns>Returns a list of DTOs of all roles.</returns>
+        [HttpGet]
+        [Route("api/roles")]
+        public IEnumerable<RoleDto> GetRoles()
+        {
+            return _identity.Roles.ToList().Select(Mapper.Map<IdentityRole, RoleDto>);
+        }
+        #endregion
     }
 }

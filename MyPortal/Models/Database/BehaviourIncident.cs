@@ -40,7 +40,7 @@ namespace MyPortal.Models.Database
 
         public virtual CurriculumAcademicYear CurriculumAcademicYear { get; set; }
 
-        public virtual StaffMember RecordedByStaff { get; set; }
+        public virtual StaffMember RecordedBy { get; set; }
 
         public virtual Student Student { get; set; }
     }

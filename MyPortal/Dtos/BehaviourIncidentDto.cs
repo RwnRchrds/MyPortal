@@ -37,7 +37,7 @@ namespace MyPortal.Dtos
 
         public virtual CurriculumAcademicYearDto CurriculumAcademicYear { get; set; }
 
-        public virtual StaffMemberDto RecordedByStaff { get; set; }
+        public virtual StaffMemberDto RecordedBy { get; set; }
 
         public virtual StudentDto Student { get; set; }
     }

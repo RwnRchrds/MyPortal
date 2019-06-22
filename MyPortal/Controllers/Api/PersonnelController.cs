@@ -1,26 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Web.Http;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
-using MyPortal.Models;
 using MyPortal.Models.Database;
 using MyPortal.Processes;
 
 namespace MyPortal.Controllers.Api
 {
-    [Authorize]
-    public class TrainingCertificatesController : ApiController
+    public class PersonnelController : MyPortalApiController
     {
-        private readonly MyPortalDbContext _context;
-
-        public TrainingCertificatesController()
-        {
-            _context = new MyPortalDbContext();
-        }
-
+        #region Training Certificates
         [HttpPost]
         [Route("api/staff/certificates/create")]
         public IHttpActionResult CreateTrainingCertificate(PersonnelTrainingCertificate trainingCertificateDto)
@@ -133,5 +127,74 @@ namespace MyPortal.Controllers.Api
 
             return Ok("Certificate updated");
         }
+
+        #endregion
+
+        #region Training Courses
+        [HttpDelete]
+        [Route("api/courses/remove/{courseId}")]
+        public IHttpActionResult DeleteCourse(int courseId)
+        {
+            var courseInDb = _context.PersonnelTrainingCourses.Single(x => x.Id == courseId);
+
+            if (courseInDb == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Training course not found");
+            }
+
+            if (courseInDb.PersonnelTrainingCertificates.Any())
+            {
+                return Content(HttpStatusCode.BadRequest, "Cannot delete course that has issued certificates");
+            }
+
+            _context.PersonnelTrainingCourses.Remove(courseInDb);
+            _context.SaveChanges();
+
+            return Ok("Training course deleted");
+        }
+
+
+        [HttpGet]
+        [Route("api/courses/fetch/{courseId}")]
+        public PersonnelTrainingCourseDto GetCourse(int courseId)
+        {
+            var courseInDb = _context.PersonnelTrainingCourses.Single(x => x.Id == courseId);
+
+            if (courseInDb == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return Mapper.Map<PersonnelTrainingCourse, PersonnelTrainingCourseDto>(courseInDb);
+        }
+
+        [HttpGet]
+        [Route("api/courses")]
+        public IEnumerable<PersonnelTrainingCourseDto> GetCourses()
+        {
+            return _context.PersonnelTrainingCourses
+                .ToList()
+                .Select(Mapper.Map<PersonnelTrainingCourse, PersonnelTrainingCourseDto>);
+        }
+
+        [HttpPost]
+        [Route("api/courses/edit")]
+        public IHttpActionResult UpdateCourse(PersonnelTrainingCourse course)
+        {
+            var courseInDb = _context.PersonnelTrainingCourses.Single(x => x.Id == course.Id);
+
+            if (courseInDb == null)
+            {
+                return Content(HttpStatusCode.NotFound, "Training course not found");
+            }
+
+            courseInDb.Code = course.Code;
+            courseInDb.Description = course.Description;
+
+            _context.SaveChanges();
+
+            return Ok("Training course updated");
+        }
+        #endregion
     }
 }

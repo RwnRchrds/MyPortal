@@ -87,7 +87,7 @@ namespace MyPortal.Processes
 
             var list =
                 context.BehaviourAchievements.Where(x =>
-                    x.AcademicYearId == academicYearId && x.StudentId == studentId).ToList();
+                    x.AcademicYearId == academicYearId && x.StudentId == studentId && !x.Deleted).ToList();
 
             if (list.Any())
             {
@@ -115,7 +115,7 @@ namespace MyPortal.Processes
 
             var list =
                 context.BehaviourIncidents.Where(x =>
-                    x.AcademicYearId == academicYearId && x.StudentId == studentId).ToList();
+                    x.AcademicYearId == academicYearId && x.StudentId == studentId && !x.Deleted).ToList();
 
             if (list.Any())
             {
