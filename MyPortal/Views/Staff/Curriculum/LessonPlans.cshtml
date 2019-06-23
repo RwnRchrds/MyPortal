@@ -222,11 +222,11 @@
                     {
                         data: "author.code",
                         render: function(data, type, plan) {
-                            return plan.author.title +
+                            return plan.author.person.title +
                                 " " +
-                                plan.author.firstName.substring(0, 1) +
+                                plan.author.person.firstName.substring(0, 1) +
                                 " " +
-                                plan.author.lastName;
+                                plan.author.person.lastName;
                         }
                     },
                     {
