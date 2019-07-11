@@ -12,6 +12,7 @@ using MyPortal.Dtos;
 using MyPortal.Dtos.GridDtos;
 using MyPortal.Models.Database;
 using MyPortal.Models.Exceptions;
+using MyPortal.Models.Misc;
 using MyPortal.Processes;
 using Syncfusion.EJ2.Base;
 
@@ -238,5 +239,15 @@ namespace MyPortal.Controllers.Api
 
             return Ok("Incident deleted");
         }
+
+        #region Reports
+
+        [HttpGet]
+        [Route("api/behaviour/reports/incidents/byType")]
+        public IEnumerable<ChartData> BehaviourIncidentsByType()
+        {
+            return BehaviourProcesses.GetReport_BehaviourIncidentsByType(_context);
+        }
+        #endregion
     }
 }

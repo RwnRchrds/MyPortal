@@ -1,10 +1,10 @@
 ﻿using System;
+using MyPortal.Models.Misc;
 
 namespace MyPortal.Processes
 {
     public static class DateTimeProcesses
     {
-        #region Extension Methods
         public static DateTime StartOfWeek(this DateTime dt)
         {
             int diff = (7 + (dt.DayOfWeek - DayOfWeek.Monday)) % 7;
@@ -20,6 +20,14 @@ namespace MyPortal.Processes
 
             return false;
         }
-        #endregion
+
+        public static ProcessResponse<DateTime> GetDateTimeFromFormattedInt(int formattedDate)
+        {
+            int year = formattedDate / 10000;
+            int month = ((formattedDate - (10000 * year)) / 100);
+            int day = (formattedDate - (10000 * year) - (100 * month));
+
+            return new ProcessResponse<DateTime>(ResponseType.Ok, null, new DateTime(year, month, day));
+        }
     }
 }

@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using MyPortal.Dtos;
 using MyPortal.Dtos.LiteDtos;
+using MyPortal.Dtos.ViewDtos;
 using MyPortal.Models.Database;
 using MyPortal.Models.Exceptions;
 using MyPortal.Models.Misc;
@@ -10,12 +13,6 @@ namespace MyPortal.Processes
 {
     public static class AttendanceProcesses
     {
-
-        static AttendanceProcesses()
-        {
-                       
-        }        
-
         public static bool VerifyAttendanceCodes(this MyPortalDbContext context, ListContainer<AttendanceRegisterMark> register)
         {
             var codesVerified = true;
@@ -94,14 +91,14 @@ namespace MyPortal.Processes
             return codeInDb?.AttendanceRegisterCodeMeaning;
         }
 
-        public static AttendanceSummary GetSummary(MyPortalDbContext context, int studentId, int academicYearId, bool asPercentage = false)
+        public static ProcessResponse<AttendanceSummary> GetSummary(int studentId, int academicYearId, MyPortalDbContext context, bool asPercentage = false)
         {
             var marksForStudent = context.AttendanceMarks.Where(x =>
                 x.AttendanceWeek.AcademicYearId == academicYearId && x.StudentId == studentId);
 
             if (!marksForStudent.Any())
             {
-                throw new BadRequestException("No attendance data.");
+                throw new ProcessException("No attendance data.", ExceptionType.BadRequest);
             }
 
             var summary = new AttendanceSummary();
@@ -112,7 +109,7 @@ namespace MyPortal.Processes
 
                 if (meaning == null)
                 {
-                    throw new EntityNotFoundException("Attendance meaning not found for code [" + mark.Mark + "]");
+                    continue;
                 }
 
                 switch (meaning.Code)
@@ -143,11 +140,125 @@ namespace MyPortal.Processes
                 summary.ConvertToPercentage();
             }
 
-            return summary;
+            return new ProcessResponse<AttendanceSummary>(ResponseType.Ok, null, summary);
         }
 
-        #region Extension Methods
-       
-        #endregion
+        public static ProcessResponse<IEnumerable<StudentRegisterMarksDto>> GetMarksForRegister(int academicYearId, int weekId,
+            int classPeriodId, MyPortalDbContext context)
+        {
+            var attendanceWeek =
+                context.AttendanceWeeks.SingleOrDefault(x => x.Id == weekId && x.AcademicYearId == academicYearId);
+
+            if (attendanceWeek == null)
+            {
+                return new ProcessResponse<IEnumerable<StudentRegisterMarksDto>>(ResponseType.NotFound, "Attendance week not found", null);
+            }
+
+            var currentPeriod = context.CurriculumClassPeriods.SingleOrDefault(x => x.Id == classPeriodId);
+
+            if (currentPeriod == null)
+            {
+                return new ProcessResponse<IEnumerable<StudentRegisterMarksDto>>(ResponseType.NotFound, "Period not found", null);
+            }
+
+            var periodsInDay = context.AttendancePeriods.Where(x => x.Weekday == currentPeriod.AttendancePeriod.Weekday).ToList();
+
+            var markList = new List<StudentRegisterMarksDto>();
+
+            foreach (var enrolment in currentPeriod.CurriculumClass.Enrolments)
+            {
+                var markObject = new StudentRegisterMarksDto();
+                var student = enrolment.Student;
+                markObject.Student = Mapper.Map<Student, StudentDto>(student);
+                var marks = new List<AttendanceRegisterMark>();
+
+                foreach (var period in periodsInDay)
+                {
+                    var mark = GetAttendanceMark(context, attendanceWeek, period, student);
+
+                    marks.Add(mark);
+                }
+
+                var liteMarks = PrepareLiteMarkList(context, marks, true);
+
+                markObject.Marks = liteMarks;
+                markList.Add(markObject);
+            }
+
+            return new ProcessResponse<IEnumerable<StudentRegisterMarksDto>>(ResponseType.Ok, null,
+                markList.ToList().OrderBy(x => x.Student.Person.LastName));
+        }
+
+        public static ProcessResponse<IEnumerable<AttendancePeriodDto>> GetAllPeriods(MyPortalDbContext context)
+        {
+            var dayIndex = new List<string> {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+            return new ProcessResponse<IEnumerable<AttendancePeriodDto>>(ResponseType.Ok, null,
+                context.AttendancePeriods.ToList().OrderBy(x => dayIndex.IndexOf(x.Weekday))
+                    .ThenBy(x => x.StartTime).Select(Mapper.Map<AttendancePeriod, AttendancePeriodDto>));
+        }
+
+        public static ProcessResponse<AttendancePeriodDto> GetPeriod(int periodId, MyPortalDbContext context)
+        {
+            var period = context.AttendancePeriods.SingleOrDefault(x => x.Id == periodId);
+
+            if (period == null)
+            {
+                return new ProcessResponse<AttendancePeriodDto>(ResponseType.NotFound, "Period not found", null);
+            }
+
+            return new ProcessResponse<AttendancePeriodDto>(ResponseType.Ok, null,
+                Mapper.Map<AttendancePeriod, AttendancePeriodDto>(period));
+        }
+
+        public static ProcessResponse<object> CreateAttendanceWeeksForYear(int academicYearId,
+            MyPortalDbContext context)
+        {
+            var academicYear = context.CurriculumAcademicYears.SingleOrDefault(x => x.Id == academicYearId);
+
+            if (academicYear == null)
+            {
+                return new ProcessResponse<object>(ResponseType.NotFound, "Academic year not found", null);
+            }
+
+            var pointer = academicYear.FirstDate;
+            while (pointer < academicYear.LastDate)
+            {
+                var weekBeginning = pointer.StartOfWeek();
+
+                if (context.AttendanceWeeks.Any(x => x.Beginning == weekBeginning))
+                {
+                    continue;
+                }
+
+                var attendanceWeek = new AttendanceWeek()
+                {
+                    AcademicYearId = academicYear.Id,
+                    Beginning = weekBeginning
+                };
+
+                context.AttendanceWeeks.Add(attendanceWeek);
+                
+                pointer = weekBeginning.AddDays(7);
+            }
+
+            context.SaveChanges();
+
+            return new ProcessResponse<object>(ResponseType.Ok, "Attendance weeks added for academic year", null);
+        }
+
+        public static ProcessResponse<AttendanceWeekDto> GetWeekByDate(int academicYearId, DateTime date, MyPortalDbContext context)
+        {
+            var weekBeginning = date.StartOfWeek();
+
+            var selectedWeek = context.AttendanceWeeks.SingleOrDefault(x => x.Beginning == weekBeginning && x.AcademicYearId == academicYearId);
+
+            if (selectedWeek == null)
+            {
+                return new ProcessResponse<AttendanceWeekDto>(ResponseType.NotFound, "Attendance week not found", null);
+            }
+
+            return new ProcessResponse<AttendanceWeekDto>(ResponseType.Ok, null,
+                Mapper.Map<AttendanceWeek, AttendanceWeekDto>(selectedWeek));
+        }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using MyPortal.Models.Database;
 using MyPortal.Models.Exceptions;
+using MyPortal.Models.Misc;
 
 namespace MyPortal.Processes
 {
@@ -128,6 +129,35 @@ namespace MyPortal.Processes
             }
 
             return points;
+        }
+
+        public static IEnumerable<ChartData> GetReport_BehaviourIncidentsByType(MyPortalDbContext context)
+        {
+            var recordedBehaviourTypes = context.BehaviourTypes.Where(x => x.BehaviourIncidents.Any()).ToList();
+            var chartData = new List<ChartData>();
+
+            foreach (var behaviourType in recordedBehaviourTypes)
+            {
+                var dataPoint = new ChartData(behaviourType.Description, behaviourType.BehaviourIncidents.Count);
+                chartData.Add(dataPoint);
+            }
+
+            return chartData;
+        }
+
+        public static IEnumerable<ChartData> GetReport_AchievementsByType(MyPortalDbContext context)
+        {
+            var recordedAchievementTypes =
+                context.BehaviourAchievementTypes.Where(x => x.BehaviourAchievements.Any()).ToList();
+            var chartData = new List<ChartData>();
+
+            foreach (var achievementType in recordedAchievementTypes)
+            {
+                var dataPoint = new ChartData(achievementType.Description, achievementType.BehaviourAchievements.Count);
+                chartData.Add(dataPoint);
+            }
+
+            return chartData;
         }
     }
 }

@@ -15,67 +15,23 @@ namespace MyPortal.Controllers.Api
 {
     public class AttendanceController : MyPortalApiController
     {
-        #region Marks
         [HttpGet]
         [Route("api/attendance/marks/loadRegister/{weekId}/{classPeriodId}")]
         public IEnumerable<StudentRegisterMarksDto> LoadRegister(int weekId, int classPeriodId)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
-            var attendanceWeek =
-                _context.AttendanceWeeks.SingleOrDefault(x => x.Id == weekId && x.AcademicYearId == academicYearId);
-
-            if (attendanceWeek == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            var currentPeriod = _context.CurriculumClassPeriods.SingleOrDefault(x => x.Id == classPeriodId);
-
-            if (currentPeriod == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            var periodsInDay = _context.AttendancePeriods.Where(x => x.Weekday == currentPeriod.AttendancePeriod.Weekday).ToList();
-
-            var markList = new List<StudentRegisterMarksDto>();
-
-            foreach (var enrolment in currentPeriod.CurriculumClass.Enrolments)
-            {
-                var markObject = new StudentRegisterMarksDto();
-                var student = enrolment.Student;
-                markObject.Student = Mapper.Map<Student, StudentDto>(student);
-                var marks = new List<AttendanceRegisterMark>();
-
-                foreach (var period in periodsInDay)
-                {
-                    var mark = AttendanceProcesses.GetAttendanceMark(_context, attendanceWeek, period, student);
-
-                    marks.Add(mark);
-                }
-
-                var liteMarks = AttendanceProcesses.PrepareLiteMarkList(_context, marks, true);
-
-                markObject.Marks = liteMarks;
-                markList.Add(markObject);
-            }
-
-            return markList.ToList().OrderBy(x => x.Student.Person.LastName);
+            return PrepareResponseObject(
+                AttendanceProcesses.GetMarksForRegister(academicYearId, weekId, classPeriodId, _context));
         }
 
         [HttpGet]
         [Route("api/attendance/summary/raw/{studentId}")]
-        public AttendanceSummary GetRawAttendanceSummary(int studentId, int? academicYearId)
+        public AttendanceSummary GetRawAttendanceSummary(int studentId)
         {
-            if (academicYearId == null)
-            {
-                academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
-            }
+            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
-            var summary = AttendanceProcesses.GetSummary(_context, studentId, (int) academicYearId);
-
-            return summary;
+            return PrepareResponseObject(AttendanceProcesses.GetSummary(studentId, academicYearId, _context));
         }
 
         [HttpGet]
@@ -84,76 +40,38 @@ namespace MyPortal.Controllers.Api
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
-            var summary = AttendanceProcesses.GetSummary(_context, studentId, academicYearId, true);
-
-            return summary;
+            return PrepareResponseObject(AttendanceProcesses.GetSummary(studentId, academicYearId, _context, true));
         }
 
-        #endregion
-
-        #region Periods
         [HttpGet]
         [Route("api/attendance/periods/get/all")]
         public IEnumerable<AttendancePeriodDto> GetAllPeriods()
         {
-            var dayIndex = new List<string> {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
-            return _context.AttendancePeriods.ToList().OrderBy(x => dayIndex.IndexOf(x.Weekday))
-                .ThenBy(x => x.StartTime).Select(Mapper.Map<AttendancePeriod, AttendancePeriodDto>);
+            return PrepareResponseObject(AttendanceProcesses.GetAllPeriods(_context));
         }
 
         [HttpGet]
         public AttendancePeriodDto GetPeriod(int periodId)
         {
-            var period = _context.AttendancePeriods.SingleOrDefault(x => x.Id == periodId);
-
-            if (period == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            return Mapper.Map<AttendancePeriod, AttendancePeriodDto>(period);
+            return PrepareResponseObject(AttendanceProcesses.GetPeriod(periodId, _context));
         }
 
-        #endregion Periods
-
-        #region Weeks
         [HttpPost]
-        [Route("api/attendance/weeks/createBulk")]
-        public IHttpActionResult CreateWeeks(CurriculumAcademicYear academicYear)
+        [Route("api/attendance/weeks/createForYear/{academicYearId:int}")]
+        public IHttpActionResult CreateWeeks([FromUri] int academicYearId)
         {
-            var academicYearInDb = _context.CurriculumAcademicYears.SingleOrDefault(x => x.Id == academicYear.Id);
-
-            if (academicYearInDb == null)
-            {
-                return Content(HttpStatusCode.BadRequest, "Academic Year Not Found");
-            }
-
-            var pointer = academicYear.FirstDate;
-            while (pointer < academicYear.LastDate)
-            {
-                var weekBeginning = pointer.StartOfWeek();
-
-                if (_context.AttendanceWeeks.Any(x => x.Beginning == weekBeginning))
-                {
-                    continue;
-                }
-
-                var attendanceWeek = new AttendanceWeek()
-                {
-                    AcademicYearId = academicYear.Id,
-                    Beginning = weekBeginning
-                };
-
-                _context.AttendanceWeeks.Add(attendanceWeek);
-                
-                pointer = weekBeginning.AddDays(7);
-            }
-
-            _context.SaveChanges();
-
-            return Ok("Attendance weeks created");
+            return PrepareResponse(AttendanceProcesses.CreateAttendanceWeeksForYear(academicYearId, _context));
         }
 
-        #endregion Weeks
+        [HttpGet]
+        [Route("api/attendance/weeks/get/byDate/{dateString}")]
+        public AttendanceWeekDto GetWeekByDate(int dateString)
+        {
+            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+
+            var date = DateTimeProcesses.GetDateTimeFromFormattedInt(dateString).ResponseObject;
+
+            return PrepareResponseObject(AttendanceProcesses.GetWeekByDate(academicYearId, date, _context));
+        }
     }
 }

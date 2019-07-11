@@ -356,12 +356,14 @@
     <Compile Include="Models\Database\SenProvisionType.cs" />
     <Compile Include="Models\Database\SenReviewType.cs" />
     <Compile Include="Models\Database\SenStatus.cs" />
-    <Compile Include="Models\Exceptions\BadRequestException.cs" />
-    <Compile Include="Models\Exceptions\EntityNotFoundException.cs" />
-    <Compile Include="Models\Exceptions\PersonNotFreeException.cs" />
+    <Compile Include="Models\Exceptions\ProcessException.cs" />
     <Compile Include="Models\Misc\ApiResponse.cs" />
     <Compile Include="Models\Misc\AttendanceSummary.cs" />
+    <Compile Include="Models\Misc\ChartData.cs" />
     <Compile Include="Models\Misc\GroupEnrolment.cs" />
+    <Compile Include="Models\Misc\ProcessResponse.cs" />
+    <Compile Include="Processes\AdminProcesses.cs" />
+    <Compile Include="Processes\AssessmentProcesses.cs" />
     <Compile Include="Processes\AttendanceProcesses.cs" />
     <Compile Include="Processes\BehaviourProcesses.cs" />
     <Compile Include="Processes\CurriculumProcesses.cs" />
@@ -422,6 +424,7 @@
     <Compile Include="Models\Misc\UserProfile.cs" />
     <Compile Include="Models\Misc\UserRoleModel.cs" />
     <Compile Include="Models\Validation\ActiveGradeSet.cs" />
+    <Compile Include="Processes\ValidationProcesses.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\AccountsViewModel.cs" />

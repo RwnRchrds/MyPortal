@@ -144,11 +144,11 @@
                     {
                         data: "teacher.id",
                         render: function(data, type, currClass) {
-                            return currClass.teacher.title +
+                            return currClass.teacher.person.title +
                                 " " +
-                                currClass.teacher.firstName.substring(0, 1) +
+                                currClass.teacher.person.firstName.substring(0, 1) +
                                 " " +
-                                currClass.teacher.lastName;
+                                currClass.teacher.person.lastName;
                         }
                     },
                     {

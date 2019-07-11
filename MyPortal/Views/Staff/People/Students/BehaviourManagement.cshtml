@@ -30,9 +30,8 @@
             col.Field("Location").HeaderText("Location").Template("#achievementsLocationTemplate").Add();
             col.Field("Points").HeaderText("Points").Template("#achievementsPointsTemplate").Add();
             col.Field("RecordedBy").HeaderText("Recorded By").Template("#achievementsRecordedByTemplate").Add();
-            col.Field("Comments").HeaderText("Comments").Template("#achievementsCommentsTemplate").Add();
             col.HeaderText("Actions").Template("#achievementsActionsTemplate").Width("170").Add();
-        }).AllowPaging().PageSettings(page => page.PageSize(5)).EnableHover(false).AllowTextWrap().TextWrapSettings(wrap => wrap.WrapMode(WrapMode.Content)).GridLines(GridLine.Both).Render()
+        }).AllowPaging().PageSettings(page => page.PageSize(5)).EnableHover(false).GridLines(GridLine.Both).RowDataBound("achievementRowDataBound").Render()
     </div>
 </div>
 
@@ -53,9 +52,8 @@
             col.Field("Location").HeaderText("Location").Template("#incidentsLocationTemplate").Add();
             col.Field("Points").HeaderText("Points").Template("#incidentsPointsTemplate").Add();
             col.Field("RecordedBy").HeaderText("Recorded By").Template("#incidentsRecordedByTemplate").Add();
-            col.Field("Comments").HeaderText("Comments").Template("#incidentsCommentsTemplate").Add();
             col.HeaderText("Actions").Template("#incidentsActionsTemplate").Width("170").Add();
-        }).AllowPaging().PageSettings(page => page.PageSize(5)).EnableHover(false).AllowTextWrap().TextWrapSettings(wrap => wrap.WrapMode(WrapMode.Content)).GridLines(GridLine.Both).Render()
+        }).AllowPaging().PageSettings(page => page.PageSize(5)).EnableHover(false).GridLines(GridLine.Both).RowDataBound("incidentRowDataBound").Render()
     </div>
 </div>
 
@@ -306,7 +304,7 @@
                             toastr.error("Failed to load incident data");
                         }
                     });
-                    $("#editBehaviourModal").modal('toggle');
+                    $("#editIncidentModal").modal('toggle');
                 });
 
             $("#achievements").on("click",
@@ -390,6 +388,12 @@
         function refreshIncidents() {
             var grid = document.getElementById("behaviour").ej2_instances[0];
             grid.refresh();
+        }
+
+        function achievementRowDataBound(args) {
+        }
+
+        function incidentRowDataBound(args) {
         }
     </script>
 

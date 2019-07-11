@@ -124,11 +124,11 @@
                     {
                         data: "leader.lastName",
                         render: function(data, type, subject) {
-                            return subject.leader.title +
+                            return subject.leader.person.title +
                                 " " +
-                                subject.leader.firstName.substring(0, 1) +
+                                subject.leader.person.firstName.substring(0, 1) +
                                 " " +
-                                subject.leader.lastName;
+                                subject.leader.person.lastName;
                         }
                     },
                     {
