@@ -26,7 +26,8 @@ namespace MyPortal.Controllers.Api
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
-            return BehaviourProcesses.GetBehaviourPoints(studentId, academicYearId, _context);
+            return PrepareResponseObject(
+                BehaviourProcesses.GetBehaviourPointsCount(studentId, academicYearId, _context));
         }
 
         [HttpPost]
@@ -34,30 +35,18 @@ namespace MyPortal.Controllers.Api
         public IHttpActionResult GetAchievementsForDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+
             var achievements =
-                _context.BehaviourAchievements.Where(
-                        x => x.AcademicYearId == academicYearId && x.StudentId == studentId && !x.Deleted).OrderByDescending(x => x.Date).ToList()
-                    .Select(Mapper.Map<BehaviourAchievement, GridAchievementDto>);
+                PrepareResponseObject(BehaviourProcesses.GetAchievementsForGrid(studentId, academicYearId, _context));
 
-            var result = achievements.PerformDataOperations(dm);
-
-            if (!dm.RequiresCounts) return Json(result);
-
-            return Json(new {result = result.Items, count = result.Count});
+            return PrepareDataGridObject(achievements, dm);
         }
 
         [HttpGet]
         [Route("api/behaviour/achievements/get/{id}")]
         public BehaviourAchievementDto GetAchievement(int id)
         {
-            var achievement = _context.BehaviourAchievements.SingleOrDefault(x => x.Id == id);
-
-            if (achievement == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            return Mapper.Map<BehaviourAchievement, BehaviourAchievementDto>(achievement);
+            return PrepareResponseObject(BehaviourProcesses.GetAchievement(id, _context));
         }
 
         [HttpPost]
@@ -65,73 +54,28 @@ namespace MyPortal.Controllers.Api
         public IHttpActionResult CreateAchievement(BehaviourAchievement achievement)
         {
             var userId = User.Identity.GetUserId();
-            var staff = PeopleProcesses.GetStaffFromUserId(userId, _context);
-
-            if (staff == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
+            var staff = PrepareResponseObject(PeopleProcesses.GetStaffFromUserId(userId, _context));
 
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             achievement.AcademicYearId = academicYearId;
-            achievement.Date = DateTime.Today;
             achievement.RecordedById = staff.Id;
-            if (!ModelState.IsValid)
-            {
-                return Content(HttpStatusCode.BadRequest, "Invalid data");
-            }
 
-            if (!achievement.Date.IsInAcademicYear(_context, academicYearId))
-            {
-                return Content(HttpStatusCode.BadRequest, "Specified date is not within the selected academic year");
-            }
-
-            _context.BehaviourAchievements.Add(achievement);
-            _context.SaveChanges();
-
-            return Ok("Achievement added");
+            return PrepareResponse(BehaviourProcesses.CreateAchievement(achievement, _context));
         }
 
         [HttpPost]
         [Route("api/behaviour/achievements/update")]
         public IHttpActionResult UpdateAchievement(BehaviourAchievement achievement)
         {
-            var achievementInDb = _context.BehaviourAchievements.SingleOrDefault(x => x.Id == achievement.Id);
-
-            if (achievementInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Achievement not found");
-            }
-
-            achievementInDb.LocationId = achievement.LocationId;
-            achievementInDb.Comments = achievement.Comments;
-            achievementInDb.Points = achievement.Points;
-            achievementInDb.Resolved = achievement.Resolved;
-            achievementInDb.AchievementTypeId = achievement.AchievementTypeId;
-
-            _context.SaveChanges();
-
-            return Ok("Achievement updated");
+            return PrepareResponse(BehaviourProcesses.UpdateAchievement(achievement, _context));
         }
 
         [HttpDelete]
         [Route("api/behaviour/achievements/delete/{id}")]
         public IHttpActionResult DeleteAchievement(int id)
         {
-            var achievement = _context.BehaviourAchievements.SingleOrDefault(x => x.Id == id);
-
-            if (achievement == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Achievement not found");
-            }
-
-            achievement.Deleted = true;
-
-            //_context.BehaviourAchievements.Remove(achievement);
-            _context.SaveChanges();
-
-            return Ok("Achievement deleted");
+            return PrepareResponse(BehaviourProcesses.DeleteAchievement(id, _context));
         }
 
         [HttpPost]
@@ -140,29 +84,16 @@ namespace MyPortal.Controllers.Api
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             var incidents =
-                _context.BehaviourIncidents.Where(
-                        x => x.AcademicYearId == academicYearId && x.StudentId == studentId && !x.Deleted)
-                    .OrderByDescending(x => x.Date).ToList().Select(Mapper.Map<BehaviourIncident, GridIncidentDto>);
+                PrepareResponseObject(BehaviourProcesses.GetBehaviourIncidentsForGrid(studentId, academicYearId, _context));
 
-            var result = incidents.PerformDataOperations(dm);
-
-            if (!dm.RequiresCounts) return Json(result);
-
-            return Json(new {result = result.Items, count = result.Count});
+            return PrepareDataGridObject(incidents, dm);
         }
 
         [HttpGet]
         [Route("api/behaviour/behaviour/get/{id}")]
         public BehaviourIncidentDto GetBehaviour(int id)
         {
-            var incident = _context.BehaviourIncidents.SingleOrDefault(x => x.Id == id);
-
-            if (incident == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            return Mapper.Map<BehaviourIncident, BehaviourIncidentDto>(incident);
+            return PrepareResponseObject(BehaviourProcesses.GetBehaviourIncident(id, _context));
         }
 
         [HttpPost]
@@ -170,84 +101,34 @@ namespace MyPortal.Controllers.Api
         public IHttpActionResult CreateIncident(BehaviourIncident incident)
         {
             var userId = User.Identity.GetUserId();
-            var staff = PeopleProcesses.GetStaffFromUserId(userId, _context);
-
-            if (staff == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
+            var staff = PrepareResponseObject(PeopleProcesses.GetStaffFromUserId(userId, _context));
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             incident.AcademicYearId = academicYearId;
-            incident.Date = DateTime.Today;
             incident.RecordedById = staff.Id;
 
-            if (!ModelState.IsValid)
-            {
-                return Content(HttpStatusCode.BadRequest, "Invalid data");
-            }
-
-            if (!incident.Date.IsInAcademicYear(_context, academicYearId))
-            {
-                return Content(HttpStatusCode.BadRequest, "Specified date is not within the selected academic year");
-            }
-
-            _context.BehaviourIncidents.Add(incident);
-            _context.SaveChanges();
-
-            return Ok("Incident added");
+            return PrepareResponse(BehaviourProcesses.CreateBehaviourIncident(incident, _context));
         }
 
         [HttpPost]
         [Route("api/behaviour/behaviour/update")]
         public IHttpActionResult UpdateIncident(BehaviourIncident incident)
         {
-            var incidentInDb = _context.BehaviourIncidents.SingleOrDefault(x => x.Id == incident.Id);
-
-            if (incidentInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Achievement not found");
-            }
-
-            incidentInDb.LocationId = incident.LocationId;
-            incidentInDb.Comments = incident.Comments;
-            incidentInDb.Points = incident.Points;
-            incidentInDb.Resolved = incident.Resolved;
-            incidentInDb.BehaviourTypeId = incident.BehaviourTypeId;
-
-            _context.SaveChanges();
-
-            return Ok("Incident updated");
+            return PrepareResponse(BehaviourProcesses.UpdateBehaviourIncident(incident, _context));
         }
 
         [HttpDelete]
         [Route("api/behaviour/behaviour/delete/{id}")]
         public IHttpActionResult DeleteIncident(int id)
         {
-            var incident = _context.BehaviourIncidents.SingleOrDefault(x => x.Id == id);
-
-            if (incident == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Achievement not found");
-            }
-
-            incident.Deleted = true;
-
-            //_context.BehaviourIncidents.Remove(incident);
-            _context.SaveChanges();
-
-            return Ok("Incident deleted");
+            return PrepareResponse(BehaviourProcesses.DeleteBehaviourIncident(id, _context));
         }
-
-        #region Reports
 
         [HttpGet]
         [Route("api/behaviour/reports/incidents/byType")]
         public IEnumerable<ChartData> BehaviourIncidentsByType()
         {
-            return BehaviourProcesses.GetReport_BehaviourIncidentsByType(_context);
+            return PrepareResponseObject(BehaviourProcesses.GetChartData_BehaviourIncidentsByType(_context));
         }
-        #endregion
     }
 }

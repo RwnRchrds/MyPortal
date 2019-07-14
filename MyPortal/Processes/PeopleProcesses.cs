@@ -12,23 +12,23 @@ namespace MyPortal.Processes
 {
     public static class PeopleProcesses
     {
-        public static StaffMember GetStaffFromUserId(string userId, MyPortalDbContext context)
+        public static ProcessResponse<StaffMember> GetStaffFromUserId(string userId, MyPortalDbContext context)
         {
             var person = context.Persons.SingleOrDefault(x => x.UserId == userId);
 
             if (person == null)
             {
-                throw new EntityNotFoundException("Person not found");
+                return new ProcessResponse<StaffMember>(ResponseType.NotFound, "Person not found", null);
             }
 
             var staff = context.StaffMembers.SingleOrDefault(x => x.PersonId == person.Id);
 
             if (staff == null)
             {
-                throw new EntityNotFoundException("Staff member not found");
+                return new ProcessResponse<StaffMember>(ResponseType.NotFound, "Staff record not found", null);
             }
 
-            return staff;
+            return new ProcessResponse<StaffMember>(ResponseType.Ok, null, staff);
         }
 
         public static string GetStudentDisplayName(Student student)
