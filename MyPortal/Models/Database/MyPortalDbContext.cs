@@ -34,7 +34,7 @@ namespace MyPortal.Models.Database
         public virtual DbSet<BehaviourAchievementType> BehaviourAchievementTypes { get; set; }
         public virtual DbSet<BehaviourIncident> BehaviourIncidents { get; set; }
         public virtual DbSet<BehaviourLocation> BehaviourLocations { get; set; }
-        public virtual DbSet<BehaviourType> BehaviourTypes { get; set; }
+        public virtual DbSet<BehaviourIncidentType> BehaviourIncidentTypes { get; set; }
         public virtual DbSet<CommunicationLog> CommunicationLogs { get; set; }
         public virtual DbSet<CommunicationType> CommunicationTypes { get; set; }
         public virtual DbSet<Document> Documents { get; set; }
@@ -49,9 +49,9 @@ namespace MyPortal.Models.Database
         public virtual DbSet<StaffMember> StaffMembers { get; set; }
         public virtual DbSet<Student> Students { get; set; }
         public virtual DbSet<CurriculumAcademicYear> CurriculumAcademicYears { get; set; }
-        public virtual DbSet<CurriculumClassEnrolment> CurriculumClassEnrolments { get; set; }
+        public virtual DbSet<CurriculumEnrolment> CurriculumEnrolments { get; set; }
         public virtual DbSet<CurriculumClass> CurriculumClasses { get; set; }
-        public virtual DbSet<CurriculumClassPeriod> CurriculumClassPeriods { get; set; }
+        public virtual DbSet<CurriculumSession> CurriculumSessions { get; set; }
         public virtual DbSet<CurriculumLessonPlan> CurriculumLessonPlans { get; set; }
         public virtual DbSet<CurriculumLessonPlanTemplate> CurriculumLessonPlanTemplates { get; set; }
         public virtual DbSet<CurriculumStudyTopic> CurriculumStudyTopics { get; set; }
@@ -65,7 +65,6 @@ namespace MyPortal.Models.Database
         public virtual DbSet<PersonnelObservation> PersonnelObservations { get; set; }
         public virtual DbSet<PersonnelTrainingCertificate> PersonnelTrainingCertificates { get; set; }
         public virtual DbSet<PersonnelTrainingCourse> PersonnelTrainingCourses { get; set; }
-        public virtual DbSet<PersonnelTrainingStatus> PersonnelTrainingStatuses { get; set; }
         public virtual DbSet<ProfileCommentBank> ProfileCommentBanks { get; set; }
         public virtual DbSet<ProfileComment> ProfileComments { get; set; }
         public virtual DbSet<ProfileLog> ProfileLogs { get; set; }
@@ -177,13 +176,13 @@ namespace MyPortal.Models.Database
                 .Property(e => e.Comments)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<BehaviourType>()
+            modelBuilder.Entity<BehaviourIncidentType>()
                 .Property(e => e.Description)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<BehaviourType>()
+            modelBuilder.Entity<BehaviourIncidentType>()
                 .HasMany(e => e.BehaviourIncidents)
-                .WithRequired(e => e.BehaviourType)
+                .WithRequired(e => e.BehaviourIncidentType)
                 .HasForeignKey(e => e.BehaviourTypeId)
                 .WillCascadeOnDelete(false);
 
@@ -606,16 +605,6 @@ namespace MyPortal.Models.Database
                 .HasMany(e => e.PersonnelTrainingCertificates)
                 .WithRequired(e => e.PersonnelTrainingCourse)
                 .HasForeignKey(e => e.CourseId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<PersonnelTrainingStatus>()
-                .Property(e => e.Name)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<PersonnelTrainingStatus>()
-                .HasMany(e => e.PersonnelTrainingCertificates)
-                .WithRequired(e => e.PersonnelTrainingStatus)
-                .HasForeignKey(e => e.StatusId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<ProfileCommentBank>()

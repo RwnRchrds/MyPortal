@@ -14,14 +14,12 @@ namespace MyPortal.ViewModels
         
         public Student Student { get; set; }
         //public List<Log> Logs { get; set; }
-        public IEnumerable<AssessmentResult> Results { get; set; }
         //public bool IsUpperSchool { get; set; }
         public IEnumerable<ProfileLogType> LogTypes { get; set; }
         public ProfileLog Log { get; set; }
         public IEnumerable<PastoralYearGroup> YearGroups { get; set; }
         public IEnumerable<PastoralRegGroup> RegGroups { get; set; }
         
-        public AssessmentResult Result { get; set; }
         public IEnumerable<AssessmentResultSet> ResultSets { get; set; }
         public IEnumerable<CurriculumSubject> Subjects { get; set; }
         public IEnumerable<Gender> Genders { get; set; }

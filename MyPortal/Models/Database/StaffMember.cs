@@ -42,7 +42,7 @@ namespace MyPortal.Models.Database
         [StringLength(255)]
         public string JobTitle { get; set; }
 
-        public bool? Deleted { get; set; }
+        public bool Deleted { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BehaviourAchievement> BehaviourAchievements { get; set; }

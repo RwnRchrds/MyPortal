@@ -15,657 +15,264 @@ using MyPortal.Processes;
 
 namespace MyPortal.Controllers.Api
 {
+    [RoutePrefix("api/curriculum")]
     public class CurriculumController : MyPortalApiController
     {
-        #region Academic Years
         [HttpGet]
-        [Route("api/curriculum/academicYears/get/all")]
+        [Route("academicYears/get/all")]
         public IEnumerable<CurriculumAcademicYearDto> GetAcademicYears()
         {
-            return _context.CurriculumAcademicYears.ToList().OrderByDescending(x => x.FirstDate)
-                .Select(Mapper.Map<CurriculumAcademicYear, CurriculumAcademicYearDto>);
+            return PrepareResponseObject(CurriculumProcesses.GetAcademicYears(_context));
         }
 
         [HttpGet]
-        [Route("api/curriculum/academicYears/get/byId")]
-        public CurriculumAcademicYearDto GetAcademicYear(int id)
+        [Route("academicYears/get/byId/{academicYearId:int}")]
+        public CurriculumAcademicYearDto GetAcademicYear([FromUri] int academicYearId)
         {
-            var academicYear = _context.CurriculumAcademicYears.SingleOrDefault(x => x.Id == id);
-
-            if (academicYear == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            return Mapper.Map<CurriculumAcademicYear, CurriculumAcademicYearDto>(academicYear);
+            return PrepareResponseObject(CurriculumProcesses.GetAcademicYear(academicYearId, _context));
         }
 
         [HttpPost]
         [Authorize(Roles = "Staff")]
-        [Route("api/curriculum/academicYears/select")]    
-        public IHttpActionResult ChangeSelectedAcademicYear(CurriculumAcademicYear year)
+        [Route("academicYears/select")]    
+        public IHttpActionResult ChangeSelectedAcademicYear([FromBody] CurriculumAcademicYear year)
         {
             User.ChangeSelectedAcademicYear(year.Id);
             return Ok("Selected academic year changed");
         }
 
-        #endregion
-
-        #region Classes
+        /// <returns></returns>
         [HttpGet]
-        [Route("api/curriculum/classes/byTeacher/{teacherId}/{dateString}")]
-        public IEnumerable<CurriculumClassPeriodDto> GetClassesByTeacher(int teacherId, int dateString)
+        [Route("sessions/byTeacher/{teacherId:int}/{date:datetime:regex(\\d{4}-\\d{2}-\\d{2})}")]
+        public IEnumerable<CurriculumSessionDto> GetSessionsForTeacher([FromUri] int teacherId, [FromUri] DateTime date)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
-            int year = dateString / 10000;
-            int month = ((dateString - (10000 * year)) / 100);
-            int day = (dateString - (10000 * year) - (100 * month));
 
-            var date = new DateTime(year, month, day);
-            var weekBeginning = date.StartOfWeek();
+            //var date = PrepareResponseObject(DateTimeProcesses.GetDateTimeFromFormattedInt(dateInt));
 
-            var academicYear = _context.CurriculumAcademicYears.SingleOrDefault(x => x.Id == academicYearId);
-
-            if (academicYear == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            if (weekBeginning < academicYear.FirstDate || weekBeginning > academicYear.LastDate)
-            {
-                return new List<CurriculumClassPeriodDto>();
-            }
-
-            var currentWeek = _context.AttendanceWeeks.SingleOrDefault(x => x.Beginning == weekBeginning && x.AcademicYearId == academicYearId);
-
-            if (currentWeek == null || currentWeek.IsHoliday)
-            {
-                return new List<CurriculumClassPeriodDto>();
-            }
-
-            return _context.CurriculumClassPeriods
-                .Where(x =>
-                    x.CurriculumClass.AcademicYearId == academicYearId && x.AttendancePeriod.Weekday ==
-                    date.DayOfWeek
-                        .ToString().Substring(0, 3) && x.CurriculumClass.TeacherId == teacherId)
-                .OrderBy(x => x.AttendancePeriod.StartTime)
-                .ToList()
-                .Select(Mapper.Map<CurriculumClassPeriod, CurriculumClassPeriodDto>);
+            return PrepareResponseObject(
+                CurriculumProcesses.GetSessionsForTeacher(teacherId, academicYearId, date, _context));
         }
 
         [HttpGet]
-        [Route("api/curriculum/classes/get/all")]
+        [Route("classes/get/all")]
         public IEnumerable<CurriculumClassDto> GetAllClasses()
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
-            return _context.CurriculumClasses.Where(x => x.AcademicYearId == academicYearId).ToList()
-                .OrderBy(x => x.Name).Select(Mapper.Map<CurriculumClass, CurriculumClassDto>);
+            return PrepareResponseObject(CurriculumProcesses.GetAllClasses(academicYearId, _context));
         }
 
         [HttpGet]
-        [Route("api/curriculum/classes/get/byId/{id}")]
-        public CurriculumClassDto GetClassById(int id)
+        [Route("classes/get/byId/{classId:int}")]
+        public CurriculumClassDto GetClassById([FromUri] int classId)
         {
-            var currClass = _context.CurriculumClasses.SingleOrDefault(x => x.Id == id);
-
-            if (currClass == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            return Mapper.Map<CurriculumClass, CurriculumClassDto>(currClass);
+            return PrepareResponseObject(CurriculumProcesses.GetClassById(classId, _context));
         }
 
         [HttpPost]
-        [Route("api/curriculum/classes/create")]
-        public IHttpActionResult CreateClass(CurriculumClass currClass)
+        [Route("classes/create")]
+        public IHttpActionResult CreateClass([FromBody] CurriculumClass @class)
         {
-            currClass.AcademicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
-
-            if (!ModelState.IsValid)
-            {
-                return Content(HttpStatusCode.BadRequest, "Invalid data");
-            }
-
-            if (_context.CurriculumClasses.Any(x => x.Name == currClass.Name))
-            {
-                return Content(HttpStatusCode.BadRequest, "Class with that name already exists");
-            }
-
-            _context.CurriculumClasses.Add(currClass);
-
-            _context.SaveChanges();
-
-            return Ok("Class added");
+            @class.AcademicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            return PrepareResponse(CurriculumProcesses.CreateClass(@class, _context));
         }
 
         [HttpPost]
-        [Route("api/curriculum/classes/update")]
-        public IHttpActionResult UpdateClass(CurriculumClass currClass)
+        [Route("classes/update")]
+        public IHttpActionResult UpdateClass([FromBody] CurriculumClass @class)
         {
-            var classInDb = _context.CurriculumClasses.SingleOrDefault(x => x.Id == currClass.Id);
-
-            if (classInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Class not found");
-            }
-
-            classInDb.Name = currClass.Name;
-            classInDb.SubjectId = currClass.SubjectId;
-            classInDb.TeacherId = currClass.TeacherId;
-            classInDb.YearGroupId = currClass.YearGroupId;
-
-            _context.SaveChanges();
-
-            return Ok("Class updated");
+            return PrepareResponse(CurriculumProcesses.UpdateClass(@class, _context));
         }
 
         [HttpDelete]
-        [Route("api/curriculum/classes/delete/{id}")]
-        public IHttpActionResult DeleteClass(int id)
+        [Route("classes/delete/{classId:int}")]
+        public IHttpActionResult DeleteClass([FromUri] int classId)
         {
-            var currClass = _context.CurriculumClasses.SingleOrDefault(x => x.Id == id);
-
-            if (currClass == null)
-            {
-                return Content(HttpStatusCode.NotFound, "CLass not found");
-            }
-
-            if (!currClass.HasPeriods() && !currClass.HasEnrolments())
-            {
-                _context.CurriculumClasses.Remove(currClass);
-                _context.SaveChanges();
-
-                return Ok("Class deleted");
-            }
-
-            return Content(HttpStatusCode.BadRequest, "Class cannot be deleted");
+            return PrepareResponse(CurriculumProcesses.DeleteClass(classId, _context));
         }
 
         [HttpGet]
-        [Route("api/curriculum/classes/schedule/get/{classId}")]
-        public IEnumerable<CurriculumClassPeriodDto> GetSchedule(int classId)
+        [Route("sessions/get/byClassId/{classId:int}")]
+        public IEnumerable<CurriculumSessionDto> GetSessionsForClass([FromUri] int classId)
         {
-            return _context.CurriculumClassPeriods.Where(x => x.ClassId == classId).ToList()
-                .Select(Mapper.Map<CurriculumClassPeriod, CurriculumClassPeriodDto>);
+            return PrepareResponseObject(CurriculumProcesses.GetSessionsForClass(classId, _context));
         }
 
         [HttpGet]
-        [Route("api/curriculum/classes/schedule/getAssignment/{id}")]
-        public CurriculumClassPeriodDto GetAssignment(int id)
+        [Route("sessions/get/byId/{sessionId:int}")]
+        public CurriculumSessionDto GetSessionById([FromUri] int sessionId)
         {
-            var assignment = _context.CurriculumClassPeriods.SingleOrDefault(x => x.Id == id);
-
-            if (assignment == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            return Mapper.Map<CurriculumClassPeriod, CurriculumClassPeriodDto>(assignment);
+            return PrepareResponseObject(CurriculumProcesses.GetSessionById(sessionId, _context));
         }
 
         [HttpPost]
-        [Route("api/curriculum/classes/schedule/createAssignment")]
-        public IHttpActionResult CreateTimetableAssignment(CurriculumClassPeriod assignment)
+        [Route("sessions/create")]
+        public IHttpActionResult CreateSession([FromBody] CurriculumSession session)
         {
-            if (!ModelState.IsValid)
-            {
-                return Content(HttpStatusCode.BadRequest, "Invalid data");
-            }
-
-            var currClass = _context.CurriculumClasses.SingleOrDefault(x => x.Id == assignment.ClassId);
-
-            if (currClass == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Class not found");
-            }
-
-            if (currClass.HasEnrolments())
-            {
-                return Content(HttpStatusCode.BadRequest, "Cannot modify class schedule while students are enrolled");
-            }
-
-            if (_context.CurriculumClassPeriods.Any(x =>
-                x.ClassId == assignment.ClassId && x.PeriodId == assignment.PeriodId))
-            {
-                return Content(HttpStatusCode.BadRequest, "Class already assigned to this period");
-            }
-
-            _context.CurriculumClassPeriods.Add(assignment);
-            _context.SaveChanges();
-
-            return Ok("Assignment added");
+            return PrepareResponse(CurriculumProcesses.CreateSession(session, _context));
         }
 
         [HttpPost]
-        [Route("api/curriculum/classes/schedule/regPeriods")]
-        public IHttpActionResult AssignAllRegPeriods(CurriculumClassPeriod assignment)
+        [Route("sessions/addRegPeriods")]
+        public IHttpActionResult CreateSessionsForRegPeriods([FromBody] CurriculumSession session)
         {
-            assignment.PeriodId = 0;
-
-            var regPeriods = _context.AttendancePeriods.Where(x => x.IsAm || x.IsPm);
-
-            var currClass = _context.CurriculumClasses.SingleOrDefault(x => x.Id == assignment.ClassId);
-
-            if (currClass == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Class not found");
-            }
-
-            if (currClass.HasEnrolments())
-            {
-                return Content(HttpStatusCode.BadRequest, "Cannot modify class schedule while students are enrolled");
-            }
-
-            if (_context.CurriculumClassPeriods.Any(x =>
-                x.ClassId == assignment.ClassId && x.PeriodId == assignment.PeriodId))
-            {
-                return Content(HttpStatusCode.BadRequest, "Class already assigned to this period");
-            }
-
-            foreach (var period in regPeriods)
-            {
-                var newAssignment = new CurriculumClassPeriod {PeriodId = period.Id, ClassId = currClass.Id};
-
-                _context.CurriculumClassPeriods.Add(newAssignment);
-            }
-
-            _context.SaveChanges();
-
-            return Ok("Class assigned to reg periods");
+            return PrepareResponse(CurriculumProcesses.CreateSessionForRegPeriods(session, _context));
         }
 
         [HttpPost]
-        [Route("api/curriculum/classes/schedule/updateAssignment")]
-        public IHttpActionResult UpdateTimetableAssignment(CurriculumClassPeriod assignment)
+        [Route("sessions/update")]
+        public IHttpActionResult UpdateSession([FromBody] CurriculumSession session)
         {
-            if (!ModelState.IsValid)
-            {
-                return Content(HttpStatusCode.BadRequest, "Invalid data");
-            }
-
-            var assignmentInDb = _context.CurriculumClassPeriods.SingleOrDefault(x => x.Id == assignment.Id);
-
-            var currClass = _context.CurriculumClasses.SingleOrDefault(x => x.Id == assignment.ClassId);
-
-            if (assignmentInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Assignment not found");
-            }
-
-            if (currClass.HasEnrolments())
-            {
-                return Content(HttpStatusCode.BadRequest, "Cannot modify class schedule while students are enrolled");
-            }
-
-            if (_context.CurriculumClassPeriods.Any(x =>
-                x.ClassId == assignment.ClassId && x.PeriodId == assignment.PeriodId))
-            {
-                return Content(HttpStatusCode.BadRequest, "Class already assigned to this period");
-            }
-
-            assignmentInDb.PeriodId = assignment.PeriodId;
-            _context.SaveChanges();
-
-            return Ok("Assignment updated");
+            return PrepareResponse(CurriculumProcesses.UpdateSession(session, _context));
         }
 
         [HttpDelete]
-        [Route("api/curriculum/classes/schedule/deleteAssignment/{assignmentId}")]
-        public IHttpActionResult DeleteTimetableAssignment(int assignmentId)
+        [Route("sessions/delete/{sessionId:int}")]
+        public IHttpActionResult DeleteSession([FromUri] int sessionId)
         {
-            var assignmentInDb = _context.CurriculumClassPeriods.SingleOrDefault(x => x.Id == assignmentId);
-
-            if (assignmentInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Assignment not found");
-            }
-
-            _context.CurriculumClassPeriods.Remove(assignmentInDb);
-            _context.SaveChanges();
-
-            return Ok("Assignment deleted");
+            return PrepareResponse(CurriculumProcesses.DeleteSession(sessionId, _context));
         }
 
         [HttpGet]
-        [Route("api/curriculum/classes/enrolments/get/{classId}")]
-        public IEnumerable<CurriculumClassEnrolmentDto> GetEnrolments(int classId)
+        [Route("enrolments/get/byClassId/{classId:int}")]
+        public IEnumerable<CurriculumEnrolmentDto> GetEnrolmentsForClass([FromUri] int classId)
         {
-            return _context.CurriculumClassEnrolments.Where(x => x.ClassId == classId).ToList()
-                .OrderBy(x => x.Student.Person.LastName)
-                .Select(Mapper.Map<CurriculumClassEnrolment, CurriculumClassEnrolmentDto>);
+            return PrepareResponseObject(CurriculumProcesses.GetEnrolmentsForClass(classId, _context));
         }
 
         [HttpGet]
-        [Route("api/curriculum/classes/enrolments/get/byId/{id}")]
-        public CurriculumClassEnrolmentDto GetEnrolment(int id)
+        [Route("enrolments/get/byId/{enrolmentId:int}")]
+        public CurriculumEnrolmentDto GetEnrolment([FromUri] int enrolmentId)
         {
-            var enrolment = _context.CurriculumClassEnrolments.SingleOrDefault(x => x.Id == id);
-
-            if (enrolment == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            return Mapper.Map<CurriculumClassEnrolment, CurriculumClassEnrolmentDto>(enrolment);
+            return PrepareResponseObject(CurriculumProcesses.GetEnrolmentById(enrolmentId, _context));
         }
 
         [HttpPost]
-        [Route("api/curriculum/classes/enrolments/create")]
-        public IHttpActionResult CreateEnrolment(CurriculumClassEnrolment enrolment)
+        [Route("enrolments/create")]
+        public IHttpActionResult CreateEnrolment([FromBody] CurriculumEnrolment enrolment)
         {
-            if (!ModelState.IsValid)
-            {
-                return Content(HttpStatusCode.BadRequest, "Invalid data");
-            }
-
-            if (!_context.CurriculumClasses.Any(x => x.Id == enrolment.ClassId))
-            {
-                return Content(HttpStatusCode.NotFound, "Class not found");
-            }
-
-            if (!_context.Students.Any(x => x.Id == enrolment.StudentId))
-            {
-                return Content(HttpStatusCode.NotFound, "Student not found");
-            }
-
-            if (!_context.CurriculumClassPeriods.Any(x => x.ClassId == enrolment.ClassId))
-            {
-                return Content(HttpStatusCode.BadRequest,
-                    "Cannot add students to class before schedule has been set up");
-            }
-
-            if (_context.CurriculumClassEnrolments.Any(x =>
-                x.ClassId == enrolment.ClassId && x.StudentId == enrolment.StudentId))
-            {
-                return Content(HttpStatusCode.BadRequest,
-                    enrolment.Student.Person.LastName + ", " + enrolment.Student.Person.FirstName + " is already enrolled in " +
-                    enrolment.CurriculumClass.Name);
-            }
-
-            bool canEnroll;
-
-            try
-            {
-                canEnroll = CurriculumProcesses.StudentCanEnroll(_context, enrolment.StudentId, enrolment.ClassId);
-            }
-            catch (EntityNotFoundException e)
-            {
-                return Content(HttpStatusCode.NotFound, e.Message);
-            }
-            catch (PersonNotFreeException e)
-            {
-                return Content(HttpStatusCode.BadRequest, e.Message);
-            }
-
-            if (canEnroll)
-            {
-                _context.CurriculumClassEnrolments.Add(enrolment);
-                _context.SaveChanges();
-
-                return Ok("Student enrolled in class");
-            }
-
-            return Content(HttpStatusCode.BadRequest, "An unknown error occurred");
+            return PrepareResponse(CurriculumProcesses.CreateEnrolment(enrolment, _context));
         }
 
         [HttpPost]
-        [Route("api/curriculum/classes/enrolments/create/group")]
-        public IHttpActionResult EnrolGroup(GroupEnrolment enrolment)
+        [Route("classes/enrolments/create/regGroup")]
+        public IHttpActionResult EnrolRegGroup([FromBody] GroupEnrolment enrolment)
         {
-            var group = _context.PastoralRegGroups.SingleOrDefault(x => x.Id == enrolment.GroupId);
-
-            if (group == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Group not found");
-            }
-
-            foreach (var student in group.Students)
-            {
-                var studentEnrolment = new CurriculumClassEnrolment
-                {
-                    ClassId = enrolment.ClassId,
-                    StudentId = student.Id
-                };
-
-                CreateEnrolment(studentEnrolment);
-            }
-
-            return Ok("Group enrolled");
+            return PrepareResponse(CurriculumProcesses.CreateEnrolmentsForRegGroup(enrolment, _context));
         }
 
         [HttpDelete]
-        [Route("api/curriculum/classes/enrolments/delete/{id}")]
-        public IHttpActionResult DeleteEnrolment(int id)
+        [Route("classes/enrolments/delete/{enrolmentId:int}")]
+        public IHttpActionResult DeleteEnrolment([FromUri] int enrolmentId)
         {
-            var enrolment = _context.CurriculumClassEnrolments.SingleOrDefault(x => x.Id == id);
-
-            if (enrolment == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Enrolment not found");
-            }
-
-            _context.CurriculumClassEnrolments.Remove(enrolment);
-            _context.SaveChanges();
-
-            return Ok(enrolment.Student.Person.LastName + ", " + enrolment.Student.Person.FirstName + " has been unenrolled from " + enrolment.CurriculumClass.Name);
+            return PrepareResponse(CurriculumProcesses.DeleteEnrolment(enrolmentId, _context));
         }
 
-        #endregion
-
-        #region Subjects
         [HttpPost]
-        [Route("api/subjects/new")]
-        public IHttpActionResult CreateSubject(CurriculumSubject data)
+        [Route("subjects/new")]
+        public IHttpActionResult CreateSubject([FromBody] CurriculumSubject subject)
         {
-            if (data.Name.IsNullOrWhiteSpace() || !ModelState.IsValid)
-            {
-                return Content(HttpStatusCode.BadRequest, "Invalid data");
-            }
-
-            var subjectToAdd = data;
-
-            _context.CurriculumSubjects.Add(subjectToAdd);
-            _context.SaveChanges();
-            return Ok("Subject created");
+            return PrepareResponse(CurriculumProcesses.CreateSubject(subject, _context));
         }
 
         [HttpDelete]
-        [Route("api/subjects/delete/{subjectId}")]
-        public IHttpActionResult DeleteSubject(int subjectId)
+        [Route("subjects/delete/{subjectId:int}")]
+        public IHttpActionResult DeleteSubject([FromUri] int subjectId)
         {
-            var subjectInDb = _context.CurriculumSubjects.SingleOrDefault(x => x.Id == subjectId);
-
-            if (subjectInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Subject not found");
-            }
-
-            _context.AssessmentResults.RemoveRange(subjectInDb.AssessmentResults);
-            _context.CurriculumSubjects.Remove(subjectInDb);
-            _context.SaveChanges();
-            return Ok("Subject deleted");
+            return PrepareResponse(CurriculumProcesses.DeleteSubject(subjectId, _context));
         }
 
         [HttpGet]
-        [Route("api/subjects/byId/{subjectId}")]
-        public CurriculumSubjectDto GetSubject(int subjectId)
+        [Route("subjects/get/byId/{subjectId:int}")]
+        public CurriculumSubjectDto GetSubjectById([FromUri] int subjectId)
         {
-            var subject = _context.CurriculumSubjects.SingleOrDefault(x => x.Id == subjectId);
-
-            if (subject == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            return Mapper.Map<CurriculumSubject, CurriculumSubjectDto>(subject);
+            return PrepareResponseObject(CurriculumProcesses.GetSubjectById(subjectId, _context));
         }
 
         [HttpGet]
-        [Route("api/subjects/all")]
-        public IEnumerable<CurriculumSubjectDto> GetSubjects()
+        [Route("subjects/get/all")]
+        public IEnumerable<CurriculumSubjectDto> GetAllSubjects()
         {
-            return _context.CurriculumSubjects.OrderBy(x => x.Name).ToList().Select(Mapper.Map<CurriculumSubject, CurriculumSubjectDto>);
+            return PrepareResponseObject(CurriculumProcesses.GetAllSubjects(_context));
         }
 
         [HttpPost]
-        [Route("api/subjects/update")]
-        public IHttpActionResult UpdateSubject(CurriculumSubject data)
+        [Route("subjects/update")]
+        public IHttpActionResult UpdateSubject([FromBody] CurriculumSubject subject)
         {
-            var subjectInDb = _context.CurriculumSubjects.SingleOrDefault(x => x.Id == data.Id);
-
-            if (subjectInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Subject not found");
-            }
-
-            subjectInDb.Name = data.Name;
-            subjectInDb.LeaderId = data.LeaderId;
-            _context.SaveChanges();
-            return Ok("Subject updated");
+            return PrepareResponse(CurriculumProcesses.UpdateSubject(subject, _context));
         }
 
-        #endregion
-
-        #region Study Topics
         [HttpPost]
-        [Route("api/studyTopics/create")]
-        public IHttpActionResult CreateStudyTopic(CurriculumStudyTopic studyTopic)
+        [Route("studyTopics/create")]
+        public IHttpActionResult CreateStudyTopic([FromBody] CurriculumStudyTopic studyTopic)
         {
-            if (!ModelState.IsValid)
-            {
-                return Content(HttpStatusCode.BadRequest, "Invalid data");
-            }
-
-            _context.CurriculumStudyTopics.Add(studyTopic);
-            _context.SaveChanges();
-
-            return Ok("Study topic added");
+            return PrepareResponse(CurriculumProcesses.CreateStudyTopic(studyTopic, _context));
         }
 
         [HttpDelete]
-        [Route("api/studyTopics/delete/{id}")]
-        public IHttpActionResult DeleteStudyTopic(int id)
+        [Route("studyTopics/delete/{studyTopicId:int}")]
+        public IHttpActionResult DeleteStudyTopic([FromUri] int studyTopicId)
         {
-            var studyTopic = _context.CurriculumStudyTopics.SingleOrDefault(x => x.Id == id);
-
-            if (studyTopic == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Study topic not found");
-            }
-
-            _context.CurriculumStudyTopics.Remove(studyTopic);
-            _context.SaveChanges();
-
-            return Ok("Study topic deleted");
+            return PrepareResponse(CurriculumProcesses.DeleteStudyTopic(studyTopicId, _context));
         }
 
         [HttpGet]
-        [Route("api/studyTopics/hasLessonPlans/{id}")]
-        public bool HasLessonPlans(int id)
+        [Route("studyTopics/get/byId/{id}")]
+        public CurriculumStudyTopicDto GetStudyTopic([FromUri] int studyTopicId)
         {
-            var studyTopic = _context.CurriculumStudyTopics.SingleOrDefault(x => x.Id == id);
-
-            if (studyTopic == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            return studyTopic.LessonPlans.Any();
-        }
-        
-        [HttpGet]
-        [Route("api/studyTopics/fetch/byId/{id}")]
-        public CurriculumStudyTopicDto GetStudyTopic(int id)
-        {
-            var studyTopic = _context.CurriculumStudyTopics.SingleOrDefault(x => x.Id == id);
-
-            if (studyTopic == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            return Mapper.Map<CurriculumStudyTopic, CurriculumStudyTopicDto>(studyTopic);
+            return PrepareResponseObject(CurriculumProcesses.GetStudyTopicById(studyTopicId, _context));
         }
 
         [HttpGet]
-        [Route("api/studyTopics/fetch/all")]
-        public IEnumerable<CurriculumStudyTopicDto> GetStudyTopics()
+        [Route("studyTopics/get/all")]
+        public IEnumerable<CurriculumStudyTopicDto> GetAllStudyTopics()
         {
-            return _context.CurriculumStudyTopics.ToList().Select(Mapper.Map<CurriculumStudyTopic, CurriculumStudyTopicDto>);
+            return PrepareResponseObject(CurriculumProcesses.GetAllStudyTopics(_context));
         }
 
         [HttpPost]
-        [Route("api/studyTopics/update")]
-        public IHttpActionResult UpdateStudyTopic(CurriculumStudyTopic studyTopic)
+        [Route("studyTopics/update")]
+        public IHttpActionResult UpdateStudyTopic([FromBody] CurriculumStudyTopic studyTopic)
         {
-            if (!ModelState.IsValid)
-            {
-                return Content(HttpStatusCode.BadRequest, "Invalid data");
-            }
-
-            var studyTopicInDb = _context.CurriculumStudyTopics.SingleOrDefault(x => x.Id == studyTopic.Id);
-
-            if (studyTopicInDb == null)
-            {
-                return Content(HttpStatusCode.BadRequest, "Study topic not found");
-            }
-
-            studyTopicInDb.Name = studyTopic.Name;
-            studyTopicInDb.SubjectId = studyTopic.SubjectId;
-            studyTopicInDb.YearGroupId = studyTopic.YearGroupId;
-
-            _context.SaveChanges();
-
-            return Ok("Study topic updated");
+            return PrepareResponse(CurriculumProcesses.UpdateStudyTopic(studyTopic, _context));
         }
 
-        #endregion
-
-        #region Lesson Plans
         /// <summary>
         /// Gets all lesson plans from the database (in alphabetical order).
         /// </summary>
         /// <returns>Returns a list of DTOs of all lesson plans from the database.</returns>
         [HttpGet]
-        [Route("api/lessonPlans/all")]
+        [Route("lessonPlans/get/all")]
         public IEnumerable<CurriculumLessonPlanDto> GetLessonPlans()
         {
-            return _context.CurriculumLessonPlans.OrderBy(x => x.Title).ToList().Select(Mapper.Map<CurriculumLessonPlan, CurriculumLessonPlanDto>);
+            return PrepareResponseObject(CurriculumProcesses.GetAllLessonPlans(_context));
         }
 
         /// <summary>
         /// Gets lesson plan from the database with the specified ID.
         /// </summary>
-        /// <param name="id">ID of the lesson plan to fetch from the database.</param>
+        /// <param name="lessonPlanId">ID of the lesson plan to fetch from the database.</param>
         /// <returns></returns>
         /// <exception cref="HttpResponseException"></exception>
         [HttpGet]
-        [Route("api/lessonPlans/byId/{id}")]
-        public CurriculumLessonPlanDto GetLessonPlanById(int id)
+        [Route("lessonPlans/get/byId/{lessonPlanId:int}")]
+        public CurriculumLessonPlanDto GetLessonPlanById([FromUri] int lessonPlanId)
         {
-            var lessonPlan = _context.CurriculumLessonPlans.SingleOrDefault(x => x.Id == id);
-
-            if (lessonPlan == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            return Mapper.Map<CurriculumLessonPlan, CurriculumLessonPlanDto>(lessonPlan);
+            return PrepareResponseObject(CurriculumProcesses.GetLessonPlanById(lessonPlanId, _context));
         }
 
         /// <summary>
         /// Gets lesson plans from the specified study topic.
         /// </summary>
-        /// <param name="id">The ID of the study topic to get lesson plans from.</param>
+        /// <param name="studyTopicId">The ID of the study topic to get lesson plans from.</param>
         /// <returns>Returns a list of DTOs of lesson plans from the specified study topic.</returns>
         [HttpGet]
-        [Route("api/lessonPlans/byTopic/{id}")]
-        public IEnumerable<CurriculumLessonPlanDto> GetLessonPlansByTopic(int id)
+        [Route("lessonPlans/byTopic/{studyTopicId:int}")]
+        public IEnumerable<CurriculumLessonPlanDto> GetLessonPlansByTopic([FromUri] int studyTopicId)
         {
-            return _context.CurriculumLessonPlans.Where(x => x.StudyTopicId == id).OrderBy(x => x.Title).ToList()
-                .Select(Mapper.Map<CurriculumLessonPlan, CurriculumLessonPlanDto>);
+            return PrepareResponseObject(CurriculumProcesses.GetLessonPlansByStudyTopic(studyTopicId, _context));
         }
 
         /// <summary>
@@ -674,44 +281,11 @@ namespace MyPortal.Controllers.Api
         /// <param name="plan">The lesson plan to add to the database</param>
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
-        [Route("api/lessonPlans/create")]
-        public IHttpActionResult CreateLessonPlan(CurriculumLessonPlan plan)
+        [Route("lessonPlans/create")]
+        public IHttpActionResult CreateLessonPlan([FromBody] CurriculumLessonPlan plan)
         {
-            if (!ModelState.IsValid)
-            {
-                return Content(HttpStatusCode.BadRequest, "Invalid data");
-            }
-            
-            var authorId = plan.AuthorId;
-
-            var author = new StaffMember();
-
-            if (authorId == 0)
-            {
-                var userId = User.Identity.GetUserId();
-                author = _context.StaffMembers.SingleOrDefault(x => x.Person.UserId == userId);
-                if (author == null)
-                {
-                    return Content(HttpStatusCode.BadRequest, "User does not have a personnel profile");
-                }
-            }
-
-            if (authorId != 0)
-            {
-                author = _context.StaffMembers.SingleOrDefault(x => x.Id == authorId);
-            }
-
-            if (author == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Staff member not found");
-            }
-
-            plan.AuthorId = author.Id;
-
-            _context.CurriculumLessonPlans.Add(plan);
-            _context.SaveChanges();
-
-            return Ok("Lesson plan added");
+            var userId = User.Identity.GetUserId();
+            return PrepareResponse(CurriculumProcesses.CreateLessonPlan(plan, userId, _context));
         }
 
         /// <summary>
@@ -720,49 +294,22 @@ namespace MyPortal.Controllers.Api
         /// <param name="plan">Lesson plan to update in the database.</param>
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
-        [Route("api/lessonPlans/update")]
-        public IHttpActionResult UpdateLessonPlan(CurriculumLessonPlan plan)
+        [Route("lessonPlans/update")]
+        public IHttpActionResult UpdateLessonPlan([FromBody] CurriculumLessonPlan plan)
         {
-            var planInDb = _context.CurriculumLessonPlans.SingleOrDefault(x => x.Id == plan.Id);
-
-            if (planInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Lesson plan not found");
-            }
-
-            planInDb.Title = plan.Title;
-            planInDb.PlanContent = plan.PlanContent;
-            planInDb.StudyTopicId = plan.StudyTopicId;
-            planInDb.LearningObjectives = plan.LearningObjectives;
-            planInDb.Homework = plan.Homework;
-
-            _context.SaveChanges();
-
-            return Ok("Lesson plan updated");
+            return PrepareResponse(CurriculumProcesses.UpdateLessonPlan(plan, _context));
         }
 
         /// <summary>
         /// Deletes the specified lesson plan from the database.
         /// </summary>
-        /// <param name="id">The ID of the lesson plan to delete.</param>
+        /// <param name="lessonPlanId">The ID of the lesson plan to delete.</param>
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpDelete]
-        [Route("api/lessonPlans/delete/{id}")]
-        public IHttpActionResult DeleteLessonPlan(int id)
+        [Route("lessonPlans/delete/{lessonPlanId:int}")]
+        public IHttpActionResult DeleteLessonPlan([FromUri] int lessonPlanId)
         {
-            var plan = _context.CurriculumLessonPlans.SingleOrDefault(x => x.Id == id);
-
-            if (plan == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Lesson plan not found");
-            }
-
-            _context.CurriculumLessonPlans.Remove(plan);
-            _context.SaveChanges();
-
-            return Ok("Lesson plan deleted");
+            return PrepareResponse(CurriculumProcesses.DeleteLessonPlan(lessonPlanId, _context));
         }
-
-        #endregion
     }
 }

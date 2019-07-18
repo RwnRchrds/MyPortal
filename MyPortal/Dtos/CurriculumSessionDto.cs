@@ -1,4 +1,4 @@
-namespace MyPortal.Models.Database
+namespace MyPortal.Dtos
 {
     using System;
     using System.Collections.Generic;
@@ -9,8 +9,7 @@ namespace MyPortal.Models.Database
     /// <summary>
     /// Represents the assignment of a period in the week to a class.
     /// </summary>
-    [Table("Curriculum_ClassPeriods")]
-    public partial class CurriculumClassPeriod
+    public partial class CurriculumSessionDto
     {
         public int Id { get; set; }
 
@@ -18,8 +17,8 @@ namespace MyPortal.Models.Database
 
         public int PeriodId { get; set; }
 
-        public virtual AttendancePeriod AttendancePeriod { get; set; }
+        public virtual AttendancePeriodDto AttendancePeriod { get; set; }
 
-        public virtual CurriculumClass CurriculumClass { get; set; }
+        public virtual CurriculumClassDto CurriculumClass { get; set; }
     }
 }

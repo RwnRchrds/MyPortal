@@ -13,11 +13,12 @@ using MyPortal.Processes;
 
 namespace MyPortal.Controllers.Api
 {
+    [RoutePrefix("api/attendance")]
     public class AttendanceController : MyPortalApiController
     {
         [HttpGet]
-        [Route("api/attendance/marks/loadRegister/{weekId}/{classPeriodId}")]
-        public IEnumerable<StudentRegisterMarksDto> LoadRegister(int weekId, int classPeriodId)
+        [Route("marks/loadRegister/{weekId:int}/{classPeriodId:int}")]
+        public IEnumerable<StudentRegisterMarksDto> LoadRegister([FromUri] int weekId, [FromUri] int classPeriodId)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
@@ -26,8 +27,8 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Route("api/attendance/summary/raw/{studentId}")]
-        public AttendanceSummary GetRawAttendanceSummary(int studentId)
+        [Route("summary/raw/{studentId:int}")]
+        public AttendanceSummary GetRawAttendanceSummary([FromUri] int studentId)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
@@ -35,8 +36,8 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Route("api/attendance/summary/percent/{studentId}")]
-        public AttendanceSummary GetPercentageAttendanceSummary(int studentId)
+        [Route("summary/percent/{studentId:int}")]
+        public AttendanceSummary GetPercentageAttendanceSummary([FromUri] int studentId)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
@@ -44,32 +45,33 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Route("api/attendance/periods/get/all")]
+        [Route("periods/get/all")]
         public IEnumerable<AttendancePeriodDto> GetAllPeriods()
         {
             return PrepareResponseObject(AttendanceProcesses.GetAllPeriods(_context));
         }
 
         [HttpGet]
-        public AttendancePeriodDto GetPeriod(int periodId)
+        [Route("periods/get/byId/{periodId:int}")]
+        public AttendancePeriodDto GetPeriod([FromUri] int periodId)
         {
             return PrepareResponseObject(AttendanceProcesses.GetPeriod(periodId, _context));
         }
 
         [HttpPost]
-        [Route("api/attendance/weeks/createForYear/{academicYearId:int}")]
+        [Route("weeks/createForYear/{academicYearId:int}")]
         public IHttpActionResult CreateWeeks([FromUri] int academicYearId)
         {
             return PrepareResponse(AttendanceProcesses.CreateAttendanceWeeksForYear(academicYearId, _context));
         }
 
         [HttpGet]
-        [Route("api/attendance/weeks/get/byDate/{dateString}")]
-        public AttendanceWeekDto GetWeekByDate(int dateString)
+        [Route("weeks/get/byDate/{date:datetime:regex(\\d{4}-\\d{2}-\\d{2})}")]
+        public AttendanceWeekDto GetWeekByDate([FromUri] DateTime date)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
-            var date = DateTimeProcesses.GetDateTimeFromFormattedInt(dateString).ResponseObject;
+            //var date = DateTimeProcesses.GetDateTimeFromFormattedInt(dateInt).ResponseObject;
 
             return PrepareResponseObject(AttendanceProcesses.GetWeekByDate(academicYearId, date, _context));
         }

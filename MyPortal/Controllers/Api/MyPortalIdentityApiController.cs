@@ -11,27 +11,24 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Controllers.Api
 {
-    public class MyPortalIdentityApiController : ApiController
+    public class MyPortalIdentityApiController : MyPortalApiController
     {
-        protected readonly MyPortalDbContext _context;
-        protected readonly ApplicationDbContext _identity;
+        protected readonly IdentityContext _identity;
         protected readonly UserManager<ApplicationUser> _userManager;
         protected readonly UserStore<ApplicationUser> _userStore;
 
         public MyPortalIdentityApiController()
         {
-            _identity = new ApplicationDbContext();
+            _identity = new IdentityContext();
             _userStore = new UserStore<ApplicationUser>(_identity);
             _userManager = new UserManager<ApplicationUser>(_userStore);
-            _context = new MyPortalDbContext();
         }
 
-        public MyPortalIdentityApiController(MyPortalDbContext context)
+        public MyPortalIdentityApiController(MyPortalDbContext context, IdentityContext identity) : base(context)
         {
-            _identity = new ApplicationDbContext();
+            _identity = new IdentityContext();
             _userStore = new UserStore<ApplicationUser>(_identity);
             _userManager = new UserManager<ApplicationUser>(_userStore);
-            _context = context;
         }
     }
 }

@@ -32,6 +32,8 @@ namespace MyPortal.Models.Database
         [StringLength(5)]
         public string Code { get; set; }
 
+        public bool Deleted { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AssessmentResult> AssessmentResults { get; set; }
 

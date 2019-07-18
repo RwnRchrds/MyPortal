@@ -20,12 +20,12 @@ namespace MyPortal.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-        private readonly ApplicationDbContext _identity;
+        private readonly IdentityContext _identity;
         private readonly MyPortalDbContext _context;
 
         public AccountController()
         {
-            _identity = new ApplicationDbContext();
+            _identity = new IdentityContext();
             _context = new MyPortalDbContext();
         }
 

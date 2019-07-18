@@ -10,7 +10,7 @@ namespace MyPortal.ViewModels
     public class TakeRegisterViewModel
     {
         public int WeekId { get; set; }
-        public CurriculumClassPeriod ClassPeriod { get; set; }  
+        public CurriculumSession ClassPeriod { get; set; }  
         public IEnumerable<AttendancePeriod> Periods { get; set; }        
     }
 }

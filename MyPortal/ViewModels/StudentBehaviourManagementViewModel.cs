@@ -10,7 +10,7 @@ namespace MyPortal.ViewModels
     {
         public Student Student { get; set; }
         public IEnumerable<BehaviourAchievementType> AchievementTypes { get; set; }
-        public IEnumerable<BehaviourType> BehaviourTypes { get; set; }
+        public IEnumerable<BehaviourIncidentType> BehaviourTypes { get; set; }
         public IEnumerable<BehaviourLocation> BehaviourLocations { get; set; }
         public BehaviourAchievement Achievement { get; set; }
         public BehaviourIncident Incident { get; set; } 

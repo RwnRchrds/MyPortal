@@ -3,14 +3,14 @@ using MyPortal.Models;
 
 namespace MyPortal.Migrations
 {
-    internal sealed class Configuration : DbMigrationsConfiguration<ApplicationDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<IdentityContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(ApplicationDbContext context)
+        protected override void Seed(IdentityContext context)
         {
             //  This method will be called after migrating to the latest version.
 

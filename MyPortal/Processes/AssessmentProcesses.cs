@@ -71,7 +71,7 @@ namespace MyPortal.Processes
             return new ProcessResponse<object>(ResponseType.Ok, "Result set deleted", null);
         }
 
-        public static ProcessResponse<AssessmentResultSetDto> GetResultSet(int resultSetId, MyPortalDbContext context)
+        public static ProcessResponse<AssessmentResultSetDto> GetResultSetById(int resultSetId, MyPortalDbContext context)
         {
             var resultSet = context.AssessmentResultSets.SingleOrDefault(x => x.Id == resultSetId);
 
@@ -85,11 +85,31 @@ namespace MyPortal.Processes
 
         }
 
-        public static ProcessResponse<IEnumerable<AssessmentResultSetDto>> GetResultSets(MyPortalDbContext context)
+        public static ProcessResponse<AssessmentResultSet> GetResultSetById_Model(int resultSetId, MyPortalDbContext context)
+        {
+            var resultSet = context.AssessmentResultSets.SingleOrDefault(x => x.Id == resultSetId);
+
+            if (resultSet == null)
+            {
+                return new ProcessResponse<AssessmentResultSet>(ResponseType.NotFound, "Result set not found", null);
+            }
+
+            return new ProcessResponse<AssessmentResultSet>(ResponseType.Ok, null,
+                resultSet);
+
+        }
+
+        public static ProcessResponse<IEnumerable<AssessmentResultSetDto>> GetAllResultSets(MyPortalDbContext context)
         {
             return new ProcessResponse<IEnumerable<AssessmentResultSetDto>>(ResponseType.Ok, null,
                 context.AssessmentResultSets.OrderBy(x => x.Name).ToList()
                     .Select(Mapper.Map<AssessmentResultSet, AssessmentResultSetDto>));
+        }
+
+        public static ProcessResponse<IEnumerable<AssessmentResultSet>> GetAllResultSets_Model(MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<AssessmentResultSet>>(ResponseType.Ok, null,
+                context.AssessmentResultSets.OrderBy(x => x.Name).ToList());
         }
 
         public static ProcessResponse<bool> ResultSetContainsResults(int id, MyPortalDbContext context)
@@ -222,7 +242,7 @@ namespace MyPortal.Processes
             return new ProcessResponse<object>(ResponseType.Ok, "Result added", null);
         }
 
-        public static ProcessResponse<IEnumerable<AssessmentResultDto>> GetResults(int studentId, int resultSetId,
+        public static ProcessResponse<IEnumerable<AssessmentResultDto>> GetResultsForStudent(int studentId, int resultSetId,
             MyPortalDbContext context)
         {
             var results = context.AssessmentResults
@@ -231,6 +251,16 @@ namespace MyPortal.Processes
                 .Select(Mapper.Map<AssessmentResult, AssessmentResultDto>);
 
             return new ProcessResponse<IEnumerable<AssessmentResultDto>>(ResponseType.Ok, null, results);
+        }
+
+        public static ProcessResponse<IEnumerable<AssessmentResult>> GetResultsForStudent_Model(int studentId, int resultSetId,
+            MyPortalDbContext context)
+        {
+            var results = context.AssessmentResults
+                .Where(r => r.StudentId == studentId && r.ResultSetId == resultSetId)
+                .ToList();
+
+            return new ProcessResponse<IEnumerable<AssessmentResult>>(ResponseType.Ok, null, results);
         }
     }
 }

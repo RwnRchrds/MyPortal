@@ -18,11 +18,12 @@ using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
 {
+    [RoutePrefix("api/behaviour")]
     public class BehaviourController : MyPortalApiController
     {
         [HttpGet]
-        [Route("api/behaviour/points/get/{studentId}")]
-        public int GetBehaviourPoints(int studentId)
+        [Route("points/get/{studentId:int}")]
+        public int GetBehaviourPoints([FromUri] int studentId)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
@@ -31,7 +32,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [Route("api/behaviour/achievements/dataGrid/get/{studentId}")]
+        [Route("achievements/get/dataGrid/{studentId:int}")]
         public IHttpActionResult GetAchievementsForDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
@@ -43,15 +44,15 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Route("api/behaviour/achievements/get/{id}")]
-        public BehaviourAchievementDto GetAchievement(int id)
+        [Route("achievements/get/byId/{achievementId:int}")]
+        public BehaviourAchievementDto GetAchievement([FromUri] int achievementId)
         {
-            return PrepareResponseObject(BehaviourProcesses.GetAchievement(id, _context));
+            return PrepareResponseObject(BehaviourProcesses.GetAchievement(achievementId, _context));
         }
 
         [HttpPost]
-        [Route("api/behaviour/achievements/create")]
-        public IHttpActionResult CreateAchievement(BehaviourAchievement achievement)
+        [Route("achievements/create")]
+        public IHttpActionResult CreateAchievement([FromBody] BehaviourAchievement achievement)
         {
             var userId = User.Identity.GetUserId();
             var staff = PrepareResponseObject(PeopleProcesses.GetStaffFromUserId(userId, _context));
@@ -65,21 +66,21 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [Route("api/behaviour/achievements/update")]
-        public IHttpActionResult UpdateAchievement(BehaviourAchievement achievement)
+        [Route("achievements/update")]
+        public IHttpActionResult UpdateAchievement([FromBody] BehaviourAchievement achievement)
         {
             return PrepareResponse(BehaviourProcesses.UpdateAchievement(achievement, _context));
         }
 
         [HttpDelete]
-        [Route("api/behaviour/achievements/delete/{id}")]
-        public IHttpActionResult DeleteAchievement(int id)
+        [Route("achievements/delete/{achievementId:int}")]
+        public IHttpActionResult DeleteAchievement([FromUri] int achievementId)
         {
-            return PrepareResponse(BehaviourProcesses.DeleteAchievement(id, _context));
+            return PrepareResponse(BehaviourProcesses.DeleteAchievement(achievementId, _context));
         }
 
         [HttpPost]
-        [Route("api/behaviour/behaviour/dataGrid/get/{studentId}")]
+        [Route("incidents/get/dataGrid/{studentId:int}")]
         public IHttpActionResult GetBehaviourForDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
@@ -90,15 +91,15 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Route("api/behaviour/behaviour/get/{id}")]
-        public BehaviourIncidentDto GetBehaviour(int id)
+        [Route("incidents/get/byId/{incidentId:int}")]
+        public BehaviourIncidentDto GetBehaviour([FromUri] int incidentId)
         {
-            return PrepareResponseObject(BehaviourProcesses.GetBehaviourIncident(id, _context));
+            return PrepareResponseObject(BehaviourProcesses.GetBehaviourIncident(incidentId, _context));
         }
 
         [HttpPost]
-        [Route("api/behaviour/behaviour/create")]
-        public IHttpActionResult CreateIncident(BehaviourIncident incident)
+        [Route("incidents/create")]
+        public IHttpActionResult CreateIncident([FromBody] BehaviourIncident incident)
         {
             var userId = User.Identity.GetUserId();
             var staff = PrepareResponseObject(PeopleProcesses.GetStaffFromUserId(userId, _context));
@@ -111,22 +112,22 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [Route("api/behaviour/behaviour/update")]
-        public IHttpActionResult UpdateIncident(BehaviourIncident incident)
+        [Route("incidents/update")]
+        public IHttpActionResult UpdateIncident([FromBody] BehaviourIncident incident)
         {
             return PrepareResponse(BehaviourProcesses.UpdateBehaviourIncident(incident, _context));
         }
 
         [HttpDelete]
-        [Route("api/behaviour/behaviour/delete/{id}")]
-        public IHttpActionResult DeleteIncident(int id)
+        [Route("incidents/delete/{incidentId:int}")]
+        public IHttpActionResult DeleteIncident([FromUri] int incidentId)
         {
-            return PrepareResponse(BehaviourProcesses.DeleteBehaviourIncident(id, _context));
+            return PrepareResponse(BehaviourProcesses.DeleteBehaviourIncident(incidentId, _context));
         }
 
         [HttpGet]
-        [Route("api/behaviour/reports/incidents/byType")]
-        public IEnumerable<ChartData> BehaviourIncidentsByType()
+        [Route("reports/incidents/byType")]
+        public IEnumerable<ChartData> ReportIncidentsByType()
         {
             return PrepareResponseObject(BehaviourProcesses.GetChartData_BehaviourIncidentsByType(_context));
         }

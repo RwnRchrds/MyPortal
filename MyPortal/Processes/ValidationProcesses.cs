@@ -22,5 +22,6 @@ namespace MyPortal.Processes
 
             ErrorMessages = results.Select(x => x.ErrorMessage).ToList();
             return false;
+        }
     }
 }

@@ -33,6 +33,10 @@ namespace MyPortal.Models.Database
         /// </summary>
         public bool Processed { get; set; }
 
+        public bool Refunded { get; set; }
+
+        public bool Deleted { get; set; }
+
         public virtual Student CoreStudent { get; set; }
 
         public virtual CurriculumAcademicYear CurriculumAcademicYear { get; set; }

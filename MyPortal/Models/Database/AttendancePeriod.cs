@@ -18,7 +18,7 @@ namespace MyPortal.Models.Database
         public AttendancePeriod()
         {
             AttendanceRegisterMarks = new HashSet<AttendanceRegisterMark>();
-            CurriculumClassPeriods = new HashSet<CurriculumClassPeriod>();
+            CurriculumClassPeriods = new HashSet<CurriculumSession>();
         }
 
         public int Id { get; set; }
@@ -43,6 +43,6 @@ namespace MyPortal.Models.Database
         public virtual ICollection<AttendanceRegisterMark> AttendanceRegisterMarks { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CurriculumClassPeriod> CurriculumClassPeriods { get; set; }
+        public virtual ICollection<CurriculumSession> CurriculumClassPeriods { get; set; }
     }
 }

@@ -2,9 +2,9 @@
 
 namespace MyPortal.Models.Misc
 {
-    public class BalanceAdjustment
+    public class FinanceTransaction
     {
-        [Required] public int Student { get; set; }
+        [Required] public int StudentId { get; set; }
 
         [Required] public decimal Amount { get; set; }
     }

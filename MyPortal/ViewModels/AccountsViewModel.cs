@@ -4,6 +4,6 @@ namespace MyPortal.ViewModels
 {
     public class AccountsViewModel
     {
-        public BalanceAdjustment BalanceAdjustment { get; set; }
+        public FinanceTransaction BalanceAdjustment { get; set; }
     }
 }

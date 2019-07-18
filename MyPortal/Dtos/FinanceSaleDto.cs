@@ -32,6 +32,10 @@ namespace MyPortal.Dtos
         /// </summary>
         public bool Processed { get; set; }
 
+        public bool Refunded { get; set; }
+
+        public bool Deleted { get; set; }
+
         public virtual StudentDto CoreStudent { get; set; }
 
         public virtual CurriculumAcademicYearDto CurriculumAcademicYear { get; set; }

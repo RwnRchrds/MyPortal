@@ -17,22 +17,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 
 <style>
-    .overview-card {
-        width: 550px;
-    }
-
-    .e-headercell {
-        background-color: #18bc9c !important;
-    }
-
-    .e-headercelldiv {
-        font-size: 13px !important;
-        color: white;
-    }
-
-    .mp-inline-block {
-        display: inline-block;
-    }
+    
 </style>
 
 <!-- #region Title -->
@@ -202,7 +187,7 @@
                 col.Field("LogTypeName").HeaderText("Log Type").Template("#logTypeTemplate").Width("150").Add();
                 col.Field("Message").HeaderText("Message").Width("400").Template("#logMessageTemplate").Add();
                 col.HeaderText("Actions").Template("#logActionsTemplate").Width("170").Add();
-            }).AllowPaging().EnableHover(false).AllowTextWrap().PageSettings(page => page.PageSize(5)).TextWrapSettings(wrap => { wrap.WrapMode(WrapMode.Content); }).GridLines(GridLine.Both).RowDataBound("logRowDataBound").Render()
+            }).AllowPaging().AllowTextWrap().PageSettings(page => page.PageSize(5)).TextWrapSettings(wrap => { wrap.WrapMode(WrapMode.Content); }).GridLines(GridLine.Both).RowDataBound("logRowDataBound").Render()
 
         </div>
     </div>

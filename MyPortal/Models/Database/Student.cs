@@ -19,7 +19,7 @@ namespace MyPortal.Models.Database
             AttendanceRegisterMarks = new HashSet<AttendanceRegisterMark>();
             BehaviourAchievements = new HashSet<BehaviourAchievement>();
             BehaviourIncidents = new HashSet<BehaviourIncident>();
-            CurriculumClassEnrolments = new HashSet<CurriculumClassEnrolment>();
+            CurriculumClassEnrolments = new HashSet<CurriculumEnrolment>();
             FinanceBasketItems = new HashSet<FinanceBasketItem>();
             FinanceSales = new HashSet<FinanceSale>();
             MedicalEvents = new HashSet<MedicalEvent>();
@@ -55,7 +55,7 @@ namespace MyPortal.Models.Database
         [StringLength(255)]
         public string MisId { get; set; }
 
-        public bool? Deleted { get; set; }
+        public bool Deleted { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AssessmentResult> AssessmentResults { get; set; }
@@ -70,7 +70,7 @@ namespace MyPortal.Models.Database
         public virtual ICollection<BehaviourIncident> BehaviourIncidents { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CurriculumClassEnrolment> CurriculumClassEnrolments { get; set; }
+        public virtual ICollection<CurriculumEnrolment> CurriculumClassEnrolments { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FinanceBasketItem> FinanceBasketItems { get; set; }

@@ -40,7 +40,7 @@ namespace MyPortal
             IOwinContext context)
         {
             var manager =
-                new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));
+                new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<IdentityContext>()));
             // Configure validation logic for usernames
             manager.UserValidator = new UserValidator<ApplicationUser>(manager)
             {

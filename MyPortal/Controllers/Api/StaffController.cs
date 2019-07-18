@@ -13,511 +13,55 @@ using MyPortal.Processes;
 namespace MyPortal.Controllers.Api
 {
     [Authorize]
-    public class StaffController : ApiController
+    [RoutePrefix("api/people/staff")]
+    public class StaffController : MyPortalApiController
     {
-        private readonly MyPortalDbContext _context;
-
-        public StaffController()
-        {
-            _context = new MyPortalDbContext();
-        }
-
-        /// <summary>
-        /// Adds a document and attaches it to the specified staff member.
-        /// </summary>
-        /// <param name="data">The StaffDocument object to add.</param>
-        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
-        [Route("api/staff/documents/add")]
-        public IHttpActionResult AddDocument(PersonDocument data)
+        [Route("create")]
+        public IHttpActionResult CreateStaff([FromBody] StaffMember staffMember)
         {
-            var staff = _context.StaffMembers.SingleOrDefault(x => x.PersonId == data.PersonId);
-
-            var uploaderId = User.Identity.GetUserId();
-
-            var uploader = PeopleProcesses.GetStaffFromUserId(uploaderId, _context);
-
-            if (staff == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Staff not found");
-            }
-
-            if (uploader == null)
-            {
-                return Content(HttpStatusCode.BadRequest, "Uploader not found");
-            }
-
-            data.Document.IsGeneral = false;
-
-            data.Document.Approved = true;
-
-            data.Document.Date = DateTime.Now;
-
-            data.Document.UploaderId = uploader.Id;
-
-            var isUriValid = Uri.TryCreate(data.Document.Url, UriKind.Absolute, out var uriResult)
-                             && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
-
-            if (!isUriValid)
-            {
-                return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
-            }
-
-            var staffDocument = data;
-
-            var document = staffDocument.Document;
-
-            _context.Documents.Add(document);
-            _context.PersonDocuments.Add(staffDocument);
-
-            _context.SaveChanges();
-
-            return Ok("Document added");
+            return PrepareResponse(PeopleProcesses.CreateStaffMember(staffMember, _context));
         }
 
-        /// <summary>
-        /// Adds a staff observation for the specified staff member.
-        /// </summary>
-        /// <param name="data">The staff observation object to add.</param>
-        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
-        [HttpPost]
-        [Route("api/staff/observations/add")]
-        public IHttpActionResult AddObservation(PersonnelObservation data)
-        {
-            data.Date = DateTime.Now;
-
-            var currentUserId = User.Identity.GetUserId();
-
-            var userPerson = PeopleProcesses.GetStaffFromUserId(currentUserId, _context);
-
-            var observer = _context.StaffMembers.SingleOrDefault(x => x.Id == data.ObserverId);
-
-            var observee = _context.StaffMembers.Single(x => x.Id == data.ObserveeId);
-
-            if (observee == null || observer == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Staff member not found");
-            }
-
-            if (observee.Id == userPerson.Id)
-            {
-                return Content(HttpStatusCode.BadRequest, "Cannot add an observation for yourself");
-            }
-
-            data.ObserverId = observer.Id;
-
-            var observationToAdd = data;
-
-            _context.PersonnelObservations.Add(observationToAdd);
-            _context.SaveChanges();
-
-            return Ok("Observation added");
-        }
-
-        /// <summary>
-        /// Adds a staff member.
-        /// </summary>
-        /// <param name="staffDto">The DTO of the staff member to add.</param>
-        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
-        [HttpPost]
-        [Route("api/staff/new")]
-        public IHttpActionResult CreateStaff(StaffMember staffDto)
-        {
-            if (!ModelState.IsValid)
-            {
-                return Content(HttpStatusCode.BadRequest, "Invalid data");
-            }
-
-            var staff = staffDto;
-            _context.StaffMembers
-                .Add(staff);
-
-            _context.SaveChanges();
-
-            staffDto.Id = staff.Id;
-
-            return Ok("Staff member added");
-        }
-
-        /// <summary>
-        /// Deletes the specified staff member.
-        /// </summary>
-        /// <param name="staffId">The ID of the staff member to delete.</param>
-        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpDelete]
-        [Route("api/staff/delete/{staffId}")]
-        public IHttpActionResult DeleteStaff(int staffId)
+        [Route("delete/{staffMemberId:int}")]
+        public IHttpActionResult DeleteStaff([FromUri] int staffMemberId)
         {
-            if (_context.CurriculumSubjects.Any(x => x.LeaderId == staffId))
-            {
-                return Content(HttpStatusCode.BadRequest, "Cannot delete a subject leader");
-            }
-
-            if (_context.PastoralYearGroups.Any(x => x.HeadId == staffId))
-            {
-                return Content(HttpStatusCode.BadRequest, "Cannot delete a head of year");
-            }
-
-            if (_context.PastoralRegGroups.Any(x => x.TutorId == staffId))
-            {
-                return Content(HttpStatusCode.BadRequest, "Cannot delete a reg tutor");
-            }
-
-            var staffInDb = _context.StaffMembers.Single(x => x.Id == staffId);
-
-            if (staffInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Staff member not found");
-            }
-
-            if (staffInDb.Person.UserId == User.Identity.GetUserId())
-            {
-                return Content(HttpStatusCode.BadRequest, "Cannot delete the current user");
-            }
-
-            staffInDb.Deleted = true;
-
-            _context.SaveChanges();
-
-            return Ok("Staff member deleted");
+            var userId = User.Identity.GetUserId();
+            return PrepareResponse(PeopleProcesses.DeleteStaffMember(staffMemberId, userId, _context));
         }
 
-        /// <summary>
-        /// Edits the specified staff member.
-        /// </summary>
-        /// <param name="data">The staff object to edit.</param>
-        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
-        [Route("api/staff/edit")]
-        public IHttpActionResult EditStaff(StaffMember data)
+        [Route("update")]
+        public IHttpActionResult UpdateStaffMember([FromBody] StaffMember staffMember)
         {
-            var staffInDb = _context.StaffMembers.SingleOrDefault(x => x.Id == data.Id);
-
-            if (staffInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Staff member not found");
-            }
-
-            if (_context.StaffMembers.Any(x => x.Code == data.Code) && staffInDb.Code != data.Code)
-            {
-                return Content(HttpStatusCode.BadRequest, "Staff code has already been used");
-            }
-
-            staffInDb.Person.FirstName = data.Person.FirstName;
-            staffInDb.Person.LastName = data.Person.LastName;
-            staffInDb.Person.Title = data.Person.Title;
-            staffInDb.Code = data.Code;
-            staffInDb.JobTitle = data.JobTitle;
-
-            _context.SaveChanges();
-
-            return Ok("Staff member updated");
+            return PrepareResponse(PeopleProcesses.UpdateStaffMember(staffMember, _context));
         }
 
-        /// <summary>
-        /// Fetches the specified document.
-        /// </summary>
-        /// <param name="documentId">The ID of the document to fetch.</param>
-        /// <returns>Returns a DTO of the staff document with the specified ID.</returns>
-        /// <exception cref="HttpResponseException"></exception>
-        [HttpGet]
-        [Route("api/staff/documents/document/{documentId}")]
-        public PersonDocumentDto GetDocument(int documentId)
+        [Route("get/all")]
+        public IEnumerable<StaffMemberDto> GetAllStaffMembers()
         {
-            var document = _context.PersonDocuments.SingleOrDefault(x => x.Id == documentId);
-
-            if (document == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            return Mapper.Map<PersonDocument, PersonDocumentDto>(document);
-        }
-
-        // --[STAFF DOCUMENTS]--
-
-        /// <summary>
-        /// Fetches documents for the specified staff member.
-        /// </summary>
-        /// <param name="staffId">The ID of the staff member to fetch.</param>
-        /// <returns>Returns a list of DTOs of documents for the specified staff member.</returns>
-        /// <exception cref="HttpResponseException"></exception>
-        [HttpGet]
-        [Route("api/staff/documents/fetch/{staffId}")]
-        public IEnumerable<PersonDocumentDto> GetDocuments(int staffId)
-        {
-            var staff = _context.StaffMembers.SingleOrDefault(s => s.Id == staffId);
-
-            if (staff == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            var documents = _context.PersonDocuments
-                .Where(x => x.PersonId == staff.PersonId)
-                .ToList()
-                .Select(Mapper.Map<PersonDocument, PersonDocumentDto>);
-
-            return documents;
-        }
-
-        /// <summary>
-        /// Gets the staff observation with the specified ID.
-        /// </summary>
-        /// <param name="observationId"></param>
-        /// <returns>Returns a DTO of the staff observation with the specified ID.</returns>
-        /// <exception cref="HttpResponseException">Thrown when staff member is not found.</exception>
-        [HttpGet]
-        [Route("api/staff/observations/observation/{observationId}")]
-        public PersonnelObservationDto GetObservation(int observationId)
-        {
-            var observation = _context.PersonnelObservations.SingleOrDefault(x => x.Id == observationId);
-
-            if (observation == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            return Mapper.Map<PersonnelObservation, PersonnelObservationDto>(observation);
+            return PrepareResponseObject(PeopleProcesses.GetAllStaffMembers(_context));
         }        
 
-        /// <summary>
-        /// Gets all observations for the specified staff member.
-        /// </summary>
-        /// <param name="staffId">The ID of the staff member to fetch observations for.</param>
-        /// <returns>Returns a list of DTOs of observations for the specified staff member.</returns>
-        /// <exception cref="HttpResponseException">Thrown when staff member is not found.</exception>
+        [Route("get/byId/{staffMemberId:int}")]
+        public StaffMemberDto GetStaffMemberById([FromUri] int staffMemberId)
+        {
+            return PrepareResponseObject(PeopleProcesses.GetStaffMemberById(staffMemberId, _context));
+        }
+
         [HttpGet]
-        [Route("api/staff/observations/fetch/{staffId}")]
-        public IEnumerable<PersonnelObservationDto> GetObservations(int staffId)
+        [Route("hasDocuments/{staffMemberId:int}")]
+        public bool StaffMemberHasDocuments([FromUri] int staffMemberId)
         {
-            var staff = _context.StaffMembers.Single(x => x.Id == staffId);
-
-            if (staff == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            var observations = _context.PersonnelObservations
-                .Where(x => x.ObserveeId == staffId)
-                .ToList()
-                .Select(Mapper.Map<PersonnelObservation, PersonnelObservationDto>);
-
-            return observations;
+            return PrepareResponseObject(PeopleProcesses.StaffMemberHasDocuments(staffMemberId, _context));
         }
 
-        /// <summary>
-        /// Gets a list of all staff.
-        /// </summary>
-        /// <returns>Returns a list of DTOs of all staff.</returns>
-        [Route("api/staff/fetch")]
-        public IEnumerable<StaffMemberDto> GetStaff()
-        {
-            return _context.StaffMembers
-                .OrderBy(x => x.Person.LastName)
-                .ToList()
-                .Select(Mapper.Map<StaffMember, StaffMemberDto>);
-        }        
-
-        /// <summary>
-        /// Gets the staff member with the specified ID.
-        /// </summary>
-        /// <param name="id">The ID of the staff member to fetch.</param>
-        /// <returns>Returns a DTO of the specified staff member.</returns>
-        /// <exception cref="HttpResponseException">Thrown when the staff member is not found.</exception>
-        [Route("api/staff/fetch/{id}")]
-        public StaffMemberDto GetStaffMember(string id)
-        {
-            var staff = _context.StaffMembers.SingleOrDefault(s => s.Code == id);
-
-            if (staff == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            return Mapper.Map<StaffMember, StaffMemberDto>(staff);
-        }
-
-        /// <summary>
-        /// Deletes the specified document.
-        /// </summary>
-        /// <param name="documentId">The ID of the document to delete.</param>
-        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
-        [HttpDelete]
-        [Route("api/staff/documents/remove/{documentId}")]
-        public IHttpActionResult RemoveDocument(int documentId)
-        {
-            var staffDocument = _context.PersonDocuments.Single(x => x.Id == documentId);
-
-            if (staffDocument == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Document not found");
-            }
-
-            var attachedDocument = staffDocument.Document;
-
-            if (attachedDocument == null)
-            {
-                return Content(HttpStatusCode.BadRequest, "No document attached");
-            }
-
-            _context.PersonDocuments.Remove(staffDocument);
-
-            _context.Documents.Remove(attachedDocument);
-
-            _context.SaveChanges();
-
-            return Ok("Document deleted");
-        }
-
-        /// <summary>
-        /// Deletes the specified observation.
-        /// </summary>
-        /// <param name="observationId">The ID of the observation to delete.</param>
-        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
-        [HttpDelete]
-        [Route("api/staff/observations/remove/{observationId}")]
-        public IHttpActionResult RemoveObservation(int observationId)
-        {
-            var observationToRemove = _context.PersonnelObservations.Single(x => x.Id == observationId);
-
-            var currentUserId = User.Identity.GetUserId();
-
-            var userStaffProfile = _context.StaffMembers.SingleOrDefault(x => x.Person.UserId == currentUserId);
-
-            if (userStaffProfile == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Current user profile not found");
-            }
-
-            if (observationToRemove == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Observation not found");
-            }
-
-            if (observationToRemove.ObserveeId == userStaffProfile.Id)
-            {
-                return Content(HttpStatusCode.BadRequest, "Cannot remove an observation for yourself");
-            }
-
-            _context.PersonnelObservations.Remove(observationToRemove);
-            _context.SaveChanges();
-
-            return Ok("Observation removed");
-        }
-
-        /// <summary>
-        /// Checks whether a staff member has any documents.
-        /// </summary>
-        /// <param name="id">The ID of the staff member to check.</param>
-        /// <returns>Returns true if staff member has documents.</returns>
-        /// <exception cref="HttpResponseException">Thrown when the staff member is not found.</exception>
         [HttpGet]
-        [Route("api/staff/hasDocuments/{id}")]
-        public bool StaffHasDocuments(int id)
+        [Route("hasLogs/{staffMemberId:int}")]
+        public bool StaffHasLogs([FromUri] int staffMemberId)
         {
-            var staffInDb = _context.StaffMembers.SingleOrDefault(x => x.Id == id);
-
-            if (staffInDb == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            return staffInDb.Documents.Any();
-        }
-
-        /// <summary>
-        /// Checks whether a staff member has written any logs.
-        /// </summary>
-        /// <param name="id">The ID of the staff member to check.</param>
-        /// <returns>Returns true if staff member has logs.</returns>
-        /// <exception cref="HttpResponseException">Thrown when the staff member is not found.</exception>
-        [HttpGet]
-        [Route("api/staff/hasLogs/{id}")]
-        public bool StaffHasLogs(int id)
-        {
-            var staffInDb = _context.StaffMembers.SingleOrDefault(x => x.Id == id);
-
-            if (staffInDb == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            return _context.ProfileLogs.Any(x => x.AuthorId == id);
-        }
-
-        /// <summary>
-        /// Updates the specified document.
-        /// </summary>
-        /// <param name="data">The document object to update.</param>
-        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
-        [HttpPost]
-        [Route("api/staff/documents/edit")]
-        public IHttpActionResult UpdateDocument(PersonDocument data)
-        {
-            var staffDocumentInDb = _context.PersonDocuments.Single(x => x.Id == data.Id);
-
-            if (staffDocumentInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Upload not found");
-            }
-
-            var isUriValid = Uri.TryCreate(data.Document.Url, UriKind.Absolute, out var uriResult)
-                             && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
-
-            if (!isUriValid)
-            {
-                return Content(HttpStatusCode.BadRequest, "The URL entered is not valid");
-            }
-
-            staffDocumentInDb.Document.Description = data.Document.Description;
-            staffDocumentInDb.Document.Url = data.Document.Url;
-            staffDocumentInDb.Document.IsGeneral = false;
-            staffDocumentInDb.Document.Approved = true;
-
-            _context.SaveChanges();
-
-            return Ok("Document updated");
-        }
-
-        /// <summary>
-        /// Updates the specified observation
-        /// </summary>
-        /// <param name="data">The staff observation object to update.</param>
-        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
-        [HttpPost]
-        [Route("api/staff/observations/update")]
-        public IHttpActionResult UpdateObservation(PersonnelObservation data)
-        {
-            var observationInDb = _context.PersonnelObservations.Single(x => x.Id == data.Id);
-
-            var currentUserId = User.Identity.GetUserId();
-
-            var observer = _context.StaffMembers.SingleOrDefault(x => x.Id == data.ObserverId);
-
-            var userStaffProfile = _context.StaffMembers.SingleOrDefault(x => x.Person.UserId == currentUserId);
-
-            if (userStaffProfile == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Current user profile not found");
-            }
-
-            if (observationInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Observation not found");
-            }
-
-            if (observationInDb.ObserveeId == userStaffProfile.Id)
-            {
-                return Content(HttpStatusCode.BadRequest, "Cannot modify an observation for yourself");
-            }
-
-            observationInDb.Outcome = data.Outcome;
-            observationInDb.ObserverId = observer.Id;
-
-            _context.SaveChanges();
-
-            return Ok("Observation updated");
+            return PrepareResponseObject(PeopleProcesses.StaffMemberHasWrittenLogs(staffMemberId, _context));
         }
     }
 }

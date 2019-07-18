@@ -7,18 +7,20 @@ namespace MyPortal.Dtos
     using System.Data.Entity.Spatial;
 
     /// <summary>
-    /// Represents the assignment of a period in the week to a class.
+    /// Represents a student enrolled in a class.
     /// </summary>
-    public partial class CurriculumClassPeriodDto
+    public partial class CurriculumEnrolmentDto
     {
         public int Id { get; set; }
 
+        [Display(Name="Student")]
+        public int StudentId { get; set; }
+
+        [Display(Name="Class")]
         public int ClassId { get; set; }
 
-        public int PeriodId { get; set; }
-
-        public virtual AttendancePeriodDto AttendancePeriod { get; set; }
-
         public virtual CurriculumClassDto CurriculumClass { get; set; }
+
+        public virtual StudentDto Student { get; set; }
     }
 }

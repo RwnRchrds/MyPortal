@@ -52,7 +52,7 @@
                         @Html.ValidationMessageFor(x => x.BalanceAdjustment.Amount)
                     </div>
                     <div class="form-group">
-                        @Html.HiddenFor(x => x.BalanceAdjustment.Student, new {Name = "Student", id = "studentIdControlCredit"})
+                        @Html.HiddenFor(x => x.BalanceAdjustment.StudentId, new {Name = "Student", id = "studentIdControlCredit"})
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -91,7 +91,7 @@
                         @Html.ValidationMessageFor(x => x.BalanceAdjustment.Amount)
                     </div>
                     <div class="form-group">
-                        @Html.HiddenFor(x => x.BalanceAdjustment.Student, new {Name = "Student", id = "studentIdControlDebit"})
+                        @Html.HiddenFor(x => x.BalanceAdjustment.StudentId, new {Name = "Student", id = "studentIdControlDebit"})
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>

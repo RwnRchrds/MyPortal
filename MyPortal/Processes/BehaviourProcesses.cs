@@ -136,7 +136,7 @@ namespace MyPortal.Processes
 
         public static ProcessResponse<IEnumerable<ChartData>> GetChartData_BehaviourIncidentsByType(MyPortalDbContext context)
         {
-            var recordedBehaviourTypes = context.BehaviourTypes.Where(x => x.BehaviourIncidents.Any()).ToList();
+            var recordedBehaviourTypes = context.BehaviourIncidentTypes.Where(x => x.BehaviourIncidents.Any()).ToList();
             var chartData = new List<ChartData>();
 
             foreach (var behaviourType in recordedBehaviourTypes)
@@ -193,7 +193,7 @@ namespace MyPortal.Processes
                 return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
             }
 
-            if (!achievement.Date.IsInAcademicYear(context, achievement.AcademicYearId))
+            if (!achievement.Date.IsInAcademicYear(context, achievement.AcademicYearId).ResponseObject)
             {
                 return new ProcessResponse<object>(ResponseType.BadRequest, "Date is not in academic year", null);
             }
@@ -274,7 +274,7 @@ namespace MyPortal.Processes
                 return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
             }
 
-            if (!incident.Date.IsInAcademicYear(context, incident.AcademicYearId))
+            if (!incident.Date.IsInAcademicYear(context, incident.AcademicYearId).ResponseObject)
             {
                 return new ProcessResponse<object>(ResponseType.BadRequest, "Date is not in academic year", null);
             }

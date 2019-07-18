@@ -18,16 +18,16 @@ namespace MyPortal.Models
         }
     }
 
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class IdentityContext : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDbContext()
+        public IdentityContext()
             : base("name=MyPortalDbContext", false)
         {
         }
 
-        public static ApplicationDbContext Create()
+        public static IdentityContext Create()
         {
-            return new ApplicationDbContext();
+            return new IdentityContext();
         }
     }
 }

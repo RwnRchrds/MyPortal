@@ -22,19 +22,8 @@ namespace MyPortal.Controllers
     //MyPortal Staff Controller --> Controller Methods for Staff Areas
     [System.Web.Mvc.Authorize(Roles = "Staff, SeniorStaff")]
     [System.Web.Mvc.RoutePrefix("Staff")]
-    public class StaffController : Controller
+    public class StaffController : MyPortalController
     {
-        private readonly MyPortalDbContext _context;
-
-        public StaffController()
-        {
-            _context = new MyPortalDbContext();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            _context.Dispose();
-        }
 
         #region Admission
         #endregion
@@ -105,14 +94,14 @@ namespace MyPortal.Controllers
         {
             var viewModel = new TakeRegisterViewModel();
             var attendanceWeek = _context.AttendanceWeeks.SingleOrDefault(x => x.Id == weekId);
-            var classPeriod = _context.CurriculumClassPeriods.SingleOrDefault(x => x.Id == periodId);
+            var classPeriod = _context.CurriculumSessions.SingleOrDefault(x => x.Id == periodId);
 
             if (attendanceWeek == null || classPeriod == null)
             {
                 return RedirectToAction("Registers");
             }
 
-            var classPeriods = _context.CurriculumClassPeriods.Where(x => x.ClassId == classPeriod.ClassId);
+            var classPeriods = _context.CurriculumSessions.Where(x => x.ClassId == classPeriod.ClassId);
 
             var validRegister = !attendanceWeek.IsHoliday && !attendanceWeek.IsNonTimetable &&
                                 classPeriods.Any(x => x.PeriodId == classPeriod.PeriodId);
@@ -341,8 +330,6 @@ namespace MyPortal.Controllers
 
             //var logs = _context.Logs.Where(l => l.Student == id).OrderByDescending(x => x.Date).ToList();
 
-            var results = _context.AssessmentResults.Where(r => r.StudentId == id && r.AssessmentResultSet.IsCurrent).ToList();
-
             var logTypes = _context.ProfileLogTypes.OrderBy(x => x.Name).ToList();
 
             var yearGroups = _context.PastoralYearGroups.OrderBy(x => x.Name).ToList();
@@ -357,32 +344,23 @@ namespace MyPortal.Controllers
 
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
-            AttendanceSummary attendanceData;
-            double? attendance = null;
+            var attendanceData = AttendanceProcesses.GetSummary(student.Id, academicYearId, _context).ResponseObject;
 
-            try
-            {
-                attendanceData = AttendanceProcesses.GetSummary(_context, student.Id, academicYearId, true);
-            }
-            catch (BadRequestException e)
-            {
-                attendanceData = null;
-            }
+            double? attendance = null;
 
             if (attendanceData != null)
             {
                 attendance = attendanceData.Present + attendanceData.Late;
             } 
 
-            var achievementCount = BehaviourProcesses.GetAchievementPointsCount(student.Id, academicYearId, _context);
+            var achievementCount = BehaviourProcesses.GetAchievementPointsCount(student.Id, academicYearId, _context).ResponseObject;
 
-            var behaviourCount = BehaviourProcesses.GetBehaviourPointsCount(student.Id, academicYearId, _context);
+            var behaviourCount = BehaviourProcesses.GetBehaviourPointsCount(student.Id, academicYearId, _context).ResponseObject;
 
             var viewModel = new StudentDetailsViewModel
             {
                 //Logs = logs,
                 Student = student,
-                Results = results,
                 LogTypes = logTypes,
                 YearGroups = yearGroups,
                 RegGroups = regGroups,
@@ -441,7 +419,7 @@ namespace MyPortal.Controllers
 
             var achievementTypes = _context.BehaviourAchievementTypes.OrderBy(x => x.Description).ToList();
 
-            var behaviourTypes = _context.BehaviourTypes.OrderBy(x => x.Description).ToList();
+            var behaviourTypes = _context.BehaviourIncidentTypes.OrderBy(x => x.Description).ToList();
 
             var behaviourLocations = _context.BehaviourLocations.OrderBy(x => x.Description).ToList();
 
@@ -492,14 +470,11 @@ namespace MyPortal.Controllers
 
             var courses = _context.PersonnelTrainingCourses.ToList();
 
-            var statuses = _context.PersonnelTrainingStatuses.ToList();
-
             var viewModel = new StaffDetailsViewModel
             {
                 Staff = staff,
                 TrainingCertificates = certificates,
                 TrainingCourses = courses,
-                TrainingStatuses = statuses,
                 CurrentStaffId = currentStaffId
             };
 

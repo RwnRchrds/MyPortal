@@ -12,189 +12,112 @@ using MyPortal.Processes;
 
 namespace MyPortal.Controllers.Api
 {
+    [RoutePrefix("api/personnel")]
     public class PersonnelController : MyPortalApiController
     {
-        #region Training Certificates
         [HttpPost]
-        [Route("api/staff/certificates/create")]
-        public IHttpActionResult CreateTrainingCertificate(PersonnelTrainingCertificate trainingCertificateDto)
+        [Route("certificates/create")]
+        public IHttpActionResult CreateTrainingCertificate([FromBody] PersonnelTrainingCertificate certificate)
         {
-            if (!ModelState.IsValid)
-            {
-                return Content(HttpStatusCode.BadRequest, "Invalid data");
-            }
-
             var userId = User.Identity.GetUserId();
-
-            var userPerson = PeopleProcesses.GetStaffFromUserId(userId, _context);
-
-            if (trainingCertificateDto.StaffId == userPerson.Id)
-            {
-                return Content(HttpStatusCode.BadRequest, "Cannot add a certificate for yourself");
-            }
-
-            var cert = trainingCertificateDto;
-
-            _context.PersonnelTrainingCertificates.Add(cert);
-            _context.SaveChanges();
-
-            return Ok("Certificate added");
+            return PrepareResponse(PersonnelProcesses.CreateTrainingCertificate(certificate, userId, _context));
         }
 
         [HttpDelete]
-        [Route("api/staff/certificates/delete/{staff}/{course}")]
-        public IHttpActionResult DeleteCertificate(int staff, int course)
+        [Route("certificates/delete/{staffId:int}/{courseId:int}")]
+        public IHttpActionResult DeleteCertificate([FromUri] int staffId, [FromUri] int courseId)
         {
-            var certInDb =
-                _context.PersonnelTrainingCertificates.SingleOrDefault(l => l.StaffId == staff && l.CourseId == course);
-
-            if (certInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Certificate not found");
-            }
-
             var userId = User.Identity.GetUserId();
-
-            var userPerson = _context.StaffMembers.SingleOrDefault(x => x.Person.UserId == userId);
-
-            if (staff == userPerson.Id)
-            {
-                return Content(HttpStatusCode.BadRequest, "Cannot remove a certificate for yourself");
-            }
-
-            _context.PersonnelTrainingCertificates.Remove(certInDb);
-            _context.SaveChanges();
-
-            return Ok("Certificate deleted");
+            return PrepareResponse(PersonnelProcesses.DeleteTrainingCertificate(staffId, courseId, userId, _context));
         }
 
 
         [HttpGet]
-        [Route("api/staff/certificates/fetch/{staffId}/{courseId}")]
-        public PersonnelTrainingCertificateDto GetCertificate(int staffId, int courseId)
+        [Route("certificates/get/{staffId:int}/{courseId:int}")]
+        public PersonnelTrainingCertificateDto GetCertificate([FromUri] int staffId, [FromUri] int courseId)
         {
-            var certInDb = _context.PersonnelTrainingCertificates.Single(x => x.StaffId == staffId && x.CourseId == courseId);
-
-            if (certInDb == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            return Mapper.Map<PersonnelTrainingCertificate, PersonnelTrainingCertificateDto>(certInDb);
+            return PrepareResponseObject(PersonnelProcesses.GetCertificate(staffId, courseId, _context));
         }
 
         [HttpGet]
-        [Route("api/staff/certificates/fetch/{staff}")]
-        public IEnumerable<PersonnelTrainingCertificateDto> GetCertificates(int staff)
+        [Route("certificates/get/byStaff/{staffId:int}")]
+        public IEnumerable<PersonnelTrainingCertificateDto> GetCertificatesForStaffMember([FromUri] int staffId)
         {
-            var staffInDb = _context.StaffMembers.Single(x => x.Id == staff);
-
-            if (staffInDb == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            return _context.PersonnelTrainingCertificates
-                .Where(c => c.StaffId == staff)
-                .ToList()
-                .Select(Mapper.Map<PersonnelTrainingCertificate, PersonnelTrainingCertificateDto>);
+            return PrepareResponseObject(PersonnelProcesses.GetCertificatesForStaffMember(staffId, _context));
         }
 
         [HttpPost]
-        [Route("api/staff/certificates/update")]
-        public IHttpActionResult UpdateCertificate(PersonnelTrainingCertificate data)
+        [Route("certificates/update")]
+        public IHttpActionResult UpdateCertificate([FromBody] PersonnelTrainingCertificate certificate)
         {
-            var certInDb =
-                _context.PersonnelTrainingCertificates.Single(x => x.StaffId == data.StaffId && x.CourseId == data.CourseId);
-
-            if (certInDb == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
             var userId = User.Identity.GetUserId();
-
-            var userPerson = _context.StaffMembers.SingleOrDefault(x => x.Person.UserId == userId);
-
-            if (userPerson != null && data.StaffId == userPerson.Id)
-            {
-                return Content(HttpStatusCode.BadRequest, "Cannot modify a certificate for yourself");
-            }
-
-            certInDb.StatusId = data.StatusId;
-
-            _context.SaveChanges();
-
-            return Ok("Certificate updated");
+            return PrepareResponse(PersonnelProcesses.UpdateCertificate(certificate, userId, _context));
         }
 
-        #endregion
-
-        #region Training Courses
         [HttpDelete]
-        [Route("api/courses/remove/{courseId}")]
-        public IHttpActionResult DeleteCourse(int courseId)
+        [Route("courses/remove/{courseId:int}")]
+        public IHttpActionResult DeleteCourse([FromUri] int courseId)
         {
-            var courseInDb = _context.PersonnelTrainingCourses.Single(x => x.Id == courseId);
-
-            if (courseInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Training course not found");
-            }
-
-            if (courseInDb.PersonnelTrainingCertificates.Any())
-            {
-                return Content(HttpStatusCode.BadRequest, "Cannot delete course that has issued certificates");
-            }
-
-            _context.PersonnelTrainingCourses.Remove(courseInDb);
-            _context.SaveChanges();
-
-            return Ok("Training course deleted");
-        }
-
-
-        [HttpGet]
-        [Route("api/courses/fetch/{courseId}")]
-        public PersonnelTrainingCourseDto GetCourse(int courseId)
-        {
-            var courseInDb = _context.PersonnelTrainingCourses.Single(x => x.Id == courseId);
-
-            if (courseInDb == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            return Mapper.Map<PersonnelTrainingCourse, PersonnelTrainingCourseDto>(courseInDb);
+            return PrepareResponse(PersonnelProcesses.DeleteCourse(courseId, _context));
         }
 
         [HttpGet]
-        [Route("api/courses")]
+        [Route("courses/get/byId/{courseId:int}")]
+        public PersonnelTrainingCourseDto GetCourseById([FromUri] int courseId)
+        {
+            return PrepareResponseObject(PersonnelProcesses.GetCourseById(courseId, _context));
+        }
+
+        [HttpGet]
+        [Route("courses")]
         public IEnumerable<PersonnelTrainingCourseDto> GetCourses()
         {
-            return _context.PersonnelTrainingCourses
-                .ToList()
-                .Select(Mapper.Map<PersonnelTrainingCourse, PersonnelTrainingCourseDto>);
+            return PrepareResponseObject(PersonnelProcesses.GetAllCourses(_context));
         }
 
         [HttpPost]
-        [Route("api/courses/edit")]
-        public IHttpActionResult UpdateCourse(PersonnelTrainingCourse course)
+        [Route("courses/edit")]
+        public IHttpActionResult UpdateCourse([FromBody] PersonnelTrainingCourse course)
         {
-            var courseInDb = _context.PersonnelTrainingCourses.Single(x => x.Id == course.Id);
-
-            if (courseInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Training course not found");
-            }
-
-            courseInDb.Code = course.Code;
-            courseInDb.Description = course.Description;
-
-            _context.SaveChanges();
-
-            return Ok("Training course updated");
+            return PrepareResponse(PersonnelProcesses.UpdateCourse(course, _context));
         }
-        #endregion
+
+        [HttpPost]
+        [Route("observations/create")]
+        public IHttpActionResult CreateObservation([FromBody] PersonnelObservation data)
+        {
+            var userId = User.Identity.GetUserId();
+            return PrepareResponse(PersonnelProcesses.CreateObservation(data, userId, _context));
+        }
+
+        [HttpGet]
+        [Route("observations/observation/{observationId:int}")]
+        public PersonnelObservationDto GetObservation([FromUri] int observationId)
+        {
+            return PrepareResponseObject(PersonnelProcesses.GetObservationById(observationId, _context));
+        }  
+        
+        [HttpGet]
+        [Route("observations/get/byStaff/{staffMemberId:int}")]
+        public IEnumerable<PersonnelObservationDto> GetObservationsForStaffMember([FromUri] int staffMemberId)
+        {
+            return PrepareResponseObject(PersonnelProcesses.GetObservationsForStaffMember(staffMemberId, _context));
+        }
+
+        [HttpDelete]
+        [Route("observations/delete/{observationId:int}")]
+        public IHttpActionResult RemoveObservation([FromUri] int observationId)
+        {
+            var userId = User.Identity.GetUserId();
+            return PrepareResponse(PersonnelProcesses.DeleteObservation(observationId, userId, _context));
+        }
+
+        [HttpPost]
+        [Route("observations/update")]
+        public IHttpActionResult UpdateObservation([FromBody] PersonnelObservation observation)
+        {
+            var userId = User.Identity.GetUserId();
+            return PrepareResponse(PersonnelProcesses.UpdateObservation(observation, userId, _context));
+        }
     }
 }

@@ -6,6 +6,13 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    public enum CertificateStatus
+    {
+        Completed = 1,
+        Pending = 2,
+        Failed = 3
+    }
+
     /// <summary>
     /// A certificate awarded to personnel who have completed a training course.
     /// </summary>
@@ -22,12 +29,10 @@ namespace MyPortal.Models.Database
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int StaffId { get; set; }
 
-        public int StatusId { get; set; }
+        public CertificateStatus StatusId { get; set; }
 
         public virtual StaffMember StaffMember { get; set; }
 
         public virtual PersonnelTrainingCourse PersonnelTrainingCourse { get; set; }
-
-        public virtual PersonnelTrainingStatus PersonnelTrainingStatus { get; set; }
     }
 }

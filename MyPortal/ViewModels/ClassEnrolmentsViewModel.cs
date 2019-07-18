@@ -9,6 +9,6 @@ namespace MyPortal.ViewModels
     public class ClassEnrolmentsViewModel
     {
         public CurriculumClass Class { get; set; }
-        public CurriculumClassEnrolment Enrolment { get; set; }
+        public CurriculumEnrolment Enrolment { get; set; }
     }
 }

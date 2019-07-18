@@ -64,9 +64,6 @@ namespace MyPortal
             CreateMap<FinanceBasketItemDto, FinanceBasketItem>();
             CreateMap<FinanceBasketItem, FinanceBasketItemDto>();
 
-            CreateMap<PersonnelTrainingStatusDto, PersonnelTrainingStatus>();
-            CreateMap<PersonnelTrainingStatus, PersonnelTrainingStatusDto>();
-
             CreateMap<DocumentDto, Document>();
             CreateMap<Document, DocumentDto>();
 
@@ -88,8 +85,8 @@ namespace MyPortal
             CreateMap<CurriculumClass, CurriculumClassDto>();
             CreateMap<CurriculumClassDto, CurriculumClass>();
 
-            CreateMap<CurriculumClassPeriod, CurriculumClassPeriodDto>();
-            CreateMap<CurriculumClassPeriodDto, CurriculumClassPeriod>();
+            CreateMap<CurriculumSession, CurriculumSessionDto>();
+            CreateMap<CurriculumSessionDto, CurriculumSession>();
 
             CreateMap<AttendanceWeek, AttendanceWeekDto>();
             CreateMap<AttendanceWeekDto, AttendanceWeek>();
@@ -105,7 +102,7 @@ namespace MyPortal
 
             CreateMap<Student, GridStudentDto>()
                 .ForMember(dest => dest.DisplayName,
-                    opts => opts.MapFrom(src => PeopleProcesses.GetStudentDisplayName(src)))
+                    opts => opts.MapFrom(src => PeopleProcesses.GetStudentDisplayName(src).ResponseObject))
                 .ForMember(dest => dest.HouseName,
                     opts => opts.MapFrom(src => src.House.Name))
                 .ForMember(dest => dest.RegGroupName,
@@ -117,7 +114,7 @@ namespace MyPortal
                 .ForMember(dest => dest.Id,
                     opts => opts.MapFrom(src => src.Id))
                 .ForMember(dest => dest.AuthorName,
-                    opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.Author)))
+                    opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.Author).ResponseObject))
                 .ForMember(dest => dest.Date,
                     opts => opts.MapFrom(src => src.Date))
                 .ForMember(dest => dest.LogTypeName,
@@ -147,15 +144,15 @@ namespace MyPortal
                 .ForMember(dest => dest.TypeName,
                     opts => opts.MapFrom(src => src.BehaviourAchievementType.Description))
                 .ForMember(dest => dest.RecordedBy,
-                    opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.RecordedBy)));
+                    opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.RecordedBy).ResponseObject));
 
             CreateMap<BehaviourIncident, GridIncidentDto>()
                 .ForMember(dest => dest.Location,
                     opts => opts.MapFrom(src => src.BehaviourLocation.Description))
                 .ForMember(dest => dest.TypeName,
-                    opts => opts.MapFrom(src => src.BehaviourType.Description))
+                    opts => opts.MapFrom(src => src.BehaviourIncidentType.Description))
                 .ForMember(dest => dest.RecordedBy,
-                    opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.RecordedBy)));
+                    opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.RecordedBy).ResponseObject));
         }
     }
 }

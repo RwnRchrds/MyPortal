@@ -155,7 +155,7 @@
                     </div>
                     <div class="form-group">
                         @Html.Label("Completion Status")
-                        @Html.DropDownListFor(l => l.TrainingCertificate.StatusId, new SelectList(Model.TrainingStatuses, "Id", "Name"), "Select Status", new {@class = "form-control", Name = "StatusId"})
+                        @Html.EnumDropDownListFor(l => l.TrainingCertificate.StatusId, "Select Status", new {@class = "form-control", Name = "StatusId"})
                         @Html.ValidationMessageFor(l => l.TrainingCertificate.StatusId)
                     </div>
                     <div class="form-group">

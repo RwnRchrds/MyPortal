@@ -23,6 +23,8 @@ namespace MyPortal.Dtos
 
         public bool OnceOnly { get; set; }
 
+        public bool Deleted { get; set; }
+
         public virtual FinanceProductTypeDto FinanceProductType { get; set; }
     }
 }

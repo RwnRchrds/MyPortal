@@ -33,6 +33,8 @@ namespace MyPortal.Models.Database
 
         public bool OnceOnly { get; set; }
 
+        public bool Deleted { get; set; }
+
         public virtual FinanceProductType FinanceProductType { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

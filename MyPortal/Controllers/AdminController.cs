@@ -14,13 +14,13 @@ namespace MyPortal.Controllers
     public class AdminController : Controller
     {
         private readonly MyPortalDbContext _context;
-        private readonly ApplicationDbContext _identity;
+        private readonly IdentityContext _identity;
         private readonly UserManager<ApplicationUser> _userManager;
 
         public AdminController()
         {
             _context = new MyPortalDbContext();
-            _identity = new ApplicationDbContext();
+            _identity = new IdentityContext();
             var store = new UserStore<ApplicationUser>(_identity);
             _userManager = new UserManager<ApplicationUser>(store);
         }

@@ -215,3 +215,20 @@
     font-weight: bold;
     color: white;
 }
+
+.overview-card {
+    width: 550px;
+}
+
+.e-headercell {
+    background-color: #2C3E50 !important;
+}
+
+.e-headercelldiv {
+    font-size: 13px !important;
+    color: white;
+}
+
+.mp-inline-block {
+    display: inline-block;
+}

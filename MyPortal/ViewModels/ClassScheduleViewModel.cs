@@ -9,7 +9,7 @@ namespace MyPortal.ViewModels
     public class ClassScheduleViewModel
     {
         public CurriculumClass Class { get; set; }
-        public CurriculumClassPeriod Assignment { get; set; }
+        public CurriculumSession Assignment { get; set; }
         public IEnumerable<AttendancePeriod> Periods { get; set; }  
     }
 }

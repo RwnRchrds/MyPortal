@@ -98,7 +98,7 @@ namespace MyPortal.UnitTests.TestData
             #endregion
 
             #region CurriculumClassEnrollments
-            context.CurriculumClassEnrolments.AddRange(new List<CurriculumClassEnrolment>
+            context.CurriculumEnrolments.AddRange(new List<CurriculumEnrolment>
             {
 
             });
@@ -111,8 +111,8 @@ namespace MyPortal.UnitTests.TestData
             });
             #endregion
 
-            #region CurriculumClassPeriods
-            context.CurriculumClassPeriods.AddRange(new List<CurriculumClassPeriod>
+            #region CurriculumSessions
+            context.CurriculumSessions.AddRange(new List<CurriculumSession>
             {
 
             });
@@ -262,13 +262,6 @@ namespace MyPortal.UnitTests.TestData
             });
             #endregion
 
-            #region PersonnelTrainingStatuses
-            context.PersonnelTrainingStatuses.AddRange(new List<PersonnelTrainingStatus>
-            {
-
-            });
-            #endregion
-
             #region ProfileComments
             context.ProfileComments.AddRange(new List<ProfileComment>
             {
@@ -378,9 +371,6 @@ namespace MyPortal.UnitTests.TestData
 
                 cfg.CreateMap<FinanceBasketItemDto, FinanceBasketItem>();
                 cfg.CreateMap<FinanceBasketItem, FinanceBasketItemDto>();
-
-                cfg.CreateMap<PersonnelTrainingStatusDto, PersonnelTrainingStatus>();
-                cfg.CreateMap<PersonnelTrainingStatus, PersonnelTrainingStatusDto>();
 
                 cfg.CreateMap<DocumentDto, Document>();
                 cfg.CreateMap<Document, DocumentDto>();

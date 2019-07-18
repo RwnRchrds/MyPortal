@@ -11,6 +11,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using MyPortal.Dtos.Identity;
 using MyPortal.Models;
 using MyPortal.Models.Misc;
+using MyPortal.Processes;
 using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers.Api
@@ -21,143 +22,19 @@ namespace MyPortal.Controllers.Api
         //Add a role to a user
         [HttpPost]
         [Route("api/users/addRole")]
-        public async Task<IHttpActionResult> AddRole([FromBody] UserRoleModel data)
+        public async Task<IHttpActionResult> AddRole([FromBody] UserRoleModel roleModel)
         {
-            var userInDb = _identity.Users.FirstOrDefault(u => u.Id == data.UserId);
-            var roleToAdd = _identity.Roles.FirstOrDefault(r => r.Name == data.RoleName);
-
-            if (userInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "User not found");
-            }
-
-            if (roleToAdd == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Role not found");
-            }
-
-            switch (data.RoleName)
-            {                
-                case "Admin":
-                case "Finance":    
-                    if (await _userManager.IsInRoleAsync(data.UserId, "Student"))
-                    {
-                        return Content(HttpStatusCode.BadRequest, "Student user cannot be added to a staff role");
-                    }
-
-                    if (!await _userManager.IsInRoleAsync(data.UserId, "SeniorStaff"))
-                    {
-                        return Content(HttpStatusCode.BadRequest, "User must be a member of SeniorStaff");
-                    }
-
-                    break;
-                
-                case "SeniorStaff":
-                    if (await _userManager.IsInRoleAsync(data.UserId, "Student"))
-                    {
-                        return Content(HttpStatusCode.BadRequest, "Student user cannot be added to a staff role");
-                    }
-
-                    break;
-
-                case "Student":
-                    if (await _userManager.IsInRoleAsync(data.UserId, "Staff"))
-                    {
-                        return Content(HttpStatusCode.BadRequest, "Staff user cannot be added to a student role");
-                    }
-
-                    break;
-
-                case "Staff":
-                    if (await _userManager.IsInRoleAsync(data.UserId, "Student"))
-                    {
-                        return Content(HttpStatusCode.BadRequest, "Student user cannot be added to a staff role");
-                    }
-
-                    break;              
-                        
-                default:
-                    return Content(HttpStatusCode.NotFound, "An error occurred");
-            }
-
-            if (await _userManager.IsInRoleAsync(data.UserId, data.RoleName))
-            {
-                return Content(HttpStatusCode.BadRequest, "User is already in this role");
-            }
-
-            var result = await _userManager.AddToRoleAsync(data.UserId, data.RoleName);
-
-            if (result.Succeeded)
-            {
-                return Ok("User added to role");
-            }
-
-            return BadRequest();
+            var result = await AdminProcesses.AddUserToRole(roleModel, _userManager, _identity);
+            return PrepareResponse(result);
         }
 
         //Attach User to Personal Profile
         [HttpPost]
         [Route("api/users/attach")]
-        public async Task<IHttpActionResult> AttachPerson([FromBody] UserProfile data)
+        public async Task<IHttpActionResult> AttachPerson([FromBody] UserProfile userProfile)
         {
-            if (data.RoleName != "Staff" && data.RoleName != "Student")
-            {
-                return Content(HttpStatusCode.BadRequest, "User can only be assigned student or staff as primary role");
-            }
-
-            var userInDb = _identity.Users.FirstOrDefault(u => u.Id == data.UserId);
-            var roleToAdd = _identity.Roles.FirstOrDefault(r => r.Name == data.RoleName);
-            var userIsAttached = _context.Students.Any(x => x.Person.UserId == data.UserId) ||
-                                 _context.StaffMembers.Any(x => x.Person.UserId == data.UserId);                       
-
-            if (userInDb == null)
-            {
-                return Content(HttpStatusCode.BadRequest, "User not found");
-            }
-
-            if (roleToAdd == null)
-            {
-                return Content(HttpStatusCode.BadRequest, "Role not found");
-            }
-
-            if (userIsAttached)
-            {
-                return Content(HttpStatusCode.BadRequest, "User is already attached to a person");
-            }
-
-            if (data.RoleName == "Staff")
-            {
-                var roles = await _userManager.GetRolesAsync(data.UserId);
-                await _userManager.RemoveFromRolesAsync(data.UserId, roles.ToArray());
-                await _userManager.AddToRoleAsync(data.UserId, "Staff");
-                var personInDb = _context.StaffMembers.Single(x => x.Id == data.PersonId);
-                if (personInDb.Person.UserId != null)
-                {
-                    return Content(HttpStatusCode.BadRequest, "Another user is already attached to this person");
-                }
-
-                personInDb.Person.UserId = userInDb.Id;
-                _context.SaveChanges();
-                return Ok("User attached to person");
-            }
-
-            if (data.RoleName == "Student")
-            {
-                var roles = await _userManager.GetRolesAsync(data.UserId);
-                await _userManager.RemoveFromRolesAsync(data.UserId, roles.ToArray());
-                await _userManager.AddToRoleAsync(data.UserId, "Student");
-                var personInDb = _context.Students.Single(x => x.Id == data.PersonId);
-                if (personInDb.Person.UserId != null)
-                {
-                    return Content(HttpStatusCode.BadRequest, "Another user is already attached to this person");
-                }
-
-                personInDb.Person.UserId = userInDb.Id;
-                _context.SaveChanges();
-                return Ok("User attached to person");
-            }
-
-            return BadRequest();
+            var result = await AdminProcesses.AttachPersonToUser(userProfile, _userManager, _identity, _context);
+            return PrepareResponse(result);
         }
 
         //Change a User's Password

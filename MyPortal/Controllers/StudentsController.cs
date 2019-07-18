@@ -15,22 +15,8 @@ namespace MyPortal.Controllers
     //MyPortal Students Controller --> Controller methods for Student areas
     [System.Web.Mvc.Authorize(Roles = "Student")]
     [System.Web.Mvc.RoutePrefix("Students")]
-    public class StudentsController : Controller
+    public class StudentsController : MyPortalController
     {
-        private readonly MyPortalDbContext _context;
-
-        public StudentsController()
-        {
-            _context = new MyPortalDbContext();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing) _context?.Dispose();
-
-            base.Dispose(disposing);
-        }
-
         #region Store
 
         //Sales History
@@ -79,33 +65,20 @@ namespace MyPortal.Controllers
         {
             var userId = User.Identity.GetUserId();
 
-            var student = _context.Students.SingleOrDefault(s => s.Person.UserId == userId);
+            var student = PeopleProcesses.GetStudentFromUserId(userId, _context).ResponseObject;
 
             if (student == null)
                 return View("~/Views/Students/NoProfileIndex.cshtml");
 
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
-            AttendanceSummary attendanceData;
-            double? attendance = null;
+            var attendanceData = AttendanceProcesses.GetSummary(student.Id, academicYearId, _context).ResponseObject;
+            
+            var attendance = attendanceData?.Present + attendanceData?.Late;
 
-            try
-            {
-                attendanceData = AttendanceProcesses.GetSummary(_context, student.Id, academicYearId, true);
-            }
-            catch (BadRequestException e)
-            {
-                attendanceData = null;
-            }
+            var achievementCount = BehaviourProcesses.GetAchievementPointsCount(student.Id, academicYearId, _context).ResponseObject;
 
-            if (attendanceData != null)
-            {
-                attendance = attendanceData.Present + attendanceData.Late;
-            }
-
-            var achievementCount = BehaviourProcesses.GetAchievementPointsCount(student.Id, academicYearId, _context);
-
-            var behaviourCount = BehaviourProcesses.GetBehaviourPointsCount(student.Id, academicYearId, _context);
+            var behaviourCount = BehaviourProcesses.GetBehaviourPointsCount(student.Id, academicYearId, _context).ResponseObject;
 
             var viewModel = new StudentDetailsViewModel
             {                
@@ -124,17 +97,17 @@ namespace MyPortal.Controllers
         {
             var userId = User.Identity.GetUserId();
 
-            var student = _context.Students.SingleOrDefault(s => s.Person.UserId == userId);
+            var student = PrepareResponseObject(PeopleProcesses.GetStudentFromUserId(userId, _context));
 
             if (student == null)
                 return HttpNotFound();
 
-            var resultSets = _context.AssessmentResultSets.ToList();
+            var resultSets = PrepareResponseObject(AssessmentProcesses.GetAllResultSets_Model(_context)).ToList();
 
-            var currentResultSet = _context.AssessmentResultSets.Single(x => x.IsCurrent);
+            var currentResultSet = resultSets.SingleOrDefault(x => x.IsCurrent);
 
             if (currentResultSet == null)
-                return Content("No result sets exist in database");
+                return Content("No current result set set");
 
             var currentResultSetId = currentResultSet.Id;
 

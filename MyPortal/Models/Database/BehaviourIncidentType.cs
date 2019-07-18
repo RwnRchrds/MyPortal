@@ -7,11 +7,11 @@ using System.Web;
 
 namespace MyPortal.Models.Database
 {
-    [Table("Behaviour_BehaviourTypes")]
-    public class BehaviourType
+    [Table("Behaviour_IncidentTypes")]
+    public class BehaviourIncidentType
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public BehaviourType()
+        public BehaviourIncidentType()
         {
             BehaviourIncidents = new HashSet<BehaviourIncident>();
         }

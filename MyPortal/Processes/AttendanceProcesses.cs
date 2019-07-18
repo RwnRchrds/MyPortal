@@ -13,7 +13,7 @@ namespace MyPortal.Processes
 {
     public static class AttendanceProcesses
     {
-        public static bool VerifyAttendanceCodes(this MyPortalDbContext context, ListContainer<AttendanceRegisterMark> register)
+        public static ProcessResponse<bool> VerifyAttendanceCodes(this MyPortalDbContext context, ListContainer<AttendanceRegisterMark> register)
         {
             var codesVerified = true;
             var codes = context.AttendanceCodes.ToList();
@@ -31,10 +31,10 @@ namespace MyPortal.Processes
                 }
             }
 
-            return codesVerified;
+            return new ProcessResponse<bool>(ResponseType.Ok, null, codesVerified);
         }
 
-        public static AttendanceRegisterMark GetAttendanceMark(MyPortalDbContext context, AttendanceWeek attendanceWeek, AttendancePeriod period, Student student)
+        public static ProcessResponse<AttendanceRegisterMark> GetAttendanceMark(MyPortalDbContext context, AttendanceWeek attendanceWeek, AttendancePeriod period, Student student)
         {
             var mark = context.AttendanceMarks.SingleOrDefault(x =>
                 x.PeriodId == period.Id && x.WeekId == attendanceWeek.Id && x.StudentId == student.Id);
@@ -58,7 +58,7 @@ namespace MyPortal.Processes
                 };
             }
 
-            return mark;
+            return new ProcessResponse<AttendanceRegisterMark>(ResponseType.Ok, null, mark);
         }
 
         public static IEnumerable<AttendanceRegisterMarkLite> PrepareLiteMarkList(MyPortalDbContext context, List<AttendanceRegisterMark> marks, bool retrieveMeanings)
@@ -154,7 +154,7 @@ namespace MyPortal.Processes
                 return new ProcessResponse<IEnumerable<StudentRegisterMarksDto>>(ResponseType.NotFound, "Attendance week not found", null);
             }
 
-            var currentPeriod = context.CurriculumClassPeriods.SingleOrDefault(x => x.Id == classPeriodId);
+            var currentPeriod = context.CurriculumSessions.SingleOrDefault(x => x.Id == classPeriodId);
 
             if (currentPeriod == null)
             {
@@ -174,7 +174,7 @@ namespace MyPortal.Processes
 
                 foreach (var period in periodsInDay)
                 {
-                    var mark = GetAttendanceMark(context, attendanceWeek, period, student);
+                    var mark = GetAttendanceMark(context, attendanceWeek, period, student).ResponseObject;
 
                     marks.Add(mark);
                 }

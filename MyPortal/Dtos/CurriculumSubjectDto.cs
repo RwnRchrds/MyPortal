@@ -19,6 +19,8 @@ namespace MyPortal.Dtos
 
         public string Code { get; set; }
 
+        public bool Deleted { get; set; }
+
         public virtual StaffMemberDto Leader { get; set; }
     }
 }

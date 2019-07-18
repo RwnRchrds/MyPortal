@@ -8,15 +8,8 @@ namespace MyPortal.Controllers
 {
     [Authorize(Roles = "Finance")]
     [RoutePrefix("Staff")]
-    public class FinanceController : Controller
+    public class FinanceController : MyPortalController
     {
-        private readonly MyPortalDbContext _context;
-
-        public FinanceController()
-        {
-            _context = new MyPortalDbContext();
-        }
-
         [Route("Finance/Accounts")]
         public ActionResult Accounts()
         {

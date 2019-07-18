@@ -11,10 +11,10 @@ namespace MyPortal.Processes
 {    
     public static class UserProcesses
     {
-        private static readonly ApplicationDbContext _identity;
+        private static readonly IdentityContext _identity;
         static UserProcesses()
         {
-           _identity = new ApplicationDbContext(); 
+           _identity = new IdentityContext(); 
         }
 
         public static ApplicationUser GetApplicationUser(this IPrincipal user)

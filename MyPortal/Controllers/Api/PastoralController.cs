@@ -7,12 +7,12 @@ using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Models.Database;
+using MyPortal.Processes;
 
 namespace MyPortal.Controllers.Api
 {
     public class PastoralController : MyPortalApiController
     {
-        #region Reg Groups
         /// <summary>
         /// Creates registration group.
         /// </summary>
@@ -20,59 +20,34 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/regGroups/create")]
-        public IHttpActionResult CreateRegGroup(PastoralRegGroup regGroup)
+        public IHttpActionResult CreateRegGroup([FromBody] PastoralRegGroup regGroup)
         {
-            if (!ModelState.IsValid)
-            {
-                return Content(HttpStatusCode.BadRequest, "Invalid data");
-            }
-
-            _context.PastoralRegGroups.Add(regGroup);
-            _context.SaveChanges();
-
-            return Ok("Reg group created");
+            return PrepareResponse(PastoralProcesses.CreateRegGroup(regGroup, _context));
         }
 
         /// <summary>
         /// Deletes the specified registration group.
         /// </summary>
-        /// <param name="id">The ID of the registration group to delete.</param>
+        /// <param name="regGroupId">The ID of the registration group to delete.</param>
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpDelete]
-        [Route("api/regGroups/delete/{id}")]
-        public IHttpActionResult DeleteRegGroup(int id)
+        [Route("api/regGroups/delete/{regGroupId:int}")]
+        public IHttpActionResult DeleteRegGroup([FromUri] int regGroupId)
         {
-            var regGroupInDb = _context.PastoralRegGroups.SingleOrDefault(x => x.Id == id);
-
-            if (regGroupInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Reg group not found");
-            }
-
-            _context.PastoralRegGroups.Remove(regGroupInDb);
-            _context.SaveChanges();
-
-            return Ok("Reg group deleted");
+            return PrepareResponse(PastoralProcesses.DeleteRegGroup(regGroupId, _context));
         }
 
         /// <summary>
         /// Gets registration group with the specified ID.
         /// </summary>
-        /// <param name="id">The ID of the registration group.</param>
+        /// <param name="regGroupId">The ID of the registration group.</param>
         /// <returns>Returns a DTO of the specified registration group.</returns>
         /// <exception cref="HttpResponseException"></exception>
         [HttpGet]
-        [Route("api/regGroups/byId/{id}")]
-        public PastoralRegGroupDto GetRegGroupById(int id)
+        [Route("api/regGroups/get/byId/{regGroupId:int}")]
+        public PastoralRegGroupDto GetRegGroupById([FromUri] int regGroupId)
         {
-            var regGroup = _context.PastoralRegGroups.SingleOrDefault(x => x.Id == id);
-
-            if (regGroup == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            return Mapper.Map<PastoralRegGroup, PastoralRegGroupDto>(regGroup);
+            return PrepareResponseObject(PastoralProcesses.GetRegGroupById(regGroupId, _context));
         }
 
         /// <summary>
@@ -81,13 +56,10 @@ namespace MyPortal.Controllers.Api
         /// <param name="yearGroupId">The ID of the year group to get registration groups.</param>
         /// <returns>Returns a list of DTOs of registration groups from the specified year group.</returns>
         [HttpGet]
-        [Route("api/regGroups/byYearGroup/{yearGroupId}")]
-        public IEnumerable<PastoralRegGroupDto> GetRegGroupsByYearGroup(int yearGroupId)
+        [Route("api/regGroups/get/byYearGroup/{yearGroupId:int}")]
+        public IEnumerable<PastoralRegGroupDto> GetRegGroupsByYearGroup([FromUri] int yearGroupId)
         {
-            return _context.PastoralRegGroups
-                .Where(x => x.YearGroupId == yearGroupId)
-                .ToList()
-                .Select(Mapper.Map<PastoralRegGroup, PastoralRegGroupDto>);
+            return PrepareResponseObject(PastoralProcesses.GetRegGroupsByYearGroup(yearGroupId, _context));
         }
 
         /// <summary>
@@ -95,30 +67,23 @@ namespace MyPortal.Controllers.Api
         /// </summary>
         /// <returns>Returns a list of DTOs of all registration groups.</returns>
         [HttpGet]
-        [Route("api/regGroups/all")]
-        public IEnumerable<PastoralRegGroupDto> GetRegGroups()
+        [Route("api/regGroups/get/all")]
+        public IEnumerable<PastoralRegGroupDto> GetAllRegGroups()
         {
-            return _context.PastoralRegGroups.ToList().OrderBy(x => x.Name).Select(Mapper.Map<PastoralRegGroup, PastoralRegGroupDto>);
+            return PrepareResponseObject(PastoralProcesses.GetAllRegGroups(_context));
         }
 
         /// <summary>
         /// Checks whether a a registration group has any assigned students.
         /// </summary>
-        /// <param name="id">The ID of the registration group to check.</param>
+        /// <param name="regGroupId">The ID of the registration group to check.</param>
         /// <returns>Returns true if the registration group contains students.</returns>
         /// <exception cref="HttpResponseException">Thrown when the registration group is not found.</exception>
         [HttpGet]
-        [Route("api/regGroups/hasStudents/{id}")]
-        public bool RegGroupHasStudents(int id)
+        [Route("api/regGroups/hasStudents/{regGroupId:int}")]
+        public bool RegGroupHasStudents([FromUri] int regGroupId)
         {
-            var regGroupInDb = _context.PastoralRegGroups.SingleOrDefault(x => x.Id == id);
-
-            if (regGroupInDb == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            return regGroupInDb.Students.Any();
+            return PrepareResponseObject(PastoralProcesses.RegGroupContainsStudents(regGroupId, _context));
         }
 
         /// <summary>
@@ -128,89 +93,37 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("api/regGroups/update")]
-        public IHttpActionResult UpdateRegGroup(PastoralRegGroup regGroup)
+        public IHttpActionResult UpdateRegGroup([FromBody] PastoralRegGroup regGroup)
         {
-            var regGroupInDb = _context.PastoralRegGroups.SingleOrDefault(x => x.Id == regGroup.Id);
-
-            if (regGroupInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Reg group not found");
-            }
-
-            regGroupInDb.Name = regGroup.Name;
-            regGroupInDb.TutorId = regGroup.TutorId;
-
-            _context.SaveChanges();
-
-            return Ok("Reg group updated");
+            return PrepareResponse(PastoralProcesses.UpdateRegGroup(regGroup, _context));
         }
-        #endregion
 
-        #region Year Groups
         [HttpPost]
         [Route("api/yearGroups/create")]
-        public IHttpActionResult CreateYearGroup(PastoralYearGroup yearGroup)
+        public IHttpActionResult CreateYearGroup([FromBody] PastoralYearGroup yearGroup)
         {
-            if (!ModelState.IsValid)
-            {
-                return Content(HttpStatusCode.BadRequest, "Invalid data");
-            }
-
-            _context.PastoralYearGroups.Add(yearGroup);
-            return Ok("Year group added");
+            return PrepareResponse(PastoralProcesses.CreateYearGroup(yearGroup, _context));
         }
 
         [HttpDelete]
-        [Route("api/yearGroups/delete/{id}")]
-        public IHttpActionResult DeleteYearGroup(int id)
+        [Route("api/yearGroups/delete/{yearGroupId:int}")]
+        public IHttpActionResult DeleteYearGroup([FromUri] int yearGroupId)
         {
-            var yearGroupInDb = _context.PastoralYearGroups.SingleOrDefault(x => x.Id == id);
-
-            if (yearGroupInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Year group not found");
-            }
-
-            _context.PastoralYearGroups.Remove(yearGroupInDb);
-            _context.SaveChanges();
-
-            return Ok("Year group deleted");
+            return PrepareResponse(PastoralProcesses.DeleteYearGroup(yearGroupId, _context));
         }
 
         [HttpGet]
-        [Route("api/yearGroups/fetch")]
-        public IEnumerable<PastoralYearGroupDto> GetYearGroups()
+        [Route("api/yearGroups/get/all")]
+        public IEnumerable<PastoralYearGroupDto> GetAllYearGroups()
         {
-            return _context.PastoralYearGroups
-                .OrderBy(x => x.Id)
-                .ToList()
-                .Select(Mapper.Map<PastoralYearGroup, PastoralYearGroupDto>);
+            return PrepareResponseObject(PastoralProcesses.GetAllYearGroups(_context));
         }
 
         [HttpPost]
         [Route("api/yearGroups/update")]
-        public IHttpActionResult UpdateYearGroup(PastoralYearGroup yearGroup)
+        public IHttpActionResult UpdateYearGroup([FromBody] PastoralYearGroup yearGroup)
         {
-            if (!ModelState.IsValid)
-            {
-                return Content(HttpStatusCode.BadRequest, "Invalid data");
-            }
-
-            var yearGroupInDb = _context.PastoralYearGroups.SingleOrDefault(x => x.Id == yearGroup.Id);
-
-            if (yearGroupInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "Year group not found");
-            }
-
-            yearGroupInDb.Name = yearGroup.Name;
-            yearGroupInDb.HeadId = yearGroup.HeadId;
-
-            _context.SaveChanges();
-
-            return Ok("Year group updated");
+            return PrepareResponse(PastoralProcesses.UpdateYearGroup(yearGroup, _context));
         }
-
-        #endregion
     }
 }

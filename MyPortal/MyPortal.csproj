@@ -264,6 +264,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\FinanceController.cs" />
+    <Compile Include="Controllers\MyPortalController.cs" />
     <Compile Include="Controllers\StaffController.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
     <Compile Include="Dtos\AssessmentGradeDto.cs" />
@@ -284,8 +285,8 @@
     <Compile Include="Dtos\CommunicationTypeDto.cs" />
     <Compile Include="Dtos\CurriculumAcademicYearDto.cs" />
     <Compile Include="Dtos\CurriculumClassDto.cs" />
-    <Compile Include="Dtos\CurriculumClassEnrolmentDto.cs" />
-    <Compile Include="Dtos\CurriculumClassPeriodDto.cs" />
+    <Compile Include="Dtos\CurriculumEnrolmentDto.cs" />
+    <Compile Include="Dtos\CurriculumSessionDto.cs" />
     <Compile Include="Dtos\CurriculumLessonPlanDto.cs" />
     <Compile Include="Dtos\CurriculumLessonPlanTemplateDto.cs" />
     <Compile Include="Dtos\CurriculumStudyTopicDto.cs" />
@@ -338,7 +339,7 @@
     <Compile Include="Models\Database\BehaviourAchievementType.cs" />
     <Compile Include="Models\Database\BehaviourIncident.cs" />
     <Compile Include="Models\Database\BehaviourLocation.cs" />
-    <Compile Include="Models\Database\BehaviourType.cs" />
+    <Compile Include="Models\Database\BehaviourIncidentType.cs" />
     <Compile Include="Models\Database\CommunicationLog.cs" />
     <Compile Include="Models\Database\CommunicationType.cs" />
     <Compile Include="Models\Database\DocumentType.cs" />
@@ -367,7 +368,13 @@
     <Compile Include="Processes\AttendanceProcesses.cs" />
     <Compile Include="Processes\BehaviourProcesses.cs" />
     <Compile Include="Processes\CurriculumProcesses.cs" />
+    <Compile Include="Processes\DocumentProcesses.cs" />
+    <Compile Include="Processes\FinanceProcesses.cs" />
+    <Compile Include="Processes\LookupProcesses.cs" />
+    <Compile Include="Processes\PastoralProcesses.cs" />
     <Compile Include="Processes\PeopleProcesses.cs" />
+    <Compile Include="Processes\PersonnelProcesses.cs" />
+    <Compile Include="Processes\ProfilesProcesses.cs" />
     <Compile Include="Processes\SystemProcesses.cs" />
     <Compile Include="Processes\UserProcesses.cs" />
     <Compile Include="Processes\DateTimeProcesses.cs" />
@@ -386,9 +393,9 @@
     <Compile Include="Models\Database\AttendanceRegisterMark.cs" />
     <Compile Include="Models\Database\AttendanceWeek.cs" />
     <Compile Include="Models\Database\CurriculumAcademicYear.cs" />
-    <Compile Include="Models\Database\CurriculumClassEnrolment.cs" />
+    <Compile Include="Models\Database\CurriculumEnrolment.cs" />
     <Compile Include="Models\Database\CurriculumClass.cs" />
-    <Compile Include="Models\Database\CurriculumClassPeriod.cs" />
+    <Compile Include="Models\Database\CurriculumSession.cs" />
     <Compile Include="Models\Database\CurriculumLessonPlan.cs" />
     <Compile Include="Models\Database\CurriculumLessonPlanTemplate.cs" />
     <Compile Include="Models\Database\CurriculumStudyTopic.cs" />
@@ -405,13 +412,12 @@
     <Compile Include="Models\Database\PersonnelObservation.cs" />
     <Compile Include="Models\Database\PersonnelTrainingCertificate.cs" />
     <Compile Include="Models\Database\PersonnelTrainingCourse.cs" />
-    <Compile Include="Models\Database\PersonnelTrainingStatus.cs" />
     <Compile Include="Models\Database\ProfileCommentBank.cs" />
     <Compile Include="Models\Database\ProfileComment.cs" />
     <Compile Include="Models\Database\ProfileLog.cs" />
     <Compile Include="Models\Database\ProfileLogType.cs" />
     <Compile Include="Models\Misc\ListContainer.cs" />
-    <Compile Include="Models\Misc\BalanceAdjustment.cs" />
+    <Compile Include="Models\Misc\FinanceTransaction.cs" />
     <Compile Include="Models\Misc\ChangePasswordModel.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -913,6 +919,7 @@
   <ItemGroup>
     <Folder Include="App_Data\Results\" />
     <Folder Include="Models\Authorisation\" />
+    <Folder Include="Views\MyPortal\" />
     <Folder Include="Views\Staff\Admissions\" />
     <Folder Include="Views\Staff\Behaviour\" />
     <Folder Include="Views\Staff\Communication\" />

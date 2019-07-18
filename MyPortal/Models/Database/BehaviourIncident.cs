@@ -7,7 +7,7 @@ using System.Web;
 
 namespace MyPortal.Models.Database
 {
-    [Table("Behaviour_BehaviourIncidents")]
+    [Table("Behaviour_Incidents")]
     public class BehaviourIncident
     {
         public int Id { get; set; }
@@ -34,7 +34,7 @@ namespace MyPortal.Models.Database
 
         public bool Deleted { get; set; }
 
-        public virtual BehaviourType BehaviourType { get; set; }
+        public virtual BehaviourIncidentType BehaviourIncidentType { get; set; }
 
         public virtual BehaviourLocation BehaviourLocation{ get; set; }
 

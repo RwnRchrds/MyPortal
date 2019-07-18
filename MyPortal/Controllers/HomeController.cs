@@ -5,20 +5,8 @@ using MyPortal.Models.Database;
 namespace MyPortal.Controllers
 {
     [AllowAnonymous]
-    public class HomeController : Controller
+    public class HomeController : MyPortalController
     {
-        private readonly MyPortalDbContext _context;
-
-        public HomeController()
-        {
-            _context = new MyPortalDbContext();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            _context.Dispose();
-        }
-
         [Authorize]
         [Route("User/Home")]
         public ActionResult Home()

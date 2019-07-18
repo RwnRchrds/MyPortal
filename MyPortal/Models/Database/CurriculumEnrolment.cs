@@ -1,4 +1,4 @@
-namespace MyPortal.Dtos
+namespace MyPortal.Models.Database
 {
     using System;
     using System.Collections.Generic;
@@ -9,7 +9,8 @@ namespace MyPortal.Dtos
     /// <summary>
     /// Represents a student enrolled in a class.
     /// </summary>
-    public partial class CurriculumClassEnrolmentDto
+    [Table("Curriculum_Enrolments")]
+    public partial class CurriculumEnrolment
     {
         public int Id { get; set; }
 
@@ -19,8 +20,8 @@ namespace MyPortal.Dtos
         [Display(Name="Class")]
         public int ClassId { get; set; }
 
-        public virtual CurriculumClassDto CurriculumClass { get; set; }
+        public virtual CurriculumClass CurriculumClass { get; set; }
 
-        public virtual StudentDto Student { get; set; }
+        public virtual Student Student { get; set; }
     }
 }

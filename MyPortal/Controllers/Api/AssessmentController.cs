@@ -14,121 +14,76 @@ using MyPortal.Processes;
 
 namespace MyPortal.Controllers.Api
 {
+    [RoutePrefix("api/assessment")]
     public class AssessmentController : MyPortalApiController
     {
-        /// <summary>
-        /// Uploads results from a CSV import file.
-        /// </summary>
-        /// <param name="resultSetId">The result set to insert results into.</param>
-        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
-        [Route("api/results/import/{resultSetId}")]
-        public IHttpActionResult ImportResults(int resultSetId)
+        [HttpGet]
+        [Route("results/import/{resultSetId:int}")]
+        public IHttpActionResult ImportResults([FromUri] int resultSetId)
         {
             return PrepareResponse(AssessmentProcesses.ImportResultsToResultSet(resultSetId, _context));
         }
 
-        /// <summary>
-        /// Adds result to student.
-        /// </summary>
-        /// <param name="data">Result to add</param>
-        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
-        [Route("api/results/create")]
-        public IHttpActionResult AddResult(AssessmentResult result)
+        [Route("results/create")]
+        public IHttpActionResult AddResult([FromBody] AssessmentResult result)
         {
             return PrepareResponse(AssessmentProcesses.CreateResult(result, _context));
         }
 
-        /// <summary>
-        /// Gets results for a student from the specified result set.
-        /// </summary>
-        /// <param name="studentId">The ID of the student to fetch results for.</param>
-        /// <param name="resultSetId">The ID of the result set to fetch results from.</param>
-        /// <returns>Returns a list of DTOs of results for a student for the specified result set.</returns>
         [HttpGet]
-        [Route("api/results/fetch")]
-        public IEnumerable<AssessmentResultDto> GetResults(int studentId, int resultSetId)
+        [Route("results/get/{studentId:int}/{resultSetId:int}")]
+        public IEnumerable<AssessmentResultDto> GetResults([FromUri] int studentId, [FromUri] int resultSetId)
         {
-            return PrepareResponseObject(AssessmentProcesses.GetResults(studentId, resultSetId, _context));
+            return PrepareResponseObject(AssessmentProcesses.GetResultsForStudent(studentId, resultSetId, _context));
         }
 
         [HttpPost]
-        [Route("api/resultSets/new")]
+        [Route("resultSets/create")]
         public IHttpActionResult CreateResultSet([FromBody] AssessmentResultSet resultSet)
         {
             return PrepareResponse(AssessmentProcesses.CreateResultSet(resultSet, _context));
         }
 
-        /// <summary>
-        /// Deletes the specified result set.
-        /// </summary>
-        /// <param name="resultSetId">The ID of the result set to delete.</param>
-        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpDelete]
-        [Route("api/resultSets/delete/{resultSetId:int}")]
+        [Route("resultSets/delete/{resultSetId:int}")]
         public IHttpActionResult DeleteResultSet([FromUri] int resultSetId)
         {
             return PrepareResponse(AssessmentProcesses.DeleteResultSet(resultSetId, _context));
         }
 
-        /// <summary>
-        /// Gets the specified result set.
-        /// </summary>
-        /// <param name="resultSetId">The ID of the specified result set.</param>
-        /// <returns>Returns a DTO of the specified result set.</returns>
-        /// <exception cref="HttpResponseException">Thrown when the result set is not found.</exception>
         [HttpGet]
-        [Route("api/resultSets/byId/{resultSetId:int}")]
+        [Route("resultSets/get/byId/{resultSetId:int}")]
         public AssessmentResultSetDto GetResultSet([FromUri] int resultSetId)
         {
             return PrepareResponseObject(
-                AssessmentProcesses.GetResultSet(resultSetId, _context));
+                AssessmentProcesses.GetResultSetById(resultSetId, _context));
         }
 
-        /// <summary>
-        /// Gets all result sets.
-        /// </summary>
-        /// <returns>Returns a list of DTOs of all result sets.</returns>
         [HttpGet]
-        [Route("api/resultSets/all")]
+        [Route("resultSets/get/all")]
         public IEnumerable<AssessmentResultSetDto> GetResultSets()
         {
-            return PrepareResponseObject(AssessmentProcesses.GetResultSets(_context));
+            return PrepareResponseObject(AssessmentProcesses.GetAllResultSets(_context));
         }
 
-        /// <summary>
-        /// Checks if the specified result set contains any results.
-        /// </summary>
-        /// <param name="id">The ID of the result set to check.</param>
-        /// <returns>Returns a boolean value indicating whether the result set contains any results.</returns>
-        /// <exception cref="HttpResponseException">Thrown when the result set is not found.</exception>
         [HttpGet]
-        [Route("api/resultSets/hasResults/{id:int}")]
-        public bool ResultSetHasResults([FromUri] int id)
+        [Route("resultSets/hasResults/{resultSetId:int}")]
+        public bool ResultSetHasResults([FromUri] int resultSetId)
         {
-            return PrepareResponseObject(AssessmentProcesses.ResultSetContainsResults(id, _context));
+            return PrepareResponseObject(AssessmentProcesses.ResultSetContainsResults(resultSetId, _context));
         }
 
 
-        /// <summary>
-        /// Sets the specified result as the current result set.
-        /// </summary>
-        /// <param name="resultSetId">The ID of the result set to mark as current.</param>
-        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
-        [Route("api/resultSets/setCurrent/{resultSetId:int}")]
+        [Route("resultSets/setCurrent/{resultSetId:int}")]
         public IHttpActionResult SetCurrent([FromUri] int resultSetId)
         {
             return PrepareResponse(AssessmentProcesses.SetResultSetAsCurrent(resultSetId, _context));
         }
 
-        /// <summary>
-        /// Updates the specified result set.
-        /// </summary>
-        /// <param name="resultSet">The result set to update.</param>
-        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
-        [Route("api/resultSets/update")]
+        [Route("resultSets/update")]
         public IHttpActionResult UpdateResultSet([FromBody] AssessmentResultSet resultSet)
         {
             return PrepareResponse(AssessmentProcesses.UpdateResultSet(resultSet, _context));
