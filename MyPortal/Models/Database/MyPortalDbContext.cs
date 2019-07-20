@@ -589,10 +589,6 @@ namespace MyPortal.Models.Database
                 .HasForeignKey(e => e.YearGroupId)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<PersonnelObservation>()
-                .Property(e => e.Outcome)
-                .IsUnicode(false);
-
             modelBuilder.Entity<PersonnelTrainingCourse>()
                 .Property(e => e.Code)
                 .IsUnicode(false);

@@ -163,12 +163,12 @@ namespace MyPortal.Processes
             return new ProcessResponse<IEnumerable<ChartData>>(ResponseType.Ok, null, chartData);
         }
 
-        public static ProcessResponse<IEnumerable<GridAchievementDto>> GetAchievementsForGrid(int studentId,
+        public static ProcessResponse<IEnumerable<GridBehaviourAchievementDto>> GetAchievementsForGrid(int studentId,
             int academicYearId, MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<GridAchievementDto>>(ResponseType.Ok, null, context.BehaviourAchievements.Where(
+            return new ProcessResponse<IEnumerable<GridBehaviourAchievementDto>>(ResponseType.Ok, null, context.BehaviourAchievements.Where(
                     x => x.AcademicYearId == academicYearId && x.StudentId == studentId && !x.Deleted).OrderByDescending(x => x.Date).ToList()
-                .Select(Mapper.Map<BehaviourAchievement, GridAchievementDto>));
+                .Select(Mapper.Map<BehaviourAchievement, GridBehaviourAchievementDto>));
         }
 
         public static ProcessResponse<BehaviourAchievementDto> GetAchievement(int achievementId, MyPortalDbContext context)
@@ -242,12 +242,12 @@ namespace MyPortal.Processes
             return new ProcessResponse<object>(ResponseType.Ok, "Achievement deleted", null);
         }
 
-        public static ProcessResponse<IEnumerable<GridIncidentDto>> GetBehaviourIncidentsForGrid(int studentId,
+        public static ProcessResponse<IEnumerable<GridBehaviourIncidentDto>> GetBehaviourIncidentsForGrid(int studentId,
             int academicYearId, MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<GridIncidentDto>>(ResponseType.Ok, null, context.BehaviourIncidents.Where(
+            return new ProcessResponse<IEnumerable<GridBehaviourIncidentDto>>(ResponseType.Ok, null, context.BehaviourIncidents.Where(
                     x => x.AcademicYearId == academicYearId && x.StudentId == studentId && !x.Deleted)
-                .OrderByDescending(x => x.Date).ToList().Select(Mapper.Map<BehaviourIncident, GridIncidentDto>));
+                .OrderByDescending(x => x.Date).ToList().Select(Mapper.Map<BehaviourIncident, GridBehaviourIncidentDto>));
         }
 
         public static ProcessResponse<BehaviourIncidentDto> GetBehaviourIncident(int incidentId,

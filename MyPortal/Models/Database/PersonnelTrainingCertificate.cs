@@ -29,7 +29,7 @@ namespace MyPortal.Models.Database
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int StaffId { get; set; }
 
-        public CertificateStatus StatusId { get; set; }
+        public CertificateStatus Status { get; set; }
 
         public virtual StaffMember StaffMember { get; set; }
 

@@ -297,10 +297,12 @@
     <Compile Include="Dtos\FinanceProductDto.cs" />
     <Compile Include="Dtos\FinanceProductTypeDto.cs" />
     <Compile Include="Dtos\FinanceSaleDto.cs" />
-    <Compile Include="Dtos\GridDtos\GridAchievementDto.cs" />
+    <Compile Include="Dtos\GridDtos\GridBehaviourAchievementDto.cs" />
     <Compile Include="Dtos\GridDtos\GridDocumentDto.cs" />
-    <Compile Include="Dtos\GridDtos\GridIncidentDto.cs" />
-    <Compile Include="Dtos\GridDtos\GridLogDto.cs" />
+    <Compile Include="Dtos\GridDtos\GridBehaviourIncidentDto.cs" />
+    <Compile Include="Dtos\GridDtos\GridPersonnelTrainingCertificateDto.cs" />
+    <Compile Include="Dtos\GridDtos\GridProfileLogDto.cs" />
+    <Compile Include="Dtos\GridDtos\GridPersonnelObservationDto.cs" />
     <Compile Include="Dtos\GridDtos\GridPersonDocumentDto.cs" />
     <Compile Include="Dtos\LiteDtos\AttendanceRegisterMarkLite.cs" />
     <Compile Include="Dtos\Identity\RoleDto.cs" />
@@ -316,7 +318,6 @@
     <Compile Include="Dtos\PersonnelObservationDto.cs" />
     <Compile Include="Dtos\PersonnelTrainingCertificateDto.cs" />
     <Compile Include="Dtos\PersonnelTrainingCourseDto.cs" />
-    <Compile Include="Dtos\PersonnelTrainingStatusDto.cs" />
     <Compile Include="Dtos\PersonTypeDto.cs" />
     <Compile Include="Dtos\ProfileCommentDto.cs" />
     <Compile Include="Dtos\ProfileCommentBankDto.cs" />

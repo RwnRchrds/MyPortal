@@ -6,6 +6,16 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    public enum ObservationOutcome
+    {
+        Oustanding = 1,
+
+        Good = 2,
+
+        Satisfactory = 3,
+
+        Inadequate = 4
+    }
     /// <summary>
     /// An appraisal/observation carried out by line managers on members of staff.
     /// </summary>
@@ -22,8 +32,7 @@ namespace MyPortal.Models.Database
         public int ObserverId { get; set; }
 
         [Required]
-        [StringLength(255)]
-        public string Outcome { get; set; }
+        public ObservationOutcome Outcome { get; set; }
 
         public virtual StaffMember Observee { get; set; }
 

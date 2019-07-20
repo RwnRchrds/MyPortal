@@ -1,3 +1,5 @@
+using MyPortal.Models.Database;
+
 namespace MyPortal.Dtos
 {
     using System;
@@ -19,7 +21,7 @@ namespace MyPortal.Dtos
 
         public int ObserverId { get; set; }
 
-        public string Outcome { get; set; }
+        public ObservationOutcome Outcome { get; set; }
 
         public virtual StaffMemberDto Observee { get; set; }
 

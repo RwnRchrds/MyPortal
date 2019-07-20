@@ -1,3 +1,5 @@
+using MyPortal.Models.Database;
+
 namespace MyPortal.Dtos
 {
     using System;
@@ -15,12 +17,10 @@ namespace MyPortal.Dtos
 
         public int StaffId { get; set; }
 
-        public int StatusId { get; set; }
+        public CertificateStatus Status { get; set; }
 
         public virtual StaffMemberDto StaffMember { get; set; }
 
         public virtual PersonnelTrainingCourseDto PersonnelTrainingCourse { get; set; }
-
-        public virtual PersonnelTrainingStatusDto PersonnelTrainingStatus { get; set; }
     }
 }

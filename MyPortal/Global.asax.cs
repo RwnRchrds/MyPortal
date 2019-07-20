@@ -22,8 +22,8 @@ namespace MyPortal
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             Directory.CreateDirectory(@"C:\MyPortal\Files\Results");
         }
-        
-        #if !DEBUG
+
+#if !DEBUG
         protected void Application_BeginRequest()
         {
             if (Request.Url.Scheme != "http") return;
@@ -31,6 +31,6 @@ namespace MyPortal
             Response.Status = "301 Moved Permanently";
             Response.AddHeader("Location", path);
         }
-        #endif        
+#endif
     }
 }

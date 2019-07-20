@@ -5,7 +5,7 @@ using System.Web;
 
 namespace MyPortal.Dtos.GridDtos
 {
-    public class GridLogDto
+    public class GridProfileLogDto
     {
         public int Id { get; set; }
         public DateTime Date { get; set; }

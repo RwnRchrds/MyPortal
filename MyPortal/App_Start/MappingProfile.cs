@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Web.Optimization;
+using AutoMapper;
 using Microsoft.AspNet.Identity.EntityFramework;
 using MyPortal.Dtos;
 using MyPortal.Dtos.GridDtos;
@@ -110,7 +111,7 @@ namespace MyPortal
                 .ForMember(dest => dest.YearGroupName,
                     opts => opts.MapFrom(src => src.PastoralYearGroup.Name));
 
-            CreateMap<ProfileLog, GridLogDto>()
+            CreateMap<ProfileLog, GridProfileLogDto>()
                 .ForMember(dest => dest.Id,
                     opts => opts.MapFrom(src => src.Id))
                 .ForMember(dest => dest.AuthorName,
@@ -138,7 +139,7 @@ namespace MyPortal
                 .ForMember(dest => dest.PersonDocumentId,
                     opts => opts.MapFrom(src => src.Id));
 
-            CreateMap<BehaviourAchievement, GridAchievementDto>()
+            CreateMap<BehaviourAchievement, GridBehaviourAchievementDto>()
                 .ForMember(dest => dest.Location,
                     opts => opts.MapFrom(src => src.BehaviourLocation.Description))
                 .ForMember(dest => dest.TypeName,
@@ -146,13 +147,29 @@ namespace MyPortal
                 .ForMember(dest => dest.RecordedBy,
                     opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.RecordedBy).ResponseObject));
 
-            CreateMap<BehaviourIncident, GridIncidentDto>()
+            CreateMap<BehaviourIncident, GridBehaviourIncidentDto>()
                 .ForMember(dest => dest.Location,
                     opts => opts.MapFrom(src => src.BehaviourLocation.Description))
                 .ForMember(dest => dest.TypeName,
                     opts => opts.MapFrom(src => src.BehaviourIncidentType.Description))
                 .ForMember(dest => dest.RecordedBy,
                     opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.RecordedBy).ResponseObject));
+
+            CreateMap<PersonnelObservation, GridPersonnelObservationDto>()
+                .ForMember(dest => dest.ObserveeName,
+                    opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.Observee).ResponseObject))
+                .ForMember(dest => dest.ObserverName,
+                    opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.Observer).ResponseObject))
+                .ForMember(dest => dest.Outcome,
+                    opts => opts.MapFrom(src => src.Outcome.ToString()));
+
+            CreateMap<PersonnelTrainingCertificate, GridPersonnelTrainingCertificateDto>()
+                .ForMember(dest => dest.Status,
+                    opts => opts.MapFrom(src => src.Status.ToString()))
+                .ForMember(dest => dest.CourseCode,
+                    opts => opts.MapFrom(src => src.PersonnelTrainingCourse.Code))
+                .ForMember(dest => dest.CourseDescription,
+                    opts => opts.MapFrom(src => src.PersonnelTrainingCourse.Description));
         }
     }
 }

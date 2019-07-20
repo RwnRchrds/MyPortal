@@ -14,7 +14,7 @@
 <div class="container float-left">
     @if (User.IsInRole("SeniorStaff"))
     {
-        @Html.ActionLink("New Student", "NewStudent", "Staff", null, new {@class = "btn btn-success"})
+        @Html.ActionLink("New Student", "NewStudent", "Staff", null, new {@class = "btn btn-primary"})
         <hr/>
     }
 </div>
@@ -24,31 +24,18 @@
     {
         dataManager.Url("/api/people/students/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor"); 
 
-    }).Columns(col =>
+    }).Columns(c =>
     {
-        col.Field("DisplayName").HeaderText("Name").Template("#nameTemplate").Width("300").Add();
-        col.Field("YearGroupName").HeaderText("Year Group").Width("80").Add();
-        col.Field("RegGroupName").HeaderText("Reg Group").Width("80").Add();
-        col.Field("HouseName").HeaderText("House").Width("100").Add();
-    }).AllowPaging().SearchSettings(search => { search.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string>() { "Search" }).PageSettings(pageSettings => pageSettings.PageSize(12)).Render()
+        c.Field("DisplayName").HeaderText("Name").Template("#nameTemplate").Width("300").Add();
+        c.Field("YearGroupName").HeaderText("Year Group").Width("80").Add();
+        c.Field("RegGroupName").HeaderText("Reg Group").Width("80").Add();
+        c.Field("HouseName").HeaderText("House").Width("100").Add();
+    }).AllowPaging().SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string>() { "Search" }).PageSettings(p => p.PageSize(12)).Render()
 </div>
 
 <style type="text/css" class="cssStyles">
     .student-name {
         font-weight: bold;
-    }
-
-    .blob {
-        background-color: #e3165b;
-        height: 27px;
-        width: 29px;
-        border-radius: 14px;
-        text-align: center;
-        color: white;
-    }
-
-    .blob-icon {
-        margin-top: 6px;
     }
 </style>
 

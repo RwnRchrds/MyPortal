@@ -73,14 +73,14 @@ namespace MyPortal.Processes
                 .Select(Mapper.Map<ProfileLog, ProfileLogDto>));
         }
 
-        public static ProcessResponse<IEnumerable<GridLogDto>> GetLogsForStudent_DataGrid(int studentId,
+        public static ProcessResponse<IEnumerable<GridProfileLogDto>> GetLogsForStudent_DataGrid(int studentId,
             int academicYearId, MyPortalDbContext context)
         {
             var logs = context.ProfileLogs
                 .Where(x => x.AcademicYearId == academicYearId && x.StudentId == studentId && !x.Deleted)
-                .OrderByDescending(x => x.Date).ToList().Select(Mapper.Map<ProfileLog, GridLogDto>);
+                .OrderByDescending(x => x.Date).ToList().Select(Mapper.Map<ProfileLog, GridProfileLogDto>);
 
-            return new ProcessResponse<IEnumerable<GridLogDto>>(ResponseType.Ok, null, logs);
+            return new ProcessResponse<IEnumerable<GridProfileLogDto>>(ResponseType.Ok, null, logs);
         }
 
         public static ProcessResponse<object> UpdateLog(ProfileLog log, MyPortalDbContext context)

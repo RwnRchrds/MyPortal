@@ -5,7 +5,7 @@ using System.Web;
 
 namespace MyPortal.Dtos.GridDtos
 {
-    public class GridAchievementDto
+    public class GridBehaviourAchievementDto
     {
         public int Id { get; set; }
         public string TypeName { get; set; }

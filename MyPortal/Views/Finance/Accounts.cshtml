@@ -4,156 +4,113 @@
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 <body>
-<!--#region Title-->
-<div class="container float-left">
-    <h2 class="mp-page-title">Accounts</h2>
-    <hr/>
-</div>
-<!--#endregion-->
-<!--#region Accounts Table-->
-<div class="container float-left">
-    <table class="table table-bordered table-hover mp-table" id="students">
-        <thead>
-        <tr>
-            <th>Student</th>
-            <th>Year Group</th>
-            <th>Reg Group</th>
-            <th>Balance</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-</div>
-<!--#endregion-->
-<!--#region Credit Modal-->
-<div id="CreditModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
+    <!--#region Title-->
+    <div class="container float-left">
+        <h2 class="mp-page-title">Accounts</h2>
+        <hr />
+    </div>
+    <!--#endregion-->
+    <!--#region Accounts Table-->
+    <div class="container float-left">
+        @Html.EJS().Grid("Accounts").DataSource(d =>
+        {
+            d.Url("/api/people/students/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor");
+        }).Columns(c =>
+        {
+            c.Field("DisplayName").HeaderText("Student").Template("#accountsStudentTemplate").Width("200").Add();
+            c.Field("YearGroupName").HeaderText("Year Group").Template("#accountsYearGroupTemplate").Width("100").Add();
+            c.Field("RegGroupName").HeaderText("Reg Group").Template("#accountsRegGroupTemplate").Width("100").Add();
+            c.Field("AccountBalance").HeaderText("Balance").Template("#accountsBalanceTemplate").Width("150").Add();
+            c.HeaderText("Actions").Template("#accountsActionsTemplate").Width("120").Add();
+        }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).AllowSorting().Toolbar(new List<string>() { "Search" }).Render()
+    </div>
+    <!--#endregion-->
+    <!--#region Credit Modal-->
+    <div id="CreditModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
 
-        <!--content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title mp-title-credit">Credit Account</h4>
-                <button type="button" class="close" data-dismiss="modal">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/students/credit", HttpMethod = "POST", OnSuccess = "creditSuccess", OnFailure = "creditFailure"}, new {id = "CreditForm"}))
-            {
-                <div class="modal-body">
-                    <div class="form-group">
-                        @Html.Label("Amount to Credit")
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text mp-bold" id="basic-addon">£</span>
-                            </div>
-                            @Html.TextBoxFor(x => x.BalanceAdjustment.Amount, new {@class = "form-control", Name = "Amount"})
-                        </div>
-                        @Html.ValidationMessageFor(x => x.BalanceAdjustment.Amount)
-                    </div>
-                    <div class="form-group">
-                        @Html.HiddenFor(x => x.BalanceAdjustment.StudentId, new {Name = "Student", id = "studentIdControlCredit"})
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
+            <!--content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title mp-title-credit">Credit Account</h4>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-            }
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/finance/creditStudent", HttpMethod = "POST", OnSuccess = "creditSuccess", OnFailure = "creditFailure" }, new { id = "CreditForm" }))
+                {
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @Html.Label("Amount to Credit")
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text mp-bold" id="basic-addon">£</span>
+                                </div>
+                                @Html.TextBoxFor(x => x.BalanceAdjustment.Amount, new { @class = "form-control", Name = "Amount" })
+                            </div>
+                            @Html.ValidationMessageFor(x => x.BalanceAdjustment.Amount)
+                        </div>
+                        <div class="form-group">
+                            @Html.HiddenFor(x => x.BalanceAdjustment.StudentId, new { Name = "Student", id = "studentIdControlCredit" })
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                }
 
+            </div>
         </div>
     </div>
-</div>
-<!--#endregion-->
-<!--#region Debit Modal-->
-<div id="DebitModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
+    <!--#endregion-->
+    <!--#region Debit Modal-->
+    <div id="DebitModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
 
-        <!--content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title mp-title-debit">Debit Account</h4>
-                <button type="button" class="close" data-dismiss="modal">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/students/debit", HttpMethod = "POST", OnSuccess = "debitSuccess", OnFailure = "debitFailure"}, new {id = "DebitForm"}))
-            {
-                <div class="modal-body">
-                    <div class="form-group">
-                        @Html.Label("Amount to Debit")
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text mp-bold" id="basic-addon">£</span>
-                            </div>
-                            @Html.TextBoxFor(x => x.BalanceAdjustment.Amount, new {@class = "form-control", Name = "Amount"})
-                        </div>
-                        @Html.ValidationMessageFor(x => x.BalanceAdjustment.Amount)
-                    </div>
-                    <div class="form-group">
-                        @Html.HiddenFor(x => x.BalanceAdjustment.StudentId, new {Name = "Student", id = "studentIdControlDebit"})
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
+            <!--content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title mp-title-debit">Debit Account</h4>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-            }
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/finance/debitStudent", HttpMethod = "POST", OnSuccess = "debitSuccess", OnFailure = "debitFailure" }, new { id = "DebitForm" }))
+                {
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @Html.Label("Amount to Debit")
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text mp-bold" id="basic-addon">£</span>
+                                </div>
+                                @Html.TextBoxFor(x => x.BalanceAdjustment.Amount, new { @class = "form-control", Name = "Amount" })
+                            </div>
+                            @Html.ValidationMessageFor(x => x.BalanceAdjustment.Amount)
+                        </div>
+                        <div class="form-group">
+                            @Html.HiddenFor(x => x.BalanceAdjustment.StudentId, new { Name = "Student", id = "studentIdControlDebit" })
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                }
 
+            </div>
         </div>
     </div>
-</div>
-<!--#endregion-->
+    <!--#endregion-->
 </body>
 
 @section scripts
 {
     <script>
         $(document).ready(function() {
-
-            function loadAccounts() {
-                $("#students").DataTable({
-                    ajax: {
-                        url: "/api/people/students/get/all",
-                        dataSrc: ""
-                    },
-                    columns: [
-                        {
-                            data: "person.firstName",
-                            render: function(data, type, student) {
-                                return student.person.lastName + ", " + student.person.firstName;
-                            }
-                        },
-                        {
-                            data: "pastoralYearGroup.name"
-                        },
-                        {
-                            data: "pastoralRegGroup.name"
-                        },
-                        {
-                            data: "accountBalance",
-                            render: $.fn.dataTable.render.number(',', '.', 2, '£')
-                        },
-                        {
-                            data: "id",
-                            render: function(data) {
-                                return "<button type='button' class='btn btn-danger js-debit mp-btn-size' data-student-id=" +
-                                    data +
-                                    "><i class=\"fas fa-minus\"></i></button> " +
-                                    "<button type='button' class='btn btn-success js-credit mp-btn-size' data-student-id=" +
-                                    data +
-                                    "><i class=\"fas fa-plus\"></i></button>";
-                            }
-                        }
-                    ],
-                    "language": {
-                        "emptyTable": "No accounts to display"
-                    }
-                });
-            }
-
             //Show Credit Modal on Click
-            $("#students").on("click",
+            $("#Accounts").on("click",
                 ".js-credit",
                 function() {
                     var button = $(this);
@@ -165,7 +122,7 @@
                 });
 
             //Show Debit Modal on Click
-            $("#students").on("click",
+            $("#Accounts").on("click",
                 ".js-debit",
                 function() {
                     var button = $(this);
@@ -185,8 +142,6 @@
                 function() {
                     $(this).find('form').trigger('reset');
                 });
-
-            loadAccounts();
         });
 
         function creditSuccess(result) {
@@ -210,6 +165,41 @@
             $("#DebitModal").modal('hide');
             toastr.error(result.responseJSON);
         }
+    </script>
+
+    <script type="text/x-jsrender" id="accountsStudentTemplate">
+        <div>
+            ${DisplayName}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="accountsYearGroupTemplate">
+        <div>
+            ${YearGroupName}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="accountsRegGroupTemplate">
+        <div>
+            ${RegGroupName}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="accountsBalanceTemplate">
+        <div>
+            ${formatCurrency(AccountBalance)}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="accountsActionsTemplate">
+        <div>
+            <button type='button' class='btn btn-danger mp-btn-action js-debit mp-btn-size' data-student-id="${Id}">
+                <i class=\"fas fa-minus\"></i>
+            </button>
+            <button type='button' class='btn btn-success mp-btn-action js-credit mp-btn-size' data-student-id="${Id}">
+                <i class=\"fas fa-plus\"></i>  
+            </button>                      
+        </div>
     </script>
 
     @Scripts.Render("~/bundles/staff")

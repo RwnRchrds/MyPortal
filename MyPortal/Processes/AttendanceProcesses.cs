@@ -98,7 +98,7 @@ namespace MyPortal.Processes
 
             if (!marksForStudent.Any())
             {
-                throw new ProcessException("No attendance data.", ExceptionType.BadRequest);
+                return new ProcessResponse<AttendanceSummary>(ResponseType.NotFound, "No attendance data", null);
             }
 
             var summary = new AttendanceSummary();

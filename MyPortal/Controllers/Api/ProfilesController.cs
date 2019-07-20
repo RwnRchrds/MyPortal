@@ -89,7 +89,7 @@ namespace MyPortal.Controllers.Api
         /// </summary>
         /// <param name="log">The log to be updated in the database.</param>
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
-        [Route("logs/log/edit")]
+        [Route("logs/update")]
         [HttpPost]
         public IHttpActionResult UpdateLog([FromBody] ProfileLog log)
         {

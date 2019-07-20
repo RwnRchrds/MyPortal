@@ -6,6 +6,7 @@ using System.Resources;
 using System.Web;
 using AutoMapper;
 using MyPortal.Dtos;
+using MyPortal.Dtos.GridDtos;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
 
@@ -67,6 +68,22 @@ namespace MyPortal.Processes
                 Mapper.Map<PersonnelTrainingCertificate, PersonnelTrainingCertificateDto>(certInDb));
         }
 
+        public static ProcessResponse<IEnumerable<PersonnelTrainingCertificate>> GetCertificatesForStaffMember_Model(
+            int staffId, MyPortalDbContext context)
+        {
+            var staffInDb = context.StaffMembers.Single(x => x.Id == staffId);
+
+            if (staffInDb == null)
+            {
+                return new ProcessResponse<IEnumerable<PersonnelTrainingCertificate>>(ResponseType.NotFound, "Staff member not found", null);
+            }
+
+            return new ProcessResponse<IEnumerable<PersonnelTrainingCertificate>>(ResponseType.Ok, null,
+                context.PersonnelTrainingCertificates
+                    .Where(c => c.StaffId == staffId)
+                    .ToList());
+        }
+
         public static ProcessResponse<IEnumerable<PersonnelTrainingCertificateDto>> GetCertificatesForStaffMember(
             int staffId, MyPortalDbContext context)
         {
@@ -78,10 +95,23 @@ namespace MyPortal.Processes
             }
 
             return new ProcessResponse<IEnumerable<PersonnelTrainingCertificateDto>>(ResponseType.Ok, null,
-                context.PersonnelTrainingCertificates
-                    .Where(c => c.StaffId == staffId)
-                    .ToList()
+                GetCertificatesForStaffMember_Model(staffId, context).ResponseObject
                     .Select(Mapper.Map<PersonnelTrainingCertificate, PersonnelTrainingCertificateDto>));
+        }
+
+        public static ProcessResponse<IEnumerable<GridPersonnelTrainingCertificateDto>> GetCertificatesForStaffMember_DataGrid(
+            int staffId, MyPortalDbContext context)
+        {
+            var staffInDb = context.StaffMembers.Single(x => x.Id == staffId);
+
+            if (staffInDb == null)
+            {
+                return new ProcessResponse<IEnumerable<GridPersonnelTrainingCertificateDto>>(ResponseType.NotFound, "Staff member not found", null);
+            }
+
+            return new ProcessResponse<IEnumerable<GridPersonnelTrainingCertificateDto>>(ResponseType.Ok, null,
+                GetCertificatesForStaffMember_Model(staffId, context).ResponseObject
+                    .Select(Mapper.Map<PersonnelTrainingCertificate, GridPersonnelTrainingCertificateDto>));
         }
 
         public static ProcessResponse<object> UpdateCertificate(PersonnelTrainingCertificate certificate,
@@ -101,12 +131,12 @@ namespace MyPortal.Processes
             //    return new ProcessResponse<object>(ResponseType.BadRequest, "Cannot modify a certificate for yourself", null);
             //}
 
-            if (certInDb.StatusId == CertificateStatus.Completed)
+            if (certInDb.Status == CertificateStatus.Completed)
             {
                 return new ProcessResponse<object>(ResponseType.BadRequest, "Cannot modify a completed certificate", null);
             }
 
-            certInDb.StatusId = certificate.StatusId;
+            certInDb.Status = certificate.Status;
 
             context.SaveChanges();
 
@@ -227,12 +257,43 @@ namespace MyPortal.Processes
                 return new ProcessResponse<IEnumerable<PersonnelObservationDto>>(ResponseType.NotFound, "Staff member not found", null);
             }
 
-            var observations = context.PersonnelObservations
-                .Where(x => x.ObserveeId == staffMemberId)
-                .ToList()
+            var observations = GetObservationsForStaffMember_Model(staffMemberId, context).ResponseObject
                 .Select(Mapper.Map<PersonnelObservation, PersonnelObservationDto>);
 
             return new ProcessResponse<IEnumerable<PersonnelObservationDto>>(ResponseType.Ok, null, observations);
+        }
+
+        public static ProcessResponse<IEnumerable<GridPersonnelObservationDto>> GetObservationsForStaffMember_DataGrid(
+            int staffMemberId, MyPortalDbContext context)
+        {
+            var staff = context.StaffMembers.Single(x => x.Id == staffMemberId);
+
+            if (staff == null)
+            {
+                return new ProcessResponse<IEnumerable<GridPersonnelObservationDto>>(ResponseType.NotFound, "Staff member not found", null);
+            }
+
+            var observations = GetObservationsForStaffMember_Model(staffMemberId, context).ResponseObject
+                .Select(Mapper.Map<PersonnelObservation, GridPersonnelObservationDto>);
+
+            return new ProcessResponse<IEnumerable<GridPersonnelObservationDto>>(ResponseType.Ok, null, observations);
+        }
+
+        public static ProcessResponse<IEnumerable<PersonnelObservation>> GetObservationsForStaffMember_Model(
+            int staffMemberId, MyPortalDbContext context)
+        {
+            var staff = context.StaffMembers.Single(x => x.Id == staffMemberId);
+
+            if (staff == null)
+            {
+                return new ProcessResponse<IEnumerable<PersonnelObservation>>(ResponseType.NotFound, "Staff member not found", null);
+            }
+
+            var observations = context.PersonnelObservations
+                .Where(x => x.ObserveeId == staffMemberId)
+                .ToList();
+
+            return new ProcessResponse<IEnumerable<PersonnelObservation>>(ResponseType.Ok, null, observations);
         }
 
         public static ProcessResponse<object> DeleteObservation(int observationId, string userId, MyPortalDbContext context)

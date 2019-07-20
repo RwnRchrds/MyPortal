@@ -5,7 +5,7 @@ using System.Web;
 
 namespace MyPortal.Dtos.GridDtos
 {
-    public class GridIncidentDto
+    public class GridBehaviourIncidentDto
     {
         public int Id { get; set; }
         public string TypeName { get; set; }

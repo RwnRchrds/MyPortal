@@ -58,36 +58,32 @@
 </div>
 
 <div class="container float-left mp-margin-top">
-    <div>
-        <hr />
-        <h4 class="mp-bold">MyTraining</h4>
-        <table class="table table-sm table-bordered mp-table" id="certs" data-staff-id="@Model.CurrentUser.Id">
-            <thead>
-                <tr>
-                    <th>Course</th>
-                    <th>Description</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-        </table>
-    </div>
+    <hr />
+    <h4 class="mp-bold">Training</h4>
+    @Html.EJS().Grid("Training").DataSource(dataManager =>
+    {
+        dataManager.Url("/api/personnel/certificates/get/byStaff/dataGrid/" + Model.CurrentUser.Id).CrossDomain(false).Adaptor("UrlAdaptor");
+    }).Columns(col =>
+    {
+        col.Field("CourseCode").HeaderText("Code").Template("#trainingCodeTemplate").Width("200").Add();
+        col.Field("CourseDescription").HeaderText("Description").Template("#trainingDescriptionTemplate").Width("300").Add();
+        col.Field("Status").HeaderText("Status").Template("#trainingStatusTemplate").Width("250").Add();
+    }).AllowPaging().PageSettings(p => p.PageSize(5)).RowDataBound("trainingRowFunction").EnableHover(false).Render()
 </div>
 
 <!--#region MyObservations Panel-->
 <div class="container float-left mp-margin-top">
-    <div>
-        <hr />
-        <h4 class="mp-bold">MyObservations</h4>
-        <table class="table table-sm table-bordered mp-table mp-table-link" id="observations" data-staff-id="@Model.CurrentUser.Id">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Observed By</th>
-                    <th>Outcome</th>
-                </tr>
-            </thead>
-        </table>
-    </div>
+    <hr />
+    <h4 class="mp-bold">Observations</h4>
+    @Html.EJS().Grid("Observations").DataSource(dataManager =>
+    {
+        dataManager.Url("/api/personnel/observations/get/byStaff/dataGrid/" + Model.CurrentUser.Id).CrossDomain(false).Adaptor("UrlAdaptor");
+    }).Columns(col =>
+    {
+        col.Field("Date").HeaderText("Date").Template("#observationsDateTemplate").Width("250").Add();
+        col.Field("ObserverName").HeaderText("Observed By").Template("#observationsObserverTemplate").Width("300").Add();
+        col.Field("Outcome").HeaderText("Outcome").Template("#observationsOutcomeTemplate").Width("300").Add();
+    }).AllowPaging().PageSettings(p => p.PageSize(5)).RowDataBound("observationsRowFunction").EnableHover(false).Render()
 </div>
 <!--#endregion-->
 <!-- MyDocuments Panel -->
@@ -101,7 +97,7 @@
     {
         col.Field("Description").HeaderText("Description").Template("#documentsDescriptionTemplate").Width("300").Add();
         col.Field("Date").HeaderText("Date").Template("#documentsDateTemplate").Width("250").Add();
-    }).AllowPaging().PageSettings(p => p.PageSize(5)).GridLines(GridLine.Both).Render()
+    }).AllowPaging().PageSettings(p => p.PageSize(5)).EnableHover(false).Render()
 </div>
 
 <div id="ChangeAcademicYearModal" class="modal fade" role="dialog">
@@ -133,101 +129,7 @@
 {
     <script>
         $(document).ready(function () {
-            $("#certs").DataTable({
-                ajax: {
-                    url: "/api/personnel/certificates/get/byStaff/" + $("#certs").attr("data-staff-id"),
-                    dataSrc: "",
-                    method: "GET"
-                },
-                columns: [
-                    {
-                        data: "personnelTrainingCourse.code"
-                    },
-                    {
-                        data: "personnelTrainingCourse.description"
-                    },
-                    {
-                        data: "statusId",
-                    }
-                ],
-                paging: false,
-                ordering: false,
-                searching: false,
-                responsive: true,
-                info: false,
-                "language": {
-                    "emptyTable": "No certificates to display"
-                },
-                "createdRow": function (row, data, dataIndex) {
-                    if (data.statusId === 1) {
-                        $(row).addClass("mp-cert-completed");
-                    }
 
-                    if (data.statusId === 2) {
-                        $(row).addClass("mp-cert-pending");
-                    }
-
-                    if (data.statusId === 3) {
-                        $(row).addClass("mp-cert-failed");
-                    }
-                }
-            });
-
-            $("#observations").DataTable({
-                ajax: {
-                    url: "/api/personnel/observations/get/byStaff/" + $("#observations").attr("data-staff-id"),
-                    dataSrc: "",
-                    method: "GET"
-                },
-                columns: [
-                    {
-                        data: "date",
-                        render: function (data) {
-                            var date = new Date(data);
-                            return date.toLocaleDateString();
-                        }
-
-                    },
-                    {
-                        data: "observer.lastname",
-                        render: function (data, type, observation) {
-                            return observation.observer.title +
-                                " " +
-                                observation.observer.firstName.substring(0, 1) +
-                                " " +
-                                observation.observer.lastName;
-                        }
-                    },
-                    {
-                        data: "outcome"
-                    }
-                ],
-                paging: false,
-                ordering: false,
-                searching: false,
-                info: false,
-                responsive: true,
-                "createdRow": function (row, data, dataIndex) {
-                    if (data.outcome === "Inadequate") {
-                        $(row).addClass("mp-observation-inadequate");
-                    }
-
-                    if (data.outcome === "Satisfactory") {
-                        $(row).addClass("mp-observation-satisfactory");
-                    }
-
-                    if (data.outcome === "Good") {
-                        $(row).addClass("mp-observation-good");
-                    }
-
-                    if (data.outcome === "Outstanding") {
-                        $(row).addClass("mp-observation-outstanding");
-                    }
-                },
-                "language": {
-                    "emptyTable": "No observations to display"
-                }
-            });
         });
 
         function selectYearSuccess(result) {
@@ -240,6 +142,33 @@
             $("#ChangeAcademicYearModal").modal('hide');
             toastr.error(result.responseJSON);
         }
+
+        function observationsRowFunction(args) {
+            if (args.data['Outcome'] === "Outstanding") {
+                args.row.classList.add("mp-observation-outstanding");
+            }
+            else if (args.data['Outcome'] === "Good") {
+                args.row.classList.add("mp-observation-good");
+            }
+            else if (args.data['Outcome'] === "Satisfactory") {
+                args.row.classList.add("mp-observation-satisfactory");
+            }
+            else if (args.data['Outcome'] === "Inadequate") {
+                args.row.classList.add("mp-observation-inadequate");
+            }
+        }
+
+        function trainingRowFunction(args) {
+            if (args.data['Status'] === "Completed") {
+                args.row.classList.add("mp-cert-completed");
+            }
+            else if (args.data['Status'] === "Pending") {
+                args.row.classList.add("mp-cert-pending");
+            }
+            else if (args.data['Status'] === "Failed") {
+                args.row.classList.add("mp-cert-failed");
+            }
+        }
     </script>
 
     <script type="text/x-jsrender" id="documentsDescriptionTemplate">
@@ -251,6 +180,42 @@
     <script type="text/x-jsrender" id="documentsDateTemplate">
         <div>
             ${formatDate(Date.toString())}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="observationsDateTemplate">
+        <div>
+            ${formatDate(Date.toString())}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="observationsObserverTemplate">
+        <div>
+            ${ObserverName}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="observationsOutcomeTemplate">
+        <div>
+            ${Outcome}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="trainingCodeTemplate">
+        <div>
+            ${CourseCode}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="trainingDescriptionTemplate">
+        <div>
+            ${CourseDescription}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="trainingStatusTemplate">
+        <div>
+            ${Status}
         </div>
     </script>
 }

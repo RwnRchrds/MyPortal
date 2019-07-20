@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Models.Database;
 using MyPortal.Processes;
+using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
 {
@@ -44,6 +45,15 @@ namespace MyPortal.Controllers.Api
         public IEnumerable<PersonnelTrainingCertificateDto> GetCertificatesForStaffMember([FromUri] int staffId)
         {
             return PrepareResponseObject(PersonnelProcesses.GetCertificatesForStaffMember(staffId, _context));
+        }
+
+        [HttpPost]
+        [Route("certificates/get/byStaff/dataGrid/{staffId:int}")]
+        public IHttpActionResult GetCertificatesForStaffMemberDataGrid([FromUri] int staffId, [FromBody] DataManagerRequest dm)
+        {
+            var certs = PrepareResponseObject(PersonnelProcesses.GetCertificatesForStaffMember_DataGrid(staffId, _context));
+
+            return PrepareDataGridObject(certs, dm);
         }
 
         [HttpPost]
@@ -102,6 +112,18 @@ namespace MyPortal.Controllers.Api
         public IEnumerable<PersonnelObservationDto> GetObservationsForStaffMember([FromUri] int staffMemberId)
         {
             return PrepareResponseObject(PersonnelProcesses.GetObservationsForStaffMember(staffMemberId, _context));
+        }
+
+        [HttpPost]
+        [Route("observations/get/byStaff/dataGrid/{staffMemberId:int}")]
+        public IHttpActionResult GetObservationsForStaffMemberDataGrid([FromUri] int staffMemberId,
+            [FromBody] DataManagerRequest dm)
+        {
+            var observations =
+                PrepareResponseObject(
+                    PersonnelProcesses.GetObservationsForStaffMember_DataGrid(staffMemberId, _context));
+
+            return PrepareDataGridObject(observations, dm);
         }
 
         [HttpDelete]
