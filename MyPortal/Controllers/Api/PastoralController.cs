@@ -11,6 +11,7 @@ using MyPortal.Processes;
 
 namespace MyPortal.Controllers.Api
 {
+    [RoutePrefix("api/pastoral")]
     public class PastoralController : MyPortalApiController
     {
         /// <summary>
@@ -19,7 +20,7 @@ namespace MyPortal.Controllers.Api
         /// <param name="regGroup">The registration group to add to the database.</param>
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
-        [Route("api/regGroups/create")]
+        [Route("regGroups/create")]
         public IHttpActionResult CreateRegGroup([FromBody] PastoralRegGroup regGroup)
         {
             return PrepareResponse(PastoralProcesses.CreateRegGroup(regGroup, _context));
@@ -31,7 +32,7 @@ namespace MyPortal.Controllers.Api
         /// <param name="regGroupId">The ID of the registration group to delete.</param>
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpDelete]
-        [Route("api/regGroups/delete/{regGroupId:int}")]
+        [Route("regGroups/delete/{regGroupId:int}")]
         public IHttpActionResult DeleteRegGroup([FromUri] int regGroupId)
         {
             return PrepareResponse(PastoralProcesses.DeleteRegGroup(regGroupId, _context));
@@ -44,7 +45,7 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns a DTO of the specified registration group.</returns>
         /// <exception cref="HttpResponseException"></exception>
         [HttpGet]
-        [Route("api/regGroups/get/byId/{regGroupId:int}")]
+        [Route("regGroups/get/byId/{regGroupId:int}")]
         public PastoralRegGroupDto GetRegGroupById([FromUri] int regGroupId)
         {
             return PrepareResponseObject(PastoralProcesses.GetRegGroupById(regGroupId, _context));
@@ -56,7 +57,7 @@ namespace MyPortal.Controllers.Api
         /// <param name="yearGroupId">The ID of the year group to get registration groups.</param>
         /// <returns>Returns a list of DTOs of registration groups from the specified year group.</returns>
         [HttpGet]
-        [Route("api/regGroups/get/byYearGroup/{yearGroupId:int}")]
+        [Route("regGroups/get/byYearGroup/{yearGroupId:int}")]
         public IEnumerable<PastoralRegGroupDto> GetRegGroupsByYearGroup([FromUri] int yearGroupId)
         {
             return PrepareResponseObject(PastoralProcesses.GetRegGroupsByYearGroup(yearGroupId, _context));
@@ -67,7 +68,7 @@ namespace MyPortal.Controllers.Api
         /// </summary>
         /// <returns>Returns a list of DTOs of all registration groups.</returns>
         [HttpGet]
-        [Route("api/regGroups/get/all")]
+        [Route("regGroups/get/all")]
         public IEnumerable<PastoralRegGroupDto> GetAllRegGroups()
         {
             return PrepareResponseObject(PastoralProcesses.GetAllRegGroups(_context));
@@ -80,7 +81,7 @@ namespace MyPortal.Controllers.Api
         /// <returns>Returns true if the registration group contains students.</returns>
         /// <exception cref="HttpResponseException">Thrown when the registration group is not found.</exception>
         [HttpGet]
-        [Route("api/regGroups/hasStudents/{regGroupId:int}")]
+        [Route("regGroups/hasStudents/{regGroupId:int}")]
         public bool RegGroupHasStudents([FromUri] int regGroupId)
         {
             return PrepareResponseObject(PastoralProcesses.RegGroupContainsStudents(regGroupId, _context));
@@ -92,35 +93,35 @@ namespace MyPortal.Controllers.Api
         /// <param name="regGroup">The registration group to update.</param>
         /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
-        [Route("api/regGroups/update")]
+        [Route("regGroups/update")]
         public IHttpActionResult UpdateRegGroup([FromBody] PastoralRegGroup regGroup)
         {
             return PrepareResponse(PastoralProcesses.UpdateRegGroup(regGroup, _context));
         }
 
         [HttpPost]
-        [Route("api/yearGroups/create")]
+        [Route("yearGroups/create")]
         public IHttpActionResult CreateYearGroup([FromBody] PastoralYearGroup yearGroup)
         {
             return PrepareResponse(PastoralProcesses.CreateYearGroup(yearGroup, _context));
         }
 
         [HttpDelete]
-        [Route("api/yearGroups/delete/{yearGroupId:int}")]
+        [Route("yearGroups/delete/{yearGroupId:int}")]
         public IHttpActionResult DeleteYearGroup([FromUri] int yearGroupId)
         {
             return PrepareResponse(PastoralProcesses.DeleteYearGroup(yearGroupId, _context));
         }
 
         [HttpGet]
-        [Route("api/yearGroups/get/all")]
+        [Route("yearGroups/get/all")]
         public IEnumerable<PastoralYearGroupDto> GetAllYearGroups()
         {
             return PrepareResponseObject(PastoralProcesses.GetAllYearGroups(_context));
         }
 
         [HttpPost]
-        [Route("api/yearGroups/update")]
+        [Route("yearGroups/update")]
         public IHttpActionResult UpdateYearGroup([FromBody] PastoralYearGroup yearGroup)
         {
             return PrepareResponse(PastoralProcesses.UpdateYearGroup(yearGroup, _context));

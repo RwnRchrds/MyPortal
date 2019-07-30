@@ -4,149 +4,143 @@
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 <body>
-<!--#region Title-->
-<div class="container float-left">
-    <h2 class="mp-page-title">Products</h2>
-    <hr/>
-</div>
-<!--#endregion-->
-<!--#region Buttons at Top of Page-->
-<div class="container float-left">
-    @if (User.IsInRole("Finance"))
-    {
-        <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#NewProductModal">New Product</button>
-        <hr/>
-    }
-</div>
-<!--#endregion-->
-<!--#region Products Table-->
-<div class="container float-left">
-    <table class="table table-bordered table-hover mp-table" id="products">
-        <thead>
-        <tr>
-            <th>Description</th>
-            <th>Type</th>
-            <th>Price</th>
-            <th>On Store</th>
-            <th>One Time</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-</div>
-<!--#endregion-->
-<!--#region New Product Modal-->
-<div id="NewProductModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
 
-        <!--content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">New Product</h4>
-                <button type="button" class="close" data-dismiss="modal">
-                    <span aria-hidden="false"></span>&times;
-                </button>
-            </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/products/new", HttpMethod = "POST", OnSuccess = "newProductSuccess", OnFailure = "newProductFailure"}, new {id = "newProductForm"}))
-            {
-                <div class="modal-body">
-                    <div class="form-group">
-                        @Html.Label("Description")
-                        @Html.TextBoxFor(x => x.Product.Description, new {@class = "form-control", Name = "Description"})
-                        @Html.ValidationMessageFor(x => x.Product.Description)
-                    </div>
-                    <div class="form-group">
-                        @Html.Label("Type")
-                        @Html.DropDownListFor(l => l.Product.ProductTypeId, new SelectList(Model.ProductTypes, "Id", "Description"), "Select Type", new { @class = "form-control", Name = "ProductTypeId" })
-                        @Html.ValidationMessageFor(x => x.Product.ProductTypeId)
-                    </div>
-                    <div class="form-group">
-                        @Html.Label("Price")
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text mp-bold" id="basic-addon">£</span>
+    <div class="container">
+        <h2 class="mp-page-title">Products</h2>
+        <hr />
+    </div>
+
+    <div class="container">
+        @if (User.IsInRole("Finance"))
+        {
+            <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" data-target="#NewProductModal">New Product</button>
+            <hr />
+        }
+    </div>
+
+    <div class="container">
+        @Html.EJS().Grid("Products").DataSource(d =>
+        {
+            d.Url("/api/finance/products/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor");
+        }).Columns(c =>
+        {
+            c.Field("Description").HeaderText("Description").Template("#productsDescriptionTemplate").Width("300").Add();
+            c.Field("TypeDescription").HeaderText("Type").Template("#productsTypeTemplate").Width("200").Add();
+            c.Field("Price").HeaderText("Price").Template("#productsPriceTemplate").Width("150").Add();
+            c.Field("Visible").HeaderText("On Store").Template("#productsStoreTemplate").Width("100").Add();
+            c.Field("OnceOnly").HeaderText("One Time").Template("#productsOnceOnlyTemplate").Width("100").Add();
+            c.HeaderText("Actions").Template("#productsActionsTemplate").Width(170).Add();
+        }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string>() { "Search" }).Render()
+    </div>
+
+    <div id="NewProductModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">New Product</h4>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="false"></span>&times;
+                    </button>
+                </div>
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/finance/products/create", HttpMethod = "POST", OnSuccess = "newProductSuccess", OnFailure = "newProductFailure" }, new { id = "newProductForm" }))
+                {
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @Html.Label("Description")
+                            @Html.TextBoxFor(x => x.Product.Description, new { @class = "form-control", Name = "Description" })
+                            @Html.ValidationMessageFor(x => x.Product.Description)
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Type")
+                            @Html.DropDownListFor(l => l.Product.ProductTypeId, new SelectList(Model.ProductTypes, "Id", "Description"), "Select Type", new { @class = "form-control", Name = "ProductTypeId" })
+                            @Html.ValidationMessageFor(x => x.Product.ProductTypeId)
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Price")
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text mp-bold" id="basic-addon">£</span>
+                                </div>
+                                @Html.TextBoxFor(x => x.Product.Price, new { @class = "form-control", Name = "Price" })
                             </div>
-                            @Html.TextBoxFor(x => x.Product.Price, new {@class = "form-control", Name = "Price"})
+                            @Html.ValidationMessageFor(x => x.Product.Price)
                         </div>
-                        @Html.ValidationMessageFor(x => x.Product.Price)
+                        <div class="checkbox">
+                            <label style="font-weight: bold;">
+                                @Html.CheckBoxFor(x => x.Product.Visible, new { Name = "Visible" }) Available on Store
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label style="font-weight: bold;">
+                                @Html.CheckBoxFor(x => x.Product.OnceOnly, new { Name = "OnceOnly" }) One-Time Purchase
+                            </label>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
                     </div>
-                    <div class="checkbox">
-                        <label style="font-weight: bold;">
-                            @Html.CheckBoxFor(x => x.Product.Visible, new {Name = "Visible"}) Available on Store
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label style="font-weight: bold;">
-                            @Html.CheckBoxFor(x => x.Product.OnceOnly, new {Name = "OnceOnly"}) One-Time Purchase
-                        </label>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
-                </div>
-            }
+                }
 
+            </div>
         </div>
     </div>
-</div>
-<!--#endregion-->
-<!--#region Edit Product Modal-->
-<div id="EditProductModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
 
-        <!--content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Edit Product</h4>
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
-            </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/products/edit", HttpMethod = "POST", OnSuccess = "editProductSuccess", OnFailure = "editProductFailure"}, new {id = "editProductForm"}))
-            {
-            <div class="modal-body">
-                <div class="form-group">
-                    @Html.HiddenFor(x => x.Product.Id, new { Name = "Id", id = "editIdControl" })
-                    @Html.Label("Description")
-                    @Html.TextBoxFor(x => x.Product.Description, new { @class = "form-control", Name = "Description", id = "editDescriptionControl" })
-                    @Html.ValidationMessageFor(x => x.Product.Description)
+    <div id="EditProductModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Product</h4>
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
                 </div>
-                <div class="form-group">
-                    @Html.Label("Type")
-                    @Html.DropDownListFor(l => l.Product.ProductTypeId, new SelectList(Model.ProductTypes, "Id", "Description"), "Select Type", new { @class = "form-control", Name = "ProductTypeId", id = "editTypeControl" })
-                    @Html.ValidationMessageFor(x => x.Product.ProductTypeId)
-                </div>
-                <div class="form-group">
-                    @Html.Label("Price")
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text mp-bold" id="basic-addon">£</span>
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/finance/products/update", HttpMethod = "POST", OnSuccess = "editProductSuccess", OnFailure = "editProductFailure" }, new { id = "editProductForm" }))
+                {
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @Html.HiddenFor(x => x.Product.Id, new { Name = "Id", id = "editIdControl" })
+                            @Html.Label("Description")
+                            @Html.TextBoxFor(x => x.Product.Description, new { @class = "form-control", Name = "Description", id = "editDescriptionControl" })
+                            @Html.ValidationMessageFor(x => x.Product.Description)
                         </div>
-                        @Html.TextBoxFor(x => x.Product.Price, new { @class = "form-control", Name = "Price", id = "editPriceControl" })
+                        <div class="form-group">
+                            @Html.Label("Type")
+                            @Html.DropDownListFor(l => l.Product.ProductTypeId, new SelectList(Model.ProductTypes, "Id", "Description"), "Select Type", new { @class = "form-control", Name = "ProductTypeId", id = "editTypeControl" })
+                            @Html.ValidationMessageFor(x => x.Product.ProductTypeId)
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Price")
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text mp-bold" id="basic-addon">£</span>
+                                </div>
+                                @Html.TextBoxFor(x => x.Product.Price, new { @class = "form-control", Name = "Price", id = "editPriceControl" })
+                            </div>
+                            @Html.ValidationMessageFor(x => x.Product.Price)
+                        </div>
+                        <div class="checkbox">
+                            <label style="font-weight: bold;">
+                                @Html.CheckBoxFor(x => x.Product.Visible, new { Name = "Visible", id = "editVisibleControl" }) Available on Store
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label style="font-weight: bold;">
+                                @Html.CheckBoxFor(x => x.Product.OnceOnly, new { Name = "OnceOnly", id = "editOnceOnlyControl" }) One-Time Purchase
+                            </label>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
                     </div>
-                    @Html.ValidationMessageFor(x => x.Product.Price)
-                </div>
-                <div class="checkbox">
-                    <label style="font-weight: bold;">
-                        @Html.CheckBoxFor(x => x.Product.Visible, new { Name = "Visible", id = "editVisibleControl" }) Available on Store
-                    </label>
-                </div>
-                <div class="checkbox">
-                    <label style="font-weight: bold;">
-                        @Html.CheckBoxFor(x => x.Product.OnceOnly, new { Name = "OnceOnly", id = "editOnceOnlyControl" }) One-Time Purchase
-                    </label>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </div>
-            }
+                }
 
+            </div>
         </div>
     </div>
-</div>
-<!--#endregion-->
 </body>
 
 
@@ -154,61 +148,8 @@
 {
     <script>
         $(document).ready(function() {
-
-            function loadProducts() {
-
-                var simpleCheckbox = function(data) {
-                    var isChecked = data === true ? "checked" : "";
-                    return '<input type="checkbox" class="checkbox" onclick="return false;" ' +
-                        isChecked +
-                        ' />';
-                };
-
-                $("#products").DataTable({
-                    ajax: {
-                        url: "/api/products",
-                        dataSrc: ""
-                    },
-                    columns: [
-                        {
-                            data: "description"
-                        },
-                        {
-                            data: "financeProductType.description"
-                        },
-                        {
-                            data: "price",
-                            render: $.fn.dataTable.render.number(',', '.', 2, '£')
-                        },
-                        {
-                            data: "visible",
-                            render: simpleCheckbox
-                        },
-                        {
-                            data: "onceOnly",
-                            render: simpleCheckbox
-                        },
-                        {
-                            data: "id",
-                            render: function(data) {
-                                return "<button type='button' class='btn btn-xs btn-warning js-edit' data-product-id=" +
-                                    data +
-                                    "><i class=\"far fa-edit\"></i></button> " +
-                                    "<button type='button' class='btn btn-xs btn-danger js-delete' data-product-id=" +
-                                    data +
-                                    "><i class=\"far fa-trash-alt\"></i></button>";
-                            }
-                        }
-                    ],
-                    "language": {
-                        "emptyTable": "No products to display"
-                    }
-
-                });
-            }
-
             //Delete Product When Button Clicked
-            $("#products").on("click",
+            $("#Products").on("click",
                 ".js-delete",
                 function() {
                     var button = $(this);
@@ -216,14 +157,14 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: "/api/products/" + button.attr("data-product-id"),
+                                    url: "/api/finance/products/delete/" + button.attr("data-product-id"),
                                     method: "DELETE",
-                                    success: function() {
-                                        $("#products").DataTable().ajax.reload();
-                                        toastr.success("Product deleted");
+                                    success: function(e) {
+                                        refreshTable("Products");
+                                        toastr.success(e);
                                     },
-                                    error: function() {
-                                        toastr.error("Could not delete product");
+                                    error: function(e) {
+                                        toastr.error(e.responseJSON);
                                     }
                                 });
                             }
@@ -235,13 +176,13 @@
                     $(this).find('form').trigger('reset');
                 });
             //Open Form When Edit Product Button Clicked
-            $("#products").on("click",
+            $("#Products").on("click",
                 ".js-edit",
                 function() {
                     var button = $(this);
                     var logId = button.attr("data-product-id");
                     $.ajax({
-                        url: "/api/products/" + logId,
+                        url: "/api/finance/products/get/byId/" + logId,
                         method: "GET",
                         success: function(result) {
                             $("#editIdControl").val(result["id"]);
@@ -257,13 +198,11 @@
                     });
                     $("#EditProductModal").modal('toggle');
                 });
-
-            loadProducts();
         });
 
         function newProductSuccess(result) {
             $("#NewProductModal").modal('hide');
-            $("#products").DataTable().ajax.reload();
+            refreshTable("Products");
             toastr.success(result);
         }
 
@@ -274,7 +213,7 @@
 
         function editProductSuccess(result) {
             $("#EditProductModal").modal('hide');
-            $("#products").DataTable().ajax.reload();
+            refreshTable("Products");
             toastr.success(result);
         }
 
@@ -282,5 +221,47 @@
             $("#EditProductModal").modal('hide');
             toastr.error(result.responseJSON);
         }
+    </script>
+
+    <script type="text/x-jsrender" id="productsDescriptionTemplate">
+        <div>
+            ${Description}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="productsTypeTemplate">
+        <div>
+            ${TypeDescription}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="productsPriceTemplate">
+        <div>
+            ${formatCurrency(Price)}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="productsStoreTemplate">
+        <div>
+            ${renderBool(Visible)}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="productsOnceOnlyTemplate">
+        <div>
+            ${renderBool(OnceOnly)}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="productsActionsTemplate">
+        <div>
+            <button type='button' class='btn btn-xs mp-btn-action btn-warning js-edit' data-product-id="${Id}">
+                <i class="far fa-edit"></i>
+            </button>
+
+            <button type='button' class='btn btn-xs mp-btn-action btn-danger js-delete' data-product-id="${Id}">
+                <i class="far fa-trash-alt"></i>
+            </button>
+        </div>
     </script>
 }

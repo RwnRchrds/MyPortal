@@ -12,6 +12,7 @@ using MyPortal.Models.Database;
 using MyPortal.Models.Exceptions;
 using MyPortal.Models.Misc;
 using MyPortal.Processes;
+using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
 {
@@ -43,7 +44,7 @@ namespace MyPortal.Controllers.Api
 
         /// <returns></returns>
         [HttpGet]
-        [Route("sessions/byTeacher/{teacherId:int}/{date:datetime:regex(\\d{4}-\\d{2}-\\d{2})}")]
+        [Route("sessions/byTeacher/{teacherId:int}/{date:datetime:regex(\\d{2}-\\d{2}-\\d{4})}")]
         public IEnumerable<CurriculumSessionDto> GetSessionsForTeacher([FromUri] int teacherId, [FromUri] DateTime date)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
@@ -97,6 +98,15 @@ namespace MyPortal.Controllers.Api
         public IEnumerable<CurriculumSessionDto> GetSessionsForClass([FromUri] int classId)
         {
             return PrepareResponseObject(CurriculumProcesses.GetSessionsForClass(classId, _context));
+        }
+
+        [HttpPost]
+        [Route("sessions/get/byClassId/dataGrid/{classId:int}")]
+        public IHttpActionResult GetSessionsForClassDataGrid([FromUri] int classId, [FromBody] DataManagerRequest dm)
+        {
+            var sessions = PrepareResponseObject(CurriculumProcesses.GetSessionsForClass_DataGrid(classId, _context));
+
+            return PrepareDataGridObject(sessions, dm);
         }
 
         [HttpGet]

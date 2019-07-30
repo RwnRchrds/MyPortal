@@ -170,6 +170,28 @@ namespace MyPortal
                     opts => opts.MapFrom(src => src.PersonnelTrainingCourse.Code))
                 .ForMember(dest => dest.CourseDescription,
                     opts => opts.MapFrom(src => src.PersonnelTrainingCourse.Description));
+
+            CreateMap<FinanceProduct, GridFinanceProductDto>()
+                .ForMember(dest => dest.TypeDescription,
+                    opts => opts.MapFrom(src => src.FinanceProductType.Description));
+
+            CreateMap<FinanceSale, GridFinanceSaleDto>()
+                .ForMember(dest => dest.ProductDescription,
+                    opts => opts.MapFrom(src => src.FinanceProduct.Description))
+                .ForMember(dest => dest.StudentName,
+                    opts => opts.MapFrom(src => PeopleProcesses.GetStudentDisplayName(src.CoreStudent).ResponseObject));
+
+            CreateMap<AssessmentResultSet, GridAssessmentResultSetDto>();
+
+            CreateMap<CurriculumSession, GridCurriculumSessionDto>()
+                .ForMember(dest => dest.ClassName,
+                    opts => opts.MapFrom(src => src.CurriculumClass.Name))
+                .ForMember(dest => dest.PeriodName,
+                    opts => opts.MapFrom(src => src.AttendancePeriod.Name))
+                .ForMember(dest => dest.Teacher,
+                    opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.CurriculumClass.Teacher)))
+                .ForMember(dest => dest.Time,
+                    opts => opts.MapFrom(src => AttendanceProcesses.GetPeriodTime(src.AttendancePeriod)));
         }
     }
 }

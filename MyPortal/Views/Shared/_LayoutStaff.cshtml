@@ -10,11 +10,7 @@
         var version = ViewContext.Controller.GetType().Assembly.GetName().Version;
     }
     
-    <!-- Syncfusion Essential JS 2 Styles -->
-    <link rel="stylesheet" href="https://cdn.syncfusion.com/ej2/material.css" />
-
-    <!-- Syncfusion Essential JS 2 Scripts -->
-    <script src="https://cdn.syncfusion.com/ej2/dist/ej2.min.js"></script>
+    @Scripts.Render("~/bundles/syncfusion")
 </head>
 <body>
     @Html.Partial("_NavBarStaffNew")

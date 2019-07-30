@@ -66,10 +66,10 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Route("weeks/get/byDate/{date:datetime:regex(\\d{4}-\\d{2}-\\d{2})}")]
+        [Route("weeks/get/byDate/{date:datetime}")]
         public AttendanceWeekDto GetWeekByDate([FromUri] DateTime date)
         {
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             //var date = DateTimeProcesses.GetDateTimeFromFormattedInt(dateInt).ResponseObject;
 

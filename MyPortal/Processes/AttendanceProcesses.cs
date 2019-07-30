@@ -260,5 +260,15 @@ namespace MyPortal.Processes
             return new ProcessResponse<AttendanceWeekDto>(ResponseType.Ok, null,
                 Mapper.Map<AttendanceWeek, AttendanceWeekDto>(selectedWeek));
         }
+
+        public static ProcessResponse<string> GetPeriodTime(AttendancePeriod period)
+        {
+            var startTime = period.StartTime.ToString(@"hh\:mm");
+            var endTime = period.EndTime.ToString(@"hh\:mm");
+
+            var periodTime = $"{startTime} - {endTime}";
+
+            return new ProcessResponse<string>(ResponseType.Ok, null, periodTime);
+        }
     }
 }

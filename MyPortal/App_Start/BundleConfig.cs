@@ -25,6 +25,9 @@ namespace MyPortal
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                 "~/Scripts/jquery.validate*"));
 
+            bundles.Add(new ScriptBundle("~/bundles/syncfusion").Include(
+                "~/Scripts/ej2/ej2.min.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/navbar").Include(
                 "~/Scripts/MyPortal/NavBar.js"));
 
@@ -46,7 +49,8 @@ namespace MyPortal
                 "~/content/regular.min.css",
                 "~/content/solid.min.css",
                 "~/Content/brands.min.css",
-                "~/Content/site.css"));
+                "~/Content/site.css",
+                "~/Content/ej2/bootstrap4.css"));
         }
     }
 }

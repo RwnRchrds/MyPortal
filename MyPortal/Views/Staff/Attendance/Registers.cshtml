@@ -1,4 +1,5 @@
-﻿@model MyPortal.ViewModels.RegistersViewModel
+﻿@using Syncfusion.EJ2.Calendars
+@model MyPortal.ViewModels.RegistersViewModel
 @{
     ViewBag.Title = "Registers";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
@@ -6,35 +7,36 @@
 
 <div class="container float-left">
     <h2 class="mp-page-title">Registers</h2>
-    <hr/>
+    <hr />
 </div>
 
 <div class="container float-left" id="registerSelectors" data-current-user-id="@Model.CurrentUser.Id">
-    <div class="form-group">
-        @Html.Label("Date")
-        @Html.TextBox("Date", null, new {id = "selectedDate", @class = "form-control register-selector"})
+    <div>
+        @Html.Label("Date", new {@class = "control-label"})
+        @*@Html.TextBox("Date", null, new {id = "selectedDate", @class = "form-control register-selector"})*@
+        @Html.EJS().DatePicker("selectedDate").Format("yyyy-MM-dd").AllowEdit(false).HtmlAttributes(new Dictionary<string, object> { { "Name", "Date" } }).Render()
     </div>
     <div class="form-group">
         @Html.Label("Teacher")
-        <select class="form-control register-selector" id="selectedTeacher"></select>
+        <select class="form-control" id="selectedTeacher"></select>
     </div>
-    
-    <button type="button" class="btn btn-success" id="buttonSearch">Search Lessons</button>
+
+    <button type="button" class="btn btn-primary" id="buttonSearch">Search Lessons</button>
 </div>
 
 <!--#region Registers Panel-->
 <div class="container float-left mp-margin-top">
     <div>
-        <hr/>
+        <hr />
         <h4 class="mp-bold" id="registersFor"></h4>
         <table class="table table-sm table-bordered table-hover mp-table mp-table-link" id="registers" data-week-id="">
             <thead>
-            <tr>
-                <th>Period</th>
-                <th>Lesson/Session</th>
-                <th>Time</th>
-                <th>Actions</th>
-            </tr>
+                <tr>
+                    <th>Period</th>
+                    <th>Lesson/Session</th>
+                    <th>Time</th>
+                    <th>Actions</th>
+                </tr>
             </thead>
         </table>
     </div>
@@ -43,19 +45,19 @@
 
 @section scripts
 {
-    <script>        
+    <script>
         $(document).ready(function () {
             $('.modal').on('hidden.bs.modal',
-                function() {
+                function () {
                     $(this).find('form').trigger('reset');
                 });
 
             $.ajax({
-                url: "/api/staff/fetch",
+                url: "/api/people/staff/get/all",
                 method: "GET",
-                complete: function(data) {
+                complete: function (data) {
                     $("#selectedTeacher").empty();
-                    $(data.responseJSON).each(function(i) {
+                    $(data.responseJSON).each(function (i) {
                         var divData = "<option value=" +
                             data.responseJSON[i].id +
                             ">" +
@@ -64,7 +66,7 @@
                             data.responseJSON[i].person.firstName +
                             "</option>";
                         $(divData).appendTo('#selectedTeacher');
-                        var currentUserId = $("#registerSelectors").attr("data-current-user-id");          
+                        var currentUserId = $("#registerSelectors").attr("data-current-user-id");
 
                         $("#selectedTeacher").val(currentUserId);
                         $("#selectedDate").val(parseToday());
@@ -73,7 +75,7 @@
             });
 
             $("#buttonSearch").on("click",
-                function() {
+                function () {
                     var selDate = parseDate($("#selectedDate").val());
                     var selTeacher = $("#selectedTeacher").val();
                     updateWeekId(selDate);
@@ -82,7 +84,7 @@
 
             $("#registers").on("click",
                 ".js-takeRegister",
-                function() {
+                function () {
                     var button = $(this);
                     var weekId = $("#registers").attr("data-week-id");
                     var periodId = button.attr("data-classperiod-id");
@@ -97,15 +99,15 @@
             $.ajax({
                 url: url,
                 method: "GET",
-                success: function(result) {
+                success: function (result) {
                     $("#registers").attr("data-week-id", result.id);
                 }
             });
         }
 
-        function loadRegisters(teacher, selectedDate) {
+        function loadRegisters(teacherId, selectedDate) {
 
-            var url = "/api/curriculum/classes/byTeacher/" + teacher + "/" + selectedDate;
+            var url = "/api/curriculum/classes/get/byTeacher/" + teacherId + "/" + selectedDate;
 
             $("#registers").DataTable().clear().destroy();
 
@@ -133,7 +135,7 @@
                         data: "id",
                         render: function (data, type, attendanceClass) {
                             return "<button type='button' class='btn btn-xs btn-success js-takeRegister' data-classperiod-id='" +
-                                attendanceClass.id +                                
+                                attendanceClass.id +
                                 "'><i class=\"fas fa-clipboard-check\"></i></button> ";
                         }
                     }
@@ -160,7 +162,7 @@
                 mm = '0' + mm;
             }
 
-            today = dd + '-' + mm + '-' + yyyy;
+            today = yyyy + '-' + mm + '-' + dd;
 
             return today.toString();
         }

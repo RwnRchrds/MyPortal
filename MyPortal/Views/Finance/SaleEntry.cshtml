@@ -4,38 +4,38 @@
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 <body>
-<!--#region Title-->
-<div class="container float-left">
+
+<div class="container">
     <h2 class="mp-page-title">Sale Entry</h2>
     <hr/>
 </div>
-<!--#endregion-->
-<!--#region New Sale Form-->
-<div class="container float-left">
+
+
+<div class="container">
     @Html.Label("Product")
     @Html.DropDownListFor(x => x.Sale.FinanceProduct, new SelectList(Model.Products, "Id", "Description"), "", new {@class = "form-control", Name = "Product", id = "productSelect"})
     <p class="text-primary mp-bold" data-price id="price"></p>
 </div>
 
-<div class="container float-left">
+<div class="container">
     <div class="form-group">
         <label>Year Group</label>
         <select class="form-control" id="yearGroupSelect"></select>
     </div>
 </div>
 
-<div class="container float-left">
+<div class="container">
     <div class="form-group" id="selectStudentArea">
         <label class="d-none" id="studentLabel">Student</label>
         <select class="form-control disabled d-none" id="studentSelect"></select>
     </div>
 </div>
 
-<div class="container float-left">
+<div class="container">
     <button type="button" class="btn btn-primary" id="backButton">Back</button>
     <button class="btn btn-success d-none" id="submitButton">Make Sale</button>
 </div>
-<!--#endregion-->
+
 </body>
 
 @section scripts
@@ -44,7 +44,7 @@
         $(document).ready(function() {
             //Gets Year Groups and Inserts Options into Dropdown
             $.ajax({
-                url: "/api/yearGroups/fetch",
+                url: "/api/pastoral/yearGroups/get/all",
                 method: "GET",
                 complete: function(data) {
                     $("#yearGroupSelect").empty();
@@ -64,7 +64,7 @@
                 function() {
                     if ($("#yearGroupSelect").val() !== "") {
                         $.ajax({
-                            url: "/api/students/yearGroup/" + $("#yearGroupSelect").val(),
+                            url: "/api/people/students/get/byYearGroup/" + $("#yearGroupSelect").val(),
                             method: "GET",
                             complete: function(data) {
                                 $("#studentSelect").empty();
@@ -90,7 +90,7 @@
             $("#productSelect").on("change",
                 function() {
                     $.ajax({
-                        url: "/api/products/price/" + $("#productSelect").val(),
+                        url: "/api/finance/products/price/" + $("#productSelect").val(),
                         method: "GET",
                         success: function(data) {
                             $("#price").text("Price: £" + data.toFixed(2));
@@ -111,7 +111,7 @@
 
             function makeSale() {
                 $.ajax({
-                    url: "/api/sales/new",
+                    url: "/api/finance/sales/create",
                     method: "POST",
                     data: ({ studentId: $("#studentSelect").val(), productId: $("#productSelect").val() }),
                     success: function(e) {
@@ -135,7 +135,7 @@
             $("#submitButton").on("click",
                 function() {
                     $.ajax({
-                        url: "/api/sales/query",
+                        url: "/api/finance/sales/queryBalance",
                         method: "POST",
                         data: ({ studentId: $("#studentSelect").val(), productId: $("#productSelect").val() }),
                         success: function(data) {

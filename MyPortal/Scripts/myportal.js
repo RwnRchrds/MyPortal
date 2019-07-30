@@ -6,3 +6,24 @@
 function formatCurrency(data) {
     return "£" + data.toFixed(2).toString();
 }
+
+function refreshTable(tableName) {
+    var grid = document.getElementById(tableName.toString()).ej2_instances[0];
+    grid.refresh();
+}
+
+function renderBool(bool) {
+    if (bool) {
+        return "Yes";
+    } else {
+        return "No";
+    }
+}
+
+function changeTableSource(tableName, apiUrl) {
+    var grid = document.getElementById(tableName.toString()).ej2_instances[0];
+    grid.dataSource = new ej.data.DataManager({
+        url: apiUrl,
+        adaptor: new ej.data.UrlAdaptor()
+    });
+}

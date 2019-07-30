@@ -4,14 +4,12 @@
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 <body>
-    <!--#region Title-->
-    <div class="container float-left">
-        <h2 class="mp-page-title">Accounts</h2>
-        <hr />
-    </div>
-    <!--#endregion-->
-    <!--#region Accounts Table-->
-    <div class="container float-left">
+<div class="container">
+    <h2 class="mp-page-title">Accounts</h2>
+    <hr />
+</div>
+
+<div class="container">
         @Html.EJS().Grid("Accounts").DataSource(d =>
         {
             d.Url("/api/people/students/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor");
@@ -24,12 +22,10 @@
             c.HeaderText("Actions").Template("#accountsActionsTemplate").Width("120").Add();
         }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).AllowSorting().Toolbar(new List<string>() { "Search" }).Render()
     </div>
-    <!--#endregion-->
-    <!--#region Credit Modal-->
+
     <div id="CreditModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
 
-            <!--content-->
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title mp-title-credit">Credit Account</h4>
@@ -51,7 +47,7 @@
                             @Html.ValidationMessageFor(x => x.BalanceAdjustment.Amount)
                         </div>
                         <div class="form-group">
-                            @Html.HiddenFor(x => x.BalanceAdjustment.StudentId, new { Name = "Student", id = "studentIdControlCredit" })
+                            @Html.HiddenFor(x => x.BalanceAdjustment.StudentId, new { Name = "StudentId", id = "studentIdControlCredit" })
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -63,8 +59,7 @@
             </div>
         </div>
     </div>
-    <!--#endregion-->
-    <!--#region Debit Modal-->
+
     <div id="DebitModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
 
@@ -90,7 +85,7 @@
                             @Html.ValidationMessageFor(x => x.BalanceAdjustment.Amount)
                         </div>
                         <div class="form-group">
-                            @Html.HiddenFor(x => x.BalanceAdjustment.StudentId, new { Name = "Student", id = "studentIdControlDebit" })
+                            @Html.HiddenFor(x => x.BalanceAdjustment.StudentId, new { Name = "StudentId", id = "studentIdControlDebit" })
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -102,7 +97,6 @@
             </div>
         </div>
     </div>
-    <!--#endregion-->
 </body>
 
 @section scripts
@@ -146,7 +140,7 @@
 
         function creditSuccess(result) {
             $("#CreditModal").modal('hide');
-            $("#students").DataTable().ajax.reload();
+            refreshTable("Accounts");
             toastr.success(result);
         }
 
@@ -157,7 +151,7 @@
 
         function debitSuccess(result) {
             $("#DebitModal").modal('hide');
-            $("#students").DataTable().ajax.reload();
+            refreshTable("Accounts");
             toastr.success(result);
         }
 
@@ -194,10 +188,10 @@
     <script type="text/x-jsrender" id="accountsActionsTemplate">
         <div>
             <button type='button' class='btn btn-danger mp-btn-action js-debit mp-btn-size' data-student-id="${Id}">
-                <i class=\"fas fa-minus\"></i>
+                <i class="fas fa-minus"></i>
             </button>
             <button type='button' class='btn btn-success mp-btn-action js-credit mp-btn-size' data-student-id="${Id}">
-                <i class=\"fas fa-plus\"></i>  
+                <i class="fas fa-plus"></i>  
             </button>                      
         </div>
     </script>

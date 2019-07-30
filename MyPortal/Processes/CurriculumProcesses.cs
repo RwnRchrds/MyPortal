@@ -6,6 +6,7 @@ using System.Web;
 using AutoMapper;
 using Microsoft.Ajax.Utilities;
 using MyPortal.Dtos;
+using MyPortal.Dtos.GridDtos;
 using MyPortal.Dtos.LiteDtos;
 using MyPortal.Models.Database;
 using MyPortal.Models.Exceptions;
@@ -241,12 +242,27 @@ namespace MyPortal.Processes
             return new ProcessResponse<object>(ResponseType.BadRequest, "Class cannot be deleted", null);
         }
 
+        public static ProcessResponse<IEnumerable<CurriculumSession>> GetSessionsForClass_Model(int classId,
+            MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<CurriculumSession>>(ResponseType.Ok, null,
+                context.CurriculumSessions.Where(x => x.ClassId == classId).ToList());
+        }
+
         public static ProcessResponse<IEnumerable<CurriculumSessionDto>> GetSessionsForClass(int classId,
             MyPortalDbContext context)
         {
             return new ProcessResponse<IEnumerable<CurriculumSessionDto>>(ResponseType.Ok, null,
-                context.CurriculumSessions.Where(x => x.ClassId == classId).ToList()
+                GetSessionsForClass_Model(classId, context).ResponseObject
                     .Select(Mapper.Map<CurriculumSession, CurriculumSessionDto>));
+        }
+
+        public static ProcessResponse<IEnumerable<GridCurriculumSessionDto>> GetSessionsForClass_DataGrid(int classId,
+            MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<GridCurriculumSessionDto>>(ResponseType.Ok, null,
+                GetSessionsForClass_Model(classId, context).ResponseObject
+                    .Select(Mapper.Map<CurriculumSession, GridCurriculumSessionDto>));
         }
 
         public static ProcessResponse<CurriculumSessionDto> GetSessionById(int sessionId, MyPortalDbContext context)

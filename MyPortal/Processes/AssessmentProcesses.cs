@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using AutoMapper;
 using MyPortal.Dtos;
+using MyPortal.Dtos.GridDtos;
 using MyPortal.Models.Database;
 using MyPortal.Models.Exceptions;
 using MyPortal.Models.Misc;
@@ -99,10 +100,17 @@ namespace MyPortal.Processes
 
         }
 
+        public static ProcessResponse<IEnumerable<GridAssessmentResultSetDto>> GetAllResultSets_DataGrid(MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<GridAssessmentResultSetDto>>(ResponseType.Ok, null,
+                GetAllResultSets_Model(context).ResponseObject
+                    .Select(Mapper.Map<AssessmentResultSet, GridAssessmentResultSetDto>));
+        }
+
         public static ProcessResponse<IEnumerable<AssessmentResultSetDto>> GetAllResultSets(MyPortalDbContext context)
         {
             return new ProcessResponse<IEnumerable<AssessmentResultSetDto>>(ResponseType.Ok, null,
-                context.AssessmentResultSets.OrderBy(x => x.Name).ToList()
+                GetAllResultSets_Model(context).ResponseObject
                     .Select(Mapper.Map<AssessmentResultSet, AssessmentResultSetDto>));
         }
 

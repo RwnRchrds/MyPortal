@@ -344,7 +344,7 @@ namespace MyPortal.Controllers
 
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
-            var attendanceData = AttendanceProcesses.GetSummary(student.Id, academicYearId, _context).ResponseObject;
+            var attendanceData = AttendanceProcesses.GetSummary(student.Id, academicYearId, _context, true).ResponseObject;
 
             double? attendance = null;
 

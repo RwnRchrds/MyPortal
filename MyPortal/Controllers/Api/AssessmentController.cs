@@ -11,6 +11,7 @@ using MyPortal.Dtos;
 using MyPortal.Models.Database;
 using MyPortal.Models.Exceptions;
 using MyPortal.Processes;
+using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
 {
@@ -62,9 +63,18 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [Route("resultSets/get/all")]
-        public IEnumerable<AssessmentResultSetDto> GetResultSets()
+        public IEnumerable<AssessmentResultSetDto> GetAllResultSets()
         {
             return PrepareResponseObject(AssessmentProcesses.GetAllResultSets(_context));
+        }
+
+        [HttpPost]
+        [Route("resultSets/get/dataGrid/all")]
+        public IHttpActionResult GetAllResultSetsForDataGrid([FromBody] DataManagerRequest dm)
+        {
+            var resultSets = PrepareResponseObject(AssessmentProcesses.GetAllResultSets_DataGrid(_context));
+
+            return PrepareDataGridObject(resultSets, dm);
         }
 
         [HttpGet]

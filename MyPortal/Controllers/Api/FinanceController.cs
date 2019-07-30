@@ -8,6 +8,7 @@ using MyPortal.Dtos;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
 using MyPortal.Processes;
+using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
 {
@@ -107,15 +108,20 @@ namespace MyPortal.Controllers.Api
             return PrepareResponseObject(FinanceProcesses.GetProductById(productId, _context));
         }
 
-        /// <summary>
-        ///     Gets a list of all products.
-        /// </summary>
-        /// <returns>Returns a list of DTOs of all products.</returns>
         [HttpGet]
         [Route("products/get/all")]
         public IEnumerable<FinanceProductDto> GetAllProducts()
         {
             return PrepareResponseObject(FinanceProcesses.GetAllProducts(_context));
+        }
+
+        [HttpPost]
+        [Route("products/get/dataGrid/all")]
+        public IHttpActionResult GetAllProductsForDataGrid([FromBody] DataManagerRequest dm)
+        {
+            var products = PrepareResponseObject(FinanceProcesses.GetAllProducts_DataGrid(_context));
+
+            return PrepareDataGridObject(products, dm);
         }
 
         /// <summary>
@@ -180,6 +186,16 @@ namespace MyPortal.Controllers.Api
             return PrepareResponseObject(FinanceProcesses.GetProcessedSales(academicYearId, _context));
         }
 
+        [HttpPost]
+        [Route("sales/get/dataGrid/processed")]
+        public IHttpActionResult GetProcessedSalesForDataGrid([FromBody] DataManagerRequest dm)
+        {
+            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var sales = PrepareResponseObject(FinanceProcesses.GetProcessedSales_DataGrid(academicYearId, _context));
+
+            return PrepareDataGridObject(sales, dm);
+        }
+
         /// <summary>
         ///     Gets a list of all sales
         /// </summary>
@@ -190,6 +206,16 @@ namespace MyPortal.Controllers.Api
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             return PrepareResponseObject(FinanceProcesses.GetAllSales(academicYearId, _context));
+        }
+
+        [HttpPost]
+        [Route("sales/get/dataGrid/all")]
+        public IHttpActionResult GetAllSalesForDataGrid([FromBody] DataManagerRequest dm)
+        {
+            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var sales = PrepareResponseObject(FinanceProcesses.GetAllSales_DataGrid(academicYearId, _context));
+
+            return PrepareDataGridObject(sales, dm);
         }
 
         /// <summary>
@@ -215,6 +241,16 @@ namespace MyPortal.Controllers.Api
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             return PrepareResponseObject(FinanceProcesses.GetPendingSales(academicYearId, _context));
+        }
+
+        [HttpPost]
+        [Route("sales/get/dataGrid/pending")]
+        public IHttpActionResult GetPendingSalesForDataGrid([FromBody] DataManagerRequest dm)
+        {
+            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var sales = PrepareResponseObject(FinanceProcesses.GetPendingSales_DataGrid(academicYearId, _context));
+
+            return PrepareDataGridObject(sales, dm);
         }
 
         /// <summary>

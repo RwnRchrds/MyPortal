@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using AutoMapper;
 using MyPortal.Dtos;
+using MyPortal.Dtos.GridDtos;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
 
@@ -134,13 +135,25 @@ namespace MyPortal.Processes
                 Mapper.Map<FinanceProduct, FinanceProductDto>(product));
         }
 
-        public static ProcessResponse<IEnumerable<FinanceProductDto>> GetAllProducts(MyPortalDbContext context)
+        public static ProcessResponse<IEnumerable<FinanceProduct>> GetAllProducts_Model(MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<FinanceProductDto>>(ResponseType.Ok, null, context.FinanceProducts
+            return new ProcessResponse<IEnumerable<FinanceProduct>>(ResponseType.Ok, null, context.FinanceProducts
                 .Where(x => !x.Deleted)
                 .OrderBy(x => x.Description)
-                .ToList()
-                .Select(Mapper.Map<FinanceProduct, FinanceProductDto>));
+                .ToList());
+        }
+
+        public static ProcessResponse<IEnumerable<FinanceProductDto>> GetAllProducts(MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<FinanceProductDto>>(ResponseType.Ok, null,
+                GetAllProducts_Model(context).ResponseObject.Select(Mapper.Map<FinanceProduct, FinanceProductDto>));
+        }
+
+        public static ProcessResponse<IEnumerable<GridFinanceProductDto>> GetAllProducts_DataGrid(MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<GridFinanceProductDto>>(ResponseType.Ok, null,
+                GetAllProducts_Model(context).ResponseObject.Select(Mapper.Map<FinanceProduct, GridFinanceProductDto>));
+
         }
 
         public static ProcessResponse<object> CreateProduct(FinanceProduct product, MyPortalDbContext context)
@@ -220,21 +233,48 @@ namespace MyPortal.Processes
             return new ProcessResponse<object>(ResponseType.Ok, "Sale deleted", null);
         }
 
+        public static ProcessResponse<IEnumerable<FinanceSale>> GetProcessedSales_Model(int academicYearId, MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<FinanceSale>>(ResponseType.Ok, null, context.FinanceSales
+                .Where(x => !x.Deleted && x.Processed && x.AcademicYearId == academicYearId)
+                .OrderByDescending(x => x.Date)
+                .ToList());
+        }
+
         public static ProcessResponse<IEnumerable<FinanceSaleDto>> GetProcessedSales(int academicYearId, MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<FinanceSaleDto>>(ResponseType.Ok, null, context.FinanceSales
-                .Where(x => !x.Deleted && x.Processed && x.AcademicYearId == academicYearId)
-                .ToList()
-                .Select(Mapper.Map<FinanceSale, FinanceSaleDto>));
+            return new ProcessResponse<IEnumerable<FinanceSaleDto>>(ResponseType.Ok, null,
+                GetProcessedSales_Model(academicYearId, context).ResponseObject
+                    .Select(Mapper.Map<FinanceSale, FinanceSaleDto>));
+        }
+
+        public static ProcessResponse<IEnumerable<GridFinanceSaleDto>> GetProcessedSales_DataGrid(int academicYearId, MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<GridFinanceSaleDto>>(ResponseType.Ok, null,
+                GetProcessedSales_Model(academicYearId, context).ResponseObject
+                    .Select(Mapper.Map<FinanceSale, GridFinanceSaleDto>));
+        }
+
+        public static ProcessResponse<IEnumerable<FinanceSale>> GetAllSales_Model(int academicYearId, MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<FinanceSale>>(ResponseType.Ok, null, context.FinanceSales
+                .Where(x => !x.Deleted && x.AcademicYearId == academicYearId)
+                .OrderByDescending(x => x.Date)
+                .ToList());
         }
 
         public static ProcessResponse<IEnumerable<FinanceSaleDto>> GetAllSales(int academicYearId, MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<FinanceSaleDto>>(ResponseType.Ok, null, context.FinanceSales
-                .Where(x => !x.Deleted && x.AcademicYearId == academicYearId)
-                .OrderByDescending(x => x.Date)
-                .ToList()
-                .Select(Mapper.Map<FinanceSale, FinanceSaleDto>));
+            return new ProcessResponse<IEnumerable<FinanceSaleDto>>(ResponseType.Ok, null,
+                GetAllSales_Model(academicYearId, context).ResponseObject
+                    .Select(Mapper.Map<FinanceSale, FinanceSaleDto>));
+        }
+
+        public static ProcessResponse<IEnumerable<GridFinanceSaleDto>> GetAllSales_DataGrid(int academicYearId, MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<GridFinanceSaleDto>>(ResponseType.Ok, null,
+                GetAllSales_Model(academicYearId, context).ResponseObject
+                    .Select(Mapper.Map<FinanceSale, GridFinanceSaleDto>));
         }
 
         public static ProcessResponse<IEnumerable<FinanceSaleDto>> GetAllSalesForStudent(int studentId,
@@ -247,14 +287,29 @@ namespace MyPortal.Processes
                 .Select(Mapper.Map<FinanceSale, FinanceSaleDto>));
         }
 
+        public static ProcessResponse<IEnumerable<FinanceSale>> GetPendingSales_Model(int academicYearId,
+            MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<FinanceSale>>(ResponseType.Ok, null, context.FinanceSales
+                .Where(x => !x.Deleted && !x.Processed && x.AcademicYearId == academicYearId)
+                .OrderByDescending(x => x.Date)
+                .ToList());
+        }
+
         public static ProcessResponse<IEnumerable<FinanceSaleDto>> GetPendingSales(int academicYearId,
             MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<FinanceSaleDto>>(ResponseType.Ok, null, context.FinanceSales
-                .Where(x => !x.Deleted && !x.Processed && x.AcademicYearId == academicYearId)
-                .OrderByDescending(x => x.Date)
-                .ToList()
-                .Select(Mapper.Map<FinanceSale, FinanceSaleDto>));
+            return new ProcessResponse<IEnumerable<FinanceSaleDto>>(ResponseType.Ok, null,
+                GetPendingSales_Model(academicYearId, context).ResponseObject
+                    .Select(Mapper.Map<FinanceSale, FinanceSaleDto>));
+        }
+
+        public static ProcessResponse<IEnumerable<GridFinanceSaleDto>> GetPendingSales_DataGrid(int academicYearId,
+            MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<GridFinanceSaleDto>>(ResponseType.Ok, null,
+                GetPendingSales_Model(academicYearId, context).ResponseObject
+                    .Select(Mapper.Map<FinanceSale, GridFinanceSaleDto>));
         }
 
         public static ProcessResponse<object> CreateSale(FinanceSale sale, int academicYearId, MyPortalDbContext context, bool commitImmediately = true)
@@ -361,6 +416,7 @@ namespace MyPortal.Processes
 
             saleInDb.CoreStudent.AccountBalance += saleInDb.AmountPaid;
 
+            saleInDb.Processed = true;
             saleInDb.Refunded = true;
             context.SaveChanges();
 

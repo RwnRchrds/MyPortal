@@ -1,5 +1,4 @@
 ﻿@using MyPortal.Processes
-@using Syncfusion.EJ2
 @using Syncfusion.EJ2.Grids
 @model MyPortal.ViewModels.StudentDetailsViewModel
 @{
@@ -19,446 +18,412 @@
 
 <style>
     
+    
+    
 </style>
 
-<!-- #region Title -->
-<div class="container float-left" id="title">
-
+<div class="container" id="title">
     <h2 class="mp-page-title">@PeopleProcesses.GetStudentDisplayName(Model.Student).ResponseObject</h2>
-
-    <hr />
-
+    <hr/>
 </div>
-<!-- #endregion -->
 
 <body>
-    <!--#region Top of Page Buttons-->
-    <div class="container float-left" id="container-1">
+<div class="container">
+    @if (User.IsInRole("SeniorStaff"))
+    {
+        <button type="button" class="btn btn-warning mp-btn-top" data-toggle="modal" data-target="#EditDetailsModal">
 
-        @if (User.IsInRole("SeniorStaff"))
+            <i class="far fa-id-card"></i> Edit Details
+
+        </button>
+    }
+
+    <div class="dropdown mp-btn-top inline-block">
+        <button class="btn btn-primary dropdown-toggle mp-btn-top" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-user-graduate"></i> Student
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <h6 class="dropdown-header">@PeopleProcesses.GetStudentDisplayName(Model.Student).ResponseObject</h6>
+            <a href="/Staff/People/Students/@Model.Student.Id/Behaviour" class="dropdown-item">Behaviour</a>
+            <a href="/Staff/People/Students/@Model.Student.Id/Results" class="dropdown-item">Results</a>
+        </div>
+    </div>
+
+    <hr/>
+
+</div>
+
+<div class="container">
+    <div class="inline-block">
+        <div class="card border-primary mp-card" id="detailsCard">
+            <div class="card-header bg-primary">Basic Details</div>
+            <div class="card-body">
+                <table class="table-condensed mp-table-condensed">
+                    <tr>
+                        <td>
+                            <b>First Name</b>
+                        </td>
+                        <td>@Model.Student.Person.FirstName</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Last Name</b>
+                        </td>
+                        <td>@Model.Student.Person.LastName</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Gender</b>
+                        </td>
+                        <td>@genderLabel</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Year Group</b>
+                        </td>
+                        <td>@Model.Student.PastoralYearGroup.Name</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Reg Group</b>
+                        </td>
+                        <td>@Model.Student.PastoralRegGroup.Name</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Reg Tutor</b>
+                        </td>
+                        <td>@Model.Student.PastoralRegGroup.Tutor.Person.Title @Model.Student.PastoralRegGroup.Tutor.Person.FirstName.Substring(0, 1) @Model.Student.PastoralRegGroup.Tutor.Person.LastName</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Head of Year</b>
+                        </td>
+                        <td>@Model.Student.PastoralYearGroup.HeadOfYear.Person.Title @Model.Student.PastoralYearGroup.HeadOfYear.Person.FirstName.Substring(0, 1) @Model.Student.PastoralYearGroup.HeadOfYear.Person.LastName</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="card-footer bg-transparent border-primary">
+
+                <h5><b>Balance:</b> £@Model.Student.AccountBalance</h5>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="inline-block">
+        <div class="card border-primary mp-card overview-card" id="summaryCard">
+            <div class="card-header bg-primary">Overview</div>
+            <div class="float-left container">
+                <div class="mp-info-block inline-block" id="attendanceBlock">
+                    @if (Model.HasAttendaceData && Model.Attendance != null)
+                    {
+                        <div class="mp-info-block-label">Attendance</div>
+                        <div class="mp-info-block-detail" data-hasdata="true" id="attendanceDetail">
+                            @Model.Attendance%
+                        </div>
+                    }
+                    @if (!Model.HasAttendaceData || Model.Attendance == null)
+                    {
+                        <div class="mp-info-block-label">Attendance</div>
+                        <div class="mp-info-block-detail-nodata" data-hasdata="false" id="attendanceDetail">
+                            No Data
+                        </div>
+                    }
+                </div>
+
+                <div class="mp-info-block inline-block" id="achievementBlock">
+                    <div class="mp-info-block-label">Achievements</div>
+                    <div class="mp-info-block-detail" id="achievementDetail">
+                        @Model.AchievementCount
+                    </div>
+                </div>
+
+                <div class="mp-info-block inline-block" id="behaviourBlock">
+                    <div class="mp-info-block-label">Behaviour</div>
+                    <div class="mp-info-block-detail" id="behaviourDetail">
+                        @Model.BehaviourCount
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mp-margin-top">
+    <div>
+        <hr/>
+        <h4 class="mp-bold">Log Notes</h4>
+        <button type="button" class="btn btn-primary mp-btn-table" data-toggle="modal" data-target="#NewLogModal">
+            <i class="fa fa-plus-circle"></i> New Log Note
+        </button>
+
+        @Html.EJS().Grid("logs").DataSource(dataManager => { dataManager.Url("/api/profiles/logs/get/byStudent/dataGrid/" + Model.Student.Id).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
         {
-            <button type="button" class="btn btn-warning mp-btn-top" data-toggle="modal" data-target="#EditDetailsModal">
-
-                <i class="far fa-id-card"></i> Edit Details
-
-            </button>
-        }
-
-        <div class="dropdown mp-btn-top mp-inline-block">
-            <button class="btn btn-primary dropdown-toggle mp-btn-top" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-user-graduate"></i> Student
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <h6 class="dropdown-header">@PeopleProcesses.GetStudentDisplayName(Model.Student).ResponseObject</h6>
-                <a href="/Staff/People/Students/@Model.Student.Id/Behaviour" class="dropdown-item">Behaviour</a>
-                <a href="/Staff/People/Students/@Model.Student.Id/Results" class="dropdown-item">Results</a>
-            </div>
-        </div>
-
-        <hr />
+            c.Field("Date").HeaderText("Date").Template("#logDateTemplate").Width("105").Add();
+            c.Field("AuthorName").HeaderText("Author").Template("#logAuthorTemplate").Width("110").Add();
+            c.Field("LogTypeName").HeaderText("Log Type").Template("#logTypeTemplate").Width("150").Add();
+            c.Field("Message").HeaderText("Message").Width("500").Template("#logMessageTemplate").Add();
+            c.HeaderText("Actions").Template("#logActionsTemplate").Width("150").Add();
+        }).AllowPaging().AllowTextWrap().PageSettings(p => p.PageSize(5)).TextWrapSettings(w => { w.WrapMode(WrapMode.Content); }).RowDataBound("logRowDataBound").EnableHover(false).Render()
 
     </div>
-    <!--#endregion-->
-    <!-- #region Card Container-->
-    <div class="container float-left" id="container-2">
-        <!--#region Student Details Card-->
-        <div class="float-left" id="detailsDiv">
+</div>
 
-            <div class="card border-primary mp-card" id="detailsCard">
+<div class="container mp-margin-top">
+    <div>
+        <hr/>
+        <h4 class="mp-bold">Documents</h4>
+        <button type="button" class="btn btn-primary mp-btn-table" data-toggle="modal" data-target="#NewDocumentModal">
+            <i class="fa fa-plus-circle"></i> New Document
+        </button>
+        @Html.EJS().Grid("documents").DataSource(dataManager => { dataManager.Url("/api/documents/personal/get/dataGrid/" + Model.Student.Person.Id).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+        {
+            c.Field("Description").HeaderText("Description").Template("#docsDescriptionTemplate").Width("700").Add();
+            c.Field("Date").HeaderText("Date").Template("#docsDateTemplate").Width("110").Add();
+            c.HeaderText("Actions").Template("#logActionsTemplate").Width("170").Add();
+        }).AllowPaging().PageSettings(p => p.PageSize(5)).Render()
 
-                <div class="card-header bg-primary">Basic Details</div>
-
-                <div class="card-body">
-
-                    <!--Student Details Table-->
-                    <table class="table-condensed mp-table-condensed">
-                        <tr>
-                            <td>
-                                <b>First Name</b>
-                            </td>
-                            <td>@Model.Student.Person.FirstName</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b>Last Name</b>
-                            </td>
-                            <td>@Model.Student.Person.LastName</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b>Gender</b>
-                            </td>
-                            <td>@genderLabel</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b>Year Group</b>
-                            </td>
-                            <td>@Model.Student.PastoralYearGroup.Name</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b>Reg Group</b>
-                            </td>
-                            <td>@Model.Student.PastoralRegGroup.Name</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b>Reg Tutor</b>
-                            </td>
-                            <td>@Model.Student.PastoralRegGroup.Tutor.Person.Title @Model.Student.PastoralRegGroup.Tutor.Person.FirstName.Substring(0, 1) @Model.Student.PastoralRegGroup.Tutor.Person.LastName</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b>Head of Year</b>
-                            </td>
-                            <td>@Model.Student.PastoralYearGroup.HeadOfYear.Person.Title @Model.Student.PastoralYearGroup.HeadOfYear.Person.FirstName.Substring(0, 1) @Model.Student.PastoralYearGroup.HeadOfYear.Person.LastName</td>
-                        </tr>
-                    </table>
-
-                </div>
-
-                <!--Student Details Footer (Account Balance)-->
-                <div class="card-footer bg-transparent border-primary">
-
-                    <h5><b>Balance:</b> £@Model.Student.AccountBalance</h5>
-
-                </div>
-            </div>
-        </div>
-        <!--#endregion-->
-        <!-- #region MyResults Table Card -->
-        <div class="float-left" id="resultsTableDiv">
-            <div class="card border-primary mp-card overview-card" id="summaryCard">
-                <div class="card-header bg-primary">Overview</div>
-                <div class="float-left container">
-                    <div class="mp-info-block inline-block" id="attendanceBlock">
-                        @if (Model.HasAttendaceData && Model.Attendance != null)
-                        {
-                            <div class="mp-info-block-label">Attendance</div>
-                            <div class="mp-info-block-detail" data-hasdata="true" id="attendanceDetail">
-                                @Model.Attendance%
-                            </div>
-                        }
-                        @if (!Model.HasAttendaceData || Model.Attendance == null)
-                        {
-                            <div class="mp-info-block-label">Attendance</div>
-                            <div class="mp-info-block-detail-nodata" data-hasdata="false" id="attendanceDetail">
-                                No Data
-                            </div>
-                        }
-                    </div>
-
-                    <div class="mp-info-block inline-block" id="achievementBlock">
-                        <div class="mp-info-block-label">Achievements</div>
-                        <div class="mp-info-block-detail" id="achievementDetail">
-                            @Model.AchievementCount
-                        </div>
-                    </div>
-
-                    <div class="mp-info-block inline-block" id="behaviourBlock">
-                        <div class="mp-info-block-label">Behaviour</div>
-                        <div class="mp-info-block-detail" id="behaviourDetail">
-                            @Model.BehaviourCount
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--#endregion-->
     </div>
-    <!--#endregion-->
-    <!-- #region MyLogs Panel -->
+</div>
 
-    <div class="container float-left mp-margin-top">
-        <div>
-            <hr />
-            <h4 class="mp-bold">Log Notes</h4>
-            <button type="button" class="btn btn-primary mp-btn-table" data-toggle="modal" data-target="#NewLogModal">
-                <i class="fa fa-plus-circle"></i> New Log Note
-            </button>
+<div id="NewLogModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
 
-            @Html.EJS().Grid("logs").DataSource(dataManager =>
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New Log - @Model.Student.Person.LastName, @Model.Student.Person.FirstName</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/profiles/logs/create", HttpMethod = "POST", OnSuccess = "newLogSuccess", OnFailure = "newLogFailure"}, new {id = "NewLogForm"}))
             {
-                dataManager.Url("/api/profiles/logs/get/byStudent/dataGrid/" + Model.Student.Id).CrossDomain(false).Adaptor("UrlAdaptor");
-            }).Columns(c =>
-            {
-                c.Field("Date").HeaderText("Date").Template("#logDateTemplate").Width("105").Add();
-                c.Field("AuthorName").HeaderText("Author").Template("#logAuthorTemplate").Width("110").Add();
-                c.Field("LogTypeName").HeaderText("Log Type").Template("#logTypeTemplate").Width("150").Add();
-                c.Field("Message").HeaderText("Message").Width("500").Template("#logMessageTemplate").Add();
-                c.HeaderText("Actions").Template("#logActionsTemplate").Width("150").Add();
-            }).AllowPaging().AllowTextWrap().PageSettings(p => p.PageSize(5)).TextWrapSettings(w => { w.WrapMode(WrapMode.Content); }).RowDataBound("logRowDataBound").Render()
-
-        </div>
-    </div>
-
-
-    <!-- #endregion-->
-    <!-- #region MyDocuments Panel -->
-    <div class="container float-left mp-margin-top">
-        <div>
-            <hr />
-            <h4 class="mp-bold">Documents</h4>
-            <button type="button" class="btn btn-primary mp-btn-table" data-toggle="modal" data-target="#NewDocumentModal">
-                <i class="fa fa-plus-circle"></i> New Document
-            </button>
-            @Html.EJS().Grid("documents").DataSource(dataManager =>
-            {
-                dataManager.Url("/api/documents/personal/get/dataGrid/" + Model.Student.Person.Id).CrossDomain(false).Adaptor("UrlAdaptor");
-            }).Columns(c =>
-            {
-                c.Field("Description").HeaderText("Description").Template("#docsDescriptionTemplate").Width("700").Add();
-                c.Field("Date").HeaderText("Date").Template("#docsDateTemplate").Width("110").Add();
-                c.HeaderText("Actions").Template("#logActionsTemplate").Width("170").Add();
-            }).AllowPaging().PageSettings(p => p.PageSize(5)).Render()
-
-        </div>
-    </div>
-    <!--#endregion-->
-    <!-- #region New Logs Form -->
-    <div id="NewLogModal" class="modal fade" role="dialog">
-        <div class="modal-dialog modal-lg" role="document">
-
-            <!--content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">New Log - @Model.Student.Person.LastName, @Model.Student.Person.FirstName</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/profiles/logs/create", HttpMethod = "POST", OnSuccess = "newLogSuccess", OnFailure = "newLogFailure" }, new { id = "NewLogForm" }))
-                {
-                    <div class="modal-body">
-                        <div class="form-group">
-                            @Html.Label("Log Type")
-                            @Html.DropDownListFor(l => l.Log.TypeId, new SelectList(Model.LogTypes, "Id", "Name"), "Select Log Type", new { @class = "form-control", Name = "TypeId" })
-                            @Html.ValidationMessageFor(l => l.Log.TypeId)
-                        </div>
-                        <hr />
-                        <button type="button" class="btn btn-sm btn-primary" id="addComment"><i class="fa fa-plus-circle"></i> Add Comment</button>
-                        <hr />
-                        <div class="form-group">
-                            @Html.Label("Message")
-                            @Html.TextAreaFor(l => l.Log.Message, new { @class = "form-control mp-textarea-lg", Name = "Message", id = "newLogMessageControl" })
-                            @Html.ValidationMessageFor(l => l.Log.Message)
-                        </div>
-                        <div class="form-group">
-                            @Html.HiddenFor(l => l.Log.StudentId, new { Value = Model.Student.Id, Name = "StudentId" })
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                    </div>
-                }
-
-            </div>
-        </div>
-    </div>
-    <!--#endregion-->
-    <!-- #region Edit Logs Form -->
-    <div id="EditLogModal" class="modal fade" role="dialog">
-        <div class="modal-dialog modal-lg">
-
-            <!--content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">New Log - @Model.Student.Person.LastName, @Model.Student.Person.FirstName</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/profiles/logs/update", HttpMethod = "POST", OnSuccess = "editLogSuccess", OnFailure = "editLogFailure" }, new { id = "EditLogForm" }))
-                {
-                    <div class="modal-body">
-                        <div class="form-group">
-                            @Html.Label("Log Type")
-                            @Html.DropDownListFor(l => l.Log.TypeId, new SelectList(Model.LogTypes, "Id", "Name"), "Select Log Type", new { @class = "form-control", id = "EditLogTypeControl", Name = "TypeId" })
-                        </div>
-                        <div class="form-group">
-                            @Html.Label("Message")
-                            @Html.TextAreaFor(l => l.Log.Message, new { @class = "form-control mp-textarea-lg", id = "EditLogMessageControl", Name = "Message" })
-                        </div>
-                        <div class="form-group">
-                            @Html.HiddenFor(l => l.Log.StudentId, new { Value = Model.Student.Id, Name = "StudentId" })
-                            @Html.HiddenFor(l => l.Log.Id, new { Name = "Id", id = "EditLogIdControl" })
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                            <button type="submit" id="EditLogSave" class="btn btn-primary">Save</button>
-                        </div>
-                    </div>
-                }
-
-            </div>
-        </div>
-    </div>
-    <!--#endregion-->
-    <!-- #region Edit Details Form -->
-    <div id="EditDetailsModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-
-            <!--content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Edit Details - @Model.Student.Person.LastName, @Model.Student.Person.FirstName</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                @using (Html.BeginForm("SaveStudent", "Staff"))
-                {
-                    <div class="modal-body">
-                        <div class="form-group">
-                            @Html.Label("First Name")
-                            @Html.TextBoxFor(s => s.Student.Person.FirstName, new { @class = "form-control", Name = "FirstName", id = "editDetailsFirstNameControl" })
-                            @Html.ValidationMessageFor(s => s.Student.Person.FirstName)
-                        </div>
-                        <div class="form-group">
-                            @Html.Label("Last Name")
-                            @Html.TextBoxFor(s => s.Student.Person.LastName, new { @class = "form-control", Name = "LastName", id = "editDetailsLastNameControl" })
-                            @Html.ValidationMessageFor(s => s.Student.Person.LastName)
-                        </div>
-                        <div class="form-group">
-                            @Html.Label("Gender")
-                            @Html.DropDownListFor(s => s.Student.Person.Gender, new SelectList(Model.Genders, "Value", "Name"), "Select Gender", new { @class = "form-control", Name = "Gender", id = "editDetailsYearGroupControl" })
-                            @Html.ValidationMessageFor(s => s.Student.Person.Gender)
-                        </div>
-                        <div class="form-group">
-                            @Html.Label("Year Group")
-                            @Html.DropDownListFor(s => s.Student.YearGroupId, new SelectList(Model.YearGroups, "Id", "Name"), "Select Year Group", new { @class = "form-control", Name = "YearGroupId", id = "editDetailsYearGroupControl" })
-                            @Html.ValidationMessageFor(s => s.Student.YearGroupId)
-                        </div>
-                        <div class="form-group">
-                            @Html.Label("Reg Group")
-                            @Html.DropDownListFor(s => s.Student.RegGroupId, new SelectList(Model.RegGroups, "Id", "Name"), "Select Reg Group", new { @class = "form-control", Name = "RegGroupId", id = "editDetailsRegGroupControl" })
-                            @Html.ValidationMessageFor(s => s.Student.RegGroupId)
-                        </div>
-                        @Html.HiddenFor(s => s.Student.Id, new { Name = "Id", id = "editDetailsIdControl" })
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                    </div>
-                }
-
-            </div>
-        </div>
-    </div>
-    <!--#endregion-->
-    <!-- #region New Documents Form-->
-    <div id="NewDocumentModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <!--content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">New Document - @Model.Student.Person.LastName, @Model.Student.Person.FirstName</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/documents/personal/create", HttpMethod = "POST", OnSuccess = "newDocumentSuccess", OnFailure = "newDocumentFailure" }, new { id = "newDocumentForm" }))
-                {
-                    <div class="modal-body">
-                        <div class="form-group">
-                            @Html.Label("Description")
-                            @Html.TextBoxFor(x => x.Upload.Document.Description, new { @class = "form-control", Name = "Document.Description" })
-                            @Html.ValidationMessageFor(x => x.Upload.Document.Description)
-                        </div>
-                        <div class="form-group">
-                            @Html.Label("URL")
-                            @Html.TextBoxFor(x => x.Upload.Document.Url, new { @class = "form-control", Name = "Document.Url" })
-                            @Html.ValidationMessageFor(x => x.Upload.Document.Url)
-                        </div>
-                        <div class="form-group">
-                            @Html.HiddenFor(x => x.Upload.PersonId, new { @class = "form-control", Value = Model.Student.Person.Id, Name = "PersonId" })
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
-    <!--#endregion-->
-    <!-- #region Edit Documents Form-->
-    <div id="EditDocumentModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <!--content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Edit Document - @Model.Student.Person.LastName, @Model.Student.Person.FirstName</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/documents/personal/update", HttpMethod = "POST", OnSuccess = "editDocumentSuccess", OnFailure = "editDocumentFailure" }, new { id = "editDocumentForm" }))
-                {
-                    <div class="modal-body">
-                        <div class="form-group">
-                            @Html.Label("Description")
-                            @Html.TextBoxFor(x => x.Upload.Document.Description, new { @class = "form-control", Name = "Description", id = "EditDocumentDescriptionControl" })
-                            @Html.ValidationMessageFor(x => x.Upload.Document.Description)
-                        </div>
-                        <div class="form-group">
-                            @Html.Label("URL")
-                            @Html.TextBoxFor(x => x.Upload.Document.Url, new { @class = "form-control", Name = "Url", id = "EditDocumentUrlControl" })
-                            @Html.ValidationMessageFor(x => x.Upload.Document.Url)
-                        </div>
-                        <div class="form-group">
-                            @Html.HiddenFor(x => x.Upload.Document.Id, new { Name = "Id", id = "EditDocumentIdControl" })
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
-
-    <div id="AddCommentModal" class="modal fade" role="dialog">
-        <div class="modal-dialog" role="document">
-
-            <!--content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Add Comment to Log</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        @Html.Label("Comment Bank")
-                        @Html.DropDownList("SelectedStatus", new SelectList(Model.CommentBanks, "Id", "Name"), "Select Comment Bank", new { @class = "form-control", Name = "Id", id = "selectedBank" })
+                        @Html.Label("Log Type")
+                        @Html.DropDownListFor(l => l.Log.TypeId, new SelectList(Model.LogTypes, "Id", "Name"), "Select Log Type", new {@class = "form-control", Name = "TypeId"})
+                        @Html.ValidationMessageFor(l => l.Log.TypeId)
                     </div>
-
-                    <div class="container">
-                        <table class="table table-bordered table-hover mp-table" id="comments">
-                            <thead>
-                                <tr>
-                                    <th>Comment</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
+                    <hr/>
+                    <button type="button" class="btn btn-sm btn-primary" id="addComment"><i class="fa fa-plus-circle"></i> Add Comment</button>
+                    <hr/>
+                    <div class="form-group">
+                        @Html.Label("Message")
+                        @Html.TextAreaFor(l => l.Log.Message, new {@class = "form-control mp-textarea-lg", Name = "Message", id = "newLogMessageControl"})
+                        @Html.ValidationMessageFor(l => l.Log.Message)
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(l => l.Log.StudentId, new {Value = Model.Student.Id, Name = "StudentId"})
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary" data-dismiss="modal">Back</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
                     </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+<div id="EditLogModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New Log - @Model.Student.Person.LastName, @Model.Student.Person.FirstName</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/profiles/logs/update", HttpMethod = "POST", OnSuccess = "editLogSuccess", OnFailure = "editLogFailure"}, new {id = "EditLogForm"}))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.Label("Log Type")
+                        @Html.DropDownListFor(l => l.Log.TypeId, new SelectList(Model.LogTypes, "Id", "Name"), "Select Log Type", new {@class = "form-control", id = "EditLogTypeControl", Name = "TypeId"})
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Message")
+                        @Html.TextAreaFor(l => l.Log.Message, new {@class = "form-control mp-textarea-lg", id = "EditLogMessageControl", Name = "Message"})
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(l => l.Log.StudentId, new {Value = Model.Student.Id, Name = "StudentId"})
+                        @Html.HiddenFor(l => l.Log.Id, new {Name = "Id", id = "EditLogIdControl"})
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" id="EditLogSave" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+<div id="EditDetailsModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Details - @Model.Student.Person.LastName, @Model.Student.Person.FirstName</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("SaveStudent", "Staff"))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.Label("First Name")
+                        @Html.TextBoxFor(s => s.Student.Person.FirstName, new {@class = "form-control", Name = "FirstName", id = "editDetailsFirstNameControl"})
+                        @Html.ValidationMessageFor(s => s.Student.Person.FirstName)
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Last Name")
+                        @Html.TextBoxFor(s => s.Student.Person.LastName, new {@class = "form-control", Name = "LastName", id = "editDetailsLastNameControl"})
+                        @Html.ValidationMessageFor(s => s.Student.Person.LastName)
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Gender")
+                        @Html.DropDownListFor(s => s.Student.Person.Gender, new SelectList(Model.Genders, "Value", "Name"), "Select Gender", new {@class = "form-control", Name = "Gender", id = "editDetailsYearGroupControl"})
+                        @Html.ValidationMessageFor(s => s.Student.Person.Gender)
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Year Group")
+                        @Html.DropDownListFor(s => s.Student.YearGroupId, new SelectList(Model.YearGroups, "Id", "Name"), "Select Year Group", new {@class = "form-control", Name = "YearGroupId", id = "editDetailsYearGroupControl"})
+                        @Html.ValidationMessageFor(s => s.Student.YearGroupId)
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Reg Group")
+                        @Html.DropDownListFor(s => s.Student.RegGroupId, new SelectList(Model.RegGroups, "Id", "Name"), "Select Reg Group", new {@class = "form-control", Name = "RegGroupId", id = "editDetailsRegGroupControl"})
+                        @Html.ValidationMessageFor(s => s.Student.RegGroupId)
+                    </div>
+                    @Html.HiddenFor(s => s.Student.Id, new {Name = "Id", id = "editDetailsIdControl"})
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+<div id="NewDocumentModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New Document - @Model.Student.Person.LastName, @Model.Student.Person.FirstName</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/documents/personal/create", HttpMethod = "POST", OnSuccess = "newDocumentSuccess", OnFailure = "newDocumentFailure"}, new {id = "newDocumentForm"}))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.Label("Description")
+                        @Html.TextBoxFor(x => x.Upload.Document.Description, new {@class = "form-control", Name = "Document.Description"})
+                        @Html.ValidationMessageFor(x => x.Upload.Document.Description)
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("URL")
+                        @Html.TextBoxFor(x => x.Upload.Document.Url, new {@class = "form-control", Name = "Document.Url"})
+                        @Html.ValidationMessageFor(x => x.Upload.Document.Url)
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(x => x.Upload.PersonId, new {@class = "form-control", Value = Model.Student.Person.Id, Name = "PersonId"})
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="EditDocumentModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Document - @Model.Student.Person.LastName, @Model.Student.Person.FirstName</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/documents/personal/update", HttpMethod = "POST", OnSuccess = "editDocumentSuccess", OnFailure = "editDocumentFailure"}, new {id = "editDocumentForm"}))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.Label("Description")
+                        @Html.TextBoxFor(x => x.Upload.Document.Description, new {@class = "form-control", Name = "Description", id = "EditDocumentDescriptionControl"})
+                        @Html.ValidationMessageFor(x => x.Upload.Document.Description)
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("URL")
+                        @Html.TextBoxFor(x => x.Upload.Document.Url, new {@class = "form-control", Name = "Url", id = "EditDocumentUrlControl"})
+                        @Html.ValidationMessageFor(x => x.Upload.Document.Url)
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(x => x.Upload.Document.Id, new {Name = "Id", id = "EditDocumentIdControl"})
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="AddCommentModal" class="modal fade" role="dialog">
+    <div class="modal-dialog" role="document">
+
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Comment to Log</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    @Html.Label("Comment Bank")
+                    @Html.DropDownList("SelectedStatus", new SelectList(Model.CommentBanks, "Id", "Name"), "Select Comment Bank", new {@class = "form-control", Name = "Id", id = "selectedBank"})
+                </div>
+
+                <div class="container">
+                    <table class="table table-bordered table-hover mp-table" id="comments">
+                        <thead>
+                        <tr>
+                            <th>Comment</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" data-dismiss="modal">Back</button>
                 </div>
             </div>
         </div>
     </div>
-    <!--#endregion-->
+</div>
 </body>
 
 @section scripts
@@ -476,11 +441,11 @@
                 ".js-delete",
                 function() {
                     var button = $(this);
-                    bootbox.confirm("Are you sure you wish to delete this log?",
+                    bootbox.confirm("Are you sure you wish to delete this log note?",
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: "/api/logs/log/" + button.attr("data-log-id"),
+                                    url: "/api/profiles/logs/delete/" + button.attr("data-log-id"),
                                     method: "DELETE",
                                     success: function(result) {
                                         refreshLogs();
@@ -502,10 +467,10 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: "/api/students/documents/remove/" + button.attr("data-document-id"),
+                                    url: "/api/documents/personal/delete/" + button.attr("data-document-id"),
                                     method: "DELETE",
                                     success: function(ajaxResult) {
-                                        refreshDocs();
+                                        refreshTable("logs");
                                         toastr.success(ajaxResult);
                                     },
                                     error: function(ajaxResult) {
@@ -566,7 +531,7 @@
                     var button = $(this);
                     var logId = button.attr("data-log-id");
                     $.ajax({
-                        url: "/api/logs/log/" + logId,
+                        url: "/api/profiles/logs/get/byId/" + logId,
                         method: "GET",
                         success: function(result) {
                             $("#EditLogTypeControl").val(result["typeId"]);
@@ -587,7 +552,7 @@
                     var button = $(this);
                     var docId = button.attr("data-document-id");
                     $.ajax({
-                        url: "/api/students/documents/document/" + docId,
+                        url: "/api/documents/personal/get/byId/" + docId,
                         method: "GET",
                         success: function(result) {
                             $("#EditDocumentDescriptionControl").val(result["description"]);
@@ -620,7 +585,7 @@
 
         function newDocumentSuccess(result) {
             $("#NewDocumentModal").modal('hide');
-            refreshDocs();
+            refreshTable("documents");
             toastr.success(result);
         }
 
@@ -631,7 +596,7 @@
 
         function editDocumentSuccess(result) {
             $("#EditDocumentModal").modal('hide');
-            refreshDocs();
+            refreshTable("documents");
             toastr.success(result);
         }
 
@@ -642,7 +607,7 @@
 
         function editLogSuccess(result) {
             $("#EditLogModal").modal('hide');
-            refreshLogs();
+            refreshTable("logs");
             toastr.success(result);
         }
 
@@ -653,7 +618,7 @@
 
         function newLogSuccess(result) {
             $("#NewLogModal").modal('hide');
-            refreshLogs();
+            refreshTable("logs");
             toastr.success(result);
         }
 
@@ -823,16 +788,6 @@
             if (args.data['LogTypeName'] === "Student Feed") {
                 args.row.classList.add("mp-log-student-feed");
             }
-        }
-
-        function refreshLogs() {
-            var grid = document.getElementById("logs").ej2_instances[0];
-            grid.refresh();
-        }
-
-        function refreshDocs() {
-            var grid = document.getElementById("documents").ej2_instances[0];
-            grid.refresh();
         }
 
     </script>

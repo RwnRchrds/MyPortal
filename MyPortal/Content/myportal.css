@@ -104,7 +104,9 @@
 }
 
 
-.mp-btn-top { width: 131px; }
+.mp-btn-top {
+     width: 131px;
+}
 
 .mp-btn-table {
     margin-bottom: 8px;
@@ -238,6 +240,13 @@
     color: white;
 }
 
-.mp-inline-block {
-    display: inline-block;
+.control-label {
+    width: 100%;
 }
+
+.e-date-wrapper {
+    width: 300px !important;
+}
+
+
+
