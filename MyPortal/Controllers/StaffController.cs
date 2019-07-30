@@ -94,27 +94,31 @@ namespace MyPortal.Controllers
         {
             var viewModel = new TakeRegisterViewModel();
             var attendanceWeek = _context.AttendanceWeeks.SingleOrDefault(x => x.Id == weekId);
-            var classPeriod = _context.CurriculumSessions.SingleOrDefault(x => x.Id == periodId);
+            var session = _context.CurriculumSessions.SingleOrDefault(x => x.Id == periodId);
 
-            if (attendanceWeek == null || classPeriod == null)
+            if (attendanceWeek == null || session == null)
             {
                 return RedirectToAction("Registers");
             }
 
-            var classPeriods = _context.CurriculumSessions.Where(x => x.ClassId == classPeriod.ClassId);
+            var sessionDate = PrepareResponseObject(AttendanceProcesses.GetPeriodDate(attendanceWeek.Id, session.PeriodId, _context));
+
+            var sessions = _context.CurriculumSessions.Where(x => x.ClassId == session.ClassId);
 
             var validRegister = !attendanceWeek.IsHoliday && !attendanceWeek.IsNonTimetable &&
-                                classPeriods.Any(x => x.PeriodId == classPeriod.PeriodId);
+                                sessions.Any(x => x.PeriodId == session.PeriodId);
 
             if (!validRegister)
             {
                 return RedirectToAction("Registers");
             }
 
-            viewModel.ClassPeriod = classPeriod;
+            viewModel.ClassPeriod = session;
             viewModel.WeekId = attendanceWeek.Id;
 
-            viewModel.Periods = _context.AttendancePeriods.Where(x => x.Weekday == classPeriod.AttendancePeriod.Weekday);
+            viewModel.Periods = _context.AttendancePeriods.Where(x => x.Weekday == session.AttendancePeriod.Weekday);
+
+            viewModel.SessionDate = sessionDate;
 
             return View("~/Views/Staff/Attendance/TakeRegister.cshtml", viewModel);
         }

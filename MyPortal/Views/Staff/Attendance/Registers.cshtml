@@ -1,4 +1,5 @@
-﻿@using Syncfusion.EJ2.Calendars
+﻿@using MyPortal.Processes
+@using Syncfusion.EJ2.Calendars
 @model MyPortal.ViewModels.RegistersViewModel
 @{
     ViewBag.Title = "Registers";
@@ -12,9 +13,9 @@
 
 <div class="container float-left" id="registerSelectors" data-current-user-id="@Model.CurrentUser.Id">
     <div>
-        @Html.Label("Date", new {@class = "control-label"})
+        @Html.Label("Date", new { @class = "control-label" })
         @*@Html.TextBox("Date", null, new {id = "selectedDate", @class = "form-control register-selector"})*@
-        @Html.EJS().DatePicker("selectedDate").Format("yyyy-MM-dd").AllowEdit(false).HtmlAttributes(new Dictionary<string, object> { { "Name", "Date" } }).Render()
+        @Html.EJS().DatePicker("selectedDate").Format("dd-MMM-yyyy").AllowEdit(false).HtmlAttributes(new Dictionary<string, object> { { "Name", "Date" } }).Render()
     </div>
     <div class="form-group">
         @Html.Label("Teacher")
@@ -29,16 +30,16 @@
     <div>
         <hr />
         <h4 class="mp-bold" id="registersFor"></h4>
-        <table class="table table-sm table-bordered table-hover mp-table mp-table-link" id="registers" data-week-id="">
-            <thead>
-                <tr>
-                    <th>Period</th>
-                    <th>Lesson/Session</th>
-                    <th>Time</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-        </table>
+        @Html.EJS().Grid("Registers").DataSource(d =>
+        {
+            d.Url($"/api/curriculum/sessions/get/byTeacher/dataGrid/{Model.CurrentUser.Id}/{DateTime.Today.ToDisplayString()}").CrossDomain(false).Adaptor("UrlAdaptor");
+        }).Columns(c =>
+        {
+            c.Field("PeriodName").HeaderText("Period").Template("#registersPeriodTemplate").Width("200").Add();
+            c.Field("ClassName").HeaderText("Class").Template("#registersClassTemplate").Width("200").Add();
+            c.Field("Teacher").HeaderText("Teacher").Template("#registersTeacherTemplate").Width("200").Add();
+            c.HeaderText("Actions").Template("#registersActionsTemplate").Width("200").Add();
+        }).AllowPaging().PageSettings(p => p.PageSize(8)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string>() { "Search" }).Render()
     </div>
 </div>
 <!--#endregion-->
@@ -46,18 +47,18 @@
 @section scripts
 {
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('.modal').on('hidden.bs.modal',
-                function () {
+                function() {
                     $(this).find('form').trigger('reset');
                 });
 
             $.ajax({
                 url: "/api/people/staff/get/all",
                 method: "GET",
-                complete: function (data) {
+                complete: function(data) {
                     $("#selectedTeacher").empty();
-                    $(data.responseJSON).each(function (i) {
+                    $(data.responseJSON).each(function(i) {
                         var divData = "<option value=" +
                             data.responseJSON[i].id +
                             ">" +
@@ -66,114 +67,70 @@
                             data.responseJSON[i].person.firstName +
                             "</option>";
                         $(divData).appendTo('#selectedTeacher');
-                        var currentUserId = $("#registerSelectors").attr("data-current-user-id");
 
-                        $("#selectedTeacher").val(currentUserId);
-                        $("#selectedDate").val(parseToday());
+                        $("#selectedTeacher").val(@Model.CurrentUser.Id);
+                        $("#selectedDate").val("@DateTime.Today.ToDisplayString()");
                     });
                 }
             });
 
             $("#buttonSearch").on("click",
-                function () {
-                    var selDate = parseDate($("#selectedDate").val());
+                function() {
+                    var selDate = $("#selectedDate").val();
                     var selTeacher = $("#selectedTeacher").val();
                     updateWeekId(selDate);
-                    loadRegisters(selTeacher, selDate);
+                    changeTableSource("Registers",
+                        `/api/curriculum/sessions/get/byTeacher/dataGrid/${selTeacher}/${selDate}`);
                 });
 
-            $("#registers").on("click",
+            $("#Registers").on("click",
                 ".js-takeRegister",
-                function () {
+                function() {
                     var button = $(this);
-                    var weekId = $("#registers").attr("data-week-id");
-                    var periodId = button.attr("data-classperiod-id");
-                    location.replace("/Staff/Attendance/TakeRegister/" + weekId + "/" + periodId);
+                    var weekId = $("#Registers").attr("data-week-id");
+                    var sessionId = button.attr("data-session-id");
+                    location.replace("/Staff/Attendance/TakeRegister/" + weekId + "/" + sessionId);
                 });
         });
 
         function updateWeekId(selectedDate) {
-            $("#registers").attr("data-week-id", "");
+            $("#Registers").attr("data-week-id", "");
             var url = "/api/attendance/weeks/get/byDate/" + selectedDate;
 
             $.ajax({
                 url: url,
                 method: "GET",
-                success: function (result) {
-                    $("#registers").attr("data-week-id", result.id);
+                success: function(result) {
+                    $("#Registers").attr("data-week-id", result.id);
                 }
             });
         }
 
-        function loadRegisters(teacherId, selectedDate) {
+    </script>
 
-            var url = "/api/curriculum/classes/get/byTeacher/" + teacherId + "/" + selectedDate;
+    <script type="text/x-jsrender" id="registersPeriodTemplate">
+        <div>
+            ${PeriodName}
+        </div>
+    </script>
 
-            $("#registers").DataTable().clear().destroy();
+    <script type="text/x-jsrender" id="registersClassTemplate">
+        <div>
+            ${ClassName}
+        </div>
+    </script>
 
-            $("#registers").DataTable({
-                ajax: {
-                    url: url,
-                    dataSrc: ""
-                },
-                columns: [
-                    {
-                        data: "attendancePeriod.name"
-                    },
-                    {
-                        data: "curriculumClass.name"
-                    },
-                    {
-                        data: "attendancePeriod.startTime",
-                        render: function (data, type, attendanceClass) {
-                            return attendanceClass.attendancePeriod.startTime +
-                                " - " +
-                                attendanceClass.attendancePeriod.endTime;
-                        }
-                    },
-                    {
-                        data: "id",
-                        render: function (data, type, attendanceClass) {
-                            return "<button type='button' class='btn btn-xs btn-success js-takeRegister' data-classperiod-id='" +
-                                attendanceClass.id +
-                                "'><i class=\"fas fa-clipboard-check\"></i></button> ";
-                        }
-                    }
-                ],
-                paging: false,
-                ordering: false,
-                searching: false,
-                "language": {
-                    "emptyTable": "No lessons to display"
-                }
-            });
-        }
+    <script type="text/x-jsrender" id="registersTeacherTemplate">
+        <div>
+            ${Teacher}
+        </div>
+    </script>
 
-        function parseToday() {
-            var today = new Date();
-            var dd = today.getDate();
-            var mm = today.getMonth() + 1;
-
-            var yyyy = today.getFullYear();
-            if (dd < 10) {
-                dd = '0' + dd;
-            }
-            if (mm < 10) {
-                mm = '0' + mm;
-            }
-
-            today = yyyy + '-' + mm + '-' + dd;
-
-            return today.toString();
-        }
-
-        function parseDate(dateString) {
-            var day = dateString.substring(0, 2);
-            var month = dateString.substring(3, 5);
-            var year = dateString.substring(6, 10);
-
-            return year + "" + month + "" + day;
-        }
-
+    <script type="text/x-jsrender" id="registersActionsTemplate">
+        <div>
+            <button type='button' class='btn btn-xs btn-success js-takeRegister' data-session-id='${Id}'>
+                <i class="fas fa-clipboard-check"></i>
+            </button>
+        </div>
     </script>
 }

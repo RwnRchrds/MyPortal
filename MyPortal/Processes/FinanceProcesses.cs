@@ -461,5 +461,11 @@ namespace MyPortal.Processes
 
             return new ProcessResponse<decimal>(ResponseType.Ok, null, studentInDb.AccountBalance);
         }
+
+        public static ProcessResponse<IEnumerable<FinanceProductType>> GetProductTypes_Model(MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<FinanceProductType>>(ResponseType.Ok, null,
+                context.FinanceProductTypes.ToList().OrderBy(x => x.Description));
+        }
     }
 }

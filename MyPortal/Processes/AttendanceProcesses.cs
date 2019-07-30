@@ -270,5 +270,48 @@ namespace MyPortal.Processes
 
             return new ProcessResponse<string>(ResponseType.Ok, null, periodTime);
         }
+
+        public static ProcessResponse<DateTime> GetPeriodDate(int weekId, int periodId, MyPortalDbContext context)
+        {
+            var week = context.AttendanceWeeks.SingleOrDefault(x => x.Id == weekId);
+
+            if (week == null)
+            {
+                return new ProcessResponse<DateTime>(ResponseType.NotFound, "Week not found", new DateTime());
+            }
+
+            var period = context.AttendancePeriods.SingleOrDefault(x => x.Id == periodId);
+
+            if (period == null)
+            {
+                return new ProcessResponse<DateTime>(ResponseType.NotFound, "Period not found", new DateTime());
+            }
+
+            var periodDay = DayOfWeek.Monday;
+
+            switch (period.Weekday)
+            {
+                case "Tue":
+                    periodDay = DayOfWeek.Tuesday;
+                    break;
+                case "Wed":
+                    periodDay = DayOfWeek.Wednesday;
+                    break;
+                case "Thu":
+                    periodDay = DayOfWeek.Thursday;
+                    break;
+                case "Fri":
+                    periodDay = DayOfWeek.Friday;
+                    break;
+                case "Sat":
+                    periodDay = DayOfWeek.Saturday;
+                    break;
+                case "Sun":
+                    periodDay = DayOfWeek.Sunday;
+                    break;
+            }
+
+            return new ProcessResponse<DateTime>(ResponseType.Ok, null, week.Beginning.GetDayOfWeek(periodDay));
+        }
     }
 }

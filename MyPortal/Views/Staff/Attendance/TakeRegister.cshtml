@@ -1,4 +1,5 @@
-﻿@model MyPortal.ViewModels.TakeRegisterViewModel
+﻿@using MyPortal.Processes
+@model MyPortal.ViewModels.TakeRegisterViewModel
 @{
     ViewBag.Title = "Take Register: " + @Model.ClassPeriod.AttendancePeriod.Name + " - " + @Model.ClassPeriod.CurriculumClass.Name;
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
@@ -12,7 +13,7 @@
 
 <div class="container float-left">
     <h2 class="mp-page-title">Take Register:</h2>    
-    <h4> @Model.ClassPeriod.CurriculumClass.Name (@Model.ClassPeriod.AttendancePeriod.Name) - @Model.ClassPeriod.CurriculumClass.Teacher.Person.Title @Model.ClassPeriod.CurriculumClass.Teacher.Person.FirstName.Substring(0, 1) @Model.ClassPeriod.CurriculumClass.Teacher.Person.LastName</h4>
+    <h4>@Model.SessionDate.ToLongDateString() -  @Model.ClassPeriod.CurriculumClass.Name (@Model.ClassPeriod.AttendancePeriod.Name) - @PeopleProcesses.GetStaffDisplayName(Model.ClassPeriod.CurriculumClass.Teacher).ResponseObject</h4>
     <hr />
 </div>
 

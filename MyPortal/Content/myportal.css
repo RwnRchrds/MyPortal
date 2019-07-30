@@ -244,8 +244,8 @@
     width: 100%;
 }
 
-.e-date-wrapper {
-    width: 300px !important;
+.e-input-group {
+    max-width: 280px;
 }
 
 

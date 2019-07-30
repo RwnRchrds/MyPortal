@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using MyPortal.Models;
 using MyPortal.Models.Database;
+using MyPortal.Processes;
 using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers
@@ -26,7 +27,7 @@ namespace MyPortal.Controllers
         {
             var viewModel = new NewProductViewModel();
 
-            viewModel.ProductTypes = _context.FinanceProductTypes.ToList().OrderBy(x => x.Description);
+            viewModel.ProductTypes = PrepareResponseObject(FinanceProcesses.GetProductTypes_Model(_context));
 
             return View(viewModel);
         }
@@ -34,7 +35,7 @@ namespace MyPortal.Controllers
         [Route("Finance/Sales/New")]
         public ActionResult SaleEntry()
         {
-            var products = _context.FinanceProducts.OrderBy(x => x.Description).ToList();
+            var products = PrepareResponseObject(FinanceProcesses.GetAllProducts_Model(_context));
 
             var viewModel = new SaleEntryViewModel
             {

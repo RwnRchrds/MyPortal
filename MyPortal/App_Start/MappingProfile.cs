@@ -189,9 +189,9 @@ namespace MyPortal
                 .ForMember(dest => dest.PeriodName,
                     opts => opts.MapFrom(src => src.AttendancePeriod.Name))
                 .ForMember(dest => dest.Teacher,
-                    opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.CurriculumClass.Teacher)))
+                    opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.CurriculumClass.Teacher).ResponseObject))
                 .ForMember(dest => dest.Time,
-                    opts => opts.MapFrom(src => AttendanceProcesses.GetPeriodTime(src.AttendancePeriod)));
+                    opts => opts.MapFrom(src => AttendanceProcesses.GetPeriodTime(src.AttendancePeriod).ResponseObject));
         }
     }
 }

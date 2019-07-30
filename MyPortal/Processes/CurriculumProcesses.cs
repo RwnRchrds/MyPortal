@@ -127,7 +127,7 @@ namespace MyPortal.Processes
                 Mapper.Map<CurriculumAcademicYear, CurriculumAcademicYearDto>(academicYear));
         }
 
-        public static ProcessResponse<IEnumerable<CurriculumSessionDto>> GetSessionsForTeacher(int staffId, int academicYearId, DateTime date,
+        public static ProcessResponse<IEnumerable<CurriculumSession>> GetSessionsForTeacher_Model(int staffId, int academicYearId, DateTime date,
             MyPortalDbContext context)
         {
             var weekBeginning = date.StartOfWeek();
@@ -136,19 +136,19 @@ namespace MyPortal.Processes
 
             if (academicYear == null)
             {
-                return new ProcessResponse<IEnumerable<CurriculumSessionDto>>(ResponseType.NotFound, "Academic year not found", null);
+                return new ProcessResponse<IEnumerable<CurriculumSession>>(ResponseType.NotFound, "Academic year not found", null);
             }
 
             if (weekBeginning < academicYear.FirstDate || weekBeginning > academicYear.LastDate)
             {
-                return new ProcessResponse<IEnumerable<CurriculumSessionDto>>(ResponseType.Ok, null, new List<CurriculumSessionDto>());
+                return new ProcessResponse<IEnumerable<CurriculumSession>>(ResponseType.Ok, null, new List<CurriculumSession>());
             }
 
             var currentWeek = context.AttendanceWeeks.SingleOrDefault(x => x.Beginning == weekBeginning && x.AcademicYearId == academicYearId);
 
             if (currentWeek == null || currentWeek.IsHoliday)
             {
-                return new ProcessResponse<IEnumerable<CurriculumSessionDto>>(ResponseType.Ok, null, new List<CurriculumSessionDto>());
+                return new ProcessResponse<IEnumerable<CurriculumSession>>(ResponseType.Ok, null, new List<CurriculumSession>());
             }
 
             var classList = context.CurriculumSessions
@@ -157,10 +157,27 @@ namespace MyPortal.Processes
                     date.DayOfWeek
                         .ToString().Substring(0, 3) && x.CurriculumClass.TeacherId == staffId)
                 .OrderBy(x => x.AttendancePeriod.StartTime)
-                .ToList()
+                .ToList();
+
+            return new ProcessResponse<IEnumerable<CurriculumSession>>(ResponseType.Ok, null, classList);
+        }
+
+        public static ProcessResponse<IEnumerable<CurriculumSessionDto>> GetSessionsForTeacher(int staffId, int academicYearId, DateTime date,
+            MyPortalDbContext context)
+        {
+            var classList = GetSessionsForTeacher_Model(staffId, academicYearId, date, context).ResponseObject
                 .Select(Mapper.Map<CurriculumSession, CurriculumSessionDto>);
 
             return new ProcessResponse<IEnumerable<CurriculumSessionDto>>(ResponseType.Ok, null, classList);
+        }
+
+        public static ProcessResponse<IEnumerable<GridCurriculumSessionDto>> GetSessionsForTeacher_DataGrid(int staffId, int academicYearId, DateTime date,
+            MyPortalDbContext context)
+        {
+            var classList = GetSessionsForTeacher_Model(staffId, academicYearId, date, context).ResponseObject
+                .Select(Mapper.Map<CurriculumSession, GridCurriculumSessionDto>);
+
+            return new ProcessResponse<IEnumerable<GridCurriculumSessionDto>>(ResponseType.Ok, null, classList);
         }
 
         public static ProcessResponse<IEnumerable<CurriculumClassDto>> GetAllClasses(int academicYearId,

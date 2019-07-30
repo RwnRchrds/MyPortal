@@ -44,7 +44,7 @@ namespace MyPortal.Controllers.Api
 
         /// <returns></returns>
         [HttpGet]
-        [Route("sessions/byTeacher/{teacherId:int}/{date:datetime:regex(\\d{2}-\\d{2}-\\d{4})}")]
+        [Route("sessions/get/byTeacher/{teacherId:int}/{date:datetime}")]
         public IEnumerable<CurriculumSessionDto> GetSessionsForTeacher([FromUri] int teacherId, [FromUri] DateTime date)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
@@ -53,6 +53,19 @@ namespace MyPortal.Controllers.Api
 
             return PrepareResponseObject(
                 CurriculumProcesses.GetSessionsForTeacher(teacherId, academicYearId, date, _context));
+        }
+
+        [HttpPost]
+        [Route("sessions/get/byTeacher/dataGrid/{teacherId:int}/{date:datetime}")]
+        public IHttpActionResult GetSessionsForTeacher_DataGrid([FromUri] int teacherId, [FromUri] DateTime date,
+            [FromBody] DataManagerRequest dm)
+        {
+            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var sessions =
+                PrepareResponseObject(
+                    CurriculumProcesses.GetSessionsForTeacher_DataGrid(teacherId, academicYearId, date, _context));
+
+            return PrepareDataGridObject(sessions, dm);
         }
 
         [HttpGet]
