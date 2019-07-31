@@ -18,11 +18,6 @@ namespace MyPortal.Controllers.Api
     [RoutePrefix("api/documents")]
     public class DocumentsController : MyPortalApiController
     {
-        /// <summary>
-        /// Adds a general document to the database.
-        /// </summary>
-        /// <param name="document">The document to add to the database.</param>
-        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("create")]
         [Authorize(Roles = "Staff, SeniorStaff")]
@@ -31,11 +26,7 @@ namespace MyPortal.Controllers.Api
             var userId = User.Identity.GetUserId();
             return PrepareResponse(DocumentProcesses.CreateDocument(document, userId, _context));
         }
-
-        /// <summary>
-        /// Gets approved documents only from the database
-        /// </summary>
-        /// <returns>Returns a list of DTOs of approved documents.</returns>
+        
         [HttpGet]
         [Route("general/approved")]
         [Authorize(Roles = "Staff, SeniorStaff")]
@@ -43,13 +34,7 @@ namespace MyPortal.Controllers.Api
         {
             return PrepareResponseObject(DocumentProcesses.GetApprovedGeneralDocuments(_context));
         }
-
-        /// <summary>
-        /// Gets the document with the specified ID from the database.
-        /// </summary>
-        /// <param name="documentId">The ID of the document to fetch.</param>
-        /// <returns>Returns a DTO of the specified document.</returns>
-        /// <exception cref="HttpResponseException">Thrown when document is not found.</exception>
+        
         [HttpGet]
         [Route("get/byId/{documentId:int}")]
         public DocumentDto GetDocumentById([FromUri] int documentId)
@@ -57,10 +42,6 @@ namespace MyPortal.Controllers.Api
             return PrepareResponseObject(DocumentProcesses.GetDocumentById(documentId, _context));
         }
 
-        /// <summary>
-        /// Gets all documents from the database, including those that are unapproved.
-        /// </summary>
-        /// <returns>Returns a list of DTOs of all documents.</returns>
         [HttpGet]
         [Route("general/all")]
         [Authorize(Roles = "SeniorStaff")]
@@ -79,11 +60,6 @@ namespace MyPortal.Controllers.Api
             return PrepareDataGridObject(documents, dm);
         }
 
-        /// <summary>
-        /// Deletes the specified document from the database.
-        /// </summary>
-        /// <param name="documentId">The ID of the document to delete.</param>
-        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpDelete]
         [Authorize(Roles = "Staff, SeniorStaff")]
         [Route("delete/{documentId:int}")]
@@ -92,11 +68,6 @@ namespace MyPortal.Controllers.Api
             return PrepareResponse(DocumentProcesses.DeleteDocument(documentId, _context));
         }
 
-        /// <summary>
-        /// Updates the document in the database.
-        /// </summary>
-        /// <param name="document">The document to update in the database.</param>
-        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Authorize(Roles = "Staff, SeniorStaff")]
         [Route("update")]

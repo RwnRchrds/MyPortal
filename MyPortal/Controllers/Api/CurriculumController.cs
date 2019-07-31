@@ -41,15 +41,12 @@ namespace MyPortal.Controllers.Api
             User.ChangeSelectedAcademicYear(year.Id);
             return Ok("Selected academic year changed");
         }
-
-        /// <returns></returns>
+        
         [HttpGet]
         [Route("sessions/get/byTeacher/{teacherId:int}/{date:datetime}")]
         public IEnumerable<CurriculumSessionDto> GetSessionsForTeacher([FromUri] int teacherId, [FromUri] DateTime date)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
-
-            //var date = PrepareResponseObject(DateTimeProcesses.GetDateTimeFromFormattedInt(dateInt));
 
             return PrepareResponseObject(
                 CurriculumProcesses.GetSessionsForTeacher(teacherId, academicYearId, date, _context));
@@ -168,10 +165,38 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Route("enrolments/get/byClassId/{classId:int}")]
+        [Route("enrolments/get/byClass/{classId:int}")]
         public IEnumerable<CurriculumEnrolmentDto> GetEnrolmentsForClass([FromUri] int classId)
         {
             return PrepareResponseObject(CurriculumProcesses.GetEnrolmentsForClass(classId, _context));
+        }
+
+        [HttpPost]
+        [Route("enrolments/get/byClass/dataGrid/{classId:int}")]
+        public IHttpActionResult GetEnrolmentsForClassForDataGrid([FromUri] int classId,
+            [FromBody] DataManagerRequest dm)
+        {
+            var enrolments = CurriculumProcesses.GetEnrolmentsForClass_DataGrid(classId, _context).ResponseObject;
+
+            return PrepareDataGridObject(enrolments, dm);
+        }
+
+        [HttpGet]
+        [Route("enrolments/get/byStudent/{studentId:int}")]
+        public IEnumerable<CurriculumEnrolmentDto> GetEnrolmentsForStudent([FromUri] int studentId)
+        {
+            return PrepareResponseObject(CurriculumProcesses.GetEnrolmentsForStudent(studentId, _context));
+        }
+
+        [HttpPost]
+        [Route("enrolments/get/byStudent/dataGrid/{studentId:int}")]
+        public IHttpActionResult GetEnrolmentsForStudentForDataGrid([FromUri] int studentId,
+            [FromBody] DataManagerRequest dm)
+        {
+            var enrolments =
+                PrepareResponseObject(CurriculumProcesses.GetEnrolmentsForStudent_DataGrid(studentId, _context));
+
+            return PrepareDataGridObject(enrolments, dm);
         }
 
         [HttpGet]
@@ -271,24 +296,14 @@ namespace MyPortal.Controllers.Api
         {
             return PrepareResponse(CurriculumProcesses.UpdateStudyTopic(studyTopic, _context));
         }
-
-        /// <summary>
-        /// Gets all lesson plans from the database (in alphabetical order).
-        /// </summary>
-        /// <returns>Returns a list of DTOs of all lesson plans from the database.</returns>
+        
         [HttpGet]
         [Route("lessonPlans/get/all")]
         public IEnumerable<CurriculumLessonPlanDto> GetLessonPlans()
         {
             return PrepareResponseObject(CurriculumProcesses.GetAllLessonPlans(_context));
         }
-
-        /// <summary>
-        /// Gets lesson plan from the database with the specified ID.
-        /// </summary>
-        /// <param name="lessonPlanId">ID of the lesson plan to fetch from the database.</param>
-        /// <returns></returns>
-        /// <exception cref="HttpResponseException"></exception>
+        
         [HttpGet]
         [Route("lessonPlans/get/byId/{lessonPlanId:int}")]
         public CurriculumLessonPlanDto GetLessonPlanById([FromUri] int lessonPlanId)
@@ -296,11 +311,6 @@ namespace MyPortal.Controllers.Api
             return PrepareResponseObject(CurriculumProcesses.GetLessonPlanById(lessonPlanId, _context));
         }
 
-        /// <summary>
-        /// Gets lesson plans from the specified study topic.
-        /// </summary>
-        /// <param name="studyTopicId">The ID of the study topic to get lesson plans from.</param>
-        /// <returns>Returns a list of DTOs of lesson plans from the specified study topic.</returns>
         [HttpGet]
         [Route("lessonPlans/byTopic/{studyTopicId:int}")]
         public IEnumerable<CurriculumLessonPlanDto> GetLessonPlansByTopic([FromUri] int studyTopicId)
@@ -308,11 +318,6 @@ namespace MyPortal.Controllers.Api
             return PrepareResponseObject(CurriculumProcesses.GetLessonPlansByStudyTopic(studyTopicId, _context));
         }
 
-        /// <summary>
-        /// Adds a lesson plan to the database.
-        /// </summary>
-        /// <param name="plan">The lesson plan to add to the database</param>
-        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("lessonPlans/create")]
         public IHttpActionResult CreateLessonPlan([FromBody] CurriculumLessonPlan plan)
@@ -321,11 +326,6 @@ namespace MyPortal.Controllers.Api
             return PrepareResponse(CurriculumProcesses.CreateLessonPlan(plan, userId, _context));
         }
 
-        /// <summary>
-        /// Updates the lesson plan specified.
-        /// </summary>
-        /// <param name="plan">Lesson plan to update in the database.</param>
-        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpPost]
         [Route("lessonPlans/update")]
         public IHttpActionResult UpdateLessonPlan([FromBody] CurriculumLessonPlan plan)
@@ -333,11 +333,6 @@ namespace MyPortal.Controllers.Api
             return PrepareResponse(CurriculumProcesses.UpdateLessonPlan(plan, _context));
         }
 
-        /// <summary>
-        /// Deletes the specified lesson plan from the database.
-        /// </summary>
-        /// <param name="lessonPlanId">The ID of the lesson plan to delete.</param>
-        /// <returns>Returns NegotiatedContentResult stating whether the action was successful.</returns>
         [HttpDelete]
         [Route("lessonPlans/delete/{lessonPlanId:int}")]
         public IHttpActionResult DeleteLessonPlan([FromUri] int lessonPlanId)

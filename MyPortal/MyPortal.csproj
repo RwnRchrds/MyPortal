@@ -300,6 +300,7 @@
     <Compile Include="Dtos\GridDtos\GridAssessmentResultSetDto.cs" />
     <Compile Include="Dtos\GridDtos\GridBehaviourAchievementDto.cs" />
     <Compile Include="Dtos\GridDtos\GridCurriculumClassDto.cs" />
+    <Compile Include="Dtos\GridDtos\GridCurriculumEnrolmentDto.cs" />
     <Compile Include="Dtos\GridDtos\GridCurriculumSessionDto.cs" />
     <Compile Include="Dtos\GridDtos\GridDocumentDto.cs" />
     <Compile Include="Dtos\GridDtos\GridBehaviourIncidentDto.cs" />

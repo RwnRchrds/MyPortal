@@ -228,10 +228,10 @@ namespace MyPortal.Controllers.Api
         #endregion
 
         #region Roles
-        /// <summary>
-        /// Gets all roles
-        /// </summary>
-        /// <returns>Returns a list of DTOs of all roles.</returns>
+        
+        
+        
+        
         [HttpGet]
         [Route("api/roles")]
         public IEnumerable<RoleDto> GetRoles()

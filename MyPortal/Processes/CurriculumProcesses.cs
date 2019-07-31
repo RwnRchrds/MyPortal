@@ -422,15 +422,63 @@ namespace MyPortal.Processes
 
             return new ProcessResponse<object>(ResponseType.Ok, "Session deleted", null);
         }
+        
+        public static ProcessResponse<IEnumerable<CurriculumEnrolment>> GetEnrolmentsForClass_Model(int classId,
+            MyPortalDbContext context)
+        {
+            var list = context.CurriculumEnrolments.Where(x => x.ClassId == classId).ToList()
+                .OrderBy(x => x.Student.Person.LastName);
+
+            return new ProcessResponse<IEnumerable<CurriculumEnrolment>>(ResponseType.Ok, null, list);
+        }
 
         public static ProcessResponse<IEnumerable<CurriculumEnrolmentDto>> GetEnrolmentsForClass(int classId,
             MyPortalDbContext context)
         {
-            var list =  context.CurriculumEnrolments.Where(x => x.ClassId == classId).ToList()
+            var list = GetEnrolmentsForClass_Model(classId, context).ResponseObject
                 .OrderBy(x => x.Student.Person.LastName)
                 .Select(Mapper.Map<CurriculumEnrolment, CurriculumEnrolmentDto>);
 
             return new ProcessResponse<IEnumerable<CurriculumEnrolmentDto>>(ResponseType.Ok, null, list);
+        }
+        
+        public static ProcessResponse<IEnumerable<GridCurriculumEnrolmentDto>> GetEnrolmentsForClass_DataGrid(int classId,
+            MyPortalDbContext context)
+        {
+            var list = GetEnrolmentsForClass_Model(classId, context).ResponseObject
+                .OrderBy(x => x.Student.Person.LastName)
+                .Select(Mapper.Map<CurriculumEnrolment, GridCurriculumEnrolmentDto>);
+
+            return new ProcessResponse<IEnumerable<GridCurriculumEnrolmentDto>>(ResponseType.Ok, null, list);
+        }
+        
+        public static ProcessResponse<IEnumerable<CurriculumEnrolment>> GetEnrolmentsForStudent_Model(int studentId,
+            MyPortalDbContext context)
+        {
+            var list = context.CurriculumEnrolments.Where(x => x.StudentId == studentId).ToList()
+                .OrderBy(x => x.Student.Person.LastName);
+
+            return new ProcessResponse<IEnumerable<CurriculumEnrolment>>(ResponseType.Ok, null, list);
+        }
+        
+        public static ProcessResponse<IEnumerable<CurriculumEnrolmentDto>> GetEnrolmentsForStudent(int studentId,
+            MyPortalDbContext context)
+        {
+            var list = GetEnrolmentsForStudent_Model(studentId, context).ResponseObject
+                .OrderBy(x => x.Student.Person.LastName)
+                .Select(Mapper.Map<CurriculumEnrolment, CurriculumEnrolmentDto>);
+
+            return new ProcessResponse<IEnumerable<CurriculumEnrolmentDto>>(ResponseType.Ok, null, list);
+        }
+        
+        public static ProcessResponse<IEnumerable<GridCurriculumEnrolmentDto>> GetEnrolmentsForStudent_DataGrid(int studentId,
+            MyPortalDbContext context)
+        {
+            var list = GetEnrolmentsForStudent_Model(studentId, context).ResponseObject
+                .OrderBy(x => x.Student.Person.LastName)
+                .Select(Mapper.Map<CurriculumEnrolment, GridCurriculumEnrolmentDto>);
+
+            return new ProcessResponse<IEnumerable<GridCurriculumEnrolmentDto>>(ResponseType.Ok, null, list);
         }
 
         public static ProcessResponse<CurriculumEnrolmentDto> GetEnrolmentById(int enrolmentId,

@@ -31,7 +31,7 @@ namespace MyPortal.Controllers.Api
         public AttendanceSummary GetRawAttendanceSummary([FromUri] int studentId)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
-
+            
             return PrepareResponseObject(AttendanceProcesses.GetSummary(studentId, academicYearId, _context));
         }
 
@@ -70,10 +70,7 @@ namespace MyPortal.Controllers.Api
         public AttendanceWeekDto GetWeekByDate([FromUri] DateTime date)
         {
              var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
-
-            //var date = DateTimeProcesses.GetDateTimeFromFormattedInt(dateInt).ResponseObject;
-
-            return PrepareResponseObject(AttendanceProcesses.GetWeekByDate(academicYearId, date, _context));
+             return PrepareResponseObject(AttendanceProcesses.GetWeekByDate(academicYearId, date, _context));
         }
     }
 }
