@@ -19,15 +19,14 @@
 </div>
 
 <div class="container float-left">
-    <table class="table table-bordered table-hover mp-table mp-table-link" id="enrolments">
-        <thead>
-        <tr>
-            <th>Student</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+    @Html.EJS().Grid("Enrolments").DataSource(d =>
+    {
+        d.Url($"/api/curriculum/enrolments/get/byClass/dataGrid/{Model.Class.Id}").CrossDomain(false).Adaptor("UrlAdaptor");
+    }).Columns(c =>
+    {
+        c.Field("StudentName").HeaderText("Student").Template("#enrolmentsStudentTemplate").Width("150").Add();
+        c.HeaderText("Actions").Template("#enrolmentsActionsTemplate").Width("200").Add();
+    }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string>() { "Search" }).Render()
 </div>
 
 <button type="button" class="btn btn-primary" id="backButton">Back</button>
@@ -150,7 +149,7 @@
                 function () {
                     if ($("#yearGroupSelect").val() !== "") {
                         $.ajax({
-                            url: "/api/students/yearGroup/" + $("#yearGroupSelect").val(),
+                            url: "/api/people/students/get/byYearGroup/" + $("#yearGroupSelect").val(),
                             method: "GET",
                             complete: function (data) {
                                 $("#studentSelect").empty();
@@ -171,41 +170,9 @@
                         $("#studentSelect").removeClass("disabled");
                         $("#studentLabel").removeClass("d-none");
                     }
-                });
+                });            
 
-            $("#enrolments").DataTable({
-                ajax: {
-                    url: "/api/curriculum/classes/enrolments/get/@Model.Class.Id",
-                    dataSrc: ""
-                },
-                columns: [
-                    {
-                        data: "studentId",
-                        render: function (data, type, enrolment) {
-                            return "<a href='/Staff/People/Students/" +
-                                enrolment.student.id +
-                                "'>" +
-                                enrolment.student.person.lastName +
-                                ", " +
-                                enrolment.student.person.firstName +
-                                "</a>";
-                        }
-                    },
-                    {
-                        data: "id",
-                        render: function(data) {
-                            return "<button type='button' class='btn btn-xs btn-danger mp-btn-action-right js-delete' data-enrolment-id=" +
-                                data +
-                                "><i class=\"far fa-trash-alt\"></i></button>";
-                        }
-                    }
-                ],
-                "language": {
-                    "emptyTable": "No students in class"
-                }
-            });
-
-            $("#enrolments").on("click",
+            $("#Enrolments").on("click",
                 ".js-delete",
                 function () {
                     var button = $(this);
@@ -230,7 +197,7 @@
 
         function newEnrolIndSuccess(result) {
             $("#newEnrolIndModal").modal('hide');
-            $("#enrolments").DataTable().ajax.reload();
+            refreshTable("Enrolments");
             toastr.success(result);
         }
 
@@ -241,7 +208,7 @@
 
         function newEnrolGroupSuccess(result) {
             $("#newEnrolGroupModal").modal('hide');
-            $("#enrolments").DataTable().ajax.reload();
+            refreshTable("Enrolments");
             toastr.success(result);
         }
 
@@ -261,6 +228,20 @@
         function resetGroupForm() {
             $("#regGroupSelect").val("");
         }
+    </script>
+
+    <script type="text/x-jsrender" id="enrolmentsStudentTemplate">
+        <div>
+            ${StudentName}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="enrolmentsActionsTemplate">
+        <div>
+            <button type='button' class='btn btn-xs btn-danger mp-btn-action-right js-delete' data-enrolment-id="${Id}">
+                <i class="far fa-trash-alt"></i>
+            </button>
+        </div>
     </script>
 }
 
