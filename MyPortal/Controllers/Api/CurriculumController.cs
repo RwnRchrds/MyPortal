@@ -77,6 +77,16 @@ namespace MyPortal.Controllers.Api
             return PrepareResponseObject(CurriculumProcesses.GetAllClasses(academicYearId, _context));
         }
 
+        [HttpPost]
+        [Route("classes/get/dataGrid/all")]
+        public IHttpActionResult GetAllClasses_DataGrid([FromBody] DataManagerRequest dm)
+        {
+            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var classes = PrepareResponseObject(CurriculumProcesses.GetAllClasses_DataGrid(academicYearId, _context));
+
+            return PrepareDataGridObject(classes, dm);
+        }
+
         [HttpGet]
         [Route("classes/get/byId/{classId:int}")]
         public CurriculumClassDto GetClassById([FromUri] int classId)

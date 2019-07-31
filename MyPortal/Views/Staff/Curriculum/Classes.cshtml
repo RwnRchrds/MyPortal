@@ -18,17 +18,16 @@
 </div>
 
 <div class="container float-left">
-    <table class="table table-bordered table-hover mp-table mp-table-link" id="classes">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Subject</th>
-            <th>Teacher</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+    @Html.EJS().Grid("Classes").DataSource(d =>
+    {
+        d.Url("/api/curriculum/classes/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor");
+    }).Columns(c =>
+    {
+        c.Field("Name").HeaderText("Name").Template("#classesNameTemplate").Width("200").Add();
+        c.Field("Subject").HeaderText("Subject").Template("#classesSubjectTemplate").Width("200").Add();
+        c.Field("Teacher").HeaderText("Main Teacher").Template("#classesTeacherTemplate").Width("200").Add();
+        c.HeaderText("Actions").Template("#classesActionsTemplate").Width("170").Add();
+    }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string>() { "Search" }).Render()
 </div>
 
 <div id="newClassModal" class="modal fade" role="dialog">
@@ -113,65 +112,9 @@
             $('.modal').on('hidden.bs.modal',
                 function () {
                     $(this).find('form').trigger('reset');
-                });
+                });           
 
-            $("#classes").DataTable({
-                ajax: {
-                    url: "/api/curriculum/classes/get/all",
-                    dataSrc: ""
-                },
-                columns: [
-                    {
-                        data: "id",
-                        render: function(data, type, currClass) {
-                            return "<a href='/Staff/Curriculum/Classes/Enrolments/" +
-                                currClass.id +
-                                "'>" +
-                                currClass.name +
-                                "</a>";
-                        }
-                    },
-                    {
-                        data: "subjectId",
-                        render: function(data, type, currClass) {
-                            if (currClass.subjectId == null) {
-                                return "No Subject";
-                            } else {
-                                return currClass.curriculumSubject.Name;
-                            }
-                        }
-                    },
-                    {
-                        data: "teacher.id",
-                        render: function(data, type, currClass) {
-                            return currClass.teacher.person.title +
-                                " " +
-                                currClass.teacher.person.firstName.substring(0, 1) +
-                                " " +
-                                currClass.teacher.person.lastName;
-                        }
-                    },
-                    {
-                        data: "id",
-                        render: function(data) {
-                            return "<button type='button' class='btn btn-xs btn-success mp-btn-action-left js-schedule' data-class-id=" +
-                                data +
-                                "><i class=\"fas fa-calendar-alt\"></i></button> " +
-                            "<button type='button' class='btn btn-xs btn-warning mp-btn-action-left js-edit' data-class-id=" +
-                                data +
-                                "><i class=\"far fa-edit\"></i></button> " +
-                                "<button type='button' class='btn btn-xs btn-danger mp-btn-action-right js-delete' data-class-id=" +
-                                data +
-                                "><i class=\"far fa-trash-alt\"></i></button>";
-                        }
-                    }
-                ],
-                "language": {
-                    "emptyTable": "No classes to display"
-                }
-            });
-
-            $("#classes").on("click",
+            $("#Classes").on("click",
                 ".js-edit",
                 function() {
                     var button = $(this);
@@ -192,15 +135,15 @@
                     $("#editClassModal").modal('toggle');
                 });
 
-            $("#classes").on("click",
-                ".js-schedule",
+            $("#Classes").on("click",
+                ".js-enrolment",
                 function () {
                     var button = $(this);
                     var classId = button.attr("data-class-id");
-                    location.replace("/Staff/Curriculum/Classes/Schedule/" + classId);
+                    location.replace("/Staff/Curriculum/Classes/Enrolments/" + classId);
                 });
 
-            $("#classes").on("click",
+            $("#Classes").on("click",
                 ".js-delete",
                 function() {
                     var button = $(this);
@@ -211,7 +154,7 @@
                                     url: "/api/curriculum/classes/delete/" + button.attr("data-class-id"),
                                     method: "DELETE",
                                     success: function(a) {
-                                        $("#classes").DataTable().ajax.reload();
+                                        refreshTable("Classes");
                                         toastr.success(a);
                                     },
                                     error: function(e) {
@@ -225,7 +168,7 @@
 
         function newClassSuccess(result) {
             $("#newClassModal").modal('hide');
-            $("#classes").DataTable().ajax.reload();
+            refreshTable("Classes");
             toastr.success(result);
         }
 
@@ -236,7 +179,7 @@
 
         function editClassSuccess(result) {
             $("#editClassModal").modal('hide');
-            $("#classes").DataTable().ajax.reload();
+            refreshTable("Classes");
             toastr.success(result);
         }
 
@@ -244,5 +187,39 @@
             $("#editClassModal").modal('hide');
             toastr.error(result.responseJSON);
         }
-    </script> 
+    </script>
+
+    <script type="text/x-jsrender" id="classesNameTemplate">
+        <div>
+            <span id="NameText" class="student-name"><a href="/Staff/Curriculum/Classes/Sessions/${Id}">${Name}</a></span>
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="classesSubjectTemplate">
+            <div>
+                ${Subject}
+            </div>
+        </script>
+
+    <script type="text/x-jsrender" id="classesTeacherTemplate">
+            <div>
+                ${Teacher}
+            </div>
+        </script>
+
+    <script type="text/x-jsrender" id="classesActionsTemplate">
+        <div>
+            <button type='button' class='btn btn-xs btn-success mp-btn-action-left js-enrolment' data-class-id="${Id}">
+                <i class="fas fa-user-graduate"></i>
+            </button>
+            
+            <button type='button' class='btn btn-xs btn-warning mp-btn-action-left js-edit' data-class-id="${Id}">
+                <i class="far fa-edit"></i>
+            </button>
+            
+            <button type='button' class='btn btn-xs btn-danger mp-btn-action-right js-delete' data-class-id="${Id}">
+                <i class="far fa-trash-alt"></i>
+            </button>
+        </div>
+    </script>
 }

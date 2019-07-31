@@ -206,7 +206,7 @@ namespace MyPortal.Controllers
         }
 
         [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("Curriculum/Classes/Schedule/{classId}")]
+        [System.Web.Mvc.Route("Curriculum/Classes/Sessions/{classId:int}")]
         public ActionResult ClassSchedule(int classId)
         {
             var viewModel = new ClassScheduleViewModel();
@@ -219,11 +219,11 @@ namespace MyPortal.Controllers
             viewModel.Periods = _context.AttendancePeriods.ToList().OrderBy(x => dayIndex.IndexOf(x.Weekday))
                 .ThenBy(x => x.StartTime);
 
-            return View("~/Views/Staff/Curriculum/ClassSchedule.cshtml", viewModel);
+            return View("~/Views/Staff/Curriculum/Sessions.cshtml", viewModel);
         }
 
         [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("Curriculum/Classes/Enrolments/{classId}")]
+        [System.Web.Mvc.Route("Curriculum/Classes/Enrolments/{classId:int}")]
         public ActionResult ClassEnrolments(int classId)
         {
             var viewModel = new ClassEnrolmentsViewModel();
@@ -232,7 +232,7 @@ namespace MyPortal.Controllers
 
             viewModel.Class = currClass ?? throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            return View("~/Views/Staff/Curriculum/ClassEnrolments.cshtml", viewModel);
+            return View("~/Views/Staff/Curriculum/Enrolments.cshtml", viewModel);
         }
 
         #endregion

@@ -299,6 +299,7 @@
     <Compile Include="Dtos\FinanceSaleDto.cs" />
     <Compile Include="Dtos\GridDtos\GridAssessmentResultSetDto.cs" />
     <Compile Include="Dtos\GridDtos\GridBehaviourAchievementDto.cs" />
+    <Compile Include="Dtos\GridDtos\GridCurriculumClassDto.cs" />
     <Compile Include="Dtos\GridDtos\GridCurriculumSessionDto.cs" />
     <Compile Include="Dtos\GridDtos\GridDocumentDto.cs" />
     <Compile Include="Dtos\GridDtos\GridBehaviourIncidentDto.cs" />
@@ -906,7 +907,7 @@
     <Content Include="Views\Staff\Attendance\Registers.cshtml" />
     <Content Include="Views\Staff\Attendance\TakeRegister.cshtml" />
     <Content Include="Views\Staff\Curriculum\Classes.cshtml" />
-    <Content Include="Views\Staff\Curriculum\ClassSchedule.cshtml" />
+    <Content Include="Views\Staff\Curriculum\Sessions.cshtml" />
     <Content Include="Views\Shared\_NavBarStaffNew.cshtml" />
     <Content Include="Scripts\umd\popper.min.js.map" />
     <Content Include="Scripts\umd\popper.js.map" />
@@ -917,14 +918,13 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
-    <Content Include="Views\Staff\Curriculum\ClassEnrolments.cshtml" />
+    <Content Include="Views\Staff\Curriculum\Enrolments.cshtml" />
     <Content Include="Views\Shared\_NavBarStudentNew.cshtml" />
     <Content Include="Views\Staff\People\Students\BehaviourManagement.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Results\" />
     <Folder Include="Models\Authorisation\" />
-    <Folder Include="Views\MyPortal\" />
     <Folder Include="Views\Staff\Admissions\" />
     <Folder Include="Views\Staff\Behaviour\" />
     <Folder Include="Views\Staff\Communication\" />

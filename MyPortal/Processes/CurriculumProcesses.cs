@@ -179,13 +179,28 @@ namespace MyPortal.Processes
 
             return new ProcessResponse<IEnumerable<GridCurriculumSessionDto>>(ResponseType.Ok, null, classList);
         }
+        
+        public static ProcessResponse<IEnumerable<CurriculumClass>> GetAllClasses_Model(int academicYearId,
+            MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<CurriculumClass>>(ResponseType.Ok, null, context.CurriculumClasses
+                .Where(x => x.AcademicYearId == academicYearId).ToList());
+        }
 
         public static ProcessResponse<IEnumerable<CurriculumClassDto>> GetAllClasses(int academicYearId,
             MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<CurriculumClassDto>>(ResponseType.Ok, null, context.CurriculumClasses
-                .Where(x => x.AcademicYearId == academicYearId).ToList()
-                .OrderBy(x => x.Name).Select(Mapper.Map<CurriculumClass, CurriculumClassDto>));
+            return new ProcessResponse<IEnumerable<CurriculumClassDto>>(ResponseType.Ok, null,
+                GetAllClasses_Model(academicYearId, context).ResponseObject
+                    .OrderBy(x => x.Name).Select(Mapper.Map<CurriculumClass, CurriculumClassDto>));
+        }
+        
+        public static ProcessResponse<IEnumerable<GridCurriculumClassDto>> GetAllClasses_DataGrid(int academicYearId,
+            MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<GridCurriculumClassDto>>(ResponseType.Ok, null,
+                GetAllClasses_Model(academicYearId, context).ResponseObject
+                    .OrderBy(x => x.Name).Select(Mapper.Map<CurriculumClass, GridCurriculumClassDto>));
         }
 
         public static ProcessResponse<CurriculumClassDto> GetClassById(int classId, MyPortalDbContext context)
@@ -791,6 +806,21 @@ namespace MyPortal.Processes
             context.SaveChanges();
 
             return new ProcessResponse<object>(ResponseType.Ok, "Lesson plan deleted", null);
+        }
+
+        public static ProcessResponse<string> GetSubjectNameForClass(CurriculumClass @class)
+        {
+            if (@class == null)
+            {
+                return new ProcessResponse<string>(ResponseType.NotFound, "Class not found", null);
+            }
+
+            if (@class.SubjectId == null || @class.SubjectId == 0)
+            {
+                return new ProcessResponse<string>(ResponseType.Ok, null, "No Subject");
+            }
+            
+            return new ProcessResponse<string>(ResponseType.Ok, null, @class.CurriculumSubject.Name);
         }
     }
 }

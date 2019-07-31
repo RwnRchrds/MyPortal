@@ -192,6 +192,12 @@ namespace MyPortal
                     opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.CurriculumClass.Teacher).ResponseObject))
                 .ForMember(dest => dest.Time,
                     opts => opts.MapFrom(src => AttendanceProcesses.GetPeriodTime(src.AttendancePeriod).ResponseObject));
+
+            CreateMap<CurriculumClass, GridCurriculumClassDto>()
+                .ForMember(dest => dest.Subject,
+                    opts => opts.MapFrom(src => CurriculumProcesses.GetSubjectNameForClass(src)))
+                .ForMember(dest => dest.Teacher,
+                    opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.Teacher)));
         }
     }
 }

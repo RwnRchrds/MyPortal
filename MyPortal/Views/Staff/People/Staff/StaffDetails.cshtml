@@ -1,4 +1,5 @@
-﻿@model MyPortal.ViewModels.StaffDetailsViewModel
+﻿@using MyPortal.Models.Database
+@model MyPortal.ViewModels.StaffDetailsViewModel
 @{
     ViewBag.Title = "Staff Details: " + Model.Staff.Person.LastName + ", " + Model.Staff.Person.FirstName;
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
@@ -155,8 +156,8 @@
                     </div>
                     <div class="form-group">
                         @Html.Label("Completion Status")
-                        @Html.EnumDropDownListFor(l => l.TrainingCertificate.StatusId, "Select Status", new {@class = "form-control", Name = "StatusId"})
-                        @Html.ValidationMessageFor(l => l.TrainingCertificate.StatusId)
+                        @Html.EnumDropDownListFor(l => l.TrainingCertificate.Status, "Select Status", new {@class = "form-control", Name = "Status"})
+                        @Html.ValidationMessageFor(l => l.TrainingCertificate.Status)
                     </div>
                     <div class="form-group">
                         @Html.HiddenFor(l => l.TrainingCertificate.StaffId, new {Value = Model.Staff.Id, Name = "PersonId"})
@@ -232,7 +233,8 @@
                     </div>
                     <div class="form-group">
                         @Html.Label("Completion Status")
-                        @Html.DropDownListFor(l => l.TrainingCertificate.StatusId, new SelectList(Model.TrainingStatuses, "Id", "Name"), "Select Status", new {@class = "form-control", Name = "StatusId", id = "EditCertStatusControl"})
+                        @Html.EnumDropDownListFor(l => l.TrainingCertificate.Status, "Select Status", new {@class = "form-control", Name = "Status"})
+                        @Html.ValidationMessageFor(l => l.TrainingCertificate.Status)
                     </div>
                     <div class="form-group">
                         @Html.HiddenFor(l => l.TrainingCertificate.StaffId, new {Value = Model.Staff.Id, Name = "PersonId", id = "EditCertStaffControl"})
