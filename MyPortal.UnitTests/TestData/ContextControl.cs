@@ -1,5 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
 using Effort;
 using MyPortal.Dtos;
@@ -10,389 +17,418 @@ namespace MyPortal.UnitTests.TestData
 {
     public static class ContextControl
     {
+        
+        public class TestDbSet<TEntity> : DbSet<TEntity>, IQueryable, IEnumerable<TEntity>, IDbAsyncEnumerable<TEntity>
+            where TEntity : class
+        {
+            ObservableCollection<TEntity> _data;
+            IQueryable _query;
+
+            public TestDbSet()
+            {
+                _data = new ObservableCollection<TEntity>();
+                _query = _data.AsQueryable();
+            }
+
+            public override TEntity Add(TEntity item)
+            {
+                _data.Add(item);
+                return item;
+            }
+
+            public override TEntity Remove(TEntity item)
+            {
+                _data.Remove(item);
+                return item;
+            }
+
+            public override TEntity Attach(TEntity item)
+            {
+                _data.Add(item);
+                return item;
+            }
+
+            public override TEntity Create()
+            {
+                return Activator.CreateInstance<TEntity>();
+            }
+
+            public override TDerivedEntity Create<TDerivedEntity>()
+            {
+                return Activator.CreateInstance<TDerivedEntity>();
+            }
+
+            public override ObservableCollection<TEntity> Local
+            {
+                get { return _data; }
+            }
+
+            Type IQueryable.ElementType
+            {
+                get { return _query.ElementType; }
+            }
+
+            Expression IQueryable.Expression
+            {
+                get { return _query.Expression; }
+            }
+
+            IQueryProvider IQueryable.Provider
+            {
+                get { return new TestDbAsyncQueryProvider<TEntity>(_query.Provider); }
+            }
+
+            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+            {
+                return _data.GetEnumerator();
+            }
+
+            IEnumerator<TEntity> IEnumerable<TEntity>.GetEnumerator()
+            {
+                return _data.GetEnumerator();
+            }
+
+            IDbAsyncEnumerator<TEntity> IDbAsyncEnumerable<TEntity>.GetAsyncEnumerator()
+            {
+                return new TestDbAsyncEnumerator<TEntity>(_data.GetEnumerator());
+            }
+        }
+        
+        internal class TestDbAsyncQueryProvider<TEntity> : IDbAsyncQueryProvider
+    {
+        private readonly IQueryProvider _inner;
+
+        internal TestDbAsyncQueryProvider(IQueryProvider inner)
+        {
+            _inner = inner;
+        }
+
+        public IQueryable CreateQuery(Expression expression)
+        {
+            return new TestDbAsyncEnumerable<TEntity>(expression);
+        }
+
+        public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
+        {
+            return new TestDbAsyncEnumerable<TElement>(expression);
+        }
+
+        public object Execute(Expression expression)
+        {
+            return _inner.Execute(expression);
+        }
+
+        public TResult Execute<TResult>(Expression expression)
+        {
+            return _inner.Execute<TResult>(expression);
+        }
+
+        public Task<object> ExecuteAsync(Expression expression, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(Execute(expression));
+        }
+
+        public Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(Execute<TResult>(expression));
+        }
+    }
+
+    internal class TestDbAsyncEnumerable<T> : EnumerableQuery<T>, IDbAsyncEnumerable<T>, IQueryable<T>
+    {
+        public TestDbAsyncEnumerable(IEnumerable<T> enumerable)
+            : base(enumerable)
+        { }
+
+        public TestDbAsyncEnumerable(Expression expression)
+            : base(expression)
+        { }
+
+        public IDbAsyncEnumerator<T> GetAsyncEnumerator()
+        {
+            return new TestDbAsyncEnumerator<T>(this.AsEnumerable().GetEnumerator());
+        }
+
+        IDbAsyncEnumerator IDbAsyncEnumerable.GetAsyncEnumerator()
+        {
+            return GetAsyncEnumerator();
+        }
+
+        IQueryProvider IQueryable.Provider
+        {
+            get { return new TestDbAsyncQueryProvider<T>(this); }
+        }
+    }
+
+    internal class TestDbAsyncEnumerator<T> : IDbAsyncEnumerator<T>
+    {
+        private readonly IEnumerator<T> _inner;
+
+        public TestDbAsyncEnumerator(IEnumerator<T> inner)
+        {
+            _inner = inner;
+        }
+
+        public void Dispose()
+        {
+            _inner.Dispose();
+        }
+
+        public Task<bool> MoveNextAsync(CancellationToken cancellationToken)
+        {
+            return Task.FromResult(_inner.MoveNext());
+        }
+
+        public T Current
+        {
+            get { return _inner.Current; }
+        }
+
+        object IDbAsyncEnumerator.Current
+        {
+            get { return Current; }
+        }
+    }
+        
         public static MyPortalDbContext GetTestData()
         {
             var effortConnection = DbConnectionFactory.CreateTransient();
-            var context = new MyPortalDbContext(effortConnection);
-            context.IsDebug = true;
-
-            #region AssessmentGradeSets
-            context.AssessmentGradeSets.AddRange(new List<AssessmentGradeSet>
+            var context = new MyPortalDbContext(effortConnection)
             {
-
-            });
-            #endregion
-
-            #region AssessmentGrades
-            context.AssessmentGrades.AddRange(new List<AssessmentGrade>
-            {
-
-            });
-            #endregion
-
-            #region AssessmentResultSets
-            context.AssessmentResultSets.AddRange(new List<AssessmentResultSet>
-            {
-                new AssessmentResultSet {Id = 1, Name = "Current", IsCurrent = true, AcademicYearId = 1},
-                new AssessmentResultSet {Id = 2, Name = "Old", IsCurrent = false, AcademicYearId = 1}
-            });
-            #endregion
-
-            #region AssessmentResults
-            context.AssessmentResults.AddRange(new List<AssessmentResult>
-            {
-                new AssessmentResult {StudentId = 1, SubjectId = 1, ResultSetId = 1, Value = "A"},
-                new AssessmentResult {StudentId = 1, SubjectId = 2, ResultSetId = 1, Value = "C"}
-            });
-            #endregion
-
-            #region AttendanceCodes
-            context.AttendanceCodes.AddRange(new List<AttendanceRegisterCode>
-            {
-                new AttendanceRegisterCode {Id = 1, Code = "/", Description = "Present", MeaningId = 1, System = true},
-                new AttendanceRegisterCode {Id = 2, Code = "L", MeaningId = 2, System = true, Description = "Late"},
-                new AttendanceRegisterCode {Id = 3, Code = "O", Description = "Unauthorised Absence", System = true, MeaningId = 3}
-            });
-            #endregion
-
-            #region AttendanceMarks
-            context.AttendanceMarks.AddRange(new List<AttendanceRegisterMark>
-            {
-                new AttendanceRegisterMark {Id = 1, Mark = "/", StudentId = 1, PeriodId = 1, WeekId = 1},
-                new AttendanceRegisterMark {Id = 2, StudentId = 1, PeriodId = 2, WeekId = 1, Mark = "O"}
-            });
-            #endregion
-
-            #region AttendanceMeanings
-            context.AttendanceMeanings.AddRange(new List<AttendanceRegisterCodeMeaning>
-            {
-                new AttendanceRegisterCodeMeaning {Id = 1, Code = "P", Description = "Present"},
-                new AttendanceRegisterCodeMeaning {Id = 2, Code = "L", Description = "Late"},
-                new AttendanceRegisterCodeMeaning {Id = 3, Code="UA", Description = "Unauthorised Absence"}
-            });
-            #endregion
-
-            #region AttendancePeriods
-            context.AttendancePeriods.AddRange(new List<AttendancePeriod>
-            {
-                new AttendancePeriod {Id = 1, IsAm = true, IsPm = false, StartTime = new TimeSpan(8, 0, 0), EndTime = new TimeSpan(9,0,0), Name = "Mon:AM", Weekday = "MON"},
-                new AttendancePeriod {Id = 2, IsAm = false, IsPm = true, StartTime = new TimeSpan(15, 0, 0), EndTime = new TimeSpan(16,0,0), Name = "Mon:PM", Weekday = "MON"},
-                new AttendancePeriod {Id = 3, IsAm = true, IsPm = false, StartTime = new TimeSpan(8, 0, 0), EndTime = new TimeSpan(9,0,0), Name = "Tue:AM", Weekday = "TUE"},
-                new AttendancePeriod {Id = 4, IsAm = false, IsPm = true, StartTime = new TimeSpan(15, 0, 0), EndTime = new TimeSpan(16,0,0), Name = "Tue:PM", Weekday = "TUE"}
-            });
-            #endregion
-
-            #region AttendanceWeeks
-            context.AttendanceWeeks.AddRange(new List<AttendanceWeek>
-            {
-                new AttendanceWeek {AcademicYearId = 1, Beginning = new DateTime(2019,01,07), Id = 1, IsHoliday = false, IsNonTimetable = false}
-            });
-            #endregion
-
-            #region CurriculumAcademicYears
-            context.CurriculumAcademicYears.AddRange(new List<CurriculumAcademicYear>
-            {
-                new CurriculumAcademicYear
-                    {FirstDate = DateTime.Parse("01/01/2019"), LastDate = DateTime.Parse("01/01/2099"), Id = 1, Name = "First"}
-            });
-            #endregion
-
-            #region CurriculumClassEnrollments
-            context.CurriculumEnrolments.AddRange(new List<CurriculumEnrolment>
-            {
-
-            });
-            #endregion
-
-            #region CurriculumClasses
-            context.CurriculumClasses.AddRange(new List<CurriculumClass>
-            {
-
-            });
-            #endregion
-
-            #region CurriculumSessions
-            context.CurriculumSessions.AddRange(new List<CurriculumSession>
-            {
-
-            });
-            #endregion
-
-            #region CurriculumLessonPlans
-            context.CurriculumLessonPlans.AddRange(new List<CurriculumLessonPlan>
-            {
-
-            });
-            #endregion
-
-            #region CurriculumLessonPlanTemplates
-            context.CurriculumLessonPlanTemplates.AddRange(new List<CurriculumLessonPlanTemplate>
-            {
-
-            });
-            #endregion
-
-            #region CurriculumStudyTopics
-            context.CurriculumStudyTopics.AddRange(new List<CurriculumStudyTopic>
-            {
-
-            });
-            #endregion
-
-            #region CurriculumSubjects
-            context.CurriculumSubjects.AddRange(new List<CurriculumSubject>
-            {
-                new CurriculumSubject {Name = "English", LeaderId = 3, Code = "En", Id = 1},
-                new CurriculumSubject {Name = "Maths", LeaderId = 3, Code = "Ma", Id = 2},
-                new CurriculumSubject {Name = "Science", LeaderId = 3, Code = "Sc", Id = 3}
-            });
-            #endregion
-
-            #region Documents
-            context.Documents.AddRange(new List<Document>
-            {
-                new Document
+                //Test Data
+                AssessmentGradeSets = new TestDbSet<AssessmentGradeSet>
                 {
-                    Description = "Doc1", Url = "http://ftp.test.com/doc1", Date = DateTime.Today, IsGeneral = true,
-                    Approved = true, UploaderId = 1, Id = 1
+                    
                 },
-                new Document
+                AssessmentGrades = new TestDbSet<AssessmentGrade>
                 {
-                    Description = "Doc2", Url = "http://ftp.test.com/doc2", Date = DateTime.Today, IsGeneral = true,
-                    Approved = true, UploaderId = 1, Id = 2
+                    
                 },
-                new Document
+                AssessmentResultSets = new TestDbSet<AssessmentResultSet>
                 {
-                    Description = "Doc3", Url = "http://ftp.test.com/doc3", Date = DateTime.Today, IsGeneral = true,
-                    Approved = false, UploaderId = 1, Id = 3
+                    
                 },
-                new Document
+                AssessmentResults = new TestDbSet<AssessmentResult>
                 {
-                    Description = "Doc4", Url = "http://ftp.test.com/doc4", Date = DateTime.Today, IsGeneral = false,
-                    Approved = true, UploaderId = 1, Id = 4
+                    
+                },
+                AttendanceCodes = new TestDbSet<AttendanceRegisterCode>
+                {
+                    
+                },
+                AttendanceMarks = new TestDbSet<AttendanceRegisterMark>
+                {
+                    
+                },
+                AttendanceMeanings = new TestDbSet<AttendanceRegisterCodeMeaning>
+                {
+                    
+                },
+                AttendancePeriods = new TestDbSet<AttendancePeriod>
+                {
+                    
+                },
+                AttendanceWeeks = new TestDbSet<AttendanceWeek>
+                {
+                    
+                },
+                BehaviourAchievementTypes = new TestDbSet<BehaviourAchievementType>
+                {
+                    
+                },
+                BehaviourAchievements = new TestDbSet<BehaviourAchievement>
+                {
+                    
+                },
+                BehaviourIncidentTypes = new TestDbSet<BehaviourIncidentType>
+                {
+                    
+                },
+                BehaviourIncidents = new TestDbSet<BehaviourIncident>
+                {
+                    
+                },
+                BehaviourLocations = new TestDbSet<BehaviourLocation>
+                {
+                    
+                },
+                CommunicationLogs = new TestDbSet<CommunicationLog>
+                {
+                    
+                },
+                CommunicationTypes = new TestDbSet<CommunicationType>
+                {
+                    
+                },
+                CurriculumAcademicYears = new TestDbSet<CurriculumAcademicYear>
+                {
+                    new CurriculumAcademicYear {Id = 1, Name = "2019", FirstDate = new DateTime(2019, 01, 01), LastDate = new DateTime(2019,12,31)}
+                },
+                CurriculumClasses = new TestDbSet<CurriculumClass>
+                {
+                    
+                },
+                CurriculumEnrolments = new TestDbSet<CurriculumEnrolment>
+                {
+                    
+                },
+                CurriculumLessonPlanTemplates = new TestDbSet<CurriculumLessonPlanTemplate>
+                {
+                    
+                },
+                CurriculumLessonPlans = new TestDbSet<CurriculumLessonPlan>
+                {
+                    
+                },
+                CurriculumSessions = new TestDbSet<CurriculumSession>
+                {
+                    
+                },
+                CurriculumStudyTopics = new TestDbSet<CurriculumStudyTopic>
+                {
+                    
+                },
+                CurriculumSubjects = new TestDbSet<CurriculumSubject>
+                {
+                    
+                },
+                DocumentTypes = new TestDbSet<DocumentType>
+                {
+                    
+                },
+                Documents = new TestDbSet<Document>
+                {
+                    
+                },
+                FinanceBasketItems = new TestDbSet<FinanceBasketItem>
+                {
+                    
+                },
+                FinanceProductTypes = new TestDbSet<FinanceProductType>
+                {
+                    new FinanceProductType {Id = 1, Description = "Meal", IsMeal = true, System = true}   
+                },
+                FinanceProducts = new TestDbSet<FinanceProduct>
+                {
+                    new FinanceProduct {Id = 1, Deleted = false, Description = "School Dinner", Price = 1.90m, Visible = true, OnceOnly = true, ProductTypeId = 1}
+                },
+                FinanceSales = new TestDbSet<FinanceSale>
+                {
+                    
+                },
+                MedicalConditions = new TestDbSet<MedicalCondition>
+                {
+                    
+                },
+                MedicalEvents = new TestDbSet<MedicalEvent>
+                {
+                    
+                },
+                MedicalStudentConditions = new TestDbSet<MedicalStudentCondition>
+                {
+                    
+                },
+                PastoralHouses = new TestDbSet<PastoralHouse>
+                {
+                    
+                },
+                PastoralRegGroups = new TestDbSet<PastoralRegGroup>
+                {
+                    new PastoralRegGroup {Id = 1, Name = "1A", TutorId = 3, YearGroupId = 1},
+                    new PastoralRegGroup {Id = 2, Name = "8A", TutorId = 4, YearGroupId = 8}
+                },
+                PastoralYearGroups = new TestDbSet<PastoralYearGroup>
+                {
+                    new PastoralYearGroup {Id = 1, Name = "Year 1", KeyStage = 1, HeadId = 1},
+                    new PastoralYearGroup {Id = 8, Name = "Year 8", KeyStage = 3, HeadId = 2}
+                },
+                PersonDocuments = new TestDbSet<PersonDocument>
+                {
+                    
+                },
+                PersonTypes = new TestDbSet<PersonType>
+                {
+                    new PersonType {Id = 1, Code = "S", Description = "Student"},
+                    new PersonType {Id = 2, Code = "T", Description = "Staff"},
+                    new PersonType {Id = 3, Code = "C", Description = "Contact"},
+                    new PersonType {Id = 4, Code = "A", Description = "Agent"}
+                },
+                PersonnelObservations = new TestDbSet<PersonnelObservation>
+                {
+                    
+                },
+                PersonnelTrainingCertificates = new TestDbSet<PersonnelTrainingCertificate>
+                {
+                    
+                },
+                PersonnelTrainingCourses = new TestDbSet<PersonnelTrainingCourse>
+                {
+                    
+                },
+                Persons = new TestDbSet<Person>
+                {
+                    //Students
+                    new Person {Id = 1, FirstName = "Aaron", LastName = "Aardvark", Dob = new DateTime(2000,06,05), Deleted = false, Gender = "M", PersonTypeId = 1, UserId = "aardvark"},
+                    new Person {Id = 2, FirstName = "Chloe", LastName = "Brown", Dob = new DateTime(2000,06,05), Deleted = false, Gender = "F", PersonTypeId = 1, UserId = "cbrown"},
+                    
+                    //Staff
+                    new Person {Id = 3, Title = "Mrs", FirstName = "Lily", LastName = "Sprague", Dob = new DateTime(1987,08,05), Deleted = false, Gender = "F", PersonTypeId = 2, UserId = "l.sprague"},
+                    new Person {Id = 4, Title = "Sir", FirstName = "William", LastName = "Townsend", Dob = new DateTime(1986,04,26), Deleted = false, Gender = "M", PersonTypeId = 2, UserId = "wtownsend"},
+                    new Person {Id = 5, Title = "Mrs", FirstName = "Joanne", LastName = "Cobb", Dob = new DateTime(1986,04,26), Deleted = false, Gender = "F", PersonTypeId = 2, UserId = "jcobb"},
+                    new Person {Id = 6, Title = "Miss", FirstName = "Ellie", LastName = "Williams", Dob = new DateTime(1986,04,26), Deleted = false, Gender = "F", PersonTypeId = 2, UserId = "ewilliams"}
+                },
+                ProfileCommentBanks = new TestDbSet<ProfileCommentBank>
+                {
+                    
+                },
+                ProfileComments = new TestDbSet<ProfileComment>
+                {
+                    
+                },
+                ProfileLogTypes = new TestDbSet<ProfileLogType>
+                {
+                    new ProfileLogType {Id = 1, Name = "Academic Support", System = true},
+                    new ProfileLogType {Id = 2, Name = "Report", System = true},
+                    new ProfileLogType {Id = 3, Name = "Behaviour Log", System = true},
+                    new ProfileLogType {Id = 4, Name = "Praise", System = true}
+                },
+                ProfileLogs = new TestDbSet<ProfileLog>
+                {
+                    
+                },
+                SenEvents = new TestDbSet<SenEvent>
+                {
+                    
+                },
+                SenProvisions = new TestDbSet<SenProvision>
+                {
+                    
+                },
+                SenStatuses = new TestDbSet<SenStatus>
+                {
+                    new SenStatus {Id = 1, Code = "N", Description = "No SEN Status"},
+                    new SenStatus {Id = 2, Code = "E", Description = "School Early Years Action"}
+                },
+                StaffMembers = new TestDbSet<StaffMember>
+                {
+                    new StaffMember {Id = 1, Code = "LSP", Deleted = false, JobTitle = "Deputy Headteacher", PersonId = 3},
+                    new StaffMember {Id = 2, Code = "WTO", Deleted = false, JobTitle = "Headteacher", PersonId = 4},
+                    new StaffMember {Id = 3, Code = "JCO", Deleted = false, JobTitle = "Teacher", PersonId = 5},
+                    new StaffMember {Id = 4, Code = "EWI", Deleted = false, JobTitle = "Teacher", PersonId = 6}
+                },
+                Students = new TestDbSet<Student>
+                {
+                    new Student {PersonId = 1, Deleted = false, Id = 1, AccountBalance = 12.99m, PupilPremium = false, FreeSchoolMeals = false, GiftedAndTalented = false, RegGroupId = 1, SenStatusId = 1, YearGroupId = 1},
+                    new Student {PersonId = 2, Deleted = false, Id = 2, AccountBalance = 50.00m, PupilPremium = true, FreeSchoolMeals = true, GiftedAndTalented = false, RegGroupId = 1, SenStatusId = 2, YearGroupId = 1}
                 }
-            });
-            #endregion
-
-            #region FinanceBasketItems
-            context.FinanceBasketItems.AddRange(new List<FinanceBasketItem>
-            {
-                new FinanceBasketItem {Id = 1, StudentId = 1, ProductId = 1},
-                new FinanceBasketItem {Id = 2, ProductId = 1, StudentId = 1},
-                new FinanceBasketItem {Id = 3, ProductId = 1, StudentId = 1},
-                new FinanceBasketItem {Id = 4, ProductId = 3, StudentId = 3}
-            });
-            #endregion
-
-            #region FinanceProducts
-            context.FinanceProducts.AddRange(new List<FinanceProduct>
-            {
-                new FinanceProduct
-                {
-                    Id = 1, Description = "Art Pack", Price = (decimal) 7.50m, OnceOnly = false, Visible = true, ProductTypeId = 1
-                },
-                new FinanceProduct
-                {
-                    Id = 2, Description = "School Dinner", OnceOnly = false, Visible = false, Price = (decimal) 1.50m, ProductTypeId = 2
-                },
-                new FinanceProduct
-                {
-                    Id = 3, Description = "School Trip", OnceOnly = true, Visible = true, Price = (decimal) 100.00m, ProductTypeId = 1
-                },
-                new FinanceProduct
-                {
-                    Id = 4, Description = "Delete Me", OnceOnly = false, Visible = true, Price = 35.99m, ProductTypeId = 1
-                }
-            });
-            #endregion
-
-            #region FinanceProductTypes
-            context.FinanceProductTypes.AddRange(new List<FinanceProductType>
-            {
-                new FinanceProductType{Id = 1, Description = "Test Product", IsMeal = false, System = true},
-                new FinanceProductType {Id = 2, Description = "Test Meal", IsMeal = true, System = true}
-            });
-            #endregion
-
-            #region FinanceSales
-            context.FinanceSales.AddRange(new List<FinanceSale>
-            {
-
-            });
-            #endregion
-
-            #region PastoralRegGroups
-            context.PastoralRegGroups.AddRange(new List<PastoralRegGroup>
-            {
-                new PastoralRegGroup {Id = 1, Name = "1A", TutorId = 1, YearGroupId = 1},
-                new PastoralRegGroup {Id = 2, Name = "4A", TutorId = 1, YearGroupId = 2},
-                new PastoralRegGroup {Id = 3, Name = "7A", YearGroupId = 3, TutorId = 1},
-                new PastoralRegGroup {Id = 4, Name = "11A", YearGroupId = 4, TutorId = 1}
-            });
-            #endregion
-
-            #region PastoralYearGroups
-            context.PastoralYearGroups.AddRange(new List<PastoralYearGroup>
-            {
-                new PastoralYearGroup {Id = 1, Name = "Year 1", KeyStage = 1, HeadId = 3},
-                new PastoralYearGroup {Id = 2, Name = "Year 4", KeyStage = 2, HeadId = 3},
-                new PastoralYearGroup {Id = 3, Name = "Year 7", HeadId = 3, KeyStage = 3},
-                new PastoralYearGroup {Id = 4, Name = "Year 11", HeadId = 3, KeyStage = 4}
-            });
-            #endregion
-
-            #region PersonnelObservations
-            context.PersonnelObservations.AddRange(new List<PersonnelObservation>
-            {
-
-            });
-            #endregion
-
-            #region PersonnelTrainingCertificates
-            context.PersonnelTrainingCertificates.AddRange(new List<PersonnelTrainingCertificate>
-            {
-
-            });
-            #endregion
-
-            #region PersonnelTrainingCourses
-            context.PersonnelTrainingCourses.AddRange(new List<PersonnelTrainingCourse>
-            {
-
-            });
-            #endregion
-
-            #region ProfileComments
-            context.ProfileComments.AddRange(new List<ProfileComment>
-            {
-                new ProfileComment {CommentBankId = 1, Value = "Hello", Id = 1},
-                new ProfileComment {CommentBankId = 2, Value = "<he> works very hard", Id = 2},
-                new ProfileComment {CommentBankId = 2, Value = "<he> needs to improve his work", Id = 3},
-                new ProfileComment {CommentBankId = 3, Value = "Thank you", Id = 4}
-            });
-            #endregion
-
-            #region ProfileCommentBanks
-            context.ProfileCommentBanks.AddRange(new List<ProfileCommentBank>
-            {
-                new ProfileCommentBank {Name = "Opening", Id = 1},
-                new ProfileCommentBank {Name = "Middle", Id = 2},
-                new ProfileCommentBank {Name = "Closing", Id = 3}
-            });
-            #endregion
-
-            #region ProfileLogs
-            context.ProfileLogs.AddRange(new List<ProfileLog>
-            {
-                new ProfileLog {Date = DateTime.Now, AuthorId = 3, Message = "Test", StudentId = 3, TypeId = 1, AcademicYearId = 1, Id = 1},
-                new ProfileLog {Date = DateTime.Now, AuthorId = 3, Message = "Test2", StudentId = 3, TypeId = 2, AcademicYearId = 1, Id = 2},
-                new ProfileLog {Date = DateTime.Today, AuthorId = 3, Message = "Test3", StudentId = 3, TypeId = 3, AcademicYearId = 1, Id = 3},
-                new ProfileLog {Date = DateTime.Today, AuthorId = 3, Message = "Test4", StudentId = 3, TypeId = 4, AcademicYearId = 1, Id = 4}
-            });
-            #endregion
-
-            #region ProfileLogTypes
-            context.ProfileLogTypes.AddRange(new List<ProfileLogType>
-            {
-                new ProfileLogType {Name = "Type 1", Id = 1},
-                new ProfileLogType {Name = "Type 2", Id = 2},
-                new ProfileLogType {Name = "Type 3", Id = 3},
-                new ProfileLogType {Name = "Type 4", Id = 4}
-            });
-            #endregion
-
-            #region SenStatuses
-            context.SenStatuses.AddRange(new List<SenStatus>
-            {
-                new SenStatus {Id = 1, Description = "No SEN", Code = "N"}
-            });
-            #endregion
-
-            #region StaffMembers
-            context.StaffMembers.AddRange(new List<StaffMember>
-            {
-
-            });
-            #endregion
-
-            #region Students
-            context.Students.AddRange(new List<Student>
-            {
-            });
-            #endregion
-
-            context.SaveChanges();
+            };
 
             return context;
         }
 
         public static void InitialiseMaps()
         {
-            Mapper.Initialize(cfg =>
-            {
-                cfg.CreateMap<Student, StudentDto>();
-                cfg.CreateMap<StudentDto, Student>();
-
-                cfg.CreateMap<ProfileLogDto, ProfileLog>();
-                cfg.CreateMap<ProfileLog, ProfileLogDto>();
-
-                cfg.CreateMap<PastoralYearGroupDto, PastoralYearGroup>();
-                cfg.CreateMap<PastoralYearGroup, PastoralYearGroupDto>();
-
-                cfg.CreateMap<PastoralRegGroupDto, PastoralRegGroup>();
-                cfg.CreateMap<PastoralRegGroup, PastoralRegGroupDto>();
-
-                cfg.CreateMap<StaffMemberDto, StaffMember>();
-                cfg.CreateMap<StaffMember, StaffMemberDto>();
-
-                cfg.CreateMap<PersonnelTrainingCertificateDto, PersonnelTrainingCertificate>();
-                cfg.CreateMap<PersonnelTrainingCertificate, PersonnelTrainingCertificateDto>();
-
-                cfg.CreateMap<PersonnelTrainingCourseDto, PersonnelTrainingCourse>();
-                cfg.CreateMap<PersonnelTrainingCourse, PersonnelTrainingCourseDto>();
-
-                cfg.CreateMap<PastoralRegGroupDto, PastoralRegGroup>();
-                cfg.CreateMap<PastoralRegGroup, PastoralRegGroupDto>();
-
-                cfg.CreateMap<AssessmentResultDto, AssessmentResult>();
-                cfg.CreateMap<AssessmentResult, AssessmentResultDto>();
-
-                cfg.CreateMap<CurriculumSubjectDto, CurriculumSubject>();
-                cfg.CreateMap<CurriculumSubject, CurriculumSubjectDto>();
-
-                cfg.CreateMap<ProfileLogTypeDto, ProfileLogType>();
-                cfg.CreateMap<ProfileLogType, ProfileLogTypeDto>();
-
-                cfg.CreateMap<FinanceProductDto, FinanceProduct>();
-                cfg.CreateMap<FinanceProduct, FinanceProductDto>();
-
-                cfg.CreateMap<FinanceSaleDto, FinanceSale>();
-                cfg.CreateMap<FinanceSale, FinanceSaleDto>();
-
-                cfg.CreateMap<FinanceBasketItemDto, FinanceBasketItem>();
-                cfg.CreateMap<FinanceBasketItem, FinanceBasketItemDto>();
-
-                cfg.CreateMap<DocumentDto, Document>();
-                cfg.CreateMap<Document, DocumentDto>();
-
-                cfg.CreateMap<AssessmentGradeSetDto, AssessmentGradeSet>();
-                cfg.CreateMap<AssessmentGradeSet, AssessmentGradeSetDto>();
-
-                cfg.CreateMap<AssessmentGradeDto, AssessmentGrade>();
-                cfg.CreateMap<AssessmentGrade, AssessmentGradeDto>();
-
-                cfg.CreateMap<ProfileComment, ProfileCommentDto>();
-                cfg.CreateMap<ProfileCommentDto, ProfileComment>();
-
-                cfg.CreateMap<ProfileCommentBankDto, ProfileCommentBank>();
-                cfg.CreateMap<ProfileCommentBank, ProfileCommentBankDto>();
-
-                cfg.CreateMap<CurriculumStudyTopic, CurriculumStudyTopicDto>();
-                cfg.CreateMap<CurriculumStudyTopicDto, CurriculumStudyTopic>();
-
-                cfg.CreateMap<CurriculumLessonPlan, CurriculumLessonPlanDto>();
-                cfg.CreateMap<CurriculumLessonPlanDto, CurriculumLessonPlan>();
-            });
+            Mapper.Initialize(c => c.AddProfile<MappingProfile>());
         }
     }
 }
