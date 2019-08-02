@@ -548,7 +548,7 @@ namespace MyPortal.Models.Database
 
             modelBuilder.Entity<PastoralHouse>()
                 .HasMany(e => e.Students)
-                .WithRequired(e => e.House)
+                .WithOptional(e => e.House)
                 .HasForeignKey(e => e.HouseId)
                 .WillCascadeOnDelete(false);
 
