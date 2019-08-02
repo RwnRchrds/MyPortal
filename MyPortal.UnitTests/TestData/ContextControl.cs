@@ -194,7 +194,7 @@ namespace MyPortal.UnitTests.TestData
             var pastoralRegGroups = new List<PastoralRegGroup>
             {
                 new PastoralRegGroup {Id = 1, Name = "1A", TutorId = 3, YearGroupId = 1},
-                new PastoralRegGroup {Id = 2, Name = "8A", TutorId = 4, YearGroupId = 8}
+                new PastoralRegGroup {Id = 8, Name = "8A", TutorId = 4, YearGroupId = 8}
             };
 
             var pastoralYearGroups = new List<PastoralYearGroup>
@@ -298,8 +298,8 @@ namespace MyPortal.UnitTests.TestData
             
             var students = new List<Student>
             {
-                new Student {PersonId = 1, Deleted = false, Id = 1, AccountBalance = 12.99m, PupilPremium = false, FreeSchoolMeals = false, GiftedAndTalented = false, RegGroupId = 1, SenStatusId = 1, YearGroupId = 1},
-                new Student {PersonId = 2, Deleted = false, Id = 2, AccountBalance = 50.00m, PupilPremium = true, FreeSchoolMeals = true, GiftedAndTalented = false, RegGroupId = 1, SenStatusId = 2, YearGroupId = 1}
+                new Student {PersonId = 1, Deleted = false, Id = 1, AccountBalance = 0, PupilPremium = false, FreeSchoolMeals = false, GiftedAndTalented = false, RegGroupId = 1, SenStatusId = 1, YearGroupId = 1},
+                new Student {PersonId = 2, Deleted = false, Id = 2, AccountBalance = 50.00m, PupilPremium = true, FreeSchoolMeals = true, GiftedAndTalented = false, RegGroupId = 1, SenStatusId = 2, YearGroupId = 1, HouseId = null}
             };
 
             var effortConnection = DbConnectionFactory.CreateTransient();
@@ -354,7 +354,7 @@ namespace MyPortal.UnitTests.TestData
             context.SenProvisions.AddRange(senProvisions);
             context.SenStatuses.AddRange(senStatuses);
             context.StaffMembers.AddRange(staffMembers);
-            context.Students.AddRange(students);
+//            context.Students.AddRange(students);
             context.SaveChanges();
 
             return context;

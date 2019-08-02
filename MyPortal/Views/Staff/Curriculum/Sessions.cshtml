@@ -1,4 +1,4 @@
-﻿@model MyPortal.ViewModels.ClassScheduleViewModel
+﻿@model MyPortal.ViewModels.SessionsViewModel
 @{
     ViewBag.Title = "Sessions";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
@@ -12,27 +12,26 @@
 <div class="container float-left">
     @if (User.IsInRole("SeniorStaff"))
     {
-        <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#newAssignmentModal">Add Period</button>
+        <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#newSessionModal">Add Period</button>
         <button type="button" class="btn btn-success mp-btn-top-auto" id="addRegPeriods">Add Reg Periods</button>
         <hr />
     }
 </div>
 
 <div class="container float-left">
-    <table class="table table-bordered table-hover mp-table mp-table-link" id="assignments">
-        <thead>
-        <tr>
-            <th>Period</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+    @Html.EJS().Grid("Sessions").DataSource(d =>
+    {
+        d.Url($"/api/curriculum/sessions/get/byClass/{Model.Class.Id}").CrossDomain(false).Adaptor("UrlAdaptor");
+    }).Columns(c =>
+    {
+        c.Field("PeriodName").HeaderText("Period").Template("#sessionsPeriodTemplate").Width("150").Add();
+        c.HeaderText("Actions").Template("#sessionsActionsTemplate").Width("170").Add();
+    }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true);}).Toolbar(new List<string> {"Search"}).Render()
 </div>
 
 <button type="button" class="btn btn-primary" id="backButton">Back</button>
 
-<div id="newAssignmentModal" class="modal fade" role="dialog">
+<div id="newSessionModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <!--content-->
         <div class="modal-content">
@@ -40,12 +39,12 @@
                 <h4 class="modal-title">Add Period for Class</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/curriculum/classes/schedule/createAssignment", HttpMethod = "POST", OnSuccess = "newAssignmentSuccess", OnFailure = "newAssignmentFailure" }, new { id = "newAssignmentForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/curriculum/sessions/create", HttpMethod = "POST", OnSuccess = "newSessionSuccess", OnFailure = "newSessionFailure" }, new { id = "newSessionForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Period")
-                        @Html.DropDownListFor(l => l.Assignment.PeriodId, new SelectList(Model.Periods, "Id", "Name"), "Select Period", new { @class = "form-control", Name = "PeriodId" })
+                        @Html.DropDownListFor(l => l.Session.PeriodId, new SelectList(Model.Periods, "Id", "Name"), "Select Period", new { @class = "form-control", Name = "PeriodId" })
                         @Html.ValidationMessageFor(l => l.Class.SubjectId)
                     </div>
                     <div class="form-group">
@@ -61,25 +60,25 @@
     </div>
 </div>
 
-<div id="editAssignmentModal" class="modal fade" role="dialog">
+<div id="editSessionModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Edit Assignment</h4>
+                <h4 class="modal-title">Edit Session</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/curriculum/classes/schedule/updateAssignment", HttpMethod = "POST", OnSuccess = "editAssignmentSuccess", OnFailure = "editAssignmentFailure" }, new { id = "editAssignmentForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/curriculum/sessions/update", HttpMethod = "POST", OnSuccess = "editSessionSuccess", OnFailure = "editSessionFailure" }, new { id = "editSessionForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Period")
-                        @Html.DropDownListFor(l => l.Assignment.PeriodId, new SelectList(Model.Periods, "Id", "Name"), "Select Period", new { @class = "form-control", Name = "PeriodId", id = "editPeriodControl" })
+                        @Html.DropDownListFor(l => l.Session.PeriodId, new SelectList(Model.Periods, "Id", "Name"), "Select Period", new { @class = "form-control", Name = "PeriodId", id = "editPeriodControl" })
                         @Html.ValidationMessageFor(l => l.Class.SubjectId)
                     </div>
                     <div class="form-group">
                         @Html.HiddenFor(x => x.Class.Id, new { Name = "ClassId", id = "editClassControl" })
-                        @Html.HiddenFor(x => x.Assignment.Id, new {Name = "Id", id = "editIdControl"})
+                        @Html.HiddenFor(x => x.Session.Id, new {Name = "Id", id = "editIdControl"})
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -103,41 +102,15 @@
             $("#backButton").on("click",
                 function () {
                     location.replace("@Url.Action("Classes", "Staff")");
-                });
+                });           
 
-            $("#assignments").DataTable({
-                ajax: {
-                    url: "/api/curriculum/classes/schedule/get/@Model.Class.Id",
-                    dataSrc: ""
-                },
-                columns: [
-                    {
-                        data: "attendancePeriod.name"
-                    },
-                    {
-                        data: "id",
-                        render: function(data) {
-                            return "<button type='button' class='btn btn-xs btn-warning mp-btn-action-left js-edit' data-assignment-id=" +
-                                data +
-                                "><i class=\"far fa-edit\"></i></button> " +
-                                "<button type='button' class='btn btn-xs btn-danger mp-btn-action-right js-delete' data-assignment-id=" +
-                                data +
-                                "><i class=\"far fa-trash-alt\"></i></button>";
-                        }
-                    }
-                ],
-                "language": {
-                    "emptyTable": "No periods assigned to class"
-                }
-            });
-
-            $("#assignments").on("click",
+            $("#Sessions").on("click",
                 ".js-edit",
                 function() {
                     var button = $(this);
-                    var assignmentId = button.attr("data-assignment-id");
+                    var SessionId = button.attr("data-session-id");
                     $.ajax({
-                        url: "/api/curriculum/classes/schedule/getAssignment/" + assignmentId,
+                        url: "/api/curriculum/sessions/get/byId/" + SessionId,
                         method: "GET",
                         success: function(result) {
                             $("#editPeriodControl").val(result["periodId"]);
@@ -145,25 +118,25 @@
                             $("#editIdControl").val(result["id"]);
                         },
                         error: function() {
-                            toastr.error("Failed to load assignment data");
+                            toastr.error("Failed to load Session data");
                         }
                     });
-                    $("#editAssignmentModal").modal('toggle');
+                    $("#editSessionModal").modal('toggle');
                 });
 
-            $("#assignments").on("click",
+            $("#Sessions").on("click",
                 ".js-delete",
                 function() {
                     var button = $(this);
-                    bootbox.confirm("Are you sure you wish to delete this assignment?",
+                    bootbox.confirm("Are you sure you wish to delete this Session?",
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: "/api/curriculum/classes/schedule/deleteAssignment/" +
-                                        button.attr("data-assignment-id"),
+                                    url: "/api/curriculum/sessions/delete/" +
+                                        button.attr("data-session-id"),
                                     method: "DELETE",
                                     success: function(a) {
-                                        $("#assignments").DataTable().ajax.reload();
+                                        refreshTable("Sessions");
                                         toastr.success(a);
                                     },
                                     error: function(e) {
@@ -180,11 +153,11 @@
                         function (result) {
                             if (result) {
                                 $.ajax({
-                                    url: "/api/curriculum/classes/schedule/regPeriods",
+                                    url: "/api/curriculum/sessions/addRegPeriods",
                                     data: {classId: @Model.Class.Id, periodId: 0},
                                     method: "POST",
                                     success: function (a) {
-                                        $("#assignments").DataTable().ajax.reload();
+                                        refreshTable("Sessions");
                                         toastr.success(a);
                                     },
                                     error: function (e) {
@@ -196,26 +169,44 @@
                 });
         });
 
-        function newAssignmentSuccess(result) {
-            $("#newAssignmentModal").modal('hide');
-            $("#assignments").DataTable().ajax.reload();
+        function newSessionSuccess(result) {
+            $("#newSessionModal").modal('hide');
+            refreshTable("Sessions");
             toastr.success(result);
         }
 
-        function newAssignmentFailure(result) {
+        function newSessionFailure(result) {
             $("#newClassModal").modal('hide');
             toastr.error(result.responseJSON);
         }
 
-        function editAssignmentSuccess(result) {
+        function editSessionSuccess(result) {
             $("#editClassModal").modal('hide');
-            $("#classes").DataTable().ajax.reload();
+            refreshTable("Sessions");
             toastr.success(result);
         }
 
-        function editAssignmentFailure(result) {
+        function editSessionFailure(result) {
             $("#editClassModal").modal('hide');
             toastr.error(result.responseJSON);
         }
     </script>
+
+    <script type="text/x-jsrender" id="sessionsPeriodTemplate">
+        <div>
+            ${PeriodName}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="sessionsActionsTemplate">
+            <div>
+                    <button type='button' class='btn btn-xs btn-warning mp-btn-action-left js-edit' data-assignment-id="${Id}">
+                        <i class="far fa-edit"></i>
+                    </button>
+                        
+                    <button type='button' class='btn btn-xs btn-danger mp-btn-action-right js-delete' data-assignment-id="${Id}">
+                        <i class="far fa-trash-alt"></i>
+                    </button>
+            </div>
+        </script>
 }

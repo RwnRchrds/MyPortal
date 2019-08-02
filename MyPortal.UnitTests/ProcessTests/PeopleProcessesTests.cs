@@ -17,6 +17,8 @@ namespace MyPortal.UnitTests.ProcessTests
             var result = PeopleProcesses.GetStaffFromUserId("jcobb", _context);
             
             Assert.That(result.ResponseType == ResponseType.Ok);
+            
+            Assert.That(result.ResponseObject.Person.LastName == "Cobb");
         }
     }
 }

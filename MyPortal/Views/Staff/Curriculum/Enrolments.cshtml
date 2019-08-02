@@ -112,7 +112,7 @@
                 });
 
             $.ajax({
-                url: "/api/yearGroups/fetch",
+                url: "/api/pastoral/yearGroups/get/all",
                 method: "GET",
                 complete: function (data) {
                     $("#yearGroupSelect").empty();
@@ -129,7 +129,7 @@
             });
 
             $.ajax({
-                url: "/api/regGroups/all",
+                url: "/api/pastoral/regGroups/get/all",
                 method: "GET",
                 complete: function (data) {
                     $("#regGroupSelect").empty();

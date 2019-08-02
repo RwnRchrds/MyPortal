@@ -21,17 +21,13 @@
 </div>
 
 <div class="container float-left mp-margin-top">
-    <table class="table table-bordered table-hover mp-table" id="lessonPlans">
-        <thead>
-        <tr>
-            <th>Title</th>
-            <th>Study Topic</th>
-            <th>Author</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+    @Html.EJS().Grid("LessonPlans").DataSource(d => { d.Url($"/api/curriculum/lessonPlans/get/byTopic/dataGrid/{0}").CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+    {
+        c.Field("Title").HeaderText("Title").Template("#lessonPlansTitleTemplate").Width("300").Add();
+        c.Field("StudyTopic").HeaderText("StudyTopic").Template("#lessonPlansStudyTopicTemplate").Width("200").Add();
+        c.Field("Author").HeaderText("Author").Template("#lessonPlansAuthorTemplate").Width("150").Add();
+        c.HeaderText("Actions").Template("#lessonPlansActionsTemplate").Width("170").Add();
+    }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string> {"Search"}).Render()
 </div>
 
 <div id="NewLessonPlanModal" class="modal fade" role="dialog">
@@ -42,7 +38,7 @@
                 <h4 class="modal-title">New Lesson Plan</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/lessonPlans/create", HttpMethod = "POST", OnSuccess = "newLessonPlanSuccess", OnFailure = "newLessonPlanFailure"}, new {id = "newLessonPlanForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/curriculum/lessonPlans/create", HttpMethod = "POST", OnSuccess = "newLessonPlanSuccess", OnFailure = "newLessonPlanFailure"}, new {id = "newLessonPlanForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -88,7 +84,7 @@
                 <h4 class="modal-title">Edit Lesson Plan</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/lessonPlans/update", HttpMethod = "POST", OnSuccess = "editLessonPlanSuccess", OnFailure = "editLessonPlanFailure"}, new {id = "editLessonPlanForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/curriculum/lessonPlans/update", HttpMethod = "POST", OnSuccess = "editLessonPlanSuccess", OnFailure = "editLessonPlanFailure"}, new {id = "editLessonPlanForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -140,17 +136,18 @@
 
             $("#selectedTopic").on("change",
                 function() {
-                    $("#lessonPlans").DataTable().clear().destroy();
-                    loadLessonPlans();
+                var studyTopicId = $("#selectedTopic").val();
+                    changeTableSource("LessonPlans", `api/curriculum/lessonPlans/get/byTopic/dataGrid/${studyTopicId}`);
+                    refreshTable("LessonPlans");
                 });
 
-            $("#lessonPlans").on("click",
+            $("#LessonPlans").on("click",
                 ".js-edit",
                 function() {
                     var button = $(this);
                     var planId = button.attr("data-plan-id");
                     $.ajax({
-                        url: "/api/lessonPlans/byId/" + planId,
+                        url: "/api/curriculum/lessonPlans/get/byId/" + planId,
                         method: "GET",
                         success: function(result) {
                             $("#editStudyTopicControl").val(result["studyTopicId"]);
@@ -167,14 +164,14 @@
                     $("#EditLessonPlanModal").modal('toggle');
                 });
                 
-            $("#lessonPlans").on("click",
+            $("#LessonPlans").on("click",
                 ".js-view",
                 function() {
                     var button = $(this);
                     location.href = "/Staff/Curriculum/LessonPlans/View/" + button.attr("data-plan-id");
                 });
 
-            $("#lessonPlans").on("click",
+            $("#LessonPlans").on("click",
                 ".js-delete",
                 function() {
                     var button = $(this);
@@ -182,10 +179,10 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: "/api/lessonPlans/delete/" + button.attr("data-plan-id"),
+                                    url: "/api/curriculum/lessonPlans/delete/" + button.attr("data-plan-id"),
                                     method: "DELETE",
                                     success: function(a) {
-                                        $("#lessonPlans").DataTable().ajax.reload();
+                                        refreshTable("LessonPlans");
                                         toastr.success(a);
                                     },
                                     error: function(e) {
@@ -195,64 +192,11 @@
                             }
                         });
                 });
-        });
-        
-        function loadLessonPlans() {
-            var studyTopic = $("#selectedTopic").val();
-
-            if (studyTopic === "") {
-                $("#lessonPlans").addClass("hidden");
-                return;
-            }
-
-            var url = "/api/lessonPlans/byTopic/" + studyTopic;
-
-            $("#lessonPlans").DataTable({
-                ajax: {
-                    url: url,
-                    dataSrc: ""
-                },
-                columns: [
-                    {
-                        data: "title"
-                    },
-                    {
-                        data: "studyTopic.name"
-                    },
-                    {
-                        data: "author.code",
-                        render: function(data, type, plan) {
-                            return plan.author.person.title +
-                                " " +
-                                plan.author.person.firstName.substring(0, 1) +
-                                " " +
-                                plan.author.person.lastName;
-                        }
-                    },
-                    {
-                        data: "id",
-                        render: function(data) {
-                            return "<button type='button' class='btn btn-xs btn-success js-view' data-plan-id=" +
-                                data +
-                                "><i class=\"fas fa-glasses\"></i></button> " + 
-                                "<button type='button' class='btn btn-xs btn-warning js-edit' data-plan-id=" +
-                                data +
-                                "><i class=\"fas fa-edit\"></i></button> " +
-                                "<button type='button' class='btn btn-xs btn-danger js-delete' data-plan-id=" +
-                                data +
-                                "><i class=\"far fa-trash-alt\"></i></button>";
-                        }
-                    }
-                ],
-                "language": {
-                    "emptyTable": "No lesson plans to display"
-                }
-            });
-        }
+        });                
         
         function newLessonPlanSuccess(result) {
             $("#NewLessonPlanModal").modal('hide');
-            $("#lessonPlans").DataTable().ajax.reload();
+            refreshTable("LessonPlans");
             toastr.success(result);
         }
 
@@ -263,7 +207,7 @@
 
         function editLessonPlanSuccess(result) {
             $("#EditLessonPlanModal").modal('hide');
-            $("#lessonPlans").DataTable().ajax.reload();
+            refreshTable("LessonPlans");
             toastr.success(result);
         }
 
@@ -281,5 +225,38 @@
             }
         }
     </script>
-}
 
+    <script type="text/x-jsrender" id="lessonPlansTitleTemplate">
+        <div>
+            ${Title}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="lessonPlansStudyTopicTemplate">
+            <div>
+                ${StudyTopic}
+            </div>
+        </script>
+
+    <script type="text/x-jsrender" id="lessonPlansAuthorTemplate">
+            <div>
+                ${Author}
+            </div>
+        </script>
+
+    <script type="text/x-jsrender" id="lessonPlansActionsTemplate">
+            <div>
+                <button type='button' class='btn btn-xs btn-success mp-btn-action js-view' data-plan-id="data">
+                    <i class="fas fa-glasses"></i>
+                </button>
+                
+                <button type='button' class='btn btn-xs btn-warning mp-btn-action js-edit' data-plan-id="data">
+                    <i class="fas fa-edit"></i>
+                </button>
+                
+                <button type='button' class='btn btn-xs btn-danger mp-btn-action js-delete' data-plan-id="data">
+                    <i class="far fa-trash-alt"></i>
+                </button>
+            </div>
+        </script>
+}

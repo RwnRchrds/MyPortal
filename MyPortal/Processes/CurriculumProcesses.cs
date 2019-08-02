@@ -720,12 +720,25 @@ namespace MyPortal.Processes
 
             return new ProcessResponse<CurriculumStudyTopicDto>(ResponseType.Ok, null, Mapper.Map<CurriculumStudyTopic, CurriculumStudyTopicDto>(studyTopic));
         }
+        
+        public static ProcessResponse<IEnumerable<CurriculumStudyTopic>> GetAllStudyTopics_Model(MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<CurriculumStudyTopic>>(ResponseType.Ok, null,
+                context.CurriculumStudyTopics.ToList());
+        }
 
         public static ProcessResponse<IEnumerable<CurriculumStudyTopicDto>> GetAllStudyTopics(MyPortalDbContext context)
         {
             return new ProcessResponse<IEnumerable<CurriculumStudyTopicDto>>(ResponseType.Ok, null,
-                context.CurriculumStudyTopics.ToList()
+                GetAllStudyTopics_Model(context).ResponseObject
                     .Select(Mapper.Map<CurriculumStudyTopic, CurriculumStudyTopicDto>));
+        }
+        
+        public static ProcessResponse<IEnumerable<GridCurriculumStudyTopicDto>> GetAllStudyTopics_DataGrid(MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<GridCurriculumStudyTopicDto>>(ResponseType.Ok, null,
+                GetAllStudyTopics_Model(context).ResponseObject
+                    .Select(Mapper.Map<CurriculumStudyTopic, GridCurriculumStudyTopicDto>));
         }
 
         public static ProcessResponse<object> UpdateStudyTopic(CurriculumStudyTopic studyTopic,
@@ -772,13 +785,29 @@ namespace MyPortal.Processes
             return new ProcessResponse<CurriculumLessonPlanDto>(ResponseType.Ok, null,
                 Mapper.Map<CurriculumLessonPlan, CurriculumLessonPlanDto>(lessonPlan));
         }
+        
+        public static ProcessResponse<IEnumerable<CurriculumLessonPlan>> GetLessonPlansByStudyTopic_Model(int studyTopicId,
+            MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<CurriculumLessonPlan>>(ResponseType.Ok, null,
+                context.CurriculumLessonPlans.Where(x => x.StudyTopicId == studyTopicId).OrderBy(x => x.Title)
+                    .ToList());
+        }
 
         public static ProcessResponse<IEnumerable<CurriculumLessonPlanDto>> GetLessonPlansByStudyTopic(int studyTopicId,
             MyPortalDbContext context)
         {
             return new ProcessResponse<IEnumerable<CurriculumLessonPlanDto>>(ResponseType.Ok, null,
-                context.CurriculumLessonPlans.Where(x => x.StudyTopicId == studyTopicId).OrderBy(x => x.Title).ToList()
+                GetLessonPlansByStudyTopic_Model(studyTopicId, context).ResponseObject
                     .Select(Mapper.Map<CurriculumLessonPlan, CurriculumLessonPlanDto>));
+        }
+        
+        public static ProcessResponse<IEnumerable<GridCurriculumLessonPlanDto>> GetLessonPlansByStudyTopic_DataGrid(int studyTopicId,
+            MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<GridCurriculumLessonPlanDto>>(ResponseType.Ok, null,
+                GetLessonPlansByStudyTopic_Model(studyTopicId, context).ResponseObject
+                    .Select(Mapper.Map<CurriculumLessonPlan, GridCurriculumLessonPlanDto>));
         }
 
         public static ProcessResponse<object> CreateLessonPlan(CurriculumLessonPlan lessonPlan, string userId,

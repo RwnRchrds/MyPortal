@@ -209,7 +209,7 @@ namespace MyPortal.Controllers
         [System.Web.Mvc.Route("Curriculum/Classes/Sessions/{classId:int}")]
         public ActionResult ClassSchedule(int classId)
         {
-            var viewModel = new ClassScheduleViewModel();
+            var viewModel = new SessionsViewModel();
 
             var currClass = _context.CurriculumClasses.SingleOrDefault(x => x.Id == classId);
 

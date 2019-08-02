@@ -301,7 +301,9 @@
     <Compile Include="Dtos\GridDtos\GridBehaviourAchievementDto.cs" />
     <Compile Include="Dtos\GridDtos\GridCurriculumClassDto.cs" />
     <Compile Include="Dtos\GridDtos\GridCurriculumEnrolmentDto.cs" />
+    <Compile Include="Dtos\GridDtos\GridCurriculumLessonPlanDto.cs" />
     <Compile Include="Dtos\GridDtos\GridCurriculumSessionDto.cs" />
+    <Compile Include="Dtos\GridDtos\GridCurriculumStudyTopicDto.cs" />
     <Compile Include="Dtos\GridDtos\GridDocumentDto.cs" />
     <Compile Include="Dtos\GridDtos\GridBehaviourIncidentDto.cs" />
     <Compile Include="Dtos\GridDtos\GridFinanceProductDto.cs" />
@@ -443,7 +445,7 @@
     <Compile Include="ViewModels\AccountsViewModel.cs" />
     <Compile Include="ViewModels\ClassEnrolmentsViewModel.cs" />
     <Compile Include="ViewModels\ClassesViewModel.cs" />
-    <Compile Include="ViewModels\ClassScheduleViewModel.cs" />
+    <Compile Include="ViewModels\SessionsViewModel.cs" />
     <Compile Include="ViewModels\RegistersViewModel.cs" />
     <Compile Include="ViewModels\CommentBanksViewModel.cs" />
     <Compile Include="ViewModels\CommentsViewModel.cs" />
@@ -925,7 +927,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Results\" />
-    <Folder Include="Interfaces" />
     <Folder Include="Models\Authorisation\" />
     <Folder Include="Views\Staff\Admissions\" />
     <Folder Include="Views\Staff\Behaviour\" />

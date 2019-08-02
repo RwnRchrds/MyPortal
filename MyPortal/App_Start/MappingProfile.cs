@@ -204,6 +204,18 @@ namespace MyPortal
                     opts => opts.MapFrom(src => PeopleProcesses.GetStudentDisplayName(src.Student)))
                 .ForMember(dest => dest.ClassName,
                     opts => opts.MapFrom(src => src.CurriculumClass.Name));
+
+            CreateMap<CurriculumLessonPlan, GridCurriculumLessonPlanDto>()
+                .ForMember(dest => dest.StudyTopic,
+                    opts => opts.MapFrom(src => src.StudyTopic.Name))
+                .ForMember(dest => dest.Author,
+                    opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.Author)));
+
+            CreateMap<CurriculumStudyTopic, GridCurriculumStudyTopicDto>()
+                .ForMember(dest => dest.SubjectName,
+                    opts => opts.MapFrom(src => src.CurriculumSubject.Name))
+                .ForMember(dest => dest.YearGroup,
+                    opts => opts.MapFrom(src => src.PastoralYearGroup.Name));
         }
     }
 }

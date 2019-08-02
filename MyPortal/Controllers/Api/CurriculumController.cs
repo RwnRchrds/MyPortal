@@ -114,15 +114,15 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Route("sessions/get/byClassId/{classId:int}")]
-        public IEnumerable<CurriculumSessionDto> GetSessionsForClass([FromUri] int classId)
+        [Route("sessions/get/byClass/{classId:int}")]
+        public IEnumerable<CurriculumSessionDto> GetSessionsByClass([FromUri] int classId)
         {
             return PrepareResponseObject(CurriculumProcesses.GetSessionsForClass(classId, _context));
         }
 
         [HttpPost]
-        [Route("sessions/get/byClassId/dataGrid/{classId:int}")]
-        public IHttpActionResult GetSessionsForClassDataGrid([FromUri] int classId, [FromBody] DataManagerRequest dm)
+        [Route("sessions/get/byClass/dataGrid/{classId:int}")]
+        public IHttpActionResult GetSessionsByClassDataGrid([FromUri] int classId, [FromBody] DataManagerRequest dm)
         {
             var sessions = PrepareResponseObject(CurriculumProcesses.GetSessionsForClass_DataGrid(classId, _context));
 
@@ -291,6 +291,15 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [Route("studyTopics/get/dataGrid/all")]
+        public IHttpActionResult GetAllStudyTopics([FromBody] DataManagerRequest dm)
+        {
+            var studyTopics = PrepareResponseObject(CurriculumProcesses.GetAllStudyTopics_DataGrid(_context));
+
+            return PrepareDataGridObject(studyTopics, dm);
+        }
+
+        [HttpPost]
         [Route("studyTopics/update")]
         public IHttpActionResult UpdateStudyTopic([FromBody] CurriculumStudyTopic studyTopic)
         {
@@ -316,6 +325,17 @@ namespace MyPortal.Controllers.Api
         public IEnumerable<CurriculumLessonPlanDto> GetLessonPlansByTopic([FromUri] int studyTopicId)
         {
             return PrepareResponseObject(CurriculumProcesses.GetLessonPlansByStudyTopic(studyTopicId, _context));
+        }
+
+        [HttpPost]
+        [Route("lessonPlans/byTopic/dataGrid/{studyTopicId:int}")]
+        public IHttpActionResult GetLessonPlansByTopicDataGrid([FromUri] int studyTopicId,
+            [FromBody] DataManagerRequest dm)
+        {
+            var lessonPlans =
+                PrepareResponseObject(CurriculumProcesses.GetLessonPlansByStudyTopic_DataGrid(studyTopicId, _context));
+
+            return PrepareDataGridObject(lessonPlans, dm);
         }
 
         [HttpPost]

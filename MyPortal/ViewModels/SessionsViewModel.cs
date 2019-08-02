@@ -6,10 +6,10 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.ViewModels
 {
-    public class ClassScheduleViewModel
+    public class SessionsViewModel
     {
         public CurriculumClass Class { get; set; }
-        public CurriculumSession Assignment { get; set; }
+        public CurriculumSession Session { get; set; }
         public IEnumerable<AttendancePeriod> Periods { get; set; }  
     }
 }
