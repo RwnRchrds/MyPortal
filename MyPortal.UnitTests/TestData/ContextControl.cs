@@ -121,6 +121,11 @@ namespace MyPortal.UnitTests.TestData
                 
             }.AsQueryable();
             
+            var curriculumLessonPlans = new List<CurriculumLessonPlan>
+            {
+                
+            }.AsQueryable();
+            
             var curriculumSessions = new List<CurriculumSession>
             {
                 
@@ -153,12 +158,12 @@ namespace MyPortal.UnitTests.TestData
 
             var financeProductTypes = new List<FinanceProductType>
             {
-
+                new FinanceProductType {Id = 1, Description = "Meal", IsMeal = true, System = true} 
             }.AsQueryable();
             
             var financeProducts = new List<FinanceProduct>
             {
-                
+                new FinanceProduct {Id = 1, Deleted = false, Description = "School Dinner", Price = 1.90m, Visible = true, OnceOnly = true, ProductTypeId = 1}
             }.AsQueryable();
             
             var financeSales = new List<FinanceSale>
@@ -188,12 +193,14 @@ namespace MyPortal.UnitTests.TestData
             
             var pastoralRegGroups = new List<PastoralRegGroup>
             {
-                
+                new PastoralRegGroup {Id = 1, Name = "1A", TutorId = 3, YearGroupId = 1},
+                new PastoralRegGroup {Id = 2, Name = "8A", TutorId = 4, YearGroupId = 8}
             }.AsQueryable();
 
             var pastoralYearGroups = new List<PastoralYearGroup>
             {
-
+                new PastoralYearGroup {Id = 1, Name = "Year 1", KeyStage = 1, HeadId = 1},
+                new PastoralYearGroup {Id = 8, Name = "Year 8", KeyStage = 3, HeadId = 2}
             }.AsQueryable();
 
             var personDocuments = new List<PersonDocument>
@@ -203,7 +210,10 @@ namespace MyPortal.UnitTests.TestData
 
             var personTypes = new List<PersonType>
             {
-
+                new PersonType {Id = 1, Code = "S", Description = "Student"},
+                new PersonType {Id = 2, Code = "T", Description = "Staff"},
+                new PersonType {Id = 3, Code = "C", Description = "Contact"},
+                new PersonType {Id = 4, Code = "A", Description = "Agent"}
             }.AsQueryable();
 
             var personnelObservations = new List<PersonnelObservation>
@@ -223,7 +233,15 @@ namespace MyPortal.UnitTests.TestData
             
             var persons = new List<Person>
             {
-                
+                //Students
+                new Person {Id = 1, FirstName = "Aaron", LastName = "Aardvark", Dob = new DateTime(2000,06,05), Deleted = false, Gender = "M", PersonTypeId = 1, UserId = "aardvark"},
+                new Person {Id = 2, FirstName = "Chloe", LastName = "Brown", Dob = new DateTime(2000,06,05), Deleted = false, Gender = "F", PersonTypeId = 1, UserId = "cbrown"},
+                    
+                //Staff
+                new Person {Id = 3, Title = "Mrs", FirstName = "Lily", LastName = "Sprague", Dob = new DateTime(1987,08,05), Deleted = false, Gender = "F", PersonTypeId = 2, UserId = "l.sprague"},
+                new Person {Id = 4, Title = "Sir", FirstName = "William", LastName = "Townsend", Dob = new DateTime(1986,04,26), Deleted = false, Gender = "M", PersonTypeId = 2, UserId = "wtownsend"},
+                new Person {Id = 5, Title = "Mrs", FirstName = "Joanne", LastName = "Cobb", Dob = new DateTime(1986,04,26), Deleted = false, Gender = "F", PersonTypeId = 2, UserId = "jcobb"},
+                new Person {Id = 6, Title = "Miss", FirstName = "Ellie", LastName = "Williams", Dob = new DateTime(1986,04,26), Deleted = false, Gender = "F", PersonTypeId = 2, UserId = "ewilliams"}
             }.AsQueryable();
             
             var profileCommentBanks = new List<ProfileCommentBank>
@@ -238,7 +256,10 @@ namespace MyPortal.UnitTests.TestData
 
             var profileLogTypes = new List<ProfileLogType>
             {
-
+                new ProfileLogType {Id = 1, Name = "Academic Support", System = true},
+                new ProfileLogType {Id = 2, Name = "Report", System = true},
+                new ProfileLogType {Id = 3, Name = "Behaviour Log", System = true},
+                new ProfileLogType {Id = 4, Name = "Praise", System = true}
             }.AsQueryable();
             
             var profileLogs = new List<ProfileLog>
@@ -258,24 +279,29 @@ namespace MyPortal.UnitTests.TestData
 
             var senStatuses = new List<SenStatus>
             {
-
+                new SenStatus {Id = 1, Code = "N", Description = "No SEN Status"},
+                new SenStatus {Id = 2, Code = "E", Description = "School Early Years Action"}
             }.AsQueryable();
             
             var staffMembers = new List<StaffMember>
             {
-                
+                new StaffMember {Id = 1, Code = "LSP", Deleted = false, JobTitle = "Deputy Headteacher", PersonId = 3},
+                new StaffMember {Id = 2, Code = "WTO", Deleted = false, JobTitle = "Headteacher", PersonId = 4},
+                new StaffMember {Id = 3, Code = "JCO", Deleted = false, JobTitle = "Teacher", PersonId = 5},
+                new StaffMember {Id = 4, Code = "EWI", Deleted = false, JobTitle = "Teacher", PersonId = 6}
             }.AsQueryable();
             
             var students = new List<Student>
             {
-                
+                new Student {PersonId = 1, Deleted = false, Id = 1, AccountBalance = 12.99m, PupilPremium = false, FreeSchoolMeals = false, GiftedAndTalented = false, RegGroupId = 1, SenStatusId = 1, YearGroupId = 1},
+                new Student {PersonId = 2, Deleted = false, Id = 2, AccountBalance = 50.00m, PupilPremium = true, FreeSchoolMeals = true, GiftedAndTalented = false, RegGroupId = 1, SenStatusId = 2, YearGroupId = 1}
             }.AsQueryable();
             
             var assessmentGradeSetsDbSet = new Mock<DbSet<AssessmentGradeSet>>();
             assessmentGradeSetsDbSet.As<IQueryable<AssessmentGradeSet>>().Setup(m => m.Provider).Returns(assessmentGradeSets.Provider);
-            assessmentGradeSetsDbSet.As<IQueryable<AssessmentGradeSet>>().Setup(m => m.Expression).Returns(assessmentGradeSets.Expression);
+            assessmentGradeSetsDbSet.As<IQueryable<AssessmentGradeSet>>().Setup(m => m.Expression).Returns(() => assessmentGradeSets.Expression);
             assessmentGradeSetsDbSet.As<IQueryable<AssessmentGradeSet>>().Setup(m => m.ElementType).Returns(assessmentGradeSets.ElementType);
-            assessmentGradeSetsDbSet.As<IQueryable<AssessmentGradeSet>>().Setup(m => m.GetEnumerator()).Returns(assessmentGradeSets.GetEnumerator());
+            assessmentGradeSetsDbSet.As<IQueryable<AssessmentGradeSet>>().Setup(m => m.GetEnumerator()).Returns(() => assessmentGradeSets.GetEnumerator());
             
             var assessmentGradesDbSet = new Mock<DbSet<AssessmentGrade>>();
             assessmentGradesDbSet.As<IQueryable<AssessmentGrade>>().Setup(m => m.Provider).Returns(assessmentGrades.Provider);
@@ -390,6 +416,12 @@ namespace MyPortal.UnitTests.TestData
             curriculumLessonPlanTemplatesDbSet.As<IQueryable<CurriculumLessonPlanTemplate>>().Setup(m => m.Expression).Returns(curriculumLessonPlanTemplates.Expression);
             curriculumLessonPlanTemplatesDbSet.As<IQueryable<CurriculumLessonPlanTemplate>>().Setup(m => m.ElementType).Returns(curriculumLessonPlanTemplates.ElementType);
             curriculumLessonPlanTemplatesDbSet.As<IQueryable<CurriculumLessonPlanTemplate>>().Setup(m => m.GetEnumerator()).Returns(curriculumLessonPlanTemplates.GetEnumerator());
+            
+            var curriculumLessonPlansDbSet = new Mock<DbSet<CurriculumLessonPlan>>();
+            curriculumLessonPlansDbSet.As<IQueryable<CurriculumLessonPlan>>().Setup(m => m.Provider).Returns(curriculumLessonPlans.Provider);
+            curriculumLessonPlansDbSet.As<IQueryable<CurriculumLessonPlan>>().Setup(m => m.Expression).Returns(curriculumLessonPlans.Expression);
+            curriculumLessonPlansDbSet.As<IQueryable<CurriculumLessonPlan>>().Setup(m => m.ElementType).Returns(curriculumLessonPlans.ElementType);
+            curriculumLessonPlansDbSet.As<IQueryable<CurriculumLessonPlan>>().Setup(m => m.GetEnumerator()).Returns(curriculumLessonPlans.GetEnumerator());
             
             var curriculumSessionsDbSet = new Mock<DbSet<CurriculumSession>>();
             curriculumSessionsDbSet.As<IQueryable<CurriculumSession>>().Setup(m => m.Provider).Returns(curriculumSessions.Provider);
@@ -515,7 +547,7 @@ namespace MyPortal.UnitTests.TestData
             personsDbSet.As<IQueryable<Person>>().Setup(m => m.Provider).Returns(persons.Provider);
             personsDbSet.As<IQueryable<Person>>().Setup(m => m.Expression).Returns(persons.Expression);
             personsDbSet.As<IQueryable<Person>>().Setup(m => m.ElementType).Returns(persons.ElementType);
-            personsDbSet.As<IQueryable<Person>>().Setup(m => m.GetEnumerator()).Returns(persons.GetEnumerator());
+            personsDbSet.As<IQueryable<Person>>().Setup(m => m.GetEnumerator()).Returns(() => persons.GetEnumerator());
             
             var profileCommentBanksDbSet = new Mock<DbSet<ProfileCommentBank>>();
             profileCommentBanksDbSet.As<IQueryable<ProfileCommentBank>>().Setup(m => m.Provider).Returns(profileCommentBanks.Provider);
@@ -563,7 +595,7 @@ namespace MyPortal.UnitTests.TestData
             staffMembersDbSet.As<IQueryable<StaffMember>>().Setup(m => m.Provider).Returns(staffMembers.Provider);
             staffMembersDbSet.As<IQueryable<StaffMember>>().Setup(m => m.Expression).Returns(staffMembers.Expression);
             staffMembersDbSet.As<IQueryable<StaffMember>>().Setup(m => m.ElementType).Returns(staffMembers.ElementType);
-            staffMembersDbSet.As<IQueryable<StaffMember>>().Setup(m => m.GetEnumerator()).Returns(staffMembers.GetEnumerator());
+            staffMembersDbSet.As<IQueryable<StaffMember>>().Setup(m => m.GetEnumerator()).Returns(() => staffMembers.GetEnumerator());
             
             var studentsDbSet = new Mock<DbSet<Student>>();
             studentsDbSet.As<IQueryable<Student>>().Setup(m => m.Provider).Returns(students.Provider);
@@ -572,22 +604,58 @@ namespace MyPortal.UnitTests.TestData
             studentsDbSet.As<IQueryable<Student>>().Setup(m => m.GetEnumerator()).Returns(students.GetEnumerator());
 
             var mockContext = new Mock<MyPortalDbContext>();
-            mockContext.Setup(c => c.AssessmentGrades).Returns(assessmentGradesDbSet.Object);
-            mockContext.Setup(c => c.AssessmentGradeSets).Returns(assessmentGradeSetsDbSet.Object);
-            mockContext.Setup(c => c.AssessmentResults).Returns(assessmentResultsDbSet.Object);
-            mockContext.Setup(c => c.AssessmentResultSets).Returns(assessmentResultSetsDbSet.Object);
-            mockContext.Setup(c => c.AttendancePeriods).Returns(attendancePeriodsDbSet.Object);
-            mockContext.Setup(c => c.AttendanceCodes).Returns(attendanceCodesDbSet.Object);
-            mockContext.Setup(c => c.AttendanceMeanings).Returns(attendanceMeaningsDbSet.Object);
-            mockContext.Setup(c => c.AttendanceMarks).Returns(attendanceMarksDbSet.Object);
-            mockContext.Setup(c => c.AttendanceWeeks).Returns(attendanceWeeksDbSet.Object);
-            mockContext.Setup(c => c.BehaviourAchievements).Returns(behaviourAchievementsDbSet.Object);
-            mockContext.Setup(c => c.BehaviourAchievementTypes).Returns(behaviourAchievementTypesDbSet.Object);
-            mockContext.Setup(c => c.BehaviourIncidents).Returns(behaviourIncidentsDbSet.Object);
-            mockContext.Setup(c => c.BehaviourIncidentTypes).Returns(behaviourIncidentTypesDbSet.Object);
-            mockContext.Setup(c => c.BehaviourLocations).Returns(behaviourLocationsDbSet.Object);
-            mockContext.Setup(c => c.CommunicationLogs).Returns(communicationLogsDbSet.Object);
-
+            mockContext.Setup(c => c.AssessmentGrades).Returns(() => assessmentGradesDbSet.Object);
+            mockContext.Setup(c => c.AssessmentGradeSets).Returns(() => assessmentGradeSetsDbSet.Object);
+            mockContext.Setup(c => c.AssessmentResults).Returns(() => assessmentResultsDbSet.Object);
+            mockContext.Setup(c => c.AssessmentResultSets).Returns(() => assessmentResultSetsDbSet.Object);
+            mockContext.Setup(c => c.AttendancePeriods).Returns(() => attendancePeriodsDbSet.Object);
+            mockContext.Setup(c => c.AttendanceCodes).Returns(() => attendanceCodesDbSet.Object);
+            mockContext.Setup(c => c.AttendanceMeanings).Returns(() => attendanceMeaningsDbSet.Object);
+            mockContext.Setup(c => c.AttendanceMarks).Returns(() => attendanceMarksDbSet.Object);
+            mockContext.Setup(c => c.AttendanceWeeks).Returns(() => attendanceWeeksDbSet.Object);
+            mockContext.Setup(c => c.BehaviourAchievements).Returns(() => behaviourAchievementsDbSet.Object);
+            mockContext.Setup(c => c.BehaviourAchievementTypes).Returns(() => behaviourAchievementTypesDbSet.Object);
+            mockContext.Setup(c => c.BehaviourIncidents).Returns(() => behaviourIncidentsDbSet.Object);
+            mockContext.Setup(c => c.BehaviourIncidentTypes).Returns(() => behaviourIncidentTypesDbSet.Object);
+            mockContext.Setup(c => c.BehaviourLocations).Returns(() => behaviourLocationsDbSet.Object);
+            mockContext.Setup(c => c.CommunicationLogs).Returns(() => communicationLogsDbSet.Object);
+            mockContext.Setup(c => c.CommunicationTypes).Returns(() => communicationTypesDbSet.Object);
+            mockContext.Setup(c => c.CurriculumAcademicYears).Returns(() => curriculumAcademicYearsDbSet.Object);
+            mockContext.Setup(c => c.CurriculumClasses).Returns(() => curriculumClassesDbSet.Object);
+            mockContext.Setup(c => c.CurriculumEnrolments).Returns(() => curriculumEnrolmentsDbSet.Object);
+            mockContext.Setup(c => c.CurriculumLessonPlanTemplates).Returns(() => curriculumLessonPlanTemplatesDbSet.Object);
+            mockContext.Setup(c => c.CurriculumLessonPlans).Returns(() => curriculumLessonPlansDbSet.Object);
+            mockContext.Setup(c => c.CurriculumSessions).Returns(() => curriculumSessionsDbSet.Object);
+            mockContext.Setup(c => c.CurriculumStudyTopics).Returns(() => curriculumStudyTopicsDbSet.Object);
+            mockContext.Setup(c => c.CurriculumSubjects).Returns(() => curriculumSubjectsDbSet.Object);
+            mockContext.Setup(c => c.DocumentTypes).Returns(() => documentTypesDbSet.Object);
+            mockContext.Setup(c => c.Documents).Returns(() => documentsDbSet.Object);
+            mockContext.Setup(c => c.FinanceBasketItems).Returns(() => financeBasketItemsDbSet.Object);
+            mockContext.Setup(c => c.FinanceProductTypes).Returns(() => financeProductTypesDbSet.Object);
+            mockContext.Setup(c => c.FinanceProducts).Returns(() => financeProductsDbSet.Object);
+            mockContext.Setup(c => c.FinanceSales).Returns(() => financeSalesDbSet.Object);
+            mockContext.Setup(c => c.MedicalConditions).Returns(() => medicalConditionsDbSet.Object);
+            mockContext.Setup(c => c.MedicalEvents).Returns(() => medicalEventsDbSet.Object);
+            mockContext.Setup(c => c.MedicalStudentConditions).Returns(() => medicalStudentConditionsDbSet.Object);
+            mockContext.Setup(c => c.PastoralHouses).Returns(() => pastoralHousesDbSet.Object);
+            mockContext.Setup(c => c.PastoralRegGroups).Returns(() => pastoralRegGroupsDbSet.Object);
+            mockContext.Setup(c => c.PastoralYearGroups).Returns(() => pastoralYearGroupsDbSet.Object);
+            mockContext.Setup(c => c.PersonDocuments).Returns(() => personDocumentsDbSet.Object);
+            mockContext.Setup(c => c.PersonTypes).Returns(() => personTypesDbSet.Object);
+            mockContext.Setup(c => c.PersonnelObservations).Returns(() => personnelObservationsDbSet.Object);
+            mockContext.Setup(c => c.PersonnelTrainingCertificates).Returns(() => personnelTrainingCertificatesDbSet.Object);
+            mockContext.Setup(c => c.PersonnelTrainingCourses).Returns(() => personnelTrainingCoursesDbSet.Object);
+            mockContext.Setup(c => c.Persons).Returns(() => personsDbSet.Object);
+            mockContext.Setup(c => c.ProfileCommentBanks).Returns(() => profileCommentBanksDbSet.Object);
+            mockContext.Setup(c => c.ProfileComments).Returns(() => profileCommentsDbSet.Object);
+            mockContext.Setup(c => c.ProfileLogTypes).Returns(() => profileLogTypesDbSet.Object);
+            mockContext.Setup(c => c.ProfileLogs).Returns(() => profileLogsDbSet.Object);
+            mockContext.Setup(c => c.SenEvents).Returns(() => senEventsDbSet.Object);
+            mockContext.Setup(c => c.SenProvisions).Returns(() => senProvisionsDbSet.Object);
+            mockContext.Setup(c => c.SenStatuses).Returns(() => senStatusDbSet.Object);
+            mockContext.Setup(c => c.StaffMembers).Returns(() => staffMembersDbSet.Object);
+            mockContext.Setup(c => c.Students).Returns(() => studentsDbSet.Object);
+            
             return mockContext.Object;
         }
 
