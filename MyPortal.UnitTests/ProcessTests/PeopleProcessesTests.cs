@@ -1,3 +1,4 @@
+using System.Linq;
 using AutoMapper;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
@@ -11,11 +12,9 @@ namespace MyPortal.UnitTests.ProcessTests
     public class PeopleProcessesTests : MyPortalTestFixture
     {
         [Test]
-        [Ignore("Not Working")]
         public static void GetStaffFromUserId_ReturnsStaffMember()
         {
-            var context = ContextControl.GetTestData();
-            var result = PeopleProcesses.GetStaffFromUserId("jcobb", context);
+            var result = PeopleProcesses.GetStaffFromUserId("jcobb", _context);
             
             Assert.That(result.ResponseType == ResponseType.Ok);
         }

@@ -8,6 +8,7 @@ namespace MyPortal.UnitTests.ProcessTests
     [TestFixture]
     public class MyPortalTestFixture
     {
+        protected static MyPortalDbContext _context;
         [OneTimeSetUp]
         public void TestFixtureSetup()
         {
@@ -20,12 +21,14 @@ namespace MyPortal.UnitTests.ProcessTests
             EffortProviderFactory.ResetDb();
             
             Mapper.Reset();
+            _context = ContextControl.GetTestData();
             ContextControl.InitialiseMaps();
         }
         
         [OneTimeTearDown]
         public void Clear()
         {
+            _context.Dispose();
         }
     }
 }
