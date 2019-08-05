@@ -33,7 +33,8 @@ namespace MyPortal.UnitTests.TestData
 
             var assessmentResultSets = new List<AssessmentResultSet>
             {
-                new AssessmentResultSet {Id = 1, Name = "Current", AcademicYearId = 1, IsCurrent = true}
+                new AssessmentResultSet {Id = 1, Name = "Current", AcademicYearId = 1, IsCurrent = true},
+                new AssessmentResultSet {Id = 2, Name = "DeleteMe", AcademicYearId = 1, IsCurrent = false}
             };
 
             var assessmentResults = new List<AssessmentResult>
