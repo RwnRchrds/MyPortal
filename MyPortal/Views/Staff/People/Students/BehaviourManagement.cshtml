@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<div class="container float-left">
+<div class="container">
 
     <h2 class="mp-page-title">Behaviour Management - @Model.Student.Person.LastName, @Model.Student.Person.FirstName</h2>
 
@@ -13,7 +13,7 @@
 
 </div>
 
-<div class="container float-left">
+<div class="container">
     <div>
         <h4 class="mp-bold">Achievements</h4>
         <button type="button" class="btn btn-success mp-btn-table" data-toggle="modal" data-target="#newAchievementModal">
@@ -35,7 +35,7 @@
     </div>
 </div>
 
-<div class="container float-left mp-margin-top">
+<div class="container mp-margin-top">
     <div>
         <h4 class="mp-bold">Behaviour Incidents</h4>
         <button type="button" class="btn btn-success mp-btn-table" data-toggle="modal" data-target="#newIncidentModal">
@@ -44,7 +44,7 @@
 
         @Html.EJS().Grid("behaviour").DataSource(dataManager =>
         {
-            dataManager.Url("/api/behaviour/behaviour/dataGrid/get/" + Model.Student.Id).CrossDomain(false).Adaptor("UrlAdaptor");
+            dataManager.Url("/api/behaviour/incidents/dataGrid/get/" + Model.Student.Id).CrossDomain(false).Adaptor("UrlAdaptor");
         }).Columns(col =>
         {
             col.Field("Date").HeaderText("Date").Template("#incidentsDateTemplate").Add();

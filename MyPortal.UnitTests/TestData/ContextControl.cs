@@ -33,7 +33,7 @@ namespace MyPortal.UnitTests.TestData
 
             var assessmentResultSets = new List<AssessmentResultSet>
             {
-
+                new AssessmentResultSet {Id = 1, Name = "Current", AcademicYearId = 1, IsCurrent = true}
             };
 
             var assessmentResults = new List<AssessmentResult>
@@ -103,7 +103,7 @@ namespace MyPortal.UnitTests.TestData
             
             var curriculumAcademicYears = new List<CurriculumAcademicYear>
             {
-                new CurriculumAcademicYear {Id = 1, Name = "2019", FirstDate = new DateTime(2019, 01, 01), LastDate = new DateTime(2019,12,31)}
+                new CurriculumAcademicYear {Id = 1, Name = "Current", FirstDate = new DateTime(2019, 01, 01), LastDate = new DateTime(2019,12,31)}
             };
             
             var curriculumClasses = new List<CurriculumClass>

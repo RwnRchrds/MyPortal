@@ -4,14 +4,14 @@
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<div class="container float-left" id="title">
+<div class="container" id="title">
 
     <h2 class="mp-page-title">Controlled Documents</h2>
     <hr/>
 
 </div>
 
-<div class="container float-left">
+<div class="container">
     @if (User.IsInRole("SeniorStaff"))
     {
         <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#NewDocumentModal">New Document</button>
@@ -20,21 +20,27 @@
 
 </div>
 
-<div class="container float-left">
-    <table class="table table-bordered table-hover mp-table mp-table-link" id="documents" access="staff">
-        <thead>
-        <tr>
-            <th>Description</th>
-            <th>Date</th>
-            @if (User.IsInRole("SeniorStaff"))
-            {
-                <th>Status</th>
-                <th>Actions</th>
-            }
-        </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+<div class="container">
+   @Html.EJS().Grid("Documents").DataSource(d =>
+   {
+       if (User.IsInRole("SeniorStaff"))
+       {
+           d.Url("/api/documents/general/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor");
+       }
+
+       else
+       {
+           d.Url("/api/documents/general/get/dataGrid/approved").CrossDomain(false).Adaptor("UrlAdaptor");
+       }
+   }).Columns(c =>
+   {
+       c.Field("Description").HeaderText("Description").Template("#documentsDescriptionTemplate").Width("200").Add();
+       c.Field("Date").HeaderText("Date").Template("#documentsDateTemplate").Width("200").Add();
+       if (User.IsInRole("SeniorStaff"))
+       {
+           c.HeaderText("Actions").Template("#documentsActionsTemplate").Width("170").Add();
+       }
+   }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string> {"Search"}).Render()
 </div>
 
 
@@ -119,100 +125,6 @@
 
 @section scripts
 {
-    @if (User.IsInRole("SeniorStaff"))
-    {
-        <script>
-            $(document).ready(function() {
-                $("#documents").DataTable({
-                    ajax: {
-                        url: "/api/documents",
-                        dataSrc: ""
-                    },
-                    columns: [
-                        {
-                            data: "description",
-                            render: function(data, type, document) {
-                                return "<a href='" +
-                                    document.url +
-                                    "' target='_blank'>" +
-                                    document.description +
-                                    "</a>";
-                            }
-                        },
-                        {
-                            data: "date",
-                            render: function(data) {
-                                var date = new Date(data);
-                                return date.toLocaleDateString();
-                            }
-                        },
-                        {
-                            data: "approved",
-                            render: function(data) {
-                                if (data === true) {
-                                    return "Approved";
-                                }
-                                if (data === false) {
-                                    return "Pending Approval";
-                                }
-                            }
-                        },
-                        {
-                            data: "id",
-                            render: function(data) {
-                                return "<button type='button' class='btn btn-xs btn-warning js-edit' data-document-id=" +
-                                    data +
-                                    "><i class=\"far fa-edit\"></i></button> " +
-                                    "<button type='button' class='btn btn-xs btn-danger js-delete' data-document-id=" +
-                                    data +
-                                    "><i class=\"far fa-trash-alt\"></i></button>";
-                            }
-                        }
-                    ],
-                    "language": {
-                        "emptyTable": "No documents to display"
-                    }
-                });
-            });
-        </script>
-    }
-
-    @if (!User.IsInRole("SeniorStaff") && User.IsInRole("Staff"))
-    {
-        <script>
-            $(document).ready(function() {
-                $("#documents").DataTable({
-                    ajax: {
-                        url: "/api/documents/approved",
-                        dataSrc: ""
-                    },
-                    columns: [
-                        {
-                            data: "description",
-                            render: function(data, type, document) {
-                                return "<a href='" +
-                                    document.url +
-                                    "' target='_blank'>" +
-                                    document.description +
-                                    "</a>";
-                            }
-                        },
-                        {
-                            data: "date",
-                            render: function(data) {
-                                var date = new Date(data);
-                                return date.toLocaleDateString();
-                            }
-                        }
-                    ],
-                    "language": {
-                        "emptyTable": "No documents to display"
-                    }
-                });
-            });
-        </script>
-    }
-
     <script>
         $(document).ready(function() {
             $('.modal').on('hidden.bs.modal',
@@ -220,7 +132,7 @@
                     $(this).find('form').trigger('reset');
                 });
 
-            $("#documents").on("click",
+            $("#Documents").on("click",
                 ".js-edit",
                 function() {
                     var button = $(this);
@@ -241,7 +153,7 @@
                     $("#EditDocumentModal").modal('toggle');
                 });
 
-            $("#documents").on("click",
+            $("#Documents").on("click",
                 ".js-delete",
                 function() {
                     var button = $(this);
@@ -252,7 +164,7 @@
                                     url: "/api/documents/remove/" + button.attr("data-document-id"),
                                     method: "DELETE",
                                     success: function(ajaxResult) {
-                                        $("#documents").DataTable().ajax.reload();
+                                        refreshTable("Documents");
                                         toastr.success(ajaxResult);
                                     },
                                     error: function(ajaxResult) {
@@ -266,7 +178,7 @@
 
         function newDocumentSuccess(result) {
             $("#NewDocumentModal").modal('hide');
-            $("#documents").DataTable().ajax.reload();
+            refreshTable("Documents");
             toastr.success(result);
         }
 
@@ -277,7 +189,7 @@
 
         function editDocumentSuccess(result) {
             $("#EditDocumentModal").modal('hide');
-            $("#documents").DataTable().ajax.reload();
+            refreshTable("Documents");            
             toastr.success(result);
         }
 
@@ -286,6 +198,30 @@
             toastr.error(result.responseJSON);
         }
     </script>
+
+    <script type="text/x-jsrender" id="documentsDescriptionTemplate">
+        <div>
+            ${Description}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="documentsDateTemplate">
+            <div>
+                ${formatDate(Date.toString())}
+            </div>
+        </script>
+
+    <script type="text/x-jsrender" id="documentsActionsTemplate">
+                <div>
+                    <button type='button' class='btn btn-xs btn-warning js-edit' data-document-id="${Id}">
+                        <i class="far fa-edit"></i>
+                    </button>
+                    
+                    <button type='button' class='btn btn-xs btn-danger js-delete' data-document-id="${Id}">
+                        <i class="far fa-trash-alt"></i>
+                    </button>
+                </div>
+            </script>
 
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/staff")

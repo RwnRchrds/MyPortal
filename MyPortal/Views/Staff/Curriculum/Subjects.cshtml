@@ -20,16 +20,16 @@
 </div>
 
 <div class="container">
-    <table class="table table-bordered table-hover mp-table mp-table-link" id="subjects">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Leader</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+   @Html.EJS().Grid("Subject").DataSource(d =>
+   {
+       d.Url("/api/curriculum/subjects/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor");
+   }).Columns(c =>
+   {
+       c.Field("Name").HeaderText("Name").Template("#subjectsNameTemplate").Width("150");
+       c.Field("Code").HeaderText("Code").Template("#subjectsCodeTemplate").Width("100").Add();
+       c.Field("LeaderName").HeaderText("Leader").Template("#subjectsLeaderTemplate").Width("150").Add();
+       c.HeaderText("Actions").Template("#subjectsActionsTemplate").Width("170").Add();
+   }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true);}).Toolbar(new List<string> {"Search"}).Render()
 </div>
 
 <div id="NewSubjectModal" class="modal fade" role="dialog">
@@ -112,46 +112,14 @@
 {
     <script>
         $(document).ready(function() {
-            $("#subjects").DataTable({
-                ajax: {
-                    url: "/api/subjects/all",
-                    dataSrc: ""
-                },
-                columns: [
-                    {
-                        data: "name"
-                    },
-                    {
-                        data: "leader.lastName",
-                        render: function(data, type, subject) {
-                            return subject.leader.person.title +
-                                " " +
-                                subject.leader.person.firstName.substring(0, 1) +
-                                " " +
-                                subject.leader.person.lastName;
-                        }
-                    },
-                    {
-                        data: "id",
-                        render: function(data) {
-                            return "<button type='button' class='btn btn-xs btn-warning mp-btn-action-left js-edit' data-subject-id=" +
-                                data +
-                                "><i class=\"far fa-edit\"></i></button> " +
-                                "<button type='button' class='btn btn-xs btn-danger mp-btn-action-right js-delete' data-subject-id=" +
-                                data +
-                                "><i class=\"far fa-trash-alt\"></i></button>";
-                        }
-                    }
-                ]
-            });
-
-            $("#subjects").on("click",
+            
+            $("#Subjects").on("click",
                 ".js-edit",
                 function() {
                     var button = $(this);
                     var subjectId = button.attr("data-subject-id");
                     $.ajax({
-                        url: "/api/subjects/byId/" + subjectId,
+                        url: "/api/curriculum/subjects/get/byId/" + subjectId,
                         method: "GET",
                         success: function(result) {
                             $("#EditSubjectCodeControl").val(result["code"]);
@@ -166,7 +134,7 @@
                     $("#EditSubjectModal").modal('toggle');
                 });
 
-            $("#subjects").on("click",
+            $("#Subjects").on("click",
                 ".js-delete",
                 function() {
                     var button = $(this);
@@ -174,7 +142,7 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: "/api/subjects/delete/" + button.attr("data-subject-id"),
+                                    url: "/api/curriculum/subjects/delete/" + button.attr("data-subject-id"),
                                     method: "DELETE",
                                     success: function(a) {
                                         $("#subjects").DataTable().ajax.reload();
@@ -187,12 +155,12 @@
                             }
                         });
                 });
-
+            
         });
 
         function newSubjectSuccess(result) {
             $("#NewSubjectModal").modal('hide');
-            $("#subjects").DataTable().ajax.reload();
+            refreshTable("Subjects");
             toastr.success(result);
         }
 
@@ -203,7 +171,7 @@
 
         function editSubjectSuccess(result) {
             $("#EditSubjectModal").modal('hide');
-            $("#subjects").DataTable().ajax.reload();
+            refreshTable("Subjects");
             toastr.success(result);
         }
 
@@ -212,5 +180,36 @@
             toastr.error(result.responseJSON);
         }
     </script>
+
+    <script type="text/x-jsrender" id="subjectsNameTemplate">
+        <div>
+            ${Name}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="subjectsLeaderTemplate">
+            <div>
+                ${LeaderName}
+            </div>
+        </script>
+
+    <script type="text/x-jsrender" id="subjectsCodeTemplate">
+            <div>
+                ${Code}
+            </div>
+        </script>
+
+    <script type="text/x-jsrender" id="subjectsActionsTemplate">
+            <div>
+                <button type='button' class='btn btn-xs btn-warning mp-btn-action-left js-edit' data-subject-id="${Id}">
+                    <i class="far fa-edit"></i>
+                </button>
+                
+                <button type='button' class='btn btn-xs btn-danger mp-btn-action-right js-delete' data-subject-id="${Id}">
+                    <i class="far fa-trash-alt"></i>
+                </button>
+            </div>
+        </script>
+
     @Scripts.Render("~/bundles/jqueryval")
 }

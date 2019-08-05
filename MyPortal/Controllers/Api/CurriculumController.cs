@@ -8,6 +8,7 @@ using AutoMapper;
 using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
+using MyPortal.Dtos.GridDtos;
 using MyPortal.Models.Database;
 using MyPortal.Models.Exceptions;
 using MyPortal.Models.Misc;
@@ -176,7 +177,8 @@ namespace MyPortal.Controllers.Api
         public IHttpActionResult GetEnrolmentsForClassForDataGrid([FromUri] int classId,
             [FromBody] DataManagerRequest dm)
         {
-            var enrolments = CurriculumProcesses.GetEnrolmentsForClass_DataGrid(classId, _context).ResponseObject;
+            var enrolments =
+                PrepareResponseObject(CurriculumProcesses.GetEnrolmentsForClass_DataGrid(classId, _context));
 
             return PrepareDataGridObject(enrolments, dm);
         }
@@ -253,6 +255,15 @@ namespace MyPortal.Controllers.Api
         public IEnumerable<CurriculumSubjectDto> GetAllSubjects()
         {
             return PrepareResponseObject(CurriculumProcesses.GetAllSubjects(_context));
+        }
+
+        [HttpPost]
+        [Route("subjects/get/dataGrid/all")]
+        public IHttpActionResult GetAllSubjectsForDataGrid([FromBody] DataManagerRequest dm)
+        {
+            var subjects = PrepareResponseObject(CurriculumProcesses.GetAllSubjects_DataGrid(_context));
+
+            return PrepareDataGridObject(subjects, dm);
         }
 
         [HttpPost]

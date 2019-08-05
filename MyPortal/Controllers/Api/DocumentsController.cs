@@ -28,11 +28,21 @@ namespace MyPortal.Controllers.Api
         }
         
         [HttpGet]
-        [Route("general/approved")]
+        [Route("general/get/approved")]
         [Authorize(Roles = "Staff, SeniorStaff")]
         public IEnumerable<DocumentDto> GetApprovedGeneralDocuments()
         {
             return PrepareResponseObject(DocumentProcesses.GetApprovedGeneralDocuments(_context));
+        }
+
+        [HttpPost]
+        [Route("general/get/dataGrid/approved")]
+        [Authorize(Roles = "Staff")]
+        public IHttpActionResult GetApprovedGeneralDocumentsForDataGrid([FromBody] DataManagerRequest dm)
+        {
+            var documents = PrepareResponseObject(DocumentProcesses.GetApprovedGeneralDocuments_DataGrid(_context));
+
+            return PrepareDataGridObject(documents, dm);
         }
         
         [HttpGet]
@@ -43,7 +53,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Route("general/all")]
+        [Route("general/get/all")]
         [Authorize(Roles = "SeniorStaff")]
         public IEnumerable<DocumentDto> GetAllGeneralDocuments()
         {
@@ -51,11 +61,21 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [Route("general/get/dataGrid/all")]
+        [Authorize(Roles = "SeniorStaff")]
+        public IHttpActionResult GetAllGeneralDocumentsForDataGrid([FromBody] DataManagerRequest dm)
+        {
+            var documents = PrepareResponseObject(DocumentProcesses.GetAllGeneralDocuments_DataGrid(_context));
+
+            return PrepareDataGridObject(documents, dm);
+        }
+
+        [HttpPost]
         [Route("personal/get/dataGrid/{personId}")]
         [Authorize]
-        public IHttpActionResult GetDocumentsForPersonDataGrid([FromBody] DataManagerRequest dm, [FromUri] int personId)
+        public IHttpActionResult GetDocumentsByPersonDataGrid([FromBody] DataManagerRequest dm, [FromUri] int personId)
         {
-            var documents = PrepareResponseObject(DocumentProcesses.GetPersonalDocumentsForDataGrid(personId, _context));
+            var documents = PrepareResponseObject(DocumentProcesses.GetPersonalDocuments_DataGrid(personId, _context));
 
             return PrepareDataGridObject(documents, dm);
         }

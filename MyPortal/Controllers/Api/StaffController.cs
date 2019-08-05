@@ -9,6 +9,7 @@ using MyPortal.Dtos;
 using MyPortal.Models;
 using MyPortal.Models.Database;
 using MyPortal.Processes;
+using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
 {
@@ -38,11 +39,21 @@ namespace MyPortal.Controllers.Api
             return PrepareResponse(PeopleProcesses.UpdateStaffMember(staffMember, _context));
         }
 
+        [HttpGet]
         [Route("get/all")]
         public IEnumerable<StaffMemberDto> GetAllStaffMembers()
         {
             return PrepareResponseObject(PeopleProcesses.GetAllStaffMembers(_context));
-        }        
+        }
+
+        [HttpPost]
+        [Route("get/dataGrid/all")]
+        public IHttpActionResult GetAllStaffMembersForDataGrid([FromBody] DataManagerRequest dm)
+        {
+            var staffMembers = PrepareResponseObject(PeopleProcesses.GetAllStaffMembers_DataGrid(_context));
+
+            return PrepareDataGridObject(staffMembers, dm);
+        }
 
         [Route("get/byId/{staffMemberId:int}")]
         public StaffMemberDto GetStaffMemberById([FromUri] int staffMemberId)

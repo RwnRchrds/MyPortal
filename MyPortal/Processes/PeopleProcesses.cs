@@ -50,6 +50,13 @@ namespace MyPortal.Processes
            return new ProcessResponse<string>(ResponseType.Ok, null, displayName);
         }
 
+        public static ProcessResponse<string> GetStaffFullName(StaffMember staffMember)
+        {
+            var fullName = $"{staffMember.Person.LastName}, {staffMember.Person.FirstName}";
+            
+            return new ProcessResponse<string>(ResponseType.Ok, null, fullName);
+        }
+
         public static ProcessResponse<StaffMember> HandleAuthorFromUserId(string userId, int authorId, MyPortalDbContext context)
         {
             var author = new StaffMember();
@@ -134,14 +141,27 @@ namespace MyPortal.Processes
 
             return new ProcessResponse<object>(ResponseType.Ok, "Staff member updated", null);
         }
-
-        public static ProcessResponse<IEnumerable<StaffMemberDto>> GetAllStaffMembers(MyPortalDbContext context)
+        
+        public static ProcessResponse<IEnumerable<StaffMember>> GetAllStaffMembers_Model(MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<StaffMemberDto>>(ResponseType.Ok, null, context.StaffMembers
+            return new ProcessResponse<IEnumerable<StaffMember>>(ResponseType.Ok, null, context.StaffMembers
                 .Where(x => !x.Deleted)
                 .OrderBy(x => x.Person.LastName)
-                .ToList()
-                .Select(Mapper.Map<StaffMember, StaffMemberDto>));
+                .ToList());
+        }
+
+        public static ProcessResponse<IEnumerable<StaffMemberDto>> GetAllStaffMembers(MyPortalDbContext context)
+                 {
+                     return new ProcessResponse<IEnumerable<StaffMemberDto>>(ResponseType.Ok, null,
+                         GetAllStaffMembers_Model(context).ResponseObject
+                             .Select(Mapper.Map<StaffMember, StaffMemberDto>));
+                 }
+        
+        public static ProcessResponse<IEnumerable<GridStaffMemberDto>> GetAllStaffMembers_DataGrid(MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<GridStaffMemberDto>>(ResponseType.Ok, null,
+                GetAllStaffMembers_Model(context).ResponseObject
+                    .Select(Mapper.Map<StaffMember, GridStaffMemberDto>));
         }
 
         public static ProcessResponse<StaffMemberDto> GetStaffMemberById(int staffMemberId, MyPortalDbContext context)

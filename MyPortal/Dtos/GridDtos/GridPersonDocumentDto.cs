@@ -7,6 +7,6 @@ namespace MyPortal.Dtos.GridDtos
 {
     public class GridPersonDocumentDto : GridDocumentDto
     {
-        public int PersonDocumentId { get; set; }
+        public int Id { get; set; }
     }
 }

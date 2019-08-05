@@ -651,12 +651,25 @@ namespace MyPortal.Processes
             return new ProcessResponse<CurriculumSubjectDto>(ResponseType.Ok, null,
                 Mapper.Map<CurriculumSubject, CurriculumSubjectDto>(subject));
         }
+        
+        public static ProcessResponse<IEnumerable<CurriculumSubject>> GetAllSubjects_Model(MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<CurriculumSubject>>(ResponseType.Ok, null,
+                context.CurriculumSubjects.Where(x => !x.Deleted).OrderBy(x => x.Name).ToList());
+        }
 
         public static ProcessResponse<IEnumerable<CurriculumSubjectDto>> GetAllSubjects(MyPortalDbContext context)
         {
             return new ProcessResponse<IEnumerable<CurriculumSubjectDto>>(ResponseType.Ok, null,
-                context.CurriculumSubjects.Where(x => !x.Deleted).OrderBy(x => x.Name).ToList()
+                GetAllSubjects_Model(context).ResponseObject
                     .Select(Mapper.Map<CurriculumSubject, CurriculumSubjectDto>));
+        }
+        
+        public static ProcessResponse<IEnumerable<GridCurriculumSubjectDto>> GetAllSubjects_DataGrid(MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<GridCurriculumSubjectDto>>(ResponseType.Ok, null,
+                GetAllSubjects_Model(context).ResponseObject
+                    .Select(Mapper.Map<CurriculumSubject, GridCurriculumSubjectDto>));
         }
 
         public static ProcessResponse<object> UpdateSubject(CurriculumSubject subject, MyPortalDbContext context)

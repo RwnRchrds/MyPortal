@@ -304,6 +304,7 @@
     <Compile Include="Dtos\GridDtos\GridCurriculumLessonPlanDto.cs" />
     <Compile Include="Dtos\GridDtos\GridCurriculumSessionDto.cs" />
     <Compile Include="Dtos\GridDtos\GridCurriculumStudyTopicDto.cs" />
+    <Compile Include="Dtos\GridDtos\GridCurriculumSubjectDto.cs" />
     <Compile Include="Dtos\GridDtos\GridDocumentDto.cs" />
     <Compile Include="Dtos\GridDtos\GridBehaviourIncidentDto.cs" />
     <Compile Include="Dtos\GridDtos\GridFinanceProductDto.cs" />
@@ -312,6 +313,7 @@
     <Compile Include="Dtos\GridDtos\GridProfileLogDto.cs" />
     <Compile Include="Dtos\GridDtos\GridPersonnelObservationDto.cs" />
     <Compile Include="Dtos\GridDtos\GridPersonDocumentDto.cs" />
+    <Compile Include="Dtos\GridDtos\GridStaffMemberDto.cs" />
     <Compile Include="Dtos\LiteDtos\AttendanceRegisterMarkLite.cs" />
     <Compile Include="Dtos\Identity\RoleDto.cs" />
     <Compile Include="Dtos\Identity\UserDto.cs" />

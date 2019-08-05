@@ -122,11 +122,11 @@ namespace MyPortal
                 .ForMember(dest => dest.Message,
                     opts => opts.MapFrom(src => src.Message));
 
-            CreateMap<Document, GridDocumentDto>();
+            CreateMap<Document, GridDocumentDto>()
+                .ForMember(dest => dest.DocumentId,
+                    opts => opts.MapFrom(src => src.Id));
 
             CreateMap<PersonDocument, GridPersonDocumentDto>()
-                .ForMember(dest => dest.Id,
-                    opts => opts.MapFrom(src => src.Document.Id))
                 .ForMember(dest => dest.Approved,
                     opts => opts.MapFrom(src => src.Document.Approved))
                 .ForMember(dest => dest.Date,
@@ -135,8 +135,8 @@ namespace MyPortal
                     opts => opts.MapFrom(src => src.Document.Description))
                 .ForMember(dest => dest.Url,
                     opts => opts.MapFrom(src => src.Document.Url))
-                .ForMember(dest => dest.PersonDocumentId,
-                    opts => opts.MapFrom(src => src.Id));
+                .ForMember(dest => dest.DocumentId,
+                    opts => opts.MapFrom(src => src.Document.Id));
 
             CreateMap<BehaviourAchievement, GridBehaviourAchievementDto>()
                 .ForMember(dest => dest.Location,
@@ -215,6 +215,14 @@ namespace MyPortal
                     opts => opts.MapFrom(src => src.CurriculumSubject.Name))
                 .ForMember(dest => dest.YearGroup,
                     opts => opts.MapFrom(src => src.PastoralYearGroup.Name));
+
+            CreateMap<CurriculumSubject, GridCurriculumSubjectDto>()
+                .ForMember(dest => dest.LeaderName,
+                    opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.Leader)));
+
+            CreateMap<StaffMember, GridStaffMemberDto>()
+                .ForMember(dest => dest.DisplayName,
+                    opts => opts.MapFrom(src => PeopleProcesses.GetStaffFullName(src).ResponseObject));
         }
     }
-}
+}    

@@ -28,26 +28,10 @@
             @Html.ValidationMessageFor(s => s.Student.Person.Gender)
         </div>
         <div class="form-group">
-            @Html.Label("Year Group")
-            @Html.DropDownListFor(s => s.Student.YearGroupId, new SelectList(Model.YearGroups, "Id", "Name"), "Select Year Group", new {@class = "form-control"})
-            @Html.ValidationMessageFor(s => s.Student.YearGroupId)
-        </div>
-        <div class="form-group">
-            @Html.Label("Reg Group")
-            @Html.DropDownListFor(s => s.Student.RegGroupId, new SelectList(Model.RegGroups, "Id", "Name"), "Select Reg Group", new {@class = "form-control"})
-            @Html.ValidationMessageFor(s => s.Student.RegGroupId)
-        </div>
-        <div class="form-group">
-            @Html.Label("Candidate Number")
-            @Html.TextBoxFor(s => s.Student.CandidateNumber, new {@class = "form-control"})
-            @Html.ValidationMessageFor(s => s.Student.CandidateNumber)
-        </div>
-        <div class="form-group">
             @Html.Label("MIS ID")
             @Html.TextBoxFor(s => s.Student.MisId, new {@class = "form-control"})
             @Html.ValidationMessageFor(s => s.Student.MisId)
         </div>
-        @Html.HiddenFor(s => s.Student.AccountBalance, new {Value = 0.00})
         @Html.AntiForgeryToken()
         <button type="button" class="btn btn-primary" id="backButton">Back</button>
         <button type="submit" class="btn btn-primary">Save</button>

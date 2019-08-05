@@ -57,13 +57,26 @@ namespace MyPortal.Processes
 
             return new ProcessResponse<object>(ResponseType.Ok, "Document uploaded", null);
         }
+        
+        public static ProcessResponse<IEnumerable<Document>> GetApprovedGeneralDocuments_Model(MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<Document>>(ResponseType.Ok, null, context.Documents
+                .Where(x => x.IsGeneral && x.Approved && !x.Deleted)
+                .ToList());
+        }
 
         public static ProcessResponse<IEnumerable<DocumentDto>> GetApprovedGeneralDocuments(MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<DocumentDto>>(ResponseType.Ok, null, context.Documents
-                .Where(x => x.IsGeneral && x.Approved && !x.Deleted)
-                .ToList()
-                .Select(Mapper.Map<Document, DocumentDto>));
+            return new ProcessResponse<IEnumerable<DocumentDto>>(ResponseType.Ok, null,
+                GetApprovedGeneralDocuments_Model(context).ResponseObject
+                    .Select(Mapper.Map<Document, DocumentDto>));
+        }
+        
+        public static ProcessResponse<IEnumerable<GridDocumentDto>> GetApprovedGeneralDocuments_DataGrid(MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<GridDocumentDto>>(ResponseType.Ok, null,
+                GetApprovedGeneralDocuments_Model(context).ResponseObject
+                    .Select(Mapper.Map<Document, GridDocumentDto>));
         }
 
         public static ProcessResponse<DocumentDto> GetDocumentById(int documentId, MyPortalDbContext context)
@@ -78,12 +91,25 @@ namespace MyPortal.Processes
 
             return new ProcessResponse<DocumentDto>(ResponseType.Ok, null, Mapper.Map<Document, DocumentDto>(document));
         }
+        
+        public static ProcessResponse<IEnumerable<Document>> GetAllGeneralDocuments_Model(MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<Document>>(ResponseType.Ok, null,
+                context.Documents.Where(x => !x.Deleted && x.IsGeneral).OrderBy(x => x.Description).ToList());
+        }
 
         public static ProcessResponse<IEnumerable<DocumentDto>> GetAllGeneralDocuments(MyPortalDbContext context)
         {
             return new ProcessResponse<IEnumerable<DocumentDto>>(ResponseType.Ok, null,
-                context.Documents.Where(x => !x.Deleted && x.IsGeneral).OrderBy(x => x.Description).ToList()
+                GetAllGeneralDocuments_Model(context).ResponseObject
                     .Select(Mapper.Map<Document, DocumentDto>));
+        }
+        
+        public static ProcessResponse<IEnumerable<GridDocumentDto>> GetAllGeneralDocuments_DataGrid(MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<GridDocumentDto>>(ResponseType.Ok, null,
+                GetAllGeneralDocuments_Model(context).ResponseObject
+                    .Select(Mapper.Map<Document, GridDocumentDto>));
         }
 
         public static ProcessResponse<PersonDocumentDto> GetPersonalDocumentById(int documentId,
@@ -99,20 +125,28 @@ namespace MyPortal.Processes
             return new ProcessResponse<PersonDocumentDto>(ResponseType.Ok, null,
                 Mapper.Map<PersonDocument, PersonDocumentDto>(document));
         }
+        
+        public static ProcessResponse<IEnumerable<PersonDocument>> GetPersonalDocuments_Model(int personId,
+            MyPortalDbContext context)
+        {
+            var documents = context.PersonDocuments.Where(x => !x.Document.Deleted && x.PersonId == personId).ToList();
+
+            return new ProcessResponse<IEnumerable<PersonDocument>>(ResponseType.Ok, null, documents);
+        }
 
         public static ProcessResponse<IEnumerable<PersonDocumentDto>> GetPersonalDocuments(int personId,
             MyPortalDbContext context)
         {
-            var documents = context.PersonDocuments.Where(x => !x.Document.Deleted && x.PersonId == personId).ToList()
+            var documents = GetPersonalDocuments_Model(personId, context).ResponseObject
                 .Select(Mapper.Map<PersonDocument, PersonDocumentDto>);
 
             return new ProcessResponse<IEnumerable<PersonDocumentDto>>(ResponseType.Ok, null, documents);
         }
 
-        public static ProcessResponse<IEnumerable<GridPersonDocumentDto>> GetPersonalDocumentsForDataGrid(int personId,
+        public static ProcessResponse<IEnumerable<GridPersonDocumentDto>> GetPersonalDocuments_DataGrid(int personId,
             MyPortalDbContext context)
         {
-            var documents = context.PersonDocuments.Where(x => !x.Document.Deleted && x.PersonId == personId).OrderBy(x => x.Document.Description).ToList()
+            var documents = GetPersonalDocuments_Model(personId, context).ResponseObject
                 .Select(Mapper.Map<PersonDocument, GridPersonDocumentDto>);
 
             return new ProcessResponse<IEnumerable<GridPersonDocumentDto>>(ResponseType.Ok, null, documents);
