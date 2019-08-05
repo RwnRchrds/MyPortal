@@ -6,12 +6,12 @@
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<div class="container float-left">
+<div class="container">
     <h2 class="mp-page-title">Registers</h2>
     <hr />
 </div>
 
-<div class="container float-left" id="registerSelectors" data-current-user-id="@Model.CurrentUser.Id">
+<div class="container" id="registerSelectors" data-current-user-id="@Model.CurrentUser.Id">
     <div>
         @Html.Label("Date", new { @class = "control-label" })
         @*@Html.TextBox("Date", null, new {id = "selectedDate", @class = "form-control register-selector"})*@
@@ -26,7 +26,7 @@
 </div>
 
 <!--#region Registers Panel-->
-<div class="container float-left mp-margin-top">
+<div class="container mp-margin-top">
     <div>
         <hr />
         <h4 class="mp-bold" id="registersFor"></h4>

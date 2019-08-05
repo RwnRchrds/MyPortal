@@ -321,14 +321,14 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Route("lessonPlans/byTopic/{studyTopicId:int}")]
+        [Route("lessonPlans/get/byTopic/{studyTopicId:int}")]
         public IEnumerable<CurriculumLessonPlanDto> GetLessonPlansByTopic([FromUri] int studyTopicId)
         {
             return PrepareResponseObject(CurriculumProcesses.GetLessonPlansByStudyTopic(studyTopicId, _context));
         }
 
         [HttpPost]
-        [Route("lessonPlans/byTopic/dataGrid/{studyTopicId:int}")]
+        [Route("lessonPlans/get/byTopic/dataGrid/{studyTopicId:int}")]
         public IHttpActionResult GetLessonPlansByTopicDataGrid([FromUri] int studyTopicId,
             [FromBody] DataManagerRequest dm)
         {

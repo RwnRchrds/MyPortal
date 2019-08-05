@@ -4,20 +4,20 @@
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<div class="container float-left">
+<div class="container">
     <h2 class="mp-page-title">Classes</h2>
     <hr />
 </div>
 
-<div class="container float-left">
+<div class="container">
     @if (User.IsInRole("SeniorStaff"))
     {
-        <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#newClassModal">New Class</button>
+        <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" data-target="#newClassModal">New Class</button>
         <hr />
     }
 </div>
 
-<div class="container float-left">
+<div class="container">
     @Html.EJS().Grid("Classes").DataSource(d =>
     {
         d.Url("/api/curriculum/classes/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor");

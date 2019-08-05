@@ -5,28 +5,24 @@
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<div class="container float-left">
+<div class="container">
     <h2 class="mp-page-title">Study Topics</h2>
     <hr/>
 </div>
 
-<div class="container float-left">
-    <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#NewStudyTopicModal">New Study Topic</button>
+<div class="container">
+    <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" data-target="#NewStudyTopicModal">New Study Topic</button>
     <hr/>
 </div>
 
-<div class="container float-left">
-    <table class="table table-bordered table-hover mp-table mp-table-link" id="studyTopics">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Subject</th>
-            <th>Year Group</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+<div class="container">
+    @Html.EJS().Grid("StudyTopics").DataSource(d => { d.Url("/api/curriculum/StudyTopics/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+    {
+        c.Field("Name").HeaderText("Name").Template("#StudyTopicsNameTemplate").Width("200").Add();
+        c.Field("SubjectName").HeaderText("Subject").Template("#StudyTopicsSubjectTemplate").Width("150").Add();
+        c.Field("YearGroup").HeaderText("Year Group").Template("#StudyTopicsYearGroupTemplate").Width("150").Add();
+        c.HeaderText("Actions").Template("#StudyTopicsActionsTemplate").Width("170").Add();
+    }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string> {"Search"}).Render()
 </div>
 
 <div id="NewStudyTopicModal" class="modal fade" role="dialog">
@@ -37,7 +33,7 @@
                 <h4 class="modal-title">New Study Topic</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/studyTopics/create", HttpMethod = "POST", OnSuccess = "newStudyTopicSuccess", OnFailure = "newStudyTopicFailure"}, new {id = "newStudyTopicForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/StudyTopics/create", HttpMethod = "POST", OnSuccess = "newStudyTopicsuccess", OnFailure = "newStudyTopicFailure"}, new {id = "newStudyTopicForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -73,7 +69,7 @@
                 <h4 class="modal-title">New Study Topic</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/studyTopics/update", HttpMethod = "POST", OnSuccess = "editStudyTopicSuccess", OnFailure = "editStudyTopicFailure"}, new {id = "editStudyTopicForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/StudyTopics/update", HttpMethod = "POST", OnSuccess = "editStudyTopicsuccess", OnFailure = "editStudyTopicFailure"}, new {id = "editStudyTopicForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -83,7 +79,7 @@
                     </div>
                     <div class="form-group">
                         @Html.Label("Subject")
-                        @Html.DropDownListFor(x => x.StudyTopic.SubjectId, new SelectList(Model.Subjects, "Id", "Name"), "Select Subject", new {@class = "form-control", Name = "SubjectId", id = "editStudyTopicSubjectControl"})
+                        @Html.DropDownListFor(x => x.StudyTopic.SubjectId, new SelectList(Model.Subjects, "Id", "Name"), "Select Subject", new {@class = "form-control", Name = "SubjectId", id = "editStudyTopicsubjectControl"})
                         @Html.ValidationMessageFor(x => x.StudyTopic.SubjectId)
                     </div>
                     <div class="form-group">
@@ -114,49 +110,17 @@
                     $(this).find('form').trigger('reset');
                 });
 
-            $("#studyTopics").DataTable({
-                ajax: {
-                    url: "/api/studyTopics/fetch/all",
-                    dataSrc: ""
-                },
-                columns: [
-                    {
-                        data: "name"
-                    },
-                    {
-                        data: "curriculumSubject.name"
-                    },
-                    {
-                        data: "pastoralYearGroup.name"
-                    },
-                    {
-                        data: "id",
-                        render: function(data) {
-                            return "<button type='button' class='btn btn-xs btn-warning mp-btn-action-left js-edit' data-topic-id=" +
-                                data +
-                                "><i class=\"far fa-edit\"></i></button> " +
-                                "<button type='button' class='btn btn-xs btn-danger mp-btn-action-right js-delete' data-topic-id=" +
-                                data +
-                                "><i class=\"far fa-trash-alt\"></i></button>";
-                        }
-                    }
-                ],
-                "language": {
-                    "emptyTable": "No study topics to display"
-                }
-            });
-
-            $("#studyTopics").on("click",
+            $("#StudyTopics").on("click",
                 ".js-edit",
                 function() {
-                    var button = $(this);
-                    var topicId = button.attr("data-topic-id");
+                    const button = $(this);
+                    const topicId = button.attr("data-topic-id");
                     $.ajax({
-                        url: "/api/studyTopics/fetch/byId/" + topicId,
+                        url: `/api/curriculum/studyTopics/get/byId/${topicId}`,
                         method: "GET",
                         success: function(result) {
                             $("#editStudyTopicNameControl").val(result["name"]);
-                            $("#editStudyTopicSubjectControl").val(result["subjectId"]);
+                            $("#editStudyTopicsubjectControl").val(result["subjectId"]);
                             $("#editStudyTopicYearGroupControl").val(result["yearGroupId"]);
                             $("#editStudyTopicIdControl").val(result["id"]);
                         },
@@ -167,11 +131,11 @@
                     $("#EditStudyTopicModal").modal('toggle');
                 });
 
-            $("#studyTopics").on("click",
+            $("#StudyTopics").on("click",
                 ".js-delete",
                 function() {
                     $.ajax({
-                        url: "/api/studyTopics/hasLessonPlans/" + button.attr("data-topic-id"),
+                        url: `/api/curriculum/studyTopics/hasLessonPlans/${button.attr("data-topic-id")}`,
                         method: "GET",
                         success: function(a) {
                             if (!a) {
@@ -179,10 +143,11 @@
                                     function(result) {
                                         if (result) {
                                             $.ajax({
-                                                url: "/api/studyTopics/delete/" + button.attr("data-topic-id"),
+                                                url: `/api/curriculum/StudyTopics/delete/${button.attr("data-topic-id")
+                                                    }`,
                                                 method: "DELETE",
                                                 success: function(a) {
-                                                    $("#studyTopics").DataTable().ajax.reload();
+                                                    refreshTable("StudyTopics");
                                                     toastr.success(a);
                                                 },
                                                 error: function(e) {
@@ -192,16 +157,18 @@
                                         }
                                     });
                             }
-                            
+
                             if (a) {
-                                bootbox.confirm("This study topic has lesson plans! Are you sure you wish to delete it?",
+                                bootbox.confirm(
+                                    "This study topic has lesson plans. Are you sure you wish to delete it?",
                                     function(result) {
                                         if (result) {
                                             $.ajax({
-                                                url: "/api/studyTopics/delete/" + button.attr("data-topic-id"),
+                                                url: `/api/curriculum/StudyTopics/delete/${button.attr("data-topic-id")
+                                                    }`,
                                                 method: "DELETE",
                                                 success: function(a) {
-                                                    $("#studyTopics").DataTable().ajax.reload();
+                                                    refreshTable("StudyTopics");
                                                     toastr.success(a);
                                                 },
                                                 error: function(e) {
@@ -219,9 +186,9 @@
                 });
         });
 
-        function newStudyTopicSuccess(result) {
+        function newStudyTopicsuccess(result) {
             $("#NewStudyTopicModal").modal('hide');
-            $("#studyTopics").DataTable().ajax.reload();
+            refreshTable("StudyTopics");
             toastr.success(result);
         }
 
@@ -230,9 +197,9 @@
             toastr.error(result.responseJSON);
         }
 
-        function editStudyTopicSuccess(result) {
+        function editStudyTopicsuccess(result) {
             $("#EditStudyTopicModal").modal('hide');
-            $("#studyTopics").DataTable().ajax.reload();
+            refreshTable("StudyTopics");
             toastr.success(result);
         }
 
@@ -241,4 +208,34 @@
             toastr.error(result.responseJSON);
         }
     </script>
+
+    <script type="text/x-jsrender" id="studyTopicsNameTemplate">
+        <div>
+            ${Name}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="studyTopicsSubjectTemplate">
+            <div>
+                ${SubjectName}
+            </div>
+        </script>
+
+    <script type="text/x-jsrender" id="studyTopicsYearGroupTemplate">
+                <div>
+                    ${YearGroup}
+                </div>
+            </script>
+
+    <script type="text/x-jsrender" id="studyTopicsActionsTemplate">
+                <div>
+                    <button type='button' class='btn btn-xs btn-warning mp-btn-action js-edit' data-topic-id="${Id}">
+                        <i class="far fa-edit"></i>
+                    </button>
+                    
+                    <button type='button' class='btn btn-xs btn-danger mp-btn-action js-delete' data-topic-id="${Id}">
+                        <i class="far fa-trash-alt"></i>
+                    </button>
+                </div>
+            </script>
 }

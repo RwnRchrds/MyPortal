@@ -5,23 +5,25 @@
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<div class="container float-left">
+<div class="container">
     <h2 class="mp-page-title">Lesson Plans</h2>
     <hr/>
 </div>
 
-<div class="container float-left">
-    <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" onclick="openNewLessonPlanModal()">New Lesson Plan</button>
+<div class="container">
+    <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" onclick="openNewLessonPlanModal()">New Lesson Plan</button>
     <hr/>
 </div>
 
-<div class="container float-left">
-    @Html.Label("Study Topic")
-    @Html.DropDownList("SelectedTopic", new SelectList(Model.StudyTopics, "Id", "Name"), "Select Study Topic", new {@class = "form-control", Name = "Id", id = "selectedTopic"})
+<div class="container">
+    <div class="form-group">
+        @Html.Label("Study Topic")
+        @Html.DropDownList("SelectedTopic", new SelectList(Model.StudyTopics, "Id", "Name"), "Select Study Topic", new {@class = "form-control", Name = "Id", id = "selectedTopic"})
+    </div>
 </div>
 
-<div class="container float-left mp-margin-top">
-    @Html.EJS().Grid("LessonPlans").DataSource(d => { d.Url($"/api/curriculum/lessonPlans/get/byTopic/dataGrid/{0}").CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+<div class="container">
+    @Html.EJS().Grid("LessonPlans").DataSource(d => { d.Url($"/api/curriculum/lessonPlans/get/byTopic/dataGrid/0").CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
     {
         c.Field("Title").HeaderText("Title").Template("#lessonPlansTitleTemplate").Width("300").Add();
         c.Field("StudyTopic").HeaderText("StudyTopic").Template("#lessonPlansStudyTopicTemplate").Width("200").Add();
@@ -136,8 +138,9 @@
 
             $("#selectedTopic").on("change",
                 function() {
-                var studyTopicId = $("#selectedTopic").val();
-                    changeTableSource("LessonPlans", `api/curriculum/lessonPlans/get/byTopic/dataGrid/${studyTopicId}`);
+                    var studyTopicId = $("#selectedTopic").val();
+                    changeTableSource("LessonPlans",
+                        `/api/curriculum/lessonPlans/get/byTopic/dataGrid/${studyTopicId}`);
                     refreshTable("LessonPlans");
                 });
 
@@ -163,7 +166,7 @@
                     });
                     $("#EditLessonPlanModal").modal('toggle');
                 });
-                
+
             $("#LessonPlans").on("click",
                 ".js-view",
                 function() {
@@ -192,8 +195,8 @@
                             }
                         });
                 });
-        });                
-        
+        });
+
         function newLessonPlanSuccess(result) {
             $("#NewLessonPlanModal").modal('hide');
             refreshTable("LessonPlans");
@@ -215,7 +218,7 @@
             $("#EditLessonPlanModal").modal('hide');
             toastr.error(result.responseJSON);
         }
-        
+
         function openNewLessonPlanModal() {
             var commentBank = $("#selectedTopic").val();
 
@@ -246,15 +249,15 @@
 
     <script type="text/x-jsrender" id="lessonPlansActionsTemplate">
             <div>
-                <button type='button' class='btn btn-xs btn-success mp-btn-action js-view' data-plan-id="data">
+                <button type='button' class='btn btn-xs btn-success mp-btn-action js-view' data-plan-id="${Id}">
                     <i class="fas fa-glasses"></i>
                 </button>
                 
-                <button type='button' class='btn btn-xs btn-warning mp-btn-action js-edit' data-plan-id="data">
+                <button type='button' class='btn btn-xs btn-warning mp-btn-action js-edit' data-plan-id="${Id}">
                     <i class="fas fa-edit"></i>
                 </button>
                 
-                <button type='button' class='btn btn-xs btn-danger mp-btn-action js-delete' data-plan-id="data">
+                <button type='button' class='btn btn-xs btn-danger mp-btn-action js-delete' data-plan-id="${Id}">
                     <i class="far fa-trash-alt"></i>
                 </button>
             </div>

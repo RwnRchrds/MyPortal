@@ -4,24 +4,24 @@
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<div class="container float-left">
+<div class="container">
     <h2 class="mp-page-title">Sessions for @Model.Class.Name</h2>
     <hr/>
 </div>
 
-<div class="container float-left">
+<div class="container">
     @if (User.IsInRole("SeniorStaff"))
     {
-        <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#newSessionModal">Add Period</button>
-        <button type="button" class="btn btn-success mp-btn-top-auto" id="addRegPeriods">Add Reg Periods</button>
+        <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" data-target="#newSessionModal">Add Period</button>
+        <button type="button" class="btn btn-primary mp-btn-top-auto" id="addRegPeriods">Add Reg Periods</button>
         <hr />
     }
 </div>
 
-<div class="container float-left">
+<div class="container">
     @Html.EJS().Grid("Sessions").DataSource(d =>
     {
-        d.Url($"/api/curriculum/sessions/get/byClass/{Model.Class.Id}").CrossDomain(false).Adaptor("UrlAdaptor");
+        d.Url($"/api/curriculum/sessions/get/byClass/dataGrid/{Model.Class.Id}").CrossDomain(false).Adaptor("UrlAdaptor");
     }).Columns(c =>
     {
         c.Field("PeriodName").HeaderText("Period").Template("#sessionsPeriodTemplate").Width("150").Add();
@@ -200,11 +200,11 @@
 
     <script type="text/x-jsrender" id="sessionsActionsTemplate">
             <div>
-                    <button type='button' class='btn btn-xs btn-warning mp-btn-action-left js-edit' data-assignment-id="${Id}">
+                    <button type='button' class='btn btn-xs btn-warning mp-btn-action js-edit' data-assignment-id="${Id}">
                         <i class="far fa-edit"></i>
                     </button>
                         
-                    <button type='button' class='btn btn-xs btn-danger mp-btn-action-right js-delete' data-assignment-id="${Id}">
+                    <button type='button' class='btn btn-xs btn-danger mp-btn-action js-delete' data-assignment-id="${Id}">
                         <i class="far fa-trash-alt"></i>
                     </button>
             </div>

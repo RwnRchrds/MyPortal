@@ -1,5 +1,4 @@
-﻿using System.Web.Optimization;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNet.Identity.EntityFramework;
 using MyPortal.Dtos;
 using MyPortal.Dtos.GridDtos;
@@ -195,13 +194,13 @@ namespace MyPortal
 
             CreateMap<CurriculumClass, GridCurriculumClassDto>()
                 .ForMember(dest => dest.Subject,
-                    opts => opts.MapFrom(src => CurriculumProcesses.GetSubjectNameForClass(src)))
+                    opts => opts.MapFrom(src => CurriculumProcesses.GetSubjectNameForClass(src).ResponseObject))
                 .ForMember(dest => dest.Teacher,
-                    opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.Teacher)));
+                    opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.Teacher).ResponseObject));
 
             CreateMap<CurriculumEnrolment, GridCurriculumEnrolmentDto>()
                 .ForMember(dest => dest.StudentName,
-                    opts => opts.MapFrom(src => PeopleProcesses.GetStudentDisplayName(src.Student)))
+                    opts => opts.MapFrom(src => PeopleProcesses.GetStudentDisplayName(src.Student).ResponseObject))
                 .ForMember(dest => dest.ClassName,
                     opts => opts.MapFrom(src => src.CurriculumClass.Name));
 
@@ -209,7 +208,7 @@ namespace MyPortal
                 .ForMember(dest => dest.StudyTopic,
                     opts => opts.MapFrom(src => src.StudyTopic.Name))
                 .ForMember(dest => dest.Author,
-                    opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.Author)));
+                    opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.Author).ResponseObject));
 
             CreateMap<CurriculumStudyTopic, GridCurriculumStudyTopicDto>()
                 .ForMember(dest => dest.SubjectName,
