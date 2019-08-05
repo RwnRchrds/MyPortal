@@ -108,9 +108,9 @@
                 ".js-edit",
                 function() {
                     var button = $(this);
-                    var SessionId = button.attr("data-session-id");
+                    var sessionId = button.attr("data-session-id");
                     $.ajax({
-                        url: "/api/curriculum/sessions/get/byId/" + SessionId,
+                        url: "/api/curriculum/sessions/get/byId/" + sessionId,
                         method: "GET",
                         success: function(result) {
                             $("#editPeriodControl").val(result["periodId"]);
@@ -200,11 +200,11 @@
 
     <script type="text/x-jsrender" id="sessionsActionsTemplate">
             <div>
-                    <button type='button' class='btn btn-xs btn-warning mp-btn-action js-edit' data-assignment-id="${Id}">
+                    <button type='button' class='btn btn-xs btn-warning mp-btn-action js-edit' data-session-id="${Id}">
                         <i class="far fa-edit"></i>
                     </button>
                         
-                    <button type='button' class='btn btn-xs btn-danger mp-btn-action js-delete' data-assignment-id="${Id}">
+                    <button type='button' class='btn btn-xs btn-danger mp-btn-action js-delete' data-session-id="${Id}">
                         <i class="far fa-trash-alt"></i>
                     </button>
             </div>

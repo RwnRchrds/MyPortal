@@ -39,7 +39,7 @@
                 <h4 class="modal-title">Add Period for Class</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/curriculum/classes/enrolments/create", HttpMethod = "POST", OnSuccess = "newEnrolIndSuccess", OnFailure = "newEnrolIndFailure" }, new { id = "newEnrolmentForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/curriculum/enrolments/create", HttpMethod = "POST", OnSuccess = "newEnrolIndSuccess", OnFailure = "newEnrolIndFailure" }, new { id = "newEnrolmentForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -71,7 +71,7 @@
                 <h4 class="modal-title">Add Period for Class</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/curriculum/classes/enrolments/create/group", HttpMethod = "POST", OnSuccess = "newEnrolGroupSuccess", OnFailure = "newEnrolGroupFailure" }, new { id = "newEnrolmentForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/curriculum/enrolments/create/group", HttpMethod = "POST", OnSuccess = "newEnrolGroupSuccess", OnFailure = "newEnrolGroupFailure" }, new { id = "newEnrolmentForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">

@@ -218,7 +218,7 @@ namespace MyPortal
 
             CreateMap<CurriculumSubject, GridCurriculumSubjectDto>()
                 .ForMember(dest => dest.LeaderName,
-                    opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.Leader)));
+                    opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.Leader).ResponseObject));
 
             CreateMap<StaffMember, GridStaffMemberDto>()
                 .ForMember(dest => dest.DisplayName,

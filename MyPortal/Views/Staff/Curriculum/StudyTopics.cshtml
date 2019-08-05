@@ -18,10 +18,10 @@
 <div class="container">
     @Html.EJS().Grid("StudyTopics").DataSource(d => { d.Url("/api/curriculum/StudyTopics/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
     {
-        c.Field("Name").HeaderText("Name").Template("#StudyTopicsNameTemplate").Width("200").Add();
-        c.Field("SubjectName").HeaderText("Subject").Template("#StudyTopicsSubjectTemplate").Width("150").Add();
-        c.Field("YearGroup").HeaderText("Year Group").Template("#StudyTopicsYearGroupTemplate").Width("150").Add();
-        c.HeaderText("Actions").Template("#StudyTopicsActionsTemplate").Width("170").Add();
+        c.Field("Name").HeaderText("Name").Template("#studyTopicsNameTemplate").Width("300").Add();
+        c.Field("SubjectName").HeaderText("Subject").Template("#studyTopicsSubjectTemplate").Width("150").Add();
+        c.Field("YearGroup").HeaderText("Year Group").Template("#studyTopicsYearGroupTemplate").Width("150").Add();
+        c.HeaderText("Actions").Template("#studyTopicsActionsTemplate").Width("170").Add();
     }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string> {"Search"}).Render()
 </div>
 
@@ -33,7 +33,7 @@
                 <h4 class="modal-title">New Study Topic</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/StudyTopics/create", HttpMethod = "POST", OnSuccess = "newStudyTopicsuccess", OnFailure = "newStudyTopicFailure"}, new {id = "newStudyTopicForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/curriculum/studyTopics/create", HttpMethod = "POST", OnSuccess = "newStudyTopicsuccess", OnFailure = "newStudyTopicFailure"}, new {id = "newStudyTopicForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -69,7 +69,7 @@
                 <h4 class="modal-title">New Study Topic</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/StudyTopics/update", HttpMethod = "POST", OnSuccess = "editStudyTopicsuccess", OnFailure = "editStudyTopicFailure"}, new {id = "editStudyTopicForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/curriculum/studyTopics/update", HttpMethod = "POST", OnSuccess = "editStudyTopicsuccess", OnFailure = "editStudyTopicFailure"}, new {id = "editStudyTopicForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">

@@ -25,7 +25,7 @@
        d.Url("/api/curriculum/subjects/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor");
    }).Columns(c =>
    {
-       c.Field("Name").HeaderText("Name").Template("#subjectsNameTemplate").Width("150");
+       c.Field("Name").HeaderText("Name").Template("#subjectsNameTemplate").Width("150").Add();
        c.Field("Code").HeaderText("Code").Template("#subjectsCodeTemplate").Width("100").Add();
        c.Field("LeaderName").HeaderText("Leader").Template("#subjectsLeaderTemplate").Width("150").Add();
        c.HeaderText("Actions").Template("#subjectsActionsTemplate").Width("170").Add();
@@ -201,11 +201,11 @@
 
     <script type="text/x-jsrender" id="subjectsActionsTemplate">
             <div>
-                <button type='button' class='btn btn-xs btn-warning mp-btn-action-left js-edit' data-subject-id="${Id}">
+                <button type='button' class='btn btn-xs btn-warning mp-btn-action js-edit' data-subject-id="${Id}">
                     <i class="far fa-edit"></i>
                 </button>
                 
-                <button type='button' class='btn btn-xs btn-danger mp-btn-action-right js-delete' data-subject-id="${Id}">
+                <button type='button' class='btn btn-xs btn-danger mp-btn-action js-delete' data-subject-id="${Id}">
                     <i class="far fa-trash-alt"></i>
                 </button>
             </div>

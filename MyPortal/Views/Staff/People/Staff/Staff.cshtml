@@ -17,7 +17,7 @@
 <div class="container">
     @Html.EJS().Grid("Staff").DataSource(d =>
     {
-        d.Url("api/people/staff/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor");
+        d.Url("/api/people/staff/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor");
     }).Columns(c =>
     {
         c.Field("DisplayName").HeaderText("Staff").Template("#staffNameTemplate").Width("200").Add();
@@ -99,7 +99,7 @@
     
     <script type="text/x-jsrender" id="staffNameTemplate">
         <div>
-            <a href="/Staff/People/Staff/${Id}">"${DisplayName}"</a>
+            <a href="/Staff/People/Staff/${Id}" class="mp-bold">${DisplayName}</a>
         </div>
     </script>
 

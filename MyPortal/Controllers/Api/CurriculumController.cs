@@ -288,7 +288,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Route("studyTopics/get/byId/{id}")]
+        [Route("studyTopics/get/byId/{studyTopicId:int}")]
         public CurriculumStudyTopicDto GetStudyTopic([FromUri] int studyTopicId)
         {
             return PrepareResponseObject(CurriculumProcesses.GetStudyTopicById(studyTopicId, _context));

@@ -110,7 +110,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Route("observations/observation/{observationId:int}")]
+        [Route("observations/get/byId/{observationId:int}")]
         public PersonnelObservationDto GetObservation([FromUri] int observationId)
         {
             return PrepareResponseObject(PersonnelProcesses.GetObservationById(observationId, _context));
