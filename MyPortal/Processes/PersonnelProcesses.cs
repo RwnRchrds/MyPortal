@@ -22,11 +22,6 @@ namespace MyPortal.Processes
                 return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
             }
 
-            //if (certificate.StaffId == PeopleProcesses.GetStaffFromUserId(userId, context).ResponseObject.Id)
-            //{
-            //    return new ProcessResponse<object>(ResponseType.BadRequest, "Cannot create a certificate for yourself", null);
-            //}
-
             context.PersonnelTrainingCertificates.Add(certificate);
             context.SaveChanges();
 
@@ -42,11 +37,6 @@ namespace MyPortal.Processes
             {
                 return new ProcessResponse<object>(ResponseType.NotFound, "Certificate not found", null);
             }
-
-            //if (certInDb.StaffId == PeopleProcesses.GetStaffFromUserId(userId, context).ResponseObject.Id)
-            //{
-            //    return new ProcessResponse<object>(ResponseType.BadRequest, "Cannot create a certificate for yourself", null);
-            //}
 
             context.PersonnelTrainingCertificates.Remove(certInDb);
             context.SaveChanges();
@@ -125,12 +115,6 @@ namespace MyPortal.Processes
                 return new ProcessResponse<object>(ResponseType.NotFound, "Certificate not found", null);
             }
 
-            //var userPerson = context.StaffMembers.SingleOrDefault(x => x.Person.UserId == userId);
-            //if (userPerson != null && certificate.StaffId == userPerson.Id)
-            //{
-            //    return new ProcessResponse<object>(ResponseType.BadRequest, "Cannot modify a certificate for yourself", null);
-            //}
-
             if (certInDb.Status == CertificateStatus.Completed)
             {
                 return new ProcessResponse<object>(ResponseType.BadRequest, "Cannot modify a completed certificate", null);
@@ -175,13 +159,26 @@ namespace MyPortal.Processes
             return new ProcessResponse<PersonnelTrainingCourseDto>(ResponseType.Ok, null,
                 Mapper.Map<PersonnelTrainingCourse, PersonnelTrainingCourseDto>(courseInDb));
         }
+        
+        public static ProcessResponse<IEnumerable<PersonnelTrainingCourse>> GetAllTrainingCourses_Model(MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<PersonnelTrainingCourse>>(ResponseType.Ok, null,
+                context.PersonnelTrainingCourses
+                    .ToList());
+        }
 
-        public static ProcessResponse<IEnumerable<PersonnelTrainingCourseDto>> GetAllCourses(MyPortalDbContext context)
+        public static ProcessResponse<IEnumerable<PersonnelTrainingCourseDto>> GetAllTrainingCourses(MyPortalDbContext context)
         {
             return new ProcessResponse<IEnumerable<PersonnelTrainingCourseDto>>(ResponseType.Ok, null,
-                context.PersonnelTrainingCourses
-                    .ToList()
+                GetAllTrainingCourses_Model(context).ResponseObject
                     .Select(Mapper.Map<PersonnelTrainingCourse, PersonnelTrainingCourseDto>));
+        }
+        
+        public static ProcessResponse<IEnumerable<GridPersonnelTrainingCourseDto>> GetAllTrainingCourses_DataGrid(MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<GridPersonnelTrainingCourseDto>>(ResponseType.Ok, null,
+                GetAllTrainingCourses_Model(context).ResponseObject
+                    .Select(Mapper.Map<PersonnelTrainingCourse, GridPersonnelTrainingCourseDto>));
         }
 
         public static ProcessResponse<object> UpdateCourse(PersonnelTrainingCourse course, MyPortalDbContext context)
@@ -219,11 +216,6 @@ namespace MyPortal.Processes
             {
                 return new ProcessResponse<object>(ResponseType.NotFound, "Observer not found", null);
             }
-
-            //if (observee.Id == PeopleProcesses.GetStaffFromUserId(userId, context).ResponseObject.Id)
-            //{
-            //    return new ProcessResponse<object>(ResponseType.BadRequest, "Cannot add an observation for yourself", null);
-            //}
 
             observation.ObserverId = observer.Id;
 

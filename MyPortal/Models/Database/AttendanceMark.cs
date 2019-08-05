@@ -10,7 +10,7 @@ namespace MyPortal.Models.Database
     /// An individual mark in the register. Represents a student's whereabouts at a particular period during the week it is recorded.
     /// </summary>
     [Table("Attendance_RegisterMarks")]
-    public partial class AttendanceRegisterMark
+    public partial class AttendanceMark
     {
         public int Id { get; set; }
 

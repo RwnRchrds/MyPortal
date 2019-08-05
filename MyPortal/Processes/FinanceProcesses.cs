@@ -414,7 +414,7 @@ namespace MyPortal.Processes
                 return new ProcessResponse<object>(ResponseType.NotFound, "Sale not found", null);
             }
 
-            saleInDb.CoreStudent.AccountBalance += saleInDb.AmountPaid;
+            saleInDb.Student.AccountBalance += saleInDb.AmountPaid;
 
             saleInDb.Processed = true;
             saleInDb.Refunded = true;

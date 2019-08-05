@@ -18,7 +18,7 @@ namespace MyPortal.Models.Database
 
         public int ProductId { get; set; }
 
-        public virtual Student CoreStudent { get; set; }
+        public virtual Student Student { get; set; }
 
         public virtual FinanceProduct FinanceProduct { get; set; }
     }

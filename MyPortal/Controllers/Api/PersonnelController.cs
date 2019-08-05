@@ -79,10 +79,19 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Route("courses")]
+        [Route("courses/get/all")]
         public IEnumerable<PersonnelTrainingCourseDto> GetCourses()
         {
-            return PrepareResponseObject(PersonnelProcesses.GetAllCourses(_context));
+            return PrepareResponseObject(PersonnelProcesses.GetAllTrainingCourses(_context));
+        }
+
+        [HttpPost]
+        [Route("courses/get/dataGrid/all")]
+        public IHttpActionResult GetAllTrainingCourseForDataGrid([FromBody] DataManagerRequest dm)
+        {
+            var trainingCourses = PrepareResponseObject(PersonnelProcesses.GetAllTrainingCourses_DataGrid(_context));
+
+            return PrepareDataGridObject(trainingCourses, dm);
         }
 
         [HttpPost]

@@ -25,9 +25,9 @@ namespace MyPortal.Models.Database
         public virtual DbSet<AssessmentGradeSet> AssessmentGradeSets { get; set; }
         public virtual DbSet<AssessmentResult> AssessmentResults { get; set; }
         public virtual DbSet<AssessmentResultSet> AssessmentResultSets { get; set; }
-        public virtual DbSet<AttendanceRegisterCode> AttendanceCodes { get; set; }
-        public virtual DbSet<AttendanceRegisterMark> AttendanceMarks { get; set; }
-        public virtual DbSet<AttendanceRegisterCodeMeaning> AttendanceMeanings { get; set; }
+        public virtual DbSet<AttendanceCode> AttendanceCodes { get; set; }
+        public virtual DbSet<AttendanceMark> AttendanceMarks { get; set; }
+        public virtual DbSet<AttendanceMeaning> AttendanceMeanings { get; set; }
         public virtual DbSet<AttendancePeriod> AttendancePeriods { get; set; }
         public virtual DbSet<AttendanceWeek> AttendanceWeeks { get; set; }
         public virtual DbSet<BehaviourAchievement> BehaviourAchievements { get; set; }
@@ -103,27 +103,27 @@ namespace MyPortal.Models.Database
                 .HasForeignKey(e => e.ResultSetId)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<AttendanceRegisterCode>()
+            modelBuilder.Entity<AttendanceCode>()
                 .Property(e => e.Code)
                 .IsFixedLength()
                 .IsUnicode(false);
 
-            modelBuilder.Entity<AttendanceRegisterCode>()
+            modelBuilder.Entity<AttendanceCode>()
                 .Property(e => e.Description)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<AttendanceRegisterMark>()
+            modelBuilder.Entity<AttendanceMark>()
                 .Property(e => e.Mark)
                 .IsFixedLength()
                 .IsUnicode(false);
 
-            modelBuilder.Entity<AttendanceRegisterCodeMeaning>()
+            modelBuilder.Entity<AttendanceMeaning>()
                 .Property(e => e.Description)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<AttendanceRegisterCodeMeaning>()
+            modelBuilder.Entity<AttendanceMeaning>()
                 .HasMany(e => e.AttendanceRegisterCodes)
-                .WithRequired(e => e.AttendanceRegisterCodeMeaning)
+                .WithRequired(e => e.AttendanceMeaning)
                 .HasForeignKey(e => e.MeaningId)
                 .WillCascadeOnDelete(false);
 
@@ -376,19 +376,19 @@ namespace MyPortal.Models.Database
 
             modelBuilder.Entity<Student>()
                 .HasMany(e => e.FinanceBasketItems)
-                .WithRequired(e => e.CoreStudent)
+                .WithRequired(e => e.Student)
                 .HasForeignKey(e => e.StudentId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Student>()
                 .HasMany(e => e.ProfileLogs)
-                .WithRequired(e => e.CoreStudent)
+                .WithRequired(e => e.Student)
                 .HasForeignKey(e => e.StudentId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Student>()
                 .HasMany(e => e.FinanceSales)
-                .WithRequired(e => e.CoreStudent)
+                .WithRequired(e => e.Student)
                 .HasForeignKey(e => e.StudentId)
                 .WillCascadeOnDelete(false);
 
@@ -567,7 +567,7 @@ namespace MyPortal.Models.Database
                 .IsUnicode(false);
 
             modelBuilder.Entity<PastoralYearGroup>()
-                .HasMany(e => e.CoreStudents)
+                .HasMany(e => e.Students)
                 .WithRequired(e => e.PastoralYearGroup)
                 .HasForeignKey(e => e.YearGroupId)
                 .WillCascadeOnDelete(false);

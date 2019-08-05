@@ -29,7 +29,7 @@ namespace MyPortal.Dtos
 
         public virtual StaffMemberDto Author { get; set; }
 
-        public virtual StudentDto CoreStudent { get; set; }
+        public virtual StudentDto Student { get; set; }
 
         public virtual CurriculumAcademicYearDto CurriculumAcademicYear { get; set; }
 

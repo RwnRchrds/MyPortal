@@ -13,7 +13,7 @@ namespace MyPortal.Processes
 {
     public static class AttendanceProcesses
     {
-        public static ProcessResponse<bool> VerifyAttendanceCodes(this MyPortalDbContext context, ListContainer<AttendanceRegisterMark> register)
+        public static ProcessResponse<bool> VerifyAttendanceCodes(this MyPortalDbContext context, ListContainer<AttendanceMark> register)
         {
             var codesVerified = true;
             var codes = context.AttendanceCodes.ToList();
@@ -34,7 +34,7 @@ namespace MyPortal.Processes
             return new ProcessResponse<bool>(ResponseType.Ok, null, codesVerified);
         }
 
-        public static ProcessResponse<AttendanceRegisterMark> GetAttendanceMark(MyPortalDbContext context, AttendanceWeek attendanceWeek, AttendancePeriod period, Student student)
+        public static ProcessResponse<AttendanceMark> GetAttendanceMark(MyPortalDbContext context, AttendanceWeek attendanceWeek, AttendancePeriod period, Student student)
         {
             var mark = context.AttendanceMarks.SingleOrDefault(x =>
                 x.PeriodId == period.Id && x.WeekId == attendanceWeek.Id && x.StudentId == student.Id);
@@ -46,7 +46,7 @@ namespace MyPortal.Processes
                     return null;
                 }
 
-                mark = new AttendanceRegisterMark
+                mark = new AttendanceMark
                 {
                     Student = student,
                     Mark = "-",
@@ -58,13 +58,13 @@ namespace MyPortal.Processes
                 };
             }
 
-            return new ProcessResponse<AttendanceRegisterMark>(ResponseType.Ok, null, mark);
+            return new ProcessResponse<AttendanceMark>(ResponseType.Ok, null, mark);
         }
 
-        public static IEnumerable<AttendanceRegisterMarkLite> PrepareLiteMarkList(MyPortalDbContext context, List<AttendanceRegisterMark> marks, bool retrieveMeanings)
+        public static IEnumerable<AttendanceRegisterMarkLite> PrepareLiteMarkList(MyPortalDbContext context, List<AttendanceMark> marks, bool retrieveMeanings)
         {
             var liteMarks = marks.OrderBy(x => x.AttendancePeriod.StartTime)
-                .Select(Mapper.Map<AttendanceRegisterMark, AttendanceRegisterMarkLite>).ToList();
+                .Select(Mapper.Map<AttendanceMark, AttendanceRegisterMarkLite>).ToList();
 
             foreach (var mark in liteMarks)
             {
@@ -84,11 +84,11 @@ namespace MyPortal.Processes
             return liteMarks;
         }
 
-        public static AttendanceRegisterCodeMeaning GetMeaning(MyPortalDbContext context, string mark)
+        public static AttendanceMeaning GetMeaning(MyPortalDbContext context, string mark)
         {
             var codeInDb = context.AttendanceCodes.SingleOrDefault(x => x.Code == mark);
 
-            return codeInDb?.AttendanceRegisterCodeMeaning;
+            return codeInDb?.AttendanceMeaning;
         }
 
         public static ProcessResponse<AttendanceSummary> GetSummary(int studentId, int academicYearId, MyPortalDbContext context, bool asPercentage = false)
@@ -170,7 +170,7 @@ namespace MyPortal.Processes
                 var markObject = new StudentRegisterMarksDto();
                 var student = enrolment.Student;
                 markObject.Student = Mapper.Map<Student, StudentDto>(student);
-                var marks = new List<AttendanceRegisterMark>();
+                var marks = new List<AttendanceMark>();
 
                 foreach (var period in periodsInDay)
                 {

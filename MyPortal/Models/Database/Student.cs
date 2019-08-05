@@ -16,7 +16,7 @@ namespace MyPortal.Models.Database
         public Student()
         {
             AssessmentResults = new HashSet<AssessmentResult>();
-            AttendanceRegisterMarks = new HashSet<AttendanceRegisterMark>();
+            AttendanceRegisterMarks = new HashSet<AttendanceMark>();
             BehaviourAchievements = new HashSet<BehaviourAchievement>();
             BehaviourIncidents = new HashSet<BehaviourIncident>();
             CurriculumClassEnrolments = new HashSet<CurriculumEnrolment>();
@@ -61,7 +61,7 @@ namespace MyPortal.Models.Database
         public virtual ICollection<AssessmentResult> AssessmentResults { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AttendanceRegisterMark> AttendanceRegisterMarks { get; set; }
+        public virtual ICollection<AttendanceMark> AttendanceRegisterMarks { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BehaviourAchievement> BehaviourAchievements { get; set; }

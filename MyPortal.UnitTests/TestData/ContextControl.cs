@@ -41,17 +41,17 @@ namespace MyPortal.UnitTests.TestData
 
             };
             
-            var attendanceCodes = new List<AttendanceRegisterCode>
+            var attendanceCodes = new List<AttendanceCode>
             {
                 
             };
 
-            var attendanceMarks = new List<AttendanceRegisterMark>
+            var attendanceMarks = new List<AttendanceMark>
             {
 
             };
 
-            var attendanceMeanings = new List<AttendanceRegisterCodeMeaning>
+            var attendanceMeanings = new List<AttendanceMeaning>
             {
 
             };

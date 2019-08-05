@@ -91,11 +91,11 @@ namespace MyPortal
             CreateMap<AttendanceWeek, AttendanceWeekDto>();
             CreateMap<AttendanceWeekDto, AttendanceWeek>();
 
-            CreateMap<AttendanceRegisterMark, AttendanceRegisterMarkDto>();
-            CreateMap<AttendanceRegisterMarkDto, AttendanceRegisterMark>();
+            CreateMap<AttendanceMark, AttendanceRegisterMarkDto>();
+            CreateMap<AttendanceRegisterMarkDto, AttendanceMark>();
 
-            CreateMap<AttendanceRegisterMark, AttendanceRegisterMarkLite>();
-            CreateMap<AttendanceRegisterMarkLite, AttendanceRegisterMark>();
+            CreateMap<AttendanceMark, AttendanceRegisterMarkLite>();
+            CreateMap<AttendanceRegisterMarkLite, AttendanceMark>();
 
             CreateMap<FinanceProductType, FinanceProductTypeDto>();
             CreateMap<FinanceProductTypeDto, FinanceProductType>();
@@ -178,7 +178,7 @@ namespace MyPortal
                 .ForMember(dest => dest.ProductDescription,
                     opts => opts.MapFrom(src => src.FinanceProduct.Description))
                 .ForMember(dest => dest.StudentName,
-                    opts => opts.MapFrom(src => PeopleProcesses.GetStudentDisplayName(src.CoreStudent).ResponseObject));
+                    opts => opts.MapFrom(src => PeopleProcesses.GetStudentDisplayName(src.Student).ResponseObject));
 
             CreateMap<AssessmentResultSet, GridAssessmentResultSetDto>();
 
@@ -223,6 +223,14 @@ namespace MyPortal
             CreateMap<StaffMember, GridStaffMemberDto>()
                 .ForMember(dest => dest.DisplayName,
                     opts => opts.MapFrom(src => PeopleProcesses.GetStaffFullName(src).ResponseObject));
+
+            CreateMap<PersonnelTrainingCourse, GridPersonnelTrainingCourseDto>();
+
+            CreateMap<FinanceBasketItem, GridFinanceBasketItemDto>()
+                .ForMember(dest => dest.ProductDescription,
+                    opts => opts.MapFrom(src => src.FinanceProduct.Description))
+                .ForMember(dest => dest.StudentName,
+                    opts => opts.MapFrom(src => PeopleProcesses.GetStudentDisplayName(src.Student)));
         }
     }
 }    

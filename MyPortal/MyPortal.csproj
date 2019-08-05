@@ -307,9 +307,11 @@
     <Compile Include="Dtos\GridDtos\GridCurriculumSubjectDto.cs" />
     <Compile Include="Dtos\GridDtos\GridDocumentDto.cs" />
     <Compile Include="Dtos\GridDtos\GridBehaviourIncidentDto.cs" />
+    <Compile Include="Dtos\GridDtos\GridFinanceBasketItemDto.cs" />
     <Compile Include="Dtos\GridDtos\GridFinanceProductDto.cs" />
     <Compile Include="Dtos\GridDtos\GridFinanceSaleDto.cs" />
     <Compile Include="Dtos\GridDtos\GridPersonnelTrainingCertificateDto.cs" />
+    <Compile Include="Dtos\GridDtos\GridPersonnelTrainingCourseDto.cs" />
     <Compile Include="Dtos\GridDtos\GridProfileLogDto.cs" />
     <Compile Include="Dtos\GridDtos\GridPersonnelObservationDto.cs" />
     <Compile Include="Dtos\GridDtos\GridPersonDocumentDto.cs" />
@@ -399,9 +401,9 @@
     <Compile Include="Models\Database\AssessmentResult.cs" />
     <Compile Include="Models\Database\AssessmentResultSet.cs" />
     <Compile Include="Models\Database\AttendancePeriod.cs" />
-    <Compile Include="Models\Database\AttendanceRegisterCode.cs" />
-    <Compile Include="Models\Database\AttendanceRegisterCodeMeaning.cs" />
-    <Compile Include="Models\Database\AttendanceRegisterMark.cs" />
+    <Compile Include="Models\Database\AttendanceCode.cs" />
+    <Compile Include="Models\Database\AttendanceMeaning.cs" />
+    <Compile Include="Models\Database\AttendanceMark.cs" />
     <Compile Include="Models\Database\AttendanceWeek.cs" />
     <Compile Include="Models\Database\CurriculumAcademicYear.cs" />
     <Compile Include="Models\Database\CurriculumEnrolment.cs" />

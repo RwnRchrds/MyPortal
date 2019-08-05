@@ -10,7 +10,7 @@ namespace MyPortal.Models.Database
     /// [SYSTEM] Codes available to use when taking the register.
     /// </summary>
     [Table("Attendance_RegisterCodes")]
-    public partial class AttendanceRegisterCode
+    public partial class AttendanceCode
     {
         //THIS IS A SYSTEM CLASS AND SHOULD NOT HAVE FEATURES TO ADD, MODIFY OR DELETE DATABASE OBJECTS
         public int Id { get; set; }
@@ -28,6 +28,6 @@ namespace MyPortal.Models.Database
 
         public bool System { get; set; }
 
-        public virtual AttendanceRegisterCodeMeaning AttendanceRegisterCodeMeaning { get; set; }
+        public virtual AttendanceMeaning AttendanceMeaning { get; set; }
     }
 }
