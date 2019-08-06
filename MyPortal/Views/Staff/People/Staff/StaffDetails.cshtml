@@ -149,7 +149,7 @@
                     <span aria-hidden="true"></span>&times;
                 </button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/staff/certificates/create", HttpMethod = "POST", OnSuccess = "createCertificateSuccess", OnFailure = "createCertificateError"}, new {id = "newCertForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/personnel/certificates/create", HttpMethod = "POST", OnSuccess = "createCertificateSuccess", OnFailure = "createCertificateError"}, new {id = "newCertForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -188,7 +188,7 @@
                     <span aria-hidden="true"></span>&times;
                 </button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/staff/observations/add", HttpMethod = "POST", OnSuccess = "createObservationSuccess", OnFailure = "createObservationError"}, new {id = "newObservationForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/personnel/observations/create", HttpMethod = "POST", OnSuccess = "createObservationSuccess", OnFailure = "createObservationError"}, new {id = "newObservationForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -226,7 +226,7 @@
                     <span aria-hidden="true"></span>&times;
                 </button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/staff/certificates/update", HttpMethod = "POST", OnSuccess = "editCertificateSuccess", OnFailure = "editCertificateError"}, new {id = "EditCertForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/personnel/certificates/update", HttpMethod = "POST", OnSuccess = "editCertificateSuccess", OnFailure = "editCertificateError"}, new {id = "EditCertForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -265,7 +265,7 @@
                     <span aria-hidden="false"></span>&times;
                 </button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/staff/edit", HttpMethod = "POST", OnSuccess = "editStaffSuccess", OnFailure = "editStaffError"}, new {id = "EditStaffForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/people/staff/update", HttpMethod = "POST", OnSuccess = "editStaffSuccess", OnFailure = "editStaffError"}, new {id = "EditStaffForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -315,7 +315,7 @@
                     <span aria-hidden="true"></span>&times;
                 </button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/staff/documents/add", HttpMethod = "POST", OnSuccess = "createDocumentSuccess", OnFailure = "createDocumentError"}, new {id = "newDocumentForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/documents/personal/create", HttpMethod = "POST", OnSuccess = "createDocumentSuccess", OnFailure = "createDocumentError"}, new {id = "newDocumentForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -352,7 +352,7 @@
                     <span aria-hidden="true"></span>&times;
                 </button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/staff/documents/edit", HttpMethod = "POST", OnSuccess = "editDocumentSuccess", OnFailure = "editDocumentError"}, new {id = "editDocumentForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/documents/personal/update", HttpMethod = "POST", OnSuccess = "editDocumentSuccess", OnFailure = "editDocumentError"}, new {id = "editDocumentForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -391,7 +391,7 @@
                     <span aria-hidden="true"></span>&times;
                 </button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/staff/observations/update", HttpMethod = "POST", OnSuccess = "editObservationSuccess", OnFailure = "editObservationError"}, new {id = "editObservationForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/personnel/observations/update", HttpMethod = "POST", OnSuccess = "editObservationSuccess", OnFailure = "editObservationError"}, new {id = "editObservationForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -856,5 +856,5 @@
                     </script>
 
     @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/bundles/staff")
+    
 }
