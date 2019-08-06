@@ -7,6 +7,9 @@ using System.Web.UI.WebControls;
 
 namespace MyPortal.Models.Database
 {
+    /// <summary>
+    /// A document assigned to a person.
+    /// </summary>
     [Table("Docs_PersonDocuments")]
     public class PersonDocument
     {

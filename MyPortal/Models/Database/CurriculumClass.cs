@@ -7,7 +7,7 @@ namespace MyPortal.Models.Database
     using System.Data.Entity.Spatial;
 
     /// <summary>
-    /// An individual class in which students are enrolled.
+    /// A class in which students are enrolled.
     /// </summary>
     [Table("Curriculum_Classes")]
     public partial class CurriculumClass

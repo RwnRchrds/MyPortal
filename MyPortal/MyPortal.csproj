@@ -312,6 +312,8 @@
     <Compile Include="Dtos\GridDtos\GridFinanceSaleDto.cs" />
     <Compile Include="Dtos\GridDtos\GridPersonnelTrainingCertificateDto.cs" />
     <Compile Include="Dtos\GridDtos\GridPersonnelTrainingCourseDto.cs" />
+    <Compile Include="Dtos\GridDtos\GridProfileCommentBankDto.cs" />
+    <Compile Include="Dtos\GridDtos\GridProfileCommentDto.cs" />
     <Compile Include="Dtos\GridDtos\GridProfileLogDto.cs" />
     <Compile Include="Dtos\GridDtos\GridPersonnelObservationDto.cs" />
     <Compile Include="Dtos\GridDtos\GridPersonDocumentDto.cs" />

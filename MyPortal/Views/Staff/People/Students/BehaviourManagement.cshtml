@@ -22,7 +22,7 @@
 
         @Html.EJS().Grid("achievements").DataSource(dataManager =>
         {
-            dataManager.Url("/api/behaviour/achievements/dataGrid/get/" + Model.Student.Id).CrossDomain(false).Adaptor("UrlAdaptor");
+            dataManager.Url("/api/behaviour/achievements/get/byStudent/dataGrid/" + Model.Student.Id).CrossDomain(false).Adaptor("UrlAdaptor");
         }).Columns(col =>
         {
             col.Field("Date").HeaderText("Date").Template("#achievementsDateTemplate").Add();
@@ -44,7 +44,7 @@
 
         @Html.EJS().Grid("behaviour").DataSource(dataManager =>
         {
-            dataManager.Url("/api/behaviour/incidents/dataGrid/get/" + Model.Student.Id).CrossDomain(false).Adaptor("UrlAdaptor");
+            dataManager.Url("/api/behaviour/incidents/get/byStudent/dataGrid/" + Model.Student.Id).CrossDomain(false).Adaptor("UrlAdaptor");
         }).Columns(col =>
         {
             col.Field("Date").HeaderText("Date").Template("#incidentsDateTemplate").Add();
@@ -161,7 +161,7 @@
                 <h4 class="modal-title">New Incident</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/behaviour/behaviour/create", HttpMethod = "POST", OnSuccess = "newIncidentSuccess", OnFailure = "newIncidentFailure" }, new { id = "newIncidentForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/behaviour/incidents/create", HttpMethod = "POST", OnSuccess = "newIncidentSuccess", OnFailure = "newIncidentFailure" }, new { id = "newIncidentForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -209,7 +209,7 @@
                 <h4 class="modal-title">Edit Incident</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/behaviour/behaviour/update", HttpMethod = "POST", OnSuccess = "editIncidentSuccess", OnFailure = "editIncidentFailure" }, new { id = "editIncidentForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/behaviour/incidents/update", HttpMethod = "POST", OnSuccess = "editIncidentSuccess", OnFailure = "editIncidentFailure" }, new { id = "editIncidentForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">

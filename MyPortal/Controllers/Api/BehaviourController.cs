@@ -32,7 +32,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [Route("achievements/get/dataGrid/{studentId:int}")]
+        [Route("achievements/get/byStudent/dataGrid/{studentId:int}")]
         public IHttpActionResult GetAchievementsForDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
@@ -80,7 +80,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [Route("incidents/get/dataGrid/{studentId:int}")]
+        [Route("incidents/get/byStudent/dataGrid/{studentId:int}")]
         public IHttpActionResult GetBehaviourForDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);

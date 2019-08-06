@@ -7,7 +7,7 @@ namespace MyPortal.Models.Database
     using System.Data.Entity.Spatial;
 
     /// <summary>
-    /// Represents a sale created when a student purchases an item.
+    /// Represents a sale created when an item is purchased.
     /// </summary>
     [Table("Finance_Sales")]
     public partial class FinanceSale

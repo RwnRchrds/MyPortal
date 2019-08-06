@@ -7,6 +7,9 @@ using System.Web;
 
 namespace MyPortal.Models.Database
 {
+    /// <summary>
+    /// Category of achievement.
+    /// </summary>
     [Table("Behaviour_AchievementTypes")]
     public class BehaviourAchievementType
     {

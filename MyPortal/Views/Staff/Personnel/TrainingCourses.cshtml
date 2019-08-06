@@ -4,12 +4,12 @@
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<div class="container float-left">
+<div class="container">
     <h2 class="mp-page-title">Training Courses</h2>
     <hr/>
 </div>
 
-<div class="container float-left">
+<div class="container">
     @if (User.IsInRole("SeniorStaff"))
     {
         @Html.ActionLink("New Course", "NewCourse", "Staff", null, new {@class = "btn btn-success", style = "margin-bottom: 8px;"})
@@ -17,20 +17,19 @@
     }
 </div>
 
-<div class="container float-left">
-    <table class="table table-bordered table-hover mp-table" id="courses">
-        <thead>
-        <tr>
-            <th>Code</th>
-            <th>Description</th>
-            @if (User.IsInRole("SeniorStaff"))
-            {
-                <th>Actions</th>
-            }
-        </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+<div class="container">
+   @Html.EJS().Grid("Courses").DataSource(d =>
+   {
+       d.Url("/api/personnel/courses/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor");
+   }).Columns(c =>
+   {
+       c.Field("Code").HeaderText("Code").Template("#coursesCodeTemplate").Width("150").Add();
+       c.Field("Description").HeaderText("Description").Template("#coursesDescriptionTemplate").Width("200").Add();
+       if (User.IsInRole("SeniorStaff"))
+       {
+           c.HeaderText("Actions").Template("#coursesActionsTemplate").Width("170").Add();
+       }
+   }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true);}).Toolbar(new List<string> {"Search"}).Render()
 </div>
 
 <div id="EditCourseModal" class="modal fade" role="dialog">
@@ -44,7 +43,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "EditCourseForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/personnel/courses/update", HttpMethod = "POST", OnSuccess = "editCourseSuccess", OnFailure = "editCourseFailure"}, new {id = "EditCourseForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -74,67 +73,15 @@
 
 @section scripts
 {
-    @if (User.IsInRole("SeniorStaff"))
-    {
-        <script>
-            $(document).ready(function() {
-
-                $("#courses").DataTable({
-                    ajax: {
-                        url: "/api/courses",
-                        dataSrc: ""
-                    },
-                    columns: [
-                        {
-                            data: "code"
-                        },
-                        {
-                            data: "description"
-                        },
-                        {
-                            data: "id",
-                            render: function(data) {
-                                return "<button type='button' class='btn btn-xs btn-warning js-edit' data-course-id=" +
-                                    data +
-                                    "><i class=\"far fa-edit\"></i></button> " +
-                                    "<button type='button' class='btn btn-xs btn-danger js-delete' data-course-id=" +
-                                    data +
-                                    "><i class=\"far fa-trash-alt\"></i></button>";
-                            }
-                        }
-                    ],
-                    "language": {
-                        "emptyTable": "No courses to display"
-                    }
-                });
-
-                $("#EditCourseForm").on("submit",
-                    function(e) {
-
-                        e.preventDefault();
-
-                        $.ajax({
-                            url: "/api/courses/edit",
-                            data: $("#EditCourseForm").serialize(),
-                            method: "POST",
-                            success: function(result) {
-                                $("#EditCourseModal").modal('hide');
-                                toastr.success(result);
-                                $("#courses").DataTable().ajax.reload();
-                            },
-                            error: function(result) {
-                                toastr.error(result.responseJSON);
-                            }
-
-                        });
-                    });
+    <script>
+            $(document).ready(function() {                               
 
                 $('#EditCourseModal').on('hidden.bs.modal',
                     function() {
                         $(this).find('form').trigger('reset');
                     });
 
-                $("#courses").on("click",
+                $("#Courses").on("click",
                     ".js-edit",
                     function() {
                         var button = $(this);
@@ -154,7 +101,7 @@
                         $("#EditCourseModal").modal('toggle');
                     });
 
-                $("#courses").on("click",
+                $("#Courses").on("click",
                     ".js-delete",
                     function() {
                         var button = $(this);
@@ -165,7 +112,7 @@
                                         url: "/api/courses/remove/" + button.attr("data-course-id"),
                                         method: "DELETE",
                                         success: function(ajaxResult) {
-                                            $("#courses").DataTable().ajax.reload();
+                                            refreshTable("Courses");
                                             toastr.success(ajaxResult);
                                         },
                                         error: function(ajaxResult) {
@@ -177,31 +124,32 @@
                     });
 
             });
-        </script>
-    }
+    </script>
 
-    @if (!User.IsInRole("SeniorStaff") && User.IsInRole("Staff"))
-    {
-        <script>
-            $(document).ready(function() {
-                $("#courses").DataTable({
-                    ajax: {
-                        url: "/api/courses",
-                        dataSrc: ""
-                    },
-                    columns: [
-                        {
-                            data: "code"
-                        },
-                        {
-                            data: "description"
-                        }
-                    ]
-                });
-            });
+    <script type="text/x-jsrender" id="coursesCodeTemplate">
+        <div>
+            ${Code}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="coursesDescriptionTemplate">
+        <div>
+            ${Description}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="coursesActionsTemplate">
+            <div>
+                <button type='button' class='btn btn-xs btn-warning js-edit' data-course-id="${Id}">
+                    <i class="far fa-edit"></i>
+                </button>
+                
+                <button type='button' class='btn btn-xs btn-danger js-delete' data-course-id="${Id}">
+                    <i class="far fa-trash-alt"></i>
+                </button>
+            </div>
         </script>
-    }
 
     @Scripts.Render("~/bundles/jqueryval")
-    
+
 }

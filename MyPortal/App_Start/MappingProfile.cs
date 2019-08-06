@@ -231,6 +231,11 @@ namespace MyPortal
                     opts => opts.MapFrom(src => src.FinanceProduct.Description))
                 .ForMember(dest => dest.StudentName,
                     opts => opts.MapFrom(src => PeopleProcesses.GetStudentDisplayName(src.Student)));
+            CreateMap<ProfileComment, GridProfileCommentDto>()
+                .ForMember(dest => dest.CommentBankName,
+                    opts => opts.MapFrom(src => src.ProfileCommentBank.Name));
+
+            CreateMap<ProfileCommentBank, GridProfileCommentBankDto>();
         }
     }
 }    

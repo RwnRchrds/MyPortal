@@ -31,8 +31,7 @@ namespace MyPortal.Controllers.Api
             var userId = User.Identity.GetUserId();
             return PrepareResponse(PersonnelProcesses.DeleteTrainingCertificate(staffId, courseId, userId, _context));
         }
-
-
+        
         [HttpGet]
         [Route("certificates/get/{staffId:int}/{courseId:int}")]
         public PersonnelTrainingCertificateDto GetCertificate([FromUri] int staffId, [FromUri] int courseId)

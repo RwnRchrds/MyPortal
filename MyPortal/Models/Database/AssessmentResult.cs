@@ -7,7 +7,7 @@ namespace MyPortal.Models.Database
     using System.Data.Entity.Spatial;
 
     /// <summary>
-    /// A result a student has achieved for a particular subject. Results are added to a result set.
+    /// A result a student has achieved for a particular subject.
     /// </summary>
     [Table("Assessment_Results")]
     public partial class AssessmentResult

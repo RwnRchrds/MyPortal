@@ -7,6 +7,9 @@ using System.Web;
 
 namespace MyPortal.Models.Database
 {
+    /// <summary>
+    /// Category of behaviour incident.
+    /// </summary>
     [Table("Behaviour_IncidentTypes")]
     public class BehaviourIncidentType
     {

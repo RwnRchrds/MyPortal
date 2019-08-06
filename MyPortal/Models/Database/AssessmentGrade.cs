@@ -7,7 +7,7 @@ namespace MyPortal.Models.Database
     using System.Data.Entity.Spatial;
 
     /// <summary>
-    /// Grades available to use in results.
+    /// Grade assigned to results.
     /// </summary>
     [Table("Assessment_Grades")]
     public partial class AssessmentGrade

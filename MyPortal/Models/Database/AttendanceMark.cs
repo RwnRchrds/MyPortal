@@ -7,7 +7,7 @@ namespace MyPortal.Models.Database
     using System.Data.Entity.Spatial;
 
     /// <summary>
-    /// An individual mark in the register. Represents a student's whereabouts at a particular period during the week it is recorded.
+    /// An individual mark in the register.
     /// </summary>
     [Table("Attendance_RegisterMarks")]
     public partial class AttendanceMark

@@ -7,7 +7,7 @@ namespace MyPortal.Models.Database
     using System.Data.Entity.Spatial;
 
     /// <summary>
-    /// A product available for purchase by students.
+    /// A product available for purchase on the system.
     /// </summary>
     [Table("Finance_Products")]
     public partial class FinanceProduct

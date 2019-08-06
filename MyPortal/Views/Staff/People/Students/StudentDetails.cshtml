@@ -14,15 +14,7 @@
     var freeSchoolMeals = Model.Student.FreeSchoolMeals ? "Yes" : "No";
 }
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
-
-<style>
-    
-    
-    
-</style>
-
-<div class="container" id="title">
+<div class="container">
     <h2 class="mp-page-title">@PeopleProcesses.GetStudentDisplayName(Model.Student).ResponseObject</h2>
     <hr/>
 </div>
@@ -48,9 +40,7 @@
             <a href="/Staff/People/Students/@Model.Student.Id/Results" class="dropdown-item">Results</a>
         </div>
     </div>
-
     <hr/>
-
 </div>
 
 <div class="container">
@@ -429,14 +419,9 @@
 @section scripts
 {
     <script>
-        //When Page Has Loaded, Prepare Scripts
-        $(document).ready(function() {
-
-            //---SCRIPT DEFINITIONS---
-
-            overviewCalc();
-
-            //Delete Log When Button Clicked
+        
+        $(document).ready(function() {           
+            overviewCalc();           
             $("#logs").on("click",
                 ".js-delete",
                 function() {
@@ -524,7 +509,7 @@
                     loadComments();
                 });
 
-            //Open Form When Edit Log Button Clicked
+            
             $("#logs").on("click",
                 ".js-edit",
                 function() {
@@ -544,8 +529,7 @@
                     });
                     $("#EditLogModal").modal('toggle');
                 });
-
-            //Open Form When Edit Document Button Clicked
+            
             $("#documents").on("click",
                 ".js-edit",
                 function() {
@@ -566,7 +550,6 @@
                     $("#EditDocumentModal").modal('toggle');
                 });
 
-
             $('#EditDetailsModal').on('hidden.bs.modal',
                 function() {
                     $("#editDetailsFirstNameControl").val("@Model.Student.Person.FirstName");
@@ -575,7 +558,7 @@
                     $("#editDetailsRegGroupControl").val("@Model.Student.RegGroupId");
                 });
 
-            //View Results
+            
             $("#ViewResultsButton").on("click",
                 function() {
                     var button = $(this);
@@ -675,8 +658,7 @@
         }
 
         function overviewCalc() {
-
-            //Attendance Block
+            
             if ($("#attendanceDetail").attr("data-hasdata") === "true") {
                 if (parseInt($("#attendanceDetail").text()) >= 95) {
                     $("#attendanceBlock").addClass("mp-background-success");
@@ -689,8 +671,7 @@
                     $("#attendanceBlock").addClass("mp-background-danger");
                 }
             }
-
-            //Achievements Block
+            
             if (parseInt($("#achievementDetail").text()) < @Model.BehaviourCount) {
                 $("#achievementBlock").addClass("mp-background-danger");
             }
@@ -701,7 +682,7 @@
                 $("#achievementBlock").addClass("mp-background-success");
             }
 
-            //Behaviour Block
+            
             if (parseInt($("#behaviourDetail").text()) === 0) {
                 $("#behaviourBlock").addClass("mp-background-success");
             }
@@ -850,7 +831,6 @@
             </button>
         </div>
     </script>
-
     
     @Scripts.Render("~/bundles/jqueryval")
 }

@@ -7,6 +7,9 @@ using System.Web;
 
 namespace MyPortal.Models.Database
 {
+    /// <summary>
+    /// Type of communication.
+    /// </summary>
     [Table("Communication_CommunicationTypes")]
     public class CommunicationType
     {

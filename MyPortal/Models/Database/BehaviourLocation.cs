@@ -7,6 +7,9 @@ using System.Web;
 
 namespace MyPortal.Models.Database
 {
+    /// <summary>
+    /// Location where an achievement/behaviour incident took place.
+    /// </summary>
     [Table("Behaviour_Locations")]
     public class BehaviourLocation
     {

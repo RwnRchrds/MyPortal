@@ -8,6 +8,9 @@ using System.Web.UI.WebControls;
 
 namespace MyPortal.Models.Database
 {
+    /// <summary>
+    /// A medical condition a person may have.
+    /// </summary>
     [Table("Medical_Conditions")]
     public class MedicalCondition
     {

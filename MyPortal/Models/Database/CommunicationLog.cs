@@ -6,6 +6,9 @@ using System.Web;
 
 namespace MyPortal.Models.Database
 {
+    /// <summary>
+    /// Record of communication made between the school and a contact.
+    /// </summary>
     [Table("Communication_CommunicationLogs")]
     public class CommunicationLog
     {

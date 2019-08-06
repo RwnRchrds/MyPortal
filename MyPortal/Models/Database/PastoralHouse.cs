@@ -7,6 +7,9 @@ using System.Web;
 
 namespace MyPortal.Models.Database
 {
+    /// <summary>
+    /// A school house.
+    /// </summary>
     [Table("Pastoral_Houses")]
     public class PastoralHouse
     {

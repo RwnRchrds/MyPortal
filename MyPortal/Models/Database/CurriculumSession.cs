@@ -7,7 +7,7 @@ namespace MyPortal.Models.Database
     using System.Data.Entity.Spatial;
 
     /// <summary>
-    /// Represents the assignment of a period in the week to a class.
+    /// A period in the week that a class takes place.
     /// </summary>
     [Table("Curriculum_Sessions")]
     public partial class CurriculumSession

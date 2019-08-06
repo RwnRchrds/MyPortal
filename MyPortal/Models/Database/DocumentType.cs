@@ -8,6 +8,9 @@ using System.Web;
 
 namespace MyPortal.Models.Database
 {
+    /// <summary>
+    /// Type of document
+    /// </summary>
     [Table("Docs_DocumentTypes")]
     public class DocumentType
     {

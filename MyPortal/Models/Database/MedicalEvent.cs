@@ -7,6 +7,9 @@ using System.Web;
 
 namespace MyPortal.Models.Database
 {
+    /// <summary>
+    /// A record of a medical event/emergency.
+    /// </summary>
     [Table("Medical_Events")]
     public class MedicalEvent
     {

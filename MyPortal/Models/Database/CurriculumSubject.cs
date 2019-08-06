@@ -7,7 +7,7 @@ namespace MyPortal.Models.Database
     using System.Data.Entity.Spatial;
 
     /// <summary>
-    /// A list of subjects/courses in the system.
+    /// A subject/course in the curriculum.
     /// </summary>
     [Table("Curriculum_Subjects")]
     public partial class CurriculumSubject

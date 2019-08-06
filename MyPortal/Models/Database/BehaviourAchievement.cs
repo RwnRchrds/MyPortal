@@ -7,6 +7,9 @@ using System.Web;
 
 namespace MyPortal.Models.Database
 {
+    /// <summary>
+    /// Record of a student achievement.
+    /// </summary>
     [Table("Behaviour_Achievements")]
     public class BehaviourAchievement
     {

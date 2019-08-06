@@ -170,12 +170,25 @@ namespace MyPortal.Processes
             return new ProcessResponse<ProfileCommentBankDto>(ResponseType.Ok, null,
                 Mapper.Map<ProfileCommentBank, ProfileCommentBankDto>(commentBankInDb));
         }
+        
+        public static ProcessResponse<IEnumerable<ProfileCommentBank>> GetAllCommentBanks_Model(MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<ProfileCommentBank>>(ResponseType.Ok, null,
+                context.ProfileCommentBanks.OrderBy(x => x.Name).ToList());
+        }
 
         public static ProcessResponse<IEnumerable<ProfileCommentBankDto>> GetAllCommentBanks(MyPortalDbContext context)
         {
             return new ProcessResponse<IEnumerable<ProfileCommentBankDto>>(ResponseType.Ok, null,
-                context.ProfileCommentBanks.OrderBy(x => x.Name).ToList()
+                GetAllCommentBanks_Model(context).ResponseObject
                     .Select(Mapper.Map<ProfileCommentBank, ProfileCommentBankDto>));
+        }
+        
+        public static ProcessResponse<IEnumerable<GridProfileCommentBankDto>> GetAllCommentBanks_DataGrid(MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<GridProfileCommentBankDto>>(ResponseType.Ok, null,
+                GetAllCommentBanks_Model(context).ResponseObject
+                    .Select(Mapper.Map<ProfileCommentBank, GridProfileCommentBankDto>));
         }
 
         public static ProcessResponse<object> UpdateCommentBank(ProfileCommentBank commentBank,
@@ -241,15 +254,30 @@ namespace MyPortal.Processes
                 .ToList()
                 .Select(Mapper.Map<ProfileComment, ProfileCommentDto>));
         }
+        
+        public static ProcessResponse<IEnumerable<ProfileComment>> GetCommentsByBank_Model(int commentBankId,
+            MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<ProfileComment>>(ResponseType.Ok, null, context.ProfileComments
+                .Where(x => x.CommentBankId == commentBankId)
+                .OrderBy(x => x.Value)
+                .ToList());
+        }
 
         public static ProcessResponse<IEnumerable<ProfileCommentDto>> GetCommentsByBank(int commentBankId,
             MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<ProfileCommentDto>>(ResponseType.Ok, null, context.ProfileComments
-                .Where(x => x.CommentBankId == commentBankId)
-                .OrderBy(x => x.Value)
-                .ToList()
-                .Select(Mapper.Map<ProfileComment, ProfileCommentDto>));
+            return new ProcessResponse<IEnumerable<ProfileCommentDto>>(ResponseType.Ok, null,
+                GetCommentsByBank_Model(commentBankId, context).ResponseObject
+                    .Select(Mapper.Map<ProfileComment, ProfileCommentDto>));
+        }
+        
+        public static ProcessResponse<IEnumerable<GridProfileCommentDto>> GetCommentsByBank_DataGrid(int commentBankId,
+            MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<GridProfileCommentDto>>(ResponseType.Ok, null,
+                GetCommentsByBank_Model(commentBankId, context).ResponseObject
+                    .Select(Mapper.Map<ProfileComment, GridProfileCommentDto>));
         }
 
         public static ProcessResponse<object> UpdateComment(ProfileComment comment, MyPortalDbContext context)

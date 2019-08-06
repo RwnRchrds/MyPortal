@@ -7,6 +7,9 @@ using System.Web;
 
 namespace MyPortal.Models.Database
 {
+    /// <summary>
+    /// Type of person in the system.
+    /// </summary>
     [Table("People_PersonTypes")]
     public class PersonType
     {

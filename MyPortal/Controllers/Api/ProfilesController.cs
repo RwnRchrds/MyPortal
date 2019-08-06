@@ -106,6 +106,15 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [Route("commentBanks/get/dataGrid/all")]
+        public IHttpActionResult GetAllCommentBanksForDataGrid([FromBody] DataManagerRequest dm)
+        {
+            var commentBanks = PrepareResponseObject(ProfilesProcesses.GetAllCommentBanks_Model(_context));
+
+            return PrepareDataGridObject(commentBanks, dm);
+        }
+
+        [HttpPost]
         [Route("commentBanks/update")]
         public IHttpActionResult UpdateCommentBank([FromBody] ProfileCommentBank commentBank)
         {
@@ -145,6 +154,16 @@ namespace MyPortal.Controllers.Api
         public IEnumerable<ProfileCommentDto> GetCommentsByCommentBank([FromUri] int commentBankId)
         {
             return PrepareResponseObject(ProfilesProcesses.GetCommentsByBank(commentBankId, _context));
+        }
+
+        [HttpPost]
+        [Route("comments/get/byBank/dataGrid/{commentBankId:int}")]
+        public IHttpActionResult GetCommentsByCommentBankForDataGrid([FromUri] int commentBankId,
+            [FromBody] DataManagerRequest dm)
+        {
+            var comments = PrepareResponseObject(ProfilesProcesses.GetCommentsByBank_DataGrid(commentBankId, _context));
+
+            return PrepareDataGridObject(comments, dm);
         }
 
         [HttpPost]
