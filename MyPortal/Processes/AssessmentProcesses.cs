@@ -36,7 +36,7 @@ namespace MyPortal.Processes
 
             return new ProcessResponse<object>(ResponseType.Ok, "Result set created", null);
         }
-
+        
         public static ProcessResponse<object> UpdateResultSet(AssessmentResultSet resultSet, MyPortalDbContext context)
         {
             var resultSetInDb = context.AssessmentResultSets.SingleOrDefault(x => x.Id == resultSet.Id);

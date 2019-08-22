@@ -6,9 +6,10 @@ using MyPortal.Dtos.LiteDtos;
 
 namespace MyPortal.Dtos.ViewDtos
 {
-    public class StudentMarksCollection
+    public class StudentLiteMarksCollection
     {
-        public StudentDto Student { get; set; }
-        public IEnumerable<AttendanceRegisterMarkLite> Marks { get; set; }
+        //public StudentDto Student { get; set; }
+        public string StudentName { get; set; }
+        public IEnumerable<AttendanceMarkLite> Marks { get; set; }
     }
 }

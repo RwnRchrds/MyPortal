@@ -89,34 +89,24 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/Attendance/Registers.cshtml", viewModel);
         }
 
-        [System.Web.Mvc.Route("Attendance/TakeRegister/{weekId}/{periodId}")]
-        public ActionResult TakeRegister(int weekId, int periodId)
+        [System.Web.Mvc.Route("Attendance/TakeRegister/{weekId:int}/{sessionId:int}")]
+        public ActionResult TakeRegister(int weekId, int sessionId)
         {
             var viewModel = new TakeRegisterViewModel();
             var attendanceWeek = _context.AttendanceWeeks.SingleOrDefault(x => x.Id == weekId);
-            var session = _context.CurriculumSessions.SingleOrDefault(x => x.Id == periodId);
+            var session = _context.CurriculumSessions.SingleOrDefault(x => x.Id == sessionId);
 
-            if (attendanceWeek == null || session == null)
+            if (attendanceWeek == null || session == null || attendanceWeek.IsHoliday || attendanceWeek.IsNonTimetable)
             {
                 return RedirectToAction("Registers");
             }
 
             var sessionDate = PrepareResponseObject(AttendanceProcesses.GetPeriodDate(attendanceWeek.Id, session.PeriodId, _context));
 
-            var sessions = _context.CurriculumSessions.Where(x => x.ClassId == session.ClassId);
-
-            var validRegister = !attendanceWeek.IsHoliday && !attendanceWeek.IsNonTimetable &&
-                                sessions.Any(x => x.PeriodId == session.PeriodId);
-
-            if (!validRegister)
-            {
-                return RedirectToAction("Registers");
-            }
-
-            viewModel.ClassPeriod = session;
+            viewModel.Session = session;
             viewModel.WeekId = attendanceWeek.Id;
 
-            viewModel.Periods = _context.AttendancePeriods.Where(x => x.Weekday == session.AttendancePeriod.Weekday);
+            viewModel.Periods = _context.AttendancePeriods.Where(x => x.Weekday == session.AttendancePeriod.Weekday).OrderBy(x => x.StartTime).ToList();
 
             viewModel.SessionDate = sessionDate;
 

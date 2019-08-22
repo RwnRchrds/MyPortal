@@ -11,7 +11,7 @@ namespace MyPortal.ViewModels
     {
         public int WeekId { get; set; }
         public DateTime SessionDate { get; set; }
-        public CurriculumSession ClassPeriod { get; set; }  
+        public CurriculumSession Session { get; set; }  
         public IEnumerable<AttendancePeriod> Periods { get; set; }        
     }
 }

@@ -81,9 +81,9 @@ namespace MyPortal.Controllers.Api
                     throw new HttpResponseException(HttpStatusCode.NotFound);
                 }
 
-                if (studentUser.Id != requestedStudent.Id)
+                if (requestedStudent.Id != studentUser.Id)
                 {
-                    throw new HttpResponseException(HttpStatusCode.BadRequest);
+                    throw new HttpResponseException(HttpStatusCode.Unauthorized);
                 }
             }
         }

@@ -61,34 +61,32 @@ namespace MyPortal.Processes
             return new ProcessResponse<AttendanceMark>(ResponseType.Ok, null, mark);
         }
 
-        public static IEnumerable<AttendanceRegisterMarkLite> PrepareLiteMarkList(MyPortalDbContext context, List<AttendanceMark> marks, bool retrieveMeanings)
+        public static IEnumerable<AttendanceMarkLite> PrepareLiteMarkList(MyPortalDbContext context, List<AttendanceMark> marks, bool retrieveMeanings)
         {
             var liteMarks = marks.OrderBy(x => x.AttendancePeriod.StartTime)
-                .Select(Mapper.Map<AttendanceMark, AttendanceRegisterMarkLite>).ToList();
+                .Select(Mapper.Map<AttendanceMark, AttendanceMarkLite>).ToList();
 
-            foreach (var mark in liteMarks)
+            if (retrieveMeanings)
             {
-                var meaning = GetMeaning(context, mark.Mark);
-
-                if (meaning == null)
+                foreach (var mark in liteMarks)
                 {
-                    continue;
+                    mark.MeaningCode = GetMeaning(context, mark.Mark).ResponseObject.Code;
                 }
-
-                if (retrieveMeanings)
-                {
-                    mark.MeaningCode = meaning.Code;
-                }                
             }
 
             return liteMarks;
         }
 
-        public static AttendanceMeaning GetMeaning(MyPortalDbContext context, string mark)
+        public static ProcessResponse<AttendanceMeaning> GetMeaning(MyPortalDbContext context, string mark)
         {
             var codeInDb = context.AttendanceCodes.SingleOrDefault(x => x.Code == mark);
 
-            return codeInDb?.AttendanceMeaning;
+            if (codeInDb == null)
+            {
+                return new ProcessResponse<AttendanceMeaning>(ResponseType.NotFound, "Attendance code not found", null);
+            }
+            
+            return new ProcessResponse<AttendanceMeaning>(ResponseType.Ok, null, codeInDb.AttendanceMeaning);
         }
 
         public static ProcessResponse<AttendanceSummary> GetSummary(int studentId, int academicYearId, MyPortalDbContext context, bool asPercentage = false)
@@ -105,7 +103,7 @@ namespace MyPortal.Processes
 
             foreach (var mark in marksForStudent)
             {
-                var meaning = GetMeaning(context, mark.Mark);
+                var meaning = GetMeaning(context, mark.Mark).ResponseObject;
 
                 if (meaning == null)
                 {
@@ -143,33 +141,33 @@ namespace MyPortal.Processes
             return new ProcessResponse<AttendanceSummary>(ResponseType.Ok, null, summary);
         }
 
-        public static ProcessResponse<IEnumerable<StudentRegisterMarksDto>> GetMarksForRegister(int academicYearId, int weekId,
-            int classPeriodId, MyPortalDbContext context)
+        public static ProcessResponse<IEnumerable<StudentLiteMarksCollection>> GetMarksForRegister(int academicYearId, int weekId,
+            int sessionId, MyPortalDbContext context)
         {
             var attendanceWeek =
                 context.AttendanceWeeks.SingleOrDefault(x => x.Id == weekId && x.AcademicYearId == academicYearId);
 
             if (attendanceWeek == null)
             {
-                return new ProcessResponse<IEnumerable<StudentRegisterMarksDto>>(ResponseType.NotFound, "Attendance week not found", null);
+                return new ProcessResponse<IEnumerable<StudentLiteMarksCollection>>(ResponseType.NotFound, "Attendance week not found", null);
             }
 
-            var currentPeriod = context.CurriculumSessions.SingleOrDefault(x => x.Id == classPeriodId);
+            var currentPeriod = context.CurriculumSessions.SingleOrDefault(x => x.Id == sessionId);
 
             if (currentPeriod == null)
             {
-                return new ProcessResponse<IEnumerable<StudentRegisterMarksDto>>(ResponseType.NotFound, "Period not found", null);
+                return new ProcessResponse<IEnumerable<StudentLiteMarksCollection>>(ResponseType.NotFound, "Period not found", null);
             }
 
             var periodsInDay = context.AttendancePeriods.Where(x => x.Weekday == currentPeriod.AttendancePeriod.Weekday).ToList();
 
-            var markList = new List<StudentRegisterMarksDto>();
+            var markList = new List<StudentLiteMarksCollection>();
 
             foreach (var enrolment in currentPeriod.CurriculumClass.Enrolments)
             {
-                var markObject = new StudentRegisterMarksDto();
+                var markObject = new StudentLiteMarksCollection();
                 var student = enrolment.Student;
-                markObject.Student = Mapper.Map<Student, StudentDto>(student);
+                markObject.StudentName = PeopleProcesses.GetStudentDisplayName(enrolment.Student).ResponseObject;
                 var marks = new List<AttendanceMark>();
 
                 foreach (var period in periodsInDay)
@@ -179,14 +177,55 @@ namespace MyPortal.Processes
                     marks.Add(mark);
                 }
 
+                marks = marks.OrderBy(x => x.AttendancePeriod.StartTime).ToList();
+
                 var liteMarks = PrepareLiteMarkList(context, marks, true);
 
                 markObject.Marks = liteMarks;
                 markList.Add(markObject);
             }
 
-            return new ProcessResponse<IEnumerable<StudentRegisterMarksDto>>(ResponseType.Ok, null,
-                markList.ToList().OrderBy(x => x.Student.Person.LastName));
+            return new ProcessResponse<IEnumerable<StudentLiteMarksCollection>>(ResponseType.Ok, null,
+                markList.ToList().OrderBy(x => x.StudentName));
+        }
+
+        public static ProcessResponse<object> SaveRegisterMarks(IEnumerable<StudentLiteMarksCollection> markCollections,
+            MyPortalDbContext context)
+        {
+            foreach (var collection in markCollections)
+            {
+                foreach (var mark in collection.Marks)
+                {
+                    if (mark.Id == 0)
+                    {
+                        var attMark = new AttendanceMark
+                        {
+                            Mark = mark.Mark,
+                            PeriodId = mark.PeriodId,
+                            WeekId = mark.WeekId,
+                            StudentId = mark.StudentId
+                        };
+
+                        context.AttendanceMarks.Add(attMark);
+                    }
+
+                    else
+                    {
+                        var markInDb = context.AttendanceMarks.SingleOrDefault(x => x.Id == mark.Id);
+
+                        if (markInDb == null)
+                        {
+                            return new ProcessResponse<object>(ResponseType.NotFound,
+                                "An attendance mark could not be found", null);
+                        }
+
+                        markInDb.Mark = mark.Mark;
+                    }
+                }
+            }
+
+            context.SaveChanges();
+            return new ProcessResponse<object>(ResponseType.Ok, "Register saved", null);
         }
 
         public static ProcessResponse<IEnumerable<AttendancePeriodDto>> GetAllPeriods(MyPortalDbContext context)

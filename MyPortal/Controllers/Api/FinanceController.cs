@@ -95,7 +95,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [Route("products/edit")]
+        [Route("products/update")]
         public IHttpActionResult UpdateProduct([FromBody] FinanceProduct product)
         {
             return PrepareResponse(FinanceProcesses.UpdateProduct(product, _context));

@@ -94,8 +94,8 @@ namespace MyPortal
             CreateMap<AttendanceMark, AttendanceRegisterMarkDto>();
             CreateMap<AttendanceRegisterMarkDto, AttendanceMark>();
 
-            CreateMap<AttendanceMark, AttendanceRegisterMarkLite>();
-            CreateMap<AttendanceRegisterMarkLite, AttendanceMark>();
+            CreateMap<AttendanceMark, AttendanceMarkLite>();
+            CreateMap<AttendanceMarkLite, AttendanceMark>();
 
             CreateMap<FinanceProductType, FinanceProductTypeDto>();
             CreateMap<FinanceProductTypeDto, FinanceProductType>();

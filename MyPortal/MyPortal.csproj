@@ -318,7 +318,7 @@
     <Compile Include="Dtos\GridDtos\GridPersonnelObservationDto.cs" />
     <Compile Include="Dtos\GridDtos\GridPersonDocumentDto.cs" />
     <Compile Include="Dtos\GridDtos\GridStaffMemberDto.cs" />
-    <Compile Include="Dtos\LiteDtos\AttendanceRegisterMarkLite.cs" />
+    <Compile Include="Dtos\LiteDtos\AttendanceMarkLite.cs" />
     <Compile Include="Dtos\Identity\RoleDto.cs" />
     <Compile Include="Dtos\Identity\UserDto.cs" />
     <Compile Include="Dtos\MedicalConditionDto.cs" />
@@ -346,7 +346,7 @@
     <Compile Include="Dtos\GridDtos\GridStudentDto.cs" />
     <Compile Include="Dtos\StaffMemberDto.cs" />
     <Compile Include="Dtos\StudentDto.cs" />
-    <Compile Include="Dtos\ViewDtos\StudentRegisterMarksDto.cs" />
+    <Compile Include="Dtos\ViewDtos\StudentLiteMarksCollection.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -931,6 +931,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Results\" />
+    <Folder Include="Models\Authorisation" />
     <Folder Include="Views\Staff\Admissions\" />
     <Folder Include="Views\Staff\Behaviour\" />
     <Folder Include="Views\Staff\Communication\" />

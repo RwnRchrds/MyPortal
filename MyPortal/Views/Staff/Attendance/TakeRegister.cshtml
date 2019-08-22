@@ -1,7 +1,8 @@
 ﻿@using MyPortal.Processes
+@using Syncfusion.EJ2.Grids
 @model MyPortal.ViewModels.TakeRegisterViewModel
 @{
-    ViewBag.Title = "Take Register: " + @Model.ClassPeriod.AttendancePeriod.Name + " - " + @Model.ClassPeriod.CurriculumClass.Name;
+    ViewBag.Title = "Take Register: " + @Model.Session.AttendancePeriod.Name + " - " + @Model.Session.CurriculumClass.Name;
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
@@ -12,23 +13,24 @@
 </style>
 
 <div class="container float-left">
-    <h2 class="mp-page-title">Take Register:</h2>    
-    <h4>@Model.SessionDate.ToLongDateString() -  @Model.ClassPeriod.CurriculumClass.Name (@Model.ClassPeriod.AttendancePeriod.Name) - @PeopleProcesses.GetStaffDisplayName(Model.ClassPeriod.CurriculumClass.Teacher).ResponseObject</h4>
+    <h2 class="mp-page-title">Take Register:</h2>
+    <h4>@Model.SessionDate.ToLongDateString() -  @Model.Session.CurriculumClass.Name (@Model.Session.AttendancePeriod.Name) - @PeopleProcesses.GetStaffDisplayName(Model.Session.CurriculumClass.Teacher).ResponseObject</h4>
     <hr />
 </div>
 
 <div class="container float-left">
-    <table class="table table-sm table-bordered table-hover mp-table mp-table-link" id="marks">
-        <thead>
-        <tr>
-            <th>Student</th>
-            @foreach (var period in Model.Periods)
-            {
-                <th>@period.Name</th>
-            }
-        </tr>
-        </thead>
-    </table>       
+    @Html.EJS().Grid("Marks").DataSource(d =>
+    {
+        d.Url($"/api/attendance/marks/loadRegister/dataGrid/{Model.WeekId}/{Model.Session.Id}").BatchUrl("/api/attendance/marks/saveRegister").CrossDomain(false).Adaptor("UrlAdaptor");
+    }).Columns(c =>
+    {
+        c.Field("StudentName").HeaderText("Student").Template("#marksStudentTemplate").Width("150").Add();
+
+        for (int i = 0; i < Model.Periods.Count(); i++)
+        {
+            c.HeaderText(Model.Periods.ToList()[i].Name).Template($"#marksPeriod-{i}-Template").Width("70").TextAlign(TextAlign.Center).Add();
+        }
+    }).EnableHover().GridLines(GridLine.Both).Render()
 </div>
 
 <div class="container float-left">
@@ -39,85 +41,32 @@
 @section scripts
 {
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $("#buttonBack").on("click",
-                function() {
+                function () {
                     location.replace("/Staff/Attendance/Registers");
                 });
-
-            var url = "/api/attendance/marks/loadRegister/@Model.WeekId/@Model.ClassPeriod.Id"; 
-
-            $("#marks").DataTable({
-                ajax: {
-                    url: url,
-                    dataSrc: ""
-                },
-                columns: [
-                    {
-                        data: "student.id",
-                        render: function(data, type, markObject) {
-                            return markObject.student.person.lastName + ", " + markObject.student.person.firstName;
-                        }
-                    },
-                    {
-                        data: "marks",
-                        render: function(data, type, markObject) {
-                            return "<div data-reg-meaning='" + markObject.marks[0].meaningCode + "'>" + markObject.marks[0].mark + "</div>";
-                        }
-                    },
-                    {
-                        data: "marks",
-                        render: function (data, type, markObject) {
-                            return markObject.marks[1].mark;
-                        }
-                    },
-                    {
-                        data: "marks",
-                        render: function (data, type, markObject) {
-                            return markObject.marks[2].mark;
-                        }
-                    },
-                    {
-                        data: "marks",
-                        render: function (data, type, markObject) {
-                            return markObject.marks[3].mark;
-                        }
-                    },
-                    {
-                        data: "marks",
-                        render: function (data, type, markObject) {
-                            return markObject.marks[4].mark;
-                        }
-                    },
-                    {
-                        data: "marks",
-                        render: function (data, type, markObject) {
-                            return markObject.marks[5].mark;
-                        }
-                    },
-                    {
-                        data: "marks",
-                        render: function (data, type, markObject) {
-                            return markObject.marks[6].mark;
-                        }
-                    },
-                    {
-                        data: "marks",
-                        render: function (data, type, markObject) {
-                            return markObject.marks[7].mark;
-                        }
-                    }
-                ],
-                paging: false,
-                ordering: false,
-                searching: false,
-                info: false,
-                "language": {
-                    "emptyTable": "No students in class"
-                }
-            });
         });
+
+        function renderAttendanceMark(marks, i) {
+            return marks[i].Mark;
+        }
     </script>
+
+    <script type="text/x-jsrender" id="marksStudentTemplate">
+        <div>
+            ${StudentName}
+        </div>
+    </script>
+
+    @for (int i = 0; i < Model.Periods.Count(); i++)
+    {
+        <script type="text/x-jsrender" id="marksPeriod-@i-Template">
+            <div>
+                ${Marks[@i].Mark}
+            </div>
+        </script>
+    }
 }
 
 

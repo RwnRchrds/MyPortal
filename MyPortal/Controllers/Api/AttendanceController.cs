@@ -10,27 +10,54 @@ using MyPortal.Dtos.ViewDtos;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
 using MyPortal.Processes;
+using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
 {
     [RoutePrefix("api/attendance")]
+    [Authorize]
     public class AttendanceController : MyPortalApiController
     {
         [HttpGet]
-        [Route("marks/loadRegister/{weekId:int}/{classPeriodId:int}")]
-        public IEnumerable<StudentRegisterMarksDto> LoadRegister([FromUri] int weekId, [FromUri] int classPeriodId)
+        [Route("marks/loadRegister/{weekId:int}/{sessionId:int}")]
+        public IEnumerable<StudentLiteMarksCollection> LoadRegister([FromUri] int weekId, [FromUri] int sessionId)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             return PrepareResponseObject(
-                AttendanceProcesses.GetMarksForRegister(academicYearId, weekId, classPeriodId, _context));
+                AttendanceProcesses.GetMarksForRegister(academicYearId, weekId, sessionId, _context));
         }
 
+        [HttpPost]
+        [Route("marks/loadRegister/dataGrid/{weekId:int}/{sessionId:int}")]
+        public IHttpActionResult LoadRegisterForDataGrid([FromBody] DataManagerRequest dm, [FromUri] int weekId,
+            [FromUri] int sessionId)
+        {
+            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+
+            var registerMarks =
+                PrepareResponseObject(
+                    AttendanceProcesses.GetMarksForRegister(academicYearId, weekId, sessionId, _context));
+
+            return PrepareDataGridObject(registerMarks, dm);
+        }
+
+        [HttpPost]
+        [Route("marks/saveRegister")]
+        public IHttpActionResult SaveRegisterMarks(List<StudentLiteMarksCollection> changed, int? key)
+        {
+            var result = AttendanceProcesses.SaveRegisterMarks(changed, _context);
+
+            return PrepareResponse(result);
+        }
+        
         [HttpGet]
         [Route("summary/raw/{studentId:int}")]
         public AttendanceSummary GetRawAttendanceSummary([FromUri] int studentId)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            
+            AuthenticateStudentRequest(studentId);
             
             return PrepareResponseObject(AttendanceProcesses.GetSummary(studentId, academicYearId, _context));
         }
@@ -40,6 +67,8 @@ namespace MyPortal.Controllers.Api
         public AttendanceSummary GetPercentageAttendanceSummary([FromUri] int studentId)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            
+            AuthenticateStudentRequest(studentId);
 
             return PrepareResponseObject(AttendanceProcesses.GetSummary(studentId, academicYearId, _context, true));
         }
