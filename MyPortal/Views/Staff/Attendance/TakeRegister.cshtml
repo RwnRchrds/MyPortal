@@ -30,7 +30,7 @@
         {
             c.HeaderText(Model.Periods.ToList()[i].Name).Template($"#marksPeriod-{i}-Template").Width("70").TextAlign(TextAlign.Center).Add();
         }
-    }).EnableHover().GridLines(GridLine.Both).Render()
+    }).EditSettings(e => { e.AllowEditing(true).Mode(EditMode.Batch);}).EnableHover().Toolbar(new List<string>() {"Update"}).GridLines(GridLine.Both).Render()
 </div>
 
 <div class="container float-left">
@@ -61,11 +61,22 @@
 
     @for (int i = 0; i < Model.Periods.Count(); i++)
     {
-        <script type="text/x-jsrender" id="marksPeriod-@i-Template">
-            <div>
-                ${Marks[@i].Mark}
-            </div>
-        </script>
+        if (Model.Periods.ElementAt(i).Name == Model.Session.AttendancePeriod.Name)
+        {
+            <script type="text/x-jsrender" id="marksPeriod-@i-Template">
+                <div class="register-column-current">
+                    ${Marks[@i].Mark}
+                </div>
+            </script>
+        }
+        else
+        {
+            <script type="text/x-jsrender" id="marksPeriod-@i-Template">
+                <div>
+                    ${Marks[@i].Mark}
+                </div>
+            </script>
+        }
     }
 }
 
