@@ -16,7 +16,7 @@
 <div class="container">
     <div>
         <h4 class="mp-bold">Achievements</h4>
-        <button type="button" class="btn btn-success mp-btn-table" data-toggle="modal" data-target="#newAchievementModal">
+        <button type="button" class="btn btn-primary mp-btn-table" data-toggle="modal" data-target="#newAchievementModal">
             <i class="fa fa-plus-circle"></i> New Achievement
         </button>
 
@@ -38,7 +38,7 @@
 <div class="container mp-margin-top">
     <div>
         <h4 class="mp-bold">Behaviour Incidents</h4>
-        <button type="button" class="btn btn-success mp-btn-table" data-toggle="modal" data-target="#newIncidentModal">
+        <button type="button" class="btn btn-primary mp-btn-table" data-toggle="modal" data-target="#newIncidentModal">
             <i class="fa fa-plus-circle"></i> New Incident
         </button>
 
@@ -267,7 +267,7 @@
                     var button = $(this);
                     var achievementId = button.attr("data-ba-id");
                     $.ajax({
-                        url: "/api/behaviour/achievements/get/" + achievementId,
+                        url: "/api/behaviour/achievements/get/byId/" + achievementId,
                         method: "GET",
                         success: function (result) {
                             $("#editAchievementIdControl").val(result["id"]);
@@ -290,7 +290,7 @@
                     var button = $(this);
                     var incidentId = button.attr("data-bi-id");
                     $.ajax({
-                        url: "/api/behaviour/behaviour/get/" + incidentId,
+                        url: "/api/behaviour/behaviour/get/byId/" + incidentId,
                         method: "GET",
                         success: function (result) {
                             $("#editBehaviourIdControl").val(result["id"]);

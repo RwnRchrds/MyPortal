@@ -1,14 +1,10 @@
-﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using MyPortal.Dtos.LiteDtos;
 
-namespace MyPortal.Dtos.ViewDtos
+namespace MyPortal.Models.Misc
 {
-    public class StudentLiteMarksCollection
+    public class StudentAttendanceMarkCollection
     {
-        //public StudentDto Student { get; set; }
         public string StudentName { get; set; }
         public IEnumerable<AttendanceMarkLite> Marks { get; set; }
     }

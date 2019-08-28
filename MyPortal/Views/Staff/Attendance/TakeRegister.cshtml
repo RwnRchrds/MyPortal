@@ -21,21 +21,19 @@
 <div class="container float-left">
     @Html.EJS().Grid("Marks").DataSource(d =>
     {
-        d.Url($"/api/attendance/marks/loadRegister/dataGrid/{Model.WeekId}/{Model.Session.Id}").BatchUrl("/api/attendance/marks/saveRegister").CrossDomain(false).Adaptor("UrlAdaptor");
+        d.Url($"/api/attendance/marks/takeRegister/dataGrid/{Model.WeekId}/{Model.Session.Id}").BatchUrl("/api/attendance/marks/saveRegister").CrossDomain(false).Adaptor("UrlAdaptor");
     }).Columns(c =>
     {
         c.Field("StudentName").HeaderText("Student").Template("#marksStudentTemplate").Width("150").Add();
-
-        for (int i = 0; i < Model.Periods.Count(); i++)
-        {
-            c.HeaderText(Model.Periods.ToList()[i].Name).Template($"#marksPeriod-{i}-Template").Width("70").TextAlign(TextAlign.Center).Add();
-        }
-    }).EditSettings(e => { e.AllowEditing(true).Mode(EditMode.Batch);}).EnableHover().Toolbar(new List<string>() {"Update"}).GridLines(GridLine.Both).Render()
+        c.Field("Mark.Mark").HeaderText(Model.Session.AttendancePeriod.Name).Width("150").Add();
+    }).EditSettings(e => { e.AllowEditing(true).Mode(EditMode.Batch);}).EnableHover().Toolbar(new List<string>() {"Update", "Cancel"}).ActionComplete("dataGridActionComplete").Render()
 </div>
 
 <div class="container float-left">
-    <button type="button" class="btn btn-primary" id="buttonBack">Back</button>
-    <button type="button" class="btn btn-primary" id="buttonSearch">Save</button>
+    <div class="form-group">
+        <button type="button" class="btn btn-primary" id="buttonBack">Back</button>
+        <button type="button" class="btn btn-primary" id="buttonSearch">Save</button>
+    </div>
 </div>
 
 @section scripts
@@ -46,10 +44,10 @@
                 function () {
                     location.replace("/Staff/Attendance/Registers");
                 });
-        });
+        }); 
 
-        function renderAttendanceMark(marks, i) {
-            return marks[i].Mark;
+        function dataGridActionComplete(args) {
+            refreshTable("Marks");
         }
     </script>
 
@@ -58,26 +56,6 @@
             ${StudentName}
         </div>
     </script>
-
-    @for (int i = 0; i < Model.Periods.Count(); i++)
-    {
-        if (Model.Periods.ElementAt(i).Name == Model.Session.AttendancePeriod.Name)
-        {
-            <script type="text/x-jsrender" id="marksPeriod-@i-Template">
-                <div class="register-column-current">
-                    ${Marks[@i].Mark}
-                </div>
-            </script>
-        }
-        else
-        {
-            <script type="text/x-jsrender" id="marksPeriod-@i-Template">
-                <div>
-                    ${Marks[@i].Mark}
-                </div>
-            </script>
-        }
-    }
 }
 
 

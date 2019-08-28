@@ -106,8 +106,6 @@ namespace MyPortal.Controllers
             viewModel.Session = session;
             viewModel.WeekId = attendanceWeek.Id;
 
-            viewModel.Periods = _context.AttendancePeriods.Where(x => x.Weekday == session.AttendancePeriod.Weekday).OrderBy(x => x.StartTime).ToList();
-
             viewModel.SessionDate = sessionDate;
 
             return View("~/Views/Staff/Attendance/TakeRegister.cshtml", viewModel);

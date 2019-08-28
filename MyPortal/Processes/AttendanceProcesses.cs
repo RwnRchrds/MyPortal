@@ -4,7 +4,6 @@ using System.Linq;
 using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Dtos.LiteDtos;
-using MyPortal.Dtos.ViewDtos;
 using MyPortal.Models.Database;
 using MyPortal.Models.Exceptions;
 using MyPortal.Models.Misc;
@@ -141,86 +140,90 @@ namespace MyPortal.Processes
             return new ProcessResponse<AttendanceSummary>(ResponseType.Ok, null, summary);
         }
 
-        public static ProcessResponse<IEnumerable<StudentLiteMarksCollection>> GetMarksForRegister(int academicYearId, int weekId,
-            int sessionId, MyPortalDbContext context)
+        public static ProcessResponse<IEnumerable<StudentAttendanceMarkCollection>> GetRegisterMarks(int academicYearId, int weekId,
+            int sessionId, MyPortalDbContext context, bool retrieveWholeDay)
         {
             var attendanceWeek =
                 context.AttendanceWeeks.SingleOrDefault(x => x.Id == weekId && x.AcademicYearId == academicYearId);
 
             if (attendanceWeek == null)
             {
-                return new ProcessResponse<IEnumerable<StudentLiteMarksCollection>>(ResponseType.NotFound, "Attendance week not found", null);
+                return new ProcessResponse<IEnumerable<StudentAttendanceMarkCollection>>(ResponseType.NotFound, "Attendance week not found", null);
             }
 
-            var currentPeriod = context.CurriculumSessions.SingleOrDefault(x => x.Id == sessionId);
+            var session = context.CurriculumSessions.SingleOrDefault(x => x.Id == sessionId);
 
-            if (currentPeriod == null)
+            if (session == null)
             {
-                return new ProcessResponse<IEnumerable<StudentLiteMarksCollection>>(ResponseType.NotFound, "Period not found", null);
+                return new ProcessResponse<IEnumerable<StudentAttendanceMarkCollection>>(ResponseType.NotFound, "Period not found", null);
             }
 
-            var periodsInDay = context.AttendancePeriods.Where(x => x.Weekday == currentPeriod.AttendancePeriod.Weekday).ToList();
+            var markList = new List<StudentAttendanceMarkCollection>();
 
-            var markList = new List<StudentLiteMarksCollection>();
-
-            foreach (var enrolment in currentPeriod.CurriculumClass.Enrolments)
+            foreach (var enrolment in session.CurriculumClass.Enrolments)
             {
-                var markObject = new StudentLiteMarksCollection();
+                var markObject = new StudentAttendanceMarkCollection();
                 var student = enrolment.Student;
                 markObject.StudentName = PeopleProcesses.GetStudentDisplayName(enrolment.Student).ResponseObject;
                 var marks = new List<AttendanceMark>();
 
-                foreach (var period in periodsInDay)
-                {
-                    var mark = GetAttendanceMark(context, attendanceWeek, period, student).ResponseObject;
+                var mark = GetAttendanceMark(context, attendanceWeek, session.AttendancePeriod, student).ResponseObject;
 
-                    marks.Add(mark);
+                marks.Add(mark);
+
+                if (retrieveWholeDay)
+                {
+                    var periodsInDay = context.AttendancePeriods.Where(x => x.Weekday == session.AttendancePeriod.Weekday).ToList();
+
+                    foreach (var period in periodsInDay)
+                    {
+                        mark = GetAttendanceMark(context, attendanceWeek, period, student).ResponseObject;
+
+                        marks.Add(mark);
+                    }
                 }
 
                 marks = marks.OrderBy(x => x.AttendancePeriod.StartTime).ToList();
 
                 var liteMarks = PrepareLiteMarkList(context, marks, true);
 
-                markObject.Marks = liteMarks;
+                markObject.Marks = liteMarks.ToList();
                 markList.Add(markObject);
             }
 
-            return new ProcessResponse<IEnumerable<StudentLiteMarksCollection>>(ResponseType.Ok, null,
+            return new ProcessResponse<IEnumerable<StudentAttendanceMarkCollection>>(ResponseType.Ok, null,
                 markList.ToList().OrderBy(x => x.StudentName));
         }
 
-        public static ProcessResponse<object> SaveRegisterMarks(IEnumerable<StudentLiteMarksCollection> markCollections,
+        public static ProcessResponse<object> SaveRegisterMarks(IEnumerable<StudentAttendanceMarkSingular> markCollection,
             MyPortalDbContext context)
         {
-            foreach (var collection in markCollections)
+            foreach (var mark in markCollection)
             {
-                foreach (var mark in collection.Marks)
+                if (mark.Mark.Id == 0)
                 {
-                    if (mark.Id == 0)
+                    var attMark = new AttendanceMark
                     {
-                        var attMark = new AttendanceMark
-                        {
-                            Mark = mark.Mark,
-                            PeriodId = mark.PeriodId,
-                            WeekId = mark.WeekId,
-                            StudentId = mark.StudentId
-                        };
+                        Mark = mark.Mark.Mark,
+                        PeriodId = mark.Mark.PeriodId,
+                        WeekId = mark.Mark.WeekId,
+                        StudentId = mark.Mark.StudentId
+                    };
 
-                        context.AttendanceMarks.Add(attMark);
+                    context.AttendanceMarks.Add(attMark);
+                }
+
+                else
+                {
+                    var markInDb = context.AttendanceMarks.SingleOrDefault(x => x.Id == mark.Mark.Id);
+
+                    if (markInDb == null)
+                    {
+                        return new ProcessResponse<object>(ResponseType.NotFound,
+                            "An attendance mark could not be found", null);
                     }
 
-                    else
-                    {
-                        var markInDb = context.AttendanceMarks.SingleOrDefault(x => x.Id == mark.Id);
-
-                        if (markInDb == null)
-                        {
-                            return new ProcessResponse<object>(ResponseType.NotFound,
-                                "An attendance mark could not be found", null);
-                        }
-
-                        markInDb.Mark = mark.Mark;
-                    }
+                    markInDb.Mark = mark.Mark.Mark;
                 }
             }
 

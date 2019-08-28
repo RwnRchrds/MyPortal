@@ -6,7 +6,6 @@ using System.Net.Http;
 using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
-using MyPortal.Dtos.ViewDtos;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
 using MyPortal.Processes;
@@ -19,17 +18,18 @@ namespace MyPortal.Controllers.Api
     public class AttendanceController : MyPortalApiController
     {
         [HttpGet]
-        [Route("marks/loadRegister/{weekId:int}/{sessionId:int}")]
-        public IEnumerable<StudentLiteMarksCollection> LoadRegister([FromUri] int weekId, [FromUri] int sessionId)
+        [Route("marks/takeRegister/{weekId:int}/{sessionId:int}")]
+        public IEnumerable<StudentAttendanceMarkSingular> LoadRegister([FromUri] int weekId, [FromUri] int sessionId)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             return PrepareResponseObject(
-                AttendanceProcesses.GetMarksForRegister(academicYearId, weekId, sessionId, _context));
+                    AttendanceProcesses.GetRegisterMarks(academicYearId, weekId, sessionId, _context, false))
+                .Select(Mapper.Map<StudentAttendanceMarkCollection, StudentAttendanceMarkSingular>);
         }
 
         [HttpPost]
-        [Route("marks/loadRegister/dataGrid/{weekId:int}/{sessionId:int}")]
+        [Route("marks/takeRegister/dataGrid/{weekId:int}/{sessionId:int}")]
         public IHttpActionResult LoadRegisterForDataGrid([FromBody] DataManagerRequest dm, [FromUri] int weekId,
             [FromUri] int sessionId)
         {
@@ -37,18 +37,22 @@ namespace MyPortal.Controllers.Api
 
             var registerMarks =
                 PrepareResponseObject(
-                    AttendanceProcesses.GetMarksForRegister(academicYearId, weekId, sessionId, _context));
+                        AttendanceProcesses.GetRegisterMarks(academicYearId, weekId, sessionId, _context, false))
+                    .Select(Mapper.Map<StudentAttendanceMarkCollection, StudentAttendanceMarkSingular>);
 
             return PrepareDataGridObject(registerMarks, dm);
         }
 
         [HttpPost]
         [Route("marks/saveRegister")]
-        public IHttpActionResult SaveRegisterMarks(List<StudentLiteMarksCollection> changed, int? key)
+        public IHttpActionResult SaveRegisterMarks(DataGridUpdate<StudentAttendanceMarkSingular> register)
         {
-            var result = AttendanceProcesses.SaveRegisterMarks(changed, _context);
+            if (register.Changed != null)
+            {
+                AttendanceProcesses.SaveRegisterMarks(register.Changed, _context);
+            }
 
-            return PrepareResponse(result);
+            return Json(new List<StudentAttendanceMarkSingular>());
         }
         
         [HttpGet]

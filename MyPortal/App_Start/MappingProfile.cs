@@ -1,10 +1,13 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using System.Linq;
+using AutoMapper;
 using Microsoft.AspNet.Identity.EntityFramework;
 using MyPortal.Dtos;
 using MyPortal.Dtos.GridDtos;
 using MyPortal.Dtos.Identity;
 using MyPortal.Dtos.LiteDtos;
 using MyPortal.Models.Database;
+using MyPortal.Models.Misc;
 using MyPortal.Processes;
 
 namespace MyPortal
@@ -236,6 +239,14 @@ namespace MyPortal
                     opts => opts.MapFrom(src => src.ProfileCommentBank.Name));
 
             CreateMap<ProfileCommentBank, GridProfileCommentBankDto>();
+
+            CreateMap<StudentAttendanceMarkCollection, StudentAttendanceMarkSingular>()
+                .ForMember(dest => dest.Mark,
+                    opts => opts.MapFrom(src => src.Marks.ElementAt(0)));
+
+            CreateMap<StudentAttendanceMarkSingular, StudentAttendanceMarkCollection>()
+                .ForMember(dest => dest.Marks,
+                    opts => opts.MapFrom(src => new List<AttendanceMarkLite> {src.Mark}));
         }
     }
 }    

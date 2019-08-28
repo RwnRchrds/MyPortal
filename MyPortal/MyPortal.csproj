@@ -346,7 +346,6 @@
     <Compile Include="Dtos\GridDtos\GridStudentDto.cs" />
     <Compile Include="Dtos\StaffMemberDto.cs" />
     <Compile Include="Dtos\StudentDto.cs" />
-    <Compile Include="Dtos\ViewDtos\StudentLiteMarksCollection.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -376,8 +375,11 @@
     <Compile Include="Models\Misc\ApiResponse.cs" />
     <Compile Include="Models\Misc\AttendanceSummary.cs" />
     <Compile Include="Models\Misc\ChartData.cs" />
+    <Compile Include="Models\Misc\DataGridUpdate.cs" />
     <Compile Include="Models\Misc\GroupEnrolment.cs" />
     <Compile Include="Models\Misc\ProcessResponse.cs" />
+    <Compile Include="Models\Misc\StudentAttendanceMarkCollection.cs" />
+    <Compile Include="Models\Misc\StudentAttendanceMarkSingular.cs" />
     <Compile Include="Processes\AdminProcesses.cs" />
     <Compile Include="Processes\AssessmentProcesses.cs" />
     <Compile Include="Processes\AttendanceProcesses.cs" />
@@ -931,7 +933,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Results\" />
-    <Folder Include="Models\Authorisation" />
+    <Folder Include="Dtos\ViewDtos\" />
+    <Folder Include="Models\Authorisation\" />
     <Folder Include="Views\Staff\Admissions\" />
     <Folder Include="Views\Staff\Behaviour\" />
     <Folder Include="Views\Staff\Communication\" />
