@@ -47,7 +47,9 @@
         }); 
 
         function dataGridActionComplete(args) {
-            refreshTable("Marks");
+            if (args.requestType == "save") {
+                refreshTable("Marks");
+            }
         }
     </script>
 
