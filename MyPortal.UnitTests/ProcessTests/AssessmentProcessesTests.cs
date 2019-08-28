@@ -92,5 +92,13 @@ namespace MyPortal.UnitTests.ProcessTests
             
             Assert.That(result.ResponseType == ResponseType.NotFound);
         }
+
+        [Test]
+        public static void GetAllResultSets_DataGrid_ReturnsResultSets()
+        {
+            var result = AssessmentProcesses.GetAllResultSets_DataGrid(_context).ResponseObject;
+            
+            Assert.That(result.Count() == 2);
+        }
     }
 }

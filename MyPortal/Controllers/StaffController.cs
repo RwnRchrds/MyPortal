@@ -19,7 +19,7 @@ using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers
 {
-    //MyPortal Staff Controller --> Controller Methods for Staff Areas
+    
     [System.Web.Mvc.Authorize(Roles = "Staff, SeniorStaff")]
     [System.Web.Mvc.RoutePrefix("Staff")]
     public class StaffController : MyPortalController
@@ -56,7 +56,7 @@ namespace MyPortal.Controllers
             return RedirectToAction("ImportResults");
         }
 
-        // Menu | Result Sets --> Result Sets List (All)
+        
         [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
         [System.Web.Mvc.Route("Assessment/ResultSets")]
         public ActionResult ResultSets()
@@ -121,7 +121,7 @@ namespace MyPortal.Controllers
 
         #region Curriculum
 
-        // Menu | Subjects --> Subjects List (All)
+        
         [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
         [System.Web.Mvc.Route("Curriculum/Subjects")]
         public ActionResult Subjects()
@@ -132,7 +132,7 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/Curriculum/Subjects.cshtml", viewModel);
         }
 
-        // Menu | Study Topics --> Study Topics List (All)
+        
         [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
         [System.Web.Mvc.Route("Curriculum/StudyTopics")]
         public ActionResult StudyTopics()
@@ -149,7 +149,7 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/Curriculum/StudyTopics.cshtml", viewModel);
         }
 
-        //Menu | Lesson Plans --> Lesson Plans List (All)
+        
         [System.Web.Mvc.Route("Curriculum/LessonPlans")]
         public ActionResult LessonPlans()
         {
@@ -162,7 +162,7 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/Curriculum/LessonPlans.cshtml", viewModel);
         }
 
-        //Menu | Lesson Plans | X --> Lesson Plan Details for Lesson Plan X
+        
         [System.Web.Mvc.Route("Curriculum/LessonPlans/View/{id}")]
         public ActionResult LessonPlanDetails(int id)
         {
@@ -227,8 +227,8 @@ namespace MyPortal.Controllers
 
         #region Documents
 
-        // Menu | Documents --> General Controlled Documents List (All)
-        //Accessible by [Staff] or [SeniorStaff]
+        
+        
         [System.Web.Mvc.Route("Documents/Documents")]
         public ActionResult Documents()
         {
@@ -246,15 +246,15 @@ namespace MyPortal.Controllers
 
         #region People
 
-        // Menu | Students --> Students List (All)
-        // Accessible by [Staff] or [SeniorStaff]
+        
+        
         [System.Web.Mvc.Route("People/Students")]
         public ActionResult Students()
         {
             return View("~/Views/Staff/People/Students/Students.cshtml");
         }
 
-        // HTTP POST request for creating students using HTML form
+        
         [System.Web.Mvc.HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CreateStudent(Student student)
@@ -270,14 +270,13 @@ namespace MyPortal.Controllers
                 return View("~/Views/Staff/People/Students/NewStudent.cshtml", viewModel);
             }
 
-            _context.Students.Add(student);
-            _context.SaveChanges();
-
+            PeopleProcesses.CreateStudent(student, _context);
+            
             return RedirectToAction("Students", "Staff");
         }
 
-        // Menu | Students | New Student --> New Student form
-        // Accessible by [SeniorStaff] only
+        
+        
         [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
         [System.Web.Mvc.Route("People/Students/New")]
         public ActionResult NewStudent()
@@ -294,7 +293,7 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/People/Students/NewStudent.cshtml", viewModel);
         }
 
-        // HTTP POST request for updating student details using HTML form
+        
         [System.Web.Mvc.HttpPost]
         public ActionResult SaveStudent(Student student)
         {
@@ -310,8 +309,8 @@ namespace MyPortal.Controllers
             return RedirectToAction("StudentDetails", "Staff", new { id = student.Id });
         }
 
-        // Menu | Students | X --> Student Details (for Student X)
-        //Accessible by [Staff] or [SeniorStaff]
+        
+        
         [System.Web.Mvc.Route("People/Students/{id:int}", Name = "StudentDetails")]
         public ActionResult StudentDetails(int id)
         {
@@ -320,7 +319,7 @@ namespace MyPortal.Controllers
             if (student == null)
                 return HttpNotFound();
 
-            //var logs = _context.Logs.Where(l => l.Student == id).OrderByDescending(x => x.Date).ToList();
+            
 
             var logTypes = _context.ProfileLogTypes.OrderBy(x => x.Name).ToList();
 
@@ -351,7 +350,7 @@ namespace MyPortal.Controllers
 
             var viewModel = new StudentDetailsViewModel
             {
-                //Logs = logs,
+                
                 Student = student,
                 LogTypes = logTypes,
                 YearGroups = yearGroups,
@@ -368,8 +367,8 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/People/Students/StudentDetails.cshtml", viewModel);
         }
 
-        //Menu | Students | X | [View Results] --> Student Results (for Student X)
-        //Accessible by [Staff] or [SeniorStaff]
+        
+        
         [System.Web.Mvc.Route("People/Students/{id}/Results")]
         public ActionResult StudentResults(int id)
         {
@@ -426,8 +425,8 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/People/Students/BehaviourManagement.cshtml", viewModel);
         }
 
-        // Menu | Staff --> Staff List (All)
-        // Accessible by [SeniorStaff] only
+        
+        
         [System.Web.Mvc.Route("People/Staff")]
         [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
         public ActionResult Staff()
@@ -436,8 +435,8 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/People/Staff/Staff.cshtml", viewModel);
         }
 
-        // Menu | Staff | X --> Student Details (for Staff X)
-        //Accessible by [SeniorStaff] only
+        
+        
         [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
         [System.Web.Mvc.Route("People/Staff/{id}")]
         public ActionResult StaffDetails(int id)
@@ -477,15 +476,15 @@ namespace MyPortal.Controllers
 
         #region Personnel
 
-        // Menu | Training Courses --> Training Courses List (All)
-        //[Authorize(Roles = "SeniorStaff")]
+        
+        
         [System.Web.Mvc.Route("Personnel/TrainingCourses")]
         public ActionResult TrainingCourses()
         {
             return View("~/Views/Staff/Personnel/TrainingCourses.cshtml");
         }
 
-        // HTTP POST request for creating training courses using HTML form
+        
         [System.Web.Mvc.HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CreateCourse(PersonnelTrainingCourse course)
@@ -498,8 +497,8 @@ namespace MyPortal.Controllers
             return RedirectToAction("TrainingCourses", "Staff");
         }
 
-        // Menu | Training Courses | New Course --> New Course Form
-        // Accessible by [SeniorStaff] only
+        
+        
         [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
         [System.Web.Mvc.Route("Personnel/TrainingCourses/New")]
         public ActionResult NewCourse()
@@ -511,7 +510,7 @@ namespace MyPortal.Controllers
 
         #region Profile
 
-        // Menu | Comment Banks --> Comment Banks List (All)
+        
         [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
         [System.Web.Mvc.Route("Profile/CommentBanks")]
         public ActionResult CommentBanks()
@@ -519,7 +518,7 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/Profile/CommentBanks.cshtml");
         }
 
-        //Menu | Comments --> Comments List (All)
+        
         [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
         [System.Web.Mvc.Route("Profile/Comments")]
         public ActionResult Comments()
@@ -532,7 +531,7 @@ namespace MyPortal.Controllers
 
         #endregion
 
-        // Staff Landing Page
+        
         [System.Web.Mvc.Route("Home")]
         public ActionResult Index()
         {

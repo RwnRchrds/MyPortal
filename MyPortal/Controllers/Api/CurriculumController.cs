@@ -216,7 +216,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [Route("classes/enrolments/create/regGroup")]
+        [Route("enrolments/create/group")]
         public IHttpActionResult EnrolRegGroup([FromBody] GroupEnrolment enrolment)
         {
             return PrepareResponse(CurriculumProcesses.CreateEnrolmentsForRegGroup(enrolment, _context));

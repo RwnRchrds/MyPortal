@@ -12,11 +12,8 @@ using MyPortal.Models.Misc;
 
 namespace MyPortal.Processes
 {
-    //Assessment --> Result Sets
     public static partial class AssessmentProcesses
     {
-        // Assessment --> Result Sets
-
         public static ProcessResponse<object> CreateResultSet(AssessmentResultSet resultSet, MyPortalDbContext context)
         {
             if (!ValidationProcesses.ModelIsValid(resultSet))
@@ -74,15 +71,20 @@ namespace MyPortal.Processes
 
         public static ProcessResponse<AssessmentResultSetDto> GetResultSetById(int resultSetId, MyPortalDbContext context)
         {
-            var resultSet = context.AssessmentResultSets.SingleOrDefault(x => x.Id == resultSetId);
+            var resultSet = GetResultSetById_Model(resultSetId, context);
 
-            if (resultSet == null)
+            if (resultSet.ResponseType == ResponseType.NotFound)
+            {
+                return new ProcessResponse<AssessmentResultSetDto>(ResponseType.NotFound, resultSet.ResponseMessage, null);
+            }
+
+            if (resultSet.ResponseObject == null)
             {
                 return new ProcessResponse<AssessmentResultSetDto>(ResponseType.NotFound, "Result set not found", null);
             }
 
             return new ProcessResponse<AssessmentResultSetDto>(ResponseType.Ok, null,
-                Mapper.Map<AssessmentResultSet, AssessmentResultSetDto>(resultSet));
+                Mapper.Map<AssessmentResultSet, AssessmentResultSetDto>(resultSet.ResponseObject));
 
         }
 
@@ -160,8 +162,6 @@ namespace MyPortal.Processes
 
             return new ProcessResponse<object>(ResponseType.Ok, "Result set set as current", null);
         }
-
-        //Assessment --> Results
 
         public static ProcessResponse<object> ImportResultsToResultSet(int resultSetId, MyPortalDbContext context)
         {

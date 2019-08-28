@@ -127,7 +127,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [Route("reports/incidents/byType")]
-        public IEnumerable<ChartData> ReportIncidentsByType()
+        public IEnumerable<ChartDataCategoric> ReportIncidentsByType()
         {
             return PrepareResponseObject(BehaviourProcesses.GetChartData_BehaviourIncidentsByType(_context));
         }

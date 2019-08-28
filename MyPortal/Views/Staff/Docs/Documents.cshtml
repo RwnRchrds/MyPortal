@@ -38,6 +38,7 @@
        c.Field("Date").HeaderText("Date").Template("#documentsDateTemplate").Width("200").Add();
        if (User.IsInRole("SeniorStaff"))
        {
+           c.Field("Approved").Template("#documentsApprovedTemplate").Width("100").Add();
            c.HeaderText("Actions").Template("#documentsActionsTemplate").Width("170").Add();
        }
    }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string> {"Search"}).Render()
@@ -197,6 +198,14 @@
             $("#EditDocumentModal").modal('hide');
             toastr.error(result.responseJSON);
         }
+        
+        function renderApproved(data) {
+            if (data) {
+                return "Approved";
+            } else {
+                return "Pending Approval";
+            }
+        }
     </script>
 
     <script type="text/x-jsrender" id="documentsDescriptionTemplate">
@@ -204,6 +213,12 @@
             ${Description}
         </div>
     </script>
+    
+    <script type="text/x-jsrender" id="documentsApprovedTemplate">
+            <div>
+                ${renderApproved(Approved)}
+            </div>
+        </script>
 
     <script type="text/x-jsrender" id="documentsDateTemplate">
             <div>

@@ -19,6 +19,15 @@
         <button type="button" class="btn btn-warning mp-btn-top-auto" id="EditDetailsButton" data-staff-id="@Model.Staff.Id">
             <i class="far fa-id-card"></i> Edit Details
         </button>
+        
+        <div class="dropdown mp-btn-top inline-block">
+            <button class="btn btn-primary dropdown-toggle mp-btn-top" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-user"></i> Staff
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <h6 class="dropdown-header">@PeopleProcesses.GetStaffDisplayName(Model.Staff).ResponseObject</h6>
+            </div>
+        </div>
 
         <button type="button" class="btn btn-danger mp-btn-top-auto" id="DeleteStaffButton" data-toggle="modal" data-staff-id="@Model.Staff.Id">
             <i class="fas fa-user-slash"></i> Delete Staff

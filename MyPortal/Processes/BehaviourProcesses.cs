@@ -134,33 +134,33 @@ namespace MyPortal.Processes
             return new ProcessResponse<int>(ResponseType.Ok, null, points);
         }
 
-        public static ProcessResponse<IEnumerable<ChartData>> GetChartData_BehaviourIncidentsByType(MyPortalDbContext context)
+        public static ProcessResponse<IEnumerable<ChartDataCategoric>> GetChartData_BehaviourIncidentsByType(MyPortalDbContext context)
         {
             var recordedBehaviourTypes = context.BehaviourIncidentTypes.Where(x => x.BehaviourIncidents.Any()).ToList();
-            var chartData = new List<ChartData>();
+            var chartData = new List<ChartDataCategoric>();
 
             foreach (var behaviourType in recordedBehaviourTypes)
             {
-                var dataPoint = new ChartData(behaviourType.Description, behaviourType.BehaviourIncidents.Count);
+                var dataPoint = new ChartDataCategoric(behaviourType.Description, behaviourType.BehaviourIncidents.Count);
                 chartData.Add(dataPoint);
             }
 
-            return new ProcessResponse<IEnumerable<ChartData>>(ResponseType.Ok, null, chartData);
+            return new ProcessResponse<IEnumerable<ChartDataCategoric>>(ResponseType.Ok, null, chartData);
         }
 
-        public static ProcessResponse<IEnumerable<ChartData>> GetChartData_AchievementsByType(MyPortalDbContext context)
+        public static ProcessResponse<IEnumerable<ChartDataCategoric>> GetChartData_AchievementsByType(MyPortalDbContext context)
         {
             var recordedAchievementTypes =
                 context.BehaviourAchievementTypes.Where(x => x.BehaviourAchievements.Any()).ToList();
-            var chartData = new List<ChartData>();
+            var chartData = new List<ChartDataCategoric>();
 
             foreach (var achievementType in recordedAchievementTypes)
             {
-                var dataPoint = new ChartData(achievementType.Description, achievementType.BehaviourAchievements.Count);
+                var dataPoint = new ChartDataCategoric(achievementType.Description, achievementType.BehaviourAchievements.Count);
                 chartData.Add(dataPoint);
             }
 
-            return new ProcessResponse<IEnumerable<ChartData>>(ResponseType.Ok, null, chartData);
+            return new ProcessResponse<IEnumerable<ChartDataCategoric>>(ResponseType.Ok, null, chartData);
         }
 
         public static ProcessResponse<IEnumerable<GridBehaviourAchievementDto>> GetAchievementsForGrid(int studentId,

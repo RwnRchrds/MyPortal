@@ -374,7 +374,7 @@
     <Compile Include="Models\Exceptions\ProcessException.cs" />
     <Compile Include="Models\Misc\ApiResponse.cs" />
     <Compile Include="Models\Misc\AttendanceSummary.cs" />
-    <Compile Include="Models\Misc\ChartData.cs" />
+    <Compile Include="Models\Misc\ChartDataCategoric.cs" />
     <Compile Include="Models\Misc\DataGridUpdate.cs" />
     <Compile Include="Models\Misc\GroupEnrolment.cs" />
     <Compile Include="Models\Misc\ProcessResponse.cs" />
@@ -467,7 +467,6 @@
     <Compile Include="ViewModels\NewStaffViewModel.cs" />
     <Compile Include="ViewModels\NewStudentViewModel.cs" />
     <Compile Include="ViewModels\NewUserViewModel.cs" />
-    <Compile Include="ViewModels\RandomStudentViewModel.cs" />
     <Compile Include="ViewModels\ResultSetsViewModel.cs" />
     <Compile Include="ViewModels\SaleEntryViewModel.cs" />
     <Compile Include="ViewModels\SalesViewModel.cs" />

@@ -5,10 +5,10 @@ using NUnit.Framework;
 
 namespace MyPortal.UnitTests.ProcessTests
 {
-    [TestFixture]
     public class MyPortalTestFixture
     {
         protected static MyPortalDbContext _context;
+        
         [OneTimeSetUp]
         public void TestFixtureSetup()
         {

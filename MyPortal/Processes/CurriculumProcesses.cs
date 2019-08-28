@@ -525,10 +525,19 @@ namespace MyPortal.Processes
                     null);
             }
 
-            var canEnroll = StudentCanEnroll(context, enrolment.StudentId, enrolment.ClassId)
-                .ResponseObject;
+            var canEnroll = StudentCanEnroll(context, enrolment.StudentId, enrolment.ClassId);
 
-            if (canEnroll)
+            if (canEnroll.ResponseType == ResponseType.BadRequest)
+            {
+                return new ProcessResponse<object>(ResponseType.BadRequest, canEnroll.ResponseMessage, null);
+            }
+
+            if (canEnroll.ResponseType == ResponseType.NotFound)
+            {
+                return new ProcessResponse<object>(ResponseType.NotFound, canEnroll.ResponseMessage, null);
+            }
+
+            if (canEnroll.ResponseObject)
             {
                 context.CurriculumEnrolments.Add(enrolment);
                 if (commitImmediately)
