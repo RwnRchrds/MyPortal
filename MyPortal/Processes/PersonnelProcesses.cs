@@ -126,6 +126,8 @@ namespace MyPortal.Processes
 
             return new ProcessResponse<object>(ResponseType.Ok, "Certificate updated", null);
         }
+        
+        
 
         public static ProcessResponse<object> DeleteCourse(int courseId, MyPortalDbContext context)
         {
@@ -196,6 +198,19 @@ namespace MyPortal.Processes
             context.SaveChanges();
 
             return new ProcessResponse<object>(ResponseType.Ok, "Course updated", null);
+        }
+
+        public static ProcessResponse<object> CreateCourse(PersonnelTrainingCourse course, MyPortalDbContext context)
+        {
+            if (!ValidationProcesses.ModelIsValid(course))
+            {
+                return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
+            }
+
+            context.PersonnelTrainingCourses.Add(course);
+            context.SaveChanges();
+            
+            return new ProcessResponse<object>(ResponseType.Ok, "Course created", null);
         }
 
         public static ProcessResponse<object> CreateObservation(PersonnelObservation observation,

@@ -376,5 +376,17 @@ namespace MyPortal.Processes
 
             return new ProcessResponse<object>(ResponseType.Ok, "Student updated", null);
         }
+
+        public static ProcessResponse<Person> GetPersonByUserId(string userId, MyPortalDbContext context)
+        {
+            var person = context.Persons.SingleOrDefault(x => x.UserId == userId);
+
+            if (person == null)
+            {
+                return new ProcessResponse<Person>(ResponseType.NotFound, "Person not found", null);
+            }
+            
+            return new ProcessResponse<Person>(ResponseType.Ok, null, person);
+        }
     }
 }

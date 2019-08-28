@@ -210,10 +210,10 @@
 
     <script type="text/x-jsrender" id="documentsDescriptionTemplate">
         <div>
-            ${Description}
+            <a href="${Url}" class="mp-bold">${Description}</a>
         </div>
     </script>
-    
+
     <script type="text/x-jsrender" id="documentsApprovedTemplate">
             <div>
                 ${renderApproved(Approved)}
@@ -239,5 +239,5 @@
             </script>
 
     @Scripts.Render("~/bundles/jqueryval")
-    
+
 }

@@ -12,7 +12,7 @@
 <div class="container">
     @if (User.IsInRole("SeniorStaff"))
     {
-        @Html.ActionLink("New Course", "NewCourse", "Staff", null, new {@class = "btn btn-success", style = "margin-bottom: 8px;"})
+        @Html.ActionLink("New Course", "NewCourse", "Staff", null, new {@class = "btn btn-primary", style = "margin-bottom: 8px;"})
         <hr/>
     }
 </div>
@@ -87,7 +87,7 @@
                         var button = $(this);
                         var courseId = button.attr("data-course-id");
                         $.ajax({
-                            url: "/api/courses/fetch/" + courseId,
+                            url: "/api/personnel/courses/get/byId/" + courseId,
                             method: "GET",
                             success: function(result) {
                                 $("#EditCourseCodeControl").val(result["code"]);
@@ -140,11 +140,11 @@
 
     <script type="text/x-jsrender" id="coursesActionsTemplate">
             <div>
-                <button type='button' class='btn btn-xs btn-warning js-edit' data-course-id="${Id}">
+                <button type='button' class='btn btn-xs btn-warning mp-btn-action js-edit' data-course-id="${Id}">
                     <i class="far fa-edit"></i>
                 </button>
                 
-                <button type='button' class='btn btn-xs btn-danger js-delete' data-course-id="${Id}">
+                <button type='button' class='btn btn-xs btn-danger mp-btn-action js-delete' data-course-id="${Id}">
                     <i class="far fa-trash-alt"></i>
                 </button>
             </div>

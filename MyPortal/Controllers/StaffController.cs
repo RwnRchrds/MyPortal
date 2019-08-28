@@ -491,8 +491,7 @@ namespace MyPortal.Controllers
         {
             if (!ModelState.IsValid) return View("~/Views/Staff/Personnel/NewTrainingCourse.cshtml");
 
-            _context.PersonnelTrainingCourses.Add(course);
-            _context.SaveChanges();
+            PersonnelProcesses.CreateCourse(course, _context);
 
             return RedirectToAction("TrainingCourses", "Staff");
         }
@@ -537,20 +536,18 @@ namespace MyPortal.Controllers
         {
             var userId = User.Identity.GetUserId();
 
-            var person = _context.Persons.SingleOrDefault(s => s.UserId == userId);
+            var staff = PeopleProcesses.GetStaffFromUserId(userId, _context);
 
-            var staff = _context.StaffMembers.SingleOrDefault(x => x.PersonId == person.Id);
-
-            var academicYears = _context.CurriculumAcademicYears.ToList().OrderByDescending(x => x.FirstDate);
+            var academicYears = PrepareResponseObject(CurriculumProcesses.GetAcademicYears_Model(_context));
 
             var selectedAcademicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
-            if (staff == null)
+            if (staff.ResponseType == ResponseType.NotFound)
                 return View("~/Views/Staff/NoProfileIndex.cshtml");
 
             var viewModel = new StaffHomeViewModel
             {
-                CurrentUser = staff,
+                CurrentUser = PrepareResponseObject(staff),
                 CurriculumAcademicYears = academicYears,
                 SelectedAcademicYearId = selectedAcademicYearId
             };

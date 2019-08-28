@@ -103,11 +103,19 @@ namespace MyPortal.Processes
 
             return new ProcessResponse<bool>(ResponseType.Ok, null, false);
         }
+        
+        public static ProcessResponse<IEnumerable<CurriculumAcademicYear>> GetAcademicYears_Model(
+            MyPortalDbContext context)
+        {
+            var academicYears = context.CurriculumAcademicYears.ToList().OrderByDescending(x => x.FirstDate).ToList();
+
+            return new ProcessResponse<IEnumerable<CurriculumAcademicYear>>(ResponseType.Ok, null, academicYears);
+        }
 
         public static ProcessResponse<IEnumerable<CurriculumAcademicYearDto>> GetAcademicYears(
             MyPortalDbContext context)
         {
-            var academicYears = context.CurriculumAcademicYears.ToList().OrderByDescending(x => x.FirstDate)
+            var academicYears = GetAcademicYears_Model(context).ResponseObject
                 .Select(Mapper.Map<CurriculumAcademicYear, CurriculumAcademicYearDto>);
 
             return new ProcessResponse<IEnumerable<CurriculumAcademicYearDto>>(ResponseType.Ok, null, academicYears);
