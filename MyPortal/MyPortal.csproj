@@ -391,7 +391,6 @@
     <Compile Include="Processes\CurriculumProcesses.cs" />
     <Compile Include="Processes\DocumentProcesses.cs" />
     <Compile Include="Processes\FinanceProcesses.cs" />
-    <Compile Include="Processes\IdentityProcesses.cs" />
     <Compile Include="Processes\LookupProcesses.cs" />
     <Compile Include="Processes\PastoralProcesses.cs" />
     <Compile Include="Processes\PeopleProcesses.cs" />
