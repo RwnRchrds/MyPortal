@@ -15,30 +15,27 @@ using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers.Api
 {
+    [RoutePrefix("api/admin")]
     public class AdminController : MyPortalIdentityApiController
     {
-        #region Users
-        //Add a role to a user
         [HttpPost]
-        [Route("api/users/addRole")]
-        public async Task<IHttpActionResult> AddRole([FromBody] UserRoleModel roleModel)
+        [Route("users/addToRole")]
+        public async Task<IHttpActionResult> AddUserToRole([FromBody] UserRoleModel roleModel)
         {
             var result = await AdminProcesses.AddUserToRole(roleModel, _userManager, _identity);
             return PrepareResponse(result);
         }
 
-        //Attach User to Personal Profile
         [HttpPost]
-        [Route("api/users/attach")]
+        [Route("users/attachPerson")]
         public async Task<IHttpActionResult> AttachPerson([FromBody] UserProfile userProfile)
         {
             var result = await AdminProcesses.AttachPersonToUser(userProfile, _userManager, _identity, _context);
             return PrepareResponse(result);
         }
 
-        //Change a User's Password
         [HttpPost]
-        [Route("api/users/resetPassword")]
+        [Route("users/resetPassword")]
         public async Task<IHttpActionResult> ChangePassword([FromBody] ChangePasswordModel data)
         {
             var result = await AdminProcesses.ChangePassword(data, _userManager, _identity);
@@ -46,9 +43,8 @@ namespace MyPortal.Controllers.Api
             return PrepareResponse(result);
         }
 
-        //Delete user
         [HttpDelete]
-        [Route("api/users/delete/{userId}")]
+        [Route("users/delete/{userId}")]
         public async Task<IHttpActionResult> DeleteUser(string userId)
         {
             var result = await AdminProcesses.DeleteUser(userId, _userManager, _identity);
@@ -56,9 +52,8 @@ namespace MyPortal.Controllers.Api
             return PrepareResponse(result);
         }
 
-        //Detach User from Personal Profile
         [HttpPost]
-        [Route("api/users/detach")]
+        [Route("users/detachPerson")]
         public async Task<IHttpActionResult> DetachPerson(ApplicationUser user)
         {
             var result = await AdminProcesses.DetachPerson(user, _userManager, _identity, _context);
@@ -66,97 +61,94 @@ namespace MyPortal.Controllers.Api
             return PrepareResponse(result);
         }
 
-        //GET Users From Database
         [HttpGet]
-        [Route("api/users")]
-        public IEnumerable<UserDto> GetUsers()
+        [Route("users/get/all")]
+        public async Task<IEnumerable<ApplicationUserDto>> GetUsers()
         {
-            return _identity.Users.ToList().Select(Mapper.Map<IdentityUser, UserDto>);
+            var result = await AdminProcesses.GetAllUsers(_identity);
+
+            return PrepareResponseObject(result);
         }
 
-        //New user
         [HttpPost]
-        [Route("api/users/new")]
-        public async Task<IHttpActionResult> NewUser([FromBody] NewUserViewModel data)
+        [Route("users/create")]
+        public async Task<IHttpActionResult> NewUser([FromBody] NewUserViewModel model)
         {
-            data.Id = Guid.NewGuid().ToString();
+            var result = await AdminProcesses.CreateUser(model, _userManager, _identity);
 
-            if (data.Username.IsNullOrWhiteSpace() || data.Password.IsNullOrWhiteSpace())
-            {
-                return Content(HttpStatusCode.BadRequest, "Invalid Data");
-            }
-
-
-            var user = new ApplicationUser
-            {
-                Id = data.Id,
-                UserName = data.Username
-            };
-
-
-            var result = await _userManager.CreateAsync(user, data.Password);
-
-            if (result.Succeeded)
-            {
-                return Ok("User added");
-            }
-
-            return BadRequest();
+            return PrepareResponse(result);
         }
 
-        //Remove Users From a Role
-        [Route("api/users/removeRole/{userId}/{roleName}")]
+        [Route("users/removeFromRole")]
+        [HttpPost]
+        public async Task<IHttpActionResult> RemoveFromRole([FromBody] UserRoleModel roleModel)
+        {
+            var result = await AdminProcesses.RemoveFromRole(roleModel.UserId, roleModel.RoleName, _userManager, _identity, _context);
+
+            return PrepareResponse(result);
+        }
+
+        [Route("roles/create")]
+        [HttpPost]
+        public async Task<IHttpActionResult> CreateRole([FromBody] ApplicationRole role)
+        {
+            var result = await AdminProcesses.CreateRole(role, _roleManager, _identity);
+
+            return PrepareResponse(result);
+        }
+
+        [Route("roles/update")]
+        [HttpPost]
+        public async Task<IHttpActionResult> UpdateRole([FromBody] ApplicationRole role)
+        {
+            var result = await AdminProcesses.UpdateRole(role, _roleManager, _identity);
+
+            return PrepareResponse(result);
+        }
+
+        [Route("roles/delete/{roleId}")]
         [HttpDelete]
-        public async Task<IHttpActionResult> RemoveFromRole(string userId, string roleName)
+        public async Task<IHttpActionResult> DeleteRole([FromUri] string roleId)
         {
-            var userIsAttached = _context.Students.Any(x => x.Person.UserId == userId) ||
-                                 _context.StaffMembers.Any(x => x.Person.UserId == userId);
-            var userInDb = _identity.Users.FirstOrDefault(user => user.Id == userId);
-            if (userInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "User not found");
-            }
+            var result = await AdminProcesses.DeleteRole(roleId, _roleManager, _identity);
 
-            //get user's assigned roles
-            var userRoles = await _userManager.GetRolesAsync(userId);
-
-            //check for role to be removed
-            var roleToRemove =
-                userRoles.FirstOrDefault(role => role.Equals(roleName, StringComparison.InvariantCultureIgnoreCase));
-            if (roleToRemove == null)
-            {
-                return Content(HttpStatusCode.NotFound, "User is not in role");
-            }
-
-            if (userIsAttached && (roleName == "Staff" || roleName == "Student"))
-            {
-                return Content(HttpStatusCode.BadRequest,
-                    "User cannot be removed from a primary role while attached to a person");
-            }
-
-            var result = await _userManager.RemoveFromRoleAsync(userId, roleToRemove);
-
-            if (result.Succeeded)
-            {
-                return Ok();
-            }
-
-            return BadRequest();
+            return PrepareResponse(result);
         }
 
-        #endregion
-
-        #region Roles
-        
-        
-        
-        
+        [Route("roles/get/all")]
         [HttpGet]
-        [Route("api/roles")]
-        public IEnumerable<RoleDto> GetRoles()
+        public async Task<IEnumerable<ApplicationRoleDto>> GetAllRoles()
         {
-            return _identity.Roles.ToList().Select(Mapper.Map<IdentityRole, RoleDto>);
+            var result = await AdminProcesses.GetAllRoles(_identity);
+
+            return PrepareResponseObject(result);
         }
-        #endregion
+
+        [Route("rolePermissions/create")]
+        [HttpPost]
+        public async Task<IHttpActionResult> AddPermissionToRole([FromBody] RolePermission rolePermission)
+        {
+            var result = await AdminProcesses.AddPermissionToRole(rolePermission, _roleManager, _identity);
+
+            return PrepareResponse(result);
+        }
+
+        [Route("rolePermissions/remove/{rolePermissionId:int}")]
+        [HttpDelete]
+        public async Task<IHttpActionResult> RemovePermissionFromRole([FromUri] int rolePermissionId)
+        {
+            var result = await AdminProcesses.RemovePermissionFromRole(rolePermissionId, _identity);
+
+            return PrepareResponse(result);
+        }
+
+        [Route("rolePermissions/get/byRole/{roleId}")]
+        [HttpGet]
+        public async Task<IEnumerable<PermissionIndicator>> GetPermissionsByRole([FromUri] string roleId)
+        {
+            var result = await AdminProcesses.GetPermissionsByRole(roleId, _roleManager, _identity);
+
+            return PrepareResponseObject(result);
+        }
     }
 }

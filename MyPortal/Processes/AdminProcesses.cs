@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using AutoMapper;
+using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
+using MyPortal.Dtos.Identity;
 using MyPortal.Models;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
+using MyPortal.ViewModels;
 
 namespace MyPortal.Processes
 {
@@ -134,7 +139,7 @@ namespace MyPortal.Processes
             }
 
 
-            var userInDb = identity.Users.FirstOrDefault(user => user.Id == data.UserId);
+            var userInDb = await userManager.FindByIdAsync(data.UserId);
 
             if (userInDb == null)
             {
@@ -159,7 +164,7 @@ namespace MyPortal.Processes
         public static async Task<ProcessResponse<object>> DeleteUser(string userId,
             UserManager<ApplicationUser, string> userManager, IdentityContext identity)
         {
-            var userInDb = identity.Users.FirstOrDefault(x => x.Id == userId);
+            var userInDb = await userManager.FindByIdAsync(userId);
 
             if (userInDb == null)
             {
@@ -229,6 +234,212 @@ namespace MyPortal.Processes
             }
 
             return new ProcessResponse<object>(ResponseType.BadRequest, "An unknown error occurred", null);
+        }
+
+        public static async Task<ProcessResponse<object>> CreateUser(NewUserViewModel model, UserManager<ApplicationUser, string> userManager, IdentityContext identity)
+        {
+            model.Id = Guid.NewGuid().ToString();
+
+            if (model.Username.IsNullOrWhiteSpace() || model.Password.IsNullOrWhiteSpace())
+            {
+                return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
+            }
+
+            var user = new ApplicationUser
+            {
+                Id = model.Id,
+                UserName = model.Username
+            };
+
+            var result = await userManager.CreateAsync(user, model.Password);
+
+            if (result.Succeeded)
+            {
+                return new ProcessResponse<object>(ResponseType.Ok, "User created", null);
+            }
+
+            return new ProcessResponse<object>(ResponseType.BadRequest, "An unknown error occurred", null);
+        }
+
+        public static async Task<ProcessResponse<IEnumerable<ApplicationUser>>> GetAllUsers_Model(IdentityContext identity)
+        {
+            var users = await identity.Users.OrderBy(x => x.UserName).ToListAsync();
+
+            return new ProcessResponse<IEnumerable<ApplicationUser>>(ResponseType.Ok, null, users);
+        }
+
+        public static async Task<ProcessResponse<IEnumerable<ApplicationUserDto>>> GetAllUsers(IdentityContext identity)
+        {
+            var users = await GetAllUsers_Model(identity);
+
+            var list = users.ResponseObject.Select(Mapper.Map<ApplicationUser, ApplicationUserDto>);
+
+            return new ProcessResponse<IEnumerable<ApplicationUserDto>>(ResponseType.Ok, null, list);
+        }
+
+        public static async Task<ProcessResponse<object>> RemoveFromRole(string userId, string roleName,
+            UserManager<ApplicationUser, string> userManager, IdentityContext identity, MyPortalDbContext context)
+        {
+            var userInDb = identity.Users.FirstOrDefault(user => user.Id == userId);
+
+            if (userInDb == null)
+            {
+                return new ProcessResponse<object>(ResponseType.NotFound, "User not found", null);
+            }
+
+            var userRoles = await userManager.GetRolesAsync(userId);
+
+            var roleToRemove =
+                userRoles.FirstOrDefault(role => role.Equals(roleName, StringComparison.InvariantCultureIgnoreCase));
+
+            if (roleToRemove == null)
+            {
+                return new ProcessResponse<object>(ResponseType.NotFound, "User is not in role", null);
+            }
+
+            var result = await userManager.RemoveFromRoleAsync(userId, roleToRemove);
+
+            if (result.Succeeded)
+            {
+                return new ProcessResponse<object>(ResponseType.Ok, "User removed from role", null);
+            }
+
+            return new ProcessResponse<object>(ResponseType.BadRequest, "An unknown error occurred", null);
+        }
+
+        public static async Task<ProcessResponse<object>> CreateRole(ApplicationRole role, RoleManager<ApplicationRole, string> roleManager, IdentityContext identity)
+        {
+            role.System = false;
+            role.Id = Guid.NewGuid().ToString();
+
+            if (!ValidationProcesses.ModelIsValid(role))
+            {
+                return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
+            }
+
+            var result = await roleManager.CreateAsync(role);
+
+            if (result.Succeeded)
+            {
+                return new ProcessResponse<object>(ResponseType.Ok, "Role created", null);
+            }
+
+            return new ProcessResponse<object>(ResponseType.BadRequest, "An unknown error occurred", null);
+        }
+
+        public static async Task<ProcessResponse<object>> UpdateRole(ApplicationRole role, RoleManager<ApplicationRole, string> roleManager, IdentityContext identity)
+        {
+            var roleInDb = await roleManager.FindByIdAsync(role.Id);
+
+            if (roleInDb == null)
+            {
+                return new ProcessResponse<object>(ResponseType.NotFound, "Role not found", null);
+            }
+
+            if (roleInDb.System)
+            {
+                return new ProcessResponse<object>(ResponseType.BadRequest, "Cannot edit default system roles", null);
+            }
+
+            roleInDb.Name = role.Name;
+            await identity.SaveChangesAsync();
+
+            return new ProcessResponse<object>(ResponseType.Ok, "Role updated", null);
+        }
+
+        public static async Task<ProcessResponse<object>> DeleteRole(string roleId, RoleManager<ApplicationRole, string> roleManager, IdentityContext identity)
+        {
+            var roleInDb = await roleManager.FindByIdAsync(roleId);
+
+            if (roleInDb == null)
+            {
+                return new ProcessResponse<object>(ResponseType.NotFound, "Role not found", null);
+            }
+
+            var result = await roleManager.DeleteAsync(roleInDb);
+
+            if (result.Succeeded)
+            {
+                return new ProcessResponse<object>(ResponseType.Ok, "Role deleted", null);
+            }
+
+            return new ProcessResponse<object>(ResponseType.BadRequest, "An unknown error occurred", null);
+        }
+
+        public static async Task<ProcessResponse<IEnumerable<ApplicationRole>>> GetAllRoles_Model(IdentityContext identity)
+        {
+            var roles = await identity.Roles.OrderBy(x => x.Name).ToListAsync();
+
+            return new ProcessResponse<IEnumerable<ApplicationRole>>(ResponseType.Ok, null, roles);
+        }
+
+        public static async Task<ProcessResponse<IEnumerable<ApplicationRoleDto>>> GetAllRoles(IdentityContext identity)
+        {
+            var process = await GetAllRoles_Model(identity);
+
+            var roles = process.ResponseObject.Select(Mapper.Map<ApplicationRole, ApplicationRoleDto>);
+
+            return new ProcessResponse<IEnumerable<ApplicationRoleDto>>(ResponseType.Ok, null, roles);
+        }
+
+        public static async Task<ProcessResponse<object>> AddPermissionToRole(RolePermission rolePermission, RoleManager<ApplicationRole, string> roleManager, IdentityContext identity)
+        {
+            if (await roleManager.FindByIdAsync(rolePermission.RoleId) == null)
+            {
+                return new ProcessResponse<object>(ResponseType.NotFound, "Role not found", null);
+            }
+
+            if (!identity.Permissions.Any(x => x.Id == rolePermission.PermissionId))
+            {
+                return new ProcessResponse<object>(ResponseType.NotFound, "Permission not found", null);
+            }
+
+            if (identity.RolePermissions.Any(x => x.RoleId == rolePermission.RoleId && x.PermissionId == rolePermission.PermissionId))
+            {
+                return new ProcessResponse<object>(ResponseType.BadRequest, "Role already has permission", null);
+            }
+
+            identity.RolePermissions.Add(rolePermission);
+            await identity.SaveChangesAsync();
+
+            return new ProcessResponse<object>(ResponseType.Ok, "Permission added to role", null);
+        }
+
+        public static async Task<ProcessResponse<object>> RemovePermissionFromRole(int rolePermissionId, IdentityContext identity)
+        {
+            var rolePermissionInDb = identity.RolePermissions.SingleOrDefault(x => x.Id == rolePermissionId);
+
+            if (rolePermissionInDb == null)
+            {
+                return new ProcessResponse<object>(ResponseType.NotFound, "Role does not have permission", null);
+            }
+
+            identity.RolePermissions.Remove(rolePermissionInDb);
+            await identity.SaveChangesAsync();
+
+            return new ProcessResponse<object>(ResponseType.Ok, "Permission removed from role", null);
+        }
+
+        public static async Task<ProcessResponse<IEnumerable<PermissionIndicator>>> GetPermissionsByRole(string roleId,
+            RoleManager<ApplicationRole, string> roleManager, IdentityContext identity)
+        {
+            var permissions = await identity.Permissions.ToListAsync();
+
+            var role = await roleManager.FindByIdAsync(roleId);
+
+            var permList = new List<PermissionIndicator>();
+
+            foreach (var permission in permissions)
+            {
+                permList.Add(new PermissionIndicator
+                    {
+                        Permission = Mapper.Map<Permission, PermissionDto>(permission),
+                        HasPermission = role.RolePermissions.Any(x => x.PermissionId == permission.Id)
+                    });
+            }
+
+            return new ProcessResponse<IEnumerable<PermissionIndicator>>(ResponseType.Ok, null,
+                permList.OrderBy(x => x.Permission.Area).ThenBy(x => x.Permission.Name).ToList());
         }
     }
 }

@@ -319,9 +319,11 @@
     <Compile Include="Dtos\GridDtos\GridPersonnelObservationDto.cs" />
     <Compile Include="Dtos\GridDtos\GridPersonDocumentDto.cs" />
     <Compile Include="Dtos\GridDtos\GridStaffMemberDto.cs" />
+    <Compile Include="Dtos\Identity\PermissionDto.cs" />
+    <Compile Include="Dtos\Identity\RolePermissionDto.cs" />
     <Compile Include="Dtos\LiteDtos\AttendanceMarkLite.cs" />
-    <Compile Include="Dtos\Identity\RoleDto.cs" />
-    <Compile Include="Dtos\Identity\UserDto.cs" />
+    <Compile Include="Dtos\Identity\ApplicationRoleDto.cs" />
+    <Compile Include="Dtos\Identity\ApplicationUserDto.cs" />
     <Compile Include="Dtos\MedicalConditionDto.cs" />
     <Compile Include="Dtos\MedicalEventDto.cs" />
     <Compile Include="Dtos\MedicalStudentConditionDto.cs" />
@@ -381,6 +383,7 @@
     <Compile Include="Models\Misc\ChartDataCategoric.cs" />
     <Compile Include="Models\Misc\DataGridUpdate.cs" />
     <Compile Include="Models\Misc\GroupEnrolment.cs" />
+    <Compile Include="Models\Misc\PermissionIndicator.cs" />
     <Compile Include="Models\Misc\ProcessResponse.cs" />
     <Compile Include="Models\Misc\StudentAttendanceMarkCollection.cs" />
     <Compile Include="Models\Misc\StudentAttendanceMarkSingular.cs" />
@@ -937,7 +940,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Results\" />
-    <Folder Include="Models\Attributes\" />
     <Folder Include="Views\Staff\Admissions\" />
     <Folder Include="Views\Staff\Behaviour\" />
     <Folder Include="Views\Staff\Communication\" />

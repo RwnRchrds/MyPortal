@@ -1,6 +1,6 @@
 ﻿namespace MyPortal.Dtos.Identity
 {
-    public class UserDto
+    public class ApplicationUserDto
     {
         public string Id { get; set; }
         public bool EmailConfirmed { get; set; }

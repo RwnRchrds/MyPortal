@@ -12,12 +12,17 @@ namespace MyPortal.Controllers.Api
         protected readonly UserStore<ApplicationUser, ApplicationRole, string, IdentityUserLogin, IdentityUserRole,
             IdentityUserClaim> _userStore;
 
+        protected readonly RoleManager<ApplicationRole, string> _roleManager;
+        protected readonly RoleStore<ApplicationRole> _roleStore;
+
         public MyPortalIdentityApiController()
         {
             _identity = new IdentityContext();
             _userStore = new UserStore<ApplicationUser, ApplicationRole, string, IdentityUserLogin, IdentityUserRole,
                 IdentityUserClaim>(_identity);
             _userManager = new UserManager<ApplicationUser, string>(_userStore);
+            _roleStore = new RoleStore<ApplicationRole>(_identity);
+            _roleManager = new RoleManager<ApplicationRole, string>(_roleStore);
         }
 
         public MyPortalIdentityApiController(MyPortalDbContext context, IdentityContext identity) : base(context)
@@ -26,6 +31,8 @@ namespace MyPortal.Controllers.Api
             _userStore = new UserStore<ApplicationUser, ApplicationRole, string, IdentityUserLogin, IdentityUserRole,
                 IdentityUserClaim>(_identity);
             _userManager = new UserManager<ApplicationUser, string>(_userStore);
+            _roleStore = new RoleStore<ApplicationRole>(_identity);
+            _roleManager = new RoleManager<ApplicationRole, string>(_roleStore);
         }
     }
 }

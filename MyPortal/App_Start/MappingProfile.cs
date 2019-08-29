@@ -6,6 +6,7 @@ using MyPortal.Dtos;
 using MyPortal.Dtos.GridDtos;
 using MyPortal.Dtos.Identity;
 using MyPortal.Dtos.LiteDtos;
+using MyPortal.Models;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
 using MyPortal.Processes;
@@ -37,11 +38,11 @@ namespace MyPortal
             CreateMap<PersonnelTrainingCourseDto, PersonnelTrainingCourse>();
             CreateMap<PersonnelTrainingCourse, PersonnelTrainingCourseDto>();
 
-            CreateMap<UserDto, IdentityUser>();
-            CreateMap<IdentityUser, UserDto>();
+            CreateMap<ApplicationUser, ApplicationUserDto>();
+            CreateMap<ApplicationUserDto, ApplicationUser>();
 
-            CreateMap<RoleDto, IdentityRole>();
-            CreateMap<IdentityRole, RoleDto>();
+            CreateMap<ApplicationRole, ApplicationRoleDto>();
+            CreateMap<ApplicationRoleDto, ApplicationRole>();
 
             CreateMap<PastoralRegGroupDto, PastoralRegGroup>();
             CreateMap<PastoralRegGroup, PastoralRegGroupDto>();

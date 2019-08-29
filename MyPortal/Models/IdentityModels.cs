@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Data.Entity.Migrations.Model;
@@ -43,7 +44,17 @@ namespace MyPortal.Models
     public class Permission
     {
         public int Id { get; set; }
+
+        [StringLength(50)]
+        [Required]
+        public string Area { get; set; }
+
+        [StringLength(50)]
+        [Required]
         public string Name { get; set; }
+
+        [StringLength(255)]
+        [Required]
         public string Description { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -54,7 +65,10 @@ namespace MyPortal.Models
     public class RolePermission
     {
         public int Id { get; set; }
+
+        [Required]
         public string RoleId { get; set; }
+
         public int PermissionId { get; set; }
         
         public virtual Permission Permission { get; set; }
