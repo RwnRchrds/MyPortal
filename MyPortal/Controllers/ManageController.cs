@@ -36,22 +36,17 @@ namespace MyPortal.Controllers
             get => _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
             private set => _userManager = value;
         }
-
-        //
-        // GET: /Manage/AddPhoneNumber
+        
         public ActionResult AddPhoneNumber()
         {
             return View();
         }
-
-        //
-        // POST: /Manage/AddPhoneNumber
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> AddPhoneNumber(AddPhoneNumberViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
-            // Generate the token and send it
             var code = await UserManager.GenerateChangePhoneNumberTokenAsync(User.Identity.GetUserId(), model.Number);
             if (UserManager.SmsService != null)
             {
@@ -65,16 +60,12 @@ namespace MyPortal.Controllers
 
             return RedirectToAction("VerifyPhoneNumber", new {PhoneNumber = model.Number});
         }
-
-        //
-        // GET: /Manage/ChangePassword
+        
         public ActionResult ChangePassword()
         {
             return View();
         }
-
-        //
-        // POST: /Manage/ChangePassword
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
@@ -92,9 +83,7 @@ namespace MyPortal.Controllers
             AddErrors(result);
             return View(model);
         }
-
-        //
-        // POST: /Manage/DisableTwoFactorAuthentication
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DisableTwoFactorAuthentication()
@@ -115,9 +104,7 @@ namespace MyPortal.Controllers
 
             base.Dispose(disposing);
         }
-
-        //
-        // POST: /Manage/EnableTwoFactorAuthentication
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EnableTwoFactorAuthentication()
@@ -127,9 +114,7 @@ namespace MyPortal.Controllers
             if (user != null) await SignInManager.SignInAsync(user, false, false);
             return RedirectToAction("Index", "Manage");
         }
-
-        //
-        // GET: /Manage/Index
+        
         public async Task<ActionResult> Index(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
@@ -158,20 +143,15 @@ namespace MyPortal.Controllers
             };
             return View(model);
         }
-
-        //
-        // POST: /Manage/LinkLogin
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult LinkLogin(string provider)
         {
-            // Request a redirect to the external login provider to link a login for the current user
             return new AccountController.ChallengeResult(provider, Url.Action("LinkLoginCallback", "Manage"),
                 User.Identity.GetUserId());
         }
-
-        //
-        // GET: /Manage/LinkLoginCallback
+        
         public async Task<ActionResult> LinkLoginCallback()
         {
             var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync(XsrfKey, User.Identity.GetUserId());
@@ -181,9 +161,7 @@ namespace MyPortal.Controllers
                 ? RedirectToAction("ManageLogins")
                 : RedirectToAction("ManageLogins", new {Message = ManageMessageId.Error});
         }
-
-        //
-        // GET: /Manage/ManageLogins
+        
         public async Task<ActionResult> ManageLogins(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
@@ -202,9 +180,7 @@ namespace MyPortal.Controllers
                 OtherLogins = otherLogins
             });
         }
-
-        //
-        // POST: /Manage/RemoveLogin
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RemoveLogin(string loginProvider, string providerKey)
@@ -225,9 +201,7 @@ namespace MyPortal.Controllers
 
             return RedirectToAction("ManageLogins", new {Message = message});
         }
-
-        //
-        // POST: /Manage/RemovePhoneNumber
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RemovePhoneNumber()
@@ -238,16 +212,12 @@ namespace MyPortal.Controllers
             if (user != null) await SignInManager.SignInAsync(user, false, false);
             return RedirectToAction("Index", new {Message = ManageMessageId.RemovePhoneSuccess});
         }
-
-        //
-        // GET: /Manage/SetPassword
+        
         public ActionResult SetPassword()
         {
             return View();
         }
-
-        //
-        // POST: /Manage/SetPassword
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SetPassword(SetPasswordViewModel model)
@@ -268,9 +238,7 @@ namespace MyPortal.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
-
-        //
-        // GET: /Manage/VerifyPhoneNumber
+        
         public async Task<ActionResult> VerifyPhoneNumber(string phoneNumber)
         {
             var code = await UserManager.GenerateChangePhoneNumberTokenAsync(User.Identity.GetUserId(), phoneNumber);
@@ -279,9 +247,7 @@ namespace MyPortal.Controllers
                 ? View("Error")
                 : View(new VerifyPhoneNumberViewModel {PhoneNumber = phoneNumber});
         }
-
-        //
-        // POST: /Manage/VerifyPhoneNumber
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> VerifyPhoneNumber(VerifyPhoneNumberViewModel model)
@@ -295,8 +261,7 @@ namespace MyPortal.Controllers
                 if (user != null) await SignInManager.SignInAsync(user, false, false);
                 return RedirectToAction("Index", new {Message = ManageMessageId.AddPhoneSuccess});
             }
-
-            // If we got this far, something failed, redisplay form
+            
             ModelState.AddModelError("", "Failed to verify phone");
             return View(model);
         }

@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Http;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using MyPortal.Models;
@@ -15,7 +12,7 @@ using MyPortal.Processes;
 
 namespace MyPortal.Controllers
 {
-    [System.Web.Mvc.Authorize]
+    [Authorize]
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;
@@ -46,10 +43,8 @@ namespace MyPortal.Controllers
             get => _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
             private set => _userManager = value;
         }
-
-        //
-        // GET: /Account/ConfirmEmail
-        [System.Web.Mvc.AllowAnonymous]
+        
+        [AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(string userId, string code)
         {
             if (userId == null || code == null) return View("Error");
@@ -76,20 +71,21 @@ namespace MyPortal.Controllers
 
             base.Dispose(disposing);
         }
-
-        //
-        // GET: /Account/Login
-        [System.Web.Mvc.AllowAnonymous]
+        
+        [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
 
-        //
-        // POST: /Account/Login
-        [System.Web.Mvc.HttpPost]
-        [System.Web.Mvc.AllowAnonymous]
+        public ActionResult RestrictedAccess()
+        {
+            return View();
+        }
+        
+        [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
@@ -97,9 +93,7 @@ namespace MyPortal.Controllers
             {
                 return View(model);
             }
-
-            // This doesn't count login failures towards account lockout
-            // To enable password failures to trigger account lockout, change to shouldLockout: true
+            
             var result =
                 await SignInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, false);
             switch (result)
@@ -116,20 +110,16 @@ namespace MyPortal.Controllers
                     return View(model);
             }
         }
-
-        //
-        // POST: /Account/LogOff
-        [System.Web.Mvc.HttpPost]
+        
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToAction("Index", "Home");
         }
-
-        //
-        // GET: /Account/ResetPassword
-        [System.Web.Mvc.AllowAnonymous]
+        
+        [AllowAnonymous]
         public ActionResult ResetPassword(string code)
         { 
             return code == null ? View("Error") : View();
@@ -141,7 +131,7 @@ namespace MyPortal.Controllers
 
             if (user == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                throw new Exception("User not found");
             }
 
             var academicYearId = SystemProcesses.GetCurrentAcademicYearId(_context);
@@ -150,11 +140,9 @@ namespace MyPortal.Controllers
 
             _identity.SaveChanges();
         }
-
-        //
-        // POST: /Account/ResetPassword
-        [System.Web.Mvc.HttpPost]
-        [System.Web.Mvc.AllowAnonymous]
+        
+        [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
         {
@@ -166,10 +154,8 @@ namespace MyPortal.Controllers
             AddErrors(result);
             return View();
         }
-
-        //
-        // GET: /Account/ResetPasswordConfirmation
-        [System.Web.Mvc.AllowAnonymous]
+        
+        [AllowAnonymous]
         public ActionResult ResetPasswordConfirmation()
         {
             return View();

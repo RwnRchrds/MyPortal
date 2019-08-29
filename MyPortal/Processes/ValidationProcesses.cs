@@ -30,7 +30,7 @@ namespace MyPortal.Processes
             return false;
         }
         
-        public static bool UserHasPermission(IPrincipal principal, string permission)
+        public static bool HasPermission(this IPrincipal principal, string permission)
         {
             var identity = new IdentityContext();
             var userStore = new UserStore<ApplicationUser>(identity);

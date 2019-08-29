@@ -15,8 +15,7 @@ namespace MyPortal.Models.Attributes
 
         protected override bool IsAuthorized(HttpActionContext actionContext)
         {
-            return ValidationProcesses.UserHasPermission(actionContext.ControllerContext.RequestContext.Principal,
-                _permission);
+            return actionContext.ControllerContext.RequestContext.Principal.HasPermission(_permission);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace MyPortal.Controllers
 
             if (User.IsInRole("Student")) return RedirectToAction("Index", "Students");
 
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("RestrictedAccess", "Account");
         }
 
         public ActionResult Index()

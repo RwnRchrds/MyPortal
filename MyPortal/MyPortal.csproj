@@ -842,6 +842,7 @@
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
+    <Content Include="Views\Account\RestrictedAccess.cshtml" />
     <Content Include="Views\Staff\Docs\Documents.cshtml" />
     <Content Include="Views\Staff\Profile\CommentBanks.cshtml" />
     <Content Include="Views\Staff\Profile\Comments.cshtml" />
