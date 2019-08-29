@@ -12,7 +12,7 @@ namespace MyPortal.Processes
 {
     public static class AdminProcesses
     {
-        public static async Task<ProcessResponse<object>> AddUserToRole(UserRoleModel roleModel, UserManager<ApplicationUser> userManager, IdentityContext identity)
+        public static async Task<ProcessResponse<object>> AddUserToRole(UserRoleModel roleModel, UserManager<ApplicationUser, string> userManager, IdentityContext identity)
         {
             var userInDb = identity.Users.SingleOrDefault(u => u.Id == roleModel.UserId);
             var roleInDb = identity.Roles.SingleOrDefault(r => r.Name == roleModel.RoleName);
@@ -67,7 +67,7 @@ namespace MyPortal.Processes
         }
 
         public static async Task<ProcessResponse<object>> AttachPersonToUser(UserProfile userProfile,
-            UserManager<ApplicationUser> userManager, IdentityContext identity, MyPortalDbContext context)
+            UserManager<ApplicationUser, string> userManager, IdentityContext identity, MyPortalDbContext context)
         {
             var userInDb = identity.Users.FirstOrDefault(u => u.Id == userProfile.UserId);
             var roleInDb = identity.Roles.FirstOrDefault(r => r.Name == userProfile.RoleName);
@@ -126,7 +126,7 @@ namespace MyPortal.Processes
         }
 
         public static async Task<ProcessResponse<object>> ChangePassword(ChangePasswordModel data,
-            UserManager<ApplicationUser> userManager, IdentityContext identity)
+            UserManager<ApplicationUser, string> userManager, IdentityContext identity)
         {
             if (data.Password != data.Confirm)
             {
@@ -157,7 +157,7 @@ namespace MyPortal.Processes
         }
 
         public static async Task<ProcessResponse<object>> DeleteUser(string userId,
-            UserManager<ApplicationUser> userManager, IdentityContext identity)
+            UserManager<ApplicationUser, string> userManager, IdentityContext identity)
         {
             var userInDb = identity.Users.FirstOrDefault(x => x.Id == userId);
 
@@ -184,7 +184,7 @@ namespace MyPortal.Processes
         }
 
         public static async Task<ProcessResponse<object>> DetachPerson(ApplicationUser user,
-            UserManager<ApplicationUser> userManager, IdentityContext identity, MyPortalDbContext context)
+            UserManager<ApplicationUser, string> userManager, IdentityContext identity, MyPortalDbContext context)
         {
             var userIsAttached = context.Students.Any(x => x.Person.UserId == user.Id) ||
                                  context.StaffMembers.Any(x => x.Person.UserId == user.Id);

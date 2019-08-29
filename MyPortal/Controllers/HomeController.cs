@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using MyPortal.Processes;
 
 namespace MyPortal.Controllers
 {
@@ -9,11 +10,16 @@ namespace MyPortal.Controllers
         [Route("User/Home")]
         public ActionResult Home()
         {
-            if (User.IsInRole("SeniorStaff") || User.IsInRole("Staff")) return RedirectToAction("Index", "Staff");
+            if (Request.IsAuthenticated)
+            {
+                if (User.HasPermission("AccessStaffPortal")) return RedirectToAction("Index", "Staff");
 
-            if (User.IsInRole("Student")) return RedirectToAction("Index", "Students");
+                if (User.HasPermission("AccessStudentPortal")) return RedirectToAction("Index", "Students");
 
-            return RedirectToAction("RestrictedAccess", "Account");
+                return RedirectToAction("RestrictedAccess", "Account");
+            }
+
+            return RedirectToAction("Login", "Account");
         }
 
         public ActionResult Index()

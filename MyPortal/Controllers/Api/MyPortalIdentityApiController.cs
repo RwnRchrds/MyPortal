@@ -8,21 +8,24 @@ namespace MyPortal.Controllers.Api
     public class MyPortalIdentityApiController : MyPortalApiController
     {
         protected readonly IdentityContext _identity;
-        protected readonly UserManager<ApplicationUser> _userManager;
-        protected readonly UserStore<ApplicationUser> _userStore;
+        protected readonly UserManager<ApplicationUser, string> _userManager;
+        protected readonly UserStore<ApplicationUser, ApplicationRole, string, IdentityUserLogin, IdentityUserRole,
+            IdentityUserClaim> _userStore;
 
         public MyPortalIdentityApiController()
         {
             _identity = new IdentityContext();
-            _userStore = new UserStore<ApplicationUser>(_identity);
-            _userManager = new UserManager<ApplicationUser>(_userStore);
+            _userStore = new UserStore<ApplicationUser, ApplicationRole, string, IdentityUserLogin, IdentityUserRole,
+                IdentityUserClaim>(_identity);
+            _userManager = new UserManager<ApplicationUser, string>(_userStore);
         }
 
         public MyPortalIdentityApiController(MyPortalDbContext context, IdentityContext identity) : base(context)
         {
             _identity = new IdentityContext();
-            _userStore = new UserStore<ApplicationUser>(_identity);
-            _userManager = new UserManager<ApplicationUser>(_userStore);
+            _userStore = new UserStore<ApplicationUser, ApplicationRole, string, IdentityUserLogin, IdentityUserRole,
+                IdentityUserClaim>(_identity);
+            _userManager = new UserManager<ApplicationUser, string>(_userStore);
         }
     }
 }
