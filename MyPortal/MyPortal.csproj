@@ -261,6 +261,7 @@
     <Compile Include="Controllers\Api\ProfilesController.cs" />
     <Compile Include="Controllers\Api\StaffController.cs" />
     <Compile Include="Controllers\Api\StudentsController.cs" />
+    <Compile Include="Controllers\Api\SystemController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\FinanceController.cs" />
@@ -346,9 +347,11 @@
     <Compile Include="Dtos\GridDtos\GridStudentDto.cs" />
     <Compile Include="Dtos\StaffMemberDto.cs" />
     <Compile Include="Dtos\StudentDto.cs" />
+    <Compile Include="Dtos\SystemBulletinDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Attributes\HasPermissionAttribute.cs" />
     <Compile Include="Models\Database\BehaviourAchievement.cs" />
     <Compile Include="Models\Database\BehaviourAchievementType.cs" />
     <Compile Include="Models\Database\BehaviourIncident.cs" />
@@ -388,6 +391,7 @@
     <Compile Include="Processes\CurriculumProcesses.cs" />
     <Compile Include="Processes\DocumentProcesses.cs" />
     <Compile Include="Processes\FinanceProcesses.cs" />
+    <Compile Include="Processes\IdentityProcesses.cs" />
     <Compile Include="Processes\LookupProcesses.cs" />
     <Compile Include="Processes\PastoralProcesses.cs" />
     <Compile Include="Processes\PeopleProcesses.cs" />
@@ -934,7 +938,7 @@
   <ItemGroup>
     <Folder Include="App_Data\Results\" />
     <Folder Include="Dtos\ViewDtos\" />
-    <Folder Include="Models\Authorisation\" />
+    <Folder Include="Models\Attributes\" />
     <Folder Include="Views\Staff\Admissions\" />
     <Folder Include="Views\Staff\Behaviour\" />
     <Folder Include="Views\Staff\Communication\" />

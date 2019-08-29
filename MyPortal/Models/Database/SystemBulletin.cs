@@ -19,7 +19,7 @@ namespace MyPortal.Models.Database
         public DateTime CreateDate { get; set; }
 
         [Display(Name = "Expires")]
-        public DateTime ExpireDate { get; set; }
+        public DateTime? ExpireDate { get; set; }
 
         [Required]
         [StringLength(50)]
@@ -29,6 +29,8 @@ namespace MyPortal.Models.Database
         public string Detail { get; set; }
 
         public bool ShowStudents { get; set; }
+        
+        public bool Approved { get; set; }
 
         public virtual StaffMember Author { get; set; }
     }
