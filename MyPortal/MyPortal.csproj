@@ -937,7 +937,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Results\" />
-    <Folder Include="Dtos\ViewDtos\" />
     <Folder Include="Models\Attributes\" />
     <Folder Include="Views\Staff\Admissions\" />
     <Folder Include="Views\Staff\Behaviour\" />

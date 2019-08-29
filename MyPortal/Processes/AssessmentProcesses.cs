@@ -214,26 +214,32 @@ namespace MyPortal.Processes
                             continue;
                         }
 
-                        context.AssessmentResults.Add(result);
+                        CreateResult(result, context, false);
                         numResults++;
                     }
                 }
             }
+            
+            context.SaveChanges();
 
             stream.Dispose();
 
             var guid = Guid.NewGuid();
             File.Move(@"C:/MyPortal/Files/Results/import.csv", @"C:/MyPortal/Files/Results/" + guid + "_IMPORTED.csv");
-
-            context.SaveChanges();
+            
             return new ProcessResponse<object>(ResponseType.Ok, numResults + " results found and imported", null);
         }
 
-        public static ProcessResponse<object> CreateResult(AssessmentResult result, MyPortalDbContext context)
+        public static ProcessResponse<object> CreateResult(AssessmentResult result, MyPortalDbContext context, bool commitImmediately = true)
         {
             if (!ValidationProcesses.ModelIsValid(result))
             {
                 return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
+            }
+
+            if (!context.AssessmentGrades.Any(x => x.GradeValue == result.Value))
+            {
+                return new ProcessResponse<object>(ResponseType.BadRequest, "Grade does not exist", null);
             }
             
             var resultInDb = context.AssessmentResults.SingleOrDefault(x =>
@@ -245,7 +251,11 @@ namespace MyPortal.Processes
             }
 
             context.AssessmentResults.Add(result);
-            context.SaveChanges();
+            
+            if (commitImmediately)
+            {
+                context.SaveChanges();   
+            }
 
             return new ProcessResponse<object>(ResponseType.Ok, "Result added", null);
         }

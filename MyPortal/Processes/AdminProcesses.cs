@@ -124,5 +124,111 @@ namespace MyPortal.Processes
 
             return new ProcessResponse<object>(ResponseType.BadRequest, "An error occurred", null);
         }
+
+        public static async Task<ProcessResponse<object>> ChangePassword(ChangePasswordModel data,
+            UserManager<ApplicationUser> userManager, IdentityContext identity)
+        {
+            if (data.Password != data.Confirm)
+            {
+                return new ProcessResponse<object>(ResponseType.BadRequest, "Passwords do not match", null);
+            }
+
+
+            var userInDb = identity.Users.FirstOrDefault(user => user.Id == data.UserId);
+
+            if (userInDb == null)
+            {
+                return new ProcessResponse<object>(ResponseType.NotFound, "User not found", null);
+            }
+
+            var removePassword = await userManager.RemovePasswordAsync(data.UserId);
+
+            if (removePassword.Succeeded)
+            {
+                var addNewPassword = await userManager.AddPasswordAsync(data.UserId, data.Password);
+
+                if (addNewPassword.Succeeded)
+                {
+                    return new ProcessResponse<object>(ResponseType.Ok, "Password changed", null);
+                }
+            }
+
+            return new ProcessResponse<object>(ResponseType.BadRequest, "An unknown error occurred", null);
+        }
+
+        public static async Task<ProcessResponse<object>> DeleteUser(string userId,
+            UserManager<ApplicationUser> userManager, IdentityContext identity)
+        {
+            var userInDb = identity.Users.FirstOrDefault(x => x.Id == userId);
+
+            if (userInDb == null)
+            {
+                return new ProcessResponse<object>(ResponseType.NotFound, "User not found", null);
+            }
+
+            var userRoles = await userManager.GetRolesAsync(userId);
+
+            foreach (var role in userRoles)
+            {
+                await userManager.RemoveFromRoleAsync(userId, role);
+            }
+
+            var result = await userManager.DeleteAsync(userInDb);
+
+            if (result.Succeeded)
+            {
+                return new ProcessResponse<object>(ResponseType.Ok, "User deleted", null);
+            }
+
+            return new ProcessResponse<object>(ResponseType.BadRequest, "An unknown error occurred", null);
+        }
+
+        public static async Task<ProcessResponse<object>> DetachPerson(ApplicationUser user,
+            UserManager<ApplicationUser> userManager, IdentityContext identity, MyPortalDbContext context)
+        {
+            var userIsAttached = context.Students.Any(x => x.Person.UserId == user.Id) ||
+                                 context.StaffMembers.Any(x => x.Person.UserId == user.Id);
+
+            if (!userIsAttached)
+            {
+                return new ProcessResponse<object>(ResponseType.BadRequest, "User is not attached to a person", null);
+            }
+
+            if (await userManager.IsInRoleAsync(user.Id, "Staff"))
+            {
+                var personInDb = context.StaffMembers.Single(x => x.Person.UserId == user.Id);
+                personInDb.Person.UserId = null;
+                context.SaveChanges();
+
+                var roles = await userManager.GetRolesAsync(user.Id);
+                var result = await userManager.RemoveFromRolesAsync(user.Id, roles.ToArray());
+
+                if (result.Succeeded)
+                {
+                    return new ProcessResponse<object>(ResponseType.Ok,
+                        $"User {user.UserName} detached from staff member {PeopleProcesses.GetStaffDisplayName(personInDb)}",
+                        null);
+                }
+            }
+
+            if (await userManager.IsInRoleAsync(user.Id, "Student"))
+            {
+                var personInDb = context.Students.Single(x => x.Person.UserId == user.Id);
+                personInDb.Person.UserId = null;
+                context.SaveChanges();
+
+                var roles = await userManager.GetRolesAsync(user.Id);
+                var result = await userManager.RemoveFromRolesAsync(user.Id, roles.ToArray());
+
+                if (result.Succeeded)
+                {
+                    return new ProcessResponse<object>(ResponseType.Ok,
+                        $"User {user.UserName} detached from student {PeopleProcesses.GetStudentDisplayName(personInDb)}",
+                        null);
+                }
+            }
+
+            return new ProcessResponse<object>(ResponseType.BadRequest, "An unknown error occurred", null);
+        }
     }
 }

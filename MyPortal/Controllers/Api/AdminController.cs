@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
@@ -42,34 +41,9 @@ namespace MyPortal.Controllers.Api
         [Route("api/users/resetPassword")]
         public async Task<IHttpActionResult> ChangePassword([FromBody] ChangePasswordModel data)
         {
-            if (data.Password != data.Confirm)
-            {
-                return Content(HttpStatusCode.BadRequest, "Passwords do not match");
-            }
+            var result = await AdminProcesses.ChangePassword(data, _userManager, _identity);
 
-
-            var userInDb = _identity.Users.FirstOrDefault(user => user.Id == data.UserId);
-
-            if (userInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "User not found");
-            }
-
-            var removePassword = await _userManager.RemovePasswordAsync(data.UserId);
-
-            if (removePassword.Succeeded)
-            {
-                var addNewPassword = await _userManager.AddPasswordAsync(data.UserId, data.Password);
-
-                if (addNewPassword.Succeeded)
-                {
-                    return Ok("Password reset");
-                }
-
-                return BadRequest();
-            }
-
-            return BadRequest();
+            return PrepareResponse(result);
         }
 
         //Delete user
@@ -77,74 +51,19 @@ namespace MyPortal.Controllers.Api
         [Route("api/users/delete/{userId}")]
         public async Task<IHttpActionResult> DeleteUser(string userId)
         {
-            var userInDb = _identity.Users.FirstOrDefault(x => x.Id == userId);
+            var result = await AdminProcesses.DeleteUser(userId, _userManager, _identity);
 
-            if (userInDb == null)
-            {
-                return Content(HttpStatusCode.NotFound, "User not found");
-            }
-
-            var userRoles = await _userManager.GetRolesAsync(userId);
-
-            foreach (var role in userRoles)
-            {
-                await _userManager.RemoveFromRoleAsync(userId, role);
-            }
-
-            var result = await _userManager.DeleteAsync(userInDb);
-
-            if (result.Succeeded)
-            {
-                return Ok("User deleted");
-            }
-
-            return BadRequest();
+            return PrepareResponse(result);
         }
 
         //Detach User from Personal Profile
         [HttpPost]
         [Route("api/users/detach")]
-        public async Task<IHttpActionResult> DetachPerson(UserDto user)
+        public async Task<IHttpActionResult> DetachPerson(ApplicationUser user)
         {
-            var userIsAttached = _context.Students.Any(x => x.Person.UserId == user.Id) ||
-                                 _context.StaffMembers.Any(x => x.Person.UserId == user.Id);
+            var result = await AdminProcesses.DetachPerson(user, _userManager, _identity, _context);
 
-            if (!userIsAttached)
-            {
-                return Content(HttpStatusCode.BadRequest, "User is not attached to a person");
-            }
-
-            if (await _userManager.IsInRoleAsync(user.Id, "Staff"))
-            {
-                var personInDb = _context.StaffMembers.Single(x => x.Person.UserId == user.Id);
-                personInDb.Person.UserId = null;
-                _context.SaveChanges();
-
-                var roles = await _userManager.GetRolesAsync(user.Id);
-                var result = await _userManager.RemoveFromRolesAsync(user.Id, roles.ToArray());
-
-                if (result.Succeeded)
-                {
-                    return Ok("User detached from person");
-                }
-            }
-
-            if (await _userManager.IsInRoleAsync(user.Id, "Student"))
-            {
-                var personInDb = _context.Students.Single(x => x.Person.UserId == user.Id);
-                personInDb.Person.UserId = null;
-                _context.SaveChanges();
-
-                var roles = await _userManager.GetRolesAsync(user.Id);
-                var result = await _userManager.RemoveFromRolesAsync(user.Id, roles.ToArray());
-
-                if (result.Succeeded)
-                {
-                    return Ok("User detached from person");
-                }
-            }
-
-            return BadRequest();
+            return PrepareResponse(result);
         }
 
         //GET Users From Database

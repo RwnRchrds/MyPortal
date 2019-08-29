@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Web.Mvc;
-using MyPortal.Models;
-using MyPortal.Models.Database;
+﻿using System.Web.Mvc;
 using MyPortal.Processes;
 using MyPortal.ViewModels;
 

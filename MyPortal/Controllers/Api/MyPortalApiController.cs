@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity.Migrations;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using MyPortal.Models.Database;
-using MyPortal.Models.Exceptions;
 using MyPortal.Models.Misc;
 using MyPortal.Processes;
 using Syncfusion.EJ2.Base;

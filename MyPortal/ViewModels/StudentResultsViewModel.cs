@@ -11,6 +11,5 @@ namespace MyPortal.ViewModels
         public int CurrentResultSetId { get; set; }
         public AssessmentResult Result { get; set; }
         public IEnumerable<CurriculumSubject> Subjects { get; set; }
-        public IEnumerable<AssessmentGradeSet> GradeSets { get; set; }
     }
 }

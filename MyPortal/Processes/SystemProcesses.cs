@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
+using System.Threading.Tasks;
 using System.Web.Helpers;
 using System.Xml.Schema;
 using AutoMapper;
@@ -85,7 +86,7 @@ namespace MyPortal.Processes
             return new ApiResponse<T> {Count = count, Items = dataSource};
         }
 
-        public static ProcessResponse<object> CreateBulletin(SystemBulletin bulletin, string userId, MyPortalDbContext context, bool autoApprove = false)
+        public static async Task<ProcessResponse<object>> CreateBulletin(SystemBulletin bulletin, string userId, MyPortalDbContext context, bool autoApprove = false)
         {
             if (!ValidationProcesses.ModelIsValid(bulletin))
             {
@@ -106,7 +107,7 @@ namespace MyPortal.Processes
             }
 
             context.SystemBulletins.Add(bulletin);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
             
             return new ProcessResponse<object>(ResponseType.Ok, "Bulletin created", null);
         }

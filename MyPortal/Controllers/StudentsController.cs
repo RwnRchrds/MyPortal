@@ -3,10 +3,6 @@ using System.Net;
 using System.Web.Http;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
-using MyPortal.Models;
-using MyPortal.Models.Database;
-using MyPortal.Models.Exceptions;
-using MyPortal.Models.Misc;
 using MyPortal.Processes;
 using MyPortal.ViewModels;
 

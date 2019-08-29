@@ -1,19 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Helpers;
+﻿using System.Collections.Generic;
 using System.Web.Http;
-using System.Web.Http.Results;
-using AutoMapper;
-using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
-using MyPortal.Dtos.GridDtos;
-using MyPortal.Models;
 using MyPortal.Models.Database;
-using MyPortal.Models.Misc;
 using MyPortal.Processes;
 using Syncfusion.EJ2.Base;
 

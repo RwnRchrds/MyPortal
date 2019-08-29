@@ -1,22 +1,11 @@
-using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Helpers;
+using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Results;
-using AutoMapper;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
-using MyPortal.Dtos.GridDtos;
-using MyPortal.Models;
 using MyPortal.Models.Attributes;
 using MyPortal.Models.Database;
-using MyPortal.Models.Misc;
 using MyPortal.Processes;
-using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
 {
@@ -27,13 +16,15 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [HasPermission("EditBulletins")]
         [Route("bulletins/create")]
-        public IHttpActionResult CreateBulletin([FromBody] SystemBulletin bulletin)
+        public async Task<IHttpActionResult> CreateBulletin([FromBody] SystemBulletin bulletin)
         {
             var userId = User.Identity.GetUserId();
 
             var autoApprove = User.IsInRole("SeniorStaff");
 
-            return PrepareResponse(SystemProcesses.CreateBulletin(bulletin, userId, _context, autoApprove));
+            var result = await SystemProcesses.CreateBulletin(bulletin, userId, _context, autoApprove);
+
+            return PrepareResponse(result);
         }
 
         [HttpPost]

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
-using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;

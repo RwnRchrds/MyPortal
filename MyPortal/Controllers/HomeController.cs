@@ -1,6 +1,4 @@
 ﻿using System.Web.Mvc;
-using MyPortal.Models;
-using MyPortal.Models.Database;
 
 namespace MyPortal.Controllers
 {
