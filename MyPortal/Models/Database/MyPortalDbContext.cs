@@ -71,7 +71,8 @@ namespace MyPortal.Models.Database
         public virtual DbSet<ProfileLogType> ProfileLogTypes { get; set; }
         public virtual DbSet<SenStatus> SenStatuses { get; set; }
         public virtual DbSet<SenEvent> SenEvents { get; set; }
-        public virtual DbSet<SenProvision> SenProvisions { get; set; }  
+        public virtual DbSet<SenProvision> SenProvisions { get; set; }
+        public virtual DbSet<SystemBulletin> SystemBulletins { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -342,6 +343,12 @@ namespace MyPortal.Models.Database
                 .HasMany(e => e.PastoralYearGroups)
                 .WithRequired(e => e.HeadOfYear)
                 .HasForeignKey(e => e.HeadId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<StaffMember>()
+                .HasMany(e => e.Bulletins)
+                .WithRequired(e => e.Author)
+                .HasForeignKey(e => e.AuthorId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Student>()
@@ -630,6 +637,10 @@ namespace MyPortal.Models.Database
 
             modelBuilder.Entity<SenStatus>()
                 .Property(x => x.Code)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<SystemBulletin>()
+                .Property(x => x.Title)
                 .IsUnicode(false);
         }
     }

@@ -29,6 +29,7 @@ namespace MyPortal.Models.Database
             PersonnelObservationsOwn = new HashSet<PersonnelObservation>();
             PersonnelObservationsObserved = new HashSet<PersonnelObservation>();
             PersonnelTrainingCertificates = new HashSet<PersonnelTrainingCertificate>();
+            Bulletins = new HashSet<SystemBulletin>();
         }
 
         public int Id { get; set; }
@@ -87,5 +88,8 @@ namespace MyPortal.Models.Database
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PersonnelTrainingCertificate> PersonnelTrainingCertificates { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SystemBulletin> Bulletins { get; set; }
     }
 }

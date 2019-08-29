@@ -371,6 +371,7 @@
     <Compile Include="Models\Database\SenProvisionType.cs" />
     <Compile Include="Models\Database\SenReviewType.cs" />
     <Compile Include="Models\Database\SenStatus.cs" />
+    <Compile Include="Models\Database\SystemBulletin.cs" />
     <Compile Include="Models\Exceptions\ProcessException.cs" />
     <Compile Include="Models\Misc\ApiResponse.cs" />
     <Compile Include="Models\Misc\AttendanceSummary.cs" />
