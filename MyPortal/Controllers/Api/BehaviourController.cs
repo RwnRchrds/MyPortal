@@ -2,6 +2,7 @@
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
+using MyPortal.Models.Attributes;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
 using MyPortal.Processes;
@@ -13,6 +14,7 @@ namespace MyPortal.Controllers.Api
     public class BehaviourController : MyPortalApiController
     {
         [HttpGet]
+        [RequiresPermission("ViewBehaviour")]
         [Route("points/get/{studentId:int}")]
         public int GetBehaviourPoints([FromUri] int studentId)
         {
@@ -23,6 +25,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("ViewBehaviour")]
         [Route("achievements/get/byStudent/dataGrid/{studentId:int}")]
         public IHttpActionResult GetAchievementsForDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
         {
@@ -35,6 +38,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [RequiresPermission("ViewBehaviour")]
         [Route("achievements/get/byId/{achievementId:int}")]
         public BehaviourAchievementDto GetAchievement([FromUri] int achievementId)
         {
@@ -42,6 +46,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("EditBehaviour")]
         [Route("achievements/create")]
         public IHttpActionResult CreateAchievement([FromBody] BehaviourAchievement achievement)
         {
@@ -57,6 +62,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("EditBehaviour")]
         [Route("achievements/update")]
         public IHttpActionResult UpdateAchievement([FromBody] BehaviourAchievement achievement)
         {
@@ -64,6 +70,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpDelete]
+        [RequiresPermission("EditBehaviour")]
         [Route("achievements/delete/{achievementId:int}")]
         public IHttpActionResult DeleteAchievement([FromUri] int achievementId)
         {
@@ -71,6 +78,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("ViewBehaviour")]
         [Route("incidents/get/byStudent/dataGrid/{studentId:int}")]
         public IHttpActionResult GetBehaviourForDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
         {
@@ -82,6 +90,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [RequiresPermission("ViewBehaviour")]
         [Route("incidents/get/byId/{incidentId:int}")]
         public BehaviourIncidentDto GetBehaviour([FromUri] int incidentId)
         {
@@ -89,6 +98,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("EditBehaviour")]
         [Route("incidents/create")]
         public IHttpActionResult CreateIncident([FromBody] BehaviourIncident incident)
         {
@@ -103,6 +113,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("EditBehaviour")]
         [Route("incidents/update")]
         public IHttpActionResult UpdateIncident([FromBody] BehaviourIncident incident)
         {
@@ -110,6 +121,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpDelete]
+        [RequiresPermission("EditBehaviour")]
         [Route("incidents/delete/{incidentId:int}")]
         public IHttpActionResult DeleteIncident([FromUri] int incidentId)
         {
@@ -117,6 +129,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [RequiresPermission("RunReports")]
         [Route("reports/incidents/byType")]
         public IEnumerable<ChartDataCategoric> ReportIncidentsByType()
         {

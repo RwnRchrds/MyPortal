@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
 using MyPortal.Dtos;
+using MyPortal.Models.Attributes;
 using MyPortal.Models.Database;
 using MyPortal.Processes;
 using Syncfusion.EJ2.Base;
@@ -11,6 +12,7 @@ namespace MyPortal.Controllers.Api
     public class AssessmentController : MyPortalApiController
     {
         [HttpGet]
+        [RequiresPermission("ImportResults")]
         [Route("results/import/{resultSetId:int}")]
         public IHttpActionResult ImportResults([FromUri] int resultSetId)
         {
@@ -18,6 +20,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("EditResults")]
         [Route("results/create")]
         public IHttpActionResult AddResult([FromBody] AssessmentResult result)
         {
@@ -25,6 +28,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [RequiresPermission("ViewResults")]
         [Route("results/get/{studentId:int}/{resultSetId:int}")]
         public IEnumerable<AssessmentResultDto> GetResults([FromUri] int studentId, [FromUri] int resultSetId)
         {
@@ -32,6 +36,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("EditResults")]
         [Route("resultSets/create")]
         public IHttpActionResult CreateResultSet([FromBody] AssessmentResultSet resultSet)
         {
@@ -39,6 +44,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpDelete]
+        [RequiresPermission("EditResultSets")]
         [Route("resultSets/delete/{resultSetId:int}")]
         public IHttpActionResult DeleteResultSet([FromUri] int resultSetId)
         {
@@ -46,6 +52,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [RequiresPermission("ViewResultSets")]
         [Route("resultSets/get/byId/{resultSetId:int}")]
         public AssessmentResultSetDto GetResultSet([FromUri] int resultSetId)
         {
@@ -54,6 +61,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [RequiresPermission("ViewResultSets")]
         [Route("resultSets/get/all")]
         public IEnumerable<AssessmentResultSetDto> GetAllResultSets()
         {
@@ -61,6 +69,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("ViewResultSets")]
         [Route("resultSets/get/dataGrid/all")]
         public IHttpActionResult GetAllResultSetsForDataGrid([FromBody] DataManagerRequest dm)
         {
@@ -70,6 +79,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [RequiresPermission("EditResultSets")]
         [Route("resultSets/hasResults/{resultSetId:int}")]
         public bool ResultSetHasResults([FromUri] int resultSetId)
         {
@@ -78,6 +88,7 @@ namespace MyPortal.Controllers.Api
 
 
         [HttpPost]
+        [RequiresPermission("EditResultSets")]
         [Route("resultSets/setCurrent/{resultSetId:int}")]
         public IHttpActionResult SetCurrent([FromUri] int resultSetId)
         {
@@ -85,6 +96,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("EditResultSets")]
         [Route("resultSets/update")]
         public IHttpActionResult UpdateResultSet([FromBody] AssessmentResultSet resultSet)
         {

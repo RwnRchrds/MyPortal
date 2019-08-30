@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Web.Http;
 using MyPortal.Dtos;
+using MyPortal.Models.Attributes;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
 using MyPortal.Processes;
@@ -14,12 +15,14 @@ namespace MyPortal.Controllers.Api
     public class FinanceController : MyPortalApiController
     {
         [HttpPost]
+        [RequiresPermission("AccessStudentPortal")]
         [Route("basketItems/create")]
         public IHttpActionResult CreateBasketItem([FromBody] FinanceBasketItem basketItem)
         {
             return PrepareResponse(FinanceProcesses.CreateBasketItem(basketItem, _context));
         }
 
+        [RequiresPermission("AccessStudentPortal")]
         [HttpGet]
         [Route("basket/{studentId:int}")]
         public IEnumerable<FinanceBasketItemDto> GetBasketItemsForStudent([FromUri] int studentId)
@@ -27,6 +30,7 @@ namespace MyPortal.Controllers.Api
             return PrepareResponseObject(FinanceProcesses.GetBasketItemsForStudent(studentId, _context));
         }
 
+        [RequiresPermission("AccessStudentPortal")]
         [HttpGet]
         [Route("basket/total/{studentId:int}")]
         public decimal GetTotal([FromUri] int studentId)
@@ -35,6 +39,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpDelete]
+        [RequiresPermission("AccessStudentPortal")]
         [Route("basket/remove/{basketItemId:int}")]
         public IHttpActionResult RemoveFromBasket([FromUri] int basketItemId)
         {
@@ -49,6 +54,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [RequiresPermission("AccessStudentPortal")]
         [Route("products/get/available/{studentId:int}")]
         public IEnumerable<FinanceProductDto> GetAvailableProductsForStudent([FromUri] int studentId)
         {
@@ -56,6 +62,7 @@ namespace MyPortal.Controllers.Api
         }
  
         [HttpGet]
+        [RequiresPermission("ViewProducts")]
         [Route("products/price/{productId:int}")]
         public decimal GetProductPrice([FromUri] int productId)
         {
@@ -63,6 +70,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [RequiresPermission("ViewProducts")]
         [Route("products/get/byId/{productId:int}")]
         public FinanceProductDto GetProductById([FromUri] int productId)
         {
@@ -70,6 +78,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [RequiresPermission("ViewProducts")]
         [Route("products/get/all")]
         public IEnumerable<FinanceProductDto> GetAllProducts()
         {
@@ -77,6 +86,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("ViewProducts")]
         [Route("products/get/dataGrid/all")]
         public IHttpActionResult GetAllProductsForDataGrid([FromBody] DataManagerRequest dm)
         {
@@ -86,6 +96,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("EditProducts")]
         [Route("products/create")]
         public IHttpActionResult NewProduct([FromBody] FinanceProduct product)
         {
@@ -93,6 +104,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("EditProducts")]
         [Route("products/update")]
         public IHttpActionResult UpdateProduct([FromBody] FinanceProduct product)
         {
@@ -100,6 +112,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("EditSales")]
         [Route("sales/queryBalance")]
         public bool AssessBalance([FromBody] FinanceSale sale)
         {
@@ -107,6 +120,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpDelete]
+        [RequiresPermission("EditSales")]
         [Route("sales/delete/{saleId:int}")]
         public IHttpActionResult DeleteSale([FromUri] int saleId)
         {
@@ -114,6 +128,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [RequiresPermission("ViewSales")]
         [Route("sales/get/processed")]
         public IEnumerable<FinanceSaleDto> GetProcessedSales()
         {
@@ -122,6 +137,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("ViewSales")]
         [Route("sales/get/dataGrid/processed")]
         public IHttpActionResult GetProcessedSalesForDataGrid([FromBody] DataManagerRequest dm)
         {
@@ -132,6 +148,7 @@ namespace MyPortal.Controllers.Api
         }
  
         [HttpGet]
+        [RequiresPermission("ViewSales")]
         [Route("sales/get/all")]
         public IEnumerable<FinanceSaleDto> GetAllSales()
         {
@@ -140,6 +157,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("ViewSales")]
         [Route("sales/get/dataGrid/all")]
         public IHttpActionResult GetAllSalesForDataGrid([FromBody] DataManagerRequest dm)
         {
@@ -150,6 +168,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [RequiresPermission("ViewSales, AccessStudentPortal")]
         [Route("sales/get/byStudent/{studentId:int}")]
         public IEnumerable<FinanceSaleDto> GetSalesForStudent([FromUri] int studentId)
         {
@@ -159,6 +178,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [Route("sales/get/pending")]
+        [RequiresPermission("ViewSales")]
         public IEnumerable<FinanceSaleDto> GetPendingSales()
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
@@ -167,6 +187,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("sales/get/dataGrid/pending")]
+        [RequiresPermission("ViewSales")]
         public IHttpActionResult GetPendingSalesForDataGrid([FromBody] DataManagerRequest dm)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
@@ -176,6 +197,7 @@ namespace MyPortal.Controllers.Api
         }
  
         [HttpPost]
+        [RequiresPermission("EditSales")]
         [Route("sales/markComplete/{saleId:int}")]
         public IHttpActionResult MarkSaleProcessed([FromUri] int saleId)
         {
@@ -193,6 +215,7 @@ namespace MyPortal.Controllers.Api
         }
  
         [HttpPost]
+        [RequiresPermission("EditSales")]
         [Route("sales/create")]
         public IHttpActionResult CreateSale([FromBody] FinanceSale sale)
         {
@@ -201,6 +224,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("AccessStudentPortal")]
         [Route("sales/checkoutBasket/{studentId:int}")]
         public IHttpActionResult Purchase([FromBody] int studentId)
         {
@@ -211,6 +235,7 @@ namespace MyPortal.Controllers.Api
         }
  
         [HttpPost]
+        [RequiresPermission("EditSales")]
         [Route("sales/refund/{saleId:int}")]
         public IHttpActionResult RefundSale([FromUri] int saleId)
         {
@@ -218,8 +243,8 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("EditAccounts")]
         [Route("creditStudent")]
-        [Authorize(Roles = "Finance")]
         public IHttpActionResult CreditStudentAccount([FromBody] FinanceTransaction transaction)
         {
             return PrepareResponse(FinanceProcesses.ProcessManualTransaction(transaction, _context, true));
@@ -227,7 +252,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("debitStudent")]
-        [Authorize(Roles = "Staff, SeniorStaff")]
+        [RequiresPermission("EditAccounts")]
         public IHttpActionResult DebitStudentAccount([FromBody] FinanceTransaction transaction)
         {
             return PrepareResponse(FinanceProcesses.ProcessManualTransaction(transaction, _context));

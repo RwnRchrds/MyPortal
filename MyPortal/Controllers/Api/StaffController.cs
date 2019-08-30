@@ -2,6 +2,7 @@
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
+using MyPortal.Models.Attributes;
 using MyPortal.Models.Database;
 using MyPortal.Processes;
 using Syncfusion.EJ2.Base;
@@ -13,6 +14,7 @@ namespace MyPortal.Controllers.Api
     public class StaffController : MyPortalApiController
     {
         [HttpPost]
+        [RequiresPermission("EditStaff")]
         [Route("create")]
         public IHttpActionResult CreateStaff([FromBody] StaffMember staffMember)
         {
@@ -20,6 +22,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpDelete]
+        [RequiresPermission("EditStaff")]
         [Route("delete/{staffMemberId:int}")]
         public IHttpActionResult DeleteStaff([FromUri] int staffMemberId)
         {
@@ -28,6 +31,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("EditStaff")]
         [Route("update")]
         public IHttpActionResult UpdateStaffMember([FromBody] StaffMember staffMember)
         {
@@ -35,6 +39,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [RequiresPermission("ViewStaff")]
         [Route("get/all")]
         public IEnumerable<StaffMemberDto> GetAllStaffMembers()
         {
@@ -43,6 +48,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("get/dataGrid/all")]
+        [RequiresPermission("ViewStaff")]
         public IHttpActionResult GetAllStaffMembersForDataGrid([FromBody] DataManagerRequest dm)
         {
             var staffMembers = PrepareResponseObject(PeopleProcesses.GetAllStaffMembers_DataGrid(_context));
@@ -51,12 +57,14 @@ namespace MyPortal.Controllers.Api
         }
 
         [Route("get/byId/{staffMemberId:int}")]
+        [RequiresPermission("ViewStaff")]
         public StaffMemberDto GetStaffMemberById([FromUri] int staffMemberId)
         {
             return PrepareResponseObject(PeopleProcesses.GetStaffMemberById(staffMemberId, _context));
         }
 
         [HttpGet]
+        [RequiresPermission("EditStaff")]
         [Route("hasDocuments/{staffMemberId:int}")]
         public bool StaffMemberHasDocuments([FromUri] int staffMemberId)
         {
@@ -64,6 +72,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [RequiresPermission("EditStaff")]
         [Route("hasLogs/{staffMemberId:int}")]
         public bool StaffHasLogs([FromUri] int staffMemberId)
         {

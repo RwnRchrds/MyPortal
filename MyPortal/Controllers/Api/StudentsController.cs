@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
 using MyPortal.Dtos;
+using MyPortal.Models.Attributes;
 using MyPortal.Models.Database;
 using MyPortal.Processes;
 using Syncfusion.EJ2.Base;
@@ -12,7 +13,7 @@ namespace MyPortal.Controllers.Api
     public class StudentsController : MyPortalApiController
     {
         [HttpPost]
-        [Authorize(Roles = "Staff, SeniorStaff")]
+        [RequiresPermission("EditStudents")]
         [Route("create")]
         public IHttpActionResult CreateStudent([FromBody] Student student)
         {
@@ -20,7 +21,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpDelete]
-        [Authorize(Roles = "Staff, SeniorStaff")]
+        [RequiresPermission("EditStudents")]
         [Route("delete/{studentId:int}")]
         public IHttpActionResult DeleteStudent([FromUri] int studentId)
         {
@@ -28,6 +29,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [Authorize]
+        [RequiresPermission("ViewStudents")]
         [Route("get/byId/{studentId:int}")]
         public StudentDto GetStudent(int studentId)
         {
@@ -35,7 +37,7 @@ namespace MyPortal.Controllers.Api
             return PrepareResponseObject(PeopleProcesses.GetStudentById(studentId, _context));
         }
 
-        [Authorize(Roles = "Staff")]
+        [RequiresPermission("ViewStudents")]
         [Route("get/all")]
         public IEnumerable<StudentDto> GetStudents()
         {
@@ -43,7 +45,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [Authorize(Roles = "Staff, SeniorStaff")]
+        [RequiresPermission("ViewStudents")]
         [Route("get/dataGrid/all")]
         public IHttpActionResult GetStudentsForDataGrid([FromBody] DataManagerRequest dm)
         {
@@ -53,7 +55,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Authorize(Roles = "Staff, SeniorStaff")]
+        [RequiresPermission("ViewStudents")]
         [Route("get/byRegGroup/{regGroupId:int}")]
         public IEnumerable<StudentDto> GetStudentsByRegGroup([FromUri] int regGroupId)
         {
@@ -61,7 +63,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Authorize(Roles = "Staff, SeniorStaff")]
+        [RequiresPermission("ViewStudents")]
         [Route("get/byYearGroup/{yearGroupId:int}")]
         public IEnumerable<StudentDto> GetStudentsFromYear([FromUri] int yearGroupId)
         {
@@ -69,6 +71,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [RequiresPermission("ViewStudents")]
         [Route("hasBasketItems/{studentId:int}")]
         public bool StudentHasBasketItems([FromUri] int studentId)
         {
@@ -77,6 +80,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [RequiresPermission("ViewStudents")]
         [Route("hasDocuments/{studentId:int}")]
         public bool StudentHasDocuments([FromUri] int studentId)
         {
@@ -85,6 +89,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [RequiresPermission("ViewStudents")]
         [Route("api/students/hasLogs/{studentId:int}")]
         public bool StudentHasLogs([FromUri] int studentId)
         {
@@ -93,6 +98,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [RequiresPermission("ViewStudents")]
         [Route("api/students/hasResults/{studentId:int}")]
         public bool StudentHasResults([FromUri] int studentId)
         {
@@ -101,6 +107,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [RequiresPermission("ViewStudents")]
         [Route("api/students/hasSales/{studentId:int}")]
         public bool StudentHasSales([FromUri] int studentId)
         {
@@ -109,7 +116,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPut]
-        [Authorize(Roles = "Staff, SeniorStaff")]
+        [RequiresPermission("EditStudents")]
         public IHttpActionResult UpdateStudent([FromBody] Student student)
         {
             return PrepareResponse(PeopleProcesses.UpdateStudent(student, _context));

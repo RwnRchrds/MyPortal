@@ -1,3 +1,4 @@
+@using MyPortal.Processes
 @model MyPortal.ViewModels.SubjectsViewModel
 @{
     ViewBag.Title = "Subjects";
@@ -11,7 +12,7 @@
 </div>
 
 <div class="container">
-    @if (User.IsInRole("SeniorStaff"))
+    @if (User.HasPermission("EditSubjects"))
     {
         <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" data-target="#NewSubjectModal">New Subject</button>
         <hr/>

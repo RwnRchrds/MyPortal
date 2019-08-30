@@ -2,6 +2,7 @@
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
+using MyPortal.Models.Attributes;
 using MyPortal.Models.Database;
 using MyPortal.Processes;
 using Syncfusion.EJ2.Base;
@@ -9,9 +10,11 @@ using Syncfusion.EJ2.Base;
 namespace MyPortal.Controllers.Api
 {
     [RoutePrefix("api/personnel")]
+    [Authorize]
     public class PersonnelController : MyPortalApiController
     {
         [HttpPost]
+        [RequiresPermission("EditTrainingCertificates")]
         [Route("certificates/create")]
         public IHttpActionResult CreateTrainingCertificate([FromBody] PersonnelTrainingCertificate certificate)
         {
@@ -20,6 +23,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpDelete]
+        [RequiresPermission("EditTrainingCertificates")]
         [Route("certificates/delete/{staffId:int}/{courseId:int}")]
         public IHttpActionResult DeleteCertificate([FromUri] int staffId, [FromUri] int courseId)
         {
@@ -28,6 +32,7 @@ namespace MyPortal.Controllers.Api
         }
         
         [HttpGet]
+        [RequiresPermission("ViewTrainingCertificates")]
         [Route("certificates/get/{staffId:int}/{courseId:int}")]
         public PersonnelTrainingCertificateDto GetCertificate([FromUri] int staffId, [FromUri] int courseId)
         {
@@ -35,6 +40,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [RequiresPermission("ViewTrainingCertificates")]
         [Route("certificates/get/byStaff/{staffId:int}")]
         public IEnumerable<PersonnelTrainingCertificateDto> GetCertificatesForStaffMember([FromUri] int staffId)
         {
@@ -42,6 +48,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("ViewTrainingCertificates")]
         [Route("certificates/get/byStaff/dataGrid/{staffId:int}")]
         public IHttpActionResult GetCertificatesForStaffMemberDataGrid([FromUri] int staffId, [FromBody] DataManagerRequest dm)
         {
@@ -51,6 +58,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("EditTrainingCertificates")]
         [Route("certificates/update")]
         public IHttpActionResult UpdateCertificate([FromBody] PersonnelTrainingCertificate certificate)
         {
@@ -59,6 +67,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpDelete]
+        [RequiresPermission("EditTrainingCourses")]
         [Route("courses/remove/{courseId:int}")]
         public IHttpActionResult DeleteCourse([FromUri] int courseId)
         {
@@ -67,6 +76,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [Route("courses/get/byId/{courseId:int}")]
+        [RequiresPermission("ViewTrainingCourses")]
         public PersonnelTrainingCourseDto GetCourseById([FromUri] int courseId)
         {
             return PrepareResponseObject(PersonnelProcesses.GetCourseById(courseId, _context));
@@ -74,6 +84,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [Route("courses/get/all")]
+        [RequiresPermission("ViewTrainingCourses")]
         public IEnumerable<PersonnelTrainingCourseDto> GetCourses()
         {
             return PrepareResponseObject(PersonnelProcesses.GetAllTrainingCourses(_context));
@@ -81,6 +92,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("courses/get/dataGrid/all")]
+        [RequiresPermission("ViewTrainingCourses")]
         public IHttpActionResult GetAllTrainingCourseForDataGrid([FromBody] DataManagerRequest dm)
         {
             var trainingCourses = PrepareResponseObject(PersonnelProcesses.GetAllTrainingCourses_DataGrid(_context));
@@ -90,6 +102,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("courses/edit")]
+        [RequiresPermission("EditTrainingCourses")]
         public IHttpActionResult UpdateCourse([FromBody] PersonnelTrainingCourse course)
         {
             return PrepareResponse(PersonnelProcesses.UpdateCourse(course, _context));
@@ -97,6 +110,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("observations/create")]
+        [RequiresPermission("EditObservations")]
         public IHttpActionResult CreateObservation([FromBody] PersonnelObservation data)
         {
             var userId = User.Identity.GetUserId();
@@ -104,6 +118,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [RequiresPermission("ViewObservations")]
         [Route("observations/get/byId/{observationId:int}")]
         public PersonnelObservationDto GetObservation([FromUri] int observationId)
         {
@@ -111,6 +126,7 @@ namespace MyPortal.Controllers.Api
         }  
         
         [HttpGet]
+        [RequiresPermission("ViewObservations")]
         [Route("observations/get/byStaff/{staffMemberId:int}")]
         public IEnumerable<PersonnelObservationDto> GetObservationsForStaffMember([FromUri] int staffMemberId)
         {
@@ -118,6 +134,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("ViewObservations")]
         [Route("observations/get/byStaff/dataGrid/{staffMemberId:int}")]
         public IHttpActionResult GetObservationsForStaffMemberDataGrid([FromUri] int staffMemberId,
             [FromBody] DataManagerRequest dm)
@@ -130,6 +147,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpDelete]
+        [RequiresPermission("EditObservations")]
         [Route("observations/delete/{observationId:int}")]
         public IHttpActionResult RemoveObservation([FromUri] int observationId)
         {
@@ -138,6 +156,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("EditObservations")]
         [Route("observations/update")]
         public IHttpActionResult UpdateObservation([FromBody] PersonnelObservation observation)
         {

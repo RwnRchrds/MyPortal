@@ -3,9 +3,10 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
-using System.Web.Http;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security.Provider;
+using MyPortal.Models.Attributes;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
 using MyPortal.Processes;
@@ -14,8 +15,9 @@ using MyPortal.ViewModels;
 namespace MyPortal.Controllers
 {
     
-    [System.Web.Mvc.Authorize(Roles = "Staff, SeniorStaff")]
-    [System.Web.Mvc.RoutePrefix("Staff")]
+    [Authorize]
+    [RequiresPermission("AccessStaffPortal")]
+    [RoutePrefix("Staff")]
     public class StaffController : MyPortalController
     {
 
@@ -24,8 +26,8 @@ namespace MyPortal.Controllers
 
         #region Assessment
 
-        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("Assessment/Results/Import")]
+        [RequiresPermission("ImportResults")]
+        [Route("Assessment/Results/Import")]
         public ActionResult ImportResults()
         {
             var resultSets = _context.AssessmentResultSets.OrderBy(x => x.Name).ToList();
@@ -39,7 +41,8 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/Assessment/ImportResults.cshtml", viewModel);
         }
 
-        [System.Web.Mvc.HttpPost]
+        [HttpPost]
+        [RequiresPermission("ImportResults")]
         public ActionResult UploadResults(HttpPostedFileBase file)
         {
             if (file.ContentLength <= 0 || Path.GetExtension(file.FileName) != ".csv")
@@ -51,8 +54,8 @@ namespace MyPortal.Controllers
         }
 
         
-        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("Assessment/ResultSets")]
+        [RequiresPermission("EditResultSets")]
+        [Route("Assessment/ResultSets")]
         public ActionResult ResultSets()
         {
             return View("~/Views/Staff/Assessment/ResultSets.cshtml");
@@ -62,7 +65,8 @@ namespace MyPortal.Controllers
 
         #region Attendance
 
-        [System.Web.Mvc.Route("Attendance/Registers")]
+        [RequiresPermission("TakeRegister")]
+        [Route("Attendance/Registers")]
         public ActionResult Registers()
         {
             var userId = User.Identity.GetUserId();
@@ -83,7 +87,8 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/Attendance/Registers.cshtml", viewModel);
         }
 
-        [System.Web.Mvc.Route("Attendance/TakeRegister/{weekId:int}/{sessionId:int}")]
+        [RequiresPermission("TakeRegister")]
+        [Route("Attendance/TakeRegister/{weekId:int}/{sessionId:int}")]
         public ActionResult TakeRegister(int weekId, int sessionId)
         {
             var viewModel = new TakeRegisterViewModel();
@@ -116,8 +121,8 @@ namespace MyPortal.Controllers
         #region Curriculum
 
         
-        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("Curriculum/Subjects")]
+        [RequiresPermission("EditSubjects")]
+        [Route("Curriculum/Subjects")]
         public ActionResult Subjects()
         {
             var viewModel = new SubjectsViewModel();
@@ -127,8 +132,8 @@ namespace MyPortal.Controllers
         }
 
         
-        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("Curriculum/StudyTopics")]
+        [RequiresPermission("EditStudyTopics")]
+        [Route("Curriculum/StudyTopics")]
         public ActionResult StudyTopics()
         {
             var viewModel = new StudyTopicsViewModel();
@@ -143,8 +148,8 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/Curriculum/StudyTopics.cshtml", viewModel);
         }
 
-        
-        [System.Web.Mvc.Route("Curriculum/LessonPlans")]
+        [RequiresPermission("EditLessonPlans")]
+        [Route("Curriculum/LessonPlans")]
         public ActionResult LessonPlans()
         {
             var viewModel = new LessonPlansViewModel();
@@ -156,15 +161,15 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/Curriculum/LessonPlans.cshtml", viewModel);
         }
 
-        
-        [System.Web.Mvc.Route("Curriculum/LessonPlans/View/{id}")]
+        [RequiresPermission("EditLessonPlans")]
+        [Route("Curriculum/LessonPlans/View/{id}")]
         public ActionResult LessonPlanDetails(int id)
         {
             var lessonPlan = _context.CurriculumLessonPlans.SingleOrDefault(x => x.Id == id);
 
             if (lessonPlan == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return HttpNotFound();
             }
 
             var viewModel = new LessonPlanDetailsViewModel();
@@ -174,8 +179,8 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/Curriculum/LessonPlanDetails.cshtml", viewModel);
         }
 
-        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("Curriculum/Classes")]
+        [RequiresPermission("EditClasses")]
+        [Route("Curriculum/Classes")]
         public ActionResult Classes()
         {
             var viewModel = new ClassesViewModel();
@@ -187,15 +192,20 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/Curriculum/Classes.cshtml", viewModel);
         }
 
-        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("Curriculum/Classes/Sessions/{classId:int}")]
+        [RequiresPermission("EditClasses")]
+        [Route("Curriculum/Classes/Sessions/{classId:int}")]
         public ActionResult ClassSchedule(int classId)
         {
             var viewModel = new SessionsViewModel();
 
             var currClass = _context.CurriculumClasses.SingleOrDefault(x => x.Id == classId);
 
-            viewModel.Class = currClass ?? throw new HttpResponseException(HttpStatusCode.NotFound);
+            if (currClass == null)
+            {
+                return HttpNotFound();
+            }
+
+            viewModel.Class = currClass;
 
             var dayIndex = new List<string> { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
             viewModel.Periods = _context.AttendancePeriods.ToList().OrderBy(x => dayIndex.IndexOf(x.Weekday))
@@ -204,15 +214,20 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/Curriculum/Sessions.cshtml", viewModel);
         }
 
-        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("Curriculum/Classes/Enrolments/{classId:int}")]
+        [RequiresPermission("EditClasses")]
+        [Route("Curriculum/Classes/Enrolments/{classId:int}")]
         public ActionResult ClassEnrolments(int classId)
         {
             var viewModel = new ClassEnrolmentsViewModel();
 
             var currClass = _context.CurriculumClasses.SingleOrDefault(x => x.Id == classId);
 
-            viewModel.Class = currClass ?? throw new HttpResponseException(HttpStatusCode.NotFound);
+            if (currClass == null)
+            {
+                return HttpNotFound();
+            }
+
+            viewModel.Class = currClass;
 
             return View("~/Views/Staff/Curriculum/Enrolments.cshtml", viewModel);
         }
@@ -221,9 +236,8 @@ namespace MyPortal.Controllers
 
         #region Documents
 
-        
-        
-        [System.Web.Mvc.Route("Documents/Documents")]
+        [RequiresPermission("ViewApprovedDocuments, ViewAllDocuments")]
+        [Route("Documents/Documents")]
         public ActionResult Documents()
         {
             return View("~/Views/Staff/Docs/Documents.cshtml");
@@ -240,16 +254,16 @@ namespace MyPortal.Controllers
 
         #region People
 
-        
-        
-        [System.Web.Mvc.Route("People/Students")]
+        [RequiresPermission("ViewStudents")]
+        [Route("People/Students")]
         public ActionResult Students()
         {
             return View("~/Views/Staff/People/Students/Students.cshtml");
         }
 
         
-        [System.Web.Mvc.HttpPost]
+        [HttpPost]
+        [RequiresPermission("EditStudents")]
         [ValidateAntiForgeryToken]
         public ActionResult CreateStudent(Student student)
         {
@@ -269,10 +283,9 @@ namespace MyPortal.Controllers
             return RedirectToAction("Students", "Staff");
         }
 
-        
-        
-        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("People/Students/New")]
+
+        [RequiresPermission("EditStudents")]
+        [Route("People/Students/New")]
         public ActionResult NewStudent()
         {
             var yearGroups = _context.PastoralYearGroups.ToList();
@@ -288,7 +301,8 @@ namespace MyPortal.Controllers
         }
 
         
-        [System.Web.Mvc.HttpPost]
+        [HttpPost]
+        [RequiresPermission("EditStudents")]
         public ActionResult SaveStudent(Student student)
         {
             var studentInDb = _context.Students.Single(l => l.Id == student.Id);
@@ -304,16 +318,14 @@ namespace MyPortal.Controllers
         }
 
         
-        
-        [System.Web.Mvc.Route("People/Students/{id:int}", Name = "StudentDetails")]
+        [RequiresPermission("ViewStudents")]
+        [Route("People/Students/{id:int}", Name = "StudentDetails")]
         public ActionResult StudentDetails(int id)
         {
             var student = _context.Students.SingleOrDefault(s => s.Id == id);
 
             if (student == null)
                 return HttpNotFound();
-
-            
 
             var logTypes = _context.ProfileLogTypes.OrderBy(x => x.Name).ToList();
 
@@ -361,9 +373,8 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/People/Students/StudentDetails.cshtml", viewModel);
         }
 
-        
-        
-        [System.Web.Mvc.Route("People/Students/{id}/Results")]
+        [RequiresPermission("ViewStudents")]
+        [Route("People/Students/{id}/Results")]
         public ActionResult StudentResults(int id)
         {
             var student = _context.Students.SingleOrDefault(s => s.Id == id);
@@ -392,14 +403,15 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/People/Students/StudentResults.cshtml", viewModel);
         }
 
-        [System.Web.Mvc.Route("People/Students/{id}/Behaviour")]
+        [RequiresPermission("ViewStudents")]
+        [Route("People/Students/{id}/Behaviour")]
         public ActionResult StudentBehaviour(int id)
         {
             var student = _context.Students.SingleOrDefault(x => x.Id == id);
 
             if (student == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return HttpNotFound();
             }
 
             var achievementTypes = _context.BehaviourAchievementTypes.OrderBy(x => x.Description).ToList();
@@ -419,20 +431,16 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/People/Students/BehaviourManagement.cshtml", viewModel);
         }
 
-        
-        
-        [System.Web.Mvc.Route("People/Staff")]
-        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
+        [Route("People/Staff")]
+        [RequiresPermission("ViewStaff")]
         public ActionResult Staff()
         {
             var viewModel = new NewStaffViewModel();
             return View("~/Views/Staff/People/Staff/Staff.cshtml", viewModel);
         }
 
-        
-        
-        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("People/Staff/{id}")]
+        [RequiresPermission("ViewStaff")]
+        [Route("People/Staff/{id}")]
         public ActionResult StaffDetails(int id)
         {
             var staff = _context.StaffMembers.SingleOrDefault(s => s.Id == id);
@@ -470,16 +478,15 @@ namespace MyPortal.Controllers
 
         #region Personnel
 
-        
-        
-        [System.Web.Mvc.Route("Personnel/TrainingCourses")]
+        [RequiresPermission("ViewTrainingCourses")]
+        [Route("Personnel/TrainingCourses")]
         public ActionResult TrainingCourses()
         {
             return View("~/Views/Staff/Personnel/TrainingCourses.cshtml");
         }
 
-        
-        [System.Web.Mvc.HttpPost]
+        [RequiresPermission("EditTrainingCourses")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CreateCourse(PersonnelTrainingCourse course)
         {
@@ -490,10 +497,8 @@ namespace MyPortal.Controllers
             return RedirectToAction("TrainingCourses", "Staff");
         }
 
-        
-        
-        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("Personnel/TrainingCourses/New")]
+        [RequiresPermission("EditTrainingCourses")]
+        [Route("Personnel/TrainingCourses/New")]
         public ActionResult NewCourse()
         {
             return View("~/Views/Staff/Personnel/NewTrainingCourse.cshtml");
@@ -503,17 +508,15 @@ namespace MyPortal.Controllers
 
         #region Profile
 
-        
-        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("Profile/CommentBanks")]
+        [RequiresPermission("EditComments")]
+        [Route("Profile/CommentBanks")]
         public ActionResult CommentBanks()
         {
             return View("~/Views/Staff/Profile/CommentBanks.cshtml");
         }
 
-        
-        [System.Web.Mvc.Authorize(Roles = "SeniorStaff")]
-        [System.Web.Mvc.Route("Profile/Comments")]
+        [RequiresPermission("EditComments")]
+        [Route("Profile/Comments")]
         public ActionResult Comments()
         {
             var viewModel = new CommentsViewModel();
@@ -525,7 +528,7 @@ namespace MyPortal.Controllers
         #endregion
 
         
-        [System.Web.Mvc.Route("Home")]
+        [Route("Home")]
         public ActionResult Index()
         {
             var userId = User.Identity.GetUserId();

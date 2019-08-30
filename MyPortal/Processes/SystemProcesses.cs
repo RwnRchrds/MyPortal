@@ -39,7 +39,7 @@ namespace MyPortal.Processes
         {
             var academicYearId = GetCurrentAcademicYearId(context);
             
-            if (user != null && user.IsInRole("Staff"))
+            if (user != null && user.HasPermission("AccessStaffPortal"))
             {
                 var selectedAcademicYearId = user.GetSelectedAcademicYearId();
 

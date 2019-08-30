@@ -888,7 +888,6 @@
     <Content Include="Views\Shared\_NavBarStudent.cshtml" />
     <Content Include="Views\Shared\_LayoutStudent.cshtml" />
     <Content Include="Views\Shared\_LayoutStaff.cshtml" />
-    <Content Include="Views\Shared\_NavBarStaff.cshtml" />
     <Content Include="Views\Staff\People\Staff\Staff.cshtml" />
     <Content Include="Views\Staff\People\Staff\StaffDetails.cshtml" />
     <Content Include="Views\Staff\People\Students\NewStudent.cshtml" />

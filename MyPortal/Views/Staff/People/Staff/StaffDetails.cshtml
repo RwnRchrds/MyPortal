@@ -14,7 +14,7 @@
 
 <div class="container" id="container-1">
 
-    @if (User.IsInRole("SeniorStaff"))
+    @if (User.HasPermission("EditStaff"))
     {
         <button type="button" class="btn btn-warning mp-btn-top-auto" id="EditDetailsButton" data-staff-id="@Model.Staff.Id">
             <i class="far fa-id-card"></i> Edit Details

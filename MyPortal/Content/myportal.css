@@ -117,7 +117,9 @@
 
 .mp-table-condensed td:first-of-type { padding: 0 20px 0 0; width: 1%; white-space: nowrap; }
 
-.mp-shrink-width { width: min-content; }
+.mp-shrink-width { 
+    width: min-content; 
+}
 
 
 .mp-log-message-box { max-width: 500px; }

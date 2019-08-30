@@ -1,10 +1,15 @@
-﻿<nav class="navbar navbar-dark bg-primary fixed-top navbar-expand-md">
+﻿@using MyPortal.Processes
+<nav class="navbar navbar-dark bg-primary fixed-top navbar-expand-md">
     <div class="container">
         <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=".navbar-collapse">&#x2630;</button>
         @Html.ActionLink("MyPortal", "Index", "Home", new {area = ""}, new {@class = "navbar-brand"})
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav mr-auto">
-                <li class="nav-item"><a class="nav-link" href="@Url.Action("Index","Home")"><i class="fas fa-home fa-lg"></i></a></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("Index", "Home")">
+                        <i class="fas fa-home fa-lg"></i>
+                    </a>
+                </li>
 
                 <!--People-->
                 <li class="nav-item dropdown">
@@ -13,10 +18,13 @@
                     </a>
                     <div class="dropdown-menu nav-app-menu" aria-labelledby="menuDropdownLink">
                         <h6 class="dropdown-header">People</h6>
-                        @Html.ActionLink("Students", "Students", "Staff", null, new { @class = "dropdown-item" })
-                        @if (User.IsInRole("SeniorStaff"))
+                        @if (User.HasPermission("ViewStudents"))
                         {
-                            @Html.ActionLink("Staff", "Staff", "Staff", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Students", "Students", "Staff", null, new {@class = "dropdown-item"})
+                        }
+                        @if (User.HasPermission("ViewStaff"))
+                        {
+                            @Html.ActionLink("Staff", "Staff", "Staff", null, new {@class = "dropdown-item"})
                         }
                     </div>
                 </li>
@@ -28,10 +36,9 @@
                     </a>
                     <div class="dropdown-menu nav-app-menu" aria-labelledby="menuDropdownLink">
                         <h6 class="dropdown-header">Personnel</h6>
-                        @Html.ActionLink("Training Courses", "TrainingCourses", "Staff", null, new { @class = "dropdown-item" })
-                        @if (User.IsInRole("SeniorStaff"))
+                        @if (User.HasPermission("ViewTrainingCourses"))
                         {
-
+                            @Html.ActionLink("Training Courses", "TrainingCourses", "Staff", null, new {@class = "dropdown-item"})
                         }
                     </div>
                 </li>
@@ -43,10 +50,9 @@
                     </a>
                     <div class="dropdown-menu nav-app-menu" aria-labelledby="menuDropdownLink">
                         <h6 class="dropdown-header">Documents</h6>
-                        @Html.ActionLink("Documents", "Documents", "Staff", null, new { @class = "dropdown-item" })
-                        @if (User.IsInRole("SeniorStaff"))
+                        @if (User.HasPermission("ViewApprovedDocuments") || User.HasPermission("ViewAllDocuments"))
                         {
-
+                            @Html.ActionLink("Documents", "Documents", "Staff", null, new {@class = "dropdown-item"})
                         }
                     </div>
                 </li>
@@ -58,10 +64,13 @@
                     </a>
                     <div class="dropdown-menu nav-app-menu" aria-labelledby="menuDropdownLink">
                         <h6 class="dropdown-header">Assessment</h6>
-                        @if (User.IsInRole("SeniorStaff"))
+                        @if (User.HasPermission("ImportResults"))
                         {
-                            @Html.ActionLink("Result Sets", "ResultSets", "Staff", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Import Results", "ImportResults", "Staff", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Import Results", "ImportResults", "Staff", null, new {@class = "dropdown-item"})
+                        }
+                        @if (User.HasPermission("EditResultSets"))
+                        {
+                            @Html.ActionLink("Result Sets", "ResultSets", "Staff", null, new {@class = "dropdown-item"})
                         }
 
                     </div>
@@ -74,12 +83,21 @@
                     </a>
                     <div class="dropdown-menu nav-app-menu" aria-labelledby="menuDropdownLink">
                         <h6 class="dropdown-header">Curriculum</h6>
-                        @Html.ActionLink("Lesson Plans", "LessonPlans", "Staff", null, new { @class = "dropdown-item" })
-                        @if (User.IsInRole("SeniorStaff"))
+                        @if (User.HasPermission("ViewLessonPlans"))
                         {
-                            @Html.ActionLink("Classes", "Classes", "Staff", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Study Topics", "StudyTopics", "Staff", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Subjects", "Subjects", "Staff", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Lesson Plans", "LessonPlans", "Staff", null, new {@class = "dropdown-item"})
+                        }
+                        @if (User.HasPermission("EditClasses"))
+                        {
+                            @Html.ActionLink("Classes", "Classes", "Staff", null, new {@class = "dropdown-item"})
+                        }
+                        @if (User.HasPermission("EditSubjects"))
+                        {
+                            @Html.ActionLink("Subjects", "Subjects", "Staff", null, new {@class = "dropdown-item"})
+                        }
+                        @if (User.HasPermission("EditStudyTopics"))
+                        {
+                            @Html.ActionLink("Study Topics", "StudyTopics", "Staff", null, new {@class = "dropdown-item"})
                         }
                     </div>
                 </li>
@@ -91,10 +109,10 @@
                     </a>
                     <div class="dropdown-menu nav-app-menu" aria-labelledby="menuDropdownLink">
                         <h6 class="dropdown-header">Profiles</h6>
-                        @if (User.IsInRole("SeniorStaff"))
+                        @if (User.HasPermission("EditComments"))
                         {
-                            @Html.ActionLink("Comment Banks", "CommentBanks", "Staff", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Comments", "Comments", "Staff", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Comment Banks", "CommentBanks", "Staff", null, new {@class = "dropdown-item"})
+                            @Html.ActionLink("Comments", "Comments", "Staff", null, new {@class = "dropdown-item"})
                         }
                     </div>
                 </li>
@@ -106,44 +124,52 @@
                     </a>
                     <div class="dropdown-menu nav-app-menu" aria-labelledby="menuDropdownLink">
                         <h6 class="dropdown-header">Attendance</h6>
-                        @Html.ActionLink("Registers", "Registers", "Staff", null, new { @class = "dropdown-item" })
-                        @if (User.IsInRole("SeniorStaff"))
+                        @if (User.HasPermission("TakeRegister"))
                         {
-
+                            @Html.ActionLink("Registers", "Registers", "Staff", null, new {@class = "dropdown-item"})
                         }
                     </div>
                 </li>
 
-                @if (User.IsInRole("Finance"))
-                {
-                    <!--Finance-->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="attendanceDropdownLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-coins fa-lg"></i>
-                        </a>
-                        <div class="dropdown-menu nav-app-menu" aria-labelledby="menuDropdownLink">
-                            <h6 class="dropdown-header">Finance</h6>
-                            @Html.ActionLink("Accounts", "Accounts", "Finance", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Products", "Products", "Finance", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Sales", "Sales", "Finance", null, new { @class = "dropdown-item" })                           
-                        </div>
-                    </li>
-                }
+                <!--Finance-->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="attendanceDropdownLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-coins fa-lg"></i>
+                    </a>
+                    <div class="dropdown-menu nav-app-menu" aria-labelledby="menuDropdownLink">
+                        <h6 class="dropdown-header">Finance</h6>
+                        @if (User.HasPermission("EditAccounts"))
+                        {
+                            @Html.ActionLink("Accounts", "Accounts", "Finance", null, new {@class = "dropdown-item"})
+                        }
+                        @if (User.HasPermission("EditProducts"))
+                        {
+                            @Html.ActionLink("Products", "Products", "Finance", null, new {@class = "dropdown-item"})
+                        }
+                        @if (User.HasPermission("EditSales"))
+                        {
+                            @Html.ActionLink("Sales", "Sales", "Finance", null, new {@class = "dropdown-item"})
+                        }
+                    </div>
+                </li>
 
-                @if (User.IsInRole("Admin"))
-                {
-                    <!--Admin-->
-                    <li class="nav-item dropdown ">
-                        <a class="nav-link dropdown-toggle" href="#" id="attendanceDropdownLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-cog fa-lg"></i>
-                        </a>
-                        <div class="dropdown-menu nav-app-menu" aria-labelledby="menuDropdownLink">
-                            <h6 class="dropdown-header">Admin</h6>
-                            @Html.ActionLink("Users", "Users", "Admin", null, new { @class = "dropdown-item" })
+                <!--Admin-->
+                <li class="nav-item dropdown ">
+                    <a class="nav-link dropdown-toggle" href="#" id="attendanceDropdownLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-cog fa-lg"></i>
+                    </a>
+                    <div class="dropdown-menu nav-app-menu" aria-labelledby="menuDropdownLink">
+                        <h6 class="dropdown-header">Admin</h6>
+                        @if (User.HasPermission("EditUsers"))
+                        {
+                            @Html.ActionLink("Users", "Users", "Admin", null, new {@class = "dropdown-item"})
+                        }
+                        @if (User.HasPermission("EditRoles"))
+                        {
                             @Html.ActionLink("Roles", "Roles", "Admin", null, new {@class = "dropdown-item"})
-                        </div>
-                    </li>
-                }
+                        }
+                    </div>
+                </li>
 
                 <li class="nav-item dropdown ">
                     <a class="nav-link dropdown-toggle" href="#" id="vleDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

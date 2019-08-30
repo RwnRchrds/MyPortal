@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
 using MyPortal.Dtos;
+using MyPortal.Models.Attributes;
 using MyPortal.Models.Database;
 using MyPortal.Processes;
 
@@ -11,6 +12,7 @@ namespace MyPortal.Controllers.Api
     {
 
         [HttpPost]
+        [RequiresPermission("EditRegGroups")]
         [Route("regGroups/create")]
         public IHttpActionResult CreateRegGroup([FromBody] PastoralRegGroup regGroup)
         {
@@ -18,6 +20,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpDelete]
+        [RequiresPermission("EditRegGroups")]
         [Route("regGroups/delete/{regGroupId:int}")]
         public IHttpActionResult DeleteRegGroup([FromUri] int regGroupId)
         {
@@ -25,6 +28,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [RequiresPermission("ViewRegGroups")]
         [Route("regGroups/get/byId/{regGroupId:int}")]
         public PastoralRegGroupDto GetRegGroupById([FromUri] int regGroupId)
         {
@@ -32,6 +36,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [RequiresPermission("ViewRegGroups")]
         [Route("regGroups/get/byYearGroup/{yearGroupId:int}")]
         public IEnumerable<PastoralRegGroupDto> GetRegGroupsByYearGroup([FromUri] int yearGroupId)
         {
@@ -40,12 +45,14 @@ namespace MyPortal.Controllers.Api
  
         [HttpGet]
         [Route("regGroups/get/all")]
+        [RequiresPermission("ViewRegGroups")]
         public IEnumerable<PastoralRegGroupDto> GetAllRegGroups()
         {
             return PrepareResponseObject(PastoralProcesses.GetAllRegGroups(_context));
         }
 
         [HttpGet]
+        [RequiresPermission("EditRegGroups")]
         [Route("regGroups/hasStudents/{regGroupId:int}")]
         public bool RegGroupHasStudents([FromUri] int regGroupId)
         {
@@ -53,6 +60,7 @@ namespace MyPortal.Controllers.Api
         }
  
         [HttpPost]
+        [RequiresPermission("EditRegGroups")]
         [Route("regGroups/update")]
         public IHttpActionResult UpdateRegGroup([FromBody] PastoralRegGroup regGroup)
         {
@@ -60,6 +68,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("EditYearGroups")]
         [Route("yearGroups/create")]
         public IHttpActionResult CreateYearGroup([FromBody] PastoralYearGroup yearGroup)
         {
@@ -67,6 +76,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpDelete]
+        [RequiresPermission("EditYearGroups")]
         [Route("yearGroups/delete/{yearGroupId:int}")]
         public IHttpActionResult DeleteYearGroup([FromUri] int yearGroupId)
         {
@@ -74,6 +84,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [RequiresPermission("ViewYearGroups")]
         [Route("yearGroups/get/all")]
         public IEnumerable<PastoralYearGroupDto> GetAllYearGroups()
         {
@@ -81,6 +92,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("EditYearGroups")]
         [Route("yearGroups/update")]
         public IHttpActionResult UpdateYearGroup([FromBody] PastoralYearGroup yearGroup)
         {

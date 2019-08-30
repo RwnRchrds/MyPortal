@@ -21,7 +21,7 @@
 
 <body>
 <div class="container">
-    @if (User.IsInRole("SeniorStaff"))
+    @if (User.HasPermission("EditStudents"))
     {
         <button type="button" class="btn btn-warning mp-btn-top" data-toggle="modal" data-target="#EditDetailsModal">
 

@@ -13,7 +13,7 @@
 </div>
 
 <div class="container">
-    @if (User.IsInRole("SeniorStaff"))
+    @if (User.HasPermission("EditDocuments"))
     {
         <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" data-target="#NewDocumentModal">New Document</button>
         <hr/>
@@ -46,7 +46,7 @@
 </div>
 
 
-@if (User.IsInRole("SeniorStaff"))
+@if (User.HasPermission("EditDocuments"))
 {
     <div id="NewDocumentModal" class="modal fade" role="dialog">
         <div class="modal-dialog">

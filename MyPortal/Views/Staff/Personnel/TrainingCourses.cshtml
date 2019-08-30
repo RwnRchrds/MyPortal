@@ -1,4 +1,5 @@
-﻿@model MyPortal.ViewModels.TrainingCoursesViewModel
+﻿@using MyPortal.Processes
+@model MyPortal.ViewModels.TrainingCoursesViewModel
 @{
     ViewBag.Title = "TrainingCourses";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
@@ -10,7 +11,7 @@
 </div>
 
 <div class="container">
-    @if (User.IsInRole("SeniorStaff"))
+    @if (User.HasPermission("EditCourses"))
     {
         @Html.ActionLink("New Course", "NewCourse", "Staff", null, new {@class = "btn btn-primary", style = "margin-bottom: 8px;"})
         <hr/>
@@ -25,7 +26,7 @@
    {
        c.Field("Code").HeaderText("Code").Template("#coursesCodeTemplate").Width("150").Add();
        c.Field("Description").HeaderText("Description").Template("#coursesDescriptionTemplate").Width("200").Add();
-       if (User.IsInRole("SeniorStaff"))
+       if (User.HasPermission("EditCourses"))
        {
            c.HeaderText("Actions").Template("#coursesActionsTemplate").Width("170").Add();
        }

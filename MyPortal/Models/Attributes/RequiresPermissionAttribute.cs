@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using MyPortal.Processes;
@@ -6,16 +8,24 @@ namespace MyPortal.Models.Attributes
 {
     public class RequiresPermissionAttribute : AuthorizeAttribute
     {
-        private string _permission;
+        private List<string> _permissions;
 
-        public RequiresPermissionAttribute(string permission)
+        public RequiresPermissionAttribute(string permissions)
         {
-            _permission = permission;
+            _permissions = permissions.Split(',').ToList();
         }
 
         protected override bool IsAuthorized(HttpActionContext actionContext)
         {
-            return actionContext.ControllerContext.RequestContext.Principal.HasPermission(_permission);
+            foreach (var permission in _permissions)
+            {
+                if (actionContext.ControllerContext.RequestContext.Principal.HasPermission(permission.Trim()))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

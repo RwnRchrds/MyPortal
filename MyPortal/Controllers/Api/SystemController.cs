@@ -20,7 +20,7 @@ namespace MyPortal.Controllers.Api
         {
             var userId = User.Identity.GetUserId();
 
-            var autoApprove = User.IsInRole("SeniorStaff");
+            var autoApprove = User.HasPermission("ApproveBulletins");
 
             var result = await SystemProcesses.CreateBulletin(bulletin, userId, _context, autoApprove);
 
@@ -31,7 +31,7 @@ namespace MyPortal.Controllers.Api
         [RequiresPermission("EditBulletins")]
         public IHttpActionResult UpdateBulletin([FromBody] SystemBulletin bulletin)
         {
-            var approvable = User.IsInRole("SeniorStaff");
+            var approvable = User.HasPermission("ApproveBulletins");
 
             return PrepareResponse(SystemProcesses.UpdateBulletin(bulletin, _context, approvable));
         }
@@ -45,7 +45,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [RequiresPermission("ViewAllBulletins")]
+        [RequiresPermission("ApproveBulletins")]
         [Route("bulletins/get/all")]
         public IEnumerable<SystemBulletinDto> GetAllBulletins()
         {

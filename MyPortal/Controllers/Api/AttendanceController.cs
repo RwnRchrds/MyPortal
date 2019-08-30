@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
+using MyPortal.Models.Attributes;
 using MyPortal.Models.Misc;
 using MyPortal.Processes;
 using Syncfusion.EJ2.Base;
@@ -15,6 +16,7 @@ namespace MyPortal.Controllers.Api
     public class AttendanceController : MyPortalApiController
     {
         [HttpGet]
+        [RequiresPermission("TakeRegister")]
         [Route("marks/takeRegister/{weekId:int}/{sessionId:int}")]
         public IEnumerable<StudentAttendanceMarkSingular> LoadRegister([FromUri] int weekId, [FromUri] int sessionId)
         {
@@ -26,6 +28,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("TakeRegister")]
         [Route("marks/takeRegister/dataGrid/{weekId:int}/{sessionId:int}")]
         public IHttpActionResult LoadRegisterForDataGrid([FromBody] DataManagerRequest dm, [FromUri] int weekId,
             [FromUri] int sessionId)
@@ -41,6 +44,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("TakeRegister")]
         [Route("marks/saveRegister")]
         public IHttpActionResult SaveRegisterMarks(DataGridUpdate<StudentAttendanceMarkSingular> register)
         {
@@ -53,6 +57,7 @@ namespace MyPortal.Controllers.Api
         }
         
         [HttpGet]
+        [RequiresPermission("ViewAttendance")]
         [Route("summary/raw/{studentId:int}")]
         public AttendanceSummary GetRawAttendanceSummary([FromUri] int studentId)
         {
@@ -64,6 +69,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [RequiresPermission("ViewAttendance")]
         [Route("summary/percent/{studentId:int}")]
         public AttendanceSummary GetPercentageAttendanceSummary([FromUri] int studentId)
         {
@@ -89,6 +95,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("EditAcademicYears")]
         [Route("weeks/createForYear/{academicYearId:int}")]
         public IHttpActionResult CreateWeeks([FromUri] int academicYearId)
         {

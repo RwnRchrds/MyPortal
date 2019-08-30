@@ -65,7 +65,7 @@ namespace MyPortal.Controllers.Api
 
         protected void AuthenticateStudentRequest(int studentId)
         {
-            if (User.IsInRole("Student"))
+            if (User.HasPermission("AccessStudentPortal"))
             {
                 var userId = User.Identity.GetUserId();
                 var studentUser = _context.Students.SingleOrDefault(x => x.Person.UserId == userId);

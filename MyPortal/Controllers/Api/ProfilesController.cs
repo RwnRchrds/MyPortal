@@ -2,6 +2,7 @@
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
+using MyPortal.Models.Attributes;
 using MyPortal.Models.Database;
 using MyPortal.Processes;
 using Syncfusion.EJ2.Base;
@@ -9,9 +10,11 @@ using Syncfusion.EJ2.Base;
 namespace MyPortal.Controllers.Api
 {
     [RoutePrefix("api/profiles")]
+    [Authorize]
     public class ProfilesController : MyPortalApiController
     {
         [HttpPost]
+        [RequiresPermission("EditProfileLogs")]
         [Route("logs/create")]
         public IHttpActionResult CreateLog([FromBody] ProfileLog log)
         {
@@ -22,6 +25,7 @@ namespace MyPortal.Controllers.Api
         }
         
         [Route("logs/delete/{logId:int}")]
+        [RequiresPermission("EditProfileLogs")]
         [HttpDelete]
         public IHttpActionResult DeleteLog([FromUri] int logId)
         {
@@ -30,6 +34,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [Route("logs/get/byId/{logId:int}")]
+        [RequiresPermission("ViewProfileLogs")]
         public ProfileLogDto GetLogById([FromUri] int logId)
         {
             return PrepareResponseObject(ProfilesProcesses.GetLogById(logId, _context));
@@ -37,6 +42,7 @@ namespace MyPortal.Controllers.Api
         
         [HttpGet]
         [Route("logs/get/byStudent/{studentId:int}")]
+        [RequiresPermission("ViewProfileLogs")]
         public IEnumerable<ProfileLogDto> GetLogsForStudent([FromUri] int studentId)
         {
             AuthenticateStudentRequest(studentId);
@@ -47,6 +53,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("logs/get/byStudent/dataGrid/{studentId:int}")]
+        [RequiresPermission("ViewProfileLogs")]
         public IHttpActionResult GetLogsForDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
@@ -57,6 +64,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [Route("logs/update")]
+        [RequiresPermission("EditProfileLogs")]
         [HttpPost]
         public IHttpActionResult UpdateLog([FromBody] ProfileLog log)
         {
@@ -64,13 +72,15 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [System.Web.Mvc.Route("commentBanks/hasComments/{bankId:int}")]
+        [RequiresPermission("ViewProfileComments")]
+        [Route("commentBanks/hasComments/{bankId:int}")]
         public bool CommentBankHasComments([FromUri] int bankId)
         {
             return PrepareResponseObject(ProfilesProcesses.CommentBankContainsComments(bankId, _context));
         }
         
         [HttpPost]
+        [RequiresPermission("EditProfileComments")]
         [Route("commentBanks/create")]
         public IHttpActionResult CreateCommentBank([FromBody] ProfileCommentBank commentBank)
         {
@@ -78,6 +88,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpDelete]
+        [RequiresPermission("EditProfileComments")]
         [Route("commentBanks/delete/{commentBankId:int}")]
         public IHttpActionResult DeleteCommentBank([FromUri] int commentBankId)
         {
@@ -85,6 +96,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [RequiresPermission("ViewProfileComments")]
         [Route("commentBanks/get/byId/{commentBankId:int}")]
         public ProfileCommentBankDto GetCommentBankById([FromUri] int commentBankId)
         {
@@ -92,6 +104,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [RequiresPermission("ViewProfileComments")]
         [Route("commentBanks/get/all")]
         public IEnumerable<ProfileCommentBankDto> GetAllCommentBanks()
         {
@@ -99,6 +112,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("ViewProfileComments")]
         [Route("commentBanks/get/dataGrid/all")]
         public IHttpActionResult GetAllCommentBanksForDataGrid([FromBody] DataManagerRequest dm)
         {
@@ -108,6 +122,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("EditProfileComments")]
         [Route("commentBanks/update")]
         public IHttpActionResult UpdateCommentBank([FromBody] ProfileCommentBank commentBank)
         {
@@ -115,6 +130,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("EditProfileComments")]
         [Route("comments/create")]
         public IHttpActionResult CreateComment([FromBody] ProfileComment comment)
         {
@@ -122,6 +138,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpDelete]
+        [RequiresPermission("EditProfileComments")]
         [Route("comments/delete/{commentId:int}")]
         public IHttpActionResult DeleteComment(int commentId)
         {
@@ -129,6 +146,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [RequiresPermission("ViewProfileComments")]
         [Route("comments/get/byId/{commentId:int}")]
         public ProfileCommentDto GetCommentById([FromUri] int commentId)
         {
@@ -136,6 +154,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [RequiresPermission("ViewProfileComments")]
         [Route("comments/get/all")]
         public IEnumerable<ProfileCommentDto> GetComments()
         {
@@ -143,6 +162,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
+        [RequiresPermission("ViewProfileComments")]
         [Route("comments/get/byBank/{commentBankId:int}")]
         public IEnumerable<ProfileCommentDto> GetCommentsByCommentBank([FromUri] int commentBankId)
         {
@@ -150,6 +170,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("ViewProfileComments")]
         [Route("comments/get/byBank/dataGrid/{commentBankId:int}")]
         public IHttpActionResult GetCommentsByCommentBankForDataGrid([FromUri] int commentBankId,
             [FromBody] DataManagerRequest dm)
@@ -160,6 +181,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("EditProfileComments")]
         [Route("comments/update")]
         public IHttpActionResult UpdateComment([FromBody] ProfileComment comment)
         {

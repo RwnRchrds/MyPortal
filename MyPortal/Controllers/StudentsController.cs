@@ -1,22 +1,22 @@
 ﻿using System.Linq;
 using System.Net;
-using System.Web.Http;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using MyPortal.Models.Attributes;
 using MyPortal.Processes;
 using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers
 {
     //MyPortal Students Controller --> Controller methods for Student areas
-    [System.Web.Mvc.Authorize(Roles = "Student")]
-    [System.Web.Mvc.RoutePrefix("Students")]
+    [RequiresPermission("AccessStudentPortal")]
+    [RoutePrefix("Students")]
     public class StudentsController : MyPortalController
     {
         #region Store
 
         //Sales History
-        [System.Web.Mvc.Route("Store/SalesHistory")]
+        [Route("Store/SalesHistory")]
         public ActionResult SalesHistory()
         {
             var userId = User.Identity.GetUserId();
@@ -24,7 +24,7 @@ namespace MyPortal.Controllers
             var studentInDb = _context.Students.SingleOrDefault(s => s.Person.UserId == userId);
 
             if (studentInDb == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return HttpNotFound();
 
             var viewModel = new StudentSalesHistoryViewModel
             {
@@ -35,7 +35,7 @@ namespace MyPortal.Controllers
         }
 
         //Store Page
-        [System.Web.Mvc.Route("Store/Store")]
+        [Route("Store/Store")]
         public ActionResult Store()
         {
             var userId = User.Identity.GetUserId();
@@ -43,7 +43,7 @@ namespace MyPortal.Controllers
             var studentInDb = _context.Students.SingleOrDefault(s => s.Person.UserId == userId);
 
             if (studentInDb == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return HttpNotFound();
 
             var viewModel = new StudentStoreViewModel
             {
@@ -56,7 +56,7 @@ namespace MyPortal.Controllers
         #endregion
 
         // Student Landing Page
-        [System.Web.Mvc.Route("Home")]
+        [Route("Home")]
         public ActionResult Index()
         {
             var userId = User.Identity.GetUserId();
@@ -88,7 +88,7 @@ namespace MyPortal.Controllers
         }
 
         //MyResults Page
-        [System.Web.Mvc.Route("Results")]
+        [Route("Results")]
         public ActionResult Results()
         {
             var userId = User.Identity.GetUserId();
