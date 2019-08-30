@@ -1,26 +1,25 @@
-﻿@{
+﻿@using MyPortal.Processes
+@{
     ViewBag.Title = "Users";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
 <body>
-<!--#region Title-->
-<div class="container float-left">
+
+<div class="container">
     <h2 class="mp-page-title">Users</h2>
     <hr/>
 </div>
-<!--#endregion-->
-<!--#region Buttons at Top of Page-->
-<div class="container float-left">
-    @if (User.IsInRole("Admin"))
+
+<div class="container">
+    @if (User.HasPermission("EditUsers"))
     {
         @Html.ActionLink("New User", "NewUser", "Admin", null, new {@class = "btn btn-success"})
         <hr/>
     }
 </div>
-<!--#endregion-->
-<!--#region Users Table-->
-<div class="container float-left">
+
+<div class="container">
     <table class="table table-bordered table-hover mp-table mp-table-link" id="users">
         <thead>
         <tr>
@@ -30,7 +29,7 @@
         <tbody></tbody>
     </table>
 </div>
-<!--#endregion-->
+
 </body>
 
 @section scripts

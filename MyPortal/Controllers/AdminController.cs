@@ -1,50 +1,28 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
+using AutoMapper;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using MyPortal.Dtos.Identity;
 using MyPortal.Models;
 using MyPortal.Models.Database;
+using MyPortal.Processes;
 using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers
 {
-    //MyPortal Admin Portal Controller --> Controller methods for Admin Portal
+    
     [Authorize(Roles = "Admin")]
     [RoutePrefix("Staff")]
-    public class AdminController : Controller
+    public class AdminController : MyPortalIdentityController
     {
-        private readonly MyPortalDbContext _context;
-        private readonly IdentityContext _identity;
-        private readonly UserManager<ApplicationUser> _userManager;
-
-        public AdminController()
-        {
-            _context = new MyPortalDbContext();
-            _identity = new IdentityContext();
-            var store = new UserStore<ApplicationUser>(_identity);
-            _userManager = new UserManager<ApplicationUser>(store);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _context.Dispose();
-                _identity.Dispose();
-                _userManager.Dispose();
-            }
-
-            base.Dispose(disposing);
-        }
-
-        // Admin | Users | New User --> New User Form
         [Route("Admin/Users/New")]
         public ActionResult NewUser()
         {
             return View();
         }
 
-        // Admin | Users | X --> User Details (for User X)
         [Route("Admin/Users/{id}")]
         public ActionResult UserDetails(string id)
         {
@@ -80,11 +58,29 @@ namespace MyPortal.Controllers
             return View(viewModel);
         }
 
-        // Admin | Users --> Users List (All)
         [Route("Admin/Users")]
         public ActionResult Users()
         {
             return View();
+        }
+
+        [Route("Admin/Roles")]
+        public ActionResult Roles()
+        {
+            var viewModel = new RolesViewModel();
+            return View(viewModel);
+        }
+
+        [Route("Admin/Roles/Permission/{roleId}")]
+        public async Task<ActionResult> RolePermissions(string roleId)
+        {
+            var viewModel = new RolePermissionsViewModel();
+
+            var role = PrepareResponseObject(await AdminProcesses.GetRoleById_Model(roleId, _roleManager, _identity));
+
+            viewModel.Role = role;
+
+            return View(viewModel);
         }
     }
 }

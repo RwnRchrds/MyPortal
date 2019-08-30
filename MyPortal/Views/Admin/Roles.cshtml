@@ -1,0 +1,186 @@
+@using MyPortal.Processes
+@model MyPortal.ViewModels.RolesViewModel
+@{
+    ViewBag.Title = "Roles";
+    Layout = "~/Views/Shared/_LayoutStaff.cshtml";
+}
+
+<div class="container">
+    <h2 class="mp-page-title">Roles</h2>
+    <hr/>
+</div>
+
+<div class="container">
+    @if (User.HasPermission("EditRoles"))
+    {
+        <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" data-target="#NewRoleModal">New Role</button>
+        <hr/>
+    }
+</div>
+
+<div class="container">
+    @Html.EJS().Grid("Roles").DataSource(d => { d.Url("/api/admin/roles/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+    {
+        c.Field("Name").HeaderText("Role").Template("#roleNameTemplate").Width("200").Add();
+        c.Field("System").HeaderText("System").Width("100").Add();
+        c.HeaderText("Actions").Template("#roleActionsTemplate").Width("170").Add();
+    }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.IgnoreCase(true); }).Toolbar(new List<string> {"Search"}).Render()
+</div>
+
+<div id="NewRoleModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New Study Topic</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/admin/roles/create", HttpMethod = "POST", OnSuccess = "newRolesuccess", OnFailure = "newRoleFailure"}, new {id = "newRoleForm"}))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.Label("Name")
+                        @Html.TextBoxFor(x => x.Role.Name, new {@class = "form-control", Name = "Name"})
+                        @Html.ValidationMessageFor(x => x.Role.Name)
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+    </div>
+</div>
+
+<div id="EditRoleModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New Study Topic</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/admin/roles/update", HttpMethod = "POST", OnSuccess = "editRolesuccess", OnFailure = "editRoleFailure"}, new {id = "editRoleForm"}))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.Label("Name")
+                        @Html.TextBoxFor(x => x.Role.Name, new {@class = "form-control", Name = "Name", id = "EditRoleNameControl"})
+                        @Html.ValidationMessageFor(x => x.Role.Name)
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(x => x.Role.Id, new {Name = "Id", id = "EditRoleIdControl"})
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+            $('.modal').on('hidden.bs.modal',
+                function() {
+                    $(this).find('form').trigger('reset');
+                });
+
+            $("#Roles").on("click",
+                ".js-delete",
+                function() {
+                    var button = $(this);
+                    bootbox.confirm("Are you sure you wish to delete this role?",
+                        function(result) {
+                            if (result) {
+                                $.ajax({
+                                    url: "/api/admin/roles/delete" + button.attr("data-role-id"),
+                                    method: "DELETE",
+                                    success: function(result) {
+                                        refreshTable("Roles");
+                                        toastr.success(result);
+                                    },
+                                    error: function(result) {
+                                        toastr.error(result.responseJSON);
+                                    }
+                                });
+                            }
+                        });
+                });
+
+            $("#Roles").on("click",
+                ".js-edit",
+                function() {
+                    var button = $(this);
+                    var logId = button.attr("data-role-id");
+                    $.ajax({
+                        url: "/api/admin/roles/get/byId/" + logId,
+                        method: "GET",
+                        success: function(result) {
+                            $("#EditRoleNameControl").val(result["name"]);
+                            $("#EditRoleIdControl").val(result["id"]);
+                        },
+                        error: function() {
+                            toastr.error("Failed to load role data");
+                        }
+                    });
+                    $("#EditRoleModal").modal('toggle');
+                });
+
+            $("#Roles").on("click",
+                ".js-permissions",
+                function () {
+                    var button = $(this);
+                    var roleId = button.attr("data-role-id");
+                    location.replace("/Staff/Admin/Roles/Permissions/" + roleId);
+                });
+        });
+
+        function newRoleSuccess(result) {
+            $("#NewRoleModal").modal('hide');
+            refreshTable("Roles");
+            toastr.success(result);
+        }
+
+        function newRoleFailure(result) {
+            $("#NewRoleModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+
+        function editRoleSuccess(result) {
+            $("#EditRoleModal").modal('hide');
+            refreshTable("Roles");
+            toastr.success(result);
+        }
+
+        function editRoleFailure(result) {
+            $("#EditRoleModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+    </script>
+    
+    <script type="text/x-jsrender" id="roleNameTemplate">
+        <div>
+            ${Name}
+        </div>
+    </script>
+    
+    <script type="text/x-jsrender" id="roleActionsTemplate">
+        <div>
+            <button type="button" class="btn btn-xs btn-success mp-btn-action js-permissions" data-role-id="${Id}">
+                <i class="far fa-check-circle"></i>
+            </button>
+            <button type="button" class="btn btn-xs btn-warning mp-btn-action js-edit" data-role-id="${Id}">
+                <i class="far fa-edit"></i>
+            </button>
+            <button type="button" class="btn btn-xs btn-danger mp-btn-action js-delete" data-role-id="${Id}">
+                <i class="far fa-trash-alt"></i>
+            </button>
+        </div>
+    </script>
+}

@@ -12,6 +12,7 @@ using MyPortal.Models;
 using MyPortal.Models.Misc;
 using MyPortal.Processes;
 using MyPortal.ViewModels;
+using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
 {
@@ -115,6 +116,15 @@ namespace MyPortal.Controllers.Api
             return PrepareResponse(result);
         }
 
+        [Route("roles/get/byId/{roleId}")]
+        [HttpGet]
+        public async Task<ApplicationRoleDto> GetRoleById([FromUri] string roleId)
+        {
+            var result = await AdminProcesses.GetRoleById(roleId, _roleManager, _identity);
+
+            return PrepareResponseObject(result);
+        }
+
         [Route("roles/get/all")]
         [HttpGet]
         public async Task<IEnumerable<ApplicationRoleDto>> GetAllRoles()
@@ -124,20 +134,20 @@ namespace MyPortal.Controllers.Api
             return PrepareResponseObject(result);
         }
 
-        [Route("rolePermissions/create")]
+        [Route("roles/get/dataGrid/all")]
         [HttpPost]
-        public async Task<IHttpActionResult> AddPermissionToRole([FromBody] RolePermission rolePermission)
+        public async Task<IHttpActionResult> GetAllRolesForDataGrid([FromBody] DataManagerRequest dm)
         {
-            var result = await AdminProcesses.AddPermissionToRole(rolePermission, _roleManager, _identity);
+            var result = PrepareResponseObject(await AdminProcesses.GetAllRoles(_identity));
 
-            return PrepareResponse(result);
+            return PrepareDataGridObject(result, dm);
         }
 
-        [Route("rolePermissions/remove/{rolePermissionId:int}")]
-        [HttpDelete]
-        public async Task<IHttpActionResult> RemovePermissionFromRole([FromUri] int rolePermissionId)
+        [Route("rolePermissions/toggle")]
+        [HttpPost]
+        public async Task<IHttpActionResult> ToggleRolePermission([FromBody] RolePermission rolePermission)
         {
-            var result = await AdminProcesses.RemovePermissionFromRole(rolePermissionId, _identity);
+            var result = await AdminProcesses.ToggleRolePermission(rolePermission, _roleManager, _identity);
 
             return PrepareResponse(result);
         }
@@ -149,6 +159,15 @@ namespace MyPortal.Controllers.Api
             var result = await AdminProcesses.GetPermissionsByRole(roleId, _roleManager, _identity);
 
             return PrepareResponseObject(result);
+        }
+
+        [Route("rolePermissions/get/byRole/dataGrid/{roleId}")]
+        [HttpPost]
+        public async Task<IHttpActionResult> GetPermissionsByRoleForDataGrid([FromUri] string roleId, [FromBody] DataManagerRequest dm)
+        {
+            var result = PrepareResponseObject(await AdminProcesses.GetPermissionsByRole(roleId, _roleManager, _identity));
+
+            return PrepareDataGridObject(result, dm);
         }
     }
 }

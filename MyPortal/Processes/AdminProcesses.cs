@@ -366,6 +366,34 @@ namespace MyPortal.Processes
             return new ProcessResponse<object>(ResponseType.BadRequest, "An unknown error occurred", null);
         }
 
+        public static async Task<ProcessResponse<ApplicationRole>> GetRoleById_Model(string roleId,
+            RoleManager<ApplicationRole, string> roleManager, IdentityContext identity)
+        {
+            var roleInDb = await roleManager.FindByIdAsync(roleId);
+
+            if (roleInDb == null)
+            {
+                return new ProcessResponse<ApplicationRole>(ResponseType.NotFound, "Role not found", null);
+            }
+
+            return new ProcessResponse<ApplicationRole>(ResponseType.Ok, null,
+                roleInDb);
+        }
+
+        public static async Task<ProcessResponse<ApplicationRoleDto>> GetRoleById(string roleId,
+            RoleManager<ApplicationRole, string> roleManager, IdentityContext identity)
+        {
+            var roleInDb = await roleManager.FindByIdAsync(roleId);
+
+            if (roleInDb == null)
+            {
+                return new ProcessResponse<ApplicationRoleDto>(ResponseType.NotFound, "Role not found", null);
+            }
+
+            return new ProcessResponse<ApplicationRoleDto>(ResponseType.Ok, null,
+                Mapper.Map<ApplicationRole, ApplicationRoleDto>(roleInDb));
+        }
+
         public static async Task<ProcessResponse<IEnumerable<ApplicationRole>>> GetAllRoles_Model(IdentityContext identity)
         {
             var roles = await identity.Roles.OrderBy(x => x.Name).ToListAsync();
@@ -382,7 +410,8 @@ namespace MyPortal.Processes
             return new ProcessResponse<IEnumerable<ApplicationRoleDto>>(ResponseType.Ok, null, roles);
         }
 
-        public static async Task<ProcessResponse<object>> AddPermissionToRole(RolePermission rolePermission, RoleManager<ApplicationRole, string> roleManager, IdentityContext identity)
+        public static async Task<ProcessResponse<object>> ToggleRolePermission(RolePermission rolePermission,
+            RoleManager<ApplicationRole, string> roleManager, IdentityContext identity)
         {
             if (await roleManager.FindByIdAsync(rolePermission.RoleId) == null)
             {
@@ -394,30 +423,21 @@ namespace MyPortal.Processes
                 return new ProcessResponse<object>(ResponseType.NotFound, "Permission not found", null);
             }
 
-            if (identity.RolePermissions.Any(x => x.RoleId == rolePermission.RoleId && x.PermissionId == rolePermission.PermissionId))
+            var rolePermissionInDb = await identity.RolePermissions.SingleOrDefaultAsync(x =>
+                x.PermissionId == rolePermission.PermissionId && x.RoleId == rolePermission.RoleId);
+
+            if (rolePermissionInDb != null)
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Role already has permission", null);
+                identity.RolePermissions.Remove(rolePermissionInDb);
+                await identity.SaveChangesAsync();
+
+                return new ProcessResponse<object>(ResponseType.Ok, "Permission removed from role", null);
             }
 
             identity.RolePermissions.Add(rolePermission);
             await identity.SaveChangesAsync();
 
             return new ProcessResponse<object>(ResponseType.Ok, "Permission added to role", null);
-        }
-
-        public static async Task<ProcessResponse<object>> RemovePermissionFromRole(int rolePermissionId, IdentityContext identity)
-        {
-            var rolePermissionInDb = identity.RolePermissions.SingleOrDefault(x => x.Id == rolePermissionId);
-
-            if (rolePermissionInDb == null)
-            {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Role does not have permission", null);
-            }
-
-            identity.RolePermissions.Remove(rolePermissionInDb);
-            await identity.SaveChangesAsync();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Permission removed from role", null);
         }
 
         public static async Task<ProcessResponse<IEnumerable<PermissionIndicator>>> GetPermissionsByRole(string roleId,

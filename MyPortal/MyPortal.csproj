@@ -266,6 +266,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\FinanceController.cs" />
     <Compile Include="Controllers\MyPortalController.cs" />
+    <Compile Include="Controllers\MyPortalIdentityController.cs" />
     <Compile Include="Controllers\StaffController.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
     <Compile Include="Dtos\AssessmentGradeDto.cs" />
@@ -460,6 +461,8 @@
     <Compile Include="ViewModels\AccountsViewModel.cs" />
     <Compile Include="ViewModels\ClassEnrolmentsViewModel.cs" />
     <Compile Include="ViewModels\ClassesViewModel.cs" />
+    <Compile Include="ViewModels\RolePermissionsViewModel.cs" />
+    <Compile Include="ViewModels\RolesViewModel.cs" />
     <Compile Include="ViewModels\SessionsViewModel.cs" />
     <Compile Include="ViewModels\RegistersViewModel.cs" />
     <Compile Include="ViewModels\CommentBanksViewModel.cs" />
@@ -846,6 +849,7 @@
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
     <Content Include="Views\Account\RestrictedAccess.cshtml" />
+    <Content Include="Views\Admin\Roles.cshtml" />
     <Content Include="Views\Staff\Docs\Documents.cshtml" />
     <Content Include="Views\Staff\Profile\CommentBanks.cshtml" />
     <Content Include="Views\Staff\Profile\Comments.cshtml" />
@@ -937,9 +941,11 @@
     <Content Include="Views\Staff\Curriculum\Enrolments.cshtml" />
     <Content Include="Views\Shared\_NavBarStudentNew.cshtml" />
     <Content Include="Views\Staff\People\Students\BehaviourManagement.cshtml" />
+    <Content Include="Views\Admin\RolePermissions.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Results\" />
+    <Folder Include="Views\MyPortalIdentity\" />
     <Folder Include="Views\Staff\Admissions\" />
     <Folder Include="Views\Staff\Behaviour\" />
     <Folder Include="Views\Staff\Communication\" />

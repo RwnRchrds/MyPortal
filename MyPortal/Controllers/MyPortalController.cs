@@ -15,6 +15,11 @@ namespace MyPortal.Controllers
             _context = new MyPortalDbContext();
         }
 
+        public MyPortalController(MyPortalDbContext context)
+        {
+            _context = context;
+        }
+
         protected override void Dispose(bool disposing)
         {
             _context.Dispose();

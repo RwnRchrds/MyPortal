@@ -132,14 +132,15 @@
 
                 @if (User.IsInRole("Admin"))
                 {
-                    <!--Finance-->
+                    <!--Admin-->
                     <li class="nav-item dropdown ">
                         <a class="nav-link dropdown-toggle" href="#" id="attendanceDropdownLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-cog fa-lg"></i>
                         </a>
                         <div class="dropdown-menu nav-app-menu" aria-labelledby="menuDropdownLink">
                             <h6 class="dropdown-header">Admin</h6>
-                            @Html.ActionLink("Users", "Users", "Admin", null, new { @class = "dropdown-item" })                           
+                            @Html.ActionLink("Users", "Users", "Admin", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Roles", "Roles", "Admin", null, new {@class = "dropdown-item"})
                         </div>
                     </li>
                 }
