@@ -1,24 +1,27 @@
 ﻿using System.Web.Mvc;
+using MyPortal.Models.Attributes;
 using MyPortal.Processes;
 using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers
 {
-    [Authorize(Roles = "Finance")]
+    [Authorize]
     [RoutePrefix("Staff")]
     public class FinanceController : MyPortalController
     {
+        protected override void Dispose(bool disposing)
+        {
+            _context.Dispose();
+        }
+        
+        [RequiresPermission("EditAccounts")]
         [Route("Finance/Accounts")]
         public ActionResult Accounts()
         {
             return View();
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            _context.Dispose();
-        }
-
+        [RequiresPermission("EditProducts")]
         [Route("Finance/Products")]
         public ActionResult Products()
         {
@@ -29,6 +32,7 @@ namespace MyPortal.Controllers
             return View(viewModel);
         }
 
+        [RequiresPermission("EditSales")]
         [Route("Finance/Sales/New")]
         public ActionResult SaleEntry()
         {
@@ -42,6 +46,7 @@ namespace MyPortal.Controllers
             return View(viewModel);
         }
 
+        [RequiresPermission("EditSales")]
         [Route("Finance/Sales")]
         public ActionResult Sales()
         {

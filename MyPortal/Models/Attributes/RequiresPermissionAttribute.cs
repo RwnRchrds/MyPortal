@@ -4,11 +4,11 @@ using MyPortal.Processes;
 
 namespace MyPortal.Models.Attributes
 {
-    public class HasPermissionAttribute : AuthorizeAttribute
+    public class RequiresPermissionAttribute : AuthorizeAttribute
     {
         private string _permission;
 
-        public HasPermissionAttribute(string permission)
+        public RequiresPermissionAttribute(string permission)
         {
             _permission = permission;
         }

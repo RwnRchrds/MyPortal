@@ -14,7 +14,7 @@ namespace MyPortal.Controllers.Api
     public class SystemController : MyPortalApiController
     {
         [HttpPost]
-        [HasPermission("EditBulletins")]
+        [RequiresPermission("EditBulletins")]
         [Route("bulletins/create")]
         public async Task<IHttpActionResult> CreateBulletin([FromBody] SystemBulletin bulletin)
         {
@@ -28,7 +28,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [HasPermission("EditBulletins")]
+        [RequiresPermission("EditBulletins")]
         public IHttpActionResult UpdateBulletin([FromBody] SystemBulletin bulletin)
         {
             var approvable = User.IsInRole("SeniorStaff");
@@ -37,7 +37,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpDelete]
-        [HasPermission("EditBulletins")]
+        [RequiresPermission("EditBulletins")]
         [Route("bulletins/delete/{bulletinId:int}")]
         public IHttpActionResult DeleteBulletin([FromUri] int bulletinId)
         {
@@ -45,7 +45,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [HasPermission("ViewAllBulletins")]
+        [RequiresPermission("ViewAllBulletins")]
         [Route("bulletins/get/all")]
         public IEnumerable<SystemBulletinDto> GetAllBulletins()
         {
@@ -53,7 +53,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [HasPermission("ViewStaffBulletins")]
+        [RequiresPermission("ViewStaffBulletins")]
         [Route("bulletins/get/approved")]
         public IEnumerable<SystemBulletinDto> GetApprovedBulletins()
         {
@@ -61,7 +61,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [HasPermission("ViewStaffBulletins")]
+        [RequiresPermission("ViewStaffBulletins")]
         [Route("bulletins/get/own")]
         public IEnumerable<SystemBulletinDto> GetOwnBulletins()
         {
@@ -70,7 +70,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [HasPermission("ViewStudentBulletins")]
+        [RequiresPermission("ViewStudentBulletins")]
         [Route("bulletins/get/student")]
         public IEnumerable<SystemBulletinDto> GetStudentBulletins()
         {

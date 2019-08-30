@@ -6,6 +6,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using MyPortal.Dtos.Identity;
 using MyPortal.Models;
+using MyPortal.Models.Attributes;
 using MyPortal.Models.Database;
 using MyPortal.Processes;
 using MyPortal.ViewModels;
@@ -13,16 +14,18 @@ using MyPortal.ViewModels;
 namespace MyPortal.Controllers
 {
     
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     [RoutePrefix("Staff")]
     public class AdminController : MyPortalIdentityController
     {
+        [RequiresPermission("EditUsers")]
         [Route("Admin/Users/New")]
         public ActionResult NewUser()
         {
             return View();
         }
 
+        [RequiresPermission("EditUsers")]
         [Route("Admin/Users/{id}")]
         public ActionResult UserDetails(string id)
         {
@@ -58,12 +61,14 @@ namespace MyPortal.Controllers
             return View(viewModel);
         }
 
+        [RequiresPermission("EditUsers")]
         [Route("Admin/Users")]
         public ActionResult Users()
         {
             return View();
         }
 
+        [RequiresPermission("EditRoles")]
         [Route("Admin/Roles")]
         public ActionResult Roles()
         {
@@ -71,6 +76,7 @@ namespace MyPortal.Controllers
             return View(viewModel);
         }
 
+        [RequiresPermission("EditRoles")]
         [Route("Admin/Roles/Permission/{roleId}")]
         public async Task<ActionResult> RolePermissions(string roleId)
         {

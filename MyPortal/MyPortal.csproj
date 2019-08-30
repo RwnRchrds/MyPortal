@@ -354,7 +354,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Attributes\HasPermissionAttribute.cs" />
+    <Compile Include="Models\Attributes\RequiresPermissionAttribute.cs" />
     <Compile Include="Models\Database\BehaviourAchievement.cs" />
     <Compile Include="Models\Database\BehaviourAchievementType.cs" />
     <Compile Include="Models\Database\BehaviourIncident.cs" />

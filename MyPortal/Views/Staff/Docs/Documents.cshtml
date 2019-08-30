@@ -1,4 +1,5 @@
-﻿@model MyPortal.ViewModels.DocumentsViewModel
+﻿@using MyPortal.Processes
+@model MyPortal.ViewModels.DocumentsViewModel
 @{
     ViewBag.Title = "Documents";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
@@ -23,7 +24,7 @@
 <div class="container">
    @Html.EJS().Grid("Documents").DataSource(d =>
    {
-       if (User.IsInRole("SeniorStaff"))
+       if (User.HasPermission("EditDocuments"))
        {
            d.Url("/api/documents/general/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor");
        }
@@ -36,7 +37,7 @@
    {
        c.Field("Description").HeaderText("Description").Template("#documentsDescriptionTemplate").Width("200").Add();
        c.Field("Date").HeaderText("Date").Template("#documentsDateTemplate").Width("200").Add();
-       if (User.IsInRole("SeniorStaff"))
+       if (User.HasPermission("EditDocuments"))
        {
            c.Field("Approved").Template("#documentsApprovedTemplate").Width("100").Add();
            c.HeaderText("Actions").Template("#documentsActionsTemplate").Width("170").Add();
