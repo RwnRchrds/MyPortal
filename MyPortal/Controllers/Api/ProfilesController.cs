@@ -72,7 +72,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [RequiresPermission("ViewProfileComments")]
+        [RequiresPermission("ViewComments")]
         [Route("commentBanks/hasComments/{bankId:int}")]
         public bool CommentBankHasComments([FromUri] int bankId)
         {
@@ -80,7 +80,7 @@ namespace MyPortal.Controllers.Api
         }
         
         [HttpPost]
-        [RequiresPermission("EditProfileComments")]
+        [RequiresPermission("EditComments")]
         [Route("commentBanks/create")]
         public IHttpActionResult CreateCommentBank([FromBody] ProfileCommentBank commentBank)
         {
@@ -88,7 +88,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpDelete]
-        [RequiresPermission("EditProfileComments")]
+        [RequiresPermission("EditComments")]
         [Route("commentBanks/delete/{commentBankId:int}")]
         public IHttpActionResult DeleteCommentBank([FromUri] int commentBankId)
         {
@@ -96,7 +96,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [RequiresPermission("ViewProfileComments")]
+        [RequiresPermission("ViewComments")]
         [Route("commentBanks/get/byId/{commentBankId:int}")]
         public ProfileCommentBankDto GetCommentBankById([FromUri] int commentBankId)
         {
@@ -104,7 +104,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [RequiresPermission("ViewProfileComments")]
+        [RequiresPermission("ViewComments")]
         [Route("commentBanks/get/all")]
         public IEnumerable<ProfileCommentBankDto> GetAllCommentBanks()
         {
@@ -112,7 +112,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [RequiresPermission("ViewProfileComments")]
+        [RequiresPermission("ViewComments")]
         [Route("commentBanks/get/dataGrid/all")]
         public IHttpActionResult GetAllCommentBanksForDataGrid([FromBody] DataManagerRequest dm)
         {
@@ -122,7 +122,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [RequiresPermission("EditProfileComments")]
+        [RequiresPermission("EditComments")]
         [Route("commentBanks/update")]
         public IHttpActionResult UpdateCommentBank([FromBody] ProfileCommentBank commentBank)
         {
@@ -130,7 +130,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [RequiresPermission("EditProfileComments")]
+        [RequiresPermission("EditComments")]
         [Route("comments/create")]
         public IHttpActionResult CreateComment([FromBody] ProfileComment comment)
         {
@@ -138,7 +138,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpDelete]
-        [RequiresPermission("EditProfileComments")]
+        [RequiresPermission("EditComments")]
         [Route("comments/delete/{commentId:int}")]
         public IHttpActionResult DeleteComment(int commentId)
         {
@@ -146,7 +146,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [RequiresPermission("ViewProfileComments")]
+        [RequiresPermission("ViewComments")]
         [Route("comments/get/byId/{commentId:int}")]
         public ProfileCommentDto GetCommentById([FromUri] int commentId)
         {
@@ -154,7 +154,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [RequiresPermission("ViewProfileComments")]
+        [RequiresPermission("ViewComments")]
         [Route("comments/get/all")]
         public IEnumerable<ProfileCommentDto> GetComments()
         {
@@ -162,7 +162,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [RequiresPermission("ViewProfileComments")]
+        [RequiresPermission("ViewComments")]
         [Route("comments/get/byBank/{commentBankId:int}")]
         public IEnumerable<ProfileCommentDto> GetCommentsByCommentBank([FromUri] int commentBankId)
         {
@@ -170,7 +170,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [RequiresPermission("ViewProfileComments")]
+        [RequiresPermission("ViewComments")]
         [Route("comments/get/byBank/dataGrid/{commentBankId:int}")]
         public IHttpActionResult GetCommentsByCommentBankForDataGrid([FromUri] int commentBankId,
             [FromBody] DataManagerRequest dm)
@@ -181,7 +181,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [RequiresPermission("EditProfileComments")]
+        [RequiresPermission("EditComments")]
         [Route("comments/update")]
         public IHttpActionResult UpdateComment([FromBody] ProfileComment comment)
         {

@@ -22,7 +22,6 @@
     @Html.EJS().Grid("Roles").DataSource(d => { d.Url("/api/admin/roles/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
     {
         c.Field("Name").HeaderText("Role").Template("#roleNameTemplate").Width("200").Add();
-        c.Field("System").HeaderText("System").Width("100").Add();
         c.HeaderText("Actions").Template("#roleActionsTemplate").Width("170").Add();
     }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.IgnoreCase(true); }).Toolbar(new List<string> {"Search"}).Render()
 </div>
@@ -43,12 +42,12 @@
                         @Html.TextBoxFor(x => x.Role.Name, new {@class = "form-control", Name = "Name"})
                         @Html.ValidationMessageFor(x => x.Role.Name)
                     </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
                 </div>
             }
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Save</button>
         </div>
     </div>
 </div>
@@ -72,12 +71,12 @@
                     <div class="form-group">
                         @Html.HiddenFor(x => x.Role.Id, new {Name = "Id", id = "EditRoleIdControl"})
                     </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
                 </div>
             }
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Save</button>
         </div>
     </div>
 </div>

@@ -5,14 +5,15 @@
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<div class="container">
-    <h2>Permissions for @Model.Role.Name</h2>
+<div class="container mp-page-title">
+    <h2>Permissions for @Model.Role.Name Role</h2>
+    <hr/>
 </div>
 
 <div class="container">
     @Html.EJS().Grid("Permissions").DataSource(d =>
     {
-        d.Url($"/api/admin/rolePermissions/get/byRole/dataGrid/{Model.RolePermission.Id}").CrossDomain(false).Adaptor("UrlAdaptor");
+        d.Url($"/api/admin/rolePermissions/get/byRole/dataGrid/{Model.Role.Id}").CrossDomain(false).Adaptor("UrlAdaptor");
     }).Columns(c =>
     {
         c.Field("Permission.Area").HeaderText("Area").Template("#permissionAreaTemplate").Width("200").Add();
@@ -60,8 +61,8 @@
     </script>
     
     <script type="text/x-jsrender" id="permissionActionsTemplate">
-        <button type="button" class="btn btn-xs btn-warning mp-btn-action js-tpggle" data-permission-id="${Id}">
-            <i class="far fa-check"></i>
+        <button type="button" class="btn btn-xs btn-warning mp-btn-action js-toggle" data-permission-id="${Permission.Id}">
+            <i class="fas fa-check"></i>
         </button>
     </script>
 }

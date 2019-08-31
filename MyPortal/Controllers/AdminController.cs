@@ -77,12 +77,14 @@ namespace MyPortal.Controllers
         }
 
         [RequiresPermission("EditRoles")]
-        [Route("Admin/Roles/Permission/{roleId}")]
+        [Route("Admin/Roles/Permissions/{roleId}")]
         public async Task<ActionResult> RolePermissions(string roleId)
         {
             var viewModel = new RolePermissionsViewModel();
 
-            var role = PrepareResponseObject(await AdminProcesses.GetRoleById_Model(roleId, _roleManager, _identity));
+            var result = await AdminProcesses.GetRoleById_Model(roleId, _roleManager, _identity);
+
+            var role = PrepareResponseObject(result);
 
             viewModel.Role = role;
 
