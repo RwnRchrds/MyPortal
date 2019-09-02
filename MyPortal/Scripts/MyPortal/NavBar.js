@@ -5,4 +5,9 @@ $(document).ready(function() {
             $(this).closest("li").addClass("hidden-menu");
         }
     });
+
+    //$("#logoutSubmit").on("click",
+    //    function() {
+    //        $("#logoutForm").submit();
+    //    });
 });

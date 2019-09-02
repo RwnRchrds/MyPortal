@@ -10,7 +10,7 @@
                 @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", null, new {title = "Manage", @class = "nav-link"})
             </li>
             <li>
-                <a href="javascript:document.getElementById('logoutForm').submit()" class="nav-link">Log off</a>
+                <a href="#" class="nav-link" id="logoutSubmit">Log off</a>
             </li>
         </ul>
     }
