@@ -25,7 +25,7 @@ namespace MyPortal.Processes
         {
             var academicYear =
                 context.CurriculumAcademicYears.SingleOrDefault(x =>
-                    x.FirstDate <= DateTime.Now && x.LastDate >= DateTime.Now);
+                    x.FirstDate <= DateTime.Today && x.LastDate >= DateTime.Today);
 
             if (academicYear == null)
             {

@@ -12,20 +12,41 @@
     
     @Scripts.Render("~/bundles/syncfusion")
 </head>
-<body>
-    @Html.Partial("_NavBarStaffNew")
-    <div class="container body-content">
-        @RenderBody()
-        <div class="container float-left">
-            <hr />
-            <footer>
-                <p>
-                    <b>Version:</b> @version.Major.ToString().@version.Minor.ToString().@version.Build.ToString()
-                </p>
-                <p>&copy; @DateTime.Now.Year - Rowan Richards</p>
-            </footer>
+<body class="portal-body">
+<div id="wrapper">
+        @Html.Partial("_SideBarStaff")
+        
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                @Html.Partial("_NavBarStaffNew")
+                
+                <div class="container-fluid">
+                    @RenderBody()
+                </div>
+                
+                <footer class="sticky-footer bg-white">
+                    <div class="container my-auto">
+                        <div class="copyright text-center my-auto">
+                            <span><b>Version:</b> @version.Major.ToString().@version.Minor.ToString().@version.Build.ToString()</span>
+                            <span>&copy; @DateTime.Now.Year - Rowan Richards</span>
+                        </div>
+                    </div>
+                </footer>
+            </div>
         </div>
     </div>
+
+@*<div class="container-fluid body-content">
+    <div class="container-fluid float-left">
+        <hr/>
+        <footer>
+            <p>
+                
+            </p>
+            <p></p>
+        </footer>
+    </div>
+</div>*@
 
     @Scripts.Render("~/bundles/lib")
     @Scripts.Render("~/bundles/navbar")

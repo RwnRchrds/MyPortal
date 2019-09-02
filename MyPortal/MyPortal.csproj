@@ -679,6 +679,8 @@
     <Content Include="Content\myportal.css" />
     <Content Include="Content\regular.css" />
     <Content Include="Content\regular.min.css" />
+    <Content Include="Content\sb-admin-2.css" />
+    <Content Include="Content\sb-admin-2.min.css" />
     <Content Include="Content\solid.css" />
     <Content Include="Content\solid.min.css" />
     <Content Include="Content\svg-with-js.css" />
@@ -842,6 +844,8 @@
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\sb-admin-2.js" />
+    <Content Include="Scripts\sb-admin-2.min.js" />
     <Content Include="Scripts\toastr.js" />
     <Content Include="Scripts\toastr.min.js" />
     <Content Include="Scripts\umd\popper-utils.js" />
@@ -941,6 +945,7 @@
     <Content Include="Views\Shared\_NavBarStudentNew.cshtml" />
     <Content Include="Views\Staff\People\Students\BehaviourManagement.cshtml" />
     <Content Include="Views\Admin\RolePermissions.cshtml" />
+    <Content Include="Views\Shared\_SideBarStaff.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Results\" />

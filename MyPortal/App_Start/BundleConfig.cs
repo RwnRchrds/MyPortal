@@ -19,6 +19,7 @@ namespace MyPortal
                 "~/Scripts/datatables/datatables.responsive.min.js",
                 "~/Scripts/datatables/responsive.bootstrap4.min.js",
                 "~/Scripts/moment.min.js",
+                "~/Scripts/sb-admin-2.min.js",
                 "~/Scripts/myportal.js"
             ));
 
@@ -37,7 +38,7 @@ namespace MyPortal
                 "~/Scripts/modernizr-*"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                "~/Content/bootstrap-flatly.css",
+                "~/Content/sb-admin-2.css",
                 "~/Content/datatables/css/datatables.bootstrap4.min.css",
                 "~/Content/datatables/css/responsive.bootstrap4.min.css",
                 "~/content/toastr.min.css",
@@ -47,7 +48,7 @@ namespace MyPortal
                 "~/content/solid.min.css",
                 "~/Content/brands.min.css",
                 "~/Content/site.css",
-                "~/Content/ej2/bootstrap4.css"));
+                "~/Content/ej2/material.css"));
         }
     }
 }

@@ -1,0 +1,88 @@
+﻿@using MyPortal.Processes
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="@Url.Action("Index", "Home")">
+            <div class="sidebar-brand-text mx-3">
+                MyPortal
+            </div>
+        </a>
+
+        <hr class="sidebar-divider my-0" />
+
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Index", "Home")">
+                <i class="fas fa-fw fa-home"></i>
+                <span>Home</span>
+            </a>
+        </li>
+
+        <hr class="sidebar-divider" />
+
+        <div class="sidebar-heading">
+            Staff Portal
+        </div>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAssessment" aria-expanded="true" aria-controls="collapseAssessment">
+                <i class="fas fa-fw fa-tasks"></i>
+                <span>Assessment</span>
+            </a>
+            <div id="collapseAssessment" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Assessment</h6>
+                    @if (User.HasPermission("ImportResults"))
+                    {
+                        @Html.ActionLink("Import Results", "ImportResults", "Staff", null, new { @class = "collapse-item" })
+                    }
+                    @if (User.HasPermission("EditResultSets"))
+                    {
+                        @Html.ActionLink("Result Sets", "ResultSets", "Staff", null, new { @class = "collapse-item" })
+                    }
+                </div>
+            </div>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAttendance" aria-expanded="true" aria-controls="collapseAttendance">
+                <i class="fas fa-fw fa-clock"></i>
+                <span>Attendance</span>
+            </a>
+            <div id="collapseAttendance" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Attendance</h6>
+                    @if (User.HasPermission("TakeRegister"))
+                    {
+                        @Html.ActionLink("Take Register", "Registers", "Staff", null, new { @class = "collapse-item" })
+                    }
+                </div>
+            </div>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCurriculum" aria-expanded="true" aria-controls="collapseCurriculum">
+                <i class="fas fa-fw fa-graduation-cap"></i>
+                <span>Curriculum</span>
+            </a>
+            <div id="collapseCurriculum" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Curriculum</h6>
+                    @if (User.HasPermission("ViewLessonPlans"))
+                    {
+                        @Html.ActionLink("Lesson Plans", "LessonPlans", "Staff", null, new {@class = "collapse-item"})
+                    }
+                    @if (User.HasPermission("EditClasses"))
+                    {
+                        @Html.ActionLink("Classes", "Classes", "Staff", null, new {@class = "collapse-item"})
+                    }
+                    @if (User.HasPermission("EditSubjects"))
+                    {
+                        @Html.ActionLink("Subjects", "Subjects", "Staff", null, new {@class = "collapse-item"})
+                    }
+                    @if (User.HasPermission("EditStudyTopics"))
+                    {
+                        @Html.ActionLink("Study Topics", "StudyTopics", "Staff", null, new {@class = "collapse-item"})
+                    }
+                </div>
+            </div>
+        </li>
+    </ul>

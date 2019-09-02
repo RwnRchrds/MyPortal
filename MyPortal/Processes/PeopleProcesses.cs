@@ -50,6 +50,25 @@ namespace MyPortal.Processes
            return new ProcessResponse<string>(ResponseType.Ok, null, displayName);
         }
 
+        public static ProcessResponse<string> GetStaffDisplayNameFromUserId(string userId)
+        {
+            var context = new MyPortalDbContext();
+
+            var staffMember = GetStaffFromUserId(userId, context);
+
+            if (staffMember.ResponseType == ResponseType.BadRequest)
+            {
+                return new ProcessResponse<string>(ResponseType.BadRequest, staffMember.ResponseMessage, null);
+            }
+
+            if (staffMember.ResponseType == ResponseType.NotFound)
+            {
+                return new ProcessResponse<string>(ResponseType.NotFound, staffMember.ResponseMessage, null);
+            }
+
+            return GetStaffDisplayName(staffMember.ResponseObject);
+        }
+
         public static ProcessResponse<string> GetStaffFullName(StaffMember staffMember)
         {
             var fullName = $"{staffMember.Person.LastName}, {staffMember.Person.FirstName}";
