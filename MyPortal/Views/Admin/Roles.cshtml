@@ -5,25 +5,44 @@
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<div class="container">
-    <h2 class="mp-page-title">Roles</h2>
-    <hr/>
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Roles</h1>
 </div>
 
-<div class="container">
-    @if (User.HasPermission("EditRoles"))
-    {
-        <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" data-target="#NewRoleModal">New Role</button>
-        <hr/>
-    }
+<div class="row">
+    
+    <div class="col-xl-12 col-md-12 mb-4">
+        @if (User.HasPermission("EditRoles"))
+            {
+                <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" data-target="#NewRoleModal">New Role</button>
+                <hr/>
+            }
+    </div>
+    
 </div>
 
-<div class="container">
-    @Html.EJS().Grid("Roles").DataSource(d => { d.Url("/api/admin/roles/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
-    {
-        c.Field("Name").HeaderText("Role").Template("#roleNameTemplate").Width("200").Add();
-        c.HeaderText("Actions").Template("#roleActionsTemplate").Width("170").Add();
-    }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.IgnoreCase(true); }).Toolbar(new List<string> {"Search"}).Render()
+<div class="row">
+    
+    <div class="col-xl-12 col-md-12 mb-4">
+        
+        <div class="card shadow mb-4">
+            
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Roles</h6>
+            </div>
+            
+            <div class="card-body">
+                @Html.EJS().Grid("Roles").DataSource(d => { d.Url("/api/admin/roles/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+                {
+                    c.Field("Name").HeaderText("Role").Template("#roleNameTemplate").Width("200").Add();
+                    c.HeaderText("Actions").Template("#roleActionsTemplate").Width("170").Add();
+                }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.IgnoreCase(true); }).Toolbar(new List<string> {"Search"}).Render()
+            </div>
+
+        </div>
+        
+    </div>
+
 </div>
 
 <div id="NewRoleModal" class="modal fade" role="dialog">

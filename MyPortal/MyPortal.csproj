@@ -931,7 +931,7 @@
     <Content Include="Views\Staff\Attendance\TakeRegister.cshtml" />
     <Content Include="Views\Staff\Curriculum\Classes.cshtml" />
     <Content Include="Views\Staff\Curriculum\Sessions.cshtml" />
-    <Content Include="Views\Shared\_NavBarStaffNew.cshtml" />
+    <Content Include="Views\Shared\_NavBarStaff.cshtml" />
     <Content Include="Scripts\umd\popper.min.js.map" />
     <Content Include="Scripts\umd\popper.js.map" />
     <Content Include="Scripts\umd\popper-utils.min.js.map" />
@@ -949,7 +949,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Results\" />
-    <Folder Include="Views\MyPortalIdentity\" />
     <Folder Include="Views\Staff\Admissions\" />
     <Folder Include="Views\Staff\Behaviour\" />
     <Folder Include="Views\Staff\Communication\" />

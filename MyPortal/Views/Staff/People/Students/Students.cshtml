@@ -2,43 +2,52 @@
 @model IEnumerable<MyPortal.Models.Database.Student>
 @{
     ViewBag.Title = "Students";
+    ViewBag.DisplayTitle = "Students";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<!--#region Title-->
-<div class="container float-left">
-    <h2 class="mp-page-title">Students</h2>
-    <hr/>
-</div>
-<!--#endregion-->
-<!--#region Buttons at Top of Page-->
-<div class="container float-left">
-    @if (User.HasPermission("EditStudents"))
-    {
-        @Html.ActionLink("New Student", "NewStudent", "Staff", null, new {@class = "btn btn-primary"})
-        <hr/>
-    }
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Students</h1>
 </div>
 
-<div class="float-left container">
-    @Html.EJS().Grid("Students").DataSource(dataManager =>
-    {
-        dataManager.Url("/api/people/students/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor"); 
-
-    }).Columns(c =>
-    {
-        c.Field("DisplayName").HeaderText("Name").Template("#nameTemplate").Width("300").Add();
-        c.Field("YearGroupName").HeaderText("Year Group").Width("80").Add();
-        c.Field("RegGroupName").HeaderText("Reg Group").Width("80").Add();
-        c.Field("HouseName").HeaderText("House").Width("100").Add();
-    }).AllowPaging().SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string>() { "Search" }).PageSettings(p => p.PageSize(12)).Render()
+<div class="row">
+    
+    <div class="col-xl-12 col-md-12 mb-4">
+        @if (User.HasPermission("EditStudents"))
+            {
+                @Html.ActionLink("New Student", "NewStudent", "Staff", null, new {@class = "btn btn-primary"})
+                <hr/>
+            }
+    </div>
+    
 </div>
 
-<style type="text/css" class="cssStyles">
-    .student-name {
-        font-weight: bold;
-    }
-</style>
+<div class="row">
+    
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Students</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                @Html.EJS().Grid("Students").DataSource(dataManager =>
+                {
+                    dataManager.Url("/api/people/students/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor");
+                   
+                }).Columns(c =>
+                {
+                    c.Field("DisplayName").HeaderText("Name").Template("#nameTemplate").Width("300").Add();
+                    c.Field("YearGroupName").HeaderText("Year Group").Width("80").Add();
+                    c.Field("RegGroupName").HeaderText("Reg Group").Width("80").Add();
+                    c.Field("HouseName").HeaderText("House").Width("100").Add();
+                }).AllowPaging().SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string>() {"Search"}).PageSettings(p => p.PageSize(12)).Render()
+            </div>
+        </div>
+    </div>
+    
+</div>
 
 @section scripts
 {

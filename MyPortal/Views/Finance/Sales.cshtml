@@ -1,43 +1,67 @@
 ﻿@model MyPortal.ViewModels.SalesViewModel
 @{
     ViewBag.Title = "Sales";
+    ViewBag.DisplayTitle = "Sales";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
-<body>
-    <!--#region Title-->
-    <div class="container">
-        <h2 class="mp-page-title">Sales</h2>
-        <hr />
-    </div>
-    <!--#endregion-->
-    <!--#region Buttons at Top-->
-    <div class="container">
-        <button type="button" class="btn btn-primary mp-btn-top-auto" id="newSaleButton">Sale Entry</button>
-        <hr />
-    </div>
-    <!--#endregion-->
-    <!--#region Sales Table + Selector-->
-    <div class="container">
-        @Html.Label("View Sales")
-        @Html.DropDownList("SelectedStatus", new SelectList(Model.Status, "Pending"), new { @class = "form-control", Name = "SaleStatus", id = "selectedStatus" })
-    </div>
 
-    <div class="container mp-margin-top">
-        @Html.EJS().Grid("Sales").DataSource(d =>
-        {
-            d.Url("/api/finance/sales/get/dataGrid/pending").CrossDomain(false).Adaptor("UrlAdaptor");
-        }).Columns(c =>
-        {
-            c.Field("Date").HeaderText("Date").Template("#salesDateTemplate").Width("150").Add();
-            c.Field("StudentName").HeaderText("Student").Template("#salesStudentTemplate").Width("150").Add();
-            c.Field("ProductDescription").HeaderText("Product").Template("#salesProductTemplate").Width("300").Add();
-            c.Field("AmountPaid").HeaderText("Paid").Template("#salesPaidTemplate").Width("100").Add();
-            c.HeaderText("Status").Template("#salesStatusTemplate").Width("200").Add();
-            c.HeaderText("Actions").Template("#salesActionsTemplate").Width("170").Add();
-        }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string>() { "Search" }).Render()
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Sales</h1>
+</div>
+
+<div class="row">
+    
+    <div class="col-xl-12 col-md-12 mb-4">
+        <button type="button" class="btn btn-primary mp-btn-top-auto" id="newSaleButton">Sale Entry</button>
     </div>
-    <!--#endregion-->
-</body>
+    
+</div>
+    
+    
+<div class="row">
+    
+    <div class="col-xl-12 col-md-12 mb-4">
+        @Html.Label("View Sales")
+            @Html.DropDownList("SelectedStatus", new SelectList(Model.Status, "Pending"), new {@class = "form-control", Name = "SaleStatus", id = "selectedStatus"})
+    </div>
+    
+</div>
+
+<div class="row">
+    
+    <div class="col-xl-12 col-lg-12">
+        
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Log Notes</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                        
+                <button type="button" class="btn btn-success mb-4" data-toggle="modal" data-target="#NewLogModal">
+                    <i class="fa fa-plus-circle"></i> New Log Note
+                </button>
+                        
+                @Html.EJS().Grid("Sales").DataSource(d =>
+                {
+                    d.Url("/api/finance/sales/get/dataGrid/pending").CrossDomain(false).Adaptor("UrlAdaptor");
+                }).Columns(c =>
+                {
+                    c.Field("Date").HeaderText("Date").Template("#salesDateTemplate").Width("150").Add();
+                    c.Field("StudentName").HeaderText("Student").Template("#salesStudentTemplate").Width("150").Add();
+                    c.Field("ProductDescription").HeaderText("Product").Template("#salesProductTemplate").Width("300").Add();
+                    c.Field("AmountPaid").HeaderText("Paid").Template("#salesPaidTemplate").Width("100").Add();
+                    c.HeaderText("Status").Template("#salesStatusTemplate").Width("200").Add();
+                    c.HeaderText("Actions").Template("#salesActionsTemplate").Width("170").Add();
+                }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string>() {"Search"}).Render()
+            </div>
+                    
+        </div>
+        
+    </div>
+    
+</div>
 
 @section scripts
 {

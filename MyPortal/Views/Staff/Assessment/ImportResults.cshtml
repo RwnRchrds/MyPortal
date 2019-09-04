@@ -1,40 +1,47 @@
 ﻿@model MyPortal.ViewModels.ImportResultsViewModel
 @{
-    ViewBag.Title = "Upload Results";
+    ViewBag.Title = "Import Results";
+    ViewBag.DisplayTitle = "Import Results";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
 <body>
 
-<div class="container float-left">
-    <h2 class="mp-page-title">Import Results</h2>
-    <hr/>
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Import Results</h1>
 </div>
 
-<div class="container float-left">
-    <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" data-target="#UploadModal">Upload Results</button>
-    <hr/>
-</div>
+<div class="row">
+    
+    <div class="col-xl-12 col-md-12 mb-4">
+        <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" data-target="#UploadModal">Upload Results</button>  
+    </div>
+    
+    <div class="col-xl-12 col-md-12 mb-4">
+        @if (!Model.FileExists)
+            {
+                <p class="text-danger">Results file not uploaded.</p>
+            }
+            @if (Model.FileExists)
+            {
+                <p class="text-success">Results file found. Please select the correct result set before importing.</p>
+            }
+    </div>
 
-<div class="container float-left">
-    @if (!Model.FileExists)
-    {
-        <p class="text-danger">Results file not uploaded.</p>
-    }
-    @if (Model.FileExists)
-    {
-        <p class="text-success">Results file found. Please select the correct result set before importing.</p>
-    }
 </div>
 
 @if (Model.FileExists)
 {
-    <div class="container float-left">
-        <div class="form-group">
-            @Html.Label("Result Set")
-            @Html.DropDownListFor(x => x.ResultSet, new SelectList(Model.ResultSets, "Id", "Name"), "Select Result Set", new {@class = "form-control", Name = "resultSetId", id = "resultSetSelect"})
+    <div class="row">
+        
+        <div class="col-xl-12 col-md-12 mb-4">
+            <div class="form-group">
+                @Html.Label("Result Set")
+                @Html.DropDownListFor(x => x.ResultSet, new SelectList(Model.ResultSets, "Id", "Name"), "Select Result Set", new {@class = "form-control", Name = "resultSetId", id = "resultSetSelect"})
+            </div>
+            <button type="button" class="btn btn-primary" disabled id="btnImport">Import</button>
         </div>
-        <button type="button" class="btn btn-primary" disabled id="btnImport">Import</button>
+        
     </div>
 }
 

@@ -1,42 +1,46 @@
 ﻿@model MyPortal.ViewModels.SaleEntryViewModel
 @{
     ViewBag.Title = "Sale Entry";
+    ViewBag.DisplayTitle = "Sale Entry";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
-<body>
 
-<div class="container">
-    <h2 class="mp-page-title">Sale Entry</h2>
-    <hr/>
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Sale Entry</h1>
 </div>
 
-
-<div class="container">
-    @Html.Label("Product")
-    @Html.DropDownListFor(x => x.Sale.FinanceProduct, new SelectList(Model.Products, "Id", "Description"), "", new {@class = "form-control", Name = "Product", id = "productSelect"})
-    <p class="text-primary mp-bold" data-price id="price"></p>
-</div>
-
-<div class="container">
-    <div class="form-group">
-        <label>Year Group</label>
-        <select class="form-control" id="yearGroupSelect"></select>
+<div class="row">
+    
+    <div class="col-xl-12 col-md-12 mb-4">
+        @Html.Label("Product")
+        @Html.DropDownListFor(x => x.Sale.FinanceProduct, new SelectList(Model.Products, "Id", "Description"), "", new {@class = "form-control", Name = "Product", id = "productSelect"})
+        <p class="text-primary mp-bold" data-price id="price"></p>
     </div>
+
 </div>
 
-<div class="container">
-    <div class="form-group" id="selectStudentArea">
-        <label class="d-none" id="studentLabel">Student</label>
-        <select class="form-control disabled d-none" id="studentSelect"></select>
+<div class="row">
+    
+    <div class="col-xl-12 col-md-12 mb-4">
+        
+        <div class="form-group">
+            <label>Year Group</label>
+            <select class="form-control" id="yearGroupSelect"></select>
+        </div>
+
+        <div class="form-group" id="selectStudentArea">
+            <label class="d-none" id="studentLabel">Student</label>
+            <select class="form-control disabled d-none" id="studentSelect"></select>
+        </div>
+        
+        <div class="form-group">
+                <button type="button" class="btn btn-primary" id="backButton">Back</button>
+                <button class="btn btn-success d-none" id="submitButton">Make Sale</button>
+        </div>
+
     </div>
+    
 </div>
-
-<div class="container">
-    <button type="button" class="btn btn-primary" id="backButton">Back</button>
-    <button class="btn btn-success d-none" id="submitButton">Make Sale</button>
-</div>
-
-</body>
 
 @section scripts
 {

@@ -1,26 +1,37 @@
 ﻿@using MyPortal.Processes
 @model MyPortal.ViewModels.RolePermissionsViewModel
 @{
-    ViewBag.Title = "RolePermissions";
+    ViewBag.Title = "Role Permissions";
+    ViewBag.DisplayTitle = $"Permissions for {Model.Role.Name}";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<div class="container mp-page-title">
-    <h2>Permissions for @Model.Role.Name Role</h2>
-    <hr/>
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Permissions for Role: @Model.Role.Name</h1>
 </div>
 
-<div class="container">
-    @Html.EJS().Grid("Permissions").DataSource(d =>
-    {
-        d.Url($"/api/admin/rolePermissions/get/byRole/dataGrid/{Model.Role.Id}").CrossDomain(false).Adaptor("UrlAdaptor");
-    }).Columns(c =>
-    {
-        c.Field("Permission.Area").HeaderText("Area").Template("#permissionAreaTemplate").Width("200").Add();
-        c.Field("Permission.Description").HeaderText("Description").Template("#permissionDescriptionTemplate").Width("300").Add();
-        c.Field("HasPermission").HeaderText("Allow").DisplayAsCheckBox(true).Width("100").Add();
-        c.HeaderText("Actions").Template("#permissionActionsTemplate").Width("170").Add();
-    }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.IgnoreCase(true);}).Toolbar(new List<string> {"Search"}).Render()
+<div class="row">
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Permissions</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                @Html.EJS().Grid("Permissions").DataSource(d =>
+                   {
+                       d.Url($"/api/admin/rolePermissions/get/byRole/dataGrid/{Model.Role.Id}").CrossDomain(false).Adaptor("UrlAdaptor");
+                   }).Columns(c =>
+                   {
+                       c.Field("Permission.Area").HeaderText("Area").Template("#permissionAreaTemplate").Width("200").Add();
+                       c.Field("Permission.Description").HeaderText("Description").Template("#permissionDescriptionTemplate").Width("300").Add();
+                       c.Field("HasPermission").HeaderText("Allow").DisplayAsCheckBox(true).Width("100").Add();
+                       c.HeaderText("Actions").Template("#permissionActionsTemplate").Width("170").Add();
+                   }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.IgnoreCase(true);}).Toolbar(new List<string> {"Search"}).Render()
+            </div>
+        </div>
+    </div>
 </div>
 
 @section scripts

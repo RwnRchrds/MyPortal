@@ -9,18 +9,14 @@
     var gender = Model.Genders.SingleOrDefault(x => x.Value == Model.Student.Person.Gender);
 
     var genderLabel = gender == null ? "Not Specified" : gender.Name;
-
-    var pupilPremium = Model.Student.FreeSchoolMeals ? "Yes" : "No";
-    var giftedTalented = Model.Student.GiftedAndTalented ? "Yes" : "No";
-    var freeSchoolMeals = Model.Student.FreeSchoolMeals ? "Yes" : "No";
 }
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">@PeopleProcesses.GetStudentDisplayName(Model.Student).ResponseObject</h1>
-
 </div>
 
 <div class="row">
+    
     <div class="col-xl-12 col-md-12 mb-4">
         <div class="dropdown mp-btn-top inline-block">
             <button class="btn btn-primary dropdown-toggle mp-btn-top" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -34,6 +30,7 @@
             </div>
         </div>
     </div>
+    
 </div>
 
 <div class="row">
@@ -64,7 +61,7 @@
                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Attendance</div>
                         @if (Model.HasAttendaceData && Model.Attendance != null)
                         {
-                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="attendanceDetail">
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" data-hasdata="true" id="attendanceDetail">
                                 @Model.Attendance%
                             </div>
                         }
@@ -183,17 +180,14 @@
             <!-- Card Header - Dropdown -->
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary">Log Notes</h6>
-                <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(17px, 19px, 0px);">
-                        <a class="dropdown-item" data-toggle="modal" data-target="#NewLogModal">New Log Note</a>
-                    </div>
-                </div>
             </div>
             <!-- Card Body -->
             <div class="card-body">
+                
+                <button type="button" class="btn btn-success mb-4" data-toggle="modal" data-target="#NewLogModal">
+                    <i class="fa fa-plus-circle"></i> New Log Note
+                </button>
+                
                 @Html.EJS().Grid("logs").DataSource(dataManager => { dataManager.Url("/api/profiles/logs/get/byStudent/dataGrid/" + Model.Student.Id).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
                 {
                     c.Field("Date").HeaderText("Date").Template("#logDateTemplate").Width("105").Add();
@@ -472,7 +466,6 @@
         </div>
     </div>
 </div>
-</body>
 
 @section scripts
 {

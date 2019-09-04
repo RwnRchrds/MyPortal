@@ -1,22 +1,24 @@
 ﻿@using MyPortal.Processes
 @{
     ViewBag.Title = "Users";
+    ViewBag.DisplayTitle = "Users";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<body>
-
-<div class="container">
-    <h2 class="mp-page-title">Users</h2>
-    <hr/>
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Users</h1>
 </div>
 
-<div class="container">
-    @if (User.HasPermission("EditUsers"))
-    {
-        @Html.ActionLink("New User", "NewUser", "Admin", null, new {@class = "btn btn-success"})
-        <hr/>
-    }
+<div class="row">
+    
+    <div class="col-xl-12 col-md-12">
+        @if (User.HasPermission("EditUsers"))
+            {
+                @Html.ActionLink("New User", "NewUser", "Admin", null, new {@class = "btn btn-success"})
+                <hr/>
+            }
+    </div>
+    
 </div>
 
 <div class="container">
@@ -29,8 +31,6 @@
         <tbody></tbody>
     </table>
 </div>
-
-</body>
 
 @section scripts
 {
