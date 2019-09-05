@@ -12,7 +12,7 @@
 <div class="row">
     
     <div class="col-xl-12 col-md-12 mb-4">
-        @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/users/new", HttpMethod = "POST", OnSuccess = "newUserSuccess", OnFailure = "newUserFailure"}, new {id = "newUserForm"}))
+        @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiAdminCreateUser", new {}), HttpMethod = "POST", OnSuccess = "newUserSuccess", OnFailure = "newUserFailure"}, new {id = "newUserForm"}))
             {
                 <div class="form-group">
                     @Html.Label("Username")
@@ -42,13 +42,13 @@
         $(document).ready(function() {
             $("#backButton").on("click",
                 function() {
-                    location.replace("/Staff/Admin/Users");
+                    location.replace(@Url.Action("Users", "Admin"));
                 });
         });
 
         function newUserSuccess(result) {
             toastr.success(result);
-            location.replace("/Staff/Admin/Users");
+            location.replace(@Url.Action("Users", "Admin"));
         }
 
         function newUserFailure(result) {

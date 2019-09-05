@@ -111,7 +111,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/users/resetpassword", HttpMethod = "POST", OnSuccess = "resetPasswordSuccess", OnFailure = "resetPasswordFailure"}, new {id = "ResetPasswordForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiAdminChangePassword", new {}), HttpMethod = "POST", OnSuccess = "resetPasswordSuccess", OnFailure = "resetPasswordFailure"}, new {id = "ResetPasswordForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -149,7 +149,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/users/addrole", HttpMethod = "POST", OnSuccess = "addRoleSuccess", OnFailure = "addRoleFailure"}, new {id = "AddRoleForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiAdminAddUserToRole", new {}), HttpMethod = "POST", OnSuccess = "addRoleSuccess", OnFailure = "addRoleFailure"}, new {id = "AddRoleForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -221,21 +221,29 @@
 @section scripts
 {
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
+
+            var urlRemoveUserFromRole = "@Url.HttpRouteUrl("ApiAdminRemoveFromRole", new {})";
+            var urlDeleteUser = "@Url.HttpRouteUrl("ApiAdminDeleteUser", new {userId = "abcd"})";
+            var urlAttachPerson = @Url.HttpRouteUrl("ApiAttachPersonToUser", new {});
+            var urlDetachPerson = "@Url.HttpRouteUrl("ApiAdminDetachPersonFromUser", new {})";
+            var urlGetAllStaff = "@Url.HttpRouteUrl("ApiPeopleGetAllStaffMembers", new {})";
+            var urlGetAllYearGroups = "@Url.HttpRouteUrl("ApiPastoralGetAllYearGroups", new {})";
+            var urlGetStudentsByYearGroup = "@Url.HttpRouteUrl("ApiPeopleGetStudentsByYearGroup", new {yearGroupId = "abcd"})";
 
             $("#roles").on("click",
                 ".js-delete",
                 function() {
                     var button = $(this);
+                    var userId = button.attr("data-user-id");
+                    var roleName = button.attr("data-role-name");
                     bootbox.confirm("Are you sure you want to remove the user from this role?",
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: "/api/users/removerole/" +
-                                        button.attr("data-user-id") +
-                                        "/" +
-                                        button.attr("data-role-name"),
-                                    method: "DELETE",
+                                    url: urlRemoveUserFromRole,
+                                    data: {userId: userId, roleName: roleName},
+                                    method: "POST",
                                     success: function(result) {
                                         location.reload();
                                         toastr.success(result);
@@ -255,7 +263,7 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: "/api/users/delete/" + button.attr("data-user-id"),
+                                    url: urlDeleteUser.replace("abcd", button.attr("data-user-id")),
                                     method: "DELETE",
                                     success: function(result) {
                                         location.replace("/Staff/Admin/Users");
@@ -276,7 +284,7 @@
                             if (result) {
                                 var data = { Id: $("#DetachPerson").attr("data-user-id") };
                                 $.ajax({
-                                    url: "/api/users/detach",
+                                    url: urlDetachPerson,
                                     data: data,
                                     method: "POST",
                                     success: function(result) {
@@ -323,7 +331,7 @@
                     if ($("#userTypeSelect").val() !== "") {
                         if ($("#userTypeSelect").val() === "Staff") {
                             $.ajax({
-                                url: "/api/staff/fetch",
+                                url: urlGetAllStaff,
                                 method: "GET",
                                 complete: function(data) {
                                     $("#personSelect").empty();
@@ -347,7 +355,7 @@
 
                         if ($("#userTypeSelect").val() === "Student") {
                             $.ajax({
-                                url: "/api/yearGroups/fetch",
+                                url: urlGetAllYearGroups,
                                 method: "GET",
                                 complete: function(data) {
                                     $("#yearGroupSelect").empty();
@@ -374,7 +382,7 @@
                 function() {
                     if ($("#studentYearGroupSelect").val() !== "") {
                         $.ajax({
-                            url: "/api/students/yearGroup/" + $("#studentYearGroupSelect").val(),
+                            url: urlGetStudentsByYearGroup.replace("abcd", $("#studentYearGroupSelect").val()),
                             method: "GET",
                             complete: function(data) {
                                 $("#personSelect").empty();
@@ -412,7 +420,7 @@
                             PersonId: $("#personSelect").val()
                         };
                         $.ajax({
-                            url: "/api/users/attach",
+                            url: urlAttachPerson,
                             data: data,
                             method: "POST",
                             success: function() {
@@ -432,7 +440,7 @@
                             PersonId: $("#personSelect").val()
                         };
                         $.ajax({
-                            url: "/api/users/attach",
+                            url: urlAttachPerson,
                             data: data,
                             method: "POST",
                             success: function() {
