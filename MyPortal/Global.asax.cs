@@ -23,14 +23,14 @@ namespace MyPortal
             Directory.CreateDirectory(@"C:\MyPortal\Files\Results");
         }
 
-#if !DEBUG
-        protected void Application_BeginRequest()
-        {
-            if (Request.Url.Scheme != "http") return;
-            var path = "https://" + Request.Url.Host + Request.Url.PathAndQuery;
-            Response.Status = "301 Moved Permanently";
-            Response.AddHeader("Location", path);
-        }
-#endif
+//#if !DEBUG
+//        protected void Application_BeginRequest()
+//        {
+//            if (Request.Url.Scheme != "http") return;
+//            var path = "https://" + Request.Url.Host + Request.Url.PathAndQuery;
+//            Response.Status = "301 Moved Permanently";
+//            Response.AddHeader("Location", path);
+//        }
+//#endif
     }
 }

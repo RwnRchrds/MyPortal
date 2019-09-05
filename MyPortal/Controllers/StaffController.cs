@@ -528,7 +528,7 @@ namespace MyPortal.Controllers
         #endregion
 
         
-        [Route("Home")]
+        [Route("Home", Name = "StaffIndex")]
         public ActionResult Index()
         {
             var userId = User.Identity.GetUserId();

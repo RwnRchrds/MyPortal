@@ -73,6 +73,7 @@ namespace MyPortal.Controllers
         }
         
         [AllowAnonymous]
+        [Route("Account/Login", Name = "AccountLogin")]
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
@@ -87,11 +88,11 @@ namespace MyPortal.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+        public async Task<ActionResult> LoginPost(LoginViewModel model, string returnUrl)
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View("~/Views/Account/Login.cshtml", model);
             }
             
             var result =

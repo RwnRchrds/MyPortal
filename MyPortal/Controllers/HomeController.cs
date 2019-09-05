@@ -7,7 +7,7 @@ namespace MyPortal.Controllers
     public class HomeController : MyPortalController
     {
         [Authorize]
-        [Route("User/Home")]
+        [Route("User/Home", Name = "Home")]
         public ActionResult Home()
         {
             if (Request.IsAuthenticated)
