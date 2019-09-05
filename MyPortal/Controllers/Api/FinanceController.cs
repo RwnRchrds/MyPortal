@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.Principal;
 using System.Web.Http;
 using MyPortal.Dtos;
 using MyPortal.Models.Attributes;
@@ -15,63 +16,64 @@ namespace MyPortal.Controllers.Api
     public class FinanceController : MyPortalApiController
     {
         [HttpPost]
-        [RequiresPermission("AccessStudentPortal")]
-        [Route("basketItems/create")]
+        [RequiresPermission("AccessStudentStore")]
+        [Route("basketItems/create", Name = "ApiFinanceCreateBasketItem")]
         public IHttpActionResult CreateBasketItem([FromBody] FinanceBasketItem basketItem)
         {
             return PrepareResponse(FinanceProcesses.CreateBasketItem(basketItem, _context));
         }
 
-        [RequiresPermission("AccessStudentPortal")]
+        [RequiresPermission("AccessStudentStore")]
         [HttpGet]
-        [Route("basket/{studentId:int}")]
-        public IEnumerable<FinanceBasketItemDto> GetBasketItemsForStudent([FromUri] int studentId)
+        [Route("basketItems/get/byStudent/{studentId:int}", Name = "ApiFinanceGetBasketItemsByStudent")]
+        public IEnumerable<FinanceBasketItemDto> GetBasketItemsByStudent([FromUri] int studentId)
         {
-            return PrepareResponseObject(FinanceProcesses.GetBasketItemsForStudent(studentId, _context));
+            return PrepareResponseObject(FinanceProcesses.GetBasketItemsByStudent(studentId, _context));
         }
 
-        [RequiresPermission("AccessStudentPortal")]
+        [RequiresPermission("AccessStudentStore")]
         [HttpGet]
-        [Route("basket/total/{studentId:int}")]
-        public decimal GetTotal([FromUri] int studentId)
+        [Route("basket/total/{studentId:int}", Name = "ApiFinanceGetBasketTotalForStudent")]
+        public decimal GetBasketTotalForStudent([FromUri] int studentId)
         {
             return PrepareResponseObject(FinanceProcesses.GetBasketTotalForStudent(studentId, _context));
         }
 
         [HttpDelete]
-        [RequiresPermission("AccessStudentPortal")]
-        [Route("basket/remove/{basketItemId:int}")]
+        [RequiresPermission("AccessStudentStore")]
+        [Route("basketItems/delete/{basketItemId:int}", Name = "ApiFinanceDeleteBasketItem")]
         public IHttpActionResult RemoveFromBasket([FromUri] int basketItemId)
         {
             return PrepareResponse(FinanceProcesses.DeleteBasketItem(basketItemId, _context));
         }
 
         [HttpDelete]
-        [Route("products/delete/{productId:int}")]
+        [RequiresPermission("EditProducts")]
+        [Route("products/delete/{productId:int}", Name = "ApiFinanceDeleteProduct")]
         public IHttpActionResult DeleteProduct([FromUri] int productId)
         {
             return PrepareResponse(FinanceProcesses.DeleteProduct(productId, _context));
         }
 
         [HttpGet]
-        [RequiresPermission("AccessStudentPortal")]
-        [Route("products/get/available/{studentId:int}")]
-        public IEnumerable<FinanceProductDto> GetAvailableProductsForStudent([FromUri] int studentId)
+        [RequiresPermission("AccessStudentStore")]
+        [Route("products/get/available/{studentId:int}", Name = "ApiFinanceGetAvailableProductsByStudent")]
+        public IEnumerable<FinanceProductDto> GetAvailableProductsByStudent([FromUri] int studentId)
         {
-            return PrepareResponseObject(FinanceProcesses.GetAvailableProductsForStudent(studentId, _context));
+            return PrepareResponseObject(FinanceProcesses.GetAvailableProductsByStudent(studentId, _context));
         }
  
         [HttpGet]
-        [RequiresPermission("ViewProducts")]
-        [Route("products/price/{productId:int}")]
+        [RequiresPermission("ViewProducts, AccessStudentStore")]
+        [Route("products/price/{productId:int}", Name = "ApiFinanceGetProductPrice")]
         public decimal GetProductPrice([FromUri] int productId)
         {
             return PrepareResponseObject(FinanceProcesses.GetProductPrice(productId, _context));
         }
 
         [HttpGet]
-        [RequiresPermission("ViewProducts")]
-        [Route("products/get/byId/{productId:int}")]
+        [RequiresPermission("ViewProducts, AccessStudentStore")]
+        [Route("products/get/byId/{productId:int}", Name = "ApiFinanceGetProductById")]
         public FinanceProductDto GetProductById([FromUri] int productId)
         {
             return PrepareResponseObject(FinanceProcesses.GetProductById(productId, _context));
@@ -79,7 +81,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewProducts")]
-        [Route("products/get/all")]
+        [Route("products/get/all", Name = "ApiFinanceGetAllProducts")]
         public IEnumerable<FinanceProductDto> GetAllProducts()
         {
             return PrepareResponseObject(FinanceProcesses.GetAllProducts(_context));
@@ -87,8 +89,8 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewProducts")]
-        [Route("products/get/dataGrid/all")]
-        public IHttpActionResult GetAllProductsForDataGrid([FromBody] DataManagerRequest dm)
+        [Route("products/get/dataGrid/all", Name = "ApiFinanceGetAllProductsDataGrid")]
+        public IHttpActionResult GetAllProductsDataGrid([FromBody] DataManagerRequest dm)
         {
             var products = PrepareResponseObject(FinanceProcesses.GetAllProducts_DataGrid(_context));
 
@@ -97,15 +99,15 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditProducts")]
-        [Route("products/create")]
-        public IHttpActionResult NewProduct([FromBody] FinanceProduct product)
+        [Route("products/create", Name = "ApiFinanceCreateProduct")]
+        public IHttpActionResult CreateProduct([FromBody] FinanceProduct product)
         {
             return PrepareResponse(FinanceProcesses.CreateProduct(product, _context));
         }
 
         [HttpPost]
         [RequiresPermission("EditProducts")]
-        [Route("products/update")]
+        [Route("products/update", Name = "ApiFinanceUpdateProduct")]
         public IHttpActionResult UpdateProduct([FromBody] FinanceProduct product)
         {
             return PrepareResponse(FinanceProcesses.UpdateProduct(product, _context));
@@ -113,7 +115,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditSales")]
-        [Route("sales/queryBalance")]
+        [Route("sales/queryBalance", Name = "ApiFinanceAssessBalance")]
         public bool AssessBalance([FromBody] FinanceSale sale)
         {
             return PrepareResponseObject(FinanceProcesses.AssessBalance(sale, _context));
@@ -121,7 +123,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditSales")]
-        [Route("sales/delete/{saleId:int}")]
+        [Route("sales/delete/{saleId:int}", Name = "ApiFinanceDeleteSale")]
         public IHttpActionResult DeleteSale([FromUri] int saleId)
         {
             return PrepareResponse(FinanceProcesses.DeleteSale(saleId, _context));
@@ -129,7 +131,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewSales")]
-        [Route("sales/get/processed")]
+        [Route("sales/get/processed", Name = "ApiFinanceGetProcessedSales")]
         public IEnumerable<FinanceSaleDto> GetProcessedSales()
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
@@ -138,8 +140,8 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewSales")]
-        [Route("sales/get/dataGrid/processed")]
-        public IHttpActionResult GetProcessedSalesForDataGrid([FromBody] DataManagerRequest dm)
+        [Route("sales/get/dataGrid/processed", Name = "ApiFinanceGetProcessedSalesDataGrid")]
+        public IHttpActionResult GetProcessedSalesDataGrid([FromBody] DataManagerRequest dm)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             var sales = PrepareResponseObject(FinanceProcesses.GetProcessedSales_DataGrid(academicYearId, _context));
@@ -149,7 +151,7 @@ namespace MyPortal.Controllers.Api
  
         [HttpGet]
         [RequiresPermission("ViewSales")]
-        [Route("sales/get/all")]
+        [Route("sales/get/all", Name = "ApiFinanceGetAllSales")]
         public IEnumerable<FinanceSaleDto> GetAllSales()
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
@@ -158,8 +160,8 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewSales")]
-        [Route("sales/get/dataGrid/all")]
-        public IHttpActionResult GetAllSalesForDataGrid([FromBody] DataManagerRequest dm)
+        [Route("sales/get/dataGrid/all", Name = "ApiFinanceGetAllSalesDataGrid")]
+        public IHttpActionResult GetAllSalesDataGrid([FromBody] DataManagerRequest dm)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             var sales = PrepareResponseObject(FinanceProcesses.GetAllSales_DataGrid(academicYearId, _context));
@@ -169,15 +171,15 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewSales, AccessStudentPortal")]
-        [Route("sales/get/byStudent/{studentId:int}")]
-        public IEnumerable<FinanceSaleDto> GetSalesForStudent([FromUri] int studentId)
+        [Route("sales/get/byStudent/{studentId:int}", Name = "ApiFinanceGetSalesByStudent")]
+        public IEnumerable<FinanceSaleDto> GetSalesByStudent([FromUri] int studentId)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
-            return PrepareResponseObject(FinanceProcesses.GetAllSalesForStudent(studentId, academicYearId, _context));
+            return PrepareResponseObject(FinanceProcesses.GetAllSalesByStudent(studentId, academicYearId, _context));
         }
 
         [HttpGet]
-        [Route("sales/get/pending")]
+        [Route("sales/get/pending", Name = "ApiFinanceGetPendingSales")]
         [RequiresPermission("ViewSales")]
         public IEnumerable<FinanceSaleDto> GetPendingSales()
         {
@@ -186,9 +188,9 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [Route("sales/get/dataGrid/pending")]
+        [Route("sales/get/dataGrid/pending", Name = "ApiFinanceGetPendingSalesDataGrid")]
         [RequiresPermission("ViewSales")]
-        public IHttpActionResult GetPendingSalesForDataGrid([FromBody] DataManagerRequest dm)
+        public IHttpActionResult GetPendingSalesDataGrid([FromBody] DataManagerRequest dm)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             var sales = PrepareResponseObject(FinanceProcesses.GetPendingSales_DataGrid(academicYearId, _context));
@@ -198,7 +200,7 @@ namespace MyPortal.Controllers.Api
  
         [HttpPost]
         [RequiresPermission("EditSales")]
-        [Route("sales/markComplete/{saleId:int}")]
+        [Route("sales/markComplete/{saleId:int}", Name = "ApiFinanceMarkSaleProcessed")]
         public IHttpActionResult MarkSaleProcessed([FromUri] int saleId)
         {
             var saleInDb = _context.FinanceSales.Single(x => x.Id == saleId);
@@ -216,7 +218,7 @@ namespace MyPortal.Controllers.Api
  
         [HttpPost]
         [RequiresPermission("EditSales")]
-        [Route("sales/create")]
+        [Route("sales/create", Name = "ApiFinanceCreateSale")]
         public IHttpActionResult CreateSale([FromBody] FinanceSale sale)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
@@ -224,9 +226,9 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [RequiresPermission("AccessStudentPortal")]
-        [Route("sales/checkoutBasket/{studentId:int}")]
-        public IHttpActionResult Purchase([FromBody] int studentId)
+        [RequiresPermission("AccessStudentStore")]
+        [Route("sales/checkoutBasket/{studentId:int}", Name = "ApiFinanceCheckoutBasket")]
+        public IHttpActionResult CheckoutBasket([FromBody] int studentId)
         {
             AuthenticateStudentRequest(studentId);
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
@@ -236,7 +238,7 @@ namespace MyPortal.Controllers.Api
  
         [HttpPost]
         [RequiresPermission("EditSales")]
-        [Route("sales/refund/{saleId:int}")]
+        [Route("sales/refund/{saleId:int}", Name = "ApiFinanceRefundSale")]
         public IHttpActionResult RefundSale([FromUri] int saleId)
         {
             return PrepareResponse(FinanceProcesses.RefundSale(saleId, _context));
@@ -244,14 +246,14 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditAccounts")]
-        [Route("creditStudent")]
+        [Route("creditStudent", Name = "ApiFinanceCreditStudent")]
         public IHttpActionResult CreditStudentAccount([FromBody] FinanceTransaction transaction)
         {
             return PrepareResponse(FinanceProcesses.ProcessManualTransaction(transaction, _context, true));
         }
 
         [HttpPost]
-        [Route("debitStudent")]
+        [Route("debitStudent", Name = "ApiFinanceDebitStudent")]
         [RequiresPermission("EditAccounts")]
         public IHttpActionResult DebitStudentAccount([FromBody] FinanceTransaction transaction)
         {
@@ -259,7 +261,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Route("getStudentBalance/{studentId:int}")]
+        [Route("getStudentBalance/{studentId:int}", Name = "ApiFinanceGetStudentBalance")]
         public decimal GetBalance([FromUri] int studentId)
         {
             AuthenticateStudentRequest(studentId);

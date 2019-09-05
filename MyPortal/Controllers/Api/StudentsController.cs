@@ -14,7 +14,7 @@ namespace MyPortal.Controllers.Api
     {
         [HttpPost]
         [RequiresPermission("EditStudents")]
-        [Route("create")]
+        [Route("create", Name = "ApiPeopleCreateStudent")]
         public IHttpActionResult CreateStudent([FromBody] Student student)
         {
             return PrepareResponse(PeopleProcesses.CreateStudent(student, _context));
@@ -22,7 +22,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditStudents")]
-        [Route("delete/{studentId:int}")]
+        [Route("delete/{studentId:int}", Name = "ApiPeopleDeleteStudent")]
         public IHttpActionResult DeleteStudent([FromUri] int studentId)
         {
             return PrepareResponse(PeopleProcesses.DeleteStudent(studentId, _context));
@@ -30,15 +30,15 @@ namespace MyPortal.Controllers.Api
 
         [Authorize]
         [RequiresPermission("ViewStudents")]
-        [Route("get/byId/{studentId:int}")]
-        public StudentDto GetStudent(int studentId)
+        [Route("get/byId/{studentId:int}", Name = "ApiPeopleGetStudentById")]
+        public StudentDto GetStudentById(int studentId)
         {
             AuthenticateStudentRequest(studentId);
             return PrepareResponseObject(PeopleProcesses.GetStudentById(studentId, _context));
         }
 
         [RequiresPermission("ViewStudents")]
-        [Route("get/all")]
+        [Route("get/all", Name = "ApiPeopleGetAllStudents")]
         public IEnumerable<StudentDto> GetStudents()
         {
             return PrepareResponseObject(PeopleProcesses.GetAllStudents(_context));
@@ -46,8 +46,8 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewStudents")]
-        [Route("get/dataGrid/all")]
-        public IHttpActionResult GetStudentsForDataGrid([FromBody] DataManagerRequest dm)
+        [Route("get/dataGrid/all", Name = "ApiPeopleGetAllStudentsDataGrid")]
+        public IHttpActionResult GetSAllStudentsDataGrid([FromBody] DataManagerRequest dm)
         {
             var students = PrepareResponseObject(PeopleProcesses.GetAllStudents_DataGrid(_context));
 
@@ -56,7 +56,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewStudents")]
-        [Route("get/byRegGroup/{regGroupId:int}")]
+        [Route("get/byRegGroup/{regGroupId:int}", Name = "ApiPeopleGetStudentsByRegGroup")]
         public IEnumerable<StudentDto> GetStudentsByRegGroup([FromUri] int regGroupId)
         {
             return PrepareResponseObject(PeopleProcesses.GetStudentsByRegGroup(regGroupId, _context));
@@ -64,8 +64,8 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewStudents")]
-        [Route("get/byYearGroup/{yearGroupId:int}")]
-        public IEnumerable<StudentDto> GetStudentsFromYear([FromUri] int yearGroupId)
+        [Route("get/byYearGroup/{yearGroupId:int}", Name = "ApiPeopleGetStudentsByYearGroup")]
+        public IEnumerable<StudentDto> GetStudentsByYearGroup([FromUri] int yearGroupId)
         {
             return PrepareResponseObject(PeopleProcesses.GetStudentsByYearGroup(yearGroupId, _context));
         }
@@ -81,7 +81,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewStudents")]
-        [Route("hasDocuments/{studentId:int}")]
+        [Route("hasDocuments/{studentId:int}", Name = "ApiPeopleStudentHasDocuments")]
         public bool StudentHasDocuments([FromUri] int studentId)
         {
             AuthenticateStudentRequest(studentId);
@@ -90,7 +90,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewStudents")]
-        [Route("api/students/hasLogs/{studentId:int}")]
+        [Route("api/students/hasLogs/{studentId:int}", Name = "ApiPeopleStudentHasLogs")]
         public bool StudentHasLogs([FromUri] int studentId)
         {
             AuthenticateStudentRequest(studentId);
@@ -99,7 +99,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewStudents")]
-        [Route("api/students/hasResults/{studentId:int}")]
+        [Route("api/students/hasResults/{studentId:int}", Name = "ApiPeopleStudentHasResults")]
         public bool StudentHasResults([FromUri] int studentId)
         {
             AuthenticateStudentRequest(studentId);
@@ -108,7 +108,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewStudents")]
-        [Route("api/students/hasSales/{studentId:int}")]
+        [Route("api/students/hasSales/{studentId:int}", Name = "ApiPeopleStudentHasSales")]
         public bool StudentHasSales([FromUri] int studentId)
         {
             AuthenticateStudentRequest(studentId);
@@ -117,6 +117,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPut]
         [RequiresPermission("EditStudents")]
+        [Route("api/students/update", Name = "ApiPeopleUpdateStudent")]
         public IHttpActionResult UpdateStudent([FromBody] Student student)
         {
             return PrepareResponse(PeopleProcesses.UpdateStudent(student, _context));

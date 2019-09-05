@@ -32,7 +32,7 @@
             </div>
             
             <div class="card-body">
-                @Html.EJS().Grid("Roles").DataSource(d => { d.Url("/api/admin/roles/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+                @Html.EJS().Grid("Roles").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiAdminGetAllRolesDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
                 {
                     c.Field("Name").HeaderText("Role").Template("#roleNameTemplate").Width("200").Add();
                     c.HeaderText("Actions").Template("#roleActionsTemplate").Width("170").Add();
@@ -53,7 +53,7 @@
                 <h4 class="modal-title">New Study Topic</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/admin/roles/create", HttpMethod = "POST", OnSuccess = "newRolesuccess", OnFailure = "newRoleFailure"}, new {id = "newRoleForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiAdminCreateRole", new {}), HttpMethod = "POST", OnSuccess = "newRolesuccess", OnFailure = "newRoleFailure"}, new {id = "newRoleForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -79,7 +79,7 @@
                 <h4 class="modal-title">New Study Topic</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/admin/roles/update", HttpMethod = "POST", OnSuccess = "editRolesuccess", OnFailure = "editRoleFailure"}, new {id = "editRoleForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiAdminUpdateRole", new {}), HttpMethod = "POST", OnSuccess = "editRolesuccess", OnFailure = "editRoleFailure"}, new {id = "editRoleForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -103,7 +103,13 @@
 @section scripts
 {
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
+
+            var urlDeleteRole = "@Url.HttpRouteUrl("ApiAdminDeleteRole", new { roleId = "abcd" })";
+            var urlGetRoleById = "@Url.HttpRouteUrl("ApiAdminGetRoleById", new { roleId = "abcd" })";
+
+            var urlRolePermissions = "@Url.RouteUrl("AdminRolePermissions", new { roleId = "abcd" })";
+
             $('.modal').on('hidden.bs.modal',
                 function() {
                     $(this).find('form').trigger('reset');
@@ -117,7 +123,7 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: "/api/admin/roles/delete" + button.attr("data-role-id"),
+                                    url: urlDeleteRole.replace("abcd", button.attr("data-role-id")),
                                     method: "DELETE",
                                     success: function(result) {
                                         refreshTable("Roles");
@@ -135,9 +141,9 @@
                 ".js-edit",
                 function() {
                     var button = $(this);
-                    var logId = button.attr("data-role-id");
+                    var roleId = button.attr("data-role-id");
                     $.ajax({
-                        url: "/api/admin/roles/get/byId/" + logId,
+                        url: urlGetRoleById.replace("abcd", roleId),
                         method: "GET",
                         success: function(result) {
                             $("#EditRoleNameControl").val(result["name"]);
@@ -155,7 +161,7 @@
                 function () {
                     var button = $(this);
                     var roleId = button.attr("data-role-id");
-                    location.replace("/Staff/Admin/Roles/Permissions/" + roleId);
+                    location.replace(urlRolePermissions.replace("abcd", roleId));
                 });
         });
 

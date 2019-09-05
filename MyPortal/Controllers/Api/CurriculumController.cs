@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Principal;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
@@ -16,22 +17,22 @@ namespace MyPortal.Controllers.Api
     public class CurriculumController : MyPortalApiController
     {
         [HttpGet]
-        [Route("academicYears/get/all")]
+        [Route("academicYears/get/all", Name = "ApiCurriculumGetAcademicYears")]
         public IEnumerable<CurriculumAcademicYearDto> GetAcademicYears()
         {
             return PrepareResponseObject(CurriculumProcesses.GetAcademicYears(_context));
         }
 
         [HttpGet]
-        [Route("academicYears/get/byId/{academicYearId:int}")]
-        public CurriculumAcademicYearDto GetAcademicYear([FromUri] int academicYearId)
+        [Route("academicYears/get/byId/{academicYearId:int}", Name = "ApiCurriculumGetAcademicYearById")]
+        public CurriculumAcademicYearDto GetAcademicYearById([FromUri] int academicYearId)
         {
             return PrepareResponseObject(CurriculumProcesses.GetAcademicYear(academicYearId, _context));
         }
 
         [HttpPost]
         [RequiresPermission("ChangeAcademicYear")]
-        [Route("academicYears/select")]    
+        [Route("academicYears/select", Name = "ApiCurriculumChangeSelectedAcademicYear")]
         public IHttpActionResult ChangeSelectedAcademicYear([FromBody] CurriculumAcademicYear year)
         {
             User.ChangeSelectedAcademicYear(year.Id);
@@ -40,32 +41,32 @@ namespace MyPortal.Controllers.Api
         
         [HttpGet]
         [RequiresPermission("ViewSessions")]
-        [Route("sessions/get/byTeacher/{teacherId:int}/{date:datetime}")]
-        public IEnumerable<CurriculumSessionDto> GetSessionsForTeacher([FromUri] int teacherId, [FromUri] DateTime date)
+        [Route("sessions/get/byTeacher/{teacherId:int}/{date:datetime}", Name = "ApiCurriculumGetSessionsByTeacher")]
+        public IEnumerable<CurriculumSessionDto> GetSessionsByTeacher([FromUri] int teacherId, [FromUri] DateTime date)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             return PrepareResponseObject(
-                CurriculumProcesses.GetSessionsForTeacher(teacherId, academicYearId, date, _context));
+                CurriculumProcesses.GetSessionsByTeacher(teacherId, academicYearId, date, _context));
         }
 
         [HttpPost]
         [RequiresPermission("ViewSessions")]
-        [Route("sessions/get/byTeacher/dataGrid/{teacherId:int}/{date:datetime}")]
-        public IHttpActionResult GetSessionsForTeacher_DataGrid([FromUri] int teacherId, [FromUri] DateTime date,
+        [Route("sessions/get/byTeacher/dataGrid/{teacherId:int}/{date:datetime}", Name = "ApiCurriculumGetSessionsByTeacherDataGrid")]
+        public IHttpActionResult GetSessionsByTeacherDataGrid([FromUri] int teacherId, [FromUri] DateTime date,
             [FromBody] DataManagerRequest dm)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             var sessions =
                 PrepareResponseObject(
-                    CurriculumProcesses.GetSessionsForTeacher_DataGrid(teacherId, academicYearId, date, _context));
+                    CurriculumProcesses.GetSessionsByTeacher_DataGrid(teacherId, academicYearId, date, _context));
 
             return PrepareDataGridObject(sessions, dm);
         }
 
         [HttpGet]
         [RequiresPermission("ViewClasses")]
-        [Route("classes/get/all")]
+        [Route("classes/get/all", Name = "ApiCurriculumGetAllClasses")]
         public IEnumerable<CurriculumClassDto> GetAllClasses()
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
@@ -75,8 +76,8 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewClasses")]
-        [Route("classes/get/dataGrid/all")]
-        public IHttpActionResult GetAllClasses_DataGrid([FromBody] DataManagerRequest dm)
+        [Route("classes/get/dataGrid/all", Name = "ApiCurriculumGetAllClassesDataGrid")]
+        public IHttpActionResult GetAllClassesDataGrid([FromBody] DataManagerRequest dm)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             var classes = PrepareResponseObject(CurriculumProcesses.GetAllClasses_DataGrid(academicYearId, _context));
@@ -86,7 +87,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewClasses")]
-        [Route("classes/get/byId/{classId:int}")]
+        [Route("classes/get/byId/{classId:int}", Name = "ApiCurriculumGetClassById")]
         public CurriculumClassDto GetClassById([FromUri] int classId)
         {
             return PrepareResponseObject(CurriculumProcesses.GetClassById(classId, _context));
@@ -94,7 +95,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditClasses")]
-        [Route("classes/create")]
+        [Route("classes/create", Name = "ApiCurriculumCreateClass")]
         public IHttpActionResult CreateClass([FromBody] CurriculumClass @class)
         {
             @class.AcademicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
@@ -103,7 +104,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditClasses")]
-        [Route("classes/update")]
+        [Route("classes/update", Name = "ApiCurriculumUpdateClass")]
         public IHttpActionResult UpdateClass([FromBody] CurriculumClass @class)
         {
             return PrepareResponse(CurriculumProcesses.UpdateClass(@class, _context));
@@ -111,7 +112,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditClasses")]
-        [Route("classes/delete/{classId:int}")]
+        [Route("classes/delete/{classId:int}", Name = "ApiCurriculumDeleteClass")]
         public IHttpActionResult DeleteClass([FromUri] int classId)
         {
             return PrepareResponse(CurriculumProcesses.DeleteClass(classId, _context));
@@ -119,7 +120,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewSessions")]
-        [Route("sessions/get/byClass/{classId:int}")]
+        [Route("sessions/get/byClass/{classId:int}", Name = "ApiCurriculumGetSessionsByClass")]
         public IEnumerable<CurriculumSessionDto> GetSessionsByClass([FromUri] int classId)
         {
             return PrepareResponseObject(CurriculumProcesses.GetSessionsForClass(classId, _context));
@@ -127,7 +128,7 @@ namespace MyPortal.Controllers.Api
 
         [RequiresPermission("ViewSessions")]
         [HttpPost]
-        [Route("sessions/get/byClass/dataGrid/{classId:int}")]
+        [Route("sessions/get/byClass/dataGrid/{classId:int}", Name = "ApiCurriculumGetSessionsByClassDataGrid")]
         public IHttpActionResult GetSessionsByClassDataGrid([FromUri] int classId, [FromBody] DataManagerRequest dm)
         {
             var sessions = PrepareResponseObject(CurriculumProcesses.GetSessionsForClass_DataGrid(classId, _context));
@@ -137,7 +138,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewSessions")]
-        [Route("sessions/get/byId/{sessionId:int}")]
+        [Route("sessions/get/byId/{sessionId:int}", Name = "ApiCurriculumGetSessionById")]
         public CurriculumSessionDto GetSessionById([FromUri] int sessionId)
         {
             return PrepareResponseObject(CurriculumProcesses.GetSessionById(sessionId, _context));
@@ -145,7 +146,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditClasses")]
-        [Route("sessions/create")]
+        [Route("sessions/create", Name = "ApiCurriculumCreateSession")]
         public IHttpActionResult CreateSession([FromBody] CurriculumSession session)
         {
             return PrepareResponse(CurriculumProcesses.CreateSession(session, _context));
@@ -153,7 +154,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditClasses")]
-        [Route("sessions/addRegPeriods")]
+        [Route("sessions/addRegPeriods", Name = "ApiCurriculumCreateSessionsForRegPeriods")]
         public IHttpActionResult CreateSessionsForRegPeriods([FromBody] CurriculumSession session)
         {
             return PrepareResponse(CurriculumProcesses.CreateSessionForRegPeriods(session, _context));
@@ -161,7 +162,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditClasses")]
-        [Route("sessions/update")]
+        [Route("sessions/update", Name = "ApiCurriculumUpdateSession")]
         public IHttpActionResult UpdateSession([FromBody] CurriculumSession session)
         {
             return PrepareResponse(CurriculumProcesses.UpdateSession(session, _context));
@@ -169,7 +170,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditClasses")]
-        [Route("sessions/delete/{sessionId:int}")]
+        [Route("sessions/delete/{sessionId:int}", Name = "ApiCurriculumDeleteSession")]
         public IHttpActionResult DeleteSession([FromUri] int sessionId)
         {
             return PrepareResponse(CurriculumProcesses.DeleteSession(sessionId, _context));
@@ -177,7 +178,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewEnrolments")]
-        [Route("enrolments/get/byClass/{classId:int}")]
+        [Route("enrolments/get/byClass/{classId:int}", Name = "ApiCurriculumGetEnrolmentsForClass")]
         public IEnumerable<CurriculumEnrolmentDto> GetEnrolmentsForClass([FromUri] int classId)
         {
             return PrepareResponseObject(CurriculumProcesses.GetEnrolmentsForClass(classId, _context));
@@ -185,8 +186,8 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewEnrolments")]
-        [Route("enrolments/get/byClass/dataGrid/{classId:int}")]
-        public IHttpActionResult GetEnrolmentsForClassForDataGrid([FromUri] int classId,
+        [Route("enrolments/get/byClass/dataGrid/{classId:int}", Name = "ApiCurriculumGetEnrolmentsForClassDataGrid")]
+        public IHttpActionResult GetEnrolmentsForClassDataGrid([FromUri] int classId,
             [FromBody] DataManagerRequest dm)
         {
             var enrolments =
@@ -197,16 +198,16 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewEnrolments")]
-        [Route("enrolments/get/byStudent/{studentId:int}")]
-        public IEnumerable<CurriculumEnrolmentDto> GetEnrolmentsForStudent([FromUri] int studentId)
+        [Route("enrolments/get/byStudent/{studentId:int}", Name = "ApiCurriculumGetEnrolmentsByStudent")]
+        public IEnumerable<CurriculumEnrolmentDto> GetEnrolmentsByStudent([FromUri] int studentId)
         {
             return PrepareResponseObject(CurriculumProcesses.GetEnrolmentsForStudent(studentId, _context));
         }
 
         [HttpPost]
         [RequiresPermission("ViewEnrolments")]
-        [Route("enrolments/get/byStudent/dataGrid/{studentId:int}")]
-        public IHttpActionResult GetEnrolmentsForStudentForDataGrid([FromUri] int studentId,
+        [Route("enrolments/get/byStudent/dataGrid/{studentId:int}", Name = "ApiCurriculumGetEnrolmentsByStudentDataGrid")]
+        public IHttpActionResult GetEnrolmentsByStudentDataGrid([FromUri] int studentId,
             [FromBody] DataManagerRequest dm)
         {
             var enrolments =
@@ -217,7 +218,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewEnrolments")]
-        [Route("enrolments/get/byId/{enrolmentId:int}")]
+        [Route("enrolments/get/byId/{enrolmentId:int}", Name = "ApiCurriculumGetEnrolment")]
         public CurriculumEnrolmentDto GetEnrolment([FromUri] int enrolmentId)
         {
             return PrepareResponseObject(CurriculumProcesses.GetEnrolmentById(enrolmentId, _context));
@@ -225,7 +226,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditClasses")]
-        [Route("enrolments/create")]
+        [Route("enrolments/create", Name = "ApiCurriculumCreateEnrolment")]
         public IHttpActionResult CreateEnrolment([FromBody] CurriculumEnrolment enrolment)
         {
             return PrepareResponse(CurriculumProcesses.CreateEnrolment(enrolment, _context));
@@ -233,7 +234,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditClasses")]
-        [Route("enrolments/create/group")]
+        [Route("enrolments/create/group", Name = "ApiCurriculumEnrolRegGroup")]
         public IHttpActionResult EnrolRegGroup([FromBody] GroupEnrolment enrolment)
         {
             return PrepareResponse(CurriculumProcesses.CreateEnrolmentsForRegGroup(enrolment, _context));
@@ -241,7 +242,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditClasses")]
-        [Route("classes/enrolments/delete/{enrolmentId:int}")]
+        [Route("classes/enrolments/delete/{enrolmentId:int}", Name = "ApiCurriculumDeleteEnrolment")]
         public IHttpActionResult DeleteEnrolment([FromUri] int enrolmentId)
         {
             return PrepareResponse(CurriculumProcesses.DeleteEnrolment(enrolmentId, _context));
@@ -249,7 +250,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditSubjects")]
-        [Route("subjects/new")]
+        [Route("subjects/new", Name = "ApiCurriculumCreateSubject")]
         public IHttpActionResult CreateSubject([FromBody] CurriculumSubject subject)
         {
             return PrepareResponse(CurriculumProcesses.CreateSubject(subject, _context));
@@ -257,7 +258,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditSubjects")]
-        [Route("subjects/delete/{subjectId:int}")]
+        [Route("subjects/delete/{subjectId:int}", Name = "ApiCurriculumDeleteSubject")]
         public IHttpActionResult DeleteSubject([FromUri] int subjectId)
         {
             return PrepareResponse(CurriculumProcesses.DeleteSubject(subjectId, _context));
@@ -265,7 +266,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("EditSubjects")]
-        [Route("subjects/get/byId/{subjectId:int}")]
+        [Route("subjects/get/byId/{subjectId:int}", Name = "ApiCurriculumGetSubjectById")]
         public CurriculumSubjectDto GetSubjectById([FromUri] int subjectId)
         {
             return PrepareResponseObject(CurriculumProcesses.GetSubjectById(subjectId, _context));
@@ -273,7 +274,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("EditSubjects")]
-        [Route("subjects/get/all")]
+        [Route("subjects/get/all", Name = "ApiCurriculumGetAllSubjects")]
         public IEnumerable<CurriculumSubjectDto> GetAllSubjects()
         {
             return PrepareResponseObject(CurriculumProcesses.GetAllSubjects(_context));
@@ -281,8 +282,8 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditSubjects")]
-        [Route("subjects/get/dataGrid/all")]
-        public IHttpActionResult GetAllSubjectsForDataGrid([FromBody] DataManagerRequest dm)
+        [Route("subjects/get/dataGrid/all", Name = "ApiCurriculumGetAllSubjectsDataGrid")]
+        public IHttpActionResult GetAllSubjectsDataGrid([FromBody] DataManagerRequest dm)
         {
             var subjects = PrepareResponseObject(CurriculumProcesses.GetAllSubjects_DataGrid(_context));
 
@@ -291,7 +292,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditSubjects")]
-        [Route("subjects/update")]
+        [Route("subjects/update", Name = "ApiCurriculumUpdateSubject")]
         public IHttpActionResult UpdateSubject([FromBody] CurriculumSubject subject)
         {
             return PrepareResponse(CurriculumProcesses.UpdateSubject(subject, _context));
@@ -299,7 +300,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditStudyTopics")]
-        [Route("studyTopics/create")]
+        [Route("studyTopics/create", Name = "ApiCurriculumCreateStudyTopic")]
         public IHttpActionResult CreateStudyTopic([FromBody] CurriculumStudyTopic studyTopic)
         {
             return PrepareResponse(CurriculumProcesses.CreateStudyTopic(studyTopic, _context));
@@ -307,7 +308,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditStudyTopics")]
-        [Route("studyTopics/delete/{studyTopicId:int}")]
+        [Route("studyTopics/delete/{studyTopicId:int}", Name = "ApiCurriculumDeleteStudyTopic")]
         public IHttpActionResult DeleteStudyTopic([FromUri] int studyTopicId)
         {
             return PrepareResponse(CurriculumProcesses.DeleteStudyTopic(studyTopicId, _context));
@@ -315,15 +316,15 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewStudyTopics")]
-        [Route("studyTopics/get/byId/{studyTopicId:int}")]
-        public CurriculumStudyTopicDto GetStudyTopic([FromUri] int studyTopicId)
+        [Route("studyTopics/get/byId/{studyTopicId:int}", Name = "ApiCurriculumGetStudyTopicById")]
+        public CurriculumStudyTopicDto GetStudyTopicById([FromUri] int studyTopicId)
         {
             return PrepareResponseObject(CurriculumProcesses.GetStudyTopicById(studyTopicId, _context));
         }
 
         [HttpGet]
         [RequiresPermission("ViewStudyTopics")]
-        [Route("studyTopics/get/all")]
+        [Route("studyTopics/get/all", Name = "ApiCurriculumGetAllStudyTopics")]
         public IEnumerable<CurriculumStudyTopicDto> GetAllStudyTopics()
         {
             return PrepareResponseObject(CurriculumProcesses.GetAllStudyTopics(_context));
@@ -331,8 +332,8 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewStudyTopics")]
-        [Route("studyTopics/get/dataGrid/all")]
-        public IHttpActionResult GetAllStudyTopics([FromBody] DataManagerRequest dm)
+        [Route("studyTopics/get/dataGrid/all", Name = "ApiCurriculumGetAllStudyTopicsDataGrid")]
+        public IHttpActionResult GetAllStudyTopicsDataGrid([FromBody] DataManagerRequest dm)
         {
             var studyTopics = PrepareResponseObject(CurriculumProcesses.GetAllStudyTopics_DataGrid(_context));
 
@@ -341,7 +342,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditStudyTopics")]
-        [Route("studyTopics/update")]
+        [Route("studyTopics/update", Name = "ApiCurriculumUpdateStudyTopics")]
         public IHttpActionResult UpdateStudyTopic([FromBody] CurriculumStudyTopic studyTopic)
         {
             return PrepareResponse(CurriculumProcesses.UpdateStudyTopic(studyTopic, _context));
@@ -349,15 +350,15 @@ namespace MyPortal.Controllers.Api
         
         [HttpGet]
         [RequiresPermission("ViewLessonPlans")]
-        [Route("lessonPlans/get/all")]
-        public IEnumerable<CurriculumLessonPlanDto> GetLessonPlans()
+        [Route("lessonPlans/get/all", Name = "ApiCurriculumGetAllLessonPlans")]
+        public IEnumerable<CurriculumLessonPlanDto> GetAllLessonPlans()
         {
             return PrepareResponseObject(CurriculumProcesses.GetAllLessonPlans(_context));
         }
         
         [HttpGet]
         [RequiresPermission("ViewLessonPlans")]
-        [Route("lessonPlans/get/byId/{lessonPlanId:int}")]
+        [Route("lessonPlans/get/byId/{lessonPlanId:int}", Name = "ApiCurriculumGetLessonPlanById")]
         public CurriculumLessonPlanDto GetLessonPlanById([FromUri] int lessonPlanId)
         {
             return PrepareResponseObject(CurriculumProcesses.GetLessonPlanById(lessonPlanId, _context));
@@ -365,7 +366,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewLessonPlans")]
-        [Route("lessonPlans/get/byTopic/{studyTopicId:int}")]
+        [Route("lessonPlans/get/byTopic/{studyTopicId:int}", Name = "ApiCurriculumGetLessonPlansByTopic")]
         public IEnumerable<CurriculumLessonPlanDto> GetLessonPlansByTopic([FromUri] int studyTopicId)
         {
             return PrepareResponseObject(CurriculumProcesses.GetLessonPlansByStudyTopic(studyTopicId, _context));
@@ -373,8 +374,8 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewLessonPlans")]
-        [Route("lessonPlans/get/byTopic/dataGrid/{studyTopicId:int}")]
-        public IHttpActionResult GetLessonPlansByTopicDataGrid([FromUri] int studyTopicId,
+        [Route("lessonPlans/get/byTopic/dataGrid/{studyTopicId:int}", Name = "ApiCurriculumGetLessonPlansByStudyTopicDatagrid")]
+        public IHttpActionResult GetLessonPlansByStudyTopicDataGrid([FromUri] int studyTopicId,
             [FromBody] DataManagerRequest dm)
         {
             var lessonPlans =
@@ -385,7 +386,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditLessonPlans")]
-        [Route("lessonPlans/create")]
+        [Route("lessonPlans/create", Name = "ApiCurriculumCreateLessonPlan")]
         public IHttpActionResult CreateLessonPlan([FromBody] CurriculumLessonPlan plan)
         {
             var userId = User.Identity.GetUserId();
@@ -394,7 +395,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditLessonPlans")]
-        [Route("lessonPlans/update")]
+        [Route("lessonPlans/update", Name = "ApiCurriculumUpdateLessonPlan")]
         public IHttpActionResult UpdateLessonPlan([FromBody] CurriculumLessonPlan plan)
         {
             return PrepareResponse(CurriculumProcesses.UpdateLessonPlan(plan, _context));
@@ -402,7 +403,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditLessonPlans")]
-        [Route("lessonPlans/delete/{lessonPlanId:int}")]
+        [Route("lessonPlans/delete/{lessonPlanId:int}", Name = "ApiCurriculumDeleteLessonPlan")]
         public IHttpActionResult DeleteLessonPlan([FromUri] int lessonPlanId)
         {
             return PrepareResponse(CurriculumProcesses.DeleteLessonPlan(lessonPlanId, _context));

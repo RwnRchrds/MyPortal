@@ -239,7 +239,7 @@ namespace MyPortal.Processes
                     .ThenBy(x => x.StartTime).Select(Mapper.Map<AttendancePeriod, AttendancePeriodDto>));
         }
 
-        public static ProcessResponse<AttendancePeriodDto> GetPeriod(int periodId, MyPortalDbContext context)
+        public static ProcessResponse<AttendancePeriodDto> GetPeriodById(int periodId, MyPortalDbContext context)
         {
             var period = context.AttendancePeriods.SingleOrDefault(x => x.Id == periodId);
 
@@ -252,7 +252,7 @@ namespace MyPortal.Processes
                 Mapper.Map<AttendancePeriod, AttendancePeriodDto>(period));
         }
 
-        public static ProcessResponse<object> CreateAttendanceWeeksForYear(int academicYearId,
+        public static ProcessResponse<object> CreateAttendanceWeeksForAcademicYear(int academicYearId,
             MyPortalDbContext context)
         {
             var academicYear = context.CurriculumAcademicYears.SingleOrDefault(x => x.Id == academicYearId);

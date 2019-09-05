@@ -63,7 +63,7 @@ namespace MyPortal.Processes
                 Mapper.Map<ProfileLog, ProfileLogDto>(log));
         }
 
-        public static ProcessResponse<IEnumerable<ProfileLogDto>> GetLogsForStudent(int studentId,
+        public static ProcessResponse<IEnumerable<ProfileLogDto>> GetLogsByStudent(int studentId,
             int academicYearId, MyPortalDbContext context)
         {
             return new ProcessResponse<IEnumerable<ProfileLogDto>>(ResponseType.Ok, null, context.ProfileLogs
@@ -73,7 +73,7 @@ namespace MyPortal.Processes
                 .Select(Mapper.Map<ProfileLog, ProfileLogDto>));
         }
 
-        public static ProcessResponse<IEnumerable<GridProfileLogDto>> GetLogsForStudent_DataGrid(int studentId,
+        public static ProcessResponse<IEnumerable<GridProfileLogDto>> GetLogsByStudent_DataGrid(int studentId,
             int academicYearId, MyPortalDbContext context)
         {
             var logs = context.ProfileLogs

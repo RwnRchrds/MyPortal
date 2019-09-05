@@ -170,7 +170,7 @@ namespace MyPortal.Processes
             return new ProcessResponse<IEnumerable<CurriculumSession>>(ResponseType.Ok, null, classList);
         }
 
-        public static ProcessResponse<IEnumerable<CurriculumSessionDto>> GetSessionsForTeacher(int staffId, int academicYearId, DateTime date,
+        public static ProcessResponse<IEnumerable<CurriculumSessionDto>> GetSessionsByTeacher(int staffId, int academicYearId, DateTime date,
             MyPortalDbContext context)
         {
             var classList = GetSessionsForTeacher_Model(staffId, academicYearId, date, context).ResponseObject
@@ -179,7 +179,7 @@ namespace MyPortal.Processes
             return new ProcessResponse<IEnumerable<CurriculumSessionDto>>(ResponseType.Ok, null, classList);
         }
 
-        public static ProcessResponse<IEnumerable<GridCurriculumSessionDto>> GetSessionsForTeacher_DataGrid(int staffId, int academicYearId, DateTime date,
+        public static ProcessResponse<IEnumerable<GridCurriculumSessionDto>> GetSessionsByTeacher_DataGrid(int staffId, int academicYearId, DateTime date,
             MyPortalDbContext context)
         {
             var classList = GetSessionsForTeacher_Model(staffId, academicYearId, date, context).ResponseObject

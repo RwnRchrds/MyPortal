@@ -15,7 +15,7 @@ namespace MyPortal.Controllers.Api
     {
         [HttpPost]
         [RequiresPermission("EditBulletins")]
-        [Route("bulletins/create")]
+        [Route("bulletins/create", Name = "ApiSystemCreateBulletin")]
         public async Task<IHttpActionResult> CreateBulletin([FromBody] SystemBulletin bulletin)
         {
             var userId = User.Identity.GetUserId();
@@ -29,6 +29,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditBulletins")]
+        [Route("bulletins/update", Name = "ApiSystemUpdateBulletin")]
         public IHttpActionResult UpdateBulletin([FromBody] SystemBulletin bulletin)
         {
             var approvable = User.HasPermission("ApproveBulletins");
@@ -38,7 +39,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditBulletins")]
-        [Route("bulletins/delete/{bulletinId:int}")]
+        [Route("bulletins/delete/{bulletinId:int}", Name = "ApiSystemDeleteBulletin")]
         public IHttpActionResult DeleteBulletin([FromUri] int bulletinId)
         {
             return PrepareResponse(SystemProcesses.DeleteBulletin(bulletinId, _context));
@@ -46,7 +47,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ApproveBulletins")]
-        [Route("bulletins/get/all")]
+        [Route("bulletins/get/all", Name = "ApiSystemGetAllBulletins")]
         public IEnumerable<SystemBulletinDto> GetAllBulletins()
         {
             return PrepareResponseObject(SystemProcesses.GetAllBulletins(_context));
@@ -54,7 +55,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewStaffBulletins")]
-        [Route("bulletins/get/approved")]
+        [Route("bulletins/get/approved", Name = "ApiSystemGetApprovedBulletins")]
         public IEnumerable<SystemBulletinDto> GetApprovedBulletins()
         {
             return PrepareResponseObject(SystemProcesses.GetApprovedBulletins(_context));
@@ -62,7 +63,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewStaffBulletins")]
-        [Route("bulletins/get/own")]
+        [Route("bulletins/get/own", Name = "ApiSystemGetOwnBulletins")]
         public IEnumerable<SystemBulletinDto> GetOwnBulletins()
         {
             var userId = User.Identity.GetUserId();
@@ -71,7 +72,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewStudentBulletins")]
-        [Route("bulletins/get/student")]
+        [Route("bulletins/get/student", Name = "ApiSystemGetStudentBulletins")]
         public IEnumerable<SystemBulletinDto> GetStudentBulletins()
         {
             return PrepareResponseObject(SystemProcesses.GetApprovedStudentBulletins(_context));

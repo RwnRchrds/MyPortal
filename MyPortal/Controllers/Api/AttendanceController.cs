@@ -17,7 +17,7 @@ namespace MyPortal.Controllers.Api
     {
         [HttpGet]
         [RequiresPermission("TakeRegister")]
-        [Route("marks/takeRegister/{weekId:int}/{sessionId:int}")]
+        [Route("marks/takeRegister/{weekId:int}/{sessionId:int}", Name = "ApiAttendanceLoadRegister")]
         public IEnumerable<StudentAttendanceMarkSingular> LoadRegister([FromUri] int weekId, [FromUri] int sessionId)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
@@ -29,8 +29,8 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("TakeRegister")]
-        [Route("marks/takeRegister/dataGrid/{weekId:int}/{sessionId:int}")]
-        public IHttpActionResult LoadRegisterForDataGrid([FromBody] DataManagerRequest dm, [FromUri] int weekId,
+        [Route("marks/takeRegister/dataGrid/{weekId:int}/{sessionId:int}", Name = "ApiAttendanceLoadRegisterDataGrid")]
+        public IHttpActionResult LoadRegisterDataGrid([FromBody] DataManagerRequest dm, [FromUri] int weekId,
             [FromUri] int sessionId)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
@@ -45,7 +45,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("TakeRegister")]
-        [Route("marks/saveRegister")]
+        [Route("marks/saveRegister", Name = "ApiAttendanceSaveRegisterMarks")]
         public IHttpActionResult SaveRegisterMarks(DataGridUpdate<StudentAttendanceMarkSingular> register)
         {
             if (register.Changed != null)
@@ -58,7 +58,7 @@ namespace MyPortal.Controllers.Api
         
         [HttpGet]
         [RequiresPermission("ViewAttendance")]
-        [Route("summary/raw/{studentId:int}")]
+        [Route("summary/raw/{studentId:int}", Name = "ApiAttendanceGetRawAttendanceSummary")]
         public AttendanceSummary GetRawAttendanceSummary([FromUri] int studentId)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
@@ -70,7 +70,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewAttendance")]
-        [Route("summary/percent/{studentId:int}")]
+        [Route("summary/percent/{studentId:int}", Name = "ApiAttendanceGetPercentageAttendanceSummary")]
         public AttendanceSummary GetPercentageAttendanceSummary([FromUri] int studentId)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
@@ -81,29 +81,29 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Route("periods/get/all")]
+        [Route("periods/get/all", Name = "ApiAttendanceGetAllPeriods")]
         public IEnumerable<AttendancePeriodDto> GetAllPeriods()
         {
             return PrepareResponseObject(AttendanceProcesses.GetAllPeriods(_context));
         }
 
         [HttpGet]
-        [Route("periods/get/byId/{periodId:int}")]
-        public AttendancePeriodDto GetPeriod([FromUri] int periodId)
+        [Route("periods/get/byId/{periodId:int}", Name = "ApiAttendanceGetPeriodById")]
+        public AttendancePeriodDto GetPeriodById([FromUri] int periodId)
         {
-            return PrepareResponseObject(AttendanceProcesses.GetPeriod(periodId, _context));
+            return PrepareResponseObject(AttendanceProcesses.GetPeriodById(periodId, _context));
         }
 
         [HttpPost]
         [RequiresPermission("EditAcademicYears")]
-        [Route("weeks/createForYear/{academicYearId:int}")]
-        public IHttpActionResult CreateWeeks([FromUri] int academicYearId)
+        [Route("weeks/createForYear/{academicYearId:int}", Name = "ApiAttendanceCreateAttendanceWeeksForAcademicYear")]
+        public IHttpActionResult CreateAttendanceWeeksForAcademicYear([FromUri] int academicYearId)
         {
-            return PrepareResponse(AttendanceProcesses.CreateAttendanceWeeksForYear(academicYearId, _context));
+            return PrepareResponse(AttendanceProcesses.CreateAttendanceWeeksForAcademicYear(academicYearId, _context));
         }
 
         [HttpGet]
-        [Route("weeks/get/byDate/{date:datetime}")]
+        [Route("weeks/get/byDate/{date:datetime}", Name = "ApiAttendanceGetWeekByDate")]
         public AttendanceWeekDto GetWeekByDate([FromUri] DateTime date)
         {
              var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);

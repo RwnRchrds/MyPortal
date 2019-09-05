@@ -46,7 +46,7 @@ namespace MyPortal.Processes
             return new ProcessResponse<object>(ResponseType.Ok, "Item added to basket", null);
         }
 
-        public static ProcessResponse<IEnumerable<FinanceBasketItemDto>> GetBasketItemsForStudent(int studentId, MyPortalDbContext context)
+        public static ProcessResponse<IEnumerable<FinanceBasketItemDto>> GetBasketItemsByStudent(int studentId, MyPortalDbContext context)
         {
             return new ProcessResponse<IEnumerable<FinanceBasketItemDto>>(ResponseType.Ok, null,
                 context.FinanceBasketItems
@@ -96,7 +96,7 @@ namespace MyPortal.Processes
             return new ProcessResponse<object>(ResponseType.Ok, "Product deleted", null);
         }
 
-        public static ProcessResponse<IEnumerable<FinanceProductDto>> GetAvailableProductsForStudent(int studentId,
+        public static ProcessResponse<IEnumerable<FinanceProductDto>> GetAvailableProductsByStudent(int studentId,
             MyPortalDbContext context)
         {
             var items = context.FinanceProducts
@@ -277,7 +277,7 @@ namespace MyPortal.Processes
                     .Select(Mapper.Map<FinanceSale, GridFinanceSaleDto>));
         }
 
-        public static ProcessResponse<IEnumerable<FinanceSaleDto>> GetAllSalesForStudent(int studentId,
+        public static ProcessResponse<IEnumerable<FinanceSaleDto>> GetAllSalesByStudent(int studentId,
             int academicYearId, MyPortalDbContext context)
         {
             return new ProcessResponse<IEnumerable<FinanceSaleDto>>(ResponseType.Ok, null, context.FinanceSales

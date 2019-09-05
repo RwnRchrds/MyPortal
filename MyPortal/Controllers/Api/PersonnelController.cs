@@ -15,7 +15,7 @@ namespace MyPortal.Controllers.Api
     {
         [HttpPost]
         [RequiresPermission("EditTrainingCertificates")]
-        [Route("certificates/create")]
+        [Route("certificates/create", Name = "ApiPersonnelCreateTrainingCertificate")]
         public IHttpActionResult CreateTrainingCertificate([FromBody] PersonnelTrainingCertificate certificate)
         {
             var userId = User.Identity.GetUserId();
@@ -24,7 +24,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditTrainingCertificates")]
-        [Route("certificates/delete/{staffId:int}/{courseId:int}")]
+        [Route("certificates/delete/{staffId:int}/{courseId:int}", Name = "ApiPersonnelDeleteTrainingCertificate")]
         public IHttpActionResult DeleteCertificate([FromUri] int staffId, [FromUri] int courseId)
         {
             var userId = User.Identity.GetUserId();
@@ -33,23 +33,23 @@ namespace MyPortal.Controllers.Api
         
         [HttpGet]
         [RequiresPermission("ViewTrainingCertificates")]
-        [Route("certificates/get/{staffId:int}/{courseId:int}")]
-        public PersonnelTrainingCertificateDto GetCertificate([FromUri] int staffId, [FromUri] int courseId)
+        [Route("certificates/get/{staffId:int}/{courseId:int}", Name = "ApiPersonnelGetTrainingCertificate")]
+        public PersonnelTrainingCertificateDto GetTrainingCertificate([FromUri] int staffId, [FromUri] int courseId)
         {
             return PrepareResponseObject(PersonnelProcesses.GetCertificate(staffId, courseId, _context));
         }
 
         [HttpGet]
         [RequiresPermission("ViewTrainingCertificates")]
-        [Route("certificates/get/byStaff/{staffId:int}")]
-        public IEnumerable<PersonnelTrainingCertificateDto> GetCertificatesForStaffMember([FromUri] int staffId)
+        [Route("certificates/get/byStaff/{staffId:int}", Name = "ApiPersonnelGetTrainingCertificatesByStaffMember")]
+        public IEnumerable<PersonnelTrainingCertificateDto> GetCertificatesByStaffMember([FromUri] int staffId)
         {
-            return PrepareResponseObject(PersonnelProcesses.GetCertificatesForStaffMember(staffId, _context));
+            return PrepareResponseObject(PersonnelProcesses.GetCertificatesByStaffMember(staffId, _context));
         }
 
         [HttpPost]
         [RequiresPermission("ViewTrainingCertificates")]
-        [Route("certificates/get/byStaff/dataGrid/{staffId:int}")]
+        [Route("certificates/get/byStaff/dataGrid/{staffId:int}", Name = "ApiPersonnelGetTrainingCertificatesByStaffMemberDataGrid")]
         public IHttpActionResult GetCertificatesForStaffMemberDataGrid([FromUri] int staffId, [FromBody] DataManagerRequest dm)
         {
             var certs = PrepareResponseObject(PersonnelProcesses.GetCertificatesForStaffMember_DataGrid(staffId, _context));
@@ -59,7 +59,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditTrainingCertificates")]
-        [Route("certificates/update")]
+        [Route("certificates/update", Name = "ApiPersonnelUpdateTrainingCertificate")]
         public IHttpActionResult UpdateCertificate([FromBody] PersonnelTrainingCertificate certificate)
         {
             var userId = User.Identity.GetUserId();
@@ -68,14 +68,14 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditTrainingCourses")]
-        [Route("courses/remove/{courseId:int}")]
+        [Route("courses/remove/{courseId:int}", Name = "ApiPersonnelDeleteTrainingCourse")]
         public IHttpActionResult DeleteCourse([FromUri] int courseId)
         {
             return PrepareResponse(PersonnelProcesses.DeleteCourse(courseId, _context));
         }
 
         [HttpGet]
-        [Route("courses/get/byId/{courseId:int}")]
+        [Route("courses/get/byId/{courseId:int}", Name = "ApiPersonnelGetTrainingCourseById")]
         [RequiresPermission("ViewTrainingCourses")]
         public PersonnelTrainingCourseDto GetCourseById([FromUri] int courseId)
         {
@@ -83,7 +83,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Route("courses/get/all")]
+        [Route("courses/get/all", Name = "ApiPersonnelGetAllTrainingCourses")]
         [RequiresPermission("ViewTrainingCourses")]
         public IEnumerable<PersonnelTrainingCourseDto> GetCourses()
         {
@@ -91,9 +91,9 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [Route("courses/get/dataGrid/all")]
+        [Route("courses/get/dataGrid/all", Name = "ApiPersonnelGetAllTrainingCoursesDataGrid")]
         [RequiresPermission("ViewTrainingCourses")]
-        public IHttpActionResult GetAllTrainingCourseForDataGrid([FromBody] DataManagerRequest dm)
+        public IHttpActionResult GetAllTrainingCourseDataGrid([FromBody] DataManagerRequest dm)
         {
             var trainingCourses = PrepareResponseObject(PersonnelProcesses.GetAllTrainingCourses_DataGrid(_context));
 
@@ -101,7 +101,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [Route("courses/edit")]
+        [Route("courses/edit", Name = "ApiPersonnelUpdateTrainingCourse")]
         [RequiresPermission("EditTrainingCourses")]
         public IHttpActionResult UpdateCourse([FromBody] PersonnelTrainingCourse course)
         {
@@ -109,7 +109,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [Route("observations/create")]
+        [Route("observations/create", Name = "ApiPersonnelCreateObservation")]
         [RequiresPermission("EditObservations")]
         public IHttpActionResult CreateObservation([FromBody] PersonnelObservation data)
         {
@@ -119,7 +119,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewObservations")]
-        [Route("observations/get/byId/{observationId:int}")]
+        [Route("observations/get/byId/{observationId:int}", Name = "ApiPersonnelGetObservationById")]
         public PersonnelObservationDto GetObservation([FromUri] int observationId)
         {
             return PrepareResponseObject(PersonnelProcesses.GetObservationById(observationId, _context));
@@ -127,15 +127,15 @@ namespace MyPortal.Controllers.Api
         
         [HttpGet]
         [RequiresPermission("ViewObservations")]
-        [Route("observations/get/byStaff/{staffMemberId:int}")]
-        public IEnumerable<PersonnelObservationDto> GetObservationsForStaffMember([FromUri] int staffMemberId)
+        [Route("observations/get/byStaff/{staffMemberId:int}", Name = "ApiPersonnelGetObservationsByStaffMember")]
+        public IEnumerable<PersonnelObservationDto> GetObservationsByStaffMember([FromUri] int staffMemberId)
         {
-            return PrepareResponseObject(PersonnelProcesses.GetObservationsForStaffMember(staffMemberId, _context));
+            return PrepareResponseObject(PersonnelProcesses.GetObservationsByStaffMember(staffMemberId, _context));
         }
 
         [HttpPost]
         [RequiresPermission("ViewObservations")]
-        [Route("observations/get/byStaff/dataGrid/{staffMemberId:int}")]
+        [Route("observations/get/byStaff/dataGrid/{staffMemberId:int}", Name = "ApiPersonnelGetObservationsByStaffMemberDataGrid")]
         public IHttpActionResult GetObservationsForStaffMemberDataGrid([FromUri] int staffMemberId,
             [FromBody] DataManagerRequest dm)
         {
@@ -148,7 +148,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditObservations")]
-        [Route("observations/delete/{observationId:int}")]
+        [Route("observations/delete/{observationId:int}", Name = "ApiPersonnelDeleteObservation")]
         public IHttpActionResult RemoveObservation([FromUri] int observationId)
         {
             var userId = User.Identity.GetUserId();
@@ -157,7 +157,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditObservations")]
-        [Route("observations/update")]
+        [Route("observations/update", Name = "ApiPersonnelUpdateObservation")]
         public IHttpActionResult UpdateObservation([FromBody] PersonnelObservation observation)
         {
             var userId = User.Identity.GetUserId();
