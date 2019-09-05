@@ -56,7 +56,7 @@ namespace MyPortal.Controllers
         #endregion
 
         // Student Landing Page
-        [Route("Home")]
+        [Route("Home", Name = "StudentsIndex")]
         public ActionResult Index()
         {
             var userId = User.Identity.GetUserId();

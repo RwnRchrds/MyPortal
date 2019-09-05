@@ -15,7 +15,7 @@ namespace MyPortal.Controllers.Api
     {
         [HttpPost]
         [RequiresPermission("EditProfileLogs")]
-        [Route("logs/create")]
+        [Route("logs/create", Name = "ApiProfilesCreateLog")]
         public IHttpActionResult CreateLog([FromBody] ProfileLog log)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
@@ -24,7 +24,7 @@ namespace MyPortal.Controllers.Api
             return PrepareResponse(ProfilesProcesses.CreateLog(log, academicYearId, userId, _context));
         }
         
-        [Route("logs/delete/{logId:int}")]
+        [Route("logs/delete/{logId:int}", Name = "ApiProfilesDeleteLog")]
         [RequiresPermission("EditProfileLogs")]
         [HttpDelete]
         public IHttpActionResult DeleteLog([FromUri] int logId)
@@ -33,7 +33,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Route("logs/get/byId/{logId:int}")]
+        [Route("logs/get/byId/{logId:int}", Name = "ApiProfilesGetLogById")]
         [RequiresPermission("ViewProfileLogs")]
         public ProfileLogDto GetLogById([FromUri] int logId)
         {
@@ -41,29 +41,29 @@ namespace MyPortal.Controllers.Api
         }
         
         [HttpGet]
-        [Route("logs/get/byStudent/{studentId:int}")]
+        [Route("logs/get/byStudent/{studentId:int}", Name = "ApiProfilesGetLogsByStudent")]
         [RequiresPermission("ViewProfileLogs")]
-        public IEnumerable<ProfileLogDto> GetLogsForStudent([FromUri] int studentId)
+        public IEnumerable<ProfileLogDto> GetLogsByStudent([FromUri] int studentId)
         {
             AuthenticateStudentRequest(studentId);
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
-            return PrepareResponseObject(ProfilesProcesses.GetLogsForStudent(studentId, academicYearId, _context));
+            return PrepareResponseObject(ProfilesProcesses.GetLogsByStudent(studentId, academicYearId, _context));
         }
 
         [HttpPost]
-        [Route("logs/get/byStudent/dataGrid/{studentId:int}")]
+        [Route("logs/get/byStudent/dataGrid/{studentId:int}", Name = "ApiProfilesGetLogsByStudentDataGrid")]
         [RequiresPermission("ViewProfileLogs")]
-        public IHttpActionResult GetLogsForDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
+        public IHttpActionResult GetLogsByStudentDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             var logs = PrepareResponseObject(
-                ProfilesProcesses.GetLogsForStudent_DataGrid(studentId, academicYearId, _context));
+                ProfilesProcesses.GetLogsByStudent_DataGrid(studentId, academicYearId, _context));
 
             return PrepareDataGridObject(logs, dm);
         }
 
-        [Route("logs/update")]
+        [Route("logs/update", Name = "ApiProfilesUpdateLog")]
         [RequiresPermission("EditProfileLogs")]
         [HttpPost]
         public IHttpActionResult UpdateLog([FromBody] ProfileLog log)
@@ -73,7 +73,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewComments")]
-        [Route("commentBanks/hasComments/{bankId:int}")]
+        [Route("commentBanks/hasComments/{bankId:int}", Name = "ApiProfilesCommentBankHasComments")]
         public bool CommentBankHasComments([FromUri] int bankId)
         {
             return PrepareResponseObject(ProfilesProcesses.CommentBankContainsComments(bankId, _context));
@@ -81,7 +81,7 @@ namespace MyPortal.Controllers.Api
         
         [HttpPost]
         [RequiresPermission("EditComments")]
-        [Route("commentBanks/create")]
+        [Route("commentBanks/create", Name = "ApiProfilesCreateCommentBank")]
         public IHttpActionResult CreateCommentBank([FromBody] ProfileCommentBank commentBank)
         {
             return PrepareResponse(ProfilesProcesses.CreateCommentBank(commentBank, _context));
@@ -89,7 +89,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditComments")]
-        [Route("commentBanks/delete/{commentBankId:int}")]
+        [Route("commentBanks/delete/{commentBankId:int}", Name = "ApiProfilesDeleteCommentBank")]
         public IHttpActionResult DeleteCommentBank([FromUri] int commentBankId)
         {
             return PrepareResponse(ProfilesProcesses.DeleteCommentBank(commentBankId, _context));
@@ -97,7 +97,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewComments")]
-        [Route("commentBanks/get/byId/{commentBankId:int}")]
+        [Route("commentBanks/get/byId/{commentBankId:int}", Name = "ApiProfilesGetCommentBankById")]
         public ProfileCommentBankDto GetCommentBankById([FromUri] int commentBankId)
         {
             return PrepareResponseObject(ProfilesProcesses.GetCommentBankById(commentBankId, _context));
@@ -105,7 +105,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewComments")]
-        [Route("commentBanks/get/all")]
+        [Route("commentBanks/get/all", Name = "ApiProfilesGetAllCommentBanks")]
         public IEnumerable<ProfileCommentBankDto> GetAllCommentBanks()
         {
             return PrepareResponseObject(ProfilesProcesses.GetAllCommentBanks(_context));
@@ -113,17 +113,17 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewComments")]
-        [Route("commentBanks/get/dataGrid/all")]
-        public IHttpActionResult GetAllCommentBanksForDataGrid([FromBody] DataManagerRequest dm)
+        [Route("commentBanks/get/dataGrid/all", Name = "ApiProfilesGetAllCommentBanksDataGrid")]
+        public IHttpActionResult GetAllCommentBanksDataGrid([FromBody] DataManagerRequest dm)
         {
-            var commentBanks = PrepareResponseObject(ProfilesProcesses.GetAllCommentBanks_Model(_context));
+            var commentBanks = PrepareResponseObject(ProfilesProcesses.GetAllCommentBanks_DataGrid(_context));
 
             return PrepareDataGridObject(commentBanks, dm);
         }
 
         [HttpPost]
         [RequiresPermission("EditComments")]
-        [Route("commentBanks/update")]
+        [Route("commentBanks/update", Name = "ApiProfilesUpdateCommentBank")]
         public IHttpActionResult UpdateCommentBank([FromBody] ProfileCommentBank commentBank)
         {
             return PrepareResponse(ProfilesProcesses.UpdateCommentBank(commentBank, _context));
@@ -131,7 +131,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditComments")]
-        [Route("comments/create")]
+        [Route("comments/create", Name = "ApiProfilesCreateComment")]
         public IHttpActionResult CreateComment([FromBody] ProfileComment comment)
         {
             return PrepareResponse(ProfilesProcesses.CreateComment(comment, _context));
@@ -139,7 +139,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditComments")]
-        [Route("comments/delete/{commentId:int}")]
+        [Route("comments/delete/{commentId:int}", Name = "ApiProfilesDeleteComment")]
         public IHttpActionResult DeleteComment(int commentId)
         {
             return PrepareResponse(ProfilesProcesses.DeleteComment(commentId, _context));
@@ -147,7 +147,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewComments")]
-        [Route("comments/get/byId/{commentId:int}")]
+        [Route("comments/get/byId/{commentId:int}", Name = "ApiProfilesGetCommentById")]
         public ProfileCommentDto GetCommentById([FromUri] int commentId)
         {
             return PrepareResponseObject(ProfilesProcesses.GetCommentById(commentId, _context));
@@ -155,15 +155,15 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewComments")]
-        [Route("comments/get/all")]
-        public IEnumerable<ProfileCommentDto> GetComments()
+        [Route("comments/get/all", Name = "ApiProfilesGetAllComments")]
+        public IEnumerable<ProfileCommentDto> GetAllComments()
         {
             return PrepareResponseObject(ProfilesProcesses.GetAllComments(_context));
         }
 
         [HttpGet]
         [RequiresPermission("ViewComments")]
-        [Route("comments/get/byBank/{commentBankId:int}")]
+        [Route("comments/get/byBank/{commentBankId:int}", Name = "ApiProfilesGetCommentsByCommentBank")]
         public IEnumerable<ProfileCommentDto> GetCommentsByCommentBank([FromUri] int commentBankId)
         {
             return PrepareResponseObject(ProfilesProcesses.GetCommentsByBank(commentBankId, _context));
@@ -171,8 +171,8 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewComments")]
-        [Route("comments/get/byBank/dataGrid/{commentBankId:int}")]
-        public IHttpActionResult GetCommentsByCommentBankForDataGrid([FromUri] int commentBankId,
+        [Route("comments/get/byBank/dataGrid/{commentBankId:int}", Name = "ApiProfilesGetCommentsByCommentBankDataGrid")]
+        public IHttpActionResult GetCommentsByCommentBankDataGrid([FromUri] int commentBankId,
             [FromBody] DataManagerRequest dm)
         {
             var comments = PrepareResponseObject(ProfilesProcesses.GetCommentsByBank_DataGrid(commentBankId, _context));
@@ -182,7 +182,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditComments")]
-        [Route("comments/update")]
+        [Route("comments/update", Name = "ApiProfilesUpdateComment")]
         public IHttpActionResult UpdateComment([FromBody] ProfileComment comment)
         {
             return PrepareResponse(ProfilesProcesses.UpdateComment(comment, _context));

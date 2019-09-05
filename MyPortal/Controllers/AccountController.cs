@@ -13,6 +13,7 @@ using MyPortal.Processes;
 namespace MyPortal.Controllers
 {
     [Authorize]
+    [RoutePrefix("Account")]
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;
@@ -73,12 +74,14 @@ namespace MyPortal.Controllers
         }
         
         [AllowAnonymous]
+        [Route("Login", Name = "AccountLogin")]
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
 
+        [Route("Restricted", Name = "AccountRestrictedAccess")]
         public ActionResult RestrictedAccess()
         {
             return View();
@@ -87,11 +90,11 @@ namespace MyPortal.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+        public async Task<ActionResult> LoginPost(LoginViewModel model, string returnUrl)
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View("~/Views/Account/Login.cshtml", model);
             }
             
             var result =
@@ -107,7 +110,7 @@ namespace MyPortal.Controllers
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "Invalid login attempt.");
-                    return View(model);
+                    return View("~/Views/Account/Login.cshtml", model);
             }
         }
         
@@ -120,6 +123,7 @@ namespace MyPortal.Controllers
         }
         
         [AllowAnonymous]
+        [Route("ResetPassword", Name = "AccountResetPassword")]
         public ActionResult ResetPassword(string code)
         { 
             return code == null ? View("Error") : View();

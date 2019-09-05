@@ -171,7 +171,7 @@ namespace MyPortal.Processes
                 .Select(Mapper.Map<BehaviourAchievement, GridBehaviourAchievementDto>));
         }
 
-        public static ProcessResponse<BehaviourAchievementDto> GetAchievement(int achievementId, MyPortalDbContext context)
+        public static ProcessResponse<BehaviourAchievementDto> GetAchievementById(int achievementId, MyPortalDbContext context)
         {
             var achievement = context.BehaviourAchievements.SingleOrDefault(x => x.Id == achievementId);
 

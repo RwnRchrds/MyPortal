@@ -74,7 +74,7 @@ namespace MyPortal.Processes
                     .ToList());
         }
 
-        public static ProcessResponse<IEnumerable<PersonnelTrainingCertificateDto>> GetCertificatesForStaffMember(
+        public static ProcessResponse<IEnumerable<PersonnelTrainingCertificateDto>> GetCertificatesByStaffMember(
             int staffId, MyPortalDbContext context)
         {
             var staffInDb = context.StaffMembers.Single(x => x.Id == staffId);
@@ -254,7 +254,7 @@ namespace MyPortal.Processes
                 Mapper.Map<PersonnelObservation, PersonnelObservationDto>(observation));
         }
 
-        public static ProcessResponse<IEnumerable<PersonnelObservationDto>> GetObservationsForStaffMember(
+        public static ProcessResponse<IEnumerable<PersonnelObservationDto>> GetObservationsByStaffMember(
             int staffMemberId, MyPortalDbContext context)
         {
             var staff = context.StaffMembers.Single(x => x.Id == staffMemberId);

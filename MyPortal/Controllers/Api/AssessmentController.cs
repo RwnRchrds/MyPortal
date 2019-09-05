@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security.Principal;
 using System.Web.Http;
 using MyPortal.Dtos;
 using MyPortal.Models.Attributes;
@@ -13,7 +14,7 @@ namespace MyPortal.Controllers.Api
     {
         [HttpGet]
         [RequiresPermission("ImportResults")]
-        [Route("results/import/{resultSetId:int}")]
+        [Route("results/import/{resultSetId:int}", Name = "ApiAssessmentImportResults")]
         public IHttpActionResult ImportResults([FromUri] int resultSetId)
         {
             return PrepareResponse(AssessmentProcesses.ImportResultsToResultSet(resultSetId, _context));
@@ -21,23 +22,23 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditResults")]
-        [Route("results/create")]
-        public IHttpActionResult AddResult([FromBody] AssessmentResult result)
+        [Route("results/create", Name = "ApiAssessmentCreateResult")]
+        public IHttpActionResult CreateResult([FromBody] AssessmentResult result)
         {
             return PrepareResponse(AssessmentProcesses.CreateResult(result, _context));
         }
 
         [HttpGet]
         [RequiresPermission("ViewResults")]
-        [Route("results/get/{studentId:int}/{resultSetId:int}")]
-        public IEnumerable<AssessmentResultDto> GetResults([FromUri] int studentId, [FromUri] int resultSetId)
+        [Route("results/get/{studentId:int}/{resultSetId:int}", Name = "ApiAssessmentGetResultsByStudent")]
+        public IEnumerable<AssessmentResultDto> GetResultsByStudent([FromUri] int studentId, [FromUri] int resultSetId)
         {
-            return PrepareResponseObject(AssessmentProcesses.GetResultsForStudent(studentId, resultSetId, _context));
+            return PrepareResponseObject(AssessmentProcesses.GetResultsByStudent(studentId, resultSetId, _context));
         }
 
         [HttpPost]
         [RequiresPermission("EditResults")]
-        [Route("resultSets/create")]
+        [Route("resultSets/create", Name = "ApiAssessmentCreateResultSet")]
         public IHttpActionResult CreateResultSet([FromBody] AssessmentResultSet resultSet)
         {
             return PrepareResponse(AssessmentProcesses.CreateResultSet(resultSet, _context));
@@ -45,7 +46,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditResultSets")]
-        [Route("resultSets/delete/{resultSetId:int}")]
+        [Route("resultSets/delete/{resultSetId:int}", Name = "ApiAssessmentDeleteResultSet")]
         public IHttpActionResult DeleteResultSet([FromUri] int resultSetId)
         {
             return PrepareResponse(AssessmentProcesses.DeleteResultSet(resultSetId, _context));
@@ -53,8 +54,8 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewResultSets")]
-        [Route("resultSets/get/byId/{resultSetId:int}")]
-        public AssessmentResultSetDto GetResultSet([FromUri] int resultSetId)
+        [Route("resultSets/get/byId/{resultSetId:int}", Name = "ApiAssessmentGetResultSetById")]
+        public AssessmentResultSetDto GetResultSetById([FromUri] int resultSetId)
         {
             return PrepareResponseObject(
                 AssessmentProcesses.GetResultSetById(resultSetId, _context));
@@ -62,7 +63,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewResultSets")]
-        [Route("resultSets/get/all")]
+        [Route("resultSets/get/all", Name = "ApiAssessmentGetAllResultSets")]
         public IEnumerable<AssessmentResultSetDto> GetAllResultSets()
         {
             return PrepareResponseObject(AssessmentProcesses.GetAllResultSets(_context));
@@ -70,8 +71,8 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewResultSets")]
-        [Route("resultSets/get/dataGrid/all")]
-        public IHttpActionResult GetAllResultSetsForDataGrid([FromBody] DataManagerRequest dm)
+        [Route("resultSets/get/dataGrid/all", Name = "ApiAssessmentGetAllResultSetsDataGrid")]
+        public IHttpActionResult GetAllResultSetsDataGrid([FromBody] DataManagerRequest dm)
         {
             var resultSets = PrepareResponseObject(AssessmentProcesses.GetAllResultSets_DataGrid(_context));
 
@@ -80,24 +81,23 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("EditResultSets")]
-        [Route("resultSets/hasResults/{resultSetId:int}")]
+        [Route("resultSets/hasResults/{resultSetId:int}", Name = "ApiAssessmentResultSetHasResults")]
         public bool ResultSetHasResults([FromUri] int resultSetId)
         {
             return PrepareResponseObject(AssessmentProcesses.ResultSetContainsResults(resultSetId, _context));
         }
 
-
         [HttpPost]
         [RequiresPermission("EditResultSets")]
-        [Route("resultSets/setCurrent/{resultSetId:int}")]
-        public IHttpActionResult SetCurrent([FromUri] int resultSetId)
+        [Route("resultSets/setCurrent/{resultSetId:int}", Name = "ApiAssessmentSetResultSetAsCurrent")]
+        public IHttpActionResult SetResultSetAsCurrent([FromUri] int resultSetId)
         {
             return PrepareResponse(AssessmentProcesses.SetResultSetAsCurrent(resultSetId, _context));
         }
 
         [HttpPost]
         [RequiresPermission("EditResultSets")]
-        [Route("resultSets/update")]
+        [Route("resultSets/update", Name = "ApiAssessmentUpdateResultSet")]
         public IHttpActionResult UpdateResultSet([FromBody] AssessmentResultSet resultSet)
         {
             return PrepareResponse(AssessmentProcesses.UpdateResultSet(resultSet, _context));

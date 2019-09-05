@@ -15,7 +15,7 @@ namespace MyPortal.Controllers.Api
     {
         [HttpPost]
         [RequiresPermission("EditStaff")]
-        [Route("create")]
+        [Route("create", Name = "ApiPeopleCreateStaff")]
         public IHttpActionResult CreateStaff([FromBody] StaffMember staffMember)
         {
             return PrepareResponse(PeopleProcesses.CreateStaffMember(staffMember, _context));
@@ -23,7 +23,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditStaff")]
-        [Route("delete/{staffMemberId:int}")]
+        [Route("delete/{staffMemberId:int}", Name = "ApiPeopleDeleteStaffMember")]
         public IHttpActionResult DeleteStaff([FromUri] int staffMemberId)
         {
             var userId = User.Identity.GetUserId();
@@ -32,7 +32,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditStaff")]
-        [Route("update")]
+        [Route("update", Name = "ApiPeopleUpdateStaffMember")]
         public IHttpActionResult UpdateStaffMember([FromBody] StaffMember staffMember)
         {
             return PrepareResponse(PeopleProcesses.UpdateStaffMember(staffMember, _context));
@@ -40,23 +40,23 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewStaff")]
-        [Route("get/all")]
+        [Route("get/all", Name = "ApiPeopleGetAllStaffMembers")]
         public IEnumerable<StaffMemberDto> GetAllStaffMembers()
         {
             return PrepareResponseObject(PeopleProcesses.GetAllStaffMembers(_context));
         }
 
         [HttpPost]
-        [Route("get/dataGrid/all")]
+        [Route("get/dataGrid/all", Name = "ApiPeopleGetAllStaffMembersDataGrid")]
         [RequiresPermission("ViewStaff")]
-        public IHttpActionResult GetAllStaffMembersForDataGrid([FromBody] DataManagerRequest dm)
+        public IHttpActionResult GetAllStaffMembersDataGrid([FromBody] DataManagerRequest dm)
         {
             var staffMembers = PrepareResponseObject(PeopleProcesses.GetAllStaffMembers_DataGrid(_context));
 
             return PrepareDataGridObject(staffMembers, dm);
         }
 
-        [Route("get/byId/{staffMemberId:int}")]
+        [Route("get/byId/{staffMemberId:int}", Name = "ApiPeopleGetStaffMemberById")]
         [RequiresPermission("ViewStaff")]
         public StaffMemberDto GetStaffMemberById([FromUri] int staffMemberId)
         {
@@ -65,7 +65,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("EditStaff")]
-        [Route("hasDocuments/{staffMemberId:int}")]
+        [Route("hasDocuments/{staffMemberId:int}", Name = "ApiPeopleStaffMemberHasDocuments")]
         public bool StaffMemberHasDocuments([FromUri] int staffMemberId)
         {
             return PrepareResponseObject(PeopleProcesses.StaffMemberHasDocuments(staffMemberId, _context));
@@ -73,7 +73,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("EditStaff")]
-        [Route("hasLogs/{staffMemberId:int}")]
+        [Route("hasLogs/{staffMemberId:int}", Name = "ApiPeopleStaffHasLogs")]
         public bool StaffHasLogs([FromUri] int staffMemberId)
         {
             return PrepareResponseObject(PeopleProcesses.StaffMemberHasWrittenLogs(staffMemberId, _context));

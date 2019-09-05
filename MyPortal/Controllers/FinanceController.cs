@@ -6,7 +6,7 @@ using MyPortal.ViewModels;
 namespace MyPortal.Controllers
 {
     [Authorize]
-    [RoutePrefix("Staff")]
+    [RoutePrefix("Staff/Finance")]
     public class FinanceController : MyPortalController
     {
         protected override void Dispose(bool disposing)
@@ -15,14 +15,14 @@ namespace MyPortal.Controllers
         }
         
         [RequiresPermission("EditAccounts")]
-        [Route("Finance/Accounts")]
+        [Route("Accounts", Name = "FinanceAccounts")]
         public ActionResult Accounts()
         {
             return View();
         }
 
         [RequiresPermission("EditProducts")]
-        [Route("Finance/Products")]
+        [Route("Products", Name = "FinanceProducts")]
         public ActionResult Products()
         {
             var viewModel = new NewProductViewModel();
@@ -33,7 +33,7 @@ namespace MyPortal.Controllers
         }
 
         [RequiresPermission("EditSales")]
-        [Route("Finance/Sales/New")]
+        [Route("Sales/New", Name = "FinanceSaleEntry")]
         public ActionResult SaleEntry()
         {
             var products = PrepareResponseObject(FinanceProcesses.GetAllProducts_Model(_context));
@@ -47,7 +47,7 @@ namespace MyPortal.Controllers
         }
 
         [RequiresPermission("EditSales")]
-        [Route("Finance/Sales")]
+        [Route("Sales", Name = "FinanceSales")]
         public ActionResult Sales()
         {
             var viewModel = new SalesViewModel();

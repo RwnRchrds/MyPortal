@@ -13,9 +13,10 @@ namespace MyPortal.Controllers.Api
     [RoutePrefix("api/documents")]
     public class DocumentsController : MyPortalApiController
     {
+
         [HttpPost]
         [RequiresPermission("EditDocuments")]
-        [Route("create")]
+        [Route("create", Name = "ApiDocumentsCreateDocument")]
         public IHttpActionResult AddDocument([FromBody] Document document)
         {
             var userId = User.Identity.GetUserId();
@@ -24,7 +25,7 @@ namespace MyPortal.Controllers.Api
         
         [HttpGet]
         [RequiresPermission("ViewApprovedDocuments")]
-        [Route("general/get/approved")]
+        [Route("general/get/approved", Name = "ApiDocumentsGetApprovedDocuments")]
         public IEnumerable<DocumentDto> GetApprovedGeneralDocuments()
         {
             return PrepareResponseObject(DocumentProcesses.GetApprovedGeneralDocuments(_context));
@@ -32,8 +33,8 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewApprovedDocuments")]
-        [Route("general/get/dataGrid/approved")]
-        public IHttpActionResult GetApprovedGeneralDocumentsForDataGrid([FromBody] DataManagerRequest dm)
+        [Route("general/get/dataGrid/approved", Name = "ApiDocumentsGetApprovedDocumentsDataGrid")]
+        public IHttpActionResult GetApprovedGeneralDocumentsDataGrid([FromBody] DataManagerRequest dm)
         {
             var documents = PrepareResponseObject(DocumentProcesses.GetApprovedGeneralDocuments_DataGrid(_context));
 
@@ -42,7 +43,7 @@ namespace MyPortal.Controllers.Api
         
         [HttpGet]
         [RequiresPermission("ViewApprovedDocuments, ViewAllDocuments")]
-        [Route("get/byId/{documentId:int}")]
+        [Route("get/byId/{documentId:int}", Name = "ApiDocumentsGetDocumentById")]
         public DocumentDto GetDocumentById([FromUri] int documentId)
         {
             return PrepareResponseObject(DocumentProcesses.GetDocumentById(documentId, _context));
@@ -50,7 +51,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewAllDocuments")]
-        [Route("general/get/all")]
+        [Route("general/get/all", Name = "ApiDocumentsGetAllDocuments")]
         public IEnumerable<DocumentDto> GetAllGeneralDocuments()
         {
             return PrepareResponseObject(DocumentProcesses.GetAllGeneralDocuments(_context));
@@ -58,8 +59,8 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewAllDocuments")]
-        [Route("general/get/dataGrid/all")]
-        public IHttpActionResult GetAllGeneralDocumentsForDataGrid([FromBody] DataManagerRequest dm)
+        [Route("general/get/dataGrid/all", Name = "ApiDocumentsGetAllDocumentsDataGrid")]
+        public IHttpActionResult GetAllGeneralDocumentsDataGrid([FromBody] DataManagerRequest dm)
         {
             var documents = PrepareResponseObject(DocumentProcesses.GetAllGeneralDocuments_DataGrid(_context));
 
@@ -68,7 +69,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewPersonalDocuments")]
-        [Route("personal/get/dataGrid/{personId}")]
+        [Route("personal/get/dataGrid/{personId}", Name = "ApiDocumentsGetPersonalDocumentsByPersonDataGrid")]
         public IHttpActionResult GetDocumentsByPersonDataGrid([FromBody] DataManagerRequest dm, [FromUri] int personId)
         {
             var documents = PrepareResponseObject(DocumentProcesses.GetPersonalDocuments_DataGrid(personId, _context));
@@ -78,15 +79,15 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditDocuments")]
-        [Route("delete/{documentId:int}")]
-        public IHttpActionResult RemoveDocument([FromUri] int documentId)
+        [Route("delete/{documentId:int}", Name = "ApiDocumentsDeleteDocument")]
+        public IHttpActionResult DeleteDocument([FromUri] int documentId)
         {
             return PrepareResponse(DocumentProcesses.DeleteDocument(documentId, _context));
         }
 
         [HttpPost]
         [RequiresPermission("EditDocuments")]
-        [Route("update")]
+        [Route("update", Name = "ApiDocumentsUpdateDocument")]
         public IHttpActionResult UpdateDocument([FromBody] Document document)
         {
             return PrepareResponse(DocumentProcesses.UpdateDocument(document, _context));
@@ -94,8 +95,8 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditPersonalDocuments")]
-        [Route("personal/create")]
-        public IHttpActionResult AddDocument([FromBody] PersonDocument document)
+        [Route("personal/create", Name = "ApiDocumentsCreatePersonalDocument")]
+        public IHttpActionResult CreatePersonalDocument([FromBody] PersonDocument document)
         {
             var uploaderId = User.Identity.GetUserId();
             return PrepareResponse(DocumentProcesses.CreatePersonalDocument(document, uploaderId, _context));
@@ -103,23 +104,23 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewPersonalDocuments")]
-        [Route("personal/get/byId/{documentId:int}")]
-        public PersonDocumentDto GetPersonalDocument([FromUri] int documentId)
+        [Route("personal/get/byId/{documentId:int}", Name = "ApiDocumentsGetPersonalDocumentById")]
+        public PersonDocumentDto GetPersonalDocumentById([FromUri] int documentId)
         {
             return PrepareResponseObject(DocumentProcesses.GetPersonalDocumentById(documentId, _context));
         }
 
         [HttpGet]
         [RequiresPermission("ViewPersonalDocuments")]
-        [Route("personal/get/{personId:int}")]
-        public IEnumerable<PersonDocumentDto> GetPersonalDocumentsForPerson([FromUri] int personId)
+        [Route("personal/get/{personId:int}", Name = "ApiDocumentsGetPersonalDocumentsByPerson")]
+        public IEnumerable<PersonDocumentDto> GetPersonalDocumentsByPerson([FromUri] int personId)
         {
             return PrepareResponseObject(DocumentProcesses.GetPersonalDocuments(personId, _context));
         }
 
         [HttpDelete]
         [RequiresPermission("EditPersonalDocuments")]
-        [Route("personal/delete/{documentId:int}")]
+        [Route("personal/delete/{documentId:int}", Name = "ApiDocumentsDeletePersonalDocument")]
         public IHttpActionResult DeletePersonalDocument([FromUri] int documentId)
         {
             return PrepareResponse(DocumentProcesses.DeletePersonalDocument(documentId, _context));
@@ -127,8 +128,8 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditPersonalDocuments")]
-        [Route("personal/update")]
-        public IHttpActionResult UpdateDocument([FromBody] PersonDocument document)
+        [Route("personal/update", Name = "ApiDocumentsUpdatePersonalDocument")]
+        public IHttpActionResult UpdatePersonalDocument([FromBody] PersonDocument document)
         {
             return PrepareResponse(DocumentProcesses.UpdatePersonalDocument(document, _context));
         }

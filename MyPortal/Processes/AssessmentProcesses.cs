@@ -260,7 +260,7 @@ namespace MyPortal.Processes
             return new ProcessResponse<object>(ResponseType.Ok, "Result added", null);
         }
 
-        public static ProcessResponse<IEnumerable<AssessmentResultDto>> GetResultsForStudent(int studentId, int resultSetId,
+        public static ProcessResponse<IEnumerable<AssessmentResultDto>> GetResultsByStudent(int studentId, int resultSetId,
             MyPortalDbContext context)
         {
             var results = context.AssessmentResults

@@ -15,18 +15,18 @@ namespace MyPortal.Controllers
 {
     
     [Authorize]
-    [RoutePrefix("Staff")]
+    [RoutePrefix("Staff/Admin")]
     public class AdminController : MyPortalIdentityController
     {
         [RequiresPermission("EditUsers")]
-        [Route("Admin/Users/New")]
+        [Route("Users/New", Name = "AdminNewUser")]
         public ActionResult NewUser()
         {
             return View();
         }
 
         [RequiresPermission("EditUsers")]
-        [Route("Admin/Users/{id}")]
+        [Route("Users/{id}", Name = "AdminUserDetails")]
         public ActionResult UserDetails(string id)
         {
             var user = _identity.Users
@@ -62,14 +62,14 @@ namespace MyPortal.Controllers
         }
 
         [RequiresPermission("EditUsers")]
-        [Route("Admin/Users")]
+        [Route("Users", Name = "AdminUsers")]
         public ActionResult Users()
         {
             return View();
         }
 
         [RequiresPermission("EditRoles")]
-        [Route("Admin/Roles")]
+        [Route("Roles", Name = "AdminRoles")]
         public ActionResult Roles()
         {
             var viewModel = new RolesViewModel();
@@ -77,7 +77,7 @@ namespace MyPortal.Controllers
         }
 
         [RequiresPermission("EditRoles")]
-        [Route("Admin/Roles/Permissions/{roleId}")]
+        [Route("Roles/Permissions/{roleId}", Name = "AdminRolePermissions")]
         public async Task<ActionResult> RolePermissions(string roleId)
         {
             var viewModel = new RolePermissionsViewModel();

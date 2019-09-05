@@ -15,8 +15,8 @@ namespace MyPortal.Controllers.Api
     {
         [HttpGet]
         [RequiresPermission("ViewBehaviour")]
-        [Route("points/get/{studentId:int}")]
-        public int GetBehaviourPoints([FromUri] int studentId)
+        [Route("points/get/{studentId:int}", Name = "ApiBehaviourGetBehaviourPointsByStudent")]
+        public int GetBehaviourPointsByStudent([FromUri] int studentId)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
@@ -26,8 +26,8 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewBehaviour")]
-        [Route("achievements/get/byStudent/dataGrid/{studentId:int}")]
-        public IHttpActionResult GetAchievementsForDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
+        [Route("achievements/get/byStudent/dataGrid/{studentId:int}", Name = "ApiBehaviourGetAchievementsByStudentDataGrid")]
+        public IHttpActionResult GetAchievementsByStudentDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
@@ -39,15 +39,15 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewBehaviour")]
-        [Route("achievements/get/byId/{achievementId:int}")]
-        public BehaviourAchievementDto GetAchievement([FromUri] int achievementId)
+        [Route("achievements/get/byId/{achievementId:int}", Name = "ApiBehaviourGetAchievementById")]
+        public BehaviourAchievementDto GetAchievementById([FromUri] int achievementId)
         {
-            return PrepareResponseObject(BehaviourProcesses.GetAchievement(achievementId, _context));
+            return PrepareResponseObject(BehaviourProcesses.GetAchievementById(achievementId, _context));
         }
 
         [HttpPost]
         [RequiresPermission("EditBehaviour")]
-        [Route("achievements/create")]
+        [Route("achievements/create", Name = "ApiBehaviourCreateAchievement")]
         public IHttpActionResult CreateAchievement([FromBody] BehaviourAchievement achievement)
         {
             var userId = User.Identity.GetUserId();
@@ -63,7 +63,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditBehaviour")]
-        [Route("achievements/update")]
+        [Route("achievements/update", Name = "ApiBehaviourUpdateAchievement")]
         public IHttpActionResult UpdateAchievement([FromBody] BehaviourAchievement achievement)
         {
             return PrepareResponse(BehaviourProcesses.UpdateAchievement(achievement, _context));
@@ -71,7 +71,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditBehaviour")]
-        [Route("achievements/delete/{achievementId:int}")]
+        [Route("achievements/delete/{achievementId:int}", Name = "ApiBehaviourDeleteAchievement")]
         public IHttpActionResult DeleteAchievement([FromUri] int achievementId)
         {
             return PrepareResponse(BehaviourProcesses.DeleteAchievement(achievementId, _context));
@@ -79,8 +79,8 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewBehaviour")]
-        [Route("incidents/get/byStudent/dataGrid/{studentId:int}")]
-        public IHttpActionResult GetBehaviourForDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
+        [Route("incidents/get/byStudent/dataGrid/{studentId:int}", Name = "ApiBehaviourGetBehaviourIncidentsDataGrid")]
+        public IHttpActionResult GetBehaviourIncidentsDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             var incidents =
@@ -91,15 +91,15 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewBehaviour")]
-        [Route("incidents/get/byId/{incidentId:int}")]
-        public BehaviourIncidentDto GetBehaviour([FromUri] int incidentId)
+        [Route("incidents/get/byId/{incidentId:int}", Name = "ApiBehaviourGetBehaviourIncidentById")]
+        public BehaviourIncidentDto GetBehaviourIncidentById([FromUri] int incidentId)
         {
             return PrepareResponseObject(BehaviourProcesses.GetBehaviourIncident(incidentId, _context));
         }
 
         [HttpPost]
         [RequiresPermission("EditBehaviour")]
-        [Route("incidents/create")]
+        [Route("incidents/create", Name = "ApiBehaviourCreateIncident")]
         public IHttpActionResult CreateIncident([FromBody] BehaviourIncident incident)
         {
             var userId = User.Identity.GetUserId();
@@ -114,7 +114,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditBehaviour")]
-        [Route("incidents/update")]
+        [Route("incidents/update", Name = "ApiBehaviourUpdateIncident")]
         public IHttpActionResult UpdateIncident([FromBody] BehaviourIncident incident)
         {
             return PrepareResponse(BehaviourProcesses.UpdateBehaviourIncident(incident, _context));
@@ -122,7 +122,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditBehaviour")]
-        [Route("incidents/delete/{incidentId:int}")]
+        [Route("incidents/delete/{incidentId:int}", Name = "ApiBehaviourDeleteIncident")]
         public IHttpActionResult DeleteIncident([FromUri] int incidentId)
         {
             return PrepareResponse(BehaviourProcesses.DeleteBehaviourIncident(incidentId, _context));
@@ -130,7 +130,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("RunReports")]
-        [Route("reports/incidents/byType")]
+        [Route("reports/incidents/byType", Name = "ApiBehaviourReportIncidentsByType")]
         public IEnumerable<ChartDataCategoric> ReportIncidentsByType()
         {
             return PrepareResponseObject(BehaviourProcesses.GetChartData_BehaviourIncidentsByType(_context));
