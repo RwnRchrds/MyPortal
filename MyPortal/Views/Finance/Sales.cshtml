@@ -38,14 +38,18 @@
             </div>
             <!-- Card Body -->
             <div class="card-body">
-                        
-                <button type="button" class="btn btn-success mb-4" data-toggle="modal" data-target="#NewLogModal">
-                    <i class="fa fa-plus-circle"></i> New Log Note
-                </button>
-                        
+                
+                <div class="mb-4">
+                    
+                    <button type="button" class="btn btn-success mb-4" data-toggle="modal" data-target="#NewLogModal">
+                        <i class="fa fa-plus-circle"></i> New Log Note
+                    </button>
+
+                </div>
+
                 @Html.EJS().Grid("Sales").DataSource(d =>
                 {
-                    d.Url("/api/finance/sales/get/dataGrid/pending").CrossDomain(false).Adaptor("UrlAdaptor");
+                    d.Url(Url.HttpRouteUrl("ApiFinanceGetPendingSalesDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor");
                 }).Columns(c =>
                 {
                     c.Field("Date").HeaderText("Date").Template("#salesDateTemplate").Width("150").Add();
@@ -66,22 +70,30 @@
 @section scripts
 {
     <script>
+
+        var urlGetAllSales = "@Url.HttpRouteUrl("ApiFinanceGetAllSalesDataGrid", new {})";
+        var urlGetPendingSales = "@Url.HttpRouteUrl("ApiFinanceGetPendingSalesDataGrid", new {})";
+        var urlGetProcessedSales = "@Url.HttpRouteUrl("ApiFinanceGetProcessedSalesDataGrid", new {})";
+        var urlDeleteSale = "@Url.HttpRouteUrl("ApiFinanceDeleteSale", new {saleId = "abcd"})";
+        var urlMarkSaleComplete = "@Url.HttpRouteUrl("ApiFinanceMarkSaleComplete", new {saleId = "abcd"})";
+        var urlRefundSale = "@Url.HttpRouteUrl("ApiFinanceRefundSale", new {saleId = "abcd"})";
+
         $(document).ready(function() {
             $("#selectedStatus").on("change",
                 function() {
                     var status = $("#selectedStatus").val();
                     if (status === "All") {
-                        changeTableSource("Sales", "/api/finance/sales/get/dataGrid/all");
+                        changeTableSource("Sales", urlGetAllSales);
                     } else if (status === "Pending") {
-                        changeTableSource("Sales", "/api/finance/sales/get/dataGrid/pending");
+                        changeTableSource("Sales", urlGetPendingSales);
                     } else if (status === "Processed") {
-                        changeTableSource("Sales", "/api/finance/sales/get/dataGrid/processed");
+                        changeTableSource("Sales", urlGetProcessedSales);
                     }
                 });
 
             $("#newSaleButton").on("click",
                 function() {
-                    location.replace("/Staff/Finance/Sales/New");
+                    location.replace("@Url.Action("SaleEntry", "Finance")");
                 });
 
             //Delete Sale When Button Clicked
@@ -93,7 +105,7 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: "/api/finance/sales/delete/" + button.attr("data-sale-id"),
+                                    url: urlDeleteSale.replace("abcd", button.attr("data-sale-id")),
                                     method: "DELETE",
                                     success: function(e) {
                                         refreshTable("Sales");
@@ -116,7 +128,7 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: "/api/finance/sales/markComplete/" + button.attr("data-sale-id"),
+                                    url: urlMarkSaleComplete.replace("abcd", button.attr("data-sale-id")),
                                     method: "POST",
                                     success: function(a) {
                                         refreshTable("Sales");
@@ -139,7 +151,7 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: "/api/finance/sales/refund/" + button.attr("data-sale-id"),
+                                    url: urlRefundSale.replace("abcd", button.attr("data-sale-id")),
                                     method: "POST",
                                     success: function(e) {
                                         refreshTable("Sales");

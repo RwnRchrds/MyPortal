@@ -2,36 +2,50 @@
 @model MyPortal.ViewModels.SubjectsViewModel
 @{
     ViewBag.Title = "Subjects";
+    ViewBag.DisplayTitle = "Subjects";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<body>
-<div class="container">
-    <h2 class="mp-page-title">Subjects</h2>
-    <hr/>
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Subjects</h1>
 </div>
 
-<div class="container">
-    @if (User.HasPermission("EditSubjects"))
-    {
+<div class="row">
+    
+    <div class="col-xl-12 col-md-12 mb-4">
+
         <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" data-target="#NewSubjectModal">New Subject</button>
-        <hr/>
-    }
+
+    </div>
 
 </div>
 
-<div class="container">
-   @Html.EJS().Grid("Subject").DataSource(d =>
-   {
-       d.Url("/api/curriculum/subjects/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor");
-   }).Columns(c =>
-   {
-       c.Field("Name").HeaderText("Name").Template("#subjectsNameTemplate").Width("150").Add();
-       c.Field("Code").HeaderText("Code").Template("#subjectsCodeTemplate").Width("100").Add();
-       c.Field("LeaderName").HeaderText("Leader").Template("#subjectsLeaderTemplate").Width("150").Add();
-       c.HeaderText("Actions").Template("#subjectsActionsTemplate").Width("170").Add();
-   }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true);}).Toolbar(new List<string> {"Search"}).Render()
+<div class="row">
+    
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Subjects</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                @Html.EJS().Grid("Subject").DataSource(d =>
+                {
+                    d.Url(Url.HttpRouteUrl("ApiCurriculumGetAllSubjectsDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor");
+                }).Columns(c =>
+                {
+                    c.Field("Name").HeaderText("Name").Template("#subjectsNameTemplate").Width("150").Add();
+                    c.Field("Code").HeaderText("Code").Template("#subjectsCodeTemplate").Width("100").Add();
+                    c.Field("LeaderName").HeaderText("Leader").Template("#subjectsLeaderTemplate").Width("150").Add();
+                    c.HeaderText("Actions").Template("#subjectsActionsTemplate").Width("170").Add();
+                }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true);}).Toolbar(new List<string> {"Search"}).Render()
+            </div>
+        </div>
+    </div>
+    
 </div>
+
 
 <div id="NewSubjectModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -41,7 +55,7 @@
                 <h4 class="modal-title">New Subject</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/subjects/new", HttpMethod = "POST", OnSuccess = "newSubjectSuccess", OnFailure = "newSubjectFailure"}, new {id = "newResultSetForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiCurriculumCreateSubject", new {}), HttpMethod = "POST", OnSuccess = "newSubjectSuccess", OnFailure = "newSubjectFailure"}, new {id = "newResultSetForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -77,7 +91,7 @@
                 <h4 class="modal-title">Edit Subject</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/subjects/update", HttpMethod = "POST", OnSuccess = "editSubjectSuccess", OnFailure = "editSubjectFailure"}, new {id = "editResultSetForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiCurriculumUpdateSubject", new {}), HttpMethod = "POST", OnSuccess = "editSubjectSuccess", OnFailure = "editSubjectFailure"}, new {id = "editResultSetForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -107,11 +121,14 @@
         </div>
     </div>
 </div>
-</body>
 
 @section scripts
 {
     <script>
+
+        var urlGetSubjectById = "@Url.HttpRouteUrl("ApiCurriculumGetSubjectById", new {subjectId = "abcd"})";
+        var urlDeleteSubject = "@Url.HttpRouteUrl("ApiCurriculumDeleteSubject", new {subjectId = "abcd"})";
+
         $(document).ready(function() {
             
             $("#Subjects").on("click",
@@ -120,7 +137,7 @@
                     var button = $(this);
                     var subjectId = button.attr("data-subject-id");
                     $.ajax({
-                        url: "/api/curriculum/subjects/get/byId/" + subjectId,
+                        url: urlGetSubjectById.replace("abcd", subjectId),
                         method: "GET",
                         success: function(result) {
                             $("#EditSubjectCodeControl").val(result["code"]);
@@ -143,7 +160,7 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: "/api/curriculum/subjects/delete/" + button.attr("data-subject-id"),
+                                    url: urlDeleteSubject.replace("abcd", button.attr("data-subject-id")),
                                     method: "DELETE",
                                     success: function(a) {
                                         $("#subjects").DataTable().ajax.reload();

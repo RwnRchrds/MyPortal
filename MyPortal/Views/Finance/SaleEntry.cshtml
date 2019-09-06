@@ -45,10 +45,17 @@
 @section scripts
 {
     <script>
+
+        var urlGetAllYearGroups = "@Url.HttpRouteUrl("ApiPastoralGetAllYearGroups", new {})";
+        var urlGetStudentsByYearGroup = "@Url.HttpRouteUrl("ApiFinanceGetStudentsByYearGroup", new {yearGroupId="abcd"})";
+        var urlGetProductPrice = "@Url.HttpRouteUrl("ApiFinanceGetProductPrice", new {productId="abcd"})";
+        var urlCreateSale = "@Url.HttpRouteUrl("ApiFinanceCreateSale", new {})";
+        var urlQueryBalance = "@Url.HttpRouteUrl("ApiFinanceQueryBalance", new {})";
+
         $(document).ready(function() {
             //Gets Year Groups and Inserts Options into Dropdown
             $.ajax({
-                url: "/api/pastoral/yearGroups/get/all",
+                url: urlGetAllYearGroups,
                 method: "GET",
                 complete: function(data) {
                     $("#yearGroupSelect").empty();
@@ -68,7 +75,7 @@
                 function() {
                     if ($("#yearGroupSelect").val() !== "") {
                         $.ajax({
-                            url: "/api/people/students/get/byYearGroup/" + $("#yearGroupSelect").val(),
+                            url: urlGetStudentsByYearGroup.replace("abcd", $("#yearGroupSelect").val()),
                             method: "GET",
                             complete: function(data) {
                                 $("#studentSelect").empty();
@@ -94,7 +101,7 @@
             $("#productSelect").on("change",
                 function() {
                     $.ajax({
-                        url: "/api/finance/products/price/" + $("#productSelect").val(),
+                        url: urlGetProductPrice.replace("abcd", $("#productSelect").val()),
                         method: "GET",
                         success: function(data) {
                             $("#price").text("Price: £" + data.toFixed(2));
@@ -110,12 +117,12 @@
 
             $("#backButton").on("click",
                 function() {
-                    location.replace("/Staff/Finance/Sales");
+                    location.replace("@Url.Action("Sales", "Finance")");
                 });
 
             function makeSale() {
                 $.ajax({
-                    url: "/api/finance/sales/create",
+                    url: urlCreateSale,
                     method: "POST",
                     data: ({ studentId: $("#studentSelect").val(), productId: $("#productSelect").val() }),
                     success: function(e) {
@@ -139,7 +146,7 @@
             $("#submitButton").on("click",
                 function() {
                     $.ajax({
-                        url: "/api/finance/sales/queryBalance",
+                        url: urlQueryBalance,
                         method: "POST",
                         data: ({ studentId: $("#studentSelect").val(), productId: $("#productSelect").val() }),
                         success: function(data) {

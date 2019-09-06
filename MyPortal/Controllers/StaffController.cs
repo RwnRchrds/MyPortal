@@ -88,7 +88,7 @@ namespace MyPortal.Controllers
         }
 
         [RequiresPermission("TakeRegister")]
-        [Route("Attendance/TakeRegister/{weekId:int}/{sessionId:int}")]
+        [Route("Attendance/TakeRegister/{weekId:int}/{sessionId:int}", Name = "AttendanceTakeRegister")]
         public ActionResult TakeRegister(int weekId, int sessionId)
         {
             var viewModel = new TakeRegisterViewModel();
@@ -162,7 +162,7 @@ namespace MyPortal.Controllers
         }
 
         [RequiresPermission("EditLessonPlans")]
-        [Route("Curriculum/LessonPlans/View/{id}")]
+        [Route("Curriculum/LessonPlans/View/{id}", Name = "CurriculumLessonPlanDetails")]
         public ActionResult LessonPlanDetails(int id)
         {
             var lessonPlan = _context.CurriculumLessonPlans.SingleOrDefault(x => x.Id == id);
@@ -215,7 +215,7 @@ namespace MyPortal.Controllers
         }
 
         [RequiresPermission("EditClasses")]
-        [Route("Curriculum/Classes/Enrolments/{classId:int}")]
+        [Route("Curriculum/Classes/Enrolments/{classId:int}", Name = "CurriculumEnrolments")]
         public ActionResult ClassEnrolments(int classId)
         {
             var viewModel = new ClassEnrolmentsViewModel();
@@ -319,7 +319,7 @@ namespace MyPortal.Controllers
 
         
         [RequiresPermission("ViewStudents")]
-        [Route("People/Students/{id:int}", Name = "StudentDetails")]
+        [Route("People/Students/{id:int}", Name = "PeopleStudentDetails")]
         public ActionResult StudentDetails(int id)
         {
             var student = _context.Students.SingleOrDefault(s => s.Id == id);
@@ -440,7 +440,7 @@ namespace MyPortal.Controllers
         }
 
         [RequiresPermission("ViewStaff")]
-        [Route("People/Staff/{id}")]
+        [Route("People/Staff/{id}", Name = "PeopleStaffDetails")]
         public ActionResult StaffDetails(int id)
         {
             var staff = _context.StaffMembers.SingleOrDefault(s => s.Id == id);

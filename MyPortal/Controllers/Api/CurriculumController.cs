@@ -178,16 +178,16 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewEnrolments")]
-        [Route("enrolments/get/byClass/{classId:int}", Name = "ApiCurriculumGetEnrolmentsForClass")]
-        public IEnumerable<CurriculumEnrolmentDto> GetEnrolmentsForClass([FromUri] int classId)
+        [Route("enrolments/get/byClass/{classId:int}", Name = "ApiCurriculumGetEnrolmentsByClass")]
+        public IEnumerable<CurriculumEnrolmentDto> GetEnrolmentsByClass([FromUri] int classId)
         {
             return PrepareResponseObject(CurriculumProcesses.GetEnrolmentsForClass(classId, _context));
         }
 
         [HttpPost]
         [RequiresPermission("ViewEnrolments")]
-        [Route("enrolments/get/byClass/dataGrid/{classId:int}", Name = "ApiCurriculumGetEnrolmentsForClassDataGrid")]
-        public IHttpActionResult GetEnrolmentsForClassDataGrid([FromUri] int classId,
+        [Route("enrolments/get/byClass/dataGrid/{classId:int}", Name = "ApiCurriculumGetEnrolmentsByClassDataGrid")]
+        public IHttpActionResult GetEnrolmentsByClassDataGrid([FromUri] int classId,
             [FromBody] DataManagerRequest dm)
         {
             var enrolments =
@@ -406,7 +406,11 @@ namespace MyPortal.Controllers.Api
         [Route("lessonPlans/delete/{lessonPlanId:int}", Name = "ApiCurriculumDeleteLessonPlan")]
         public IHttpActionResult DeleteLessonPlan([FromUri] int lessonPlanId)
         {
-            return PrepareResponse(CurriculumProcesses.DeleteLessonPlan(lessonPlanId, _context));
+            var userId = User.Identity.GetUserId();
+            var canDeleteAll = User.HasPermission("DeleteAllLessonPlans");
+            var staffId = PrepareResponseObject(PeopleProcesses.GetStaffFromUserId(userId, _context)).Id;
+
+            return PrepareResponse(CurriculumProcesses.DeleteLessonPlan(lessonPlanId, staffId, canDeleteAll, _context));
         }
     }
 }

@@ -2,33 +2,71 @@
 
 @{
     ViewBag.Title = "Lesson Plan: " + Model.LessonPlan.Title;
+    ViewBag.DisplayTitle = "Lesson Plan Details";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<div class="container">
-    <h2 class="mp-page-title">Lesson Plan: @Model.LessonPlan.Title</h2>
-    <hr/>
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">@Model.LessonPlan.Title</h1>
 </div>
 
-<div class="container">
-    <h4>Learning Objectives</h4>
-    <div class="mp-text-section">
-        <p>@Model.LessonPlan.LearningObjectives</p>
-    </div>    
+<div class="row">
+    
+    <div class="col-xl-12 col-lg-12 mb-4">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Learning Objectives</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                <p>@Model.LessonPlan.LearningObjectives</p>
+            </div>
+        </div>
+    </div>
+    
 </div>
 
-<div class="container">
-    <h4>Lesson Plan Content</h4>
-    <div class="mp-text-section">
-        <p>@Model.LessonPlan.PlanContent</p>
-    </div>    
+<div class="row">
+
+    <div class="col-xl-12 col-lg-12 mb-4">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Lesson Plan Content</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                <p>@Model.LessonPlan.PlanContent</p>
+            </div>
+        </div>
+    </div>
+
 </div>
 
-<div class="container">
-    <h4>Homework</h4>
-    <div class="mp-text-section">
-        <p>@Model.LessonPlan.Homework</p>
-    </div> 
+<div class="row">
+
+    <div class="col-xl-12 col-lg-12 mb-4">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Homework</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                <p>@Model.LessonPlan.Homework</p>
+            </div>
+        </div>
+    </div>
+
 </div>
 
-@Html.ActionLink("Back", "LessonPlans", "Staff", null, new {@class = "btn btn-primary"})
+<div class="row">
+    
+    <div class="col-xl-12 col-md-12">
+
+        @Html.ActionLink("Back", "LessonPlans", "Staff", null, new { @class = "btn btn-primary" })
+
+    </div>
+
+</div>

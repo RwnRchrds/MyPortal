@@ -3,50 +3,70 @@
 @model MyPortal.ViewModels.RegistersViewModel
 @{
     ViewBag.Title = "Registers";
+    ViewBag.DisplayTitle = "Registers";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<div class="container">
-    <h2 class="mp-page-title">Registers</h2>
-    <hr />
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Registers</h1>
 </div>
 
-<div class="container" id="registerSelectors" data-current-user-id="@Model.CurrentUser.Id">
-    <div>
-        @Html.Label("Date", new { @class = "control-label" })
-        @*@Html.TextBox("Date", null, new {id = "selectedDate", @class = "form-control register-selector"})*@
-        @Html.EJS().DatePicker("selectedDate").Format("dd-MMM-yyyy").AllowEdit(false).HtmlAttributes(new Dictionary<string, object> { { "Name", "Date" } }).Render()
-    </div>
-    <div class="form-group">
-        @Html.Label("Teacher")
-        <select class="form-control" id="selectedTeacher"></select>
+<div class="row">
+    
+    <div class="col-xl-12 col-md-12 mb-4" id="registerSelectors">
+        
+        <div class="form-group">
+            @Html.Label("Date", new { @class = "control-label" })
+            @Html.EJS().DatePicker("selectedDate").Format("dd-MMM-yyyy").AllowEdit(false).HtmlAttributes(new Dictionary<string, object> { { "Name", "Date" } }).Render()
+        </div>
+        <div class="form-group">
+            @Html.Label("Teacher")
+            <select class="form-control" id="selectedTeacher"></select>
+        </div>
+
+        <button type="button" class="btn btn-primary" id="buttonSearch">Search Lessons</button>
+
     </div>
 
-    <button type="button" class="btn btn-primary" id="buttonSearch">Search Lessons</button>
 </div>
 
-<!--#region Registers Panel-->
-<div class="container mp-margin-top">
-    <div>
-        <hr />
-        <h4 class="mp-bold" id="registersFor"></h4>
-        @Html.EJS().Grid("Registers").DataSource(d =>
-        {
-            d.Url($"/api/curriculum/sessions/get/byTeacher/dataGrid/{Model.CurrentUser.Id}/{DateTime.Today.ToDisplayString()}").CrossDomain(false).Adaptor("UrlAdaptor");
-        }).Columns(c =>
-        {
-            c.Field("PeriodName").HeaderText("Period").Template("#registersPeriodTemplate").Width("200").Add();
-            c.Field("ClassName").HeaderText("Class").Template("#registersClassTemplate").Width("200").Add();
-            c.Field("Teacher").HeaderText("Teacher").Template("#registersTeacherTemplate").Width("200").Add();
-            c.HeaderText("Actions").Template("#registersActionsTemplate").Width("200").Add();
-        }).AllowPaging().PageSettings(p => p.PageSize(8)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string>() { "Search" }).Render()
+<div class="row">
+    
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Registers</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                @Html.EJS().Grid("Registers").DataSource(d =>
+                {
+                    d.Url(Url.HttpRouteUrl("ApiCurriculumGetSessionsByTeacherDataGrid", new {teacherId = Model.CurrentUser.Id, date = DateTime.Today.ToDisplayString()})).CrossDomain(false).Adaptor("UrlAdaptor");
+                }).Columns(c =>
+                {
+                    c.Field("PeriodName").HeaderText("Period").Template("#registersPeriodTemplate").Width("200").Add();
+                    c.Field("ClassName").HeaderText("Class").Template("#registersClassTemplate").Width("200").Add();
+                    c.Field("Teacher").HeaderText("Teacher").Template("#registersTeacherTemplate").Width("200").Add();
+                    c.HeaderText("Actions").Template("#registersActionsTemplate").Width("200").Add();
+                }).AllowPaging().PageSettings(p => p.PageSize(8)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string>() { "Search" }).Render()
+            </div>
+        </div>
     </div>
+    
 </div>
-<!--#endregion-->
+
 
 @section scripts
 {
     <script>
+
+        var urlGetAllStaff = "@Url.HttpRouteUrl("ApiPeopleGetAllStaff", new {})";
+        var urlGetRegisters =
+            "@Url.HttpRouteUrl("ApiCurriculumGetSessionsByTeacherDataGrid", new {teacherId = "abcd", date = "efgh"})";
+        var urlTakeRegister = "@Url.HttpRouteUrl("AttendanceTakeRegister", new {weekId = "abcd", sessionId = "efgh"})";
+        var urlGetWeekByDate = "@Url.HttpRouteUrl("ApiAttendanceGetWeekByDate", new {date = "abcd"})";
+
         $(document).ready(function() {
             $('.modal').on('hidden.bs.modal',
                 function() {
@@ -54,7 +74,7 @@
                 });
 
             $.ajax({
-                url: "/api/people/staff/get/all",
+                url: urlGetAllStaff,
                 method: "GET",
                 complete: function(data) {
                     $("#selectedTeacher").empty();
@@ -80,7 +100,7 @@
                     var selTeacher = $("#selectedTeacher").val();
                     updateWeekId(selDate);
                     changeTableSource("Registers",
-                        `/api/curriculum/sessions/get/byTeacher/dataGrid/${selTeacher}/${selDate}`);
+                        urlGetRegisters.replace("abcd", selTeacher).replace("efgh", selDate));
                 });
 
             $("#Registers").on("click",
@@ -89,16 +109,15 @@
                     var button = $(this);
                     var weekId = $("#Registers").attr("data-week-id");
                     var sessionId = button.attr("data-session-id");
-                    location.replace("/Staff/Attendance/TakeRegister/" + weekId + "/" + sessionId);
+                    location.replace(urlTakeRegister.replace("abcd", weekId).replace("efgh", sessionId));
                 });
         });
 
         function updateWeekId(selectedDate) {
             $("#Registers").attr("data-week-id", "");
-            var url = "/api/attendance/weeks/get/byDate/" + selectedDate;
 
             $.ajax({
-                url: url,
+                url: urlGetWeekByDate.replace("abcd", selectedDate),
                 method: "GET",
                 success: function(result) {
                     $("#Registers").attr("data-week-id", result.id);

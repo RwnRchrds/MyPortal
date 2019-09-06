@@ -35,25 +35,24 @@ namespace MyPortal.Processes
         public static bool HasPermission(this IPrincipal principal, string permission)
         {
             var identity = new IdentityContext();
-            var userStore =
-                new UserStore<ApplicationUser, ApplicationRole, string, IdentityUserLogin, IdentityUserRole,
-                    IdentityUserClaim>(identity);
-            var userManager = new UserManager<ApplicationUser, string>(userStore);
+            var roleStore = new RoleStore<ApplicationRole>(identity);
+            var roleManager = new RoleManager<ApplicationRole, string>(roleStore);
 
-            var roles = userManager.GetRoles(principal.Identity.GetUserId());
+            var userId = principal.Identity.GetUserId();
+
+            var roles = roleManager.Roles.Where(x => x.Users.Any(u => u.UserId == userId)).ToList();
 
             foreach (var role in roles)
             {
                 var permissionObject = identity.Permissions.SingleOrDefault(x => x.Name == permission);
-                var roleObject = identity.Roles.SingleOrDefault(x => x.Name == role);
 
-                if (permissionObject == null || roleObject == null)
+                if (permissionObject == null)
                 {
                     return false;
                 }
 
                 var hasPermission = identity.RolePermissions.Any(x =>
-                    x.PermissionId == permissionObject.Id && x.RoleId == roleObject.Id);
+                    x.PermissionId == permissionObject.Id && x.RoleId == role.Id);
 
                 if (hasPermission)
                 {

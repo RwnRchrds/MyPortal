@@ -12,46 +12,55 @@
 <div class="row">
     
     <div class="col-xl-12 col-md-12">
-        @if (User.HasPermission("EditUsers"))
-            {
-                @Html.ActionLink("New User", "NewUser", "Admin", null, new {@class = "btn btn-success"})
-                <hr/>
-            }
-    </div>
-    
-</div>
+        
+        <div class="card shadow mb-4">
 
-<div class="container">
-    <table class="table table-bordered table-hover mp-table mp-table-link" id="users">
-        <thead>
-        <tr>
-            <th>Username</th>
-        </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Users</h6>
+            </div>
+            
+            <div class="card-body">
+                
+                <div class="mb-4">
+
+                    @Html.ActionLink("New User", "NewUser", "Admin", null, new { @class = "btn btn-primary" })
+
+                </div>
+                
+                @Html.EJS().Grid("Users").DataSource(d =>
+                {
+                    d.Url(Url.HttpRouteUrl("ApiAdminGetAllUsersDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor");
+                }).Columns(c =>
+                {
+                    c.Field("Username").HeaderText("Username").Template("#usersUserNameTemplate").Add();
+                }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.IgnoreCase(true); }).Toolbar(new List<string> {"Search"}).Render()
+
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
 
 @section scripts
 {
     <script>
+
+        var urlUserDetails = "@Url.HttpRouteUrl("ApiAdminUserDetails", new {id = "abcd"})";
+
         $(document).ready(function() {
 
-            $("#users").DataTable({
-                ajax: {
-                    url: "/api/users",
-                    dataSrc: ""
-                },
-                columns: [
-                    {
-                        data: "userName",
-                        render: function(data, type, user) {
-                            return "<a href='/Staff/Admin/Users/" + user.id + "'>" + user.userName + "</a>";
-                        }
-                    }
-                ]
-
-            });
         });
+
+        function renderUserDetailsUrl(id) {
+            return urlUserDetails.replace("abcd", id);
+        }
+    </script>
+
+    <script type="text/x-jsrender" id="usersUserNameTemplate">
+        <div>
+            <span><a href=${renderUserDetails(Id)}>${UserName}</a></span>
+        </div>
     </script>
 }

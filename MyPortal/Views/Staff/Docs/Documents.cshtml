@@ -1,50 +1,64 @@
 ﻿@using MyPortal.Processes
 @model MyPortal.ViewModels.DocumentsViewModel
 @{
-    ViewBag.Title = "Documents";
+    ViewBag.Title = "Controlled Documents";
+    ViewBag.DisplayTitle = "Controlled Documents";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<div class="container" id="title">
-
-    <h2 class="mp-page-title">Controlled Documents</h2>
-    <hr/>
-
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Controlled Documents</h1>
 </div>
 
-<div class="container">
-    @if (User.HasPermission("EditDocuments"))
-    {
-        <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" data-target="#NewDocumentModal">New Document</button>
-        <hr/>
-    }
+@if (User.HasPermission("EditDocuments"))
+{
+    <div class="row">
+        
+        <div class="col-xl-12 col-md-12 mb-4">
 
+            <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" data-target="#NewDocumentModal">New Document</button>
+
+        </div>
+
+    </div>
+}
+
+<div class="row">
+    
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Documents</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                @Html.EJS().Grid("Documents").DataSource(d =>
+                {
+                    if (User.HasPermission("EditDocuments"))
+                    {
+                        d.Url(Url.HttpRouteUrl("ApiDocumentsGetAllDocumentsDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor");
+                    }
+
+                    else
+                    {
+                        d.Url(Url.HttpRouteUrl("ApiDocumentsGetApprovedDocumentsDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor");
+                    }
+                }).Columns(c =>
+                {
+                    c.Field("Description").HeaderText("Description").Template("#documentsDescriptionTemplate").Width("200").Add();
+                    c.Field("Date").HeaderText("Date").Template("#documentsDateTemplate").Width("200").Add();
+                    if (User.HasPermission("EditDocuments"))
+                    {
+                        c.Field("Approved").Template("#documentsApprovedTemplate").Width("100").Add();
+                        c.HeaderText("Actions").Template("#documentsActionsTemplate").Width("170").Add();
+                    }
+                }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string> {"Search"}).Render()
+            </div>
+        </div>
+    </div>
+    
 </div>
-
-<div class="container">
-   @Html.EJS().Grid("Documents").DataSource(d =>
-   {
-       if (User.HasPermission("EditDocuments"))
-       {
-           d.Url("/api/documents/general/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor");
-       }
-
-       else
-       {
-           d.Url("/api/documents/general/get/dataGrid/approved").CrossDomain(false).Adaptor("UrlAdaptor");
-       }
-   }).Columns(c =>
-   {
-       c.Field("Description").HeaderText("Description").Template("#documentsDescriptionTemplate").Width("200").Add();
-       c.Field("Date").HeaderText("Date").Template("#documentsDateTemplate").Width("200").Add();
-       if (User.HasPermission("EditDocuments"))
-       {
-           c.Field("Approved").Template("#documentsApprovedTemplate").Width("100").Add();
-           c.HeaderText("Actions").Template("#documentsActionsTemplate").Width("170").Add();
-       }
-   }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string> {"Search"}).Render()
-</div>
-
 
 @if (User.HasPermission("EditDocuments"))
 {
@@ -56,7 +70,7 @@
                     <h4 class="modal-title">New Controlled Document</h4>
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/documents/add", HttpMethod = "POST", OnSuccess = "newDocumentSuccess", OnFailure = "newDocumentFailure"}, new {id = "newDocumentForm"}))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiDocumentsCreateDocument", new {}), HttpMethod = "POST", OnSuccess = "newDocumentSuccess", OnFailure = "newDocumentFailure"}, new {id = "newDocumentForm"}))
                 {
                     <div class="modal-body">
                         <div class="form-group">
@@ -92,7 +106,7 @@
                     <h4 class="modal-title">Edit Controlled Document</h4>
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/documents/edit", HttpMethod = "POST", OnSuccess = "editDocumentSuccess", OnFailure = "editDocumentFailure"}, new {id = "editDocumentForm"}))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiDocumentsUpdateDocument", new {}), HttpMethod = "POST", OnSuccess = "editDocumentSuccess", OnFailure = "editDocumentFailure"}, new {id = "editDocumentForm"}))
                 {
                     <div class="modal-body">
                         <div class="form-group">
@@ -128,6 +142,10 @@
 @section scripts
 {
     <script>
+
+        var urlGetDocumentById = "@Url.HttpRouteUrl("ApiDocumentsGetDocumentById", new {documentId = "abcd"})";
+        var urlDeleteDocument = "@Url.HttpRouteUrl("ApiDocumentsDeleteDocument", new {documentId = "abcd"})";
+
         $(document).ready(function() {
             $('.modal').on('hidden.bs.modal',
                 function() {
@@ -140,7 +158,7 @@
                     var button = $(this);
                     var docId = button.attr("data-document-id");
                     $.ajax({
-                        url: "/api/documents/document/" + docId,
+                        url: urlGetDocumentById.replace("abcd", docId),
                         method: "GET",
                         success: function(result) {
                             $("#EditDocumentDescriptionControl").val(result["description"]);
@@ -163,7 +181,7 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: "/api/documents/remove/" + button.attr("data-document-id"),
+                                    url: urlDeleteDocument.replace("abcd", button.attr("data-document-id")),
                                     method: "DELETE",
                                     success: function(ajaxResult) {
                                         refreshTable("Documents");

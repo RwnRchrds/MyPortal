@@ -36,7 +36,7 @@
             <div class="card-body">
                 @Html.EJS().Grid("Products").DataSource(d =>
                 {
-                    d.Url("/api/finance/products/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor");
+                    d.Url(Url.HttpRouteUrl("ApiFinanceGetAllProductsDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor");
                 }).Columns(c =>
                 {
                     c.Field("Description").HeaderText("Description").Template("#productsDescriptionTemplate").Width("300").Add();
@@ -62,7 +62,7 @@
                         <span aria-hidden="false"></span>&times;
                     </button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/finance/products/create", HttpMethod = "POST", OnSuccess = "newProductSuccess", OnFailure = "newProductFailure" }, new { id = "newProductForm" }))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiFinanceCreateProduct", new {}), HttpMethod = "POST", OnSuccess = "newProductSuccess", OnFailure = "newProductFailure" }, new { id = "newProductForm" }))
                 {
                     <div class="modal-body">
                         <div class="form-group">
@@ -113,7 +113,7 @@
                     <h4 class="modal-title">Edit Product</h4>
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/finance/products/update", HttpMethod = "POST", OnSuccess = "editProductSuccess", OnFailure = "editProductFailure" }, new { id = "editProductForm" }))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiFinanceUpdateProduct", new {}), HttpMethod = "POST", OnSuccess = "editProductSuccess", OnFailure = "editProductFailure" }, new { id = "editProductForm" }))
                 {
                     <div class="modal-body">
                         <div class="form-group">
@@ -162,6 +162,10 @@
 @section scripts
 {
     <script>
+
+        var urlDeleteProduct = "@Url.HttpRouteUrl("ApiFinanceDeleteProduct", new {productId = "abcd"})";
+        var urlGetProductById = "@Url.HttpRouteUrl("ApiFinanceGetProductById", new {productId = "abcd"})";
+
         $(document).ready(function() {
             //Delete Product When Button Clicked
             $("#Products").on("click",
@@ -172,7 +176,7 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: "/api/finance/products/delete/" + button.attr("data-product-id"),
+                                    url: urlDeleteProduct.replace("abcd", button.attr("data-product-id")),
                                     method: "DELETE",
                                     success: function(e) {
                                         refreshTable("Products");
@@ -195,9 +199,9 @@
                 ".js-edit",
                 function() {
                     var button = $(this);
-                    var logId = button.attr("data-product-id");
+                    var productId = button.attr("data-product-id");
                     $.ajax({
-                        url: "/api/finance/products/get/byId/" + logId,
+                        url: urlGetProductById.replace("abcd", productId),
                         method: "GET",
                         success: function(result) {
                             $("#editIdControl").val(result["id"]);

@@ -2,27 +2,45 @@
 
 @{
     ViewBag.Title = "Study Topics";
+    ViewBag.DisplayTitle = "Study Topics";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<div class="container">
-    <h2 class="mp-page-title">Study Topics</h2>
-    <hr/>
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Study Topics</h1>
 </div>
 
-<div class="container">
-    <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" data-target="#NewStudyTopicModal">New Study Topic</button>
-    <hr/>
+<div class="row">
+    
+    <div class="col-xl-12 col-md-12">
+
+        <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" data-target="#NewStudyTopicModal">New Study Topic</button>
+
+    </div>
+
 </div>
 
-<div class="container">
-    @Html.EJS().Grid("StudyTopics").DataSource(d => { d.Url("/api/curriculum/StudyTopics/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
-    {
-        c.Field("Name").HeaderText("Name").Template("#studyTopicsNameTemplate").Width("300").Add();
-        c.Field("SubjectName").HeaderText("Subject").Template("#studyTopicsSubjectTemplate").Width("150").Add();
-        c.Field("YearGroup").HeaderText("Year Group").Template("#studyTopicsYearGroupTemplate").Width("150").Add();
-        c.HeaderText("Actions").Template("#studyTopicsActionsTemplate").Width("170").Add();
-    }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string> {"Search"}).Render()
+<div class="row">
+    
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Study Topics</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                @Html.EJS().Grid("StudyTopics").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiCurriculumGetAllStudyTopicsDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+                {
+                    c.Field("Name").HeaderText("Name").Template("#studyTopicsNameTemplate").Width("300").Add();
+                    c.Field("SubjectName").HeaderText("Subject").Template("#studyTopicsSubjectTemplate").Width("150").Add();
+                    c.Field("YearGroup").HeaderText("Year Group").Template("#studyTopicsYearGroupTemplate").Width("150").Add();
+                    c.HeaderText("Actions").Template("#studyTopicsActionsTemplate").Width("170").Add();
+                }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string> {"Search"}).Render()
+            </div>
+        </div>
+    </div>
+    
 </div>
 
 <div id="NewStudyTopicModal" class="modal fade" role="dialog">
@@ -33,7 +51,7 @@
                 <h4 class="modal-title">New Study Topic</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/curriculum/studyTopics/create", HttpMethod = "POST", OnSuccess = "newStudyTopicsuccess", OnFailure = "newStudyTopicFailure"}, new {id = "newStudyTopicForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiCurriculumCreateStudyTopic", new {}), HttpMethod = "POST", OnSuccess = "newStudyTopicsuccess", OnFailure = "newStudyTopicFailure"}, new {id = "newStudyTopicForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -69,7 +87,7 @@
                 <h4 class="modal-title">New Study Topic</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/curriculum/studyTopics/update", HttpMethod = "POST", OnSuccess = "editStudyTopicsuccess", OnFailure = "editStudyTopicFailure"}, new {id = "editStudyTopicForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiCurriculumUpdateStudyTopic", new {}), HttpMethod = "POST", OnSuccess = "editStudyTopicsuccess", OnFailure = "editStudyTopicFailure"}, new {id = "editStudyTopicForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -104,6 +122,10 @@
 {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
+
+        var urlGetStudyTopicById = "@Url.HttpRouteUrl("ApiCurriculumGetStudyTopicById", new {studyTopicId = "abcd"})";
+        var urlDeleteStudyTopic = "@Url.HttpRouteUrl("ApiCurriculumDeleteStudyTopic", new {studyTopicId = "abcd"})";
+
         $(document).ready(function() {
             $('.modal').on('hidden.bs.modal',
                 function() {
@@ -113,10 +135,10 @@
             $("#StudyTopics").on("click",
                 ".js-edit",
                 function() {
-                    const button = $(this);
-                    const topicId = button.attr("data-topic-id");
+                    var button = $(this);
+                    var topicId = button.attr("data-topic-id");
                     $.ajax({
-                        url: `/api/curriculum/studyTopics/get/byId/${topicId}`,
+                        url: urlGetStudyTopicById.replace("abcd", topicId),
                         method: "GET",
                         success: function(result) {
                             $("#editStudyTopicNameControl").val(result["name"]);
@@ -134,55 +156,22 @@
             $("#StudyTopics").on("click",
                 ".js-delete",
                 function() {
-                    $.ajax({
-                        url: `/api/curriculum/studyTopics/hasLessonPlans/${button.attr("data-topic-id")}`,
-                        method: "GET",
-                        success: function(a) {
-                            if (!a) {
-                                bootbox.confirm("Are you sure you wish to delete this study topic?",
-                                    function(result) {
-                                        if (result) {
-                                            $.ajax({
-                                                url: `/api/curriculum/StudyTopics/delete/${button.attr("data-topic-id")
-                                                    }`,
-                                                method: "DELETE",
-                                                success: function(a) {
-                                                    refreshTable("StudyTopics");
-                                                    toastr.success(a);
-                                                },
-                                                error: function(e) {
-                                                    toastr.error(e.responseJSON);
-                                                }
-                                            });
-                                        }
-                                    });
+                    bootbox.confirm("Are you sure you wish to delete this study topic?",
+                        function(result) {
+                            if (result) {
+                                $.ajax({
+                                    url: urlDeleteStudyTopic.replace("abcd", button.attr("data-topic-id")),
+                                    method: "DELETE",
+                                    success: function(e) {
+                                        refreshTable("StudyTopics");
+                                        toastr.success(e);
+                                    },
+                                    error: function(e) {
+                                        toastr.error(e.responseJSON);
+                                    }
+                                });
                             }
-
-                            if (a) {
-                                bootbox.confirm(
-                                    "This study topic has lesson plans. Are you sure you wish to delete it?",
-                                    function(result) {
-                                        if (result) {
-                                            $.ajax({
-                                                url: `/api/curriculum/StudyTopics/delete/${button.attr("data-topic-id")
-                                                    }`,
-                                                method: "DELETE",
-                                                success: function(a) {
-                                                    refreshTable("StudyTopics");
-                                                    toastr.success(a);
-                                                },
-                                                error: function(e) {
-                                                    toastr.error(e.responseJSON);
-                                                }
-                                            });
-                                        }
-                                    });
-                            }
-                        },
-                        error: function(e) {
-                            toastr.error(e.responseJSON);
-                        }
-                    });
+                        });
                 });
         });
 

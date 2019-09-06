@@ -248,6 +248,8 @@ namespace MyPortal
             CreateMap<StudentAttendanceMarkSingular, StudentAttendanceMarkCollection>()
                 .ForMember(dest => dest.Marks,
                     opts => opts.MapFrom(src => new List<AttendanceMarkLite> {src.Mark}));
+
+            CreateMap<ApplicationUser, GridApplicationUserDto>();
         }
     }
 }    

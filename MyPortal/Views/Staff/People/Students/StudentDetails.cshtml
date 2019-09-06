@@ -184,10 +184,14 @@
             <!-- Card Body -->
             <div class="card-body">
                 
-                <button type="button" class="btn btn-success mb-4" data-toggle="modal" data-target="#NewLogModal">
-                    <i class="fa fa-plus-circle"></i> New Log Note
-                </button>
-                
+                <div class="mb-4">
+                    
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#NewLogModal">
+                        <i class="fa fa-plus-circle"></i> New Log Note
+                    </button>
+
+                </div>
+
                 @Html.EJS().Grid("logs").DataSource(dataManager => { dataManager.Url("/api/profiles/logs/get/byStudent/dataGrid/" + Model.Student.Id).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
                 {
                     c.Field("Date").HeaderText("Date").Template("#logDateTemplate").Width("105").Add();
@@ -207,17 +211,18 @@
             <!-- Card Header - Dropdown -->
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary">Documents</h6>
-                <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(17px, 19px, 0px);">
-                        <a class="dropdown-item" data-toggle="modal" data-target="#NewDocumentModal">New Document</a>
-                    </div>
-                </div>
             </div>
             <!-- Card Body -->
             <div class="card-body">
+                
+                <div class="mb-4">
+                    
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#NewDocumentModal">
+                        <i class="fa fa-plus-circle"></i> New Document
+                    </button>
+
+                </div>
+
                 @Html.EJS().Grid("documents").DataSource(dataManager => { dataManager.Url("/api/documents/personal/get/dataGrid/" + Model.Student.Person.Id).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
                 {
                     c.Field("Description").HeaderText("Description").Template("#docsDescriptionTemplate").Width("700").Add();

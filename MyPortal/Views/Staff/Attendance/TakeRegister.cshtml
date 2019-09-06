@@ -3,6 +3,7 @@
 @model MyPortal.ViewModels.TakeRegisterViewModel
 @{
     ViewBag.Title = "Take Register: " + @Model.Session.AttendancePeriod.Name + " - " + @Model.Session.CurriculumClass.Name;
+    ViewBag.DisplayTitle = "Take Register";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
@@ -12,28 +13,48 @@
     }
 </style>
 
-<div class="container float-left">
-    <h2 class="mp-page-title">Take Register:</h2>
-    <h4>@Model.SessionDate.ToLongDateString() -  @Model.Session.CurriculumClass.Name (@Model.Session.AttendancePeriod.Name) - @PeopleProcesses.GetStaffDisplayName(Model.Session.CurriculumClass.Teacher).ResponseObject</h4>
-    <hr />
-</div>
+@*<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Take Register</h1>
+</div>*@
 
-<div class="container float-left">
-    @Html.EJS().Grid("Marks").DataSource(d =>
-    {
-        d.Url($"/api/attendance/marks/takeRegister/dataGrid/{Model.WeekId}/{Model.Session.Id}").BatchUrl("/api/attendance/marks/saveRegister").CrossDomain(false).Adaptor("UrlAdaptor");
-    }).Columns(c =>
-    {
-        c.Field("StudentName").HeaderText("Student").Template("#marksStudentTemplate").Width("150").Add();
-        c.Field("Mark.Mark").HeaderText(Model.Session.AttendancePeriod.Name).Width("150").Add();
-    }).EditSettings(e => { e.AllowEditing(true).Mode(EditMode.Batch);}).EnableHover().Toolbar(new List<string>() {"Update", "Cancel"}).ActionComplete("dataGridActionComplete").Render()
-</div>
-
-<div class="container float-left">
-    <div class="form-group">
-        <button type="button" class="btn btn-primary" id="buttonBack">Back</button>
-        <button type="button" class="btn btn-primary" id="buttonSearch">Save</button>
+@if (User.HasPermission("TakeRegister"))
+{
+    <div class="row">
+    
+        <div class="col-xl-12 col-lg-12 mb-4">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">@Model.SessionDate.ToLongDateString() -  @Model.Session.CurriculumClass.Name (@Model.Session.AttendancePeriod.Name) - @PeopleProcesses.GetStaffDisplayName(Model.Session.CurriculumClass.Teacher).ResponseObject</h6>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    @Html.EJS().Grid("Marks").DataSource(d =>
+                    {
+                        d.Url(Url.HttpRouteUrl("ApiAttendanceLoadRegisterDataGrid", new {weekId = Model.WeekId, sessionId = Model.Session.Id})).BatchUrl(Url.HttpRouteUrl("ApiAttendanceSaveRegisterMarks", new {})).CrossDomain(false).Adaptor("UrlAdaptor");
+                    }).Columns(c =>
+                    {
+                        c.Field("StudentName").HeaderText("Student").Template("#marksStudentTemplate").Width("150").Add();
+                        c.Field("Mark.Mark").HeaderText(Model.Session.AttendancePeriod.Name).Width("150").Add();
+                    }).EditSettings(e => { e.AllowEditing(true).Mode(EditMode.Batch);}).EnableHover().Toolbar(new List<string>() {"Update", "Cancel"}).ActionComplete("dataGridActionComplete").Render()
+                </div>
+            </div>
+        </div>
+    
     </div>
+}
+
+<div class="row">
+    
+    <div class="col-xl-12 col-md-12">
+        
+        <div class="form-group">
+            <button type="button" class="btn btn-primary" id="buttonBack">Back</button>
+            <button type="button" class="btn btn-primary" id="buttonSearch">Save</button>
+        </div>
+
+    </div>
+
 </div>
 
 @section scripts
@@ -42,7 +63,7 @@
         $(document).ready(function () {
             $("#buttonBack").on("click",
                 function () {
-                    location.replace("/Staff/Attendance/Registers");
+                    location.replace("@Url.Action("Registers", "Staff")");
                 });
         }); 
 

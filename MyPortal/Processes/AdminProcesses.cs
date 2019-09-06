@@ -7,6 +7,7 @@ using System.Web;
 using AutoMapper;
 using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
+using MyPortal.Dtos.GridDtos;
 using MyPortal.Dtos.Identity;
 using MyPortal.Models;
 using MyPortal.Models.Database;
@@ -277,6 +278,15 @@ namespace MyPortal.Processes
             return new ProcessResponse<IEnumerable<ApplicationUserDto>>(ResponseType.Ok, null, list);
         }
 
+        public static async Task<ProcessResponse<IEnumerable<GridApplicationUserDto>>> GetAllUsers_DataGrid(IdentityContext identity)
+        {
+            var users = await GetAllUsers_Model(identity);
+
+            var list = users.ResponseObject.Select(Mapper.Map<ApplicationUser, GridApplicationUserDto>);
+
+            return new ProcessResponse<IEnumerable<GridApplicationUserDto>>(ResponseType.Ok, null, list);
+        }
+
         public static async Task<ProcessResponse<object>> RemoveFromRole(string userId, string roleName,
             UserManager<ApplicationUser, string> userManager, IdentityContext identity, MyPortalDbContext context)
         {
@@ -406,6 +416,23 @@ namespace MyPortal.Processes
             var process = await GetAllRoles_Model(identity);
 
             var roles = process.ResponseObject.Select(Mapper.Map<ApplicationRole, ApplicationRoleDto>);
+
+            return new ProcessResponse<IEnumerable<ApplicationRoleDto>>(ResponseType.Ok, null, roles);
+        }
+
+        public static async Task<ProcessResponse<IEnumerable<ApplicationRole>>> GetRolesByUser_Model(string userId, RoleManager<ApplicationRole, string> roleManager)
+        {
+            var roles = await roleManager.Roles.Where(x => x.Users.Any(u => u.UserId == userId)).OrderBy(x => x.Name)
+                .ToListAsync();
+
+            return new ProcessResponse<IEnumerable<ApplicationRole>>(ResponseType.Ok, null, roles);
+        }
+
+        public static async Task<ProcessResponse<IEnumerable<ApplicationRoleDto>>> GetRolesByUser(string userId, RoleManager<ApplicationRole, string> roleManager)
+        {
+            var result = await GetRolesByUser_Model(userId, roleManager);
+
+            var roles = result.ResponseObject.Select(Mapper.Map<ApplicationRole, ApplicationRoleDto>);
 
             return new ProcessResponse<IEnumerable<ApplicationRoleDto>>(ResponseType.Ok, null, roles);
         }

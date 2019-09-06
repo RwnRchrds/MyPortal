@@ -19,6 +19,7 @@ using Syncfusion.EJ2.Base;
 namespace MyPortal.Controllers.Api
 {
     [RoutePrefix("api/admin")]
+    [Authorize]
     public class AdminController : MyPortalIdentityApiController
     {
         [HttpPost]
@@ -49,6 +50,17 @@ namespace MyPortal.Controllers.Api
             return PrepareResponse(result);
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        //TODO: Generate random 12 char string for each client
+        [Route("5wf0wxy08maf/createSystemUser")]
+        public async Task<IHttpActionResult> Diagnostic_CreateSystemUser()
+        {
+            await DiagnosticProcesses.CreateSystemUser(_userManager);
+
+            return Json(true);
+        }
+
         [HttpDelete]
         [RequiresPermission("EditUsers")]
         [Route("users/delete/{userId}", Name = "ApiAdminDeleteUser")]
@@ -77,6 +89,16 @@ namespace MyPortal.Controllers.Api
             var result = await AdminProcesses.GetAllUsers(_identity);
 
             return PrepareResponseObject(result);
+        }
+
+        [HttpPost]
+        [RequiresPermission("EditUsers")]
+        [Route("users/get/dataGrid/all", Name = "ApiAdminGetAllUsersDataGrid")]
+        public async Task<IHttpActionResult> GetAllUsersDataGrid([FromBody] DataManagerRequest dm)
+        {
+            var result = PrepareResponseObject(await AdminProcesses.GetAllUsers_DataGrid(_identity));
+
+            return PrepareDataGridObject(result, dm);
         }
 
         [HttpPost]
@@ -147,6 +169,27 @@ namespace MyPortal.Controllers.Api
             var result = await AdminProcesses.GetAllRoles(_identity);
 
             return PrepareResponseObject(result);
+        }
+
+        [RequiresPermission("EditUsers")]
+        [Route("roles/get/byUser", Name = "ApiAdminGetRolesByUser")]
+        [HttpGet]
+        public async Task<IEnumerable<ApplicationRoleDto>> GetRolesByUser([FromUri] string userId)
+        {
+            var result = await AdminProcesses.GetRolesByUser(userId, _roleManager);
+
+            return PrepareResponseObject(result);
+        }
+
+        [RequiresPermission("EditUsers")]
+        [Route("roles/get/dataGrid/byUser", Name = "ApiAdminGetRolesByUserDataGrid")]
+        [HttpPost]
+        public async Task<IHttpActionResult> GetRolesByUserDataGrid([FromUri] string userId,
+            [FromBody] DataManagerRequest dm)
+        {
+            var result = PrepareResponseObject(await AdminProcesses.GetRolesByUser(userId, _roleManager));
+
+            return PrepareDataGridObject(result, dm);
         }
 
         [RequiresPermission("EditRoles")]

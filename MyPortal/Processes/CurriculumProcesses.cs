@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Web;
+using System.Web.WebSockets;
 using AutoMapper;
 using Microsoft.Ajax.Utilities;
 using MyPortal.Dtos;
@@ -900,13 +901,18 @@ namespace MyPortal.Processes
             return new ProcessResponse<object>(ResponseType.Ok, "Lesson plan updated", null);
         }
 
-        public static ProcessResponse<object> DeleteLessonPlan(int lessonPlanId, MyPortalDbContext context)
+        public static ProcessResponse<object> DeleteLessonPlan(int lessonPlanId, int staffId, bool canDeleteAll, MyPortalDbContext context)
         {
             var plan = context.CurriculumLessonPlans.SingleOrDefault(x => x.Id == lessonPlanId);
 
             if (plan == null)
             {
                 return new ProcessResponse<object>(ResponseType.NotFound, "Lesson plan not found", null);
+            }
+
+            if (!canDeleteAll && plan.AuthorId != staffId)
+            {
+                return new ProcessResponse<object>(ResponseType.BadRequest, "Cannot delete someone else's lesson plan", null);
             }
 
             context.CurriculumLessonPlans.Remove(plan);

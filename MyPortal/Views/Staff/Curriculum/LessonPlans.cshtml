@@ -2,34 +2,58 @@
 
 @{
     ViewBag.Title = "Lesson Plans";
+    ViewBag.DisplayTitle = "Lesson Plans";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<div class="container">
-    <h2 class="mp-page-title">Lesson Plans</h2>
-    <hr/>
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Lesson Plans</h1>
 </div>
 
-<div class="container">
-    <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" onclick="openNewLessonPlanModal()">New Lesson Plan</button>
-    <hr/>
-</div>
+<div class="row">
+    
+    <div class="col-xl-12 col-md-12 mb-4">
 
-<div class="container">
-    <div class="form-group">
-        @Html.Label("Study Topic")
-        @Html.DropDownList("SelectedTopic", new SelectList(Model.StudyTopics, "Id", "Name"), "Select Study Topic", new {@class = "form-control", Name = "Id", id = "selectedTopic"})
+        <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" onclick="openNewLessonPlanModal()">New Lesson Plan</button>
+
     </div>
+
 </div>
 
-<div class="container">
-    @Html.EJS().Grid("LessonPlans").DataSource(d => { d.Url($"/api/curriculum/lessonPlans/get/byTopic/dataGrid/0").CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
-    {
-        c.Field("Title").HeaderText("Title").Template("#lessonPlansTitleTemplate").Width("300").Add();
-        c.Field("StudyTopic").HeaderText("StudyTopic").Template("#lessonPlansStudyTopicTemplate").Width("200").Add();
-        c.Field("Author").HeaderText("Author").Template("#lessonPlansAuthorTemplate").Width("150").Add();
-        c.HeaderText("Actions").Template("#lessonPlansActionsTemplate").Width("170").Add();
-    }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string> {"Search"}).Render()
+<div class="row">
+    
+    <div class="col-xl-12 col-md-12 mb-4">
+        
+        <div class="form-group">
+            @Html.Label("Study Topic")
+            @Html.DropDownList("SelectedTopic", new SelectList(Model.StudyTopics, "Id", "Name"), "Select Study Topic", new {@class = "form-control", Name = "Id", id = "selectedTopic"})
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row">
+    
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Lesson Plans</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                @Html.EJS().Grid("LessonPlans").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiCurriculumGetLessonPlansByStudyTopicDataGrid", new {studyTopicId = 0})).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+                {
+                    c.Field("Title").HeaderText("Title").Template("#lessonPlansTitleTemplate").Width("300").Add();
+                    c.Field("StudyTopic").HeaderText("StudyTopic").Template("#lessonPlansStudyTopicTemplate").Width("200").Add();
+                    c.Field("Author").HeaderText("Author").Template("#lessonPlansAuthorTemplate").Width("150").Add();
+                    c.HeaderText("Actions").Template("#lessonPlansActionsTemplate").Width("170").Add();
+                }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string> {"Search"}).Render()
+            </div>
+        </div>
+    </div>
+    
 </div>
 
 <div id="NewLessonPlanModal" class="modal fade" role="dialog">
@@ -40,7 +64,7 @@
                 <h4 class="modal-title">New Lesson Plan</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/curriculum/lessonPlans/create", HttpMethod = "POST", OnSuccess = "newLessonPlanSuccess", OnFailure = "newLessonPlanFailure"}, new {id = "newLessonPlanForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiCurriculumCreateLessonPlan", new {}), HttpMethod = "POST", OnSuccess = "newLessonPlanSuccess", OnFailure = "newLessonPlanFailure"}, new {id = "newLessonPlanForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -86,7 +110,7 @@
                 <h4 class="modal-title">Edit Lesson Plan</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/curriculum/lessonPlans/update", HttpMethod = "POST", OnSuccess = "editLessonPlanSuccess", OnFailure = "editLessonPlanFailure"}, new {id = "editLessonPlanForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiCurriculumUpdateLessonPlan", new {}), HttpMethod = "POST", OnSuccess = "editLessonPlanSuccess", OnFailure = "editLessonPlanFailure"}, new {id = "editLessonPlanForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -130,6 +154,13 @@
 @section scripts
 {
     <script>
+
+        var urlGetLessonPlansByStudyTopic =
+            "@Url.HttpRouteUrl("ApiCurriculumGetLessonPlansByStudyTopicDataGrid", new {studyTopicId = "abcd"})";
+        var urlGetLessonPlanById = "@Url.HttpRouteUrl("ApiCurriculumGetLessonPlanById", new {lessonPlanId = "abcd"})";
+        var urlViewLessonPlan = "@Url.HttpRouteUrl("CurriculumLessonPlanDetails", new {id = "abcd"})";
+        var urlDeleteLessonPlan = "@Url.HttpRouteUrl("ApiCurriculumDeleteLessonPlan", new {})";
+
         $(document).ready(function() {
             $('.modal').on('hidden.bs.modal',
                 function() {
@@ -139,8 +170,7 @@
             $("#selectedTopic").on("change",
                 function() {
                     var studyTopicId = $("#selectedTopic").val();
-                    changeTableSource("LessonPlans",
-                        `/api/curriculum/lessonPlans/get/byTopic/dataGrid/${studyTopicId}`);
+                    changeTableSource("LessonPlans", urlGetLessonPlansByStudyTopic.replace("abcd", studyTopicId));
                     refreshTable("LessonPlans");
                 });
 
@@ -150,7 +180,7 @@
                     var button = $(this);
                     var planId = button.attr("data-plan-id");
                     $.ajax({
-                        url: "/api/curriculum/lessonPlans/get/byId/" + planId,
+                        url: urlGetLessonPlanById.replace("abcd", planId),
                         method: "GET",
                         success: function(result) {
                             $("#editStudyTopicControl").val(result["studyTopicId"]);
@@ -171,7 +201,7 @@
                 ".js-view",
                 function() {
                     var button = $(this);
-                    location.href = "/Staff/Curriculum/LessonPlans/View/" + button.attr("data-plan-id");
+                    location.href = urlViewLessonPlan.replace("abcd", button.attr("data-plan-id"));
                 });
 
             $("#LessonPlans").on("click",
@@ -182,7 +212,7 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: "/api/curriculum/lessonPlans/delete/" + button.attr("data-plan-id"),
+                                    url: urlDeleteLessonPlan.replace("abcd", button.attr("data-plan-id")),
                                     method: "DELETE",
                                     success: function(a) {
                                         refreshTable("LessonPlans");
@@ -220,10 +250,10 @@
         }
 
         function openNewLessonPlanModal() {
-            var commentBank = $("#selectedTopic").val();
+            var studyTopic = $("#selectedTopic").val();
 
-            if (commentBank !== "") {
-                $("#newStudyTopicControl").val(commentBank);
+            if (studyTopic !== "") {
+                $("#newStudyTopicControl").val(studyTopic);
                 $("#NewLessonPlanModal").modal('toggle');
             }
         }

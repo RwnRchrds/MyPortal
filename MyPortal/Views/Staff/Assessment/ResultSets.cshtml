@@ -1,29 +1,52 @@
-﻿@model MyPortal.ViewModels.ResultSetsViewModel
+﻿@using MyPortal.Processes
+@model MyPortal.ViewModels.ResultSetsViewModel
 @{
     ViewBag.Title = "Result Sets";
+    ViewBag.DisplayTitle = "Result Sets";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-    <div class="container">
-        <h2 class="mp-page-title">Result Sets</h2>
-        <hr />
-    </div>
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Result Sets</h1>
+</div>
 
-    <div class="container">
-        <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" data-target="#NewResultSetModal">New Result Set</button>
-        <hr />
-    </div>
+@if (User.HasPermission("EditResultSets"))
+{
+    <div class="row">
 
-    <div class="container">
-        @Html.EJS().Grid("ResultSets").DataSource(d => { d.Url("/api/assessment/resultSets/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
-        {
-            c.Field("Name").HeaderText("Name").Template("#resultSetsNameTemplate").Width("150").Add();
-            c.HeaderText("Status").Template("#resultSetsStatusTemplate").Width("150").Add();
-            c.HeaderText("Actions").Template("#resultSetsActionsTemplate").Width("170").Add();
-        }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string> {"Search"}).Render()
-    </div>
+        <div class="col-xl-12 col-md-12 mb-4">
 
-    <div id="NewResultSetModal" class="modal fade" role="dialog">
+            <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" data-target="#NewResultSetModal">New Result Set</button>
+
+        </div>
+
+    </div>
+}
+
+
+<div class="row">
+    
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Result Sets</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                @Html.EJS().Grid("ResultSets").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiAssessmentGetAllResultSetsDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+                {
+                    c.Field("Name").HeaderText("Name").Template("#resultSetsNameTemplate").Width("150").Add();
+                    c.HeaderText("Status").Template("#resultSetsStatusTemplate").Width("150").Add();
+                    c.HeaderText("Actions").Template("#resultSetsActionsTemplate").Width("170").Add();
+                }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string> {"Search"}).Render()
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<div id="NewResultSetModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <!--content-->
             <div class="modal-content">
@@ -31,7 +54,7 @@
                     <h4 class="modal-title">New Result Set</h4>
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/resultSets/new", HttpMethod = "POST", OnSuccess = "newResultSetSuccess", OnFailure = "newResultSetFailure" }, new { id = "newResultSetForm" }))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiAssessmentCreateResultSet", new {}), HttpMethod = "POST", OnSuccess = "newResultSetSuccess", OnFailure = "newResultSetFailure" }, new { id = "newResultSetForm" }))
                 {
                     <div class="modal-body">
                         <div class="form-group">
@@ -57,7 +80,7 @@
                     <h4 class="modal-title">Edit Result Set</h4>
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/resultSets/update", HttpMethod = "POST", OnSuccess = "editResultSetSuccess", OnFailure = "editResultSetFailure" }, new { id = "editResultSetForm" }))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiAssessmentUpdateResultSet", new {}), HttpMethod = "POST", OnSuccess = "editResultSetSuccess", OnFailure = "editResultSetFailure" }, new { id = "editResultSetForm" }))
                 {
                     <div class="modal-body">
                         <div class="form-group">
@@ -81,6 +104,12 @@
 @section scripts
 {
     <script>
+
+        var urlGetResultSetById = "@Url.HttpRouteUrl("ApiAssessmentGetResultSetById", new {resultSetId = "abcd"})";
+        var urlSetResultSetCurrent =
+            "@Url.HttpRouteUrl("ApiAssessmentSetResultSetAsCurrent", new {resutlSetId = "abcd"})";
+        var urlDeleteResultSet = "@Url.HttpRouteUrl("ApiAssessmentDeleteResultSet", new {resultSetId = "abcd"})";
+
         $(document).ready(function() {
             $('.modal').on('hidden.bs.modal',
                 function() {
@@ -90,10 +119,10 @@
             $("#ResultSets").on("click",
                 ".js-edit",
                 function() {
-                    const button = $(this);
-                    const setId = button.attr("data-set-id");
+                    var button = $(this);
+                    var setId = button.attr("data-set-id");
                     $.ajax({
-                        url: `/api/resultSets/byId/${setId}`,
+                        url: urlGetResultSetById.replace("abcd", setId),
                         method: "GET",
                         success: function(result) {
                             $("#EditResultSetNameControl").val(result["name"]);
@@ -114,7 +143,7 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: `/api/assessment/resultSets/setCurrent/${button.attr("data-set-id")}`,
+                                    url: urlSetResultSetCurrent.replace("abcd", button.attr("data-set-id")),
                                     method: "POST",
                                     success: function(a) {
                                         refreshTable("ResultSets");
@@ -136,7 +165,7 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: `/api/assessment/resultSets/delete/${button.attr("data-set-id")}`,
+                                    url: urlDeleteResultSet.replace("abcd", button.attr("data-set-id")),
                                     method: "DELETE",
                                     success: function(a) {
                                         refreshTable("ResultSets");

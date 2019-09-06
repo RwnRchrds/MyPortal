@@ -299,6 +299,7 @@
     <Compile Include="Dtos\FinanceProductDto.cs" />
     <Compile Include="Dtos\FinanceProductTypeDto.cs" />
     <Compile Include="Dtos\FinanceSaleDto.cs" />
+    <Compile Include="Dtos\GridDtos\GridApplicationUserDto.cs" />
     <Compile Include="Dtos\GridDtos\GridAssessmentResultSetDto.cs" />
     <Compile Include="Dtos\GridDtos\GridBehaviourAchievementDto.cs" />
     <Compile Include="Dtos\GridDtos\GridCurriculumClassDto.cs" />
@@ -393,6 +394,7 @@
     <Compile Include="Processes\AttendanceProcesses.cs" />
     <Compile Include="Processes\BehaviourProcesses.cs" />
     <Compile Include="Processes\CurriculumProcesses.cs" />
+    <Compile Include="Processes\DiagnosticProcesses.cs" />
     <Compile Include="Processes\DocumentProcesses.cs" />
     <Compile Include="Processes\FinanceProcesses.cs" />
     <Compile Include="Processes\LookupProcesses.cs" />

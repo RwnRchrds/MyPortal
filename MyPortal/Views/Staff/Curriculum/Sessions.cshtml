@@ -2,35 +2,58 @@
 @model MyPortal.ViewModels.SessionsViewModel
 @{
     ViewBag.Title = "Sessions";
+    ViewBag.DisplayTitle = "Class Sessions";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<div class="container">
-    <h2 class="mp-page-title">Sessions for @Model.Class.Name</h2>
-    <hr/>
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Sessions for @Model.Class.Name</h1>
 </div>
 
-<div class="container">
-    @if (User.HasPermission("EditClasses"))
-    {
+<div class="row">
+    
+    <div class="col-xl-12 col-md-12">
+        
         <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" data-target="#newSessionModal">Add Period</button>
         <button type="button" class="btn btn-primary mp-btn-top-auto" id="addRegPeriods">Add Reg Periods</button>
-        <hr />
-    }
+
+    </div>
+
 </div>
 
-<div class="container">
-    @Html.EJS().Grid("Sessions").DataSource(d =>
-    {
-        d.Url($"/api/curriculum/sessions/get/byClass/dataGrid/{Model.Class.Id}").CrossDomain(false).Adaptor("UrlAdaptor");
-    }).Columns(c =>
-    {
-        c.Field("PeriodName").HeaderText("Period").Template("#sessionsPeriodTemplate").Width("150").Add();
-        c.HeaderText("Actions").Template("#sessionsActionsTemplate").Width("170").Add();
-    }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true);}).Toolbar(new List<string> {"Search"}).Render()
+<div class="row">
+    
+    <div class="col-xl-12 col-lg-12 mb-4">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Students</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                @Html.EJS().Grid("Sessions").DataSource(d =>
+                {
+                    d.Url(Url.HttpRouteUrl("ApiCurriculumGetSessionsByClassDataGrid", new{classId = Model.Class.Id})).CrossDomain(false).Adaptor("UrlAdaptor");
+                }).Columns(c =>
+                {
+                    c.Field("PeriodName").HeaderText("Period").Template("#sessionsPeriodTemplate").Width("150").Add();
+                    c.HeaderText("Actions").Template("#sessionsActionsTemplate").Width("170").Add();
+                }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true);}).Toolbar(new List<string> {"Search"}).Render()
+            </div>
+        </div>
+    </div>
+    
 </div>
 
-<button type="button" class="btn btn-primary" id="backButton">Back</button>
+<div class="row">
+    
+    <div class="col-xl-12 col-md-12">
+
+        <button type="button" class="btn btn-primary" id="backButton">Back</button>
+
+    </div>
+
+</div>
 
 <div id="newSessionModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -40,7 +63,7 @@
                 <h4 class="modal-title">Add Period for Class</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/curriculum/sessions/create", HttpMethod = "POST", OnSuccess = "newSessionSuccess", OnFailure = "newSessionFailure" }, new { id = "newSessionForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiCurriculumCreateSession", new {}), HttpMethod = "POST", OnSuccess = "newSessionSuccess", OnFailure = "newSessionFailure" }, new { id = "newSessionForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -69,7 +92,7 @@
                 <h4 class="modal-title">Edit Session</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/curriculum/sessions/update", HttpMethod = "POST", OnSuccess = "editSessionSuccess", OnFailure = "editSessionFailure" }, new { id = "editSessionForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiCurriculumUpdateSession", new {}), HttpMethod = "POST", OnSuccess = "editSessionSuccess", OnFailure = "editSessionFailure" }, new { id = "editSessionForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -94,6 +117,11 @@
 @section scripts
 {
     <script>
+
+        var urlGetSessionById = "@Url.HttpRouteUrl("ApiCurriculumGetSessionById", new {sessionId = "abcd"})";
+        var urlDeleteSession = "@Url.HttpRouteUrl("ApiCurriculumDeleteSession", new {sessionId = "abcd"})";
+        var urlAddRegPeriods = "@Url.HttpRouteUrl("ApiCurriculumCreateSessionsForRegPeriods", new {})";
+
         $(document).ready(function() {
             $('.modal').on('hidden.bs.modal',
                 function() {
@@ -111,7 +139,7 @@
                     var button = $(this);
                     var sessionId = button.attr("data-session-id");
                     $.ajax({
-                        url: "/api/curriculum/sessions/get/byId/" + sessionId,
+                        url: urlGetSessionById.replace("abcd", sessionId),
                         method: "GET",
                         success: function(result) {
                             $("#editPeriodControl").val(result["periodId"]);
@@ -133,8 +161,7 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: "/api/curriculum/sessions/delete/" +
-                                        button.attr("data-session-id"),
+                                    url: urlDeleteSession.replace("abcd", button.attr("data-session-id")),
                                     method: "DELETE",
                                     success: function(a) {
                                         refreshTable("Sessions");
@@ -154,7 +181,7 @@
                         function (result) {
                             if (result) {
                                 $.ajax({
-                                    url: "/api/curriculum/sessions/addRegPeriods",
+                                    url: urlAddRegPeriods,
                                     data: {classId: @Model.Class.Id, periodId: 0},
                                     method: "POST",
                                     success: function (a) {

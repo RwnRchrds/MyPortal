@@ -10,95 +10,75 @@
 </div>
 
 
-<div class="row">
+<div class="row" id="topRow" data-user-id="@Model.User.Id">
     
     <div class="col-xl-12 col-md-12 mb-4">
         @if (Model.AttachedProfileName == "")
-            {
-                <p class="text-danger">No user profile attached</p>
-            }
-            else
-            {
-                <p class="text-success">User profile attached: @Model.AttachedProfileName</p>
-            }
+        {
+            <p class="text-danger">No user profile attached</p>
+        }
+        else
+        {
+            <p class="text-primary">User profile attached: @Model.AttachedProfileName</p>
+        }
     </div>
     
 </div>
-
 
 <div class="row">
     
-    <div class="col-xl-12 col-md-12">
-        <button type="button" class="btn btn-success mp-btn-top-auto" data-user-id="@Model.User.Id" id="AttachPerson" data-toggle="modal" data-target="#AttachPersonModal">
-                <i class="fas fa-user-tag"></i> Attach Profile
+    <div class="col-xl-12 col-md-12 mb-4">
+
+        <div class="dropdown mp-btn-top inline-block">
+            <button class="btn btn-primary dropdown-toggle mp-btn-top" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-user"></i> User
             </button>
-        
-            <button type="button" class="btn btn-danger mp-btn-top-auto" data-user-id="@Model.User.Id" id="DetachPerson">
-                <i class="fas fa-user-times"></i> Detach Profile
-            </button>
-    </div>
 
-</div>
-
-<div class="row">
-
-    <div class="col-xl-12 col-md-12">
-        <button type="button" class="btn btn-success mp-btn-top-auto" id="AddRole" data-toggle="modal" data-target="#AddRoleModal">
-            <i class="fa fa-plus-circle"></i> Add Role
-        </button>
-        
-        <button type="button" class="btn btn-warning mp-btn-top-auto" data-toggle="modal" data-target="#ResetPasswordModal" id="ResetPassword">
-            <i class="fas fa-key"></i> Reset Password
-        </button>
-        
-        
-        <button type="button" class="btn btn-danger mp-btn-top-auto" data-user-id="@Model.User.Id" id="DeleteUser">
-            <i class="fas fa-user-slash"></i> Delete User
-        </button>
-    </div>
-    
-</div>
-
-
-<div class="container float-left">
-    <div class="container" id="details">
-        <div class="float-left" id="Results">
-            <div class="card border-primary mp-card">
-                <div class="card-header bg-primary">User Roles</div>
-                @if (!Model.User.Roles.Any())
-                {
-                    {
-                        <text>
-                            <div class="card-body">No roles to display.</div></text>
-                    }
-                }
-                else
-                {
-                    <table class="table table-condensed table-bordered" id="roles">
-                        <thead>
-                        <tr style="background-color: #18bc9c">
-                            <th style="color: whitesmoke">Role</th>
-                            <th style="color: whitesmoke">Actions</th>
-                        </tr>
-                        </thead>
-                        @foreach (var role in Model.UserRoles)
-                        {
-                            <tr>
-                                <td>@role</td>
-                                <td>
-                                    <button data-role-name="@role" data-user-id="@Model.User.Id" type="button" class="btn btn-danger btn-xs js-delete">
-                                        <i class="far fa-trash-alt"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        }
-                    </table>
-                }
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <h6 class="dropdown-header">@Model.User.UserName</h6>
+                <a class="dropdown-item" data-toggle="modal" data-target="#AttachPersonModal" id="AttachPerson">Attach Profile</a>
+                <a class="dropdown-item" data-toggle="modal" id="DetachPerson">Detach Profile</a>
+                <a class="dropdown-item" data-toggle="modal" data-target="#ResetPasswordModal" id="ResetPassword">Reset Password</a>
+                <a class="dropdown-item" data-toggle="modal" data-target="#ResetPasswordModal" id="DeleteUser">Delete User</a>
             </div>
         </div>
+
     </div>
+
 </div>
 
+<div class="row">
+    
+    <div class="card shadow mb-4">
+        
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Roles</h6>
+        </div>
+        
+        <div class="card-body">
+            
+            <div class="mb-4">
+                
+                <button type="button" class="btn btn-primary mp-btn-top-auto" id="AddRole" data-toggle="modal" data-target="#AddRoleModal">
+                    <i class="fa fa-plus-circle"></i> Add Role
+                </button>
+
+            </div>
+            
+            @Html.EJS().Grid("Roles").DataSource(d =>
+            {
+                d.Url(Url.HttpRouteUrl("ApiAdminGetRolesByUser", new {})).CrossDomain(false).Adaptor("UrlAdaptor");
+            }).Columns(c =>
+            {
+                c.Field("Name").HeaderText("Role").Template("#rolesNameTemplate").Add();
+                c.HeaderText("Actions").Template("#rolesActionsTemplate").Width("170").Add();
+            }).AllowPaging().PageSettings(p => p.PageSize(5)).EnableHover(false).Render()
+
+        </div>
+
+    </div>
+
+</div>
 
 <div id="ResetPasswordModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -244,12 +224,12 @@
                                     url: urlRemoveUserFromRole,
                                     data: {userId: userId, roleName: roleName},
                                     method: "POST",
-                                    success: function(result) {
+                                    success: function(e) {
                                         location.reload();
-                                        toastr.success(result);
+                                        toastr.success(e);
                                     },
-                                    error: function(result) {
-                                        toastr.error(result.responseJSON);
+                                    error: function(e) {
+                                        toastr.error(e.responseJSON);
                                     }
                                 });
                             }
@@ -265,12 +245,12 @@
                                 $.ajax({
                                     url: urlDeleteUser.replace("abcd", button.attr("data-user-id")),
                                     method: "DELETE",
-                                    success: function(result) {
-                                        location.replace("/Staff/Admin/Users");
-                                        toastr.success(result);
+                                    success: function(e) {
+                                        location.replace("@Url.HttpRouteUrl("Users", "Admin")");
+                                        toastr.success(e);
                                     },
-                                    error: function(result) {
-                                        toastr.error(result.responseJSON);
+                                    error: function(e) {
+                                        toastr.error(e.responseJSON);
                                     }
                                 });
                             }
@@ -282,17 +262,17 @@
                     bootbox.confirm("Are you sure you wish to detach the personal profile from this user?",
                         function(result) {
                             if (result) {
-                                var data = { Id: $("#DetachPerson").attr("data-user-id") };
+                                var data = { Id: @Model.User.Id };
                                 $.ajax({
                                     url: urlDetachPerson,
                                     data: data,
                                     method: "POST",
-                                    success: function(result) {
-                                        toastr.success(result);
+                                    success: function(e) {
+                                        toastr.success(e);
                                         location.reload();
                                     },
-                                    error: function(result) {
-                                        toastr.error(result.responseJSON);
+                                    error: function(e) {
+                                        toastr.error(e.responseJSON);
                                     }
                                 });
                             }
@@ -415,7 +395,7 @@
                     var data;
                     if ($("#userTypeSelect").val() === "Student") {
                         data = {
-                            UserId: $("#AttachPerson").attr("data-user-id"),
+                            UserId: @Model.User.Id,
                             RoleName: "Student",
                             PersonId: $("#personSelect").val()
                         };
@@ -435,7 +415,7 @@
 
                     if ($("#userTypeSelect").val() === "Staff") {
                         data = {
-                            UserId: $("#AttachPerson").attr("data-user-id"),
+                            UserId: @Model.User.Id,
                             RoleName: "Staff",
                             PersonId: $("#personSelect").val()
                         };

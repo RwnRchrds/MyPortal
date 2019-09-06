@@ -1,27 +1,45 @@
 ﻿@model MyPortal.ViewModels.NewStaffViewModel
 @{
     ViewBag.Title = "Staff";
+    ViewBag.DisplayTitle = "Staff";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<div class="container">
-    <h2 class="mp-page-title">Staff</h2>
-    <hr/>
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Staff</h1>
 </div>
 
-<div class="container">
-    <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#NewStaffModal">New Staff</button>
-    <hr/>
+<div class="row">
+    
+    <div class="col-xl-12 col-md-12 mb-4">
+
+        <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#NewStaffModal">New Staff</button>
+
+    </div>
+
 </div>
 
-<div class="container">
-    @Html.EJS().Grid("Staff").DataSource(d =>
-    {
-        d.Url("/api/people/staff/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor");
-    }).Columns(c =>
-    {
-        c.Field("DisplayName").HeaderText("Staff").Template("#staffNameTemplate").Width("200").Add();
-    }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true);}).Toolbar(new List<string> {"Search"}).Render()
+<div class="row">
+    
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Staff</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                @Html.EJS().Grid("Staff").DataSource(d =>
+                {
+                    d.Url("/api/people/staff/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor");
+                }).Columns(c =>
+                {
+                    c.Field("DisplayName").HeaderText("Staff").Template("#staffNameTemplate").Width("200").Add();
+                }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true);}).Toolbar(new List<string> {"Search"}).Render()
+            </div>
+        </div>
+    </div>
+    
 </div>
 
 <div id="NewStaffModal" class="modal fade" role="dialog">
@@ -35,7 +53,7 @@
                     <span aria-hidden="false"></span>&times;
                 </button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/staff/new", HttpMethod = "POST", OnSuccess = "newStaffSuccess", OnFailure = "newStaffFailure"}, new {id = "newStaffForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiPeopleCreateStaff", new {}), HttpMethod = "POST", OnSuccess = "newStaffSuccess", OnFailure = "newStaffFailure"}, new {id = "newStaffForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -77,11 +95,14 @@
 @section scripts
 {
     <script>
+
+        var urlStaffDetails = "@Url.HttpRouteUrl("PeopleStaffDetails", new {id = "abcd"})";
+
         $(document).ready(function() {
             $('.modal').on('hidden.bs.modal',
                 function() {
                     $(this).find('form').trigger('reset');
-                });           
+                });
         });
 
         function newStaffSuccess(result) {
@@ -95,14 +116,18 @@
             refreshTable("Staff");
             toastr.error(result.responseJSON);
         }
+
+        function renderDetailsUrl(id) {
+            return urlStaffDetails.replace("abcd", id);
+        }
     </script>
-    
+
     <script type="text/x-jsrender" id="staffNameTemplate">
         <div>
-            <a href="/Staff/People/Staff/${Id}" class="mp-bold">${DisplayName}</a>
+            <a href="${renderDetailsUrl(Id)}" class="mp-bold">${DisplayName}</a>
         </div>
     </script>
 
-    
+
     @Scripts.Render("~/bundles/jqueryval")
 }

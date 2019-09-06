@@ -1,60 +1,88 @@
-﻿@using Syncfusion.EJ2.Grids
+﻿@using MyPortal.Processes
+@using Syncfusion.EJ2.Grids
 @model MyPortal.ViewModels.StudentBehaviourManagementViewModel
 @{
     ViewBag.Title = "Behaviour Management";
+    ViewBag.DisplayTitle = "Behaviour Management";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<div class="container">
-
-    <h2 class="mp-page-title">Behaviour Management - @Model.Student.Person.LastName, @Model.Student.Person.FirstName</h2>
-
-    <hr />
-
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">@PeopleProcesses.GetStudentDisplayName(Model.Student)</h1>
 </div>
 
-<div class="container">
-    <div>
-        <h4 class="mp-bold">Achievements</h4>
-        <button type="button" class="btn btn-primary mp-btn-table" data-toggle="modal" data-target="#newAchievementModal">
-            <i class="fa fa-plus-circle"></i> New Achievement
-        </button>
+<div class="row">
+    
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Achievements</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                
+                <div class="mb-4">
+                    
+                    <button type="button" class="btn btn-primary mp-btn-table" data-toggle="modal" data-target="#newAchievementModal">
+                        <i class="fa fa-plus-circle"></i> New Achievement
+                    </button>
 
-        @Html.EJS().Grid("achievements").DataSource(dataManager =>
-        {
-            dataManager.Url("/api/behaviour/achievements/get/byStudent/dataGrid/" + Model.Student.Id).CrossDomain(false).Adaptor("UrlAdaptor");
-        }).Columns(col =>
-        {
-            col.Field("Date").HeaderText("Date").Template("#achievementsDateTemplate").Add();
-            col.Field("TypeName").HeaderText("Type").Template("#achievementsTypeTemplate").Add();
-            col.Field("Location").HeaderText("Location").Template("#achievementsLocationTemplate").Add();
-            col.Field("Points").HeaderText("Points").Template("#achievementsPointsTemplate").Add();
-            col.Field("RecordedBy").HeaderText("Recorded By").Template("#achievementsRecordedByTemplate").Add();
-            col.HeaderText("Actions").Template("#achievementsActionsTemplate").Width("170").Add();
-        }).AllowPaging().PageSettings(page => page.PageSize(5)).EnableHover(false).GridLines(GridLine.Both).RowDataBound("achievementRowDataBound").Render()
+                </div>
+
+                @Html.EJS().Grid("achievements").DataSource(dataManager =>
+                {
+                    dataManager.Url(Url.HttpRouteUrl("ApiBehaviourGetAchievementsByStudentDataGrid", new {studentId = Model.Student.Id})).CrossDomain(false).Adaptor("UrlAdaptor");
+                }).Columns(col =>
+                {
+                    col.Field("Date").HeaderText("Date").Template("#achievementsDateTemplate").Add();
+                    col.Field("TypeName").HeaderText("Type").Template("#achievementsTypeTemplate").Add();
+                    col.Field("Location").HeaderText("Location").Template("#achievementsLocationTemplate").Add();
+                    col.Field("Points").HeaderText("Points").Template("#achievementsPointsTemplate").Add();
+                    col.Field("RecordedBy").HeaderText("Recorded By").Template("#achievementsRecordedByTemplate").Add();
+                    col.HeaderText("Actions").Template("#achievementsActionsTemplate").Width("170").Add();
+                }).AllowPaging().PageSettings(page => page.PageSize(5)).EnableHover(false).GridLines(GridLine.Both).RowDataBound("achievementRowDataBound").Render()
+            </div>
+        </div>
     </div>
+    
 </div>
 
-<div class="container mp-margin-top">
-    <div>
-        <h4 class="mp-bold">Behaviour Incidents</h4>
-        <button type="button" class="btn btn-primary mp-btn-table" data-toggle="modal" data-target="#newIncidentModal">
-            <i class="fa fa-plus-circle"></i> New Incident
-        </button>
+<div class="row">
 
-        @Html.EJS().Grid("behaviour").DataSource(dataManager =>
-        {
-            dataManager.Url("/api/behaviour/incidents/get/byStudent/dataGrid/" + Model.Student.Id).CrossDomain(false).Adaptor("UrlAdaptor");
-        }).Columns(col =>
-        {
-            col.Field("Date").HeaderText("Date").Template("#incidentsDateTemplate").Add();
-            col.Field("TypeName").HeaderText("Type").Template("#incidentsTypeTemplate").Add();
-            col.Field("Location").HeaderText("Location").Template("#incidentsLocationTemplate").Add();
-            col.Field("Points").HeaderText("Points").Template("#incidentsPointsTemplate").Add();
-            col.Field("RecordedBy").HeaderText("Recorded By").Template("#incidentsRecordedByTemplate").Add();
-            col.HeaderText("Actions").Template("#incidentsActionsTemplate").Width("170").Add();
-        }).AllowPaging().PageSettings(page => page.PageSize(5)).EnableHover(false).GridLines(GridLine.Both).RowDataBound("incidentRowDataBound").Render()
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Behaviour Incidents</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+
+                <div class="mb-4">
+
+                    <button type="button" class="btn btn-primary mp-btn-table" data-toggle="modal" data-target="#newAchievementModal">
+                        <i class="fa fa-plus-circle"></i> New Incident
+                    </button>
+
+                </div>
+
+                @Html.EJS().Grid("behaviour").DataSource(dataManager =>
+                {
+                    dataManager.Url(Url.HttpRouteUrl("ApiBehaviourGetBehaviourIncidentsByStudentDataGrid",  new {studentId = Model.Student.Id})).CrossDomain(false).Adaptor("UrlAdaptor");
+                }).Columns(col =>
+                {
+                    col.Field("Date").HeaderText("Date").Template("#incidentsDateTemplate").Add();
+                    col.Field("TypeName").HeaderText("Type").Template("#incidentsTypeTemplate").Add();
+                    col.Field("Location").HeaderText("Location").Template("#incidentsLocationTemplate").Add();
+                    col.Field("Points").HeaderText("Points").Template("#incidentsPointsTemplate").Add();
+                    col.Field("RecordedBy").HeaderText("Recorded By").Template("#incidentsRecordedByTemplate").Add();
+                    col.HeaderText("Actions").Template("#incidentsActionsTemplate").Width("170").Add();
+                }).AllowPaging().PageSettings(page => page.PageSize(5)).EnableHover(false).GridLines(GridLine.Both).RowDataBound("incidentRowDataBound").Render()
+            </div>
+        </div>
     </div>
+
 </div>
 
 <div id="newAchievementModal" class="modal fade" role="dialog">
@@ -65,7 +93,7 @@
                 <h4 class="modal-title">New Achievement</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/behaviour/achievements/create", HttpMethod = "POST", OnSuccess = "newAchievementSuccess", OnFailure = "newAchievementFailure" }, new { id = "newAchievementForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiBehaviourCreateAchievement", new {}), HttpMethod = "POST", OnSuccess = "newAchievementSuccess", OnFailure = "newAchievementFailure" }, new { id = "newAchievementForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -113,7 +141,7 @@
                 <h4 class="modal-title">Edit Achievement</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/behaviour/achievements/update", HttpMethod = "POST", OnSuccess = "editAchievementSuccess", OnFailure = "editAchievementFailure" }, new { id = "editAchievementForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiBehaviourUpdateAchievement", new {}), HttpMethod = "POST", OnSuccess = "editAchievementSuccess", OnFailure = "editAchievementFailure" }, new { id = "editAchievementForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -161,7 +189,7 @@
                 <h4 class="modal-title">New Incident</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/behaviour/incidents/create", HttpMethod = "POST", OnSuccess = "newIncidentSuccess", OnFailure = "newIncidentFailure" }, new { id = "newIncidentForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiBehaviourCreateIncident", new {}), HttpMethod = "POST", OnSuccess = "newIncidentSuccess", OnFailure = "newIncidentFailure" }, new { id = "newIncidentForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -209,7 +237,7 @@
                 <h4 class="modal-title">Edit Incident</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/behaviour/incidents/update", HttpMethod = "POST", OnSuccess = "editIncidentSuccess", OnFailure = "editIncidentFailure" }, new { id = "editIncidentForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiBehaviourUpdateIncident", new {}), HttpMethod = "POST", OnSuccess = "editIncidentSuccess", OnFailure = "editIncidentFailure" }, new { id = "editIncidentForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -255,6 +283,14 @@
 {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
+
+        var urlGetAchievementById = "@Url.HttpRouteUrl("ApiBehaviourGetAchievementById", new {achievementId = "abcd"})";
+        var urlGetIncidentById =
+            "@Url.HttpRouteUrl("ApiBehaviourGetBehaviourIncidentById",  new {incidentId = "abcd"})";
+        var urlDeleteAchievement = "@Url.HttpRouteUrl("ApiBehaviourDeleteAchievement", new {achievementId = "abcd"})";
+        var urlDeleteIncident = "@Url.HttpRouteUrl("ApiBehaviourDeleteIncident", new {incidentId = "abcd"})";
+        var urlStudentDetails = "@Url.HttpRouteUrl("PeopleStudentDetails", new {id = Model.Student.Id})";
+
         $(document).ready(function () {
             $('.modal').on('hidden.bs.modal',
                 function () {
@@ -267,7 +303,7 @@
                     var button = $(this);
                     var achievementId = button.attr("data-ba-id");
                     $.ajax({
-                        url: "/api/behaviour/achievements/get/byId/" + achievementId,
+                        url: urlGetAchievementById.replace("abcd", achievementId),
                         method: "GET",
                         success: function (result) {
                             $("#editAchievementIdControl").val(result["id"]);
@@ -290,7 +326,7 @@
                     var button = $(this);
                     var incidentId = button.attr("data-bi-id");
                     $.ajax({
-                        url: "/api/behaviour/behaviour/get/byId/" + incidentId,
+                        url: urlGetIncidentById.replace("abcd", incidentId),
                         method: "GET",
                         success: function (result) {
                             $("#editBehaviourIdControl").val(result["id"]);
@@ -315,7 +351,7 @@
                         function (result) {
                             if (result) {
                                 $.ajax({
-                                    url: "/api/behaviour/achievements/delete/" + button.attr("data-ba-id"),
+                                    url: urlDeleteAchievement.replace("abcd", button.attr("data-ba-id")),
                                     method: "DELETE",
                                     success: function (ajaxResult) {
                                         refreshAchievements();
@@ -337,7 +373,7 @@
                         function (result) {
                             if (result) {
                                 $.ajax({
-                                    url: "/api/behaviour/behaviour/delete/" + button.attr("data-bi-id"),
+                                    url: urlDeleteIncident.replace("abcd", button.attr("data-bi-id")),
                                     method: "DELETE",
                                     success: function (ajaxResult) {
                                         refreshIncidents();
@@ -353,7 +389,7 @@
 
             $("#backButton").on("click",
                 function () {
-                    location.replace("/Staff/People/Students/" + $("#backButton").attr("data-student-id"));
+                    location.replace(urlStudentDetails);
                 });
 
         });
