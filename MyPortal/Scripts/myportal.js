@@ -20,6 +20,14 @@ function renderBool(bool) {
     }
 }
 
+function renderApproved(bool) {
+    if (bool) {
+        return "Approved";
+    } else {
+        return "Pending Approval";
+    }
+}
+
 function changeTableSource(tableName, apiUrl) {
     var grid = document.getElementById(tableName.toString()).ej2_instances[0];
     grid.dataSource = new ej.data.DataManager({

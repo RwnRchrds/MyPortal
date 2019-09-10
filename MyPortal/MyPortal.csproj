@@ -674,6 +674,7 @@
     <Content Include="Content\ej2\fabric.css" />
     <Content Include="Content\ej2\highcontrast.css" />
     <Content Include="Content\ej2\material.css" />
+    <Content Include="Content\ej2\material.min.css" />
     <Content Include="Content\fontawesome-all.css" />
     <Content Include="Content\fontawesome-all.min.css" />
     <Content Include="Content\fontawesome.css" />

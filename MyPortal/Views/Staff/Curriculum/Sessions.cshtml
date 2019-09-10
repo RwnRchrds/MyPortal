@@ -12,7 +12,7 @@
 
 <div class="row">
     
-    <div class="col-xl-12 col-md-12">
+    <div class="col-xl-12 col-md-12 mb-4">
         
         <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" data-target="#newSessionModal">Add Period</button>
         <button type="button" class="btn btn-primary mp-btn-top-auto" id="addRegPeriods">Add Reg Periods</button>
@@ -27,7 +27,7 @@
         <div class="card shadow mb-4">
             <!-- Card Header - Dropdown -->
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Students</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Sessions</h6>
             </div>
             <!-- Card Body -->
             <div class="card-body">
@@ -47,7 +47,7 @@
 
 <div class="row">
     
-    <div class="col-xl-12 col-md-12">
+    <div class="col-xl-12 col-md-12 mb-4">
 
         <button type="button" class="btn btn-primary" id="backButton">Back</button>
 
@@ -118,8 +118,8 @@
 {
     <script>
 
-        var urlGetSessionById = "@Url.HttpRouteUrl("ApiCurriculumGetSessionById", new {sessionId = "abcd"})";
-        var urlDeleteSession = "@Url.HttpRouteUrl("ApiCurriculumDeleteSession", new {sessionId = "abcd"})";
+        var urlGetSessionById = "@Url.HttpRouteUrl("ApiCurriculumGetSessionById", new {sessionId = 9999})";
+        var urlDeleteSession = "@Url.HttpRouteUrl("ApiCurriculumDeleteSession", new {sessionId = 9999})";
         var urlAddRegPeriods = "@Url.HttpRouteUrl("ApiCurriculumCreateSessionsForRegPeriods", new {})";
 
         $(document).ready(function() {
@@ -139,7 +139,7 @@
                     var button = $(this);
                     var sessionId = button.attr("data-session-id");
                     $.ajax({
-                        url: urlGetSessionById.replace("abcd", sessionId),
+                        url: urlGetSessionById.replace("9999", sessionId),
                         method: "GET",
                         success: function(result) {
                             $("#editPeriodControl").val(result["periodId"]);
@@ -161,7 +161,7 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: urlDeleteSession.replace("abcd", button.attr("data-session-id")),
+                                    url: urlDeleteSession.replace("9999", button.attr("data-session-id")),
                                     method: "DELETE",
                                     success: function(a) {
                                         refreshTable("Sessions");

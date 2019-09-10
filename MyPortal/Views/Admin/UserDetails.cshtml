@@ -11,7 +11,7 @@
 
 
 <div class="row" id="topRow" data-user-id="@Model.User.Id">
-    
+
     <div class="col-xl-12 col-md-12 mb-4">
         @if (Model.AttachedProfileName == "")
         {
@@ -22,15 +22,15 @@
             <p class="text-primary">User profile attached: @Model.AttachedProfileName</p>
         }
     </div>
-    
+
 </div>
 
 <div class="row">
-    
+
     <div class="col-xl-12 col-md-12 mb-4">
 
         <div class="dropdown mp-btn-top inline-block">
-            <button class="btn btn-primary dropdown-toggle mp-btn-top" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button class="btn btn-primary dropdown-toggle px-4" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-user"></i> User
             </button>
 
@@ -39,7 +39,7 @@
                 <a class="dropdown-item" data-toggle="modal" data-target="#AttachPersonModal" id="AttachPerson">Attach Profile</a>
                 <a class="dropdown-item" data-toggle="modal" id="DetachPerson">Detach Profile</a>
                 <a class="dropdown-item" data-toggle="modal" data-target="#ResetPasswordModal" id="ResetPassword">Reset Password</a>
-                <a class="dropdown-item" data-toggle="modal" data-target="#ResetPasswordModal" id="DeleteUser">Delete User</a>
+                <a class="dropdown-item" id="DeleteUser">Delete User</a>
             </div>
         </div>
 
@@ -48,26 +48,26 @@
 </div>
 
 <div class="row">
-    
+
     <div class="card shadow mb-4">
-        
+
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
             <h6 class="m-0 font-weight-bold text-primary">Roles</h6>
         </div>
-        
+
         <div class="card-body">
-            
+
             <div class="mb-4">
-                
+
                 <button type="button" class="btn btn-primary mp-btn-top-auto" id="AddRole" data-toggle="modal" data-target="#AddRoleModal">
                     <i class="fa fa-plus-circle"></i> Add Role
                 </button>
 
             </div>
-            
+
             @Html.EJS().Grid("Roles").DataSource(d =>
             {
-                d.Url(Url.HttpRouteUrl("ApiAdminGetRolesByUser", new {})).CrossDomain(false).Adaptor("UrlAdaptor");
+                d.Url(Url.HttpRouteUrl("ApiAdminGetRolesByUserDataGrid", new { userId = Model.User.Id })).CrossDomain(false).Adaptor("UrlAdaptor");
             }).Columns(c =>
             {
                 c.Field("Name").HeaderText("Role").Template("#rolesNameTemplate").Add();
@@ -83,7 +83,7 @@
 <div id="ResetPasswordModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
-        
+
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Reset Password - @Model.User.UserName</h4>
@@ -91,19 +91,19 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiAdminChangePassword", new {}), HttpMethod = "POST", OnSuccess = "resetPasswordSuccess", OnFailure = "resetPasswordFailure"}, new {id = "ResetPasswordForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiAdminChangePassword", new { }), HttpMethod = "POST", OnSuccess = "resetPasswordSuccess", OnFailure = "resetPasswordFailure" }, new { id = "ResetPasswordForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Password")
-                        @Html.PasswordFor(p => p.ChangePassword.Password, new {@class = "form-control", id = "enteredPassword", Name = "Password"})
+                        @Html.PasswordFor(p => p.ChangePassword.Password, new { @class = "form-control", id = "enteredPassword", Name = "Password" })
                         @Html.ValidationMessageFor(p => p.ChangePassword.Password)
 
-                        @Html.HiddenFor(u => u.ChangePassword.UserId, new {Value = Model.User.Id, id = "userIdControl", Name = "UserId"})
+                        @Html.HiddenFor(u => u.ChangePassword.UserId, new { Value = Model.User.Id, id = "userIdControl", Name = "UserId" })
                     </div>
                     <div class="form-group">
                         @Html.Label("Confirm Password")
-                        @Html.PasswordFor(p => p.ChangePassword.Confirm, new {@class = "form-control", id = "confirmPassword", Name = "Confirm"})
+                        @Html.PasswordFor(p => p.ChangePassword.Confirm, new { @class = "form-control", id = "confirmPassword", Name = "Confirm" })
                         @Html.ValidationMessageFor(p => p.ChangePassword.Confirm)
                     </div>
                     <div class="modal-footer">
@@ -121,7 +121,7 @@
 <div id="AddRoleModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
-        
+
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add Role - @Model.User.UserName</h4>
@@ -129,14 +129,14 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiAdminAddUserToRole", new {}), HttpMethod = "POST", OnSuccess = "addRoleSuccess", OnFailure = "addRoleFailure"}, new {id = "AddRoleForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiAdminAddUserToRole", new { }), HttpMethod = "POST", OnSuccess = "addRoleSuccess", OnFailure = "addRoleFailure" }, new { id = "AddRoleForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Role")
-                        @Html.DropDownListFor(r => r.ChangeRole.RoleName, new SelectList(Model.Roles, "Name", "Name"), "Select Role", new {@class = "form-control", Name = "RoleName"})
+                        @Html.DropDownListFor(r => r.ChangeRole.RoleName, new SelectList(Model.Roles, "Name", "Name"), "Select Role", new { @class = "form-control", Name = "RoleName" })
 
-                        @Html.HiddenFor(u => u.ChangePassword.UserId, new {Value = Model.User.Id, Name = "UserId"})
+                        @Html.HiddenFor(u => u.ChangePassword.UserId, new { Value = Model.User.Id, Name = "UserId" })
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -153,7 +153,7 @@
 <div id="AttachPersonModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
-        
+
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Attach Person - @Model.User.UserName</h4>
@@ -161,7 +161,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = ""}, new {id = "AttachPersonForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "AttachPersonForm" }))
             {
                 <div class="modal-body">
 
@@ -205,18 +205,18 @@
 
             var urlRemoveUserFromRole = "@Url.HttpRouteUrl("ApiAdminRemoveFromRole", new {})";
             var urlDeleteUser = "@Url.HttpRouteUrl("ApiAdminDeleteUser", new {userId = "abcd"})";
-            var urlAttachPerson = @Url.HttpRouteUrl("ApiAttachPersonToUser", new {});
+            var urlAttachPerson = "@Url.HttpRouteUrl("ApiAdminAttachPersonToUser", new {})";
             var urlDetachPerson = "@Url.HttpRouteUrl("ApiAdminDetachPersonFromUser", new {})";
             var urlGetAllStaff = "@Url.HttpRouteUrl("ApiPeopleGetAllStaffMembers", new {})";
             var urlGetAllYearGroups = "@Url.HttpRouteUrl("ApiPastoralGetAllYearGroups", new {})";
-            var urlGetStudentsByYearGroup = "@Url.HttpRouteUrl("ApiPeopleGetStudentsByYearGroup", new {yearGroupId = "abcd"})";
+            var urlGetStudentsByYearGroup = "@Url.HttpRouteUrl("ApiPeopleGetStudentsByYearGroup", new {yearGroupId = 9999})";
 
-            $("#roles").on("click",
+            $("#Roles").on("click",
                 ".js-delete",
                 function() {
                     var button = $(this);
-                    var userId = button.attr("data-user-id");
-                    var roleName = button.attr("data-role-name");
+                    var userId = "@Model.User.Id";
+                    var roleName = button.attr("data-role-id");
                     bootbox.confirm("Are you sure you want to remove the user from this role?",
                         function(result) {
                             if (result) {
@@ -246,7 +246,7 @@
                                     url: urlDeleteUser.replace("abcd", button.attr("data-user-id")),
                                     method: "DELETE",
                                     success: function(e) {
-                                        location.replace("@Url.HttpRouteUrl("Users", "Admin")");
+                                        location.replace("@Url.Action("Users", "Admin")");
                                         toastr.success(e);
                                     },
                                     error: function(e) {
@@ -262,7 +262,7 @@
                     bootbox.confirm("Are you sure you wish to detach the personal profile from this user?",
                         function(result) {
                             if (result) {
-                                var data = { Id: @Model.User.Id };
+                                var data = { Id: "@Model.User.Id" };
                                 $.ajax({
                                     url: urlDetachPerson,
                                     data: data,
@@ -362,7 +362,7 @@
                 function() {
                     if ($("#studentYearGroupSelect").val() !== "") {
                         $.ajax({
-                            url: urlGetStudentsByYearGroup.replace("abcd", $("#studentYearGroupSelect").val()),
+                            url: urlGetStudentsByYearGroup.replace("9999", $("#studentYearGroupSelect").val()),
                             method: "GET",
                             complete: function(data) {
                                 $("#personSelect").empty();
@@ -395,7 +395,7 @@
                     var data;
                     if ($("#userTypeSelect").val() === "Student") {
                         data = {
-                            UserId: @Model.User.Id,
+                            UserId: "@Model.User.Id",
                             RoleName: "Student",
                             PersonId: $("#personSelect").val()
                         };
@@ -415,7 +415,7 @@
 
                     if ($("#userTypeSelect").val() === "Staff") {
                         data = {
-                            UserId: @Model.User.Id,
+                            UserId: "@Model.User.Id",
                             RoleName: "Staff",
                             PersonId: $("#personSelect").val()
                         };
@@ -455,6 +455,21 @@
             $("#AddRoleModal").modal('hide');
             toastr.error(result.responseJSON);
         }
+
+    </script>
+
+    <script type="text/x-jsrender" id="rolesNameTemplate">
+        <div>
+            ${Name}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="rolesActionsTemplate">
+        <div>
+            <button type='button' class='btn btn-xs btn-danger mp-btn-action js-delete' data-role-Id="${Name}">
+                <i class="far fa-trash-alt"></i>
+            </button>
+        </div>
     </script>
 
     @Scripts.Render("~/bundles/jqueryval")

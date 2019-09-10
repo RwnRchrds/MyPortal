@@ -8,16 +8,12 @@ namespace MyPortal
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/lib").Include(
-                "~/Scripts/jquery-{version}.js",
-                "~/Scripts/jquery.unobtrusive-ajax.js",
+                "~/Scripts/jquery-3.4.1.min.js",
+                "~/Scripts/jquery.unobtrusive-ajax.min.js",
                 "~/Scripts/bootstrap.bundle.min.js",
                 "~/Scripts/bootbox.min.js",
                 "~/Scripts/respond.min.js",
                 "~/Scripts/toastr.min.js",
-                "~/Scripts/datatables/jquery.datatables.min.js",
-                "~/Scripts/datatables/datatables.bootstrap4.min.js",
-                "~/Scripts/datatables/datatables.responsive.min.js",
-                "~/Scripts/datatables/responsive.bootstrap4.min.js",
                 "~/Scripts/moment.min.js",
                 "~/Scripts/sb-admin-2.min.js",
                 "~/Scripts/myportal.js"
@@ -38,9 +34,7 @@ namespace MyPortal
                 "~/Scripts/modernizr-*"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                "~/Content/sb-admin-2.css",
-                "~/Content/datatables/css/datatables.bootstrap4.min.css",
-                "~/Content/datatables/css/responsive.bootstrap4.min.css",
+                "~/Content/sb-admin-2.min.css",
                 "~/content/toastr.min.css",
                 "~/content/myportal.css",
                 "~/content/fontawesome.min.css",
@@ -48,7 +42,7 @@ namespace MyPortal
                 "~/content/solid.min.css",
                 "~/Content/brands.min.css",
                 "~/Content/site.css",
-                "~/Content/ej2/material.css"));
+                "~/Content/ej2/material.min.css"));
         }
     }
 }

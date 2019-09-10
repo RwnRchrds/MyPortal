@@ -47,7 +47,7 @@
 {
     <script>
 
-        var urlUserDetails = "@Url.HttpRouteUrl("ApiAdminUserDetails", new {id = "abcd"})";
+        var urlUserDetails = "@Url.HttpRouteUrl("AdminUserDetails", new {id = "abcd"})";
 
         $(document).ready(function() {
 
@@ -60,7 +60,7 @@
 
     <script type="text/x-jsrender" id="usersUserNameTemplate">
         <div>
-            <span><a href=${renderUserDetails(Id)}>${UserName}</a></span>
+            <span><a href=${renderUserDetailsUrl(Id)}>${Username}</a></span>
         </div>
     </script>
 }

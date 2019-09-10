@@ -8,7 +8,7 @@
 }
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">@PeopleProcesses.GetStudentDisplayName(Model.Student)</h1>
+    <h1 class="h3 mb-0 text-gray-800">@PeopleProcesses.GetStudentDisplayName(Model.Student).ResponseObject</h1>
 </div>
 
 <div class="row">
@@ -284,11 +284,11 @@
     @Scripts.Render("~/bundles/jqueryval")
     <script>
 
-        var urlGetAchievementById = "@Url.HttpRouteUrl("ApiBehaviourGetAchievementById", new {achievementId = "abcd"})";
+        var urlGetAchievementById = "@Url.HttpRouteUrl("ApiBehaviourGetAchievementById", new {achievementId = 9999})";
         var urlGetIncidentById =
-            "@Url.HttpRouteUrl("ApiBehaviourGetBehaviourIncidentById",  new {incidentId = "abcd"})";
-        var urlDeleteAchievement = "@Url.HttpRouteUrl("ApiBehaviourDeleteAchievement", new {achievementId = "abcd"})";
-        var urlDeleteIncident = "@Url.HttpRouteUrl("ApiBehaviourDeleteIncident", new {incidentId = "abcd"})";
+            "@Url.HttpRouteUrl("ApiBehaviourGetBehaviourIncidentById",  new {incidentId = 9999})";
+        var urlDeleteAchievement = "@Url.HttpRouteUrl("ApiBehaviourDeleteAchievement", new {achievementId = 9999})";
+        var urlDeleteIncident = "@Url.HttpRouteUrl("ApiBehaviourDeleteIncident", new {incidentId = 9999})";
         var urlStudentDetails = "@Url.HttpRouteUrl("PeopleStudentDetails", new {id = Model.Student.Id})";
 
         $(document).ready(function () {
@@ -303,7 +303,7 @@
                     var button = $(this);
                     var achievementId = button.attr("data-ba-id");
                     $.ajax({
-                        url: urlGetAchievementById.replace("abcd", achievementId),
+                        url: urlGetAchievementById.replace("9999", achievementId),
                         method: "GET",
                         success: function (result) {
                             $("#editAchievementIdControl").val(result["id"]);
@@ -326,7 +326,7 @@
                     var button = $(this);
                     var incidentId = button.attr("data-bi-id");
                     $.ajax({
-                        url: urlGetIncidentById.replace("abcd", incidentId),
+                        url: urlGetIncidentById.replace("9999", incidentId),
                         method: "GET",
                         success: function (result) {
                             $("#editBehaviourIdControl").val(result["id"]);
@@ -351,7 +351,7 @@
                         function (result) {
                             if (result) {
                                 $.ajax({
-                                    url: urlDeleteAchievement.replace("abcd", button.attr("data-ba-id")),
+                                    url: urlDeleteAchievement.replace("9999", button.attr("data-ba-id")),
                                     method: "DELETE",
                                     success: function (ajaxResult) {
                                         refreshAchievements();
@@ -373,7 +373,7 @@
                         function (result) {
                             if (result) {
                                 $.ajax({
-                                    url: urlDeleteIncident.replace("abcd", button.attr("data-bi-id")),
+                                    url: urlDeleteIncident.replace("9999", button.attr("data-bi-id")),
                                     method: "DELETE",
                                     success: function (ajaxResult) {
                                         refreshIncidents();

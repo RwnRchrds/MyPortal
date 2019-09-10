@@ -36,7 +36,7 @@
                     {
                         c.Field("StudentName").HeaderText("Student").Template("#marksStudentTemplate").Width("150").Add();
                         c.Field("Mark.Mark").HeaderText(Model.Session.AttendancePeriod.Name).Width("150").Add();
-                    }).EditSettings(e => { e.AllowEditing(true).Mode(EditMode.Batch);}).EnableHover().Toolbar(new List<string>() {"Update", "Cancel"}).ActionComplete("dataGridActionComplete").Render()
+                    }).EditSettings(e => { e.AllowEditing(true).Mode(EditMode.Batch);}).EnableHover().Toolbar(new List<string>() {"Update", "Cancel"}).ActionComplete("dataGridActionComplete").CellEdit("cellEdit").Render()
                 </div>
             </div>
         </div>
@@ -71,6 +71,13 @@
             if (args.requestType === "save") {
                 refreshTable("Marks");
             }
+        }
+
+        function cellEdit(args) {
+            setTimeout(function clearText() {
+                    this.cell.querySelector("input").select();
+                }.bind(args),
+                0);
         }
     </script>
 

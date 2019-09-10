@@ -47,8 +47,8 @@
     <script>
 
         var urlGetAllYearGroups = "@Url.HttpRouteUrl("ApiPastoralGetAllYearGroups", new {})";
-        var urlGetStudentsByYearGroup = "@Url.HttpRouteUrl("ApiFinanceGetStudentsByYearGroup", new {yearGroupId="abcd"})";
-        var urlGetProductPrice = "@Url.HttpRouteUrl("ApiFinanceGetProductPrice", new {productId="abcd"})";
+        var urlGetStudentsByYearGroup = "@Url.HttpRouteUrl("ApiFinanceGetStudentsByYearGroup", new {yearGroupId=9999})";
+        var urlGetProductPrice = "@Url.HttpRouteUrl("ApiFinanceGetProductPrice", new {productId=9999})";
         var urlCreateSale = "@Url.HttpRouteUrl("ApiFinanceCreateSale", new {})";
         var urlQueryBalance = "@Url.HttpRouteUrl("ApiFinanceQueryBalance", new {})";
 
@@ -75,7 +75,7 @@
                 function() {
                     if ($("#yearGroupSelect").val() !== "") {
                         $.ajax({
-                            url: urlGetStudentsByYearGroup.replace("abcd", $("#yearGroupSelect").val()),
+                            url: urlGetStudentsByYearGroup.replace("9999", $("#yearGroupSelect").val()),
                             method: "GET",
                             complete: function(data) {
                                 $("#studentSelect").empty();
@@ -101,7 +101,7 @@
             $("#productSelect").on("change",
                 function() {
                     $.ajax({
-                        url: urlGetProductPrice.replace("abcd", $("#productSelect").val()),
+                        url: urlGetProductPrice.replace("9999", $("#productSelect").val()),
                         method: "GET",
                         success: function(data) {
                             $("#price").text("Price: £" + data.toFixed(2));

@@ -148,7 +148,7 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/Curriculum/StudyTopics.cshtml", viewModel);
         }
 
-        [RequiresPermission("EditLessonPlans")]
+        [RequiresPermission("ViewLessonPlans")]
         [Route("Curriculum/LessonPlans")]
         public ActionResult LessonPlans()
         {
@@ -161,7 +161,7 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/Curriculum/LessonPlans.cshtml", viewModel);
         }
 
-        [RequiresPermission("EditLessonPlans")]
+        [RequiresPermission("ViewLessonPlans")]
         [Route("Curriculum/LessonPlans/View/{id}", Name = "CurriculumLessonPlanDetails")]
         public ActionResult LessonPlanDetails(int id)
         {

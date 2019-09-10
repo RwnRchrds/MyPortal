@@ -89,7 +89,7 @@
                 <h4 class="modal-title">Edit Class</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiCurriculmUpdateClass", new {}), HttpMethod = "POST", OnSuccess = "editClassSuccess", OnFailure = "editClassFailure" }, new { id = "editClassForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiCurriculumUpdateClass", new {}), HttpMethod = "POST", OnSuccess = "editClassSuccess", OnFailure = "editClassFailure" }, new { id = "editClassForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -124,9 +124,9 @@
 {
     <script>
 
-        var urlGetClassById = "@Url.HttpRouteUrl("ApiCurriculumGetClassById", new {classId = "abcd"})";
-        var urlEnrolments = "@Url.HttpRouteUrl("CurriculumEnrolments", new {classId = "abcd"})";
-        var urlDeleteClass = "@Url.HttpRouteUrl("ApiCurriculumDeleteClass", new {classId = "abcd"})";
+        var urlGetClassById = "@Url.HttpRouteUrl("ApiCurriculumGetClassById", new {classId = 9999})";
+        var urlEnrolments = "@Url.HttpRouteUrl("CurriculumEnrolments", new {classId = 9999})";
+        var urlDeleteClass = "@Url.HttpRouteUrl("ApiCurriculumDeleteClass", new {classId = 9999})";
 
         $(document).ready(function() {
             $('.modal').on('hidden.bs.modal',
@@ -140,7 +140,7 @@
                     var button = $(this);
                     var classId = button.attr("data-class-id");
                     $.ajax({
-                        url: urlGetClassById.replace("abcd", classId),
+                        url: urlGetClassById.replace("9999", classId),
                         method: "GET",
                         success: function(result) {
                             $("#editClassNameControl").val(result["name"]);
@@ -160,7 +160,7 @@
                 function () {
                     var button = $(this);
                     var classId = button.attr("data-class-id");
-                    location.replace(urlEnrolments.replace("abcd", classId));
+                    location.replace(urlEnrolments.replace("9999", classId));
                 });
 
             $("#Classes").on("click",
@@ -171,7 +171,7 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: urlDeleteClass.replace("abcd", button.attr("data-class-id")),
+                                    url: urlDeleteClass.replace("9999", button.attr("data-class-id")),
                                     method: "DELETE",
                                     success: function(a) {
                                         refreshTable("Classes");

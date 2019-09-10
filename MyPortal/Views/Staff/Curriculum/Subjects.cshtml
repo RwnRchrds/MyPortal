@@ -126,8 +126,8 @@
 {
     <script>
 
-        var urlGetSubjectById = "@Url.HttpRouteUrl("ApiCurriculumGetSubjectById", new {subjectId = "abcd"})";
-        var urlDeleteSubject = "@Url.HttpRouteUrl("ApiCurriculumDeleteSubject", new {subjectId = "abcd"})";
+        var urlGetSubjectById = "@Url.HttpRouteUrl("ApiCurriculumGetSubjectById", new {subjectId = 9999})";
+        var urlDeleteSubject = "@Url.HttpRouteUrl("ApiCurriculumDeleteSubject", new {subjectId = 9999})";
 
         $(document).ready(function() {
             
@@ -137,7 +137,7 @@
                     var button = $(this);
                     var subjectId = button.attr("data-subject-id");
                     $.ajax({
-                        url: urlGetSubjectById.replace("abcd", subjectId),
+                        url: urlGetSubjectById.replace("9999", subjectId),
                         method: "GET",
                         success: function(result) {
                             $("#EditSubjectCodeControl").val(result["code"]);
@@ -160,7 +160,7 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: urlDeleteSubject.replace("abcd", button.attr("data-subject-id")),
+                                    url: urlDeleteSubject.replace("9999", button.attr("data-subject-id")),
                                     method: "DELETE",
                                     success: function(a) {
                                         $("#subjects").DataTable().ajax.reload();
