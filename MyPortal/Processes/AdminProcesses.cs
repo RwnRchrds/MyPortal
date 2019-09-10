@@ -406,7 +406,7 @@ namespace MyPortal.Processes
 
         public static async Task<ProcessResponse<IEnumerable<ApplicationRole>>> GetAllRoles_Model(IdentityContext identity)
         {
-            var roles = await identity.Roles.Where(x => x.System).OrderBy(x => x.Name).ToListAsync();
+            var roles = await identity.Roles.Where(x => !x.System).OrderBy(x => x.Name).ToListAsync();
 
             return new ProcessResponse<IEnumerable<ApplicationRole>>(ResponseType.Ok, null, roles);
         }
