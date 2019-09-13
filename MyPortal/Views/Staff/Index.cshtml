@@ -23,7 +23,7 @@
 </div>
 
 <div class="row">
-    <div class="col-xl-2 col-lg-3">
+    <div class="col-xl-3 col-lg-3">
         <div class="card shadow mb-4">
             <!-- Card Header - Dropdown -->
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -61,7 +61,7 @@
         </div>
     </div>
 
-    <div class="col-xl-10 col-lg-9">
+    <div class="col-xl-9 col-lg-9">
         <div class="card shadow mb-4">
             <!-- Card Header - Dropdown -->
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -92,7 +92,7 @@
                     col.Field("CourseCode").HeaderText("Code").Template("#trainingCodeTemplate").Width("200").Add();
                     col.Field("CourseDescription").HeaderText("Description").Template("#trainingDescriptionTemplate").Width("300").Add();
                     col.Field("Status").HeaderText("Status").Template("#trainingStatusTemplate").Width("250").Add();
-                }).AllowPaging().PageSettings(p => p.PageSize(5)).RowDataBound("trainingRowFunction").EnableHover(false).Render()
+                }).AllowPaging().PageSettings(p => p.PageSize(5)).QueryCellInfo("trainingQuery").EnableHover(false).Render()
             </div>
         </div>
     </div>
@@ -115,7 +115,7 @@
                     col.Field("Date").HeaderText("Date").Template("#observationsDateTemplate").Width("250").Add();
                     col.Field("ObserverName").HeaderText("Observed By").Template("#observationsObserverTemplate").Width("300").Add();
                     col.Field("Outcome").HeaderText("Outcome").Template("#observationsOutcomeTemplate").Width("300").Add();
-                }).AllowPaging().PageSettings(p => p.PageSize(5)).RowDataBound("observationsRowFunction").EnableHover(false).Render()
+                }).AllowPaging().PageSettings(p => p.PageSize(5)).QueryCellInfo("observationQuery").EnableHover(false).Render()
             </div>
         </div>
     </div>
@@ -186,30 +186,34 @@
             toastr.error(result.responseJSON);
         }
 
-        function observationsRowFunction(args) {
-            if (args.data['Outcome'] === "Outstanding") {
-                args.row.classList.add("mp-observation-outstanding");
-            }
-            else if (args.data['Outcome'] === "Good") {
-                args.row.classList.add("mp-observation-good");
-            }
-            else if (args.data['Outcome'] === "Satisfactory") {
-                args.row.classList.add("mp-observation-satisfactory");
-            }
-            else if (args.data['Outcome'] === "Inadequate") {
-                args.row.classList.add("mp-observation-inadequate");
+        function observationQuery(args) {
+            if (args.column.field === "Outcome") {
+                if (args.cell.textContent === "Outstanding") {
+                    args.cell.classList.add("mp-observation-outstanding");
+                }
+                else if (args.cell.textContent === "Good") {
+                    args.cell.classList.add("mp-observation-good");
+                }
+                else if (args.cell.textContent === "Satisfactory") {
+                    args.cell.classList.add("mp-observation-satisfactory");
+                }
+                else if (args.cell.textContent === "Inadequate") {
+                    args.cell.classList.add("mp-observation-inadequate");
+                }
             }
         }
 
-        function trainingRowFunction(args) {
-            if (args.data['Status'] === "Completed") {
-                args.row.classList.add("mp-cert-completed");
-            }
-            else if (args.data['Status'] === "Pending") {
-                args.row.classList.add("mp-cert-pending");
-            }
-            else if (args.data['Status'] === "Failed") {
-                args.row.classList.add("mp-cert-failed");
+        function trainingQuery(args) {
+            if (args.column.field === "Status") {
+                if (args.cell.textContent === "Completed") {
+                    args.cell.classList.add("mp-cert-completed");
+                }
+                else if (args.column.cell.textContent === "Pending") {
+                    args.cell.classList.add("mp-cert-pending");
+                }
+                else if (args.column.cell.textContent === "Failed") {
+                    args.cell.classList.add("mp-cert-failed");
+                }
             }
         }
     </script>

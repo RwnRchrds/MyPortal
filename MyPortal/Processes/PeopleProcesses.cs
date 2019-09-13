@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Web;
 using AutoMapper;
 using Microsoft.Ajax.Utilities;
@@ -67,6 +68,25 @@ namespace MyPortal.Processes
             }
 
             return GetStaffDisplayName(staffMember.ResponseObject);
+        }
+
+        public static ProcessResponse<string> GetStudentDisplayNameFromUserId(string userId)
+        {
+            var context = new MyPortalDbContext();
+
+            var student = GetStudentFromUserId(userId, context);
+
+            if (student.ResponseType == ResponseType.BadRequest)
+            {
+                return new ProcessResponse<string>(ResponseType.BadRequest, student.ResponseMessage, null);
+            }
+
+            if (student.ResponseType == ResponseType.NotFound)
+            {
+                return new ProcessResponse<string>(ResponseType.NotFound, student.ResponseMessage, null);
+            }
+
+            return GetStudentDisplayName(student.ResponseObject);
         }
 
         public static ProcessResponse<string> GetStaffFullName(StaffMember staffMember)

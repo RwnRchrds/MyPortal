@@ -32,11 +32,11 @@
                     <h6 class="collapse-header">Admin</h6>
                     @if (User.HasPermission("EditUsers"))
                     {
-                        @Html.ActionLink("Users", "Users", "Admin", null, new {@class = "collapse-item"})
+                        @Html.ActionLink("Users", "Users", "Admin", null, new { @class = "collapse-item" })
                     }
                     @if (User.HasPermission("EditRoles"))
                     {
-                        @Html.ActionLink("Roles", "Roles", "Admin", null, new {@class = "collapse-item"})
+                        @Html.ActionLink("Roles", "Roles", "Admin", null, new { @class = "collapse-item" })
                     }
                 </div>
             </div>
@@ -198,4 +198,12 @@
                 </div>
             </div>
         </li>
+
+    <hr class="sidebar-divider d-none d-md-block">
+    
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
+    
+
     </ul>

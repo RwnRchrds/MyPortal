@@ -41,7 +41,7 @@
                    
                     }).Columns(c =>
                     {
-                        c.Field("DisplayName").HeaderText("Name").Template("#nameTemplate").Width("300").Add();
+                        c.Field("DisplayName").HeaderText("Name").Template("#nameTemplate").Width("100").Add();
                         c.Field("YearGroupName").HeaderText("Year Group").Width("80").Add();
                         c.Field("RegGroupName").HeaderText("Reg Group").Width("80").Add();
                         c.Field("HouseName").HeaderText("House").Width("100").Add();
@@ -63,7 +63,7 @@
 
     <script type="text/x-jsrender" id="nameTemplate">
         <div>
-                <span id="Studtext" class="student-name"><a href="/Staff/People/Students/${Id}">${DisplayName}</a></span>
+            <span id="Studtext" class="student-name"><a href="/Staff/People/Students/${Id}">${DisplayName}</a></span>
         </div>        
     </script>
 

@@ -1,37 +1,36 @@
-﻿<nav class="navbar navbar-dark bg-primary fixed-top navbar-expand-md">
-    <div class="container">
-        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=".navbar-collapse">&#x2630;</button>
-        @Html.ActionLink("MyPortal", "Index", "Home", new {area = ""}, new {@class = "navbar-brand"})
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav mr-auto">
-                <li>@Html.ActionLink("Home", "Index", "Students", null, new {@class = "nav-link"})</li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="menuDropdownLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Menu
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="menuDropdownLink">
-                        <h6 class="dropdown-header">Home</h6>
-                        @Html.ActionLink("MyResults", "Results", "Students", null, new {@class = "dropdown-item"})
-                        <div class="dropdown-divider"></div>
-                        @Html.ActionLink("MyStore", "Store", "Students", null, new {@class = "dropdown-item"})
-                        @Html.ActionLink("MySales History", "SalesHistory", "Students", null, new {@class = "dropdown-item"})
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="vleDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        VLE
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="vleDropdownMenuLink">
-                        <a class="dropdown-item" href="https://calendar.google.com/a/vle.harrodsschool.co.uk" target="_blank">Calendar</a>
-                        <a class="dropdown-item" href="https://classroom.google.com/a/vle.harrodsschool.co.uk" target="_blank">Classroom</a>
-                        <a class="dropdown-item" href="https://drive.google.com/a/vle.harrodsschool.co.uk" target="_blank">Drive</a>
-                        <a class="dropdown-item" href="https://keep.google.com/a/vle.harrodsschool.co.uk" target="_blank">Keep</a>
-                        <a class="dropdown-item" href="https://mail.google.com/a/vle.harrodsschool.co.uk" target="_blank">Mail</a>
-                        <a class="dropdown-item" href="https://sites.google.com/vle.harrodsschool.co.uk/directory" target="_blank">VLE Directory</a>
-                    </div>
-                </li>
-            </ul>
-            @Html.Partial("_LoginPartial")
-        </div>
+﻿@using Microsoft.AspNet.Identity
+@using MyPortal.Processes
+<nav class="navbar navbar-light bg-white topbar mb-4 static-top shadow navbar-expand">
+    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+        <i class="fa fa-bars"></i>
+    </button>
+
+    <div>
+        <h5 class="display-title">@ViewBag.DisplayTitle</h5>
     </div>
+
+    <ul class="navbar-nav ml-auto">
+        <div class="topbar-divider d-none d-sm-block"></div>
+        <li class="nav-item dropdown no-arrow">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@PeopleProcesses.GetStudentDisplayNameFromUserId(User.Identity.GetUserId()).ResponseObject</span>
+            </a>
+            <!-- Dropdown - User Information -->
+            @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                    <a class="dropdown-item" href="@Url.Action("Index", "Manage")">
+                        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                        Profile
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="javascript:$('#logoutForm').submit()">
+                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                        Logout
+                    </a>
+                </div>
+            }
+        </li>
+    </ul>
 </nav>
