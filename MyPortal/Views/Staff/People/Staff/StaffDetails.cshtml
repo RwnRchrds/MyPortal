@@ -3,6 +3,7 @@
 @model MyPortal.ViewModels.StaffDetailsViewModel
 @{
     ViewBag.Title = "Staff Details: " + PeopleProcesses.GetStaffFullName(Model.Staff).ResponseObject;
+    ViewBag.DisplayTitle = "Staff Details";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
@@ -12,7 +13,7 @@
 
 <div class="row">
     
-    <div class="col-xl-12 col-md-12">
+    <div class="col-xl-12 col-md-12 mb-4">
 
         <div class="dropdown mp-btn-top inline-block">
             <button class="btn btn-primary dropdown-toggle mp-btn-top" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -85,7 +86,7 @@
 
                 <div class="mb-4">
 
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewCertModal">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#NewCertModal">
                         <i class="fa fa-plus-circle"></i> New Certificate
                     </button>
 
@@ -118,7 +119,7 @@
 
                 <div class="mb-4">
 
-                    <button type="button" class="btn btn-success" onclick="populateNewObserverSelection()">
+                    <button type="button" class="btn btn-primary" onclick="populateNewObserverSelection()">
                         <i class="fa fa-plus-circle"></i> New Observation
                     </button>
 
@@ -151,7 +152,7 @@
 
                 <div class="mb-4">
 
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#NewDocumentModal">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#NewDocumentModal">
                         <i class="fa fa-plus-circle"></i> New Document
                     </button>
 
@@ -453,15 +454,15 @@
 {
     <script>
 
-        var urlDeleteStaffMember = "@Url.HttpRouteUrl("ApiPeopleDeleteStaffMember", new {staffId = "abcd"})";
-        var urlGetCertificate = "@Url.HttpRouteUrl("ApiPersonnelGetTrainingCertificate", new {staffId = "abcd", courseId = "efgh"})";
+        var urlDeleteStaffMember = "@Url.HttpRouteUrl("ApiPeopleDeleteStaffMember", new {staffId = 9999})";
+        var urlGetCertificate = "@Url.HttpRouteUrl("ApiPersonnelGetTrainingCertificate", new {staffId = 9999, courseId = 8888})";
         var urlGetPersonalDocumentById =
-            "@Url.HttpRouteUrl("ApiDocumentsGetPersonalDocumentById", new {documentId = "abcd"})";
-        var urlGetObservationById = "@Url.HttpRouteUrl("ApiPersonnelGetObservationById", new {observationId = "abcd"})";
-        var urlDeleteDocument = "@Url.HttpRouteUrl("ApiDocumentsDeletePersonalDocument", new {documentId = "abcd"})";
-        var urlDeleteCertificate = "@Url.HttpRouteUrl("ApiPersonnelDeleteTrainingCertificate", new {staffId = "abcd", courseId = "efgh"})";
-        var urlDeleteObservation = "@Url.HttpRouteUrl("ApiPersonnelDeleteObservation", new {observationId = "abcd"})";
-        var urlGetAllStaff = "@Url.HttpRouteUrl("ApiPeopleGetAllStaff", new {})";
+            "@Url.HttpRouteUrl("ApiDocumentsGetPersonalDocumentById", new {documentId = 9999})";
+        var urlGetObservationById = "@Url.HttpRouteUrl("ApiPersonnelGetObservationById", new {observationId = 9999})";
+        var urlDeleteDocument = "@Url.HttpRouteUrl("ApiDocumentsDeletePersonalDocument", new {documentId = 9999})";
+        var urlDeleteCertificate = "@Url.HttpRouteUrl("ApiPersonnelDeleteTrainingCertificate", new {staffId = 9999, courseId = 8888})";
+        var urlDeleteObservation = "@Url.HttpRouteUrl("ApiPersonnelDeleteObservation", new {observationId = 9999})";
+        var urlGetAllStaff = "@Url.HttpRouteUrl("ApiPeopleGetAllStaffMembers", new {})";
 
         $(document).ready(function() {
 
@@ -490,7 +491,7 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: urlDeleteStaffMember.replace("abcd", button.attr("data-staff-id")),
+                                    url: urlDeleteStaffMember.replace("9999", button.attr("data-staff-id")),
                                     method: "DELETE",
                                     success: function(a) {
                                         location.replace("@Url.Action("Staff", "Staff")");
@@ -511,7 +512,7 @@
                     var courseId = button.attr("data-course-id");
                     var staffId = "@Model.Staff.Id";
                     $.ajax({
-                        url: urlGetCertificate.replace("abcd", staffId).replace("efgh", courseId),
+                        url: urlGetCertificate.replace("9999", staffId).replace("8888", courseId),
                         method: "GET",
                         success: function(result) {
                             $("#EditCertCourseDisplay").val(result["trainingCourse"].description);
@@ -533,7 +534,7 @@
                     var button = $(this);
                     var documentId = button.attr("data-document-id");
                     $.ajax({
-                        url: urlGetPersonalDocumentById.replace("abcd", documentId),
+                        url: urlGetPersonalDocumentById.replace("9999", documentId),
                         method: "GET",
                         success: function(result) {
                             $("#EditDocumentDescription").val(result["document"].description);
@@ -554,7 +555,7 @@
                     var button = $(this);
                     var observationId = button.attr("data-observation-id");
                     $.ajax({
-                        url: urlGetObservationById.replace("abcd", observationId),
+                        url: urlGetObservationById.replace("9999", observationId),
                         method: "GET",
                         success: function(result) {
                             $("#EditObservationDate").val(result["date"].toLocaleDateString);
@@ -578,7 +579,7 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: urlDeleteDocument.replace("abcd", button.attr("data-document-id")),
+                                    url: urlDeleteDocument.replace("9999", button.attr("data-document-id")),
                                     method: "DELETE",
                                     success: function(ajaxResult) {
                                         refreshTable("Documents");
@@ -600,7 +601,7 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: urlDeleteCertificate.replace("abcd", $("#certs").attr("data-staff-id")).replace("efgh", button.attr("data-course-id")),
+                                    url: urlDeleteCertificate.replace("9999", $("#certs").attr("data-staff-id")).replace("8888", button.attr("data-course-id")),
                                     method: "DELETE",
                                     success: function(a) {
                                         toastr.success(a);
@@ -622,7 +623,7 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: urlDeleteObservation.replace("abcd", button.attr("data-observation-id")),
+                                    url: urlDeleteObservation.replace("9999", button.attr("data-observation-id")),
                                     method: "DELETE",
                                     success: function(ajaxResult) {
                                         $("#observations").DataTable().ajax.reload();

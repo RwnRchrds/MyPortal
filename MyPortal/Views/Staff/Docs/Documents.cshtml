@@ -143,8 +143,8 @@
 {
     <script>
 
-        var urlGetDocumentById = "@Url.HttpRouteUrl("ApiDocumentsGetDocumentById", new {documentId = "abcd"})";
-        var urlDeleteDocument = "@Url.HttpRouteUrl("ApiDocumentsDeleteDocument", new {documentId = "abcd"})";
+        var urlGetDocumentById = "@Url.HttpRouteUrl("ApiDocumentsGetDocumentById", new {documentId = 9999})";
+        var urlDeleteDocument = "@Url.HttpRouteUrl("ApiDocumentsDeleteDocument", new {documentId = 9999})";
 
         $(document).ready(function() {
             $('.modal').on('hidden.bs.modal',
@@ -158,7 +158,7 @@
                     var button = $(this);
                     var docId = button.attr("data-document-id");
                     $.ajax({
-                        url: urlGetDocumentById.replace("abcd", docId),
+                        url: urlGetDocumentById.replace("9999", docId),
                         method: "GET",
                         success: function(result) {
                             $("#EditDocumentDescriptionControl").val(result["description"]);
@@ -181,7 +181,7 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: urlDeleteDocument.replace("abcd", button.attr("data-document-id")),
+                                    url: urlDeleteDocument.replace("9999", button.attr("data-document-id")),
                                     method: "DELETE",
                                     success: function(ajaxResult) {
                                         refreshTable("Documents");
@@ -217,14 +217,6 @@
             $("#EditDocumentModal").modal('hide');
             toastr.error(result.responseJSON);
         }
-        
-        function renderApproved(data) {
-            if (data) {
-                return "Approved";
-            } else {
-                return "Pending Approval";
-            }
-        }
     </script>
 
     <script type="text/x-jsrender" id="documentsDescriptionTemplate">
@@ -235,7 +227,7 @@
 
     <script type="text/x-jsrender" id="documentsApprovedTemplate">
             <div>
-                ${renderApproved(Approved)}
+                ${renderBool(Approved)}
             </div>
         </script>
 

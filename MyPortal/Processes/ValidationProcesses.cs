@@ -48,7 +48,7 @@ namespace MyPortal.Processes
 
                 if (permissionObject == null)
                 {
-                    return false;
+                    throw new Exception($"Permission '{permission}' not found");
                 }
 
                 var hasPermission = identity.RolePermissions.Any(x =>

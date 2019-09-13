@@ -105,10 +105,10 @@
 {
     <script>
 
-        var urlGetResultSetById = "@Url.HttpRouteUrl("ApiAssessmentGetResultSetById", new {resultSetId = "abcd"})";
+        var urlGetResultSetById = "@Url.HttpRouteUrl("ApiAssessmentGetResultSetById", new {resultSetId = 9999})";
         var urlSetResultSetCurrent =
-            "@Url.HttpRouteUrl("ApiAssessmentSetResultSetAsCurrent", new {resutlSetId = "abcd"})";
-        var urlDeleteResultSet = "@Url.HttpRouteUrl("ApiAssessmentDeleteResultSet", new {resultSetId = "abcd"})";
+            "@Url.HttpRouteUrl("ApiAssessmentSetResultSetAsCurrent", new {resutlSetId = 9999})";
+        var urlDeleteResultSet = "@Url.HttpRouteUrl("ApiAssessmentDeleteResultSet", new {resultSetId = 9999})";
 
         $(document).ready(function() {
             $('.modal').on('hidden.bs.modal',
@@ -122,7 +122,7 @@
                     var button = $(this);
                     var setId = button.attr("data-set-id");
                     $.ajax({
-                        url: urlGetResultSetById.replace("abcd", setId),
+                        url: urlGetResultSetById.replace("9999", setId),
                         method: "GET",
                         success: function(result) {
                             $("#EditResultSetNameControl").val(result["name"]);
@@ -143,7 +143,7 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: urlSetResultSetCurrent.replace("abcd", button.attr("data-set-id")),
+                                    url: urlSetResultSetCurrent.replace("9999", button.attr("data-set-id")),
                                     method: "POST",
                                     success: function(a) {
                                         refreshTable("ResultSets");
@@ -165,7 +165,7 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: urlDeleteResultSet.replace("abcd", button.attr("data-set-id")),
+                                    url: urlDeleteResultSet.replace("9999", button.attr("data-set-id")),
                                     method: "DELETE",
                                     success: function(a) {
                                         refreshTable("ResultSets");

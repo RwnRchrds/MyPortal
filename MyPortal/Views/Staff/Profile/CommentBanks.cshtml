@@ -1,30 +1,43 @@
 @model MyPortal.ViewModels.CommentBanksViewModel
-
 @{
     ViewBag.Title = "Comment Banks";
+    ViewBag.DisplayTitle = "Comment Banks";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<div class="container float-left">
-    <h2 class="mp-page-title">Comment Banks</h2>
-    <hr/>
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Comment Banks</h1>
 </div>
 
-<div class="container float-left">
-    <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" data-target="#NewCommentBankModal">New Comment Bank</button>
-    <hr/>
+<div class="row">
+    
+    <div class="col-xl-12 col-md-12 mb-4">
+
+        <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" data-target="#NewCommentBankModal">New Comment Bank</button>
+
+    </div>
+
 </div>
 
-<div class="container float-left">
-    <table class="table table-bordered table-hover mp-table mp-table-link" id="commentBanks">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+<div class="row">
+
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Comment Banks</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                @Html.EJS().Grid("CommentBanks").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiProfilesGetAllCommentBanksDataGrid", new { })).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+                {
+                    c.Field("Name").HeaderText("Name").Template("#commentBankNameTemplate").Width("300").Add();
+                    c.HeaderText("Actions").Template("#commentBankActionsTemplate").Width("170").Add();
+                }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string> { "Search" }).Render()
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <div id="NewCommentBankModal" class="modal fade" role="dialog">
@@ -35,7 +48,7 @@
                 <h4 class="modal-title">New Comment Bank</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/commentBanks/create", HttpMethod = "POST", OnSuccess = "newCommentBankSuccess", OnFailure = "newCommentBankFailure"}, new {id = "newCommentBankForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiProfilesCreateCommentBank", new {}), HttpMethod = "POST", OnSuccess = "newCommentBankSuccess", OnFailure = "newCommentBankFailure"}, new {id = "newCommentBankForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -61,7 +74,7 @@
                 <h4 class="modal-title">Edit Comment Bank</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/commentBanks/update", HttpMethod = "POST", OnSuccess = "editCommentBankSuccess", OnFailure = "editCommentBankFailure"}, new {id = "newResultSetForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiProfilesUpdateCommentBank", new {}), HttpMethod = "POST", OnSuccess = "editCommentBankSuccess", OnFailure = "editCommentBankFailure"}, new {id = "newResultSetForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -85,45 +98,23 @@
 @section scripts
 {
     <script>
+
+        var urlGetCommentBankById = "@Url.HttpRouteUrl("ApiProfilesGetCommentBankById", new {commentBankId = 9999})";
+        var urlDeleteCommentBank = "@Url.HttpRouteUrl("ApiProfilesDeleteCommentBank", new {commentBankId = 9999})";
+
         $(document).ready(function() {
             $('.modal').on('hidden.bs.modal',
                 function() {
                     $(this).find('form').trigger('reset');
                 });
 
-            $("#commentBanks").DataTable({
-                ajax: {
-                    url: "/api/commentBanks/all",
-                    dataSrc: ""
-                },
-                columns: [
-                    {
-                        data: "name"
-                    },
-                    {
-                        data: "id",
-                        render: function(data) {
-                            return "<button type='button' class='btn btn-xs btn-warning mp-btn-action-left js-edit' data-bank-id=" +
-                                data +
-                                "><i class=\"far fa-edit\"></i></button> " +
-                                "<button type='button' class='btn btn-xs btn-danger mp-btn-action-right js-delete' data-bank-id=" +
-                                data +
-                                "><i class=\"far fa-trash-alt\"></i></button>";
-                        }
-                    }
-                ],
-                "language": {
-                    "emptyTable": "No comment banks to display"
-                }
-            });
-
-            $("#commentBanks").on("click",
+            $("#CommentBanks").on("click",
                 ".js-edit",
                 function() {
                     var button = $(this);
                     var bankId = button.attr("data-bank-id");
                     $.ajax({
-                        url: "/api/commentBanks/byId/" + bankId,
+                        url: urlGetCommentBankById.replace("9999", bankId),
                         method: "GET",
                         success: function(result) {
                             $("#editCommentBankNameControl").val(result["name"]);
@@ -136,7 +127,7 @@
                     $("#EditCommentBankModal").modal('toggle');
                 });
 
-            $("#commentBanks").on("click",
+            $("#CommentBanks").on("click",
                 ".js-delete",
                 function() {
                     var button = $(this);
@@ -144,10 +135,10 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: "/api/commentBanks/delete/" + button.attr("data-bank-id"),
+                                    url: urlDeleteCommentBank.replace("9999", button.attr("data-bank-id")),
                                     method: "DELETE",
                                     success: function(a) {
-                                        $("#commentBanks").DataTable().ajax.reload();
+                                        refreshTable("CommentBanks");
                                         toastr.success(a);
                                     },
                                     error: function(e) {
@@ -162,7 +153,7 @@
 
         function newCommentBankSuccess(result) {
             $("#NewCommentBankModal").modal('hide');
-            $("#commentBanks").DataTable().ajax.reload();
+            refreshTable("CommentBanks");
             toastr.success(result);
         }
 
@@ -173,7 +164,7 @@
 
         function editCommentBankSuccess(result) {
             $("#EditCommentBankModal").modal('hide');
-            $("#commentBanks").DataTable().ajax.reload();
+            refreshTable("CommentBanks");
             toastr.success(result);
         }
 
@@ -182,5 +173,24 @@
             toastr.error(result.responseJSON);
         }
     </script>
+
+    <script type="text/xjsrender" id="commentBankNameTemplate">
+        <div>
+            ${Name}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="commentBankActionsTemplate">
+        <div>
+            <button type='button' class='btn btn-xs btn-warning mp-btn-action js-edit' data-bank-id="${Id}">
+                <i class="far fa-edit"></i>
+            </button>
+
+            <button type='button' class='btn btn-xs btn-danger mp-btn-action js-delete' data-bank-id="${Id}">
+                <i class="far fa-trash-alt"></i>
+            </button>
+        </div>
+    </script>
+
     @Scripts.Render("~/bundles/jqueryval")
 }

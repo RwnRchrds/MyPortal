@@ -46,7 +46,7 @@
 
 <div class="row">
     
-    <div class="col-xl-12 col-md-12">
+    <div class="col-xl-12 col-md-12 mb-4">
 
         <button type="button" class="btn btn-primary" id="backButton">Back</button>
 
@@ -121,8 +121,8 @@
         var urlGetAllYearGroups = "@Url.HttpRouteUrl("ApiPastoralGetAllYearGroups", new {})";
         var urlGetAllRegGroups = "@Url.HttpRouteUrl("ApiPastoralGetAllRegGroups", new {})";
         var urlGetStudentsByYearGroup =
-            "@Url.HttpRouteUrl("ApiPeopleGetStudentsByYearGroup", new {yearGroupId = "abcd"})";
-        var urlDeleteEnrolment = "@Url.HttpRouteUrl("ApiCurriculumDeleteEnrolment", new {enrolmentId = "abcd"})";
+            "@Url.HttpRouteUrl("ApiPeopleGetStudentsByYearGroup", new {yearGroupId = 9999})";
+        var urlDeleteEnrolment = "@Url.HttpRouteUrl("ApiCurriculumDeleteEnrolment", new {enrolmentId = 9999})";
 
         $(document).ready(function() {
             
@@ -179,7 +179,7 @@
                 function () {
                     if ($("#yearGroupSelect").val() !== "") {
                         $.ajax({
-                            url: urlGetStudentsByYearGroup.replace("abcd", $("#yearGroupSelect").val()),
+                            url: urlGetStudentsByYearGroup.replace("9999", $("#yearGroupSelect").val()),
                             method: "GET",
                             complete: function (data) {
                                 $("#studentSelect").empty();
@@ -210,7 +210,7 @@
                         function (result) {
                             if (result) {
                                 $.ajax({
-                                    url: urlDeleteEnrolment.replace("abcd", button.attr("data-enrolment-id")),
+                                    url: urlDeleteEnrolment.replace("9999", button.attr("data-enrolment-id")),
                                     method: "DELETE",
                                     success: function (a) {
                                         $("#enrolments").DataTable().ajax.reload();

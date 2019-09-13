@@ -74,9 +74,9 @@
         var urlGetAllSales = "@Url.HttpRouteUrl("ApiFinanceGetAllSalesDataGrid", new {})";
         var urlGetPendingSales = "@Url.HttpRouteUrl("ApiFinanceGetPendingSalesDataGrid", new {})";
         var urlGetProcessedSales = "@Url.HttpRouteUrl("ApiFinanceGetProcessedSalesDataGrid", new {})";
-        var urlDeleteSale = "@Url.HttpRouteUrl("ApiFinanceDeleteSale", new {saleId = "abcd"})";
-        var urlMarkSaleComplete = "@Url.HttpRouteUrl("ApiFinanceMarkSaleComplete", new {saleId = "abcd"})";
-        var urlRefundSale = "@Url.HttpRouteUrl("ApiFinanceRefundSale", new {saleId = "abcd"})";
+        var urlDeleteSale = "@Url.HttpRouteUrl("ApiFinanceDeleteSale", new {saleId = 9999})";
+        var urlMarkSaleComplete = "@Url.HttpRouteUrl("ApiFinanceMarkSaleProcessed", new {saleId = 9999})";
+        var urlRefundSale = "@Url.HttpRouteUrl("ApiFinanceRefundSale", new {saleId = 9999})";
 
         $(document).ready(function() {
             $("#selectedStatus").on("change",
@@ -105,7 +105,7 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: urlDeleteSale.replace("abcd", button.attr("data-sale-id")),
+                                    url: urlDeleteSale.replace("9999", button.attr("data-sale-id")),
                                     method: "DELETE",
                                     success: function(e) {
                                         refreshTable("Sales");
@@ -128,7 +128,7 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: urlMarkSaleComplete.replace("abcd", button.attr("data-sale-id")),
+                                    url: urlMarkSaleComplete.replace("9999", button.attr("data-sale-id")),
                                     method: "POST",
                                     success: function(a) {
                                         refreshTable("Sales");
@@ -151,7 +151,7 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: urlRefundSale.replace("abcd", button.attr("data-sale-id")),
+                                    url: urlRefundSale.replace("9999", button.attr("data-sale-id")),
                                     method: "POST",
                                     success: function(e) {
                                         refreshTable("Sales");

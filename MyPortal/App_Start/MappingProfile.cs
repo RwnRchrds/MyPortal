@@ -250,6 +250,14 @@ namespace MyPortal
                     opts => opts.MapFrom(src => new List<AttendanceMarkLite> {src.Mark}));
 
             CreateMap<ApplicationUser, GridApplicationUserDto>();
+
+            CreateMap<AssessmentResult, GridAssessmentResultDto>()
+                .ForMember(dest => dest.ResultSet,
+                    opts => opts.MapFrom(src => src.AssessmentResultSet.Name))
+                .ForMember(dest => dest.StudentName,
+                    opts => opts.MapFrom(src => PeopleProcesses.GetStudentDisplayName(src.Student)))
+                .ForMember(dest => dest.Subject,
+                    opts => opts.MapFrom(src => src.CurriculumSubject.Name));
         }
     }
 }    

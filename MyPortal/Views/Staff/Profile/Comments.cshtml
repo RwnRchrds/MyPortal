@@ -2,36 +2,57 @@
 
 @{
     ViewBag.Title = "Comments";
+    ViewBag.DisplayTitle = "Profiles Comments";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<body>
-<div class="container float-left">
-    <h2 class="mp-page-title">Comments</h2>
-    <hr/>
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Comments</h1>
 </div>
 
-<div class="container float-left">
-    <button type="button" class="btn btn-success mp-btn-top-auto" data-toggle="modal" onclick="openNewCommentModal()">New Comment</button>
-    <hr/>
+<div class="row">
+
+    <div class="col-xl-12 col-md-12 mb-4">
+
+        <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" onclick="openNewCommentModal()">New Comment</button>
+
+    </div>
+
 </div>
 
-<div class="container float-left">
-    @Html.Label("Comment Bank")
-    @Html.DropDownList("SelectedStatus", new SelectList(Model.CommentBanks, "Id", "Name"), "Select Comment Bank", new {@class = "form-control", Name = "Id", id = "selectedBank"})
+<div class="row">
+
+    <div class="col-xl-12 col-md-12 mb-4">
+
+        <div class="form-group">
+            @Html.Label("Comment Bank")
+            @Html.DropDownList("SelectedStatus", new SelectList(Model.CommentBanks, "Id", "Name"), "Select Comment Bank", new { @class = "form-control", Name = "Id", id = "selectedBank" })
+        </div>
+
+    </div>
+
 </div>
 
-<div class="container float-left mp-margin-top">
-    <table class="table table-bordered table-hover mp-table" id="comments">
-        <thead>
-        <tr>
-            <th>Comment</th>
-            <th>Comment Bank</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+<div class="row">
+
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Comments</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                @Html.EJS().Grid("Comments").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiProfilesGetCommentsByCommentBankDataGrid", new { commentBankId = 0 })).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+                {
+                    c.Field("CommentBankName").HeaderText("Comment Bank").Template("#commentBankNameTemplate").Width("300").Add();
+                    c.Field("Value").HeaderText("Comment").Template("#commentValueTemplate").Width("300").Add();
+                    c.HeaderText("Actions").Template("#commentActionsTemplate").Width("170").Add();
+                }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string> { "Search" }).Render()
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <div id="NewCommentModal" class="modal fade" role="dialog">
@@ -42,17 +63,17 @@
                 <h4 class="modal-title">New Comment</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/comments/create", HttpMethod = "POST", OnSuccess = "newCommentSuccess", OnFailure = "newCommentFailure"}, new {id = "newCommentForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiProfilesCreateComment", new { }), HttpMethod = "POST", OnSuccess = "newCommentSuccess", OnFailure = "newCommentFailure" }, new { id = "newCommentForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Comment Bank")
-                        @Html.DropDownListFor(l => l.Comment.CommentBankId, new SelectList(Model.CommentBanks, "Id", "Name"), "Select Comment Bank", new {@class = "form-control", Name = "CommentBankId", id = "newCommentBankControl"})
+                        @Html.DropDownListFor(l => l.Comment.CommentBankId, new SelectList(Model.CommentBanks, "Id", "Name"), "Select Comment Bank", new { @class = "form-control", Name = "CommentBankId", id = "newCommentBankControl" })
                         @Html.ValidationMessageFor(x => x.Comment.CommentBankId)
                     </div>
                     <div class="form-group">
                         @Html.Label("Value")
-                        @Html.TextAreaFor(x => x.Comment.Value, new {@class = "form-control", Name = "Value"})
+                        @Html.TextAreaFor(x => x.Comment.Value, new { @class = "form-control", Name = "Value" })
                         @Html.ValidationMessageFor(x => x.Comment.Value)
                     </div>
                     <div class="modal-footer">
@@ -73,21 +94,21 @@
                 <h4 class="modal-title">Edit Comment</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/comments/update", HttpMethod = "POST", OnSuccess = "editCommentSuccess", OnFailure = "editCommentFailure"}, new {id = "editCommentForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiProfilesUpdateComment", new { }), HttpMethod = "POST", OnSuccess = "editCommentSuccess", OnFailure = "editCommentFailure" }, new { id = "editCommentForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Comment Bank")
-                        @Html.DropDownListFor(l => l.Comment.CommentBankId, new SelectList(Model.CommentBanks, "Id", "Name"), "Select Comment Bank", new {@class = "form-control", Name = "CommentBankId", id = "editCommentBankControl"})
+                        @Html.DropDownListFor(l => l.Comment.CommentBankId, new SelectList(Model.CommentBanks, "Id", "Name"), "Select Comment Bank", new { @class = "form-control", Name = "CommentBankId", id = "editCommentBankControl" })
                         @Html.ValidationMessageFor(x => x.Comment.CommentBankId)
                     </div>
                     <div class="form-group">
                         @Html.Label("Value")
-                        @Html.TextAreaFor(x => x.Comment.Value, new {@class = "form-control", Name = "Value", id = "editCommentValueControl"})
+                        @Html.TextAreaFor(x => x.Comment.Value, new { @class = "form-control", Name = "Value", id = "editCommentValueControl" })
                         @Html.ValidationMessageFor(x => x.Comment.Value)
                     </div>
                     <div class="form-group">
-                        @Html.HiddenFor(x => x.Comment.Id, new {id = "editCommentIdControl", Name = "Id"})
+                        @Html.HiddenFor(x => x.Comment.Id, new { id = "editCommentIdControl", Name = "Id" })
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -98,54 +119,15 @@
         </div>
     </div>
 </div>
-</body>
 
 @section scripts
 {
     <script>
-        function loadComments() {
-            var commentBank = $("#selectedBank").val();
 
-            if (commentBank === "") {
-                $("#comments").addClass("hidden");
-                return;
-            }
-
-            var url = "/api/comments/byBank/" + commentBank;
-
-            $("#comments").DataTable({
-                ajax: {
-                    url: url,
-                    dataSrc: ""
-                },
-                columns: [
-                    {
-                        data: "value",
-                        render: function(data) {
-                            return data.replace(/</g, "&lt;")
-                                .replace(/>/g, "&gt;");
-                        }
-                    },
-                    {
-                        data: "profileCommentBank.name"
-                    },
-                    {
-                        data: "id",
-                        render: function(data) {
-                            return "<button type='button' class='btn btn-xs btn-warning js-edit' data-comment-id=" +
-                                data +
-                                "><i class=\"fas fa-edit\"></i></button> " +
-                                "<button type='button' class='btn btn-xs btn-danger js-delete' data-comment-id=" +
-                                data +
-                                "><i class=\"far fa-trash-alt\"></i></button>";
-                        }
-                    }
-                ],
-                "language": {
-                    "emptyTable": "No comments to display"
-                }
-            });
-        }
+        var urlGetCommentsByCommentBank =
+            "@Url.HttpRouteUrl("ApiProfilesGetCommentsByCommentBankDataGrid", new {commentBankId = 9999})";
+        var urlGetCommentById = "@Url.HttpRouteUrl("ApiProfilesGetCommentById", new {commentId = 9999})";
+        var urlDeleteComment = "@Url.HttpRouteUrl("ApiProfilesDeleteComment", new {commentId = 9999})";
 
         $(document).ready(function() {
             $('.modal').on('hidden.bs.modal',
@@ -155,17 +137,17 @@
 
             $("#selectedBank").on("change",
                 function() {
-                    $("#comments").DataTable().clear().destroy();
-                    loadComments();
+                    var url = urlGetCommentsByCommentBank.replace("9999", $("#selectedBank").val());
+                    changeTableSource("Comments", url);
                 });
 
-            $("#comments").on("click",
+            $("#Comments").on("click",
                 ".js-edit",
                 function() {
                     var button = $(this);
-                    var setId = button.attr("data-comment-id");
+                    var commentId = button.attr("data-comment-id");
                     $.ajax({
-                        url: "/api/comments/byId/" + setId,
+                        url: urlGetCommentById.replace("9999", commentId),
                         method: "GET",
                         success: function(result) {
                             $("#editCommentBankControl").val(result["commentBankId"]);
@@ -179,7 +161,7 @@
                     $("#EditCommentModal").modal('toggle');
                 });
 
-            $("#comments").on("click",
+            $("#Comments").on("click",
                 ".js-delete",
                 function() {
                     var button = $(this);
@@ -187,10 +169,10 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: "/api/Comments/delete/" + button.attr("data-comment-id"),
+                                    url: urlDeleteComment.replace("9999", button.attr("data-comment-id")),
                                     method: "DELETE",
                                     success: function(a) {
-                                        $("#comments").DataTable().ajax.reload();
+                                        refreshTable("Comments");
                                         toastr.success(a);
                                     },
                                     error: function(e) {
@@ -204,7 +186,7 @@
 
         function newCommentSuccess(result) {
             $("#NewCommentModal").modal('hide');
-            $("#comments").DataTable().ajax.reload();
+            refreshTable("Comments");
             toastr.success(result);
         }
 
@@ -215,7 +197,7 @@
 
         function editCommentSuccess(result) {
             $("#EditCommentModal").modal('hide');
-            $("#comments").DataTable().ajax.reload();
+            refreshTable("Comments");
             toastr.success(result);
         }
 
@@ -232,5 +214,29 @@
                 $("#NewCommentModal").modal('toggle');
             }
         }
+    </script>
+
+    <script type="text/x-jsrender" id="commentBankNameTemplate">
+        <div>
+            ${CommentBankName}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="commentValueTemplate">
+        <div>
+            ${Value}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="commentActionsTemplate">
+        <div>
+            <button type='button' class='btn btn-xs btn-warning mp-btn-action js-edit' data-comment-id="${Id}">
+                <i class="fas fa-edit"></i>
+            </button>
+
+            <button type='button' class='btn btn-xs btn-danger mp-btn-action js-delete' data-comment-id="${Id}">
+                <i class="far fa-trash-alt"></i>
+            </button>
+        </div>
     </script>
 }

@@ -1,31 +1,36 @@
 ﻿@model MyPortal.Models.Database.PersonnelTrainingCourse
 @{
     ViewBag.Title = "New Course";
+    ViewBag.DisplayTitle = "Courses - New";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<div class="container float-left">
-    <h2 class="mp-page-title">New Training Course</h2>
-    <hr/>
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">New Training Course</h1>
 </div>
 
-<div class="container float-left">
-    @using (Html.BeginForm("CreateCourse", "Staff"))
-    {
-        <div class="form-group">
-            @Html.Label("Course Code")
-            @Html.TextBoxFor(c => c.Code, new {@class = "form-control"})
-            @Html.ValidationMessageFor(c => c.Code)
-        </div>
-        <div class="form-group">
-            @Html.Label("Description")
-            @Html.TextBoxFor(c => c.Description, new {@class = "form-control"})
-            @Html.ValidationMessageFor(c => c.Description)
-        </div>
-        @Html.AntiForgeryToken()
-        <button type="button" class="btn btn-primary" id="backButton">Back</button>
-        <button type="submit" class="btn btn-primary">Save</button>
-    }
+<div class="row">
+    
+    <div class="col-xl-12 col-md-12 mb-4">
+        
+        @using (Html.BeginForm("CreateCourse", "Staff"))
+        {
+            <div class="form-group">
+                @Html.Label("Course Code")
+                @Html.TextBoxFor(c => c.Code, new {@class = "form-control"})
+                @Html.ValidationMessageFor(c => c.Code)
+            </div>
+            <div class="form-group">
+                @Html.Label("Description")
+                @Html.TextBoxFor(c => c.Description, new {@class = "form-control"})
+                @Html.ValidationMessageFor(c => c.Description)
+            </div>
+            @Html.AntiForgeryToken()
+            <button type="button" class="btn btn-primary" id="backButton">Back</button>
+            <button type="submit" class="btn btn-primary">Save</button>
+        }
+
+    </div>
 
 </div>
 
@@ -35,7 +40,7 @@
         $(document).ready(function() {
             $("#backButton").on("click",
                 function() {
-                    location.replace("/Staff/TrainingCourses");
+                    location.replace("@Url.Action("TrainingCourses", "Staff")");
                 });
         });
     </script>

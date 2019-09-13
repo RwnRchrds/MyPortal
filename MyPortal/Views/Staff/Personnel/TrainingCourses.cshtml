@@ -1,36 +1,53 @@
 ﻿@using MyPortal.Processes
 @model MyPortal.ViewModels.TrainingCoursesViewModel
 @{
-    ViewBag.Title = "TrainingCourses";
+    ViewBag.Title = "Training Courses";
+    ViewBag.DisplayTitle = "Training Courses";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<div class="container">
-    <h2 class="mp-page-title">Training Courses</h2>
-    <hr/>
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Training Courses</h1>
 </div>
 
-<div class="container">
-    @if (User.HasPermission("EditCourses"))
-    {
-        @Html.ActionLink("New Course", "NewCourse", "Staff", null, new {@class = "btn btn-primary", style = "margin-bottom: 8px;"})
-        <hr/>
-    }
-</div>
+@if (User.HasPermission("EditCourses"))
+{
+    <div class="row">
+        
+        <div class="col-xl-12 col-md-12 mb-4">
 
-<div class="container">
-   @Html.EJS().Grid("Courses").DataSource(d =>
-   {
-       d.Url("/api/personnel/courses/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor");
-   }).Columns(c =>
-   {
-       c.Field("Code").HeaderText("Code").Template("#coursesCodeTemplate").Width("150").Add();
-       c.Field("Description").HeaderText("Description").Template("#coursesDescriptionTemplate").Width("200").Add();
-       if (User.HasPermission("EditCourses"))
-       {
-           c.HeaderText("Actions").Template("#coursesActionsTemplate").Width("170").Add();
-       }
-   }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true);}).Toolbar(new List<string> {"Search"}).Render()
+            @Html.ActionLink("New Course", "NewCourse", "Staff", null, new { @class = "btn btn-primary" })
+
+        </div>
+
+    </div>
+}
+
+<div class="row">
+    
+<div class="col-xl-12 col-lg-12">
+    <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Courses</h6>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+            @Html.EJS().Grid("Courses").DataSource(d =>
+            {
+                d.Url("/api/personnel/courses/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor");
+            }).Columns(c =>
+            {
+                c.Field("Code").HeaderText("Code").Template("#coursesCodeTemplate").Width("150").Add();
+                c.Field("Description").HeaderText("Description").Template("#coursesDescriptionTemplate").Width("200").Add();
+                if (User.HasPermission("EditCourses"))
+                {
+                    c.HeaderText("Actions").Template("#coursesActionsTemplate").Width("170").Add();
+                }
+            }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true);}).Toolbar(new List<string> {"Search"}).Render()
+        </div>
+    </div>
+
 </div>
 
 <div id="EditCourseModal" class="modal fade" role="dialog">

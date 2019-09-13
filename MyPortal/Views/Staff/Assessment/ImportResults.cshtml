@@ -76,7 +76,7 @@
 {
     <script>
 
-        var urlImportResults = "@Url.HttpRouteUrl("ApiAssessmentImportResults", new {resultSetId = "abcd"})";
+        var urlImportResults = "@Url.HttpRouteUrl("ApiAssessmentImportResults", new {resultSetId = 9999})";
 
         $(document).ready(function() {
             $("#resultSetSelect").on("change",
@@ -92,7 +92,7 @@
             $("#btnImport").on("click",
                 function() {
                     $.ajax({
-                        url: urlImportResults.replace("abcd", $("#resultSetSelect").val()),
+                        url: urlImportResults.replace("9999", $("#resultSetSelect").val()),
                         method: "POST",
                         success: function(e) {
                             toastr.success(e);

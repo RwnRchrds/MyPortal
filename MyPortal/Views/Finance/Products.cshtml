@@ -17,7 +17,6 @@
         @if (User.HasPermission("EditProducts"))
         {
             <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" data-target="#NewProductModal">New Product</button>
-            <hr/>
         }
         
     </div>
@@ -163,8 +162,8 @@
 {
     <script>
 
-        var urlDeleteProduct = "@Url.HttpRouteUrl("ApiFinanceDeleteProduct", new {productId = "abcd"})";
-        var urlGetProductById = "@Url.HttpRouteUrl("ApiFinanceGetProductById", new {productId = "abcd"})";
+        var urlDeleteProduct = "@Url.HttpRouteUrl("ApiFinanceDeleteProduct", new {productId = 9999})";
+        var urlGetProductById = "@Url.HttpRouteUrl("ApiFinanceGetProductById", new {productId = 9999})";
 
         $(document).ready(function() {
             //Delete Product When Button Clicked
@@ -176,7 +175,7 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: urlDeleteProduct.replace("abcd", button.attr("data-product-id")),
+                                    url: urlDeleteProduct.replace("9999", button.attr("data-product-id")),
                                     method: "DELETE",
                                     success: function(e) {
                                         refreshTable("Products");
@@ -201,7 +200,7 @@
                     var button = $(this);
                     var productId = button.attr("data-product-id");
                     $.ajax({
-                        url: urlGetProductById.replace("abcd", productId),
+                        url: urlGetProductById.replace("9999", productId),
                         method: "GET",
                         success: function(result) {
                             $("#editIdControl").val(result["id"]);

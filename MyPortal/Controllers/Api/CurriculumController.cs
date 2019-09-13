@@ -342,7 +342,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditStudyTopics")]
-        [Route("studyTopics/update", Name = "ApiCurriculumUpdateStudyTopics")]
+        [Route("studyTopics/update", Name = "ApiCurriculumUpdateStudyTopic")]
         public IHttpActionResult UpdateStudyTopic([FromBody] CurriculumStudyTopic studyTopic)
         {
             return PrepareResponse(CurriculumProcesses.UpdateStudyTopic(studyTopic, _context));

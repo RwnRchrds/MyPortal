@@ -156,10 +156,10 @@
     <script>
 
         var urlGetLessonPlansByStudyTopic =
-            "@Url.HttpRouteUrl("ApiCurriculumGetLessonPlansByStudyTopicDataGrid", new {studyTopicId = "abcd"})";
-        var urlGetLessonPlanById = "@Url.HttpRouteUrl("ApiCurriculumGetLessonPlanById", new {lessonPlanId = "abcd"})";
+            "@Url.HttpRouteUrl("ApiCurriculumGetLessonPlansByStudyTopicDataGrid", new {studyTopicId = 9999})";
+        var urlGetLessonPlanById = "@Url.HttpRouteUrl("ApiCurriculumGetLessonPlanById", new {lessonPlanId = 9999})";
         var urlViewLessonPlan = "@Url.HttpRouteUrl("CurriculumLessonPlanDetails", new {id = "abcd"})";
-        var urlDeleteLessonPlan = "@Url.HttpRouteUrl("ApiCurriculumDeleteLessonPlan", new {})";
+        var urlDeleteLessonPlan = "@Url.HttpRouteUrl("ApiCurriculumDeleteLessonPlan", new {lessonPlanId = 9999})";
 
         $(document).ready(function() {
             $('.modal').on('hidden.bs.modal',
@@ -170,7 +170,7 @@
             $("#selectedTopic").on("change",
                 function() {
                     var studyTopicId = $("#selectedTopic").val();
-                    changeTableSource("LessonPlans", urlGetLessonPlansByStudyTopic.replace("abcd", studyTopicId));
+                    changeTableSource("LessonPlans", urlGetLessonPlansByStudyTopic.replace("9999", studyTopicId));
                     refreshTable("LessonPlans");
                 });
 
@@ -180,7 +180,7 @@
                     var button = $(this);
                     var planId = button.attr("data-plan-id");
                     $.ajax({
-                        url: urlGetLessonPlanById.replace("abcd", planId),
+                        url: urlGetLessonPlanById.replace("9999", planId),
                         method: "GET",
                         success: function(result) {
                             $("#editStudyTopicControl").val(result["studyTopicId"]);
@@ -212,7 +212,7 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: urlDeleteLessonPlan.replace("abcd", button.attr("data-plan-id")),
+                                    url: urlDeleteLessonPlan.replace("9999", button.attr("data-plan-id")),
                                     method: "DELETE",
                                     success: function(a) {
                                         refreshTable("LessonPlans");

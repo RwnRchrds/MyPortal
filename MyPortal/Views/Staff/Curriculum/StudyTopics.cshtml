@@ -12,7 +12,7 @@
 
 <div class="row">
     
-    <div class="col-xl-12 col-md-12">
+    <div class="col-xl-12 col-md-12 mb-4">
 
         <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" data-target="#NewStudyTopicModal">New Study Topic</button>
 
@@ -123,8 +123,8 @@
     @Scripts.Render("~/bundles/jqueryval")
     <script>
 
-        var urlGetStudyTopicById = "@Url.HttpRouteUrl("ApiCurriculumGetStudyTopicById", new {studyTopicId = "abcd"})";
-        var urlDeleteStudyTopic = "@Url.HttpRouteUrl("ApiCurriculumDeleteStudyTopic", new {studyTopicId = "abcd"})";
+        var urlGetStudyTopicById = "@Url.HttpRouteUrl("ApiCurriculumGetStudyTopicById", new {studyTopicId = 9999})";
+        var urlDeleteStudyTopic = "@Url.HttpRouteUrl("ApiCurriculumDeleteStudyTopic", new {studyTopicId = 9999})";
 
         $(document).ready(function() {
             $('.modal').on('hidden.bs.modal',
@@ -138,7 +138,7 @@
                     var button = $(this);
                     var topicId = button.attr("data-topic-id");
                     $.ajax({
-                        url: urlGetStudyTopicById.replace("abcd", topicId),
+                        url: urlGetStudyTopicById.replace("9999", topicId),
                         method: "GET",
                         success: function(result) {
                             $("#editStudyTopicNameControl").val(result["name"]);
@@ -160,7 +160,7 @@
                         function(result) {
                             if (result) {
                                 $.ajax({
-                                    url: urlDeleteStudyTopic.replace("abcd", button.attr("data-topic-id")),
+                                    url: urlDeleteStudyTopic.replace("9999", button.attr("data-topic-id")),
                                     method: "DELETE",
                                     success: function(e) {
                                         refreshTable("StudyTopics");
