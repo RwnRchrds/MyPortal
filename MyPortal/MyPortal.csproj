@@ -300,6 +300,7 @@
     <Compile Include="Dtos\FinanceProductTypeDto.cs" />
     <Compile Include="Dtos\FinanceSaleDto.cs" />
     <Compile Include="Dtos\GridDtos\GridApplicationUserDto.cs" />
+    <Compile Include="Dtos\GridDtos\GridAssessmentResultDto.cs" />
     <Compile Include="Dtos\GridDtos\GridAssessmentResultSetDto.cs" />
     <Compile Include="Dtos\GridDtos\GridBehaviourAchievementDto.cs" />
     <Compile Include="Dtos\GridDtos\GridCurriculumClassDto.cs" />

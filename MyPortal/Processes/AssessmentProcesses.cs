@@ -102,6 +102,35 @@ namespace MyPortal.Processes
 
         }
 
+        public static ProcessResponse<IEnumerable<AssessmentResultSet>> GetResultSetsByStudent_Model(int studentId,
+            MyPortalDbContext context)
+        {
+            if (!context.Students.Any(x => x.Id == studentId))
+            {
+                return new ProcessResponse<IEnumerable<AssessmentResultSet>>(ResponseType.NotFound, "Student not found", null);
+            }
+
+            var resultSets =
+                context.AssessmentResultSets.Where(x => x.AssessmentResults.Any(s => s.StudentId == studentId));
+
+            return new ProcessResponse<IEnumerable<AssessmentResultSet>>(ResponseType.Ok, null, resultSets);
+        }
+
+        public static ProcessResponse<IEnumerable<AssessmentResultSetDto>> GetResultSetsByStudent(int studentId,
+            MyPortalDbContext context)
+        {
+            if (!context.Students.Any(x => x.Id == studentId))
+            {
+                return new ProcessResponse<IEnumerable<AssessmentResultSetDto>>(ResponseType.NotFound, "Student not found", null);
+            }
+
+            var resultSets =
+                GetResultSetsByStudent_Model(studentId, context).ResponseObject.ToList();
+
+            return new ProcessResponse<IEnumerable<AssessmentResultSetDto>>(ResponseType.Ok, null,
+                resultSets.Select(Mapper.Map<AssessmentResultSet, AssessmentResultSetDto>));
+        }
+
         public static ProcessResponse<IEnumerable<GridAssessmentResultSetDto>> GetAllResultSets_DataGrid(MyPortalDbContext context)
         {
             return new ProcessResponse<IEnumerable<GridAssessmentResultSetDto>>(ResponseType.Ok, null,
@@ -269,6 +298,17 @@ namespace MyPortal.Processes
                 .Select(Mapper.Map<AssessmentResult, AssessmentResultDto>);
 
             return new ProcessResponse<IEnumerable<AssessmentResultDto>>(ResponseType.Ok, null, results);
+        }
+
+        public static ProcessResponse<IEnumerable<GridAssessmentResultDto>> GetResultsByStudentDataGrid(int studentId, int resultSetId,
+            MyPortalDbContext context)
+        {
+            var results = context.AssessmentResults
+                .Where(r => r.StudentId == studentId && r.ResultSetId == resultSetId)
+                .ToList()
+                .Select(Mapper.Map<AssessmentResult, GridAssessmentResultDto>);
+
+            return new ProcessResponse<IEnumerable<GridAssessmentResultDto>>(ResponseType.Ok, null, results);
         }
 
         public static ProcessResponse<IEnumerable<AssessmentResult>> GetResultsForStudent_Model(int studentId, int resultSetId,

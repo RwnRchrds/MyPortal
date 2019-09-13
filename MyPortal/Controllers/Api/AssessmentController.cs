@@ -30,10 +30,23 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewResults")]
-        [Route("results/get/{studentId:int}/{resultSetId:int}", Name = "ApiAssessmentGetResultsByStudent")]
+        [Route("results/get/byStudent/{studentId:int}/{resultSetId:int}", Name = "ApiAssessmentGetResultsByStudent")]
         public IEnumerable<AssessmentResultDto> GetResultsByStudent([FromUri] int studentId, [FromUri] int resultSetId)
         {
             return PrepareResponseObject(AssessmentProcesses.GetResultsByStudent(studentId, resultSetId, _context));
+        }
+
+        [HttpPost]
+        [RequiresPermission("ViewResults")]
+        [Route("results/get/byStudent/{studentId:int}/{resultsetId:int}")]
+        public IHttpActionResult GetResultsByStudentDataGrid([FromUri] int studentId, [FromUri] int resultSetId,
+            [FromBody] DataManagerRequest dm)
+        {
+            var results =
+                PrepareResponseObject(
+                    AssessmentProcesses.GetResultsByStudentDataGrid(studentId, resultSetId, _context));
+
+            return PrepareDataGridObject(results, dm);
         }
 
         [HttpPost]
@@ -67,6 +80,14 @@ namespace MyPortal.Controllers.Api
         public IEnumerable<AssessmentResultSetDto> GetAllResultSets()
         {
             return PrepareResponseObject(AssessmentProcesses.GetAllResultSets(_context));
+        }
+
+        [HttpGet]
+        [RequiresPermission("ViewResultSets")]
+        [Route("resultSets/get/byStudent/{studentId:int}", Name = "ApiAssessmentGetResultSetsByStudent")]
+        public IEnumerable<AssessmentResultSetDto> GetResultSetsByStudent([FromUri] int studentId)
+        {
+            return PrepareResponseObject(AssessmentProcesses.GetResultSetsByStudent(studentId, _context));
         }
 
         [HttpPost]
