@@ -1,36 +1,112 @@
-﻿@model MyPortal.ViewModels.StudentDetailsViewModel
+﻿@using MyPortal.Processes
+@using Syncfusion.EJ2.Grids
+@model MyPortal.ViewModels.StudentDetailsViewModel
 @{
-    ViewBag.Title = "Home: " + Model.Student.Person.LastName + ", " + Model.Student.Person.FirstName;
+    ViewBag.Title = $"Home: {PeopleProcesses.GetStudentDisplayName(Model.Student)}";
+    ViewBag.DisplayTitle = "Home";
     Layout = "~/Views/Shared/_LayoutStudent.cshtml";
+
+    var gender = Model.Genders.SingleOrDefault(x => x.Value == Model.Student.Person.Gender);
+
+    var genderLabel = gender == null ? "Not Specified" : gender.Name;
 }
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
-
-<style>
-    .overview-card {
-        width: 550px;
-    }
-</style>
-
-<div class="container float-left">
-    <h2 class="mp-page-title">@Model.Student.Person.LastName, @Model.Student.Person.FirstName</h2>
-    <hr/>
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">@PeopleProcesses.GetStudentDisplayName(Model.Student).ResponseObject</h1>
 </div>
 
-<body>
+<div class="row">
 
-<!--CARD CONTAINER-->
-<div class="container float-left" id="container-2">
-    <!--Student Details Card-->
-    <div class="float-left" id="detailsDiv">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Account Balance</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            £@Model.Student.AccountBalance
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-pound-sign fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <div class="card border-primary mp-card" id="detailsCard">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card shadow h-100 py-2" id="attendanceBlock">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Attendance</div>
+                        @if (Model.HasAttendaceData && Model.Attendance != null)
+                        {
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" data-hasdata="true" id="attendanceDetail">
+                                @Model.Attendance%
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="attendanceDetail">
+                                --
+                            </div>
+                        }
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-            <div class="card-header bg-primary">MyDetails</div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card shadow h-100 py-2" id="achievementBlock">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Achievement</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="achievementDetail">
+                            @Model.AchievementCount
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-smile fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card shadow h-100 py-2" id="behaviourBlock">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Behaviour</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="behaviourDetail">
+                            @Model.BehaviourCount
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-frown fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-6 col-md-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Basic Details</h6>
+            </div>
 
             <div class="card-body">
-
-                <!--Student Details Table-->
                 <table class="table-condensed mp-table-condensed">
                     <tr>
                         <td>
@@ -43,6 +119,12 @@
                             <b>Last Name</b>
                         </td>
                         <td>@Model.Student.Person.LastName</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Gender</b>
+                        </td>
+                        <td>@genderLabel</td>
                     </tr>
                     <tr>
                         <td>
@@ -69,298 +151,209 @@
                         <td>@Model.Student.PastoralYearGroup.HeadOfYear.Person.Title @Model.Student.PastoralYearGroup.HeadOfYear.Person.FirstName.Substring(0, 1) @Model.Student.PastoralYearGroup.HeadOfYear.Person.LastName</td>
                     </tr>
                 </table>
-
-            </div>
-
-            <!--Student Details Footer (Account Balance)-->
-            <div class="card-footer bg-transparent border-primary">
-
-                <h5><b>Balance:</b> £@Model.Student.AccountBalance</h5>
-
-            </div>
-        </div>
-    </div>
-
-    <!-- MyResults Table Card -->
-    <div class="float-left" id="resultsTableDiv">
-        <div class="card border-primary mp-card overview-card" id="summaryCard">
-            <div class="card-header bg-primary">Overview</div>
-            <div class="float-left container">
-                <div class="mp-info-block inline-block" id="attendanceBlock">
-                    @if (Model.HasAttendaceData && Model.Attendance != null)
-                    {
-                        <div class="mp-info-block-label">Attendance</div>
-                        <div class="mp-info-block-detail" data-hasdata="true" id="attendanceDetail">
-                            @Model.Attendance%
-                        </div>
-                    }
-                    @if (!Model.HasAttendaceData || Model.Attendance == null)
-                    {
-                        <div class="mp-info-block-label">Attendance</div>
-                        <div class="mp-info-block-detail-nodata" data-hasdata="false" id="attendanceDetail">
-                            No Data
-                        </div>
-                    }
-                </div>
-
-                <div class="mp-info-block inline-block" id="achievementBlock">
-                    <div class="mp-info-block-label">Achievements</div>
-                    <div class="mp-info-block-detail" id="achievementDetail">
-                        @Model.AchievementCount
-                    </div>
-                </div>
-
-                <div class="mp-info-block inline-block" id="behaviourBlock">
-                    <div class="mp-info-block-label">Behaviour</div>
-                    <div class="mp-info-block-detail" id="behaviourDetail">
-                        @Model.BehaviourCount
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- MyLogs Panel -->
-<div class="container float-left mp-margin-top">
-    <div>
-        <hr/>
-        <h4 class="mp-bold">MyLogs</h4>
-        <table class="table table-sm table-bordered mp-table mp-log-table" id="logs" data-student-id="@Model.Student.Id">
-            <thead>
-            <tr>
-                <th>Date</th>
-                <th>Author</th>
-                <th>Type</th>
-                <th>Message</th>
-            </tr>
-            </thead>
-        </table>
+<div class="row">
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Log Notes</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                @Html.EJS().Grid("logs").DataSource(dataManager => { dataManager.Url(Url.HttpRouteUrl("ApiProfilesGetLogsByStudentDataGrid", new {studentId = Model.Student.Id})).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+                {
+                    c.Field("Date").HeaderText("Date").Template("#logDateTemplate").Width("105").Add();
+                    c.Field("AuthorName").HeaderText("Author").Template("#logAuthorTemplate").Width("110").Add();
+                    c.Field("LogTypeName").HeaderText("Log Type").Template("#logTypeTemplate").Width("150").Add();
+                    c.Field("Message").HeaderText("Message").Width("500").Template("#logMessageTemplate").Add();
+                }).AllowPaging().AllowTextWrap().PageSettings(p => p.PageSize(5)).TextWrapSettings(w => { w.WrapMode(WrapMode.Content); }).QueryCellInfo("logQuery").EnableHover(false).Render()
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- MyDocuments Panel -->
-<div class="container float-left mp-margin-top">
-    <div>
-        <hr/>
-        <h4 class="mp-bold">MyDocuments</h4>
-        <table class="table table-sm table-bordered mp-table mp-document-table mp-table-link" id="documents" data-student-id="@Model.Student.Id">
-            <thead>
-            <tr>
-                <th>Description</th>
-                <th>Date</th>
-            </tr>
-            </thead>
-        </table>
+<div class="row">
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Documents</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                @Html.EJS().Grid("documents").DataSource(dataManager => { dataManager.Url("/api/documents/personal/get/dataGrid/" + Model.Student.Person.Id).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+                {
+                    c.Field("Description").HeaderText("Description").Template("#docsDescriptionTemplate").Width("700").Add();
+                    c.Field("Date").HeaderText("Date").Template("#docsDateTemplate").Width("110").Add();
+                }).AllowPaging().PageSettings(p => p.PageSize(5)).Render()
+            </div>
+        </div>
     </div>
 </div>
-</body>
 
 @section scripts
 {
     <script>
-        //Script run when page loads
-        $(document).ready(function () {
+
+        $(document).ready(function() {
 
             overviewCalc();
-
-            $("#logs").DataTable({
-                ajax: {
-                    url: "/api/logs/" + $("#logs").attr("data-student-id"),
-                    dataSrc: "",
-                    method: "GET"
-                },
-                columns: [
-                    {
-                        data: "date",
-                        render: function(data) {
-                            var date = new Date(data);
-                            return date.toLocaleDateString();
-                        }
-
-                    },
-                    {
-                        data: "author.code",
-                        render: function(data, type, log) {
-                            return log.author.person.title +
-                                " " +
-                                log.author.person.firstName.substring(0, 1) +
-                                " " +
-                                log.author.person.lastName;
-                        }
-                    },
-                    {
-                        data: "profileLogType.name"
-                    },
-                    {
-                        data: "message",
-                        render: function(data) {
-
-                            if ("@Model.Student.Person.Gender" === "M") {
-                                return data.replace(/<name>/g, "@Model.Student.Person.FirstName")
-                                    .replace(/<he>/g, "he")
-                                    .replace(/<He>/g, "He")
-                                    .replace(/<him>/g, "him")
-                                    .replace(/<Him>/g, "Him")
-                                    .replace(/<his>/g, "his")
-                                    .replace(/<His>/g, "His")
-                                    .replace(/<himself>/g, "himself")
-                                    .replace(/<Himself>/g, "Himself")
-                                    .replace(/</g, "&lt;")
-                                    .replace(/>/g, "&gt;")
-                                    .replace(/\n/g, "<br/>");
-                            }
-
-                            if ("@Model.Student.Person.Gender" === "F") {
-                                return data.replace("<name>", "@Model.Student.Person.FirstName")
-                                    .replace(/<he>/g, "she")
-                                    .replace(/<He>/g, "She")
-                                    .replace(/<him>/g, "her")
-                                    .replace(/<Him>/g, "Her")
-                                    .replace(/<his>/g, "her")
-                                    .replace(/<His>/g, "Her")
-                                    .replace(/<himself>/g, "herself")
-                                    .replace(/<Himself>/g, "Herself")
-                                    .replace(/</g, "&lt;")
-                                    .replace(/>/g, "&gt;")
-                                    .replace(/\n/g, "<br/>");
-                            }
-
-                            if ("@Model.Student.Person.Gender" === "X") {
-                                return data.replace("<name>", "@Model.Student.Person.FirstName")
-                                    .replace(/<he>/g, "they")
-                                    .replace(/<He>/g, "They")
-                                    .replace(/<him>/g, "them")
-                                    .replace(/<Him>/g, "Them")
-                                    .replace(/<his>/g, "their")
-                                    .replace(/<His>/g, "Their")
-                                    .replace(/<himself>/g, "themselves")
-                                    .replace(/<Himself>/g, "Themselves")
-                                    .replace(/</g, "&lt;")
-                                    .replace(/>/g, "&gt;")
-                                    .replace(/\n/g, "<br/>");
-                            }
-
-                            return data;
-                        }
-                    }
-                ],
-                paging: false,
-                ordering: false,
-                searching: false,
-                info: false,
-                "createdRow": function(row, data, dataIndex) {
-                    if (data.profileLogType.name === "Academic Support") {
-                        $(row).addClass("mp-log-academic-support");
-                    }
-
-                    if (data.profileLogType.name === "Behaviour Log") {
-                        $(row).addClass("mp-log-behaviour");
-                    }
-
-                    if (data.profileLogType.name === "Report") {
-                        $(row).addClass("mp-log-report");
-                    }
-
-                    if (data.profileLogType.name === "Praise") {
-                        $(row).addClass("mp-log-praise");
-                    }
-
-                    if (data.profileLogType.name === "SEN Note") {
-                        $(row).addClass("mp-log-sen");
-                    }
-
-                    if (data.profileLogType.name === "Student Feed") {
-                        $(row).addClass("mp-log-student-feed");
-                    }
-
-                    if (data.profileLogType.name === "Tutor Note") {
-                        $(row).addClass("mp-log-tutor-note");
-                    }
-
-                    if (data.profileLogType.name === "Medical Event") {
-                        $(row).addClass("mp-log-medical-event");
-                    }
-                },
-                "language": {
-                    "emptyTable": "No logs to display"
-                }
-            });
-
-            $("#documents").DataTable({
-                ajax: {
-                    url: "/api/students/documents/fetch/" + $("#documents").attr("data-student-id"),
-                    dataSrc: "",
-                    method: "GET"
-                },
-                columns: [
-                    {
-                        data: "document.description",
-                        render: function(data, type, document) {
-                            return "<a href='" +
-                                document.document.url +
-                                "' target='_blank'>" +
-                                document.document.description +
-                                "</a>";
-                        }
-
-                    },
-                    {
-                        data: "document.date",
-                        render: function(data) {
-                            var date = new Date(data);
-                            return date.toLocaleDateString();
-                        }
-                    }
-                ],
-                paging: false,
-                ordering: false,
-                searching: false,
-                info: false,
-                "language": {
-                    "emptyTable": "No documents to display"
-                }
-            });
         });
 
         function overviewCalc() {
 
-            //Attendance Block
             if ($("#attendanceDetail").attr("data-hasdata") === "true") {
                 if (parseInt($("#attendanceDetail").text()) >= 95) {
-                    $("#attendanceBlock").addClass("mp-background-success");
-                }
-                if (parseInt($("#attendanceDetail").text()) < 95) {
-                    $("#attendanceBlock").addClass("mp-background-warning");
-                }
-                if (parseInt($("#attendanceDetail").text()) < 90) {
-                    $("#attendanceBlock").removeClass("mp-background-warning");
-                    $("#attendanceBlock").addClass("mp-background-danger");
+                    $("#attendanceBlock").addClass("border-left-success");
+                } else if (parseInt($("#attendanceDetail").text()) < 90) {
+                    $("#attendanceBlock").addClass("border-left-danger");
+                } else if (parseInt($("#attendanceDetail").text()) < 95) {
+                    $("#attendanceBlock").addClass("border-left-warning");
                 }
             }
 
-            //Achievements Block
             if (parseInt($("#achievementDetail").text()) < @Model.BehaviourCount) {
-                $("#achievementBlock").addClass("mp-background-danger");
+                $("#achievementBlock").addClass("border-left-danger");
             }
             if (parseInt($("#achievementDetail").text()) === @Model.BehaviourCount) {
-                $("#achievementBlock").addClass("mp-background-warning");
+                $("#achievementBlock").addClass("border-left-warning");
             }
             if (parseInt($("#achievementDetail").text()) > @Model.BehaviourCount) {
-                $("#achievementBlock").addClass("mp-background=success");
+                $("#achievementBlock").addClass("border-left-success");
             }
 
-            //Behaviour Block
+
             if (parseInt($("#behaviourDetail").text()) === 0) {
-                $("#behaviourBlock").addClass("mp-background-success");
+                $("#behaviourBlock").addClass("border-left-success");
+            }
+            if (parseInt($("#behaviourDetail").text()) > 9) {
+                $("#behaviourBlock").addClass("border-left-danger");
             }
             if (parseInt($("#behaviourDetail").text()) > 0) {
-                $("#behaviourBlock").addClass("mp-background-warning");
-            }
-            if (parseInt($("#behaviourDetail").text()) > 10) {
-                $("#behaviourBlock").addClass("mp-background-danger");
+                $("#behaviourBlock").addClass("border-left-warning");
             }
         }
+
+        function renderLogMessage(data) {
+            if ("@Model.Student.Person.Gender" === "M") {
+                return data.replace(/<name>/g, "@Model.Student.Person.FirstName")
+                    .replace(/<he>/g, "he")
+                    .replace(/<He>/g, "He")
+                    .replace(/<him>/g, "him")
+                    .replace(/<Him>/g, "Him")
+                    .replace(/<his>/g, "his")
+                    .replace(/<His>/g, "His")
+                    .replace(/<himself>/g, "himself")
+                    .replace(/<Himself>/g, "Himself")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/\n/g, "<br/>");
+            }
+
+            if ("@Model.Student.Person.Gender" === "F") {
+                return data.replace("<name>", "@Model.Student.Person.FirstName")
+                    .replace(/<he>/g, "she")
+                    .replace(/<He>/g, "She")
+                    .replace(/<him>/g, "her")
+                    .replace(/<Him>/g, "Her")
+                    .replace(/<his>/g, "her")
+                    .replace(/<His>/g, "Her")
+                    .replace(/<himself>/g, "herself")
+                    .replace(/<Himself>/g, "Herself")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/\n/g, "<br/>");
+            }
+
+            if ("@Model.Student.Person.Gender" === "X") {
+                return data.replace("<name>", "@Model.Student.Person.FirstName")
+                    .replace(/<he>/g, "they")
+                    .replace(/<He>/g, "They")
+                    .replace(/<him>/g, "them")
+                    .replace(/<Him>/g, "Them")
+                    .replace(/<his>/g, "their")
+                    .replace(/<His>/g, "Their")
+                    .replace(/<himself>/g, "themselves")
+                    .replace(/<Himself>/g, "Themselves")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/\n/g, "<br/>");
+            }
+
+            return data;
+        }
+
+        function logQuery(args) {
+
+            if (args.column.field === "LogTypeName") {
+                if (args.cell.textContent === "Academic Support") {
+                    args.cell.classList.add("mp-log-academic-support");
+                }
+                else if (args.cell.textContent === "Behaviour Log") {
+                    args.cell.classList.add("mp-log-behaviour");
+                }
+                else if (args.cell.textContent === "Report") {
+                    args.cell.classList.add("mp-log-report");
+                }
+                else if (args.cell.textContent === "Praise") {
+                    args.cell.classList.add("mp-log-praise");
+                }
+                else if (args.cell.textContent === "SEN Note") {
+                    args.cell.classList.add("mp-log-sen");
+                }
+                else if (args.cell.textContent === "Tutor Note") {
+                    args.cell.classList.add("mp-log-tutor-note");
+                }
+                else if (args.cell.textContent === "Medical Event") {
+                    args.cell.classList.add("mp-log-medical-event");
+                }
+                else if (args.cell.textContent === "Student Feed") {
+                    args.cell.classList.add("mp-log-student-feed");
+                }
+            }
+        }
+    </script>
+
+    <script type="text/x-jsrender" id="logAuthorTemplate">
+        <div>
+            ${AuthorName}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="logDateTemplate">
+        <div>
+            ${formatDate(Date.toString())}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="logTypeTemplate">
+        <div>
+            ${LogTypeName}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="logMessageTemplate">
+        <div>
+            <b>${renderLogMessage(Message.toString())}</b>
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="docsDescriptionTemplate">
+        <div>
+            <b><a href="${Url}" target="_blank">${Description}</a></b>
+        </div>
+    </script>
+
+
+    <script type="text/x-jsrender" id="docsDateTemplate">
+        <div>
+            ${formatDate(Date.toString())}
+        </div>
     </script>
 
     @Scripts.Render("~/bundles/students")

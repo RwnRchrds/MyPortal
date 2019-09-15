@@ -38,7 +38,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewResults")]
-        [Route("results/get/byStudent/{studentId:int}/{resultsetId:int}")]
+        [Route("results/get/byStudent/{studentId:int}/{resultsetId:int}", Name = "ApiAssessmentGetResultsByStudentDataGrid")]
         public IHttpActionResult GetResultsByStudentDataGrid([FromUri] int studentId, [FromUri] int resultSetId,
             [FromBody] DataManagerRequest dm)
         {

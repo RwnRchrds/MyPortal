@@ -199,7 +199,7 @@
                     c.Field("LogTypeName").HeaderText("Log Type").Template("#logTypeTemplate").Width("150").Add();
                     c.Field("Message").HeaderText("Message").Width("500").Template("#logMessageTemplate").Add();
                     c.HeaderText("Actions").Template("#logActionsTemplate").Width("150").Add();
-                }).AllowPaging().AllowTextWrap().PageSettings(p => p.PageSize(5)).TextWrapSettings(w => { w.WrapMode(WrapMode.Content); }).RowDataBound("logRowDataBound").EnableHover(false).Render()
+                }).AllowPaging().AllowTextWrap().PageSettings(p => p.PageSize(5)).TextWrapSettings(w => { w.WrapMode(WrapMode.Content); }).QueryCellInfo("logQuery").EnableHover(false).Render()
             </div>
         </div>
     </div>
@@ -569,8 +569,8 @@
             $("#logs").on("click",
                 ".js-edit",
                 function() {
-                    const button = $(this);
-                    const logId = button.attr("data-log-id");
+                    var button = $(this);
+                    var logId = button.attr("data-log-id");
                     $.ajax({
                         url: `/api/profiles/logs/get/byId/${logId}`,
                         method: "GET",
@@ -589,8 +589,8 @@
             $("#documents").on("click",
                 ".js-edit",
                 function() {
-                    const button = $(this);
-                    const docId = button.attr("data-document-id");
+                    var button = $(this);
+                    var docId = button.attr("data-document-id");
                     $.ajax({
                         url: `/api/documents/personal/get/byId/${docId}`,
                         method: "GET",
@@ -617,7 +617,7 @@
 
             $("#ViewResultsButton").on("click",
                 function() {
-                    const button = $(this);
+                    var button = $(this);
                     location.replace(`/Staff/People/Students/${button.attr("data-student-id")}/Results`);
                 });
         });
@@ -667,14 +667,14 @@
         }
 
         function loadComments() {
-            const commentBank = $("#selectedBank").val();
+            var commentBank = $("#selectedBank").val();
 
             if (commentBank === "") {
                 $("#comments").hide();
                 return;
             }
 
-            const url = `/api/profiles/comments/get/byBank/${commentBank}`;
+            var url = `/api/profiles/comments/get/byBank/${commentBank}`;
 
             $("#comments").DataTable({
                 ajax: {
@@ -795,30 +795,33 @@
             return data;
         }
 
-        function logRowDataBound(args) {
-            if (args.data['LogTypeName'] === "Academic Support") {
-                args.row.classList.add("mp-log-academic-support");
-            }
-            if (args.data['LogTypeName'] === "Behaviour Log") {
-                args.row.classList.add("mp-log-behaviour");
-            }
-            if (args.data['LogTypeName'] === "Report") {
-                args.row.classList.add("mp-log-report");
-            }
-            if (args.data['LogTypeName'] === "Praise") {
-                args.row.classList.add("mp-log-praise");
-            }
-            if (args.data['LogTypeName'] === "SEN Note") {
-                args.row.classList.add("mp-log-sen");
-            }
-            if (args.data['LogTypeName'] === "Tutor Note") {
-                args.row.classList.add("mp-log-tutor-note");
-            }
-            if (args.data['LogTypeName'] === "Medical Event") {
-                args.row.classList.add("mp-log-medical-event");
-            }
-            if (args.data['LogTypeName'] === "Student Feed") {
-                args.row.classList.add("mp-log-student-feed");
+        function logQuery(args) {
+
+            if (args.column.field === "LogTypeName") {
+                if (args.cell.textContent === "Academic Support") {
+                    args.cell.classList.add("mp-log-academic-support");
+                }
+                else if (args.cell.textContent === "Behaviour Log") {
+                    args.cell.classList.add("mp-log-behaviour");
+                }
+                else if (args.cell.textContent === "Report") {
+                    args.cell.classList.add("mp-log-report");
+                }
+                else if (args.cell.textContent === "Praise") {
+                    args.cell.classList.add("mp-log-praise");
+                }
+                else if (args.cell.textContent === "SEN Note") {
+                    args.cell.classList.add("mp-log-sen");
+                }
+                else if (args.cell.textContent === "Tutor Note") {
+                    args.cell.classList.add("mp-log-tutor-note");
+                }
+                else if (args.cell.textContent === "Medical Event") {
+                    args.cell.classList.add("mp-log-medical-event");
+                }
+                else if (args.cell.textContent === "Student Feed") {
+                    args.cell.classList.add("mp-log-student-feed");
+                }
             }
         }
 

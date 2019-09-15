@@ -53,7 +53,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("logs/get/byStudent/dataGrid/{studentId:int}", Name = "ApiProfilesGetLogsByStudentDataGrid")]
-        [RequiresPermission("ViewProfileLogs")]
+        [RequiresPermission("ViewProfileLogs, AccessStudentPortal")]
         public IHttpActionResult GetLogsByStudentDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
         {
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
