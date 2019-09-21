@@ -127,13 +127,5 @@ namespace MyPortal.Controllers.Api
         {
             return PrepareResponse(BehaviourProcesses.DeleteBehaviourIncident(incidentId, _context));
         }
-
-        [HttpGet]
-        [RequiresPermission("RunReports")]
-        [Route("reports/incidents/byType", Name = "ApiBehaviourReportIncidentsByType")]
-        public IEnumerable<ChartDataCategoric> ReportIncidentsByType()
-        {
-            return PrepareResponseObject(BehaviourProcesses.GetChartData_BehaviourIncidentsByType(_context));
-        }
     }
 }

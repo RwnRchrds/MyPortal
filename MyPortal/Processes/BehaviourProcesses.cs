@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using AutoMapper;
@@ -134,9 +135,10 @@ namespace MyPortal.Processes
             return new ProcessResponse<int>(ResponseType.Ok, null, points);
         }
 
-        public static ProcessResponse<IEnumerable<ChartDataCategoric>> GetChartData_BehaviourIncidentsByType(MyPortalDbContext context)
+        public static ProcessResponse<IEnumerable<ChartDataCategoric>> GetChartData_BehaviourIncidentsByType(int academicYearId, MyPortalDbContext context)
         {
-            var recordedBehaviourTypes = context.BehaviourIncidentTypes.Where(x => x.BehaviourIncidents.Any()).ToList();
+            var recordedBehaviourTypes = context.BehaviourIncidentTypes.Where(x => x.BehaviourIncidents.Any(i => i.AcademicYearId == academicYearId))
+                .Include(x => x.BehaviourIncidents).ToList();
             var chartData = new List<ChartDataCategoric>();
 
             foreach (var behaviourType in recordedBehaviourTypes)

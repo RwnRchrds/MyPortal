@@ -259,6 +259,7 @@
     <Compile Include="Controllers\Api\PastoralController.cs" />
     <Compile Include="Controllers\Api\PersonnelController.cs" />
     <Compile Include="Controllers\Api\ProfilesController.cs" />
+    <Compile Include="Controllers\Api\ReportsController.cs" />
     <Compile Include="Controllers\Api\StaffController.cs" />
     <Compile Include="Controllers\Api\StudentsController.cs" />
     <Compile Include="Controllers\Api\SystemController.cs" />
