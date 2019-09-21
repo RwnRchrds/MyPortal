@@ -15,9 +15,6 @@ namespace MyPortal.Dtos
 
         public string Name { get; set; }
 
-        public string FaIcon { get; set; }
-
-        public string HexColour { get; set; }
         public bool System { get; set; }
     }
 }
