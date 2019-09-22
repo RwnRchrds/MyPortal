@@ -150,10 +150,10 @@ namespace MyPortal.Processes
             return new ProcessResponse<IEnumerable<ChartDataCategoric>>(ResponseType.Ok, null, chartData);
         }
 
-        public static ProcessResponse<IEnumerable<ChartDataCategoric>> GetChartData_AchievementsByType(MyPortalDbContext context)
+        public static ProcessResponse<IEnumerable<ChartDataCategoric>> GetChartData_AchievementsByType(int academicYearId, MyPortalDbContext context)
         {
             var recordedAchievementTypes =
-                context.BehaviourAchievementTypes.Where(x => x.BehaviourAchievements.Any()).ToList();
+                context.BehaviourAchievementTypes.Where(x => x.BehaviourAchievements.Any(i => i.AcademicYearId == academicYearId)).ToList();
             var chartData = new List<ChartDataCategoric>();
 
             foreach (var achievementType in recordedAchievementTypes)
