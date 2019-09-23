@@ -95,7 +95,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ProcessTests\AssessmentProcessesTests.cs" />
+    <Compile Include="ProcessTests\AssessmentProcessTests.cs" />
+    <Compile Include="ProcessTests\AttendanceProcessTests.cs" />
     <Compile Include="ProcessTests\MyPortalTestFixture.cs" />
     <Compile Include="ProcessTests\PeopleProcessesTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

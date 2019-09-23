@@ -17,7 +17,7 @@ namespace MyPortal.Processes
 {
     public static class CurriculumProcesses
     {
-        public static ProcessResponse<bool> StudentCanEnroll(MyPortalDbContext context, int studentId, int classId)
+        public static ProcessResponse<bool> StudentCanEnrol(MyPortalDbContext context, int studentId, int classId)
         {
             var student = context.Students.SingleOrDefault(x => x.Id == studentId);
 
@@ -534,7 +534,7 @@ namespace MyPortal.Processes
                     null);
             }
 
-            var canEnroll = StudentCanEnroll(context, enrolment.StudentId, enrolment.ClassId);
+            var canEnroll = StudentCanEnrol(context, enrolment.StudentId, enrolment.ClassId);
 
             if (canEnroll.ResponseType == ResponseType.BadRequest)
             {

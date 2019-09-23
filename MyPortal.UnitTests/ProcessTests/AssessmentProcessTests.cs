@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace MyPortal.UnitTests.ProcessTests
 {
     [TestFixture]
-    public class AssessmentProcessesTests : MyPortalTestFixture
+    public class AssessmentProcessTests : MyPortalTestFixture
     {
         [Test]
         public static void CreateResultSet_CreatesResultSet()

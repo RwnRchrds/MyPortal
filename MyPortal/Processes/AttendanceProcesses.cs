@@ -155,7 +155,7 @@ namespace MyPortal.Processes
 
             if (session == null)
             {
-                return new ProcessResponse<IEnumerable<StudentAttendanceMarkCollection>>(ResponseType.NotFound, "Period not found", null);
+                return new ProcessResponse<IEnumerable<StudentAttendanceMarkCollection>>(ResponseType.NotFound, "Session not found", null);
             }
 
             var markList = new List<StudentAttendanceMarkCollection>();
@@ -183,8 +183,6 @@ namespace MyPortal.Processes
                     }
                 }
 
-                marks = marks.OrderBy(x => x.AttendancePeriod.StartTime).ToList();
-
                 var liteMarks = PrepareLiteMarkList(context, marks, true);
 
                 markObject.Marks = liteMarks.ToList();
@@ -195,35 +193,38 @@ namespace MyPortal.Processes
                 markList.ToList().OrderBy(x => x.StudentName));
         }
 
-        public static ProcessResponse<object> SaveRegisterMarks(IEnumerable<StudentAttendanceMarkSingular> markCollection,
+        public static ProcessResponse<object> SaveRegisterMarks(IEnumerable<StudentAttendanceMarkCollection> markCollections,
             MyPortalDbContext context)
         {
-            foreach (var mark in markCollection)
+            foreach (var collection in markCollections)
             {
-                if (mark.Mark.Id == 0)
+                foreach (var mark in collection.Marks)
                 {
-                    var attMark = new AttendanceMark
+                    if (mark.Id == 0)
                     {
-                        Mark = mark.Mark.Mark,
-                        PeriodId = mark.Mark.PeriodId,
-                        WeekId = mark.Mark.WeekId,
-                        StudentId = mark.Mark.StudentId
-                    };
+                        var attMark = new AttendanceMark
+                        {
+                            Mark = mark.Mark,
+                            PeriodId = mark.PeriodId,
+                            WeekId = mark.WeekId,
+                            StudentId = mark.StudentId
+                        };
 
-                    context.AttendanceMarks.Add(attMark);
-                }
-
-                else
-                {
-                    var markInDb = context.AttendanceMarks.SingleOrDefault(x => x.Id == mark.Mark.Id);
-
-                    if (markInDb == null)
-                    {
-                        return new ProcessResponse<object>(ResponseType.NotFound,
-                            "An attendance mark could not be found", null);
+                        context.AttendanceMarks.Add(attMark);
                     }
 
-                    markInDb.Mark = mark.Mark.Mark;
+                    else
+                    {
+                        var markInDb = context.AttendanceMarks.SingleOrDefault(x => x.Id == mark.Id);
+
+                        if (markInDb == null)
+                        {
+                            return new ProcessResponse<object>(ResponseType.NotFound,
+                                "An attendance mark could not be found", null);
+                        }
+
+                        markInDb.Mark = mark.Mark;
+                    }
                 }
             }
 

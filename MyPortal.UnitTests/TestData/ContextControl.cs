@@ -104,7 +104,7 @@ namespace MyPortal.UnitTests.TestData
             
             var curriculumAcademicYears = new List<CurriculumAcademicYear>
             {
-                new CurriculumAcademicYear {Id = 1, Name = "Current", FirstDate = new DateTime(2019, 01, 01), LastDate = new DateTime(2019,12,31)}
+                new CurriculumAcademicYear {Id = 1, Name = "Current", FirstDate = new DateTime(DateTime.Now.Year, 01, 01), LastDate = new DateTime(DateTime.Now.Year,12,31)}
             };
             
             var curriculumClasses = new List<CurriculumClass>

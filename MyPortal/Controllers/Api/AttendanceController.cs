@@ -46,7 +46,7 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("TakeRegister")]
         [Route("marks/saveRegister", Name = "ApiAttendanceSaveRegisterMarks")]
-        public IHttpActionResult SaveRegisterMarks(DataGridUpdate<StudentAttendanceMarkSingular> register)
+        public IHttpActionResult SaveRegisterMarks(DataGridUpdate<StudentAttendanceMarkCollection> register)
         {
             if (register.Changed != null)
             {
