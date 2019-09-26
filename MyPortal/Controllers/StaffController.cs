@@ -350,9 +350,9 @@ namespace MyPortal.Controllers
                 attendance = attendanceData.Present + attendanceData.Late;
             } 
 
-            var achievementCount = BehaviourProcesses.GetAchievementPointsCount(student.Id, academicYearId, _context).ResponseObject;
+            var achievementCount = BehaviourProcesses.GetAchievementPointsCountByStudent(student.Id, academicYearId, _context).ResponseObject;
 
-            var behaviourCount = BehaviourProcesses.GetBehaviourPointsCount(student.Id, academicYearId, _context).ResponseObject;
+            var behaviourCount = BehaviourProcesses.GetBehaviourPointsCountByStudent(student.Id, academicYearId, _context).ResponseObject;
 
             var viewModel = new StudentDetailsViewModel
             {

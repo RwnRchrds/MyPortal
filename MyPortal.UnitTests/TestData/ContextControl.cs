@@ -87,7 +87,7 @@ namespace MyPortal.UnitTests.TestData
                 
             };
             
-            var behaviourLocations = new List<BehaviourLocation>
+            var behaviourLocations = new List<SchoolLocation>
             {
                 
             };

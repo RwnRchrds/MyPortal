@@ -239,7 +239,7 @@ namespace MyPortal.Processes
 
         public static async Task<ProcessResponse<object>> CreateUser(NewUserViewModel model, UserManager<ApplicationUser, string> userManager, IdentityContext identity)
         {
-            model.Id = Guid.NewGuid().ToString();
+            model.Id = UtilityProcesses.GenerateId();
 
             if (model.Username.IsNullOrWhiteSpace() || model.Password.IsNullOrWhiteSpace())
             {
@@ -320,7 +320,7 @@ namespace MyPortal.Processes
         public static async Task<ProcessResponse<object>> CreateRole(ApplicationRole role, RoleManager<ApplicationRole, string> roleManager, IdentityContext identity)
         {
             role.System = false;
-            role.Id = Guid.NewGuid().ToString();
+            role.Id = UtilityProcesses.GenerateId();
 
             if (!ValidationProcesses.ModelIsValid(role))
             {

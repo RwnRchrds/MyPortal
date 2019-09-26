@@ -33,7 +33,7 @@ namespace MyPortal.Models.Database
         public virtual DbSet<BehaviourAchievement> BehaviourAchievements { get; set; }
         public virtual DbSet<BehaviourAchievementType> BehaviourAchievementTypes { get; set; }
         public virtual DbSet<BehaviourIncident> BehaviourIncidents { get; set; }
-        public virtual DbSet<BehaviourLocation> BehaviourLocations { get; set; }
+        public virtual DbSet<SchoolLocation> BehaviourLocations { get; set; }
         public virtual DbSet<BehaviourIncidentType> BehaviourIncidentTypes { get; set; }
         public virtual DbSet<CommunicationLog> CommunicationLogs { get; set; }
         public virtual DbSet<CommunicationType> CommunicationTypes { get; set; }
@@ -86,6 +86,12 @@ namespace MyPortal.Models.Database
 
             modelBuilder.Entity<AssessmentGradeSet>()
                 .HasMany(e => e.AssessmentGrades)
+                .WithRequired(e => e.AssessmentGradeSet)
+                .HasForeignKey(e => e.GradeSetId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<AssessmentGradeSet>()
+                .HasMany(e => e.AssessmentResults)
                 .WithRequired(e => e.AssessmentGradeSet)
                 .HasForeignKey(e => e.GradeSetId)
                 .WillCascadeOnDelete(false);
@@ -187,19 +193,19 @@ namespace MyPortal.Models.Database
                 .HasForeignKey(e => e.BehaviourTypeId)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<BehaviourLocation>()
+            modelBuilder.Entity<SchoolLocation>()
                 .Property(e => e.Description)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<BehaviourLocation>()
+            modelBuilder.Entity<SchoolLocation>()
                 .HasMany(e => e.BehaviourAchievements)
-                .WithRequired(e => e.BehaviourLocation)
+                .WithRequired(e => e.Location)
                 .HasForeignKey(e => e.LocationId)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<BehaviourLocation>()
+            modelBuilder.Entity<SchoolLocation>()
                 .HasMany(e => e.BehaviourIncidents)
-                .WithRequired(e => e.BehaviourLocation)
+                .WithRequired(e => e.Location)
                 .HasForeignKey(e => e.LocationId)
                 .WillCascadeOnDelete(false);
 
@@ -485,7 +491,7 @@ namespace MyPortal.Models.Database
 
             modelBuilder.Entity<CurriculumSubject>()
                 .HasMany(e => e.AssessmentResults)
-                .WithRequired(e => e.CurriculumSubject)
+                .WithRequired(e => e.Subject)
                 .HasForeignKey(e => e.SubjectId)
                 .WillCascadeOnDelete(false);
 

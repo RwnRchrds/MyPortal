@@ -39,7 +39,7 @@ namespace MyPortal.Models.Database
 
         public virtual BehaviourIncidentType BehaviourIncidentType { get; set; }
 
-        public virtual BehaviourLocation BehaviourLocation{ get; set; }
+        public virtual SchoolLocation Location{ get; set; }
 
         public virtual CurriculumAcademicYear CurriculumAcademicYear { get; set; }
 

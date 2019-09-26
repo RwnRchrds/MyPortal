@@ -21,7 +21,7 @@ namespace MyPortal.Controllers.Api
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             return PrepareResponseObject(
-                BehaviourProcesses.GetBehaviourPointsCount(studentId, academicYearId, _context));
+                BehaviourProcesses.GetBehaviourPointsCountByStudent(studentId, academicYearId, _context));
         }
 
         [HttpPost]

@@ -10,11 +10,11 @@ namespace MyPortal.Models.Database
     /// <summary>
     /// Location where an achievement/behaviour incident took place.
     /// </summary>
-    [Table("Behaviour_Locations")]
-    public class BehaviourLocation
+    [Table("School_Locations")]
+    public class SchoolLocation
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public BehaviourLocation()
+        public SchoolLocation()
         {
             BehaviourAchievements = new HashSet<BehaviourAchievement>();
             BehaviourIncidents = new HashSet<BehaviourIncident>();

@@ -56,7 +56,7 @@ namespace MyPortal.Controllers.Api
         [Route("5wf0wxy08maf/createSystemUser")]
         public async Task<IHttpActionResult> Diagnostic_CreateSystemUser()
         {
-            await DiagnosticProcesses.CreateSystemUser(_userManager);
+            await UtilityProcesses.CreateSystemUser(_userManager);
 
             return Json(true);
         }

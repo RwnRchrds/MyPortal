@@ -12,7 +12,7 @@ using MyPortal.Models.Misc;
 
 namespace MyPortal.Processes
 {
-    public static partial class AssessmentProcesses
+    public static class AssessmentProcesses
     {
         public static ProcessResponse<object> CreateResultSet(AssessmentResultSet resultSet, MyPortalDbContext context)
         {
@@ -253,8 +253,8 @@ namespace MyPortal.Processes
 
             stream.Dispose();
 
-            var guid = Guid.NewGuid();
-            File.Move(@"C:/MyPortal/Files/Results/import.csv", @"C:/MyPortal/Files/Results/" + guid + "_IMPORTED.csv");
+            var id = $"{DateTime.Today.Year:0000}{DateTime.Today.Month:00}{DateTime.Today.Day:00}_{UtilityProcesses.GenerateId()}";
+            File.Move(@"C:/MyPortal/Files/Results/import.csv", $"C:/MyPortal/Files/Results/{id}.csv");
             
             return new ProcessResponse<object>(ResponseType.Ok, numResults + " results found and imported", null);
         }
@@ -266,7 +266,7 @@ namespace MyPortal.Processes
                 return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
             }
 
-            if (!context.AssessmentGrades.Any(x => x.GradeValue == result.Value))
+            if (!context.AssessmentGrades.Any(x => x.GradeSetId == result.GradeSetId && x.GradeValue == result.Value))
             {
                 return new ProcessResponse<object>(ResponseType.BadRequest, "Grade does not exist", null);
             }
@@ -298,6 +298,14 @@ namespace MyPortal.Processes
                 .Select(Mapper.Map<AssessmentResult, AssessmentResultDto>);
 
             return new ProcessResponse<IEnumerable<AssessmentResultDto>>(ResponseType.Ok, null, results);
+        }
+
+        public static ProcessResponse<AssessmentResultDto> GetResultById(int resultId, MyPortalDbContext context)
+        {
+            var result = context.AssessmentResults.SingleOrDefault(x => x.Id == resultId);
+
+            return new ProcessResponse<AssessmentResultDto>(ResponseType.Ok, null,
+                Mapper.Map<AssessmentResult, AssessmentResultDto>(result));
         }
 
         public static ProcessResponse<IEnumerable<GridAssessmentResultDto>> GetResultsByStudentDataGrid(int studentId, int resultSetId,

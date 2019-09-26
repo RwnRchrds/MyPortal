@@ -14,7 +14,7 @@ namespace MyPortal.Processes
 {
     public static class BehaviourProcesses
     {
-        public static ProcessResponse<int> GetTotalConductPoints(int studentId, int academicYearId, MyPortalDbContext context)
+        public static ProcessResponse<int> GetTotalConductPointsByStudent(int studentId, int academicYearId, MyPortalDbContext context)
         {
             var student = context.Students.SingleOrDefault(x => x.Id == studentId);
 
@@ -37,7 +37,7 @@ namespace MyPortal.Processes
             return new ProcessResponse<int>(ResponseType.Ok, null, achievementPoints - behaviourPoints);
         }
 
-        public static ProcessResponse<int> GetAchievementIncidentCount(int studentId, int academicYearId, MyPortalDbContext context)
+        public static ProcessResponse<int> GetAchievementCountByStudent(int studentId, int academicYearId, MyPortalDbContext context)
         {
             var student = context.Students.SingleOrDefault(x => x.Id == studentId);
 
@@ -58,7 +58,7 @@ namespace MyPortal.Processes
             return new ProcessResponse<int>(ResponseType.Ok, null, posPoints);
         }
 
-        public static ProcessResponse<int> GetBehaviourIncidentCount(int studentId, int academicYearId, MyPortalDbContext context)
+        public static ProcessResponse<int> GetBehaviourIncidentCountByStudent(int studentId, int academicYearId, MyPortalDbContext context)
         {
             var student = context.Students.SingleOrDefault(x => x.Id == studentId);
 
@@ -79,7 +79,7 @@ namespace MyPortal.Processes
             return new ProcessResponse<int>(ResponseType.Ok, null, negPoints);
         }
 
-        public static ProcessResponse<int> GetAchievementPointsCount(int studentId, int academicYearId, MyPortalDbContext context)
+        public static ProcessResponse<int> GetAchievementPointsCountByStudent(int studentId, int academicYearId, MyPortalDbContext context)
         {
             var student = context.Students.SingleOrDefault(x => x.Id == studentId);
 
@@ -107,7 +107,7 @@ namespace MyPortal.Processes
             return new ProcessResponse<int>(ResponseType.Ok, null, points);
         }
 
-        public static ProcessResponse<int> GetBehaviourPointsCount(int studentId, int academicYearId, MyPortalDbContext context)
+        public static ProcessResponse<int> GetBehaviourPointsCountByStudent(int studentId, int academicYearId, MyPortalDbContext context)
         {
             var student = context.Students.SingleOrDefault(x => x.Id == studentId);
 
