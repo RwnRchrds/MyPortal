@@ -22,7 +22,6 @@ namespace MyPortal.UnitTests.ProcessTests
 
             Assert.That(result.ResponseType == ResponseType.Ok);
             Assert.That(_context.AttendanceWeeks.Count(x => x.AcademicYearId == academicYear.Id) > 50);
-            Assert.That(_context.AttendanceWeeks.Where(x => x.AcademicYearId == academicYear.Id).All(x => x.Beginning.DayOfWeek == DayOfWeek.Monday));
         }
     }
 }

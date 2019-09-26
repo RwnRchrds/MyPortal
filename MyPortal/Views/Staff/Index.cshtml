@@ -12,6 +12,17 @@
     <h1 class="h3 mb-0 text-gray-800">@PeopleProcesses.GetStaffDisplayName(Model.CurrentUser).ResponseObject</h1>
 </div>
 
+@if (Model.SelectedAcademicYearId == 0)
+{
+    <div class="row">
+        <div class="col-xl-12 col-md-12">
+            <div class="alert alert-danger" role="alert">
+                No academic years have been defined
+            </div>
+        </div>
+    </div>
+}
+
 <div class="row">
     <div class="col mb-4">
         <button type="button" class="btn btn-primary mp-btn-top" data-toggle="modal" data-target="#ChangeAcademicYearModal">

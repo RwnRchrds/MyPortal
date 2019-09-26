@@ -195,6 +195,11 @@ namespace MyPortal.Processes
                 return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
             }
 
+            if (!context.CurriculumAcademicYears.Any(x => x.Id == achievement.AcademicYearId))
+            {
+                return new ProcessResponse<object>(ResponseType.NotFound, "Academic year not found", null);
+            }
+
             if (!achievement.Date.IsInAcademicYear(context, achievement.AcademicYearId).ResponseObject)
             {
                 return new ProcessResponse<object>(ResponseType.BadRequest, "Date is not in academic year", null);
@@ -274,6 +279,11 @@ namespace MyPortal.Processes
             if (!ValidationProcesses.ModelIsValid(incident))
             {
                 return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
+            }
+
+            if (!context.CurriculumAcademicYears.Any(x => x.Id == incident.AcademicYearId))
+            {
+                return new ProcessResponse<object>(ResponseType.NotFound, "Academic year not found", null);
             }
 
             if (!incident.Date.IsInAcademicYear(context, incident.AcademicYearId).ResponseObject)

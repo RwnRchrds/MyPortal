@@ -17,18 +17,14 @@ namespace MyPortal.Processes
     public static class SystemProcesses
     {
 
-        public static int GetCurrentAcademicYearId(MyPortalDbContext context)
+        public static int? GetCurrentAcademicYearId(MyPortalDbContext context)
         {
             var academicYear =
                 context.CurriculumAcademicYears.SingleOrDefault(x =>
-                    x.FirstDate <= DateTime.Today && x.LastDate >= DateTime.Today);
+                    x.FirstDate <= DateTime.Today && x.LastDate >= DateTime.Today) ??
+                context.CurriculumAcademicYears.FirstOrDefault();
 
-            if (academicYear == null)
-            {
-                throw new Exception("Academic year not found.");
-            }
-
-            return academicYear.Id;
+            return academicYear?.Id;
         }
 
         public static int GetCurrentOrSelectedAcademicYearId(MyPortalDbContext context, IPrincipal user)
@@ -41,11 +37,16 @@ namespace MyPortal.Processes
 
                 if (selectedAcademicYearId != null)
                 {
-                    academicYearId = (int) selectedAcademicYearId;
+                    academicYearId = selectedAcademicYearId;
                 }
             }
 
-            return academicYearId;
+            if (academicYearId == null)
+            {
+                return 0;
+            }
+
+            return (int) academicYearId;
         }
 
         public static async Task<ProcessResponse<object>> CreateBulletin(SystemBulletin bulletin, string userId, MyPortalDbContext context, bool autoApprove = false)

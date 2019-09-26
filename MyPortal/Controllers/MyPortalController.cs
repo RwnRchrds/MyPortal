@@ -39,5 +39,10 @@ namespace MyPortal.Controllers
 
             throw new HttpResponseException(HttpStatusCode.BadRequest);
         }
+
+        protected ActionResult NoAcademicYear()
+        {
+            return View("~/Views/Error/NoAcademicYear.cshtml");
+        }
     }
 }

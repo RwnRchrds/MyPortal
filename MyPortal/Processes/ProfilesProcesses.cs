@@ -15,9 +15,12 @@ namespace MyPortal.Processes
     {
         public static ProcessResponse<object> CreateLog(ProfileLog log, int academicYearId, string userId, MyPortalDbContext context)
         {
-            var authorId = log.AuthorId;
+            if (!context.CurriculumAcademicYears.Any(x => x.Id == academicYearId))
+            {
+                return new ProcessResponse<object>(ResponseType.NotFound, "Academic year not found", null);
+            }
 
-            var author = PeopleProcesses.HandleAuthorFromUserId(userId, authorId, context).ResponseObject;
+            var author = PeopleProcesses.GetStaffFromUserId(userId, context).ResponseObject;
 
             log.Date = DateTime.Now;
             log.AuthorId = author.Id;
@@ -105,7 +108,7 @@ namespace MyPortal.Processes
             return new ProcessResponse<object>(ResponseType.Ok, "Log note updated", null);
         }
 
-        public static ProcessResponse<bool> CommentBankContainsComments(int bankId, MyPortalDbContext context)
+        public static ProcessResponse<bool> CommentBankHasComments(int bankId, MyPortalDbContext context)
         {
             var commentBank = context.ProfileCommentBanks.SingleOrDefault(x => x.Id == bankId);
 

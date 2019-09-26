@@ -122,7 +122,7 @@ namespace MyPortal.Processes
             return new ProcessResponse<IEnumerable<CurriculumAcademicYearDto>>(ResponseType.Ok, null, academicYears);
         }
 
-        public static ProcessResponse<CurriculumAcademicYearDto> GetAcademicYear(int academicYearId,
+        public static ProcessResponse<CurriculumAcademicYearDto> GetAcademicYearById(int academicYearId,
             MyPortalDbContext context)
         {
             var academicYear = context.CurriculumAcademicYears.SingleOrDefault(x => x.Id == academicYearId);
@@ -232,7 +232,12 @@ namespace MyPortal.Processes
                 return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
             }
 
-            if (context.CurriculumClasses.Any(x => x.Name == @class.Name))
+            if (!context.CurriculumAcademicYears.Any(x => x.Id == @class.AcademicYearId))
+            {
+                return new ProcessResponse<object>(ResponseType.NotFound, "Academic year not found", null);
+            }
+
+            if (context.CurriculumClasses.Any(x => x.Name == @class.Name && x.AcademicYearId == @class.AcademicYearId))
             {
                 return new ProcessResponse<object>(ResponseType.BadRequest, "Class already exists", null);
             }

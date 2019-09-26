@@ -150,6 +150,9 @@ namespace MyPortal
                 .ForMember(dest => dest.RecordedBy,
                     opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.RecordedBy).ResponseObject));
 
+            CreateMap<BehaviourAchievement, BehaviourAchievementDto>();
+            CreateMap<BehaviourIncident, BehaviourIncidentDto>();
+
             CreateMap<BehaviourIncident, GridBehaviourIncidentDto>()
                 .ForMember(dest => dest.Location,
                     opts => opts.MapFrom(src => src.Location.Description))

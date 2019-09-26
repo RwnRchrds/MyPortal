@@ -960,6 +960,7 @@
     <Content Include="Views\Admin\RolePermissions.cshtml" />
     <Content Include="Views\Shared\_SideBarStaff.cshtml" />
     <Content Include="Views\Shared\_SideBarStudent.cshtml" />
+    <Content Include="Views\Error\NoAcademicYear.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Results\" />
