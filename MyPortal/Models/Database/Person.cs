@@ -22,8 +22,6 @@ namespace MyPortal.Models.Database
 
         public int Id { get; set; }
 
-        public int? PersonTypeId { get; set; }
-
         [StringLength(50)]
         public string Title { get; set; }
 
@@ -47,12 +45,13 @@ namespace MyPortal.Models.Database
 
         public bool Deleted { get; set; }
 
-        public virtual PersonType PersonType { get; set; }
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<StaffMember> Staff { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Student> Students { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CommunicationPhoneNumber> PhoneNumbers { get; set; }
     }
 }

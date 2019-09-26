@@ -76,7 +76,7 @@ namespace MyPortal.Controllers.Api
         [Route("commentBanks/hasComments/{bankId:int}", Name = "ApiProfilesCommentBankHasComments")]
         public bool CommentBankHasComments([FromUri] int bankId)
         {
-            return PrepareResponseObject(ProfilesProcesses.CommentBankContainsComments(bankId, _context));
+            return PrepareResponseObject(ProfilesProcesses.CommentBankHasComments(bankId, _context));
         }
         
         [HttpPost]

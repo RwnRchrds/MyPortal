@@ -8,28 +8,28 @@ using System.Web;
 namespace MyPortal.Models.Database
 {
     /// <summary>
-    /// Type of person in the system.
+    /// Location where an achievement/behaviour incident took place.
     /// </summary>
-    [Table("People_PersonTypes")]
-    public class PersonType
+    [Table("School_Locations")]
+    public class SchoolLocation
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public PersonType()
+        public SchoolLocation()
         {
-            Persons = new HashSet<Person>();
+            BehaviourAchievements = new HashSet<BehaviourAchievement>();
+            BehaviourIncidents = new HashSet<BehaviourIncident>();
         }
 
         public int Id { get; set; }
-
-        [Required]
-        [StringLength(1)]
-        public string Code { get; set; }
 
         [Required]
         [StringLength(50)]
         public string Description { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Person> Persons { get; set; }
+        public virtual ICollection<BehaviourAchievement> BehaviourAchievements { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BehaviourIncident> BehaviourIncidents { get; set; }
     }
 }

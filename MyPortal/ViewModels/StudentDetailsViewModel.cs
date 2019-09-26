@@ -24,7 +24,7 @@ namespace MyPortal.ViewModels
         public PersonDocumentUpload Upload { get; set; }
         public bool HasAttendaceData { get; set; }
         public double? Attendance { get; set; }
-        public int AchievementCount { get; set; }
-        public int BehaviourCount { get; set; }
+        public int? AchievementCount { get; set; }
+        public int? BehaviourCount { get; set; }
     }
 }

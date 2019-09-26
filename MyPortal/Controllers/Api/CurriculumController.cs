@@ -27,7 +27,7 @@ namespace MyPortal.Controllers.Api
         [Route("academicYears/get/byId/{academicYearId:int}", Name = "ApiCurriculumGetAcademicYearById")]
         public CurriculumAcademicYearDto GetAcademicYearById([FromUri] int academicYearId)
         {
-            return PrepareResponseObject(CurriculumProcesses.GetAcademicYear(academicYearId, _context));
+            return PrepareResponseObject(CurriculumProcesses.GetAcademicYearById(academicYearId, _context));
         }
 
         [HttpPost]

@@ -13,11 +13,57 @@ namespace MyPortal.Processes
 {
     public static class ProfilesProcesses
     {
+        public static ProcessResponse<bool> CommentBankHasComments(int bankId, MyPortalDbContext context)
+        {
+            var commentBank = context.ProfileCommentBanks.SingleOrDefault(x => x.Id == bankId);
+
+            if (commentBank == null)
+            {
+                return new ProcessResponse<bool>(ResponseType.NotFound, "Comment bank not found", false);
+            }
+
+            return new ProcessResponse<bool>(ResponseType.Ok, null, commentBank.ProfileComments.Any());
+        }
+
+        public static ProcessResponse<object> CreateComment(ProfileComment comment, MyPortalDbContext context)
+        {
+            if (!ValidationProcesses.ModelIsValid(comment))
+            {
+                return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
+            }
+
+            context.ProfileComments.Add(comment);
+            context.SaveChanges();
+            return new ProcessResponse<object>(ResponseType.Ok, "Comment created", null);
+        }
+
+        public static ProcessResponse<object> CreateCommentBank(ProfileCommentBank commentBank,
+            MyPortalDbContext context)
+        {
+            if (ValidationProcesses.ModelIsValid(commentBank) || string.IsNullOrWhiteSpace(commentBank.Name))
+            {
+                return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
+            }
+
+
+            if (context.ProfileCommentBanks.Any(x => x.Name == commentBank.Name))
+            {
+                return new ProcessResponse<object>(ResponseType.BadRequest, "Comment bank already exists", null);
+            }
+
+            context.ProfileCommentBanks.Add(commentBank);
+            context.SaveChanges();
+            return new ProcessResponse<object>(ResponseType.Ok, "Comment bank created", null);
+        }
+
         public static ProcessResponse<object> CreateLog(ProfileLog log, int academicYearId, string userId, MyPortalDbContext context)
         {
-            var authorId = log.AuthorId;
+            if (!context.CurriculumAcademicYears.Any(x => x.Id == academicYearId))
+            {
+                return new ProcessResponse<object>(ResponseType.NotFound, "Academic year not found", null);
+            }
 
-            var author = PeopleProcesses.HandleAuthorFromUserId(userId, authorId, context).ResponseObject;
+            var author = PeopleProcesses.GetStaffFromUserId(userId, context).ResponseObject;
 
             log.Date = DateTime.Now;
             log.AuthorId = author.Id;
@@ -34,6 +80,42 @@ namespace MyPortal.Processes
             return new ProcessResponse<object>(ResponseType.Ok, "Log note created", null);
         }
 
+        public static ProcessResponse<object> DeleteComment(int commentId, MyPortalDbContext context)
+        {
+            var comment = context.ProfileComments.SingleOrDefault(x => x.Id == commentId);
+
+            if (comment == null)
+            {
+                return new ProcessResponse<object>(ResponseType.NotFound, "Comment not found", null);
+            }
+
+            context.ProfileComments.Remove(comment);
+            context.SaveChanges();
+
+            return new ProcessResponse<object>(ResponseType.Ok, "Comment deleted", null);
+        }
+
+        public static ProcessResponse<object> DeleteCommentBank(int commentBankId, MyPortalDbContext context)
+        {
+            var commentBank = context.ProfileCommentBanks.SingleOrDefault(x => x.Id == commentBankId);
+
+            if (commentBank == null)
+            {
+                return new ProcessResponse<object>(ResponseType.NotFound, "Comment bank not found", null);
+            }
+
+            var comments = context.ProfileComments.Where(x => x.CommentBankId == commentBankId);
+
+            if (comments.Any())
+            {
+                context.ProfileComments.RemoveRange(comments);
+            }
+
+            context.ProfileCommentBanks.Remove(commentBank);
+            context.SaveChanges();
+            return new ProcessResponse<object>(ResponseType.Ok, "Comment bank deleted", null);
+        }
+
         public static ProcessResponse<object> DeleteLog(int logId, MyPortalDbContext context)
         {
             var logInDb = context.ProfileLogs.SingleOrDefault(l => l.Id == logId);
@@ -48,6 +130,86 @@ namespace MyPortal.Processes
             context.SaveChanges();
 
             return new ProcessResponse<object>(ResponseType.Ok, "Log note deleted", null);
+        }
+
+        public static ProcessResponse<IEnumerable<ProfileCommentBankDto>> GetAllCommentBanks(MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<ProfileCommentBankDto>>(ResponseType.Ok, null,
+                GetAllCommentBanks_Model(context).ResponseObject
+                    .Select(Mapper.Map<ProfileCommentBank, ProfileCommentBankDto>));
+        }
+
+        public static ProcessResponse<IEnumerable<GridProfileCommentBankDto>> GetAllCommentBanks_DataGrid(MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<GridProfileCommentBankDto>>(ResponseType.Ok, null,
+                GetAllCommentBanks_Model(context).ResponseObject
+                    .Select(Mapper.Map<ProfileCommentBank, GridProfileCommentBankDto>));
+        }
+
+        public static ProcessResponse<IEnumerable<ProfileCommentBank>> GetAllCommentBanks_Model(MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<ProfileCommentBank>>(ResponseType.Ok, null,
+                context.ProfileCommentBanks.OrderBy(x => x.Name).ToList());
+        }
+
+        public static ProcessResponse<IEnumerable<ProfileCommentDto>> GetAllComments(MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<ProfileCommentDto>>(ResponseType.Ok, null, context.ProfileComments
+                .OrderBy(x => x.Value)
+                .ToList()
+                .Select(Mapper.Map<ProfileComment, ProfileCommentDto>));
+        }
+
+        public static ProcessResponse<ProfileCommentBankDto> GetCommentBankById(int commentBankId,
+            MyPortalDbContext context)
+        {
+            var commentBankInDb = context.ProfileCommentBanks.SingleOrDefault(x => x.Id == commentBankId);
+
+            if (commentBankInDb == null)
+            {
+                return new ProcessResponse<ProfileCommentBankDto>(ResponseType.NotFound, "Comment bank not found", null);
+            }
+
+            return new ProcessResponse<ProfileCommentBankDto>(ResponseType.Ok, null,
+                Mapper.Map<ProfileCommentBank, ProfileCommentBankDto>(commentBankInDb));
+        }
+
+        public static ProcessResponse<ProfileCommentDto> GetCommentById(int commentId, MyPortalDbContext context)
+        {
+            var comment = context.ProfileComments.SingleOrDefault(x => x.Id == commentId);
+
+            if (comment == null)
+            {
+                return new ProcessResponse<ProfileCommentDto>(ResponseType.NotFound, "Comment not found", null);
+            }
+
+            return new ProcessResponse<ProfileCommentDto>(ResponseType.Ok, null,
+                Mapper.Map<ProfileComment, ProfileCommentDto>(comment));
+        }
+
+        public static ProcessResponse<IEnumerable<ProfileCommentDto>> GetCommentsByBank(int commentBankId,
+            MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<ProfileCommentDto>>(ResponseType.Ok, null,
+                GetCommentsByBank_Model(commentBankId, context).ResponseObject
+                    .Select(Mapper.Map<ProfileComment, ProfileCommentDto>));
+        }
+
+        public static ProcessResponse<IEnumerable<GridProfileCommentDto>> GetCommentsByBank_DataGrid(int commentBankId,
+            MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<GridProfileCommentDto>>(ResponseType.Ok, null,
+                GetCommentsByBank_Model(commentBankId, context).ResponseObject
+                    .Select(Mapper.Map<ProfileComment, GridProfileCommentDto>));
+        }
+
+        public static ProcessResponse<IEnumerable<ProfileComment>> GetCommentsByBank_Model(int commentBankId,
+            MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<ProfileComment>>(ResponseType.Ok, null, context.ProfileComments
+                .Where(x => x.CommentBankId == commentBankId)
+                .OrderBy(x => x.Value)
+                .ToList());
         }
 
         public static ProcessResponse<ProfileLogDto> GetLogById(int logId, MyPortalDbContext context)
@@ -83,203 +245,6 @@ namespace MyPortal.Processes
             return new ProcessResponse<IEnumerable<GridProfileLogDto>>(ResponseType.Ok, null, logs);
         }
 
-        public static ProcessResponse<object> UpdateLog(ProfileLog log, MyPortalDbContext context)
-        {
-            if (!ValidationProcesses.ModelIsValid(log))
-            {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
-            }
-
-            var logInDb = context.ProfileLogs.SingleOrDefault(l => l.Id == log.Id);
-
-            if (logInDb == null)
-            {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Log note not found", null);
-            }
-
-            logInDb.TypeId = log.TypeId;
-            logInDb.Message = log.Message;
-
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Log note updated", null);
-        }
-
-        public static ProcessResponse<bool> CommentBankContainsComments(int bankId, MyPortalDbContext context)
-        {
-            var commentBank = context.ProfileCommentBanks.SingleOrDefault(x => x.Id == bankId);
-
-            if (commentBank == null)
-            {
-                return new ProcessResponse<bool>(ResponseType.NotFound, "Comment bank not found", false);
-            }
-
-            return new ProcessResponse<bool>(ResponseType.Ok, null, commentBank.ProfileComments.Any());
-        }
-
-        public static ProcessResponse<object> CreateCommentBank(ProfileCommentBank commentBank,
-            MyPortalDbContext context)
-        {
-            if (ValidationProcesses.ModelIsValid(commentBank) || string.IsNullOrWhiteSpace(commentBank.Name))
-            {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
-            }
-
-
-            if (context.ProfileCommentBanks.Any(x => x.Name == commentBank.Name))
-            {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Comment bank already exists", null);
-            }
-
-            context.ProfileCommentBanks.Add(commentBank);
-            context.SaveChanges();
-            return new ProcessResponse<object>(ResponseType.Ok, "Comment bank created", null);
-        }
-
-        public static ProcessResponse<object> DeleteCommentBank(int commentBankId, MyPortalDbContext context)
-        {
-            var commentBank = context.ProfileCommentBanks.SingleOrDefault(x => x.Id == commentBankId);
-
-            if (commentBank == null)
-            {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Comment bank not found", null);
-            }
-
-            var comments = context.ProfileComments.Where(x => x.CommentBankId == commentBankId);
-
-            if (comments.Any())
-            {
-                context.ProfileComments.RemoveRange(comments);
-            }
-
-            context.ProfileCommentBanks.Remove(commentBank);
-            context.SaveChanges();
-            return new ProcessResponse<object>(ResponseType.Ok, "Comment bank deleted", null);
-        }
-
-        public static ProcessResponse<ProfileCommentBankDto> GetCommentBankById(int commentBankId,
-            MyPortalDbContext context)
-        {
-            var commentBankInDb = context.ProfileCommentBanks.SingleOrDefault(x => x.Id == commentBankId);
-
-            if (commentBankInDb == null)
-            {
-                return new ProcessResponse<ProfileCommentBankDto>(ResponseType.NotFound, "Comment bank not found", null);
-            }
-
-            return new ProcessResponse<ProfileCommentBankDto>(ResponseType.Ok, null,
-                Mapper.Map<ProfileCommentBank, ProfileCommentBankDto>(commentBankInDb));
-        }
-        
-        public static ProcessResponse<IEnumerable<ProfileCommentBank>> GetAllCommentBanks_Model(MyPortalDbContext context)
-        {
-            return new ProcessResponse<IEnumerable<ProfileCommentBank>>(ResponseType.Ok, null,
-                context.ProfileCommentBanks.OrderBy(x => x.Name).ToList());
-        }
-
-        public static ProcessResponse<IEnumerable<ProfileCommentBankDto>> GetAllCommentBanks(MyPortalDbContext context)
-        {
-            return new ProcessResponse<IEnumerable<ProfileCommentBankDto>>(ResponseType.Ok, null,
-                GetAllCommentBanks_Model(context).ResponseObject
-                    .Select(Mapper.Map<ProfileCommentBank, ProfileCommentBankDto>));
-        }
-        
-        public static ProcessResponse<IEnumerable<GridProfileCommentBankDto>> GetAllCommentBanks_DataGrid(MyPortalDbContext context)
-        {
-            return new ProcessResponse<IEnumerable<GridProfileCommentBankDto>>(ResponseType.Ok, null,
-                GetAllCommentBanks_Model(context).ResponseObject
-                    .Select(Mapper.Map<ProfileCommentBank, GridProfileCommentBankDto>));
-        }
-
-        public static ProcessResponse<object> UpdateCommentBank(ProfileCommentBank commentBank,
-            MyPortalDbContext context)
-        {
-            var commentBankInDb = context.ProfileCommentBanks.SingleOrDefault(x => x.Id == commentBank.Id);
-
-            if (commentBankInDb == null)
-            {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Comment bank not found", null);
-            }
-
-            commentBankInDb.Name = commentBank.Name;
-
-            context.SaveChanges();
-            return new ProcessResponse<object>(ResponseType.Ok, "Comment bank updated", null);
-        }
-
-        public static ProcessResponse<object> CreateComment(ProfileComment comment, MyPortalDbContext context)
-        {
-            if (!ValidationProcesses.ModelIsValid(comment))
-            {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
-            }
-
-            context.ProfileComments.Add(comment);
-            context.SaveChanges();
-            return new ProcessResponse<object>(ResponseType.Ok, "Comment created", null);
-        }
-
-        public static ProcessResponse<object> DeleteComment(int commentId, MyPortalDbContext context)
-        {
-            var comment = context.ProfileComments.SingleOrDefault(x => x.Id == commentId);
-
-            if (comment == null)
-            {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Comment not found", null);
-            }
-
-            context.ProfileComments.Remove(comment);
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Comment deleted", null);
-        }
-
-        public static ProcessResponse<ProfileCommentDto> GetCommentById(int commentId, MyPortalDbContext context)
-        {
-            var comment = context.ProfileComments.SingleOrDefault(x => x.Id == commentId);
-
-            if (comment == null)
-            {
-                return new ProcessResponse<ProfileCommentDto>(ResponseType.NotFound, "Comment not found", null);
-            }
-
-            return new ProcessResponse<ProfileCommentDto>(ResponseType.Ok, null,
-                Mapper.Map<ProfileComment, ProfileCommentDto>(comment));
-        }
-
-        public static ProcessResponse<IEnumerable<ProfileCommentDto>> GetAllComments(MyPortalDbContext context)
-        {
-            return new ProcessResponse<IEnumerable<ProfileCommentDto>>(ResponseType.Ok, null, context.ProfileComments
-                .OrderBy(x => x.Value)
-                .ToList()
-                .Select(Mapper.Map<ProfileComment, ProfileCommentDto>));
-        }
-        
-        public static ProcessResponse<IEnumerable<ProfileComment>> GetCommentsByBank_Model(int commentBankId,
-            MyPortalDbContext context)
-        {
-            return new ProcessResponse<IEnumerable<ProfileComment>>(ResponseType.Ok, null, context.ProfileComments
-                .Where(x => x.CommentBankId == commentBankId)
-                .OrderBy(x => x.Value)
-                .ToList());
-        }
-
-        public static ProcessResponse<IEnumerable<ProfileCommentDto>> GetCommentsByBank(int commentBankId,
-            MyPortalDbContext context)
-        {
-            return new ProcessResponse<IEnumerable<ProfileCommentDto>>(ResponseType.Ok, null,
-                GetCommentsByBank_Model(commentBankId, context).ResponseObject
-                    .Select(Mapper.Map<ProfileComment, ProfileCommentDto>));
-        }
-        
-        public static ProcessResponse<IEnumerable<GridProfileCommentDto>> GetCommentsByBank_DataGrid(int commentBankId,
-            MyPortalDbContext context)
-        {
-            return new ProcessResponse<IEnumerable<GridProfileCommentDto>>(ResponseType.Ok, null,
-                GetCommentsByBank_Model(commentBankId, context).ResponseObject
-                    .Select(Mapper.Map<ProfileComment, GridProfileCommentDto>));
-        }
-
         public static ProcessResponse<object> UpdateComment(ProfileComment comment, MyPortalDbContext context)
         {
             if (!ValidationProcesses.ModelIsValid(comment))
@@ -300,6 +265,44 @@ namespace MyPortal.Processes
             context.SaveChanges();
 
             return new ProcessResponse<object>(ResponseType.Ok, "Comment updated", null);
+        }
+
+        public static ProcessResponse<object> UpdateCommentBank(ProfileCommentBank commentBank,
+            MyPortalDbContext context)
+        {
+            var commentBankInDb = context.ProfileCommentBanks.SingleOrDefault(x => x.Id == commentBank.Id);
+
+            if (commentBankInDb == null)
+            {
+                return new ProcessResponse<object>(ResponseType.NotFound, "Comment bank not found", null);
+            }
+
+            commentBankInDb.Name = commentBank.Name;
+
+            context.SaveChanges();
+            return new ProcessResponse<object>(ResponseType.Ok, "Comment bank updated", null);
+        }
+
+        public static ProcessResponse<object> UpdateLog(ProfileLog log, MyPortalDbContext context)
+        {
+            if (!ValidationProcesses.ModelIsValid(log))
+            {
+                return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
+            }
+
+            var logInDb = context.ProfileLogs.SingleOrDefault(l => l.Id == log.Id);
+
+            if (logInDb == null)
+            {
+                return new ProcessResponse<object>(ResponseType.NotFound, "Log note not found", null);
+            }
+
+            logInDb.TypeId = log.TypeId;
+            logInDb.Message = log.Message;
+
+            context.SaveChanges();
+
+            return new ProcessResponse<object>(ResponseType.Ok, "Log note updated", null);
         }
     }
 }

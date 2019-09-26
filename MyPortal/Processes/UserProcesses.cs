@@ -17,18 +17,22 @@ namespace MyPortal.Processes
            _identity = new IdentityContext(); 
         }
 
+        public static void ChangeSelectedAcademicYear(this IPrincipal user, int academicYearId)
+        {
+            var applicationUser = user.GetApplicationUser();
+
+            if (applicationUser == null)
+            {
+                throw new Exception("User not found");
+            }
+
+            applicationUser.SelectedAcademicYearId = academicYearId;
+
+            _identity.SaveChanges();
+        }
+
         public static ApplicationUser GetApplicationUser(this IPrincipal user)
         {
-            if (user.Identity.Name == "test")
-            {
-                return new ApplicationUser
-                {
-                    Id = "1",
-                    SelectedAcademicYearId = 1,
-                    PasswordHash = "test",
-                    UserName = "test"
-                };
-            }
             var userId = user.Identity.GetUserId();
             var applicationUser = _identity.Users.SingleOrDefault(x => x.Id == userId);
 
@@ -46,20 +50,6 @@ namespace MyPortal.Processes
             }
 
             return applicationUser.SelectedAcademicYearId;
-        }
-
-        public static void ChangeSelectedAcademicYear(this IPrincipal user, int academicYearId)
-        {
-            var applicationUser = user.GetApplicationUser();
-
-            if (applicationUser == null)
-            {
-                throw new Exception("User not found");
-            }
-
-            applicationUser.SelectedAcademicYearId = academicYearId;
-
-            _identity.SaveChanges();
         }
     }
 }

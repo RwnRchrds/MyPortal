@@ -144,15 +144,18 @@ namespace MyPortal
 
             CreateMap<BehaviourAchievement, GridBehaviourAchievementDto>()
                 .ForMember(dest => dest.Location,
-                    opts => opts.MapFrom(src => src.BehaviourLocation.Description))
+                    opts => opts.MapFrom(src => src.Location.Description))
                 .ForMember(dest => dest.TypeName,
                     opts => opts.MapFrom(src => src.BehaviourAchievementType.Description))
                 .ForMember(dest => dest.RecordedBy,
                     opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.RecordedBy).ResponseObject));
 
+            CreateMap<BehaviourAchievement, BehaviourAchievementDto>();
+            CreateMap<BehaviourIncident, BehaviourIncidentDto>();
+
             CreateMap<BehaviourIncident, GridBehaviourIncidentDto>()
                 .ForMember(dest => dest.Location,
-                    opts => opts.MapFrom(src => src.BehaviourLocation.Description))
+                    opts => opts.MapFrom(src => src.Location.Description))
                 .ForMember(dest => dest.TypeName,
                     opts => opts.MapFrom(src => src.BehaviourIncidentType.Description))
                 .ForMember(dest => dest.RecordedBy,
@@ -257,7 +260,7 @@ namespace MyPortal
                 .ForMember(dest => dest.StudentName,
                     opts => opts.MapFrom(src => PeopleProcesses.GetStudentDisplayName(src.Student)))
                 .ForMember(dest => dest.Subject,
-                    opts => opts.MapFrom(src => src.CurriculumSubject.Name));
+                    opts => opts.MapFrom(src => src.Subject.Name));
         }
     }
 }    

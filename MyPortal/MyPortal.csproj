@@ -358,10 +358,12 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Attributes\RequiresPermissionAttribute.cs" />
+    <Compile Include="Models\Database\CommunicationPhoneNumber.cs" />
+    <Compile Include="Models\Database\CommunicationPhoneNumberType.cs" />
     <Compile Include="Models\Database\BehaviourAchievement.cs" />
     <Compile Include="Models\Database\BehaviourAchievementType.cs" />
     <Compile Include="Models\Database\BehaviourIncident.cs" />
-    <Compile Include="Models\Database\BehaviourLocation.cs" />
+    <Compile Include="Models\Database\SchoolLocation.cs" />
     <Compile Include="Models\Database\BehaviourIncidentType.cs" />
     <Compile Include="Models\Database\CommunicationLog.cs" />
     <Compile Include="Models\Database\CommunicationType.cs" />
@@ -373,7 +375,6 @@
     <Compile Include="Models\Database\PastoralHouse.cs" />
     <Compile Include="Models\Database\Person.cs" />
     <Compile Include="Models\Database\PersonDocument.cs" />
-    <Compile Include="Models\Database\PersonType.cs" />
     <Compile Include="Models\Database\SenEvent.cs" />
     <Compile Include="Models\Database\SenEventType.cs" />
     <Compile Include="Models\Database\SenProvision.cs" />
@@ -396,7 +397,6 @@
     <Compile Include="Processes\AttendanceProcesses.cs" />
     <Compile Include="Processes\BehaviourProcesses.cs" />
     <Compile Include="Processes\CurriculumProcesses.cs" />
-    <Compile Include="Processes\DiagnosticProcesses.cs" />
     <Compile Include="Processes\DocumentProcesses.cs" />
     <Compile Include="Processes\FinanceProcesses.cs" />
     <Compile Include="Processes\LookupProcesses.cs" />
@@ -459,6 +459,7 @@
     <Compile Include="Models\Misc\UserProfile.cs" />
     <Compile Include="Models\Misc\UserRoleModel.cs" />
     <Compile Include="Models\Validation\ActiveGradeSet.cs" />
+    <Compile Include="Processes\UtilityProcesses.cs" />
     <Compile Include="Processes\ValidationProcesses.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -960,6 +961,7 @@
     <Content Include="Views\Admin\RolePermissions.cshtml" />
     <Content Include="Views\Shared\_SideBarStaff.cshtml" />
     <Content Include="Views\Shared\_SideBarStudent.cshtml" />
+    <Content Include="Views\Error\NoAcademicYear.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Results\" />

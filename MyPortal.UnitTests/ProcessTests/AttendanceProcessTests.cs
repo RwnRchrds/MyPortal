@@ -14,13 +14,14 @@ namespace MyPortal.UnitTests.ProcessTests
         [Test]
         public static void CreateAttendanceWeeksForAcademicYear_CreatesAttendanceWeeks()
         {
-            var academicYear = _context.CurriculumAcademicYears.FirstOrDefault();
+            var academicYear = _context.CurriculumAcademicYears.FirstOrDefault(x => x.Name == "Current");
 
             Assert.That(academicYear != null);
 
             var result = AttendanceProcesses.CreateAttendanceWeeksForAcademicYear(academicYear.Id, _context);
 
             Assert.That(result.ResponseType == ResponseType.Ok);
+            Assert.That(_context.AttendanceWeeks.Count(x => x.AcademicYearId == academicYear.Id) > 50);
         }
     }
 }

@@ -86,9 +86,18 @@
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Achievement</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="achievementDetail">
-                            @Model.AchievementCount
-                        </div>
+                        @if (Model.AchievementCount.HasValue)
+                        {
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="achievementDetail">
+                                @Model.AchievementCount
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="achievementDetail">
+                                --
+                            </div>
+                        }
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-smile fa-2x text-gray-300"></i>
@@ -104,9 +113,18 @@
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Behaviour</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="behaviourDetail">
-                            @Model.BehaviourCount
-                        </div>
+                        @if (Model.BehaviourCount.HasValue)
+                        {
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="behaviourDetail">
+                                @Model.BehaviourCount
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="behaviourDetail">
+                                --
+                            </div>
+                        }
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-frown fa-2x text-gray-300"></i>
@@ -489,7 +507,7 @@
                                     url: `/api/profiles/logs/delete/${button.attr("data-log-id")}`,
                                     method: "DELETE",
                                     success: function(result) {
-                                        refreshLogs();
+                                        refreshTable("logs");
                                         toastr.success(result);
                                     },
                                     error: function(result) {
@@ -511,7 +529,7 @@
                                     url: `/api/documents/personal/delete/${button.attr("data-document-id")}`,
                                     method: "DELETE",
                                     success: function(ajaxResult) {
-                                        refreshTable("logs");
+                                        refreshTable("documents");
                                         toastr.success(ajaxResult);
                                     },
                                     error: function(ajaxResult) {

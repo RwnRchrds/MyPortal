@@ -12,23 +12,20 @@ namespace MyPortal.Models.Database
     [Table("Assessment_Results")]
     public partial class AssessmentResult
     {
-        [Key]
-        [Column(Order = 0)]
+        public int Id { get; set; }
+
         [Display(Name="Result Set")]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ResultSetId { get; set; }
 
-        [Key]
-        [Column(Order = 1)]
         [Display(Name="Student")]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int StudentId { get; set; }
 
-        [Key]
         [Display(Name="Subject")]
-        [Column(Order = 2)]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int SubjectId { get; set; }
+
+        public int GradeSetId { get; set; }
+
+        public DateTime Date { get; set; }
 
         [Required]
         [StringLength(255)]
@@ -38,6 +35,8 @@ namespace MyPortal.Models.Database
 
         public virtual Student Student { get; set; }
 
-        public virtual CurriculumSubject CurriculumSubject { get; set; }
+        public virtual AssessmentGradeSet AssessmentGradeSet { get; set; }
+
+        public virtual CurriculumSubject Subject { get; set; }
     }
 }

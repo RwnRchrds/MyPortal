@@ -341,18 +341,18 @@ namespace MyPortal.Controllers
 
             var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
-            var attendanceData = AttendanceProcesses.GetSummary(student.Id, academicYearId, _context, true).ResponseObject;
-
             double? attendance = null;
+
+            var attendanceData = AttendanceProcesses.GetSummary(student.Id, (int)academicYearId, _context, true).ResponseObject;
 
             if (attendanceData != null)
             {
                 attendance = attendanceData.Present + attendanceData.Late;
-            } 
+            }
 
-            var achievementCount = BehaviourProcesses.GetAchievementPointsCount(student.Id, academicYearId, _context).ResponseObject;
+            int? achievementCount = BehaviourProcesses.GetAchievementPointsCountByStudent(student.Id, (int)academicYearId, _context).ResponseObject;
 
-            var behaviourCount = BehaviourProcesses.GetBehaviourPointsCount(student.Id, academicYearId, _context).ResponseObject;
+            int? behaviourCount = BehaviourProcesses.GetBehaviourPointsCountByStudent(student.Id, (int)academicYearId, _context).ResponseObject;
 
             var viewModel = new StudentDetailsViewModel
             {

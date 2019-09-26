@@ -87,7 +87,7 @@ namespace MyPortal.UnitTests.TestData
                 
             };
             
-            var behaviourLocations = new List<BehaviourLocation>
+            var behaviourLocations = new List<SchoolLocation>
             {
                 
             };
@@ -209,14 +209,6 @@ namespace MyPortal.UnitTests.TestData
 
             };
 
-            var personTypes = new List<PersonType>
-            {
-                new PersonType {Id = 1, Code = "S", Description = "Student"},
-                new PersonType {Id = 2, Code = "T", Description = "Staff"},
-                new PersonType {Id = 3, Code = "C", Description = "Contact"},
-                new PersonType {Id = 4, Code = "A", Description = "Agent"}
-            };
-
             var personnelObservations = new List<PersonnelObservation>
             {
 
@@ -235,14 +227,14 @@ namespace MyPortal.UnitTests.TestData
             var persons = new List<Person>
             {
                 //Students
-                new Person {Id = 1, FirstName = "Aaron", LastName = "Aardvark", Dob = new DateTime(2000,06,05), Deleted = false, Gender = "M", PersonTypeId = 1, UserId = "aardvark"},
-                new Person {Id = 2, FirstName = "Chloe", LastName = "Brown", Dob = new DateTime(2000,06,05), Deleted = false, Gender = "F", PersonTypeId = 1, UserId = "cbrown"},
+                new Person {Id = 1, FirstName = "Aaron", LastName = "Aardvark", Dob = new DateTime(2000,06,05), Deleted = false, Gender = "M", UserId = "aardvark"},
+                new Person {Id = 2, FirstName = "Chloe", LastName = "Brown", Dob = new DateTime(2000,06,05), Deleted = false, Gender = "F", UserId = "cbrown"},
                     
                 //Staff
-                new Person {Id = 3, Title = "Mrs", FirstName = "Lily", LastName = "Sprague", Dob = new DateTime(1987,08,05), Deleted = false, Gender = "F", PersonTypeId = 2, UserId = "l.sprague"},
-                new Person {Id = 4, Title = "Sir", FirstName = "William", LastName = "Townsend", Dob = new DateTime(1986,04,26), Deleted = false, Gender = "M", PersonTypeId = 2, UserId = "wtownsend"},
-                new Person {Id = 5, Title = "Mrs", FirstName = "Joanne", LastName = "Cobb", Dob = new DateTime(1986,04,26), Deleted = false, Gender = "F", PersonTypeId = 2, UserId = "jcobb"},
-                new Person {Id = 6, Title = "Miss", FirstName = "Ellie", LastName = "Williams", Dob = new DateTime(1986,04,26), Deleted = false, Gender = "F", PersonTypeId = 2, UserId = "ewilliams"}
+                new Person {Id = 3, Title = "Mrs", FirstName = "Lily", LastName = "Sprague", Dob = new DateTime(1987,08,05), Deleted = false, Gender = "F", UserId = "l.sprague"},
+                new Person {Id = 4, Title = "Sir", FirstName = "William", LastName = "Townsend", Dob = new DateTime(1986,04,26), Deleted = false, Gender = "M", UserId = "wtownsend"},
+                new Person {Id = 5, Title = "Mrs", FirstName = "Joanne", LastName = "Cobb", Dob = new DateTime(1986,04,26), Deleted = false, Gender = "F", UserId = "jcobb"},
+                new Person {Id = 6, Title = "Miss", FirstName = "Ellie", LastName = "Williams", Dob = new DateTime(1986,04,26), Deleted = false, Gender = "F", UserId = "ewilliams"}
             };
             
             var profileCommentBanks = new List<ProfileCommentBank>
@@ -346,7 +338,6 @@ namespace MyPortal.UnitTests.TestData
             context.PersonnelObservations.AddRange(personnelObservations);
             context.PersonnelTrainingCertificates.AddRange(personnelTrainingCertificates);
             context.PersonnelTrainingCourses.AddRange(personnelTrainingCourses);
-            context.PersonTypes.AddRange(personTypes);
             context.ProfileComments.AddRange(profileComments);
             context.ProfileCommentBanks.AddRange(profileCommentBanks);
             context.ProfileLogs.AddRange(profileLogs);
