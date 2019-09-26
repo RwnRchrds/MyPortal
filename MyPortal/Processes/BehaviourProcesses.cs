@@ -14,27 +14,102 @@ namespace MyPortal.Processes
 {
     public static class BehaviourProcesses
     {
-        public static ProcessResponse<int> GetTotalConductPointsByStudent(int studentId, int academicYearId, MyPortalDbContext context)
+        public static ProcessResponse<object> CreateAchievement(BehaviourAchievement achievement, MyPortalDbContext context)
         {
-            var student = context.Students.SingleOrDefault(x => x.Id == studentId);
+            achievement.Date = DateTime.Today;
 
-            if (student == null)
+            if (!ValidationProcesses.ModelIsValid(achievement))
             {
-                return new ProcessResponse<int>(ResponseType.NotFound, "Student not found", 0);
+                return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
             }
 
-            var achievements =
-                context.BehaviourAchievements.Where(x =>
-                    x.AcademicYearId == academicYearId && x.StudentId == studentId).ToList();
+            if (!context.CurriculumAcademicYears.Any(x => x.Id == achievement.AcademicYearId))
+            {
+                return new ProcessResponse<object>(ResponseType.NotFound, "Academic year not found", null);
+            }
 
-            var behaviourIncidents =
-                context.BehaviourIncidents.Where(x => x.AcademicYearId == academicYearId && x.StudentId == studentId)
-                    .ToList();
+            if (!achievement.Date.IsInAcademicYear(context, achievement.AcademicYearId).ResponseObject)
+            {
+                return new ProcessResponse<object>(ResponseType.BadRequest, "Date is not in academic year", null);
+            }
 
-            var achievementPoints = achievements.Any() ? achievements.Sum(x => x.Points) : 0;
-            var behaviourPoints = behaviourIncidents.Any() ? behaviourIncidents.Sum(x => x.Points) : 0;
+            context.BehaviourAchievements.Add(achievement);
+            context.SaveChanges();
 
-            return new ProcessResponse<int>(ResponseType.Ok, null, achievementPoints - behaviourPoints);
+            return new ProcessResponse<object>(ResponseType.Ok, "Achievement added", null);
+        }
+
+        public static ProcessResponse<object> CreateBehaviourIncident(BehaviourIncident incident,
+            MyPortalDbContext context)
+        {
+            incident.Date = DateTime.Today;
+
+            if (!ValidationProcesses.ModelIsValid(incident))
+            {
+                return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
+            }
+
+            if (!context.CurriculumAcademicYears.Any(x => x.Id == incident.AcademicYearId))
+            {
+                return new ProcessResponse<object>(ResponseType.NotFound, "Academic year not found", null);
+            }
+
+            if (!incident.Date.IsInAcademicYear(context, incident.AcademicYearId).ResponseObject)
+            {
+                return new ProcessResponse<object>(ResponseType.BadRequest, "Date is not in academic year", null);
+            }
+
+            context.BehaviourIncidents.Add(incident);
+            context.SaveChanges();
+
+            return new ProcessResponse<object>(ResponseType.Ok, "Incident added", null);
+        }
+
+        public static ProcessResponse<object> DeleteAchievement(int achievementId, MyPortalDbContext context)
+        {
+            var achievement = context.BehaviourAchievements.SingleOrDefault(x => x.Id == achievementId);
+
+            if (achievement == null)
+            {
+                return new ProcessResponse<object>(ResponseType.NotFound, "Achievement not found", null);
+            }
+
+            achievement.Deleted = true; //Flag as deleted
+
+            //context.BehaviourAchievements.Remove(achievement); //Enable this to delete from the database
+            context.SaveChanges();
+
+            return new ProcessResponse<object>(ResponseType.Ok, "Achievement deleted", null);
+        }
+
+        public static ProcessResponse<object> DeleteBehaviourIncident(int incidentId, MyPortalDbContext context)
+        {
+            var incident = context.BehaviourIncidents.SingleOrDefault(x => x.Id == incidentId);
+
+            if (incident == null)
+            {
+                return new ProcessResponse<object>(ResponseType.NotFound, "Incident not found", null);
+            }
+
+            incident.Deleted = true;
+
+            //_context.BehaviourIncidents.Remove(incident);
+            context.SaveChanges();
+
+            return new ProcessResponse<object>(ResponseType.Ok, "Incident deleted", null);
+        }
+
+        public static ProcessResponse<BehaviourAchievementDto> GetAchievementById(int achievementId, MyPortalDbContext context)
+        {
+            var achievement = context.BehaviourAchievements.SingleOrDefault(x => x.Id == achievementId);
+
+            if (achievement == null)
+            {
+                return new ProcessResponse<BehaviourAchievementDto>(ResponseType.NotFound, "Student not found", null);
+            }
+
+            return new ProcessResponse<BehaviourAchievementDto>(ResponseType.Ok, null,
+                Mapper.Map<BehaviourAchievement, BehaviourAchievementDto>(achievement));
         }
 
         public static ProcessResponse<int> GetAchievementCountByStudent(int studentId, int academicYearId, MyPortalDbContext context)
@@ -56,27 +131,6 @@ namespace MyPortal.Processes
             }
 
             return new ProcessResponse<int>(ResponseType.Ok, null, posPoints);
-        }
-
-        public static ProcessResponse<int> GetBehaviourIncidentCountByStudent(int studentId, int academicYearId, MyPortalDbContext context)
-        {
-            var student = context.Students.SingleOrDefault(x => x.Id == studentId);
-
-            if (student == null)
-            {
-                return new ProcessResponse<int>(ResponseType.NotFound, "Student not found", 0);
-            }
-
-            var negPoints =
-                context.BehaviourIncidents.Count(x =>
-                    x.AcademicYearId == academicYearId && x.StudentId == studentId);
-
-            if (negPoints < 0)
-            {
-                return new ProcessResponse<int>(ResponseType.BadRequest, "Cannot have negative incident count", 0);
-            }
-
-            return new ProcessResponse<int>(ResponseType.Ok, null, negPoints);
         }
 
         public static ProcessResponse<int> GetAchievementPointsCountByStudent(int studentId, int academicYearId, MyPortalDbContext context)
@@ -107,6 +161,57 @@ namespace MyPortal.Processes
             return new ProcessResponse<int>(ResponseType.Ok, null, points);
         }
 
+        public static ProcessResponse<IEnumerable<GridBehaviourAchievementDto>> GetAchievementsForGrid(int studentId,
+            int academicYearId, MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<GridBehaviourAchievementDto>>(ResponseType.Ok, null, context.BehaviourAchievements.Where(
+                    x => x.AcademicYearId == academicYearId && x.StudentId == studentId && !x.Deleted).OrderByDescending(x => x.Date).ToList()
+                .Select(Mapper.Map<BehaviourAchievement, GridBehaviourAchievementDto>));
+        }
+
+        public static ProcessResponse<BehaviourIncidentDto> GetBehaviourIncident(int incidentId,
+            MyPortalDbContext context)
+        {
+            var incident = context.BehaviourIncidents.SingleOrDefault(x => x.Id == incidentId);
+
+            if (incident == null)
+            {
+                return new ProcessResponse<BehaviourIncidentDto>(ResponseType.NotFound, "Incident not found", null);
+            }
+
+            return new ProcessResponse<BehaviourIncidentDto>(ResponseType.Ok, null,
+                Mapper.Map<BehaviourIncident, BehaviourIncidentDto>(incident));
+        }
+
+        public static ProcessResponse<int> GetBehaviourIncidentCountByStudent(int studentId, int academicYearId, MyPortalDbContext context)
+        {
+            var student = context.Students.SingleOrDefault(x => x.Id == studentId);
+
+            if (student == null)
+            {
+                return new ProcessResponse<int>(ResponseType.NotFound, "Student not found", 0);
+            }
+
+            var negPoints =
+                context.BehaviourIncidents.Count(x =>
+                    x.AcademicYearId == academicYearId && x.StudentId == studentId);
+
+            if (negPoints < 0)
+            {
+                return new ProcessResponse<int>(ResponseType.BadRequest, "Cannot have negative incident count", 0);
+            }
+
+            return new ProcessResponse<int>(ResponseType.Ok, null, negPoints);
+        }
+
+        public static ProcessResponse<IEnumerable<GridBehaviourIncidentDto>> GetBehaviourIncidentsForGrid(int studentId,
+            int academicYearId, MyPortalDbContext context)
+        {
+            return new ProcessResponse<IEnumerable<GridBehaviourIncidentDto>>(ResponseType.Ok, null, context.BehaviourIncidents.Where(
+                    x => x.AcademicYearId == academicYearId && x.StudentId == studentId && !x.Deleted)
+                .OrderByDescending(x => x.Date).ToList().Select(Mapper.Map<BehaviourIncident, GridBehaviourIncidentDto>));
+        }
+
         public static ProcessResponse<int> GetBehaviourPointsCountByStudent(int studentId, int academicYearId, MyPortalDbContext context)
         {
             var student = context.Students.SingleOrDefault(x => x.Id == studentId);
@@ -135,21 +240,6 @@ namespace MyPortal.Processes
             return new ProcessResponse<int>(ResponseType.Ok, null, points);
         }
 
-        public static ProcessResponse<IEnumerable<ChartDataCategoric>> GetChartData_BehaviourIncidentsByType(int academicYearId, MyPortalDbContext context)
-        {
-            var recordedBehaviourTypes = context.BehaviourIncidentTypes.Where(x => x.BehaviourIncidents.Any(i => i.AcademicYearId == academicYearId))
-                .Include(x => x.BehaviourIncidents).ToList();
-            var chartData = new List<ChartDataCategoric>();
-
-            foreach (var behaviourType in recordedBehaviourTypes)
-            {
-                var dataPoint = new ChartDataCategoric(behaviourType.Description, behaviourType.BehaviourIncidents.Count);
-                chartData.Add(dataPoint);
-            }
-
-            return new ProcessResponse<IEnumerable<ChartDataCategoric>>(ResponseType.Ok, null, chartData);
-        }
-
         public static ProcessResponse<IEnumerable<ChartDataCategoric>> GetChartData_AchievementsByType(int academicYearId, MyPortalDbContext context)
         {
             var recordedAchievementTypes =
@@ -165,52 +255,43 @@ namespace MyPortal.Processes
             return new ProcessResponse<IEnumerable<ChartDataCategoric>>(ResponseType.Ok, null, chartData);
         }
 
-        public static ProcessResponse<IEnumerable<GridBehaviourAchievementDto>> GetAchievementsForGrid(int studentId,
-            int academicYearId, MyPortalDbContext context)
+        public static ProcessResponse<IEnumerable<ChartDataCategoric>> GetChartData_BehaviourIncidentsByType(int academicYearId, MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<GridBehaviourAchievementDto>>(ResponseType.Ok, null, context.BehaviourAchievements.Where(
-                    x => x.AcademicYearId == academicYearId && x.StudentId == studentId && !x.Deleted).OrderByDescending(x => x.Date).ToList()
-                .Select(Mapper.Map<BehaviourAchievement, GridBehaviourAchievementDto>));
+            var recordedBehaviourTypes = context.BehaviourIncidentTypes.Where(x => x.BehaviourIncidents.Any(i => i.AcademicYearId == academicYearId))
+                .Include(x => x.BehaviourIncidents).ToList();
+            var chartData = new List<ChartDataCategoric>();
+
+            foreach (var behaviourType in recordedBehaviourTypes)
+            {
+                var dataPoint = new ChartDataCategoric(behaviourType.Description, behaviourType.BehaviourIncidents.Count);
+                chartData.Add(dataPoint);
+            }
+
+            return new ProcessResponse<IEnumerable<ChartDataCategoric>>(ResponseType.Ok, null, chartData);
         }
 
-        public static ProcessResponse<BehaviourAchievementDto> GetAchievementById(int achievementId, MyPortalDbContext context)
+        public static ProcessResponse<int> GetTotalConductPointsByStudent(int studentId, int academicYearId, MyPortalDbContext context)
         {
-            var achievement = context.BehaviourAchievements.SingleOrDefault(x => x.Id == achievementId);
+            var student = context.Students.SingleOrDefault(x => x.Id == studentId);
 
-            if (achievement == null)
+            if (student == null)
             {
-                return new ProcessResponse<BehaviourAchievementDto>(ResponseType.NotFound, "Student not found", null);
+                return new ProcessResponse<int>(ResponseType.NotFound, "Student not found", 0);
             }
 
-            return new ProcessResponse<BehaviourAchievementDto>(ResponseType.Ok, null,
-                Mapper.Map<BehaviourAchievement, BehaviourAchievementDto>(achievement));
+            var achievements =
+                context.BehaviourAchievements.Where(x =>
+                    x.AcademicYearId == academicYearId && x.StudentId == studentId).ToList();
+
+            var behaviourIncidents =
+                context.BehaviourIncidents.Where(x => x.AcademicYearId == academicYearId && x.StudentId == studentId)
+                    .ToList();
+
+            var achievementPoints = achievements.Any() ? achievements.Sum(x => x.Points) : 0;
+            var behaviourPoints = behaviourIncidents.Any() ? behaviourIncidents.Sum(x => x.Points) : 0;
+
+            return new ProcessResponse<int>(ResponseType.Ok, null, achievementPoints - behaviourPoints);
         }
-
-        public static ProcessResponse<object> CreateAchievement(BehaviourAchievement achievement, MyPortalDbContext context)
-        {
-            achievement.Date = DateTime.Today;
-
-            if (!ValidationProcesses.ModelIsValid(achievement))
-            {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
-            }
-
-            if (!context.CurriculumAcademicYears.Any(x => x.Id == achievement.AcademicYearId))
-            {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Academic year not found", null);
-            }
-
-            if (!achievement.Date.IsInAcademicYear(context, achievement.AcademicYearId).ResponseObject)
-            {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Date is not in academic year", null);
-            }
-
-            context.BehaviourAchievements.Add(achievement);
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Achievement added", null);
-        }
-
         public static ProcessResponse<object> UpdateAchievement(BehaviourAchievement achievement,
             MyPortalDbContext context)
         {
@@ -231,72 +312,6 @@ namespace MyPortal.Processes
 
             return new ProcessResponse<object>(ResponseType.Ok, "Achievement updated", null);
         }
-
-        public static ProcessResponse<object> DeleteAchievement(int achievementId, MyPortalDbContext context)
-        {
-            var achievement = context.BehaviourAchievements.SingleOrDefault(x => x.Id == achievementId);
-
-            if (achievement == null)
-            {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Achievement not found", null);
-            }
-
-            achievement.Deleted = true; //Flag as deleted
-
-            //context.BehaviourAchievements.Remove(achievement); //Enable this to delete from the database
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Achievement deleted", null);
-        }
-
-        public static ProcessResponse<IEnumerable<GridBehaviourIncidentDto>> GetBehaviourIncidentsForGrid(int studentId,
-            int academicYearId, MyPortalDbContext context)
-        {
-            return new ProcessResponse<IEnumerable<GridBehaviourIncidentDto>>(ResponseType.Ok, null, context.BehaviourIncidents.Where(
-                    x => x.AcademicYearId == academicYearId && x.StudentId == studentId && !x.Deleted)
-                .OrderByDescending(x => x.Date).ToList().Select(Mapper.Map<BehaviourIncident, GridBehaviourIncidentDto>));
-        }
-
-        public static ProcessResponse<BehaviourIncidentDto> GetBehaviourIncident(int incidentId,
-            MyPortalDbContext context)
-        {
-            var incident = context.BehaviourIncidents.SingleOrDefault(x => x.Id == incidentId);
-
-            if (incident == null)
-            {
-                return new ProcessResponse<BehaviourIncidentDto>(ResponseType.NotFound, "Incident not found", null);
-            }
-
-            return new ProcessResponse<BehaviourIncidentDto>(ResponseType.Ok, null,
-                Mapper.Map<BehaviourIncident, BehaviourIncidentDto>(incident));
-        }
-
-        public static ProcessResponse<object> CreateBehaviourIncident(BehaviourIncident incident,
-            MyPortalDbContext context)
-        {
-            incident.Date = DateTime.Today;
-
-            if (!ValidationProcesses.ModelIsValid(incident))
-            {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
-            }
-
-            if (!context.CurriculumAcademicYears.Any(x => x.Id == incident.AcademicYearId))
-            {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Academic year not found", null);
-            }
-
-            if (!incident.Date.IsInAcademicYear(context, incident.AcademicYearId).ResponseObject)
-            {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Date is not in academic year", null);
-            }
-
-            context.BehaviourIncidents.Add(incident);
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Incident added", null);
-        }
-
         public static ProcessResponse<object> UpdateBehaviourIncident(BehaviourIncident incident,
             MyPortalDbContext context)
         {
@@ -316,23 +331,6 @@ namespace MyPortal.Processes
             context.SaveChanges();
 
             return new ProcessResponse<object>(ResponseType.Ok, "Incident updated", null);
-        }
-
-        public static ProcessResponse<object> DeleteBehaviourIncident(int incidentId, MyPortalDbContext context)
-        {
-            var incident = context.BehaviourIncidents.SingleOrDefault(x => x.Id == incidentId);
-
-            if (incident == null)
-            {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Incident not found", null);
-            }
-
-            incident.Deleted = true;
-
-            //_context.BehaviourIncidents.Remove(incident);
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Incident deleted", null);
         }
     }
 }

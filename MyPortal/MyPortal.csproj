@@ -358,6 +358,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Attributes\RequiresPermissionAttribute.cs" />
+    <Compile Include="Models\Database\CommunicationPhoneNumber.cs" />
+    <Compile Include="Models\Database\CommunicationPhoneNumberType.cs" />
     <Compile Include="Models\Database\BehaviourAchievement.cs" />
     <Compile Include="Models\Database\BehaviourAchievementType.cs" />
     <Compile Include="Models\Database\BehaviourIncident.cs" />
@@ -373,7 +375,6 @@
     <Compile Include="Models\Database\PastoralHouse.cs" />
     <Compile Include="Models\Database\Person.cs" />
     <Compile Include="Models\Database\PersonDocument.cs" />
-    <Compile Include="Models\Database\PersonType.cs" />
     <Compile Include="Models\Database\SenEvent.cs" />
     <Compile Include="Models\Database\SenEventType.cs" />
     <Compile Include="Models\Database\SenProvision.cs" />

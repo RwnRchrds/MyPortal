@@ -10,12 +10,13 @@ namespace MyPortal.Models.Database
     public partial class MyPortalDbContext : DbContext
     {
         public bool IsDebug { get; set; }
+
         public MyPortalDbContext()
             : base("name=MyPortalDbContext")
         {
             IsDebug = false;
         }
-        
+
         public MyPortalDbContext(DbConnection connection) : base(connection, true)
         {
             IsDebug = false;
@@ -33,45 +34,46 @@ namespace MyPortal.Models.Database
         public virtual DbSet<BehaviourAchievement> BehaviourAchievements { get; set; }
         public virtual DbSet<BehaviourAchievementType> BehaviourAchievementTypes { get; set; }
         public virtual DbSet<BehaviourIncident> BehaviourIncidents { get; set; }
-        public virtual DbSet<SchoolLocation> BehaviourLocations { get; set; }
         public virtual DbSet<BehaviourIncidentType> BehaviourIncidentTypes { get; set; }
+        public virtual DbSet<SchoolLocation> BehaviourLocations { get; set; }
         public virtual DbSet<CommunicationLog> CommunicationLogs { get; set; }
+        public virtual DbSet<CommunicationPhoneNumber> CommunicationPhoneNumbers { get; set; }
+        public virtual DbSet<CommunicationPhoneNumberType> CommunicationPhoneNumberTypes { get; set; }
         public virtual DbSet<CommunicationType> CommunicationTypes { get; set; }
-        public virtual DbSet<Document> Documents { get; set; }
-        public virtual DbSet<DocumentType> DocumentTypes { get; set; }
-        public virtual DbSet<PersonDocument> PersonDocuments { get; set; }
-        public virtual DbSet<MedicalCondition> MedicalConditions { get; set; }
-        public virtual DbSet<MedicalEvent> MedicalEvents { get; set; }
-        public virtual DbSet<MedicalStudentCondition> MedicalStudentConditions { get; set; }
-        public virtual DbSet<PastoralHouse> PastoralHouses { get; set; }
-        public virtual DbSet<Person> Persons { get; set; }
-        public virtual DbSet<PersonType> PersonTypes { get; set; }
-        public virtual DbSet<StaffMember> StaffMembers { get; set; }
-        public virtual DbSet<Student> Students { get; set; }
         public virtual DbSet<CurriculumAcademicYear> CurriculumAcademicYears { get; set; }
-        public virtual DbSet<CurriculumEnrolment> CurriculumEnrolments { get; set; }
         public virtual DbSet<CurriculumClass> CurriculumClasses { get; set; }
-        public virtual DbSet<CurriculumSession> CurriculumSessions { get; set; }
+        public virtual DbSet<CurriculumEnrolment> CurriculumEnrolments { get; set; }
         public virtual DbSet<CurriculumLessonPlan> CurriculumLessonPlans { get; set; }
         public virtual DbSet<CurriculumLessonPlanTemplate> CurriculumLessonPlanTemplates { get; set; }
+        public virtual DbSet<CurriculumSession> CurriculumSessions { get; set; }
         public virtual DbSet<CurriculumStudyTopic> CurriculumStudyTopics { get; set; }
         public virtual DbSet<CurriculumSubject> CurriculumSubjects { get; set; }
+        public virtual DbSet<Document> Documents { get; set; }
+        public virtual DbSet<DocumentType> DocumentTypes { get; set; }
         public virtual DbSet<FinanceBasketItem> FinanceBasketItems { get; set; }
         public virtual DbSet<FinanceProduct> FinanceProducts { get; set; }
         public virtual DbSet<FinanceProductType> FinanceProductTypes { get; set; }
         public virtual DbSet<FinanceSale> FinanceSales { get; set; }
+        public virtual DbSet<MedicalCondition> MedicalConditions { get; set; }
+        public virtual DbSet<MedicalEvent> MedicalEvents { get; set; }
+        public virtual DbSet<MedicalStudentCondition> MedicalStudentConditions { get; set; }
+        public virtual DbSet<PastoralHouse> PastoralHouses { get; set; }
         public virtual DbSet<PastoralRegGroup> PastoralRegGroups { get; set; }
         public virtual DbSet<PastoralYearGroup> PastoralYearGroups { get; set; }
+        public virtual DbSet<PersonDocument> PersonDocuments { get; set; }
         public virtual DbSet<PersonnelObservation> PersonnelObservations { get; set; }
         public virtual DbSet<PersonnelTrainingCertificate> PersonnelTrainingCertificates { get; set; }
         public virtual DbSet<PersonnelTrainingCourse> PersonnelTrainingCourses { get; set; }
+        public virtual DbSet<Person> Persons { get; set; }
         public virtual DbSet<ProfileCommentBank> ProfileCommentBanks { get; set; }
         public virtual DbSet<ProfileComment> ProfileComments { get; set; }
         public virtual DbSet<ProfileLog> ProfileLogs { get; set; }
         public virtual DbSet<ProfileLogType> ProfileLogTypes { get; set; }
-        public virtual DbSet<SenStatus> SenStatuses { get; set; }
         public virtual DbSet<SenEvent> SenEvents { get; set; }
         public virtual DbSet<SenProvision> SenProvisions { get; set; }
+        public virtual DbSet<SenStatus> SenStatuses { get; set; }
+        public virtual DbSet<StaffMember> StaffMembers { get; set; }
+        public virtual DbSet<Student> Students { get; set; }
         public virtual DbSet<SystemBulletin> SystemBulletins { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -193,20 +195,10 @@ namespace MyPortal.Models.Database
                 .HasForeignKey(e => e.BehaviourTypeId)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<SchoolLocation>()
-                .Property(e => e.Description)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<SchoolLocation>()
-                .HasMany(e => e.BehaviourAchievements)
-                .WithRequired(e => e.Location)
-                .HasForeignKey(e => e.LocationId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<SchoolLocation>()
-                .HasMany(e => e.BehaviourIncidents)
-                .WithRequired(e => e.Location)
-                .HasForeignKey(e => e.LocationId)
+            modelBuilder.Entity<CommunicationPhoneNumberType>()
+                .HasMany(e => e.PhoneNumbers)
+                .WithRequired(e => e.Type)
+                .HasForeignKey(e => e.TypeId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<CommunicationType>()
@@ -246,6 +238,12 @@ namespace MyPortal.Models.Database
                 .IsUnicode(false);
 
             modelBuilder.Entity<Person>()
+                .HasMany(e => e.PhoneNumbers)
+                .WithRequired(e => e.Person)
+                .HasForeignKey(e => e.PersonId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Person>()
                 .Property(e => e.Title)
                 .IsUnicode(false);
 
@@ -272,6 +270,22 @@ namespace MyPortal.Models.Database
             modelBuilder.Entity<StaffMember>()
                 .Property(e => e.JobTitle)
                 .IsUnicode(false);
+
+            modelBuilder.Entity<SchoolLocation>()
+                .Property(e => e.Description)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<SchoolLocation>()
+                .HasMany(e => e.BehaviourAchievements)
+                .WithRequired(e => e.Location)
+                .HasForeignKey(e => e.LocationId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<SchoolLocation>()
+                .HasMany(e => e.BehaviourIncidents)
+                .WithRequired(e => e.Location)
+                .HasForeignKey(e => e.LocationId)
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.Documents)

@@ -12,6 +12,34 @@ namespace MyPortal.Processes
 {
     public static class UtilityProcesses
     {
+        public static async Task<ProcessResponse<object>> CreateSystemUser(UserManager<ApplicationUser, string> userManager)
+        {
+            var userInDb = await userManager.FindByNameAsync("system");
+
+            if (userInDb != null)
+            {
+                await userManager.DeleteAsync(userInDb);
+            }
+
+            var newId = Guid.NewGuid().ToString();
+
+            var user = new ApplicationUser
+            {
+                Id = newId,
+                UserName = "system"
+            };
+
+            await userManager.CreateAsync(user, "education");
+            await userManager.AddToRoleAsync(newId, "Admin");
+
+            return new ProcessResponse<object>(ResponseType.Ok, null, null);
+        }
+
+        public static string GenerateId()
+        {
+            return Guid.NewGuid().ToString("N");
+        }
+
         public static ApiResponse<T> PerformDataOperations<T>(this IEnumerable<T> dataSource, DataManagerRequest dm)
         {
             DataOperations operation = new DataOperations();
@@ -44,34 +72,6 @@ namespace MyPortal.Processes
             }
 
             return new ApiResponse<T> { Count = count, Items = dataSource };
-        }
-
-        public static async Task<ProcessResponse<object>> CreateSystemUser(UserManager<ApplicationUser, string> userManager)
-        {
-            var userInDb = await userManager.FindByNameAsync("system");
-
-            if (userInDb != null)
-            {
-                await userManager.DeleteAsync(userInDb);
-            }
-
-            var newId = Guid.NewGuid().ToString();
-
-            var user = new ApplicationUser
-            {
-                Id = newId,
-                UserName = "system"
-            };
-
-            await userManager.CreateAsync(user, "education");
-            await userManager.AddToRoleAsync(newId, "Admin");
-
-            return new ProcessResponse<object>(ResponseType.Ok, null, null);
-        }
-
-        public static string GenerateId()
-        {
-            return Guid.NewGuid().ToString("N");
         }
     }
 }
