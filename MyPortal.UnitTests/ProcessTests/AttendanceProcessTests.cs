@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MyPortal.Models.Misc;
 using MyPortal.Processes;
 using NUnit.Framework;
 
@@ -18,6 +19,8 @@ namespace MyPortal.UnitTests.ProcessTests
             Assert.That(academicYear != null);
 
             var result = AttendanceProcesses.CreateAttendanceWeeksForAcademicYear(academicYear.Id, _context);
+
+            Assert.That(result.ResponseType == ResponseType.Ok);
         }
     }
 }

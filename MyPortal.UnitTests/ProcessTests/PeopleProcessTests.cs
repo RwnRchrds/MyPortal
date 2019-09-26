@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace MyPortal.UnitTests.ProcessTests
 {
     [TestFixture]
-    public class PeopleProcessesTests : MyPortalTestFixture
+    public class PeopleProcessTests : MyPortalTestFixture
     {
         [Test]
         public static void GetStaffFromUserId_ReturnsStaffMember()
