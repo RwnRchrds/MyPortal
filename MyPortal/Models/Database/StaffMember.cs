@@ -10,7 +10,7 @@ namespace MyPortal.Models.Database
     /// A staff member in the system.
     /// </summary>
     [Table("People_Staff")]
-    public partial class StaffMember
+    public class StaffMember
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public StaffMember()

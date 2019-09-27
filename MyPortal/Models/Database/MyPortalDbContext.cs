@@ -366,6 +366,12 @@ namespace MyPortal.Models.Database
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<StaffMember>()
+                .HasMany(e => e.PastoralHouses)
+                .WithRequired(e => e.HeadOfHouse)
+                .HasForeignKey(e => e.HeadId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.Bulletins)
                 .WithRequired(e => e.Author)
                 .HasForeignKey(e => e.AuthorId)
