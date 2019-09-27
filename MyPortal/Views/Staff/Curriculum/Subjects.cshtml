@@ -30,7 +30,7 @@
             </div>
             <!-- Card Body -->
             <div class="card-body">
-                @Html.EJS().Grid("Subject").DataSource(d =>
+                @Html.EJS().Grid("Subjects").DataSource(d =>
                 {
                     d.Url(Url.HttpRouteUrl("ApiCurriculumGetAllSubjectsDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor");
                 }).Columns(c =>

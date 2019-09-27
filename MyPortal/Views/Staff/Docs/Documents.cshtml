@@ -53,7 +53,7 @@
                         c.Field("Approved").Template("#documentsApprovedTemplate").Width("100").Add();
                         c.HeaderText("Actions").Template("#documentsActionsTemplate").Width("170").Add();
                     }
-                }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string> {"Search"}).Render()
+                }).AllowPaging().PageSettings(p => p.PageSize(12)).AllowSorting().SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string> {"Search"}).Render()
             </div>
         </div>
     </div>
@@ -239,11 +239,11 @@
 
     <script type="text/x-jsrender" id="documentsActionsTemplate">
                 <div>
-                    <button type='button' class='btn btn-xs btn-warning mp-btn-action js-edit' data-document-id="${Id}">
+                    <button type='button' class='btn btn-xs btn-warning mp-btn-action js-edit' data-document-id="${DocumentId}">
                         <i class="far fa-edit"></i>
                     </button>
                     
-                    <button type='button' class='btn btn-xs btn-danger mp-btn-action js-delete' data-document-id="${Id}">
+                    <button type='button' class='btn btn-xs btn-danger mp-btn-action js-delete' data-document-id="${DocumentId}">
                         <i class="far fa-trash-alt"></i>
                     </button>
                 </div>

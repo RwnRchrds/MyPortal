@@ -339,7 +339,6 @@
     <Compile Include="Dtos\PersonnelObservationDto.cs" />
     <Compile Include="Dtos\PersonnelTrainingCertificateDto.cs" />
     <Compile Include="Dtos\PersonnelTrainingCourseDto.cs" />
-    <Compile Include="Dtos\PersonTypeDto.cs" />
     <Compile Include="Dtos\ProfileCommentDto.cs" />
     <Compile Include="Dtos\ProfileCommentBankDto.cs" />
     <Compile Include="Dtos\ProfileLogDto.cs" />

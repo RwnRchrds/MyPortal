@@ -104,6 +104,13 @@ namespace MyPortal
             CreateMap<FinanceProductType, FinanceProductTypeDto>();
             CreateMap<FinanceProductTypeDto, FinanceProductType>();
 
+            CreateMap<CurriculumStudyTopic, CurriculumStudyTopicDto>();
+            CreateMap<CurriculumLessonPlan, CurriculumLessonPlanDto>();
+
+            CreateMap<BehaviourAchievement, BehaviourAchievementDto>();
+
+            CreateMap<BehaviourIncident, BehaviourIncidentDto>();
+
             CreateMap<Student, GridStudentDto>()
                 .ForMember(dest => dest.DisplayName,
                     opts => opts.MapFrom(src => PeopleProcesses.GetStudentDisplayName(src).ResponseObject))
@@ -149,9 +156,6 @@ namespace MyPortal
                     opts => opts.MapFrom(src => src.BehaviourAchievementType.Description))
                 .ForMember(dest => dest.RecordedBy,
                     opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.RecordedBy).ResponseObject));
-
-            CreateMap<BehaviourAchievement, BehaviourAchievementDto>();
-            CreateMap<BehaviourIncident, BehaviourIncidentDto>();
 
             CreateMap<BehaviourIncident, GridBehaviourIncidentDto>()
                 .ForMember(dest => dest.Location,

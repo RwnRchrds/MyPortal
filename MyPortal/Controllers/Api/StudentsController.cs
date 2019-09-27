@@ -47,7 +47,7 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("ViewStudents")]
         [Route("get/dataGrid/all", Name = "ApiPeopleGetAllStudentsDataGrid")]
-        public IHttpActionResult GetSAllStudentsDataGrid([FromBody] DataManagerRequest dm)
+        public IHttpActionResult GetAllStudentsDataGrid([FromBody] DataManagerRequest dm)
         {
             var students = PrepareResponseObject(PeopleProcesses.GetAllStudents_DataGrid(_context));
 

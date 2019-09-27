@@ -11,7 +11,7 @@ namespace MyPortal.Dtos
     /// <summary>
     /// A staff member in the system.
     /// </summary>
-    public partial class StaffMemberDto
+    public class StaffMemberDto
     {
         public int Id { get; set; }
 

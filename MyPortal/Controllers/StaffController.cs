@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -343,16 +344,16 @@ namespace MyPortal.Controllers
 
             double? attendance = null;
 
-            var attendanceData = AttendanceProcesses.GetSummary(student.Id, (int)academicYearId, _context, true).ResponseObject;
+            var attendanceData = AttendanceProcesses.GetSummary(student.Id, academicYearId, _context, true).ResponseObject;
 
             if (attendanceData != null)
             {
                 attendance = attendanceData.Present + attendanceData.Late;
             }
 
-            int? achievementCount = BehaviourProcesses.GetAchievementPointsCountByStudent(student.Id, (int)academicYearId, _context).ResponseObject;
+            int? achievementCount = BehaviourProcesses.GetAchievementPointsCountByStudent(student.Id, academicYearId, _context).ResponseObject;
 
-            int? behaviourCount = BehaviourProcesses.GetBehaviourPointsCountByStudent(student.Id, (int)academicYearId, _context).ResponseObject;
+            int? behaviourCount = BehaviourProcesses.GetBehaviourPointsCountByStudent(student.Id, academicYearId, _context).ResponseObject;
 
             var viewModel = new StudentDetailsViewModel
             {

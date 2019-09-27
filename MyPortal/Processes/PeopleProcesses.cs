@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Security.Policy;
 using System.Web;
@@ -103,20 +104,30 @@ namespace MyPortal.Processes
                 .ToList());
         }
 
+        public static ProcessResponse<IEnumerable<Student>> GetAllStudents_Model(MyPortalDbContext context)
+        {
+            var result = context.Students.Include(x => x.Person).Include(x => x.PastoralYearGroup)
+                .Include(x => x.PastoralRegGroup).Include(x => x.House).OrderBy(x => x.Person.LastName).ToList();
+
+            return new ProcessResponse<IEnumerable<Student>>(ResponseType.Ok, null, result);
+        }
+
         public static ProcessResponse<IEnumerable<StudentDto>> GetAllStudents(MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<StudentDto>>(ResponseType.Ok, null, context.Students
-                .OrderBy(x => x.Person.LastName)
-                .ToList()
-                .Select(Mapper.Map<Student, StudentDto>));
+            var students = GetAllStudents_Model(context).ResponseObject;
+
+            var result = students.Select(Mapper.Map<Student, StudentDto>);
+
+            return new ProcessResponse<IEnumerable<StudentDto>>(ResponseType.Ok, null, result);
         }
 
         public static ProcessResponse<IEnumerable<GridStudentDto>> GetAllStudents_DataGrid(MyPortalDbContext context)
         {
-            var students = context.Students.OrderBy(x => x.Person.LastName).ToList().Select(Mapper.Map<Student, GridStudentDto>);
+            var students = GetAllStudents_Model(context).ResponseObject;
 
-            return new ProcessResponse<IEnumerable<GridStudentDto>>(ResponseType.Ok, null, students);
-            ;
+            var result = students.Select(Mapper.Map<Student, GridStudentDto>);
+
+            return new ProcessResponse<IEnumerable<GridStudentDto>>(ResponseType.Ok, null, result);
         }
 
         public static ProcessResponse<Person> GetPersonByUserId(string userId, MyPortalDbContext context)

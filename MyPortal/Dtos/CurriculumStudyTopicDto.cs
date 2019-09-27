@@ -9,7 +9,7 @@ namespace MyPortal.Dtos
     /// <summary>
     /// A particular topic for study in the curriculum. A study topic contains lesson plans for delivery.
     /// </summary>
-    public partial class CurriculumStudyTopicDto
+    public class CurriculumStudyTopicDto
     {
         public int Id { get; set; }
 

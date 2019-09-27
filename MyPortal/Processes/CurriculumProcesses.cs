@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net.Mime;
 using System.Web;
@@ -607,7 +608,7 @@ namespace MyPortal.Processes
             MyPortalDbContext context)
         {
             return new ProcessResponse<IEnumerable<CurriculumLessonPlan>>(ResponseType.Ok, null,
-                context.CurriculumLessonPlans.Where(x => x.StudyTopicId == studyTopicId).OrderBy(x => x.Title)
+                context.CurriculumLessonPlans.Where(x => x.StudyTopicId == studyTopicId).Include(x => x.StudyTopic).OrderBy(x => x.Title)
                     .ToList());
         }
 

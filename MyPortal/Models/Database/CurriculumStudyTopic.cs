@@ -10,7 +10,7 @@ namespace MyPortal.Models.Database
     /// A topic for study in the curriculum. A study topic contains lesson plans for delivery.
     /// </summary>
     [Table("Curriculum_StudyTopics")]
-    public partial class CurriculumStudyTopic
+    public class CurriculumStudyTopic
     {
         public int Id { get; set; }
 
