@@ -10,17 +10,18 @@ namespace MyPortal.Models.Database
     /// Grade assigned to results.
     /// </summary>
     [Table("Assessment_Grades")]
-    public partial class AssessmentGrade
+    public class AssessmentGrade
     {
         public int Id { get; set; }
 
-        [Display(Name="Grade Set")]
         public int GradeSetId { get; set; }
 
         [Required]
-        [Display(Name="Grade")]
+        [Column("Grade")]
         [StringLength(255)]
-        public string GradeValue { get; set; }
+        public string GradeCode { get; set; }
+
+        public int Value { get; set; }
 
         public virtual AssessmentGradeSet AssessmentGradeSet { get; set; }
     }

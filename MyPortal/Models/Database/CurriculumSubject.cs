@@ -15,7 +15,6 @@ namespace MyPortal.Models.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public CurriculumSubject()
         {
-            AssessmentResults = new HashSet<AssessmentResult>();
             CurriculumClasses = new HashSet<CurriculumClass>();
             CurriculumStudyTopics = new HashSet<CurriculumStudyTopic>();
         }
@@ -33,9 +32,6 @@ namespace MyPortal.Models.Database
         public string Code { get; set; }
 
         public bool Deleted { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AssessmentResult> AssessmentResults { get; set; }
 
         public virtual StaffMember Leader { get; set; }
 

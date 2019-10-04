@@ -10,7 +10,7 @@ namespace MyPortal.Models.Database
     /// A set of grades to use when adding results.
     /// </summary>
     [Table("Assessment_GradeSets")]
-    public partial class AssessmentGradeSet
+    public class AssessmentGradeSet
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public AssessmentGradeSet()
@@ -27,9 +27,9 @@ namespace MyPortal.Models.Database
         public bool Active { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AssessmentGrade> AssessmentGrades { get; set; }
+        public virtual ICollection<AssessmentAspect> Aspects { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AssessmentResult> AssessmentResults { get; set; }
+        public virtual ICollection<AssessmentGrade> AssessmentGrades { get; set; }
     }
 }

@@ -10,20 +10,15 @@ namespace MyPortal.Models.Database
     /// A result a student has achieved for a particular subject.
     /// </summary>
     [Table("Assessment_Results")]
-    public partial class AssessmentResult
+    public class AssessmentResult
     {
         public int Id { get; set; }
 
-        [Display(Name="Result Set")]
         public int ResultSetId { get; set; }
 
-        [Display(Name="Student")]
         public int StudentId { get; set; }
 
-        [Display(Name="Subject")]
-        public int SubjectId { get; set; }
-
-        public int GradeSetId { get; set; }
+        public int AspectId { get; set; }
 
         public DateTime Date { get; set; }
 
@@ -33,10 +28,8 @@ namespace MyPortal.Models.Database
 
         public virtual AssessmentResultSet AssessmentResultSet { get; set; }
 
+        public virtual AssessmentAspect Aspect { get; set; }
+
         public virtual Student Student { get; set; }
-
-        public virtual AssessmentGradeSet AssessmentGradeSet { get; set; }
-
-        public virtual CurriculumSubject Subject { get; set; }
     }
 }

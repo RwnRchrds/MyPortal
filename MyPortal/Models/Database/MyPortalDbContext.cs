@@ -1,16 +1,10 @@
 using System.Data.Common;
+using System.Data.Entity;
 
 namespace MyPortal.Models.Database
 {
-    using System;
-    using System.Data.Entity;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Linq;
-
-    public partial class MyPortalDbContext : DbContext
+    public class MyPortalDbContext : DbContext
     {
-        public bool IsDebug { get; set; }
-
         public MyPortalDbContext()
             : base("name=MyPortalDbContext")
         {
@@ -22,6 +16,10 @@ namespace MyPortal.Models.Database
             IsDebug = false;
         }
 
+        public bool IsDebug { get; set; }
+
+        public virtual DbSet<AssessmentAspect> AssessmentAspects { get; set; }
+        public virtual DbSet<AssessmentAspectType> AssessmentAspectTypes { get; set; }
         public virtual DbSet<AssessmentGrade> AssessmentGrades { get; set; }
         public virtual DbSet<AssessmentGradeSet> AssessmentGradeSets { get; set; }
         public virtual DbSet<AssessmentResult> AssessmentResults { get; set; }
@@ -78,13 +76,27 @@ namespace MyPortal.Models.Database
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<AssessmentAspect>()
+                .HasMany(e => e.Results)
+                .WithRequired(e => e.Aspect)
+                .HasForeignKey(e => e.AspectId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<AssessmentAspectType>()
+                .HasMany(e => e.Aspects)
+                .WithRequired(e => e.AspectType)
+                .HasForeignKey(e => e.TypeId)
+                .WillCascadeOnDelete(false);
+
             modelBuilder.Entity<AssessmentGrade>()
-                .Property(e => e.GradeValue)
+                .Property(e => e.GradeCode)
                 .IsUnicode(false);
 
             modelBuilder.Entity<AssessmentGradeSet>()
-                .Property(e => e.Name)
-                .IsUnicode(false);
+                .HasMany(e => e.Aspects)
+                .WithOptional(e => e.GradeSet)
+                .HasForeignKey(e => e.GradeSetId)
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<AssessmentGradeSet>()
                 .HasMany(e => e.AssessmentGrades)
@@ -93,17 +105,11 @@ namespace MyPortal.Models.Database
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<AssessmentGradeSet>()
-                .HasMany(e => e.AssessmentResults)
-                .WithRequired(e => e.AssessmentGradeSet)
-                .HasForeignKey(e => e.GradeSetId)
-                .WillCascadeOnDelete(false);
+                .Property(e => e.Name)
+                .IsUnicode(false);
 
             modelBuilder.Entity<AssessmentResult>()
                 .Property(e => e.Value)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<AssessmentResultSet>()
-                .Property(e => e.Name)
                 .IsUnicode(false);
 
             modelBuilder.Entity<AssessmentResultSet>()
@@ -111,6 +117,10 @@ namespace MyPortal.Models.Database
                 .WithRequired(e => e.AssessmentResultSet)
                 .HasForeignKey(e => e.ResultSetId)
                 .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<AssessmentResultSet>()
+                .Property(e => e.Name)
+                .IsUnicode(false);
 
             modelBuilder.Entity<AttendanceCode>()
                 .Property(e => e.Code)
@@ -122,12 +132,7 @@ namespace MyPortal.Models.Database
                 .IsUnicode(false);
 
             modelBuilder.Entity<AttendanceMark>()
-                .Property(e => e.Mark)
-                .IsFixedLength()
-                .IsUnicode(false);
-
-            modelBuilder.Entity<AttendanceMeaning>()
-                .Property(e => e.Description)
+                .Property(e => e.Mark).IsFixedLength()
                 .IsUnicode(false);
 
             modelBuilder.Entity<AttendanceMeaning>()
@@ -136,538 +141,179 @@ namespace MyPortal.Models.Database
                 .HasForeignKey(e => e.MeaningId)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<AttendancePeriod>()
-                .Property(e => e.Weekday)
-                .IsFixedLength()
-                .IsUnicode(false);
-
-            modelBuilder.Entity<AttendancePeriod>()
-                .Property(e => e.StartTime)
-                .HasPrecision(2);
-
-            modelBuilder.Entity<AttendancePeriod>()
-                .Property(e => e.EndTime)
-                .HasPrecision(2);
-
-            modelBuilder.Entity<AttendancePeriod>()
-                .HasMany(e => e.AttendanceRegisterMarks)
-                .WithRequired(e => e.AttendancePeriod)
-                .HasForeignKey(e => e.PeriodId)
+            modelBuilder.Entity<AttendanceMeaning>().Property(e => e.Description).IsUnicode(false);
+            modelBuilder.Entity<AttendancePeriod>().HasMany(e => e.AttendanceRegisterMarks)
+                .WithRequired(e => e.AttendancePeriod).HasForeignKey(e => e.PeriodId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<AttendancePeriod>().HasMany(e => e.CurriculumClassPeriods)
+                .WithRequired(e => e.AttendancePeriod).HasForeignKey(e => e.PeriodId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<AttendancePeriod>().Property(e => e.EndTime).HasPrecision(2);
+            modelBuilder.Entity<AttendancePeriod>().Property(e => e.StartTime).HasPrecision(2);
+            modelBuilder.Entity<AttendancePeriod>().Property(e => e.Weekday).IsFixedLength().IsUnicode(false);
+            modelBuilder.Entity<AttendanceWeek>().HasMany(e => e.AttendanceRegisterMarks)
+                .WithRequired(e => e.AttendanceWeek).HasForeignKey(e => e.WeekId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<BehaviourAchievement>().Property(e => e.Comments).IsUnicode(false);
+            modelBuilder.Entity<BehaviourAchievementType>().HasMany(e => e.BehaviourAchievements)
+                .WithRequired(e => e.BehaviourAchievementType).HasForeignKey(e => e.AchievementTypeId)
                 .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<AttendancePeriod>()
-                .HasMany(e => e.CurriculumClassPeriods)
-                .WithRequired(e => e.AttendancePeriod)
-                .HasForeignKey(e => e.PeriodId)
+            modelBuilder.Entity<BehaviourAchievementType>().Property(e => e.Description).IsUnicode(false);
+            modelBuilder.Entity<BehaviourIncident>().Property(e => e.Comments).IsUnicode(false);
+            modelBuilder.Entity<BehaviourIncidentType>().HasMany(e => e.BehaviourIncidents)
+                .WithRequired(e => e.BehaviourIncidentType).HasForeignKey(e => e.BehaviourTypeId)
                 .WillCascadeOnDelete(false);
-            
-            modelBuilder.Entity<AttendanceWeek>()
-                .HasMany(e => e.AttendanceRegisterMarks)
-                .WithRequired(e => e.AttendanceWeek)
-                .HasForeignKey(e => e.WeekId)
+            modelBuilder.Entity<BehaviourIncidentType>().Property(e => e.Description).IsUnicode(false);
+            modelBuilder.Entity<CommunicationLog>().Property(e => e.Note).IsUnicode(false);
+            modelBuilder.Entity<CommunicationPhoneNumberType>().HasMany(e => e.PhoneNumbers).WithRequired(e => e.Type)
+                .HasForeignKey(e => e.TypeId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<CommunicationType>().HasMany(e => e.CommunicationLogs)
+                .WithRequired(e => e.CommunicationType).HasForeignKey(e => e.CommunicationTypeId)
                 .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<BehaviourAchievement>()
-                .Property(e => e.Comments)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<BehaviourAchievementType>()
-                .Property(e => e.Description)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<BehaviourAchievementType>()
-                .HasMany(e => e.BehaviourAchievements)
-                .WithRequired(e => e.BehaviourAchievementType)
-                .HasForeignKey(e => e.AchievementTypeId)
+            modelBuilder.Entity<CommunicationType>().Property(e => e.Description).IsUnicode(false);
+            modelBuilder.Entity<CurriculumAcademicYear>().HasMany(e => e.Achievements)
+                .WithRequired(e => e.CurriculumAcademicYear).HasForeignKey(e => e.AcademicYearId)
                 .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<BehaviourIncident>()
-                .Property(e => e.Comments)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<BehaviourIncidentType>()
-                .Property(e => e.Description)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<BehaviourIncidentType>()
-                .HasMany(e => e.BehaviourIncidents)
-                .WithRequired(e => e.BehaviourIncidentType)
-                .HasForeignKey(e => e.BehaviourTypeId)
+            modelBuilder.Entity<CurriculumAcademicYear>().HasMany(e => e.AssessmentResultSets)
+                .WithRequired(e => e.CurriculumAcademicYear).HasForeignKey(e => e.AcademicYearId)
                 .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<CommunicationPhoneNumberType>()
-                .HasMany(e => e.PhoneNumbers)
-                .WithRequired(e => e.Type)
-                .HasForeignKey(e => e.TypeId)
+            modelBuilder.Entity<CurriculumAcademicYear>().HasMany(e => e.AttendanceWeeks)
+                .WithRequired(e => e.CurriculumAcademicYear).HasForeignKey(e => e.AcademicYearId)
                 .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<CommunicationType>()
-                .Property(e => e.Description)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<CommunicationType>()
-                .HasMany(e => e.CommunicationLogs)
-                .WithRequired(e => e.CommunicationType)
-                .HasForeignKey(e => e.CommunicationTypeId)
+            modelBuilder.Entity<CurriculumAcademicYear>().HasMany(e => e.BehaviourIncidents)
+                .WithRequired(e => e.CurriculumAcademicYear).HasForeignKey(e => e.AcademicYearId)
                 .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<CommunicationLog>()
-                .Property(e => e.Note)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Document>()
-                .Property(e => e.Description)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Document>()
-                .Property(e => e.Url)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Document>()
-                .HasMany(e => e.PersonDocuments)
-                .WithRequired(e => e.Document)
-                .HasForeignKey(e => e.DocumentId)
+            modelBuilder.Entity<CurriculumAcademicYear>().HasMany(e => e.CurriculumClasses)
+                .WithRequired(e => e.CurriculumAcademicYear).HasForeignKey(e => e.AcademicYearId)
                 .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<DocumentType>()
-                .Property(e => e.Description)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<StaffMember>()
-                .Property(e => e.Code)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Person>()
-                .HasMany(e => e.PhoneNumbers)
-                .WithRequired(e => e.Person)
-                .HasForeignKey(e => e.PersonId)
+            modelBuilder.Entity<CurriculumAcademicYear>().HasMany(e => e.FinanceSales)
+                .WithRequired(e => e.CurriculumAcademicYear).HasForeignKey(e => e.AcademicYearId)
                 .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Person>()
-                .Property(e => e.Title)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Person>()
-                .Property(e => e.FirstName)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Person>()
-                .Property(e => e.LastName)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Person>()
-                .HasMany(e => e.Staff)
-                .WithRequired(e => e.Person)
-                .HasForeignKey(e => e.PersonId)
+            modelBuilder.Entity<CurriculumAcademicYear>().HasMany(e => e.ProfileLogs)
+                .WithRequired(e => e.CurriculumAcademicYear).HasForeignKey(e => e.AcademicYearId)
                 .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Person>()
-                .HasMany(e => e.Students)
-                .WithRequired(e => e.Person)
-                .HasForeignKey(e => e.PersonId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<StaffMember>()
-                .Property(e => e.JobTitle)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<SchoolLocation>()
-                .Property(e => e.Description)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<SchoolLocation>()
-                .HasMany(e => e.BehaviourAchievements)
-                .WithRequired(e => e.Location)
-                .HasForeignKey(e => e.LocationId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<SchoolLocation>()
-                .HasMany(e => e.BehaviourIncidents)
-                .WithRequired(e => e.Location)
-                .HasForeignKey(e => e.LocationId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.Documents)
-                .WithRequired(e => e.Uploader)
-                .HasForeignKey(e => e.UploaderId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.CurriculumClasses)
-                .WithRequired(e => e.Teacher)
-                .HasForeignKey(e => e.TeacherId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.CurriculumClasses)
-                .WithRequired(e => e.Teacher)
-                .HasForeignKey(e => e.TeacherId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.CurriculumLessonPlans)
-                .WithRequired(e => e.Author)
-                .HasForeignKey(e => e.AuthorId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.ProfileLogs)
-                .WithRequired(e => e.Author)
-                .HasForeignKey(e => e.AuthorId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.PastoralRegGroups)
-                .WithRequired(e => e.Tutor)
-                .HasForeignKey(e => e.TutorId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.PersonnelObservationsOwn)
-                .WithRequired(e => e.Observee)
-                .HasForeignKey(e => e.ObserveeId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.PersonnelObservationsObserved)
-                .WithRequired(e => e.Observer)
-                .HasForeignKey(e => e.ObserverId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.CurriculumSubjects)
-                .WithRequired(e => e.Leader)
-                .HasForeignKey(e => e.LeaderId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.BehaviourAchievements)
-                .WithRequired(e => e.RecordedBy)
-                .HasForeignKey(e => e.RecordedById)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.BehaviourIncidents)
-                .WithRequired(e => e.RecordedBy)
-                .HasForeignKey(e => e.RecordedById)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.PersonnelTrainingCertificates)
-                .WithRequired(e => e.StaffMember)
-                .HasForeignKey(e => e.StaffId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.PastoralYearGroups)
-                .WithRequired(e => e.HeadOfYear)
-                .HasForeignKey(e => e.HeadId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.PastoralHouses)
-                .WithRequired(e => e.HeadOfHouse)
-                .HasForeignKey(e => e.HeadId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.Bulletins)
-                .WithRequired(e => e.Author)
-                .HasForeignKey(e => e.AuthorId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Student>()
-                .Property(e => e.CandidateNumber)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Student>()
-                .Property(e => e.AccountBalance)
-                .HasPrecision(10, 2);
-
-            modelBuilder.Entity<Student>()
-                .Property(e => e.MisId)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Student>()
-                .HasMany(e => e.AssessmentResults)
-                .WithRequired(e => e.Student)
-                .HasForeignKey(e => e.StudentId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Student>()
-                .HasMany(e => e.AttendanceRegisterMarks)
-                .WithRequired(e => e.Student)
-                .HasForeignKey(e => e.StudentId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Student>()
-                .HasMany(e => e.CurriculumClassEnrolments)
-                .WithRequired(e => e.Student)
-                .HasForeignKey(e => e.StudentId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Student>()
-                .HasMany(e => e.FinanceBasketItems)
-                .WithRequired(e => e.Student)
-                .HasForeignKey(e => e.StudentId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Student>()
-                .HasMany(e => e.ProfileLogs)
-                .WithRequired(e => e.Student)
-                .HasForeignKey(e => e.StudentId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Student>()
-                .HasMany(e => e.FinanceSales)
-                .WithRequired(e => e.Student)
-                .HasForeignKey(e => e.StudentId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<CurriculumAcademicYear>()
-                .Property(e => e.Name)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<CurriculumAcademicYear>()
-                .HasMany(e => e.AttendanceWeeks)
-                .WithRequired(e => e.CurriculumAcademicYear)
-                .HasForeignKey(e => e.AcademicYearId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<CurriculumAcademicYear>()
-                .HasMany(e => e.CurriculumClasses)
-                .WithRequired(e => e.CurriculumAcademicYear)
-                .HasForeignKey(e => e.AcademicYearId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<CurriculumAcademicYear>()
-                .HasMany(e => e.ProfileLogs)
-                .WithRequired(e => e.CurriculumAcademicYear)
-                .HasForeignKey(e => e.AcademicYearId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<CurriculumAcademicYear>()
-                .HasMany(e => e.FinanceSales)
-                .WithRequired(e => e.CurriculumAcademicYear)
-                .HasForeignKey(e => e.AcademicYearId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<CurriculumAcademicYear>()
-                .HasMany(e => e.AssessmentResultSets)
-                .WithRequired(e => e.CurriculumAcademicYear)
-                .HasForeignKey(e => e.AcademicYearId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<CurriculumAcademicYear>()
-                .HasMany(e => e.Achievements)
-                .WithRequired(e => e.CurriculumAcademicYear)
-                .HasForeignKey(e => e.AcademicYearId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<CurriculumAcademicYear>()
-                .HasMany(e => e.BehaviourIncidents)
-                .WithRequired(e => e.CurriculumAcademicYear)
-                .HasForeignKey(e => e.AcademicYearId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<CurriculumClass>()
-                .Property(e => e.Name)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<CurriculumClass>()
-                .HasMany(e => e.Enrolments)
-                .WithRequired(e => e.CurriculumClass)
-                .HasForeignKey(e => e.ClassId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<CurriculumClass>()
-                .HasMany(e => e.CurriculumClassPeriods)
-                .WithRequired(e => e.CurriculumClass)
-                .HasForeignKey(e => e.ClassId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<CurriculumLessonPlan>()
-                .Property(e => e.Title)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<CurriculumLessonPlanTemplate>()
-                .Property(e => e.Name)
-                .IsUnicode(false);
-                        
-            modelBuilder.Entity<CurriculumStudyTopic>()
-                .HasMany(e => e.LessonPlans)
-                .WithRequired(e => e.StudyTopic)
-                .HasForeignKey(e => e.StudyTopicId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<CurriculumSubject>()
-                .Property(e => e.Name)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<CurriculumSubject>()
-                .Property(e => e.Code)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<CurriculumSubject>()
-                .HasMany(e => e.AssessmentResults)
-                .WithRequired(e => e.Subject)
-                .HasForeignKey(e => e.SubjectId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<CurriculumSubject>()
-                .HasMany(e => e.CurriculumClasses)
-                .WithOptional(e => e.CurriculumSubject)
-                .HasForeignKey(e => e.SubjectId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<CurriculumSubject>()
-                .HasMany(e => e.CurriculumStudyTopics)
-                .WithRequired(e => e.CurriculumSubject)
-                .HasForeignKey(e => e.SubjectId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<FinanceProduct>()
-                .Property(e => e.Description)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<FinanceProduct>()
-                .Property(e => e.Price)
-                .HasPrecision(10, 2);
-
-            modelBuilder.Entity<FinanceProduct>()
-                .HasMany(e => e.FinanceBasketItems)
-                .WithRequired(e => e.FinanceProduct)
-                .HasForeignKey(e => e.ProductId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<FinanceProduct>()
-                .HasMany(e => e.FinanceSales)
-                .WithRequired(e => e.FinanceProduct)
-                .HasForeignKey(e => e.ProductId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<FinanceProductType>()
-                .HasMany(x => x.Products)
-                .WithRequired(x => x.FinanceProductType)
-                .HasForeignKey(x => x.ProductTypeId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<FinanceSale>()
-                .Property(e => e.AmountPaid)
-                .HasPrecision(10, 2);
-
-            modelBuilder.Entity<MedicalCondition>()
-                .Property(e => e.Description)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<MedicalCondition>()
-                .HasMany(e => e.MedicalStudentConditions)
-                .WithRequired(e => e.MedicalCondition)
-                .HasForeignKey(e => e.ConditionId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<MedicalEvent>()
-                .Property(e => e.Note)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<MedicalStudentCondition>()
-                .Property(e => e.Medication)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<PastoralHouse>()
-                .Property(e => e.Name)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<PastoralHouse>()
-                .HasMany(e => e.Students)
-                .WithOptional(e => e.House)
-                .HasForeignKey(e => e.HouseId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<PastoralRegGroup>()
-                .Property(e => e.Name)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<PastoralRegGroup>()
-                .HasMany(e => e.Students)
-                .WithRequired(e => e.PastoralRegGroup)
-                .HasForeignKey(e => e.RegGroupId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<PastoralYearGroup>()
-                .Property(e => e.Name)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<PastoralYearGroup>()
-                .HasMany(e => e.Students)
-                .WithRequired(e => e.PastoralYearGroup)
-                .HasForeignKey(e => e.YearGroupId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<PastoralYearGroup>()
-                .HasMany(e => e.CurriculumClasses)
-                .WithOptional(e => e.PastoralYearGroup)
-                .HasForeignKey(e => e.YearGroupId);
-
-            modelBuilder.Entity<PastoralYearGroup>()
-                .HasMany(e => e.CurriculumStudyTopics)
-                .WithRequired(e => e.PastoralYearGroup)
-                .HasForeignKey(e => e.YearGroupId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<PastoralYearGroup>()
-                .HasMany(e => e.PastoralRegGroups)
-                .WithRequired(e => e.PastoralYearGroup)
-                .HasForeignKey(e => e.YearGroupId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<PersonnelTrainingCourse>()
-                .Property(e => e.Code)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<PersonnelTrainingCourse>()
-                .Property(e => e.Description)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<PersonnelTrainingCourse>()
-                .HasMany(e => e.PersonnelTrainingCertificates)
-                .WithRequired(e => e.PersonnelTrainingCourse)
-                .HasForeignKey(e => e.CourseId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<ProfileCommentBank>()
-                .Property(e => e.Name)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<ProfileCommentBank>()
-                .HasMany(e => e.ProfileComments)
-                .WithRequired(e => e.ProfileCommentBank)
-                .HasForeignKey(e => e.CommentBankId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<ProfileLogType>()
-                .Property(e => e.Name)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<ProfileLogType>()
-                .HasMany(e => e.ProfileLogs)
-                .WithRequired(e => e.ProfileLogType)
-                .HasForeignKey(e => e.TypeId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<SenStatus>()
-                .HasMany(x => x.Students)
-                .WithRequired(x => x.SenStatus)
+            modelBuilder.Entity<CurriculumAcademicYear>().Property(e => e.Name).IsUnicode(false);
+            modelBuilder.Entity<CurriculumClass>().HasMany(e => e.CurriculumClassPeriods)
+                .WithRequired(e => e.CurriculumClass).HasForeignKey(e => e.ClassId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<CurriculumClass>().HasMany(e => e.Enrolments).WithRequired(e => e.CurriculumClass)
+                .HasForeignKey(e => e.ClassId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<CurriculumClass>().Property(e => e.Name).IsUnicode(false);
+            modelBuilder.Entity<CurriculumLessonPlan>().Property(e => e.Title).IsUnicode(false);
+            modelBuilder.Entity<CurriculumLessonPlanTemplate>().Property(e => e.Name).IsUnicode(false);
+            modelBuilder.Entity<CurriculumStudyTopic>().HasMany(e => e.LessonPlans).WithRequired(e => e.StudyTopic)
+                .HasForeignKey(e => e.StudyTopicId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<CurriculumSubject>().HasMany(e => e.CurriculumClasses)
+                .WithOptional(e => e.CurriculumSubject).HasForeignKey(e => e.SubjectId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<CurriculumSubject>().HasMany(e => e.CurriculumStudyTopics)
+                .WithRequired(e => e.CurriculumSubject).HasForeignKey(e => e.SubjectId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<CurriculumSubject>().Property(e => e.Code).IsUnicode(false);
+            modelBuilder.Entity<CurriculumSubject>().Property(e => e.Name).IsUnicode(false);
+            modelBuilder.Entity<Document>().HasMany(e => e.PersonDocuments).WithRequired(e => e.Document)
+                .HasForeignKey(e => e.DocumentId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<Document>().Property(e => e.Description).IsUnicode(false);
+            modelBuilder.Entity<Document>().Property(e => e.Url).IsUnicode(false);
+            modelBuilder.Entity<DocumentType>().Property(e => e.Description).IsUnicode(false);
+            modelBuilder.Entity<FinanceProduct>().HasMany(e => e.FinanceBasketItems).WithRequired(e => e.FinanceProduct)
+                .HasForeignKey(e => e.ProductId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<FinanceProduct>().HasMany(e => e.FinanceSales).WithRequired(e => e.FinanceProduct)
+                .HasForeignKey(e => e.ProductId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<FinanceProduct>().Property(e => e.Description).IsUnicode(false);
+            modelBuilder.Entity<FinanceProduct>().Property(e => e.Price).HasPrecision(10, 2);
+            modelBuilder.Entity<FinanceProductType>().HasMany(x => x.Products).WithRequired(x => x.FinanceProductType)
+                .HasForeignKey(x => x.ProductTypeId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<FinanceSale>().Property(e => e.AmountPaid).HasPrecision(10, 2);
+            modelBuilder.Entity<MedicalCondition>().HasMany(e => e.MedicalStudentConditions)
+                .WithRequired(e => e.MedicalCondition).HasForeignKey(e => e.ConditionId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<MedicalCondition>().Property(e => e.Description).IsUnicode(false);
+            modelBuilder.Entity<MedicalEvent>().Property(e => e.Note).IsUnicode(false);
+            modelBuilder.Entity<MedicalStudentCondition>().Property(e => e.Medication).IsUnicode(false);
+            modelBuilder.Entity<PastoralHouse>().HasMany(e => e.Students).WithOptional(e => e.House)
+                .HasForeignKey(e => e.HouseId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<PastoralHouse>().Property(e => e.Name).IsUnicode(false);
+            modelBuilder.Entity<PastoralRegGroup>().HasMany(e => e.Students).WithRequired(e => e.PastoralRegGroup)
+                .HasForeignKey(e => e.RegGroupId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<PastoralRegGroup>().Property(e => e.Name).IsUnicode(false);
+            modelBuilder.Entity<PastoralYearGroup>().HasMany(e => e.CurriculumClasses)
+                .WithOptional(e => e.PastoralYearGroup).HasForeignKey(e => e.YearGroupId);
+            modelBuilder.Entity<PastoralYearGroup>().HasMany(e => e.CurriculumStudyTopics)
+                .WithRequired(e => e.PastoralYearGroup).HasForeignKey(e => e.YearGroupId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<PastoralYearGroup>().HasMany(e => e.PastoralRegGroups)
+                .WithRequired(e => e.PastoralYearGroup).HasForeignKey(e => e.YearGroupId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<PastoralYearGroup>().HasMany(e => e.Students).WithRequired(e => e.PastoralYearGroup)
+                .HasForeignKey(e => e.YearGroupId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<PastoralYearGroup>().Property(e => e.Name).IsUnicode(false);
+            modelBuilder.Entity<Person>().HasMany(e => e.PhoneNumbers).WithRequired(e => e.Person)
+                .HasForeignKey(e => e.PersonId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<Person>().HasMany(e => e.Staff).WithRequired(e => e.Person)
+                .HasForeignKey(e => e.PersonId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<Person>().HasMany(e => e.Students).WithRequired(e => e.Person)
+                .HasForeignKey(e => e.PersonId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<Person>().Property(e => e.FirstName).IsUnicode(false);
+            modelBuilder.Entity<Person>().Property(e => e.LastName).IsUnicode(false);
+            modelBuilder.Entity<Person>().Property(e => e.Title).IsUnicode(false);
+            modelBuilder.Entity<PersonnelTrainingCourse>().HasMany(e => e.PersonnelTrainingCertificates)
+                .WithRequired(e => e.PersonnelTrainingCourse).HasForeignKey(e => e.CourseId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<PersonnelTrainingCourse>().Property(e => e.Code).IsUnicode(false);
+            modelBuilder.Entity<PersonnelTrainingCourse>().Property(e => e.Description).IsUnicode(false);
+            modelBuilder.Entity<ProfileCommentBank>().HasMany(e => e.ProfileComments)
+                .WithRequired(e => e.ProfileCommentBank).HasForeignKey(e => e.CommentBankId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<ProfileCommentBank>().Property(e => e.Name).IsUnicode(false);
+            modelBuilder.Entity<ProfileLogType>().HasMany(e => e.ProfileLogs).WithRequired(e => e.ProfileLogType)
+                .HasForeignKey(e => e.TypeId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<ProfileLogType>().Property(e => e.Name).IsUnicode(false);
+            modelBuilder.Entity<SchoolLocation>().HasMany(e => e.BehaviourAchievements).WithRequired(e => e.Location)
+                .HasForeignKey(e => e.LocationId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<SchoolLocation>().HasMany(e => e.BehaviourIncidents).WithRequired(e => e.Location)
+                .HasForeignKey(e => e.LocationId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<SchoolLocation>().Property(e => e.Description).IsUnicode(false);
+            modelBuilder.Entity<SenStatus>().HasMany(x => x.Students).WithRequired(x => x.SenStatus)
                 .HasForeignKey(x => x.SenStatusId);
-
-            modelBuilder.Entity<SenStatus>()
-                .Property(x => x.Code)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<SystemBulletin>()
-                .Property(x => x.Title)
-                .IsUnicode(false);
+            modelBuilder.Entity<SenStatus>().Property(x => x.Code).IsUnicode(false);
+            modelBuilder.Entity<StaffMember>().HasMany(e => e.BehaviourAchievements).WithRequired(e => e.RecordedBy)
+                .HasForeignKey(e => e.RecordedById).WillCascadeOnDelete(false);
+            modelBuilder.Entity<StaffMember>().HasMany(e => e.BehaviourIncidents).WithRequired(e => e.RecordedBy)
+                .HasForeignKey(e => e.RecordedById).WillCascadeOnDelete(false);
+            modelBuilder.Entity<StaffMember>().HasMany(e => e.Bulletins).WithRequired(e => e.Author)
+                .HasForeignKey(e => e.AuthorId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<StaffMember>().HasMany(e => e.CurriculumClasses).WithRequired(e => e.Teacher)
+                .HasForeignKey(e => e.TeacherId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<StaffMember>().HasMany(e => e.CurriculumClasses).WithRequired(e => e.Teacher)
+                .HasForeignKey(e => e.TeacherId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<StaffMember>().HasMany(e => e.CurriculumLessonPlans).WithRequired(e => e.Author)
+                .HasForeignKey(e => e.AuthorId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<StaffMember>().HasMany(e => e.CurriculumSubjects).WithRequired(e => e.Leader)
+                .HasForeignKey(e => e.LeaderId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<StaffMember>().HasMany(e => e.Documents).WithRequired(e => e.Uploader)
+                .HasForeignKey(e => e.UploaderId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<StaffMember>().HasMany(e => e.PastoralHouses).WithRequired(e => e.HeadOfHouse)
+                .HasForeignKey(e => e.HeadId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<StaffMember>().HasMany(e => e.PastoralRegGroups).WithRequired(e => e.Tutor)
+                .HasForeignKey(e => e.TutorId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<StaffMember>().HasMany(e => e.PastoralYearGroups).WithRequired(e => e.HeadOfYear)
+                .HasForeignKey(e => e.HeadId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<StaffMember>().HasMany(e => e.PersonnelObservationsObserved)
+                .WithRequired(e => e.Observer).HasForeignKey(e => e.ObserverId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<StaffMember>().HasMany(e => e.PersonnelObservationsOwn).WithRequired(e => e.Observee)
+                .HasForeignKey(e => e.ObserveeId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<StaffMember>().HasMany(e => e.PersonnelTrainingCertificates)
+                .WithRequired(e => e.StaffMember).HasForeignKey(e => e.StaffId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<StaffMember>().HasMany(e => e.ProfileLogs).WithRequired(e => e.Author)
+                .HasForeignKey(e => e.AuthorId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<StaffMember>().Property(e => e.Code).IsUnicode(false);
+            modelBuilder.Entity<StaffMember>().Property(e => e.JobTitle).IsUnicode(false);
+            modelBuilder.Entity<Student>().HasMany(e => e.AssessmentResults).WithRequired(e => e.Student)
+                .HasForeignKey(e => e.StudentId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<Student>().HasMany(e => e.AttendanceRegisterMarks).WithRequired(e => e.Student)
+                .HasForeignKey(e => e.StudentId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<Student>().HasMany(e => e.CurriculumClassEnrolments).WithRequired(e => e.Student)
+                .HasForeignKey(e => e.StudentId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<Student>().HasMany(e => e.FinanceBasketItems).WithRequired(e => e.Student)
+                .HasForeignKey(e => e.StudentId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<Student>().HasMany(e => e.FinanceSales).WithRequired(e => e.Student)
+                .HasForeignKey(e => e.StudentId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<Student>().HasMany(e => e.ProfileLogs).WithRequired(e => e.Student)
+                .HasForeignKey(e => e.StudentId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<Student>().Property(e => e.AccountBalance).HasPrecision(10, 2);
+            modelBuilder.Entity<Student>().Property(e => e.CandidateNumber).IsUnicode(false);
+            modelBuilder.Entity<Student>().Property(e => e.MisId).IsUnicode(false);
+            modelBuilder.Entity<SystemBulletin>().Property(x => x.Title).IsUnicode(false);
         }
     }
 }
