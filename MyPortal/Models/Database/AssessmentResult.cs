@@ -26,7 +26,7 @@ namespace MyPortal.Models.Database
         [StringLength(255)]
         public string Value { get; set; }
 
-        public virtual AssessmentResultSet AssessmentResultSet { get; set; }
+        public virtual AssessmentResultSet ResultSet { get; set; }
 
         public virtual AssessmentAspect Aspect { get; set; }
 

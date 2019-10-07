@@ -257,13 +257,13 @@ namespace MyPortal.Processes
 
         public static ProcessResponse<IEnumerable<ChartDataCategoric>> GetChartData_BehaviourIncidentsByType(int academicYearId, MyPortalDbContext context)
         {
-            var recordedBehaviourTypes = context.BehaviourIncidentTypes.Where(x => x.BehaviourIncidents.Any(i => i.AcademicYearId == academicYearId))
-                .Include(x => x.BehaviourIncidents).ToList();
+            var recordedBehaviourTypes = context.BehaviourIncidentTypes.Where(x => x.Incidents.Any(i => i.AcademicYearId == academicYearId))
+                .Include(x => x.Incidents).ToList();
             var chartData = new List<ChartDataCategoric>();
 
             foreach (var behaviourType in recordedBehaviourTypes)
             {
-                var dataPoint = new ChartDataCategoric(behaviourType.Description, behaviourType.BehaviourIncidents.Count);
+                var dataPoint = new ChartDataCategoric(behaviourType.Description, behaviourType.Incidents.Count);
                 chartData.Add(dataPoint);
             }
 

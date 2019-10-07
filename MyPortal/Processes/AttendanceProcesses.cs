@@ -73,10 +73,10 @@ namespace MyPortal.Processes
                     Student = student,
                     Mark = "-",
                     WeekId = attendanceWeek.Id,
-                    AttendanceWeek = attendanceWeek,
+                    Week = attendanceWeek,
                     PeriodId = period.Id,
                     StudentId = student.Id,
-                    AttendancePeriod = period
+                    Period = period
                 };
             }
 
@@ -217,7 +217,7 @@ namespace MyPortal.Processes
         public static ProcessResponse<AttendanceSummary> GetSummary(int studentId, int academicYearId, MyPortalDbContext context, bool asPercentage = false)
         {
             var marksForStudent = context.AttendanceMarks.Where(x =>
-                x.AttendanceWeek.AcademicYearId == academicYearId && x.StudentId == studentId);
+                x.Week.AcademicYearId == academicYearId && x.StudentId == studentId);
 
             if (!marksForStudent.Any())
             {
@@ -283,7 +283,7 @@ namespace MyPortal.Processes
 
         public static IEnumerable<AttendanceMarkLite> PrepareLiteMarkList(MyPortalDbContext context, List<AttendanceMark> marks, bool retrieveMeanings)
         {
-            var liteMarks = marks.OrderBy(x => x.AttendancePeriod.StartTime)
+            var liteMarks = marks.OrderBy(x => x.Period.StartTime)
                 .Select(Mapper.Map<AttendanceMark, AttendanceMarkLite>).ToList();
 
             if (retrieveMeanings)

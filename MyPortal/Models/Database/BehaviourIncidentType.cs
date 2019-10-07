@@ -16,7 +16,7 @@ namespace MyPortal.Models.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public BehaviourIncidentType()
         {
-            BehaviourIncidents = new HashSet<BehaviourIncident>();
+            Incidents = new HashSet<BehaviourIncident>();
         }
 
         public int Id { get; set; }
@@ -30,6 +30,6 @@ namespace MyPortal.Models.Database
         public int DefaultPoints { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BehaviourIncident> BehaviourIncidents { get; set; }
+        public virtual ICollection<BehaviourIncident> Incidents { get; set; }
     }
 }

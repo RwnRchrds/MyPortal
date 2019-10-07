@@ -20,11 +20,14 @@ namespace MyPortal.Models.Database
 
         public int Id { get; set; }
 
+        public int TypeId { get; set; }
+
         [Required]
         [StringLength(255)]
         public string Description { get; set; }
 
         [Required]
+        [Url]
         [StringLength(255)]
         public string Url { get; set; }
 
@@ -40,6 +43,8 @@ namespace MyPortal.Models.Database
         public bool Deleted { get; set; }
 
         public virtual StaffMember Uploader { get; set; }
+
+        public virtual DocumentType DocumentType { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PersonDocument> PersonDocuments { get; set; }

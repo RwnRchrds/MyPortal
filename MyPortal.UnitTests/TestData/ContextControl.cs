@@ -181,12 +181,7 @@ namespace MyPortal.UnitTests.TestData
             {
                 
             };
-            
-            var medicalStudentConditions = new List<MedicalStudentCondition>
-            {
-                
-            };
-            
+
             var pastoralHouses = new List<PastoralHouse>
             {
                 new PastoralHouse {Id = 1, Name = "Penguins", HeadId = 2}

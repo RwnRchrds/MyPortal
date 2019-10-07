@@ -21,8 +21,9 @@ namespace MyPortal.Models.Database
         [StringLength(255)]
         public string GradeCode { get; set; }
 
-        public int Value { get; set; }
+        [Column("Value")]
+        public int PointsValue { get; set; }
 
-        public virtual AssessmentGradeSet AssessmentGradeSet { get; set; }
+        public virtual AssessmentGradeSet GradeSet { get; set; }
     }
 }

@@ -18,7 +18,7 @@ namespace MyPortal.Models.Validation
         {
             var result = (AssessmentResult) validationContext.ObjectInstance;
 
-            var validGrades = _context.AssessmentGrades.Where(x => x.AssessmentGradeSet.Active).ToList();
+            var validGrades = _context.AssessmentGrades.Where(x => x.GradeSet.Active).ToList();
 
             return validGrades.Any(x => x.GradeValue == result.Value) 
                 ? ValidationResult.Success 

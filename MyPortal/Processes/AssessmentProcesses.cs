@@ -191,7 +191,7 @@ namespace MyPortal.Processes
             }
 
             var resultSets =
-                context.AssessmentResultSets.Where(x => x.AssessmentResults.Any(s => s.StudentId == studentId));
+                context.AssessmentResultSets.Where(x => x.Results.Any(s => s.StudentId == studentId));
 
             return new ProcessResponse<IEnumerable<AssessmentResultSet>>(ResponseType.Ok, null, resultSets);
         }
@@ -282,7 +282,7 @@ namespace MyPortal.Processes
                 throw new ProcessException("Result set not found", ExceptionType.NotFound);
             }
 
-            return new ProcessResponse<bool>(ResponseType.Ok, null, resultSet.AssessmentResults.Any());
+            return new ProcessResponse<bool>(ResponseType.Ok, null, resultSet.Results.Any());
         }
 
         public static ProcessResponse<object> SetResultSetAsCurrent(int resultSetId, MyPortalDbContext context)

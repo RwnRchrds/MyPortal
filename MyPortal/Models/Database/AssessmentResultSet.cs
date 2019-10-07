@@ -9,30 +9,29 @@ namespace MyPortal.Models.Database
     /// <summary>
     /// A set of results awarded to students. Result sets usually represent a time-frame eg 'Spring Term'.
     /// </summary>
+
     [Table("Assessment_ResultSets")]
-    public partial class AssessmentResultSet
+    public class AssessmentResultSet
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public AssessmentResultSet()
         {
-            AssessmentResults = new HashSet<AssessmentResult>();
+            Results = new HashSet<AssessmentResult>();
         }
 
         public int Id { get; set; }
 
-        [Display(Name="Academic Year")]
         public int AcademicYearId { get; set; }
 
         [Required]
         [StringLength(255)]
         public string Name { get; set; }
 
-        [Display(Name="Is Current")]
         public bool IsCurrent { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AssessmentResult> AssessmentResults { get; set; }
+        public virtual ICollection<AssessmentResult> Results { get; set; }
 
-        public virtual CurriculumAcademicYear CurriculumAcademicYear { get; set; }
+        public virtual CurriculumAcademicYear AcademicYear { get; set; }
     }
 }

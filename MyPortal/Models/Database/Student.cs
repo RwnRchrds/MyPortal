@@ -23,7 +23,6 @@ namespace MyPortal.Models.Database
             FinanceBasketItems = new HashSet<FinanceBasketItem>();
             FinanceSales = new HashSet<FinanceSale>();
             MedicalEvents = new HashSet<MedicalEvent>();
-            MedicalStudentConditions = new HashSet<MedicalStudentCondition>();
             SenEvents = new HashSet<SenEvent>();
             SenProvisions = new HashSet<SenProvision>();
             ProfileLogs = new HashSet<ProfileLog>();
@@ -81,9 +80,6 @@ namespace MyPortal.Models.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MedicalEvent> MedicalEvents { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<MedicalStudentCondition> MedicalStudentConditions { get; set; }
-
         public virtual PastoralRegGroup PastoralRegGroup { get; set; }
 
         public virtual PastoralYearGroup PastoralYearGroup { get; set; }
@@ -102,5 +98,8 @@ namespace MyPortal.Models.Database
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProfileLog> ProfileLogs { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SenGiftedTalented> GiftedTalentedSubjects { get; set; }
     }
 }

@@ -4,21 +4,16 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using System.Web.UI.WebControls;
 
 namespace MyPortal.Models.Database
 {
-    // SYSTEM CLASS -- LOOKUP ONLY
-
-    [Table("Assessment_AspectTypes")]
-    public class AssessmentAspectType
+    [Table("School_Phases")]
+    public class SchoolPhase
     {
         public int Id { get; set; }
 
-        [Required]
         [StringLength(50)]
         public string Description { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AssessmentAspect> Aspects { get; set; }  
     }
 }

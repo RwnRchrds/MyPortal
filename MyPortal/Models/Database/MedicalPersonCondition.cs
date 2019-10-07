@@ -8,12 +8,12 @@ using System.Web.UI.WebControls;
 
 namespace MyPortal.Models.Database
 {
-    [Table("Medical_StudentConditions")]
-    public class MedicalStudentCondition
+    [Table("Medical_PersonConditions")]
+    public class MedicalPersonCondition
     {
         public int Id { get; set; }
 
-        public int StudentId { get; set; }
+        public int PersonId { get; set; }
 
         public int ConditionId { get; set; }
 
@@ -22,8 +22,7 @@ namespace MyPortal.Models.Database
         [StringLength(100)]
         public string Medication { get; set; }
 
-        public virtual MedicalCondition MedicalCondition { get; set; }
-
-        public virtual Student Student { get; set; }
+        public virtual Person Person { get; set; }
+        public virtual MedicalCondition Condition { get; set; }
     }
 }

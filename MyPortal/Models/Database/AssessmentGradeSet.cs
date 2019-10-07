@@ -15,7 +15,7 @@ namespace MyPortal.Models.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public AssessmentGradeSet()
         {
-            AssessmentGrades = new HashSet<AssessmentGrade>();
+            Grades = new HashSet<AssessmentGrade>();
         }
 
         public int Id { get; set; }
@@ -30,6 +30,6 @@ namespace MyPortal.Models.Database
         public virtual ICollection<AssessmentAspect> Aspects { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AssessmentGrade> AssessmentGrades { get; set; }
+        public virtual ICollection<AssessmentGrade> Grades { get; set; }
     }
 }

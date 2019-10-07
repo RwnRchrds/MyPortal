@@ -54,7 +54,6 @@ namespace MyPortal.Models.Database
         public virtual DbSet<FinanceSale> FinanceSales { get; set; }
         public virtual DbSet<MedicalCondition> MedicalConditions { get; set; }
         public virtual DbSet<MedicalEvent> MedicalEvents { get; set; }
-        public virtual DbSet<MedicalStudentCondition> MedicalStudentConditions { get; set; }
         public virtual DbSet<PastoralHouse> PastoralHouses { get; set; }
         public virtual DbSet<PastoralRegGroup> PastoralRegGroups { get; set; }
         public virtual DbSet<PastoralYearGroup> PastoralYearGroups { get; set; }
@@ -88,6 +87,10 @@ namespace MyPortal.Models.Database
                 .HasForeignKey(e => e.TypeId)
                 .WillCascadeOnDelete(false);
 
+            modelBuilder.Entity<AssessmentAspectType>()
+                .Property(e => e.Description)
+                .IsUnicode(false);
+
             modelBuilder.Entity<AssessmentGrade>()
                 .Property(e => e.GradeCode)
                 .IsUnicode(false);
@@ -99,8 +102,8 @@ namespace MyPortal.Models.Database
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<AssessmentGradeSet>()
-                .HasMany(e => e.AssessmentGrades)
-                .WithRequired(e => e.AssessmentGradeSet)
+                .HasMany(e => e.Grades)
+                .WithRequired(e => e.GradeSet)
                 .HasForeignKey(e => e.GradeSetId)
                 .WillCascadeOnDelete(false);
 
@@ -113,8 +116,8 @@ namespace MyPortal.Models.Database
                 .IsUnicode(false);
 
             modelBuilder.Entity<AssessmentResultSet>()
-                .HasMany(e => e.AssessmentResults)
-                .WithRequired(e => e.AssessmentResultSet)
+                .HasMany(e => e.Results)
+                .WithRequired(e => e.ResultSet)
                 .HasForeignKey(e => e.ResultSetId)
                 .WillCascadeOnDelete(false);
 
@@ -148,7 +151,7 @@ namespace MyPortal.Models.Database
 
             modelBuilder.Entity<AttendancePeriod>()
                 .HasMany(e => e.AttendanceRegisterMarks)
-                .WithRequired(e => e.AttendancePeriod)
+                .WithRequired(e => e.Period)
                 .HasForeignKey(e => e.PeriodId)
                 .WillCascadeOnDelete(false);
 
@@ -172,8 +175,8 @@ namespace MyPortal.Models.Database
                 .IsUnicode(false);
 
             modelBuilder.Entity<AttendanceWeek>()
-                .HasMany(e => e.AttendanceRegisterMarks)
-                .WithRequired(e => e.AttendanceWeek)
+                .HasMany(e => e.RegisterMarks)
+                .WithRequired(e => e.Week)
                 .HasForeignKey(e => e.WeekId)
                 .WillCascadeOnDelete(false);
 
@@ -183,7 +186,7 @@ namespace MyPortal.Models.Database
 
             modelBuilder.Entity<BehaviourAchievementType>()
                 .HasMany(e => e.BehaviourAchievements)
-                .WithRequired(e => e.BehaviourAchievementType)
+                .WithRequired(e => e.AchievementType)
                 .HasForeignKey(e => e.AchievementTypeId)
                 .WillCascadeOnDelete(false);
 
@@ -196,8 +199,8 @@ namespace MyPortal.Models.Database
                 .IsUnicode(false);
 
             modelBuilder.Entity<BehaviourIncidentType>()
-                .HasMany(e => e.BehaviourIncidents)
-                .WithRequired(e => e.BehaviourIncidentType)
+                .HasMany(e => e.Incidents)
+                .WithRequired(e => e.IncidentType)
                 .HasForeignKey(e => e.BehaviourTypeId)
                 .WillCascadeOnDelete(false);
 
@@ -227,25 +230,25 @@ namespace MyPortal.Models.Database
 
             modelBuilder.Entity<CurriculumAcademicYear>()
                 .HasMany(e => e.Achievements)
-                .WithRequired(e => e.CurriculumAcademicYear)
+                .WithRequired(e => e.AcademicYear)
                 .HasForeignKey(e => e.AcademicYearId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<CurriculumAcademicYear>()
                 .HasMany(e => e.AssessmentResultSets)
-                .WithRequired(e => e.CurriculumAcademicYear)
+                .WithRequired(e => e.AcademicYear)
                 .HasForeignKey(e => e.AcademicYearId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<CurriculumAcademicYear>()
                 .HasMany(e => e.AttendanceWeeks)
-                .WithRequired(e => e.CurriculumAcademicYear)
+                .WithRequired(e => e.AcademicYear)
                 .HasForeignKey(e => e.AcademicYearId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<CurriculumAcademicYear>()
                 .HasMany(e => e.BehaviourIncidents)
-                .WithRequired(e => e.CurriculumAcademicYear)
+                .WithRequired(e => e.AcademicYear)
                 .HasForeignKey(e => e.AcademicYearId)
                 .WillCascadeOnDelete(false);
 
@@ -314,6 +317,12 @@ namespace MyPortal.Models.Database
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<CurriculumSubject>()
+                .HasMany(e => e.GiftedTalentedStudents)
+                .WithRequired(e => e.Subject)
+                .HasForeignKey(e => e.SubjectId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<CurriculumSubject>()
                 .Property(e => e.Code)
                 .IsUnicode(false);
 
@@ -334,6 +343,12 @@ namespace MyPortal.Models.Database
             modelBuilder.Entity<Document>()
                 .Property(e => e.Url)
                 .IsUnicode(false);
+
+            modelBuilder.Entity<DocumentType>()
+                .HasMany(e => e.Documents)
+                .WithRequired(e => e.DocumentType)
+                .HasForeignKey(e => e.TypeId)
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<DocumentType>()
                 .Property(e => e.Description)
@@ -370,21 +385,11 @@ namespace MyPortal.Models.Database
                 .HasPrecision(10, 2);
 
             modelBuilder.Entity<MedicalCondition>()
-                .HasMany(e => e.MedicalStudentConditions)
-                .WithRequired(e => e.MedicalCondition)
-                .HasForeignKey(e => e.ConditionId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<MedicalCondition>()
                 .Property(e => e.Description)
                 .IsUnicode(false);
 
             modelBuilder.Entity<MedicalEvent>()
                 .Property(e => e.Note)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<MedicalStudentCondition>()
-                .Property(e => e.Medication)
                 .IsUnicode(false);
 
             modelBuilder.Entity<PastoralHouse>()
@@ -433,6 +438,12 @@ namespace MyPortal.Models.Database
             modelBuilder.Entity<PastoralYearGroup>()
                 .Property(e => e.Name)
                 .IsUnicode(false);
+
+            modelBuilder.Entity<Person>()
+                .HasMany(e => e.MedicalConditions)
+                .WithRequired(e => e.Person)
+                .HasForeignKey(e => e.PersonId)
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Person>()
                 .HasMany(e => e.PhoneNumbers)
@@ -647,6 +658,12 @@ namespace MyPortal.Models.Database
 
             modelBuilder.Entity<Student>()
                 .HasMany(e => e.FinanceSales)
+                .WithRequired(e => e.Student)
+                .HasForeignKey(e => e.StudentId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Student>()
+                .HasMany(e => e.GiftedTalentedSubjects)
                 .WithRequired(e => e.Student)
                 .HasForeignKey(e => e.StudentId)
                 .WillCascadeOnDelete(false);

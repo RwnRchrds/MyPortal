@@ -40,5 +40,8 @@ namespace MyPortal.Models.Database
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CurriculumStudyTopic> CurriculumStudyTopics { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SenGiftedTalented> GiftedTalentedStudents { get; set; }
     }
 }

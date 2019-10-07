@@ -153,7 +153,7 @@ namespace MyPortal
                 .ForMember(dest => dest.Location,
                     opts => opts.MapFrom(src => src.Location.Description))
                 .ForMember(dest => dest.TypeName,
-                    opts => opts.MapFrom(src => src.BehaviourAchievementType.Description))
+                    opts => opts.MapFrom(src => src.AchievementType.Description))
                 .ForMember(dest => dest.RecordedBy,
                     opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.RecordedBy).ResponseObject));
 
@@ -161,7 +161,7 @@ namespace MyPortal
                 .ForMember(dest => dest.Location,
                     opts => opts.MapFrom(src => src.Location.Description))
                 .ForMember(dest => dest.TypeName,
-                    opts => opts.MapFrom(src => src.BehaviourIncidentType.Description))
+                    opts => opts.MapFrom(src => src.IncidentType.Description))
                 .ForMember(dest => dest.RecordedBy,
                     opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.RecordedBy).ResponseObject));
 
@@ -260,7 +260,7 @@ namespace MyPortal
 
             CreateMap<AssessmentResult, GridAssessmentResultDto>()
                 .ForMember(dest => dest.ResultSet,
-                    opts => opts.MapFrom(src => src.AssessmentResultSet.Name))
+                    opts => opts.MapFrom(src => src.ResultSet.Name))
                 .ForMember(dest => dest.StudentName,
                     opts => opts.MapFrom(src => PeopleProcesses.GetStudentDisplayName(src.Student)))
                 .ForMember(dest => dest.Subject,

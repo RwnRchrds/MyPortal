@@ -27,10 +27,10 @@ namespace MyPortal.Models.Database
         [StringLength(1)]
         public string Mark { get; set; }
 
-        public virtual AttendancePeriod AttendancePeriod { get; set; }
+        public virtual AttendancePeriod Period { get; set; }
 
         public virtual Student Student { get; set; }
 
-        public virtual AttendanceWeek AttendanceWeek { get; set; }
+        public virtual AttendanceWeek Week { get; set; }
     }
 }

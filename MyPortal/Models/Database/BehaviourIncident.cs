@@ -37,11 +37,11 @@ namespace MyPortal.Models.Database
 
         public bool Deleted { get; set; }
 
-        public virtual BehaviourIncidentType BehaviourIncidentType { get; set; }
+        public virtual BehaviourIncidentType IncidentType { get; set; }
 
         public virtual SchoolLocation Location{ get; set; }
 
-        public virtual CurriculumAcademicYear CurriculumAcademicYear { get; set; }
+        public virtual CurriculumAcademicYear AcademicYear { get; set; }
 
         public virtual StaffMember RecordedBy { get; set; }
 

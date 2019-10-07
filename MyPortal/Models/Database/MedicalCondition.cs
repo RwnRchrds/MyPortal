@@ -17,7 +17,7 @@ namespace MyPortal.Models.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public MedicalCondition()
         {
-            MedicalStudentConditions = new HashSet<MedicalStudentCondition>();
+            
         }
 
         public int Id { get; set; }
@@ -27,8 +27,5 @@ namespace MyPortal.Models.Database
         public string Description { get; set; }
 
         public bool System { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<MedicalStudentCondition> MedicalStudentConditions { get; set; }
     }
 }

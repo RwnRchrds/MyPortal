@@ -8,18 +8,20 @@ using System.Web.UI.WebControls;
 
 namespace MyPortal.Models.Database
 {
-    [Table("Communication_PhoneNumbers")]
-    public class CommunicationPhoneNumber
+    [Table("People_Contacts")]
+    public class Contact
     {
         public int Id { get; set; }
-        public int TypeId { get; set; }
+
         public int PersonId { get; set; }
 
-        [StringLength(50)]
-        [Phone]
-        public string Number { get; set; }  
+        public bool ParentalBallot { get; set; }
 
-        public virtual CommunicationPhoneNumberType Type { get; set; }
-        public virtual Person Person { get; set; }
+        public string PlaceOfWork { get; set; }
+
+        public string JobTitle { get; set; }
+
+        [StringLength(50)]
+        public string NiNumber { get; set; }
     }
 }
