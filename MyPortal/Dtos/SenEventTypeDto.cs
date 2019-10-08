@@ -7,10 +7,16 @@ using System.Web;
 
 namespace MyPortal.Dtos
 {
+    
     public class SenEventTypeDto
     {
+
         public int Id { get; set; }
 
+        
         public string Description { get; set; }
+
+        
+        
     }
 }

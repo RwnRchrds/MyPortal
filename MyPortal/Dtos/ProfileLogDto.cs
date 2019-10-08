@@ -9,6 +9,7 @@ namespace MyPortal.Dtos
     /// <summary>
     /// A log note for a student.
     /// </summary>
+    
     public partial class ProfileLogDto
     {
         public int Id { get; set; }
@@ -21,6 +22,7 @@ namespace MyPortal.Dtos
 
         public int AcademicYearId { get; set; }
 
+        
         public string Message { get; set; }
 
         public DateTime Date { get; set; }
@@ -29,7 +31,7 @@ namespace MyPortal.Dtos
 
         public virtual StaffMemberDto Author { get; set; }
 
-        public virtual StudentDto Student { get; set; }
+        public virtual StudentDto StudentDto { get; set; }
 
         public virtual CurriculumAcademicYearDto CurriculumAcademicYear { get; set; }
 

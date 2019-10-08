@@ -6,6 +6,10 @@ using System.Web;
 
 namespace MyPortal.Dtos
 {
+    /// <summary>
+    /// Record of communication made between the school and a contact.
+    /// </summary>
+    
     public class CommunicationLogDto
     {
         public int Id { get; set; }

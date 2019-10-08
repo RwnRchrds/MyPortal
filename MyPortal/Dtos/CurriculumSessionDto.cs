@@ -7,8 +7,9 @@ namespace MyPortal.Dtos
     using System.Data.Entity.Spatial;
 
     /// <summary>
-    /// Represents the assignment of a period in the week to a class.
+    /// A period in the week that a class takes place.
     /// </summary>
+    
     public partial class CurriculumSessionDto
     {
         public int Id { get; set; }

@@ -7,8 +7,9 @@ namespace MyPortal.Dtos
     using System.Data.Entity.Spatial;
 
     /// <summary>
-    /// A particular topic for study in the curriculum. A study topic contains lesson plans for delivery.
+    /// A topic for study in the curriculum. A study topic contains lesson plans for delivery.
     /// </summary>
+    
     public class CurriculumStudyTopicDto
     {
         public int Id { get; set; }
@@ -17,10 +18,14 @@ namespace MyPortal.Dtos
 
         public int YearGroupId { get; set; }
 
+        
         public string Name { get; set; }
 
         public virtual CurriculumSubjectDto CurriculumSubject { get; set; }
 
         public virtual PastoralYearGroupDto PastoralYearGroup { get; set; }
+        
+        
+        
     }
 }

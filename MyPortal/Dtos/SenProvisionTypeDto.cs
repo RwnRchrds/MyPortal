@@ -8,11 +8,15 @@ using System.Web.UI.WebControls;
 
 namespace MyPortal.Dtos
 {
+    
     public class SenProvisionTypeDto
     {
-
         public int Id { get; set; }
 
+        
         public string Description { get; set; }
+
+        
+        
     }
 }

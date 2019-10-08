@@ -7,6 +7,10 @@ using System.Web;
 
 namespace MyPortal.Dtos
 {
+    /// <summary>
+    /// A record of a behaviour incident.
+    /// </summary>
+    
     public class BehaviourIncidentDto
     {
         public int Id { get; set; }
@@ -21,6 +25,7 @@ namespace MyPortal.Dtos
 
         public int RecordedById { get; set; }
 
+        
         public DateTime Date { get; set; }
 
         public string Comments { get; set; }
@@ -31,11 +36,11 @@ namespace MyPortal.Dtos
 
         public bool Deleted { get; set; }
 
-        public virtual BehaviourTypeDto BehaviourType { get; set; }
+        public virtual BehaviourIncidentTypeDto IncidentType { get; set; }
 
-        public virtual BehaviourLocationDto BehaviourLocation{ get; set; }
+        public virtual SchoolLocationDto Location { get; set; }
 
-        public virtual CurriculumAcademicYearDto CurriculumAcademicYear { get; set; }
+        public virtual CurriculumAcademicYearDto AcademicYear { get; set; }
 
         public virtual StaffMemberDto RecordedBy { get; set; }
 

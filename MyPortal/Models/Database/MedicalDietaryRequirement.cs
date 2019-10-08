@@ -5,9 +5,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
-namespace MyPortal.Dtos
+namespace MyPortal.Models.Database
 {
-    public class BehaviourLocationDto
+    [Table("Medical_DietaryRequirements")]
+    public class MedicalDietaryRequirement
     {
         public int Id { get; set; }
 

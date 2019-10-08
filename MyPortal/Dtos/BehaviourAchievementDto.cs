@@ -7,6 +7,10 @@ using System.Web;
 
 namespace MyPortal.Dtos
 {
+    /// <summary>
+    /// Record of a student achievement.
+    /// </summary>
+    
     public class BehaviourAchievementDto
     {
         public int Id { get; set; }
@@ -31,11 +35,11 @@ namespace MyPortal.Dtos
 
         public bool Deleted { get; set; }
 
-        public virtual BehaviourAchievementTypeDto BehaviourAchievementType { get; set; }
+        public virtual BehaviourAchievementTypeDto AchievementType { get; set; }
 
-        public virtual BehaviourLocationDto BehaviourLocation { get; set; }
+        public virtual SchoolLocationDto Location { get; set; }
 
-        public virtual CurriculumAcademicYearDto CurriculumAcademicYear { get; set; }
+        public virtual CurriculumAcademicYearDto AcademicYear { get; set; }
 
         public virtual StaffMemberDto RecordedBy { get; set; }
 

@@ -7,14 +7,17 @@ namespace MyPortal.Dtos
     using System.Data.Entity.Spatial;
 
     /// <summary>
-    /// [NOT IN USE] A generic template for lesson plan creation.
+    ///  A generic template for lesson plan creation.
     /// </summary>
+    
     public partial class CurriculumLessonPlanTemplateDto
     {
         public int Id { get; set; }
 
+        
         public string Name { get; set; }
 
+        
         public string PlanTemplate { get; set; }
     }
 }

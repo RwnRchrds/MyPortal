@@ -9,14 +9,38 @@ namespace MyPortal.Dtos
     /// <summary>
     /// Represents an academic year in the system.
     /// </summary>
+    
     public partial class CurriculumAcademicYearDto
     {
+
         public int Id { get; set; }
 
+        
         public string Name { get; set; }
 
+        
         public DateTime FirstDate { get; set; }
 
+        
         public DateTime LastDate { get; set; }
+
+        
+        
+
+        
+        
+
+        
+        
+
+        
+        
+
+        
+        
+        
+        
+        
+        
     }
 }

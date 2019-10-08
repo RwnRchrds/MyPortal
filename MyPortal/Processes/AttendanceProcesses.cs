@@ -52,7 +52,7 @@ namespace MyPortal.Processes
         {
             var dayIndex = new List<string> { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
             return new ProcessResponse<IEnumerable<AttendancePeriodDto>>(ResponseType.Ok, null,
-                context.AttendancePeriods.ToList().OrderBy(x => dayIndex.IndexOf(x.Weekday))
+                context.AttendancePeriods.ToList().OrderBy(x => x.Weekday)
                     .ThenBy(x => x.StartTime).Select(Mapper.Map<AttendancePeriod, AttendancePeriodDto>));
         }
 
@@ -124,31 +124,7 @@ namespace MyPortal.Processes
                 return new ProcessResponse<DateTime>(ResponseType.NotFound, "Period not found", new DateTime());
             }
 
-            var periodDay = DayOfWeek.Monday;
-
-            switch (period.Weekday)
-            {
-                case "Tue":
-                    periodDay = DayOfWeek.Tuesday;
-                    break;
-                case "Wed":
-                    periodDay = DayOfWeek.Wednesday;
-                    break;
-                case "Thu":
-                    periodDay = DayOfWeek.Thursday;
-                    break;
-                case "Fri":
-                    periodDay = DayOfWeek.Friday;
-                    break;
-                case "Sat":
-                    periodDay = DayOfWeek.Saturday;
-                    break;
-                case "Sun":
-                    periodDay = DayOfWeek.Sunday;
-                    break;
-            }
-
-            return new ProcessResponse<DateTime>(ResponseType.Ok, null, week.Beginning.GetDayOfWeek(periodDay));
+            return new ProcessResponse<DateTime>(ResponseType.Ok, null, week.Beginning.GetDayOfWeek(period.Weekday));
         }
 
         public static ProcessResponse<string> GetPeriodTime(AttendancePeriod period)

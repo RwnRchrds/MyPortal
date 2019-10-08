@@ -7,6 +7,10 @@ using System.Web;
 
 namespace MyPortal.Dtos
 {
+    /// <summary>
+    /// A record of a medical event/emergency.
+    /// </summary>
+    
     public class MedicalEventDto
     {
         public int Id { get; set; }
@@ -15,8 +19,10 @@ namespace MyPortal.Dtos
 
         public int RecordedById { get; set; }
 
+        
         public DateTime Date { get; set; }
 
+        
         public string Note { get; set; }
 
         public virtual StaffMemberDto RecordedBy { get; set; }

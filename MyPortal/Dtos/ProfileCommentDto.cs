@@ -9,15 +9,16 @@ namespace MyPortal.Dtos
     /// <summary>
     /// A comment that can be used in the creation of a log note.
     /// </summary>
+    
     public partial class ProfileCommentDto
     {
         public int Id { get; set; }
 
         public int CommentBankId { get; set; }
 
-        [Required]
+        
         public string Value { get; set; }
 
-        public virtual ProfileCommentBankDto ProfileCommentBank { get; set; }
+        public virtual ProfileCommentBankDto CommentBank { get; set; }
     }
 }

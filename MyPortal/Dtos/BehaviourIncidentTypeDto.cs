@@ -7,16 +7,22 @@ using System.Web;
 
 namespace MyPortal.Dtos
 {
-    public class BehaviourTypeDto
+    /// <summary>
+    /// Category of behaviour incident.
+    /// </summary>
+    
+    public class BehaviourIncidentTypeDto
     {
         public int Id { get; set; }
 
-        [Required]
-        [StringLength(100)]
+        
         public string Description { get; set; }
 
         public bool System { get; set; }
 
         public int DefaultPoints { get; set; }
+
+        
+        
     }
 }

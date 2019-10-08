@@ -7,8 +7,9 @@ namespace MyPortal.Dtos
     using System.Data.Entity.Spatial;
 
     /// <summary>
-    /// An individual class in which students are enrolled.
+    /// A class in which students are enrolled.
     /// </summary>
+    
     public partial class CurriculumClassDto
     {
         public int Id { get; set; }
@@ -17,6 +18,7 @@ namespace MyPortal.Dtos
 
         public int? SubjectId { get; set; }
 
+        
         public string Name { get; set; }
 
         public int TeacherId { get; set; }
@@ -27,8 +29,14 @@ namespace MyPortal.Dtos
 
         public virtual CurriculumAcademicYearDto CurriculumAcademicYear { get; set; }
 
+        
+        
+
         public virtual CurriculumSubjectDto CurriculumSubject { get; set; }
 
         public virtual PastoralYearGroupDto PastoralYearGroup { get; set; }
+
+        
+        
     }
 }

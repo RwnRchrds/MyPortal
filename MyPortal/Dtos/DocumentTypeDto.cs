@@ -8,10 +8,18 @@ using System.Web;
 
 namespace MyPortal.Dtos
 {
+    /// <summary>
+    /// Type of document
+    /// </summary>
+    
     public class DocumentTypeDto
     {
         public int Id { get; set; }
 
+        
         public string Description { get; set; }
+
+        
+        
     }
 }

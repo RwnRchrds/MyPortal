@@ -11,16 +11,19 @@ namespace MyPortal.Dtos
     /// <summary>
     /// An appraisal/observation carried out by line managers on members of staff.
     /// </summary>
+    
     public partial class PersonnelObservationDto
     {
         public int Id { get; set; }
 
+        
         public DateTime Date { get; set; }
 
         public int ObserveeId { get; set; }
 
         public int ObserverId { get; set; }
 
+        
         public ObservationOutcome Outcome { get; set; }
 
         public virtual StaffMemberDto Observee { get; set; }

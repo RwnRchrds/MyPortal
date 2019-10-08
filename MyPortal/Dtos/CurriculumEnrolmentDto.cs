@@ -9,14 +9,13 @@ namespace MyPortal.Dtos
     /// <summary>
     /// Represents a student enrolled in a class.
     /// </summary>
+    
     public partial class CurriculumEnrolmentDto
     {
         public int Id { get; set; }
 
-        [Display(Name="Student")]
         public int StudentId { get; set; }
 
-        [Display(Name="Class")]
         public int ClassId { get; set; }
 
         public virtual CurriculumClassDto CurriculumClass { get; set; }

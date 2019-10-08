@@ -7,6 +7,10 @@ using System.Web.UI.WebControls;
 
 namespace MyPortal.Dtos
 {
+    /// <summary>
+    /// A document assigned to a person.
+    /// </summary>
+    
     public class PersonDocumentDto
     {
         public int Id { get; set; }

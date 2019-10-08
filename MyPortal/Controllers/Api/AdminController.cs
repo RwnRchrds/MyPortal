@@ -25,10 +25,18 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditUsers")]
         [Route("users/addToRole", Name = "ApiAdminAddUserToRole")]
-        public async Task<IHttpActionResult> AddUserToRole([FromBody] UserRoleModel roleModel)
+        public IHttpActionResult AddUserToRole([FromBody] UserRoleModel roleModel)
         {
-            var result = await AdminProcesses.AddUserToRole(roleModel, _userManager, _identity);
-            return PrepareResponse(result);
+            try
+            {
+                AdminProcesses.AddUserToRole(roleModel, _userManager, _identity);
+            }
+            catch (Exception e)
+            {
+                HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "User added to role");
         }
 
         [HttpPost]

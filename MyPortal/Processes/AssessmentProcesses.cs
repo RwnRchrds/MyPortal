@@ -14,24 +14,24 @@ namespace MyPortal.Processes
 {
     public static class AssessmentProcesses
     {
-        public static ProcessResponse<object> CreateResult(AssessmentResult result, MyPortalDbContext context, bool commitImmediately = true)
+        public static void CreateResult(AssessmentResult result, MyPortalDbContext context, bool commitImmediately = true)
         {
             if (!ValidationProcesses.ModelIsValid(result))
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
+                throw new BadRequestException("Invalid data");
             }
 
-            if (!context.AssessmentGrades.Any(x => x.GradeSetId == result.GradeSetId && x.GradeValue == result.Value))
+            if (!context.AssessmentGrades.Any(x => x.GradeSetId == result.Aspect.GradeSetId && x.Code == result.Grade))
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Grade does not exist", null);
+                throw new BadRequestException("Grade does not exist");
             }
 
             var resultInDb = context.AssessmentResults.SingleOrDefault(x =>
-                x.StudentId == result.StudentId && x.SubjectId == result.SubjectId && x.ResultSetId == result.ResultSetId);
+                x.StudentId == result.StudentId && x.AspectId == result.AspectId && x.ResultSetId == result.ResultSetId);
 
             if (resultInDb != null)
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Result already exists", null);
+                throw new BadRequestException("Result already exists");
             }
 
             context.AssessmentResults.Add(result);
@@ -40,8 +40,6 @@ namespace MyPortal.Processes
             {
                 context.SaveChanges();
             }
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Result added", null);
         }
 
         public static ProcessResponse<object> CreateResultSet(AssessmentResultSet resultSet, MyPortalDbContext context)
@@ -206,80 +204,13 @@ namespace MyPortal.Processes
             return new ProcessResponse<IEnumerable<AssessmentResult>>(ResponseType.Ok, null, results);
         }
 
-        public static ProcessResponse<object> ImportResultsToResultSet(int resultSetId, MyPortalDbContext context)
-        {
-            if (!File.Exists(@"C:\MyPortal\Files\Results\import.csv"))
-            {
-                return new ProcessResponse<object>(ResponseType.NotFound, "File not found", null);
-            }
-
-            var stream = new FileStream(@"C:\MyPortal\Files\Results\import.csv", FileMode.Open);
-            var subjects = context.CurriculumSubjects.OrderBy(x => x.Name).ToList();
-            var numResults = 0;
-            var resultSet = context.AssessmentResultSets.SingleOrDefault(x => x.Id == resultSetId);
-
-            if (resultSet == null)
-            {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Result set not found", null);
-            }
-
-            using (var reader = new StreamReader(stream))
-            {
-                reader.ReadLine();
-                while (!reader.EndOfStream)
-                {
-                    var line = reader.ReadLine();
-                    if (line == null)
-                    {
-                        continue;
-                    }
-
-                    var values = line.Split(',');
-                    for (var i = 0; i < subjects.Count; i++)
-                    {
-                        var studentMisId = values[4];
-                        var student = context.Students.SingleOrDefault(x => x.MisId == studentMisId);
-                        if (student == null)
-                        {
-                            continue;
-                        }
-
-                        var result = new AssessmentResult
-                        {
-                            StudentId = student.Id,
-                            ResultSetId = resultSet.Id,
-                            SubjectId = subjects[i].Id,
-                            Value = values[5 + i]
-                        };
-
-                        if (result.Value.Equals(""))
-                        {
-                            continue;
-                        }
-
-                        CreateResult(result, context, false);
-                        numResults++;
-                    }
-                }
-            }
-
-            context.SaveChanges();
-
-            stream.Dispose();
-
-            var id = $"{DateTime.Today.Year:0000}{DateTime.Today.Month:00}{DateTime.Today.Day:00}_{UtilityProcesses.GenerateId()}";
-            File.Move(@"C:/MyPortal/Files/Results/import.csv", $"C:/MyPortal/Files/Results/{id}.csv");
-
-            return new ProcessResponse<object>(ResponseType.Ok, numResults + " results found and imported", null);
-        }
-
         public static ProcessResponse<bool> ResultSetContainsResults(int id, MyPortalDbContext context)
         {
             var resultSet = context.AssessmentResultSets.SingleOrDefault(x => x.Id == id);
 
             if (resultSet == null)
             {
-                return new ProcessResponse<bool>(ResponseType.NotFound, "Result set not found", null);
+                return new ProcessResponse<bool>(ResponseType.NotFound, "Result set not found", false);
             }
 
             return new ProcessResponse<bool>(ResponseType.Ok, null, resultSet.Results.Any());

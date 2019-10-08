@@ -7,6 +7,7 @@ using System.Web;
 
 namespace MyPortal.Dtos
 {
+    
     public class SenProvisionDto
     {
         public int Id { get; set; }
@@ -15,13 +16,13 @@ namespace MyPortal.Dtos
 
         public int ProvisionTypeId { get; set; }
 
-        [Column(TypeName = "date")]
+        
         public DateTime StartDate { get; set; }
 
-        [Column(TypeName = "date")]
+        
         public DateTime EndDate { get; set; }
 
-        [Required]
+        
         public string Note { get; set; }
 
         public virtual StudentDto Student { get; set; }

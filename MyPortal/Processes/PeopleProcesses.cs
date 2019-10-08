@@ -403,7 +403,6 @@ namespace MyPortal.Processes
             staffInDb.Person.LastName = staffMember.Person.LastName;
             staffInDb.Person.Title = staffMember.Person.Title;
             staffInDb.Code = staffMember.Code;
-            staffInDb.JobTitle = staffMember.JobTitle;
 
             context.SaveChanges();
 

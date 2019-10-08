@@ -209,7 +209,7 @@ namespace MyPortal.Controllers
             viewModel.Class = currClass;
 
             var dayIndex = new List<string> { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
-            viewModel.Periods = _context.AttendancePeriods.ToList().OrderBy(x => dayIndex.IndexOf(x.Weekday))
+            viewModel.Periods = _context.AttendancePeriods.ToList().OrderBy(x => x)
                 .ThenBy(x => x.StartTime);
 
             return View("~/Views/Staff/Curriculum/Sessions.cshtml", viewModel);
@@ -419,7 +419,7 @@ namespace MyPortal.Controllers
 
             var behaviourTypes = _context.BehaviourIncidentTypes.OrderBy(x => x.Description).ToList();
 
-            var behaviourLocations = _context.BehaviourLocations.OrderBy(x => x.Description).ToList();
+            var behaviourLocations = _context.SchoolLocations.OrderBy(x => x.Description).ToList();
 
             var viewModel = new StudentBehaviourManagementViewModel
             {

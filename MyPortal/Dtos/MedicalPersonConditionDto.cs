@@ -8,11 +8,12 @@ using System.Web.UI.WebControls;
 
 namespace MyPortal.Dtos
 {
-    public class MedicalStudentConditionDto
+    
+    public class MedicalPersonConditionDto
     {
         public int Id { get; set; }
 
-        public int StudentId { get; set; }
+        public int PersonId { get; set; }
 
         public int ConditionId { get; set; }
 
@@ -20,8 +21,7 @@ namespace MyPortal.Dtos
 
         public string Medication { get; set; }
 
-        public virtual MedicalConditionDto MedicalCondition { get; set; }
-
-        public virtual StudentDto Student { get; set; }
+        public virtual PersonDto Person { get; set; }
+        public virtual MedicalConditionDto Condition { get; set; }
     }
 }

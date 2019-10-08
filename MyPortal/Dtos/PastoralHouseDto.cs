@@ -7,16 +7,22 @@ using System.Web;
 
 namespace MyPortal.Dtos
 {
+    /// <summary>
+    /// A school house.
+    /// </summary>
+    
     public class PastoralHouseDto
     {
         public int Id { get; set; }
 
-        [Required]
-        [StringLength(50)]
+        
         public string Name { get; set; }
 
         public int HeadId { get; set; }
 
         public virtual StaffMemberDto HeadOfHouse { get; set; }
+
+        
+        
     }
 }

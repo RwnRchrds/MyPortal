@@ -9,21 +9,26 @@ namespace MyPortal.Dtos
     /// <summary>
     /// A lesson plan for a study topic.
     /// </summary>
+    
     public partial class CurriculumLessonPlanDto
     {
         public int Id { get; set; }
 
         public int StudyTopicId { get; set; }
 
+        public int AuthorId { get; set; }
+
+        
         public string Title { get; set; }
 
+        
         public string LearningObjectives { get; set; }
 
+        
         public string PlanContent { get; set; }
 
+        
         public string Homework { get; set; }
-
-        public int AuthorId { get; set; }
 
         public virtual StaffMemberDto Author { get; set; }
 

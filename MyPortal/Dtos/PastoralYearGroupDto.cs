@@ -9,10 +9,12 @@ namespace MyPortal.Dtos
     /// <summary>
     /// A year group in the system.
     /// </summary>
+    
     public partial class PastoralYearGroupDto
     {
         public int Id { get; set; }
 
+        
         public string Name { get; set; }
 
         public int HeadId { get; set; }
@@ -20,5 +22,17 @@ namespace MyPortal.Dtos
         public int KeyStage { get; set; }
 
         public virtual StaffMemberDto HeadOfYear { get; set; }
+
+        
+        
+
+        
+        
+
+        
+        
+
+        
+        
     }
 }

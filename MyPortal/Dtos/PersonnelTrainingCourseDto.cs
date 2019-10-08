@@ -9,12 +9,18 @@ namespace MyPortal.Dtos
     /// <summary>
     /// A training course available to staff.
     /// </summary>
+    
     public partial class PersonnelTrainingCourseDto
     {
         public int Id { get; set; }
 
+        
         public string Code { get; set; }
 
+        
         public string Description { get; set; }
+
+        
+        
     }
 }

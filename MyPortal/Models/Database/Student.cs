@@ -1,3 +1,5 @@
+using MyPortal.Models.Attributes;
+
 namespace MyPortal.Models.Database
 {
     using System;

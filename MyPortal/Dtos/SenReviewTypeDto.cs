@@ -7,10 +7,12 @@ using System.Web;
 
 namespace MyPortal.Dtos
 {
+    
     public class SenReviewTypeDto
     {
         public int Id { get; set; }
 
+        
         public string Description { get; set; }
     }
 }

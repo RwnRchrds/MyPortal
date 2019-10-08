@@ -9,10 +9,12 @@ namespace MyPortal.Dtos
     /// <summary>
     /// A registration/tutor group in the system.
     /// </summary>
+    
     public partial class PastoralRegGroupDto
     {
         public int Id { get; set; }
 
+        
         public string Name { get; set; }
 
         public int TutorId { get; set; }

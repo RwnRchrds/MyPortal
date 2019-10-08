@@ -377,7 +377,7 @@ namespace MyPortal.Processes
             subjectInDb.Deleted = true; //Flag as deleted
 
             //Delete from database
-            if (subjectInDb.AssessmentResults.Any() || subjectInDb.CurriculumClasses.Any() ||
+            if (subjectInDb.CurriculumClasses.Any() ||
                 subjectInDb.StudyTopics.Any())
             {
                 return new ProcessResponse<object>(ResponseType.BadRequest, "This subject cannot be deleted", null);
@@ -706,8 +706,7 @@ namespace MyPortal.Processes
             var classList = context.CurriculumSessions
                 .Where(x =>
                     x.CurriculumClass.AcademicYearId == academicYearId && x.AttendancePeriod.Weekday ==
-                    date.DayOfWeek
-                        .ToString().Substring(0, 3) && x.CurriculumClass.TeacherId == staffId)
+                    date.DayOfWeek && x.CurriculumClass.TeacherId == staffId)
                 .OrderBy(x => x.AttendancePeriod.StartTime)
                 .ToList();
 

@@ -4,11 +4,12 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using System.Web.UI.WebControls;
 
-namespace MyPortal.Models.Database
+namespace MyPortal.Dtos
 {
-    [Table("Medical_DietaryRequirements")]
-    public class MedicalDietaryRequirements
+    
+    public class ContactTypeDto
     {
         public int Id { get; set; }
 

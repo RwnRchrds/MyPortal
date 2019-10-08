@@ -1,3 +1,5 @@
+using MyPortal.Models.Attributes;
+
 namespace MyPortal.Dtos
 {
     using System;
@@ -9,8 +11,9 @@ namespace MyPortal.Dtos
     /// <summary>
     /// A student in the system.
     /// </summary>
+    
     public partial class StudentDto
-    {
+    { 
         public int Id { get; set; }
 
         public int PersonId { get; set; }
@@ -19,31 +22,75 @@ namespace MyPortal.Dtos
 
         public int YearGroupId { get; set; }
 
-        [StringLength(10)]
+        public int? HouseId { get; set; }
+
         public string CandidateNumber { get; set; }
+
+        public int AdmissionNumber { get; set; }
 
         public decimal AccountBalance { get; set; }
 
-        public bool? FreeSchoolMeals { get; set; }
+        public bool FreeSchoolMeals { get; set; }
 
-        public bool? GiftedAndTalented { get; set; }
+        public bool GiftedAndTalented { get; set; }
 
-        public int? SenStatusId { get; set; }
+        public int SenStatusId { get; set; }
 
-        public bool? PupilPremium { get; set; }
+        public bool PupilPremium { get; set; }
 
-        [StringLength(255)]
         public string MisId { get; set; }
 
-        public bool? Deleted { get; set; }
+        
+        public string Upn { get; set; }
 
-        public virtual PastoralRegGroupDto PastoralRegGroup { get; set; }
+        public string Uci { get; set; }
 
-        public virtual PastoralYearGroupDto PastoralYearGroup { get; set; }
+        public bool Deleted { get; set; }
 
-        public virtual PersonDto Person { get; set; }
+        
+        
 
-        public virtual SenStatusDto SenStatus { get; set; }
+        
+        
 
+        
+        
+
+        
+        
+
+        
+        
+
+        
+        
+
+        
+        
+
+        
+        
+
+        public virtual PastoralRegGroupDto PastoralRegGroupDto { get; set; }
+
+        public virtual PastoralYearGroupDto PastoralYearGroupDto { get; set; }
+
+        public virtual PersonDto PersonDto { get; set; }
+
+        public virtual SenStatusDto SenStatusDto { get; set; }
+
+        public virtual PastoralHouseDto HouseDto { get; set; }    
+
+        
+        
+
+        
+        
+
+        
+        
+
+        
+        
     }
 }

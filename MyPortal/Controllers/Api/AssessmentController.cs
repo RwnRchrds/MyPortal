@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Net;
 using System.Security.Principal;
 using System.Web.Http;
 using MyPortal.Dtos;
@@ -12,20 +14,21 @@ namespace MyPortal.Controllers.Api
     [RoutePrefix("api/assessment")]
     public class AssessmentController : MyPortalApiController
     {
-        [HttpGet]
-        [RequiresPermission("ImportResults")]
-        [Route("results/import/{resultSetId:int}", Name = "ApiAssessmentImportResults")]
-        public IHttpActionResult ImportResults([FromUri] int resultSetId)
-        {
-            return PrepareResponse(AssessmentProcesses.ImportResultsToResultSet(resultSetId, _context));
-        }
-
         [HttpPost]
         [RequiresPermission("EditResults")]
         [Route("results/create", Name = "ApiAssessmentCreateResult")]
         public IHttpActionResult CreateResult([FromBody] AssessmentResult result)
         {
-            return PrepareResponse(AssessmentProcesses.CreateResult(result, _context));
+            try
+            {
+                AssessmentProcesses.CreateResult(result, _context);
+            }
+            catch (Exception e)
+            {
+                HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "Result created");
         }
 
         [HttpGet]

@@ -33,11 +33,12 @@ namespace MyPortal.Models.Database
         public virtual DbSet<BehaviourAchievementType> BehaviourAchievementTypes { get; set; }
         public virtual DbSet<BehaviourIncident> BehaviourIncidents { get; set; }
         public virtual DbSet<BehaviourIncidentType> BehaviourIncidentTypes { get; set; }
-        public virtual DbSet<SchoolLocation> BehaviourLocations { get; set; }
         public virtual DbSet<CommunicationLog> CommunicationLogs { get; set; }
         public virtual DbSet<CommunicationPhoneNumber> CommunicationPhoneNumbers { get; set; }
         public virtual DbSet<CommunicationPhoneNumberType> CommunicationPhoneNumberTypes { get; set; }
         public virtual DbSet<CommunicationType> CommunicationTypes { get; set; }
+        public virtual DbSet<Contact> Contacts { get; set; }
+        public virtual DbSet<ContactType> ContactTypes { get; set; }
         public virtual DbSet<CurriculumAcademicYear> CurriculumAcademicYears { get; set; }
         public virtual DbSet<CurriculumClass> CurriculumClasses { get; set; }
         public virtual DbSet<CurriculumEnrolment> CurriculumEnrolments { get; set; }
@@ -53,7 +54,9 @@ namespace MyPortal.Models.Database
         public virtual DbSet<FinanceProductType> FinanceProductTypes { get; set; }
         public virtual DbSet<FinanceSale> FinanceSales { get; set; }
         public virtual DbSet<MedicalCondition> MedicalConditions { get; set; }
+        public virtual DbSet<MedicalDietaryRequirement> MedicalDietaryRequirements { get; set; }
         public virtual DbSet<MedicalEvent> MedicalEvents { get; set; }
+        public virtual DbSet<MedicalPersonCondition> MedicalPersonConditions { get; set; }
         public virtual DbSet<PastoralHouse> PastoralHouses { get; set; }
         public virtual DbSet<PastoralRegGroup> PastoralRegGroups { get; set; }
         public virtual DbSet<PastoralYearGroup> PastoralYearGroups { get; set; }
@@ -66,12 +69,23 @@ namespace MyPortal.Models.Database
         public virtual DbSet<ProfileComment> ProfileComments { get; set; }
         public virtual DbSet<ProfileLog> ProfileLogs { get; set; }
         public virtual DbSet<ProfileLogType> ProfileLogTypes { get; set; }
+        public virtual DbSet<SchoolGovernanceType> SchoolGovernanceTypes { get; set; }
+        public virtual DbSet<SchoolIntakeType> SchoolIntakeTypes { get; set; }
+        public virtual DbSet<SchoolLocation> SchoolLocations { get; set; }
+        public virtual DbSet<SchoolPhase> SchoolPhases { get; set; }
+        public virtual DbSet<SchoolType> SchoolTypes { get; set; }
         public virtual DbSet<SenEvent> SenEvents { get; set; }
+        public virtual DbSet<SenGiftedTalented> SenGiftedTalented { get; set; }
         public virtual DbSet<SenProvision> SenProvisions { get; set; }
+        public virtual DbSet<SenProvisionType> SenProvisionTypes { get; set; }
+        public virtual DbSet<SenReviewType> SenReviewTypes { get; set; }
         public virtual DbSet<SenStatus> SenStatuses { get; set; }
         public virtual DbSet<StaffMember> StaffMembers { get; set; }
         public virtual DbSet<Student> Students { get; set; }
+        public virtual DbSet<SystemArea> SystemAreas { get; set; }
         public virtual DbSet<SystemBulletin> SystemBulletins { get; set; }
+        public virtual DbSet<SystemReport> SystemReports { get; set; }
+        public virtual DbSet<SystemSchool> SystemSchools { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -87,14 +101,6 @@ namespace MyPortal.Models.Database
                 .HasForeignKey(e => e.TypeId)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<AssessmentAspectType>()
-                .Property(e => e.Description)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<AssessmentGrade>()
-                .Property(e => e.GradeCode)
-                .IsUnicode(false);
-
             modelBuilder.Entity<AssessmentGradeSet>()
                 .HasMany(e => e.Aspects)
                 .WithOptional(e => e.GradeSet)
@@ -106,14 +112,6 @@ namespace MyPortal.Models.Database
                 .WithRequired(e => e.GradeSet)
                 .HasForeignKey(e => e.GradeSetId)
                 .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<AssessmentGradeSet>()
-                .Property(e => e.Name)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<AssessmentResult>()
-                .Property(e => e.Value)
-                .IsUnicode(false);
 
             modelBuilder.Entity<AssessmentResultSet>()
                 .HasMany(e => e.Results)
@@ -168,11 +166,6 @@ namespace MyPortal.Models.Database
             modelBuilder.Entity<AttendancePeriod>()
                 .Property(e => e.StartTime)
                 .HasPrecision(2);
-
-            modelBuilder.Entity<AttendancePeriod>()
-                .Property(e => e.Weekday)
-                .IsFixedLength()
-                .IsUnicode(false);
 
             modelBuilder.Entity<AttendanceWeek>()
                 .HasMany(e => e.AttendanceMarks)
@@ -230,12 +223,6 @@ namespace MyPortal.Models.Database
 
             modelBuilder.Entity<CurriculumAcademicYear>()
                 .HasMany(e => e.Achievements)
-                .WithRequired(e => e.AcademicYear)
-                .HasForeignKey(e => e.AcademicYearId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<CurriculumAcademicYear>()
-                .HasMany(e => e.AssessmentResultSets)
                 .WithRequired(e => e.AcademicYear)
                 .HasForeignKey(e => e.AcademicYearId)
                 .WillCascadeOnDelete(false);
@@ -626,10 +613,6 @@ namespace MyPortal.Models.Database
 
             modelBuilder.Entity<StaffMember>()
                 .Property(e => e.Code)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<StaffMember>()
-                .Property(e => e.JobTitle)
                 .IsUnicode(false);
 
             modelBuilder.Entity<Student>()

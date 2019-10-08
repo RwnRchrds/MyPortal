@@ -33,8 +33,8 @@ namespace MyPortal.UnitTests.TestData
 
             var assessmentResultSets = new List<AssessmentResultSet>
             {
-                new AssessmentResultSet {Id = 1, Name = "Current", AcademicYearId = 1, IsCurrent = true},
-                new AssessmentResultSet {Id = 2, Name = "DeleteMe", AcademicYearId = 1, IsCurrent = false}
+                new AssessmentResultSet {Id = 1, Name = "Current",  IsCurrent = true},
+                new AssessmentResultSet {Id = 2, Name = "DeleteMe", IsCurrent = false}
             };
 
             var assessmentResults = new List<AssessmentResult>
@@ -182,6 +182,11 @@ namespace MyPortal.UnitTests.TestData
                 
             };
 
+            var medicalPersonConditions = new List<MedicalPersonCondition>
+            {
+
+            };
+
             var pastoralHouses = new List<PastoralHouse>
             {
                 new PastoralHouse {Id = 1, Name = "Penguins", HeadId = 2}
@@ -278,10 +283,10 @@ namespace MyPortal.UnitTests.TestData
             
             var staffMembers = new List<StaffMember>
             {
-                new StaffMember {Id = 1, Code = "LSP", Deleted = false, JobTitle = "Deputy Headteacher", PersonId = 3},
-                new StaffMember {Id = 2, Code = "WTO", Deleted = false, JobTitle = "Headteacher", PersonId = 4},
-                new StaffMember {Id = 3, Code = "JCO", Deleted = false, JobTitle = "Teacher", PersonId = 5},
-                new StaffMember {Id = 4, Code = "EWI", Deleted = false, JobTitle = "Teacher", PersonId = 6}
+                new StaffMember {Id = 1, Code = "LSP", Deleted = false,  PersonId = 3},
+                new StaffMember {Id = 2, Code = "WTO", Deleted = false,  PersonId = 4},
+                new StaffMember {Id = 3, Code = "JCO", Deleted = false,  PersonId = 5},
+                new StaffMember {Id = 4, Code = "EWI", Deleted = false,  PersonId = 6}
             };
             
             var students = new List<Student>
@@ -305,7 +310,7 @@ namespace MyPortal.UnitTests.TestData
             context.BehaviourAchievementTypes.AddRange(behaviourAchievementTypes);
             context.BehaviourIncidents.AddRange(behaviourIncidents);
             context.BehaviourIncidentTypes.AddRange(behaviourIncidentTypes);
-            context.BehaviourLocations.AddRange(behaviourLocations);
+            context.SchoolLocations.AddRange(behaviourLocations);
             context.CommunicationLogs.AddRange(communicationLogs);
             context.CommunicationTypes.AddRange(communicationTypes);
             context.CurriculumAcademicYears.AddRange(curriculumAcademicYears);
@@ -324,7 +329,7 @@ namespace MyPortal.UnitTests.TestData
             context.FinanceSales.AddRange(financeSales);
             context.MedicalConditions.AddRange(medicalConditions);
             context.MedicalEvents.AddRange(medicalEvents);
-            context.MedicalStudentConditions.AddRange(medicalStudentConditions);
+            context.MedicalPersonConditions.AddRange(medicalPersonConditions);
             context.PastoralHouses.AddRange(pastoralHouses);
             context.PastoralRegGroups.AddRange(pastoralRegGroups);
             context.PastoralYearGroups.AddRange(pastoralYearGroups);

@@ -7,15 +7,43 @@ using System.Web;
 
 namespace MyPortal.Dtos
 {
+    /// <summary>
+    /// Represents an individual person in the system.
+    /// </summary>
+    
     public class PersonDto
     {
         public int Id { get; set; }
+
         public string Title { get; set; }
+
+        
         public string FirstName { get; set; }
+
+        
         public string LastName { get; set; }
+
+        
+        
         public string Gender { get; set; }
-        public DateTime Dob { get; set; }
+
+        
+        public DateTime? Dob { get; set; }
+
         public string UserId { get; set; }
+
         public bool Deleted { get; set; }
+
+        
+        
+
+        
+        
+
+        
+        
+
+        
+        
     }
 }

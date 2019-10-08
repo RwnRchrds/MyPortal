@@ -95,8 +95,8 @@ namespace MyPortal
             CreateMap<AttendanceWeek, AttendanceWeekDto>();
             CreateMap<AttendanceWeekDto, AttendanceWeek>();
 
-            CreateMap<AttendanceMark, AttendanceRegisterMarkDto>();
-            CreateMap<AttendanceRegisterMarkDto, AttendanceMark>();
+            CreateMap<AttendanceMark, AttendanceMarkDto>();
+            CreateMap<AttendanceMarkDto, AttendanceMark>();
 
             CreateMap<AttendanceMark, AttendanceMarkLite>();
             CreateMap<AttendanceMarkLite, AttendanceMark>();
@@ -263,8 +263,8 @@ namespace MyPortal
                     opts => opts.MapFrom(src => src.ResultSet.Name))
                 .ForMember(dest => dest.StudentName,
                     opts => opts.MapFrom(src => PeopleProcesses.GetStudentDisplayName(src.Student)))
-                .ForMember(dest => dest.Subject,
-                    opts => opts.MapFrom(src => src.Subject.Name));
+                .ForMember(dest => dest.Aspect,
+                    opts => opts.MapFrom(src => src.Aspect.Description));
         }
     }
 }    
