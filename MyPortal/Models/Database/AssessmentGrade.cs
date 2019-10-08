@@ -17,12 +17,9 @@ namespace MyPortal.Models.Database
         public int GradeSetId { get; set; }
 
         [Required]
-        [Column("Grade")]
-        [StringLength(255)]
-        public string GradeCode { get; set; }
+        public string Code { get; set; }
 
-        [Column("Value")]
-        public int PointsValue { get; set; }
+        public int Value { get; set; }
 
         public virtual AssessmentGradeSet GradeSet { get; set; }
     }

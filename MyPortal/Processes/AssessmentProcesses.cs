@@ -279,7 +279,7 @@ namespace MyPortal.Processes
 
             if (resultSet == null)
             {
-                throw new ProcessException("Result set not found", ExceptionType.NotFound);
+                return new ProcessResponse<bool>(ResponseType.NotFound, "Result set not found", null);
             }
 
             return new ProcessResponse<bool>(ResponseType.Ok, null, resultSet.Results.Any());

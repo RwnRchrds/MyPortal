@@ -21,20 +21,15 @@ namespace MyPortal.Models.Database
 
         public int Id { get; set; }
 
-        [Display(Name="Academic Year")]
         public int AcademicYearId { get; set; }
 
-        [Display(Name="Subject")]
         public int? SubjectId { get; set; }
 
         [Required]
-        [StringLength(50)]
         public string Name { get; set; }
 
-        [Display(Name="Teacher")]
         public int TeacherId { get; set; }
 
-        [Display(Name="Year Group")]
         public int? YearGroupId { get; set; }
 
         public virtual StaffMember Teacher { get; set; }

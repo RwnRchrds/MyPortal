@@ -28,7 +28,6 @@ namespace MyPortal.Models.Database
         [Column(TypeName = "date")]
         public DateTime Date { get; set; }
 
-        [StringLength(50)]
         public string Comments { get; set; }
 
         public int Points { get; set; }

@@ -378,7 +378,7 @@ namespace MyPortal.Processes
 
             //Delete from database
             if (subjectInDb.AssessmentResults.Any() || subjectInDb.CurriculumClasses.Any() ||
-                subjectInDb.CurriculumStudyTopics.Any())
+                subjectInDb.StudyTopics.Any())
             {
                 return new ProcessResponse<object>(ResponseType.BadRequest, "This subject cannot be deleted", null);
             }
@@ -622,7 +622,7 @@ namespace MyPortal.Processes
             }
 
             return new ProcessResponse<IEnumerable<AttendancePeriod>>(ResponseType.Ok, null,
-                context.AttendancePeriods.Where(x => x.CurriculumClassPeriods.Any(p => p.ClassId == classId)).ToList());
+                context.AttendancePeriods.Where(x => x.Sessions.Any(p => p.ClassId == classId)).ToList());
         }
 
         public static ProcessResponse<CurriculumSessionDto> GetSessionById(int sessionId, MyPortalDbContext context)

@@ -10,6 +10,11 @@ namespace MyPortal.Models.Database
     [Table("Assessment_Aspects")]
     public class AssessmentAspect
     {
+        public AssessmentAspect()
+        {
+            Results = new HashSet<AssessmentResult>();
+        }
+
         public int Id { get; set; }
         public int TypeId { get; set; }
         public int? GradeSetId { get; set; }

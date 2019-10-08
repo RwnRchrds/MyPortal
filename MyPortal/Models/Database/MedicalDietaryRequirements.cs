@@ -12,7 +12,6 @@ namespace MyPortal.Models.Database
     {
         public int Id { get; set; }
 
-        [StringLength(50)]
         public string Description { get; set; }
     }
 }

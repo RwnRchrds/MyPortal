@@ -23,14 +23,9 @@ namespace MyPortal.Models.Database
         [Column(TypeName = "date")]
         public DateTime Date { get; set; }
 
-        /// <summary>
-        /// The amount paid at the time of purchase.
-        /// </summary>
+        [Range(0, Double.MaxValue, ErrorMessage = "Amount paid cannot be negative")]
         public decimal AmountPaid { get; set; }
 
-        /// <summary>
-        /// Indicates whether the sale has been processed by the school's finance department.
-        /// </summary>
         public bool Processed { get; set; }
 
         public bool Refunded { get; set; }

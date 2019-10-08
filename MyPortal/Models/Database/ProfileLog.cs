@@ -22,6 +22,7 @@ namespace MyPortal.Models.Database
 
         public int AcademicYearId { get; set; }
 
+        [Required]
         public string Message { get; set; }
 
         public DateTime Date { get; set; }

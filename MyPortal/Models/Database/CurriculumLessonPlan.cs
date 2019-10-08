@@ -14,25 +14,21 @@ namespace MyPortal.Models.Database
     {
         public int Id { get; set; }
 
-        [Display(Name="Study Topic")]
         public int StudyTopicId { get; set; }
 
+        public int AuthorId { get; set; }
+
         [Required]
-        [StringLength(255)]
         public string Title { get; set; }
 
         [Required]
-        [Display(Name="Learning Objectives")]
         public string LearningObjectives { get; set; }
 
         [Required]
-        [Display(Name="Lesson Plan Content")]
         public string PlanContent { get; set; }
 
         [Required]
         public string Homework { get; set; }
-
-        public int AuthorId { get; set; }
 
         public virtual StaffMember Author { get; set; }
 

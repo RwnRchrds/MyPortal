@@ -19,7 +19,6 @@ namespace MyPortal.Models.Database
 
         public bool MedicationTaken { get; set; }
 
-        [StringLength(100)]
         public string Medication { get; set; }
 
         public virtual Person Person { get; set; }

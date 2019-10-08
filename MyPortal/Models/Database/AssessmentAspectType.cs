@@ -12,10 +12,14 @@ namespace MyPortal.Models.Database
     [Table("Assessment_AspectTypes")]
     public class AssessmentAspectType
     {
+        public AssessmentAspectType()
+        {
+            Aspects = new HashSet<AssessmentAspect>();
+        }
+
         public int Id { get; set; }
 
         [Required]
-        [StringLength(50)]
         public string Description { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

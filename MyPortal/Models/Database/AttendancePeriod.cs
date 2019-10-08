@@ -17,22 +17,19 @@ namespace MyPortal.Models.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public AttendancePeriod()
         {
-            AttendanceRegisterMarks = new HashSet<AttendanceMark>();
-            CurriculumClassPeriods = new HashSet<CurriculumSession>();
+            AttendanceMarks = new HashSet<AttendanceMark>();
+            Sessions = new HashSet<CurriculumSession>();
         }
 
         public int Id { get; set; }
 
-        [Required]
-        [StringLength(3)]
-        public string Weekday { get; set; }
+        public DayOfWeek Weekday { get; set; }
 
+        [Required]
         public string Name { get; set; }
 
-        [Display(Name="Start Time")]
         public TimeSpan StartTime { get; set; }
 
-        [Display(Name="End Time")]
         public TimeSpan EndTime { get; set; }
 
         public bool IsAm { get; set; }
@@ -40,9 +37,9 @@ namespace MyPortal.Models.Database
         public bool IsPm { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AttendanceMark> AttendanceRegisterMarks { get; set; }
+        public virtual ICollection<AttendanceMark> AttendanceMarks { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CurriculumSession> CurriculumClassPeriods { get; set; }
+        public virtual ICollection<CurriculumSession> Sessions { get; set; }
     }
 }

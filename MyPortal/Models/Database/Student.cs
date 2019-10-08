@@ -38,8 +38,9 @@ namespace MyPortal.Models.Database
 
         public int? HouseId { get; set; }
 
-        [StringLength(10)]
         public string CandidateNumber { get; set; }
+
+        public int AdmissionNumber { get; set; }
 
         public decimal AccountBalance { get; set; }
 
@@ -51,8 +52,11 @@ namespace MyPortal.Models.Database
 
         public bool PupilPremium { get; set; }
 
-        [StringLength(255)]
         public string MisId { get; set; }
+
+        public string Upn { get; set; }
+
+        public string Uci { get; set; }
 
         public bool Deleted { get; set; }
 

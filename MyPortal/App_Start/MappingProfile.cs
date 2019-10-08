@@ -244,7 +244,7 @@ namespace MyPortal
                     opts => opts.MapFrom(src => PeopleProcesses.GetStudentDisplayName(src.Student)));
             CreateMap<ProfileComment, GridProfileCommentDto>()
                 .ForMember(dest => dest.CommentBankName,
-                    opts => opts.MapFrom(src => src.ProfileCommentBank.Name));
+                    opts => opts.MapFrom(src => src.CommentBank.Name));
 
             CreateMap<ProfileCommentBank, GridProfileCommentBankDto>();
 

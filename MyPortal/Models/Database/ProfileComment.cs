@@ -19,6 +19,6 @@ namespace MyPortal.Models.Database
         [Required]
         public string Value { get; set; }
 
-        public virtual ProfileCommentBank ProfileCommentBank { get; set; }
+        public virtual ProfileCommentBank CommentBank { get; set; }
     }
 }

@@ -1,7 +1,9 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Web.Http;
 using System.Web.Mvc;
 using MyPortal.Models.Database;
+using MyPortal.Models.Exceptions;
 using MyPortal.Models.Misc;
 
 namespace MyPortal.Controllers
@@ -38,6 +40,21 @@ namespace MyPortal.Controllers
             }
 
             throw new HttpResponseException(HttpStatusCode.BadRequest);
+        }
+
+        protected void ThrowException(Exception ex)
+        {
+            if (ex is NotFoundException)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            if (ex is BadRequestException)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+
+            throw ex;
         }
 
         protected ActionResult NoAcademicYear()

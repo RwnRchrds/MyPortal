@@ -15,25 +15,22 @@ namespace MyPortal.Models.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public AttendanceWeek()
         {
-            RegisterMarks = new HashSet<AttendanceMark>();
+            AttendanceMarks = new HashSet<AttendanceMark>();
         }
         public int Id { get; set; }
 
-        [Display(Name="Academic Year")]
         public int AcademicYearId { get; set; }
 
         [Column(TypeName = "date")]
         public DateTime Beginning { get; set; }
 
-        [Display(Name="Is Holiday")]
         public bool IsHoliday { get; set; }
 
-        [Display(Name="Is Non-TT")]
         public bool IsNonTimetable { get; set; }
 
         public virtual CurriculumAcademicYear AcademicYear { get; set; }
         
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AttendanceMark> RegisterMarks { get; set; }
+        public virtual ICollection<AttendanceMark> AttendanceMarks { get; set; }
     }
 }

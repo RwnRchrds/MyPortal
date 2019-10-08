@@ -21,7 +21,6 @@ namespace MyPortal.Models.Database
 
         public string JobTitle { get; set; }
 
-        [StringLength(50)]
         public string NiNumber { get; set; }
     }
 }

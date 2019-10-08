@@ -23,12 +23,10 @@ namespace MyPortal.Models.Database
         public int TypeId { get; set; }
 
         [Required]
-        [StringLength(255)]
         public string Description { get; set; }
 
         [Required]
         [Url]
-        [StringLength(255)]
         public string Url { get; set; }
 
         public int UploaderId { get; set; }

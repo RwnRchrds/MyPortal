@@ -20,13 +20,13 @@ namespace MyPortal.Models.Database
         public string Code { get; set; }
 
         [Required]
-        [StringLength(50)]
         public string Description { get; set; }
 
-        [Display(Name="Meaning")]
         public int MeaningId { get; set; }
 
         public bool System { get; set; }
+
+        public bool DoNotUse { get; set; }
 
         public virtual AttendanceMeaning AttendanceMeaning { get; set; }
     }

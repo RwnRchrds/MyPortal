@@ -16,13 +16,12 @@ namespace MyPortal.Models.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public BehaviourAchievementType()
         {
-            BehaviourAchievements = new HashSet<BehaviourAchievement>();
+            Achievements = new HashSet<BehaviourAchievement>();
         }
 
         public int Id { get; set; }
 
         [Required]
-        [StringLength(100)]
         public string Description { get; set; }
 
         public int DefaultPoints { get; set; }
@@ -30,6 +29,6 @@ namespace MyPortal.Models.Database
         public bool System { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BehaviourAchievement> BehaviourAchievements { get; set; }
+        public virtual ICollection<BehaviourAchievement> Achievements { get; set; }
     }
 }

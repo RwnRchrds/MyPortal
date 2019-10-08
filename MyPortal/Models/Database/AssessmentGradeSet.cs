@@ -16,12 +16,12 @@ namespace MyPortal.Models.Database
         public AssessmentGradeSet()
         {
             Grades = new HashSet<AssessmentGrade>();
+            Aspects = new HashSet<AssessmentAspect>();
         }
 
         public int Id { get; set; }
 
         [Required]
-        [StringLength(255)]
         public string Name { get; set; }
 
         public bool Active { get; set; }

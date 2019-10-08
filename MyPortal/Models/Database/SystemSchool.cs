@@ -14,7 +14,7 @@ namespace MyPortal.Models.Database
 
         public string Name { get; set; }
 
-        public int LocalAuthorityId { get; set; }
+        public int? LocalAuthorityId { get; set; }
 
         public int EstablishmentNumber { get; set; }
 
@@ -30,7 +30,7 @@ namespace MyPortal.Models.Database
 
         public int IntakeTypeId { get; set; }
 
-        public int HeadTeacherId { get; set; }
+        public int? HeadTeacherId { get; set; }
 
         [Phone]
         public string TelephoneNo { get; set; }

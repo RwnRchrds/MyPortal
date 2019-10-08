@@ -15,7 +15,6 @@ namespace MyPortal.Models.Database
         public int TypeId { get; set; }
         public int PersonId { get; set; }
 
-        [StringLength(50)]
         [Phone]
         public string Number { get; set; }  
 

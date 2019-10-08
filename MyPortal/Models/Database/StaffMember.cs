@@ -37,11 +37,7 @@ namespace MyPortal.Models.Database
         public int PersonId { get; set; }
 
         [Required]
-        [StringLength(10)]
         public string Code { get; set; }
-
-        [StringLength(255)]
-        public string JobTitle { get; set; }
 
         public bool Deleted { get; set; }
 

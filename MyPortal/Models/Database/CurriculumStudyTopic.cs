@@ -19,7 +19,6 @@ namespace MyPortal.Models.Database
         public int YearGroupId { get; set; }
 
         [Required]
-        [StringLength(255)]
         public string Name { get; set; }
 
         public virtual CurriculumSubject CurriculumSubject { get; set; }

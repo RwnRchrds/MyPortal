@@ -21,7 +21,6 @@ namespace MyPortal.UnitTests.ProcessTests
             {
                 Name = "TestAddition",
                 IsCurrent = false,
-                AcademicYearId = academicYear.Id
             };
 
             var initial = _context.AssessmentResultSets.Count();

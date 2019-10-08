@@ -8,12 +8,11 @@ using System.Web.UI.WebControls;
 
 namespace MyPortal.Models.Database
 {
-    [Table("System_ReportAreas")]
-    public class SystemReportArea
+    [Table("System_Areas")]
+    public class SystemArea
     {
         public int Id { get; set; }
 
-        [StringLength(200)]
         public string Description { get; set; }
     }
 }

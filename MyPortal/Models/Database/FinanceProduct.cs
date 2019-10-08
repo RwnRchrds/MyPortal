@@ -24,9 +24,9 @@ namespace MyPortal.Models.Database
         public int ProductTypeId { get; set; }
 
         [Required]
-        [StringLength(255)]
         public string Description { get; set; }
 
+        [Range(0.00, Double.MaxValue, ErrorMessage = "Price cannot be negative")]
         public decimal Price { get; set; }
 
         public bool Visible { get; set; }

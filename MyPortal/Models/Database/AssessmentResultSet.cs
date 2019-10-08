@@ -9,7 +9,6 @@ namespace MyPortal.Models.Database
     /// <summary>
     /// A set of results awarded to students. Result sets usually represent a time-frame eg 'Spring Term'.
     /// </summary>
-
     [Table("Assessment_ResultSets")]
     public class AssessmentResultSet
     {
@@ -21,17 +20,12 @@ namespace MyPortal.Models.Database
 
         public int Id { get; set; }
 
-        public int AcademicYearId { get; set; }
-
         [Required]
-        [StringLength(255)]
         public string Name { get; set; }
 
         public bool IsCurrent { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AssessmentResult> Results { get; set; }
-
-        public virtual CurriculumAcademicYear AcademicYear { get; set; }
     }
 }

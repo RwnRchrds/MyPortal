@@ -140,7 +140,7 @@ namespace MyPortal.Models.Database
                 .IsUnicode(false);
 
             modelBuilder.Entity<AttendanceMeaning>()
-                .HasMany(e => e.AttendanceRegisterCodes)
+                .HasMany(e => e.AttendanceCodes)
                 .WithRequired(e => e.AttendanceMeaning)
                 .HasForeignKey(e => e.MeaningId)
                 .WillCascadeOnDelete(false);
@@ -150,13 +150,13 @@ namespace MyPortal.Models.Database
                 .IsUnicode(false);
 
             modelBuilder.Entity<AttendancePeriod>()
-                .HasMany(e => e.AttendanceRegisterMarks)
+                .HasMany(e => e.AttendanceMarks)
                 .WithRequired(e => e.Period)
                 .HasForeignKey(e => e.PeriodId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<AttendancePeriod>()
-                .HasMany(e => e.CurriculumClassPeriods)
+                .HasMany(e => e.Sessions)
                 .WithRequired(e => e.AttendancePeriod)
                 .HasForeignKey(e => e.PeriodId)
                 .WillCascadeOnDelete(false);
@@ -175,7 +175,7 @@ namespace MyPortal.Models.Database
                 .IsUnicode(false);
 
             modelBuilder.Entity<AttendanceWeek>()
-                .HasMany(e => e.RegisterMarks)
+                .HasMany(e => e.AttendanceMarks)
                 .WithRequired(e => e.Week)
                 .HasForeignKey(e => e.WeekId)
                 .WillCascadeOnDelete(false);
@@ -185,7 +185,7 @@ namespace MyPortal.Models.Database
                 .IsUnicode(false);
 
             modelBuilder.Entity<BehaviourAchievementType>()
-                .HasMany(e => e.BehaviourAchievements)
+                .HasMany(e => e.Achievements)
                 .WithRequired(e => e.AchievementType)
                 .HasForeignKey(e => e.AchievementTypeId)
                 .WillCascadeOnDelete(false);
@@ -311,7 +311,7 @@ namespace MyPortal.Models.Database
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<CurriculumSubject>()
-                .HasMany(e => e.CurriculumStudyTopics)
+                .HasMany(e => e.StudyTopics)
                 .WithRequired(e => e.CurriculumSubject)
                 .HasForeignKey(e => e.SubjectId)
                 .WillCascadeOnDelete(false);
@@ -491,7 +491,7 @@ namespace MyPortal.Models.Database
 
             modelBuilder.Entity<ProfileCommentBank>()
                 .HasMany(e => e.ProfileComments)
-                .WithRequired(e => e.ProfileCommentBank)
+                .WithRequired(e => e.CommentBank)
                 .HasForeignKey(e => e.CommentBankId)
                 .WillCascadeOnDelete(false);
 

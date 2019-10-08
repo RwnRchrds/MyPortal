@@ -22,7 +22,6 @@ namespace MyPortal.Models.Database
         public int Id { get; set; }
 
         [Required]
-        [StringLength(10)]
         public string Name { get; set; }
 
         public int TutorId { get; set; }

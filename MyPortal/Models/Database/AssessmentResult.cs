@@ -20,11 +20,11 @@ namespace MyPortal.Models.Database
 
         public int AspectId { get; set; }
 
+        [Column(TypeName = "date")]
         public DateTime Date { get; set; }
 
         [Required]
-        [StringLength(255)]
-        public string Value { get; set; }
+        public string Grade { get; set; }
 
         public virtual AssessmentResultSet ResultSet { get; set; }
 

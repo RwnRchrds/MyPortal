@@ -15,9 +15,10 @@ namespace MyPortal.Models.Database
 
         public int AreaId { get; set; }
 
-        [StringLength(50)]
+        [Required]
         public string Name { get; set; }
 
+        [Required]
         public string Description { get; set; }
 
         public bool Restricted { get; set; }

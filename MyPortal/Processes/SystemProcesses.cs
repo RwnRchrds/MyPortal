@@ -11,6 +11,7 @@ using MyPortal.Dtos;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
 using Syncfusion.EJ2.Base;
+using Syncfusion.EJ2.Linq;
 
 namespace MyPortal.Processes
 {
@@ -178,6 +179,23 @@ namespace MyPortal.Processes
             context.SaveChanges();
             
             return new ProcessResponse<object>(ResponseType.Ok, "Bulletin updated", null);
+        }
+
+        public static bool ValidateUpn(string upn)
+        {
+            var alpha = new char[] {'A','B','C','D','E','F','G','H','J','K','L','M','N','P','Q','R','T','U','V','W','X','Y','Z'};
+            var chars = upn.ToCharArray();
+
+            if (chars.Length != 13)
+            {
+                return false;
+            }
+
+            var check = chars.Select(c => Convert.ToInt32(c) * (chars.IndexOf(c) + 1)).Aggregate(0, (current, n) => current + n);
+
+            var alphaIndex = check % 23;
+
+            return chars[0] == alpha[alphaIndex];
         }
     }
 }

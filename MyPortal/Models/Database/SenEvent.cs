@@ -20,7 +20,6 @@ namespace MyPortal.Models.Database
         public DateTime Date { get; set; }
 
         [Required]
-        [StringLength(100)]
         public string Note { get; set; }
 
         public virtual Student Student { get; set; }

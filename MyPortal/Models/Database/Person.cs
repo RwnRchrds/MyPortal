@@ -18,19 +18,18 @@ namespace MyPortal.Models.Database
         {
             Staff = new HashSet<StaffMember>();
             Students = new HashSet<Student>();
+            PhoneNumbers = new HashSet<CommunicationPhoneNumber>();
+            MedicalConditions = new HashSet<MedicalPersonCondition>();
         }
 
         public int Id { get; set; }
 
-        [StringLength(50)]
         public string Title { get; set; }
 
         [Required]
-        [StringLength(300)]
         public string FirstName { get; set; }
 
         [Required]
-        [StringLength(300)]
         public string LastName { get; set; }
 
         [Required]
@@ -40,7 +39,6 @@ namespace MyPortal.Models.Database
         [Column(TypeName = "date")]
         public DateTime? Dob { get; set; }
 
-        [StringLength(128)]
         public string UserId { get; set; }
 
         public bool Deleted { get; set; }
