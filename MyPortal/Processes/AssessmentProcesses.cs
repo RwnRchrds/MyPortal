@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using AutoMapper;
 using MyPortal.Dtos;
@@ -14,19 +16,19 @@ namespace MyPortal.Processes
 {
     public static class AssessmentProcesses
     {
-        public static void CreateResult(AssessmentResult result, MyPortalDbContext context, bool commitImmediately = true)
+        public static async Task CreateResult(AssessmentResult result, MyPortalDbContext context, bool commitImmediately = true)
         {
             if (!ValidationProcesses.ModelIsValid(result))
             {
                 throw new BadRequestException("Invalid data");
             }
 
-            if (!context.AssessmentGrades.Any(x => x.GradeSetId == result.Aspect.GradeSetId && x.Code == result.Grade))
+            if (! await context.AssessmentGrades.AnyAsync(x => x.GradeSetId == result.Aspect.GradeSetId && x.Code == result.Grade))
             {
                 throw new BadRequestException("Grade does not exist");
             }
 
-            var resultInDb = context.AssessmentResults.SingleOrDefault(x =>
+            var resultInDb = await context.AssessmentResults.SingleOrDefaultAsync(x =>
                 x.StudentId == result.StudentId && x.AspectId == result.AspectId && x.ResultSetId == result.ResultSetId);
 
             if (resultInDb != null)
@@ -38,18 +40,18 @@ namespace MyPortal.Processes
 
             if (commitImmediately)
             {
-                context.SaveChanges();
+                await context.SaveChangesAsync();
             }
         }
 
-        public static ProcessResponse<object> CreateResultSet(AssessmentResultSet resultSet, MyPortalDbContext context)
+        public static async Task CreateResultSet(AssessmentResultSet resultSet, MyPortalDbContext context)
         {
             if (!ValidationProcesses.ModelIsValid(resultSet))
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
+                throw new BadRequestException("Invalid data");
             }
 
-            var currentRsExists = context.AssessmentResultSets.Any(x => x.IsCurrent);
+            var currentRsExists = await context.AssessmentResultSets.AnyAsync(x => x.IsCurrent);
 
             if (!currentRsExists)
             {
@@ -57,207 +59,166 @@ namespace MyPortal.Processes
             }
 
             context.AssessmentResultSets.Add(resultSet);
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Result set created", null);
+            await context.SaveChangesAsync();
         }
 
-        public static ProcessResponse<object> DeleteResultSet(int resultSetId, MyPortalDbContext context)
+        public static async Task DeleteResultSet(int resultSetId, MyPortalDbContext context)
         {
-            var resultSet = context.AssessmentResultSets.SingleOrDefault(x => x.Id == resultSetId);
+            var resultSet = await context.AssessmentResultSets.SingleOrDefaultAsync(x => x.Id == resultSetId);
 
             if (resultSet == null)
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Result set not found", null);
+                throw new NotFoundException("Result set not found");
             }
 
             if (resultSet.IsCurrent)
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Result set is already marked as current", null);
+                throw new BadRequestException("Result set is marked as current");
             }
 
             context.AssessmentResultSets.Remove(resultSet);
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Result set deleted", null);
+            await context.SaveChangesAsync();
         }
 
-        public static ProcessResponse<IEnumerable<AssessmentResultSetDto>> GetAllResultSets(MyPortalDbContext context)
+        public static async Task<IEnumerable<AssessmentResultSetDto>> GetAllResultSets(MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<AssessmentResultSetDto>>(ResponseType.Ok, null,
-                GetAllResultSets_Model(context).ResponseObject
-                    .Select(Mapper.Map<AssessmentResultSet, AssessmentResultSetDto>));
+            var resultSets = await GetAllResultSetsModel(context);
+
+            return resultSets.Select(Mapper.Map<AssessmentResultSet, AssessmentResultSetDto>);
         }
 
-        public static ProcessResponse<IEnumerable<GridAssessmentResultSetDto>> GetAllResultSets_DataGrid(MyPortalDbContext context)
+        public static async Task<IEnumerable<GridAssessmentResultSetDto>> GetAllResultSetsDataGrid(MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<GridAssessmentResultSetDto>>(ResponseType.Ok, null,
-                GetAllResultSets_Model(context).ResponseObject
-                    .Select(Mapper.Map<AssessmentResultSet, GridAssessmentResultSetDto>));
+            var resultSets = await GetAllResultSetsModel(context);
+
+            return resultSets.Select(Mapper.Map<AssessmentResultSet, GridAssessmentResultSetDto>);
         }
 
-        public static ProcessResponse<IEnumerable<AssessmentResultSet>> GetAllResultSets_Model(MyPortalDbContext context)
+        public static async Task<IEnumerable<AssessmentResultSet>> GetAllResultSetsModel(MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<AssessmentResultSet>>(ResponseType.Ok, null,
-                context.AssessmentResultSets.OrderBy(x => x.Name).ToList());
+            return await context.AssessmentResultSets.OrderBy(x => x.Name).ToListAsync();
         }
 
-        public static ProcessResponse<AssessmentResultDto> GetResultById(int resultId, MyPortalDbContext context)
+        public static async Task<AssessmentResultDto> GetResultById(int resultId, MyPortalDbContext context)
         {
-            var result = context.AssessmentResults.SingleOrDefault(x => x.Id == resultId);
+            var result = await context.AssessmentResults.SingleOrDefaultAsync(x => x.Id == resultId);
 
-            return new ProcessResponse<AssessmentResultDto>(ResponseType.Ok, null,
-                Mapper.Map<AssessmentResult, AssessmentResultDto>(result));
+            return Mapper.Map<AssessmentResult, AssessmentResultDto>(result);
         }
 
-        public static ProcessResponse<IEnumerable<AssessmentResultDto>> GetResultsByStudent(int studentId, int resultSetId,
+        public static async Task<IEnumerable<AssessmentResult>> GetResultsByStudentModel(int studentId, int resultSetId, MyPortalDbContext context)
+        {
+            var results = await context.AssessmentResults
+                .Where(x => x.StudentId == studentId && x.ResultSetId == resultSetId).ToListAsync();
+
+            return results;
+        }
+
+        public static async Task<IEnumerable<AssessmentResultDto>> GetResultsByStudent(int studentId, int resultSetId,
             MyPortalDbContext context)
         {
-            var results = context.AssessmentResults
-                .Where(r => r.StudentId == studentId && r.ResultSetId == resultSetId)
-                .ToList()
-                .Select(Mapper.Map<AssessmentResult, AssessmentResultDto>);
+            var results = await GetResultsByStudentModel(studentId, resultSetId, context);
 
-            return new ProcessResponse<IEnumerable<AssessmentResultDto>>(ResponseType.Ok, null, results);
+            return results.Select(Mapper.Map<AssessmentResult, AssessmentResultDto>);
         }
 
-        public static ProcessResponse<IEnumerable<GridAssessmentResultDto>> GetResultsByStudentDataGrid(int studentId, int resultSetId,
+        public static async Task<IEnumerable<GridAssessmentResultDto>> GetResultsByStudentDataGrid(int studentId, int resultSetId,
             MyPortalDbContext context)
         {
-            var results = context.AssessmentResults
-                .Where(r => r.StudentId == studentId && r.ResultSetId == resultSetId)
-                .ToList()
-                .Select(Mapper.Map<AssessmentResult, GridAssessmentResultDto>);
+            var results = await GetResultsByStudentModel(studentId, resultSetId, context);
 
-            return new ProcessResponse<IEnumerable<GridAssessmentResultDto>>(ResponseType.Ok, null, results);
+            return results.Select(Mapper.Map<AssessmentResult, GridAssessmentResultDto>);
         }
 
-        public static ProcessResponse<AssessmentResultSetDto> GetResultSetById(int resultSetId, MyPortalDbContext context)
+        public static async Task<AssessmentResultSetDto> GetResultSetById(int resultSetId, MyPortalDbContext context)
         {
-            var resultSet = GetResultSetById_Model(resultSetId, context);
+            var resultSet = await GetResultSetByIdModel(resultSetId, context);
 
-            if (resultSet.ResponseType == ResponseType.NotFound)
-            {
-                return new ProcessResponse<AssessmentResultSetDto>(ResponseType.NotFound, resultSet.ResponseMessage, null);
-            }
-
-            if (resultSet.ResponseObject == null)
-            {
-                return new ProcessResponse<AssessmentResultSetDto>(ResponseType.NotFound, "Result set not found", null);
-            }
-
-            return new ProcessResponse<AssessmentResultSetDto>(ResponseType.Ok, null,
-                Mapper.Map<AssessmentResultSet, AssessmentResultSetDto>(resultSet.ResponseObject));
-
+            return Mapper.Map<AssessmentResultSet, AssessmentResultSetDto>(resultSet);
         }
 
-        public static ProcessResponse<AssessmentResultSet> GetResultSetById_Model(int resultSetId, MyPortalDbContext context)
+        public static async Task<AssessmentResultSet> GetResultSetByIdModel(int resultSetId, MyPortalDbContext context)
         {
-            var resultSet = context.AssessmentResultSets.SingleOrDefault(x => x.Id == resultSetId);
+            var resultSet = await context.AssessmentResultSets.SingleOrDefaultAsync(x => x.Id == resultSetId);
 
             if (resultSet == null)
             {
-                return new ProcessResponse<AssessmentResultSet>(ResponseType.NotFound, "Result set not found", null);
+                throw new NotFoundException("Result set not found");
             }
 
-            return new ProcessResponse<AssessmentResultSet>(ResponseType.Ok, null,
-                resultSet);
-
+            return resultSet;
         }
 
-        public static ProcessResponse<IEnumerable<AssessmentResultSetDto>> GetResultSetsByStudent(int studentId,
+        public static async Task<IEnumerable<AssessmentResultSetDto>> GetResultSetsByStudent(int studentId,
             MyPortalDbContext context)
         {
-            if (!context.Students.Any(x => x.Id == studentId))
+            var resultSets = await GetResultSetsByStudentModel(studentId, context);
+
+            return resultSets.Select(Mapper.Map<AssessmentResultSet, AssessmentResultSetDto>);
+        }
+
+        public static async Task<IEnumerable<AssessmentResultSet>> GetResultSetsByStudentModel(int studentId,
+            MyPortalDbContext context)
+        {
+            if (!await context.Students.AnyAsync(x => x.Id == studentId))
             {
-                return new ProcessResponse<IEnumerable<AssessmentResultSetDto>>(ResponseType.NotFound, "Student not found", null);
+                throw new NotFoundException("Student not found");
             }
 
-            var resultSets =
-                GetResultSetsByStudent_Model(studentId, context).ResponseObject.ToList();
+            var resultSets = await context.AssessmentResultSets.Where(x => x.Results.Any(s => s.StudentId == studentId))
+                .ToListAsync();
 
-            return new ProcessResponse<IEnumerable<AssessmentResultSetDto>>(ResponseType.Ok, null,
-                resultSets.Select(Mapper.Map<AssessmentResultSet, AssessmentResultSetDto>));
+            return resultSets;
         }
 
-        public static ProcessResponse<IEnumerable<AssessmentResultSet>> GetResultSetsByStudent_Model(int studentId,
-            MyPortalDbContext context)
+        public static async Task<bool> ResultSetContainsResults(int resultSetId, MyPortalDbContext context)
         {
-            if (!context.Students.Any(x => x.Id == studentId))
+            if (!await context.AssessmentResultSets.AnyAsync(x => x.Id == resultSetId))
             {
-                return new ProcessResponse<IEnumerable<AssessmentResultSet>>(ResponseType.NotFound, "Student not found", null);
+                throw new NotFoundException("Result set not found");
             }
 
-            var resultSets =
-                context.AssessmentResultSets.Where(x => x.Results.Any(s => s.StudentId == studentId));
-
-            return new ProcessResponse<IEnumerable<AssessmentResultSet>>(ResponseType.Ok, null, resultSets);
+            return await context.AssessmentResults.AnyAsync(x => x.ResultSetId == resultSetId);
         }
 
-        public static ProcessResponse<IEnumerable<AssessmentResult>> GetResultsForStudent_Model(int studentId, int resultSetId,
-            MyPortalDbContext context)
+        public static async Task SetResultSetAsCurrent(int resultSetId, MyPortalDbContext context)
         {
-            var results = context.AssessmentResults
-                .Where(r => r.StudentId == studentId && r.ResultSetId == resultSetId)
-                .ToList();
-
-            return new ProcessResponse<IEnumerable<AssessmentResult>>(ResponseType.Ok, null, results);
-        }
-
-        public static ProcessResponse<bool> ResultSetContainsResults(int id, MyPortalDbContext context)
-        {
-            var resultSet = context.AssessmentResultSets.SingleOrDefault(x => x.Id == id);
+            var resultSet = await context.AssessmentResultSets.SingleOrDefaultAsync(x => x.Id == resultSetId);
 
             if (resultSet == null)
             {
-                return new ProcessResponse<bool>(ResponseType.NotFound, "Result set not found", false);
-            }
-
-            return new ProcessResponse<bool>(ResponseType.Ok, null, resultSet.Results.Any());
-        }
-
-        public static ProcessResponse<object> SetResultSetAsCurrent(int resultSetId, MyPortalDbContext context)
-        {
-            var resultSet = context.AssessmentResultSets.SingleOrDefault(x => x.Id == resultSetId);
-
-            if (resultSet == null)
-            {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Result set not found", null);
+                throw new NotFoundException("Result set not found");
             }
 
             if (resultSet.IsCurrent)
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Result set already set as current", null);
+                throw new BadRequestException("Result set is already marked as current");
             }
 
-            var currentResultSet = context.AssessmentResultSets.SingleOrDefault(x => x.IsCurrent);
+            var currentResultSet = await context.AssessmentResultSets.SingleOrDefaultAsync(x => x.IsCurrent);
 
-            if (currentResultSet == null)
+            if (currentResultSet != null)
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Result set not found", null);
+                currentResultSet.IsCurrent = false;
             }
 
-            currentResultSet.IsCurrent = false;
             resultSet.IsCurrent = true;
 
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Result set set as current", null);
+            await context.SaveChangesAsync();
         }
 
-        public static ProcessResponse<object> UpdateResultSet(AssessmentResultSet resultSet, MyPortalDbContext context)
+        public static async Task UpdateResultSet(AssessmentResultSet resultSet, MyPortalDbContext context)
         {
-            var resultSetInDb = context.AssessmentResultSets.SingleOrDefault(x => x.Id == resultSet.Id);
+            var resultSetInDb = await context.AssessmentResultSets.SingleOrDefaultAsync(x => x.Id == resultSet.Id);
 
             if (resultSetInDb == null)
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Result set not found", null);
+                throw new NotFoundException("Result set not found");
             }
 
             resultSetInDb.Name = resultSet.Name;
 
-            context.SaveChanges();
-            return new ProcessResponse<object>(ResponseType.Ok, "Result set updated", null);
+            await context.SaveChangesAsync();
         }
     }
 }

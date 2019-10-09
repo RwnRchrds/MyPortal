@@ -1,6 +1,8 @@
 using System.Linq;
+using System.Threading.Tasks;
 using MyPortal.Dtos;
 using MyPortal.Models.Database;
+using MyPortal.Models.Exceptions;
 using MyPortal.Models.Misc;
 using MyPortal.Processes;
 using NUnit.Framework;
@@ -11,7 +13,7 @@ namespace MyPortal.UnitTests.ProcessTests
     public class AssessmentProcessTests : MyPortalTestFixture
     {
         [Test]
-        public static void CreateResultSet_CreatesResultSet()
+        public static async Task CreateResultSet_CreatesResultSet()
         {
             var academicYear = _context.CurriculumAcademicYears.SingleOrDefault(x => x.Name == "Current");
             
@@ -25,7 +27,7 @@ namespace MyPortal.UnitTests.ProcessTests
 
             var initial = _context.AssessmentResultSets.Count();
 
-            AssessmentProcesses.CreateResultSet(resultSet, _context);
+            await AssessmentProcesses.CreateResultSet(resultSet, _context);
 
             var final = _context.AssessmentResultSets.Count();
             
@@ -33,7 +35,7 @@ namespace MyPortal.UnitTests.ProcessTests
         }
 
         [Test]
-        public static void UpdateResultSet_UpdatesResultSet()
+        public static async Task UpdateResultSet_UpdatesResultSet()
         {
             var resultSetInDb = _context.AssessmentResultSets.SingleOrDefault(x => x.Name == "Current");
             
@@ -46,7 +48,7 @@ namespace MyPortal.UnitTests.ProcessTests
                 IsCurrent = resultSetInDb.IsCurrent
             };
 
-            AssessmentProcesses.UpdateResultSet(resultSet, _context);
+            await AssessmentProcesses.UpdateResultSet(resultSet, _context);
 
             var final = _context.AssessmentResultSets.SingleOrDefault(x => x.Id == resultSetInDb.Id);
             
@@ -54,7 +56,7 @@ namespace MyPortal.UnitTests.ProcessTests
         }
 
         [Test]
-        public static void DeleteResultSet_DeletesResultSet()
+        public static async Task DeleteResultSet_DeletesResultSet()
         {
             var resultSetInDb = _context.AssessmentResultSets.SingleOrDefault(x => x.Name == "DeleteMe");
             
@@ -62,7 +64,7 @@ namespace MyPortal.UnitTests.ProcessTests
 
             var initial = _context.AssessmentResultSets.Count();
 
-            AssessmentProcesses.DeleteResultSet(resultSetInDb.Id, _context);
+            await AssessmentProcesses.DeleteResultSet(resultSetInDb.Id, _context);
 
             var final = _context.AssessmentResultSets.Count();
             
@@ -70,32 +72,23 @@ namespace MyPortal.UnitTests.ProcessTests
         }
 
         [Test]
-        public static void GetResultSetById_ReturnsResultSet()
+        public static async void GetResultSetById_ReturnsResultSet()
         {
             var resultSetName = "DeleteMe";
             var resultSetInDb = _context.AssessmentResultSets.SingleOrDefault(x => x.Name == resultSetName);
             
             Assert.IsNotNull(resultSetInDb);
 
-            var result = AssessmentProcesses.GetResultSetById(resultSetInDb.Id, _context);
+            var result = await AssessmentProcesses.GetResultSetById(resultSetInDb.Id, _context);
             
-            Assert.That(result.ResponseType == ResponseType.Ok);
-            Assert.That(result.ResponseObject.GetType() == typeof(AssessmentResultSetDto));
-            Assert.That(result.ResponseObject.Name == resultSetName);
+            Assert.That(result.GetType() == typeof(AssessmentResultSetDto));
+            Assert.That(result.Name == resultSetName);
         }
 
         [Test]
-        public static void GetResultSetById_ReturnsNotFound()
+        public static async void GetAllResultSets_DataGrid_ReturnsResultSets()
         {
-            var result = AssessmentProcesses.GetResultSetById(9999, _context);
-            
-            Assert.That(result.ResponseType == ResponseType.NotFound);
-        }
-
-        [Test]
-        public static void GetAllResultSets_DataGrid_ReturnsResultSets()
-        {
-            var result = AssessmentProcesses.GetAllResultSets_DataGrid(_context).ResponseObject;
+            var result = await AssessmentProcesses.GetAllResultSetsDataGrid(_context);
             
             Assert.That(result.Count() == 2);
         }

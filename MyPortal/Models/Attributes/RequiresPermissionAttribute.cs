@@ -17,15 +17,8 @@ namespace MyPortal.Models.Attributes
 
         protected override bool IsAuthorized(HttpActionContext actionContext)
         {
-            foreach (var permission in _permissions)
-            {
-                if (actionContext.ControllerContext.RequestContext.Principal.HasPermission(permission.Trim()))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return _permissions.Any(permission =>
+                actionContext.ControllerContext.RequestContext.Principal.HasPermission(permission.Trim()));
         }
     }
 }

@@ -25,15 +25,15 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditUsers")]
         [Route("users/addToRole", Name = "ApiAdminAddUserToRole")]
-        public IHttpActionResult AddUserToRole([FromBody] UserRoleModel roleModel)
+        public async Task<IHttpActionResult> AddUserToRole([FromBody] UserRoleModel roleModel)
         {
             try
             {
-                AdminProcesses.AddUserToRole(roleModel, _userManager, _identity);
+                await AdminProcesses.AddUserToRole(roleModel, _userManager, _identity);
             }
             catch (Exception e)
             {
-                HandleException(e);
+                return HandleException(e);
             }
 
             return Content(HttpStatusCode.OK, "User added to role");
@@ -44,8 +44,16 @@ namespace MyPortal.Controllers.Api
         [Route("users/attachPerson", Name = "ApiAdminAttachPersonToUser")]
         public async Task<IHttpActionResult> AttachPersonToUser([FromBody] UserProfile userProfile)
         {
-            var result = await AdminProcesses.AttachPersonToUser(userProfile, _userManager, _identity, _context);
-            return PrepareResponse(result);
+            try
+            {
+                await AdminProcesses.AttachPersonToUser(userProfile, _userManager, _identity, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "Person attached");
         }
 
         [HttpPost]
@@ -53,20 +61,16 @@ namespace MyPortal.Controllers.Api
         [Route("users/resetPassword", Name = "ApiAdminChangePassword")]
         public async Task<IHttpActionResult> ChangePassword([FromBody] ChangePasswordModel data)
         {
-            var result = await AdminProcesses.ChangePassword(data, _userManager, _identity);
+            try
+            {
+                await AdminProcesses.ChangePassword(data, _userManager);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
 
-            return PrepareResponse(result);
-        }
-
-        [HttpGet]
-        [AllowAnonymous]
-        //TODO: Generate random 12 char string for each client
-        [Route("5wf0wxy08maf/createSystemUser")]
-        public async Task<IHttpActionResult> Diagnostic_CreateSystemUser()
-        {
-            await UtilityProcesses.CreateSystemUser(_userManager);
-
-            return Json(true);
+            return Content(HttpStatusCode.OK, "Password changed");
         }
 
         [HttpDelete]
@@ -74,9 +78,16 @@ namespace MyPortal.Controllers.Api
         [Route("users/delete/{userId}", Name = "ApiAdminDeleteUser")]
         public async Task<IHttpActionResult> DeleteUser(string userId)
         {
-            var result = await AdminProcesses.DeleteUser(userId, _userManager, _identity);
+            try
+            {
+                await AdminProcesses.DeleteUser(userId, _userManager);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
 
-            return PrepareResponse(result);
+            return Content(HttpStatusCode.OK, "User deleted");
         }
 
         [HttpPost]
@@ -84,9 +95,16 @@ namespace MyPortal.Controllers.Api
         [Route("users/detachPerson", Name = "ApiAdminDetachPersonFromUser")]
         public async Task<IHttpActionResult> DetachPersonFromUser(ApplicationUser user)
         {
-            var result = await AdminProcesses.DetachPerson(user, _userManager, _identity, _context);
+            try
+            {
+                await AdminProcesses.DetachPerson(user, _userManager, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
 
-            return PrepareResponse(result);
+            return Content(HttpStatusCode.OK, "Person detached");
         }
 
         [HttpGet]
@@ -94,9 +112,15 @@ namespace MyPortal.Controllers.Api
         [Route("users/get/all", Name = "ApiAdminGetAllUsers")]
         public async Task<IEnumerable<ApplicationUserDto>> GetAllUsers()
         {
-            var result = await AdminProcesses.GetAllUsers(_identity);
-
-            return PrepareResponseObject(result);
+            try
+            {
+                return await AdminProcesses.GetAllUsers(_identity);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return null;
+            }
         }
 
         [HttpPost]
@@ -104,9 +128,15 @@ namespace MyPortal.Controllers.Api
         [Route("users/get/dataGrid/all", Name = "ApiAdminGetAllUsersDataGrid")]
         public async Task<IHttpActionResult> GetAllUsersDataGrid([FromBody] DataManagerRequest dm)
         {
-            var result = PrepareResponseObject(await AdminProcesses.GetAllUsers_DataGrid(_identity));
-
-            return PrepareDataGridObject(result, dm);
+            try
+            {
+                var users = await AdminProcesses.GetAllUsersDataGrid(_identity);
+                return PrepareDataGridObject(users, dm);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpPost]
@@ -114,9 +144,16 @@ namespace MyPortal.Controllers.Api
         [Route("users/create", Name = "ApiAdminCreateUser")]
         public async Task<IHttpActionResult> CreateUser([FromBody] NewUserViewModel model)
         {
-            var result = await AdminProcesses.CreateUser(model, _userManager, _identity);
+            try
+            {
+                await AdminProcesses.CreateUser(model, _userManager);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
 
-            return PrepareResponse(result);
+            return Content(HttpStatusCode.OK, "User created");
         }
 
         [Route("users/removeFromRole", Name = "ApiAdminRemoveFromRole")]
@@ -124,9 +161,16 @@ namespace MyPortal.Controllers.Api
         [RequiresPermission("EditUsers")]
         public async Task<IHttpActionResult> RemoveFromRole([FromBody] UserRoleModel roleModel)
         {
-            var result = await AdminProcesses.RemoveFromRole(roleModel.UserId, roleModel.RoleName, _userManager, _identity, _context);
+            try
+            {
+                await AdminProcesses.RemoveFromRole(roleModel.UserId, roleModel.RoleName, _userManager, _identity);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
 
-            return PrepareResponse(result);
+            return Content(HttpStatusCode.OK, "User removed from role");
         }
 
         [RequiresPermission("EditRoles")]
@@ -134,9 +178,16 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         public async Task<IHttpActionResult> CreateRole([FromBody] ApplicationRole role)
         {
-            var result = await AdminProcesses.CreateRole(role, _roleManager, _identity);
+            try
+            {
+                await AdminProcesses.CreateRole(role, _roleManager);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
 
-            return PrepareResponse(result);
+            return Content(HttpStatusCode.OK, "Role created");
         }
 
         [RequiresPermission("EditRoles")]
@@ -144,9 +195,16 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         public async Task<IHttpActionResult> UpdateRole([FromBody] ApplicationRole role)
         {
-            var result = await AdminProcesses.UpdateRole(role, _roleManager, _identity);
+            try
+            {
+                await AdminProcesses.UpdateRole(role, _roleManager);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
 
-            return PrepareResponse(result);
+            return Content(HttpStatusCode.OK, "Role updated");
         }
 
         [RequiresPermission("EditRoles")]
@@ -154,9 +212,16 @@ namespace MyPortal.Controllers.Api
         [HttpDelete]
         public async Task<IHttpActionResult> DeleteRole([FromUri] string roleId)
         {
-            var result = await AdminProcesses.DeleteRole(roleId, _roleManager, _identity);
+            try
+            {
+                await AdminProcesses.DeleteRole(roleId, _roleManager);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
 
-            return PrepareResponse(result);
+            return Content(HttpStatusCode.OK, "Role deleted");
         }
 
         [RequiresPermission("EditRoles")]
@@ -164,9 +229,15 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         public async Task<ApplicationRoleDto> GetRoleById([FromUri] string roleId)
         {
-            var result = await AdminProcesses.GetRoleById(roleId, _roleManager, _identity);
-
-            return PrepareResponseObject(result);
+            try
+            {
+                return await AdminProcesses.GetRoleById(roleId, _roleManager);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return null;
+            }
         }
 
         [RequiresPermission("EditRoles")]
@@ -174,9 +245,15 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         public async Task<IEnumerable<ApplicationRoleDto>> GetAllRoles()
         {
-            var result = await AdminProcesses.GetAllRoles(_identity);
-
-            return PrepareResponseObject(result);
+            try
+            {
+                return await AdminProcesses.GetAllRoles(_identity);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return null;
+            }
         }
 
         [RequiresPermission("EditUsers")]
@@ -184,9 +261,15 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         public async Task<IEnumerable<ApplicationRoleDto>> GetRolesByUser([FromUri] string userId)
         {
-            var result = await AdminProcesses.GetRolesByUser(userId, _roleManager);
-
-            return PrepareResponseObject(result);
+            try
+            {
+                return await AdminProcesses.GetRolesByUser(userId, _roleManager);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return null;
+            }
         }
 
         [RequiresPermission("EditUsers")]
@@ -195,9 +278,15 @@ namespace MyPortal.Controllers.Api
         public async Task<IHttpActionResult> GetRolesByUserDataGrid([FromUri] string userId,
             [FromBody] DataManagerRequest dm)
         {
-            var result = PrepareResponseObject(await AdminProcesses.GetRolesByUser(userId, _roleManager));
-
-            return PrepareDataGridObject(result, dm);
+            try
+            {
+                var roles = await AdminProcesses.GetRolesByUser(userId, _roleManager);
+                return PrepareDataGridObject(roles, dm);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [RequiresPermission("EditRoles")]
@@ -205,9 +294,15 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         public async Task<IHttpActionResult> GetAllRolesDataGrid([FromBody] DataManagerRequest dm)
         {
-            var result = PrepareResponseObject(await AdminProcesses.GetAllRoles(_identity));
-
-            return PrepareDataGridObject(result, dm);
+            try
+            {
+                var roles = await AdminProcesses.GetAllRoles(_identity);
+                return PrepareDataGridObject(roles, dm);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [RequiresPermission("EditRoles")]
@@ -215,9 +310,16 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         public async Task<IHttpActionResult> ToggleRolePermission([FromBody] RolePermission rolePermission)
         {
-            var result = await AdminProcesses.ToggleRolePermission(rolePermission, _roleManager, _identity);
+            try
+            {
+                await AdminProcesses.ToggleRolePermission(rolePermission, _roleManager, _identity);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
 
-            return PrepareResponse(result);
+            return Content(HttpStatusCode.OK, "Permissions updated");
         }
 
         [RequiresPermission("EditRoles")]
@@ -225,9 +327,15 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         public async Task<IEnumerable<PermissionIndicator>> GetPermissionsByRole([FromUri] string roleId)
         {
-            var result = await AdminProcesses.GetPermissionsByRole(roleId, _roleManager, _identity);
-
-            return PrepareResponseObject(result);
+            try
+            {
+                return await AdminProcesses.GetPermissionsByRole(roleId, _roleManager, _identity);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return null;
+            }
         }
 
         [RequiresPermission("EditRoles")]
@@ -235,9 +343,16 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         public async Task<IHttpActionResult> GetPermissionsByRoleDataGrid([FromUri] string roleId, [FromBody] DataManagerRequest dm)
         {
-            var result = PrepareResponseObject(await AdminProcesses.GetPermissionsByRole(roleId, _roleManager, _identity));
-
-            return PrepareDataGridObject(result, dm);
+            try
+            {
+                var permissions = await AdminProcesses.GetPermissionsByRole(roleId, _roleManager, _identity);
+                return PrepareDataGridObject(permissions, dm);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return null;
+            }
         }
     }
 }

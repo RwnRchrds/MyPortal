@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Security.Principal;
+using System.Threading.Tasks;
 using System.Web.Http;
 using MyPortal.Dtos;
 using MyPortal.Models.Attributes;
@@ -17,15 +18,15 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditResults")]
         [Route("results/create", Name = "ApiAssessmentCreateResult")]
-        public IHttpActionResult CreateResult([FromBody] AssessmentResult result)
+        public async Task<IHttpActionResult> CreateResult([FromBody] AssessmentResult result)
         {
             try
             {
-                AssessmentProcesses.CreateResult(result, _context);
+                await AssessmentProcesses.CreateResult(result, _context);
             }
             catch (Exception e)
             {
-                HandleException(e);
+                return HandleException(e);
             }
 
             return Content(HttpStatusCode.OK, "Result created");
@@ -34,97 +35,182 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ViewResults")]
         [Route("results/get/byStudent/{studentId:int}/{resultSetId:int}", Name = "ApiAssessmentGetResultsByStudent")]
-        public IEnumerable<AssessmentResultDto> GetResultsByStudent([FromUri] int studentId, [FromUri] int resultSetId)
+        public async Task<IEnumerable<AssessmentResultDto>> GetResultsByStudent([FromUri] int studentId, [FromUri] int resultSetId)
         {
-            return PrepareResponseObject(AssessmentProcesses.GetResultsByStudent(studentId, resultSetId, _context));
+            try
+            {
+                return await AssessmentProcesses.GetResultsByStudent(studentId, resultSetId, _context);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return null;
+            }
         }
 
         [HttpPost]
         [RequiresPermission("ViewResults")]
         [Route("results/get/byStudent/{studentId:int}/{resultsetId:int}", Name = "ApiAssessmentGetResultsByStudentDataGrid")]
-        public IHttpActionResult GetResultsByStudentDataGrid([FromUri] int studentId, [FromUri] int resultSetId,
+        public async Task<IHttpActionResult> GetResultsByStudentDataGrid([FromUri] int studentId, [FromUri] int resultSetId,
             [FromBody] DataManagerRequest dm)
         {
-            var results =
-                PrepareResponseObject(
-                    AssessmentProcesses.GetResultsByStudentDataGrid(studentId, resultSetId, _context));
-
-            return PrepareDataGridObject(results, dm);
+            try
+            {
+                var results = await AssessmentProcesses.GetResultsByStudentDataGrid(studentId, resultSetId, _context);
+                return PrepareDataGridObject(results, dm);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpPost]
         [RequiresPermission("EditResults")]
         [Route("resultSets/create", Name = "ApiAssessmentCreateResultSet")]
-        public IHttpActionResult CreateResultSet([FromBody] AssessmentResultSet resultSet)
+        public async Task<IHttpActionResult> CreateResultSet([FromBody] AssessmentResultSet resultSet)
         {
-            return PrepareResponse(AssessmentProcesses.CreateResultSet(resultSet, _context));
+            try
+            {
+                await AssessmentProcesses.CreateResultSet(resultSet, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "Result set created");
         }
 
         [HttpDelete]
         [RequiresPermission("EditResultSets")]
         [Route("resultSets/delete/{resultSetId:int}", Name = "ApiAssessmentDeleteResultSet")]
-        public IHttpActionResult DeleteResultSet([FromUri] int resultSetId)
+        public async Task<IHttpActionResult> DeleteResultSet([FromUri] int resultSetId)
         {
-            return PrepareResponse(AssessmentProcesses.DeleteResultSet(resultSetId, _context));
+            try
+            {
+                await AssessmentProcesses.DeleteResultSet(resultSetId, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "Result set deleted");
         }
 
         [HttpGet]
         [RequiresPermission("ViewResultSets")]
         [Route("resultSets/get/byId/{resultSetId:int}", Name = "ApiAssessmentGetResultSetById")]
-        public AssessmentResultSetDto GetResultSetById([FromUri] int resultSetId)
+        public async Task<AssessmentResultSetDto> GetResultSetById([FromUri] int resultSetId)
         {
-            return PrepareResponseObject(
-                AssessmentProcesses.GetResultSetById(resultSetId, _context));
+            try
+            {
+                return await AssessmentProcesses.GetResultSetById(resultSetId, _context);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return null;
+            }
         }
 
         [HttpGet]
         [RequiresPermission("ViewResultSets")]
         [Route("resultSets/get/all", Name = "ApiAssessmentGetAllResultSets")]
-        public IEnumerable<AssessmentResultSetDto> GetAllResultSets()
+        public async Task<IEnumerable<AssessmentResultSetDto>> GetAllResultSets()
         {
-            return PrepareResponseObject(AssessmentProcesses.GetAllResultSets(_context));
+            try
+            {
+                return await AssessmentProcesses.GetAllResultSets(_context);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return null;
+            }
         }
 
         [HttpGet]
         [RequiresPermission("ViewResultSets")]
         [Route("resultSets/get/byStudent/{studentId:int}", Name = "ApiAssessmentGetResultSetsByStudent")]
-        public IEnumerable<AssessmentResultSetDto> GetResultSetsByStudent([FromUri] int studentId)
+        public async Task<IEnumerable<AssessmentResultSetDto>> GetResultSetsByStudent([FromUri] int studentId)
         {
-            return PrepareResponseObject(AssessmentProcesses.GetResultSetsByStudent(studentId, _context));
+            try
+            {
+                return await AssessmentProcesses.GetResultSetsByStudent(studentId, _context);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return null;
+            }
         }
 
         [HttpPost]
         [RequiresPermission("ViewResultSets")]
         [Route("resultSets/get/dataGrid/all", Name = "ApiAssessmentGetAllResultSetsDataGrid")]
-        public IHttpActionResult GetAllResultSetsDataGrid([FromBody] DataManagerRequest dm)
+        public async Task<IHttpActionResult> GetAllResultSetsDataGrid([FromBody] DataManagerRequest dm)
         {
-            var resultSets = PrepareResponseObject(AssessmentProcesses.GetAllResultSets_DataGrid(_context));
-
-            return PrepareDataGridObject(resultSets, dm);
+            try
+            {
+                var resultSets = await AssessmentProcesses.GetAllResultSetsDataGrid(_context);
+                return PrepareDataGridObject(resultSets, dm);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpGet]
         [RequiresPermission("EditResultSets")]
         [Route("resultSets/hasResults/{resultSetId:int}", Name = "ApiAssessmentResultSetHasResults")]
-        public bool ResultSetHasResults([FromUri] int resultSetId)
+        public async Task<bool> ResultSetHasResults([FromUri] int resultSetId)
         {
-            return PrepareResponseObject(AssessmentProcesses.ResultSetContainsResults(resultSetId, _context));
+            try
+            {
+                return await AssessmentProcesses.ResultSetContainsResults(resultSetId, _context);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return false;
+            }
         }
 
         [HttpPost]
         [RequiresPermission("EditResultSets")]
         [Route("resultSets/setCurrent/{resultSetId:int}", Name = "ApiAssessmentSetResultSetAsCurrent")]
-        public IHttpActionResult SetResultSetAsCurrent([FromUri] int resultSetId)
+        public async Task<IHttpActionResult> SetResultSetAsCurrent([FromUri] int resultSetId)
         {
-            return PrepareResponse(AssessmentProcesses.SetResultSetAsCurrent(resultSetId, _context));
+            try
+            {
+                await AssessmentProcesses.SetResultSetAsCurrent(resultSetId, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "Result set marked as current");
         }
 
         [HttpPost]
         [RequiresPermission("EditResultSets")]
         [Route("resultSets/update", Name = "ApiAssessmentUpdateResultSet")]
-        public IHttpActionResult UpdateResultSet([FromBody] AssessmentResultSet resultSet)
+        public async Task<IHttpActionResult> UpdateResultSet([FromBody] AssessmentResultSet resultSet)
         {
-            return PrepareResponse(AssessmentProcesses.UpdateResultSet(resultSet, _context));
+            try
+            {
+                await AssessmentProcesses.UpdateResultSet(resultSet, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "Result set updated");
         }
     }
 }

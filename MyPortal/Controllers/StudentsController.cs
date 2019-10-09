@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using MyPortal.Models.Attributes;
@@ -89,7 +90,7 @@ namespace MyPortal.Controllers
 
         //MyResults Page
         [Route("Results")]
-        public ActionResult Results()
+        public async Task<ActionResult> Results()
         {
             var userId = User.Identity.GetUserId();
 
@@ -98,7 +99,9 @@ namespace MyPortal.Controllers
             if (student == null)
                 return HttpNotFound();
 
-            var resultSets = PrepareResponseObject(AssessmentProcesses.GetAllResultSets_Model(_context)).ToList();
+            var list = await AssessmentProcesses.GetAllResultSetsModel(_context);
+
+            var resultSets = list.ToList();
 
             var currentResultSet = resultSets.SingleOrDefault(x => x.IsCurrent);
 

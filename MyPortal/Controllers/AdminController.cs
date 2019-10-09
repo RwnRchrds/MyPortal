@@ -82,11 +82,9 @@ namespace MyPortal.Controllers
         {
             var viewModel = new RolePermissionsViewModel();
 
-            var result = await AdminProcesses.GetRoleById_Model(roleId, _roleManager, _identity);
+            var result = await AdminProcesses.GetRoleByIdModel(roleId, _roleManager);
 
-            var role = PrepareResponseObject(result);
-
-            viewModel.Role = role;
+            viewModel.Role = result;
 
             return View(viewModel);
         }

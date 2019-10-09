@@ -44,32 +44,16 @@ namespace MyPortal.Controllers.Api
 
         protected IHttpActionResult HandleException(Exception ex)
         {
-            if (ex is NotFoundException)
-            {
-                return Content(HttpStatusCode.NotFound, ex.Message);
-            }
-
-            if (ex is BadRequestException)
-            {
-                return Content(HttpStatusCode.BadRequest, ex.Message);
-            }
-
-            throw ex;
+            return Content(ex is NotFoundException
+                ? HttpStatusCode.NotFound
+                : HttpStatusCode.BadRequest, ex.Message);
         }
 
         protected void ThrowException(Exception ex)
         {
-            if (ex is NotFoundException)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            if (ex is BadRequestException)
-            {
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
-            }
-
-            throw ex;
+            throw new HttpResponseException(ex is NotFoundException
+                ? HttpStatusCode.NotFound
+                : HttpStatusCode.BadRequest);
         }
 
         //If ProcessResponse returns an object

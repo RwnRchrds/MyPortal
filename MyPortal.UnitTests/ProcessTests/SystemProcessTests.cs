@@ -14,11 +14,21 @@ namespace MyPortal.UnitTests.ProcessTests
         [Test]
         public static void ValidateUpn_ReturnsTrue()
         {
-            const string upn = "H801200001001";
+            const string upn = "N936358319001";
 
             var result = SystemProcesses.ValidateUpn(upn);
 
             Assert.That(result);
+        }
+
+        [Test]
+        public static void ValidateUpn_ReturnsFalse()
+        {
+            const string upn = "H936357319001";
+
+            var result = SystemProcesses.ValidateUpn(upn);
+
+            Assert.That(!result);
         }
     }
 }
