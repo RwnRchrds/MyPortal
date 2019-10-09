@@ -262,14 +262,14 @@ namespace MyPortal.Models.Database
                 .IsUnicode(false);
 
             modelBuilder.Entity<CurriculumClass>()
-                .HasMany(e => e.CurriculumClassPeriods)
-                .WithRequired(e => e.CurriculumClass)
+                .HasMany(e => e.Sessions)
+                .WithRequired(e => e.Class)
                 .HasForeignKey(e => e.ClassId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<CurriculumClass>()
                 .HasMany(e => e.Enrolments)
-                .WithRequired(e => e.CurriculumClass)
+                .WithRequired(e => e.Class)
                 .HasForeignKey(e => e.ClassId)
                 .WillCascadeOnDelete(false);
 
@@ -628,7 +628,7 @@ namespace MyPortal.Models.Database
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Student>()
-                .HasMany(e => e.CurriculumClassEnrolments)
+                .HasMany(e => e.Enrolments)
                 .WithRequired(e => e.Student)
                 .HasForeignKey(e => e.StudentId)
                 .WillCascadeOnDelete(false);

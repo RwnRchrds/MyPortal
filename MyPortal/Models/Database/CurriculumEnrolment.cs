@@ -18,7 +18,7 @@ namespace MyPortal.Models.Database
 
         public int ClassId { get; set; }
 
-        public virtual CurriculumClass CurriculumClass { get; set; }
+        public virtual CurriculumClass Class { get; set; }
 
         public virtual Student Student { get; set; }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
@@ -102,23 +103,23 @@ namespace MyPortal.Processes
             return new ProcessResponse<IEnumerable<SystemBulletin>>(ResponseType.Ok, null, bulletins);
         }
 
-        public static int? GetCurrentAcademicYearId(MyPortalDbContext context)
+        public static async Task<int?> GetCurrentAcademicYearId(MyPortalDbContext context)
         {
             var academicYear =
-                context.CurriculumAcademicYears.SingleOrDefault(x =>
+                await context.CurriculumAcademicYears.SingleOrDefaultAsync(x =>
                     x.FirstDate <= DateTime.Today && x.LastDate >= DateTime.Today) ??
-                context.CurriculumAcademicYears.FirstOrDefault();
+                await context.CurriculumAcademicYears.FirstOrDefaultAsync();
 
             return academicYear?.Id;
         }
 
-        public static int GetCurrentOrSelectedAcademicYearId(MyPortalDbContext context, IPrincipal user)
+        public static async Task<int> GetCurrentOrSelectedAcademicYearId(MyPortalDbContext context, IPrincipal user)
         {
-            var academicYearId = GetCurrentAcademicYearId(context);
+            var academicYearId = await GetCurrentAcademicYearId(context);
             
             if (user != null && user.HasPermission("AccessStaffPortal"))
             {
-                var selectedAcademicYearId = user.GetSelectedAcademicYearId();
+                var selectedAcademicYearId = await user.GetSelectedAcademicYearId();
 
                 if (selectedAcademicYearId != null)
                 {

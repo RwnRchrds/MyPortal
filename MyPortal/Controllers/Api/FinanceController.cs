@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net;
 using System.Security.Principal;
+using System.Threading.Tasks;
 using System.Web.Http;
 using MyPortal.Dtos;
 using MyPortal.Models.Attributes;
@@ -132,18 +133,18 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ViewSales")]
         [Route("sales/get/processed", Name = "ApiFinanceGetProcessedSales")]
-        public IEnumerable<FinanceSaleDto> GetProcessedSales()
+        public async Task<IEnumerable<FinanceSaleDto>> GetProcessedSales()
         {
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             return PrepareResponseObject(FinanceProcesses.GetProcessedSales(academicYearId, _context));
         }
 
         [HttpPost]
         [RequiresPermission("ViewSales")]
         [Route("sales/get/dataGrid/processed", Name = "ApiFinanceGetProcessedSalesDataGrid")]
-        public IHttpActionResult GetProcessedSalesDataGrid([FromBody] DataManagerRequest dm)
+        public async Task<IHttpActionResult> GetProcessedSalesDataGrid([FromBody] DataManagerRequest dm)
         {
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             var sales = PrepareResponseObject(FinanceProcesses.GetProcessedSales_DataGrid(academicYearId, _context));
 
             return PrepareDataGridObject(sales, dm);
@@ -152,18 +153,18 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ViewSales")]
         [Route("sales/get/all", Name = "ApiFinanceGetAllSales")]
-        public IEnumerable<FinanceSaleDto> GetAllSales()
+        public async Task<IEnumerable<FinanceSaleDto>> GetAllSales()
         {
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             return PrepareResponseObject(FinanceProcesses.GetAllSales(academicYearId, _context));
         }
 
         [HttpPost]
         [RequiresPermission("ViewSales")]
         [Route("sales/get/dataGrid/all", Name = "ApiFinanceGetAllSalesDataGrid")]
-        public IHttpActionResult GetAllSalesDataGrid([FromBody] DataManagerRequest dm)
+        public async Task<IHttpActionResult> GetAllSalesDataGrid([FromBody] DataManagerRequest dm)
         {
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             var sales = PrepareResponseObject(FinanceProcesses.GetAllSales_DataGrid(academicYearId, _context));
 
             return PrepareDataGridObject(sales, dm);
@@ -172,27 +173,27 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ViewSales, AccessStudentPortal")]
         [Route("sales/get/byStudent/{studentId:int}", Name = "ApiFinanceGetSalesByStudent")]
-        public IEnumerable<FinanceSaleDto> GetSalesByStudent([FromUri] int studentId)
+        public async Task<IEnumerable<FinanceSaleDto>> GetSalesByStudent([FromUri] int studentId)
         {
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             return PrepareResponseObject(FinanceProcesses.GetAllSalesByStudent(studentId, academicYearId, _context));
         }
 
         [HttpGet]
         [Route("sales/get/pending", Name = "ApiFinanceGetPendingSales")]
         [RequiresPermission("ViewSales")]
-        public IEnumerable<FinanceSaleDto> GetPendingSales()
+        public async Task<IEnumerable<FinanceSaleDto>> GetPendingSales()
         {
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             return PrepareResponseObject(FinanceProcesses.GetPendingSales(academicYearId, _context));
         }
 
         [HttpPost]
         [Route("sales/get/dataGrid/pending", Name = "ApiFinanceGetPendingSalesDataGrid")]
         [RequiresPermission("ViewSales")]
-        public IHttpActionResult GetPendingSalesDataGrid([FromBody] DataManagerRequest dm)
+        public async Task<IHttpActionResult> GetPendingSalesDataGrid([FromBody] DataManagerRequest dm)
         {
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             var sales = PrepareResponseObject(FinanceProcesses.GetPendingSales_DataGrid(academicYearId, _context));
 
             return PrepareDataGridObject(sales, dm);
@@ -219,19 +220,19 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditSales")]
         [Route("sales/create", Name = "ApiFinanceCreateSale")]
-        public IHttpActionResult CreateSale([FromBody] FinanceSale sale)
+        public async Task<IHttpActionResult> CreateSale([FromBody] FinanceSale sale)
         {
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             return PrepareResponse(FinanceProcesses.CreateSale(sale, academicYearId, _context));
         }
 
         [HttpPost]
         [RequiresPermission("AccessStudentStore")]
         [Route("sales/checkoutBasket/{studentId:int}", Name = "ApiFinanceCheckoutBasket")]
-        public IHttpActionResult CheckoutBasket([FromBody] int studentId)
+        public async Task<IHttpActionResult> CheckoutBasket([FromBody] int studentId)
         {
             AuthenticateStudentRequest(studentId);
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             return PrepareResponse(FinanceProcesses.CheckoutBasketForStudent(studentId, academicYearId, _context));
         }

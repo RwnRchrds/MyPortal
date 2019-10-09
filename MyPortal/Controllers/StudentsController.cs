@@ -58,7 +58,7 @@ namespace MyPortal.Controllers
 
         // Student Landing Page
         [Route("Home", Name = "StudentsIndex")]
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             var userId = User.Identity.GetUserId();
 
@@ -67,9 +67,9 @@ namespace MyPortal.Controllers
             if (student == null)
                 return View("~/Views/Students/NoProfileIndex.cshtml");
 
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
-            var attendanceData = AttendanceProcesses.GetSummary(student.Id, academicYearId, _context).ResponseObject;
+            var attendanceData = await AttendanceProcesses.GetSummary(student.Id, academicYearId, _context);
             
             var attendance = attendanceData?.Present + attendanceData?.Late;
 

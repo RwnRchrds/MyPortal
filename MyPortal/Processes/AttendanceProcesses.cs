@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Dtos.LiteDtos;
@@ -12,14 +14,14 @@ namespace MyPortal.Processes
 {
     public static class AttendanceProcesses
     {
-        public static ProcessResponse<object> CreateAttendanceWeeksForAcademicYear(int academicYearId,
+        public static async Task CreateAttendanceWeeksForAcademicYear(int academicYearId,
             MyPortalDbContext context)
         {
-            var academicYear = context.CurriculumAcademicYears.SingleOrDefault(x => x.Id == academicYearId);
+            var academicYear = await context.CurriculumAcademicYears.SingleOrDefaultAsync(x => x.Id == academicYearId);
 
             if (academicYear == null)
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Academic year not found", null);
+                throw new NotFoundException("Academic year not found");
             }
 
             var pointer = academicYear.FirstDate;
@@ -27,144 +29,137 @@ namespace MyPortal.Processes
             {
                 var weekBeginning = pointer.StartOfWeek();
 
-                if (context.AttendanceWeeks.Any(x => x.Beginning == weekBeginning))
+                if (!await context.AttendanceWeeks.AnyAsync(x => x.Beginning == weekBeginning))
                 {
-                    continue;
+                    var attendanceWeek = new AttendanceWeek()
+                    {
+                        AcademicYearId = academicYear.Id,
+                        Beginning = weekBeginning
+                    };
+
+                    context.AttendanceWeeks.Add(attendanceWeek);
                 }
-
-                var attendanceWeek = new AttendanceWeek()
-                {
-                    AcademicYearId = academicYear.Id,
-                    Beginning = weekBeginning
-                };
-
-                context.AttendanceWeeks.Add(attendanceWeek);
 
                 pointer = weekBeginning.AddDays(7);
             }
 
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Attendance weeks added for academic year", null);
+            await context.SaveChangesAsync();
         }
 
-        public static ProcessResponse<IEnumerable<AttendancePeriodDto>> GetAllPeriods(MyPortalDbContext context)
+        public static async Task<IEnumerable<AttendancePeriodDto>> GetAllPeriods(MyPortalDbContext context)
         {
-            var dayIndex = new List<string> { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
-            return new ProcessResponse<IEnumerable<AttendancePeriodDto>>(ResponseType.Ok, null,
-                context.AttendancePeriods.ToList().OrderBy(x => x.Weekday)
-                    .ThenBy(x => x.StartTime).Select(Mapper.Map<AttendancePeriod, AttendancePeriodDto>));
+            var attendancePeriods = await context.AttendancePeriods.OrderBy(x => x.Weekday).ThenBy(x => x.StartTime)
+                .ToListAsync();
+
+            return attendancePeriods.Select(Mapper.Map<AttendancePeriod, AttendancePeriodDto>);
         }
 
-        public static ProcessResponse<AttendanceMark> GetAttendanceMark(MyPortalDbContext context, AttendanceWeek attendanceWeek, AttendancePeriod period, Student student)
+        public static async Task<AttendanceMark> GetAttendanceMark(MyPortalDbContext context, int attendanceWeekId, int periodId, int studentId)
         {
-            var mark = context.AttendanceMarks.SingleOrDefault(x =>
-                x.PeriodId == period.Id && x.WeekId == attendanceWeek.Id && x.StudentId == student.Id);
+            var mark = await context.AttendanceMarks.SingleOrDefaultAsync(x =>
+                x.PeriodId == periodId && x.WeekId == attendanceWeekId && x.StudentId == studentId);
+
+            var verifyValues = await context.AttendanceWeeks.AnyAsync(x => x.Id == attendanceWeekId) &&
+                               await context.AttendancePeriods.AnyAsync(x => x.Id == periodId) &&
+                               await context.Students.AnyAsync(x => x.Id == studentId);
 
             if (mark == null)
             {
-                if (student == null || period == null || attendanceWeek == null)
+                if (!verifyValues)
                 {
                     return null;
                 }
 
                 mark = new AttendanceMark
                 {
-                    Student = student,
                     Mark = "-",
-                    WeekId = attendanceWeek.Id,
-                    Week = attendanceWeek,
-                    PeriodId = period.Id,
-                    StudentId = student.Id,
-                    Period = period
+                    WeekId = attendanceWeekId,
+                    PeriodId = periodId,
+                    StudentId = studentId,
                 };
             }
 
-            return new ProcessResponse<AttendanceMark>(ResponseType.Ok, null, mark);
+            return mark;
         }
 
-        public static ProcessResponse<AttendanceMeaning> GetMeaning(MyPortalDbContext context, string mark)
+        public static async Task<AttendanceMeaning> GetMeaning(MyPortalDbContext context, string mark)
         {
-            var codeInDb = context.AttendanceCodes.SingleOrDefault(x => x.Code == mark);
+            var codeInDb = await context.AttendanceCodes.SingleOrDefaultAsync(x => x.Code == mark);
 
             if (codeInDb == null)
             {
-                return new ProcessResponse<AttendanceMeaning>(ResponseType.NotFound, "Attendance code not found", null);
+                throw new NotFoundException("Attendance code not found");
             }
 
-            return new ProcessResponse<AttendanceMeaning>(ResponseType.Ok, null, codeInDb.AttendanceMeaning);
+            return codeInDb.AttendanceMeaning;
         }
 
-        public static ProcessResponse<AttendancePeriodDto> GetPeriodById(int periodId, MyPortalDbContext context)
+        public static async Task<AttendancePeriodDto> GetPeriodById(int periodId, MyPortalDbContext context)
         {
-            var period = context.AttendancePeriods.SingleOrDefault(x => x.Id == periodId);
+            var period = await context.AttendancePeriods.SingleOrDefaultAsync(x => x.Id == periodId);
 
             if (period == null)
             {
-                return new ProcessResponse<AttendancePeriodDto>(ResponseType.NotFound, "Period not found", null);
+                throw new NotFoundException("Period not found");
             }
 
-            return new ProcessResponse<AttendancePeriodDto>(ResponseType.Ok, null,
-                Mapper.Map<AttendancePeriod, AttendancePeriodDto>(period));
+            return Mapper.Map<AttendancePeriod, AttendancePeriodDto>(period);
         }
 
-        public static ProcessResponse<DateTime> GetPeriodDate(int weekId, int periodId, MyPortalDbContext context)
+        public static async Task<DateTime> GetPeriodDate(int weekId, int periodId, MyPortalDbContext context)
         {
-            var week = context.AttendanceWeeks.SingleOrDefault(x => x.Id == weekId);
+            var week = await context.AttendanceWeeks.SingleOrDefaultAsync(x => x.Id == weekId);
 
             if (week == null)
             {
-                return new ProcessResponse<DateTime>(ResponseType.NotFound, "Week not found", new DateTime());
+                throw new NotFoundException("Attendance week not found");
             }
 
-            var period = context.AttendancePeriods.SingleOrDefault(x => x.Id == periodId);
+            var period = await context.AttendancePeriods.SingleOrDefaultAsync(x => x.Id == periodId);
 
             if (period == null)
             {
-                return new ProcessResponse<DateTime>(ResponseType.NotFound, "Period not found", new DateTime());
+                throw new NotFoundException("");
             }
 
-            return new ProcessResponse<DateTime>(ResponseType.Ok, null, week.Beginning.GetDayOfWeek(period.Weekday));
+            return week.Beginning.GetDayOfWeek(period.Weekday);
         }
 
-        public static ProcessResponse<string> GetPeriodTime(AttendancePeriod period)
+        public static string GetPeriodTime(AttendancePeriod period)
         {
             var startTime = period.StartTime.ToString(@"hh\:mm");
             var endTime = period.EndTime.ToString(@"hh\:mm");
 
             var periodTime = $"{startTime} - {endTime}";
 
-            return new ProcessResponse<string>(ResponseType.Ok, null, periodTime);
+            return periodTime;
         }
 
-        public static ProcessResponse<IEnumerable<StudentAttendanceMarkCollection>> GetRegisterMarks(int academicYearId, int weekId,
+        public static async Task<IEnumerable<StudentAttendanceMarkCollection>> GetRegisterMarks(int academicYearId, int weekId,
             int sessionId, MyPortalDbContext context, bool retrieveWholeDay)
         {
-            var attendanceWeek =
-                context.AttendanceWeeks.SingleOrDefault(x => x.Id == weekId && x.AcademicYearId == academicYearId);
 
-            if (attendanceWeek == null)
+            if (!await context.AttendanceWeeks.AnyAsync(x => x.Id == weekId))
             {
-                return new ProcessResponse<IEnumerable<StudentAttendanceMarkCollection>>(ResponseType.NotFound, "Attendance week not found", null);
+                throw new NotFoundException("Attendance week not found");
             }
 
-            var session = context.CurriculumSessions.SingleOrDefault(x => x.Id == sessionId);
+            var session = await context.CurriculumSessions.SingleOrDefaultAsync(x => x.Id == sessionId);
 
             if (session == null)
             {
-                return new ProcessResponse<IEnumerable<StudentAttendanceMarkCollection>>(ResponseType.NotFound, "Session not found", null);
+                throw new NotFoundException("Session not found");
             }
 
             var markList = new List<StudentAttendanceMarkCollection>();
 
-            foreach (var enrolment in session.CurriculumClass.Enrolments)
+            foreach (var enrolment in session.Class.Enrolments)
             {
                 var markObject = new StudentAttendanceMarkCollection();
-                var student = enrolment.Student;
                 markObject.StudentName = PeopleProcesses.GetStudentDisplayName(enrolment.Student).ResponseObject;
                 var marks = new List<AttendanceMark>();
 
-                var mark = GetAttendanceMark(context, attendanceWeek, session.AttendancePeriod, student).ResponseObject;
+                var mark = await GetAttendanceMark(context, weekId, session.PeriodId, enrolment.StudentId);
 
                 marks.Add(mark);
 
@@ -174,63 +169,60 @@ namespace MyPortal.Processes
 
                     foreach (var period in periodsInDay)
                     {
-                        mark = GetAttendanceMark(context, attendanceWeek, period, student).ResponseObject;
+                        mark = await GetAttendanceMark(context, weekId, session.PeriodId, enrolment.StudentId);
 
                         marks.Add(mark);
                     }
                 }
 
-                var liteMarks = PrepareLiteMarkList(context, marks, true);
+                var liteMarks = await PrepareLiteMarkList(context, marks, true);
 
                 markObject.Marks = liteMarks.ToList();
                 markList.Add(markObject);
             }
 
-            return new ProcessResponse<IEnumerable<StudentAttendanceMarkCollection>>(ResponseType.Ok, null,
-                markList.ToList().OrderBy(x => x.StudentName));
+            return markList.ToList().OrderBy(x => x.StudentName);
         }
 
-        public static ProcessResponse<AttendanceSummary> GetSummary(int studentId, int academicYearId, MyPortalDbContext context, bool asPercentage = false)
+        public static async Task<AttendanceSummary> GetSummary(int studentId, int academicYearId, MyPortalDbContext context, bool asPercentage = false)
         {
-            var marksForStudent = context.AttendanceMarks.Where(x =>
-                x.Week.AcademicYearId == academicYearId && x.StudentId == studentId);
+            var marksForStudent = await context.AttendanceMarks.Where(x =>
+                x.Week.AcademicYearId == academicYearId && x.StudentId == studentId).ToListAsync();
 
             if (!marksForStudent.Any())
             {
-                return new ProcessResponse<AttendanceSummary>(ResponseType.NotFound, "No attendance data", null);
+                throw new NotFoundException("No attendance data available");
             }
 
             var summary = new AttendanceSummary();
 
             foreach (var mark in marksForStudent)
             {
-                var meaning = GetMeaning(context, mark.Mark).ResponseObject;
+                var meaning = await GetMeaning(context, mark.Mark);
 
-                if (meaning == null)
+                if (meaning != null)
                 {
-                    continue;
-                }
-
-                switch (meaning.Code)
-                {
-                    case "P":
-                        summary.Present++;
-                        break;
-                    case "AA":
-                        summary.AuthorisedAbsence++;
-                        break;
-                    case "AEA":
-                        summary.ApprovedEdActivity++;
-                        break;
-                    case "UA":
-                        summary.UnauthorisedAbsence++;
-                        break;
-                    case "ANR":
-                        summary.NotRequired++;
-                        break;
-                    case "L":
-                        summary.Late++;
-                        break;
+                    switch (meaning.Code)
+                    {
+                        case "P":
+                            summary.Present++;
+                            break;
+                        case "AA":
+                            summary.AuthorisedAbsence++;
+                            break;
+                        case "AEA":
+                            summary.ApprovedEdActivity++;
+                            break;
+                        case "UA":
+                            summary.UnauthorisedAbsence++;
+                            break;
+                        case "ANR":
+                            summary.NotRequired++;
+                            break;
+                        case "L":
+                            summary.Late++;
+                            break;
+                    }
                 }
             }
 
@@ -239,25 +231,25 @@ namespace MyPortal.Processes
                 summary.ConvertToPercentage();
             }
 
-            return new ProcessResponse<AttendanceSummary>(ResponseType.Ok, null, summary);
+            return summary;
         }
 
-        public static ProcessResponse<AttendanceWeekDto> GetWeekByDate(int academicYearId, DateTime date, MyPortalDbContext context)
+        public static async Task<AttendanceWeekDto> GetWeekByDate(int academicYearId, DateTime date, MyPortalDbContext context)
         {
             var weekBeginning = date.StartOfWeek();
 
-            var selectedWeek = context.AttendanceWeeks.SingleOrDefault(x => x.Beginning == weekBeginning && x.AcademicYearId == academicYearId);
+            var selectedWeek = await context.AttendanceWeeks.SingleOrDefaultAsync(x =>
+                x.Beginning == weekBeginning && x.AcademicYearId == academicYearId);
 
             if (selectedWeek == null)
             {
-                return new ProcessResponse<AttendanceWeekDto>(ResponseType.NotFound, "Attendance week not found", null);
+               throw new NotFoundException("Attendance week not found");
             }
 
-            return new ProcessResponse<AttendanceWeekDto>(ResponseType.Ok, null,
-                Mapper.Map<AttendanceWeek, AttendanceWeekDto>(selectedWeek));
+            return Mapper.Map<AttendanceWeek, AttendanceWeekDto>(selectedWeek);
         }
 
-        public static IEnumerable<AttendanceMarkLite> PrepareLiteMarkList(MyPortalDbContext context, List<AttendanceMark> marks, bool retrieveMeanings)
+        public static async Task<IEnumerable<AttendanceMarkLite>> PrepareLiteMarkList(MyPortalDbContext context, List<AttendanceMark> marks, bool retrieveMeanings)
         {
             var liteMarks = marks.OrderBy(x => x.Period.StartTime)
                 .Select(Mapper.Map<AttendanceMark, AttendanceMarkLite>).ToList();
@@ -266,14 +258,15 @@ namespace MyPortal.Processes
             {
                 foreach (var mark in liteMarks)
                 {
-                    mark.MeaningCode = GetMeaning(context, mark.Mark).ResponseObject.Code;
+                    var meaning = await GetMeaning(context, mark.Mark);
+                    mark.MeaningCode = meaning.Code;
                 }
             }
 
             return liteMarks;
         }
 
-        public static ProcessResponse<object> SaveRegisterMarks(IEnumerable<StudentAttendanceMarkCollection> markCollections,
+        public static async Task SaveRegisterMarks(IEnumerable<StudentAttendanceMarkCollection> markCollections,
             MyPortalDbContext context)
         {
             foreach (var collection in markCollections)
@@ -295,12 +288,11 @@ namespace MyPortal.Processes
 
                     else
                     {
-                        var markInDb = context.AttendanceMarks.SingleOrDefault(x => x.Id == mark.Id);
+                        var markInDb = await context.AttendanceMarks.SingleOrDefaultAsync(x => x.Id == mark.Id);
 
                         if (markInDb == null)
                         {
-                            return new ProcessResponse<object>(ResponseType.NotFound,
-                                "An attendance mark could not be found", null);
+                            throw new NotFoundException("Attendance mark not found");
                         }
 
                         markInDb.Mark = mark.Mark;
@@ -308,29 +300,7 @@ namespace MyPortal.Processes
                 }
             }
 
-            context.SaveChanges();
-            return new ProcessResponse<object>(ResponseType.Ok, "Register saved", null);
-        }
-
-        public static ProcessResponse<bool> VerifyAttendanceCodes(this MyPortalDbContext context, ListContainer<AttendanceMark> register)
-        {
-            var codesVerified = true;
-            var codes = context.AttendanceCodes.ToList();
-
-            foreach (var mark in register.Objects)
-            {
-                if (!codesVerified)
-                {
-                    break;
-                }
-
-                if (codes.All(x => x.Code != mark.Mark))
-                {
-                    codesVerified = false;
-                }
-            }
-
-            return new ProcessResponse<bool>(ResponseType.Ok, null, codesVerified);
+            await context.SaveChangesAsync();
         }
     }
 }

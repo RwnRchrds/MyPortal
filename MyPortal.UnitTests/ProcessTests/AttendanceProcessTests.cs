@@ -20,7 +20,6 @@ namespace MyPortal.UnitTests.ProcessTests
 
             var result = AttendanceProcesses.CreateAttendanceWeeksForAcademicYear(academicYear.Id, _context);
 
-            Assert.That(result.ResponseType == ResponseType.Ok);
             Assert.That(_context.AttendanceWeeks.Count(x => x.AcademicYearId == academicYear.Id) > 50);
         }
     }

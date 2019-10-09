@@ -3,6 +3,7 @@ using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
@@ -90,7 +91,7 @@ namespace MyPortal.Controllers
 
         [RequiresPermission("TakeRegister")]
         [Route("Attendance/TakeRegister/{weekId:int}/{sessionId:int}", Name = "AttendanceTakeRegister")]
-        public ActionResult TakeRegister(int weekId, int sessionId)
+        public async Task<ActionResult> TakeRegister(int weekId, int sessionId)
         {
             var viewModel = new TakeRegisterViewModel();
             var attendanceWeek = _context.AttendanceWeeks.SingleOrDefault(x => x.Id == weekId);
@@ -101,7 +102,7 @@ namespace MyPortal.Controllers
                 return RedirectToAction("Registers");
             }
 
-            var sessionDate = PrepareResponseObject(AttendanceProcesses.GetPeriodDate(attendanceWeek.Id, session.PeriodId, _context));
+            var sessionDate = await AttendanceProcesses.GetPeriodDate(attendanceWeek.Id, session.PeriodId, _context);
 
             viewModel.Session = session;
             viewModel.WeekId = attendanceWeek.Id;
@@ -321,7 +322,7 @@ namespace MyPortal.Controllers
         
         [RequiresPermission("ViewStudents")]
         [Route("People/Students/{id:int}", Name = "PeopleStudentDetails")]
-        public ActionResult StudentDetails(int id)
+        public async Task<ActionResult> StudentDetails(int id)
         {
             var student = _context.Students.SingleOrDefault(s => s.Id == id);
 
@@ -340,11 +341,11 @@ namespace MyPortal.Controllers
 
             var commentBanks = _context.ProfileCommentBanks.OrderBy(x => x.Name).ToList();
 
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             double? attendance = null;
 
-            var attendanceData = AttendanceProcesses.GetSummary(student.Id, academicYearId, _context, true).ResponseObject;
+            var attendanceData = await AttendanceProcesses.GetSummary(student.Id, academicYearId, _context, true);
 
             if (attendanceData != null)
             {
@@ -530,7 +531,7 @@ namespace MyPortal.Controllers
 
         
         [Route("Home", Name = "StaffIndex")]
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             var userId = User.Identity.GetUserId();
 
@@ -538,7 +539,7 @@ namespace MyPortal.Controllers
 
             var academicYears = PrepareResponseObject(CurriculumProcesses.GetAcademicYears_Model(_context));
 
-            var selectedAcademicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var selectedAcademicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             if (staff.ResponseType == ResponseType.NotFound)
                 return View("~/Views/Staff/NoProfileIndex.cshtml");

@@ -68,7 +68,7 @@ namespace MyPortal.Processes
                 x.ClassId == enrolment.ClassId && x.StudentId == enrolment.StudentId))
             {
                 return new ProcessResponse<object>(ResponseType.BadRequest,
-                    $"{PeopleProcesses.GetStudentDisplayName(enrolment.Student).ResponseObject} is already enrolled in {enrolment.CurriculumClass.Name}",
+                    $"{PeopleProcesses.GetStudentDisplayName(enrolment.Student).ResponseObject} is already enrolled in {enrolment.Class.Name}",
                     null);
             }
 
@@ -93,7 +93,7 @@ namespace MyPortal.Processes
                 }
 
                 return new ProcessResponse<object>(ResponseType.Ok,
-                    $"{PeopleProcesses.GetStudentDisplayName(enrolment.Student).ResponseObject} has been enrolled in {enrolment.CurriculumClass.Name}",
+                    $"{PeopleProcesses.GetStudentDisplayName(enrolment.Student).ResponseObject} has been enrolled in {enrolment.Class.Name}",
                     null);
             }
 
@@ -306,7 +306,7 @@ namespace MyPortal.Processes
             context.SaveChanges();
 
             return new ProcessResponse<object>(ResponseType.Ok,
-                $"{PeopleProcesses.GetStudentDisplayName(enrolment.Student).ResponseObject} has been unenrolled from {enrolment.CurriculumClass.Name}",
+                $"{PeopleProcesses.GetStudentDisplayName(enrolment.Student).ResponseObject} has been unenrolled from {enrolment.Class.Name}",
                 null);
         }
 
@@ -705,8 +705,8 @@ namespace MyPortal.Processes
 
             var classList = context.CurriculumSessions
                 .Where(x =>
-                    x.CurriculumClass.AcademicYearId == academicYearId && x.AttendancePeriod.Weekday ==
-                    date.DayOfWeek && x.CurriculumClass.TeacherId == staffId)
+                    x.Class.AcademicYearId == academicYearId && x.AttendancePeriod.Weekday ==
+                    date.DayOfWeek && x.Class.TeacherId == staffId)
                 .OrderBy(x => x.AttendancePeriod.StartTime)
                 .ToList();
 
@@ -761,7 +761,7 @@ namespace MyPortal.Processes
 
         public static ProcessResponse<bool> HasPeriods(this CurriculumClass currClass)
         {
-            return new ProcessResponse<bool>(ResponseType.Ok, null, currClass.CurriculumClassPeriods.Any());
+            return new ProcessResponse<bool>(ResponseType.Ok, null, currClass.Sessions.Any());
         }
 
         public static ProcessResponse<bool> IsInAcademicYear(this DateTime date, MyPortalDbContext context, int academicYearId)
@@ -784,7 +784,7 @@ namespace MyPortal.Processes
         public static ProcessResponse<bool> PeriodIsFree(MyPortalDbContext context, Student student, int periodId)
         {
             bool isFree = !context.CurriculumEnrolments.Any(x =>
-                x.StudentId == student.Id && x.CurriculumClass.CurriculumClassPeriods.Any(p => p.PeriodId == periodId));
+                x.StudentId == student.Id && x.Class.Sessions.Any(p => p.PeriodId == periodId));
 
             return new ProcessResponse<bool>(ResponseType.Ok, null, isFree);
         }

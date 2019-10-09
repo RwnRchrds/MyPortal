@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
@@ -16,9 +17,9 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ViewBehaviour")]
         [Route("points/get/{studentId:int}", Name = "ApiBehaviourGetBehaviourPointsByStudent")]
-        public int GetBehaviourPointsByStudent([FromUri] int studentId)
+        public async Task<int> GetBehaviourPointsByStudent([FromUri] int studentId)
         {
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             return PrepareResponseObject(
                 BehaviourProcesses.GetBehaviourPointsCountByStudent(studentId, academicYearId, _context));
@@ -27,9 +28,9 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("ViewBehaviour")]
         [Route("achievements/get/byStudent/dataGrid/{studentId:int}", Name = "ApiBehaviourGetAchievementsByStudentDataGrid")]
-        public IHttpActionResult GetAchievementsByStudentDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
+        public async Task<IHttpActionResult> GetAchievementsByStudentDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
         {
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             var achievements =
                 PrepareResponseObject(BehaviourProcesses.GetAchievementsForGrid(studentId, academicYearId, _context));
@@ -48,12 +49,12 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditBehaviour")]
         [Route("achievements/create", Name = "ApiBehaviourCreateAchievement")]
-        public IHttpActionResult CreateAchievement([FromBody] BehaviourAchievement achievement)
+        public async Task<IHttpActionResult> CreateAchievement([FromBody] BehaviourAchievement achievement)
         {
             var userId = User.Identity.GetUserId();
             var staff = PrepareResponseObject(PeopleProcesses.GetStaffFromUserId(userId, _context));
 
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             achievement.AcademicYearId = academicYearId;
             achievement.RecordedById = staff.Id;
@@ -80,9 +81,9 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("ViewBehaviour")]
         [Route("incidents/get/byStudent/dataGrid/{studentId:int}", Name = "ApiBehaviourGetBehaviourIncidentsByStudentDataGrid")]
-        public IHttpActionResult GetBehaviourIncidentsByStudentDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
+        public async Task<IHttpActionResult> GetBehaviourIncidentsByStudentDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
         {
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             var incidents =
                 PrepareResponseObject(BehaviourProcesses.GetBehaviourIncidentsForGrid(studentId, academicYearId, _context));
 
@@ -100,11 +101,11 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditBehaviour")]
         [Route("incidents/create", Name = "ApiBehaviourCreateIncident")]
-        public IHttpActionResult CreateIncident([FromBody] BehaviourIncident incident)
+        public async Task<IHttpActionResult> CreateIncident([FromBody] BehaviourIncident incident)
         {
             var userId = User.Identity.GetUserId();
             var staff = PrepareResponseObject(PeopleProcesses.GetStaffFromUserId(userId, _context));
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             incident.AcademicYearId = academicYearId;
             incident.RecordedById = staff.Id;

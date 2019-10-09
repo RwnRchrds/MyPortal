@@ -195,13 +195,13 @@ namespace MyPortal
 
             CreateMap<CurriculumSession, GridCurriculumSessionDto>()
                 .ForMember(dest => dest.ClassName,
-                    opts => opts.MapFrom(src => src.CurriculumClass.Name))
+                    opts => opts.MapFrom(src => src.Class.Name))
                 .ForMember(dest => dest.PeriodName,
                     opts => opts.MapFrom(src => src.AttendancePeriod.Name))
                 .ForMember(dest => dest.Teacher,
-                    opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.CurriculumClass.Teacher).ResponseObject))
+                    opts => opts.MapFrom(src => PeopleProcesses.GetStaffDisplayName(src.Class.Teacher).ResponseObject))
                 .ForMember(dest => dest.Time,
-                    opts => opts.MapFrom(src => AttendanceProcesses.GetPeriodTime(src.AttendancePeriod).ResponseObject));
+                    opts => opts.MapFrom(src => AttendanceProcesses.GetPeriodTime(src.AttendancePeriod)));
 
             CreateMap<CurriculumClass, GridCurriculumClassDto>()
                 .ForMember(dest => dest.Subject,
@@ -213,7 +213,7 @@ namespace MyPortal
                 .ForMember(dest => dest.StudentName,
                     opts => opts.MapFrom(src => PeopleProcesses.GetStudentDisplayName(src.Student).ResponseObject))
                 .ForMember(dest => dest.ClassName,
-                    opts => opts.MapFrom(src => src.CurriculumClass.Name));
+                    opts => opts.MapFrom(src => src.Class.Name));
 
             CreateMap<CurriculumLessonPlan, GridCurriculumLessonPlanDto>()
                 .ForMember(dest => dest.StudyTopic,

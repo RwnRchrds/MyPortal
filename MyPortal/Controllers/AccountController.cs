@@ -103,7 +103,7 @@ namespace MyPortal.Controllers
             {
                 case SignInStatus.Success:
                     var userName = model.Username;
-                    SetDefaultAcademicYear(userName);
+                    await SetDefaultAcademicYear(userName);
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -129,7 +129,7 @@ namespace MyPortal.Controllers
             return code == null ? View("Error") : View();
         }
 
-        public void SetDefaultAcademicYear(string userName)
+        public async Task SetDefaultAcademicYear(string userName)
         {
             var user = _identity.Users.SingleOrDefault(x => x.UserName == userName);
 
@@ -138,7 +138,7 @@ namespace MyPortal.Controllers
                 throw new Exception("User not found");
             }
 
-            var academicYearId = SystemProcesses.GetCurrentAcademicYearId(_context);
+            var academicYearId = await SystemProcesses.GetCurrentAcademicYearId(_context);
 
             user.SelectedAcademicYearId = academicYearId;
 

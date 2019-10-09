@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using MyPortal.Models.Attributes;
 using MyPortal.Models.Misc;
@@ -18,18 +19,18 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("RunReports")]
         [Route("behaviour/incidents/byType", Name = "ApiReportsBehaviourIncidentsByType")]
-        public IEnumerable<ChartDataCategoric> BehaviourIncidentsByType()
+        public async Task<IEnumerable<ChartDataCategoric>> BehaviourIncidentsByType()
         {
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             return PrepareResponseObject(BehaviourProcesses.GetChartData_BehaviourIncidentsByType(academicYearId, _context));
         }
 
         [HttpGet]
         [RequiresPermission("RunReports")]
         [Route("behaviour/achievements/byType", Name = "ApiReportsAchievementsByType")]
-        public IEnumerable<ChartDataCategoric> AchievementsByType()
+        public async Task<IEnumerable<ChartDataCategoric>> AchievementsByType()
         {
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             return PrepareResponseObject(BehaviourProcesses.GetChartData_AchievementsByType(academicYearId, _context));
         }
     }

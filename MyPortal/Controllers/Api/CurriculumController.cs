@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Principal;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
@@ -42,9 +43,9 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ViewSessions")]
         [Route("sessions/get/byTeacher/{teacherId:int}/{date:datetime}", Name = "ApiCurriculumGetSessionsByTeacher")]
-        public IEnumerable<CurriculumSessionDto> GetSessionsByTeacher([FromUri] int teacherId, [FromUri] DateTime date)
+        public async Task<IEnumerable<CurriculumSessionDto>> GetSessionsByTeacher([FromUri] int teacherId, [FromUri] DateTime date)
         {
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             return PrepareResponseObject(
                 CurriculumProcesses.GetSessionsByTeacher(teacherId, academicYearId, date, _context));
@@ -53,10 +54,10 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("ViewSessions")]
         [Route("sessions/get/byTeacher/dataGrid/{teacherId:int}/{date:datetime}", Name = "ApiCurriculumGetSessionsByTeacherDataGrid")]
-        public IHttpActionResult GetSessionsByTeacherDataGrid([FromUri] int teacherId, [FromUri] DateTime date,
+        public async Task<IHttpActionResult> GetSessionsByTeacherDataGrid([FromUri] int teacherId, [FromUri] DateTime date,
             [FromBody] DataManagerRequest dm)
         {
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             var sessions =
                 PrepareResponseObject(
                     CurriculumProcesses.GetSessionsByTeacher_DataGrid(teacherId, academicYearId, date, _context));
@@ -67,9 +68,9 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ViewClasses")]
         [Route("classes/get/all", Name = "ApiCurriculumGetAllClasses")]
-        public IEnumerable<CurriculumClassDto> GetAllClasses()
+        public async Task<IEnumerable<CurriculumClassDto>> GetAllClasses()
         {
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             return PrepareResponseObject(CurriculumProcesses.GetAllClasses(academicYearId, _context));
         }
@@ -77,9 +78,9 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("ViewClasses")]
         [Route("classes/get/dataGrid/all", Name = "ApiCurriculumGetAllClassesDataGrid")]
-        public IHttpActionResult GetAllClassesDataGrid([FromBody] DataManagerRequest dm)
+        public async Task<IHttpActionResult> GetAllClassesDataGrid([FromBody] DataManagerRequest dm)
         {
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             var classes = PrepareResponseObject(CurriculumProcesses.GetAllClasses_DataGrid(academicYearId, _context));
 
             return PrepareDataGridObject(classes, dm);
@@ -96,9 +97,9 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditClasses")]
         [Route("classes/create", Name = "ApiCurriculumCreateClass")]
-        public IHttpActionResult CreateClass([FromBody] CurriculumClass @class)
+        public async Task<IHttpActionResult> CreateClass([FromBody] CurriculumClass @class)
         {
-            @class.AcademicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            @class.AcademicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             return PrepareResponse(CurriculumProcesses.CreateClass(@class, _context));
         }
 

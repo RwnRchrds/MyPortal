@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Security.Principal;
+using System.Threading.Tasks;
 using System.Web.WebSockets;
 using Microsoft.AspNet.Identity;
 using MyPortal.Models;
@@ -39,14 +41,14 @@ namespace MyPortal.Processes
             return applicationUser;
         }
 
-        public static int? GetSelectedAcademicYearId(this IPrincipal user)
+        public static async Task<int?> GetSelectedAcademicYearId(this IPrincipal user)
         {
             var userId = user.Identity.GetUserId();
-            var applicationUser = _identity.Users.SingleOrDefault(x => x.Id == userId);
+            var applicationUser = await _identity.Users.SingleOrDefaultAsync(x => x.Id == userId);
 
             if (applicationUser == null)
             {
-                throw new Exception("User not found.");
+                throw new NotFoundException("User not found");
             }
 
             return applicationUser.SelectedAcademicYearId;

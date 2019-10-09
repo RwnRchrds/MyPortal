@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
@@ -16,9 +17,9 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditProfileLogs")]
         [Route("logs/create", Name = "ApiProfilesCreateLog")]
-        public IHttpActionResult CreateLog([FromBody] ProfileLog log)
+        public async Task<IHttpActionResult> CreateLog([FromBody] ProfileLog log)
         {
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             var userId = User.Identity.GetUserId();
 
             return PrepareResponse(ProfilesProcesses.CreateLog(log, academicYearId, userId, _context));
@@ -43,10 +44,10 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [Route("logs/get/byStudent/{studentId:int}", Name = "ApiProfilesGetLogsByStudent")]
         [RequiresPermission("ViewProfileLogs")]
-        public IEnumerable<ProfileLogDto> GetLogsByStudent([FromUri] int studentId)
+        public async Task<IEnumerable<ProfileLogDto>> GetLogsByStudent([FromUri] int studentId)
         {
             AuthenticateStudentRequest(studentId);
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             return PrepareResponseObject(ProfilesProcesses.GetLogsByStudent(studentId, academicYearId, _context));
         }
@@ -54,9 +55,9 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [Route("logs/get/byStudent/dataGrid/{studentId:int}", Name = "ApiProfilesGetLogsByStudentDataGrid")]
         [RequiresPermission("ViewProfileLogs, AccessStudentPortal")]
-        public IHttpActionResult GetLogsByStudentDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
+        public async Task<IHttpActionResult> GetLogsByStudentDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
         {
-            var academicYearId = SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             var logs = PrepareResponseObject(
                 ProfilesProcesses.GetLogsByStudent_DataGrid(studentId, academicYearId, _context));
 

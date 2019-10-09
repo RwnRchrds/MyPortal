@@ -16,7 +16,7 @@ namespace MyPortal.Models.Database
         public CurriculumClass()
         {
             Enrolments = new HashSet<CurriculumEnrolment>();
-            CurriculumClassPeriods = new HashSet<CurriculumSession>();
+            Sessions = new HashSet<CurriculumSession>();
         }
 
         public int Id { get; set; }
@@ -44,6 +44,6 @@ namespace MyPortal.Models.Database
         public virtual PastoralYearGroup PastoralYearGroup { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CurriculumSession> CurriculumClassPeriods { get; set; }
+        public virtual ICollection<CurriculumSession> Sessions { get; set; }
     }
 }

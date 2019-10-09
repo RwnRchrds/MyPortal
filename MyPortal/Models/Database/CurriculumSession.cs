@@ -20,6 +20,6 @@ namespace MyPortal.Models.Database
 
         public virtual AttendancePeriod AttendancePeriod { get; set; }
 
-        public virtual CurriculumClass CurriculumClass { get; set; }
+        public virtual CurriculumClass Class { get; set; }
     }
 }
