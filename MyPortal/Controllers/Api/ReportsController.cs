@@ -22,7 +22,7 @@ namespace MyPortal.Controllers.Api
         public async Task<IEnumerable<ChartDataCategoric>> BehaviourIncidentsByType()
         {
             var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
-            return PrepareResponseObject(BehaviourProcesses.GetChartData_BehaviourIncidentsByType(academicYearId, _context));
+            return await BehaviourProcesses.GetChartDataBehaviourIncidentsByType(academicYearId, _context);
         }
 
         [HttpGet]
@@ -31,7 +31,7 @@ namespace MyPortal.Controllers.Api
         public async Task<IEnumerable<ChartDataCategoric>> AchievementsByType()
         {
             var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
-            return PrepareResponseObject(BehaviourProcesses.GetChartData_AchievementsByType(academicYearId, _context));
+            return await BehaviourProcesses.GetChartDataAchievementsByType(academicYearId, _context);
         }
     }
 }

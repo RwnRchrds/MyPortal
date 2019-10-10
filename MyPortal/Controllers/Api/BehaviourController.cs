@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Models.Attributes;
 using MyPortal.Models.Database;
-using MyPortal.Models.Misc;
 using MyPortal.Processes;
 using Syncfusion.EJ2.Base;
 
@@ -21,8 +21,15 @@ namespace MyPortal.Controllers.Api
         {
             var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
-            return PrepareResponseObject(
-                BehaviourProcesses.GetBehaviourPointsCountByStudent(studentId, academicYearId, _context));
+            try
+            {
+                return await BehaviourProcesses.GetBehaviourPointsCountByStudent(studentId, academicYearId, _context);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return 0;
+            }
         }
 
         [HttpPost]
@@ -32,18 +39,31 @@ namespace MyPortal.Controllers.Api
         {
             var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
-            var achievements =
-                PrepareResponseObject(BehaviourProcesses.GetAchievementsForGrid(studentId, academicYearId, _context));
-
-            return PrepareDataGridObject(achievements, dm);
+            try
+            {
+                var achievements = await BehaviourProcesses.GetAchievementsForGrid(studentId, academicYearId, _context);
+                return PrepareDataGridObject(achievements, dm);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpGet]
         [RequiresPermission("ViewBehaviour")]
         [Route("achievements/get/byId/{achievementId:int}", Name = "ApiBehaviourGetAchievementById")]
-        public BehaviourAchievementDto GetAchievementById([FromUri] int achievementId)
+        public async Task<BehaviourAchievementDto> GetAchievementById([FromUri] int achievementId)
         {
-            return PrepareResponseObject(BehaviourProcesses.GetAchievementById(achievementId, _context));
+            try
+            {
+                return await BehaviourProcesses.GetAchievementById(achievementId, _context);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return null;
+            }
         }
 
         [HttpPost]
@@ -59,23 +79,50 @@ namespace MyPortal.Controllers.Api
             achievement.AcademicYearId = academicYearId;
             achievement.RecordedById = staff.Id;
 
-            return PrepareResponse(BehaviourProcesses.CreateAchievement(achievement, _context));
+            try
+            {
+                await BehaviourProcesses.CreateAchievement(achievement, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "Achievement created");
         }
 
         [HttpPost]
         [RequiresPermission("EditBehaviour")]
         [Route("achievements/update", Name = "ApiBehaviourUpdateAchievement")]
-        public IHttpActionResult UpdateAchievement([FromBody] BehaviourAchievement achievement)
+        public async Task<IHttpActionResult> UpdateAchievement([FromBody] BehaviourAchievement achievement)
         {
-            return PrepareResponse(BehaviourProcesses.UpdateAchievement(achievement, _context));
+            try
+            {
+                await BehaviourProcesses.UpdateAchievement(achievement, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "Achievement updated");
         }
 
         [HttpDelete]
         [RequiresPermission("EditBehaviour")]
         [Route("achievements/delete/{achievementId:int}", Name = "ApiBehaviourDeleteAchievement")]
-        public IHttpActionResult DeleteAchievement([FromUri] int achievementId)
+        public async Task<IHttpActionResult> DeleteAchievement([FromUri] int achievementId)
         {
-            return PrepareResponse(BehaviourProcesses.DeleteAchievement(achievementId, _context));
+            try
+            {
+                await BehaviourProcesses.DeleteAchievement(achievementId, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "Achievement deleted");
         }
 
         [HttpPost]
@@ -84,18 +131,32 @@ namespace MyPortal.Controllers.Api
         public async Task<IHttpActionResult> GetBehaviourIncidentsByStudentDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
         {
             var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
-            var incidents =
-                PrepareResponseObject(BehaviourProcesses.GetBehaviourIncidentsForGrid(studentId, academicYearId, _context));
 
-            return PrepareDataGridObject(incidents, dm);
+            try
+            {
+                var incidents = await BehaviourProcesses.GetAchievementsForGrid(studentId, academicYearId, _context);
+                return PrepareDataGridObject(incidents, dm);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpGet]
         [RequiresPermission("ViewBehaviour")]
         [Route("incidents/get/byId/{incidentId:int}", Name = "ApiBehaviourGetBehaviourIncidentById")]
-        public BehaviourIncidentDto GetBehaviourIncidentById([FromUri] int incidentId)
+        public async  Task<BehaviourIncidentDto> GetBehaviourIncidentById([FromUri] int incidentId)
         {
-            return PrepareResponseObject(BehaviourProcesses.GetBehaviourIncident(incidentId, _context));
+            try
+            {
+                return await BehaviourProcesses.GetBehaviourIncidentById(incidentId, _context);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return null;
+            }
         }
 
         [HttpPost]
@@ -110,23 +171,50 @@ namespace MyPortal.Controllers.Api
             incident.AcademicYearId = academicYearId;
             incident.RecordedById = staff.Id;
 
-            return PrepareResponse(BehaviourProcesses.CreateBehaviourIncident(incident, _context));
+            try
+            {
+                await BehaviourProcesses.CreateBehaviourIncident(incident, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "Incident created");
         }
 
         [HttpPost]
         [RequiresPermission("EditBehaviour")]
         [Route("incidents/update", Name = "ApiBehaviourUpdateIncident")]
-        public IHttpActionResult UpdateIncident([FromBody] BehaviourIncident incident)
+        public async Task<IHttpActionResult> UpdateIncident([FromBody] BehaviourIncident incident)
         {
-            return PrepareResponse(BehaviourProcesses.UpdateBehaviourIncident(incident, _context));
+            try
+            {
+                await BehaviourProcesses.UpdateBehaviourIncident(incident, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "Incident updated");
         }
 
         [HttpDelete]
         [RequiresPermission("EditBehaviour")]
         [Route("incidents/delete/{incidentId:int}", Name = "ApiBehaviourDeleteIncident")]
-        public IHttpActionResult DeleteIncident([FromUri] int incidentId)
+        public async Task<IHttpActionResult> DeleteIncident([FromUri] int incidentId)
         {
-            return PrepareResponse(BehaviourProcesses.DeleteBehaviourIncident(incidentId, _context));
+            try
+            {
+                await BehaviourProcesses.DeleteBehaviourIncident(incidentId, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "Incident deleted");
         }
     }
 }

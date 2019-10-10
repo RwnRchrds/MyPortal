@@ -73,9 +73,9 @@ namespace MyPortal.Controllers
             
             var attendance = attendanceData?.Present + attendanceData?.Late;
 
-            var achievementCount = BehaviourProcesses.GetAchievementPointsCountByStudent(student.Id, academicYearId, _context).ResponseObject;
+            var achievementCount = await BehaviourProcesses.GetAchievementPointsCountByStudent(student.Id, academicYearId, _context);
 
-            var behaviourCount = BehaviourProcesses.GetBehaviourPointsCountByStudent(student.Id, academicYearId, _context).ResponseObject;
+            var behaviourCount = await BehaviourProcesses.GetBehaviourPointsCountByStudent(student.Id, academicYearId, _context);
 
             var viewModel = new StudentDetailsViewModel
             {                

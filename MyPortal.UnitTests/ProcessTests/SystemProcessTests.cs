@@ -14,6 +14,7 @@ namespace MyPortal.UnitTests.ProcessTests
         [Test]
         public static void ValidateUpn_ReturnsTrue()
         {
+            //Valid UPN
             const string upn = "N936358319001";
 
             var result = SystemProcesses.ValidateUpn(upn);
@@ -24,6 +25,7 @@ namespace MyPortal.UnitTests.ProcessTests
         [Test]
         public static void ValidateUpn_ReturnsFalse()
         {
+            //Invalid UPN
             const string upn = "H936357319001";
 
             var result = SystemProcesses.ValidateUpn(upn);

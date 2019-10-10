@@ -72,7 +72,7 @@ namespace MyPortal.UnitTests.ProcessTests
         }
 
         [Test]
-        public static async void GetResultSetById_ReturnsResultSet()
+        public static async Task GetResultSetById_ReturnsResultSet()
         {
             var resultSetName = "DeleteMe";
             var resultSetInDb = _context.AssessmentResultSets.SingleOrDefault(x => x.Name == resultSetName);
@@ -86,7 +86,7 @@ namespace MyPortal.UnitTests.ProcessTests
         }
 
         [Test]
-        public static async void GetAllResultSets_DataGrid_ReturnsResultSets()
+        public static async Task GetAllResultSets_DataGrid_ReturnsResultSets()
         {
             var result = await AssessmentProcesses.GetAllResultSetsDataGrid(_context);
             

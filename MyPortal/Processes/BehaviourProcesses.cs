@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using AutoMapper;
 using MyPortal.Dtos;
@@ -14,292 +15,253 @@ namespace MyPortal.Processes
 {
     public static class BehaviourProcesses
     {
-        public static ProcessResponse<object> CreateAchievement(BehaviourAchievement achievement, MyPortalDbContext context)
+        public static async Task CreateAchievement(BehaviourAchievement achievement, MyPortalDbContext context)
         {
             achievement.Date = DateTime.Today;
 
             if (!ValidationProcesses.ModelIsValid(achievement))
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
+                throw new BadRequestException("Invalid data");
             }
 
-            if (!context.CurriculumAcademicYears.Any(x => x.Id == achievement.AcademicYearId))
+            if (!await context.CurriculumAcademicYears.AnyAsync(x => x.Id == achievement.AcademicYearId))
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Academic year not found", null);
+                throw new NotFoundException("Academic year not found");
             }
 
             if (!achievement.Date.IsInAcademicYear(context, achievement.AcademicYearId).ResponseObject)
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Date is not in academic year", null);
+                throw new BadRequestException("Date is not in academic year");
             }
 
             context.BehaviourAchievements.Add(achievement);
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Achievement added", null);
+            await context.SaveChangesAsync();
         }
 
-        public static ProcessResponse<object> CreateBehaviourIncident(BehaviourIncident incident,
+        public static async Task CreateBehaviourIncident(BehaviourIncident incident,
             MyPortalDbContext context)
         {
             incident.Date = DateTime.Today;
 
             if (!ValidationProcesses.ModelIsValid(incident))
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
+                throw new BadRequestException("Invalid data");
             }
 
-            if (!context.CurriculumAcademicYears.Any(x => x.Id == incident.AcademicYearId))
+            if (!await context.CurriculumAcademicYears.AnyAsync(x => x.Id == incident.AcademicYearId))
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Academic year not found", null);
+                throw new NotFoundException("Academic year not found");
             }
 
             if (!incident.Date.IsInAcademicYear(context, incident.AcademicYearId).ResponseObject)
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Date is not in academic year", null);
+                throw new BadRequestException("Date is not in academic year");
             }
 
             context.BehaviourIncidents.Add(incident);
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Incident added", null);
+            await context.SaveChangesAsync();
         }
 
-        public static ProcessResponse<object> DeleteAchievement(int achievementId, MyPortalDbContext context)
+        public static async Task DeleteAchievement(int achievementId, MyPortalDbContext context)
         {
-            var achievement = context.BehaviourAchievements.SingleOrDefault(x => x.Id == achievementId);
+            var achievement = await context.BehaviourAchievements.SingleOrDefaultAsync(x => x.Id == achievementId);
 
             if (achievement == null)
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Achievement not found", null);
+                throw new NotFoundException("Achievement not found");
             }
 
             achievement.Deleted = true; //Flag as deleted
 
             //context.BehaviourAchievements.Remove(achievement); //Enable this to delete from the database
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Achievement deleted", null);
+            await context.SaveChangesAsync();
         }
 
-        public static ProcessResponse<object> DeleteBehaviourIncident(int incidentId, MyPortalDbContext context)
+        public static async Task DeleteBehaviourIncident(int incidentId, MyPortalDbContext context)
         {
-            var incident = context.BehaviourIncidents.SingleOrDefault(x => x.Id == incidentId);
+            var incident = await context.BehaviourIncidents.SingleOrDefaultAsync(x => x.Id == incidentId);
 
             if (incident == null)
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Incident not found", null);
+                throw new NotFoundException("Incident not found");
             }
 
             incident.Deleted = true;
 
             //_context.BehaviourIncidents.Remove(incident);
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Incident deleted", null);
+            await context.SaveChangesAsync();
         }
 
-        public static ProcessResponse<BehaviourAchievementDto> GetAchievementById(int achievementId, MyPortalDbContext context)
+        public static async Task<BehaviourAchievementDto> GetAchievementById(int achievementId, MyPortalDbContext context)
         {
-            var achievement = context.BehaviourAchievements.SingleOrDefault(x => x.Id == achievementId);
+            var achievement = await context.BehaviourAchievements.SingleOrDefaultAsync(x => x.Id == achievementId);
 
             if (achievement == null)
             {
-                return new ProcessResponse<BehaviourAchievementDto>(ResponseType.NotFound, "Student not found", null);
+                throw new NotFoundException("Achievement not found");
             }
 
-            return new ProcessResponse<BehaviourAchievementDto>(ResponseType.Ok, null,
-                Mapper.Map<BehaviourAchievement, BehaviourAchievementDto>(achievement));
+            return Mapper.Map<BehaviourAchievement, BehaviourAchievementDto>(achievement);
         }
 
-        public static ProcessResponse<int> GetAchievementCountByStudent(int studentId, int academicYearId, MyPortalDbContext context)
+        public static async Task<int> GetAchievementCountByStudent(int studentId, int academicYearId, MyPortalDbContext context)
         {
             var student = context.Students.SingleOrDefault(x => x.Id == studentId);
 
             if (student == null)
             {
-                return new ProcessResponse<int>(ResponseType.NotFound, "Student not found", 0);
+                throw new NotFoundException("Student not found");
             }
 
-            var posPoints =
-                context.BehaviourAchievements.Count(x =>
-                    x.AcademicYearId == academicYearId && x.StudentId == studentId);
+            var achievementCount = await context.BehaviourAchievements.CountAsync(x =>
+                x.AcademicYearId == academicYearId && x.StudentId == studentId);
 
-            if (posPoints < 0)
+            if (achievementCount < 0)
             {
-                return new ProcessResponse<int>(ResponseType.BadRequest, "Cannot have negative incident count", 0);
+                throw new BadRequestException("Cannot have negative achievement count");
             }
 
-            return new ProcessResponse<int>(ResponseType.Ok, null, posPoints);
+            return achievementCount;
         }
 
-        public static ProcessResponse<int> GetAchievementPointsCountByStudent(int studentId, int academicYearId, MyPortalDbContext context)
+        public static async Task<int> GetAchievementPointsCountByStudent(int studentId, int academicYearId, MyPortalDbContext context)
         {
-            var student = context.Students.SingleOrDefault(x => x.Id == studentId);
+            var student = await context.Students.SingleOrDefaultAsync(x => x.Id == studentId);
 
             if (student == null)
             {
-                return new ProcessResponse<int>(ResponseType.NotFound, "Student not found", 0);
+                throw new NotFoundException("Student not found");
             }
 
-            var points = 0;
-
-            var list =
-                context.BehaviourAchievements.Where(x =>
-                    x.AcademicYearId == academicYearId && x.StudentId == studentId && !x.Deleted).ToList();
-
-            if (list.Any())
-            {
-                points = list.Sum(x => x.Points);
-            }
+            var points =
+                await context.BehaviourAchievements
+                    .Where(x => x.AcademicYearId == academicYearId && x.StudentId == studentId && !x.Deleted)
+                    .SumAsync(x => x.Points);
 
             if (points < 0)
             {
-                return new ProcessResponse<int>(ResponseType.BadRequest, "Cannot have negative points count", 0);
+                throw new BadRequestException("Cannot have negative points count");
             }
 
-            return new ProcessResponse<int>(ResponseType.Ok, null, points);
+            return points;
         }
 
-        public static ProcessResponse<IEnumerable<GridBehaviourAchievementDto>> GetAchievementsForGrid(int studentId,
+        public static async Task<IEnumerable<GridBehaviourAchievementDto>> GetAchievementsForGrid(int studentId,
             int academicYearId, MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<GridBehaviourAchievementDto>>(ResponseType.Ok, null, context.BehaviourAchievements.Where(
-                    x => x.AcademicYearId == academicYearId && x.StudentId == studentId && !x.Deleted).OrderByDescending(x => x.Date).ToList()
-                .Select(Mapper.Map<BehaviourAchievement, GridBehaviourAchievementDto>));
+            var achievements = await context.BehaviourAchievements
+                .Where(x => x.AcademicYearId == academicYearId && x.StudentId == studentId && !x.Deleted)
+                .OrderByDescending(x => x.Date).ToListAsync();
+
+            return achievements.Select(Mapper.Map<BehaviourAchievement, GridBehaviourAchievementDto>);
         }
 
-        public static ProcessResponse<BehaviourIncidentDto> GetBehaviourIncident(int incidentId,
+        public static async Task<BehaviourIncidentDto> GetBehaviourIncidentById(int incidentId,
             MyPortalDbContext context)
         {
-            var incident = context.BehaviourIncidents.SingleOrDefault(x => x.Id == incidentId);
+            var incident = await context.BehaviourIncidents.SingleOrDefaultAsync(x => x.Id == incidentId);
 
             if (incident == null)
             {
-                return new ProcessResponse<BehaviourIncidentDto>(ResponseType.NotFound, "Incident not found", null);
+                throw new NotFoundException("Incident not found");
             }
 
-            return new ProcessResponse<BehaviourIncidentDto>(ResponseType.Ok, null,
-                Mapper.Map<BehaviourIncident, BehaviourIncidentDto>(incident));
+            return Mapper.Map<BehaviourIncident, BehaviourIncidentDto>(incident);
         }
 
-        public static ProcessResponse<int> GetBehaviourIncidentCountByStudent(int studentId, int academicYearId, MyPortalDbContext context)
+        public static async Task<int> GetBehaviourIncidentCountByStudent(int studentId, int academicYearId, MyPortalDbContext context)
         {
             var student = context.Students.SingleOrDefault(x => x.Id == studentId);
 
             if (student == null)
             {
-                return new ProcessResponse<int>(ResponseType.NotFound, "Student not found", 0);
+                throw new NotFoundException("Student not found");
             }
 
             var negPoints =
-                context.BehaviourIncidents.Count(x =>
+                await context.BehaviourIncidents.CountAsync(x =>
                     x.AcademicYearId == academicYearId && x.StudentId == studentId);
 
             if (negPoints < 0)
             {
-                return new ProcessResponse<int>(ResponseType.BadRequest, "Cannot have negative incident count", 0);
+                throw new BadRequestException("Cannot have negative incident count");
             }
 
-            return new ProcessResponse<int>(ResponseType.Ok, null, negPoints);
+            return negPoints;
         }
 
-        public static ProcessResponse<IEnumerable<GridBehaviourIncidentDto>> GetBehaviourIncidentsForGrid(int studentId,
+        public static async Task<IEnumerable<GridBehaviourIncidentDto>> GetBehaviourIncidentsForGrid(int studentId,
             int academicYearId, MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<GridBehaviourIncidentDto>>(ResponseType.Ok, null, context.BehaviourIncidents.Where(
+            var incidents = await context.BehaviourIncidents.Where(
                     x => x.AcademicYearId == academicYearId && x.StudentId == studentId && !x.Deleted)
-                .OrderByDescending(x => x.Date).ToList().Select(Mapper.Map<BehaviourIncident, GridBehaviourIncidentDto>));
+                .OrderByDescending(x => x.Date).ToListAsync();
+
+            return incidents.Select(Mapper.Map<BehaviourIncident, GridBehaviourIncidentDto>);
         }
 
-        public static ProcessResponse<int> GetBehaviourPointsCountByStudent(int studentId, int academicYearId, MyPortalDbContext context)
+        public static async Task<int> GetBehaviourPointsCountByStudent(int studentId, int academicYearId, MyPortalDbContext context)
         {
             var student = context.Students.SingleOrDefault(x => x.Id == studentId);
 
             if (student == null)
             {
-                return new ProcessResponse<int>(ResponseType.NotFound, "Student not found", 0);
+                throw new NotFoundException("Student not found");
             }
 
-            var points = 0;
-
-            var list =
-                context.BehaviourIncidents.Where(x =>
-                    x.AcademicYearId == academicYearId && x.StudentId == studentId && !x.Deleted).ToList();
-
-            if (list.Any())
-            {
-                points = list.Sum(x => x.Points);
-            }
+            var points = await context.BehaviourIncidents
+                .Where(x => x.AcademicYearId == academicYearId && x.StudentId == studentId && !x.Deleted).SumAsync(x => x.Points);
 
             if (points < 0)
             {
-                return new ProcessResponse<int>(ResponseType.BadRequest, "Cannot have negative points count", 0);
+                throw new BadRequestException("Cannot have negative points count");
             }
 
-            return new ProcessResponse<int>(ResponseType.Ok, null, points);
+            return points;
         }
 
-        public static ProcessResponse<IEnumerable<ChartDataCategoric>> GetChartData_AchievementsByType(int academicYearId, MyPortalDbContext context)
+        public static async Task<IEnumerable<ChartDataCategoric>> GetChartDataAchievementsByType(int academicYearId, MyPortalDbContext context)
         {
-            var recordedAchievementTypes =
-                context.BehaviourAchievementTypes.Where(x => x.Achievements.Any(i => i.AcademicYearId == academicYearId)).ToList();
-            var chartData = new List<ChartDataCategoric>();
+            var recordedAchievementTypes = await context.BehaviourAchievementTypes
+                .Where(x => x.Achievements.Any(i => i.AcademicYearId == academicYearId)).ToListAsync();
 
-            foreach (var achievementType in recordedAchievementTypes)
-            {
-                var dataPoint = new ChartDataCategoric(achievementType.Description, achievementType.Achievements.Count);
-                chartData.Add(dataPoint);
-            }
-
-            return new ProcessResponse<IEnumerable<ChartDataCategoric>>(ResponseType.Ok, null, chartData);
+            return recordedAchievementTypes.Select(achievementType => new ChartDataCategoric(achievementType.Description, achievementType.Achievements.Count)).ToList();
         }
 
-        public static ProcessResponse<IEnumerable<ChartDataCategoric>> GetChartData_BehaviourIncidentsByType(int academicYearId, MyPortalDbContext context)
+        public static async Task<IEnumerable<ChartDataCategoric>> GetChartDataBehaviourIncidentsByType(int academicYearId, MyPortalDbContext context)
         {
-            var recordedBehaviourTypes = context.BehaviourIncidentTypes.Where(x => x.Incidents.Any(i => i.AcademicYearId == academicYearId))
-                .Include(x => x.Incidents).ToList();
-            var chartData = new List<ChartDataCategoric>();
+            var recordedBehaviourTypes = await context.BehaviourIncidentTypes
+                .Where(x => x.Incidents.Any(i => i.AcademicYearId == academicYearId)).Include(x => x.Incidents)
+                .ToListAsync();
 
-            foreach (var behaviourType in recordedBehaviourTypes)
-            {
-                var dataPoint = new ChartDataCategoric(behaviourType.Description, behaviourType.Incidents.Count);
-                chartData.Add(dataPoint);
-            }
-
-            return new ProcessResponse<IEnumerable<ChartDataCategoric>>(ResponseType.Ok, null, chartData);
+            return recordedBehaviourTypes.Select(behaviourType => new ChartDataCategoric(behaviourType.Description, behaviourType.Incidents.Count)).ToList();
         }
 
-        public static ProcessResponse<int> GetTotalConductPointsByStudent(int studentId, int academicYearId, MyPortalDbContext context)
+        public static async Task<int> GetTotalConductPointsByStudent(int studentId, int academicYearId, MyPortalDbContext context)
         {
-            var student = context.Students.SingleOrDefault(x => x.Id == studentId);
+            var student = await context.Students.SingleOrDefaultAsync(x => x.Id == studentId);
 
             if (student == null)
             {
-                return new ProcessResponse<int>(ResponseType.NotFound, "Student not found", 0);
+                throw new NotFoundException("Student not found");
             }
 
-            var achievements =
-                context.BehaviourAchievements.Where(x =>
-                    x.AcademicYearId == academicYearId && x.StudentId == studentId).ToList();
+            var achievementPoints = await context.BehaviourAchievements
+                .Where(x => x.AcademicYearId == academicYearId && x.StudentId == studentId).SumAsync(x => x.Points);
 
-            var behaviourIncidents =
-                context.BehaviourIncidents.Where(x => x.AcademicYearId == academicYearId && x.StudentId == studentId)
-                    .ToList();
+            var behaviourPoints = await context.BehaviourIncidents
+                .Where(x => x.AcademicYearId == academicYearId && x.StudentId == studentId).SumAsync(x => x.Points);
 
-            var achievementPoints = achievements.Any() ? achievements.Sum(x => x.Points) : 0;
-            var behaviourPoints = behaviourIncidents.Any() ? behaviourIncidents.Sum(x => x.Points) : 0;
-
-            return new ProcessResponse<int>(ResponseType.Ok, null, achievementPoints - behaviourPoints);
+            return achievementPoints - behaviourPoints;
         }
-        public static ProcessResponse<object> UpdateAchievement(BehaviourAchievement achievement,
+        public static async Task UpdateAchievement(BehaviourAchievement achievement,
             MyPortalDbContext context)
         {
-            var achievementInDb = context.BehaviourAchievements.SingleOrDefault(x => x.Id == achievement.Id);
+            var achievementInDb = await context.BehaviourAchievements.SingleOrDefaultAsync(x => x.Id == achievement.Id);
 
             if (achievementInDb == null)
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Achievement not found", null);
+                throw new NotFoundException("Achievement not found");
             }
 
             achievementInDb.LocationId = achievement.LocationId;
@@ -308,18 +270,16 @@ namespace MyPortal.Processes
             achievementInDb.Resolved = achievement.Resolved;
             achievementInDb.AchievementTypeId = achievement.AchievementTypeId;
 
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Achievement updated", null);
+            await context.SaveChangesAsync();
         }
-        public static ProcessResponse<object> UpdateBehaviourIncident(BehaviourIncident incident,
+        public static async Task UpdateBehaviourIncident(BehaviourIncident incident,
             MyPortalDbContext context)
         {
-            var incidentInDb = context.BehaviourIncidents.SingleOrDefault(x => x.Id == incident.Id);
+            var incidentInDb = await context.BehaviourIncidents.SingleOrDefaultAsync(x => x.Id == incident.Id);
 
             if (incidentInDb == null)
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Incident not found", null);
+                throw new NotFoundException("Incident not found");
             }
 
             incidentInDb.LocationId = incident.LocationId;
@@ -328,9 +288,7 @@ namespace MyPortal.Processes
             incidentInDb.Resolved = incident.Resolved;
             incidentInDb.BehaviourTypeId = incident.BehaviourTypeId;
 
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Incident updated", null);
+            await context.SaveChangesAsync();
         }
     }
 }
