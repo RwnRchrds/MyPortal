@@ -537,7 +537,7 @@ namespace MyPortal.Controllers
 
             var staff = PeopleProcesses.GetStaffFromUserId(userId, _context);
 
-            var academicYears = PrepareResponseObject(CurriculumProcesses.GetAcademicYears_Model(_context));
+            var academicYears = PrepareResponseObject(CurriculumProcesses.GetAcademicYearsModel(_context));
 
             var selectedAcademicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 

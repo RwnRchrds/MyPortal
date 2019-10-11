@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net.Mime;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.WebSockets;
 using AutoMapper;
@@ -18,89 +19,72 @@ namespace MyPortal.Processes
 {
     public static class CurriculumProcesses
     {
-        public static ProcessResponse<object> CreateClass(CurriculumClass @class, MyPortalDbContext context)
+        public static async Task CreateClass(CurriculumClass @class, MyPortalDbContext context)
         {
             if (!ValidationProcesses.ModelIsValid(@class))
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
+                throw new BadRequestException("Invalid data");
             }
 
-            if (!context.CurriculumAcademicYears.Any(x => x.Id == @class.AcademicYearId))
+            if (!await context.CurriculumAcademicYears.AnyAsync(x => x.Id == @class.AcademicYearId))
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Academic year not found", null);
+                throw new NotFoundException("Academic year not found");
             }
 
-            if (context.CurriculumClasses.Any(x => x.Name == @class.Name && x.AcademicYearId == @class.AcademicYearId))
+            if (await context.CurriculumClasses.AnyAsync(x => x.Name == @class.Name && x.AcademicYearId == @class.AcademicYearId))
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Class already exists", null);
+                throw new BadRequestException("Class already exists");
             }
 
             context.CurriculumClasses.Add(@class);
 
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Class created", null);
+            await context.SaveChangesAsync();
         }
 
-        public static ProcessResponse<object> CreateEnrolment(CurriculumEnrolment enrolment, MyPortalDbContext context, bool commitImmediately = true)
+        public static async Task CreateEnrolment(CurriculumEnrolment enrolment, MyPortalDbContext context, bool commitImmediately = true)
         {
             if (!ValidationProcesses.ModelIsValid(enrolment))
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
+                throw new BadRequestException("Invalid data");
             }
 
-            if (!context.CurriculumClasses.Any(x => x.Id == enrolment.ClassId))
+            if (!await context.CurriculumClasses.AnyAsync(x => x.Id == enrolment.ClassId))
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Class not found", null);
+                throw new NotFoundException("Class not found");
             }
 
-            if (!context.Students.Any(x => x.Id == enrolment.StudentId))
+            if (!await context.Students.AnyAsync(x => x.Id == enrolment.StudentId))
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Student not found", null);
+                throw new NotFoundException("Student not found");
             }
 
-            if (!context.CurriculumSessions.Any(x => x.ClassId == enrolment.ClassId))
+            if (!await context.CurriculumSessions.AnyAsync(x => x.ClassId == enrolment.ClassId))
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Cannot add students to a class with no sessions", null);
+                throw new NotFoundException("Cannot add students to a class with no sessions");
             }
 
-            if (context.CurriculumEnrolments.Any(x =>
+            if (await context.CurriculumEnrolments.AnyAsync(x =>
                 x.ClassId == enrolment.ClassId && x.StudentId == enrolment.StudentId))
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest,
-                    $"{PeopleProcesses.GetStudentDisplayName(enrolment.Student).ResponseObject} is already enrolled in {enrolment.Class.Name}",
-                    null);
+                throw new BadRequestException(
+                    $"{PeopleProcesses.GetStudentDisplayName(enrolment.Student).ResponseObject} is already enrolled in {enrolment.Class.Name}");
             }
 
             var canEnroll = StudentCanEnrol(context, enrolment.StudentId, enrolment.ClassId);
-
-            if (canEnroll.ResponseType == ResponseType.BadRequest)
-            {
-                return new ProcessResponse<object>(ResponseType.BadRequest, canEnroll.ResponseMessage, null);
-            }
-
-            if (canEnroll.ResponseType == ResponseType.NotFound)
-            {
-                return new ProcessResponse<object>(ResponseType.NotFound, canEnroll.ResponseMessage, null);
-            }
 
             if (canEnroll.ResponseObject)
             {
                 context.CurriculumEnrolments.Add(enrolment);
                 if (commitImmediately)
                 {
-                    context.SaveChanges();
+                    await context.SaveChangesAsync();
                 }
-
-                return new ProcessResponse<object>(ResponseType.Ok,
-                    $"{PeopleProcesses.GetStudentDisplayName(enrolment.Student).ResponseObject} has been enrolled in {enrolment.Class.Name}",
-                    null);
             }
 
-            return new ProcessResponse<object>(ResponseType.BadRequest, "An unknown error has occurred", null);
+            throw new BadRequestException("An unknown error occurred");
         }
 
-        public static ProcessResponse<object> CreateEnrolmentsForMultipleStudents(IEnumerable<Student> students,
+        public static async Task CreateEnrolmentsForMultipleStudents(IEnumerable<Student> students,
             int classId, MyPortalDbContext context)
         {
             foreach (var student in students)
@@ -111,21 +95,20 @@ namespace MyPortal.Processes
                     StudentId = student.Id
                 };
 
-                CreateEnrolment(studentEnrolment, context, false);
+                await CreateEnrolment(studentEnrolment, context, false);
             }
 
-            context.SaveChanges();
-            return new ProcessResponse<object>(ResponseType.Ok, "Group enrolled in class", null);
+            await context.SaveChangesAsync();
         }
 
-        public static ProcessResponse<object> CreateEnrolmentsForRegGroup(GroupEnrolment enrolment,
+        public static async Task CreateEnrolmentsForRegGroup(GroupEnrolment enrolment,
             MyPortalDbContext context)
         {
-            var group = context.PastoralRegGroups.SingleOrDefault(x => x.Id == enrolment.GroupId);
+            var group = await context.PastoralRegGroups.SingleOrDefaultAsync(x => x.Id == enrolment.GroupId);
 
             if (group == null)
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Group not found", null);
+                throw new NotFoundException("Group not found");
             }
 
             foreach (var student in group.Students)
@@ -136,19 +119,18 @@ namespace MyPortal.Processes
                     StudentId = student.Id
                 };
 
-                CreateEnrolment(studentEnrolment, context, false);
+                await CreateEnrolment(studentEnrolment, context, false);
             }
 
-            context.SaveChanges();
-            return new ProcessResponse<object>(ResponseType.Ok, "Group enrolled in class", null);
+            await context.SaveChangesAsync();
         }
 
-        public static ProcessResponse<object> CreateLessonPlan(CurriculumLessonPlan lessonPlan, string userId,
+        public static async Task CreateLessonPlan(CurriculumLessonPlan lessonPlan, string userId,
             MyPortalDbContext context)
         {
             if (!ValidationProcesses.ModelIsValid(lessonPlan))
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
+                throw new BadRequestException("Invalid data");
             }
 
             var authorId = lessonPlan.AuthorId;
@@ -157,421 +139,387 @@ namespace MyPortal.Processes
 
             if (authorId == 0)
             {
-                author = context.StaffMembers.SingleOrDefault(x => x.Person.UserId == userId);
+                author = await context.StaffMembers.SingleOrDefaultAsync(x => x.Person.UserId == userId);
                 if (author == null)
                 {
-                    return new ProcessResponse<object>(ResponseType.NotFound, "Staff member not found", null);
+                    throw new NotFoundException("Staff member not found");
                 }
             }
 
             if (authorId != 0)
             {
-                author = context.StaffMembers.SingleOrDefault(x => x.Id == authorId);
+                author = await context.StaffMembers.SingleOrDefaultAsync(x => x.Id == authorId);
             }
 
             if (author == null)
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Staff member not found", null);
+                throw new NotFoundException("Staff member not found");
             }
 
             lessonPlan.AuthorId = author.Id;
 
             context.CurriculumLessonPlans.Add(lessonPlan);
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Lesson plan created", null);
+            await context.SaveChangesAsync();
         }
 
-        public static ProcessResponse<object> CreateSession(CurriculumSession session, MyPortalDbContext context)
+        public static async Task CreateSession(CurriculumSession session, MyPortalDbContext context)
         {
             if (!ValidationProcesses.ModelIsValid(session))
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
+                throw new BadRequestException("Invalid data");
             }
 
-            var currClass = context.CurriculumClasses.SingleOrDefault(x => x.Id == session.ClassId);
-
-            if (currClass == null)
+            if (!await context.CurriculumClasses.AnyAsync(x => x.Id == session.ClassId))
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Class not found", null);
+                throw new NotFoundException("Class not found");
             }
 
-            if (currClass.HasEnrolments().ResponseObject)
+            if (await HasEnrolments(session.ClassId, context))
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Cannot modify class schedule while students are enrolled", null);
+                throw new BadRequestException("Cannot modify class schedule while students are enrolled");
             }
 
             if (context.CurriculumSessions.Any(x =>
                 x.ClassId == session.ClassId && x.PeriodId == session.PeriodId))
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Class already assigned to this period", null);
+                throw new BadRequestException("Class is already assigned to this period");
             }
 
             context.CurriculumSessions.Add(session);
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Session created", null);
+            await context.SaveChangesAsync();
         }
 
-        public static ProcessResponse<object> CreateSessionForRegPeriods(CurriculumSession session,
+        public static async Task CreateSessionForRegPeriods(CurriculumSession session,
             MyPortalDbContext context)
         {
             session.PeriodId = 0;
 
-            var regPeriods = context.AttendancePeriods.Where(x => x.IsAm || x.IsPm);
+            var regPeriods = await context.AttendancePeriods.Where(x => x.IsAm || x.IsPm).ToListAsync();
 
-            var currClass = context.CurriculumClasses.SingleOrDefault(x => x.Id == session.ClassId);
-
-            if (currClass == null)
+            if (! await context.CurriculumClasses.AnyAsync(x => x.Id == session.ClassId))
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Class not found", null);
+                throw new NotFoundException("Class not found");
             }
 
-            if (currClass.HasEnrolments().ResponseObject)
+            if (await HasEnrolments(session.ClassId, context))
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Cannot modify class schedule while students are enrolled", null);
+                throw new BadRequestException("Cannot modify class schedule while students are enrolled");
             }
 
-            foreach (var period in regPeriods)
+            foreach (var newAssignment in regPeriods.Select(period => new {period, period1 = period})
+                .Where(@t =>
+                    !context.CurriculumSessions.Any(x => x.ClassId == session.ClassId && x.PeriodId == @t.period1.Id))
+                .Select(@t => new CurriculumSession {PeriodId = @t.period.Id, ClassId = session.ClassId}))
             {
-                if (!context.CurriculumSessions.Any(x => x.ClassId == currClass.Id && x.PeriodId == period.Id))
-                {
-                    var newAssignment = new CurriculumSession { PeriodId = period.Id, ClassId = currClass.Id };
-
-                    context.CurriculumSessions.Add(newAssignment);
-                }
+                context.CurriculumSessions.Add(newAssignment);
             }
 
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
-            return new ProcessResponse<object>(ResponseType.Ok, "All reg sessions added", null);
         }
 
-        public static ProcessResponse<object> CreateStudyTopic(CurriculumStudyTopic studyTopic,
+        public static async Task CreateStudyTopic(CurriculumStudyTopic studyTopic,
             MyPortalDbContext context)
         {
             if (!ValidationProcesses.ModelIsValid(studyTopic))
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
+                throw new BadRequestException("Invalid data");
             }
 
             context.CurriculumStudyTopics.Add(studyTopic);
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Study topic created", null);
+            await context.SaveChangesAsync();
         }
 
-        public static ProcessResponse<object> CreateSubject(CurriculumSubject subject, MyPortalDbContext context)
+        public static async Task CreateSubject(CurriculumSubject subject, MyPortalDbContext context)
         {
             if (subject.Name.IsNullOrWhiteSpace() || !ValidationProcesses.ModelIsValid(subject))
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
+                throw new BadRequestException("Invalid data");
             }
 
             context.CurriculumSubjects.Add(subject);
-            context.SaveChanges();
-            return new ProcessResponse<object>(ResponseType.Ok, "Subject created", null);
+            await context.SaveChangesAsync();
         }
 
-        public static ProcessResponse<object> DeleteClass(int classId, MyPortalDbContext context)
+        public static async Task DeleteClass(int classId, MyPortalDbContext context)
         {
             var currClass = context.CurriculumClasses.SingleOrDefault(x => x.Id == classId);
 
             if (currClass == null)
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Class not found", null);
+                throw new NotFoundException("Class not found");
             }
 
-            if (!currClass.HasPeriods().ResponseObject && !currClass.HasEnrolments().ResponseObject)
+            if (await HasSessions(classId, context) || await HasEnrolments(classId, context))
             {
-                context.CurriculumClasses.Remove(currClass);
-                context.SaveChanges();
-
-                return new ProcessResponse<object>(ResponseType.Ok, "Class deleted", null);
+                throw new BadRequestException("Class cannot be deleted");
             }
 
-            return new ProcessResponse<object>(ResponseType.BadRequest, "Class cannot be deleted", null);
+            context.CurriculumClasses.Remove(currClass);
+            await context.SaveChangesAsync();
         }
 
-        public static ProcessResponse<object> DeleteEnrolment(int enrolmentId, MyPortalDbContext context)
+        public static async Task DeleteEnrolment(int enrolmentId, MyPortalDbContext context)
         {
             var enrolment = context.CurriculumEnrolments.SingleOrDefault(x => x.Id == enrolmentId);
 
             if (enrolment == null)
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Enrolment not found", null);
+                throw new NotFoundException("Enrolment not found");
             }
 
             context.CurriculumEnrolments.Remove(enrolment);
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok,
-                $"{PeopleProcesses.GetStudentDisplayName(enrolment.Student).ResponseObject} has been unenrolled from {enrolment.Class.Name}",
-                null);
+            await context.SaveChangesAsync();
         }
 
-        public static ProcessResponse<object> DeleteLessonPlan(int lessonPlanId, int staffId, bool canDeleteAll, MyPortalDbContext context)
+        public static async Task DeleteLessonPlan(int lessonPlanId, int staffId, bool canDeleteAll, MyPortalDbContext context)
         {
-            var plan = context.CurriculumLessonPlans.SingleOrDefault(x => x.Id == lessonPlanId);
+            var plan = await context.CurriculumLessonPlans.SingleOrDefaultAsync(x => x.Id == lessonPlanId);
 
             if (plan == null)
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Lesson plan not found", null);
+                throw new NotFoundException("Lesson plan not found");
             }
 
             if (!canDeleteAll && plan.AuthorId != staffId)
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Cannot delete someone else's lesson plan", null);
+                throw new BadRequestException("Cannot delete someone else's lesson plan");
             }
 
             context.CurriculumLessonPlans.Remove(plan);
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Lesson plan deleted", null);
+            await context.SaveChangesAsync();
         }
 
-        public static ProcessResponse<object> DeleteSession(int sessionId, MyPortalDbContext context)
+        public static async Task DeleteSession(int sessionId, MyPortalDbContext context)
         {
-            var assignmentInDb = context.CurriculumSessions.SingleOrDefault(x => x.Id == sessionId);
+            var sessionInDb = await context.CurriculumSessions.SingleOrDefaultAsync(x => x.Id == sessionId);
 
-            if (assignmentInDb == null)
+            if (sessionInDb == null)
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Session not found", null);
+                throw new NotFoundException("Session not found");
             }
 
-            context.CurriculumSessions.Remove(assignmentInDb);
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Session deleted", null);
+            context.CurriculumSessions.Remove(sessionInDb);
+            await context.SaveChangesAsync();
         }
 
-        public static ProcessResponse<object> DeleteStudyTopic(int studyTopicId, MyPortalDbContext context)
+        public static async Task DeleteStudyTopic(int studyTopicId, MyPortalDbContext context)
         {
-            var studyTopic = context.CurriculumStudyTopics.SingleOrDefault(x => x.Id == studyTopicId);
+            var studyTopic = await context.CurriculumStudyTopics.SingleOrDefaultAsync(x => x.Id == studyTopicId);
 
             if (studyTopic == null)
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Study topic not found", null);
+                throw new NotFoundException("Study topic not found");
             }
 
-            if (studyTopic.LessonPlans.Any())
+            if (!studyTopic.LessonPlans.Any())
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "This study topic cannot be deleted", null);
+                context.CurriculumStudyTopics.Remove(studyTopic);
+                await context.SaveChangesAsync();
             }
 
-            context.CurriculumStudyTopics.Remove(studyTopic);
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Study topic deleted", null);
+            throw new BadRequestException("This study topic cannot be deleted");
         }
 
-        public static ProcessResponse<object> DeleteSubject(int subjectId, MyPortalDbContext context)
+        public static async Task DeleteSubject(int subjectId, MyPortalDbContext context)
         {
-            var subjectInDb = context.CurriculumSubjects.SingleOrDefault(x => x.Id == subjectId);
+            var subjectInDb = await context.CurriculumSubjects.SingleOrDefaultAsync(x => x.Id == subjectId);
 
             if (subjectInDb == null)
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Subject not found", null);
+                throw new NotFoundException("Student not found");
             }
 
             subjectInDb.Deleted = true; //Flag as deleted
 
             //Delete from database
-            if (subjectInDb.CurriculumClasses.Any() ||
-                subjectInDb.StudyTopics.Any())
+            if (await context.CurriculumClasses.AnyAsync(x => x.SubjectId == subjectId) ||
+                await context.CurriculumStudyTopics.AnyAsync(x => x.SubjectId == subjectId))
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "This subject cannot be deleted", null);
+                throw new BadRequestException("This subject cannot be deleted");
             }
+
             context.CurriculumSubjects.Remove(subjectInDb);
 
-            context.SaveChanges();
-            return new ProcessResponse<object>(ResponseType.Ok, "Subject deleted", null);
+            await context.SaveChangesAsync();
         }
 
-        public static ProcessResponse<CurriculumAcademicYearDto> GetAcademicYearById(int academicYearId,
+        public static async Task<CurriculumAcademicYearDto> GetAcademicYearById(int academicYearId,
             MyPortalDbContext context)
         {
-            var academicYear = context.CurriculumAcademicYears.SingleOrDefault(x => x.Id == academicYearId);
+            var academicYear = await context.CurriculumAcademicYears.SingleOrDefaultAsync(x => x.Id == academicYearId);
 
             if (academicYear == null)
             {
-                return new ProcessResponse<CurriculumAcademicYearDto>(ResponseType.NotFound, "Academic year not found", null);
+                throw new NotFoundException("Academic year not found");
             }
 
-            return new ProcessResponse<CurriculumAcademicYearDto>(ResponseType.Ok, null,
-                Mapper.Map<CurriculumAcademicYear, CurriculumAcademicYearDto>(academicYear));
+            return Mapper.Map<CurriculumAcademicYear, CurriculumAcademicYearDto>(academicYear);
         }
 
-        public static ProcessResponse<IEnumerable<CurriculumAcademicYearDto>> GetAcademicYears(
+        public static async Task<IEnumerable<CurriculumAcademicYearDto>> GetAcademicYears(
             MyPortalDbContext context)
         {
-            var academicYears = GetAcademicYears_Model(context).ResponseObject
-                .Select(Mapper.Map<CurriculumAcademicYear, CurriculumAcademicYearDto>);
-
-            return new ProcessResponse<IEnumerable<CurriculumAcademicYearDto>>(ResponseType.Ok, null, academicYears);
+            var academicYears = await GetAcademicYearsModel(context);
+                
+            return academicYears.Select(Mapper.Map<CurriculumAcademicYear, CurriculumAcademicYearDto>);
         }
 
-        public static ProcessResponse<IEnumerable<CurriculumAcademicYear>> GetAcademicYears_Model(
+        public static async Task<IEnumerable<CurriculumAcademicYear>> GetAcademicYearsModel(
             MyPortalDbContext context)
         {
-            var academicYears = context.CurriculumAcademicYears.ToList().OrderByDescending(x => x.FirstDate).ToList();
+            var academicYears = await context.CurriculumAcademicYears.OrderByDescending(x => x.FirstDate).ToListAsync();
 
-            return new ProcessResponse<IEnumerable<CurriculumAcademicYear>>(ResponseType.Ok, null, academicYears);
+            return academicYears;
         }
 
-        public static ProcessResponse<IEnumerable<CurriculumClassDto>> GetAllClasses(int academicYearId,
+        public static async Task<IEnumerable<CurriculumClassDto>> GetAllClasses(int academicYearId,
             MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<CurriculumClassDto>>(ResponseType.Ok, null,
-                GetAllClasses_Model(academicYearId, context).ResponseObject
-                    .OrderBy(x => x.Name).Select(Mapper.Map<CurriculumClass, CurriculumClassDto>));
+            var classes = await GetAllClassesModel(academicYearId, context);
+
+            return classes.Select(Mapper.Map<CurriculumClass, CurriculumClassDto>);
         }
 
-        public static ProcessResponse<IEnumerable<GridCurriculumClassDto>> GetAllClasses_DataGrid(int academicYearId,
+        public static async Task<IEnumerable<GridCurriculumClassDto>> GetAllClassesDataGrid(int academicYearId,
             MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<GridCurriculumClassDto>>(ResponseType.Ok, null,
-                GetAllClasses_Model(academicYearId, context).ResponseObject
-                    .OrderBy(x => x.Name).Select(Mapper.Map<CurriculumClass, GridCurriculumClassDto>));
+            var classes = await GetAllClassesModel(academicYearId, context);
+
+            return classes.Select(Mapper.Map<CurriculumClass, GridCurriculumClassDto>);
         }
 
-        public static ProcessResponse<IEnumerable<CurriculumClass>> GetAllClasses_Model(int academicYearId,
+        public static async Task<IEnumerable<CurriculumClass>> GetAllClassesModel(int academicYearId,
             MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<CurriculumClass>>(ResponseType.Ok, null, context.CurriculumClasses
-                .Where(x => x.AcademicYearId == academicYearId).ToList());
+            return await context.CurriculumClasses.Where(x => x.AcademicYearId == academicYearId).OrderBy(x => x.Name)
+                .ToListAsync();
         }
 
-        public static ProcessResponse<IEnumerable<CurriculumLessonPlanDto>> GetAllLessonPlans(MyPortalDbContext context)
+        public static async Task<IEnumerable<CurriculumLessonPlanDto>> GetAllLessonPlans(MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<CurriculumLessonPlanDto>>(ResponseType.Ok, null,
-                context.CurriculumLessonPlans.OrderBy(x => x.Title).ToList()
-                    .Select(Mapper.Map<CurriculumLessonPlan, CurriculumLessonPlanDto>));
+            var lessonPlans = await context.CurriculumLessonPlans.OrderBy(x => x.Title).ToListAsync();
+
+            return lessonPlans.Select(Mapper.Map<CurriculumLessonPlan, CurriculumLessonPlanDto>);
         }
 
-        public static ProcessResponse<IEnumerable<CurriculumStudyTopicDto>> GetAllStudyTopics(MyPortalDbContext context)
+        public static async Task<IEnumerable<CurriculumStudyTopicDto>> GetAllStudyTopics(MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<CurriculumStudyTopicDto>>(ResponseType.Ok, null,
-                GetAllStudyTopics_Model(context).ResponseObject
-                    .Select(Mapper.Map<CurriculumStudyTopic, CurriculumStudyTopicDto>));
+            var studyTopics = await GetAllStudyTopicsModel(context);
+
+            return studyTopics.Select(Mapper.Map<CurriculumStudyTopic, CurriculumStudyTopicDto>);
         }
 
-        public static ProcessResponse<IEnumerable<GridCurriculumStudyTopicDto>> GetAllStudyTopics_DataGrid(MyPortalDbContext context)
+        public static async Task<IEnumerable<GridCurriculumStudyTopicDto>> GetAllStudyTopicsDataGrid(MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<GridCurriculumStudyTopicDto>>(ResponseType.Ok, null,
-                GetAllStudyTopics_Model(context).ResponseObject
-                    .Select(Mapper.Map<CurriculumStudyTopic, GridCurriculumStudyTopicDto>));
+            var studyTopics = await GetAllStudyTopicsModel(context);
+
+            return studyTopics.Select(Mapper.Map<CurriculumStudyTopic, GridCurriculumStudyTopicDto>);
         }
 
-        public static ProcessResponse<IEnumerable<CurriculumStudyTopic>> GetAllStudyTopics_Model(MyPortalDbContext context)
+        public static async Task<IEnumerable<CurriculumStudyTopic>> GetAllStudyTopicsModel(MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<CurriculumStudyTopic>>(ResponseType.Ok, null,
-                context.CurriculumStudyTopics.ToList());
+            return await context.CurriculumStudyTopics.OrderBy(x => x.Name).ToListAsync();
         }
 
-        public static ProcessResponse<IEnumerable<CurriculumSubjectDto>> GetAllSubjects(MyPortalDbContext context)
+        public static async Task<IEnumerable<CurriculumSubjectDto>> GetAllSubjects(MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<CurriculumSubjectDto>>(ResponseType.Ok, null,
-                GetAllSubjects_Model(context).ResponseObject
-                    .Select(Mapper.Map<CurriculumSubject, CurriculumSubjectDto>));
+            var subjects = await GetAllSubjectsModel(context);
+
+            return subjects.Select(Mapper.Map<CurriculumSubject, CurriculumSubjectDto>);
         }
 
-        public static ProcessResponse<IEnumerable<GridCurriculumSubjectDto>> GetAllSubjects_DataGrid(MyPortalDbContext context)
+        public static async Task<IEnumerable<GridCurriculumSubjectDto>> GetAllSubjects_DataGrid(MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<GridCurriculumSubjectDto>>(ResponseType.Ok, null,
-                GetAllSubjects_Model(context).ResponseObject
-                    .Select(Mapper.Map<CurriculumSubject, GridCurriculumSubjectDto>));
+            var subjects = await GetAllSubjectsModel(context);
+
+            return subjects.Select(Mapper.Map<CurriculumSubject, GridCurriculumSubjectDto>);
         }
 
-        public static ProcessResponse<IEnumerable<CurriculumSubject>> GetAllSubjects_Model(MyPortalDbContext context)
+        public static async Task<IEnumerable<CurriculumSubject>> GetAllSubjectsModel(MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<CurriculumSubject>>(ResponseType.Ok, null,
-                context.CurriculumSubjects.Where(x => !x.Deleted).OrderBy(x => x.Name).ToList());
+            var subjects = await context.CurriculumSubjects.Where(x => !x.Deleted).ToListAsync();
+
+            return subjects;
         }
 
-        public static ProcessResponse<CurriculumClassDto> GetClassById(int classId, MyPortalDbContext context)
+        public static async Task<CurriculumClassDto> GetClassById(int classId, MyPortalDbContext context)
         {
-            var currClass = context.CurriculumClasses.SingleOrDefault(x => x.Id == classId);
+            var currClass = await context.CurriculumClasses.SingleOrDefaultAsync(x => x.Id == classId);
 
             if (currClass == null)
             {
-                return new ProcessResponse<CurriculumClassDto>(ResponseType.NotFound, "Class not found", null);
+                throw new NotFoundException("Class not found");
             }
 
-            return new ProcessResponse<CurriculumClassDto>(ResponseType.Ok, null,
-                Mapper.Map<CurriculumClass, CurriculumClassDto>(currClass));
+            return Mapper.Map<CurriculumClass, CurriculumClassDto>(currClass);
         }
 
-        public static ProcessResponse<CurriculumEnrolmentDto> GetEnrolmentById(int enrolmentId,
+        public static async Task<CurriculumEnrolmentDto> GetEnrolmentById(int enrolmentId,
             MyPortalDbContext context)
         {
-            var enrolment = context.CurriculumEnrolments.SingleOrDefault(x => x.Id == enrolmentId);
+            var enrolment = await context.CurriculumEnrolments.SingleOrDefaultAsync(x => x.Id == enrolmentId);
 
             if (enrolment == null)
             {
-                return new ProcessResponse<CurriculumEnrolmentDto>(ResponseType.NotFound, "Enrolment not found", null);
+                throw new NotFoundException("Enrolment not found");
             }
 
-            return new ProcessResponse<CurriculumEnrolmentDto>(ResponseType.Ok, null,
-                Mapper.Map<CurriculumEnrolment, CurriculumEnrolmentDto>(enrolment));
+            return Mapper.Map<CurriculumEnrolment, CurriculumEnrolmentDto>(enrolment);
         }
 
-        public static ProcessResponse<IEnumerable<CurriculumEnrolmentDto>> GetEnrolmentsForClass(int classId,
+        public static async Task<IEnumerable<CurriculumEnrolmentDto>> GetEnrolmentsForClass(int classId,
             MyPortalDbContext context)
         {
-            var list = GetEnrolmentsForClass_Model(classId, context).ResponseObject
+            var list = await GetEnrolmentsForClassModel(classId, context);
+
+            return list.Select(Mapper.Map<CurriculumEnrolment, CurriculumEnrolmentDto>);
+        }
+
+        public static async Task<IEnumerable<GridCurriculumEnrolmentDto>> GetEnrolmentsForClassDataGrid(int classId,
+            MyPortalDbContext context)
+        {
+            var list = await GetEnrolmentsForClassModel(classId, context);
+
+            return list.Select(Mapper.Map<CurriculumEnrolment, GridCurriculumEnrolmentDto>);
+        }
+
+        public static async Task<IEnumerable<CurriculumEnrolment>> GetEnrolmentsForClassModel(int classId,
+            MyPortalDbContext context)
+        {
+            var list = await context.CurriculumEnrolments.Where(x => x.ClassId == classId)
+                .OrderBy(x => x.Student.Person.LastName).ToListAsync();
+
+            return list;
+        }
+
+        public static async Task<IEnumerable<CurriculumEnrolmentDto>> GetEnrolmentsForStudent(int studentId,
+            MyPortalDbContext context)
+        {
+            var list = GetEnrolmentsForStudentModel(studentId, context).ResponseObject
                 .OrderBy(x => x.Student.Person.LastName)
                 .Select(Mapper.Map<CurriculumEnrolment, CurriculumEnrolmentDto>);
 
             return new ProcessResponse<IEnumerable<CurriculumEnrolmentDto>>(ResponseType.Ok, null, list);
         }
 
-        public static ProcessResponse<IEnumerable<GridCurriculumEnrolmentDto>> GetEnrolmentsForClass_DataGrid(int classId,
+        public static async Task<IEnumerable<GridCurriculumEnrolmentDto>> GetEnrolmentsForStudent_DataGrid(int studentId,
             MyPortalDbContext context)
         {
-            var list = GetEnrolmentsForClass_Model(classId, context).ResponseObject
+            var list = GetEnrolmentsForStudentModel(studentId, context).ResponseObject
                 .OrderBy(x => x.Student.Person.LastName)
                 .Select(Mapper.Map<CurriculumEnrolment, GridCurriculumEnrolmentDto>);
 
             return new ProcessResponse<IEnumerable<GridCurriculumEnrolmentDto>>(ResponseType.Ok, null, list);
         }
 
-        public static ProcessResponse<IEnumerable<CurriculumEnrolment>> GetEnrolmentsForClass_Model(int classId,
+        public static async Task<IEnumerable<CurriculumEnrolment>> GetEnrolmentsForStudentModel(int studentId,
             MyPortalDbContext context)
         {
-            var list = context.CurriculumEnrolments.Where(x => x.ClassId == classId).ToList()
-                .OrderBy(x => x.Student.Person.LastName);
+            var list = await context.CurriculumEnrolments.Where(x => x.StudentId == studentId)
+                .OrderBy(x => x.Student.Person.LastName).ToListAsync();
 
-            return new ProcessResponse<IEnumerable<CurriculumEnrolment>>(ResponseType.Ok, null, list);
-        }
-
-        public static ProcessResponse<IEnumerable<CurriculumEnrolmentDto>> GetEnrolmentsForStudent(int studentId,
-            MyPortalDbContext context)
-        {
-            var list = GetEnrolmentsForStudent_Model(studentId, context).ResponseObject
-                .OrderBy(x => x.Student.Person.LastName)
-                .Select(Mapper.Map<CurriculumEnrolment, CurriculumEnrolmentDto>);
-
-            return new ProcessResponse<IEnumerable<CurriculumEnrolmentDto>>(ResponseType.Ok, null, list);
-        }
-
-        public static ProcessResponse<IEnumerable<GridCurriculumEnrolmentDto>> GetEnrolmentsForStudent_DataGrid(int studentId,
-            MyPortalDbContext context)
-        {
-            var list = GetEnrolmentsForStudent_Model(studentId, context).ResponseObject
-                .OrderBy(x => x.Student.Person.LastName)
-                .Select(Mapper.Map<CurriculumEnrolment, GridCurriculumEnrolmentDto>);
-
-            return new ProcessResponse<IEnumerable<GridCurriculumEnrolmentDto>>(ResponseType.Ok, null, list);
-        }
-
-        public static ProcessResponse<IEnumerable<CurriculumEnrolment>> GetEnrolmentsForStudent_Model(int studentId,
-            MyPortalDbContext context)
-        {
-            var list = context.CurriculumEnrolments.Where(x => x.StudentId == studentId).ToList()
-                .OrderBy(x => x.Student.Person.LastName);
-
-            return new ProcessResponse<IEnumerable<CurriculumEnrolment>>(ResponseType.Ok, null, list);
+            return list;
         }
 
         public static ProcessResponse<CurriculumLessonPlanDto> GetLessonPlanById(int lessonPlanId,
@@ -754,14 +702,14 @@ namespace MyPortal.Processes
             return new ProcessResponse<string>(ResponseType.Ok, null, @class.CurriculumSubject.Name);
         }
 
-        public static ProcessResponse<bool> HasEnrolments(this CurriculumClass currClass)
+        public static async Task<bool> HasEnrolments(int classId, MyPortalDbContext context)
         {
-            return new ProcessResponse<bool>(ResponseType.Ok, null, currClass.Enrolments.Any());
+            return await context.CurriculumEnrolments.AnyAsync(x => x.ClassId == classId);
         }
 
-        public static ProcessResponse<bool> HasPeriods(this CurriculumClass currClass)
+        public static async Task<bool> HasSessions(int classId, MyPortalDbContext context)
         {
-            return new ProcessResponse<bool>(ResponseType.Ok, null, currClass.Sessions.Any());
+            return await context.CurriculumSessions.AnyAsync(x => x.ClassId == classId);
         }
 
         public static ProcessResponse<bool> IsInAcademicYear(this DateTime date, MyPortalDbContext context, int academicYearId)

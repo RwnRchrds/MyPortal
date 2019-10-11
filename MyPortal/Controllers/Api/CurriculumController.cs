@@ -81,7 +81,7 @@ namespace MyPortal.Controllers.Api
         public async Task<IHttpActionResult> GetAllClassesDataGrid([FromBody] DataManagerRequest dm)
         {
             var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
-            var classes = PrepareResponseObject(CurriculumProcesses.GetAllClasses_DataGrid(academicYearId, _context));
+            var classes = PrepareResponseObject(CurriculumProcesses.GetAllClassesDataGrid(academicYearId, _context));
 
             return PrepareDataGridObject(classes, dm);
         }
@@ -192,7 +192,7 @@ namespace MyPortal.Controllers.Api
             [FromBody] DataManagerRequest dm)
         {
             var enrolments =
-                PrepareResponseObject(CurriculumProcesses.GetEnrolmentsForClass_DataGrid(classId, _context));
+                PrepareResponseObject(CurriculumProcesses.GetEnrolmentsForClassDataGrid(classId, _context));
 
             return PrepareDataGridObject(enrolments, dm);
         }
@@ -336,7 +336,7 @@ namespace MyPortal.Controllers.Api
         [Route("studyTopics/get/dataGrid/all", Name = "ApiCurriculumGetAllStudyTopicsDataGrid")]
         public IHttpActionResult GetAllStudyTopicsDataGrid([FromBody] DataManagerRequest dm)
         {
-            var studyTopics = PrepareResponseObject(CurriculumProcesses.GetAllStudyTopics_DataGrid(_context));
+            var studyTopics = PrepareResponseObject(CurriculumProcesses.GetAllStudyTopicsDataGrid(_context));
 
             return PrepareDataGridObject(studyTopics, dm);
         }

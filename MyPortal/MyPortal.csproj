@@ -417,6 +417,7 @@
     <Compile Include="Models\Misc\ChartDataCategoric.cs" />
     <Compile Include="Models\Misc\DataGridUpdate.cs" />
     <Compile Include="Models\Misc\GroupEnrolment.cs" />
+    <Compile Include="Models\Misc\Lookup.cs" />
     <Compile Include="Models\Misc\PermissionIndicator.cs" />
     <Compile Include="Models\Misc\ProcessResponse.cs" />
     <Compile Include="Models\Misc\StudentAttendanceMarkCollection.cs" />
@@ -474,7 +475,6 @@
     <Compile Include="Models\Database\ProfileComment.cs" />
     <Compile Include="Models\Database\ProfileLog.cs" />
     <Compile Include="Models\Database\ProfileLogType.cs" />
-    <Compile Include="Models\Misc\ListContainer.cs" />
     <Compile Include="Models\Misc\FinanceTransaction.cs" />
     <Compile Include="Models\Misc\ChangePasswordModel.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
