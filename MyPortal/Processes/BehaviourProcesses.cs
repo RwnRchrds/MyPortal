@@ -29,7 +29,7 @@ namespace MyPortal.Processes
                 throw new NotFoundException("Academic year not found");
             }
 
-            if (!achievement.Date.IsInAcademicYear(context, achievement.AcademicYearId).ResponseObject)
+            if (!await achievement.Date.IsInAcademicYear(context, achievement.AcademicYearId))
             {
                 throw new BadRequestException("Date is not in academic year");
             }
@@ -53,7 +53,7 @@ namespace MyPortal.Processes
                 throw new NotFoundException("Academic year not found");
             }
 
-            if (!incident.Date.IsInAcademicYear(context, incident.AcademicYearId).ResponseObject)
+            if (!await incident.Date.IsInAcademicYear(context, incident.AcademicYearId))
             {
                 throw new BadRequestException("Date is not in academic year");
             }

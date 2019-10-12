@@ -57,6 +57,7 @@ namespace MyPortal.Controllers.Api
         [RequiresPermission("ViewProfileLogs, AccessStudentPortal")]
         public async Task<IHttpActionResult> GetLogsByStudentDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
         {
+            AuthenticateStudentRequest(studentId);
             var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             var logs = PrepareResponseObject(
                 ProfilesProcesses.GetLogsByStudent_DataGrid(studentId, academicYearId, _context));

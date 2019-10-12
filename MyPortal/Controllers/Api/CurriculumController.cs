@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -19,16 +20,32 @@ namespace MyPortal.Controllers.Api
     {
         [HttpGet]
         [Route("academicYears/get/all", Name = "ApiCurriculumGetAcademicYears")]
-        public IEnumerable<CurriculumAcademicYearDto> GetAcademicYears()
+        public async Task<IEnumerable<CurriculumAcademicYearDto>> GetAcademicYears()
         {
-            return PrepareResponseObject(CurriculumProcesses.GetAcademicYears(_context));
+            try
+            {
+                return await CurriculumProcesses.GetAcademicYears(_context);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return null;
+            }
         }
 
         [HttpGet]
         [Route("academicYears/get/byId/{academicYearId:int}", Name = "ApiCurriculumGetAcademicYearById")]
-        public CurriculumAcademicYearDto GetAcademicYearById([FromUri] int academicYearId)
+        public async Task<CurriculumAcademicYearDto> GetAcademicYearById([FromUri] int academicYearId)
         {
-            return PrepareResponseObject(CurriculumProcesses.GetAcademicYearById(academicYearId, _context));
+            try
+            {
+                return await CurriculumProcesses.GetAcademicYearById(academicYearId, _context);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return null;
+            }
         }
 
         [HttpPost]
@@ -36,33 +53,49 @@ namespace MyPortal.Controllers.Api
         [Route("academicYears/select", Name = "ApiCurriculumChangeSelectedAcademicYear")]
         public IHttpActionResult ChangeSelectedAcademicYear([FromBody] CurriculumAcademicYear year)
         {
+            //TODO: MAKE ASYNC
             User.ChangeSelectedAcademicYear(year.Id);
             return Ok("Selected academic year changed");
         }
-        
+
         [HttpGet]
         [RequiresPermission("ViewSessions")]
-        [Route("sessions/get/byTeacher/{teacherId:int}/{date:datetime}", Name = "ApiCurriculumGetSessionsByTeacher")]
-        public async Task<IEnumerable<CurriculumSessionDto>> GetSessionsByTeacher([FromUri] int teacherId, [FromUri] DateTime date)
+        [Route("sessions/get/byTeacherAndDate/{teacherId:int}/{date:datetime}", Name = "ApiCurriculumGetSessionsByTeacherAndDate")]
+        public async Task<IEnumerable<CurriculumSessionDto>> GetSessionsByTeacherOnDayOfWeek([FromUri] int teacherId, [FromUri] DateTime date)
         {
             var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
-            return PrepareResponseObject(
-                CurriculumProcesses.GetSessionsByTeacher(teacherId, academicYearId, date, _context));
+            try
+            {
+                return await CurriculumProcesses.GetSessionsByTeacherOnDayOfWeek(teacherId, academicYearId, date, _context);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return null;
+            }
         }
 
         [HttpPost]
         [RequiresPermission("ViewSessions")]
-        [Route("sessions/get/byTeacher/dataGrid/{teacherId:int}/{date:datetime}", Name = "ApiCurriculumGetSessionsByTeacherDataGrid")]
+        [Route("sessions/get/byTeacherAndDate/dataGrid/{teacherId:int}/{date:datetime}", Name = "ApiCurriculumGetSessionsByTeacherAndDateDataGrid")]
         public async Task<IHttpActionResult> GetSessionsByTeacherDataGrid([FromUri] int teacherId, [FromUri] DateTime date,
             [FromBody] DataManagerRequest dm)
         {
             var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
-            var sessions =
-                PrepareResponseObject(
-                    CurriculumProcesses.GetSessionsByTeacher_DataGrid(teacherId, academicYearId, date, _context));
 
-            return PrepareDataGridObject(sessions, dm);
+            try
+            {
+                var sessions =
+                    await CurriculumProcesses.GetSessionsByTeacherOnDayOfWeek(teacherId, academicYearId, date,
+                        _context);
+
+                return PrepareDataGridObject(sessions, dm);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpGet]
@@ -72,7 +105,15 @@ namespace MyPortal.Controllers.Api
         {
             var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
-            return PrepareResponseObject(CurriculumProcesses.GetAllClasses(academicYearId, _context));
+            try
+            {
+                return await CurriculumProcesses.GetAllClasses(academicYearId, _context);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return null;
+            }
         }
 
         [HttpPost]
@@ -81,17 +122,33 @@ namespace MyPortal.Controllers.Api
         public async Task<IHttpActionResult> GetAllClassesDataGrid([FromBody] DataManagerRequest dm)
         {
             var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
-            var classes = PrepareResponseObject(CurriculumProcesses.GetAllClassesDataGrid(academicYearId, _context));
 
-            return PrepareDataGridObject(classes, dm);
+            try
+            {
+                var classes = await CurriculumProcesses.GetAllClasses(academicYearId, _context);
+
+                return PrepareDataGridObject(classes, dm);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpGet]
         [RequiresPermission("ViewClasses")]
         [Route("classes/get/byId/{classId:int}", Name = "ApiCurriculumGetClassById")]
-        public CurriculumClassDto GetClassById([FromUri] int classId)
+        public async Task<CurriculumClassDto> GetClassById([FromUri] int classId)
         {
-            return PrepareResponseObject(CurriculumProcesses.GetClassById(classId, _context));
+            try
+            {
+                return await CurriculumProcesses.GetClassById(classId, _context);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return null;
+            }
         }
 
         [HttpPost]
@@ -100,318 +157,623 @@ namespace MyPortal.Controllers.Api
         public async Task<IHttpActionResult> CreateClass([FromBody] CurriculumClass @class)
         {
             @class.AcademicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
-            return PrepareResponse(CurriculumProcesses.CreateClass(@class, _context));
+
+            try
+            {
+                await CurriculumProcesses.CreateClass(@class, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "Class created");
         }
 
         [HttpPost]
         [RequiresPermission("EditClasses")]
         [Route("classes/update", Name = "ApiCurriculumUpdateClass")]
-        public IHttpActionResult UpdateClass([FromBody] CurriculumClass @class)
+        public async Task<IHttpActionResult> UpdateClass([FromBody] CurriculumClass @class)
         {
-            return PrepareResponse(CurriculumProcesses.UpdateClass(@class, _context));
+            try
+            {
+                await CurriculumProcesses.UpdateClass(@class, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "Class updated");
         }
 
         [HttpDelete]
         [RequiresPermission("EditClasses")]
         [Route("classes/delete/{classId:int}", Name = "ApiCurriculumDeleteClass")]
-        public IHttpActionResult DeleteClass([FromUri] int classId)
+        public async Task<IHttpActionResult> DeleteClass([FromUri] int classId)
         {
-            return PrepareResponse(CurriculumProcesses.DeleteClass(classId, _context));
+            try
+            {
+                await CurriculumProcesses.DeleteClass(classId, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "Class deleted");
         }
 
         [HttpGet]
         [RequiresPermission("ViewSessions")]
         [Route("sessions/get/byClass/{classId:int}", Name = "ApiCurriculumGetSessionsByClass")]
-        public IEnumerable<CurriculumSessionDto> GetSessionsByClass([FromUri] int classId)
+        public async Task<IEnumerable<CurriculumSessionDto>> GetSessionsByClass([FromUri] int classId)
         {
-            return PrepareResponseObject(CurriculumProcesses.GetSessionsForClass(classId, _context));
+            try
+            {
+                return await CurriculumProcesses.GetSessionsByClass(classId, _context);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return null;
+            }
         }
 
         [RequiresPermission("ViewSessions")]
         [HttpPost]
         [Route("sessions/get/byClass/dataGrid/{classId:int}", Name = "ApiCurriculumGetSessionsByClassDataGrid")]
-        public IHttpActionResult GetSessionsByClassDataGrid([FromUri] int classId, [FromBody] DataManagerRequest dm)
+        public async Task<IHttpActionResult> GetSessionsByClassDataGrid([FromUri] int classId, [FromBody] DataManagerRequest dm)
         {
-            var sessions = PrepareResponseObject(CurriculumProcesses.GetSessionsForClass_DataGrid(classId, _context));
+            try
+            {
+                var sessions = await CurriculumProcesses.GetSessionsByClass(classId, _context);
 
-            return PrepareDataGridObject(sessions, dm);
+                return PrepareDataGridObject(sessions, dm);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpGet]
         [RequiresPermission("ViewSessions")]
         [Route("sessions/get/byId/{sessionId:int}", Name = "ApiCurriculumGetSessionById")]
-        public CurriculumSessionDto GetSessionById([FromUri] int sessionId)
+        public async Task<CurriculumSessionDto> GetSessionById([FromUri] int sessionId)
         {
-            return PrepareResponseObject(CurriculumProcesses.GetSessionById(sessionId, _context));
+            try
+            {
+                return await CurriculumProcesses.GetSessionById(sessionId, _context);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return null;
+            }
         }
 
         [HttpPost]
         [RequiresPermission("EditClasses")]
         [Route("sessions/create", Name = "ApiCurriculumCreateSession")]
-        public IHttpActionResult CreateSession([FromBody] CurriculumSession session)
+        public async Task<IHttpActionResult> CreateSession([FromBody] CurriculumSession session)
         {
-            return PrepareResponse(CurriculumProcesses.CreateSession(session, _context));
+            try
+            {
+                await CurriculumProcesses.CreateSession(session, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "Session created");
         }
 
         [HttpPost]
         [RequiresPermission("EditClasses")]
         [Route("sessions/addRegPeriods", Name = "ApiCurriculumCreateSessionsForRegPeriods")]
-        public IHttpActionResult CreateSessionsForRegPeriods([FromBody] CurriculumSession session)
+        public async Task<IHttpActionResult> CreateSessionsForRegPeriods([FromBody] CurriculumSession session)
         {
-            return PrepareResponse(CurriculumProcesses.CreateSessionForRegPeriods(session, _context));
+            try
+            {
+                await CurriculumProcesses.CreateSessionForRegPeriods(session, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "Sessions created");
         }
 
         [HttpPost]
         [RequiresPermission("EditClasses")]
         [Route("sessions/update", Name = "ApiCurriculumUpdateSession")]
-        public IHttpActionResult UpdateSession([FromBody] CurriculumSession session)
+        public async Task<IHttpActionResult> UpdateSession([FromBody] CurriculumSession session)
         {
-            return PrepareResponse(CurriculumProcesses.UpdateSession(session, _context));
+            try
+            {
+                await CurriculumProcesses.UpdateSession(session, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "Session updated");
         }
 
         [HttpDelete]
         [RequiresPermission("EditClasses")]
         [Route("sessions/delete/{sessionId:int}", Name = "ApiCurriculumDeleteSession")]
-        public IHttpActionResult DeleteSession([FromUri] int sessionId)
+        public async Task<IHttpActionResult> DeleteSession([FromUri] int sessionId)
         {
-            return PrepareResponse(CurriculumProcesses.DeleteSession(sessionId, _context));
+            try
+            {
+                await CurriculumProcesses.DeleteSession(sessionId, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "Session deleted");
         }
 
         [HttpGet]
         [RequiresPermission("ViewEnrolments")]
         [Route("enrolments/get/byClass/{classId:int}", Name = "ApiCurriculumGetEnrolmentsByClass")]
-        public IEnumerable<CurriculumEnrolmentDto> GetEnrolmentsByClass([FromUri] int classId)
+        public async Task<IEnumerable<CurriculumEnrolmentDto>> GetEnrolmentsByClass([FromUri] int classId)
         {
-            return PrepareResponseObject(CurriculumProcesses.GetEnrolmentsForClass(classId, _context));
+            try
+            {
+                return await CurriculumProcesses.GetEnrolmentsForClass(classId, _context);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return null;
+            }
         }
 
         [HttpPost]
         [RequiresPermission("ViewEnrolments")]
         [Route("enrolments/get/byClass/dataGrid/{classId:int}", Name = "ApiCurriculumGetEnrolmentsByClassDataGrid")]
-        public IHttpActionResult GetEnrolmentsByClassDataGrid([FromUri] int classId,
+        public async Task<IHttpActionResult> GetEnrolmentsByClassDataGrid([FromUri] int classId,
             [FromBody] DataManagerRequest dm)
         {
-            var enrolments =
-                PrepareResponseObject(CurriculumProcesses.GetEnrolmentsForClassDataGrid(classId, _context));
+            try
+            {
+                var enrolments = await CurriculumProcesses.GetEnrolmentsForClassDataGrid(classId, _context);
 
-            return PrepareDataGridObject(enrolments, dm);
+                return PrepareDataGridObject(enrolments, dm);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpGet]
         [RequiresPermission("ViewEnrolments")]
         [Route("enrolments/get/byStudent/{studentId:int}", Name = "ApiCurriculumGetEnrolmentsByStudent")]
-        public IEnumerable<CurriculumEnrolmentDto> GetEnrolmentsByStudent([FromUri] int studentId)
+        public async Task<IEnumerable<CurriculumEnrolmentDto>> GetEnrolmentsByStudent([FromUri] int studentId)
         {
-            return PrepareResponseObject(CurriculumProcesses.GetEnrolmentsForStudent(studentId, _context));
+            try
+            {
+                return await CurriculumProcesses.GetEnrolmentsForStudent(studentId, _context);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return null;
+            }
         }
 
         [HttpPost]
         [RequiresPermission("ViewEnrolments")]
         [Route("enrolments/get/byStudent/dataGrid/{studentId:int}", Name = "ApiCurriculumGetEnrolmentsByStudentDataGrid")]
-        public IHttpActionResult GetEnrolmentsByStudentDataGrid([FromUri] int studentId,
+        public async Task<IHttpActionResult> GetEnrolmentsByStudentDataGrid([FromUri] int studentId,
             [FromBody] DataManagerRequest dm)
         {
-            var enrolments =
-                PrepareResponseObject(CurriculumProcesses.GetEnrolmentsForStudent_DataGrid(studentId, _context));
+            try
+            {
+                var enrolments = await CurriculumProcesses.GetEnrolmentsForStudentDataGrid(studentId, _context);
 
-            return PrepareDataGridObject(enrolments, dm);
+                return PrepareDataGridObject(enrolments, dm);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpGet]
         [RequiresPermission("ViewEnrolments")]
         [Route("enrolments/get/byId/{enrolmentId:int}", Name = "ApiCurriculumGetEnrolment")]
-        public CurriculumEnrolmentDto GetEnrolment([FromUri] int enrolmentId)
+        public async Task<CurriculumEnrolmentDto> GetEnrolment([FromUri] int enrolmentId)
         {
-            return PrepareResponseObject(CurriculumProcesses.GetEnrolmentById(enrolmentId, _context));
+            try
+            {
+                return await CurriculumProcesses.GetEnrolmentById(enrolmentId, _context);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return null;
+            }
         }
 
         [HttpPost]
         [RequiresPermission("EditClasses")]
         [Route("enrolments/create", Name = "ApiCurriculumCreateEnrolment")]
-        public IHttpActionResult CreateEnrolment([FromBody] CurriculumEnrolment enrolment)
+        public async Task<IHttpActionResult> CreateEnrolment([FromBody] CurriculumEnrolment enrolment)
         {
-            return PrepareResponse(CurriculumProcesses.CreateEnrolment(enrolment, _context));
+            try
+            {
+                await CurriculumProcesses.CreateEnrolment(enrolment, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "Enrolment created");
         }
 
         [HttpPost]
         [RequiresPermission("EditClasses")]
         [Route("enrolments/create/group", Name = "ApiCurriculumEnrolRegGroup")]
-        public IHttpActionResult EnrolRegGroup([FromBody] GroupEnrolment enrolment)
+        public async Task<IHttpActionResult> EnrolRegGroup([FromBody] GroupEnrolment enrolment)
         {
-            return PrepareResponse(CurriculumProcesses.CreateEnrolmentsForRegGroup(enrolment, _context));
+            try
+            {
+                await CurriculumProcesses.CreateEnrolmentsForRegGroup(enrolment, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "Group enrolled");
         }
 
         [HttpDelete]
         [RequiresPermission("EditClasses")]
         [Route("classes/enrolments/delete/{enrolmentId:int}", Name = "ApiCurriculumDeleteEnrolment")]
-        public IHttpActionResult DeleteEnrolment([FromUri] int enrolmentId)
+        public async Task<IHttpActionResult> DeleteEnrolment([FromUri] int enrolmentId)
         {
-            return PrepareResponse(CurriculumProcesses.DeleteEnrolment(enrolmentId, _context));
+            try
+            {
+                await CurriculumProcesses.DeleteEnrolment(enrolmentId, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "Enrolment deleted");
         }
 
         [HttpPost]
         [RequiresPermission("EditSubjects")]
         [Route("subjects/new", Name = "ApiCurriculumCreateSubject")]
-        public IHttpActionResult CreateSubject([FromBody] CurriculumSubject subject)
+        public async Task<IHttpActionResult> CreateSubject([FromBody] CurriculumSubject subject)
         {
-            return PrepareResponse(CurriculumProcesses.CreateSubject(subject, _context));
+            try
+            {
+                await CurriculumProcesses.CreateSubject(subject, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "Subject created");
         }
 
         [HttpDelete]
         [RequiresPermission("EditSubjects")]
         [Route("subjects/delete/{subjectId:int}", Name = "ApiCurriculumDeleteSubject")]
-        public IHttpActionResult DeleteSubject([FromUri] int subjectId)
+        public async Task<IHttpActionResult> DeleteSubject([FromUri] int subjectId)
         {
-            return PrepareResponse(CurriculumProcesses.DeleteSubject(subjectId, _context));
+            try
+            {
+                await CurriculumProcesses.DeleteSubject(subjectId, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "Subject deleted");
         }
 
         [HttpGet]
         [RequiresPermission("EditSubjects")]
         [Route("subjects/get/byId/{subjectId:int}", Name = "ApiCurriculumGetSubjectById")]
-        public CurriculumSubjectDto GetSubjectById([FromUri] int subjectId)
+        public async Task<CurriculumSubjectDto> GetSubjectById([FromUri] int subjectId)
         {
-            return PrepareResponseObject(CurriculumProcesses.GetSubjectById(subjectId, _context));
+            try
+            {
+                return await CurriculumProcesses.GetSubjectById(subjectId, _context);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return null;
+            }
         }
 
         [HttpGet]
         [RequiresPermission("EditSubjects")]
         [Route("subjects/get/all", Name = "ApiCurriculumGetAllSubjects")]
-        public IEnumerable<CurriculumSubjectDto> GetAllSubjects()
+        public async Task<IEnumerable<CurriculumSubjectDto>> GetAllSubjects()
         {
-            return PrepareResponseObject(CurriculumProcesses.GetAllSubjects(_context));
+            try
+            {
+                return await CurriculumProcesses.GetAllSubjects(_context);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return null;
+            }
         }
 
         [HttpPost]
         [RequiresPermission("EditSubjects")]
         [Route("subjects/get/dataGrid/all", Name = "ApiCurriculumGetAllSubjectsDataGrid")]
-        public IHttpActionResult GetAllSubjectsDataGrid([FromBody] DataManagerRequest dm)
+        public async Task<IHttpActionResult> GetAllSubjectsDataGrid([FromBody] DataManagerRequest dm)
         {
-            var subjects = PrepareResponseObject(CurriculumProcesses.GetAllSubjects_DataGrid(_context));
+            try
+            {
+                var subjects = await CurriculumProcesses.GetAllSubjectsDataGrid(_context);
 
-            return PrepareDataGridObject(subjects, dm);
+                return PrepareDataGridObject(subjects, dm);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpPost]
         [RequiresPermission("EditSubjects")]
         [Route("subjects/update", Name = "ApiCurriculumUpdateSubject")]
-        public IHttpActionResult UpdateSubject([FromBody] CurriculumSubject subject)
+        public async Task<IHttpActionResult> UpdateSubject([FromBody] CurriculumSubject subject)
         {
-            return PrepareResponse(CurriculumProcesses.UpdateSubject(subject, _context));
+            try
+            {
+                await CurriculumProcesses.UpdateSubject(subject, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "Subject updated");
         }
 
         [HttpPost]
         [RequiresPermission("EditStudyTopics")]
         [Route("studyTopics/create", Name = "ApiCurriculumCreateStudyTopic")]
-        public IHttpActionResult CreateStudyTopic([FromBody] CurriculumStudyTopic studyTopic)
+        public async Task<IHttpActionResult> CreateStudyTopic([FromBody] CurriculumStudyTopic studyTopic)
         {
-            return PrepareResponse(CurriculumProcesses.CreateStudyTopic(studyTopic, _context));
+            try
+            {
+                await CurriculumProcesses.CreateStudyTopic(studyTopic, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "Study topic created");
         }
 
         [HttpDelete]
         [RequiresPermission("EditStudyTopics")]
         [Route("studyTopics/delete/{studyTopicId:int}", Name = "ApiCurriculumDeleteStudyTopic")]
-        public IHttpActionResult DeleteStudyTopic([FromUri] int studyTopicId)
+        public async Task<IHttpActionResult> DeleteStudyTopic([FromUri] int studyTopicId)
         {
-            return PrepareResponse(CurriculumProcesses.DeleteStudyTopic(studyTopicId, _context));
+            try
+            {
+                await CurriculumProcesses.DeleteStudyTopic(studyTopicId, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "Study topic deleted");
         }
 
         [HttpGet]
         [RequiresPermission("ViewStudyTopics")]
         [Route("studyTopics/get/byId/{studyTopicId:int}", Name = "ApiCurriculumGetStudyTopicById")]
-        public CurriculumStudyTopicDto GetStudyTopicById([FromUri] int studyTopicId)
+        public async Task<CurriculumStudyTopicDto> GetStudyTopicById([FromUri] int studyTopicId)
         {
-            return PrepareResponseObject(CurriculumProcesses.GetStudyTopicById(studyTopicId, _context));
+            try
+            {
+                return await CurriculumProcesses.GetStudyTopicById(studyTopicId, _context);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return null;
+            }
         }
 
         [HttpGet]
         [RequiresPermission("ViewStudyTopics")]
         [Route("studyTopics/get/all", Name = "ApiCurriculumGetAllStudyTopics")]
-        public IEnumerable<CurriculumStudyTopicDto> GetAllStudyTopics()
+        public async Task<IEnumerable<CurriculumStudyTopicDto>> GetAllStudyTopics()
         {
-            return PrepareResponseObject(CurriculumProcesses.GetAllStudyTopics(_context));
+            try
+            {
+                return await CurriculumProcesses.GetAllStudyTopics(_context);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return null;
+            }
         }
 
         [HttpPost]
         [RequiresPermission("ViewStudyTopics")]
         [Route("studyTopics/get/dataGrid/all", Name = "ApiCurriculumGetAllStudyTopicsDataGrid")]
-        public IHttpActionResult GetAllStudyTopicsDataGrid([FromBody] DataManagerRequest dm)
+        public async Task<IHttpActionResult> GetAllStudyTopicsDataGrid([FromBody] DataManagerRequest dm)
         {
-            var studyTopics = PrepareResponseObject(CurriculumProcesses.GetAllStudyTopicsDataGrid(_context));
+            try
+            {
+                var studyTopics = await CurriculumProcesses.GetAllStudyTopicsDataGrid(_context);
 
-            return PrepareDataGridObject(studyTopics, dm);
+                return PrepareDataGridObject(studyTopics, dm);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpPost]
         [RequiresPermission("EditStudyTopics")]
         [Route("studyTopics/update", Name = "ApiCurriculumUpdateStudyTopic")]
-        public IHttpActionResult UpdateStudyTopic([FromBody] CurriculumStudyTopic studyTopic)
+        public async Task<IHttpActionResult> UpdateStudyTopic([FromBody] CurriculumStudyTopic studyTopic)
         {
-            return PrepareResponse(CurriculumProcesses.UpdateStudyTopic(studyTopic, _context));
+            try
+            {
+                await CurriculumProcesses.UpdateStudyTopic(studyTopic, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "Study topic updated");
         }
-        
+
         [HttpGet]
         [RequiresPermission("ViewLessonPlans")]
         [Route("lessonPlans/get/all", Name = "ApiCurriculumGetAllLessonPlans")]
-        public IEnumerable<CurriculumLessonPlanDto> GetAllLessonPlans()
+        public async Task<IEnumerable<CurriculumLessonPlanDto>> GetAllLessonPlans()
         {
-            return PrepareResponseObject(CurriculumProcesses.GetAllLessonPlans(_context));
+            try
+            {
+                return await CurriculumProcesses.GetAllLessonPlans(_context);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return null;
+            }
         }
-        
+
         [HttpGet]
         [RequiresPermission("ViewLessonPlans")]
         [Route("lessonPlans/get/byId/{lessonPlanId:int}", Name = "ApiCurriculumGetLessonPlanById")]
-        public CurriculumLessonPlanDto GetLessonPlanById([FromUri] int lessonPlanId)
+        public async Task<CurriculumLessonPlanDto> GetLessonPlanById([FromUri] int lessonPlanId)
         {
-            return PrepareResponseObject(CurriculumProcesses.GetLessonPlanById(lessonPlanId, _context));
+            try
+            {
+                return await CurriculumProcesses.GetLessonPlanById(lessonPlanId, _context);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return null;
+            }
         }
 
         [HttpGet]
         [RequiresPermission("ViewLessonPlans")]
         [Route("lessonPlans/get/byTopic/{studyTopicId:int}", Name = "ApiCurriculumGetLessonPlansByTopic")]
-        public IEnumerable<CurriculumLessonPlanDto> GetLessonPlansByTopic([FromUri] int studyTopicId)
+        public async Task<IEnumerable<CurriculumLessonPlanDto>> GetLessonPlansByTopic([FromUri] int studyTopicId)
         {
-            return PrepareResponseObject(CurriculumProcesses.GetLessonPlansByStudyTopic(studyTopicId, _context));
+            try
+            {
+                return await CurriculumProcesses.GetLessonPlansByStudyTopic(studyTopicId, _context);
+            }
+            catch (Exception e)
+            {
+                ThrowException(e);
+                return null;
+            }
         }
 
         [HttpPost]
         [RequiresPermission("ViewLessonPlans")]
         [Route("lessonPlans/get/byTopic/dataGrid/{studyTopicId:int}", Name = "ApiCurriculumGetLessonPlansByStudyTopicDatagrid")]
-        public IHttpActionResult GetLessonPlansByStudyTopicDataGrid([FromUri] int studyTopicId,
+        public async Task<IHttpActionResult> GetLessonPlansByStudyTopicDataGrid([FromUri] int studyTopicId,
             [FromBody] DataManagerRequest dm)
         {
-            var lessonPlans =
-                PrepareResponseObject(CurriculumProcesses.GetLessonPlansByStudyTopic_DataGrid(studyTopicId, _context));
+            try
+            {
+                var lessonPlans = await CurriculumProcesses.GetLessonPlansByStudyTopicDataGrid(studyTopicId, _context);
 
-            return PrepareDataGridObject(lessonPlans, dm);
+                return PrepareDataGridObject(lessonPlans, dm);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpPost]
         [RequiresPermission("EditLessonPlans")]
         [Route("lessonPlans/create", Name = "ApiCurriculumCreateLessonPlan")]
-        public IHttpActionResult CreateLessonPlan([FromBody] CurriculumLessonPlan plan)
+        public async Task<IHttpActionResult> CreateLessonPlan([FromBody] CurriculumLessonPlan plan)
         {
             var userId = User.Identity.GetUserId();
-            return PrepareResponse(CurriculumProcesses.CreateLessonPlan(plan, userId, _context));
+            try
+            {
+                await CurriculumProcesses.CreateLessonPlan(plan, userId, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "Lesson plan created");
         }
 
         [HttpPost]
         [RequiresPermission("EditLessonPlans")]
         [Route("lessonPlans/update", Name = "ApiCurriculumUpdateLessonPlan")]
-        public IHttpActionResult UpdateLessonPlan([FromBody] CurriculumLessonPlan plan)
+        public async Task<IHttpActionResult> UpdateLessonPlan([FromBody] CurriculumLessonPlan plan)
         {
-            return PrepareResponse(CurriculumProcesses.UpdateLessonPlan(plan, _context));
+            try
+            {
+                await CurriculumProcesses.UpdateLessonPlan(plan, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Content(HttpStatusCode.OK, "Lesson plan updated");
         }
 
         [HttpDelete]
         [RequiresPermission("EditLessonPlans")]
         [Route("lessonPlans/delete/{lessonPlanId:int}", Name = "ApiCurriculumDeleteLessonPlan")]
-        public IHttpActionResult DeleteLessonPlan([FromUri] int lessonPlanId)
+        public async Task<IHttpActionResult> DeleteLessonPlan([FromUri] int lessonPlanId)
         {
-            var userId = User.Identity.GetUserId();
-            var canDeleteAll = User.HasPermission("DeleteAllLessonPlans");
-            var staffId = PrepareResponseObject(PeopleProcesses.GetStaffFromUserId(userId, _context)).Id;
+            var staffId = PeopleProcesses.GetStaffFromUserId(User.Identity.GetUserId(), _context).ResponseObject.Id;
+            try
+            {
+                await CurriculumProcesses.DeleteLessonPlan(lessonPlanId, staffId,
+                    User.HasPermission("DeleteAllLessonPlans"), _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
 
-            return PrepareResponse(CurriculumProcesses.DeleteLessonPlan(lessonPlanId, staffId, canDeleteAll, _context));
+            return Content(HttpStatusCode.OK, "Lesson plan deleted");
         }
     }
 }

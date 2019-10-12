@@ -12,6 +12,7 @@ namespace MyPortal.Models.Database
     {
         public int Id { get; set; }
 
+        [Index(IsUnique = true)]
         public string Description { get; set; }
     }
 }

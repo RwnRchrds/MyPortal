@@ -96,7 +96,7 @@ namespace MyPortal.Controllers.Api
 
                 if (requestedStudent.Id != studentUser.Id)
                 {
-                    throw new HttpResponseException(HttpStatusCode.Unauthorized);
+                    throw new HttpResponseException(HttpStatusCode.Forbidden);
                 }
             }
         }

@@ -201,9 +201,9 @@ namespace MyPortal.Processes
 
             for (var i = 1; i < chars.Length; i++)
             {
-                var n = char.GetNumericValue(chars[i]) * (i+1);
+                var n = int.Parse(chars[i].ToString()) * (i+1);
 
-                check += (int) n;
+                check += n;
             }
 
             var alphaIndex = check % 23;
