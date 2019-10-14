@@ -20,12 +20,12 @@ namespace MyPortal.Processes
         {
             if (!ValidationProcesses.ModelIsValid(result))
             {
-                throw new BadRequestException("Invalid data");
+                throw new ProcessException(ExceptionType.BadRequest,"Invalid data");
             }
 
             if (! await context.AssessmentGrades.AnyAsync(x => x.GradeSetId == result.Aspect.GradeSetId && x.Code == result.Grade))
             {
-                throw new BadRequestException("Grade does not exist");
+                throw new ProcessException(ExceptionType.BadRequest,"Grade does not exist");
             }
 
             var resultInDb = await context.AssessmentResults.SingleOrDefaultAsync(x =>
@@ -33,7 +33,7 @@ namespace MyPortal.Processes
 
             if (resultInDb != null)
             {
-                throw new BadRequestException("Result already exists");
+                throw new ProcessException(ExceptionType.BadRequest,"Result already exists");
             }
 
             context.AssessmentResults.Add(result);
@@ -48,7 +48,7 @@ namespace MyPortal.Processes
         {
             if (!ValidationProcesses.ModelIsValid(resultSet))
             {
-                throw new BadRequestException("Invalid data");
+                throw new ProcessException(ExceptionType.BadRequest,"Invalid data");
             }
 
             var currentRsExists = await context.AssessmentResultSets.AnyAsync(x => x.IsCurrent);
@@ -68,12 +68,12 @@ namespace MyPortal.Processes
 
             if (resultSet == null)
             {
-                throw new NotFoundException("Result set not found");
+                throw new ProcessException(ExceptionType.NotFound,"Result set not found");
             }
 
             if (resultSet.IsCurrent)
             {
-                throw new BadRequestException("Result set is marked as current");
+                throw new ProcessException(ExceptionType.BadRequest,"Result set is marked as current");
             }
 
             context.AssessmentResultSets.Remove(resultSet);
@@ -143,7 +143,7 @@ namespace MyPortal.Processes
 
             if (resultSet == null)
             {
-                throw new NotFoundException("Result set not found");
+                throw new ProcessException(ExceptionType.NotFound,"Result set not found");
             }
 
             return resultSet;
@@ -162,7 +162,7 @@ namespace MyPortal.Processes
         {
             if (!await context.Students.AnyAsync(x => x.Id == studentId))
             {
-                throw new NotFoundException("Student not found");
+                throw new ProcessException(ExceptionType.NotFound,"Student not found");
             }
 
             var resultSets = await context.AssessmentResultSets.Where(x => x.Results.Any(s => s.StudentId == studentId))
@@ -175,7 +175,7 @@ namespace MyPortal.Processes
         {
             if (!await context.AssessmentResultSets.AnyAsync(x => x.Id == resultSetId))
             {
-                throw new NotFoundException("Result set not found");
+                throw new ProcessException(ExceptionType.NotFound,"Result set not found");
             }
 
             return await context.AssessmentResults.AnyAsync(x => x.ResultSetId == resultSetId);
@@ -187,12 +187,12 @@ namespace MyPortal.Processes
 
             if (resultSet == null)
             {
-                throw new NotFoundException("Result set not found");
+                throw new ProcessException(ExceptionType.NotFound,"Result set not found");
             }
 
             if (resultSet.IsCurrent)
             {
-                throw new BadRequestException("Result set is already marked as current");
+                throw new ProcessException(ExceptionType.BadRequest,"Result set is already marked as current");
             }
 
             var currentResultSet = await context.AssessmentResultSets.SingleOrDefaultAsync(x => x.IsCurrent);
@@ -213,7 +213,7 @@ namespace MyPortal.Processes
 
             if (resultSetInDb == null)
             {
-                throw new NotFoundException("Result set not found");
+                throw new ProcessException(ExceptionType.NotFound,"Result set not found");
             }
 
             resultSetInDb.Name = resultSet.Name;

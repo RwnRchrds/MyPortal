@@ -24,17 +24,17 @@ namespace MyPortal.Processes
         {
             if (!ValidationProcesses.ModelIsValid(@class))
             {
-                throw new BadRequestException("Invalid data");
+                throw new ProcessException(ExceptionType.BadRequest,"Invalid data");
             }
 
             if (!await context.CurriculumAcademicYears.AnyAsync(x => x.Id == @class.AcademicYearId))
             {
-                throw new NotFoundException("Academic year not found");
+                throw new ProcessException(ExceptionType.NotFound,"Academic year not found");
             }
 
             if (await context.CurriculumClasses.AnyAsync(x => x.Name == @class.Name && x.AcademicYearId == @class.AcademicYearId))
             {
-                throw new BadRequestException("Class already exists");
+                throw new ProcessException(ExceptionType.BadRequest,"Class already exists");
             }
 
             context.CurriculumClasses.Add(@class);
@@ -46,28 +46,28 @@ namespace MyPortal.Processes
         {
             if (!ValidationProcesses.ModelIsValid(enrolment))
             {
-                throw new BadRequestException("Invalid data");
+                throw new ProcessException(ExceptionType.BadRequest,"Invalid data");
             }
 
             if (!await context.CurriculumClasses.AnyAsync(x => x.Id == enrolment.ClassId))
             {
-                throw new NotFoundException("Class not found");
+                throw new ProcessException(ExceptionType.NotFound,"Class not found");
             }
 
             if (!await context.Students.AnyAsync(x => x.Id == enrolment.StudentId))
             {
-                throw new NotFoundException("Student not found");
+                throw new ProcessException(ExceptionType.NotFound,"Student not found");
             }
 
             if (!await context.CurriculumSessions.AnyAsync(x => x.ClassId == enrolment.ClassId))
             {
-                throw new NotFoundException("Cannot add students to a class with no sessions");
+                throw new ProcessException(ExceptionType.NotFound,"Cannot add students to a class with no sessions");
             }
 
             if (await context.CurriculumEnrolments.AnyAsync(x =>
                 x.ClassId == enrolment.ClassId && x.StudentId == enrolment.StudentId))
             {
-                throw new BadRequestException(
+                throw new ProcessException(ExceptionType.BadRequest,
                     $"{PeopleProcesses.GetStudentDisplayName(enrolment.Student).ResponseObject} is already enrolled in {enrolment.Class.Name}");
             }
 
@@ -80,7 +80,7 @@ namespace MyPortal.Processes
                 }
             }
 
-            throw new BadRequestException("An unknown error occurred");
+            throw new ProcessException(ExceptionType.BadRequest,"An unknown error occurred");
         }
 
         public static async Task CreateEnrolmentsForMultipleStudents(IEnumerable<Student> students,
@@ -107,7 +107,7 @@ namespace MyPortal.Processes
 
             if (group == null)
             {
-                throw new NotFoundException("Group not found");
+                throw new ProcessException(ExceptionType.NotFound,"Group not found");
             }
 
             foreach (var student in group.Students)
@@ -129,7 +129,7 @@ namespace MyPortal.Processes
         {
             if (!ValidationProcesses.ModelIsValid(lessonPlan))
             {
-                throw new BadRequestException("Invalid data");
+                throw new ProcessException(ExceptionType.BadRequest,"Invalid data");
             }
 
             var authorId = lessonPlan.AuthorId;
@@ -141,7 +141,7 @@ namespace MyPortal.Processes
                 author = await context.StaffMembers.SingleOrDefaultAsync(x => x.Person.UserId == userId);
                 if (author == null)
                 {
-                    throw new NotFoundException("Staff member not found");
+                    throw new ProcessException(ExceptionType.NotFound,"Staff member not found");
                 }
             }
 
@@ -152,7 +152,7 @@ namespace MyPortal.Processes
 
             if (author == null)
             {
-                throw new NotFoundException("Staff member not found");
+                throw new ProcessException(ExceptionType.NotFound,"Staff member not found");
             }
 
             lessonPlan.AuthorId = author.Id;
@@ -165,23 +165,23 @@ namespace MyPortal.Processes
         {
             if (!ValidationProcesses.ModelIsValid(session))
             {
-                throw new BadRequestException("Invalid data");
+                throw new ProcessException(ExceptionType.BadRequest,"Invalid data");
             }
 
             if (!await context.CurriculumClasses.AnyAsync(x => x.Id == session.ClassId))
             {
-                throw new NotFoundException("Class not found");
+                throw new ProcessException(ExceptionType.NotFound,"Class not found");
             }
 
             if (await HasEnrolments(session.ClassId, context))
             {
-                throw new BadRequestException("Cannot modify class schedule while students are enrolled");
+                throw new ProcessException(ExceptionType.BadRequest,"Cannot modify class schedule while students are enrolled");
             }
 
             if (context.CurriculumSessions.Any(x =>
                 x.ClassId == session.ClassId && x.PeriodId == session.PeriodId))
             {
-                throw new BadRequestException("Class is already assigned to this period");
+                throw new ProcessException(ExceptionType.BadRequest,"Class is already assigned to this period");
             }
 
             context.CurriculumSessions.Add(session);
@@ -197,12 +197,12 @@ namespace MyPortal.Processes
 
             if (! await context.CurriculumClasses.AnyAsync(x => x.Id == session.ClassId))
             {
-                throw new NotFoundException("Class not found");
+                throw new ProcessException(ExceptionType.NotFound,"Class not found");
             }
 
             if (await HasEnrolments(session.ClassId, context))
             {
-                throw new BadRequestException("Cannot modify class schedule while students are enrolled");
+                throw new ProcessException(ExceptionType.BadRequest,"Cannot modify class schedule while students are enrolled");
             }
 
             foreach (var newAssignment in regPeriods.Select(period => new {period, period1 = period})
@@ -222,7 +222,7 @@ namespace MyPortal.Processes
         {
             if (!ValidationProcesses.ModelIsValid(studyTopic))
             {
-                throw new BadRequestException("Invalid data");
+                throw new ProcessException(ExceptionType.BadRequest,"Invalid data");
             }
 
             context.CurriculumStudyTopics.Add(studyTopic);
@@ -233,7 +233,7 @@ namespace MyPortal.Processes
         {
             if (subject.Name.IsNullOrWhiteSpace() || !ValidationProcesses.ModelIsValid(subject))
             {
-                throw new BadRequestException("Invalid data");
+                throw new ProcessException(ExceptionType.BadRequest,"Invalid data");
             }
 
             context.CurriculumSubjects.Add(subject);
@@ -246,12 +246,12 @@ namespace MyPortal.Processes
 
             if (currClass == null)
             {
-                throw new NotFoundException("Class not found");
+                throw new ProcessException(ExceptionType.NotFound,"Class not found");
             }
 
             if (await HasSessions(classId, context) || await HasEnrolments(classId, context))
             {
-                throw new BadRequestException("Class cannot be deleted");
+                throw new ProcessException(ExceptionType.BadRequest,"Class cannot be deleted");
             }
 
             context.CurriculumClasses.Remove(currClass);
@@ -264,7 +264,7 @@ namespace MyPortal.Processes
 
             if (enrolment == null)
             {
-                throw new NotFoundException("Enrolment not found");
+                throw new ProcessException(ExceptionType.NotFound,"Enrolment not found");
             }
 
             context.CurriculumEnrolments.Remove(enrolment);
@@ -277,12 +277,12 @@ namespace MyPortal.Processes
 
             if (plan == null)
             {
-                throw new NotFoundException("Lesson plan not found");
+                throw new ProcessException(ExceptionType.NotFound,"Lesson plan not found");
             }
 
             if (!canDeleteAll && plan.AuthorId != staffId)
             {
-                throw new BadRequestException("Cannot delete someone else's lesson plan");
+                throw new ProcessException(ExceptionType.BadRequest,"Cannot delete someone else's lesson plan");
             }
 
             context.CurriculumLessonPlans.Remove(plan);
@@ -295,7 +295,7 @@ namespace MyPortal.Processes
 
             if (sessionInDb == null)
             {
-                throw new NotFoundException("Session not found");
+                throw new ProcessException(ExceptionType.NotFound,"Session not found");
             }
 
             context.CurriculumSessions.Remove(sessionInDb);
@@ -308,7 +308,7 @@ namespace MyPortal.Processes
 
             if (studyTopic == null)
             {
-                throw new NotFoundException("Study topic not found");
+                throw new ProcessException(ExceptionType.NotFound,"Study topic not found");
             }
 
             if (!studyTopic.LessonPlans.Any())
@@ -317,7 +317,7 @@ namespace MyPortal.Processes
                 await context.SaveChangesAsync();
             }
 
-            throw new BadRequestException("This study topic cannot be deleted");
+            throw new ProcessException(ExceptionType.BadRequest,"This study topic cannot be deleted");
         }
 
         public static async Task DeleteSubject(int subjectId, MyPortalDbContext context)
@@ -326,7 +326,7 @@ namespace MyPortal.Processes
 
             if (subjectInDb == null)
             {
-                throw new NotFoundException("Student not found");
+                throw new ProcessException(ExceptionType.NotFound,"Student not found");
             }
 
             subjectInDb.Deleted = true; //Flag as deleted
@@ -335,7 +335,7 @@ namespace MyPortal.Processes
             if (await context.CurriculumClasses.AnyAsync(x => x.SubjectId == subjectId) ||
                 await context.CurriculumStudyTopics.AnyAsync(x => x.SubjectId == subjectId))
             {
-                throw new BadRequestException("This subject cannot be deleted");
+                throw new ProcessException(ExceptionType.BadRequest,"This subject cannot be deleted");
             }
 
             context.CurriculumSubjects.Remove(subjectInDb);
@@ -350,7 +350,7 @@ namespace MyPortal.Processes
 
             if (academicYear == null)
             {
-                throw new NotFoundException("Academic year not found");
+                throw new ProcessException(ExceptionType.NotFound,"Academic year not found");
             }
 
             return Mapper.Map<CurriculumAcademicYear, CurriculumAcademicYearDto>(academicYear);
@@ -448,7 +448,7 @@ namespace MyPortal.Processes
 
             if (currClass == null)
             {
-                throw new NotFoundException("Class not found");
+                throw new ProcessException(ExceptionType.NotFound,"Class not found");
             }
 
             return Mapper.Map<CurriculumClass, CurriculumClassDto>(currClass);
@@ -461,7 +461,7 @@ namespace MyPortal.Processes
 
             if (enrolment == null)
             {
-                throw new NotFoundException("Enrolment not found");
+                throw new ProcessException(ExceptionType.NotFound,"Enrolment not found");
             }
 
             return Mapper.Map<CurriculumEnrolment, CurriculumEnrolmentDto>(enrolment);
@@ -524,7 +524,7 @@ namespace MyPortal.Processes
 
             if (lessonPlan == null)
             {
-                throw new NotFoundException("Lesson plan not found");
+                throw new ProcessException(ExceptionType.NotFound,"Lesson plan not found");
             }
 
             return Mapper.Map<CurriculumLessonPlan, CurriculumLessonPlanDto>(lessonPlan);
@@ -558,7 +558,7 @@ namespace MyPortal.Processes
         {
             if (!await context.CurriculumClasses.AnyAsync(x => x.Id == classId))
             {
-                throw new NotFoundException("Class not found");
+                throw new ProcessException(ExceptionType.NotFound,"Class not found");
             }
 
             return await context.AttendancePeriods.Where(x => x.Sessions.Any(p => p.ClassId == classId)).ToListAsync();
@@ -570,7 +570,7 @@ namespace MyPortal.Processes
 
             if (session == null)
             {
-                throw new NotFoundException("Session not found");
+                throw new ProcessException(ExceptionType.NotFound,"Session not found");
             }
 
             return Mapper.Map<CurriculumSession, CurriculumSessionDto>(session);
@@ -623,24 +623,24 @@ namespace MyPortal.Processes
 
             if (academicYear == null)
             {
-                throw new NotFoundException("Academic year not found");
+                throw new ProcessException(ExceptionType.NotFound,"Academic year not found");
             }
 
             if (weekBeginning < academicYear.FirstDate || weekBeginning > academicYear.LastDate)
             {
-                throw new BadRequestException("Selected date is outside academic year");
+                throw new ProcessException(ExceptionType.BadRequest,"Selected date is outside academic year");
             }
 
             var currentWeek = await context.AttendanceWeeks.SingleOrDefaultAsync(x => x.Beginning == weekBeginning && x.AcademicYearId == academicYearId);
 
             if (currentWeek == null)
             {
-                throw new NotFoundException("Attendance week not found");
+                throw new ProcessException(ExceptionType.NotFound,"Attendance week not found");
             }
 
             if (currentWeek.IsHoliday)
             {
-                throw new BadRequestException("Selected date is during a school holiday");
+                throw new ProcessException(ExceptionType.BadRequest,"Selected date is during a school holiday");
             }
 
             var classList = await context.CurriculumSessions
@@ -660,7 +660,7 @@ namespace MyPortal.Processes
 
             if (studyTopic == null)
             {
-                throw new NotFoundException("Study topic not found");
+                throw new ProcessException(ExceptionType.NotFound,"Study topic not found");
             }
 
             return Mapper.Map<CurriculumStudyTopic, CurriculumStudyTopicDto>(studyTopic);
@@ -672,7 +672,7 @@ namespace MyPortal.Processes
 
             if (subject == null)
             {
-                throw new NotFoundException("Subject not found");
+                throw new ProcessException(ExceptionType.NotFound,"Subject not found");
             }
 
             return Mapper.Map<CurriculumSubject, CurriculumSubjectDto>(subject);
@@ -682,7 +682,7 @@ namespace MyPortal.Processes
         {
             if (@class == null)
             {
-                throw new NotFoundException("Class not found");
+                throw new ProcessException(ExceptionType.NotFound,"Class not found");
             }
 
             if (@class.SubjectId == null || @class.SubjectId == 0)
@@ -709,7 +709,7 @@ namespace MyPortal.Processes
 
             if (academicYear == null)
             {
-                throw new NotFoundException("Academic year not found");
+                throw new ProcessException(ExceptionType.NotFound,"Academic year not found");
             }
 
             return date >= academicYear.FirstDate && date <= academicYear.LastDate;
@@ -725,18 +725,18 @@ namespace MyPortal.Processes
         {
             if (!await context.Students.AnyAsync(x => x.Id == studentId))
             {
-                throw new NotFoundException("Student not found");
+                throw new ProcessException(ExceptionType.NotFound,"Student not found");
             }
 
             if (!await context.CurriculumClasses.AnyAsync(x => x.Id == classId))
             {
-                throw new NotFoundException("Class not found");
+                throw new ProcessException(ExceptionType.NotFound,"Class not found");
             }
 
             if (await context.CurriculumEnrolments.AnyAsync(x =>
                 x.ClassId == classId && x.StudentId == studentId))
             {
-                throw new BadRequestException("Student is already enrolled in class");
+                throw new ProcessException(ExceptionType.BadRequest,"Student is already enrolled in class");
             }
 
             var periods = await GetPeriodsForClass(context, classId);
@@ -745,7 +745,7 @@ namespace MyPortal.Processes
                 {
                     if (!await PeriodIsFree(context, studentId, period.Id))
                     {
-                        throw new BadRequestException($"Student is not free during period {period.Name}");
+                        throw new ProcessException(ExceptionType.BadRequest,$"Student is not free during period {period.Name}");
                     }
                 }
 
@@ -757,7 +757,7 @@ namespace MyPortal.Processes
 
             if (classInDb == null)
             {
-                throw new NotFoundException("Class not found");
+                throw new ProcessException(ExceptionType.NotFound,"Class not found");
             }
 
             classInDb.Name = @class.Name;
@@ -774,7 +774,7 @@ namespace MyPortal.Processes
 
             if (planInDb == null)
             {
-                throw new NotFoundException("Lesson plan not found");
+                throw new ProcessException(ExceptionType.NotFound,"Lesson plan not found");
             }
 
             planInDb.Title = lessonPlan.Title;
@@ -790,25 +790,25 @@ namespace MyPortal.Processes
         {
             if (!ValidationProcesses.ModelIsValid(session))
             {
-                throw new BadRequestException("Invalid data");
+                throw new ProcessException(ExceptionType.BadRequest,"Invalid data");
             }
 
             var sessionInDb = await context.CurriculumSessions.SingleOrDefaultAsync(x => x.Id == session.Id);
 
             if (sessionInDb == null)
             {
-                throw new NotFoundException("Session not found");
+                throw new ProcessException(ExceptionType.NotFound,"Session not found");
             }
 
             if (await HasEnrolments(session.ClassId, context))
             {
-                throw new BadRequestException("Cannot modify class schedule while students are enrolled");
+                throw new ProcessException(ExceptionType.BadRequest,"Cannot modify class schedule while students are enrolled");
             }
 
             if (await context.CurriculumSessions.AnyAsync(x =>
                 x.ClassId == session.ClassId && x.PeriodId == session.PeriodId))
             {
-                throw new BadRequestException("Class already assigned to this period");
+                throw new ProcessException(ExceptionType.BadRequest,"Class already assigned to this period");
             }
 
             sessionInDb.PeriodId = session.PeriodId;
@@ -819,14 +819,14 @@ namespace MyPortal.Processes
         {
             if (!ValidationProcesses.ModelIsValid(studyTopic))
             {
-                throw new BadRequestException("Invalid data");
+                throw new ProcessException(ExceptionType.BadRequest,"Invalid data");
             }
 
             var studyTopicInDb = await context.CurriculumStudyTopics.SingleOrDefaultAsync(x => x.Id == studyTopic.Id);
 
             if (studyTopicInDb == null)
             {
-                throw new NotFoundException("Study topic not found");
+                throw new ProcessException(ExceptionType.NotFound,"Study topic not found");
             }
 
             studyTopicInDb.Name = studyTopic.Name;
@@ -842,7 +842,7 @@ namespace MyPortal.Processes
 
             if (subjectInDb == null)
             {
-                throw new NotFoundException("Subject not found");
+                throw new ProcessException(ExceptionType.NotFound,"Subject not found");
             }
 
             subjectInDb.Name = subject.Name;

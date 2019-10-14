@@ -21,17 +21,17 @@ namespace MyPortal.Processes
 
             if (!ValidationProcesses.ModelIsValid(achievement))
             {
-                throw new BadRequestException("Invalid data");
+                throw new ProcessException(ExceptionType.BadRequest,"Invalid data");
             }
 
             if (!await context.CurriculumAcademicYears.AnyAsync(x => x.Id == achievement.AcademicYearId))
             {
-                throw new NotFoundException("Academic year not found");
+                throw new ProcessException(ExceptionType.NotFound,"Academic year not found");
             }
 
             if (!await achievement.Date.IsInAcademicYear(context, achievement.AcademicYearId))
             {
-                throw new BadRequestException("Date is not in academic year");
+                throw new ProcessException(ExceptionType.BadRequest,"Date is not in academic year");
             }
 
             context.BehaviourAchievements.Add(achievement);
@@ -45,17 +45,17 @@ namespace MyPortal.Processes
 
             if (!ValidationProcesses.ModelIsValid(incident))
             {
-                throw new BadRequestException("Invalid data");
+                throw new ProcessException(ExceptionType.BadRequest,"Invalid data");
             }
 
             if (!await context.CurriculumAcademicYears.AnyAsync(x => x.Id == incident.AcademicYearId))
             {
-                throw new NotFoundException("Academic year not found");
+                throw new ProcessException(ExceptionType.NotFound,"Academic year not found");
             }
 
             if (!await incident.Date.IsInAcademicYear(context, incident.AcademicYearId))
             {
-                throw new BadRequestException("Date is not in academic year");
+                throw new ProcessException(ExceptionType.BadRequest,"Date is not in academic year");
             }
 
             context.BehaviourIncidents.Add(incident);
@@ -68,7 +68,7 @@ namespace MyPortal.Processes
 
             if (achievement == null)
             {
-                throw new NotFoundException("Achievement not found");
+                throw new ProcessException(ExceptionType.NotFound,"Achievement not found");
             }
 
             achievement.Deleted = true; //Flag as deleted
@@ -83,7 +83,7 @@ namespace MyPortal.Processes
 
             if (incident == null)
             {
-                throw new NotFoundException("Incident not found");
+                throw new ProcessException(ExceptionType.NotFound,"Incident not found");
             }
 
             incident.Deleted = true;
@@ -98,7 +98,7 @@ namespace MyPortal.Processes
 
             if (achievement == null)
             {
-                throw new NotFoundException("Achievement not found");
+                throw new ProcessException(ExceptionType.NotFound,"Achievement not found");
             }
 
             return Mapper.Map<BehaviourAchievement, BehaviourAchievementDto>(achievement);
@@ -110,7 +110,7 @@ namespace MyPortal.Processes
 
             if (student == null)
             {
-                throw new NotFoundException("Student not found");
+                throw new ProcessException(ExceptionType.NotFound,"Student not found");
             }
 
             var achievementCount = await context.BehaviourAchievements.CountAsync(x =>
@@ -118,7 +118,7 @@ namespace MyPortal.Processes
 
             if (achievementCount < 0)
             {
-                throw new BadRequestException("Cannot have negative achievement count");
+                throw new ProcessException(ExceptionType.BadRequest,"Cannot have negative achievement count");
             }
 
             return achievementCount;
@@ -130,7 +130,7 @@ namespace MyPortal.Processes
 
             if (student == null)
             {
-                throw new NotFoundException("Student not found");
+                throw new ProcessException(ExceptionType.NotFound,"Student not found");
             }
 
             var points =
@@ -140,7 +140,7 @@ namespace MyPortal.Processes
 
             if (points < 0)
             {
-                throw new BadRequestException("Cannot have negative points count");
+                throw new ProcessException(ExceptionType.BadRequest,"Cannot have negative points count");
             }
 
             return points;
@@ -163,7 +163,7 @@ namespace MyPortal.Processes
 
             if (incident == null)
             {
-                throw new NotFoundException("Incident not found");
+                throw new ProcessException(ExceptionType.NotFound,"Incident not found");
             }
 
             return Mapper.Map<BehaviourIncident, BehaviourIncidentDto>(incident);
@@ -175,7 +175,7 @@ namespace MyPortal.Processes
 
             if (student == null)
             {
-                throw new NotFoundException("Student not found");
+                throw new ProcessException(ExceptionType.NotFound,"Student not found");
             }
 
             var negPoints =
@@ -184,7 +184,7 @@ namespace MyPortal.Processes
 
             if (negPoints < 0)
             {
-                throw new BadRequestException("Cannot have negative incident count");
+                throw new ProcessException(ExceptionType.BadRequest,"Cannot have negative incident count");
             }
 
             return negPoints;
@@ -206,7 +206,7 @@ namespace MyPortal.Processes
 
             if (student == null)
             {
-                throw new NotFoundException("Student not found");
+                throw new ProcessException(ExceptionType.NotFound,"Student not found");
             }
 
             var points = await context.BehaviourIncidents
@@ -214,7 +214,7 @@ namespace MyPortal.Processes
 
             if (points < 0)
             {
-                throw new BadRequestException("Cannot have negative points count");
+                throw new ProcessException(ExceptionType.BadRequest,"Cannot have negative points count");
             }
 
             return points;
@@ -243,7 +243,7 @@ namespace MyPortal.Processes
 
             if (student == null)
             {
-                throw new NotFoundException("Student not found");
+                throw new ProcessException(ExceptionType.NotFound,"Student not found");
             }
 
             var achievementPoints = await context.BehaviourAchievements
@@ -261,7 +261,7 @@ namespace MyPortal.Processes
 
             if (achievementInDb == null)
             {
-                throw new NotFoundException("Achievement not found");
+                throw new ProcessException(ExceptionType.NotFound,"Achievement not found");
             }
 
             achievementInDb.LocationId = achievement.LocationId;
@@ -279,7 +279,7 @@ namespace MyPortal.Processes
 
             if (incidentInDb == null)
             {
-                throw new NotFoundException("Incident not found");
+                throw new ProcessException(ExceptionType.NotFound,"Incident not found");
             }
 
             incidentInDb.LocationId = incident.LocationId;

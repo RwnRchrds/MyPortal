@@ -5,13 +5,13 @@ namespace MyPortal.Processes
 {
     public static class DateTimeProcesses
     {
-        public static ProcessResponse<DateTime> GetDateTimeFromFormattedInt(int formattedDate)
+        public static DateTime GetDateTimeFromFormattedInt(int formattedDate)
         {
-            int year = formattedDate / 10000;
-            int month = ((formattedDate - (10000 * year)) / 100);
-            int day = (formattedDate - (10000 * year) - (100 * month));
+            var year = formattedDate / 10000;
+            var month = ((formattedDate - (10000 * year)) / 100);
+            var day = (formattedDate - (10000 * year) - (100 * month));
 
-            return new ProcessResponse<DateTime>(ResponseType.Ok, null, new DateTime(year, month, day));
+            return new DateTime(year, month, day);
         }
 
         public static DateTime GetDayOfWeek(this DateTime dt, DayOfWeek day)

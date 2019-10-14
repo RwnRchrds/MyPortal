@@ -44,16 +44,48 @@ namespace MyPortal.Controllers.Api
 
         protected IHttpActionResult HandleException(Exception ex)
         {
-            return Content(ex is NotFoundException
-                ? HttpStatusCode.NotFound
-                : HttpStatusCode.BadRequest, ex.Message);
+            var statusCode = HttpStatusCode.BadRequest;
+
+            if (ex is ProcessException e)
+            {
+                switch (e.ExceptionType)
+                {
+                    case ExceptionType.NotFound:
+                        statusCode = HttpStatusCode.NotFound;
+                        break;
+                    case ExceptionType.Forbidden:
+                        statusCode = HttpStatusCode.Forbidden;
+                        break;
+                    case ExceptionType.Conflict:
+                        statusCode = HttpStatusCode.Conflict;
+                        break;
+                }
+            }
+
+            return Content(statusCode, ex.Message);
         }
 
         protected void ThrowException(Exception ex)
         {
-            throw new HttpResponseException(ex is NotFoundException
-                ? HttpStatusCode.NotFound
-                : HttpStatusCode.BadRequest);
+            var statusCode = HttpStatusCode.BadRequest;
+
+            if (ex is ProcessException e)
+            {
+                switch (e.ExceptionType)
+                {
+                    case ExceptionType.NotFound:
+                        statusCode = HttpStatusCode.NotFound;
+                        break;
+                    case ExceptionType.Forbidden:
+                        statusCode = HttpStatusCode.Forbidden;
+                        break;
+                    case ExceptionType.Conflict:
+                        statusCode = HttpStatusCode.Conflict;
+                        break;
+                }
+            }
+
+            throw new HttpResponseException(statusCode);
         }
 
         //If ProcessResponse returns an object

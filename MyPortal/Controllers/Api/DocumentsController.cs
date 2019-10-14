@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
@@ -17,10 +20,20 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditDocuments")]
         [Route("create", Name = "ApiDocumentsCreateDocument")]
-        public IHttpActionResult AddDocument([FromBody] Document document)
+        public async Task<IHttpActionResult> CreateDocument([FromBody] Document document)
         {
             var userId = User.Identity.GetUserId();
-            return PrepareResponse(DocumentProcesses.CreateDocument(document, userId, _context));
+
+            try
+            {
+                await DocumentProcesses.CreateDocument(document, userId, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok( "Document created");
         }
         
         [HttpGet]
@@ -80,9 +93,18 @@ namespace MyPortal.Controllers.Api
         [HttpDelete]
         [RequiresPermission("EditDocuments")]
         [Route("delete/{documentId:int}", Name = "ApiDocumentsDeleteDocument")]
-        public IHttpActionResult DeleteDocument([FromUri] int documentId)
+        public async Task<IHttpActionResult> DeleteDocument([FromUri] int documentId)
         {
-            return PrepareResponse(DocumentProcesses.DeleteDocument(documentId, _context));
+            try
+            {
+                await DocumentProcesses.DeleteDocument(documentId, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Document deleted");
         }
 
         [HttpPost]
@@ -96,10 +118,19 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditPersonalDocuments")]
         [Route("personal/create", Name = "ApiDocumentsCreatePersonalDocument")]
-        public IHttpActionResult CreatePersonalDocument([FromBody] PersonDocument document)
+        public async Task<IHttpActionResult> CreatePersonalDocument([FromBody] PersonDocument document)
         {
             var uploaderId = User.Identity.GetUserId();
-            return PrepareResponse(DocumentProcesses.CreatePersonalDocument(document, uploaderId, _context));
+            try
+            {
+                await DocumentProcesses.CreatePersonalDocument(document, uploaderId, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Document created");
         }
 
         [HttpGet]
@@ -121,9 +152,18 @@ namespace MyPortal.Controllers.Api
         [HttpDelete]
         [RequiresPermission("EditPersonalDocuments")]
         [Route("personal/delete/{documentId:int}", Name = "ApiDocumentsDeletePersonalDocument")]
-        public IHttpActionResult DeletePersonalDocument([FromUri] int documentId)
+        public async Task<IHttpActionResult> DeletePersonalDocument([FromUri] int documentId)
         {
-            return PrepareResponse(DocumentProcesses.DeletePersonalDocument(documentId, _context));
+            try
+            {
+                await DocumentProcesses.DeletePersonalDocument(documentId, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Document deleted");
         }
 
         [HttpPost]

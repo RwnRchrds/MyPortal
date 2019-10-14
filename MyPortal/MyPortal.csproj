@@ -410,8 +410,7 @@
     <Compile Include="Models\Database\SystemArea.cs" />
     <Compile Include="Models\Database\SystemReport.cs" />
     <Compile Include="Models\Database\SystemSchool.cs" />
-    <Compile Include="Models\Exceptions\BadRequestException.cs" />
-    <Compile Include="Models\Exceptions\NotFoundException.cs" />
+    <Compile Include="Models\Exceptions\ProcessException.cs" />
     <Compile Include="Models\Misc\ApiResponse.cs" />
     <Compile Include="Models\Misc\AttendanceSummary.cs" />
     <Compile Include="Models\Misc\ChartDataCategoric.cs" />

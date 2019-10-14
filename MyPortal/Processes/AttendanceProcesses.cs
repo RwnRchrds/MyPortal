@@ -21,7 +21,7 @@ namespace MyPortal.Processes
 
             if (academicYear == null)
             {
-                throw new NotFoundException("Academic year not found");
+                throw new ProcessException(ExceptionType.NotFound,"Academic year not found");
             }
 
             var pointer = academicYear.FirstDate;
@@ -88,7 +88,7 @@ namespace MyPortal.Processes
 
             if (codeInDb == null)
             {
-                throw new NotFoundException("Attendance code not found");
+                throw new ProcessException(ExceptionType.NotFound,"Attendance code not found");
             }
 
             return codeInDb.AttendanceMeaning;
@@ -100,7 +100,7 @@ namespace MyPortal.Processes
 
             if (period == null)
             {
-                throw new NotFoundException("Period not found");
+                throw new ProcessException(ExceptionType.NotFound,"Period not found");
             }
 
             return Mapper.Map<AttendancePeriod, AttendancePeriodDto>(period);
@@ -112,14 +112,14 @@ namespace MyPortal.Processes
 
             if (week == null)
             {
-                throw new NotFoundException("Attendance week not found");
+                throw new ProcessException(ExceptionType.NotFound,"Attendance week not found");
             }
 
             var period = await context.AttendancePeriods.SingleOrDefaultAsync(x => x.Id == periodId);
 
             if (period == null)
             {
-                throw new NotFoundException("");
+                throw new ProcessException(ExceptionType.NotFound,"");
             }
 
             return week.Beginning.GetDayOfWeek(period.Weekday);
@@ -141,14 +141,14 @@ namespace MyPortal.Processes
 
             if (!await context.AttendanceWeeks.AnyAsync(x => x.Id == weekId))
             {
-                throw new NotFoundException("Attendance week not found");
+                throw new ProcessException(ExceptionType.NotFound,"Attendance week not found");
             }
 
             var session = await context.CurriculumSessions.SingleOrDefaultAsync(x => x.Id == sessionId);
 
             if (session == null)
             {
-                throw new NotFoundException("Session not found");
+                throw new ProcessException(ExceptionType.NotFound,"Session not found");
             }
 
             var markList = new List<StudentAttendanceMarkCollection>();
@@ -191,7 +191,7 @@ namespace MyPortal.Processes
 
             if (!marksForStudent.Any())
             {
-                throw new NotFoundException("No attendance data available");
+                throw new ProcessException(ExceptionType.NotFound,"No attendance data available");
             }
 
             var summary = new AttendanceSummary();
@@ -243,7 +243,7 @@ namespace MyPortal.Processes
 
             if (selectedWeek == null)
             {
-               throw new NotFoundException("Attendance week not found");
+               throw new ProcessException(ExceptionType.NotFound,"Attendance week not found");
             }
 
             return Mapper.Map<AttendanceWeek, AttendanceWeekDto>(selectedWeek);
@@ -292,7 +292,7 @@ namespace MyPortal.Processes
 
                         if (markInDb == null)
                         {
-                            throw new NotFoundException("Attendance mark not found");
+                            throw new ProcessException(ExceptionType.NotFound,"Attendance mark not found");
                         }
 
                         markInDb.Mark = mark.Mark;

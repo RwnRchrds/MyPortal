@@ -1,77 +1,59 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Dtos.GridDtos;
 using MyPortal.Models.Database;
+using MyPortal.Models.Exceptions;
 using MyPortal.Models.Misc;
 
 namespace MyPortal.Processes
 {
     public static class DocumentProcesses
     {
-        public static ProcessResponse<object> CreateDocument(Document document, string userId, MyPortalDbContext context)
+        public static async Task CreateDocument(Document document, string userId, MyPortalDbContext context)
         {
-            var IsUriValid = Uri.TryCreate(document.Url, UriKind.Absolute, out var uriResult)
-                             && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
-
-            if (!IsUriValid)
-            {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "The URL entered is invalid", null);
-            }
-
-            var uploader = new StaffMember();
-
-            var uploaderId = document.UploaderId;
-
-            if (uploaderId == 0)
+            if (document.UploaderId == 0)
             {
                 
-                uploader = context.StaffMembers.SingleOrDefault(x => x.Person.UserId == userId);
+                var uploader = await context.StaffMembers.SingleOrDefaultAsync(x => x.Person.UserId == userId);
                 if (uploader == null)
                 {
-                    return new ProcessResponse<object>(ResponseType.NotFound, "Staff member not found", null);
+                    throw new ProcessException(ExceptionType.NotFound,"Uploader not found");
                 }
+
+                document.UploaderId = uploader.Id;
             }
 
-            if (uploaderId != 0)
+            else if (document.UploaderId != 0 && ! await context.StaffMembers.AnyAsync(x => x.Id == document.UploaderId))
             {
-                uploader = context.StaffMembers.SingleOrDefault(x => x.Id == uploaderId);
+                throw new ProcessException(ExceptionType.NotFound,"Uploader not found");
             }
-
-            if (uploader == null)
-            {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Staff member not found", null);
-            }
-
-            document.UploaderId = uploader.Id;
 
             document.IsGeneral = true;
 
             document.Date = DateTime.Now;
 
             context.Documents.Add(document);
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Document uploaded", null);
+            await context.SaveChangesAsync();
         }
 
-        public static ProcessResponse<object> CreatePersonalDocument(PersonDocument document, string uploaderId, MyPortalDbContext context)
+        public static async Task CreatePersonalDocument(PersonDocument document, string userId, MyPortalDbContext context)
         {
-            var person = context.Persons.SingleOrDefault(x => x.Id == document.PersonId);
-
-            var uploader = PeopleProcesses.GetStaffFromUserId(uploaderId, context).ResponseObject;
-
-            if (person == null)
+            if (!await context.Persons.AnyAsync(x => x.Id == document.PersonId))
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Person not found", null);
+                throw new ProcessException(ExceptionType.NotFound,"Person not found");
             }
+
+            var uploader = await context.StaffMembers.SingleOrDefaultAsync(x => x.Person.UserId == userId);
 
             if (uploader == null)
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Uploader not found", null);
+                throw new ProcessException(ExceptionType.NotFound,"Staff member not found");
             }
 
             document.Document.IsGeneral = false;
@@ -82,63 +64,52 @@ namespace MyPortal.Processes
 
             document.Document.UploaderId = uploader.Id;
 
-            var isUriValid = Uri.TryCreate(document.Document.Url, UriKind.Absolute, out var uriResult)
-                             && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
-
-            if (!isUriValid)
-            {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "The URL entered is not valid", null);
-            }
-
             var documentObject = document.Document;
 
             context.Documents.Add(documentObject);
             context.PersonDocuments.Add(document);
 
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Document uploaded", null);
+            await context.SaveChangesAsync();
         }
 
-        public static ProcessResponse<object> DeleteDocument(int documentId, MyPortalDbContext context)
+        public static async Task DeleteDocument(int documentId, MyPortalDbContext context)
         {
-            var documentInDb = context.Documents.SingleOrDefault(x => x.Id == documentId);
+            var documentInDb = await context.Documents.SingleOrDefaultAsync(x => x.Id == documentId);
 
             if (documentInDb == null)
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Document not found", null);
+                throw new ProcessException(ExceptionType.NotFound,"Document not found");
             }
 
             documentInDb.Deleted = true;
-            //context.Documents.Remove(documentInDb); //Delete from database
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Document deleted", null);
+            
+            //Delete from database
+            //context.Documents.Remove(documentInDb);
+            
+            await context.SaveChangesAsync();
         }
 
-        public static ProcessResponse<object> DeletePersonalDocument(int documentId, MyPortalDbContext context)
+        public static async Task DeletePersonalDocument(int documentId, MyPortalDbContext context)
         {
-            var staffDocument = context.PersonDocuments.Single(x => x.Id == documentId);
+            var staffDocument = await context.PersonDocuments.SingleOrDefaultAsync(x => x.Id == documentId);
 
             if (staffDocument == null)
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Document not found", null);
+                throw new ProcessException(ExceptionType.NotFound,"Document not found");
             }
 
             var attachedDocument = staffDocument.Document;
 
             if (attachedDocument == null)
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Document object not found", null);
+                throw new ProcessException(ExceptionType.NotFound,"Document not found");
             }
 
             context.PersonDocuments.Remove(staffDocument);
 
             context.Documents.Remove(attachedDocument);
 
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Document deleted", null);
+            await context.SaveChangesAsync();
         }
 
         public static ProcessResponse<IEnumerable<DocumentDto>> GetAllGeneralDocuments(MyPortalDbContext context)

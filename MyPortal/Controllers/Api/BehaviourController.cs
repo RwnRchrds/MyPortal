@@ -88,7 +88,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Achievement created");
+            return Ok( "Achievement created");
         }
 
         [HttpPost]
@@ -105,7 +105,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Achievement updated");
+            return Ok( "Achievement updated");
         }
 
         [HttpDelete]
@@ -122,7 +122,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Achievement deleted");
+            return Ok( "Achievement deleted");
         }
 
         [HttpPost]
@@ -180,7 +180,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Incident created");
+            return Ok( "Incident created");
         }
 
         [HttpPost]
@@ -197,7 +197,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Incident updated");
+            return Ok( "Incident updated");
         }
 
         [HttpDelete]
@@ -214,7 +214,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Incident deleted");
+            return Ok( "Incident deleted");
         }
     }
 }

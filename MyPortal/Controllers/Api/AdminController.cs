@@ -36,7 +36,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "User added to role");
+            return Ok( "User added to role");
         }
 
         [HttpPost]
@@ -53,7 +53,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Person attached");
+            return Ok( "Person attached");
         }
 
         [HttpPost]
@@ -70,7 +70,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Password changed");
+            return Ok( "Password changed");
         }
 
         [HttpDelete]
@@ -87,7 +87,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "User deleted");
+            return Ok( "User deleted");
         }
 
         [HttpPost]
@@ -104,7 +104,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Person detached");
+            return Ok( "Person detached");
         }
 
         [HttpGet]
@@ -153,7 +153,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "User created");
+            return Ok( "User created");
         }
 
         [Route("users/removeFromRole", Name = "ApiAdminRemoveFromRole")]
@@ -170,7 +170,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "User removed from role");
+            return Ok( "User removed from role");
         }
 
         [RequiresPermission("EditRoles")]
@@ -187,7 +187,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Role created");
+            return Ok( "Role created");
         }
 
         [RequiresPermission("EditRoles")]
@@ -204,7 +204,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Role updated");
+            return Ok( "Role updated");
         }
 
         [RequiresPermission("EditRoles")]
@@ -221,7 +221,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Role deleted");
+            return Ok( "Role deleted");
         }
 
         [RequiresPermission("EditRoles")]
@@ -319,7 +319,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Permissions updated");
+            return Ok( "Permissions updated");
         }
 
         [RequiresPermission("EditRoles")]

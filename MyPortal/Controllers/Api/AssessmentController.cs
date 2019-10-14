@@ -29,7 +29,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Result created");
+            return Ok( "Result created");
         }
 
         [HttpGet]
@@ -79,7 +79,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Result set created");
+            return Ok( "Result set created");
         }
 
         [HttpDelete]
@@ -96,7 +96,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Result set deleted");
+            return Ok( "Result set deleted");
         }
 
         [HttpGet]
@@ -193,7 +193,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Result set marked as current");
+            return Ok( "Result set marked as current");
         }
 
         [HttpPost]
@@ -210,7 +210,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Result set updated");
+            return Ok( "Result set updated");
         }
     }
 }

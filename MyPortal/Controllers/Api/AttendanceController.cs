@@ -152,7 +152,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Attendance weeks created");
+            return Ok( "Attendance weeks created");
         }
 
         [HttpGet]

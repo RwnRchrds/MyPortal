@@ -167,7 +167,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Class created");
+            return Ok( "Class created");
         }
 
         [HttpPost]
@@ -184,7 +184,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Class updated");
+            return Ok( "Class updated");
         }
 
         [HttpDelete]
@@ -201,7 +201,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Class deleted");
+            return Ok( "Class deleted");
         }
 
         [HttpGet]
@@ -267,7 +267,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Session created");
+            return Ok( "Session created");
         }
 
         [HttpPost]
@@ -284,7 +284,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Sessions created");
+            return Ok( "Sessions created");
         }
 
         [HttpPost]
@@ -301,7 +301,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Session updated");
+            return Ok( "Session updated");
         }
 
         [HttpDelete]
@@ -318,7 +318,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Session deleted");
+            return Ok( "Session deleted");
         }
 
         [HttpGet]
@@ -419,7 +419,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Enrolment created");
+            return Ok( "Enrolment created");
         }
 
         [HttpPost]
@@ -436,7 +436,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Group enrolled");
+            return Ok( "Group enrolled");
         }
 
         [HttpDelete]
@@ -453,7 +453,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Enrolment deleted");
+            return Ok( "Enrolment deleted");
         }
 
         [HttpPost]
@@ -470,7 +470,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Subject created");
+            return Ok( "Subject created");
         }
 
         [HttpDelete]
@@ -487,7 +487,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Subject deleted");
+            return Ok( "Subject deleted");
         }
 
         [HttpGet]
@@ -553,7 +553,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Subject updated");
+            return Ok( "Subject updated");
         }
 
         [HttpPost]
@@ -570,7 +570,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Study topic created");
+            return Ok( "Study topic created");
         }
 
         [HttpDelete]
@@ -587,7 +587,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Study topic deleted");
+            return Ok( "Study topic deleted");
         }
 
         [HttpGet]
@@ -653,7 +653,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Study topic updated");
+            return Ok( "Study topic updated");
         }
 
         [HttpGet]
@@ -737,7 +737,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Lesson plan created");
+            return Ok( "Lesson plan created");
         }
 
         [HttpPost]
@@ -754,7 +754,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Lesson plan updated");
+            return Ok( "Lesson plan updated");
         }
 
         [HttpDelete]
@@ -773,7 +773,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Content(HttpStatusCode.OK, "Lesson plan deleted");
+            return Ok( "Lesson plan deleted");
         }
     }
 }
