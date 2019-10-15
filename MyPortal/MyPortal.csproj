@@ -480,7 +480,6 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Misc\Checkout.cs" />
-    <Compile Include="Models\Misc\Gender.cs" />
     <Compile Include="Models\Misc\RegisterLookup.cs" />
     <Compile Include="Models\Misc\ShoppingBasket.cs" />
     <Compile Include="Models\Misc\PersonDocumentUpload.cs" />

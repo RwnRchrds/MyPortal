@@ -27,6 +27,7 @@ namespace MyPortal.Controllers.Api
         }
 
         //If ProcessResponse does NOT return an object
+        [Obsolete]
         protected IHttpActionResult PrepareResponse(ProcessResponse<object> response)
         {
             if (response.ResponseType == ResponseType.NotFound)
@@ -89,6 +90,7 @@ namespace MyPortal.Controllers.Api
         }
 
         //If ProcessResponse returns an object
+        [Obsolete]
         protected T PrepareResponseObject<T>(ProcessResponse<T> response)
         {
             if (response.ResponseType == ResponseType.NotFound)

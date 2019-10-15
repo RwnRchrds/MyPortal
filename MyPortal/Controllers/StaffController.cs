@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
@@ -329,7 +330,7 @@ namespace MyPortal.Controllers
             if (student == null)
                 return HttpNotFound();
 
-            var logTypes = _context.ProfileLogTypes.OrderBy(x => x.Name).ToList();
+            var logTypes = await ProfilesProcesses.GetAllLogTypesLookup(_context);
 
             var yearGroups = _context.PastoralYearGroups.OrderBy(x => x.Name).ToList();
 

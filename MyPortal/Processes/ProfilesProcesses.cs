@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using AutoMapper;
 using Microsoft.Owin.Security.Provider;
@@ -303,6 +305,20 @@ namespace MyPortal.Processes
             context.SaveChanges();
 
             return new ProcessResponse<object>(ResponseType.Ok, "Log note updated", null);
+        }
+
+        public static async Task<IEnumerable<ProfileLogType>> GetAllLogTypesModel(MyPortalDbContext context)
+        {
+            var logTypes = await context.ProfileLogTypes.OrderBy(x => x.Name).ToListAsync();
+
+            return logTypes;
+        }
+
+        public static async Task<IDictionary<int, string>> GetAllLogTypesLookup(MyPortalDbContext context)
+        {
+            var logTypes = await context.ProfileLogTypes.OrderBy(x => x.Name).ToDictionaryAsync(x => x.Id, x => x.Name);
+
+            return logTypes;
         }
     }
 }

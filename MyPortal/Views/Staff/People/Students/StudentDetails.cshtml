@@ -1,14 +1,11 @@
-﻿@using MyPortal.Processes
+﻿@using MyPortal.Models.Database
+@using MyPortal.Processes
 @using Syncfusion.EJ2.Grids
 @model MyPortal.ViewModels.StudentDetailsViewModel
 @{
     ViewBag.Title = $"Student Details: {PeopleProcesses.GetStudentDisplayName(Model.Student).ResponseObject}";
     ViewBag.DisplayTitle = "Student Details";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
-
-    var gender = Model.Genders.SingleOrDefault(x => x.Value == Model.Student.Person.Gender);
-
-    var genderLabel = gender == null ? "Not Specified" : gender.Name;
 }
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -160,7 +157,7 @@
                         <td>
                             <b>Gender</b>
                         </td>
-                        <td>@genderLabel</td>
+                        <td>@Enum.GetName(typeof(Gender), Model.Student.Person.Gender)</td>
                     </tr>
                     <tr>
                         <td>
@@ -268,7 +265,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Log Type")
-                        @Html.DropDownListFor(l => l.Log.TypeId, new SelectList(Model.LogTypes, "Id", "Name"), "Select Log Type", new {@class = "form-control", Name = "TypeId"})
+                        @Html.DropDownListFor(l => l.Log.TypeId, new SelectList(Model.LogTypes, "Value", "Key"), "Select Log Type", new {@class = "form-control", Name = "TypeId"})
                         @Html.ValidationMessageFor(l => l.Log.TypeId)
                     </div>
                     <hr/>
@@ -310,7 +307,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Log Type")
-                        @Html.DropDownListFor(l => l.Log.TypeId, new SelectList(Model.LogTypes, "Id", "Name"), "Select Log Type", new {@class = "form-control", id = "EditLogTypeControl", Name = "TypeId"})
+                        @Html.DropDownListFor(l => l.Log.TypeId, new SelectList(Model.LogTypes, "Value", "Key"), "Select Log Type", new {@class = "form-control", id = "EditLogTypeControl", Name = "TypeId"})
                     </div>
                     <div class="form-group">
                         @Html.Label("Message")
@@ -357,7 +354,7 @@
                     </div>
                     <div class="form-group">
                         @Html.Label("Gender")
-                        @Html.DropDownListFor(s => s.Student.Person.Gender, new SelectList(Model.Genders, "Value", "Name"), "Select Gender", new {@class = "form-control", Name = "Gender", id = "editDetailsYearGroupControl"})
+                        @Html.EnumDropDownListFor(x => x.Student.Person.Gender, "Select Gender", new {@class = "form-control", Name = "Gender", id = "editDetailsGenderControl"})
                         @Html.ValidationMessageFor(s => s.Student.Person.Gender)
                     </div>
                     <div class="form-group">

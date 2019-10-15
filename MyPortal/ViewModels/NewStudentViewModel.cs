@@ -5,12 +5,8 @@ using MyPortal.Models.Misc;
 
 namespace MyPortal.ViewModels
 {
-    public class NewStudentViewModel
+    public class NewStudentViewModel 
     {
-        public NewStudentViewModel()
-        {
-            Genders = Gender.GetGenderOptions();
-        }
         public IEnumerable<PastoralYearGroup> YearGroups { get; set; }
         public IEnumerable<PastoralRegGroup> RegGroups { get; set; }
         public IEnumerable<Gender> Genders { get; set; }

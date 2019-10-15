@@ -27,6 +27,7 @@ namespace MyPortal.Controllers
             _context.Dispose();
         }
 
+        [Obsolete]
         protected T PrepareResponseObject<T>(ProcessResponse<T> response)
         {
             if (response.ResponseType == ResponseType.NotFound)
@@ -44,17 +45,25 @@ namespace MyPortal.Controllers
 
         protected void ThrowException(Exception ex)
         {
-            if (ex is NotFoundException)
+            var statusCode = HttpStatusCode.BadRequest;
+            
+            if (ex is ProcessException e)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                switch (e.ExceptionType)
+                {
+                    case ExceptionType.NotFound:
+                        statusCode = HttpStatusCode.NotFound;
+                        break;
+                    case ExceptionType.Forbidden:
+                        statusCode = HttpStatusCode.Forbidden;
+                        break;
+                    case ExceptionType.Conflict:
+                        statusCode = HttpStatusCode.Conflict;
+                        break;
+                }
             }
 
-            if (ex is BadRequestException)
-            {
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
-            }
-
-            throw ex;
+            throw new HttpResponseException(statusCode);
         }
 
         protected ActionResult NoAcademicYear()

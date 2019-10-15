@@ -112,138 +112,118 @@ namespace MyPortal.Processes
             await context.SaveChangesAsync();
         }
 
-        public static ProcessResponse<IEnumerable<DocumentDto>> GetAllGeneralDocuments(MyPortalDbContext context)
+        public static async Task<IEnumerable<DocumentDto>> GetAllGeneralDocuments(MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<DocumentDto>>(ResponseType.Ok, null,
-                GetAllGeneralDocuments_Model(context).ResponseObject
-                    .Select(Mapper.Map<Document, DocumentDto>));
+            var documents = await GetAllGeneralDocumentsModel(context);
+
+            return documents.Select(Mapper.Map<Document, DocumentDto>);
         }
 
-        public static ProcessResponse<IEnumerable<GridDocumentDto>> GetAllGeneralDocuments_DataGrid(MyPortalDbContext context)
+        public static async Task<IEnumerable<GridDocumentDto>> GetAllGeneralDocumentsDataGrid(MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<GridDocumentDto>>(ResponseType.Ok, null,
-                GetAllGeneralDocuments_Model(context).ResponseObject
-                    .Select(Mapper.Map<Document, GridDocumentDto>));
+            var documents =  await GetAllGeneralDocumentsModel(context);
+            return documents.Select(Mapper.Map<Document, GridDocumentDto>);
         }
 
-        public static ProcessResponse<IEnumerable<Document>> GetAllGeneralDocuments_Model(MyPortalDbContext context)
+        public static async Task<IEnumerable<Document>> GetAllGeneralDocumentsModel(MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<Document>>(ResponseType.Ok, null,
-                context.Documents.Where(x => !x.Deleted && x.IsGeneral).OrderBy(x => x.Description).ToList());
+            return await context.Documents.Where(x => !x.Deleted && x.IsGeneral).OrderBy(x => x.Description)
+                .ToListAsync();
         }
 
-        public static ProcessResponse<IEnumerable<DocumentDto>> GetApprovedGeneralDocuments(MyPortalDbContext context)
+        public static async Task<IEnumerable<DocumentDto>> GetApprovedGeneralDocuments(MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<DocumentDto>>(ResponseType.Ok, null,
-                GetApprovedGeneralDocuments_Model(context).ResponseObject
-                    .Select(Mapper.Map<Document, DocumentDto>));
+            var documents = await GetApprovedGeneralDocumentsModel(context);
+
+            return documents.Select(Mapper.Map<Document, DocumentDto>);
         }
 
-        public static ProcessResponse<IEnumerable<GridDocumentDto>> GetApprovedGeneralDocuments_DataGrid(MyPortalDbContext context)
+        public static async Task<IEnumerable<GridDocumentDto>> GetApprovedGeneralDocumentsDataGrid(MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<GridDocumentDto>>(ResponseType.Ok, null,
-                GetApprovedGeneralDocuments_Model(context).ResponseObject
-                    .Select(Mapper.Map<Document, GridDocumentDto>));
+            var documents = await GetApprovedGeneralDocumentsModel(context);
+
+            return documents.Select(Mapper.Map<Document, GridDocumentDto>);
         }
 
-        public static ProcessResponse<IEnumerable<Document>> GetApprovedGeneralDocuments_Model(MyPortalDbContext context)
+        public static async Task<IEnumerable<Document>> GetApprovedGeneralDocumentsModel(MyPortalDbContext context)
         {
-            return new ProcessResponse<IEnumerable<Document>>(ResponseType.Ok, null, context.Documents
-                .Where(x => x.IsGeneral && x.Approved && !x.Deleted)
-                .ToList());
+            return await context.Documents.Where(x => x.IsGeneral && x.Approved && !x.Deleted).ToListAsync();
         }
-        public static ProcessResponse<DocumentDto> GetDocumentById(int documentId, MyPortalDbContext context)
+        
+        public static async Task<DocumentDto> GetDocumentById(int documentId, MyPortalDbContext context)
         {
-            var document = context.Documents
-                .Single(x => x.Id == documentId);
+            var document = await context.Documents.SingleOrDefaultAsync(x => x.Id == documentId);
 
             if (document == null)
             {
-                return new ProcessResponse<DocumentDto>(ResponseType.NotFound, "Document not found", null);
+                throw new ProcessException(ExceptionType.NotFound, "Document not found");
             }
 
-            return new ProcessResponse<DocumentDto>(ResponseType.Ok, null, Mapper.Map<Document, DocumentDto>(document));
+            return Mapper.Map<Document, DocumentDto>(document);
         }
-        public static ProcessResponse<PersonDocumentDto> GetPersonalDocumentById(int documentId,
+        
+        public static async Task<PersonDocumentDto> GetPersonalDocumentById(int documentId,
             MyPortalDbContext context)
         {
-            var document = context.PersonDocuments.SingleOrDefault(x => x.Id == documentId);
+            var document = await context.PersonDocuments.SingleOrDefaultAsync(x => x.Id == documentId);
 
             if (document == null)
             {
-                return new ProcessResponse<PersonDocumentDto>(ResponseType.NotFound, "Document not found", null);
+                throw new ProcessException(ExceptionType.NotFound, "Document not found");
             }
 
-            return new ProcessResponse<PersonDocumentDto>(ResponseType.Ok, null,
-                Mapper.Map<PersonDocument, PersonDocumentDto>(document));
+            return Mapper.Map<PersonDocument, PersonDocumentDto>(document);
         }
 
-        public static ProcessResponse<IEnumerable<PersonDocumentDto>> GetPersonalDocuments(int personId,
+        public static async Task<IEnumerable<PersonDocumentDto>> GetPersonalDocuments(int personId,
             MyPortalDbContext context)
         {
-            var documents = GetPersonalDocuments_Model(personId, context).ResponseObject
-                .Select(Mapper.Map<PersonDocument, PersonDocumentDto>);
+            var documents = await GetPersonalDocumentsModel(personId, context);
 
-            return new ProcessResponse<IEnumerable<PersonDocumentDto>>(ResponseType.Ok, null, documents);
+            return documents.Select(Mapper.Map<PersonDocument, PersonDocumentDto>);
         }
 
-        public static ProcessResponse<IEnumerable<GridPersonDocumentDto>> GetPersonalDocuments_DataGrid(int personId,
+        public static async Task<IEnumerable<GridPersonDocumentDto>> GetPersonalDocumentsDataGrid(int personId,
             MyPortalDbContext context)
         {
-            var documents = GetPersonalDocuments_Model(personId, context).ResponseObject
-                .Select(Mapper.Map<PersonDocument, GridPersonDocumentDto>);
+            var documents = await GetPersonalDocumentsModel(personId, context);
 
-            return new ProcessResponse<IEnumerable<GridPersonDocumentDto>>(ResponseType.Ok, null, documents);
+            return documents.Select(Mapper.Map<PersonDocument, GridPersonDocumentDto>);
         }
 
-        public static ProcessResponse<IEnumerable<PersonDocument>> GetPersonalDocuments_Model(int personId,
+        public static async Task<IEnumerable<PersonDocument>> GetPersonalDocumentsModel(int personId,
                             MyPortalDbContext context)
         {
-            var documents = context.PersonDocuments.Where(x => !x.Document.Deleted && x.PersonId == personId).ToList();
+            var documents = await context.PersonDocuments.Where(x => !x.Document.Deleted && x.PersonId == personId)
+                .ToListAsync();
 
-            return new ProcessResponse<IEnumerable<PersonDocument>>(ResponseType.Ok, null, documents);
+            return documents;
         }
-        public static ProcessResponse<object> UpdateDocument(Document document, MyPortalDbContext context)
+        
+        public static async Task UpdateDocument(Document document, MyPortalDbContext context)
         {
-            var documentInDb = context.Documents.SingleOrDefault(x => x.Id == document.Id);
+            var documentInDb = await context.Documents.SingleOrDefaultAsync(x => x.Id == document.Id);
 
             if (documentInDb == null)
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Document nor found", null);
+                throw new ProcessException(ExceptionType.NotFound, "Document not found");
             }
-
-            var isUriValid = Uri.TryCreate(document.Url, UriKind.Absolute, out var uriResult)
-                             && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
-
-            if (!isUriValid)
-            {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "The URL entered is not valid", null);
-            }
-
+            
             documentInDb.Description = document.Description;
             documentInDb.Url = document.Url;
             documentInDb.IsGeneral = true;
             documentInDb.Approved = document.Approved;
 
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Document updated", null);
+            await context.SaveChangesAsync();
         }
-        public static ProcessResponse<object> UpdatePersonalDocument(PersonDocument document, MyPortalDbContext context)
+        
+        public static async Task UpdatePersonalDocument(PersonDocument document, MyPortalDbContext context)
         {
-            var documentInDb = context.PersonDocuments.Single(x => x.Id == document.Id);
+            var documentInDb = await context.PersonDocuments.SingleOrDefaultAsync(x => x.Id == document.Id);
 
             if (documentInDb == null)
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Document not found", null);
-            }
-
-            var isUriValid = Uri.TryCreate(document.Document.Url, UriKind.Absolute, out var uriResult)
-                             && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
-
-            if (!isUriValid)
-            {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "The URL entered is not valid", null);
+                throw new ProcessException(ExceptionType.NotFound, "Document not found");
             }
 
             documentInDb.Document.Description = document.Document.Description;
@@ -251,9 +231,7 @@ namespace MyPortal.Processes
             documentInDb.Document.IsGeneral = false;
             documentInDb.Document.Approved = true;
 
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Document updated", null);
+            await context.SaveChangesAsync();
         }
     }
 }

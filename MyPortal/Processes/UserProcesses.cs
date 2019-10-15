@@ -48,7 +48,7 @@ namespace MyPortal.Processes
 
             if (applicationUser == null)
             {
-                throw new NotFoundException("User not found");
+                throw new ProcessException(ExceptionType.NotFound, "User not found");
             }
 
             return applicationUser.SelectedAcademicYearId;

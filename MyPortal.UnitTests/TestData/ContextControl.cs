@@ -227,14 +227,14 @@ namespace MyPortal.UnitTests.TestData
             var persons = new List<Person>
             {
                 //Students
-                new Person {Id = 1, FirstName = "Aaron", LastName = "Aardvark", Dob = new DateTime(2000,06,05), Deleted = false, Gender = "M", UserId = "aardvark"},
-                new Person {Id = 2, FirstName = "Chloe", LastName = "Brown", Dob = new DateTime(2000,06,05), Deleted = false, Gender = "F", UserId = "cbrown"},
+                new Person {Id = 1, FirstName = "Aaron", LastName = "Aardvark", Dob = new DateTime(2000,06,05), Deleted = false, Gender = Gender.Male, UserId = "aardvark"},
+                new Person {Id = 2, FirstName = "Chloe", LastName = "Brown", Dob = new DateTime(2000,06,05), Deleted = false, Gender = Gender.Female, UserId = "cbrown"},
                     
                 //Staff
-                new Person {Id = 3, Title = "Mrs", FirstName = "Lily", LastName = "Sprague", Dob = new DateTime(1987,08,05), Deleted = false, Gender = "F", UserId = "l.sprague"},
-                new Person {Id = 4, Title = "Sir", FirstName = "William", LastName = "Townsend", Dob = new DateTime(1986,04,26), Deleted = false, Gender = "M", UserId = "wtownsend"},
-                new Person {Id = 5, Title = "Mrs", FirstName = "Joanne", LastName = "Cobb", Dob = new DateTime(1986,04,26), Deleted = false, Gender = "F", UserId = "jcobb"},
-                new Person {Id = 6, Title = "Miss", FirstName = "Ellie", LastName = "Williams", Dob = new DateTime(1986,04,26), Deleted = false, Gender = "F", UserId = "ewilliams"}
+                new Person {Id = 3, Title = "Mrs", FirstName = "Lily", LastName = "Sprague", Dob = new DateTime(1987,08,05), Deleted = false, Gender = Gender.Female, UserId = "l.sprague"},
+                new Person {Id = 4, Title = "Sir", FirstName = "William", LastName = "Townsend", Dob = new DateTime(1986,04,26), Deleted = false, Gender = Gender.Male, UserId = "wtownsend"},
+                new Person {Id = 5, Title = "Mrs", FirstName = "Joanne", LastName = "Cobb", Dob = new DateTime(1986,04,26), Deleted = false, Gender = Gender.Female, UserId = "jcobb"},
+                new Person {Id = 6, Title = "Miss", FirstName = "Ellie", LastName = "Williams", Dob = new DateTime(1986,04,26), Deleted = false, Gender = Gender.Female, UserId = "ewilliams"}
             };
             
             var profileCommentBanks = new List<ProfileCommentBank>
