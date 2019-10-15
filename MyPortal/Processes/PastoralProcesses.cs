@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using AutoMapper;
 using MyPortal.Dtos;
@@ -151,6 +153,22 @@ namespace MyPortal.Processes
             context.SaveChanges();
 
             return new ProcessResponse<object>(ResponseType.Ok, "Year group updated", null);
+        }
+        
+        public static async Task<IDictionary<int, string>> GetAllYearGroupsLookup(MyPortalDbContext context)
+        {
+            var yearGroups = await context.PastoralYearGroups.OrderBy(x => x.Name)
+                .ToDictionaryAsync(x => x.Id, x => x.Name);
+
+            return yearGroups;
+        }
+
+        public static async Task<IDictionary<int, string>> GetAllRegGroupsLookup(MyPortalDbContext context)
+        {
+            var regGroups = await context.PastoralRegGroups.OrderBy(x => x.Name)
+                .ToDictionaryAsync(x => x.Id, x => x.Name);
+
+            return regGroups;
         }
     }
 }

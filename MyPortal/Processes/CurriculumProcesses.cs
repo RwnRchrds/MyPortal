@@ -428,6 +428,13 @@ namespace MyPortal.Processes
             return subjects.Select(Mapper.Map<CurriculumSubject, CurriculumSubjectDto>);
         }
 
+        public static async Task<IDictionary<int, string>> GetAllSubjectsLookup(MyPortalDbContext context)
+        {
+            var subjects = await GetAllSubjectsModel(context);
+
+            return subjects.ToDictionary(x => x.Id, x => x.Name);
+        }
+
         public static async Task<IEnumerable<GridCurriculumSubjectDto>> GetAllSubjectsDataGrid(MyPortalDbContext context)
         {
             var subjects = await GetAllSubjectsModel(context);
@@ -437,7 +444,7 @@ namespace MyPortal.Processes
 
         public static async Task<IEnumerable<CurriculumSubject>> GetAllSubjectsModel(MyPortalDbContext context)
         {
-            var subjects = await context.CurriculumSubjects.Where(x => !x.Deleted).ToListAsync();
+            var subjects = await context.CurriculumSubjects.Where(x => !x.Deleted).OrderBy(x => x.Name).ToListAsync();
 
             return subjects;
         }

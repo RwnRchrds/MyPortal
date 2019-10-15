@@ -220,5 +220,12 @@ namespace MyPortal.Processes
 
             await context.SaveChangesAsync();
         }
+
+        public static async Task<IDictionary<int, string>> GetAllResultSetsLookup(MyPortalDbContext context)
+        {
+            var resultSets = await GetAllResultSetsModel(context);
+
+            return resultSets.ToDictionary(x => x.Id, x => x.Name);
+        }
     }
 }

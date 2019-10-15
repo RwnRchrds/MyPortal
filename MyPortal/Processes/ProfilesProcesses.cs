@@ -137,18 +137,25 @@ namespace MyPortal.Processes
         public static ProcessResponse<IEnumerable<ProfileCommentBankDto>> GetAllCommentBanks(MyPortalDbContext context)
         {
             return new ProcessResponse<IEnumerable<ProfileCommentBankDto>>(ResponseType.Ok, null,
-                GetAllCommentBanks_Model(context).ResponseObject
+                GetAllCommentBanksModel(context).ResponseObject
                     .Select(Mapper.Map<ProfileCommentBank, ProfileCommentBankDto>));
         }
 
-        public static ProcessResponse<IEnumerable<GridProfileCommentBankDto>> GetAllCommentBanks_DataGrid(MyPortalDbContext context)
+        public static ProcessResponse<IEnumerable<GridProfileCommentBankDto>> GetAllCommentBanksDataGrid(MyPortalDbContext context)
         {
             return new ProcessResponse<IEnumerable<GridProfileCommentBankDto>>(ResponseType.Ok, null,
-                GetAllCommentBanks_Model(context).ResponseObject
+                GetAllCommentBanksModel(context).ResponseObject
                     .Select(Mapper.Map<ProfileCommentBank, GridProfileCommentBankDto>));
         }
 
-        public static ProcessResponse<IEnumerable<ProfileCommentBank>> GetAllCommentBanks_Model(MyPortalDbContext context)
+        public static IDictionary<int, string> GetAllCommentBanksLookup(MyPortalDbContext context)
+        {
+            var commentBanks = GetAllCommentBanksModel(context).ResponseObject;
+
+            return commentBanks.ToDictionary(x => x.Id, x => x.Name);
+        }
+
+        public static ProcessResponse<IEnumerable<ProfileCommentBank>> GetAllCommentBanksModel(MyPortalDbContext context)
         {
             return new ProcessResponse<IEnumerable<ProfileCommentBank>>(ResponseType.Ok, null,
                 context.ProfileCommentBanks.OrderBy(x => x.Name).ToList());

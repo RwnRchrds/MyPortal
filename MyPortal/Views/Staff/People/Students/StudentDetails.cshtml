@@ -265,7 +265,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Log Type")
-                        @Html.DropDownListFor(l => l.Log.TypeId, new SelectList(Model.LogTypes, "Value", "Key"), "Select Log Type", new {@class = "form-control", Name = "TypeId"})
+                        @Html.DropDownListFor(l => l.Log.TypeId, new SelectList(Model.LogTypes, "Key", "Value"), "Select Log Type", new {@class = "form-control", Name = "TypeId"})
                         @Html.ValidationMessageFor(l => l.Log.TypeId)
                     </div>
                     <hr/>

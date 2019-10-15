@@ -118,7 +118,7 @@ namespace MyPortal.Controllers.Api
         [Route("commentBanks/get/dataGrid/all", Name = "ApiProfilesGetAllCommentBanksDataGrid")]
         public IHttpActionResult GetAllCommentBanksDataGrid([FromBody] DataManagerRequest dm)
         {
-            var commentBanks = PrepareResponseObject(ProfilesProcesses.GetAllCommentBanks_DataGrid(_context));
+            var commentBanks = PrepareResponseObject(ProfilesProcesses.GetAllCommentBanksDataGrid(_context));
 
             return PrepareDataGridObject(commentBanks, dm);
         }

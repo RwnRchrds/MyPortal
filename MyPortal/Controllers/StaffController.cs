@@ -332,15 +332,15 @@ namespace MyPortal.Controllers
 
             var logTypes = await ProfilesProcesses.GetAllLogTypesLookup(_context);
 
-            var yearGroups = _context.PastoralYearGroups.OrderBy(x => x.Name).ToList();
+            var yearGroups = await PastoralProcesses.GetAllYearGroupsLookup(_context);
 
-            var regGroups = _context.PastoralRegGroups.OrderBy(x => x.Name).ToList();
+            var regGroups = await PastoralProcesses.GetAllRegGroupsLookup(_context);
 
-            var resultSets = _context.AssessmentResultSets.OrderBy(x => x.Name).ToList();
+            var resultSets = await AssessmentProcesses.GetAllResultSetsLookup(_context);
 
-            var subjects = _context.CurriculumSubjects.OrderBy(x => x.Name).ToList();
+            var subjects = await CurriculumProcesses.GetAllSubjectsLookup(_context);
 
-            var commentBanks = _context.ProfileCommentBanks.OrderBy(x => x.Name).ToList();
+            var commentBanks = ProfilesProcesses.GetAllCommentBanksLookup(_context);
 
             var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 

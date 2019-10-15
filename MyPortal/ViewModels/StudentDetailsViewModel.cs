@@ -10,11 +10,11 @@ namespace MyPortal.ViewModels
         public Student Student { get; set; }
         public IDictionary<int, string> LogTypes { get; set; }
         public ProfileLog Log { get; set; }
-        public IEnumerable<PastoralYearGroup> YearGroups { get; set; }
-        public IEnumerable<PastoralRegGroup> RegGroups { get; set; }
-        public IEnumerable<AssessmentResultSet> ResultSets { get; set; }
-        public IEnumerable<CurriculumSubject> Subjects { get; set; }
-        public IEnumerable<ProfileCommentBank> CommentBanks { get; set; }
+        public IDictionary<int, string> YearGroups { get; set; }
+        public IDictionary<int, string> RegGroups { get; set; }
+        public IDictionary<int, string> ResultSets { get; set; }
+        public IDictionary<int, string> Subjects { get; set; }
+        public IDictionary<int, string> CommentBanks { get; set; }
         public PersonDocumentUpload Upload { get; set; }
         public bool HasAttendaceData { get; set; }
         public double? Attendance { get; set; }
