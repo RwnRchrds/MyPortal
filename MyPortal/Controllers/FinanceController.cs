@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Threading.Tasks;
+using System.Web.Mvc;
 using MyPortal.Models.Attributes;
 using MyPortal.Processes;
 using MyPortal.ViewModels;
@@ -23,20 +24,20 @@ namespace MyPortal.Controllers
 
         [RequiresPermission("EditProducts")]
         [Route("Products", Name = "FinanceProducts")]
-        public ActionResult Products()
+        public async Task<ActionResult> Products()
         {
             var viewModel = new NewProductViewModel();
 
-            viewModel.ProductTypes = PrepareResponseObject(FinanceProcesses.GetAllProductTypesModel(_context));
+            viewModel.ProductTypes = await FinanceProcesses.GetAllProductTypesModel(_context);
 
             return View(viewModel);
         }
 
         [RequiresPermission("EditSales")]
         [Route("Sales/New", Name = "FinanceSaleEntry")]
-        public ActionResult SaleEntry()
+        public async Task<ActionResult> SaleEntry()
         {
-            var products = PrepareResponseObject(FinanceProcesses.GetAllProductsModel(_context));
+            var products = await FinanceProcesses.GetAllProductsModel(_context);
 
             var viewModel = new SaleEntryViewModel
             {

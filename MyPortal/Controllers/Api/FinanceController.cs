@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using System.Web.DynamicData;
 using System.Web.Http;
 using MyPortal.Dtos;
 using MyPortal.Models.Attributes;
@@ -246,7 +247,14 @@ namespace MyPortal.Controllers.Api
         public async Task<IEnumerable<FinanceSaleDto>> GetProcessedSales()
         {
             var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
-            return PrepareResponseObject(FinanceProcesses.GetProcessedSales(academicYearId, _context));
+            try
+            {
+                return await FinanceProcesses.GetProcessedSales(academicYearId, _context);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
 
         [HttpPost]
@@ -255,9 +263,16 @@ namespace MyPortal.Controllers.Api
         public async Task<IHttpActionResult> GetProcessedSalesDataGrid([FromBody] DataManagerRequest dm)
         {
             var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
-            var sales = PrepareResponseObject(FinanceProcesses.GetProcessedSalesDataGrid(academicYearId, _context));
+            try
+            {
+                var sales = await FinanceProcesses.GetProcessedSalesDataGrid(academicYearId, _context);
 
-            return PrepareDataGridObject(sales, dm);
+                return PrepareDataGridObject(sales, dm);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
  
         [HttpGet]
@@ -266,7 +281,14 @@ namespace MyPortal.Controllers.Api
         public async Task<IEnumerable<FinanceSaleDto>> GetAllSales()
         {
             var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
-            return PrepareResponseObject(FinanceProcesses.GetAllSales(academicYearId, _context));
+            try
+            {
+                return await FinanceProcesses.GetAllSales(academicYearId, _context);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
 
         [HttpPost]
@@ -275,9 +297,16 @@ namespace MyPortal.Controllers.Api
         public async Task<IHttpActionResult> GetAllSalesDataGrid([FromBody] DataManagerRequest dm)
         {
             var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
-            var sales = PrepareResponseObject(FinanceProcesses.GetAllSalesDataGrid(academicYearId, _context));
+            try
+            {
+                var sales = await FinanceProcesses.GetAllSalesDataGrid(academicYearId, _context);
 
-            return PrepareDataGridObject(sales, dm);
+                return PrepareDataGridObject(sales, dm);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpGet]
@@ -286,7 +315,14 @@ namespace MyPortal.Controllers.Api
         public async Task<IEnumerable<FinanceSaleDto>> GetSalesByStudent([FromUri] int studentId)
         {
             var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
-            return PrepareResponseObject(FinanceProcesses.GetAllSalesByStudent(studentId, academicYearId, _context));
+            try
+            {
+                return await FinanceProcesses.GetAllSalesByStudent(studentId, academicYearId, _context);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
 
         [HttpGet]
@@ -295,7 +331,15 @@ namespace MyPortal.Controllers.Api
         public async Task<IEnumerable<FinanceSaleDto>> GetPendingSales()
         {
             var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
-            return PrepareResponseObject(FinanceProcesses.GetPendingSales(academicYearId, _context));
+
+            try
+            {
+                return await FinanceProcesses.GetPendingSales(academicYearId, _context);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
 
         [HttpPost]
@@ -304,25 +348,32 @@ namespace MyPortal.Controllers.Api
         public async Task<IHttpActionResult> GetPendingSalesDataGrid([FromBody] DataManagerRequest dm)
         {
             var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
-            var sales = PrepareResponseObject(FinanceProcesses.GetPendingSalesDataGrid(academicYearId, _context));
 
-            return PrepareDataGridObject(sales, dm);
+            try
+            {
+                var sales = await FinanceProcesses.GetPendingSalesDataGrid(academicYearId, _context);
+
+                return PrepareDataGridObject(sales, dm);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
  
         [HttpPost]
         [RequiresPermission("EditSales")]
         [Route("sales/markComplete/{saleId:int}", Name = "ApiFinanceMarkSaleProcessed")]
-        public IHttpActionResult MarkSaleProcessed([FromUri] int saleId)
+        public async Task<IHttpActionResult> MarkSaleProcessed([FromUri] int saleId)
         {
-            var saleInDb = _context.FinanceSales.Single(x => x.Id == saleId);
-
-            if (saleInDb == null) return Content(HttpStatusCode.NotFound, "Sale not found");
-
-            if (saleInDb.Processed) return Content(HttpStatusCode.BadRequest, "Sale already marked as processed");
-
-            saleInDb.Processed = true;
-
-            _context.SaveChanges();
+            try
+            {
+                await FinanceProcesses.MarkSaleProcessed(saleId, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
 
             return Ok("Sale marked as processed");
         }
@@ -333,7 +384,17 @@ namespace MyPortal.Controllers.Api
         public async Task<IHttpActionResult> CreateSale([FromBody] FinanceSale sale)
         {
             var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
-            return PrepareResponse(FinanceProcesses.CreateSale(sale, academicYearId, _context));
+
+            try
+            {
+                await FinanceProcesses.CreateSale(sale, academicYearId, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Sale created");
         }
 
         [HttpPost]
@@ -344,31 +405,67 @@ namespace MyPortal.Controllers.Api
             await AuthenticateStudentRequest(studentId);
             var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
-            return PrepareResponse(FinanceProcesses.CheckoutBasketForStudent(studentId, academicYearId, _context));
+            try
+            {
+                await FinanceProcesses.CheckoutBasketForStudent(studentId, academicYearId, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Sale completed");
         }
  
         [HttpPost]
         [RequiresPermission("EditSales")]
         [Route("sales/refund/{saleId:int}", Name = "ApiFinanceRefundSale")]
-        public IHttpActionResult RefundSale([FromUri] int saleId)
+        public async Task<IHttpActionResult> RefundSale([FromUri] int saleId)
         {
-            return PrepareResponse(FinanceProcesses.RefundSale(saleId, _context));
+            try
+            {
+                await FinanceProcesses.RefundSale(saleId, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Sale refunded");
         }
 
         [HttpPost]
         [RequiresPermission("EditAccounts")]
         [Route("creditStudent", Name = "ApiFinanceCreditStudent")]
-        public IHttpActionResult CreditStudentAccount([FromBody] FinanceTransaction transaction)
+        public async Task<IHttpActionResult> CreditStudentAccount([FromBody] FinanceTransaction transaction)
         {
-            return PrepareResponse(FinanceProcesses.ProcessManualTransaction(transaction, _context));
+            try
+            {
+                await FinanceProcesses.ProcessManualTransaction(transaction, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Account credited");
         }
 
         [HttpPost]
         [Route("debitStudent", Name = "ApiFinanceDebitStudent")]
         [RequiresPermission("EditAccounts")]
-        public IHttpActionResult DebitStudentAccount([FromBody] FinanceTransaction transaction)
+        public async Task<IHttpActionResult> DebitStudentAccount([FromBody] FinanceTransaction transaction)
         {
-            return PrepareResponse(FinanceProcesses.ProcessManualTransaction(transaction, _context, true));
+            try
+            {
+                await FinanceProcesses.ProcessManualTransaction(transaction, _context, true);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Account debited");
         }
 
         [HttpGet]
@@ -376,7 +473,14 @@ namespace MyPortal.Controllers.Api
         public async Task<decimal> GetBalance([FromUri] int studentId)
         {
             await AuthenticateStudentRequest(studentId);
-            return PrepareResponseObject(FinanceProcesses.GetStudentBalance(studentId, _context));
+            try
+            {
+                return await FinanceProcesses.GetStudentBalance(studentId, _context);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
     }
 }

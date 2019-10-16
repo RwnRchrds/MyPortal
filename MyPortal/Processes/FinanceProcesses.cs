@@ -453,5 +453,24 @@ namespace MyPortal.Processes
 
             await context.SaveChangesAsync();
         }
+
+        public static async Task MarkSaleProcessed(int saleId, MyPortalDbContext context)
+        {
+            var saleInDb = await context.FinanceSales.SingleOrDefaultAsync(x => x.Id == saleId);
+
+            if (saleInDb == null)
+            {
+                throw new ProcessException(ExceptionType.NotFound, "Sale not found");
+            }
+
+            if (saleInDb.Processed)
+            {
+                throw new ProcessException(ExceptionType.BadRequest, "Sale already processed");
+            }
+
+            saleInDb.Processed = true;
+
+            await context.SaveChangesAsync();
+        }
     }
 }
