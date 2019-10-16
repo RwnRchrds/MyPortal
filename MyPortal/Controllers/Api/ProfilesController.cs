@@ -46,7 +46,7 @@ namespace MyPortal.Controllers.Api
         [RequiresPermission("ViewProfileLogs")]
         public async Task<IEnumerable<ProfileLogDto>> GetLogsByStudent([FromUri] int studentId)
         {
-            AuthenticateStudentRequest(studentId);
+            await AuthenticateStudentRequest(studentId);
             var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             return PrepareResponseObject(ProfilesProcesses.GetLogsByStudent(studentId, academicYearId, _context));
@@ -57,7 +57,7 @@ namespace MyPortal.Controllers.Api
         [RequiresPermission("ViewProfileLogs, AccessStudentPortal")]
         public async Task<IHttpActionResult> GetLogsByStudentDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
         {
-            AuthenticateStudentRequest(studentId);
+            await AuthenticateStudentRequest(studentId);
             var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             var logs = PrepareResponseObject(
                 ProfilesProcesses.GetLogsByStudent_DataGrid(studentId, academicYearId, _context));

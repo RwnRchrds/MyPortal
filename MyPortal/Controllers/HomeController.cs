@@ -1,4 +1,6 @@
-﻿using System.Web.Mvc;
+﻿using System.Threading.Tasks;
+using System.Web.Mvc;
+using MyPortal.Models;
 using MyPortal.Processes;
 
 namespace MyPortal.Controllers
@@ -8,15 +10,19 @@ namespace MyPortal.Controllers
     {
         [Authorize]
         [Route("User/Home", Name = "Home")]
-        public ActionResult Home()
+        public async Task<ActionResult> Home()
         {
             if (Request.IsAuthenticated)
             {
-                if (User.HasPermission("AccessStaffPortal")) return RedirectToAction("Index", "Staff");
-
-                if (User.HasPermission("AccessStudentPortal")) return RedirectToAction("Index", "Students");
-
-                return RedirectToAction("RestrictedAccess", "Account");
+                switch (await User.GetUserType())
+                {
+                    case UserType.Staff:
+                        return RedirectToAction("Index", "Staff");
+                    case UserType.Student:
+                        return RedirectToAction("Index", "Students");
+                    default:
+                        return RedirectToAction("RestrictedAccess", "Account");
+                }
             }
 
             return RedirectToAction("Login", "Account");

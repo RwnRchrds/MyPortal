@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Security.Principal;
@@ -19,115 +20,224 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("AccessStudentStore")]
         [Route("basketItems/create", Name = "ApiFinanceCreateBasketItem")]
-        public IHttpActionResult CreateBasketItem([FromBody] FinanceBasketItem basketItem)
+        public async Task<IHttpActionResult> CreateBasketItem([FromBody] FinanceBasketItem basketItem)
         {
-            return PrepareResponse(FinanceProcesses.CreateBasketItem(basketItem, _context));
+            try
+            {
+                await FinanceProcesses.CreateBasketItem(basketItem, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Item added to basket");
         }
 
         [RequiresPermission("AccessStudentStore")]
         [HttpGet]
         [Route("basketItems/get/byStudent/{studentId:int}", Name = "ApiFinanceGetBasketItemsByStudent")]
-        public IEnumerable<FinanceBasketItemDto> GetBasketItemsByStudent([FromUri] int studentId)
+        public async Task<IEnumerable<FinanceBasketItemDto>> GetBasketItemsByStudent([FromUri] int studentId)
         {
-            return PrepareResponseObject(FinanceProcesses.GetBasketItemsByStudent(studentId, _context));
+            try
+            {
+                return await FinanceProcesses.GetBasketItemsByStudent(studentId, _context);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
 
         [RequiresPermission("AccessStudentStore")]
         [HttpGet]
         [Route("basket/total/{studentId:int}", Name = "ApiFinanceGetBasketTotalForStudent")]
-        public decimal GetBasketTotalForStudent([FromUri] int studentId)
+        public async Task<decimal> GetBasketTotalForStudent([FromUri] int studentId)
         {
-            return PrepareResponseObject(FinanceProcesses.GetBasketTotalForStudent(studentId, _context));
+            try
+            {
+                return await FinanceProcesses.GetBasketTotalForStudent(studentId, _context);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
 
         [HttpDelete]
         [RequiresPermission("AccessStudentStore")]
         [Route("basketItems/delete/{basketItemId:int}", Name = "ApiFinanceDeleteBasketItem")]
-        public IHttpActionResult RemoveFromBasket([FromUri] int basketItemId)
+        public async Task<IHttpActionResult> RemoveFromBasket([FromUri] int basketItemId)
         {
-            return PrepareResponse(FinanceProcesses.DeleteBasketItem(basketItemId, _context));
+            try
+            {
+                await FinanceProcesses.DeleteBasketItem(basketItemId, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Item removed from basket");
         }
 
         [HttpDelete]
         [RequiresPermission("EditProducts")]
         [Route("products/delete/{productId:int}", Name = "ApiFinanceDeleteProduct")]
-        public IHttpActionResult DeleteProduct([FromUri] int productId)
+        public async Task<IHttpActionResult> DeleteProduct([FromUri] int productId)
         {
-            return PrepareResponse(FinanceProcesses.DeleteProduct(productId, _context));
+            try
+            {
+                await FinanceProcesses.DeleteProduct(productId, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Product deleted");
         }
 
         [HttpGet]
         [RequiresPermission("AccessStudentStore")]
         [Route("products/get/available/{studentId:int}", Name = "ApiFinanceGetAvailableProductsByStudent")]
-        public IEnumerable<FinanceProductDto> GetAvailableProductsByStudent([FromUri] int studentId)
+        public async Task<IEnumerable<FinanceProductDto>> GetAvailableProductsByStudent([FromUri] int studentId)
         {
-            return PrepareResponseObject(FinanceProcesses.GetAvailableProductsByStudent(studentId, _context));
+            try
+            {
+                return await FinanceProcesses.GetAvailableProductsByStudent(studentId, _context);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
  
         [HttpGet]
         [RequiresPermission("ViewProducts, AccessStudentStore")]
         [Route("products/price/{productId:int}", Name = "ApiFinanceGetProductPrice")]
-        public decimal GetProductPrice([FromUri] int productId)
+        public async Task<decimal> GetProductPrice([FromUri] int productId)
         {
-            return PrepareResponseObject(FinanceProcesses.GetProductPrice(productId, _context));
+            try
+            {
+                return await FinanceProcesses.GetProductPrice(productId, _context);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
 
         [HttpGet]
         [RequiresPermission("ViewProducts, AccessStudentStore")]
         [Route("products/get/byId/{productId:int}", Name = "ApiFinanceGetProductById")]
-        public FinanceProductDto GetProductById([FromUri] int productId)
+        public async Task<FinanceProductDto> GetProductById([FromUri] int productId)
         {
-            return PrepareResponseObject(FinanceProcesses.GetProductById(productId, _context));
+            try
+            {
+                return await FinanceProcesses.GetProductById(productId, _context);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
 
         [HttpGet]
         [RequiresPermission("ViewProducts")]
         [Route("products/get/all", Name = "ApiFinanceGetAllProducts")]
-        public IEnumerable<FinanceProductDto> GetAllProducts()
+        public async Task<IEnumerable<FinanceProductDto>> GetAllProducts()
         {
-            return PrepareResponseObject(FinanceProcesses.GetAllProducts(_context));
+            try
+            {
+                return await FinanceProcesses.GetAllProducts(_context);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
 
         [HttpPost]
         [RequiresPermission("ViewProducts")]
         [Route("products/get/dataGrid/all", Name = "ApiFinanceGetAllProductsDataGrid")]
-        public IHttpActionResult GetAllProductsDataGrid([FromBody] DataManagerRequest dm)
+        public async Task<IHttpActionResult> GetAllProductsDataGrid([FromBody] DataManagerRequest dm)
         {
-            var products = PrepareResponseObject(FinanceProcesses.GetAllProducts_DataGrid(_context));
-
-            return PrepareDataGridObject(products, dm);
+            try
+            {
+                var products = await FinanceProcesses.GetAllProductsDataGrid(_context);
+                return PrepareDataGridObject(products, dm);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpPost]
         [RequiresPermission("EditProducts")]
         [Route("products/create", Name = "ApiFinanceCreateProduct")]
-        public IHttpActionResult CreateProduct([FromBody] FinanceProduct product)
+        public async Task<IHttpActionResult> CreateProduct([FromBody] FinanceProduct product)
         {
-            return PrepareResponse(FinanceProcesses.CreateProduct(product, _context));
+            try
+            {
+                await FinanceProcesses.CreateProduct(product, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Product created");
         }
 
         [HttpPost]
         [RequiresPermission("EditProducts")]
         [Route("products/update", Name = "ApiFinanceUpdateProduct")]
-        public IHttpActionResult UpdateProduct([FromBody] FinanceProduct product)
+        public async Task<IHttpActionResult> UpdateProduct([FromBody] FinanceProduct product)
         {
-            return PrepareResponse(FinanceProcesses.UpdateProduct(product, _context));
+            try
+            {
+                await FinanceProcesses.UpdateProduct(product, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Product updated");
         }
 
         [HttpPost]
         [RequiresPermission("EditSales")]
         [Route("sales/queryBalance", Name = "ApiFinanceAssessBalance")]
-        public bool AssessBalance([FromBody] FinanceSale sale)
+        public async Task<bool> AssessBalance([FromBody] FinanceSale sale)
         {
-            return PrepareResponseObject(FinanceProcesses.AssessBalance(sale, _context));
+            try
+            {
+                return await FinanceProcesses.AssessBalance(sale, _context);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
 
         [HttpDelete]
         [RequiresPermission("EditSales")]
         [Route("sales/delete/{saleId:int}", Name = "ApiFinanceDeleteSale")]
-        public IHttpActionResult DeleteSale([FromUri] int saleId)
+        public async Task<IHttpActionResult> DeleteSale([FromUri] int saleId)
         {
-            return PrepareResponse(FinanceProcesses.DeleteSale(saleId, _context));
+            try
+            {
+                await FinanceProcesses.DeleteSale(saleId, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Sale deleted");
         }
 
         [HttpGet]
@@ -145,7 +255,7 @@ namespace MyPortal.Controllers.Api
         public async Task<IHttpActionResult> GetProcessedSalesDataGrid([FromBody] DataManagerRequest dm)
         {
             var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
-            var sales = PrepareResponseObject(FinanceProcesses.GetProcessedSales_DataGrid(academicYearId, _context));
+            var sales = PrepareResponseObject(FinanceProcesses.GetProcessedSalesDataGrid(academicYearId, _context));
 
             return PrepareDataGridObject(sales, dm);
         }
@@ -165,7 +275,7 @@ namespace MyPortal.Controllers.Api
         public async Task<IHttpActionResult> GetAllSalesDataGrid([FromBody] DataManagerRequest dm)
         {
             var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
-            var sales = PrepareResponseObject(FinanceProcesses.GetAllSales_DataGrid(academicYearId, _context));
+            var sales = PrepareResponseObject(FinanceProcesses.GetAllSalesDataGrid(academicYearId, _context));
 
             return PrepareDataGridObject(sales, dm);
         }
@@ -194,7 +304,7 @@ namespace MyPortal.Controllers.Api
         public async Task<IHttpActionResult> GetPendingSalesDataGrid([FromBody] DataManagerRequest dm)
         {
             var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
-            var sales = PrepareResponseObject(FinanceProcesses.GetPendingSales_DataGrid(academicYearId, _context));
+            var sales = PrepareResponseObject(FinanceProcesses.GetPendingSalesDataGrid(academicYearId, _context));
 
             return PrepareDataGridObject(sales, dm);
         }
@@ -231,7 +341,7 @@ namespace MyPortal.Controllers.Api
         [Route("sales/checkoutBasket/{studentId:int}", Name = "ApiFinanceCheckoutBasket")]
         public async Task<IHttpActionResult> CheckoutBasket([FromBody] int studentId)
         {
-            AuthenticateStudentRequest(studentId);
+            await AuthenticateStudentRequest(studentId);
             var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             return PrepareResponse(FinanceProcesses.CheckoutBasketForStudent(studentId, academicYearId, _context));
@@ -250,7 +360,7 @@ namespace MyPortal.Controllers.Api
         [Route("creditStudent", Name = "ApiFinanceCreditStudent")]
         public IHttpActionResult CreditStudentAccount([FromBody] FinanceTransaction transaction)
         {
-            return PrepareResponse(FinanceProcesses.ProcessManualTransaction(transaction, _context, true));
+            return PrepareResponse(FinanceProcesses.ProcessManualTransaction(transaction, _context));
         }
 
         [HttpPost]
@@ -258,14 +368,14 @@ namespace MyPortal.Controllers.Api
         [RequiresPermission("EditAccounts")]
         public IHttpActionResult DebitStudentAccount([FromBody] FinanceTransaction transaction)
         {
-            return PrepareResponse(FinanceProcesses.ProcessManualTransaction(transaction, _context));
+            return PrepareResponse(FinanceProcesses.ProcessManualTransaction(transaction, _context, true));
         }
 
         [HttpGet]
         [Route("getStudentBalance/{studentId:int}", Name = "ApiFinanceGetStudentBalance")]
-        public decimal GetBalance([FromUri] int studentId)
+        public async Task<decimal> GetBalance([FromUri] int studentId)
         {
-            AuthenticateStudentRequest(studentId);
+            await AuthenticateStudentRequest(studentId);
             return PrepareResponseObject(FinanceProcesses.GetStudentBalance(studentId, _context));
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Http;
 using MyPortal.Dtos;
 using MyPortal.Models.Attributes;
@@ -31,9 +32,9 @@ namespace MyPortal.Controllers.Api
         [Authorize]
         [RequiresPermission("ViewStudents")]
         [Route("get/byId/{studentId:int}", Name = "ApiPeopleGetStudentById")]
-        public StudentDto GetStudentById(int studentId)
+        public async Task<StudentDto> GetStudentById(int studentId)
         {
-            AuthenticateStudentRequest(studentId);
+            await AuthenticateStudentRequest(studentId);
             return PrepareResponseObject(PeopleProcesses.GetStudentById(studentId, _context));
         }
 
@@ -73,52 +74,52 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ViewStudents")]
         [Route("hasBasketItems/{studentId:int}")]
-        public bool StudentHasBasketItems([FromUri] int studentId)
+        public async Task<bool> StudentHasBasketItems([FromUri] int studentId)
         {
-            AuthenticateStudentRequest(studentId);
+            await AuthenticateStudentRequest(studentId);
             return PrepareResponseObject(PeopleProcesses.StudentHasBasketItems(studentId, _context));
         }
 
         [HttpGet]
         [RequiresPermission("ViewStudents")]
         [Route("hasDocuments/{studentId:int}", Name = "ApiPeopleStudentHasDocuments")]
-        public bool StudentHasDocuments([FromUri] int studentId)
+        public async Task<bool> StudentHasDocuments([FromUri] int studentId)
         {
-            AuthenticateStudentRequest(studentId);
+            await AuthenticateStudentRequest(studentId);
             return PrepareResponseObject(PeopleProcesses.StudentHasDocuments(studentId, _context));
         }
 
         [HttpGet]
         [RequiresPermission("ViewStudents")]
         [Route("api/students/hasLogs/{studentId:int}", Name = "ApiPeopleStudentHasLogs")]
-        public bool StudentHasLogs([FromUri] int studentId)
+        public async Task<bool> StudentHasLogs([FromUri] int studentId)
         {
-            AuthenticateStudentRequest(studentId);
+            await AuthenticateStudentRequest(studentId);
             return PrepareResponseObject(PeopleProcesses.StudentHasLogs(studentId, _context));
         }
 
         [HttpGet]
         [RequiresPermission("ViewStudents")]
         [Route("api/students/hasResults/{studentId:int}", Name = "ApiPeopleStudentHasResults")]
-        public bool StudentHasResults([FromUri] int studentId)
+        public async Task<bool> StudentHasResults([FromUri] int studentId)
         {
-            AuthenticateStudentRequest(studentId);
+            await AuthenticateStudentRequest(studentId);
             return PrepareResponseObject(PeopleProcesses.StudentHasResults(studentId, _context));
         }
 
         [HttpGet]
         [RequiresPermission("ViewStudents")]
         [Route("api/students/hasSales/{studentId:int}", Name = "ApiPeopleStudentHasSales")]
-        public bool StudentHasSales([FromUri] int studentId)
+        public async Task<bool> StudentHasSales([FromUri] int studentId)
         {
-            AuthenticateStudentRequest(studentId);
+            await AuthenticateStudentRequest(studentId);
             return PrepareResponseObject(PeopleProcesses.StudentHasSales(studentId, _context));
         }
 
         [HttpPut]
         [RequiresPermission("EditStudents")]
         [Route("api/students/update", Name = "ApiPeopleUpdateStudent")]
-        public IHttpActionResult UpdateStudent([FromBody] Student student)
+        public async Task<IHttpActionResult> UpdateStudent([FromBody] Student student)
         {
             return PrepareResponse(PeopleProcesses.UpdateStudent(student, _context));
         }

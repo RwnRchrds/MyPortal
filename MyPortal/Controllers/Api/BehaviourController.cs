@@ -27,8 +27,7 @@ namespace MyPortal.Controllers.Api
             }
             catch (Exception e)
             {
-                ThrowException(e);
-                return 0;
+                throw GetException(e);
             }
         }
 
@@ -61,8 +60,7 @@ namespace MyPortal.Controllers.Api
             }
             catch (Exception e)
             {
-                ThrowException(e);
-                return null;
+                throw GetException(e);
             }
         }
 
@@ -154,8 +152,7 @@ namespace MyPortal.Controllers.Api
             }
             catch (Exception e)
             {
-                ThrowException(e);
-                return null;
+                throw GetException(e);
             }
         }
 

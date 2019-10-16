@@ -19,24 +19,31 @@ namespace MyPortal.Processes
            _identity = new IdentityContext(); 
         }
 
-        public static void ChangeSelectedAcademicYear(this IPrincipal user, int academicYearId)
+        public static async Task ChangeSelectedAcademicYear(this IPrincipal user, int academicYearId)
         {
-            var applicationUser = user.GetApplicationUser();
+            var applicationUser = await user.GetApplicationUser();
 
             if (applicationUser == null)
             {
-                throw new Exception("User not found");
+                throw new ProcessException(ExceptionType.NotFound, "User not found");
             }
 
             applicationUser.SelectedAcademicYearId = academicYearId;
 
-            _identity.SaveChanges();
+            await _identity.SaveChangesAsync();
         }
 
-        public static ApplicationUser GetApplicationUser(this IPrincipal user)
+        public static async Task<UserType> GetUserType(this IPrincipal user)
+        {
+            var applicationUser = await user.GetApplicationUser();
+
+            return applicationUser.UserType;
+        }
+
+        public static async Task<ApplicationUser> GetApplicationUser(this IPrincipal user)
         {
             var userId = user.Identity.GetUserId();
-            var applicationUser = _identity.Users.SingleOrDefault(x => x.Id == userId);
+            var applicationUser = await _identity.Users.SingleOrDefaultAsync(x => x.Id == userId);
 
             return applicationUser;
         }

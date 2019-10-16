@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
+using MyPortal.Models;
 using MyPortal.Models.Database;
 using MyPortal.Models.Exceptions;
 using MyPortal.Models.Misc;
@@ -66,7 +69,7 @@ namespace MyPortal.Controllers.Api
             return Content(statusCode, ex.Message);
         }
 
-        protected void ThrowException(Exception ex)
+        protected HttpResponseException GetException(Exception ex)
         {
             var statusCode = HttpStatusCode.BadRequest;
 
@@ -86,7 +89,7 @@ namespace MyPortal.Controllers.Api
                 }
             }
 
-            throw new HttpResponseException(statusCode);
+            return new HttpResponseException(statusCode);
         }
 
         //If ProcessResponse returns an object
@@ -115,13 +118,14 @@ namespace MyPortal.Controllers.Api
             return Json(new { result = result.Items, count = result.Count });
         }
 
-        protected void AuthenticateStudentRequest(int studentId)
+        protected async Task AuthenticateStudentRequest(int studentId)
         {
-            if (User.HasPermission("AccessStudentPortal"))
+            var userType = await User.GetUserType();
+            if (userType == UserType.Student)
             {
                 var userId = User.Identity.GetUserId();
-                var studentUser = _context.Students.SingleOrDefault(x => x.Person.UserId == userId);
-                var requestedStudent = _context.Students.SingleOrDefault(x => x.Id == studentId);
+                var studentUser = await _context.Students.SingleOrDefaultAsync(x => x.Person.UserId == userId);
+                var requestedStudent = await _context.Students.SingleOrDefaultAsync(x => x.Id == studentId);
 
                 if (studentUser == null || requestedStudent == null)
                 {

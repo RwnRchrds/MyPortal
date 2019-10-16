@@ -18,7 +18,7 @@ namespace MyPortal.Processes
     {
         public static List<string> ErrorMessages = new List<string>();
 
-        public static bool HasPermission(this IPrincipal principal, string permission)
+        public static async Task<bool> HasPermission(this IPrincipal principal, string permission)
         {
             var identity = new IdentityContext();
             var roleStore = new RoleStore<ApplicationRole>(identity);
@@ -30,14 +30,14 @@ namespace MyPortal.Processes
 
             foreach (var role in roles)
             {
-                var permissionObject = identity.Permissions.SingleOrDefault(x => x.Name == permission);
+                var permissionObject = await identity.Permissions.SingleOrDefaultAsync(x => x.Name == permission);
 
                 if (permissionObject == null)
                 {
                     throw new Exception($"Permission '{permission}' not found");
                 }
 
-                var hasPermission = identity.RolePermissions.Any(x =>
+                var hasPermission = await identity.RolePermissions.AnyAsync(x =>
                     x.PermissionId == permissionObject.Id && x.RoleId == role.Id);
 
                 if (hasPermission)

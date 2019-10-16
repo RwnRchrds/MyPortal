@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Policy;
 using System.Threading.Tasks;
 using System.Web;
@@ -15,7 +16,7 @@ using MyPortal.Models.Misc;
 
 namespace MyPortal.Processes
 {
-    public static class PeopleProcesses
+    public class PeopleProcesses
     {
         public static ProcessResponse<object> CreateStaffMember(StaffMember staffMember, MyPortalDbContext context)
         {

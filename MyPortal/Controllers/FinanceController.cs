@@ -27,7 +27,7 @@ namespace MyPortal.Controllers
         {
             var viewModel = new NewProductViewModel();
 
-            viewModel.ProductTypes = PrepareResponseObject(FinanceProcesses.GetProductTypes_Model(_context));
+            viewModel.ProductTypes = PrepareResponseObject(FinanceProcesses.GetAllProductTypesModel(_context));
 
             return View(viewModel);
         }
@@ -36,7 +36,7 @@ namespace MyPortal.Controllers
         [Route("Sales/New", Name = "FinanceSaleEntry")]
         public ActionResult SaleEntry()
         {
-            var products = PrepareResponseObject(FinanceProcesses.GetAllProducts_Model(_context));
+            var products = PrepareResponseObject(FinanceProcesses.GetAllProductsModel(_context));
 
             var viewModel = new SaleEntryViewModel
             {

@@ -30,8 +30,7 @@ namespace MyPortal.Controllers.Api
             }
             catch (Exception e)
             {
-                ThrowException(e);
-                return null;
+                throw GetException(e);
             }
         }
 
@@ -75,7 +74,7 @@ namespace MyPortal.Controllers.Api
         {
             var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             
-            AuthenticateStudentRequest(studentId);
+            await AuthenticateStudentRequest(studentId);
 
             try
             {
@@ -83,8 +82,7 @@ namespace MyPortal.Controllers.Api
             }
             catch (Exception e)
             {
-                ThrowException(e);
-                return null;
+                throw GetException(e);
             }
         }
 
@@ -95,7 +93,7 @@ namespace MyPortal.Controllers.Api
         {
             var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
             
-            AuthenticateStudentRequest(studentId);
+            await AuthenticateStudentRequest(studentId);
 
             try
             {
@@ -103,8 +101,7 @@ namespace MyPortal.Controllers.Api
             }
             catch (Exception e)
             {
-                ThrowException(e);
-                return null;
+                throw GetException(e);
             }
         }
 
@@ -118,8 +115,7 @@ namespace MyPortal.Controllers.Api
             }
             catch (Exception e)
             {
-                ThrowException(e);
-                return null;
+                throw GetException(e);
             }
         }
 
@@ -133,8 +129,7 @@ namespace MyPortal.Controllers.Api
             }
             catch (Exception e)
             {
-                ThrowException(e);
-                return null;
+                throw GetException(e);
             }
         }
 
@@ -167,8 +162,7 @@ namespace MyPortal.Controllers.Api
              }
              catch (Exception e)
              {
-                 ThrowException(e);
-                 return null;
+                 throw GetException(e);
              }
         }
     }

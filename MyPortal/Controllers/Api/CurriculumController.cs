@@ -28,8 +28,7 @@ namespace MyPortal.Controllers.Api
             }
             catch (Exception e)
             {
-                ThrowException(e);
-                return null;
+                throw GetException(e);
             }
         }
 
@@ -43,18 +42,16 @@ namespace MyPortal.Controllers.Api
             }
             catch (Exception e)
             {
-                ThrowException(e);
-                return null;
+                throw GetException(e);
             }
         }
 
         [HttpPost]
         [RequiresPermission("ChangeAcademicYear")]
         [Route("academicYears/select", Name = "ApiCurriculumChangeSelectedAcademicYear")]
-        public IHttpActionResult ChangeSelectedAcademicYear([FromBody] CurriculumAcademicYear year)
+        public async Task<IHttpActionResult> ChangeSelectedAcademicYear([FromBody] CurriculumAcademicYear year)
         {
-            //TODO: MAKE ASYNC
-            User.ChangeSelectedAcademicYear(year.Id);
+            await User.ChangeSelectedAcademicYear(year.Id);
             return Ok("Selected academic year changed");
         }
 
@@ -71,8 +68,7 @@ namespace MyPortal.Controllers.Api
             }
             catch (Exception e)
             {
-                ThrowException(e);
-                return null;
+                throw GetException(e);
             }
         }
 
@@ -111,8 +107,7 @@ namespace MyPortal.Controllers.Api
             }
             catch (Exception e)
             {
-                ThrowException(e);
-                return null;
+                throw GetException(e);
             }
         }
 
@@ -146,8 +141,7 @@ namespace MyPortal.Controllers.Api
             }
             catch (Exception e)
             {
-                ThrowException(e);
-                return null;
+                throw GetException(e);
             }
         }
 
@@ -215,8 +209,7 @@ namespace MyPortal.Controllers.Api
             }
             catch (Exception e)
             {
-                ThrowException(e);
-                return null;
+                throw GetException(e);
             }
         }
 
@@ -248,8 +241,7 @@ namespace MyPortal.Controllers.Api
             }
             catch (Exception e)
             {
-                ThrowException(e);
-                return null;
+                throw GetException(e);
             }
         }
 
@@ -332,8 +324,7 @@ namespace MyPortal.Controllers.Api
             }
             catch (Exception e)
             {
-                ThrowException(e);
-                return null;
+                throw GetException(e);
             }
         }
 
@@ -366,8 +357,7 @@ namespace MyPortal.Controllers.Api
             }
             catch (Exception e)
             {
-                ThrowException(e);
-                return null;
+                throw GetException(e);
             }
         }
 
@@ -400,8 +390,7 @@ namespace MyPortal.Controllers.Api
             }
             catch (Exception e)
             {
-                ThrowException(e);
-                return null;
+                throw GetException(e);
             }
         }
 
@@ -501,8 +490,7 @@ namespace MyPortal.Controllers.Api
             }
             catch (Exception e)
             {
-                ThrowException(e);
-                return null;
+                throw GetException(e);
             }
         }
 
@@ -517,8 +505,7 @@ namespace MyPortal.Controllers.Api
             }
             catch (Exception e)
             {
-                ThrowException(e);
-                return null;
+                throw GetException(e);
             }
         }
 
@@ -601,8 +588,7 @@ namespace MyPortal.Controllers.Api
             }
             catch (Exception e)
             {
-                ThrowException(e);
-                return null;
+                throw GetException(e);
             }
         }
 
@@ -617,8 +603,7 @@ namespace MyPortal.Controllers.Api
             }
             catch (Exception e)
             {
-                ThrowException(e);
-                return null;
+                throw GetException(e);
             }
         }
 
@@ -667,8 +652,7 @@ namespace MyPortal.Controllers.Api
             }
             catch (Exception e)
             {
-                ThrowException(e);
-                return null;
+                throw GetException(e);
             }
         }
 
@@ -683,8 +667,7 @@ namespace MyPortal.Controllers.Api
             }
             catch (Exception e)
             {
-                ThrowException(e);
-                return null;
+                throw GetException(e);
             }
         }
 
@@ -699,8 +682,7 @@ namespace MyPortal.Controllers.Api
             }
             catch (Exception e)
             {
-                ThrowException(e);
-                return null;
+                throw GetException(e);
             }
         }
 
@@ -766,7 +748,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await CurriculumProcesses.DeleteLessonPlan(lessonPlanId, staffId,
-                    User.HasPermission("DeleteAllLessonPlans"), _context);
+                    await User.HasPermission("DeleteAllLessonPlans"), _context);
             }
             catch (Exception e)
             {
