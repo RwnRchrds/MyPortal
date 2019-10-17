@@ -1,4 +1,7 @@
 # MyPortal
+
+![Banner](https://drive.google.com/uc?export=view&id=1aYvNO374sGSm0YuuWK4UkVoIsoglP0lx)
+
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/bd6f737bead2482f86dc5a787524cf26)](https://app.codacy.com/app/rrichards.63170/MyPortal?utm_source=github.com&utm_medium=referral&utm_content=RRichards63170/MyPortal&utm_campaign=Badge_Grade_Settings)
 
 [![Build Status](https://dev.azure.com/Harrods-School/MyPortal/_apis/build/status/RRichards63170.MyPortal?branchName=master)](https://dev.azure.com/11RichR1/MyPortal/_build/latest?definitionId=5?branchName=master)
