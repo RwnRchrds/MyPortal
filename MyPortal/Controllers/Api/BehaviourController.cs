@@ -132,7 +132,7 @@ namespace MyPortal.Controllers.Api
 
             try
             {
-                var incidents = await BehaviourProcesses.GetAchievementsForGrid(studentId, academicYearId, _context);
+                var incidents = await BehaviourProcesses.GetBehaviourIncidentsForGrid(studentId, academicYearId, _context);
                 return PrepareDataGridObject(incidents, dm);
             }
             catch (Exception e)
