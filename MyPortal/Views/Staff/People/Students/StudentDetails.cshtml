@@ -157,7 +157,7 @@
                         <td>
                             <b>Gender</b>
                         </td>
-                        <td>@Enum.GetName(typeof(Gender), Model.Student.Person.Gender)</td>
+                        <td>@PeopleProcesses.GetGenderDisplayName(Model.Student.Person.Gender)</td>
                     </tr>
                     <tr>
                         <td>
@@ -354,17 +354,17 @@
                     </div>
                     <div class="form-group">
                         @Html.Label("Gender")
-                        @Html.EnumDropDownListFor(x => x.Student.Person.Gender, "Select Gender", new {@class = "form-control", Name = "Gender", id = "editDetailsGenderControl"})
+                        @Html.DropDownListFor(x => x.Student.Person.Gender, new SelectList(Model.Genders, "Key", "Value"), new {@class = "form-control", Name = "Gender", id = "editDetailsGenderControl"})
                         @Html.ValidationMessageFor(s => s.Student.Person.Gender)
                     </div>
                     <div class="form-group">
                         @Html.Label("Year Group")
-                        @Html.DropDownListFor(s => s.Student.YearGroupId, new SelectList(Model.YearGroups, "Id", "Name"), "Select Year Group", new {@class = "form-control", Name = "YearGroupId", id = "editDetailsYearGroupControl"})
+                        @Html.DropDownListFor(s => s.Student.YearGroupId, new SelectList(Model.YearGroups, "Key", "Value"), "Select Year Group", new {@class = "form-control", Name = "YearGroupId", id = "editDetailsYearGroupControl"})
                         @Html.ValidationMessageFor(s => s.Student.YearGroupId)
                     </div>
                     <div class="form-group">
                         @Html.Label("Reg Group")
-                        @Html.DropDownListFor(s => s.Student.RegGroupId, new SelectList(Model.RegGroups, "Id", "Name"), "Select Reg Group", new {@class = "form-control", Name = "RegGroupId", id = "editDetailsRegGroupControl"})
+                        @Html.DropDownListFor(s => s.Student.RegGroupId, new SelectList(Model.RegGroups, "Key", "Value"), "Select Reg Group", new {@class = "form-control", Name = "RegGroupId", id = "editDetailsRegGroupControl"})
                         @Html.ValidationMessageFor(s => s.Student.RegGroupId)
                     </div>
                     @Html.HiddenFor(s => s.Student.Id, new {Name = "Id", id = "editDetailsIdControl"})
@@ -465,7 +465,7 @@
             <div class="modal-body">
                 <div class="form-group">
                     @Html.Label("Comment Bank")
-                    @Html.DropDownList("SelectedStatus", new SelectList(Model.CommentBanks, "Id", "Name"), "Select Comment Bank", new {@class = "form-control", Name = "Id", id = "selectedBank"})
+                    @Html.DropDownList("SelectedStatus", new SelectList(Model.CommentBanks, "Key", "Value"), "Select Comment Bank", new {@class = "form-control", Name = "Id", id = "selectedBank"})
                 </div>
 
                 <div class="container">

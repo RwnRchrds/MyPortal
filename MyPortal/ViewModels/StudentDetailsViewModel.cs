@@ -15,6 +15,7 @@ namespace MyPortal.ViewModels
         public IDictionary<int, string> ResultSets { get; set; }
         public IDictionary<int, string> Subjects { get; set; }
         public IDictionary<int, string> CommentBanks { get; set; }
+        public IDictionary<string, string> Genders { get; set; }    
         public PersonDocumentUpload Upload { get; set; }
         public bool HasAttendaceData { get; set; }
         public double? Attendance { get; set; }

@@ -12,7 +12,7 @@ namespace MyPortal.Migrations
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(MyPortal.Models.Database.MyPortalDbContext context)
+        protected override void Seed(Models.Database.MyPortalDbContext context)
         {
             //  This method will be called after migrating to the latest version.
 

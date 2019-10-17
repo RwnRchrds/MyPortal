@@ -133,10 +133,9 @@ namespace MyPortal.Processes
                 throw new ProcessException(ExceptionType.NotFound,"Student not found");
             }
 
-            var points =
-                await context.BehaviourAchievements
-                    .Where(x => x.AcademicYearId == academicYearId && x.StudentId == studentId && !x.Deleted)
-                    .SumAsync(x => x.Points);
+            var points = await context.BehaviourAchievements
+                .Where(x => x.AcademicYearId == academicYearId && x.StudentId == studentId && !x.Deleted)
+                .SumAsync(x => (int?) x.Points) ?? 0;
 
             if (points < 0)
             {
@@ -210,7 +209,7 @@ namespace MyPortal.Processes
             }
 
             var points = await context.BehaviourIncidents
-                .Where(x => x.AcademicYearId == academicYearId && x.StudentId == studentId && !x.Deleted).SumAsync(x => x.Points);
+                .Where(x => x.AcademicYearId == academicYearId && x.StudentId == studentId && !x.Deleted).SumAsync(x => (int?) x.Points) ?? 0;
 
             if (points < 0)
             {

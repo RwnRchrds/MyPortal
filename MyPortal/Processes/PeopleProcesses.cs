@@ -436,5 +436,31 @@ namespace MyPortal.Processes
 
             return new ProcessResponse<object>(ResponseType.Ok, "Student updated", null);
         }
+
+        public static string GetGenderDisplayName(string genderCode)
+        {
+            switch (genderCode)
+            {
+                case "M":
+                    return "Male";
+                case "F":
+                    return "Female";
+                case "X":
+                    return "Other";
+                default:
+                    return "Unknown";
+            }
+        }
+
+        public static IDictionary<string, string> GetGenderLookup()
+        {
+            return new Dictionary<string, string>
+            {
+                { "Male", "M" },
+                { "Female", "F" },
+                { "Other", "X" },
+                { "Unknown", "U" }
+            };
+        }
     }
 }

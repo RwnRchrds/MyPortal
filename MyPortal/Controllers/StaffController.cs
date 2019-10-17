@@ -370,7 +370,8 @@ namespace MyPortal.Controllers
                 BehaviourCount = behaviourCount,
                 AchievementCount = achievementCount,
                 HasAttendaceData = attendance != null,
-                Attendance = attendance
+                Attendance = attendance,
+                Genders = PeopleProcesses.GetGenderLookup()
             };
 
             return View("~/Views/Staff/People/Students/StudentDetails.cshtml", viewModel);
