@@ -28,6 +28,7 @@ namespace MyPortal.Models.Database
         public string Code { get; set; }
 
         [Required]
+        [StringLength(128)]
         public string Description { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

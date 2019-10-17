@@ -24,6 +24,6 @@ namespace MyPortal.Models.Database
 
         public virtual Student Student { get; set; }
 
-        public virtual SenEventType SenEventType { get; set; }
+        public virtual SenEventType Type { get; set; }
     }
 }

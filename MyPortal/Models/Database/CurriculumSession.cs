@@ -18,7 +18,7 @@ namespace MyPortal.Models.Database
 
         public int PeriodId { get; set; }
 
-        public virtual AttendancePeriod AttendancePeriod { get; set; }
+        public virtual AttendancePeriod Period { get; set; }
 
         public virtual CurriculumClass Class { get; set; }
     }

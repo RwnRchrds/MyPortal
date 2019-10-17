@@ -26,6 +26,7 @@ namespace MyPortal.Models.Database
         public int? SubjectId { get; set; }
 
         [Required]
+        [StringLength(128)]
         public string Name { get; set; }
 
         public int TeacherId { get; set; }
@@ -39,9 +40,9 @@ namespace MyPortal.Models.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CurriculumEnrolment> Enrolments { get; set; }
 
-        public virtual CurriculumSubject CurriculumSubject { get; set; }
+        public virtual CurriculumSubject Subject { get; set; }
 
-        public virtual PastoralYearGroup PastoralYearGroup { get; set; }
+        public virtual PastoralYearGroup YearGroup { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CurriculumSession> Sessions { get; set; }

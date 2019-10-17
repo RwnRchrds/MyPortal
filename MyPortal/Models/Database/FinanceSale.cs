@@ -20,7 +20,6 @@ namespace MyPortal.Models.Database
 
         public int AcademicYearId { get; set; }
 
-        [Column(TypeName = "date")]
         public DateTime Date { get; set; }
 
         [Range(0, Double.MaxValue, ErrorMessage = "Amount paid cannot be negative")]
@@ -36,6 +35,6 @@ namespace MyPortal.Models.Database
 
         public virtual CurriculumAcademicYear CurriculumAcademicYear { get; set; }
 
-        public virtual FinanceProduct FinanceProduct { get; set; }
+        public virtual FinanceProduct Product { get; set; }
     }
 }

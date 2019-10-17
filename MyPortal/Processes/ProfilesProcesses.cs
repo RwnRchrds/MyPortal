@@ -24,7 +24,7 @@ namespace MyPortal.Processes
                 return new ProcessResponse<bool>(ResponseType.NotFound, "Comment bank not found", false);
             }
 
-            return new ProcessResponse<bool>(ResponseType.Ok, null, commentBank.ProfileComments.Any());
+            return new ProcessResponse<bool>(ResponseType.Ok, null, commentBank.Comments.Any());
         }
 
         public static ProcessResponse<object> CreateComment(ProfileComment comment, MyPortalDbContext context)

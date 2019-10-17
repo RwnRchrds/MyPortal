@@ -28,6 +28,7 @@ namespace MyPortal.Models.Database
             SenEvents = new HashSet<SenEvent>();
             SenProvisions = new HashSet<SenProvision>();
             ProfileLogs = new HashSet<ProfileLog>();
+            GiftedTalentedSubjects = new HashSet<SenGiftedTalented>();
         }
 
         public int Id { get; set; }
@@ -40,8 +41,10 @@ namespace MyPortal.Models.Database
 
         public int? HouseId { get; set; }
 
+        [StringLength(128)]
         public string CandidateNumber { get; set; }
 
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int AdmissionNumber { get; set; }
 
         public decimal AccountBalance { get; set; }
@@ -54,8 +57,10 @@ namespace MyPortal.Models.Database
 
         public bool PupilPremium { get; set; }
 
+        [StringLength(256)]
         public string MisId { get; set; }
 
+        [StringLength(13)]
         public string Upn { get; set; }
 
         public string Uci { get; set; }

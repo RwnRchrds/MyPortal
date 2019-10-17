@@ -19,6 +19,7 @@ namespace MyPortal.Models.Database
         public int AuthorId { get; set; }
 
         [Required]
+        [StringLength(256)]
         public string Title { get; set; }
 
         [Required]

@@ -33,8 +33,8 @@ namespace MyPortal.Models.Database
 
         public virtual Student Student { get; set; }
 
-        public virtual CurriculumAcademicYear CurriculumAcademicYear { get; set; }
+        public virtual CurriculumAcademicYear AcademicYear { get; set; }
 
-        public virtual ProfileLogType ProfileLogType { get; set; }
+        public virtual ProfileLogType Type { get; set; }
     }
 }

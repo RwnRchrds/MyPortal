@@ -16,11 +16,15 @@ namespace MyPortal.Models.Database
         public int AreaId { get; set; }
 
         [Required]
+        [StringLength(128)]
         public string Name { get; set; }
 
         [Required]
+        [StringLength(128)]
         public string Description { get; set; }
 
         public bool Restricted { get; set; }
+
+        public virtual SystemArea SystemArea { get; set; }
     }
 }

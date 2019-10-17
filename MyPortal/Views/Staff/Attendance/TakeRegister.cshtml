@@ -2,7 +2,7 @@
 @using Syncfusion.EJ2.Grids
 @model MyPortal.ViewModels.TakeRegisterViewModel
 @{
-    ViewBag.Title = "Take Register: " + @Model.Session.AttendancePeriod.Name + " - " + @Model.Session.CurriculumClass.Name;
+    ViewBag.Title = "Take Register: " + @Model.Session.Period.Name + " - " + @Model.Session.CurriculumClass.Name;
     ViewBag.DisplayTitle = "Take Register";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
@@ -25,7 +25,7 @@
             <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">@Model.SessionDate.ToLongDateString() -  @Model.Session.CurriculumClass.Name (@Model.Session.AttendancePeriod.Name) - @PeopleProcesses.GetStaffDisplayName(Model.Session.CurriculumClass.Teacher).ResponseObject</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">@Model.SessionDate.ToLongDateString() -  @Model.Session.CurriculumClass.Name (@Model.Session.Period.Name) - @PeopleProcesses.GetStaffDisplayName(Model.Session.CurriculumClass.Teacher).ResponseObject</h6>
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
@@ -35,7 +35,7 @@
                     }).Columns(c =>
                     {
                         c.Field("StudentName").HeaderText("Student").Template("#marksStudentTemplate").Width("150").Add();
-                        c.Field("Mark.Mark").HeaderText(Model.Session.AttendancePeriod.Name).Width("150").Add();
+                        c.Field("Mark.Mark").HeaderText(Model.Session.Period.Name).Width("150").Add();
                     }).EditSettings(e => { e.AllowEditing(true).Mode(EditMode.Batch);}).EnableHover().Toolbar(new List<string>() {"Update", "Cancel"}).ActionComplete("dataGridActionComplete").CellEdit("cellEdit").Render()
                 </div>
             </div>

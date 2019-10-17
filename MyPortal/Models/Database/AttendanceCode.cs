@@ -20,6 +20,7 @@ namespace MyPortal.Models.Database
         public string Code { get; set; }
 
         [Required]
+        [StringLength(128)]
         public string Description { get; set; }
 
         public int MeaningId { get; set; }
@@ -28,6 +29,6 @@ namespace MyPortal.Models.Database
 
         public bool DoNotUse { get; set; }
 
-        public virtual AttendanceMeaning AttendanceMeaning { get; set; }
+        public virtual AttendanceMeaning Meaning { get; set; }
     }
 }

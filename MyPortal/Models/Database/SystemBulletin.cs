@@ -22,6 +22,7 @@ namespace MyPortal.Models.Database
         public DateTime? ExpireDate { get; set; }
 
         [Required]
+        [StringLength(128)]
         public string Title { get; set; }
 
         [Required]

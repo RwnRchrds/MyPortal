@@ -77,7 +77,7 @@ namespace MyPortal.Processes
                 return new ProcessResponse<object>(ResponseType.NotFound, "Course not found", null);
             }
 
-            if (courseInDb.PersonnelTrainingCertificates.Any())
+            if (courseInDb.Certificates.Any())
             {
                 return new ProcessResponse<object>(ResponseType.BadRequest, "Cannot delete a course with issued certificates", null);
             }

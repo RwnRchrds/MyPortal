@@ -12,6 +12,7 @@ namespace MyPortal.Models.Database
     [Table("Assessment_AspectTypes")]
     public class AssessmentAspectType
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public AssessmentAspectType()
         {
             Aspects = new HashSet<AssessmentAspect>();
@@ -20,9 +21,10 @@ namespace MyPortal.Models.Database
         public int Id { get; set; }
 
         [Required]
+        [StringLength(256)]
         public string Description { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AssessmentAspect> Aspects { get; set; }  
+        public virtual ICollection<AssessmentAspect> Aspects { get; set; }
     }
 }

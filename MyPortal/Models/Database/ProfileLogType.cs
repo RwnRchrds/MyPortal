@@ -16,17 +16,18 @@ namespace MyPortal.Models.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ProfileLogType()
         {
-            ProfileLogs = new HashSet<ProfileLog>();
+            Logs = new HashSet<ProfileLog>();
         }
 
         public int Id { get; set; }
 
         [Required]
+        [StringLength(128)]
         public string Name { get; set; }
 
         public bool System { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProfileLog> ProfileLogs { get; set; }
+        public virtual ICollection<ProfileLog> Logs { get; set; }
     }
 }

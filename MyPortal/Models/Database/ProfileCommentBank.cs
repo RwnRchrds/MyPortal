@@ -15,17 +15,18 @@ namespace MyPortal.Models.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ProfileCommentBank()
         {
-            ProfileComments = new HashSet<ProfileComment>();
+            Comments = new HashSet<ProfileComment>();
         }
 
         public int Id { get; set; }
 
         [Required]
+        [StringLength(128)]
         public string Name { get; set; }
 
         public bool System { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProfileComment> ProfileComments { get; set; }
+        public virtual ICollection<ProfileComment> Comments { get; set; }
     }
 }

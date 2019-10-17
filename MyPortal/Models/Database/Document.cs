@@ -23,6 +23,7 @@ namespace MyPortal.Models.Database
         public int TypeId { get; set; }
 
         [Required]
+        [StringLength(256)]
         public string Description { get; set; }
 
         [Required]
@@ -42,7 +43,7 @@ namespace MyPortal.Models.Database
 
         public virtual StaffMember Uploader { get; set; }
 
-        public virtual DocumentType DocumentType { get; set; }
+        public virtual DocumentType Type { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PersonDocument> PersonDocuments { get; set; }

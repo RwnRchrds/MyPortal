@@ -22,6 +22,6 @@ namespace MyPortal.Models.Database
 
         public string Note { get; set; }
 
-        public virtual CommunicationType CommunicationType { get; set; }
+        public virtual CommunicationType Type { get; set; }
     }
 }

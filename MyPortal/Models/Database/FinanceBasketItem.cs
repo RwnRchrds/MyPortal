@@ -20,6 +20,6 @@ namespace MyPortal.Models.Database
 
         public virtual Student Student { get; set; }
 
-        public virtual FinanceProduct FinanceProduct { get; set; }
+        public virtual FinanceProduct Product { get; set; }
     }
 }

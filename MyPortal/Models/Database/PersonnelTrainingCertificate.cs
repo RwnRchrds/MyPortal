@@ -33,6 +33,6 @@ namespace MyPortal.Models.Database
 
         public virtual StaffMember StaffMember { get; set; }
 
-        public virtual PersonnelTrainingCourse PersonnelTrainingCourse { get; set; }
+        public virtual PersonnelTrainingCourse TrainingCourse { get; set; }
     }
 }

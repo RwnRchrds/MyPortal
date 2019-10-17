@@ -22,6 +22,7 @@ namespace MyPortal.Models.Database
         public int Id { get; set; }
 
         [Required]
+        [StringLength(256)]
         public string Description { get; set; }
 
         public bool System { get; set; }

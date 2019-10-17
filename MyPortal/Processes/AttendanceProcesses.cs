@@ -91,7 +91,7 @@ namespace MyPortal.Processes
                 throw new ProcessException(ExceptionType.NotFound,"Attendance code not found");
             }
 
-            return codeInDb.AttendanceMeaning;
+            return codeInDb.Meaning;
         }
 
         public static async Task<AttendancePeriodDto> GetPeriodById(int periodId, MyPortalDbContext context)
@@ -165,7 +165,7 @@ namespace MyPortal.Processes
 
                 if (retrieveWholeDay)
                 {
-                    var periodsInDay = context.AttendancePeriods.Where(x => x.Weekday == session.AttendancePeriod.Weekday).ToList();
+                    var periodsInDay = context.AttendancePeriods.Where(x => x.Weekday == session.Period.Weekday).ToList();
 
                     foreach (var period in periodsInDay)
                     {

@@ -12,14 +12,20 @@ namespace MyPortal.Models.Database
     {
         public int Id { get; set; }
 
+        [Required]
+        [StringLength(256)]
         public string Name { get; set; }
 
         public int? LocalAuthorityId { get; set; }
 
         public int EstablishmentNumber { get; set; }
 
+        [Required]
+        [StringLength(128)]
         public string Urn { get; set; }
 
+        [Required]
+        [StringLength(128)]
         public string Uprn { get; set; }
 
         public int PhaseId { get; set; }
@@ -33,15 +39,19 @@ namespace MyPortal.Models.Database
         public int? HeadTeacherId { get; set; }
 
         [Phone]
+        [StringLength(128)]
         public string TelephoneNo { get; set; }
 
         [Phone]
+        [StringLength(128)]
         public string FaxNo { get; set; }
 
         [EmailAddress]
+        [StringLength(128)]
         public string EmailAddress { get; set; }
 
         [Url]
+        [StringLength(128)]
         public string Website { get; set; }
 
         public bool Local { get; set; }

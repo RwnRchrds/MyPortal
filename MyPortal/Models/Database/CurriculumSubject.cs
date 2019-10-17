@@ -15,7 +15,7 @@ namespace MyPortal.Models.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public CurriculumSubject()
         {
-            CurriculumClasses = new HashSet<CurriculumClass>();
+            Classes = new HashSet<CurriculumClass>();
             StudyTopics = new HashSet<CurriculumStudyTopic>();
             GiftedTalentedStudents = new HashSet<SenGiftedTalented>();
         }
@@ -23,11 +23,13 @@ namespace MyPortal.Models.Database
         public int Id { get; set; }
 
         [Required]
+        [StringLength(256)]
         public string Name { get; set; }
 
         public int LeaderId { get; set; }
 
         [Required]
+        [StringLength(128)]
         public string Code { get; set; }
 
         public bool Deleted { get; set; }
@@ -35,7 +37,7 @@ namespace MyPortal.Models.Database
         public virtual StaffMember Leader { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CurriculumClass> CurriculumClasses { get; set; }
+        public virtual ICollection<CurriculumClass> Classes { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CurriculumStudyTopic> StudyTopics { get; set; }

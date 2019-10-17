@@ -21,6 +21,9 @@ namespace MyPortal.Models.Database
 
         public string JobTitle { get; set; }
 
+        [StringLength(128)]
         public string NiNumber { get; set; }
+
+        public virtual Person Person { get; set; }
     }
 }

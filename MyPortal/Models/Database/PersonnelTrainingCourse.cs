@@ -15,18 +15,20 @@ namespace MyPortal.Models.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public PersonnelTrainingCourse()
         {
-            PersonnelTrainingCertificates = new HashSet<PersonnelTrainingCertificate>();
+            Certificates = new HashSet<PersonnelTrainingCertificate>();
         }
 
         public int Id { get; set; }
 
         [Required]
+        [StringLength(128)]
         public string Code { get; set; }
 
         [Required]
+        [StringLength(128)]
         public string Description { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PersonnelTrainingCertificate> PersonnelTrainingCertificates { get; set; }
+        public virtual ICollection<PersonnelTrainingCertificate> Certificates { get; set; }
     }
 }

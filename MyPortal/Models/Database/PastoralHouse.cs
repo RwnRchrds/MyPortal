@@ -13,6 +13,7 @@ namespace MyPortal.Models.Database
     [Table("Pastoral_Houses")]
     public class PastoralHouse
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public PastoralHouse()
         {
             Students = new HashSet<Student>();
@@ -21,6 +22,7 @@ namespace MyPortal.Models.Database
         public int Id { get; set; }
 
         [Required]
+        [StringLength(128)]
         public string Name { get; set; }
 
         public int HeadId { get; set; }

@@ -17,6 +17,7 @@ namespace MyPortal.Models.Database
         {
             AttendanceMarks = new HashSet<AttendanceMark>();
         }
+
         public int Id { get; set; }
 
         public int AcademicYearId { get; set; }

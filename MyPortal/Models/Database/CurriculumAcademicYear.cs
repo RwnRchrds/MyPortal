@@ -16,16 +16,17 @@ namespace MyPortal.Models.Database
         public CurriculumAcademicYear()
         {
             AttendanceWeeks = new HashSet<AttendanceWeek>();
-            CurriculumClasses = new HashSet<CurriculumClass>();
-            ProfileLogs= new HashSet<ProfileLog>();
-            FinanceSales = new HashSet<FinanceSale>();
+            Classes = new HashSet<CurriculumClass>();
+            Logs= new HashSet<ProfileLog>();
+            Sales = new HashSet<FinanceSale>();
             Achievements = new HashSet<BehaviourAchievement>();
-            BehaviourIncidents = new HashSet<BehaviourIncident>();
+            Incidents = new HashSet<BehaviourIncident>();
         }
 
         public int Id { get; set; }
 
         [Required]
+        [StringLength(128)]
         public string Name { get; set; }
 
         [Column(TypeName = "date")]
@@ -38,16 +39,16 @@ namespace MyPortal.Models.Database
         public virtual ICollection<AttendanceWeek> AttendanceWeeks { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CurriculumClass> CurriculumClasses { get; set; }
+        public virtual ICollection<CurriculumClass> Classes { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProfileLog> ProfileLogs { get; set; }
+        public virtual ICollection<ProfileLog> Logs { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<FinanceSale> FinanceSales { get; set; }
+        public virtual ICollection<FinanceSale> Sales { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BehaviourAchievement> Achievements { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BehaviourIncident> BehaviourIncidents { get; set; }  
+        public virtual ICollection<BehaviourIncident> Incidents { get; set; }  
     }
 }

@@ -16,15 +16,15 @@ namespace MyPortal.Models.Database
         public PastoralYearGroup()
         {
             Students = new HashSet<Student>();
-            CurriculumClasses = new HashSet<CurriculumClass>();
-            CurriculumStudyTopics = new HashSet<CurriculumStudyTopic>();
-            PastoralRegGroups = new HashSet<PastoralRegGroup>();
+            Classes = new HashSet<CurriculumClass>();
+            StudyTopics = new HashSet<CurriculumStudyTopic>();
+            RegGroups = new HashSet<PastoralRegGroup>();
         }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
 
         [Required]
+        [StringLength(256)]
         public string Name { get; set; }
 
         public int HeadId { get; set; }
@@ -37,12 +37,12 @@ namespace MyPortal.Models.Database
         public virtual ICollection<Student> Students { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CurriculumClass> CurriculumClasses { get; set; }
+        public virtual ICollection<CurriculumClass> Classes { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CurriculumStudyTopic> CurriculumStudyTopics { get; set; }
+        public virtual ICollection<CurriculumStudyTopic> StudyTopics { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PastoralRegGroup> PastoralRegGroups { get; set; }
+        public virtual ICollection<PastoralRegGroup> RegGroups { get; set; }
     }
 }

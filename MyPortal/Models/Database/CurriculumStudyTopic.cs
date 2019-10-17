@@ -12,6 +12,12 @@ namespace MyPortal.Models.Database
     [Table("Curriculum_StudyTopics")]
     public class CurriculumStudyTopic
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public CurriculumStudyTopic()
+        {
+            LessonPlans = new HashSet<CurriculumLessonPlan>();
+        }
+
         public int Id { get; set; }
 
         public int SubjectId { get; set; }
@@ -19,6 +25,7 @@ namespace MyPortal.Models.Database
         public int YearGroupId { get; set; }
 
         [Required]
+        [StringLength(256)]
         public string Name { get; set; }
 
         public virtual CurriculumSubject CurriculumSubject { get; set; }

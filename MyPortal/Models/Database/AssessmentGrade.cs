@@ -17,6 +17,7 @@ namespace MyPortal.Models.Database
         public int GradeSetId { get; set; }
 
         [Required]
+        [StringLength(128)]
         public string Code { get; set; }
 
         public int Value { get; set; }

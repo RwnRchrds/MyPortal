@@ -24,6 +24,7 @@ namespace MyPortal.Models.Database
         public DateTime Date { get; set; }
 
         [Required]
+        [StringLength(128)]
         public string Grade { get; set; }
 
         public virtual AssessmentResultSet ResultSet { get; set; }

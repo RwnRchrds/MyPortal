@@ -371,6 +371,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201910171655443_Initial.cs" />
+    <Compile Include="Migrations\201910171655443_Initial.Designer.cs">
+      <DependentUpon>201910171655443_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Attributes\RequiresPermissionAttribute.cs" />
     <Compile Include="Models\Attributes\UpnAttribute.cs" />
     <Compile Include="Models\Database\AssessmentAspect.cs" />
@@ -384,6 +389,7 @@
     <Compile Include="Models\Database\ContactType.cs" />
     <Compile Include="Models\Database\MedicalDietaryRequirement.cs" />
     <Compile Include="Models\Database\MedicalPersonCondition.cs" />
+    <Compile Include="Models\Database\MedicalPersonDietaryRequirement.cs" />
     <Compile Include="Models\Database\SchoolGovernanceType.cs" />
     <Compile Include="Models\Database\SchoolIntakeType.cs" />
     <Compile Include="Models\Database\SchoolLocation.cs" />
@@ -436,11 +442,6 @@
     <Compile Include="Processes\SystemProcesses.cs" />
     <Compile Include="Processes\UserProcesses.cs" />
     <Compile Include="Processes\DateTimeProcesses.cs" />
-    <Compile Include="Migrations\201803051926258_InitialModel.cs" />
-    <Compile Include="Migrations\201803051926258_InitialModel.Designer.cs">
-      <DependentUpon>201803051926258_InitialModel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Database\AssessmentGrade.cs" />
     <Compile Include="Models\Database\AssessmentGradeSet.cs" />
     <Compile Include="Models\Database\AssessmentResult.cs" />
@@ -1003,16 +1004,16 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201803051926258_InitialModel.resx">
-      <DependentUpon>201803051926258_InitialModel.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\ej2\ej2.d.ts" />
     <TypeScriptCompile Include="Scripts\index.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201910171655443_Initial.resx">
+      <DependentUpon>201910171655443_Initial.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -37,6 +37,7 @@ namespace MyPortal.Models.Database
         public int PersonId { get; set; }
 
         [Required]
+        [StringLength(128)]
         public string Code { get; set; }
 
         public bool Deleted { get; set; }

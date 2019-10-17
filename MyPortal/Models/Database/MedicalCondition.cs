@@ -17,14 +17,17 @@ namespace MyPortal.Models.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public MedicalCondition()
         {
-            
+            PersonConditions = new HashSet<MedicalPersonCondition>();
         }
 
         public int Id { get; set; }
 
         [Required]
+        [StringLength(128)]
         public string Description { get; set; }
 
         public bool System { get; set; }
+
+        public virtual ICollection<MedicalPersonCondition> PersonConditions { get; set; }
     }
 }

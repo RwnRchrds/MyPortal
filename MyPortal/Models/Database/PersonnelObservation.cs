@@ -31,7 +31,6 @@ namespace MyPortal.Models.Database
 
         public int ObserverId { get; set; }
 
-        [Required]
         public ObservationOutcome Outcome { get; set; }
 
         public virtual StaffMember Observee { get; set; }

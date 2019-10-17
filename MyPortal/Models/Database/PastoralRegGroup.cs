@@ -18,10 +18,10 @@ namespace MyPortal.Models.Database
             Students = new HashSet<Student>();
         }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
 
         [Required]
+        [StringLength(128)]
         public string Name { get; set; }
 
         public int TutorId { get; set; }
@@ -33,6 +33,6 @@ namespace MyPortal.Models.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Student> Students { get; set; }
 
-        public virtual PastoralYearGroup PastoralYearGroup { get; set; }
+        public virtual PastoralYearGroup YearGroup { get; set; }
     }
 }

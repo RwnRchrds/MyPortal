@@ -25,6 +25,7 @@ namespace MyPortal.Models.Database
 
         public int RecordedById { get; set; }
 
+        [Column(TypeName = "date")]
         public DateTime Date { get; set; }
 
         public string Comments { get; set; }
@@ -35,7 +36,7 @@ namespace MyPortal.Models.Database
 
         public bool Deleted { get; set; }
 
-        public virtual BehaviourAchievementType AchievementType { get; set; }
+        public virtual BehaviourAchievementType Type { get; set; }
 
         public virtual SchoolLocation Location { get; set; }
 

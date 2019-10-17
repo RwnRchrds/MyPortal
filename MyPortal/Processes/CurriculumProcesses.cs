@@ -652,9 +652,9 @@ namespace MyPortal.Processes
 
             var classList = await context.CurriculumSessions
                 .Where(x =>
-                    x.Class.AcademicYearId == academicYearId && x.AttendancePeriod.Weekday ==
+                    x.Class.AcademicYearId == academicYearId && x.Period.Weekday ==
                     date.DayOfWeek && x.Class.TeacherId == staffId)
-                .OrderBy(x => x.AttendancePeriod.StartTime)
+                .OrderBy(x => x.Period.StartTime)
                 .ToListAsync();
 
             return classList;
@@ -697,7 +697,7 @@ namespace MyPortal.Processes
                 return "No Subject";
             }
 
-            return @class.CurriculumSubject.Name;
+            return @class.Subject.Name;
         }
 
         public static async Task<bool> HasEnrolments(int classId, MyPortalDbContext context)

@@ -32,7 +32,7 @@ namespace MyPortal.Processes
                 throw new ProcessException(ExceptionType.NotFound, "Student not found");
             }
 
-            if (product.FinanceProductType.IsMeal && student.FreeSchoolMeals)
+            if (product.Type.IsMeal && student.FreeSchoolMeals)
             {
                 return true;
             }
@@ -56,7 +56,7 @@ namespace MyPortal.Processes
                 throw new ProcessException(ExceptionType.BadRequest, "There are no items in your basket");
             }
 
-            if (basket.Sum(x => x.FinanceProduct.Price) > student.AccountBalance)
+            if (basket.Sum(x => x.Product.Price) > student.AccountBalance)
             {
                 throw new ProcessException(ExceptionType.Forbidden, "Insufficient funds");
             }
@@ -139,12 +139,12 @@ namespace MyPortal.Processes
                 throw new ProcessException(ExceptionType.NotFound, "Product not found");
             }
 
-            if (product.FinanceProductType.IsMeal)
+            if (product.Type.IsMeal)
             {
                 sale.Processed = true;
             }
 
-            if (product.FinanceProductType.IsMeal && student.FreeSchoolMeals)
+            if (product.Type.IsMeal && student.FreeSchoolMeals)
             {
                 sale.AmountPaid = 0.00m;
                 sale.AcademicYearId = academicYearId;
@@ -275,8 +275,8 @@ namespace MyPortal.Processes
         {
             var items = await context.FinanceProducts
                 .Where(x => !x.Deleted && (x.OnceOnly && x.Visible ||
-                                           x.FinanceBasketItems.All(i => i.StudentId != studentId) &&
-                                           x.FinanceSales.All(s => s.StudentId != studentId)))
+                                           x.BasketItems.All(i => i.StudentId != studentId) &&
+                                           x.Sales.All(s => s.StudentId != studentId)))
                 .OrderBy(x => x.Description).ToListAsync();
                 
             return items.Select(Mapper.Map<FinanceProduct, FinanceProductDto>);
@@ -285,7 +285,7 @@ namespace MyPortal.Processes
         public static async Task<IEnumerable<FinanceBasketItemDto>> GetBasketItemsByStudent(int studentId, MyPortalDbContext context)
         {
             var basketItems = await context.FinanceBasketItems.Where(x => x.StudentId == studentId)
-                .OrderBy(x => x.FinanceProduct.Description).ToListAsync();
+                .OrderBy(x => x.Product.Description).ToListAsync();
             
             return basketItems.Select(Mapper.Map<FinanceBasketItem, FinanceBasketItemDto>);
         }
@@ -293,7 +293,7 @@ namespace MyPortal.Processes
         public static async Task<decimal> GetBasketTotalForStudent(int studentId, MyPortalDbContext context)
         {
             var total = await context.FinanceBasketItems.Where(x => x.StudentId == studentId)
-                .SumAsync(x => x.FinanceProduct.Price);
+                .SumAsync(x => x.Product.Price);
 
             return total;
         }

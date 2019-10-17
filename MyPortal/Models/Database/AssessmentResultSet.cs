@@ -21,6 +21,7 @@ namespace MyPortal.Models.Database
         public int Id { get; set; }
 
         [Required]
+        [StringLength(256)]
         public string Name { get; set; }
 
         public bool IsCurrent { get; set; }

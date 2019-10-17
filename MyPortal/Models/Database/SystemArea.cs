@@ -11,8 +11,19 @@ namespace MyPortal.Models.Database
     [Table("System_Areas")]
     public class SystemArea
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public SystemArea()
+        {
+            Reports = new HashSet<SystemReport>();
+        }
+
         public int Id { get; set; }
 
+        [Required]
+        [StringLength(128)]
         public string Description { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SystemReport> Reports { get; set; }
     }
 }
