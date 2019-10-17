@@ -9,7 +9,7 @@ namespace MyPortal.Models.Database
     /// <summary>
     /// [SYSTEM] Meanings of register codes in the system.
     /// </summary>
-    [Table("Attendance_RegisterCodeMeanings")]
+    [Table("Attendance_Meanings")]
     public partial class AttendanceMeaning
     {
         //THIS IS A SYSTEM CLASS AND SHOULD NOT HAVE FEATURES TO ADD, MODIFY OR DELETE DATABASE OBJECTS

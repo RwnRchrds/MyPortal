@@ -7,14 +7,14 @@ using System.Web;
 
 namespace MyPortal.Models.Database
 {
-    public enum Gender
+    public static class Gender
     {
-        Male = 'M',
-        Female = 'F',
-        Other = 'X',
-        Unknown = 'U'
+        public const string Male = "M";
+        public const string Female = "F";
+        public const string Other = "X";
+        public const string Unknown = "U";
     }
-    
+
     /// <summary>
     /// Represents an individual person in the system.
     /// </summary>
@@ -41,7 +41,7 @@ namespace MyPortal.Models.Database
         public string LastName { get; set; }
 
         [Required]
-        public Gender Gender { get; set; }
+        public string Gender { get; set; }
 
         [Column(TypeName = "date")]
         public DateTime? Dob { get; set; }

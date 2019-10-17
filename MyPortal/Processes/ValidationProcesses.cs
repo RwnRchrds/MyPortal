@@ -18,7 +18,7 @@ namespace MyPortal.Processes
     {
         public static List<string> ErrorMessages = new List<string>();
 
-        public static async Task<bool> HasPermission(this IPrincipal principal, string permission)
+        public static bool HasPermission(this IPrincipal principal, string permission)
         {
             var identity = new IdentityContext();
             var roleStore = new RoleStore<ApplicationRole>(identity);
@@ -27,6 +27,37 @@ namespace MyPortal.Processes
             var userId = principal.Identity.GetUserId();
 
             var roles = roleManager.Roles.Where(x => x.Users.Any(u => u.UserId == userId)).ToList();
+
+            foreach (var role in roles)
+            {
+                var permissionObject = identity.Permissions.SingleOrDefault(x => x.Name == permission);
+
+                if (permissionObject == null)
+                {
+                    throw new Exception($"Permission '{permission}' not found");
+                }
+
+                var hasPermission = identity.RolePermissions.Any(x =>
+                    x.PermissionId == permissionObject.Id && x.RoleId == role.Id);
+
+                if (hasPermission)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public static async Task<bool> HasPermissionAsync(this IPrincipal principal, string permission)
+        {
+            var identity = new IdentityContext();
+            var roleStore = new RoleStore<ApplicationRole>(identity);
+            var roleManager = new RoleManager<ApplicationRole, string>(roleStore);
+
+            var userId = principal.Identity.GetUserId();
+
+            var roles = await roleManager.Roles.Where(x => x.Users.Any(u => u.UserId == userId)).ToListAsync();
 
             foreach (var role in roles)
             {

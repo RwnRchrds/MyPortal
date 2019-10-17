@@ -20,7 +20,7 @@ namespace MyPortal.Controllers.Api
         {
             var userId = User.Identity.GetUserId();
 
-            var autoApprove = await User.HasPermission("ApproveBulletins");
+            var autoApprove = await User.HasPermissionAsync("ApproveBulletins");
 
             var result = await SystemProcesses.CreateBulletin(bulletin, userId, _context, autoApprove);
 
@@ -32,7 +32,7 @@ namespace MyPortal.Controllers.Api
         [Route("bulletins/update", Name = "ApiSystemUpdateBulletin")]
         public async Task<IHttpActionResult> UpdateBulletin([FromBody] SystemBulletin bulletin)
         {
-            var approvable = await User.HasPermission("ApproveBulletins");
+            var approvable = await User.HasPermissionAsync("ApproveBulletins");
 
             return PrepareResponse(SystemProcesses.UpdateBulletin(bulletin, _context, approvable));
         }

@@ -9,7 +9,7 @@ namespace MyPortal.Models.Database
     /// <summary>
     /// An individual mark in the register.
     /// </summary>
-    [Table("Attendance_RegisterMarks")]
+    [Table("Attendance_Marks")]
     public partial class AttendanceMark
     {
         public int Id { get; set; }

@@ -117,7 +117,7 @@ namespace MyPortal.Processes
         {
             var academicYearId = await GetCurrentAcademicYearId(context);
             
-            if (user != null && await user.HasPermission("ChangeAcademicYear"))
+            if (user != null && await user.HasPermissionAsync("ChangeAcademicYear"))
             {
                 var selectedAcademicYearId = await user.GetSelectedAcademicYearId();
 

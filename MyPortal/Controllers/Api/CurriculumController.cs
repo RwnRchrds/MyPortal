@@ -748,7 +748,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await CurriculumProcesses.DeleteLessonPlan(lessonPlanId, staffId,
-                    await User.HasPermission("DeleteAllLessonPlans"), _context);
+                    await User.HasPermissionAsync("DeleteAllLessonPlans"), _context);
             }
             catch (Exception e)
             {

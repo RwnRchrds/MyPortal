@@ -19,7 +19,6 @@ namespace MyPortal.Models.Database
             CurriculumClasses = new HashSet<CurriculumClass>();
             ProfileLogs= new HashSet<ProfileLog>();
             FinanceSales = new HashSet<FinanceSale>();
-            AssessmentResultSets = new HashSet<AssessmentResultSet>();
             Achievements = new HashSet<BehaviourAchievement>();
             BehaviourIncidents = new HashSet<BehaviourIncident>();
         }
@@ -46,9 +45,6 @@ namespace MyPortal.Models.Database
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FinanceSale> FinanceSales { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AssessmentResultSet> AssessmentResultSets { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BehaviourAchievement> Achievements { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
