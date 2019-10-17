@@ -61,6 +61,7 @@ namespace MyPortal.Models.Database
         public string MisId { get; set; }
 
         [StringLength(13)]
+        [Upn]
         public string Upn { get; set; }
 
         public string Uci { get; set; }
