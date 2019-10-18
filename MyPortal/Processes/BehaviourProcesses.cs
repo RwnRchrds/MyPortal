@@ -289,5 +289,17 @@ namespace MyPortal.Processes
 
             await context.SaveChangesAsync();
         }
+
+        public static async Task<int> GetAchievementPointsToday(MyPortalDbContext context)
+        {
+            return await context.BehaviourAchievements.Where(x => x.Date == DateTime.Today)
+                       .SumAsync(x => (int?) x.Points) ?? 0;
+        }
+
+        public static async Task<int> GetBehaviourPointsToday(MyPortalDbContext context)
+        {
+            return await context.BehaviourIncidents.Where(x => x.Date == DateTime.Today)
+                       .SumAsync(x => (int?) x.Points) ?? 0;
+        }
     }
 }

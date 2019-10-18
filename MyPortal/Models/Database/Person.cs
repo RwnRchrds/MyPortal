@@ -32,6 +32,7 @@ namespace MyPortal.Models.Database
             StaffMembers = new HashSet<StaffMember>();
             Students = new HashSet<Student>();
             Schools = new HashSet<SystemSchool>();
+            EmailAddresses = new HashSet<CommunicationEmailAddress>();
         }
 
         public int Id { get; set; }
@@ -81,5 +82,8 @@ namespace MyPortal.Models.Database
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SystemSchool> Schools { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CommunicationEmailAddress> EmailAddresses { get; set; }
     }
 }

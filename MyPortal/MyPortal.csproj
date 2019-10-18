@@ -380,6 +380,8 @@
     <Compile Include="Models\Attributes\UpnAttribute.cs" />
     <Compile Include="Models\Database\AssessmentAspect.cs" />
     <Compile Include="Models\Database\AssessmentAspectType.cs" />
+    <Compile Include="Models\Database\CommunicationAddress.cs" />
+    <Compile Include="Models\Database\CommunicationEmailAddress.cs" />
     <Compile Include="Models\Database\CommunicationPhoneNumber.cs" />
     <Compile Include="Models\Database\CommunicationPhoneNumberType.cs" />
     <Compile Include="Models\Database\BehaviourAchievement.cs" />

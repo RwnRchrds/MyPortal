@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Http;
 using MyPortal.Dtos;
 using MyPortal.Models.Attributes;
@@ -14,89 +16,178 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditRegGroups")]
         [Route("regGroups/create", Name = "ApiPastoralCreateRegGroup")]
-        public IHttpActionResult CreateRegGroup([FromBody] PastoralRegGroup regGroup)
+        public async Task<IHttpActionResult> CreateRegGroup([FromBody] PastoralRegGroup regGroup)
         {
-            return PrepareResponse(PastoralProcesses.CreateRegGroup(regGroup, _context));
+            try
+            {
+                await PastoralProcesses.CreateRegGroup(regGroup, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Reg group created");
         }
 
         [HttpDelete]
         [RequiresPermission("EditRegGroups")]
         [Route("regGroups/delete/{regGroupId:int}", Name = "ApiPastoralDeleteRegGroup")]
-        public IHttpActionResult DeleteRegGroup([FromUri] int regGroupId)
+        public async Task<IHttpActionResult> DeleteRegGroup([FromUri] int regGroupId)
         {
-            return PrepareResponse(PastoralProcesses.DeleteRegGroup(regGroupId, _context));
+            try
+            {
+                await PastoralProcesses.DeleteRegGroup(regGroupId, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Reg group deleted");
         }
 
         [HttpGet]
         [RequiresPermission("ViewRegGroups")]
         [Route("regGroups/get/byId/{regGroupId:int}", Name = "ApiPastoralGetRegGroupById")]
-        public PastoralRegGroupDto GetRegGroupById([FromUri] int regGroupId)
+        public async Task<PastoralRegGroupDto> GetRegGroupById([FromUri] int regGroupId)
         {
-            return PrepareResponseObject(PastoralProcesses.GetRegGroupById(regGroupId, _context));
+            try
+            {
+                return await PastoralProcesses.GetRegGroupById(regGroupId, _context);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
 
         [HttpGet]
         [RequiresPermission("ViewRegGroups")]
         [Route("regGroups/get/byYearGroup/{yearGroupId:int}", Name = "ApiPastoralGetRegGroupsByYearGroup")]
-        public IEnumerable<PastoralRegGroupDto> GetRegGroupsByYearGroup([FromUri] int yearGroupId)
+        public async Task<IEnumerable<PastoralRegGroupDto>> GetRegGroupsByYearGroup([FromUri] int yearGroupId)
         {
-            return PrepareResponseObject(PastoralProcesses.GetRegGroupsByYearGroup(yearGroupId, _context));
+            try
+            {
+                return await PastoralProcesses.GetRegGroupsByYearGroup(yearGroupId, _context);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
  
         [HttpGet]
         [Route("regGroups/get/all", Name = "ApiPastoralGetAllRegGroups")]
         [RequiresPermission("ViewRegGroups")]
-        public IEnumerable<PastoralRegGroupDto> GetAllRegGroups()
+        public async Task<IEnumerable<PastoralRegGroupDto>> GetAllRegGroups()
         {
-            return PrepareResponseObject(PastoralProcesses.GetAllRegGroups(_context));
+            try
+            {
+                return await PastoralProcesses.GetAllRegGroups(_context);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
 
         [HttpGet]
         [RequiresPermission("EditRegGroups")]
         [Route("regGroups/hasStudents/{regGroupId:int}", Name = "ApiPastoralRegGroupHasStudents")]
-        public bool RegGroupHasStudents([FromUri] int regGroupId)
+        public async Task<bool> RegGroupHasStudents([FromUri] int regGroupId)
         {
-            return PrepareResponseObject(PastoralProcesses.RegGroupContainsStudents(regGroupId, _context));
+            try
+            {
+                return await PastoralProcesses.RegGroupContainsStudents(regGroupId, _context);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
  
         [HttpPost]
         [RequiresPermission("EditRegGroups")]
         [Route("regGroups/update", Name = "ApiPastoralUpdateRegGroup")]
-        public IHttpActionResult UpdateRegGroup([FromBody] PastoralRegGroup regGroup)
+        public async Task<IHttpActionResult> UpdateRegGroup([FromBody] PastoralRegGroup regGroup)
         {
-            return PrepareResponse(PastoralProcesses.UpdateRegGroup(regGroup, _context));
+            try
+            {
+                await PastoralProcesses.UpdateRegGroup(regGroup, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Reg group updated");
         }
 
         [HttpPost]
         [RequiresPermission("EditYearGroups")]
         [Route("yearGroups/create", Name = "ApiPastoralCreateYearGroup")]
-        public IHttpActionResult CreateYearGroup([FromBody] PastoralYearGroup yearGroup)
+        public async Task<IHttpActionResult> CreateYearGroup([FromBody] PastoralYearGroup yearGroup)
         {
-            return PrepareResponse(PastoralProcesses.CreateYearGroup(yearGroup, _context));
+            try
+            {
+                await PastoralProcesses.CreateYearGroup(yearGroup, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Year group created");
         }
 
         [HttpDelete]
         [RequiresPermission("EditYearGroups")]
         [Route("yearGroups/delete/{yearGroupId:int}", Name = "ApiPastoralDeleteYearGroup")]
-        public IHttpActionResult DeleteYearGroup([FromUri] int yearGroupId)
+        public async Task<IHttpActionResult> DeleteYearGroup([FromUri] int yearGroupId)
         {
-            return PrepareResponse(PastoralProcesses.DeleteYearGroup(yearGroupId, _context));
+            try
+            {
+                await PastoralProcesses.DeleteYearGroup(yearGroupId, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Year group deleted");
         }
 
         [HttpGet]
         [RequiresPermission("ViewYearGroups")]
         [Route("yearGroups/get/all", Name = "ApiPastoralGetAllYearGroups")]
-        public IEnumerable<PastoralYearGroupDto> GetAllYearGroups()
+        public async Task<IEnumerable<PastoralYearGroupDto>> GetAllYearGroups()
         {
-            return PrepareResponseObject(PastoralProcesses.GetAllYearGroups(_context));
+            try
+            {
+                return await PastoralProcesses.GetAllYearGroups(_context);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
 
         [HttpPost]
         [RequiresPermission("EditYearGroups")]
         [Route("yearGroups/update", Name = "ApiPastoralUpdateYearGroup")]
-        public IHttpActionResult UpdateYearGroup([FromBody] PastoralYearGroup yearGroup)
+        public async Task<IHttpActionResult> UpdateYearGroup([FromBody] PastoralYearGroup yearGroup)
         {
-            return PrepareResponse(PastoralProcesses.UpdateYearGroup(yearGroup, _context));
+            try
+            {
+                await PastoralProcesses.UpdateYearGroup(yearGroup, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Year group updated");
         }
     }
 }

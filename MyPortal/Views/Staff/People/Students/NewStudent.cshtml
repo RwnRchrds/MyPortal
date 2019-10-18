@@ -1,4 +1,5 @@
-﻿@model MyPortal.ViewModels.NewStudentViewModel
+﻿@using MyPortal.Processes
+@model MyPortal.ViewModels.NewStudentViewModel
 @{
     ViewBag.Title = "New Student";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
@@ -24,13 +25,8 @@
         </div>
         <div class="form-group">
             @Html.Label("Gender")
-            @Html.DropDownListFor(s => s.Student.Person.Gender, new SelectList(Model.Genders, "Value", "Name"), "Select Gender", new {@class = "form-control"})
+            @Html.DropDownListFor(s => s.Student.Person.Gender, new SelectList(Model.Genders, "Key", "Value"), "Select Gender", new {@class = "form-control"})
             @Html.ValidationMessageFor(s => s.Student.Person.Gender)
-        </div>
-        <div class="form-group">
-            @Html.Label("MIS ID")
-            @Html.TextBoxFor(s => s.Student.MisId, new {@class = "form-control"})
-            @Html.ValidationMessageFor(s => s.Student.MisId)
         </div>
         @Html.AntiForgeryToken()
         <button type="button" class="btn btn-primary" id="backButton">Back</button>
@@ -44,7 +40,7 @@
         $(document).ready(function() {
             $("#backButton").on("click",
                 function() {
-                    location.replace("/Staff/Students");
+                    location.replace("@Url.Action("Students", "Staff")");
                 });
         });
     </script>

@@ -437,6 +437,22 @@ namespace MyPortal.Processes
             return new ProcessResponse<object>(ResponseType.Ok, "Student updated", null);
         }
 
+        public static async Task<int> GetNumberOfBirthdaysThisWeek(MyPortalDbContext context)
+        {
+            var weekBeginning = DateTime.Today.GetDayOfWeek(DayOfWeek.Monday);
+            var weekEnd = DateTime.Today.GetDayOfWeek(DayOfWeek.Sunday);
+
+            return await context.Persons.CountAsync(x => x.Dob >= weekBeginning && x.Dob <= weekEnd);
+        }
+
+        public static async Task<IEnumerable<Person>> SearchForPerson(Person person, MyPortalDbContext context)
+        {
+            return await context.Persons.Where(x =>
+                (person.FirstName == null || x.FirstName == person.FirstName) &&
+                (person.LastName == null || x.LastName == person.LastName) &&
+                (person.Dob == null || x.Dob == person.Dob)).ToListAsync();
+        }
+
         public static string GetGenderDisplayName(string genderCode)
         {
             switch (genderCode)

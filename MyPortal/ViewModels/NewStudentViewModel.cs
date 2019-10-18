@@ -7,8 +7,7 @@ namespace MyPortal.ViewModels
 {
     public class NewStudentViewModel 
     {
-        public IEnumerable<PastoralYearGroup> YearGroups { get; set; }
-        public IEnumerable<PastoralRegGroup> RegGroups { get; set; }
         public Student Student { get; set; }
+        public IDictionary<string, string> Genders { get; set; }
     }
 }
