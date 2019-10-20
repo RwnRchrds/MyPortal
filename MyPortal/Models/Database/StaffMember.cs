@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 namespace MyPortal.Models.Database
 {
     using System;
@@ -39,6 +41,15 @@ namespace MyPortal.Models.Database
         [Required]
         [StringLength(128)]
         public string Code { get; set; }
+
+        [StringLength(128)]
+        public string NiNumber { get; set; }
+
+        [StringLength(128)]
+        public string PostNominal { get; set; }
+
+        [DefaultValue(false)]
+        public bool TeachingStaff { get; set; }
 
         public bool Deleted { get; set; }
 

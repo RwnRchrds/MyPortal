@@ -44,6 +44,14 @@ namespace MyPortal.Models.Database
         [StringLength(256)]
         public string FirstName { get; set; }
 
+        [StringLength(256)] 
+        public string MiddleName { get; set; }
+
+        public int? PhotoId { get; set; }
+
+        [StringLength(256)]
+        public string NhsNumber { get; set; }
+
         [Required]
         [StringLength(256)]
         public string LastName { get; set; }
@@ -54,6 +62,9 @@ namespace MyPortal.Models.Database
 
         [Column(TypeName = "date")]
         public DateTime? Dob { get; set; }
+
+        [Column(TypeName = "date")] 
+        public DateTime? Deceased { get; set; }
 
         public string UserId { get; set; }
 
@@ -85,5 +96,8 @@ namespace MyPortal.Models.Database
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CommunicationEmailAddress> EmailAddresses { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CommunicationAddressPerson> Addresses { get; set; }
     }
 }

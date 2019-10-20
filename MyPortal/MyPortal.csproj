@@ -381,6 +381,7 @@
     <Compile Include="Models\Database\AssessmentAspect.cs" />
     <Compile Include="Models\Database\AssessmentAspectType.cs" />
     <Compile Include="Models\Database\CommunicationAddress.cs" />
+    <Compile Include="Models\Database\CommunicationAddressPerson.cs" />
     <Compile Include="Models\Database\CommunicationEmailAddress.cs" />
     <Compile Include="Models\Database\CommunicationPhoneNumber.cs" />
     <Compile Include="Models\Database\CommunicationPhoneNumberType.cs" />
@@ -433,6 +434,7 @@
     <Compile Include="Processes\AssessmentProcesses.cs" />
     <Compile Include="Processes\AttendanceProcesses.cs" />
     <Compile Include="Processes\BehaviourProcesses.cs" />
+    <Compile Include="Processes\CommunicationProcesses.cs" />
     <Compile Include="Processes\CurriculumProcesses.cs" />
     <Compile Include="Processes\DocumentProcesses.cs" />
     <Compile Include="Processes\FinanceProcesses.cs" />

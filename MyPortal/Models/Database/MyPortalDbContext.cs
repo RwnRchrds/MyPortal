@@ -34,6 +34,8 @@ namespace MyPortal.Models.Database
         public virtual DbSet<BehaviourAchievementType> BehaviourAchievementTypes { get; set; }
         public virtual DbSet<BehaviourIncident> BehaviourIncidents { get; set; }
         public virtual DbSet<BehaviourIncidentType> BehaviourIncidentTypes { get; set; }
+        public virtual DbSet<CommunicationAddress> CommunicationAddresses { get; set; }
+        public virtual DbSet<CommunicationAddressPerson> CommunicationAddressPersons { get; set; }
         public virtual DbSet<CommunicationEmailAddress> CommunicationEmailAddresses { get; set; }
         public virtual DbSet<CommunicationLog> CommunicationLogs { get; set; }
         public virtual DbSet<CommunicationPhoneNumber> CommunicationPhoneNumbers { get; set; }
@@ -174,6 +176,12 @@ namespace MyPortal.Models.Database
                 .HasMany(e => e.Incidents)
                 .WithRequired(e => e.Type)
                 .HasForeignKey(e => e.BehaviourTypeId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<CommunicationAddress>()
+                .HasMany(e => e.People)
+                .WithRequired(e => e.Address)
+                .HasForeignKey(e => e.AddressId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<CommunicationPhoneNumberType>()
@@ -343,6 +351,12 @@ namespace MyPortal.Models.Database
                 .HasMany(e => e.Students)
                 .WithRequired(e => e.PastoralYearGroup)
                 .HasForeignKey(e => e.YearGroupId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Person>()
+                .HasMany(e => e.Addresses)
+                .WithRequired(e => e.Person)
+                .HasForeignKey(e => e.AddressId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Person>()

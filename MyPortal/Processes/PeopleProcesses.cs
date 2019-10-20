@@ -18,54 +18,49 @@ namespace MyPortal.Processes
 {
     public class PeopleProcesses
     {
-        public static ProcessResponse<object> CreateStaffMember(StaffMember staffMember, MyPortalDbContext context)
+        public static async Task CreateStaffMember(StaffMember staffMember, MyPortalDbContext context)
         {
             if (!ValidationProcesses.ModelIsValid(staffMember))
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
+                throw new ProcessException(ExceptionType.BadRequest, "Invalid data");
             }
 
             context.Persons.Add(staffMember.Person);
             context.StaffMembers.Add(staffMember);
 
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Staff member created", null);
+            await context.SaveChangesAsync();
         }
 
-        public static ProcessResponse<object> CreateStudent(Student student, MyPortalDbContext context)
+        public static async Task CreateStudent(Student student, MyPortalDbContext context)
         {
             if (!ValidationProcesses.ModelIsValid(student))
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
+                throw new ProcessException(ExceptionType.BadRequest, "Invalid data");
             }
 
             context.Persons.Add(student.Person);
             context.Students.Add(student);
 
-            context.SaveChanges();
-            return new ProcessResponse<object>(ResponseType.Ok, "Student created", null);
+            await context.SaveChangesAsync();
         }
 
-        public static ProcessResponse<object> DeleteStaffMember(int staffMemberId, string userId, MyPortalDbContext context)
+        public static async Task DeleteStaffMember(int staffMemberId, string userId, MyPortalDbContext context)
         {
             var staffInDb = context.StaffMembers.Single(x => x.Id == staffMemberId);
 
             if (staffInDb == null)
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Staff member not found", null);
+                throw new ProcessException(ExceptionType.NotFound, "Staff member not found");
             }
 
             if (staffInDb.Person.UserId == userId)
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Cannot delete yourself", null);
+                throw new ProcessException(ExceptionType.Forbidden, "Cannot delete yourself");
             }
 
             staffInDb.Deleted = true;
 
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Staff member deleted", null);
+            await context.SaveChangesAsync();
         }
 
         public static ProcessResponse<object> DeleteStudent(int studentId, MyPortalDbContext context)
