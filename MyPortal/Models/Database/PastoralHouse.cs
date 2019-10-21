@@ -25,7 +25,7 @@ namespace MyPortal.Models.Database
         [StringLength(128)]
         public string Name { get; set; }
 
-        public int HeadId { get; set; }
+        public int? HeadId { get; set; }
 
         public virtual StaffMember HeadOfHouse { get; set; }
 

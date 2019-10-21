@@ -20,7 +20,16 @@ namespace MyPortal.Controllers.Api
         [RequiresPermission("EditContactInformation")]
         public async Task<IHttpActionResult> CreateEmailAddress([FromBody] CommunicationEmailAddress emailAddress)
         {
-            
+            try
+            {
+                await CommunicationProcesses.CreateEmailAddress(emailAddress, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Email address created");
         }
     }
 }

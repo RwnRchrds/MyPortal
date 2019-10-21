@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Http;
 using MyPortal.Dtos;
@@ -16,9 +17,18 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditStudents")]
         [Route("create", Name = "ApiPeopleCreateStudent")]
-        public IHttpActionResult CreateStudent([FromBody] Student student)
+        public async Task<IHttpActionResult> CreateStudent([FromBody] Student student)
         {
-            return PrepareResponse(PeopleProcesses.CreateStudent(student, _context));
+            try
+            {
+                await PeopleProcesses.CreateStudent(student, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Student created");
         }
 
         [HttpDelete]

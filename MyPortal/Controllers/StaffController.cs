@@ -274,9 +274,7 @@ namespace MyPortal.Controllers
             {
                 var viewModel = new NewStudentViewModel
                 {
-                    Student = student,
-                    RegGroups = _context.PastoralRegGroups.ToList(),
-                    YearGroups = _context.PastoralYearGroups.ToList()
+                    Student = student
                 };
                 return View("~/Views/Staff/People/Students/NewStudent.cshtml", viewModel);
             }
@@ -296,8 +294,7 @@ namespace MyPortal.Controllers
 
             var viewModel = new NewStudentViewModel
             {
-                RegGroups = regGroups,
-                YearGroups = yearGroups
+
             };
 
             return View("~/Views/Staff/People/Students/NewStudent.cshtml", viewModel);
@@ -377,8 +374,33 @@ namespace MyPortal.Controllers
             return View("~/Views/Staff/People/Students/StudentDetails.cshtml", viewModel);
         }
 
+        [RequiresPermission("EditStudents")]
+        [Route("People/Students/{id:int}/ExtendedDetails")]
+        public async Task<ActionResult> StudentExtendedDetails(int id)
+        {
+            var student = _context.Students.SingleOrDefault(x => x.Id == id);
+
+            if (student == null)
+            {
+                return HttpNotFound();
+            }
+
+            var yearGroups = await PastoralProcesses.GetAllYearGroupsLookup(_context);
+
+            var regGroups = await PastoralProcesses.GetAllRegGroupsLookup(_context);
+
+            var viewModel = new StudentDetailsViewModel
+            {
+                Student = student,
+                YearGroups = yearGroups,
+                RegGroups = regGroups
+            };
+
+            return View("~/Views/Staff/People/Students/FullDetails.cshtml", viewModel);
+        }
+
         [RequiresPermission("ViewStudents")]
-        [Route("People/Students/{id}/Results")]
+        [Route("People/Students/{id:int}/Results")]
         public ActionResult StudentResults(int id)
         {
             var student = _context.Students.SingleOrDefault(s => s.Id == id);

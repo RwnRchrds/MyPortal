@@ -467,10 +467,10 @@ namespace MyPortal.Processes
         {
             return new Dictionary<string, string>
             {
-                { "Male", "M" },
-                { "Female", "F" },
-                { "Other", "X" },
-                { "Unknown", "U" }
+                { "M", "Male" },
+                { "F", "Female" },
+                { "X", "Other" },
+                { "U", "Unknown" }
             };
         }
     }

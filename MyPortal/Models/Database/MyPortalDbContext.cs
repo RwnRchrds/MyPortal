@@ -360,6 +360,12 @@ namespace MyPortal.Models.Database
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Person>()
+                .HasMany(e => e.ContactDetails)
+                .WithRequired(e => e.Person)
+                .HasForeignKey(e => e.PersonId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Person>()
                 .HasMany(e => e.EmailAddresses)
                 .WithRequired(e => e.Person)
                 .HasForeignKey(e => e.PersonId)
@@ -383,13 +389,13 @@ namespace MyPortal.Models.Database
                 .IsUnicode(false);
 
             modelBuilder.Entity<Person>()
-                .HasMany(e => e.StaffMembers)
+                .HasMany(e => e.StaffMemberDetails)
                 .WithRequired(e => e.Person)
                 .HasForeignKey(e => e.PersonId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Person>()
-                .HasMany(e => e.Students)
+                .HasMany(e => e.StudentDetails)
                 .WithRequired(e => e.Person)
                 .HasForeignKey(e => e.PersonId)
                 .WillCascadeOnDelete(false);
@@ -520,7 +526,7 @@ namespace MyPortal.Models.Database
 
             modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.PastoralHouses)
-                .WithRequired(e => e.HeadOfHouse)
+                .WithOptional(e => e.HeadOfHouse)
                 .HasForeignKey(e => e.HeadId)
                 .WillCascadeOnDelete(false);
 

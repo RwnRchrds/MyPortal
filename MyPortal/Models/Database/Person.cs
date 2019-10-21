@@ -28,9 +28,6 @@ namespace MyPortal.Models.Database
             PersonalDocuments = new HashSet<PersonDocument>();
             MedicalConditions = new HashSet<MedicalPersonCondition>();
             DietaryRequirements = new HashSet<MedicalPersonDietaryRequirement>();
-            Contacts = new HashSet<Contact>();
-            StaffMembers = new HashSet<StaffMember>();
-            Students = new HashSet<Student>();
             Schools = new HashSet<SystemSchool>();
             EmailAddresses = new HashSet<CommunicationEmailAddress>();
         }
@@ -83,13 +80,13 @@ namespace MyPortal.Models.Database
         public virtual ICollection<MedicalPersonDietaryRequirement> DietaryRequirements { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Contact> Contacts { get; set; }
+        public virtual ICollection<Contact> ContactDetails { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<StaffMember> StaffMembers { get; set; }
+        public virtual ICollection<StaffMember> StaffMemberDetails { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Student> Students { get; set; }
+        public virtual ICollection<Student> StudentDetails { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SystemSchool> Schools { get; set; }

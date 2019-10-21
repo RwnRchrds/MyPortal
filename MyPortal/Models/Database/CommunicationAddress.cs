@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
@@ -24,15 +26,28 @@ namespace MyPortal.Models.Database
 
         public string Apartment { get; set; }
 
+        [Required]
+        [StringLength(256)]
         public string Street { get; set; }
 
+        [StringLength(256)]
         public string District { get; set; }
 
+        [Required]
+        [StringLength(256)]
         public string Town { get; set; }
 
+        [Required]
+        [StringLength(256)]
         public string County { get; set; }
 
+        [Required]
+        [StringLength(128)]
         public string Postcode { get; set; }
+
+        [Required]
+        [StringLength(128)]
+        public string Country { get; set; }
 
         public bool Validated { get; set; }
 

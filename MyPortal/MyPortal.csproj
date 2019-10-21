@@ -375,6 +375,22 @@
     <Compile Include="Migrations\201910171655443_Initial.Designer.cs">
       <DependentUpon>201910171655443_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201910210943113_AddedAddresses.cs" />
+    <Compile Include="Migrations\201910210943113_AddedAddresses.Designer.cs">
+      <DependentUpon>201910210943113_AddedAddresses.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910211005234_UpdateModel.cs" />
+    <Compile Include="Migrations\201910211005234_UpdateModel.Designer.cs">
+      <DependentUpon>201910211005234_UpdateModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910211007589_RemovedExplicitKeys.cs" />
+    <Compile Include="Migrations\201910211007589_RemovedExplicitKeys.Designer.cs">
+      <DependentUpon>201910211007589_RemovedExplicitKeys.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910211410452_HeadOfHouseNotRequried.cs" />
+    <Compile Include="Migrations\201910211410452_HeadOfHouseNotRequried.Designer.cs">
+      <DependentUpon>201910211410452_HeadOfHouseNotRequried.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Attributes\RequiresPermissionAttribute.cs" />
     <Compile Include="Models\Attributes\UpnAttribute.cs" />
@@ -993,6 +1009,7 @@
     <Content Include="Views\Shared\_SideBarStaff.cshtml" />
     <Content Include="Views\Shared\_SideBarStudent.cshtml" />
     <Content Include="Views\Error\NoAcademicYear.cshtml" />
+    <Content Include="Views\Staff\People\Students\FullDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Results\" />
@@ -1017,6 +1034,18 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201910171655443_Initial.resx">
       <DependentUpon>201910171655443_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910210943113_AddedAddresses.resx">
+      <DependentUpon>201910210943113_AddedAddresses.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910211005234_UpdateModel.resx">
+      <DependentUpon>201910211005234_UpdateModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910211007589_RemovedExplicitKeys.resx">
+      <DependentUpon>201910211007589_RemovedExplicitKeys.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910211410452_HeadOfHouseNotRequried.resx">
+      <DependentUpon>201910211410452_HeadOfHouseNotRequried.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

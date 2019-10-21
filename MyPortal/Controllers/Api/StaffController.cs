@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
@@ -16,18 +18,37 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditStaff")]
         [Route("create", Name = "ApiPeopleCreateStaff")]
-        public IHttpActionResult CreateStaff([FromBody] StaffMember staffMember)
+        public async Task<IHttpActionResult> CreateStaff([FromBody] StaffMember staffMember)
         {
-            return PrepareResponse(PeopleProcesses.CreateStaffMember(staffMember, _context));
+            try
+            {
+                await PeopleProcesses.CreateStaffMember(staffMember, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Staff member created");
         }
 
         [HttpDelete]
         [RequiresPermission("EditStaff")]
         [Route("delete/{staffMemberId:int}", Name = "ApiPeopleDeleteStaffMember")]
-        public IHttpActionResult DeleteStaff([FromUri] int staffMemberId)
+        public async Task<IHttpActionResult> DeleteStaff([FromUri] int staffMemberId)
         {
             var userId = User.Identity.GetUserId();
-            return PrepareResponse(PeopleProcesses.DeleteStaffMember(staffMemberId, userId, _context));
+
+            try
+            {
+                await PeopleProcesses.DeleteStaffMember(staffMemberId, userId, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Staff member deleted");
         }
 
         [HttpPost]

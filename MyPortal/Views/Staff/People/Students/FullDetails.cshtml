@@ -1,0 +1,190 @@
+﻿@using MyPortal.Processes
+@model MyPortal.ViewModels.StudentDetailsViewModel
+@{
+    ViewBag.Title = "Student Details";
+    ViewBag.DisplayTitle = "Student Details";
+    Layout = "~/Views/Shared/_LayoutStaff.cshtml";
+}
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">@PeopleProcesses.GetStudentDisplayName(Model.Student).ResponseObject</h1>
+</div>
+
+<form id="studentDetailsForm">
+
+    <div class="row">
+        <div class="col-sm-6">
+
+            <div class="card shadow mb-4">
+
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Basic Details</h6>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row">
+
+                        <div class="col form-group">
+
+                            @Html.Label("First Name")
+                            @Html.TextBoxFor(x => x.Student.Person.FirstName, new { @class = "form-control form-control-sm", Name = "Person.FirstName" })
+
+                        </div>
+
+                        <div class="col form-group">
+
+                            @Html.Label("Middle Name")
+                            @Html.TextBoxFor(x => x.Student.Person.MiddleName, new { @class = "form-control form-control-sm", Name = "Person.MiddleName" })
+
+                        </div>
+
+                    </div>
+                    
+                    <div class="row">
+
+                        <div class="col form-group">
+
+                            @Html.Label("Last Name")
+                            @Html.TextBoxFor(x => x.Student.Person.LastName, new { @class = "form-control form-control-sm", Name = "Person.LastName" })
+
+                        </div>
+                        
+                        <div class="col form-group">
+
+                            @Html.Label("Gender")
+                            @Html.DropDownListFor(x => x.Student.Person.Gender, new SelectList(PeopleProcesses.GetGenderLookup(), "Key", "Value"), new { @class = "form-control form-control-sm", Name = "Person.Gender" })
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col form-group">
+
+                            @Html.Label("Date of Birth")
+                            @Html.TextBoxFor(x => x.Student.Person.Dob, new { @class = "form-control form-control-sm", Name = "Person.Dob" })
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-sm-6">
+
+            <div class="card shadow mb-4">
+
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Registration Details</h6>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col form-group">
+                            @Html.Label("Year Group")
+                            @Html.DropDownListFor(x => x.Student.YearGroupId, new SelectList(Model.YearGroups, "Key", "Value"), "Select Year Group", new {@class = "form-control form-control-sm", Name = "YearGroupId"})
+                        </div>
+                        
+                        <div class="col form-group">
+                            @Html.Label("Reg Group")
+                            @Html.DropDownListFor(x => x.Student.RegGroupId, new SelectList(Model.RegGroups, "Key", "Value"), "Select Reg Group", new { @class = "form-control form-control-sm", Name = "RegGroupId"})
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+
+                        <div class="col form-group">
+                            @Html.Label("UPN")
+                            <div class="input-group input-group-sm">
+                                @Html.TextBoxFor(x => x.Student.Upn, new { @class = "form-control form-control-sm", Name = "Upn" })
+                                <div class="input-group-append">
+                                    <button class="input-group-text"><i class="fas fa-cog"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col form-group">
+
+                            @Html.Label("Admission Number")
+                            @Html.TextBoxFor(x => x.Student.AdmissionNumber, new { @class = "form-control form-control-sm", Name = "AdmissionNumber" })
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
+
+            <div class="card shadow mb-4">
+
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Contact Details</h6>
+                </div>
+
+                <div class="card-body">
+
+                    <h5>Address</h5>
+
+                    <h5>Email Addresses</h5>
+
+                    <h5>Phone Numbers</h5>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-sm-6">
+
+            <div class="card shadow mb-4">
+
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Medical Details</h6>
+                </div>
+
+                <div class="card-body">
+                    
+                    <div class="row">
+
+                        <div class="col form-group">
+
+                            @Html.Label("NHS Number")
+                            @Html.TextBoxFor(x => x.Student.Person.NhsNumber, new { @class = "form-control form-control-sm", Name = "Person.NhsNumber" })
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</form>
+
+<div class="row mb-4">
+    
+    <div class="col">
+        <button type="button" class="btn btn-primary mr-2">Back</button>
+        <button type="button" class="btn btn-primary">Save</button>
+    </div>
+
+</div>
+
