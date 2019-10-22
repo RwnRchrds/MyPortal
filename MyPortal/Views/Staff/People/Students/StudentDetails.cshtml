@@ -21,7 +21,11 @@
             </button>
 
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <h6 class="dropdown-header">@PeopleProcesses.GetStudentDisplayName(Model.Student).ResponseObject</h6>
+                @if (User.HasPermission("EditStudents"))
+                {
+                    <h6 class="dropdown-header">@PeopleProcesses.GetStudentDisplayName(Model.Student).ResponseObject</h6>
+                }
+                <a href="@Url.HttpRouteUrl("PeopleStudentExtendedDetails", new {studentId = Model.Student.Id})" class="dropdown-item">Details</a>
                 <a href="/Staff/People/Students/@Model.Student.Id/Behaviour" class="dropdown-item">Behaviour</a>
                 <a href="/Staff/People/Students/@Model.Student.Id/Results" class="dropdown-item">Results</a>
             </div>
@@ -183,6 +187,12 @@
                         </td>
                         <td>@Model.Student.PastoralYearGroup.HeadOfYear.Person.Title @Model.Student.PastoralYearGroup.HeadOfYear.Person.FirstName.Substring(0, 1) @Model.Student.PastoralYearGroup.HeadOfYear.Person.LastName</td>
                     </tr>
+                    <tr>
+                        <td>
+                            <b>Head of House</b>
+                        </td>
+                        <td>@*@PeopleProcesses.GetStaffDisplayName(Model.Student.House.HeadOfHouse).ResponseObject*@</td>
+                    </tr>
                 </table>
             </div>
         </div>
@@ -320,57 +330,6 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                         <button type="submit" id="EditLogSave" class="btn btn-primary">Save</button>
-                    </div>
-                </div>
-            }
-
-        </div>
-    </div>
-</div>
-
-<div id="EditDetailsModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-
-        <!--content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Edit Details - @Model.Student.Person.LastName, @Model.Student.Person.FirstName</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            @using (Html.BeginForm("SaveStudent", "Staff"))
-            {
-                <div class="modal-body">
-                    <div class="form-group">
-                        @Html.Label("First Name")
-                        @Html.TextBoxFor(s => s.Student.Person.FirstName, new {@class = "form-control", Name = "FirstName", id = "editDetailsFirstNameControl"})
-                        @Html.ValidationMessageFor(s => s.Student.Person.FirstName)
-                    </div>
-                    <div class="form-group">
-                        @Html.Label("Last Name")
-                        @Html.TextBoxFor(s => s.Student.Person.LastName, new {@class = "form-control", Name = "LastName", id = "editDetailsLastNameControl"})
-                        @Html.ValidationMessageFor(s => s.Student.Person.LastName)
-                    </div>
-                    <div class="form-group">
-                        @Html.Label("Gender")
-                        @Html.DropDownListFor(x => x.Student.Person.Gender, new SelectList(Model.Genders, "Key", "Value"), new {@class = "form-control", Name = "Gender", id = "editDetailsGenderControl"})
-                        @Html.ValidationMessageFor(s => s.Student.Person.Gender)
-                    </div>
-                    <div class="form-group">
-                        @Html.Label("Year Group")
-                        @Html.DropDownListFor(s => s.Student.YearGroupId, new SelectList(Model.YearGroups, "Key", "Value"), "Select Year Group", new {@class = "form-control", Name = "YearGroupId", id = "editDetailsYearGroupControl"})
-                        @Html.ValidationMessageFor(s => s.Student.YearGroupId)
-                    </div>
-                    <div class="form-group">
-                        @Html.Label("Reg Group")
-                        @Html.DropDownListFor(s => s.Student.RegGroupId, new SelectList(Model.RegGroups, "Key", "Value"), "Select Reg Group", new {@class = "form-control", Name = "RegGroupId", id = "editDetailsRegGroupControl"})
-                        @Html.ValidationMessageFor(s => s.Student.RegGroupId)
-                    </div>
-                    @Html.HiddenFor(s => s.Student.Id, new {Name = "Id", id = "editDetailsIdControl"})
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </div>
             }

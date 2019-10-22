@@ -151,5 +151,12 @@ namespace MyPortal.Processes
 
             return regGroups;
         }
+
+        public static async Task<IDictionary<int, string>> GetAllHousesLookup(MyPortalDbContext context)
+        {
+            var houses = await context.PastoralHouses.OrderBy(x => x.Name).ToDictionaryAsync(x => x.Id, x => x.Name);
+
+            return houses;
+        }
     }
 }

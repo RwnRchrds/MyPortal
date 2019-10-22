@@ -257,6 +257,7 @@
     <Compile Include="Controllers\Api\MyPortalIdentityApiController.cs" />
     <Compile Include="Controllers\Api\MyPortalApiController.cs" />
     <Compile Include="Controllers\Api\PastoralController.cs" />
+    <Compile Include="Controllers\Api\PeopleController.cs" />
     <Compile Include="Controllers\Api\PersonnelController.cs" />
     <Compile Include="Controllers\Api\ProfilesController.cs" />
     <Compile Include="Controllers\Api\ReportsController.cs" />
@@ -320,6 +321,8 @@
     <Compile Include="Dtos\GridDtos\GridFinanceBasketItemDto.cs" />
     <Compile Include="Dtos\GridDtos\GridFinanceProductDto.cs" />
     <Compile Include="Dtos\GridDtos\GridFinanceSaleDto.cs" />
+    <Compile Include="Dtos\GridDtos\GridMedicalPersonConditionDto.cs" />
+    <Compile Include="Dtos\GridDtos\GridMedicalPersonDietaryRequirementDto.cs" />
     <Compile Include="Dtos\GridDtos\GridPersonnelTrainingCertificateDto.cs" />
     <Compile Include="Dtos\GridDtos\GridPersonnelTrainingCourseDto.cs" />
     <Compile Include="Dtos\GridDtos\GridProfileCommentBankDto.cs" />
@@ -338,6 +341,7 @@
     <Compile Include="Dtos\MedicalDietaryRequirementDto.cs" />
     <Compile Include="Dtos\MedicalEventDto.cs" />
     <Compile Include="Dtos\MedicalPersonConditionDto.cs" />
+    <Compile Include="Dtos\MedicalPersonDietaryRequirementDto.cs" />
     <Compile Include="Dtos\PastoralHouseDto.cs" />
     <Compile Include="Dtos\PastoralRegGroupDto.cs" />
     <Compile Include="Dtos\PastoralYearGroupDto.cs" />
@@ -390,6 +394,10 @@
     <Compile Include="Migrations\201910211410452_HeadOfHouseNotRequried.cs" />
     <Compile Include="Migrations\201910211410452_HeadOfHouseNotRequried.Designer.cs">
       <DependentUpon>201910211410452_HeadOfHouseNotRequried.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910221612298_StructureUpdate.cs" />
+    <Compile Include="Migrations\201910221612298_StructureUpdate.Designer.cs">
+      <DependentUpon>201910221612298_StructureUpdate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Attributes\RequiresPermissionAttribute.cs" />
@@ -541,6 +549,7 @@
     <Compile Include="ViewModels\StaffHomeViewModel.cs" />
     <Compile Include="ViewModels\StudentBehaviourManagementViewModel.cs" />
     <Compile Include="ViewModels\StudentDetailsViewModel.cs" />
+    <Compile Include="ViewModels\StudentExtendedDetailsViewModel.cs" />
     <Compile Include="ViewModels\StudentHomeViewModel.cs" />
     <Compile Include="ViewModels\StudentResultsViewModel.cs" />
     <Compile Include="ViewModels\StudentSalesHistoryViewModel.cs" />
@@ -1009,7 +1018,7 @@
     <Content Include="Views\Shared\_SideBarStaff.cshtml" />
     <Content Include="Views\Shared\_SideBarStudent.cshtml" />
     <Content Include="Views\Error\NoAcademicYear.cshtml" />
-    <Content Include="Views\Staff\People\Students\FullDetails.cshtml" />
+    <Content Include="Views\Staff\People\Students\ExtendedDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Results\" />
@@ -1046,6 +1055,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201910211410452_HeadOfHouseNotRequried.resx">
       <DependentUpon>201910211410452_HeadOfHouseNotRequried.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910221612298_StructureUpdate.resx">
+      <DependentUpon>201910221612298_StructureUpdate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

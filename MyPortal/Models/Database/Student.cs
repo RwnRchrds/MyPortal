@@ -53,7 +53,7 @@ namespace MyPortal.Models.Database
 
         public bool GiftedAndTalented { get; set; }
 
-        public int SenStatusId { get; set; }
+        public int? SenStatusId { get; set; }
 
         public bool PupilPremium { get; set; }
 

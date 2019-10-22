@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Security.Policy;
 using System.Threading.Tasks;
 using System.Web;
@@ -141,6 +143,11 @@ namespace MyPortal.Processes
 
         public static ProcessResponse<string> GetStaffDisplayName(StaffMember staffMember)
         {
+            if (staffMember == null)
+            {
+                return null;
+            }
+
             var displayName = $"{staffMember.Person.Title} {staffMember.Person.FirstName.Substring(0, 1)} {staffMember.Person.LastName}";
             return new ProcessResponse<string>(ResponseType.Ok, null, displayName);
         }
@@ -382,6 +389,28 @@ namespace MyPortal.Processes
             return new ProcessResponse<bool>(ResponseType.Ok, null, studentInDb.FinanceSales.Any());
         }
 
+        public static async Task UpdatePerson(Person person, MyPortalDbContext context, bool commitImmediately = true)
+        {
+            var personInDb = await context.Persons.SingleOrDefaultAsync(x => x.Id == person.Id);
+
+            if (personInDb == null)
+            {
+                throw new ProcessException(ExceptionType.NotFound, "Person not found");
+            }
+
+            personInDb.Title = person.Title;
+            personInDb.FirstName = person.FirstName;
+            personInDb.LastName = person.LastName;
+            personInDb.Gender = person.Gender;
+            personInDb.Dob = person.Dob;
+            personInDb.MiddleName = person.MiddleName;
+            personInDb.PhotoId = person.PhotoId;
+            personInDb.NhsNumber = person.NhsNumber;
+            personInDb.Deceased = person.Deceased;
+
+            await context.SaveChangesAsync();
+        }
+
         public static ProcessResponse<object> UpdateStaffMember(StaffMember staffMember, MyPortalDbContext context)
         {
             var staffInDb = context.StaffMembers.SingleOrDefault(x => x.Id == staffMember.Id);
@@ -405,31 +434,41 @@ namespace MyPortal.Processes
 
             return new ProcessResponse<object>(ResponseType.Ok, "Staff member updated", null);
         }
-        public static ProcessResponse<object> UpdateStudent(Student student, MyPortalDbContext context)
+        public static async Task UpdateStudent(Student student, MyPortalDbContext context)
         {
             if (!ValidationProcesses.ModelIsValid(student))
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
+                throw new ProcessException(ExceptionType.BadRequest, "Invalid data");
             }
 
-            var studentInDb = context.Students.SingleOrDefault(s => s.Id == student.Id);
+            var studentInDb = await context.Students.SingleOrDefaultAsync(s => s.Id == student.Id);
 
             if (studentInDb == null)
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Student not found", null);
+                throw new ProcessException(ExceptionType.NotFound, "Student not found");
             }
 
-            Mapper.Map(student, studentInDb);
+            studentInDb.HouseId = student.HouseId;
+            studentInDb.Upn = student.Upn;
+            studentInDb.CandidateNumber = student.CandidateNumber;
+            studentInDb.FreeSchoolMeals = student.FreeSchoolMeals;
+            studentInDb.GiftedAndTalented = student.GiftedAndTalented;
+            studentInDb.PupilPremium = student.PupilPremium;
+            studentInDb.RegGroupId = student.RegGroupId;
+            studentInDb.YearGroupId = student.YearGroupId;
+            studentInDb.SenStatusId = student.SenStatusId;
+            studentInDb.Uci = student.Uci;
+
             studentInDb.Person.FirstName = student.Person.FirstName;
             studentInDb.Person.LastName = student.Person.LastName;
             studentInDb.Person.Gender = student.Person.Gender;
-            studentInDb.RegGroupId = student.RegGroupId;
-            studentInDb.YearGroupId = student.YearGroupId;
-            studentInDb.AccountBalance = student.AccountBalance;
+            studentInDb.Person.Dob = student.Person.Dob;
+            studentInDb.Person.MiddleName = student.Person.MiddleName;
+            studentInDb.Person.PhotoId = student.Person.PhotoId;
+            studentInDb.Person.NhsNumber = student.Person.NhsNumber;
+            studentInDb.Person.Deceased = student.Person.Deceased;
 
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Student updated", null);
+            await context.SaveChangesAsync();
         }
 
         public static async Task<int> GetNumberOfBirthdaysThisWeek(MyPortalDbContext context)
@@ -446,6 +485,39 @@ namespace MyPortal.Processes
                 (person.FirstName == null || x.FirstName == person.FirstName) &&
                 (person.LastName == null || x.LastName == person.LastName) &&
                 (person.Dob == null || x.Dob == person.Dob)).ToListAsync();
+        }
+
+        public static async Task<IEnumerable<GridMedicalPersonConditionDto>> GetMedicalConditionsByPersonDataGrid(
+            int personId, MyPortalDbContext context)
+        {
+            var conditions = await GetMedicalConditionsByPersonModel(personId, context);
+
+            return conditions.Select(Mapper.Map<MedicalPersonCondition, GridMedicalPersonConditionDto>);
+        }
+
+        public static async Task<IEnumerable<MedicalPersonCondition>> GetMedicalConditionsByPersonModel(int personId,
+            MyPortalDbContext context)
+        {
+            var conditions = await context.MedicalPersonConditions.Where(x => x.PersonId == personId).ToListAsync();
+
+            return conditions;
+        }
+
+        public static async Task<IEnumerable<GridMedicalPersonDietaryRequirementDto>>
+            GetMedicalDietaryRequirementsByPersonDataGrid(int personId, MyPortalDbContext context)
+        {
+            var dietaryRequirements = await GetMedicalDietaryRequirementsByPersonModel(personId, context);
+
+            return dietaryRequirements.Select(Mapper
+                .Map<MedicalPersonDietaryRequirement, GridMedicalPersonDietaryRequirementDto>);
+        }
+
+        public static async Task<IEnumerable<MedicalPersonDietaryRequirement>> GetMedicalDietaryRequirementsByPersonModel(
+            int personId, MyPortalDbContext context)
+        {
+            var dietaryRequirements = await context.MedicalPersonDietaryRequirements.Where(x => x.PersonId == personId).ToListAsync();
+
+            return dietaryRequirements;
         }
 
         public static string GetGenderDisplayName(string genderCode)

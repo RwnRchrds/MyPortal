@@ -10,6 +10,7 @@ using MyPortal.Models;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
 using MyPortal.Processes;
+using Syncfusion.EJ2.Grids;
 
 namespace MyPortal
 {
@@ -265,6 +266,14 @@ namespace MyPortal
                     opts => opts.MapFrom(src => PeopleProcesses.GetStudentDisplayName(src.Student)))
                 .ForMember(dest => dest.Aspect,
                     opts => opts.MapFrom(src => src.Aspect.Description));
+
+            CreateMap<MedicalPersonCondition, GridMedicalPersonConditionDto>()
+                .ForMember(dest => dest.Condition,
+                    opts => opts.MapFrom(src => src.Condition.Description));
+
+            CreateMap<MedicalPersonDietaryRequirement, GridMedicalPersonDietaryRequirementDto>()
+                .ForMember(dest => dest.Description,
+                    opts => opts.MapFrom(src => src.DietaryRequirement.Description));
         }
     }
 }    

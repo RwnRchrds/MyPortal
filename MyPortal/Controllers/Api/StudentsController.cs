@@ -126,12 +126,21 @@ namespace MyPortal.Controllers.Api
             return PrepareResponseObject(PeopleProcesses.StudentHasSales(studentId, _context));
         }
 
-        [HttpPut]
+        [HttpPost]
         [RequiresPermission("EditStudents")]
         [Route("api/students/update", Name = "ApiPeopleUpdateStudent")]
         public async Task<IHttpActionResult> UpdateStudent([FromBody] Student student)
         {
-            return PrepareResponse(PeopleProcesses.UpdateStudent(student, _context));
+            try
+            {
+                await PeopleProcesses.UpdateStudent(student, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Student updated");
         }
     }
 }

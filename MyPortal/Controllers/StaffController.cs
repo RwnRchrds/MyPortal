@@ -319,23 +319,15 @@ namespace MyPortal.Controllers
 
         
         [RequiresPermission("ViewStudents")]
-        [Route("People/Students/{id:int}", Name = "PeopleStudentDetails")]
-        public async Task<ActionResult> StudentDetails(int id)
+        [Route("People/Students/{studentId:int}", Name = "PeopleStudentDetails")]
+        public async Task<ActionResult> StudentDetails(int studentId)
         {
-            var student = _context.Students.SingleOrDefault(s => s.Id == id);
+            var student = _context.Students.SingleOrDefault(s => s.Id == studentId);
 
             if (student == null)
                 return HttpNotFound();
 
             var logTypes = await ProfilesProcesses.GetAllLogTypesLookup(_context);
-
-            var yearGroups = await PastoralProcesses.GetAllYearGroupsLookup(_context);
-
-            var regGroups = await PastoralProcesses.GetAllRegGroupsLookup(_context);
-
-            var resultSets = await AssessmentProcesses.GetAllResultSetsLookup(_context);
-
-            var subjects = await CurriculumProcesses.GetAllSubjectsLookup(_context);
 
             var commentBanks = ProfilesProcesses.GetAllCommentBanksLookup(_context);
 
@@ -359,26 +351,21 @@ namespace MyPortal.Controllers
                 
                 Student = student,
                 LogTypes = logTypes,
-                YearGroups = yearGroups,
-                RegGroups = regGroups,
-                ResultSets = resultSets,
-                Subjects = subjects,
-                CommentBanks = commentBanks,
                 BehaviourCount = behaviourCount,
                 AchievementCount = achievementCount,
                 HasAttendaceData = attendance != null,
+                CommentBanks = commentBanks,
                 Attendance = attendance,
-                Genders = PeopleProcesses.GetGenderLookup()
             };
 
             return View("~/Views/Staff/People/Students/StudentDetails.cshtml", viewModel);
         }
 
         [RequiresPermission("EditStudents")]
-        [Route("People/Students/{id:int}/ExtendedDetails")]
-        public async Task<ActionResult> StudentExtendedDetails(int id)
+        [Route("People/Students/{studentId:int}/ExtendedDetails", Name = "PeopleStudentExtendedDetails")]
+        public async Task<ActionResult> StudentExtendedDetails(int studentId)
         {
-            var student = _context.Students.SingleOrDefault(x => x.Id == id);
+            var student = _context.Students.SingleOrDefault(x => x.Id == studentId);
 
             if (student == null)
             {
@@ -389,14 +376,17 @@ namespace MyPortal.Controllers
 
             var regGroups = await PastoralProcesses.GetAllRegGroupsLookup(_context);
 
-            var viewModel = new StudentDetailsViewModel
+            var houses = await PastoralProcesses.GetAllHousesLookup(_context);
+
+            var viewModel = new StudentExtendedDetailsViewModel
             {
                 Student = student,
                 YearGroups = yearGroups,
-                RegGroups = regGroups
+                RegGroups = regGroups,
+                Houses = houses
             };
 
-            return View("~/Views/Staff/People/Students/FullDetails.cshtml", viewModel);
+            return View("~/Views/Staff/People/Students/ExtendedDetails.cshtml", viewModel);
         }
 
         [RequiresPermission("ViewStudents")]
