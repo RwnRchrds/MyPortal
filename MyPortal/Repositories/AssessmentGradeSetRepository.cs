@@ -7,9 +7,9 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class AssessmentResultRepository : Repository<AssessmentResult>, IAssessmentResultRepository
+    public class AssessmentGradeSetRepository : Repository<AssessmentGradeSet>, IAssessmentGradeSetRepository
     {
-        public AssessmentResultRepository(MyPortalDbContext context) : base(context)
+        public AssessmentGradeSetRepository(MyPortalDbContext context) : base(context)
         {
 
         }

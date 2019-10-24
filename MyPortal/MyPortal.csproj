@@ -428,7 +428,7 @@
     <Compile Include="Interfaces\IProfileCommentBankRepository.cs" />
     <Compile Include="Interfaces\IProfileCommentRepository.cs" />
     <Compile Include="Interfaces\IProfileLogRepository.cs" />
-    <Compile Include="Interfaces\IProfileLogType.cs" />
+    <Compile Include="Interfaces\IProfileLogTypeRepository.cs" />
     <Compile Include="Interfaces\IReadOnlyRepository.cs" />
     <Compile Include="Interfaces\IRepository.cs" />
     <Compile Include="Interfaces\IAssessmentResultRepository.cs" />
@@ -602,6 +602,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Repositories\AssessmentAspectRepository.cs" />
+    <Compile Include="Repositories\AssessmentAspectTypeRepository.cs" />
+    <Compile Include="Repositories\AssessmentGradeRepository.cs" />
+    <Compile Include="Repositories\AssessmentGradeSetRepository.cs" />
     <Compile Include="Repositories\AssessmentResultRepository.cs" />
     <Compile Include="Repositories\ReadOnlyRepository.cs" />
     <Compile Include="Repositories\Repository.cs" />
