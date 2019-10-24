@@ -7,7 +7,7 @@ using System.Web.WebSockets;
 using Microsoft.AspNet.Identity;
 using MyPortal.Models;
 using MyPortal.Models.Database;
-using MyPortal.Models.Exceptions;
+using MyPortal.Exceptions;
 
 namespace MyPortal.Processes
 {    

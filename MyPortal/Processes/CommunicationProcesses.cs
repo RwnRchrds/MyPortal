@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using MyPortal.Models.Database;
-using MyPortal.Models.Exceptions;
+using MyPortal.Exceptions;
 
 namespace MyPortal.Processes
 {
@@ -63,6 +63,15 @@ namespace MyPortal.Processes
             }
 
             return emailInDb;
+        }
+
+        public async Task<IEnumerable<CommunicationEmailAddress>> GetEmailAddressesByPersonModel(int personId,
+            MyPortalDbContext context)
+        {
+            var emailAddresses =
+                await context.CommunicationEmailAddresses.Where(x => x.PersonId == personId).ToListAsync();
+
+            return emailAddresses;
         }
     }
 }

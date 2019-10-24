@@ -11,7 +11,7 @@ using MyPortal.Dtos.GridDtos;
 using MyPortal.Dtos.Identity;
 using MyPortal.Models;
 using MyPortal.Models.Database;
-using MyPortal.Models.Exceptions;
+using MyPortal.Exceptions;
 using MyPortal.Models.Misc;
 using MyPortal.ViewModels;
 

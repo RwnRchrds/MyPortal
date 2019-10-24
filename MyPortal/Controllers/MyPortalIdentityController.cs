@@ -39,5 +39,15 @@ namespace MyPortal.Controllers
             _roleStore = new RoleStore<ApplicationRole>(_identity);
             _roleManager = new RoleManager<ApplicationRole, string>(_roleStore);
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            _context.Dispose();
+            _roleManager.Dispose();
+            _roleStore.Dispose();
+            _userManager.Dispose();
+            _userStore.Dispose();
+            _identity.Dispose();
+        }
     }
 }

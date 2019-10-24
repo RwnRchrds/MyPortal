@@ -9,38 +9,26 @@ using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Dtos.GridDtos;
 using MyPortal.Models.Database;
-using MyPortal.Models.Exceptions;
+using MyPortal.Exceptions;
 using MyPortal.Models.Misc;
+using MyPortal.Persistence;
 
 namespace MyPortal.Processes
 {
     public static class AssessmentProcesses
     {
-        public static async Task CreateResult(AssessmentResult result, MyPortalDbContext context, bool commitImmediately = true)
+        public static async Task CreateResult(AssessmentResult result)
         {
             if (!ValidationProcesses.ModelIsValid(result))
             {
-                throw new ProcessException(ExceptionType.BadRequest,"Invalid data");
+                throw new ProcessException(ExceptionType.BadRequest, "Invalid data");
             }
 
-            if (! await context.AssessmentGrades.AnyAsync(x => x.GradeSetId == result.Aspect.GradeSetId && x.Code == result.Grade))
+            using (var unitOfWork = new UnitOfWork(new MyPortalDbContext()))
             {
-                throw new ProcessException(ExceptionType.BadRequest,"Grade does not exist");
-            }
+                unitOfWork.AssessmentResults.Add(result);
 
-            var resultInDb = await context.AssessmentResults.SingleOrDefaultAsync(x =>
-                x.StudentId == result.StudentId && x.AspectId == result.AspectId && x.ResultSetId == result.ResultSetId);
-
-            if (resultInDb != null)
-            {
-                throw new ProcessException(ExceptionType.BadRequest,"Result already exists");
-            }
-
-            context.AssessmentResults.Add(result);
-
-            if (commitImmediately)
-            {
-                await context.SaveChangesAsync();
+                await unitOfWork.Complete();
             }
         }
 

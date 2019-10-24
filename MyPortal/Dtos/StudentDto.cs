@@ -1,4 +1,4 @@
-using MyPortal.Models.Attributes;
+using MyPortal.Attributes;
 
 namespace MyPortal.Dtos
 {

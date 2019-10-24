@@ -3,8 +3,8 @@
 @using Syncfusion.EJ2.Grids
 @model MyPortal.ViewModels.StudentDetailsViewModel
 @{
-    ViewBag.Title = $"Student Details: {PeopleProcesses.GetStudentDisplayName(Model.Student).ResponseObject}";
-    ViewBag.DisplayTitle = "Student Details";
+    ViewBag.Title = $"Student Overview: {PeopleProcesses.GetStudentDisplayName(Model.Student).ResponseObject}";
+    ViewBag.DisplayTitle = "Student Overview";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
@@ -15,7 +15,7 @@
 <div class="row">
     
     <div class="col-xl-12 col-md-12 mb-4">
-        <div class="dropdown mp-btn-top inline-block">
+        <div class="dropdown inline-block">
             <button class="btn btn-primary dropdown-toggle mp-btn-top" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-user-graduate"></i> Student
             </button>
@@ -23,11 +23,11 @@
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 @if (User.HasPermission("EditStudents"))
                 {
-                    <h6 class="dropdown-header">@PeopleProcesses.GetStudentDisplayName(Model.Student).ResponseObject</h6>
+                    <h6 class="dropdown-header">@Model.Student.GetDisplayName()</h6>
                 }
                 <a href="@Url.HttpRouteUrl("PeopleStudentExtendedDetails", new {studentId = Model.Student.Id})" class="dropdown-item">Details</a>
-                <a href="/Staff/People/Students/@Model.Student.Id/Behaviour" class="dropdown-item">Behaviour</a>
-                <a href="/Staff/People/Students/@Model.Student.Id/Results" class="dropdown-item">Results</a>
+                <a href="@Url.HttpRouteUrl("PeopleStudentBehaviourDetails", new {studentId = Model.Student.Id})" class="dropdown-item">Behaviour</a>
+                <a href="@Url.HttpRouteUrl("PeopleStudentAssessmentResults", new {studentId = Model.Student.Id})" class="dropdown-item">Results</a>
             </div>
         </div>
     </div>

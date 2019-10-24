@@ -28,7 +28,7 @@ namespace MyPortal.Processes
 
             var authorId = bulletin.Author.Id;
 
-            var author = PeopleProcesses.HandleAuthorFromUserId(userId, authorId, context).ResponseObject;
+            var author = PeopleProcesses.GetAuthor(userId, authorId, context).ResponseObject;
 
             bulletin.CreateDate = DateTime.Today;
             bulletin.Approved = autoApprove;

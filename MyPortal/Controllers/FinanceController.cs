@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Mvc;
-using MyPortal.Models.Attributes;
+using MyPortal.Attributes;
 using MyPortal.Processes;
 using MyPortal.ViewModels;
 

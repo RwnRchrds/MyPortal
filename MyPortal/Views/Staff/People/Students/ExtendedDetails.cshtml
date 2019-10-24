@@ -10,6 +10,13 @@
     <h1 class="h3 mb-0 text-gray-800">@PeopleProcesses.GetStudentDisplayName(Model.Student).ResponseObject</h1>
 </div>
 
+<div class="row">
+    <div class="col mb-4">
+        <button type="button" class="btn btn-primary mr-2" id="backButton">Back</button>
+        <button type="button" class="btn btn-primary" id="saveButton">Save</button>
+    </div>
+</div>
+
 <form id="studentDetails">
     
     @Html.HiddenFor(x => x.Student.Id, new {Name = "Id"})
@@ -48,25 +55,29 @@
                         <div class="col form-group">
 
                             @Html.Label("Last Name")
-                            @Html.TextBoxFor(x => x.Student.Person.LastName, new {@class = "form-control form-control-sm", Name = "Person.LastName"})
+                            @Html.TextBoxFor(x => x.Student.Person.LastName, new { @class = "form-control form-control-sm", Name = "Person.LastName" })
 
                         </div>
 
                         <div class="col form-group">
 
-                            @Html.Label("Gender")
-                            @Html.DropDownListFor(x => x.Student.Person.Gender, new SelectList(PeopleProcesses.GetGenderLookup(), "Key", "Value"), new {@class = "form-control form-control-sm", Name = "Person.Gender"})
+                            @Html.Label("Date of Birth")
+                            @Html.TextBoxFor(x => x.Student.Person.Dob, new { @class = "form-control form-control-sm", Name = "Person.Dob", id ="dobControl" })
 
                         </div>
 
                     </div>
 
                     <div class="form-row">
-
+                        
                         <div class="col form-group">
 
-                            @Html.Label("Date of Birth")
-                            @Html.TextBoxFor(x => x.Student.Person.Dob, new {@class = "form-control form-control-sm", Name = "Person.Dob"})
+                            @Html.Label("Gender")
+                            @Html.DropDownListFor(x => x.Student.Person.Gender, new SelectList(PeopleProcesses.GetGenderLookup(), "Key", "Value"), new {@class = "form-control form-control-sm", Name = "Person.Gender"})
+
+                        </div>
+                        
+                        <div class="col form-group">
 
                         </div>
 
@@ -83,7 +94,7 @@
             <div class="card shadow mb-4">
 
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Registration Details</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Registration</h6>
                 </div>
 
                 <div class="card-body">
@@ -145,14 +156,11 @@
             <div class="card shadow mb-4">
 
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Contact Details</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Addresses</h6>
                 </div>
 
                 <div class="card-body">
 
-                    <h6>Email Addresses</h6>
-
-                    <h6>Telephone</h6>
 
                 </div>
 
@@ -165,63 +173,191 @@
             <div class="card shadow mb-4">
 
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Medical Details</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Telephones and Email Addresses</h6>
                 </div>
 
                 <div class="card-body">
 
-                    <div class="form-row">
-
-                        <div class="col form-group">
-
-                            @Html.Label("NHS Number")
-                            @Html.TextBoxFor(x => x.Student.Person.NhsNumber, new {@class = "form-control form-control-sm", Name = "Person.NhsNumber"})
-
-                        </div>
-
-                    </div>
-
+                    <h6>Telephones</h6>
+                    @Html.EJS().Grid("Telephones").DataSource(d =>
+               {
+                   d.Url("").CrossDomain(false).Adaptor("UrlAdaptor");
+               }).Columns(c =>
+               {
+                   c.Field("Type").Width("150").Add();
+                   c.Field("Number").Width("200").Add();
+                   c.HeaderText("Actions").Width("170").Add();
+               }).AllowPaging().PageSettings(p => p.PageSize(5)).Render()
                     <hr/>
 
-                    <h6>Dietary Requirements</h6>
-                    @Html.EJS().Grid("DietaryRequirements").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiPeopleGetMedicalDietaryRequirementsByPersonDataGrid", new {personId = Model.Student.Person.Id})).CrossDomain(false).Adaptor("UrlAdaptor");}).Columns(c =>
+                    <h6>Email Addresses</h6>
+                    @Html.EJS().Grid("EmailAddresses").DataSource(d =>
                     {
-                        c.Field("Description").HeaderText("Requirement").Width("200").Add();
-                        c.HeaderText("Actions").Add();
-                    }).AllowPaging().PageSettings(p => p.PageSize(5)).Render()
-
-                    <hr/>
-
-                    <h6>Medical Conditions</h6>
-                    @Html.EJS().Grid("MedicalConditions").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiPeopleGetMedicalConditionsByPersonDataGrid", new {personId = Model.Student.Person.Id})).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+                        d.Url("").CrossDomain(false).Adaptor("UrlAdaptor");
+                    }).Columns(c =>
                     {
-                        c.Field("Condition").Width("200").Add();
-                        c.Field("MedicationTaken").HeaderText("On Medication").Width("200").DisplayAsCheckBox(true).Add();
-                        c.HeaderText("Actions").Add();
+                        c.Field("Type").Width("150").Add();
+                        c.Field("Number").Width("200").Add();
+                        c.HeaderText("Actions").Width("170").Add();
                     }).AllowPaging().PageSettings(p => p.PageSize(5)).Render()
-
                 </div>
 
             </div>
 
         </div>
     </div>
+    
+<div class="row">
+    
+    <div class="col-sm-6">
 
-</form>
+        <div class="card shadow mb-4">
 
-<div class="row mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Family/Home</h6>
+            </div>
 
-    <div class="col">
-        <button type="button" class="btn btn-primary mr-2" id="backButton">Back</button>
-        <button type="button" class="btn btn-primary" id="saveButton">Save</button>
+            <div class="card-body">
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-sm-6">
+
+        <div class="card shadow mb-4">
+
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Medical Details</h6>
+            </div>
+
+            <div class="card-body">
+
+                <div class="form-row">
+
+                    <div class="col form-group">
+
+                        @Html.Label("NHS Number")
+                        @Html.TextBoxFor(x => x.Student.Person.NhsNumber, new {@class = "form-control form-control-sm", Name = "Person.NhsNumber"})
+
+                    </div>
+
+                </div>
+
+                <hr/>
+
+                <h6>Dietary Requirements</h6>
+                @Html.EJS().Grid("DietaryRequirements").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiPeopleGetMedicalDietaryRequirementsByPersonDataGrid", new {personId = Model.Student.Person.Id})).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+                {
+                    c.Field("Description").HeaderText("Requirement").Width("200").Add();
+                    c.HeaderText("Actions").Add();
+                }).AllowPaging().PageSettings(p => p.PageSize(5)).Render()
+
+                <hr/>
+
+                <h6>Medical Conditions</h6>
+                @Html.EJS().Grid("MedicalConditions").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiPeopleGetMedicalConditionsByPersonDataGrid", new {personId = Model.Student.Person.Id})).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+                {
+                    c.Field("Condition").Width("200").Add();
+                    c.Field("MedicationTaken").HeaderText("On Medication").Width("200").DisplayAsCheckBox(true).Add();
+                    c.HeaderText("Actions").Add();
+                }).AllowPaging().PageSettings(p => p.PageSize(5)).Render()
+
+            </div>
+
+        </div>
+
     </div>
 
 </div>
+
+<div class="row">
+    
+    <div class="col-sm-6">
+
+        <div class="card shadow mb-4">
+
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Ethnic/Cultural</h6>
+            </div>
+
+            <div class="card-body">
+
+
+            </div>
+
+        </div>
+
+    </div>
+    
+    <div class="col-sm-6">
+
+        <div class="card shadow mb-4">
+
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Additional Information</h6>
+            </div>
+
+            <div class="card-body">
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row">
+    
+    <div class="col-sm-6">
+
+        <div class="card shadow mb-4">
+
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Welfare</h6>
+            </div>
+
+            <div class="card-body">
+
+
+            </div>
+
+        </div>
+
+    </div>
+    
+    <div class="col-sm-6">
+
+        <div class="card shadow mb-4">
+
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">School History</h6>
+            </div>
+
+            <div class="card-body">
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</form>
 
 @section scripts
 {
     <script>
         $(document).ready(function() {
+
+            $("#dobControl").val(formatDate($("#dobControl").val()));
 
             $("#saveButton").on("click",
                 function() {

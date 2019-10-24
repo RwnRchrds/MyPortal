@@ -1,6 +1,6 @@
 using System;
 
-namespace MyPortal.Models.Exceptions
+namespace MyPortal.Exceptions
 {
     public enum ExceptionType
     {

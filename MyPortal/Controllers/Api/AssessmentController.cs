@@ -5,7 +5,7 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web.Http;
 using MyPortal.Dtos;
-using MyPortal.Models.Attributes;
+using MyPortal.Attributes;
 using MyPortal.Models.Database;
 using MyPortal.Processes;
 using Syncfusion.EJ2.Base;

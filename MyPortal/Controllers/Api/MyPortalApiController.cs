@@ -8,7 +8,7 @@ using System.Web.Http;
 using Microsoft.AspNet.Identity;
 using MyPortal.Models;
 using MyPortal.Models.Database;
-using MyPortal.Models.Exceptions;
+using MyPortal.Exceptions;
 using MyPortal.Models.Misc;
 using MyPortal.Processes;
 using Syncfusion.EJ2.Base;
@@ -27,6 +27,11 @@ namespace MyPortal.Controllers.Api
         public MyPortalApiController(MyPortalDbContext context)
         {
             _context = context;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _context.Dispose();
         }
 
         //If ProcessResponse does NOT return an object

@@ -375,6 +375,82 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IAssessmentAspectRepository.cs" />
+    <Compile Include="Interfaces\IAssessmentAspectTypeRepository.cs" />
+    <Compile Include="Interfaces\IAssessmentGradeRepository.cs" />
+    <Compile Include="Interfaces\IAssessmentGradeSetRepository.cs" />
+    <Compile Include="Interfaces\IAssessmentResultSetRepository.cs" />
+    <Compile Include="Interfaces\IAttendanceCodeRepository.cs" />
+    <Compile Include="Interfaces\IAttendanceMarkRepository.cs" />
+    <Compile Include="Interfaces\IAttendanceMeaningRepository.cs" />
+    <Compile Include="Interfaces\IAttendancePeriodRepository.cs" />
+    <Compile Include="Interfaces\IAttendanceWeekRepository.cs" />
+    <Compile Include="Interfaces\IBehaviourAchievementRepository.cs" />
+    <Compile Include="Interfaces\IBehaviourAchievementTypeRepository.cs" />
+    <Compile Include="Interfaces\IBehaviourIncidentRepository.cs" />
+    <Compile Include="Interfaces\IBehaviourIncidentTypeRepository.cs" />
+    <Compile Include="Interfaces\ICommunicationAddressPersonRepository.cs" />
+    <Compile Include="Interfaces\ICommunicationAddressRepository.cs" />
+    <Compile Include="Interfaces\ICommunicationEmailAddressRepository.cs" />
+    <Compile Include="Interfaces\ICommunicationLogRepository.cs" />
+    <Compile Include="Interfaces\ICommunicationPhoneNumberRepository.cs" />
+    <Compile Include="Interfaces\ICommunicationPhoneNumberTypeRepository.cs" />
+    <Compile Include="Interfaces\ICommunicationTypeRepository.cs" />
+    <Compile Include="Interfaces\IContactRepository.cs" />
+    <Compile Include="Interfaces\IContactTypeRepository.cs" />
+    <Compile Include="Interfaces\ICurriculumAcademicYearRepository.cs" />
+    <Compile Include="Interfaces\ICurriculumClassRepository.cs" />
+    <Compile Include="Interfaces\ICurriculumEnrolmentRepository.cs" />
+    <Compile Include="Interfaces\ICurriculumLessonPlanRepository.cs" />
+    <Compile Include="Interfaces\ICurriculumLessonPlanTemplateRepository.cs" />
+    <Compile Include="Interfaces\ICurriculumSessionRepository.cs" />
+    <Compile Include="Interfaces\ICurriculumStudyTopicRepository.cs" />
+    <Compile Include="Interfaces\ICurriculumSubjectRepository.cs" />
+    <Compile Include="Interfaces\IDocumentRepository.cs" />
+    <Compile Include="Interfaces\IDocumentTypeRepository.cs" />
+    <Compile Include="Interfaces\IFinanceBasketItemRepository.cs" />
+    <Compile Include="Interfaces\IFinanceProductRepository.cs" />
+    <Compile Include="Interfaces\IFinanceProductTypeRepository.cs" />
+    <Compile Include="Interfaces\IFinanceSaleRepository.cs" />
+    <Compile Include="Interfaces\IMedicalConditionRepository.cs" />
+    <Compile Include="Interfaces\IMedicalDietaryRequirementRepository.cs" />
+    <Compile Include="Interfaces\IMedicalEventRepository.cs" />
+    <Compile Include="Interfaces\IMedicalPersonConditionRepository.cs" />
+    <Compile Include="Interfaces\IMedicalPersonDietaryRequirementRepository.cs" />
+    <Compile Include="Interfaces\IPastoralHouseRepository.cs" />
+    <Compile Include="Interfaces\IPastoralRegGroupRepository.cs" />
+    <Compile Include="Interfaces\IPastoralYearGroupRepository.cs" />
+    <Compile Include="Interfaces\IPersonDocumentRepository.cs" />
+    <Compile Include="Interfaces\IPersonnelObservationRepository.cs" />
+    <Compile Include="Interfaces\IPersonnelTrainingCertificateRepository.cs" />
+    <Compile Include="Interfaces\IPersonnelTrainingCourseRepository.cs" />
+    <Compile Include="Interfaces\IPersonRepository.cs" />
+    <Compile Include="Interfaces\IProfileCommentBankRepository.cs" />
+    <Compile Include="Interfaces\IProfileCommentRepository.cs" />
+    <Compile Include="Interfaces\IProfileLogRepository.cs" />
+    <Compile Include="Interfaces\IProfileLogType.cs" />
+    <Compile Include="Interfaces\IReadOnlyRepository.cs" />
+    <Compile Include="Interfaces\IRepository.cs" />
+    <Compile Include="Interfaces\IAssessmentResultRepository.cs" />
+    <Compile Include="Interfaces\ISchoolGovernanceTypeRepository.cs" />
+    <Compile Include="Interfaces\ISchoolIntakeTypeRepository.cs" />
+    <Compile Include="Interfaces\ISchoolLocationRepository.cs" />
+    <Compile Include="Interfaces\ISchoolPhaseRepository.cs" />
+    <Compile Include="Interfaces\ISchoolTypeRepository.cs" />
+    <Compile Include="Interfaces\ISenEventRepository.cs" />
+    <Compile Include="Interfaces\ISenEventTypeRepository.cs" />
+    <Compile Include="Interfaces\ISenGiftedTalentedRepository.cs" />
+    <Compile Include="Interfaces\ISenProvisionRepository.cs" />
+    <Compile Include="Interfaces\ISenProvisionType.cs" />
+    <Compile Include="Interfaces\ISenReviewTypeRepository.cs" />
+    <Compile Include="Interfaces\ISenStatusRepository.cs" />
+    <Compile Include="Interfaces\IStaffMemberRepository.cs" />
+    <Compile Include="Interfaces\IStudentRepository.cs" />
+    <Compile Include="Interfaces\ISystemAreaRepository.cs" />
+    <Compile Include="Interfaces\ISystemBulletinRepository.cs" />
+    <Compile Include="Interfaces\ISystemReportRepository.cs" />
+    <Compile Include="Interfaces\ISystemSchoolRepository.cs" />
+    <Compile Include="Interfaces\IUnitOfWork.cs" />
     <Compile Include="Migrations\201910171655443_Initial.cs" />
     <Compile Include="Migrations\201910171655443_Initial.Designer.cs">
       <DependentUpon>201910171655443_Initial.cs</DependentUpon>
@@ -400,8 +476,8 @@
       <DependentUpon>201910221612298_StructureUpdate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\Attributes\RequiresPermissionAttribute.cs" />
-    <Compile Include="Models\Attributes\UpnAttribute.cs" />
+    <Compile Include="Attributes\RequiresPermissionAttribute.cs" />
+    <Compile Include="Attributes\UpnAttribute.cs" />
     <Compile Include="Models\Database\AssessmentAspect.cs" />
     <Compile Include="Models\Database\AssessmentAspectType.cs" />
     <Compile Include="Models\Database\CommunicationAddress.cs" />
@@ -443,7 +519,7 @@
     <Compile Include="Models\Database\SystemArea.cs" />
     <Compile Include="Models\Database\SystemReport.cs" />
     <Compile Include="Models\Database\SystemSchool.cs" />
-    <Compile Include="Models\Exceptions\ProcessException.cs" />
+    <Compile Include="Exceptions\ProcessException.cs" />
     <Compile Include="Models\Misc\ApiResponse.cs" />
     <Compile Include="Models\Misc\AttendanceSummary.cs" />
     <Compile Include="Models\Misc\ChartDataCategoric.cs" />
@@ -454,6 +530,7 @@
     <Compile Include="Models\Misc\ProcessResponse.cs" />
     <Compile Include="Models\Misc\StudentAttendanceMarkCollection.cs" />
     <Compile Include="Models\Misc\StudentAttendanceMarkSingular.cs" />
+    <Compile Include="Persistence\UnitOfWork.cs" />
     <Compile Include="Processes\AdminProcesses.cs" />
     <Compile Include="Processes\AssessmentProcesses.cs" />
     <Compile Include="Processes\AttendanceProcesses.cs" />
@@ -467,6 +544,8 @@
     <Compile Include="Processes\PeopleProcesses.cs" />
     <Compile Include="Processes\PersonnelProcesses.cs" />
     <Compile Include="Processes\ProfilesProcesses.cs" />
+    <Compile Include="Processes\StaffProcesses.cs" />
+    <Compile Include="Processes\StudentProcesses.cs" />
     <Compile Include="Processes\SystemProcesses.cs" />
     <Compile Include="Processes\UserProcesses.cs" />
     <Compile Include="Processes\DateTimeProcesses.cs" />
@@ -522,6 +601,10 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\AssessmentAspectRepository.cs" />
+    <Compile Include="Repositories\AssessmentResultRepository.cs" />
+    <Compile Include="Repositories\ReadOnlyRepository.cs" />
+    <Compile Include="Repositories\Repository.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\AccountsViewModel.cs" />
     <Compile Include="ViewModels\ClassEnrolmentsViewModel.cs" />
@@ -959,7 +1042,7 @@
     <Content Include="Views\Staff\Index.cshtml" />
     <Content Include="Views\Shared\_NavBar.cshtml" />
     <Content Include="Views\Staff\People\Students\Students.cshtml" />
-    <Content Include="Views\Staff\People\Students\StudentDetails.cshtml" />
+    <Content Include="Views\Staff\People\Students\StudentOverview.cshtml" />
     <Content Include="Views\Shared\_LayoutStudent.cshtml" />
     <Content Include="Views\Shared\_LayoutStaff.cshtml" />
     <Content Include="Views\Staff\People\Staff\Staff.cshtml" />
@@ -1022,7 +1105,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Results\" />
-    <Folder Include="Models\Validation\" />
     <Folder Include="Views\Staff\Admissions\" />
     <Folder Include="Views\Staff\Behaviour\" />
     <Folder Include="Views\Staff\Communication\" />

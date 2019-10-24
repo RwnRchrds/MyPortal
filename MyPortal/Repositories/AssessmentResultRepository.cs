@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using MyPortal.Interfaces;
+using MyPortal.Models.Database;
+
+namespace MyPortal.Repositories
+{
+    public class AssessmentResultRepository : Repository<AssessmentResult>, IAssessmentResultRepository
+    {
+        public AssessmentResultRepository(MyPortalDbContext context) : base(context)
+        {
+
+        }
+
+    }
+}

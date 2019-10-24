@@ -65,7 +65,7 @@ namespace MyPortal.Processes
                 return new ProcessResponse<object>(ResponseType.NotFound, "Academic year not found", null);
             }
 
-            var author = PeopleProcesses.GetStaffFromUserId(userId, context).ResponseObject;
+            var author = PeopleProcesses.GetStaffFromUserId(userId, context).Result;
 
             log.Date = DateTime.Now;
             log.AuthorId = author.Id;

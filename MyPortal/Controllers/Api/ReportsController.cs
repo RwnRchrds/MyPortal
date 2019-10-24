@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using MyPortal.Models.Attributes;
+using MyPortal.Attributes;
 using MyPortal.Models.Misc;
 using MyPortal.Processes;
 

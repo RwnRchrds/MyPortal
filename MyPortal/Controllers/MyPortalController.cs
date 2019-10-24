@@ -3,7 +3,7 @@ using System.Net;
 using System.Web.Http;
 using System.Web.Mvc;
 using MyPortal.Models.Database;
-using MyPortal.Models.Exceptions;
+using MyPortal.Exceptions;
 using MyPortal.Models.Misc;
 
 namespace MyPortal.Controllers

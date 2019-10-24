@@ -39,6 +39,7 @@ namespace MyPortal.Models.Database
         public int PersonId { get; set; }
 
         [Required]
+        [Index(IsUnique = true)]
         [StringLength(128)]
         public string Code { get; set; }
 

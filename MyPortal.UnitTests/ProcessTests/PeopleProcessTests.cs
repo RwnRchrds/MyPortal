@@ -65,7 +65,7 @@ namespace MyPortal.UnitTests.ProcessTests
         {
             var staff = _context.StaffMembers.SingleOrDefault(x => x.Person.LastName == "Sprague");
 
-            var result = PeopleProcesses.GetStaffDisplayName(staff);
+            var result = PeopleProcesses.GetDisplayName(staff);
 
             Assert.That(result.ResponseType == ResponseType.Ok);
 

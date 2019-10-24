@@ -9,7 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security.Provider;
-using MyPortal.Models.Attributes;
+using MyPortal.Attributes;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
 using MyPortal.Processes;
@@ -358,7 +358,7 @@ namespace MyPortal.Controllers
                 Attendance = attendance,
             };
 
-            return View("~/Views/Staff/People/Students/StudentDetails.cshtml", viewModel);
+            return View("~/Views/Staff/People/Students/StudentOverview.cshtml", viewModel);
         }
 
         [RequiresPermission("EditStudents")]
@@ -390,10 +390,10 @@ namespace MyPortal.Controllers
         }
 
         [RequiresPermission("ViewStudents")]
-        [Route("People/Students/{id:int}/Results")]
-        public ActionResult StudentResults(int id)
+        [Route("People/Students/{studentId:int}/Results", Name = "PeopleStudentAssessmentResults")]
+        public ActionResult StudentResults(int studentId)
         {
-            var student = _context.Students.SingleOrDefault(s => s.Id == id);
+            var student = _context.Students.SingleOrDefault(s => s.Id == studentId);
 
             var currentResultSet = _context.AssessmentResultSets.SingleOrDefault(r => r.IsCurrent);
 
@@ -420,10 +420,10 @@ namespace MyPortal.Controllers
         }
 
         [RequiresPermission("ViewStudents")]
-        [Route("People/Students/{id}/Behaviour")]
-        public ActionResult StudentBehaviour(int id)
+        [Route("People/Students/{studentId:int}/Behaviour", Name = "PeopleStudentBehaviourDetails")]
+        public ActionResult StudentBehaviour(int studentId)
         {
-            var student = _context.Students.SingleOrDefault(x => x.Id == id);
+            var student = _context.Students.SingleOrDefault(x => x.Id == studentId);
 
             if (student == null)
             {

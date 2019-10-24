@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
-using MyPortal.Models.Attributes;
+using MyPortal.Attributes;
 using MyPortal.Models.Database;
 using MyPortal.Processes;
 using Syncfusion.EJ2.Base;
@@ -22,7 +22,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await PeopleProcesses.CreateStaffMember(staffMember, _context);
+                await StaffProcesses.CreateStaffMember(staffMember, _context);
             }
             catch (Exception e)
             {
@@ -41,7 +41,7 @@ namespace MyPortal.Controllers.Api
 
             try
             {
-                await PeopleProcesses.DeleteStaffMember(staffMemberId, userId, _context);
+                await StaffProcesses.DeleteStaffMember(staffMemberId, userId, _context);
             }
             catch (Exception e)
             {
@@ -54,34 +54,64 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditStaff")]
         [Route("update", Name = "ApiPeopleUpdateStaffMember")]
-        public IHttpActionResult UpdateStaffMember([FromBody] StaffMember staffMember)
+        public async Task<IHttpActionResult> UpdateStaffMember([FromBody] StaffMember staffMember)
         {
-            return PrepareResponse(PeopleProcesses.UpdateStaffMember(staffMember, _context));
+            try
+            {
+                await StaffProcesses.UpdateStaffMember(staffMember, _context);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Staff member updated");
         }
 
         [HttpGet]
         [RequiresPermission("ViewStaff")]
         [Route("get/all", Name = "ApiPeopleGetAllStaffMembers")]
-        public IEnumerable<StaffMemberDto> GetAllStaffMembers()
+        public async Task<IEnumerable<StaffMemberDto>> GetAllStaffMembers()
         {
-            return PrepareResponseObject(PeopleProcesses.GetAllStaffMembers(_context));
+            try
+            {
+                return await StaffProcesses.GetAllStaffMembers(_context);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
 
         [HttpPost]
         [Route("get/dataGrid/all", Name = "ApiPeopleGetAllStaffMembersDataGrid")]
         [RequiresPermission("ViewStaff")]
-        public IHttpActionResult GetAllStaffMembersDataGrid([FromBody] DataManagerRequest dm)
+        public async Task<IHttpActionResult> GetAllStaffMembersDataGrid([FromBody] DataManagerRequest dm)
         {
-            var staffMembers = PrepareResponseObject(PeopleProcesses.GetAllStaffMembers_DataGrid(_context));
+            try
+            {
+                var staff = await StaffProcesses.GetAllStaffMembersDataGrid(_context);
 
-            return PrepareDataGridObject(staffMembers, dm);
+                return PrepareDataGridObject(staff, dm);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [Route("get/byId/{staffMemberId:int}", Name = "ApiPeopleGetStaffMemberById")]
         [RequiresPermission("ViewStaff")]
-        public StaffMemberDto GetStaffMemberById([FromUri] int staffMemberId)
+        public async Task<StaffMemberDto> GetStaffMemberById([FromUri] int staffMemberId)
         {
-            return PrepareResponseObject(PeopleProcesses.GetStaffMemberById(staffMemberId, _context));
+            try
+            {
+                return await StaffProcesses.
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
 
         [HttpGet]
@@ -89,7 +119,7 @@ namespace MyPortal.Controllers.Api
         [Route("hasDocuments/{staffMemberId:int}", Name = "ApiPeopleStaffMemberHasDocuments")]
         public bool StaffMemberHasDocuments([FromUri] int staffMemberId)
         {
-            return PrepareResponseObject(PeopleProcesses.StaffMemberHasDocuments(staffMemberId, _context));
+            return PrepareResponseObject(PeopleProcesses.PersonHasDocuments(staffMemberId, _context));
         }
 
         [HttpGet]

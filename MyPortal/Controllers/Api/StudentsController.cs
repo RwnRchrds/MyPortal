@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Http;
 using MyPortal.Dtos;
-using MyPortal.Models.Attributes;
+using MyPortal.Attributes;
 using MyPortal.Models.Database;
 using MyPortal.Processes;
 using Syncfusion.EJ2.Base;
@@ -60,7 +60,7 @@ namespace MyPortal.Controllers.Api
         [Route("get/dataGrid/all", Name = "ApiPeopleGetAllStudentsDataGrid")]
         public IHttpActionResult GetAllStudentsDataGrid([FromBody] DataManagerRequest dm)
         {
-            var students = PrepareResponseObject(PeopleProcesses.GetAllStudents_DataGrid(_context));
+            var students = PrepareResponseObject(PeopleProcesses.GetAllStudentsDataGrid(_context));
 
             return PrepareDataGridObject(students, dm);
         }

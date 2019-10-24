@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using System.Web.Http;
-using MyPortal.Models.Attributes;
+using MyPortal.Attributes;
 using MyPortal.Processes;
 using Syncfusion.EJ2.Base;
 

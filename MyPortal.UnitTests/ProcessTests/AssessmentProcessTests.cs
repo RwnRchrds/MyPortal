@@ -2,7 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MyPortal.Dtos;
 using MyPortal.Models.Database;
-using MyPortal.Models.Exceptions;
+using MyPortal.Exceptions;
 using MyPortal.Models.Misc;
 using MyPortal.Processes;
 using NUnit.Framework;

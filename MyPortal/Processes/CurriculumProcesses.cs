@@ -13,7 +13,7 @@ using MyPortal.Dtos;
 using MyPortal.Dtos.GridDtos;
 using MyPortal.Dtos.LiteDtos;
 using MyPortal.Models.Database;
-using MyPortal.Models.Exceptions;
+using MyPortal.Exceptions;
 using MyPortal.Models.Misc;
 
 namespace MyPortal.Processes

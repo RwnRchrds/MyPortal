@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MyPortal.Processes;
 
-namespace MyPortal.Models.Attributes
+namespace MyPortal.Attributes
 {
     public class UpnAttribute : ValidationAttribute
     {

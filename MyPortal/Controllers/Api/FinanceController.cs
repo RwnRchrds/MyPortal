@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Web.DynamicData;
 using System.Web.Http;
 using MyPortal.Dtos;
-using MyPortal.Models.Attributes;
+using MyPortal.Attributes;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
 using MyPortal.Processes;

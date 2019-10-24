@@ -4,7 +4,7 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using MyPortal.Processes;
 
-namespace MyPortal.Models.Attributes
+namespace MyPortal.Attributes
 {
     public class RequiresPermissionAttribute : AuthorizeAttribute
     {
