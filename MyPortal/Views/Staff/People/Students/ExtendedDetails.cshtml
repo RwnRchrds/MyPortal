@@ -1,4 +1,4 @@
-﻿@using MyPortal.Processes
+﻿@using MyPortal.Services
 @model MyPortal.ViewModels.StudentExtendedDetailsViewModel
 @{
     ViewBag.Title = "Extended Details";
@@ -7,7 +7,7 @@
 }
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">@PeopleProcesses.GetStudentDisplayName(Model.Student).ResponseObject</h1>
+    <h1 class="h3 mb-0 text-gray-800">@PeopleService.GetStudentDisplayName(Model.Student).ResponseObject</h1>
 </div>
 
 <div class="row">
@@ -73,7 +73,7 @@
                         <div class="col form-group">
 
                             @Html.Label("Gender")
-                            @Html.DropDownListFor(x => x.Student.Person.Gender, new SelectList(PeopleProcesses.GetGenderLookup(), "Key", "Value"), new {@class = "form-control form-control-sm", Name = "Person.Gender"})
+                            @Html.DropDownListFor(x => x.Student.Person.Gender, new SelectList(PeopleService.GetGenderLookup(), "Key", "Value"), new {@class = "form-control form-control-sm", Name = "Person.Gender"})
 
                         </div>
                         

@@ -10,7 +10,7 @@ using MyPortal.Dtos;
 using MyPortal.Attributes;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
-using MyPortal.Processes;
+using MyPortal.Services;
 using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
@@ -25,7 +25,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await FinanceProcesses.CreateBasketItem(basketItem, _context);
+                await FinanceService.CreateBasketItem(basketItem, _context);
             }
             catch (Exception e)
             {
@@ -42,7 +42,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await FinanceProcesses.GetBasketItemsByStudent(studentId, _context);
+                return await FinanceService.GetBasketItemsByStudent(studentId, _context);
             }
             catch (Exception e)
             {
@@ -57,7 +57,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await FinanceProcesses.GetBasketTotalForStudent(studentId, _context);
+                return await FinanceService.GetBasketTotalForStudent(studentId, _context);
             }
             catch (Exception e)
             {
@@ -72,7 +72,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await FinanceProcesses.DeleteBasketItem(basketItemId, _context);
+                await FinanceService.DeleteBasketItem(basketItemId, _context);
             }
             catch (Exception e)
             {
@@ -89,7 +89,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await FinanceProcesses.DeleteProduct(productId, _context);
+                await FinanceService.DeleteProduct(productId, _context);
             }
             catch (Exception e)
             {
@@ -106,7 +106,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await FinanceProcesses.GetAvailableProductsByStudent(studentId, _context);
+                return await FinanceService.GetAvailableProductsByStudent(studentId, _context);
             }
             catch (Exception e)
             {
@@ -121,7 +121,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await FinanceProcesses.GetProductPrice(productId, _context);
+                return await FinanceService.GetProductPrice(productId, _context);
             }
             catch (Exception e)
             {
@@ -136,7 +136,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await FinanceProcesses.GetProductById(productId, _context);
+                return await FinanceService.GetProductById(productId, _context);
             }
             catch (Exception e)
             {
@@ -151,7 +151,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await FinanceProcesses.GetAllProducts(_context);
+                return await FinanceService.GetAllProducts(_context);
             }
             catch (Exception e)
             {
@@ -166,7 +166,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var products = await FinanceProcesses.GetAllProductsDataGrid(_context);
+                var products = await FinanceService.GetAllProductsDataGrid(_context);
                 return PrepareDataGridObject(products, dm);
             }
             catch (Exception e)
@@ -182,7 +182,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await FinanceProcesses.CreateProduct(product, _context);
+                await FinanceService.CreateProduct(product, _context);
             }
             catch (Exception e)
             {
@@ -199,7 +199,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await FinanceProcesses.UpdateProduct(product, _context);
+                await FinanceService.UpdateProduct(product, _context);
             }
             catch (Exception e)
             {
@@ -216,7 +216,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await FinanceProcesses.AssessBalance(sale, _context);
+                return await FinanceService.AssessBalance(sale, _context);
             }
             catch (Exception e)
             {
@@ -231,7 +231,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await FinanceProcesses.DeleteSale(saleId, _context);
+                await FinanceService.DeleteSale(saleId, _context);
             }
             catch (Exception e)
             {
@@ -246,10 +246,10 @@ namespace MyPortal.Controllers.Api
         [Route("sales/get/processed", Name = "ApiFinanceGetProcessedSales")]
         public async Task<IEnumerable<FinanceSaleDto>> GetProcessedSales()
         {
-            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
             try
             {
-                return await FinanceProcesses.GetProcessedSales(academicYearId, _context);
+                return await FinanceService.GetProcessedSales(academicYearId, _context);
             }
             catch (Exception e)
             {
@@ -262,10 +262,10 @@ namespace MyPortal.Controllers.Api
         [Route("sales/get/dataGrid/processed", Name = "ApiFinanceGetProcessedSalesDataGrid")]
         public async Task<IHttpActionResult> GetProcessedSalesDataGrid([FromBody] DataManagerRequest dm)
         {
-            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
             try
             {
-                var sales = await FinanceProcesses.GetProcessedSalesDataGrid(academicYearId, _context);
+                var sales = await FinanceService.GetProcessedSalesDataGrid(academicYearId, _context);
 
                 return PrepareDataGridObject(sales, dm);
             }
@@ -280,10 +280,10 @@ namespace MyPortal.Controllers.Api
         [Route("sales/get/all", Name = "ApiFinanceGetAllSales")]
         public async Task<IEnumerable<FinanceSaleDto>> GetAllSales()
         {
-            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
             try
             {
-                return await FinanceProcesses.GetAllSales(academicYearId, _context);
+                return await FinanceService.GetAllSales(academicYearId, _context);
             }
             catch (Exception e)
             {
@@ -296,10 +296,10 @@ namespace MyPortal.Controllers.Api
         [Route("sales/get/dataGrid/all", Name = "ApiFinanceGetAllSalesDataGrid")]
         public async Task<IHttpActionResult> GetAllSalesDataGrid([FromBody] DataManagerRequest dm)
         {
-            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
             try
             {
-                var sales = await FinanceProcesses.GetAllSalesDataGrid(academicYearId, _context);
+                var sales = await FinanceService.GetAllSalesDataGrid(academicYearId, _context);
 
                 return PrepareDataGridObject(sales, dm);
             }
@@ -314,10 +314,10 @@ namespace MyPortal.Controllers.Api
         [Route("sales/get/byStudent/{studentId:int}", Name = "ApiFinanceGetSalesByStudent")]
         public async Task<IEnumerable<FinanceSaleDto>> GetSalesByStudent([FromUri] int studentId)
         {
-            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
             try
             {
-                return await FinanceProcesses.GetAllSalesByStudent(studentId, academicYearId, _context);
+                return await FinanceService.GetAllSalesByStudent(studentId, academicYearId, _context);
             }
             catch (Exception e)
             {
@@ -330,11 +330,11 @@ namespace MyPortal.Controllers.Api
         [RequiresPermission("ViewSales")]
         public async Task<IEnumerable<FinanceSaleDto>> GetPendingSales()
         {
-            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             try
             {
-                return await FinanceProcesses.GetPendingSales(academicYearId, _context);
+                return await FinanceService.GetPendingSales(academicYearId, _context);
             }
             catch (Exception e)
             {
@@ -347,11 +347,11 @@ namespace MyPortal.Controllers.Api
         [RequiresPermission("ViewSales")]
         public async Task<IHttpActionResult> GetPendingSalesDataGrid([FromBody] DataManagerRequest dm)
         {
-            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             try
             {
-                var sales = await FinanceProcesses.GetPendingSalesDataGrid(academicYearId, _context);
+                var sales = await FinanceService.GetPendingSalesDataGrid(academicYearId, _context);
 
                 return PrepareDataGridObject(sales, dm);
             }
@@ -368,7 +368,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await FinanceProcesses.MarkSaleProcessed(saleId, _context);
+                await FinanceService.MarkSaleProcessed(saleId, _context);
             }
             catch (Exception e)
             {
@@ -383,11 +383,11 @@ namespace MyPortal.Controllers.Api
         [Route("sales/create", Name = "ApiFinanceCreateSale")]
         public async Task<IHttpActionResult> CreateSale([FromBody] FinanceSale sale)
         {
-            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             try
             {
-                await FinanceProcesses.CreateSale(sale, academicYearId, _context);
+                await FinanceService.CreateSale(sale, academicYearId, _context);
             }
             catch (Exception e)
             {
@@ -403,11 +403,11 @@ namespace MyPortal.Controllers.Api
         public async Task<IHttpActionResult> CheckoutBasket([FromBody] int studentId)
         {
             await AuthenticateStudentRequest(studentId);
-            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             try
             {
-                await FinanceProcesses.CheckoutBasketForStudent(studentId, academicYearId, _context);
+                await FinanceService.CheckoutBasketForStudent(studentId, academicYearId, _context);
             }
             catch (Exception e)
             {
@@ -424,7 +424,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await FinanceProcesses.RefundSale(saleId, _context);
+                await FinanceService.RefundSale(saleId, _context);
             }
             catch (Exception e)
             {
@@ -441,7 +441,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await FinanceProcesses.ProcessManualTransaction(transaction, _context);
+                await FinanceService.ProcessManualTransaction(transaction, _context);
             }
             catch (Exception e)
             {
@@ -458,7 +458,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await FinanceProcesses.ProcessManualTransaction(transaction, _context, true);
+                await FinanceService.ProcessManualTransaction(transaction, _context, true);
             }
             catch (Exception e)
             {
@@ -475,7 +475,7 @@ namespace MyPortal.Controllers.Api
             await AuthenticateStudentRequest(studentId);
             try
             {
-                return await FinanceProcesses.GetStudentBalance(studentId, _context);
+                return await FinanceService.GetStudentBalance(studentId, _context);
             }
             catch (Exception e)
             {

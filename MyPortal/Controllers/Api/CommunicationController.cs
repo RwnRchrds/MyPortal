@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using MyPortal.Attributes;
 using MyPortal.Models.Database;
-using MyPortal.Processes;
+using MyPortal.Services;
 
 namespace MyPortal.Controllers.Api
 {
@@ -22,7 +22,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CommunicationProcesses.CreateEmailAddress(emailAddress, _context);
+                await CommunicationService.CreateEmailAddress(emailAddress, _context);
             }
             catch (Exception e)
             {

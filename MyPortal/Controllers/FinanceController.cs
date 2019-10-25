@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Mvc;
 using MyPortal.Attributes;
-using MyPortal.Processes;
+using MyPortal.Services;
 using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers
@@ -28,7 +28,7 @@ namespace MyPortal.Controllers
         {
             var viewModel = new NewProductViewModel();
 
-            viewModel.ProductTypes = await FinanceProcesses.GetAllProductTypesModel(_context);
+            viewModel.ProductTypes = await FinanceService.GetAllProductTypesModel(_context);
 
             return View(viewModel);
         }
@@ -37,7 +37,7 @@ namespace MyPortal.Controllers
         [Route("Sales/New", Name = "FinanceSaleEntry")]
         public async Task<ActionResult> SaleEntry()
         {
-            var products = await FinanceProcesses.GetAllProductsModel(_context);
+            var products = await FinanceService.GetAllProductsModel(_context);
 
             var viewModel = new SaleEntryViewModel
             {

@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNet.Identity
-@using MyPortal.Processes
+@using MyPortal.Services
 @{
-    var nameDisplay = PeopleProcesses.GetStudentDisplayNameFromUserId(User.Identity.GetUserId()).ResponseObject ?? User.Identity.GetUserName();
+    var nameDisplay = PeopleService.GetStudentDisplayNameFromUserId(User.Identity.GetUserId()).ResponseObject ?? User.Identity.GetUserName();
 }
 <nav class="navbar navbar-light bg-white topbar mb-4 static-top shadow navbar-expand">
     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">

@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface ISenEventTypeRepository : IRepository<SenEventType>
+    public interface ISenEventTypeRepository : IReadOnlyRepository<SenEventType>
     {
 
     }

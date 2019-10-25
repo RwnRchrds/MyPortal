@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using MyPortal.Processes;
+using MyPortal.Services;
 
 namespace MyPortal.Attributes
 {
@@ -12,7 +12,7 @@ namespace MyPortal.Attributes
                 return ValidationResult.Success;
             }
 
-            return SystemProcesses.ValidateUpn(value.ToString())
+            return SystemService.ValidateUpn(value.ToString())
                 ? ValidationResult.Success
                 : new ValidationResult("Upn is not valid");
         }

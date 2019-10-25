@@ -29,11 +29,6 @@ namespace MyPortal.Repositories
             return await Context.Set<TEntity>().ToListAsync();
         }
 
-        public async Task<IEnumerable<TEntity>> GetWhereAsync(Expression<Func<TEntity, bool>> predicate)
-        {
-            return await Context.Set<TEntity>().Where(predicate).ToListAsync();
-        }
-
         public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return await Context.Set<TEntity>().AnyAsync(predicate);

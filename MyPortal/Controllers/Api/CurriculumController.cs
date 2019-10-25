@@ -9,7 +9,7 @@ using MyPortal.Dtos;
 using MyPortal.Attributes;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
-using MyPortal.Processes;
+using MyPortal.Services;
 using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
@@ -24,7 +24,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumProcesses.GetAcademicYears(_context);
+                return await CurriculumService.GetAcademicYears(_context);
             }
             catch (Exception e)
             {
@@ -38,7 +38,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumProcesses.GetAcademicYearById(academicYearId, _context);
+                return await CurriculumService.GetAcademicYearById(academicYearId, _context);
             }
             catch (Exception e)
             {
@@ -60,11 +60,11 @@ namespace MyPortal.Controllers.Api
         [Route("sessions/get/byTeacherAndDate/{teacherId:int}/{date:datetime}", Name = "ApiCurriculumGetSessionsByTeacherAndDate")]
         public async Task<IEnumerable<CurriculumSessionDto>> GetSessionsByTeacherOnDayOfWeek([FromUri] int teacherId, [FromUri] DateTime date)
         {
-            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             try
             {
-                return await CurriculumProcesses.GetSessionsByTeacherOnDayOfWeek(teacherId, academicYearId, date, _context);
+                return await CurriculumService.GetSessionsByTeacherOnDayOfWeek(teacherId, academicYearId, date, _context);
             }
             catch (Exception e)
             {
@@ -78,12 +78,12 @@ namespace MyPortal.Controllers.Api
         public async Task<IHttpActionResult> GetSessionsByTeacherDataGrid([FromUri] int teacherId, [FromUri] DateTime date,
             [FromBody] DataManagerRequest dm)
         {
-            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             try
             {
                 var sessions =
-                    await CurriculumProcesses.GetSessionsByTeacherOnDayOfWeek(teacherId, academicYearId, date,
+                    await CurriculumService.GetSessionsByTeacherOnDayOfWeek(teacherId, academicYearId, date,
                         _context);
 
                 return PrepareDataGridObject(sessions, dm);
@@ -99,11 +99,11 @@ namespace MyPortal.Controllers.Api
         [Route("classes/get/all", Name = "ApiCurriculumGetAllClasses")]
         public async Task<IEnumerable<CurriculumClassDto>> GetAllClasses()
         {
-            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             try
             {
-                return await CurriculumProcesses.GetAllClasses(academicYearId, _context);
+                return await CurriculumService.GetAllClasses(academicYearId, _context);
             }
             catch (Exception e)
             {
@@ -116,11 +116,11 @@ namespace MyPortal.Controllers.Api
         [Route("classes/get/dataGrid/all", Name = "ApiCurriculumGetAllClassesDataGrid")]
         public async Task<IHttpActionResult> GetAllClassesDataGrid([FromBody] DataManagerRequest dm)
         {
-            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             try
             {
-                var classes = await CurriculumProcesses.GetAllClasses(academicYearId, _context);
+                var classes = await CurriculumService.GetAllClasses(academicYearId, _context);
 
                 return PrepareDataGridObject(classes, dm);
             }
@@ -137,7 +137,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumProcesses.GetClassById(classId, _context);
+                return await CurriculumService.GetClassById(classId, _context);
             }
             catch (Exception e)
             {
@@ -150,11 +150,11 @@ namespace MyPortal.Controllers.Api
         [Route("classes/create", Name = "ApiCurriculumCreateClass")]
         public async Task<IHttpActionResult> CreateClass([FromBody] CurriculumClass @class)
         {
-            @class.AcademicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            @class.AcademicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             try
             {
-                await CurriculumProcesses.CreateClass(@class, _context);
+                await CurriculumService.CreateClass(@class, _context);
             }
             catch (Exception e)
             {
@@ -171,7 +171,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumProcesses.UpdateClass(@class, _context);
+                await CurriculumService.UpdateClass(@class, _context);
             }
             catch (Exception e)
             {
@@ -188,7 +188,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumProcesses.DeleteClass(classId, _context);
+                await CurriculumService.DeleteClass(classId, _context);
             }
             catch (Exception e)
             {
@@ -205,7 +205,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumProcesses.GetSessionsByClass(classId, _context);
+                return await CurriculumService.GetSessionsByClass(classId, _context);
             }
             catch (Exception e)
             {
@@ -220,7 +220,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var sessions = await CurriculumProcesses.GetSessionsByClass(classId, _context);
+                var sessions = await CurriculumService.GetSessionsByClass(classId, _context);
 
                 return PrepareDataGridObject(sessions, dm);
             }
@@ -237,7 +237,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumProcesses.GetSessionById(sessionId, _context);
+                return await CurriculumService.GetSessionById(sessionId, _context);
             }
             catch (Exception e)
             {
@@ -252,7 +252,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumProcesses.CreateSession(session, _context);
+                await CurriculumService.CreateSession(session, _context);
             }
             catch (Exception e)
             {
@@ -269,7 +269,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumProcesses.CreateSessionForRegPeriods(session, _context);
+                await CurriculumService.CreateSessionForRegPeriods(session, _context);
             }
             catch (Exception e)
             {
@@ -286,7 +286,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumProcesses.UpdateSession(session, _context);
+                await CurriculumService.UpdateSession(session, _context);
             }
             catch (Exception e)
             {
@@ -303,7 +303,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumProcesses.DeleteSession(sessionId, _context);
+                await CurriculumService.DeleteSession(sessionId, _context);
             }
             catch (Exception e)
             {
@@ -320,7 +320,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumProcesses.GetEnrolmentsForClass(classId, _context);
+                return await CurriculumService.GetEnrolmentsForClass(classId, _context);
             }
             catch (Exception e)
             {
@@ -336,7 +336,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var enrolments = await CurriculumProcesses.GetEnrolmentsForClassDataGrid(classId, _context);
+                var enrolments = await CurriculumService.GetEnrolmentsForClassDataGrid(classId, _context);
 
                 return PrepareDataGridObject(enrolments, dm);
             }
@@ -353,7 +353,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumProcesses.GetEnrolmentsForStudent(studentId, _context);
+                return await CurriculumService.GetEnrolmentsForStudent(studentId, _context);
             }
             catch (Exception e)
             {
@@ -369,7 +369,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var enrolments = await CurriculumProcesses.GetEnrolmentsForStudentDataGrid(studentId, _context);
+                var enrolments = await CurriculumService.GetEnrolmentsForStudentDataGrid(studentId, _context);
 
                 return PrepareDataGridObject(enrolments, dm);
             }
@@ -386,7 +386,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumProcesses.GetEnrolmentById(enrolmentId, _context);
+                return await CurriculumService.GetEnrolmentById(enrolmentId, _context);
             }
             catch (Exception e)
             {
@@ -401,7 +401,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumProcesses.CreateEnrolment(enrolment, _context);
+                await CurriculumService.CreateEnrolment(enrolment, _context);
             }
             catch (Exception e)
             {
@@ -418,7 +418,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumProcesses.CreateEnrolmentsForRegGroup(enrolment, _context);
+                await CurriculumService.CreateEnrolmentsForRegGroup(enrolment, _context);
             }
             catch (Exception e)
             {
@@ -435,7 +435,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumProcesses.DeleteEnrolment(enrolmentId, _context);
+                await CurriculumService.DeleteEnrolment(enrolmentId, _context);
             }
             catch (Exception e)
             {
@@ -452,7 +452,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumProcesses.CreateSubject(subject, _context);
+                await CurriculumService.CreateSubject(subject, _context);
             }
             catch (Exception e)
             {
@@ -469,7 +469,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumProcesses.DeleteSubject(subjectId, _context);
+                await CurriculumService.DeleteSubject(subjectId, _context);
             }
             catch (Exception e)
             {
@@ -486,7 +486,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumProcesses.GetSubjectById(subjectId, _context);
+                return await CurriculumService.GetSubjectById(subjectId, _context);
             }
             catch (Exception e)
             {
@@ -501,7 +501,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumProcesses.GetAllSubjects(_context);
+                return await CurriculumService.GetAllSubjects(_context);
             }
             catch (Exception e)
             {
@@ -516,7 +516,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var subjects = await CurriculumProcesses.GetAllSubjectsDataGrid(_context);
+                var subjects = await CurriculumService.GetAllSubjectsDataGrid(_context);
 
                 return PrepareDataGridObject(subjects, dm);
             }
@@ -533,7 +533,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumProcesses.UpdateSubject(subject, _context);
+                await CurriculumService.UpdateSubject(subject, _context);
             }
             catch (Exception e)
             {
@@ -550,7 +550,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumProcesses.CreateStudyTopic(studyTopic, _context);
+                await CurriculumService.CreateStudyTopic(studyTopic, _context);
             }
             catch (Exception e)
             {
@@ -567,7 +567,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumProcesses.DeleteStudyTopic(studyTopicId, _context);
+                await CurriculumService.DeleteStudyTopic(studyTopicId, _context);
             }
             catch (Exception e)
             {
@@ -584,7 +584,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumProcesses.GetStudyTopicById(studyTopicId, _context);
+                return await CurriculumService.GetStudyTopicById(studyTopicId, _context);
             }
             catch (Exception e)
             {
@@ -599,7 +599,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumProcesses.GetAllStudyTopics(_context);
+                return await CurriculumService.GetAllStudyTopics(_context);
             }
             catch (Exception e)
             {
@@ -614,7 +614,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var studyTopics = await CurriculumProcesses.GetAllStudyTopicsDataGrid(_context);
+                var studyTopics = await CurriculumService.GetAllStudyTopicsDataGrid(_context);
 
                 return PrepareDataGridObject(studyTopics, dm);
             }
@@ -631,7 +631,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumProcesses.UpdateStudyTopic(studyTopic, _context);
+                await CurriculumService.UpdateStudyTopic(studyTopic, _context);
             }
             catch (Exception e)
             {
@@ -648,7 +648,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumProcesses.GetAllLessonPlans(_context);
+                return await CurriculumService.GetAllLessonPlans(_context);
             }
             catch (Exception e)
             {
@@ -663,7 +663,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumProcesses.GetLessonPlanById(lessonPlanId, _context);
+                return await CurriculumService.GetLessonPlanById(lessonPlanId, _context);
             }
             catch (Exception e)
             {
@@ -678,7 +678,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumProcesses.GetLessonPlansByStudyTopic(studyTopicId, _context);
+                return await CurriculumService.GetLessonPlansByStudyTopic(studyTopicId, _context);
             }
             catch (Exception e)
             {
@@ -694,7 +694,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var lessonPlans = await CurriculumProcesses.GetLessonPlansByStudyTopicDataGrid(studyTopicId, _context);
+                var lessonPlans = await CurriculumService.GetLessonPlansByStudyTopicDataGrid(studyTopicId, _context);
 
                 return PrepareDataGridObject(lessonPlans, dm);
             }
@@ -712,7 +712,7 @@ namespace MyPortal.Controllers.Api
             var userId = User.Identity.GetUserId();
             try
             {
-                await CurriculumProcesses.CreateLessonPlan(plan, userId, _context);
+                await CurriculumService.CreateLessonPlan(plan, userId, _context);
             }
             catch (Exception e)
             {
@@ -729,7 +729,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumProcesses.UpdateLessonPlan(plan, _context);
+                await CurriculumService.UpdateLessonPlan(plan, _context);
             }
             catch (Exception e)
             {
@@ -744,10 +744,10 @@ namespace MyPortal.Controllers.Api
         [Route("lessonPlans/delete/{lessonPlanId:int}", Name = "ApiCurriculumDeleteLessonPlan")]
         public async Task<IHttpActionResult> DeleteLessonPlan([FromUri] int lessonPlanId)
         {
-            var staffId = PeopleProcesses.GetStaffFromUserId(User.Identity.GetUserId(), _context).ResponseObject.Id;
+            var userId = User.Identity.GetUserId();
             try
             {
-                await CurriculumProcesses.DeleteLessonPlan(lessonPlanId, staffId,
+                await CurriculumService.DeleteLessonPlan(lessonPlanId, userId,
                     await User.HasPermissionAsync("DeleteAllLessonPlans"), _context);
             }
             catch (Exception e)

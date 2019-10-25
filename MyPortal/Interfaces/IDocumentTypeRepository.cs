@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IDocumentTypeRepository : IRepository<DocumentType>
+    public interface IDocumentTypeRepository : IReadOnlyRepository<DocumentType>
     {
 
     }

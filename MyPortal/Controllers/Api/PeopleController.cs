@@ -7,7 +7,7 @@ using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using System.Web.Http;
 using MyPortal.Attributes;
-using MyPortal.Processes;
+using MyPortal.Services;
 using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
@@ -24,7 +24,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var medicalConditions = await PeopleProcesses.GetMedicalConditionsByPersonDataGrid(personId, _context);
+                var medicalConditions = await PeopleService.GetMedicalConditionsByPersonDataGrid(personId, _context);
 
                 return PrepareDataGridObject(medicalConditions, dm);
             }
@@ -44,7 +44,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 var dietaryRequirements =
-                    await PeopleProcesses.GetMedicalDietaryRequirementsByPersonDataGrid(personId, _context);
+                    await PeopleService.GetMedicalDietaryRequirementsByPersonDataGrid(personId, _context);
 
                 return PrepareDataGridObject(dietaryRequirements, dm);
             }

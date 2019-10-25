@@ -5,7 +5,7 @@ using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Attributes;
 using MyPortal.Models.Database;
-using MyPortal.Processes;
+using MyPortal.Services;
 
 namespace MyPortal.Controllers.Api
 {
@@ -22,7 +22,7 @@ namespace MyPortal.Controllers.Api
 
             var autoApprove = await User.HasPermissionAsync("ApproveBulletins");
 
-            var result = await SystemProcesses.CreateBulletin(bulletin, userId, _context, autoApprove);
+            var result = await SystemService.CreateBulletin(bulletin, userId, _context, autoApprove);
 
             return PrepareResponse(result);
         }
@@ -34,7 +34,7 @@ namespace MyPortal.Controllers.Api
         {
             var approvable = await User.HasPermissionAsync("ApproveBulletins");
 
-            return PrepareResponse(SystemProcesses.UpdateBulletin(bulletin, _context, approvable));
+            return PrepareResponse(SystemService.UpdateBulletin(bulletin, _context, approvable));
         }
 
         [HttpDelete]
@@ -42,7 +42,7 @@ namespace MyPortal.Controllers.Api
         [Route("bulletins/delete/{bulletinId:int}", Name = "ApiSystemDeleteBulletin")]
         public IHttpActionResult DeleteBulletin([FromUri] int bulletinId)
         {
-            return PrepareResponse(SystemProcesses.DeleteBulletin(bulletinId, _context));
+            return PrepareResponse(SystemService.DeleteBulletin(bulletinId, _context));
         }
 
         [HttpGet]
@@ -50,7 +50,7 @@ namespace MyPortal.Controllers.Api
         [Route("bulletins/get/all", Name = "ApiSystemGetAllBulletins")]
         public IEnumerable<SystemBulletinDto> GetAllBulletins()
         {
-            return PrepareResponseObject(SystemProcesses.GetAllBulletins(_context));
+            return PrepareResponseObject(SystemService.GetAllBulletins(_context));
         }
 
         [HttpGet]
@@ -58,7 +58,7 @@ namespace MyPortal.Controllers.Api
         [Route("bulletins/get/approved", Name = "ApiSystemGetApprovedBulletins")]
         public IEnumerable<SystemBulletinDto> GetApprovedBulletins()
         {
-            return PrepareResponseObject(SystemProcesses.GetApprovedBulletins(_context));
+            return PrepareResponseObject(SystemService.GetApprovedBulletins(_context));
         }
 
         [HttpGet]
@@ -67,7 +67,7 @@ namespace MyPortal.Controllers.Api
         public IEnumerable<SystemBulletinDto> GetOwnBulletins()
         {
             var userId = User.Identity.GetUserId();
-            return PrepareResponseObject(SystemProcesses.GetOwnBulletins(userId, _context));
+            return PrepareResponseObject(SystemService.GetOwnBulletins(userId, _context));
         }
 
         [HttpGet]
@@ -75,7 +75,7 @@ namespace MyPortal.Controllers.Api
         [Route("bulletins/get/student", Name = "ApiSystemGetStudentBulletins")]
         public IEnumerable<SystemBulletinDto> GetStudentBulletins()
         {
-            return PrepareResponseObject(SystemProcesses.GetApprovedStudentBulletins(_context));
+            return PrepareResponseObject(SystemService.GetApprovedStudentBulletins(_context));
         }
     }
 }

@@ -8,7 +8,7 @@ using MyPortal.Dtos.Identity;
 using MyPortal.Models;
 using MyPortal.Attributes;
 using MyPortal.Models.Database;
-using MyPortal.Processes;
+using MyPortal.Services;
 using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers
@@ -82,7 +82,7 @@ namespace MyPortal.Controllers
         {
             var viewModel = new RolePermissionsViewModel();
 
-            var result = await AdminProcesses.GetRoleByIdModel(roleId, _roleManager);
+            var result = await AdminService.GetRoleByIdModel(roleId, _roleManager);
 
             viewModel.Role = result;
 

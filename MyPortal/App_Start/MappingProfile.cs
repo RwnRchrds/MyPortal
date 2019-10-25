@@ -9,7 +9,7 @@ using MyPortal.Dtos.LiteDtos;
 using MyPortal.Models;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
-using MyPortal.Processes;
+using MyPortal.Services;
 using Syncfusion.EJ2.Grids;
 
 namespace MyPortal
@@ -114,7 +114,7 @@ namespace MyPortal
 
             CreateMap<Student, GridStudentDto>()
                 .ForMember(dest => dest.DisplayName,
-                    opts => opts.MapFrom(src => PeopleProcesses.GetStudentDisplayName(src).ResponseObject))
+                    opts => opts.MapFrom(src => src.GetDisplayName()))
                 .ForMember(dest => dest.HouseName,
                     opts => opts.MapFrom(src => src.House.Name))
                 .ForMember(dest => dest.RegGroupName,
@@ -126,7 +126,7 @@ namespace MyPortal
                 .ForMember(dest => dest.Id,
                     opts => opts.MapFrom(src => src.Id))
                 .ForMember(dest => dest.AuthorName,
-                    opts => opts.MapFrom(src => PeopleProcesses.GetDisplayName(src.Author).ResponseObject))
+                    opts => opts.MapFrom(src => src.Author.GetDisplayName()))
                 .ForMember(dest => dest.Date,
                     opts => opts.MapFrom(src => src.Date))
                 .ForMember(dest => dest.LogTypeName,
@@ -156,7 +156,7 @@ namespace MyPortal
                 .ForMember(dest => dest.TypeName,
                     opts => opts.MapFrom(src => src.Type.Description))
                 .ForMember(dest => dest.RecordedBy,
-                    opts => opts.MapFrom(src => PeopleProcesses.GetDisplayName(src.RecordedBy).ResponseObject));
+                    opts => opts.MapFrom(src => src.RecordedBy.GetDisplayName()));
 
             CreateMap<BehaviourIncident, GridBehaviourIncidentDto>()
                 .ForMember(dest => dest.Location,
@@ -164,13 +164,13 @@ namespace MyPortal
                 .ForMember(dest => dest.TypeName,
                     opts => opts.MapFrom(src => src.Type.Description))
                 .ForMember(dest => dest.RecordedBy,
-                    opts => opts.MapFrom(src => PeopleProcesses.GetDisplayName(src.RecordedBy).ResponseObject));
+                    opts => opts.MapFrom(src => src.RecordedBy.GetDisplayName()));
 
             CreateMap<PersonnelObservation, GridPersonnelObservationDto>()
                 .ForMember(dest => dest.ObserveeName,
-                    opts => opts.MapFrom(src => PeopleProcesses.GetDisplayName(src.Observee).ResponseObject))
+                    opts => opts.MapFrom(src => src.Observee.GetDisplayName()))
                 .ForMember(dest => dest.ObserverName,
-                    opts => opts.MapFrom(src => PeopleProcesses.GetDisplayName(src.Observer).ResponseObject))
+                    opts => opts.MapFrom(src => src.Observer.GetDisplayName()))
                 .ForMember(dest => dest.Outcome,
                     opts => opts.MapFrom(src => src.Outcome.ToString()));
 
@@ -190,7 +190,7 @@ namespace MyPortal
                 .ForMember(dest => dest.ProductDescription,
                     opts => opts.MapFrom(src => src.Product.Description))
                 .ForMember(dest => dest.StudentName,
-                    opts => opts.MapFrom(src => PeopleProcesses.GetStudentDisplayName(src.Student).ResponseObject));
+                    opts => opts.MapFrom(src => src.Student.GetDisplayName()));
 
             CreateMap<AssessmentResultSet, GridAssessmentResultSetDto>();
 
@@ -200,19 +200,19 @@ namespace MyPortal
                 .ForMember(dest => dest.PeriodName,
                     opts => opts.MapFrom(src => src.Period.Name))
                 .ForMember(dest => dest.Teacher,
-                    opts => opts.MapFrom(src => PeopleProcesses.GetDisplayName(src.Class.Teacher).ResponseObject))
+                    opts => opts.MapFrom(src => src.Class.Teacher.GetDisplayName()))
                 .ForMember(dest => dest.Time,
-                    opts => opts.MapFrom(src => AttendanceProcesses.GetPeriodTime(src.Period)));
+                    opts => opts.MapFrom(src => AttendanceService.GetPeriodTime(src.Period)));
 
             CreateMap<CurriculumClass, GridCurriculumClassDto>()
                 .ForMember(dest => dest.Subject,
-                    opts => opts.MapFrom(src => CurriculumProcesses.GetSubjectNameForClass(src)))
+                    opts => opts.MapFrom(src => CurriculumService.GetSubjectNameForClass(src)))
                 .ForMember(dest => dest.Teacher,
-                    opts => opts.MapFrom(src => PeopleProcesses.GetDisplayName(src.Teacher).ResponseObject));
+                    opts => opts.MapFrom(src => src.Teacher.GetDisplayName()));
 
             CreateMap<CurriculumEnrolment, GridCurriculumEnrolmentDto>()
                 .ForMember(dest => dest.StudentName,
-                    opts => opts.MapFrom(src => PeopleProcesses.GetStudentDisplayName(src.Student).ResponseObject))
+                    opts => opts.MapFrom(src => src.Student.GetDisplayName()))
                 .ForMember(dest => dest.ClassName,
                     opts => opts.MapFrom(src => src.Class.Name));
 
@@ -220,7 +220,7 @@ namespace MyPortal
                 .ForMember(dest => dest.StudyTopic,
                     opts => opts.MapFrom(src => src.StudyTopic.Name))
                 .ForMember(dest => dest.Author,
-                    opts => opts.MapFrom(src => PeopleProcesses.GetDisplayName(src.Author).ResponseObject));
+                    opts => opts.MapFrom(src => src.Author.GetDisplayName()));
 
             CreateMap<CurriculumStudyTopic, GridCurriculumStudyTopicDto>()
                 .ForMember(dest => dest.SubjectName,
@@ -230,11 +230,11 @@ namespace MyPortal
 
             CreateMap<CurriculumSubject, GridCurriculumSubjectDto>()
                 .ForMember(dest => dest.LeaderName,
-                    opts => opts.MapFrom(src => PeopleProcesses.GetDisplayName(src.Leader).ResponseObject));
+                    opts => opts.MapFrom(src => src.Leader.GetDisplayName()));
 
             CreateMap<StaffMember, GridStaffMemberDto>()
                 .ForMember(dest => dest.DisplayName,
-                    opts => opts.MapFrom(src => PeopleProcesses.GetStaffFullName(src).ResponseObject));
+                    opts => opts.MapFrom(src => src.GetFullName()));
 
             CreateMap<PersonnelTrainingCourse, GridPersonnelTrainingCourseDto>();
 
@@ -242,7 +242,7 @@ namespace MyPortal
                 .ForMember(dest => dest.ProductDescription,
                     opts => opts.MapFrom(src => src.Product.Description))
                 .ForMember(dest => dest.StudentName,
-                    opts => opts.MapFrom(src => PeopleProcesses.GetStudentDisplayName(src.Student)));
+                    opts => opts.MapFrom(src => src.Student.GetDisplayName()));
             CreateMap<ProfileComment, GridProfileCommentDto>()
                 .ForMember(dest => dest.CommentBankName,
                     opts => opts.MapFrom(src => src.CommentBank.Name));
@@ -263,7 +263,7 @@ namespace MyPortal
                 .ForMember(dest => dest.ResultSet,
                     opts => opts.MapFrom(src => src.ResultSet.Name))
                 .ForMember(dest => dest.StudentName,
-                    opts => opts.MapFrom(src => PeopleProcesses.GetStudentDisplayName(src.Student)))
+                    opts => opts.MapFrom(src => src.Student.GetDisplayName()))
                 .ForMember(dest => dest.Aspect,
                     opts => opts.MapFrom(src => src.Aspect.Description));
 

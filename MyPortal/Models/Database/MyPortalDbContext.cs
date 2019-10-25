@@ -42,7 +42,6 @@ namespace MyPortal.Models.Database
         public virtual DbSet<CommunicationPhoneNumberType> CommunicationPhoneNumberTypes { get; set; }
         public virtual DbSet<CommunicationType> CommunicationTypes { get; set; }
         public virtual DbSet<Contact> Contacts { get; set; }
-        public virtual DbSet<ContactType> ContactTypes { get; set; }
         public virtual DbSet<CurriculumAcademicYear> CurriculumAcademicYears { get; set; }
         public virtual DbSet<CurriculumClass> CurriculumClasses { get; set; }
         public virtual DbSet<CurriculumEnrolment> CurriculumEnrolments { get; set; }
@@ -74,6 +73,7 @@ namespace MyPortal.Models.Database
         public virtual DbSet<ProfileComment> ProfileComments { get; set; }
         public virtual DbSet<ProfileLog> ProfileLogs { get; set; }
         public virtual DbSet<ProfileLogType> ProfileLogTypes { get; set; }
+        public virtual DbSet<RelationshipType> RelationshipTypes { get; set; }
         public virtual DbSet<SchoolGovernanceType> SchoolGovernanceTypes { get; set; }
         public virtual DbSet<SchoolIntakeType> SchoolIntakeTypes { get; set; }
         public virtual DbSet<SchoolLocation> SchoolLocations { get; set; }

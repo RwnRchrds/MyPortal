@@ -6,7 +6,7 @@ using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Attributes;
 using MyPortal.Models.Database;
-using MyPortal.Processes;
+using MyPortal.Services;
 using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
@@ -22,7 +22,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await StaffProcesses.CreateStaffMember(staffMember, _context);
+                await StaffMemberService.CreateStaffMember(staffMember, _context);
             }
             catch (Exception e)
             {
@@ -41,7 +41,7 @@ namespace MyPortal.Controllers.Api
 
             try
             {
-                await StaffProcesses.DeleteStaffMember(staffMemberId, userId, _context);
+                await StaffMemberService.DeleteStaffMember(staffMemberId, userId, _context);
             }
             catch (Exception e)
             {
@@ -58,7 +58,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await StaffProcesses.UpdateStaffMember(staffMember, _context);
+                await StaffMemberService.UpdateStaffMember(staffMember, _context);
             }
             catch (Exception e)
             {
@@ -75,7 +75,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await StaffProcesses.GetAllStaffMembers(_context);
+                return await StaffMemberService.GetAllStaffMembers(_context);
             }
             catch (Exception e)
             {
@@ -90,7 +90,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var staff = await StaffProcesses.GetAllStaffMembersDataGrid(_context);
+                var staff = await StaffMemberService.GetAllStaffMembersDataGrid(_context);
 
                 return PrepareDataGridObject(staff, dm);
             }
@@ -106,28 +106,12 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await StaffProcesses.
+                return await StaffMemberService.GetStaffMemberById(staffMemberId, _context);
             }
             catch (Exception e)
             {
                 throw GetException(e);
             }
-        }
-
-        [HttpGet]
-        [RequiresPermission("EditStaff")]
-        [Route("hasDocuments/{staffMemberId:int}", Name = "ApiPeopleStaffMemberHasDocuments")]
-        public bool StaffMemberHasDocuments([FromUri] int staffMemberId)
-        {
-            return PrepareResponseObject(PeopleProcesses.PersonHasDocuments(staffMemberId, _context));
-        }
-
-        [HttpGet]
-        [RequiresPermission("EditStaff")]
-        [Route("hasLogs/{staffMemberId:int}", Name = "ApiPeopleStaffHasLogs")]
-        public bool StaffHasLogs([FromUri] int staffMemberId)
-        {
-            return PrepareResponseObject(PeopleProcesses.StaffMemberHasWrittenLogs(staffMemberId, _context));
         }
     }
 }

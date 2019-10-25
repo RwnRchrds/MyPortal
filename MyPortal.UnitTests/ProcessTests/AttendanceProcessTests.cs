@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MyPortal.Models.Misc;
-using MyPortal.Processes;
+using MyPortal.Services;
 using NUnit.Framework;
 
 namespace MyPortal.UnitTests.ProcessTests
@@ -18,7 +18,7 @@ namespace MyPortal.UnitTests.ProcessTests
 
             Assert.That(academicYear != null);
 
-            var result = AttendanceProcesses.CreateAttendanceWeeksForAcademicYear(academicYear.Id, _context);
+            var result = AttendanceService.CreateAttendanceWeeksForAcademicYear(academicYear.Id, _context);
 
             Assert.That(_context.AttendanceWeeks.Count(x => x.AcademicYearId == academicYear.Id) > 50);
         }

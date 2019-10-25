@@ -8,7 +8,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using MyPortal.Models;
 using MyPortal.Models.Database;
-using MyPortal.Processes;
+using MyPortal.Services;
 
 namespace MyPortal.Controllers
 {
@@ -138,7 +138,7 @@ namespace MyPortal.Controllers
                 throw new Exception("User not found");
             }
 
-            var academicYearId = await SystemProcesses.GetCurrentAcademicYearId(_context);
+            var academicYearId = await SystemService.GetCurrentAcademicYearId(_context);
 
             user.SelectedAcademicYearId = academicYearId;
 

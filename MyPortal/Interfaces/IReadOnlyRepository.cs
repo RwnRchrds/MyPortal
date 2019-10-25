@@ -13,8 +13,6 @@ namespace MyPortal.Interfaces
 
         Task<IEnumerable<TEntity>> GetAllAsync();
 
-        Task<IEnumerable<TEntity>> GetWhereAsync(Expression<Func<TEntity, bool>> predicate);
-
         Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate);
     }
 }

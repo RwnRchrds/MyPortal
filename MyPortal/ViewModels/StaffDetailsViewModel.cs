@@ -4,7 +4,7 @@ using MyPortal.Dtos;
 using MyPortal.Models;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
-using MyPortal.Processes;
+using MyPortal.Services;
 
 namespace MyPortal.ViewModels
 {
@@ -12,7 +12,7 @@ namespace MyPortal.ViewModels
     {
         public StaffDetailsViewModel()
         {
-            Titles = LookupProcesses.GetTitles().ResponseObject;
+            Titles = LookupService.GetTitles().ResponseObject;
             ObservationOutcomes = new List<string>{"Outstanding","Good","Satisfactory","Inadequate"};
         }
 

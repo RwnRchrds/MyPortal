@@ -12,7 +12,7 @@ using Microsoft.Owin.Security.Provider;
 using MyPortal.Attributes;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
-using MyPortal.Processes;
+using MyPortal.Services;
 using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers
@@ -103,7 +103,7 @@ namespace MyPortal.Controllers
                 return RedirectToAction("Registers");
             }
 
-            var sessionDate = await AttendanceProcesses.GetPeriodDate(attendanceWeek.Id, session.PeriodId, _context);
+            var sessionDate = await AttendanceService.GetPeriodDate(attendanceWeek.Id, session.PeriodId, _context);
 
             viewModel.Session = session;
             viewModel.WeekId = attendanceWeek.Id;
@@ -265,24 +265,7 @@ namespace MyPortal.Controllers
         }
 
         
-        [HttpPost]
-        [RequiresPermission("EditStudents")]
-        [ValidateAntiForgeryToken]
-        public ActionResult CreateStudent(Student student)
-        {
-            if (!ModelState.IsValid)
-            {
-                var viewModel = new NewStudentViewModel
-                {
-                    Student = student
-                };
-                return View("~/Views/Staff/People/Students/NewStudent.cshtml", viewModel);
-            }
-
-            PeopleProcesses.CreateStudent(student, _context);
-            
-            return RedirectToAction("Students", "Staff");
-        }
+        
 
 
         [RequiresPermission("EditStudents")]
@@ -327,24 +310,24 @@ namespace MyPortal.Controllers
             if (student == null)
                 return HttpNotFound();
 
-            var logTypes = await ProfilesProcesses.GetAllLogTypesLookup(_context);
+            var logTypes = await ProfilesService.GetAllLogTypesLookup(_context);
 
-            var commentBanks = ProfilesProcesses.GetAllCommentBanksLookup(_context);
+            var commentBanks = ProfilesService.GetAllCommentBanksLookup(_context);
 
-            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             double? attendance = null;
 
-            var attendanceData = await AttendanceProcesses.GetSummary(student.Id, academicYearId, _context, true);
+            var attendanceData = await AttendanceService.GetSummary(student.Id, academicYearId, _context, true);
 
             if (attendanceData != null)
             {
                 attendance = attendanceData.Present + attendanceData.Late;
             }
 
-            int? achievementCount = await BehaviourProcesses.GetAchievementPointsCountByStudent(student.Id, academicYearId, _context);
+            int? achievementCount = await BehaviourService.GetAchievementPointsCountByStudent(student.Id, academicYearId, _context);
 
-            int? behaviourCount = await BehaviourProcesses.GetBehaviourPointsCountByStudent(student.Id, academicYearId, _context);
+            int? behaviourCount = await BehaviourService.GetBehaviourPointsCountByStudent(student.Id, academicYearId, _context);
 
             var viewModel = new StudentDetailsViewModel
             {
@@ -372,11 +355,11 @@ namespace MyPortal.Controllers
                 return HttpNotFound();
             }
 
-            var yearGroups = await PastoralProcesses.GetAllYearGroupsLookup(_context);
+            var yearGroups = await PastoralService.GetAllYearGroupsLookup(_context);
 
-            var regGroups = await PastoralProcesses.GetAllRegGroupsLookup(_context);
+            var regGroups = await PastoralService.GetAllRegGroupsLookup(_context);
 
-            var houses = await PastoralProcesses.GetAllHousesLookup(_context);
+            var houses = await PastoralService.GetAllHousesLookup(_context);
 
             var viewModel = new StudentExtendedDetailsViewModel
             {
@@ -508,7 +491,7 @@ namespace MyPortal.Controllers
         {
             if (!ModelState.IsValid) return View("~/Views/Staff/Personnel/NewTrainingCourse.cshtml");
 
-            PersonnelProcesses.CreateCourse(course, _context);
+            PersonnelService.CreateCourse(course, _context);
 
             return RedirectToAction("TrainingCourses", "Staff");
         }
@@ -549,18 +532,15 @@ namespace MyPortal.Controllers
         {
             var userId = User.Identity.GetUserId();
 
-            var staff = PeopleProcesses.GetStaffFromUserId(userId, _context);
+            var staff = await StaffMemberService.GetStaffFromUserId(userId, _context);
 
-            var academicYears = await CurriculumProcesses.GetAcademicYearsModel(_context);
+            var academicYears = await CurriculumService.GetAcademicYearsModel(_context);
 
-            var selectedAcademicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
-
-            if (staff.ResponseType == ResponseType.NotFound)
-                return View("~/Views/Staff/NoProfileIndex.cshtml");
+            var selectedAcademicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             var viewModel = new StaffHomeViewModel
             {
-                CurrentUser = PrepareResponseObject(staff),
+                CurrentUser = staff,
                 CurriculumAcademicYears = academicYears,
                 SelectedAcademicYearId = selectedAcademicYearId
             };

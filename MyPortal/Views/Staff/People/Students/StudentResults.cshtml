@@ -1,4 +1,4 @@
-﻿@using MyPortal.Processes
+﻿@using MyPortal.Services
 @using Syncfusion.EJ2.Grids
 @model MyPortal.ViewModels.StudentResultsViewModel
 @{
@@ -8,7 +8,7 @@
 }
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">@PeopleProcesses.GetStudentDisplayName(Model.Student).ResponseObject</h1>
+    <h1 class="h3 mb-0 text-gray-800">@PeopleService.GetStudentDisplayName(Model.Student).ResponseObject</h1>
 </div>
 
 <div class="row">

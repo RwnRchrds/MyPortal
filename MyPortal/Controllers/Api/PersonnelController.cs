@@ -4,7 +4,7 @@ using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Attributes;
 using MyPortal.Models.Database;
-using MyPortal.Processes;
+using MyPortal.Services;
 using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
@@ -19,7 +19,7 @@ namespace MyPortal.Controllers.Api
         public IHttpActionResult CreateTrainingCertificate([FromBody] PersonnelTrainingCertificate certificate)
         {
             var userId = User.Identity.GetUserId();
-            return PrepareResponse(PersonnelProcesses.CreateTrainingCertificate(certificate, userId, _context));
+            return PrepareResponse(PersonnelService.CreateTrainingCertificate(certificate, userId, _context));
         }
 
         [HttpDelete]
@@ -28,7 +28,7 @@ namespace MyPortal.Controllers.Api
         public IHttpActionResult DeleteCertificate([FromUri] int staffId, [FromUri] int courseId)
         {
             var userId = User.Identity.GetUserId();
-            return PrepareResponse(PersonnelProcesses.DeleteTrainingCertificate(staffId, courseId, userId, _context));
+            return PrepareResponse(PersonnelService.DeleteTrainingCertificate(staffId, courseId, userId, _context));
         }
         
         [HttpGet]
@@ -36,7 +36,7 @@ namespace MyPortal.Controllers.Api
         [Route("certificates/get/{staffId:int}/{courseId:int}", Name = "ApiPersonnelGetTrainingCertificate")]
         public PersonnelTrainingCertificateDto GetTrainingCertificate([FromUri] int staffId, [FromUri] int courseId)
         {
-            return PrepareResponseObject(PersonnelProcesses.GetCertificate(staffId, courseId, _context));
+            return PrepareResponseObject(PersonnelService.GetCertificate(staffId, courseId, _context));
         }
 
         [HttpGet]
@@ -44,7 +44,7 @@ namespace MyPortal.Controllers.Api
         [Route("certificates/get/byStaff/{staffId:int}", Name = "ApiPersonnelGetTrainingCertificatesByStaffMember")]
         public IEnumerable<PersonnelTrainingCertificateDto> GetCertificatesByStaffMember([FromUri] int staffId)
         {
-            return PrepareResponseObject(PersonnelProcesses.GetCertificatesByStaffMember(staffId, _context));
+            return PrepareResponseObject(PersonnelService.GetCertificatesByStaffMember(staffId, _context));
         }
 
         [HttpPost]
@@ -52,7 +52,7 @@ namespace MyPortal.Controllers.Api
         [Route("certificates/get/byStaff/dataGrid/{staffId:int}", Name = "ApiPersonnelGetTrainingCertificatesByStaffMemberDataGrid")]
         public IHttpActionResult GetCertificatesForStaffMemberDataGrid([FromUri] int staffId, [FromBody] DataManagerRequest dm)
         {
-            var certs = PrepareResponseObject(PersonnelProcesses.GetCertificatesForStaffMember_DataGrid(staffId, _context));
+            var certs = PrepareResponseObject(PersonnelService.GetCertificatesForStaffMember_DataGrid(staffId, _context));
 
             return PrepareDataGridObject(certs, dm);
         }
@@ -63,7 +63,7 @@ namespace MyPortal.Controllers.Api
         public IHttpActionResult UpdateCertificate([FromBody] PersonnelTrainingCertificate certificate)
         {
             var userId = User.Identity.GetUserId();
-            return PrepareResponse(PersonnelProcesses.UpdateCertificate(certificate, userId, _context));
+            return PrepareResponse(PersonnelService.UpdateCertificate(certificate, userId, _context));
         }
 
         [HttpDelete]
@@ -71,7 +71,7 @@ namespace MyPortal.Controllers.Api
         [Route("courses/remove/{courseId:int}", Name = "ApiPersonnelDeleteTrainingCourse")]
         public IHttpActionResult DeleteCourse([FromUri] int courseId)
         {
-            return PrepareResponse(PersonnelProcesses.DeleteCourse(courseId, _context));
+            return PrepareResponse(PersonnelService.DeleteCourse(courseId, _context));
         }
 
         [HttpGet]
@@ -79,7 +79,7 @@ namespace MyPortal.Controllers.Api
         [RequiresPermission("ViewTrainingCourses")]
         public PersonnelTrainingCourseDto GetCourseById([FromUri] int courseId)
         {
-            return PrepareResponseObject(PersonnelProcesses.GetCourseById(courseId, _context));
+            return PrepareResponseObject(PersonnelService.GetCourseById(courseId, _context));
         }
 
         [HttpGet]
@@ -87,7 +87,7 @@ namespace MyPortal.Controllers.Api
         [RequiresPermission("ViewTrainingCourses")]
         public IEnumerable<PersonnelTrainingCourseDto> GetCourses()
         {
-            return PrepareResponseObject(PersonnelProcesses.GetAllTrainingCourses(_context));
+            return PrepareResponseObject(PersonnelService.GetAllTrainingCourses(_context));
         }
 
         [HttpPost]
@@ -95,7 +95,7 @@ namespace MyPortal.Controllers.Api
         [RequiresPermission("ViewTrainingCourses")]
         public IHttpActionResult GetAllTrainingCourseDataGrid([FromBody] DataManagerRequest dm)
         {
-            var trainingCourses = PrepareResponseObject(PersonnelProcesses.GetAllTrainingCourses_DataGrid(_context));
+            var trainingCourses = PrepareResponseObject(PersonnelService.GetAllTrainingCourses_DataGrid(_context));
 
             return PrepareDataGridObject(trainingCourses, dm);
         }
@@ -105,7 +105,7 @@ namespace MyPortal.Controllers.Api
         [RequiresPermission("EditTrainingCourses")]
         public IHttpActionResult UpdateCourse([FromBody] PersonnelTrainingCourse course)
         {
-            return PrepareResponse(PersonnelProcesses.UpdateCourse(course, _context));
+            return PrepareResponse(PersonnelService.UpdateCourse(course, _context));
         }
 
         [HttpPost]
@@ -114,7 +114,7 @@ namespace MyPortal.Controllers.Api
         public IHttpActionResult CreateObservation([FromBody] PersonnelObservation data)
         {
             var userId = User.Identity.GetUserId();
-            return PrepareResponse(PersonnelProcesses.CreateObservation(data, userId, _context));
+            return PrepareResponse(PersonnelService.CreateObservation(data, userId, _context));
         }
 
         [HttpGet]
@@ -122,7 +122,7 @@ namespace MyPortal.Controllers.Api
         [Route("observations/get/byId/{observationId:int}", Name = "ApiPersonnelGetObservationById")]
         public PersonnelObservationDto GetObservation([FromUri] int observationId)
         {
-            return PrepareResponseObject(PersonnelProcesses.GetObservationById(observationId, _context));
+            return PrepareResponseObject(PersonnelService.GetObservationById(observationId, _context));
         }  
         
         [HttpGet]
@@ -130,7 +130,7 @@ namespace MyPortal.Controllers.Api
         [Route("observations/get/byStaff/{staffMemberId:int}", Name = "ApiPersonnelGetObservationsByStaffMember")]
         public IEnumerable<PersonnelObservationDto> GetObservationsByStaffMember([FromUri] int staffMemberId)
         {
-            return PrepareResponseObject(PersonnelProcesses.GetObservationsByStaffMember(staffMemberId, _context));
+            return PrepareResponseObject(PersonnelService.GetObservationsByStaffMember(staffMemberId, _context));
         }
 
         [HttpPost]
@@ -141,7 +141,7 @@ namespace MyPortal.Controllers.Api
         {
             var observations =
                 PrepareResponseObject(
-                    PersonnelProcesses.GetObservationsForStaffMember_DataGrid(staffMemberId, _context));
+                    PersonnelService.GetObservationsForStaffMember_DataGrid(staffMemberId, _context));
 
             return PrepareDataGridObject(observations, dm);
         }
@@ -152,7 +152,7 @@ namespace MyPortal.Controllers.Api
         public IHttpActionResult RemoveObservation([FromUri] int observationId)
         {
             var userId = User.Identity.GetUserId();
-            return PrepareResponse(PersonnelProcesses.DeleteObservation(observationId, userId, _context));
+            return PrepareResponse(PersonnelService.DeleteObservation(observationId, userId, _context));
         }
 
         [HttpPost]
@@ -161,7 +161,7 @@ namespace MyPortal.Controllers.Api
         public IHttpActionResult UpdateObservation([FromBody] PersonnelObservation observation)
         {
             var userId = User.Identity.GetUserId();
-            return PrepareResponse(PersonnelProcesses.UpdateObservation(observation, userId, _context));
+            return PrepareResponse(PersonnelService.UpdateObservation(observation, userId, _context));
         }
     }
 }

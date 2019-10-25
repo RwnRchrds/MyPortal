@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IProfileLogTypeRepository : IRepository<ProfileLogType>
+    public interface IProfileLogTypeRepository : IReadOnlyRepository<ProfileLogType>
     {
 
     }

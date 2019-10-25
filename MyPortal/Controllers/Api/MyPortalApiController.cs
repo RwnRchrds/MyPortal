@@ -9,8 +9,9 @@ using Microsoft.AspNet.Identity;
 using MyPortal.Models;
 using MyPortal.Models.Database;
 using MyPortal.Exceptions;
+using MyPortal.Interfaces;
 using MyPortal.Models.Misc;
-using MyPortal.Processes;
+using MyPortal.Services;
 using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
@@ -31,7 +32,7 @@ namespace MyPortal.Controllers.Api
 
         protected override void Dispose(bool disposing)
         {
-            _context.Dispose();
+            
         }
 
         //If ProcessResponse does NOT return an object

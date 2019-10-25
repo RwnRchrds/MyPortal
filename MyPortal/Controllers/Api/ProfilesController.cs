@@ -5,7 +5,7 @@ using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Attributes;
 using MyPortal.Models.Database;
-using MyPortal.Processes;
+using MyPortal.Services;
 using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
@@ -19,10 +19,10 @@ namespace MyPortal.Controllers.Api
         [Route("logs/create", Name = "ApiProfilesCreateLog")]
         public async Task<IHttpActionResult> CreateLog([FromBody] ProfileLog log)
         {
-            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
             var userId = User.Identity.GetUserId();
 
-            return PrepareResponse(ProfilesProcesses.CreateLog(log, academicYearId, userId, _context));
+            return PrepareResponse(ProfilesService.CreateLog(log, academicYearId, userId, _context));
         }
         
         [Route("logs/delete/{logId:int}", Name = "ApiProfilesDeleteLog")]
@@ -30,7 +30,7 @@ namespace MyPortal.Controllers.Api
         [HttpDelete]
         public IHttpActionResult DeleteLog([FromUri] int logId)
         {
-            return PrepareResponse(ProfilesProcesses.DeleteLog(logId, _context));
+            return PrepareResponse(ProfilesService.DeleteLog(logId, _context));
         }
 
         [HttpGet]
@@ -38,7 +38,7 @@ namespace MyPortal.Controllers.Api
         [RequiresPermission("ViewProfileLogs")]
         public ProfileLogDto GetLogById([FromUri] int logId)
         {
-            return PrepareResponseObject(ProfilesProcesses.GetLogById(logId, _context));
+            return PrepareResponseObject(ProfilesService.GetLogById(logId, _context));
         }
         
         [HttpGet]
@@ -47,9 +47,9 @@ namespace MyPortal.Controllers.Api
         public async Task<IEnumerable<ProfileLogDto>> GetLogsByStudent([FromUri] int studentId)
         {
             await AuthenticateStudentRequest(studentId);
-            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
 
-            return PrepareResponseObject(ProfilesProcesses.GetLogsByStudent(studentId, academicYearId, _context));
+            return PrepareResponseObject(ProfilesService.GetLogsByStudent(studentId, academicYearId, _context));
         }
 
         [HttpPost]
@@ -58,9 +58,9 @@ namespace MyPortal.Controllers.Api
         public async Task<IHttpActionResult> GetLogsByStudentDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
         {
             await AuthenticateStudentRequest(studentId);
-            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
             var logs = PrepareResponseObject(
-                ProfilesProcesses.GetLogsByStudent_DataGrid(studentId, academicYearId, _context));
+                ProfilesService.GetLogsByStudent_DataGrid(studentId, academicYearId, _context));
 
             return PrepareDataGridObject(logs, dm);
         }
@@ -70,7 +70,7 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         public IHttpActionResult UpdateLog([FromBody] ProfileLog log)
         {
-            return PrepareResponse(ProfilesProcesses.UpdateLog(log, _context));
+            return PrepareResponse(ProfilesService.UpdateLog(log, _context));
         }
 
         [HttpGet]
@@ -78,7 +78,7 @@ namespace MyPortal.Controllers.Api
         [Route("commentBanks/hasComments/{bankId:int}", Name = "ApiProfilesCommentBankHasComments")]
         public bool CommentBankHasComments([FromUri] int bankId)
         {
-            return PrepareResponseObject(ProfilesProcesses.CommentBankHasComments(bankId, _context));
+            return PrepareResponseObject(ProfilesService.CommentBankHasComments(bankId, _context));
         }
         
         [HttpPost]
@@ -86,7 +86,7 @@ namespace MyPortal.Controllers.Api
         [Route("commentBanks/create", Name = "ApiProfilesCreateCommentBank")]
         public IHttpActionResult CreateCommentBank([FromBody] ProfileCommentBank commentBank)
         {
-            return PrepareResponse(ProfilesProcesses.CreateCommentBank(commentBank, _context));
+            return PrepareResponse(ProfilesService.CreateCommentBank(commentBank, _context));
         }
 
         [HttpDelete]
@@ -94,7 +94,7 @@ namespace MyPortal.Controllers.Api
         [Route("commentBanks/delete/{commentBankId:int}", Name = "ApiProfilesDeleteCommentBank")]
         public IHttpActionResult DeleteCommentBank([FromUri] int commentBankId)
         {
-            return PrepareResponse(ProfilesProcesses.DeleteCommentBank(commentBankId, _context));
+            return PrepareResponse(ProfilesService.DeleteCommentBank(commentBankId, _context));
         }
 
         [HttpGet]
@@ -102,7 +102,7 @@ namespace MyPortal.Controllers.Api
         [Route("commentBanks/get/byId/{commentBankId:int}", Name = "ApiProfilesGetCommentBankById")]
         public ProfileCommentBankDto GetCommentBankById([FromUri] int commentBankId)
         {
-            return PrepareResponseObject(ProfilesProcesses.GetCommentBankById(commentBankId, _context));
+            return PrepareResponseObject(ProfilesService.GetCommentBankById(commentBankId, _context));
         }
 
         [HttpGet]
@@ -110,7 +110,7 @@ namespace MyPortal.Controllers.Api
         [Route("commentBanks/get/all", Name = "ApiProfilesGetAllCommentBanks")]
         public IEnumerable<ProfileCommentBankDto> GetAllCommentBanks()
         {
-            return PrepareResponseObject(ProfilesProcesses.GetAllCommentBanks(_context));
+            return PrepareResponseObject(ProfilesService.GetAllCommentBanks(_context));
         }
 
         [HttpPost]
@@ -118,7 +118,7 @@ namespace MyPortal.Controllers.Api
         [Route("commentBanks/get/dataGrid/all", Name = "ApiProfilesGetAllCommentBanksDataGrid")]
         public IHttpActionResult GetAllCommentBanksDataGrid([FromBody] DataManagerRequest dm)
         {
-            var commentBanks = PrepareResponseObject(ProfilesProcesses.GetAllCommentBanksDataGrid(_context));
+            var commentBanks = PrepareResponseObject(ProfilesService.GetAllCommentBanksDataGrid(_context));
 
             return PrepareDataGridObject(commentBanks, dm);
         }
@@ -128,7 +128,7 @@ namespace MyPortal.Controllers.Api
         [Route("commentBanks/update", Name = "ApiProfilesUpdateCommentBank")]
         public IHttpActionResult UpdateCommentBank([FromBody] ProfileCommentBank commentBank)
         {
-            return PrepareResponse(ProfilesProcesses.UpdateCommentBank(commentBank, _context));
+            return PrepareResponse(ProfilesService.UpdateCommentBank(commentBank, _context));
         }
 
         [HttpPost]
@@ -136,7 +136,7 @@ namespace MyPortal.Controllers.Api
         [Route("comments/create", Name = "ApiProfilesCreateComment")]
         public IHttpActionResult CreateComment([FromBody] ProfileComment comment)
         {
-            return PrepareResponse(ProfilesProcesses.CreateComment(comment, _context));
+            return PrepareResponse(ProfilesService.CreateComment(comment, _context));
         }
 
         [HttpDelete]
@@ -144,7 +144,7 @@ namespace MyPortal.Controllers.Api
         [Route("comments/delete/{commentId:int}", Name = "ApiProfilesDeleteComment")]
         public IHttpActionResult DeleteComment(int commentId)
         {
-            return PrepareResponse(ProfilesProcesses.DeleteComment(commentId, _context));
+            return PrepareResponse(ProfilesService.DeleteComment(commentId, _context));
         }
 
         [HttpGet]
@@ -152,7 +152,7 @@ namespace MyPortal.Controllers.Api
         [Route("comments/get/byId/{commentId:int}", Name = "ApiProfilesGetCommentById")]
         public ProfileCommentDto GetCommentById([FromUri] int commentId)
         {
-            return PrepareResponseObject(ProfilesProcesses.GetCommentById(commentId, _context));
+            return PrepareResponseObject(ProfilesService.GetCommentById(commentId, _context));
         }
 
         [HttpGet]
@@ -160,7 +160,7 @@ namespace MyPortal.Controllers.Api
         [Route("comments/get/all", Name = "ApiProfilesGetAllComments")]
         public IEnumerable<ProfileCommentDto> GetAllComments()
         {
-            return PrepareResponseObject(ProfilesProcesses.GetAllComments(_context));
+            return PrepareResponseObject(ProfilesService.GetAllComments(_context));
         }
 
         [HttpGet]
@@ -168,7 +168,7 @@ namespace MyPortal.Controllers.Api
         [Route("comments/get/byBank/{commentBankId:int}", Name = "ApiProfilesGetCommentsByCommentBank")]
         public IEnumerable<ProfileCommentDto> GetCommentsByCommentBank([FromUri] int commentBankId)
         {
-            return PrepareResponseObject(ProfilesProcesses.GetCommentsByBank(commentBankId, _context));
+            return PrepareResponseObject(ProfilesService.GetCommentsByBank(commentBankId, _context));
         }
 
         [HttpPost]
@@ -177,7 +177,7 @@ namespace MyPortal.Controllers.Api
         public IHttpActionResult GetCommentsByCommentBankDataGrid([FromUri] int commentBankId,
             [FromBody] DataManagerRequest dm)
         {
-            var comments = PrepareResponseObject(ProfilesProcesses.GetCommentsByBank_DataGrid(commentBankId, _context));
+            var comments = PrepareResponseObject(ProfilesService.GetCommentsByBank_DataGrid(commentBankId, _context));
 
             return PrepareDataGridObject(comments, dm);
         }
@@ -187,7 +187,7 @@ namespace MyPortal.Controllers.Api
         [Route("comments/update", Name = "ApiProfilesUpdateComment")]
         public IHttpActionResult UpdateComment([FromBody] ProfileComment comment)
         {
-            return PrepareResponse(ProfilesProcesses.UpdateComment(comment, _context));
+            return PrepareResponse(ProfilesService.UpdateComment(comment, _context));
         }
     }
 }

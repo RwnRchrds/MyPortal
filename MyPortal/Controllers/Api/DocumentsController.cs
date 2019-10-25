@@ -7,7 +7,7 @@ using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Attributes;
 using MyPortal.Models.Database;
-using MyPortal.Processes;
+using MyPortal.Services;
 using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
@@ -26,7 +26,7 @@ namespace MyPortal.Controllers.Api
 
             try
             {
-                await DocumentProcesses.CreateDocument(document, userId, _context);
+                await DocumentService.CreateDocument(document, userId, _context);
             }
             catch (Exception e)
             {
@@ -43,7 +43,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await DocumentProcesses.GetApprovedGeneralDocuments(_context);
+                return await DocumentService.GetApprovedGeneralDocuments(_context);
             }
             catch (Exception e)
             {
@@ -58,7 +58,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var documents = await DocumentProcesses.GetApprovedGeneralDocumentsDataGrid(_context);
+                var documents = await DocumentService.GetApprovedGeneralDocumentsDataGrid(_context);
 
                 return PrepareDataGridObject(documents, dm);
             }
@@ -75,7 +75,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await DocumentProcesses.GetDocumentById(documentId, _context);
+                return await DocumentService.GetDocumentById(documentId, _context);
             }
             catch (Exception e)
             {
@@ -90,7 +90,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await DocumentProcesses.GetAllGeneralDocuments(_context);
+                return await DocumentService.GetAllGeneralDocuments(_context);
             }
             catch (Exception e)
             {
@@ -105,7 +105,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var documents = await DocumentProcesses.GetAllGeneralDocumentsDataGrid(_context);
+                var documents = await DocumentService.GetAllGeneralDocumentsDataGrid(_context);
 
                 return PrepareDataGridObject(documents, dm);
             }
@@ -122,7 +122,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var documents = await DocumentProcesses.GetPersonalDocumentsDataGrid(personId, _context);
+                var documents = await DocumentService.GetPersonalDocumentsDataGrid(personId, _context);
 
                 return PrepareDataGridObject(documents, dm);
             }
@@ -139,7 +139,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await DocumentProcesses.DeleteDocument(documentId, _context);
+                await DocumentService.DeleteDocument(documentId, _context);
             }
             catch (Exception e)
             {
@@ -156,7 +156,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await DocumentProcesses.UpdateDocument(document, _context);
+                await DocumentService.UpdateDocument(document, _context);
             }
             catch (Exception e)
             {
@@ -174,7 +174,7 @@ namespace MyPortal.Controllers.Api
             var uploaderId = User.Identity.GetUserId();
             try
             {
-                await DocumentProcesses.CreatePersonalDocument(document, uploaderId, _context);
+                await DocumentService.CreatePersonalDocument(document, uploaderId, _context);
             }
             catch (Exception e)
             {
@@ -191,7 +191,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await DocumentProcesses.GetPersonalDocumentById(documentId, _context);
+                return await DocumentService.GetPersonalDocumentById(documentId, _context);
             }
             catch (Exception e)
             {
@@ -206,7 +206,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await DocumentProcesses.GetPersonalDocuments(personId, _context);
+                return await DocumentService.GetPersonalDocuments(personId, _context);
             }
             catch (Exception e)
             {
@@ -221,7 +221,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await DocumentProcesses.DeletePersonalDocument(documentId, _context);
+                await DocumentService.DeletePersonalDocument(documentId, _context);
             }
             catch (Exception e)
             {
@@ -238,7 +238,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await DocumentProcesses.UpdatePersonalDocument(document, _context);
+                await DocumentService.UpdatePersonalDocument(document, _context);
             }
             catch (Exception e)
             {

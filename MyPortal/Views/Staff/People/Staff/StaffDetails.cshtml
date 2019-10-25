@@ -1,14 +1,14 @@
 ﻿@using MyPortal.Models.Database
-@using MyPortal.Processes
+@using MyPortal.Services
 @model MyPortal.ViewModels.StaffDetailsViewModel
 @{
-    ViewBag.Title = "Staff Details: " + PeopleProcesses.GetStaffFullName(Model.Staff).ResponseObject;
+    ViewBag.Title = "Staff Details: " + PeopleService.GetStaffFullName(Model.Staff).ResponseObject;
     ViewBag.DisplayTitle = "Staff Details";
     Layout = "~/Views/Shared/_LayoutStaff.cshtml";
 }
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">@PeopleProcesses.GetDisplayName(Model.Staff).ResponseObject</h1>
+    <h1 class="h3 mb-0 text-gray-800">@PeopleService.GetDisplayName(Model.Staff).ResponseObject</h1>
 </div>
 
 <div class="row">
@@ -20,7 +20,7 @@
                 <i class="fas fa-user"></i> Staff
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <h6 class="dropdown-header">@PeopleProcesses.GetDisplayName(Model.Staff).ResponseObject</h6>
+                <h6 class="dropdown-header">@PeopleService.GetDisplayName(Model.Staff).ResponseObject</h6>
             </div>
         </div>
 

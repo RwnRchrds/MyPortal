@@ -9,6 +9,6 @@ namespace MyPortal.Interfaces
 {
     public interface IAssessmentResultRepository : IRepository<AssessmentResult>
     {
-
+        Task<IEnumerable<AssessmentResult>> GetResultsByStudent(int studentId, int resultSetId);
     }
 }

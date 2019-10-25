@@ -5,7 +5,7 @@ using System.Web.Http;
 using MyPortal.Dtos;
 using MyPortal.Attributes;
 using MyPortal.Models.Database;
-using MyPortal.Processes;
+using MyPortal.Services;
 
 namespace MyPortal.Controllers.Api
 {
@@ -20,7 +20,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await PastoralProcesses.CreateRegGroup(regGroup, _context);
+                await PastoralService.CreateRegGroup(regGroup, _context);
             }
             catch (Exception e)
             {
@@ -37,7 +37,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await PastoralProcesses.DeleteRegGroup(regGroupId, _context);
+                await PastoralService.DeleteRegGroup(regGroupId, _context);
             }
             catch (Exception e)
             {
@@ -54,7 +54,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await PastoralProcesses.GetRegGroupById(regGroupId, _context);
+                return await PastoralService.GetRegGroupById(regGroupId, _context);
             }
             catch (Exception e)
             {
@@ -69,7 +69,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await PastoralProcesses.GetRegGroupsByYearGroup(yearGroupId, _context);
+                return await PastoralService.GetRegGroupsByYearGroup(yearGroupId, _context);
             }
             catch (Exception e)
             {
@@ -84,7 +84,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await PastoralProcesses.GetAllRegGroups(_context);
+                return await PastoralService.GetAllRegGroups(_context);
             }
             catch (Exception e)
             {
@@ -99,7 +99,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await PastoralProcesses.RegGroupContainsStudents(regGroupId, _context);
+                return await PastoralService.RegGroupContainsStudents(regGroupId, _context);
             }
             catch (Exception e)
             {
@@ -114,7 +114,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await PastoralProcesses.UpdateRegGroup(regGroup, _context);
+                await PastoralService.UpdateRegGroup(regGroup, _context);
             }
             catch (Exception e)
             {
@@ -131,7 +131,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await PastoralProcesses.CreateYearGroup(yearGroup, _context);
+                await PastoralService.CreateYearGroup(yearGroup, _context);
             }
             catch (Exception e)
             {
@@ -148,7 +148,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await PastoralProcesses.DeleteYearGroup(yearGroupId, _context);
+                await PastoralService.DeleteYearGroup(yearGroupId, _context);
             }
             catch (Exception e)
             {
@@ -165,7 +165,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await PastoralProcesses.GetAllYearGroups(_context);
+                return await PastoralService.GetAllYearGroups(_context);
             }
             catch (Exception e)
             {
@@ -180,7 +180,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await PastoralProcesses.UpdateYearGroup(yearGroup, _context);
+                await PastoralService.UpdateYearGroup(yearGroup, _context);
             }
             catch (Exception e)
             {

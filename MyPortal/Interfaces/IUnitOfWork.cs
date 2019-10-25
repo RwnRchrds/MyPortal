@@ -31,7 +31,7 @@ namespace MyPortal.Interfaces
         ICommunicationPhoneNumberTypeRepository CommunicationPhoneNumberTypes { get; }
         ICommunicationTypeRepository CommunicationTypes { get; }
         IContactRepository Contacts { get; }
-        IContactTypeRepository ContactTypes { get; }
+        IRelationshipTypeRepository RelationshipTypes { get; }
         ICurriculumAcademicYearRepository CurriculumAcademicYears { get; }
         ICurriculumClassRepository CurriculumClasses { get; }
         ICurriculumEnrolmentRepository CurriculumEnrolments { get; }
@@ -56,8 +56,8 @@ namespace MyPortal.Interfaces
         IPastoralYearGroupRepository PastoralYearGroups { get; }
         IPersonDocumentRepository PersonDocuments { get; }
         IPersonnelObservationRepository PersonnelObservations { get; }
-        IPersonnelTrainingCertificateRepository PersonnelTrainingCertificate { get; }
-        IPersonnelTrainingCourseRepository PersonnelTrainingCourse { get; }
+        IPersonnelTrainingCertificateRepository PersonnelTrainingCertificates { get; }
+        IPersonnelTrainingCourseRepository PersonnelTrainingCourses { get; }
         IPersonRepository People { get; }
         IProfileCommentBankRepository ProfileCommentBanks { get; }
         IProfileCommentRepository ProfileComments { get; }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MyPortal.Processes;
+using MyPortal.Services;
 using NUnit.Framework;
 
 namespace MyPortal.UnitTests.ProcessTests
@@ -17,7 +17,7 @@ namespace MyPortal.UnitTests.ProcessTests
             //Valid UPN
             const string upn = "N936358319001";
 
-            var result = SystemProcesses.ValidateUpn(upn);
+            var result = SystemService.ValidateUpn(upn);
 
             Assert.That(result);
         }
@@ -28,7 +28,7 @@ namespace MyPortal.UnitTests.ProcessTests
             //Invalid UPN
             const string upn = "H936357319001";
 
-            var result = SystemProcesses.ValidateUpn(upn);
+            var result = SystemService.ValidateUpn(upn);
 
             Assert.That(!result);
         }

@@ -3,7 +3,7 @@ using System.Linq;
 using AutoMapper;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
-using MyPortal.Processes;
+using MyPortal.Services;
 using MyPortal.UnitTests.TestData;
 using NUnit.Framework;
 
@@ -15,7 +15,7 @@ namespace MyPortal.UnitTests.ProcessTests
         [Test]
         public static void GetStaffFromUserId_ReturnsStaffMember()
         {
-            var result = PeopleProcesses.GetStaffFromUserId("jcobb", _context);
+            var result = PeopleService.GetStaffFromUserId("jcobb", _context);
             
             Assert.That(result.ResponseType == ResponseType.Ok);
             
@@ -25,7 +25,7 @@ namespace MyPortal.UnitTests.ProcessTests
         [Test]
         public static void GetStaffFromUserId_ReturnsNotFound()
         {
-            var result = PeopleProcesses.GetStaffFromUserId("testme", _context);
+            var result = PeopleService.GetStaffFromUserId("testme", _context);
 
             Assert.That(result.ResponseType == ResponseType.NotFound);
         }
@@ -33,7 +33,7 @@ namespace MyPortal.UnitTests.ProcessTests
         [Test]
         public static void GetStudentFromUserId_ReturnsStudent()
         {
-            var result = PeopleProcesses.GetStudentFromUserId("aardvark", _context);
+            var result = PeopleService.GetStudentFromUserId("aardvark", _context);
 
             Assert.That(result.ResponseType == ResponseType.Ok);
 
@@ -43,7 +43,7 @@ namespace MyPortal.UnitTests.ProcessTests
         [Test]
         public static void GetStudentFromUserId_ReturnsNotFound()
         {
-            var result = PeopleProcesses.GetStudentFromUserId("testme", _context);
+            var result = PeopleService.GetStudentFromUserId("testme", _context);
 
             Assert.That(result.ResponseType == ResponseType.NotFound);
         }
@@ -53,7 +53,7 @@ namespace MyPortal.UnitTests.ProcessTests
         {
             var student = _context.Students.SingleOrDefault(x => x.Person.LastName == "Aardvark");
 
-            var result = PeopleProcesses.GetStudentDisplayName(student);
+            var result = PeopleService.GetStudentDisplayName(student);
 
             Assert.That(result.ResponseType == ResponseType.Ok);
 
@@ -65,7 +65,7 @@ namespace MyPortal.UnitTests.ProcessTests
         {
             var staff = _context.StaffMembers.SingleOrDefault(x => x.Person.LastName == "Sprague");
 
-            var result = PeopleProcesses.GetDisplayName(staff);
+            var result = PeopleService.GetDisplayName(staff);
 
             Assert.That(result.ResponseType == ResponseType.Ok);
 

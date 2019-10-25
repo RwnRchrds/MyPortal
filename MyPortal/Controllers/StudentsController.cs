@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using MyPortal.Attributes;
-using MyPortal.Processes;
+using MyPortal.Services;
 using MyPortal.ViewModels;
 
 namespace MyPortal.Controllers
@@ -62,20 +62,20 @@ namespace MyPortal.Controllers
         {
             var userId = User.Identity.GetUserId();
 
-            var student = PeopleProcesses.GetStudentFromUserId(userId, _context).ResponseObject;
+            var student = await StudentService.GetStudentFromUserId(userId, _context);
 
             if (student == null)
                 return View("~/Views/Students/NoProfileIndex.cshtml");
 
-            var academicYearId = await SystemProcesses.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
 
-            var attendanceData = await AttendanceProcesses.GetSummary(student.Id, academicYearId, _context);
+            var attendanceData = await AttendanceService.GetSummary(student.Id, academicYearId, _context);
             
             var attendance = attendanceData?.Present + attendanceData?.Late;
 
-            var achievementCount = await BehaviourProcesses.GetAchievementPointsCountByStudent(student.Id, academicYearId, _context);
+            var achievementCount = await BehaviourService.GetAchievementPointsCountByStudent(student.Id, academicYearId, _context);
 
-            var behaviourCount = await BehaviourProcesses.GetBehaviourPointsCountByStudent(student.Id, academicYearId, _context);
+            var behaviourCount = await BehaviourService.GetBehaviourPointsCountByStudent(student.Id, academicYearId, _context);
 
             var viewModel = new StudentDetailsViewModel
             {                
@@ -94,12 +94,12 @@ namespace MyPortal.Controllers
         {
             var userId = User.Identity.GetUserId();
 
-            var student = PrepareResponseObject(PeopleProcesses.GetStudentFromUserId(userId, _context));
+            var student = await StudentService.GetStudentFromUserId(userId, _context);
 
             if (student == null)
                 return HttpNotFound();
 
-            var list = await AssessmentProcesses.GetAllResultSetsModel(_context);
+            var list = await new AssessmentService(_context).GetAllResultSetsModel();
 
             var resultSets = list.ToList();
 

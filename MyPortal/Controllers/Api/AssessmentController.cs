@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web.Http;
 using MyPortal.Dtos;
 using MyPortal.Attributes;
 using MyPortal.Models.Database;
-using MyPortal.Processes;
+using MyPortal.Persistence;
+using MyPortal.Services;
 using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
@@ -22,7 +24,10 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await AssessmentProcesses.CreateResult(result, _context);
+                using (var service = new AssessmentService(_context))
+                {
+                    await service.CreateResult(result);
+                }
             }
             catch (Exception e)
             {
@@ -39,7 +44,10 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await AssessmentProcesses.GetResultsByStudent(studentId, resultSetId, _context);
+                using (var service = new AssessmentService(_context))
+                {
+                    return await service.GetResultsByStudent(studentId, resultSetId);
+                }
             }
             catch (Exception e)
             {
@@ -55,8 +63,11 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var results = await AssessmentProcesses.GetResultsByStudentDataGrid(studentId, resultSetId, _context);
-                return PrepareDataGridObject(results, dm);
+                using (var service = new AssessmentService(_context))
+                {
+                    var results = await service.GetResultsByStudentDataGrid(studentId, resultSetId);
+                    return PrepareDataGridObject(results, dm);
+                }
             }
             catch (Exception e)
             {
@@ -71,7 +82,10 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await AssessmentProcesses.CreateResultSet(resultSet, _context);
+                using (var service = new AssessmentService(_context))
+                {
+                    await service.CreateResultSet(resultSet);
+                }
             }
             catch (Exception e)
             {
@@ -88,7 +102,10 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await AssessmentProcesses.DeleteResultSet(resultSetId, _context);
+                using (var service = new AssessmentService(_context))
+                {
+                    await service.DeleteResultSet(resultSetId);
+                }
             }
             catch (Exception e)
             {
@@ -105,7 +122,10 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await AssessmentProcesses.GetResultSetById(resultSetId, _context);
+                using (var service = new AssessmentService(_context))
+                {
+                    return await service.GetResultSetById(resultSetId);
+                }
             }
             catch (Exception e)
             {
@@ -120,7 +140,10 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await AssessmentProcesses.GetAllResultSets(_context);
+                using (var service = new AssessmentService(_context))
+                {
+                    return await service.GetAllResultSets();
+                }
             }
             catch (Exception e)
             {
@@ -135,7 +158,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await AssessmentProcesses.GetResultSetsByStudent(studentId, _context);
+                return await _service.GetResultSetsByStudent(studentId);
             }
             catch (Exception e)
             {
@@ -150,7 +173,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var resultSets = await AssessmentProcesses.GetAllResultSetsDataGrid(_context);
+                var resultSets = await _service.GetAllResultSetsDataGrid();
                 return PrepareDataGridObject(resultSets, dm);
             }
             catch (Exception e)
@@ -166,7 +189,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await AssessmentProcesses.ResultSetContainsResults(resultSetId, _context);
+                return await _service.ResultSetContainsResults(resultSetId);
             }
             catch (Exception e)
             {
@@ -181,7 +204,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await AssessmentProcesses.SetResultSetAsCurrent(resultSetId, _context);
+                await _service.SetResultSetAsCurrent(resultSetId);
             }
             catch (Exception e)
             {
@@ -198,7 +221,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await AssessmentProcesses.UpdateResultSet(resultSet, _context);
+                await _service.UpdateResultSet(resultSet);
             }
             catch (Exception e)
             {
