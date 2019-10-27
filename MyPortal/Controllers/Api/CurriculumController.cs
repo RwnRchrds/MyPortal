@@ -320,7 +320,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumService.GetEnrolmentsForClass(classId, _context);
+                return await CurriculumService.GetEnrolmentsForClassDto(classId, _context);
             }
             catch (Exception e)
             {
@@ -353,7 +353,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumService.GetEnrolmentsForStudent(studentId, _context);
+                return await CurriculumService.GetEnrolmentsForStudentDto(studentId, _context);
             }
             catch (Exception e)
             {
@@ -501,7 +501,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumService.GetAllSubjects(_context);
+                return await CurriculumService.GetAllSubjectsDto(_context);
             }
             catch (Exception e)
             {
@@ -599,7 +599,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumService.GetAllStudyTopics(_context);
+                return await CurriculumService.GetAllStudyTopicsDto(_context);
             }
             catch (Exception e)
             {
@@ -678,7 +678,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumService.GetLessonPlansByStudyTopic(studyTopicId, _context);
+                return await CurriculumService.GetLessonPlansByStudyTopicDto(studyTopicId, _context);
             }
             catch (Exception e)
             {

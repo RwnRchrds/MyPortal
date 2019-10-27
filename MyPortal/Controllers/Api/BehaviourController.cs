@@ -40,7 +40,7 @@ namespace MyPortal.Controllers.Api
 
             try
             {
-                var achievements = await BehaviourService.GetAchievementsForGrid(studentId, academicYearId, _context);
+                var achievements = await BehaviourService.GetAchievementsByStudentDataGrid(studentId, academicYearId, _context);
                 return PrepareDataGridObject(achievements, dm);
             }
             catch (Exception e)

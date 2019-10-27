@@ -9,6 +9,6 @@ namespace MyPortal.Interfaces
 {
     public interface IStaffMemberRepository : IRepository<StaffMember>
     {
-
+        Task<StaffMember> GetByUserIdAsync(string userId);
     }
 }

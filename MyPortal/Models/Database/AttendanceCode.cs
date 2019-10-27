@@ -6,6 +6,17 @@ namespace MyPortal.Models.Database
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    public enum AttendanceMeaning
+    {
+        Present = 1,
+        AuthorisedAbsence = 2,
+        ApprovedEducationalActivity = 3,
+        UnauthorisedAbsence = 4,
+        AttendanceNotRequired = 5,
+        NoMark = 6,
+        Late = 7
+    }
+
     /// <summary>
     /// [SYSTEM] Codes available to use when taking the register.
     /// </summary>
@@ -23,12 +34,10 @@ namespace MyPortal.Models.Database
         [StringLength(128)]
         public string Description { get; set; }
 
-        public int MeaningId { get; set; }
+        public AttendanceMeaning Meaning { get; set; }
 
         public bool System { get; set; }
 
         public bool DoNotUse { get; set; }
-
-        public virtual AttendanceMeaning Meaning { get; set; }
     }
 }

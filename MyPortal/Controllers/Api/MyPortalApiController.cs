@@ -11,6 +11,7 @@ using MyPortal.Models.Database;
 using MyPortal.Exceptions;
 using MyPortal.Interfaces;
 using MyPortal.Models.Misc;
+using MyPortal.Persistence;
 using MyPortal.Services;
 using Syncfusion.EJ2.Base;
 
@@ -18,16 +19,16 @@ namespace MyPortal.Controllers.Api
 {
     public class MyPortalApiController : ApiController
     {
-        protected readonly MyPortalDbContext _context;
+        protected readonly IUnitOfWork _unitOfWork;
 
         public MyPortalApiController()
         {
-            _context = new MyPortalDbContext();
+            _unitOfWork = new UnitOfWork(new MyPortalDbContext());
         }
 
-        public MyPortalApiController(MyPortalDbContext context)
+        public MyPortalApiController(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         protected override void Dispose(bool disposing)
@@ -130,8 +131,8 @@ namespace MyPortal.Controllers.Api
             if (userType == UserType.Student)
             {
                 var userId = User.Identity.GetUserId();
-                var studentUser = await _context.Students.SingleOrDefaultAsync(x => x.Person.UserId == userId);
-                var requestedStudent = await _context.Students.SingleOrDefaultAsync(x => x.Id == studentId);
+                var studentUser = await _unitOfWork.Students.GetByUserId(userId);
+                var requestedStudent = await _unitOfWork.Students.GetByIdAsync(studentId);
 
                 if (studentUser == null || requestedStudent == null)
                 {

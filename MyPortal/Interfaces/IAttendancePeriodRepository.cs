@@ -9,6 +9,9 @@ namespace MyPortal.Interfaces
 {
     public interface IAttendancePeriodRepository : IRepository<AttendancePeriod>
     {
-
+        Task<IEnumerable<AttendancePeriod>> GetAllPeriods();
+        Task<IEnumerable<AttendancePeriod>> GetPeriodsByDayOfWeek(DayOfWeek weekDay);
+        Task<IEnumerable<AttendancePeriod>> GetPeriodsByClass(int classId);
+        Task<IEnumerable<AttendancePeriod>> GetRegPeriods();
     }
 }

@@ -99,7 +99,7 @@ namespace MyPortal.Controllers
             if (student == null)
                 return HttpNotFound();
 
-            var list = await new AssessmentService(_context).GetAllResultSetsModel();
+            var list = await new AssessmentService(_context).GetAllResultSets();
 
             var resultSets = list.ToList();
 

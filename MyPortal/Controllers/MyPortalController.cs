@@ -4,27 +4,29 @@ using System.Web.Http;
 using System.Web.Mvc;
 using MyPortal.Models.Database;
 using MyPortal.Exceptions;
+using MyPortal.Interfaces;
 using MyPortal.Models.Misc;
+using MyPortal.Persistence;
 
 namespace MyPortal.Controllers
 {
     public class MyPortalController : Controller
     {
-        protected readonly MyPortalDbContext _context;
+        protected readonly IUnitOfWork _unitOfWork;
 
         public MyPortalController()
         {
-            _context = new MyPortalDbContext();
+            _unitOfWork = new UnitOfWork(new MyPortalDbContext());
         }
 
-        public MyPortalController(MyPortalDbContext context)
+        public MyPortalController(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         protected override void Dispose(bool disposing)
         {
-            _context.Dispose();
+            _unitOfWork.Dispose();
         }
 
         [Obsolete]

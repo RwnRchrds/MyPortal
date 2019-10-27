@@ -557,7 +557,6 @@
     <Compile Include="Models\Database\AssessmentResultSet.cs" />
     <Compile Include="Models\Database\AttendancePeriod.cs" />
     <Compile Include="Models\Database\AttendanceCode.cs" />
-    <Compile Include="Models\Database\AttendanceMeaning.cs" />
     <Compile Include="Models\Database\AttendanceMark.cs" />
     <Compile Include="Models\Database\AttendanceWeek.cs" />
     <Compile Include="Models\Database\CurriculumAcademicYear.cs" />

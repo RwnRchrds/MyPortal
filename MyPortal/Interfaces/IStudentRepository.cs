@@ -9,6 +9,6 @@ namespace MyPortal.Interfaces
 {
     public interface IStudentRepository : IRepository<Student>
     {
-
+        Task<Student> GetByUserId(string userId);
     }
 }

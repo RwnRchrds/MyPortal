@@ -27,7 +27,6 @@ namespace MyPortal.Models.Database
         public virtual DbSet<AssessmentResultSet> AssessmentResultSets { get; set; }
         public virtual DbSet<AttendanceCode> AttendanceCodes { get; set; }
         public virtual DbSet<AttendanceMark> AttendanceMarks { get; set; }
-        public virtual DbSet<AttendanceMeaning> AttendanceMeanings { get; set; }
         public virtual DbSet<AttendancePeriod> AttendancePeriods { get; set; }
         public virtual DbSet<AttendanceWeek> AttendanceWeeks { get; set; }
         public virtual DbSet<BehaviourAchievement> BehaviourAchievements { get; set; }
@@ -133,12 +132,6 @@ namespace MyPortal.Models.Database
                 .Property(e => e.Mark)
                 .IsFixedLength()
                 .IsUnicode(false);
-
-            modelBuilder.Entity<AttendanceMeaning>()
-                .HasMany(e => e.AttendanceCodes)
-                .WithRequired(e => e.Meaning)
-                .HasForeignKey(e => e.MeaningId)
-                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<AttendancePeriod>()
                 .Property(e => e.StartTime)

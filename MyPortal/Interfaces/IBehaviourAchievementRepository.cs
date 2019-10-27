@@ -9,6 +9,9 @@ namespace MyPortal.Interfaces
 {
     public interface IBehaviourAchievementRepository : IRepository<BehaviourAchievement>
     {
-
+        Task<int> GetAchievementCountByStudent(int studentId, int academicYearId);
+        Task<int> GetAchievementPointsCountByStudent(int studentId, int academicYearId);
+        Task<IEnumerable<BehaviourAchievement>> GetAchievementsByStudent(int studentId, int academicYearId);
+        Task<int> GetBehaviourAchievementPointsToday();
     }
 }

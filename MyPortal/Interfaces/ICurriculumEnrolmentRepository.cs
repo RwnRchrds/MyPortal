@@ -9,6 +9,7 @@ namespace MyPortal.Interfaces
 {
     public interface ICurriculumEnrolmentRepository : IRepository<CurriculumEnrolment>
     {
-
+        Task<IEnumerable<CurriculumEnrolment>> GetEnrolmentsByClass(int classId);
+        Task<IEnumerable<CurriculumEnrolment>> GetEnrolmentsByStudent(int classId);
     }
 }

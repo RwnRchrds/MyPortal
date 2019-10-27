@@ -9,9 +9,9 @@ namespace MyPortal.Services
     {
         protected readonly IUnitOfWork _unitOfWork;
 
-        public MyPortalService(MyPortalDbContext context)
+        public MyPortalService(IUnitOfWork unitOfWork)
         {
-            _unitOfWork = new UnitOfWork(context);
+            _unitOfWork = unitOfWork;
         }
 
         public void Dispose()

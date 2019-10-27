@@ -9,6 +9,6 @@ namespace MyPortal.Interfaces
 {
     public interface ICommunicationEmailAddressRepository : IRepository<CommunicationEmailAddress>
     {
-
+        Task<IEnumerable<CommunicationEmailAddress>> GetEmailAddressesByPerson(int personId);
     }
 }

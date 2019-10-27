@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using MyPortal.Interfaces;
 using MyPortal.Models;
 using MyPortal.Models.Database;
 
@@ -25,9 +26,9 @@ namespace MyPortal.Controllers.Api
             _roleManager = new RoleManager<ApplicationRole, string>(_roleStore);
         }
 
-        public MyPortalIdentityApiController(MyPortalDbContext context, IdentityContext identity) : base(context)
+        public MyPortalIdentityApiController(IUnitOfWork unitOfWork, IdentityContext identity) : base(unitOfWork)
         {
-            _identity = new IdentityContext();
+            _identity = identity;
             _userStore = new UserStore<ApplicationUser, ApplicationRole, string, IdentityUserLogin, IdentityUserRole,
                 IdentityUserClaim>(_identity);
             _userManager = new UserManager<ApplicationUser, string>(_userStore);

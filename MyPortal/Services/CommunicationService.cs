@@ -3,28 +3,33 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using MyPortal.Exceptions;
+using MyPortal.Interfaces;
 using MyPortal.Models.Database;
 
 namespace MyPortal.Services
 {
-    public class CommunicationService
+    public class CommunicationService : MyPortalService
     {
-        public static async Task CreateEmailAddress(CommunicationEmailAddress emailAddress, MyPortalDbContext context)
+        public CommunicationService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        {
+
+        }
+
+        public async Task CreateEmailAddress(CommunicationEmailAddress emailAddress)
         {
             if (!ValidationService.ModelIsValid(emailAddress))
             {
                 throw new ProcessException(ExceptionType.BadRequest, "Invalid data");
             }
 
-            context.CommunicationEmailAddresses.Add(emailAddress);
+            _unitOfWork.CommunicationEmailAddresses.Add(emailAddress);
 
-            await context.SaveChangesAsync();
+            await _unitOfWork.Complete();
         }
 
-        public static async Task UpdateEmailAddress(CommunicationEmailAddress emailAddress, MyPortalDbContext context)
+        public async Task UpdateEmailAddress(CommunicationEmailAddress emailAddress)
         {
-            var emailInDb =
-                await context.CommunicationEmailAddresses.SingleOrDefaultAsync(x => x.Id == emailAddress.Id);
+            var emailInDb = await _unitOfWork.CommunicationEmailAddresses.GetByIdAsync(emailAddress.Id);
 
             if (emailInDb == null)
             {
@@ -35,25 +40,27 @@ namespace MyPortal.Services
             emailInDb.Main = emailAddress.Main;
             emailInDb.Primary = emailAddress.Primary;
             emailInDb.Notes = emailAddress.Notes;
+
+            await _unitOfWork.Complete();
         }
 
-        public static async Task DeleteEmailAddress(CommunicationEmailAddress emailAddress, MyPortalDbContext context)
+        public async Task DeleteEmailAddress(int emailAddressId)
         {
-            var emailInDb = await context.CommunicationEmailAddresses.SingleOrDefaultAsync(x => x.Id == emailAddress.Id);
+            var emailInDb = await _unitOfWork.CommunicationEmailAddresses.GetByIdAsync(emailAddressId);
 
             if (emailInDb == null)
             {
                 throw new ProcessException(ExceptionType.NotFound, "Email address not found");
             }
 
-            context.CommunicationEmailAddresses.Remove(emailInDb);
+            _unitOfWork.CommunicationEmailAddresses.Remove(emailInDb);
 
-            await context.SaveChangesAsync();
+            await _unitOfWork.Complete();
         }
 
-        public async Task<CommunicationEmailAddress> GetEmailAddressByIdModel(int emailAddressId, MyPortalDbContext context)
+        public async Task<CommunicationEmailAddress> GetEmailAddressById(int emailAddressId)
         {
-            var emailInDb = await context.CommunicationEmailAddresses.SingleOrDefaultAsync(e => e.Id == emailAddressId);
+            var emailInDb = await _unitOfWork.CommunicationEmailAddresses.GetByIdAsync(emailAddressId);
 
             if (emailInDb == null)
             {
@@ -63,11 +70,10 @@ namespace MyPortal.Services
             return emailInDb;
         }
 
-        public async Task<IEnumerable<CommunicationEmailAddress>> GetEmailAddressesByPersonModel(int personId,
-            MyPortalDbContext context)
+        public async Task<IEnumerable<CommunicationEmailAddress>> GetEmailAddressesByPerson(int personId)
         {
             var emailAddresses =
-                await context.CommunicationEmailAddresses.Where(x => x.PersonId == personId).ToListAsync();
+                await _unitOfWork.CommunicationEmailAddresses.GetEmailAddressesByPerson(personId);
 
             return emailAddresses;
         }

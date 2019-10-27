@@ -18,10 +18,10 @@ namespace MyPortal.Services
 {
     public static class AdminService
     {
-        public static async Task AddUserToRole(UserRoleModel roleModel, UserManager<ApplicationUser, string> userManager, IdentityContext identity)
+        public static async Task AddUserToRole(UserRoleModel roleModel, UserManager<ApplicationUser, string> userManager, RoleManager<ApplicationRole, string> roleManager)
         {
-            var userInDb = identity.Users.SingleOrDefault(u => u.Id == roleModel.UserId);
-            var roleInDb = identity.Roles.SingleOrDefault(r => r.Name == roleModel.RoleName);
+            var userInDb = await userManager.FindByIdAsync(roleModel.UserId);
+            var roleInDb = await roleManager.FindByNameAsync(roleModel.RoleName);
 
             if (userInDb == null)
             {

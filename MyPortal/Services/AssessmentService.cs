@@ -5,13 +5,14 @@ using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Dtos.GridDtos;
 using MyPortal.Exceptions;
+using MyPortal.Interfaces;
 using MyPortal.Models.Database;
 
 namespace MyPortal.Services
 {
     public class AssessmentService : MyPortalService
     {
-        public AssessmentService(MyPortalDbContext context) : base (context)
+        public AssessmentService(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
 
         }
@@ -63,21 +64,21 @@ namespace MyPortal.Services
             await _unitOfWork.Complete();
         }
 
-        public async Task<IEnumerable<AssessmentResultSetDto>> GetAllResultSets()
+        public async Task<IEnumerable<AssessmentResultSetDto>> GetAllResultSetsDto()
         {
-            var resultSets = await GetAllResultSetsModel();
+            var resultSets = await _unitOfWork.AssessmentResultSets.GetAllAsync();
 
             return resultSets.Select(Mapper.Map<AssessmentResultSet, AssessmentResultSetDto>);
         }
 
         public async Task<IEnumerable<GridAssessmentResultSetDto>> GetAllResultSetsDataGrid()
         {
-            var resultSets = await GetAllResultSetsModel();
+            var resultSets = await _unitOfWork.AssessmentResultSets.GetAllAsync();
 
             return resultSets.Select(Mapper.Map<AssessmentResultSet, GridAssessmentResultSetDto>);
         }
 
-        public async Task<IEnumerable<AssessmentResultSet>> GetAllResultSetsModel()
+        public async Task<IEnumerable<AssessmentResultSet>> GetAllResultSets()
         {
             return await _unitOfWork.AssessmentResultSets.GetAllAsync();
         }
@@ -89,35 +90,35 @@ namespace MyPortal.Services
             return Mapper.Map<AssessmentResult, AssessmentResultDto>(result);
         }
 
-        public async Task<IEnumerable<AssessmentResult>> GetResultsByStudentModel(int studentId, int resultSetId)
+        public async Task<IEnumerable<AssessmentResult>> GetResultsByStudent(int studentId, int resultSetId)
         {
             var results = await _unitOfWork.AssessmentResults.GetResultsByStudent(studentId, resultSetId);
 
             return results;
         }
 
-        public async Task<IEnumerable<AssessmentResultDto>> GetResultsByStudent(int studentId, int resultSetId)
+        public async Task<IEnumerable<AssessmentResultDto>> GetResultsByStudentDto(int studentId, int resultSetId)
         {
-            var results = await GetResultsByStudentModel(studentId, resultSetId);
+            var results = await GetResultsByStudent(studentId, resultSetId);
 
             return results.Select(Mapper.Map<AssessmentResult, AssessmentResultDto>);
         }
 
         public async Task<IEnumerable<GridAssessmentResultDto>> GetResultsByStudentDataGrid(int studentId, int resultSetId)
         {
-            var results = await GetResultsByStudentModel(studentId, resultSetId);
+            var results = await GetResultsByStudent(studentId, resultSetId);
 
             return results.Select(Mapper.Map<AssessmentResult, GridAssessmentResultDto>);
         }
 
-        public async Task<AssessmentResultSetDto> GetResultSetById(int resultSetId)
+        public async Task<AssessmentResultSetDto> GetResultSetByIdDto(int resultSetId)
         {
-            var resultSet = await GetResultSetByIdModel(resultSetId);
+            var resultSet = await GetResultSetById(resultSetId);
 
             return Mapper.Map<AssessmentResultSet, AssessmentResultSetDto>(resultSet);
         }
 
-        public async Task<AssessmentResultSet> GetResultSetByIdModel(int resultSetId)
+        public async Task<AssessmentResultSet> GetResultSetById(int resultSetId)
         {
             var resultSet = await _unitOfWork.AssessmentResultSets.GetByIdAsync(resultSetId);
 
@@ -129,14 +130,14 @@ namespace MyPortal.Services
             return resultSet;
         }
 
-        public async Task<IEnumerable<AssessmentResultSetDto>> GetResultSetsByStudent(int studentId)
+        public async Task<IEnumerable<AssessmentResultSetDto>> GetResultSetsByStudentDto(int studentId)
         {
-            var resultSets = await GetResultSetsByStudentModel(studentId);
+            var resultSets = await GetResultSetsByStudent(studentId);
 
             return resultSets.Select(Mapper.Map<AssessmentResultSet, AssessmentResultSetDto>);
         }
 
-        public async Task<IEnumerable<AssessmentResultSet>> GetResultSetsByStudentModel(int studentId)
+        public async Task<IEnumerable<AssessmentResultSet>> GetResultSetsByStudent(int studentId)
         {
             if (!await _unitOfWork.Students.AnyAsync(x => x.Id == studentId))
             {
@@ -200,7 +201,7 @@ namespace MyPortal.Services
 
         public async Task<IDictionary<int, string>> GetAllResultSetsLookup(MyPortalDbContext context)
         {
-            var resultSets = await GetAllResultSetsModel();
+            var resultSets = await GetAllResultSets();
 
             return resultSets.ToDictionary(x => x.Id, x => x.Name);
         }

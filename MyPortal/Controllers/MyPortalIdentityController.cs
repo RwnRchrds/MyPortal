@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using MyPortal.Interfaces;
 using MyPortal.Models;
 using MyPortal.Models.Database;
 
@@ -30,7 +31,7 @@ namespace MyPortal.Controllers
             _roleManager = new RoleManager<ApplicationRole, string>(_roleStore);
         }
 
-        public MyPortalIdentityController(MyPortalDbContext context, IdentityContext identity) : base(context)
+        public MyPortalIdentityController(IUnitOfWork unitOfWork, IdentityContext identity) : base(unitOfWork)
         {
             _identity = new IdentityContext();
             _userStore = new UserStore<ApplicationUser, ApplicationRole, string, IdentityUserLogin, IdentityUserRole,
@@ -42,7 +43,6 @@ namespace MyPortal.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            _context.Dispose();
             _roleManager.Dispose();
             _roleStore.Dispose();
             _userManager.Dispose();

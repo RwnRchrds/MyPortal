@@ -26,7 +26,10 @@ namespace MyPortal.Controllers.Api
 
             try
             {
-                return await AttendanceService.GetRegisterMarks(academicYearId, weekId, sessionId, _context, false);
+                using (var service = new AttendanceService(_context))
+                {
+                    return await service.GetRegisterMarks( weekId, sessionId);
+                }
             }
             catch (Exception e)
             {
@@ -44,9 +47,11 @@ namespace MyPortal.Controllers.Api
 
             try
             {
-                var marks = await AttendanceService.GetRegisterMarks(academicYearId, weekId, sessionId, _context,
-                    true);
-                return PrepareDataGridObject(marks, dm);
+                using (var service = new AttendanceService(_context))
+                {
+                    var marks = await service.GetRegisterMarks(weekId, sessionId);
+                    return PrepareDataGridObject(marks, dm);
+                }
             }
             catch (Exception e)
             {
@@ -61,7 +66,17 @@ namespace MyPortal.Controllers.Api
         {
             if (register.Changed != null)
             {
-                await AttendanceService.SaveRegisterMarks(register.Changed, _context);
+                try
+                {
+                    using (var service = new AttendanceService(_context))
+                    {
+                        await service.SaveRegisterMarks(register.Changed);
+                    }
+                }
+                catch (Exception e)
+                {
+                    return HandleException(e);
+                }
             }
 
             return Json(new List<StudentAttendanceMarkCollection>());
@@ -78,7 +93,10 @@ namespace MyPortal.Controllers.Api
 
             try
             {
-                return await AttendanceService.GetSummary(studentId, academicYearId, _context);
+                using (var service = new AttendanceService(_context))
+                {
+                    return await service.GetSummary(studentId, academicYearId);
+                }
             }
             catch (Exception e)
             {
@@ -97,7 +115,10 @@ namespace MyPortal.Controllers.Api
 
             try
             {
-                return await AttendanceService.GetSummary(studentId, academicYearId, _context, true);
+                using (var service = new AttendanceService(_context))
+                {
+                    return await service.GetSummary(studentId, academicYearId, true);
+                }
             }
             catch (Exception e)
             {
@@ -111,7 +132,10 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await AttendanceService.GetAllPeriods(_context);
+                using (var service = new AttendanceService(_context))
+                {
+                    return await service.GetAllPeriods();
+                }
             }
             catch (Exception e)
             {
@@ -125,7 +149,10 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await AttendanceService.GetPeriodById(periodId, _context);
+                using (var service = new AttendanceService(_context))
+                {
+                    return await service.GetPeriodById(periodId);
+                }
             }
             catch (Exception e)
             {
@@ -140,7 +167,10 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await AttendanceService.CreateAttendanceWeeksForAcademicYear(academicYearId, _context);
+                using (var service = new AttendanceService(_context))
+                {
+                    await service.CreateAttendanceWeeksForAcademicYear(academicYearId);
+                }
             }
             catch (Exception e)
             {
@@ -158,7 +188,10 @@ namespace MyPortal.Controllers.Api
 
              try
              {
-                 return await AttendanceService.GetWeekByDate(academicYearId, date, _context);
+                 using (var service = new AttendanceService(_context))
+                 {
+                     return await service.GetWeekByDate(academicYearId, date);
+                 }
              }
              catch (Exception e)
              {

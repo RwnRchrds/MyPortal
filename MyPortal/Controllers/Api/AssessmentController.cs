@@ -24,7 +24,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var service = new AssessmentService(_context))
+                using (var service = new AssessmentService(_unitOfWork))
                 {
                     await service.CreateResult(result);
                 }
@@ -44,9 +44,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var service = new AssessmentService(_context))
+                using (var service = new AssessmentService(_unitOfWork))
                 {
-                    return await service.GetResultsByStudent(studentId, resultSetId);
+                    return await service.GetResultsByStudentDto(studentId, resultSetId);
                 }
             }
             catch (Exception e)
@@ -63,7 +63,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var service = new AssessmentService(_context))
+                using (var service = new AssessmentService(_unitOfWork))
                 {
                     var results = await service.GetResultsByStudentDataGrid(studentId, resultSetId);
                     return PrepareDataGridObject(results, dm);
@@ -82,7 +82,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var service = new AssessmentService(_context))
+                using (var service = new AssessmentService(_unitOfWork))
                 {
                     await service.CreateResultSet(resultSet);
                 }
@@ -102,7 +102,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var service = new AssessmentService(_context))
+                using (var service = new AssessmentService(_unitOfWork))
                 {
                     await service.DeleteResultSet(resultSetId);
                 }
@@ -122,9 +122,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var service = new AssessmentService(_context))
+                using (var service = new AssessmentService(_unitOfWork))
                 {
-                    return await service.GetResultSetById(resultSetId);
+                    return await service.GetResultSetByIdDto(resultSetId);
                 }
             }
             catch (Exception e)
@@ -140,9 +140,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var service = new AssessmentService(_context))
+                using (var service = new AssessmentService(_unitOfWork))
                 {
-                    return await service.GetAllResultSets();
+                    return await service.GetAllResultSetsDto();
                 }
             }
             catch (Exception e)

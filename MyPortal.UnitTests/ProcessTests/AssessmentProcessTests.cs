@@ -79,7 +79,7 @@ namespace MyPortal.UnitTests.ProcessTests
             
             Assert.IsNotNull(resultSetInDb);
 
-            var result = await AssessmentService.GetResultSetById(resultSetInDb.Id, _context);
+            var result = await AssessmentService.GetResultSetByIdDto(resultSetInDb.Id, _context);
             
             Assert.That(result.GetType() == typeof(AssessmentResultSetDto));
             Assert.That(result.Name == resultSetName);
