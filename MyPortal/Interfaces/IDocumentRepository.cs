@@ -9,6 +9,8 @@ namespace MyPortal.Interfaces
 {
     public interface IDocumentRepository : IRepository<Document>
     {
+        Task<IEnumerable<Document>> GetAllDocuments();
 
+        Task<IEnumerable<Document>> GetApprovedDocuments();
     }
 }

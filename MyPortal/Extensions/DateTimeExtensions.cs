@@ -1,18 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 
-namespace MyPortal.Services
+namespace MyPortal.Extensions
 {
-    public static class DateTimeService
+    public static class DateTimeExtensions
     {
-        public static DateTime GetDateTimeFromFormattedInt(int formattedDate)
-        {
-            var year = formattedDate / 10000;
-            var month = ((formattedDate - (10000 * year)) / 100);
-            var day = (formattedDate - (10000 * year) - (100 * month));
-
-            return new DateTime(year, month, day);
-        }
-
         public static DateTime GetDayOfWeek(this DateTime dt, DayOfWeek day)
         {
             var monday = dt.StartOfWeek();

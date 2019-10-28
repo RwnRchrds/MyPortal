@@ -64,7 +64,7 @@ namespace MyPortal.Controllers.Api
 
             try
             {
-                return await CurriculumService.GetSessionsByTeacherOnDayOfWeek(teacherId, academicYearId, date, _context);
+                return await CurriculumService.GetSessionsByDateDto(teacherId, academicYearId, date, _context);
             }
             catch (Exception e)
             {
@@ -83,7 +83,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 var sessions =
-                    await CurriculumService.GetSessionsByTeacherOnDayOfWeek(teacherId, academicYearId, date,
+                    await CurriculumService.GetSessionsByDateDto(teacherId, academicYearId, date,
                         _context);
 
                 return PrepareDataGridObject(sessions, dm);
@@ -205,7 +205,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumService.GetSessionsByClass(classId, _context);
+                return await CurriculumService.GetSessionsByClassDto(classId, _context);
             }
             catch (Exception e)
             {
@@ -220,7 +220,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var sessions = await CurriculumService.GetSessionsByClass(classId, _context);
+                var sessions = await CurriculumService.GetSessionsByClassDto(classId, _context);
 
                 return PrepareDataGridObject(sessions, dm);
             }

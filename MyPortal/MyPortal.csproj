@@ -372,6 +372,8 @@
     <Compile Include="Dtos\SystemBulletinDto.cs" />
     <Compile Include="Dtos\SystemReportDto.cs" />
     <Compile Include="Dtos\SystemSchoolDto.cs" />
+    <Compile Include="Extensions\CurriculumExtensions.cs" />
+    <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -550,7 +552,6 @@
     <Compile Include="Services\StudentService.cs" />
     <Compile Include="Services\SystemService.cs" />
     <Compile Include="Services\UserService.cs" />
-    <Compile Include="Services\DateTimeService.cs" />
     <Compile Include="Models\Database\AssessmentGrade.cs" />
     <Compile Include="Models\Database\AssessmentGradeSet.cs" />
     <Compile Include="Models\Database\AssessmentResult.cs" />

@@ -43,7 +43,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await DocumentService.GetApprovedGeneralDocuments(_context);
+                return await DocumentService.GetApprovedGeneralDocumentsDto(_context);
             }
             catch (Exception e)
             {
@@ -90,7 +90,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await DocumentService.GetAllGeneralDocuments(_context);
+                return await DocumentService.GetAllGeneralDocumentsDto(_context);
             }
             catch (Exception e)
             {

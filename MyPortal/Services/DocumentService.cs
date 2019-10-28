@@ -7,18 +7,25 @@ using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Dtos.GridDtos;
 using MyPortal.Exceptions;
+using MyPortal.Interfaces;
 using MyPortal.Models.Database;
 
 namespace MyPortal.Services
 {
-    public static class DocumentService
+    public class DocumentService : MyPortalService
     {
-        public static async Task CreateDocument(Document document, string userId, MyPortalDbContext context)
+        public DocumentService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        {
+
+        }
+
+        public async Task CreateDocument(Document document, string userId)
         {
             if (document.UploaderId == 0)
             {
                 
-                var uploader = await context.StaffMembers.SingleOrDefaultAsync(x => x.Person.UserId == userId);
+                var uploader = await _unitOfWork.StaffMembers.GetByUserIdAsync(userId);
+
                 if (uploader == null)
                 {
                     throw new ProcessException(ExceptionType.NotFound,"Uploader not found");
@@ -27,7 +34,7 @@ namespace MyPortal.Services
                 document.UploaderId = uploader.Id;
             }
 
-            else if (document.UploaderId != 0 && ! await context.StaffMembers.AnyAsync(x => x.Id == document.UploaderId))
+            else if (document.UploaderId != 0 && ! await _unitOfWork.StaffMembers.AnyAsync(x => x.Id == document.UploaderId))
             {
                 throw new ProcessException(ExceptionType.NotFound,"Uploader not found");
             }
@@ -36,18 +43,19 @@ namespace MyPortal.Services
 
             document.Date = DateTime.Now;
 
-            context.Documents.Add(document);
-            await context.SaveChangesAsync();
+            _unitOfWork.Documents.Add(document);
+
+            await _unitOfWork.Complete();
         }
 
-        public static async Task CreatePersonalDocument(PersonDocument document, string userId, MyPortalDbContext context)
+        public async Task CreatePersonalDocument(PersonDocument document, string userId)
         {
-            if (!await context.Persons.AnyAsync(x => x.Id == document.PersonId))
+            if (!await _unitOfWork.People.AnyAsync(x => x.Id == document.PersonId))
             {
                 throw new ProcessException(ExceptionType.NotFound,"Person not found");
             }
 
-            var uploader = await context.StaffMembers.SingleOrDefaultAsync(x => x.Person.UserId == userId);
+            var uploader = await _unitOfWork.StaffMembers.GetByUserIdAsync(userId);
 
             if (uploader == null)
             {
@@ -64,15 +72,15 @@ namespace MyPortal.Services
 
             var documentObject = document.Document;
 
-            context.Documents.Add(documentObject);
-            context.PersonDocuments.Add(document);
+            _unitOfWork.Documents.Add(documentObject);
+            _unitOfWork.PersonDocuments.Add(document);
 
-            await context.SaveChangesAsync();
+            await _unitOfWork.Complete();
         }
 
-        public static async Task DeleteDocument(int documentId, MyPortalDbContext context)
+        public async Task DeleteDocument(int documentId)
         {
-            var documentInDb = await context.Documents.SingleOrDefaultAsync(x => x.Id == documentId);
+            var documentInDb = await _unitOfWork.Documents.GetByIdAsync(documentId);
 
             if (documentInDb == null)
             {
@@ -80,16 +88,13 @@ namespace MyPortal.Services
             }
 
             documentInDb.Deleted = true;
-            
-            //Delete from database
-            //context.Documents.Remove(documentInDb);
-            
-            await context.SaveChangesAsync();
+
+            await _unitOfWork.Complete();
         }
 
-        public static async Task DeletePersonalDocument(int documentId, MyPortalDbContext context)
+        public async Task DeletePersonalDocument(int documentId)
         {
-            var staffDocument = await context.PersonDocuments.SingleOrDefaultAsync(x => x.Id == documentId);
+            var staffDocument = await _unitOfWork.PersonDocuments.GetByIdAsync(documentId);
 
             if (staffDocument == null)
             {
@@ -103,54 +108,53 @@ namespace MyPortal.Services
                 throw new ProcessException(ExceptionType.NotFound,"Document not found");
             }
 
-            context.PersonDocuments.Remove(staffDocument);
+            _unitOfWork.PersonDocuments.Remove(staffDocument);
 
-            context.Documents.Remove(attachedDocument);
+            _unitOfWork.Documents.Remove(attachedDocument);
 
-            await context.SaveChangesAsync();
+            await _unitOfWork.Complete();
         }
 
-        public static async Task<IEnumerable<DocumentDto>> GetAllGeneralDocuments(MyPortalDbContext context)
+        public async Task<IEnumerable<DocumentDto>> GetAllGeneralDocumentsDto()
         {
-            var documents = await GetAllGeneralDocumentsModel(context);
+            var documents = await GetAllGeneralDocuments();
 
             return documents.Select(Mapper.Map<Document, DocumentDto>);
         }
 
-        public static async Task<IEnumerable<GridDocumentDto>> GetAllGeneralDocumentsDataGrid(MyPortalDbContext context)
+        public async Task<IEnumerable<GridDocumentDto>> GetAllGeneralDocumentsDataGrid()
         {
-            var documents =  await GetAllGeneralDocumentsModel(context);
+            var documents =  await GetAllGeneralDocuments();
             return documents.Select(Mapper.Map<Document, GridDocumentDto>);
         }
 
-        public static async Task<IEnumerable<Document>> GetAllGeneralDocumentsModel(MyPortalDbContext context)
+        public async Task<IEnumerable<Document>> GetAllGeneralDocuments()
         {
-            return await context.Documents.Where(x => !x.Deleted && x.IsGeneral).OrderBy(x => x.Description)
-                .ToListAsync();
+            return await _unitOfWork.Documents.GetAllDocuments();
         }
 
-        public static async Task<IEnumerable<DocumentDto>> GetApprovedGeneralDocuments(MyPortalDbContext context)
+        public async Task<IEnumerable<DocumentDto>> GetApprovedGeneralDocumentsDto()
         {
-            var documents = await GetApprovedGeneralDocumentsModel(context);
+            var documents = await GetApprovedGeneralDocuments();
 
             return documents.Select(Mapper.Map<Document, DocumentDto>);
         }
 
-        public static async Task<IEnumerable<GridDocumentDto>> GetApprovedGeneralDocumentsDataGrid(MyPortalDbContext context)
+        public async Task<IEnumerable<GridDocumentDto>> GetApprovedGeneralDocumentsDataGrid()
         {
-            var documents = await GetApprovedGeneralDocumentsModel(context);
+            var documents = await GetApprovedGeneralDocuments();
 
             return documents.Select(Mapper.Map<Document, GridDocumentDto>);
         }
 
-        public static async Task<IEnumerable<Document>> GetApprovedGeneralDocumentsModel(MyPortalDbContext context)
+        public async Task<IEnumerable<Document>> GetApprovedGeneralDocuments()
         {
-            return await context.Documents.Where(x => x.IsGeneral && x.Approved && !x.Deleted).ToListAsync();
+            return await _unitOfWork.Documents.GetApprovedDocuments();
         }
         
-        public static async Task<DocumentDto> GetDocumentById(int documentId, MyPortalDbContext context)
+        public async Task<DocumentDto> GetDocumentById(int documentId)
         {
-            var document = await context.Documents.SingleOrDefaultAsync(x => x.Id == documentId);
+            var document = await _unitOfWork.Documents.GetByIdAsync(documentId);
 
             if (document == null)
             {

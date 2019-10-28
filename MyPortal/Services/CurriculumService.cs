@@ -72,7 +72,7 @@ namespace MyPortal.Services
                     $"{enrolment.Student.GetDisplayName()} is already enrolled in {enrolment.Class.Name}");
             }
 
-            if (await StudentCanEnrol(_unitOfWork, enrolment.StudentId, enrolment.ClassId))
+            if (await StudentCanEnrol(enrolment.StudentId, enrolment.ClassId))
             {
                 _unitOfWork.CurriculumEnrolments.Add(enrolment);
                 if (commitImmediately)
@@ -198,17 +198,20 @@ namespace MyPortal.Services
                 throw new ProcessException(ExceptionType.NotFound,"Class not found");
             }
 
-            if (await HasEnrolments(session.ClassId, _unitOfWork))
+            if (await HasEnrolments(session.ClassId))
             {
                 throw new ProcessException(ExceptionType.BadRequest,"Cannot modify class schedule while students are enrolled");
             }
 
-            foreach (var newAssignment in regPeriods.Select(period => new {period, period1 = period})
-                .Where(@t =>
-                    !_unitOfWork.CurriculumSessions.Any(x => x.ClassId == session.ClassId && x.PeriodId == @t.period1.Id))
-                .Select(@t => new CurriculumSession {PeriodId = @t.period.Id, ClassId = session.ClassId}))
+            foreach (var period in regPeriods)
             {
-                _unitOfWork.CurriculumSessions.Add(newAssignment);
+                var newSession = new CurriculumSession
+                {
+                    ClassId = session.ClassId,
+                    PeriodId = period.Id
+                };
+
+                _unitOfWork.CurriculumSessions.Add(newSession);
             }
 
             await _unitOfWork.Complete();
@@ -550,49 +553,46 @@ namespace MyPortal.Services
             return Mapper.Map<CurriculumSession, CurriculumSessionDto>(session);
         }
 
-        public async Task<IEnumerable<CurriculumSessionDto>> GetSessionsByTeacherOnDayOfWeek(int staffId, int academicYearId, DateTime date)
+        public async Task<IEnumerable<CurriculumSessionDto>> GetSessionsByDateDto(int staffId, int academicYearId, DateTime date)
         {
-            var classes = await GetSessionsByTeacherOnDayOfWeekModel(staffId, academicYearId, date);
+            var classes = await GetSessionsByDate(staffId, academicYearId, date);
 
             return classes.Select(Mapper.Map<CurriculumSession, CurriculumSessionDto>);
         }
 
-        public async Task<IEnumerable<GridCurriculumSessionDto>> GetSessionsByTeacherOnDayOfWeekDataGrid(int staffId, int academicYearId, DateTime date,
-            MyPortalDb_unitOfWork _unitOfWork)
+        public async Task<IEnumerable<GridCurriculumSessionDto>> GetSessionsByDateDataGrid(int staffId, int academicYearId, DateTime date)
         {
-            var classes = await GetSessionsByTeacherOnDayOfWeekModel(staffId, academicYearId, date, _unitOfWork);
+            var classes = await GetSessionsByDate(staffId, academicYearId, date);
 
             return classes.Select(Mapper.Map<CurriculumSession, GridCurriculumSessionDto>);
         }
 
-        public async Task<IEnumerable<CurriculumSessionDto>> GetSessionsByClass(int classId,
-            MyPortalDb_unitOfWork _unitOfWork)
+        public async Task<IEnumerable<CurriculumSessionDto>> GetSessionsByClassDto(int classId)
         {
-            var sessions = await GetSessionsForClassModel(classId, _unitOfWork);
+            var sessions = await _unitOfWork.CurriculumSessions.GetSessionsByClass(classId);
 
             return sessions.Select(Mapper.Map<CurriculumSession, CurriculumSessionDto>);
         }
 
-        public async Task<IEnumerable<GridCurriculumSessionDto>> GetSessionsForClass_DataGrid(int classId,
-            MyPortalDb_unitOfWork _unitOfWork)
+        public async Task<IEnumerable<GridCurriculumSessionDto>> GetSessionsByClassDataGrid(int classId)
         {
-            var sessions = await GetSessionsForClassModel(classId, _unitOfWork);
+            var sessions = await _unitOfWork.CurriculumSessions.GetSessionsByClass(classId);
 
             return sessions.Select(Mapper.Map<CurriculumSession, GridCurriculumSessionDto>);
         }
 
-        public async Task<IEnumerable<CurriculumSession>> GetSessionsForClassModel(int classId,
-            MyPortalDb_unitOfWork _unitOfWork)
+        public async Task<IEnumerable<CurriculumSession>> GetSessionsByClass(int classId)
         {
-            return await _unitOfWork.CurriculumSessions.Where(x => x.ClassId == classId).ToListAsync();
+            var sessions = await _unitOfWork.CurriculumSessions.GetSessionsByClass(classId);
+
+            return sessions;
         }
 
-        public async Task<IEnumerable<CurriculumSession>> GetSessionsByTeacherOnDayOfWeekModel(int staffId, int academicYearId, DateTime date,
-            MyPortalDb_unitOfWork _unitOfWork)
+        public async Task<IEnumerable<CurriculumSession>> GetSessionsByDate(int staffId, int academicYearId, DateTime date)
         {
             var weekBeginning = date.StartOfWeek();
 
-            var academicYear = await _unitOfWork.CurriculumAcademicYears.SingleOrDefaultAsync(x => x.Id == academicYearId);
+            var academicYear = await _unitOfWork.CurriculumAcademicYears.GetByIdAsync(academicYearId);
 
             if (academicYear == null)
             {
@@ -604,7 +604,7 @@ namespace MyPortal.Services
                 throw new ProcessException(ExceptionType.BadRequest,"Selected date is outside academic year");
             }
 
-            var currentWeek = await _unitOfWork.AttendanceWeeks.SingleOrDefaultAsync(x => x.Beginning == weekBeginning && x.AcademicYearId == academicYearId);
+            var currentWeek = await _unitOfWork.AttendanceWeeks.GetAttendanceWeekByDate(academicYearId, weekBeginning);
 
             if (currentWeek == null)
             {
@@ -616,20 +616,14 @@ namespace MyPortal.Services
                 throw new ProcessException(ExceptionType.BadRequest,"Selected date is during a school holiday");
             }
 
-            var classList = await _unitOfWork.CurriculumSessions
-                .Where(x =>
-                    x.Class.AcademicYearId == academicYearId && x.Period.Weekday ==
-                    date.DayOfWeek && x.Class.TeacherId == staffId)
-                .OrderBy(x => x.Period.StartTime)
-                .ToListAsync();
+            var classList = await _unitOfWork.CurriculumSessions.GetSessionsByDate(academicYearId, staffId, date);
 
             return classList;
         }
 
-        public async Task<CurriculumStudyTopicDto> GetStudyTopicById(int studyTopicId,
-            MyPortalDb_unitOfWork _unitOfWork)
+        public async Task<CurriculumStudyTopicDto> GetStudyTopicById(int studyTopicId)
         {
-            var studyTopic = await _unitOfWork.CurriculumStudyTopics.SingleOrDefaultAsync(x => x.Id == studyTopicId);
+            var studyTopic = await _unitOfWork.CurriculumStudyTopics.GetByIdAsync(studyTopicId);
 
             if (studyTopic == null)
             {
@@ -641,7 +635,7 @@ namespace MyPortal.Services
 
         public async Task<CurriculumSubjectDto> GetSubjectById(int subjectId)
         {
-            var subject = await _unitOfWork.CurriculumSubjects.SingleOrDefaultAsync(x => x.Id == subjectId);
+            var subject = await _unitOfWork.CurriculumSubjects.GetByIdAsync(subjectId);
 
             if (subject == null)
             {
@@ -649,21 +643,6 @@ namespace MyPortal.Services
             }
 
             return Mapper.Map<CurriculumSubject, CurriculumSubjectDto>(subject);
-        }
-
-        public static string GetSubjectNameForClass(CurriculumClass @class)
-        {
-            if (@class == null)
-            {
-                throw new ProcessException(ExceptionType.NotFound,"Class not found");
-            }
-
-            if (@class.SubjectId == null || @class.SubjectId == 0)
-            {
-                return "No Subject";
-            }
-
-            return @class.Subject.Name;
         }
 
         public async Task<bool> HasEnrolments(int classId)
@@ -676,9 +655,9 @@ namespace MyPortal.Services
             return await _unitOfWork.CurriculumSessions.AnyAsync(x => x.ClassId == classId);
         }
 
-        public async Task<bool> IsInAcademicYear(this DateTime date,  int academicYearId)
+        public async Task<bool> IsDateInAcademicYear(DateTime date,  int academicYearId)
         {
-            var academicYear = await _unitOfWork.CurriculumAcademicYears.SingleOrDefaultAsync(x => x.Id == academicYearId);
+            var academicYear = await _unitOfWork.CurriculumAcademicYears.GetByIdAsync(academicYearId);
 
             if (academicYear == null)
             {
@@ -688,7 +667,7 @@ namespace MyPortal.Services
             return date >= academicYear.FirstDate && date <= academicYear.LastDate;
         }
 
-        public async Task<bool> PeriodIsFree( int studentId, int periodId)
+        public async Task<bool> PeriodIsFree(int studentId, int periodId)
         {
             return !await _unitOfWork.CurriculumEnrolments.AnyAsync(x =>
                 x.StudentId == studentId && x.Class.Sessions.Any(p => p.PeriodId == periodId));
@@ -712,13 +691,13 @@ namespace MyPortal.Services
                 throw new ProcessException(ExceptionType.BadRequest,"Student is already enrolled in class");
             }
 
-            var periods = await GetPeriodsByClass(_unitOfWork, classId);
+            var sessions = await GetSessionsByClass(classId);
             
-                foreach (var period in periods)
+                foreach (var session in sessions)
                 {
-                    if (!await PeriodIsFree(_unitOfWork, studentId, period.Id))
+                    if (!await PeriodIsFree(studentId, session.PeriodId))
                     {
-                        throw new ProcessException(ExceptionType.BadRequest,$"Student is not free during period {period.Name}");
+                        throw new ProcessException(ExceptionType.BadRequest,$"Student is not free during period {session.Period.Name}");
                     }
                 }
 
@@ -726,7 +705,7 @@ namespace MyPortal.Services
         }
         public async Task UpdateClass(CurriculumClass @class)
         {
-            var classInDb = await _unitOfWork.CurriculumClasses.SingleOrDefaultAsync(x => x.Id == @class.Id);
+            var classInDb = await _unitOfWork.CurriculumClasses.GetByIdAsync(@class.Id);
 
             if (classInDb == null)
             {
@@ -740,10 +719,9 @@ namespace MyPortal.Services
 
             await _unitOfWork.Complete();
         }
-        public async Task UpdateLessonPlan(CurriculumLessonPlan lessonPlan,
-            MyPortalDb_unitOfWork _unitOfWork)
+        public async Task UpdateLessonPlan(CurriculumLessonPlan lessonPlan)
         {
-            var planInDb = await _unitOfWork.CurriculumLessonPlans.SingleOrDefaultAsync(x => x.Id == lessonPlan.Id);
+            var planInDb = await _unitOfWork.CurriculumLessonPlans.GetByIdAsync(lessonPlan.Id);
 
             if (planInDb == null)
             {
@@ -766,14 +744,14 @@ namespace MyPortal.Services
                 throw new ProcessException(ExceptionType.BadRequest,"Invalid data");
             }
 
-            var sessionInDb = await _unitOfWork.CurriculumSessions.SingleOrDefaultAsync(x => x.Id == session.Id);
+            var sessionInDb = await _unitOfWork.CurriculumSessions.GetByIdAsync(session.Id);
 
             if (sessionInDb == null)
             {
                 throw new ProcessException(ExceptionType.NotFound,"Session not found");
             }
 
-            if (await HasEnrolments(session.ClassId, _unitOfWork))
+            if (await HasEnrolments(session.ClassId))
             {
                 throw new ProcessException(ExceptionType.BadRequest,"Cannot modify class schedule while students are enrolled");
             }
@@ -787,15 +765,15 @@ namespace MyPortal.Services
             sessionInDb.PeriodId = session.PeriodId;
             await _unitOfWork.Complete();
         }
-        public async Task UpdateStudyTopic(CurriculumStudyTopic studyTopic,
-            MyPortalDb_unitOfWork _unitOfWork)
+
+        public async Task UpdateStudyTopic(CurriculumStudyTopic studyTopic)
         {
             if (!ValidationService.ModelIsValid(studyTopic))
             {
                 throw new ProcessException(ExceptionType.BadRequest,"Invalid data");
             }
 
-            var studyTopicInDb = await _unitOfWork.CurriculumStudyTopics.SingleOrDefaultAsync(x => x.Id == studyTopic.Id);
+            var studyTopicInDb = await _unitOfWork.CurriculumStudyTopics.GetByIdAsync(studyTopic.Id);
 
             if (studyTopicInDb == null)
             {
@@ -811,7 +789,7 @@ namespace MyPortal.Services
 
         public async Task UpdateSubject(CurriculumSubject subject)
         {
-            var subjectInDb = await _unitOfWork.CurriculumSubjects.SingleOrDefaultAsync(x => x.Id == subject.Id);
+            var subjectInDb = await _unitOfWork.CurriculumSubjects.GetByIdAsync(subject.Id);
 
             if (subjectInDb == null)
             {
