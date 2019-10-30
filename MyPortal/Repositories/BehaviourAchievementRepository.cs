@@ -33,5 +33,11 @@ namespace MyPortal.Repositories
             return await Context.BehaviourAchievements
                 .Where(x => x.StudentId == studentId && x.AcademicYearId == academicYearId).ToListAsync();
         }
+
+        public async Task<int> GetBehaviourAchievementPointsToday()
+        {
+            return await Context.BehaviourAchievements.Where(x => x.Date == DateTime.Today)
+                       .SumAsync(x => (int?) x.Points) ?? 0;
+        }
     }
 }

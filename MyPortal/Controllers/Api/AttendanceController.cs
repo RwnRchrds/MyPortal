@@ -22,11 +22,11 @@ namespace MyPortal.Controllers.Api
         [Route("marks/takeRegister/{weekId:int}/{sessionId:int}", Name = "ApiAttendanceLoadRegister")]
         public async Task<IEnumerable<StudentAttendanceMarkCollection>> LoadRegister([FromUri] int weekId, [FromUri] int sessionId)
         {
-            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(User);
 
             try
             {
-                using (var service = new AttendanceService(_context))
+                using (var service = new AttendanceService(UnitOfWork))
                 {
                     return await service.GetRegisterMarks( weekId, sessionId);
                 }
@@ -43,11 +43,11 @@ namespace MyPortal.Controllers.Api
         public async Task<IHttpActionResult> LoadRegisterDataGrid([FromBody] DataManagerRequest dm, [FromUri] int weekId,
             [FromUri] int sessionId)
         {
-            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(UnitOfWork, User);
 
             try
             {
-                using (var service = new AttendanceService(_context))
+                using (var service = new AttendanceService(UnitOfWork))
                 {
                     var marks = await service.GetRegisterMarks(weekId, sessionId);
                     return PrepareDataGridObject(marks, dm);
@@ -68,7 +68,7 @@ namespace MyPortal.Controllers.Api
             {
                 try
                 {
-                    using (var service = new AttendanceService(_context))
+                    using (var service = new AttendanceService(UnitOfWork))
                     {
                         await service.SaveRegisterMarks(register.Changed);
                     }
@@ -87,13 +87,13 @@ namespace MyPortal.Controllers.Api
         [Route("summary/raw/{studentId:int}", Name = "ApiAttendanceGetRawAttendanceSummary")]
         public async Task<AttendanceSummary> GetRawAttendanceSummary([FromUri] int studentId)
         {
-            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(UnitOfWork, User);
             
             await AuthenticateStudentRequest(studentId);
 
             try
             {
-                using (var service = new AttendanceService(_context))
+                using (var service = new AttendanceService(UnitOfWork))
                 {
                     return await service.GetSummary(studentId, academicYearId);
                 }
@@ -109,13 +109,13 @@ namespace MyPortal.Controllers.Api
         [Route("summary/percent/{studentId:int}", Name = "ApiAttendanceGetPercentageAttendanceSummary")]
         public async Task<AttendanceSummary> GetPercentageAttendanceSummary([FromUri] int studentId)
         {
-            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
+            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(UnitOfWork, User);
             
             await AuthenticateStudentRequest(studentId);
 
             try
             {
-                using (var service = new AttendanceService(_context))
+                using (var service = new AttendanceService(UnitOfWork))
                 {
                     return await service.GetSummary(studentId, academicYearId, true);
                 }
@@ -132,7 +132,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var service = new AttendanceService(_context))
+                using (var service = new AttendanceService(UnitOfWork))
                 {
                     return await service.GetAllPeriods();
                 }
@@ -149,7 +149,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var service = new AttendanceService(_context))
+                using (var service = new AttendanceService(UnitOfWork))
                 {
                     return await service.GetPeriodById(periodId);
                 }
@@ -167,7 +167,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var service = new AttendanceService(_context))
+                using (var service = new AttendanceService(UnitOfWork))
                 {
                     await service.CreateAttendanceWeeksForAcademicYear(academicYearId);
                 }
@@ -184,11 +184,11 @@ namespace MyPortal.Controllers.Api
         [Route("weeks/get/byDate/{date:datetime}", Name = "ApiAttendanceGetWeekByDate")]
         public async Task<AttendanceWeekDto> GetWeekByDate([FromUri] DateTime date)
         {
-             var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
+             var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(UnitOfWork, User);
 
              try
              {
-                 using (var service = new AttendanceService(_context))
+                 using (var service = new AttendanceService(UnitOfWork))
                  {
                      return await service.GetWeekByDate(academicYearId, date);
                  }

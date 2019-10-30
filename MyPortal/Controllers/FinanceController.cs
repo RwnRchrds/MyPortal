@@ -28,7 +28,7 @@ namespace MyPortal.Controllers
         {
             var viewModel = new NewProductViewModel();
 
-            viewModel.ProductTypes = await FinanceService.GetAllProductTypesModel(_context);
+            viewModel.ProductTypes = await FinanceService.GetAllProductTypes(_context);
 
             return View(viewModel);
         }
@@ -37,7 +37,7 @@ namespace MyPortal.Controllers
         [Route("Sales/New", Name = "FinanceSaleEntry")]
         public async Task<ActionResult> SaleEntry()
         {
-            var products = await FinanceService.GetAllProductsModel(_context);
+            var products = await FinanceService.GetAllProducts(_context);
 
             var viewModel = new SaleEntryViewModel
             {

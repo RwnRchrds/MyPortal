@@ -24,7 +24,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var service = new AssessmentService(_unitOfWork))
+                using (var service = new AssessmentService(UnitOfWork))
                 {
                     await service.CreateResult(result);
                 }
@@ -44,7 +44,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var service = new AssessmentService(_unitOfWork))
+                using (var service = new AssessmentService(UnitOfWork))
                 {
                     return await service.GetResultsByStudentDto(studentId, resultSetId);
                 }
@@ -63,7 +63,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var service = new AssessmentService(_unitOfWork))
+                using (var service = new AssessmentService(UnitOfWork))
                 {
                     var results = await service.GetResultsByStudentDataGrid(studentId, resultSetId);
                     return PrepareDataGridObject(results, dm);
@@ -82,7 +82,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var service = new AssessmentService(_unitOfWork))
+                using (var service = new AssessmentService(UnitOfWork))
                 {
                     await service.CreateResultSet(resultSet);
                 }
@@ -102,7 +102,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var service = new AssessmentService(_unitOfWork))
+                using (var service = new AssessmentService(UnitOfWork))
                 {
                     await service.DeleteResultSet(resultSetId);
                 }
@@ -122,7 +122,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var service = new AssessmentService(_unitOfWork))
+                using (var service = new AssessmentService(UnitOfWork))
                 {
                     return await service.GetResultSetByIdDto(resultSetId);
                 }
@@ -140,7 +140,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var service = new AssessmentService(_unitOfWork))
+                using (var service = new AssessmentService(UnitOfWork))
                 {
                     return await service.GetAllResultSetsDto();
                 }

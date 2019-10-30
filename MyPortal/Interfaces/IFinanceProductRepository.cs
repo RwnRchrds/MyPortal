@@ -9,6 +9,6 @@ namespace MyPortal.Interfaces
 {
     public interface IFinanceProductRepository : IRepository<FinanceProduct>
     {
-
+        Task<IEnumerable<FinanceProduct>> GetAvailableProductsByStudent(int studentId);
     }
 }

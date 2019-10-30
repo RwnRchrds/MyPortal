@@ -47,6 +47,12 @@ namespace MyPortal.Models.Database
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int AdmissionNumber { get; set; }
 
+        [Column(TypeName = "date")]
+        public DateTime? DateStarting { get; set; }
+
+        [Column(TypeName = "date")]
+        public DateTime? DateLeaving { get; set; }
+
         public decimal AccountBalance { get; set; }
 
         public bool FreeSchoolMeals { get; set; }

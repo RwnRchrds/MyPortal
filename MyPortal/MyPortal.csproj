@@ -384,7 +384,6 @@
     <Compile Include="Interfaces\IAssessmentResultSetRepository.cs" />
     <Compile Include="Interfaces\IAttendanceCodeRepository.cs" />
     <Compile Include="Interfaces\IAttendanceMarkRepository.cs" />
-    <Compile Include="Interfaces\IAttendanceMeaningRepository.cs" />
     <Compile Include="Interfaces\IAttendancePeriodRepository.cs" />
     <Compile Include="Interfaces\IAttendanceWeekRepository.cs" />
     <Compile Include="Interfaces\IBehaviourAchievementRepository.cs" />
@@ -611,7 +610,6 @@
     <Compile Include="Repositories\AssessmentResultSetRepository.cs" />
     <Compile Include="Repositories\AttendanceCodeRepository.cs" />
     <Compile Include="Repositories\AttendanceMarkRepository.cs" />
-    <Compile Include="Repositories\AttendanceMeaningRepository.cs" />
     <Compile Include="Repositories\AttendancePeriodRepository.cs" />
     <Compile Include="Repositories\AttendanceWeekRepository.cs" />
     <Compile Include="Repositories\BehaviourAchievementRepository.cs" />

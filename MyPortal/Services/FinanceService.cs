@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -7,14 +8,21 @@ using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Dtos.GridDtos;
 using MyPortal.Exceptions;
+using MyPortal.Interfaces;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
+using Syncfusion.EJ2.Charts;
 
 namespace MyPortal.Services
 {
-    public static class FinanceService
+    public class FinanceService : MyPortalService
     {
-        public static async Task<bool> AssessBalance(FinanceSale sale, MyPortalDbContext context)
+        public FinanceService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        {
+            
+        }
+
+        public async Task<bool> AssessBalance(FinanceSale sale)
         {
             var product = await context.FinanceProducts.SingleOrDefaultAsync(x => x.Id == sale.ProductId);
 
@@ -38,7 +46,7 @@ namespace MyPortal.Services
             return student.AccountBalance >= product.Price;
         }
 
-        public static async Task CheckoutBasketForStudent(int studentId, int academicYearId, MyPortalDbContext context)
+        public static async Task CheckoutBasketForStudent(int studentId, int academicYearId)
         {
             var student = await context.Students.SingleOrDefaultAsync(x => x.Id == studentId);
 
@@ -77,7 +85,7 @@ namespace MyPortal.Services
             await context.SaveChangesAsync();
         }
 
-        public static async Task CreateBasketItem(FinanceBasketItem basketItem, MyPortalDbContext context)
+        public static async Task CreateBasketItem(FinanceBasketItem basketItem)
         {
             var student = await context.Students.SingleOrDefaultAsync(x => x.Id == basketItem.StudentId);
 
@@ -108,7 +116,7 @@ namespace MyPortal.Services
             await context.SaveChangesAsync();
         }
 
-        public static async Task CreateProduct(FinanceProduct product, MyPortalDbContext context)
+        public static async Task CreateProduct(FinanceProduct product)
         {
             if (!ValidationService.ModelIsValid(product))
             {
@@ -119,7 +127,7 @@ namespace MyPortal.Services
             await context.SaveChangesAsync();
         }
 
-        public static async Task CreateSale(FinanceSale sale, int academicYearId, MyPortalDbContext context, bool commitImmediately = true)
+        public static async Task CreateSale(FinanceSale sale, int academicYearId, bool commitImmediately = true)
         {
             sale.Date = DateTime.Now;
 
@@ -171,7 +179,7 @@ namespace MyPortal.Services
             }
         }
 
-        public static async Task DeleteBasketItem(int basketItemId, MyPortalDbContext context)
+        public static async Task DeleteBasketItem(int basketItemId)
         {
             var itemInDb = await context.FinanceBasketItems.SingleOrDefaultAsync(x => x.Id == basketItemId);
 
@@ -184,7 +192,7 @@ namespace MyPortal.Services
             await context.SaveChangesAsync();
         }
 
-        public static async Task DeleteProduct(int productId, MyPortalDbContext context)
+        public static async Task DeleteProduct(int productId)
         {
             var productInDb = await context.FinanceProducts.SingleOrDefaultAsync(p => p.Id == productId);
 
@@ -198,7 +206,7 @@ namespace MyPortal.Services
             await context.SaveChangesAsync();
         }
 
-        public static async Task DeleteSale(int saleId, MyPortalDbContext context)
+        public static async Task DeleteSale(int saleId)
         {
             var saleInDb = await context.FinanceSales.SingleOrDefaultAsync(p => p.Id == saleId);
 
@@ -212,211 +220,143 @@ namespace MyPortal.Services
             await context.SaveChangesAsync();
         }
 
-        public static async Task<IEnumerable<FinanceProductDto>> GetAllProducts(MyPortalDbContext context)
+        public async Task<IDictionary<int, string>> GetAllProductsLookup()
         {
-            var products = await GetAllProductsModel(context);
-
-            return products.Select(Mapper.Map<FinanceProduct, FinanceProductDto>);
-        }
-
-        public static async Task<IEnumerable<GridFinanceProductDto>> GetAllProductsDataGrid(MyPortalDbContext context)
-        {
-            var products = await GetAllProductsModel(context);
-
-            return products.Select(Mapper.Map<FinanceProduct, GridFinanceProductDto>);
-        }
-
-        public static async Task<IDictionary<int, string>> GetAllProductsLookup(MyPortalDbContext context)
-        {
-            var products = await GetAllProductsModel(context);
+            var products = await GetAllProducts();
 
             return products.ToDictionary(x => x.Id, x => x.Description);
         }
 
-        public static async Task<IEnumerable<FinanceProduct>> GetAllProductsModel(MyPortalDbContext context)
+        public async Task<IEnumerable<FinanceProduct>> GetAllProducts()
         {
-            return await context.FinanceProducts.Where(x => !x.Deleted).OrderBy(x => x.Description).ToListAsync();
+            return await UnitOfWork.FinanceProducts.GetAllAsync();
         }
 
-        public static async Task<IEnumerable<FinanceSaleDto>> GetAllSales(int academicYearId, MyPortalDbContext context)
+        public async Task<IEnumerable<FinanceSale>> GetAllSales(int academicYearId)
         {
-            var sales = await GetAllSalesModel(academicYearId, context);
-
-            return sales.Select(Mapper.Map<FinanceSale, FinanceSaleDto>);
+            return await UnitOfWork.FinanceSales.GetAllAsync(academicYearId);
         }
 
-        public static async Task<IEnumerable<GridFinanceSaleDto>> GetAllSalesDataGrid(int academicYearId, MyPortalDbContext context)
+        public async Task<IEnumerable<FinanceSale>> GetAllSalesByStudent(int studentId,
+            int academicYearId)
         {
-            var sales = await GetAllSalesModel(academicYearId, context);
-
-            return sales.Select(Mapper.Map<FinanceSale, GridFinanceSaleDto>);
-        }
-
-        public static async Task<IEnumerable<FinanceSale>> GetAllSalesModel(int academicYearId, MyPortalDbContext context)
-        {
-            return await context.FinanceSales.Where(x => !x.Deleted && x.AcademicYearId == academicYearId)
-                .OrderByDescending(x => x.Date).ToListAsync();
-        }
-
-        public static async Task<IEnumerable<FinanceSaleDto>> GetAllSalesByStudent(int studentId,
-            int academicYearId, MyPortalDbContext context)
-        {
-            var sales = await context.FinanceSales
-                .Where(x => !x.Deleted && x.StudentId == studentId && x.AcademicYearId == academicYearId)
-                .OrderByDescending(x => x.Date).ToListAsync();
+            var sales = await UnitOfWork.FinanceSales.GetSalesByStudent(studentId, academicYearId);
             
-            return sales.Select(Mapper.Map<FinanceSale, FinanceSaleDto>);
+            return sales;
         }
 
-        public static async Task<IEnumerable<FinanceProductDto>> GetAvailableProductsByStudent(int studentId,
-            MyPortalDbContext context)
+        public async Task<IEnumerable<FinanceProduct>> GetAvailableProductsByStudent(int studentId)
         {
-            var items = await context.FinanceProducts
-                .Where(x => !x.Deleted && (x.OnceOnly && x.Visible ||
-                                           x.BasketItems.All(i => i.StudentId != studentId) &&
-                                           x.Sales.All(s => s.StudentId != studentId)))
-                .OrderBy(x => x.Description).ToListAsync();
-                
-            return items.Select(Mapper.Map<FinanceProduct, FinanceProductDto>);
+            var items = await UnitOfWork.FinanceProducts.GetAvailableProductsByStudent(studentId);
+
+            return items;
         }
 
-        public static async Task<IEnumerable<FinanceBasketItemDto>> GetBasketItemsByStudent(int studentId, MyPortalDbContext context)
+        public async Task<IEnumerable<FinanceBasketItem>> GetBasketItemsByStudent(int studentId)
         {
-            var basketItems = await context.FinanceBasketItems.Where(x => x.StudentId == studentId)
-                .OrderBy(x => x.Product.Description).ToListAsync();
-            
-            return basketItems.Select(Mapper.Map<FinanceBasketItem, FinanceBasketItemDto>);
+            var basketItems = await UnitOfWork.FinanceBasketItems.GetBasketItemsByStudent(studentId);
+
+            return basketItems;
         }
 
-        public static async Task<decimal> GetBasketTotalForStudent(int studentId, MyPortalDbContext context)
+        public async Task<decimal> GetBasketTotalForStudent(int studentId)
         {
-            var total = await context.FinanceBasketItems.Where(x => x.StudentId == studentId)
-                .SumAsync(x => x.Product.Price);
+            var total = await UnitOfWork.FinanceBasketItems.GetBasketTotalForStudent(studentId);
 
             return total;
         }
-        
-        public static async Task<IEnumerable<FinanceSaleDto>> GetPendingSales(int academicYearId,
-            MyPortalDbContext context)
-        {
-            var sales = await GetPendingSalesModel(academicYearId, context);
 
-            return sales.Select(Mapper.Map<FinanceSale, FinanceSaleDto>);
+        public async Task<IEnumerable<FinanceSale>> GetPendingSales(int academicYearId)
+        {
+            return await UnitOfWork.FinanceSales.GetPending();
         }
 
-        public static async Task<IEnumerable<GridFinanceSaleDto>> GetPendingSalesDataGrid(int academicYearId,
-            MyPortalDbContext context)
+        public async Task<IEnumerable<FinanceSale>> GetProcessedSales(int academicYearId)
         {
-            var sales = await GetPendingSalesModel(academicYearId, context);
-
-            return sales.Select(Mapper.Map<FinanceSale, GridFinanceSaleDto>);
+            return await UnitOfWork.FinanceSales.GetProcessed();
         }
 
-        public static async Task<IEnumerable<FinanceSale>> GetPendingSalesModel(int academicYearId,
-            MyPortalDbContext context)
+        public async Task<FinanceProduct> GetProductById(int productId)
         {
-            return await context.FinanceSales
-                .Where(x => !x.Deleted && !x.Processed && x.AcademicYearId == academicYearId)
-                .OrderByDescending(x => x.Date).ToListAsync();
-        }
-
-        public static async Task<IEnumerable<FinanceSaleDto>> GetProcessedSales(int academicYearId, MyPortalDbContext context)
-        {
-            var sales = await GetProcessedSalesModel(academicYearId, context);
-
-            return sales.Select(Mapper.Map<FinanceSale, FinanceSaleDto>);
-        }
-
-        public static async Task<IEnumerable<GridFinanceSaleDto>> GetProcessedSalesDataGrid(int academicYearId, MyPortalDbContext context)
-        {
-            var sales = await GetProcessedSalesModel(academicYearId, context);
-
-            return sales.Select(Mapper.Map<FinanceSale, GridFinanceSaleDto>);
-        }
-
-        public static async Task<IEnumerable<FinanceSale>> GetProcessedSalesModel(int academicYearId, MyPortalDbContext context)
-        {
-            return await context.FinanceSales
-                .Where(x => !x.Deleted && x.Processed && x.AcademicYearId == academicYearId)
-                .OrderByDescending(x => x.Date).ToListAsync();
-        }
-
-        public static async Task<FinanceProductDto> GetProductById(int productId, MyPortalDbContext context)
-        {
-            var product = await context.FinanceProducts.SingleOrDefaultAsync(x => x.Id == productId);
+            var product = await UnitOfWork.FinanceProducts.GetByIdAsync(productId);
 
             if (product == null)
             {
                 throw new ProcessException(ExceptionType.NotFound, "Product not found");
             }
 
-            return Mapper.Map<FinanceProduct, FinanceProductDto>(product);
+            return product;
         }
 
-        public static async Task<decimal> GetProductPrice(int productId, MyPortalDbContext context)
+        public async Task<FinanceSale> GetSaleById(int saleId)
         {
-            var productInDb = await context.FinanceProducts.SingleOrDefaultAsync(x => x.Id == productId);
+            var sale = await UnitOfWork.FinanceSales.GetByIdAsync(saleId);
 
-            if (productInDb == null)
+            if (sale == null)
             {
-                throw new ProcessException(ExceptionType.NotFound, "Product not found");
+                throw new ProcessException(ExceptionType.NotFound, "Sale not found");
             }
+
+            return sale;
+        }
+
+        public async Task<decimal> GetProductPrice(int productId)
+        {
+            var productInDb = await GetProductById(productId);
 
             return productInDb.Price;
         }
 
-        public static async Task<IEnumerable<FinanceProductType>> GetAllProductTypesModel(MyPortalDbContext context)
+        public async Task<IEnumerable<FinanceProductType>> GetAllProductTypes()
         {
-            return await context.FinanceProductTypes.OrderBy(x => x.Description).ToListAsync();
+            return await UnitOfWork.FinanceProductTypes.GetAllAsync();
         }
 
-        public static async Task<IDictionary<int, string>> GetAllProductTypesLookup(MyPortalDbContext context)
+        public async Task<IDictionary<int, string>> GetAllProductTypesLookup()
         {
-            var productTypes = await GetAllProductTypesModel(context);
+            var productTypes = await GetAllProductTypes();
 
             return productTypes.ToDictionary(x => x.Id, x => x.Description);
         }
 
-        public static async Task<decimal> GetStudentBalance(int studentId, MyPortalDbContext context)
+        public async Task<decimal> GetStudentBalance(int studentId)
         {
-            var studentInDb = await context.Students.SingleOrDefaultAsync(x => x.Id == studentId);
+            //ToDo: Write Method
 
-            if (studentInDb == null)
-            {
-                throw new ProcessException(ExceptionType.NotFound, "Student not found");
-            }
-
-            return studentInDb.AccountBalance;
+            throw new NotImplementedException();
         }
 
-        public static async Task ProcessManualTransaction(FinanceTransaction transaction,
-            MyPortalDbContext context, bool debit = false)
+        public static async Task ProcessManualTransaction(FinanceTransaction transaction, bool debit = false)
         {
-            if (transaction.Amount <= 0)
-            {
-                throw new ProcessException(ExceptionType.BadRequest, "Amount cannot be negative");
-            }
+            //if (transaction.Amount <= 0)
+            //{
+            //    throw new ProcessException(ExceptionType.BadRequest, "Amount cannot be negative");
+            //}
 
-            var studentInDb = await context.Students.SingleOrDefaultAsync(s => s.Id == transaction.StudentId);
+            //var studentInDb = await context.Students.SingleOrDefaultAsync(s => s.Id == transaction.StudentId);
 
-            if (studentInDb == null)
-            {
-                throw new ProcessException(ExceptionType.NotFound, "Student not found");
-            }
+            //if (studentInDb == null)
+            //{
+            //    throw new ProcessException(ExceptionType.NotFound, "Student not found");
+            //}
 
-            if (debit)
-            {
-                transaction.Amount *= -1;
-            }
+            //if (debit)
+            //{
+            //    transaction.Amount *= -1;
+            //}
 
-            studentInDb.AccountBalance += transaction.Amount;
+            //studentInDb.AccountBalance += transaction.Amount;
 
-            await context.SaveChangesAsync();
+            //await context.SaveChangesAsync();
+
+            //ToDo: Write Method
+
+            throw new NotImplementedException();
         }
 
-        public static async Task RefundSale(int saleId, MyPortalDbContext context)
+        public async Task RefundSale(int saleId)
         {
-            var saleInDb = await context.FinanceSales.SingleOrDefaultAsync(p => p.Id == saleId);
+            var saleInDb = await GetSaleById(saleId);
 
             if (saleInDb == null)
             {
@@ -427,17 +367,17 @@ namespace MyPortal.Services
 
             saleInDb.Processed = true;
             saleInDb.Refunded = true;
-            await context.SaveChangesAsync();
+            await UnitOfWork.Complete();
         }
 
-        public static async Task UpdateProduct(FinanceProduct product, MyPortalDbContext context)
+        public async Task UpdateProduct(FinanceProduct product)
         {
             if (product == null)
             {
                 throw new ProcessException(ExceptionType.NotFound, "Product not found");
             }
 
-            var productInDb = await context.FinanceProducts.SingleOrDefaultAsync(x => x.Id == product.Id);
+            var productInDb = await GetProductById(product.Id);
 
             if (productInDb == null)
             {
@@ -449,12 +389,12 @@ namespace MyPortal.Services
             productInDb.Visible = product.Visible;
             productInDb.Description = product.Description;
 
-            await context.SaveChangesAsync();
+            await UnitOfWork.Complete();
         }
 
-        public static async Task MarkSaleProcessed(int saleId, MyPortalDbContext context)
+        public async Task MarkSaleProcessed(int saleId)
         {
-            var saleInDb = await context.FinanceSales.SingleOrDefaultAsync(x => x.Id == saleId);
+            var saleInDb = GetS;
 
             if (saleInDb == null)
             {

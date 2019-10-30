@@ -24,7 +24,6 @@ namespace MyPortal.Persistence
             AssessmentResultSets = new AssessmentResultSetRepository(context);
             AttendanceCodes = new AttendanceCodeRepository(context);
             AttendanceMarks = new AttendanceMarkRepository(context);
-            AttendanceMeanings = new AttendanceMeaningRepository(context);
             AttendancePeriods = new AttendancePeriodRepository(context);
             AttendanceWeeks = new AttendanceWeekRepository(context);
             BehaviourAchievements = new BehaviourAchievementRepository(context);
@@ -98,7 +97,6 @@ namespace MyPortal.Persistence
         public IAssessmentResultSetRepository AssessmentResultSets { get; private set; }
         public IAttendanceCodeRepository AttendanceCodes { get; private set; }
         public IAttendanceMarkRepository AttendanceMarks { get; private set; }
-        public IAttendanceMeaningRepository AttendanceMeanings { get; private set; }
         public IAttendancePeriodRepository AttendancePeriods { get; private set; }
         public IAttendanceWeekRepository AttendanceWeeks { get; private set; }
         public IBehaviourAchievementRepository BehaviourAchievements { get; private set; }

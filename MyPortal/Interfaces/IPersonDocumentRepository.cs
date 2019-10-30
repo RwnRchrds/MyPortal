@@ -9,6 +9,6 @@ namespace MyPortal.Interfaces
 {
     public interface IPersonDocumentRepository : IRepository<PersonDocument>
     {
-
+        Task<IEnumerable<PersonDocument>> GetDocumentsByPerson(int personId);
     }
 }

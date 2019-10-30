@@ -6,6 +6,7 @@ using MyPortal.Dtos;
 using MyPortal.Dtos.GridDtos;
 using MyPortal.Dtos.Identity;
 using MyPortal.Dtos.LiteDtos;
+using MyPortal.Extensions;
 using MyPortal.Models;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
@@ -202,11 +203,11 @@ namespace MyPortal
                 .ForMember(dest => dest.Teacher,
                     opts => opts.MapFrom(src => src.Class.Teacher.GetDisplayName()))
                 .ForMember(dest => dest.Time,
-                    opts => opts.MapFrom(src => AttendanceService.GetPeriodTime(src.Period)));
+                    opts => opts.MapFrom(src => AttendanceService.GetAttendancePeriodTime(src.Period)));
 
             CreateMap<CurriculumClass, GridCurriculumClassDto>()
                 .ForMember(dest => dest.Subject,
-                    opts => opts.MapFrom(src => CurriculumService.GetSubjectNameForClass(src)))
+                    opts => opts.MapFrom(src => src.GetSubjectName()))
                 .ForMember(dest => dest.Teacher,
                     opts => opts.MapFrom(src => src.Teacher.GetDisplayName()));
 

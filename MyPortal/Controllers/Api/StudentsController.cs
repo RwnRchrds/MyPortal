@@ -66,42 +66,6 @@ namespace MyPortal.Controllers.Api
             }
         }
 
-        [HttpGet]
-        [RequiresPermission("ViewStudents")]
-        [Route("hasDocuments/{studentId:int}", Name = "ApiPeopleStudentHasDocuments")]
-        public async Task<bool> StudentHasDocuments([FromUri] int studentId)
-        {
-            await AuthenticateStudentRequest(studentId);
-            return PrepareResponseObject(PeopleService.StudentHasDocuments(studentId, _context));
-        }
-
-        [HttpGet]
-        [RequiresPermission("ViewStudents")]
-        [Route("api/students/hasLogs/{studentId:int}", Name = "ApiPeopleStudentHasLogs")]
-        public async Task<bool> StudentHasLogs([FromUri] int studentId)
-        {
-            await AuthenticateStudentRequest(studentId);
-            return PrepareResponseObject(PeopleService.StudentHasLogs(studentId, _context));
-        }
-
-        [HttpGet]
-        [RequiresPermission("ViewStudents")]
-        [Route("api/students/hasResults/{studentId:int}", Name = "ApiPeopleStudentHasResults")]
-        public async Task<bool> StudentHasResults([FromUri] int studentId)
-        {
-            await AuthenticateStudentRequest(studentId);
-            return PrepareResponseObject(PeopleService.StudentHasResults(studentId, _context));
-        }
-
-        [HttpGet]
-        [RequiresPermission("ViewStudents")]
-        [Route("api/students/hasSales/{studentId:int}", Name = "ApiPeopleStudentHasSales")]
-        public async Task<bool> StudentHasSales([FromUri] int studentId)
-        {
-            await AuthenticateStudentRequest(studentId);
-            return PrepareResponseObject(PeopleService.StudentHasSales(studentId, _context));
-        }
-
         [HttpPost]
         [RequiresPermission("EditStudents")]
         [Route("api/students/update", Name = "ApiPeopleUpdateStudent")]
@@ -109,7 +73,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await PeopleService.UpdateStudent(student, _context);
+                await StudentService.UpdateStudent(student);
             }
             catch (Exception e)
             {

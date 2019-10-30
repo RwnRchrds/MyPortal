@@ -22,14 +22,14 @@ namespace MyPortal.Services
                 throw new ProcessException(ExceptionType.BadRequest, "Invalid data");
             }
 
-            _unitOfWork.CommunicationEmailAddresses.Add(emailAddress);
+            UnitOfWork.CommunicationEmailAddresses.Add(emailAddress);
 
-            await _unitOfWork.Complete();
+            await UnitOfWork.Complete();
         }
 
         public async Task UpdateEmailAddress(CommunicationEmailAddress emailAddress)
         {
-            var emailInDb = await _unitOfWork.CommunicationEmailAddresses.GetByIdAsync(emailAddress.Id);
+            var emailInDb = await UnitOfWork.CommunicationEmailAddresses.GetByIdAsync(emailAddress.Id);
 
             if (emailInDb == null)
             {
@@ -41,26 +41,26 @@ namespace MyPortal.Services
             emailInDb.Primary = emailAddress.Primary;
             emailInDb.Notes = emailAddress.Notes;
 
-            await _unitOfWork.Complete();
+            await UnitOfWork.Complete();
         }
 
         public async Task DeleteEmailAddress(int emailAddressId)
         {
-            var emailInDb = await _unitOfWork.CommunicationEmailAddresses.GetByIdAsync(emailAddressId);
+            var emailInDb = await UnitOfWork.CommunicationEmailAddresses.GetByIdAsync(emailAddressId);
 
             if (emailInDb == null)
             {
                 throw new ProcessException(ExceptionType.NotFound, "Email address not found");
             }
 
-            _unitOfWork.CommunicationEmailAddresses.Remove(emailInDb);
+            UnitOfWork.CommunicationEmailAddresses.Remove(emailInDb);
 
-            await _unitOfWork.Complete();
+            await UnitOfWork.Complete();
         }
 
         public async Task<CommunicationEmailAddress> GetEmailAddressById(int emailAddressId)
         {
-            var emailInDb = await _unitOfWork.CommunicationEmailAddresses.GetByIdAsync(emailAddressId);
+            var emailInDb = await UnitOfWork.CommunicationEmailAddresses.GetByIdAsync(emailAddressId);
 
             if (emailInDb == null)
             {
@@ -73,7 +73,7 @@ namespace MyPortal.Services
         public async Task<IEnumerable<CommunicationEmailAddress>> GetEmailAddressesByPerson(int personId)
         {
             var emailAddresses =
-                await _unitOfWork.CommunicationEmailAddresses.GetEmailAddressesByPerson(personId);
+                await UnitOfWork.CommunicationEmailAddresses.GetEmailAddressesByPerson(personId);
 
             return emailAddresses;
         }

@@ -7,16 +7,16 @@ namespace MyPortal.Services
 {
     public class MyPortalService : IService
     {
-        protected readonly IUnitOfWork _unitOfWork;
+        protected readonly IUnitOfWork UnitOfWork;
 
         public MyPortalService(IUnitOfWork unitOfWork)
         {
-            _unitOfWork = unitOfWork;
+            UnitOfWork = unitOfWork;
         }
 
         public void Dispose()
         {
-            _unitOfWork.Dispose();
+            UnitOfWork.Dispose();
         }
     }
 }

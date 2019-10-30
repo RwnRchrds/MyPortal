@@ -16,7 +16,6 @@ namespace MyPortal.Interfaces
         IAssessmentResultSetRepository AssessmentResultSets { get; }
         IAttendanceCodeRepository AttendanceCodes { get; }
         IAttendanceMarkRepository AttendanceMarks { get; }
-        IAttendanceMeaningRepository AttendanceMeanings { get; }
         IAttendancePeriodRepository AttendancePeriods { get; }
         IAttendanceWeekRepository AttendanceWeeks { get; }
         IBehaviourAchievementRepository BehaviourAchievements { get; }

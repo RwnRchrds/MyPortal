@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using MyPortal.Extensions;
 using MyPortal.Interfaces;
 using MyPortal.Models.Database;
 using MyPortal.Services;

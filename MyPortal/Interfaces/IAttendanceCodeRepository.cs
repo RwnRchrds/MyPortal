@@ -9,6 +9,6 @@ namespace MyPortal.Interfaces
 {
     public interface IAttendanceCodeRepository : IReadOnlyRepository<AttendanceCode>
     {
-        Task<AttendanceCode> GetCode(string code);
+        Task<AttendanceCode> GetAttendanceCode(string code);
     }
 }

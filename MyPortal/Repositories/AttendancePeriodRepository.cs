@@ -30,5 +30,10 @@ namespace MyPortal.Repositories
         {
             return await Context.AttendancePeriods.Where(x => x.Sessions.Any(s => s.ClassId == classId)).ToListAsync();
         }
+
+        public async Task<IEnumerable<AttendancePeriod>> GetRegPeriods()
+        {
+            return await Context.AttendancePeriods.Where(x => x.IsAm || x.IsPm).ToListAsync();
+        }
     }
 }

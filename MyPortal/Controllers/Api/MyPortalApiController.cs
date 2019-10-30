@@ -19,16 +19,16 @@ namespace MyPortal.Controllers.Api
 {
     public class MyPortalApiController : ApiController
     {
-        protected readonly IUnitOfWork _unitOfWork;
+        protected readonly IUnitOfWork UnitOfWork;
 
         public MyPortalApiController()
         {
-            _unitOfWork = new UnitOfWork(new MyPortalDbContext());
+            UnitOfWork = new UnitOfWork(new MyPortalDbContext());
         }
 
         public MyPortalApiController(IUnitOfWork unitOfWork)
         {
-            _unitOfWork = unitOfWork;
+            UnitOfWork = unitOfWork;
         }
 
         protected override void Dispose(bool disposing)
@@ -131,8 +131,8 @@ namespace MyPortal.Controllers.Api
             if (userType == UserType.Student)
             {
                 var userId = User.Identity.GetUserId();
-                var studentUser = await _unitOfWork.Students.GetByUserId(userId);
-                var requestedStudent = await _unitOfWork.Students.GetByIdAsync(studentId);
+                var studentUser = await UnitOfWork.Students.GetByUserId(userId);
+                var requestedStudent = await UnitOfWork.Students.GetByIdAsync(studentId);
 
                 if (studentUser == null || requestedStudent == null)
                 {

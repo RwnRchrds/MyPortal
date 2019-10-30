@@ -16,7 +16,7 @@ namespace MyPortal.Repositories
 
         }
 
-        public async Task<AttendanceCode> GetCode(string code)
+        public async Task<AttendanceCode> GetAttendanceCode(string code)
         {
             return await Context.AttendanceCodes.SingleOrDefaultAsync(x => x.Code == code);
         }

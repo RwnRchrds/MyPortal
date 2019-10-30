@@ -4,9 +4,9 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using MyPortal.Dtos;
 using MyPortal.Dtos.LiteDtos;
 using MyPortal.Exceptions;
+using MyPortal.Extensions;
 using MyPortal.Interfaces;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
@@ -22,45 +22,43 @@ namespace MyPortal.Services
 
         public async Task CreateAttendanceWeeksForAcademicYear(int academicYearId)
         {
-            var academicYear = await _unitOfWork.CurriculumAcademicYears.GetByIdAsync(academicYearId);
-
-            if (academicYear == null)
+            using (var curriculumService = new CurriculumService(UnitOfWork))
             {
-                throw new ProcessException(ExceptionType.NotFound,"Academic year not found");
-            }
+                var academicYear = await curriculumService.GetAcademicYearById(academicYearId);
 
-            var pointer = academicYear.FirstDate;
-            while (pointer < academicYear.LastDate)
-            {
-                var weekBeginning = pointer.StartOfWeek();
-
-                if (!await _unitOfWork.AttendanceWeeks.AnyAsync(x => x.Beginning == weekBeginning))
+                var pointer = academicYear.FirstDate;
+                while (pointer < academicYear.LastDate)
                 {
-                    var attendanceWeek = new AttendanceWeek()
-                    {
-                        AcademicYearId = academicYear.Id,
-                        Beginning = weekBeginning
-                    };
+                    var weekBeginning = pointer.StartOfWeek();
 
-                    _unitOfWork.AttendanceWeeks.Add(attendanceWeek);
+                    if (!await UnitOfWork.AttendanceWeeks.AnyAsync(x => x.Beginning == weekBeginning))
+                    {
+                        var attendanceWeek = new AttendanceWeek()
+                        {
+                            AcademicYearId = academicYear.Id,
+                            Beginning = weekBeginning
+                        };
+
+                        UnitOfWork.AttendanceWeeks.Add(attendanceWeek);
+                    }
+
+                    pointer = weekBeginning.AddDays(7);
                 }
 
-                pointer = weekBeginning.AddDays(7);
+                await UnitOfWork.Complete();
             }
-
-            await _unitOfWork.Complete();
         }
 
-        public async Task<IEnumerable<AttendancePeriodDto>> GetAllPeriods()
+        public async Task<IEnumerable<AttendancePeriod>> GetAllPeriods()
         {
-            var attendancePeriods = await _unitOfWork.AttendancePeriods.GetAllPeriods();
+            var attendancePeriods = await UnitOfWork.AttendancePeriods.GetAllPeriods();
 
-            return attendancePeriods.Select(Mapper.Map<AttendancePeriod, AttendancePeriodDto>);
+            return attendancePeriods;
         }
 
         public async Task<AttendanceMark> GetAttendanceMark(int attendanceWeekId, int periodId, int studentId)
         {
-            var mark = await _unitOfWork.AttendanceMarks.GetAttendanceMark(studentId, attendanceWeekId, periodId) ?? new AttendanceMark
+            var mark = await UnitOfWork.AttendanceMarks.GetAttendanceMark(studentId, attendanceWeekId, periodId) ?? new AttendanceMark
             {
                 Mark = "-",
                 WeekId = attendanceWeekId,
@@ -71,50 +69,59 @@ namespace MyPortal.Services
             return mark;
         }
 
-        public async Task<AttendanceMeaning> GetMeaning(string mark)
+        public async Task<AttendanceWeek> GetAttendanceWeekById(int attendanceWeekId)
         {
-            var codeInDb = await _unitOfWork.AttendanceCodes.GetCode(mark);
+            var week = await UnitOfWork.AttendanceWeeks.GetByIdAsync(attendanceWeekId);
+
+            if (week == null)
+            {
+                throw new ProcessException(ExceptionType.NotFound, "Attendance week not found");
+            }
+
+            return week;
+        }
+
+        public async Task<AttendanceCode> GetAttendanceCode(string mark)
+        {
+            var codeInDb = await UnitOfWork.AttendanceCodes.GetAttendanceCode(mark);
 
             if (codeInDb == null)
             {
-                throw new ProcessException(ExceptionType.NotFound,"Attendance code not found");
+                throw new ProcessException(ExceptionType.NotFound, "Attendance code not found");
             }
+
+            return codeInDb;
+        }
+
+        public async Task<AttendanceMeaning> GetMeaning(string mark)
+        {
+            var codeInDb = await GetAttendanceCode(mark);
 
             return codeInDb.Meaning;
         }
 
-        public async Task<AttendancePeriodDto> GetPeriodById(int periodId)
+        public async Task<AttendancePeriod> GetPeriodById(int periodId)
         {
-            var period = await _unitOfWork.AttendancePeriods.GetByIdAsync(periodId);
+            var period = await UnitOfWork.AttendancePeriods.GetByIdAsync(periodId);
 
             if (period == null)
             {
                 throw new ProcessException(ExceptionType.NotFound,"Period not found");
             }
 
-            return Mapper.Map<AttendancePeriod, AttendancePeriodDto>(period);
+            return period;
         }
 
-        public async Task<DateTime> GetPeriodDate(int weekId, int periodId)
+        public async Task<DateTime> GetAttendancePeriodDate(int weekId, int periodId)
         {
-            var week = await _unitOfWork.AttendanceWeeks.GetByIdAsync(weekId);
+            var week = await GetAttendanceWeekById(weekId);
 
-            if (week == null)
-            {
-                throw new ProcessException(ExceptionType.NotFound,"Attendance week not found");
-            }
-
-            var period = await _unitOfWork.AttendancePeriods.GetByIdAsync(periodId);
-
-            if (period == null)
-            {
-                throw new ProcessException(ExceptionType.NotFound,"");
-            }
+            var period = await GetPeriodById(periodId);
 
             return week.Beginning.GetDayOfWeek(period.Weekday);
         }
 
-        public static string GetPeriodTime(AttendancePeriod period)
+        public string GetAttendancePeriodTime(AttendancePeriod period)
         {
             var startTime = period.StartTime.ToString(@"hh\:mm");
             var endTime = period.EndTime.ToString(@"hh\:mm");
@@ -128,12 +135,12 @@ namespace MyPortal.Services
             int sessionId)
         {
 
-            if (!await _unitOfWork.AttendanceWeeks.AnyAsync(x => x.Id == weekId))
+            if (!await UnitOfWork.AttendanceWeeks.AnyAsync(x => x.Id == weekId))
             {
                 throw new ProcessException(ExceptionType.NotFound,"Attendance week not found");
             }
 
-            var session = await _unitOfWork.CurriculumSessions.GetByIdAsync(sessionId);
+            var session = await UnitOfWork.CurriculumSessions.GetByIdAsync(sessionId);
 
             if (session == null)
             {
@@ -148,7 +155,7 @@ namespace MyPortal.Services
                 markObject.StudentName = enrolment.Student.GetDisplayName();
                 var marks = new List<AttendanceMark>();
 
-                var periodsInDay = await _unitOfWork.AttendancePeriods.GetPeriodsByDayOfWeek(session.Period.Weekday);
+                var periodsInDay = await UnitOfWork.AttendancePeriods.GetPeriodsByDayOfWeek(session.Period.Weekday);
 
                 foreach (var period in periodsInDay)
                 {
@@ -168,7 +175,7 @@ namespace MyPortal.Services
 
         public async Task<AttendanceSummary> GetSummary(int studentId, int academicYearId, bool asPercentage = false)
         {
-            var marksForStudent = await _unitOfWork.AttendanceMarks.GetAllAttendanceMarksByStudent(studentId, academicYearId);
+            var marksForStudent = await UnitOfWork.AttendanceMarks.GetAllAttendanceMarksByStudent(studentId, academicYearId);
 
             var marksList = marksForStudent.ToList();
 
@@ -214,18 +221,18 @@ namespace MyPortal.Services
             return summary;
         }
 
-        public async Task<AttendanceWeekDto> GetWeekByDate(int academicYearId, DateTime date)
+        public async Task<AttendanceWeek> GetWeekByDate(int academicYearId, DateTime date)
         {
             var weekBeginning = date.StartOfWeek();
 
-            var selectedWeek = await _unitOfWork.AttendanceWeeks.GetAttendanceWeekByDate(academicYearId, date);
+            var selectedWeek = await UnitOfWork.AttendanceWeeks.GetAttendanceWeekByDate(academicYearId, date);
 
             if (selectedWeek == null)
             {
                throw new ProcessException(ExceptionType.NotFound,"Attendance week not found");
             }
 
-            return Mapper.Map<AttendanceWeek, AttendanceWeekDto>(selectedWeek);
+            return selectedWeek;
         }
 
         public async Task<IEnumerable<AttendanceMarkLite>> PrepareLiteMarkList(List<AttendanceMark> marks, bool retrieveMeanings)
@@ -261,12 +268,12 @@ namespace MyPortal.Services
                             StudentId = mark.StudentId
                         };
 
-                        _unitOfWork.AttendanceMarks.Add(attMark);
+                        UnitOfWork.AttendanceMarks.Add(attMark);
                     }
 
                     else
                     {
-                        var markInDb = await _unitOfWork.AttendanceMarks.GetByIdAsync(mark.Id);
+                        var markInDb = await UnitOfWork.AttendanceMarks.GetByIdAsync(mark.Id);
 
                         if (markInDb == null)
                         {
@@ -278,17 +285,17 @@ namespace MyPortal.Services
                 }
             }
 
-            await _unitOfWork.Complete();
+            await UnitOfWork.Complete();
         }
 
         public async Task<IEnumerable<AttendancePeriod>> GetPeriodsByClass(int classId)
         {
-            if (!await _unitOfWork.CurriculumClasses.AnyAsync(x => x.Id == classId))
+            if (!await UnitOfWork.CurriculumClasses.AnyAsync(x => x.Id == classId))
             {
                 throw new ProcessException(ExceptionType.NotFound,"Class not found");
             }
 
-            return await _unitOfWork.AttendancePeriods.GetPeriodsByClass(classId);
+            return await UnitOfWork.AttendancePeriods.GetPeriodsByClass(classId);
         }
     }
 }

@@ -9,6 +9,12 @@ namespace MyPortal.Interfaces
 {
     public interface IFinanceSaleRepository : IRepository<FinanceSale>
     {
+        Task<IEnumerable<FinanceSale>> GetAllAsync(int academicYearId);
 
+        Task<IEnumerable<FinanceSale>> GetSalesByStudent(int studentId, int academicYearId);
+
+        Task<IEnumerable<FinanceSale>> GetPending();
+
+        Task<IEnumerable<FinanceSale>> GetProcessed();
     }
 }

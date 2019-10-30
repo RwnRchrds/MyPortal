@@ -103,7 +103,7 @@ namespace MyPortal.Controllers
                 return RedirectToAction("Registers");
             }
 
-            var sessionDate = await AttendanceService.GetPeriodDate(attendanceWeek.Id, session.PeriodId, _context);
+            var sessionDate = await AttendanceService.GetAttendancePeriodDate(attendanceWeek.Id, session.PeriodId, _context);
 
             viewModel.Session = session;
             viewModel.WeekId = attendanceWeek.Id;

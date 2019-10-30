@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using MyPortal.Dtos.GridDtos;
 using MyPortal.Exceptions;
+using MyPortal.Extensions;
 using MyPortal.Models.Database;
 
 namespace MyPortal.Services

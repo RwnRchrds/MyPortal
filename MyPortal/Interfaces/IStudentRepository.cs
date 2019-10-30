@@ -10,5 +10,11 @@ namespace MyPortal.Interfaces
     public interface IStudentRepository : IRepository<Student>
     {
         Task<Student> GetByUserId(string userId);
+
+        Task<IEnumerable<Student>> GetOnRoll();
+
+        Task<IEnumerable<Student>> GetLeavers();
+
+        Task<IEnumerable<Student>> GetFuture();
     }
 }

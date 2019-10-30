@@ -9,6 +9,6 @@ namespace MyPortal.Interfaces
 {
     public interface IBehaviourIncidentTypeRepository : IReadOnlyRepository<BehaviourIncidentType>
     {
-        Task<IEnumerable<BehaviourIncidentType>> GetAllRecordedAchievementTypes(int academicYearId);
+        Task<IEnumerable<BehaviourIncidentType>> GetAllRecordedIncidentTypes(int academicYearId);
     }
 }
