@@ -9,6 +9,8 @@ namespace MyPortal.Interfaces
 {
     public interface IPersonRepository : IRepository<Person>
     {
+        Task<Person> GetPersonByUserId(string userId);
 
+        Task<IEnumerable<Person>> SearchPeople(Person person);
     }
 }

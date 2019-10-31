@@ -5,12 +5,18 @@ using System.Threading.Tasks;
 using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Exceptions;
+using MyPortal.Interfaces;
 using MyPortal.Models.Database;
 
 namespace MyPortal.Services
 {
-    public static class PastoralService
+    public class PastoralService : MyPortalService
     {
+        public PastoralService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        {
+
+        }
+
         public static async Task CreateRegGroup(PastoralRegGroup regGroup, MyPortalDbContext context)
         {
             if (!ValidationService.ModelIsValid(regGroup))

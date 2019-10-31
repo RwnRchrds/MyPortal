@@ -6,28 +6,34 @@ using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Dtos.GridDtos;
 using MyPortal.Exceptions;
+using MyPortal.Extensions;
+using MyPortal.Interfaces;
 using MyPortal.Models.Database;
 
 namespace MyPortal.Services
 {
-    public static class StudentService
+    public class StudentService : MyPortalService
     {
-        public static async Task CreateStudent(Student student, MyPortalDbContext context)
+        public StudentService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        {
+            
+        }
+
+        public async Task CreateStudent(Student student)
         {
             if (!ValidationService.ModelIsValid(student))
             {
                 throw new ProcessException(ExceptionType.BadRequest, "Invalid data");
             }
 
-            context.Persons.Add(student.Person);
-            context.Students.Add(student);
+            UnitOfWork.Students.Add(student);
 
-            await context.SaveChangesAsync();
+            await UnitOfWork.Complete();
         }
 
-        public static async Task DeleteStudent(int studentId, MyPortalDbContext context)
+        public async Task DeleteStudent(int studentId)
         {
-            var studentInDb = context.Students.SingleOrDefault(s => s.Id == studentId);
+            var studentInDb = await GetStudentById(studentId);
 
             if (studentInDb == null)
             {
@@ -36,41 +42,19 @@ namespace MyPortal.Services
 
             studentInDb.Deleted = true;
             //context.Students.Remove(studentInDb);
-            await context.SaveChangesAsync();
+            await UnitOfWork.Complete();
         }
 
-        public static async Task<IEnumerable<Student>> GetAllStudentsModel(MyPortalDbContext context)
+        public async Task<IEnumerable<Student>> GetAllStudents()
         {
-            var result = await context.Students.Include(x => x.Person).Include(x => x.PastoralYearGroup)
-                .Include(x => x.PastoralRegGroup).Include(x => x.House).OrderBy(x => x.Person.LastName).ToListAsync();
+            var result = await UnitOfWork.Students.GetAllAsync();
 
             return result;
         }
 
-        public static async Task<IEnumerable<StudentDto>> GetAllStudents(MyPortalDbContext context)
+        public async Task<Student> GetStudentById(int studentId)
         {
-            var students = await GetAllStudentsModel(context);
-
-            return students.Select(Mapper.Map<Student, StudentDto>);
-        }
-
-        public static async Task<IEnumerable<GridStudentDto>> GetAllStudentsDataGrid(MyPortalDbContext context)
-        {
-            var students = await GetAllStudentsModel(context);
-
-            return students.Select(Mapper.Map<Student, GridStudentDto>);
-        }
-
-        public static async Task<StudentDto> GetStudentById(int studentId, MyPortalDbContext context)
-        {
-            var student = await GetStudentByIdModel(studentId, context);
-
-            return Mapper.Map<Student, StudentDto>(student);
-        }
-
-        public static async Task<Student> GetStudentByIdModel(int studentId, MyPortalDbContext context)
-        {
-            var student = await context.Students.SingleOrDefaultAsync(s => s.Id == studentId);
+            var student = await UnitOfWork.Students.GetByIdAsync(studentId);
 
             if (student == null)
             {
@@ -80,23 +64,16 @@ namespace MyPortal.Services
             return student;
         }
 
-        public static string GetDisplayName(this Student student)
+        public async Task<string> GetStudentDisplayNameFromUserId(string userId)
         {
-            return $"{student.Person.LastName}, {student.Person.FirstName}";
-        }
-
-        public static async Task<string> GetStudentDisplayNameFromUserId(string userId)
-        {
-            var context = new MyPortalDbContext();
-
-            var student = await GetStudentFromUserId(userId, context);
+            var student = await GetStudentFromUserId(userId);
 
             return student.GetDisplayName();
         }
 
-        public static async Task<Student> GetStudentFromUserId(string userId, MyPortalDbContext context)
+        public async Task<Student> GetStudentFromUserId(string userId)
         {
-            var student = await context.Students.SingleOrDefaultAsync(x => x.Person.UserId == userId);
+            var student = await UnitOfWork.Students.GetByUserIdAsync(userId);
 
             if (student == null)
             {
@@ -105,56 +82,28 @@ namespace MyPortal.Services
 
             return student;
         }
-        public static async Task<IEnumerable<StudentDto>> GetStudentsByRegGroup(int regGroupId, MyPortalDbContext context)
+        public async Task<IEnumerable<Student>> GetStudentsByRegGroup(int regGroupId)
         {
-            var students = await context.Students.Where(x => x.RegGroupId == regGroupId).OrderBy(x => x.Person.LastName)
-                .ToListAsync();
+            var students = await UnitOfWork.Students.GetStudentsByRegGroup(regGroupId);
 
-            return students.Select(Mapper.Map<Student, StudentDto>);
+            return students;
         }
 
-        public static async Task<IEnumerable<StudentDto>> GetStudentsByYearGroup(int yearGroupId,
-            MyPortalDbContext context)
+        public async Task<IEnumerable<Student>> GetStudentsByYearGroup(int yearGroupId)
         {
-            var students = await context.Students.Where(x => x.YearGroupId == yearGroupId).OrderBy(x => x.Person.LastName)
-                .ToListAsync();
+            var students = await UnitOfWork.Students.GetStudentsByYearGroup(yearGroupId);
 
-            return students.Select(Mapper.Map<Student, StudentDto>);
+            return students;
         }
 
-        public static async Task<bool> StudentHasBasketItems(int studentId, MyPortalDbContext context)
-        {
-            return await context.FinanceBasketItems.AnyAsync(x => x.StudentId == studentId);
-        }
-
-        public static async Task<bool> StudentHasLogs(int studentId, MyPortalDbContext context)
-        {
-            return await context.ProfileLogs.AnyAsync(x => x.StudentId == studentId);
-        }
-
-        public static async Task<bool> StudentHasResults(int studentId, MyPortalDbContext context)
-        {
-            return await context.AssessmentResults.AnyAsync(x => x.StudentId == studentId);
-        }
-
-        public static async Task<bool> StudentHasSales(int studentId, MyPortalDbContext context)
-        {
-            return await context.FinanceSales.AnyAsync(x => x.StudentId == studentId);
-        }
-
-        public static async Task UpdateStudent(Student student, MyPortalDbContext context)
+        public async Task UpdateStudent(Student student)
         {
             if (!ValidationService.ModelIsValid(student))
             {
                 throw new ProcessException(ExceptionType.BadRequest, "Invalid data");
             }
 
-            var studentInDb = await context.Students.SingleOrDefaultAsync(s => s.Id == student.Id);
-
-            if (studentInDb == null)
-            {
-                throw new ProcessException(ExceptionType.NotFound, "Student not found");
-            }
+            var studentInDb = await GetStudentById(student.Id);
 
             studentInDb.HouseId = student.HouseId;
             studentInDb.Upn = student.Upn;
@@ -176,7 +125,7 @@ namespace MyPortal.Services
             studentInDb.Person.NhsNumber = student.Person.NhsNumber;
             studentInDb.Person.Deceased = student.Person.Deceased;
 
-            await context.SaveChangesAsync();
+            await UnitOfWork.Complete();
         }
     }
 }

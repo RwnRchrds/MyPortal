@@ -9,6 +9,6 @@ namespace MyPortal.Interfaces
 {
     public interface IMedicalPersonConditionRepository : IRepository<MedicalPersonCondition>
     {
-        
+        Task<IEnumerable<MedicalPersonCondition>> GetMedicalConditionsByPerson(int personId);
     }
 }

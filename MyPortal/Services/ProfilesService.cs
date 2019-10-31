@@ -63,7 +63,7 @@ namespace MyPortal.Services
                 return new ProcessResponse<object>(ResponseType.NotFound, "Academic year not found", null);
             }
 
-            var author = StaffMemberService.GetStaffFromUserId(userId, context).Result;
+            var author = StaffMemberService.GetStaffMemberFromUserId(userId, context).Result;
 
             log.Date = DateTime.Now;
             log.AuthorId = author.Id;

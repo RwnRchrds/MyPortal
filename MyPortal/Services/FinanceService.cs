@@ -24,200 +24,175 @@ namespace MyPortal.Services
 
         public async Task<bool> AssessBalance(FinanceSale sale)
         {
-            var product = await context.FinanceProducts.SingleOrDefaultAsync(x => x.Id == sale.ProductId);
-
-            var student = await context.Students.SingleOrDefaultAsync(x => x.Id == sale.StudentId);
-
-            if (product == null)
+            using (var studentService = new StudentService(UnitOfWork))
             {
-                throw new ProcessException(ExceptionType.NotFound, "Product not found");
-            }
+                var product = await GetProductById(sale.ProductId);
 
-            if (student == null)
-            {
-                throw new ProcessException(ExceptionType.NotFound, "Student not found");
-            }
+                var student = await studentService.GetStudentById(sale.StudentId);
 
-            if (product.Type.IsMeal && student.FreeSchoolMeals)
-            {
-                return true;
-            }
-
-            return student.AccountBalance >= product.Price;
-        }
-
-        public static async Task CheckoutBasketForStudent(int studentId, int academicYearId)
-        {
-            var student = await context.Students.SingleOrDefaultAsync(x => x.Id == studentId);
-
-            if (student == null)
-            {
-                throw new ProcessException(ExceptionType.NotFound, "Student not found");
-            }
-
-            var basket = student.FinanceBasketItems;
-
-            if (!basket.Any())
-            {
-                throw new ProcessException(ExceptionType.BadRequest, "There are no items in your basket");
-            }
-
-            if (basket.Sum(x => x.Product.Price) > student.AccountBalance)
-            {
-                throw new ProcessException(ExceptionType.Forbidden, "Insufficient funds");
-            }
-
-            //Process sales for each item
-            foreach (var item in basket)
-            {
-                var sale = new FinanceSale
+                if (product == null)
                 {
-                    StudentId = studentId,
-                    ProductId = item.ProductId,
-                    AcademicYearId = academicYearId
-                };
+                    throw new ProcessException(ExceptionType.NotFound, "Product not found");
+                }
 
-                await CreateSale(sale, academicYearId, context, false);
+                if (product.Type.IsMeal && student.FreeSchoolMeals)
+                {
+                    return true;
+                }
+
+                return student.AccountBalance >= product.Price;
             }
-
-            context.FinanceBasketItems.RemoveRange(basket);
-
-            await context.SaveChangesAsync();
         }
 
-        public static async Task CreateBasketItem(FinanceBasketItem basketItem)
+        public async Task CheckoutBasketForStudent(int studentId, int academicYearId)
         {
-            var student = await context.Students.SingleOrDefaultAsync(x => x.Id == basketItem.StudentId);
-
-            if (student == null)
+            using (var studentService = new StudentService(UnitOfWork))
             {
-                throw new ProcessException(ExceptionType.NotFound, "Student not found");
+                var student = await studentService.GetStudentById(studentId);
+
+                var basket = student.FinanceBasketItems;
+
+                if (!basket.Any())
+                {
+                    throw new ProcessException(ExceptionType.BadRequest, "There are no items in your basket");
+                }
+
+                if (basket.Sum(x => x.Product.Price) > student.AccountBalance)
+                {
+                    throw new ProcessException(ExceptionType.Forbidden, "Insufficient funds");
+                }
+
+                //Process sales for each item
+                foreach (var item in basket)
+                {
+                    await CreateSale(new FinanceSale
+                    {
+                        AcademicYearId = academicYearId,
+                        StudentId = studentId,
+                        ProductId = item.ProductId
+                    }, academicYearId, false);
+                }
+
+                UnitOfWork.FinanceBasketItems.RemoveRange(basket);
+
+                await UnitOfWork.Complete();   
             }
-
-            var product = await context.FinanceProducts.SingleOrDefaultAsync(x => x.Id == basketItem.ProductId);
-
-            if (product == null)
-            {
-                throw new ProcessException(ExceptionType.NotFound, "Product not found");
-            }
-
-            if (!product.Visible)
-            {
-                throw new ProcessException(ExceptionType.Forbidden, "Product not available");
-            }
-
-            if ((student.FinanceBasketItems.Any(x => x.ProductId == basketItem.ProductId) ||
-                 student.FinanceSales.Any(x => x.ProductId == basketItem.ProductId)) && product.OnceOnly)
-            {
-                throw new ProcessException(ExceptionType.Forbidden, "This product cannot be purchased more than once");
-            }
-
-            context.FinanceBasketItems.Add(basketItem);
-            await context.SaveChangesAsync();
         }
 
-        public static async Task CreateProduct(FinanceProduct product)
+        public async Task CreateBasketItem(FinanceBasketItem basketItem)
+        {
+            using (var studentService = new StudentService(UnitOfWork))
+            {
+                var student = await studentService.GetStudentById(basketItem.StudentId);
+
+                var product = await GetProductById(basketItem.ProductId);
+
+                if (product == null)
+                {
+                    throw new ProcessException(ExceptionType.NotFound, "Product not found");
+                }
+
+                if (!product.Visible)
+                {
+                    throw new ProcessException(ExceptionType.Forbidden, "Product not available");
+                }
+
+                if ((student.FinanceBasketItems.Any(x => x.ProductId == basketItem.ProductId) ||
+                     student.FinanceSales.Any(x => x.ProductId == basketItem.ProductId)) && product.OnceOnly)
+                {
+                    throw new ProcessException(ExceptionType.Forbidden, "This product cannot be purchased more than once");
+                }
+
+                UnitOfWork.FinanceBasketItems.Add(basketItem);
+                await UnitOfWork.Complete();
+            }
+        }
+
+        public async Task CreateProduct(FinanceProduct product)
         {
             if (!ValidationService.ModelIsValid(product))
             {
                 throw new ProcessException(ExceptionType.BadRequest, "Invalid data");
             }
 
-            context.FinanceProducts.Add(product);
-            await context.SaveChangesAsync();
+            UnitOfWork.FinanceProducts.Add(product);
+            await UnitOfWork.Complete();
         }
 
-        public static async Task CreateSale(FinanceSale sale, int academicYearId, bool commitImmediately = true)
+        public async Task CreateSale(FinanceSale sale, int academicYearId, bool commitImmediately = true)
         {
-            sale.Date = DateTime.Now;
-
-            var student = await context.Students.SingleOrDefaultAsync(x => x.Id == sale.StudentId);
-
-            var product = await context.FinanceProducts.SingleOrDefaultAsync(x => x.Id == sale.ProductId);
-
-            if (student == null)
+            using (var studentService = new StudentService(UnitOfWork))
             {
-                throw new ProcessException(ExceptionType.NotFound, "Student not found");
-            }
+                sale.Date = DateTime.Now;
 
-            if (product == null)
-            {
-                throw new ProcessException(ExceptionType.NotFound, "Product not found");
-            }
+                var student = await studentService.GetStudentById(sale.StudentId);
 
-            if (product.Type.IsMeal)
-            {
-                sale.Processed = true;
-            }
+                var product = await GetProductById(sale.ProductId);
 
-            if (product.Type.IsMeal && student.FreeSchoolMeals)
-            {
-                sale.AmountPaid = 0.00m;
-                sale.AcademicYearId = academicYearId;
-
-                context.FinanceSales.Add(sale);
-
-                if (commitImmediately)
+                if (product == null)
                 {
-                    await context.SaveChangesAsync();
+                    throw new ProcessException(ExceptionType.NotFound, "Product not found");
                 }
-            }
 
-            else
-            {
-                student.AccountBalance -= product.Price;
-
-                sale.AmountPaid = product.Price;
-                sale.AcademicYearId = academicYearId;
-
-                context.FinanceSales.Add(sale);
-
-                if (commitImmediately)
+                if (product.Type.IsMeal)
                 {
-                    context.SaveChanges();
+                    sale.Processed = true;
                 }
+
+                if (product.Type.IsMeal && student.FreeSchoolMeals)
+                {
+                    sale.AmountPaid = 0.00m;
+                    sale.AcademicYearId = academicYearId;
+
+                    UnitOfWork.FinanceSales.Add(sale);
+
+                    if (commitImmediately)
+                    {
+                        await UnitOfWork.Complete();
+                    }
+                }
+
+                else
+                {
+                    student.AccountBalance -= product.Price;
+
+                    sale.AmountPaid = product.Price;
+                    sale.AcademicYearId = academicYearId;
+
+                    UnitOfWork.FinanceSales.Add(sale);
+
+                    if (commitImmediately)
+                    {
+                        await UnitOfWork.Complete();
+                    }
+                }   
             }
         }
 
-        public static async Task DeleteBasketItem(int basketItemId)
+        public async Task DeleteBasketItem(int basketItemId)
         {
-            var itemInDb = await context.FinanceBasketItems.SingleOrDefaultAsync(x => x.Id == basketItemId);
+            var itemInDb = await GetBasketItemById(basketItemId);
 
-            if (itemInDb == null)
-            {
-                throw new ProcessException(ExceptionType.NotFound, "Item not found");
-            }
-
-            context.FinanceBasketItems.Remove(itemInDb);
-            await context.SaveChangesAsync();
+            UnitOfWork.FinanceBasketItems.Remove(itemInDb);
+            await UnitOfWork.Complete();
         }
 
-        public static async Task DeleteProduct(int productId)
+        public async Task DeleteProduct(int productId)
         {
-            var productInDb = await context.FinanceProducts.SingleOrDefaultAsync(p => p.Id == productId);
-
-            if (productInDb == null)
-            {
-                throw new ProcessException(ExceptionType.NotFound, "Product not found");
-            }
+            var productInDb = await GetProductById(productId);
 
             productInDb.Deleted = true;
             //context.FinanceProducts.Remove(productInDb); //Delete from database
-            await context.SaveChangesAsync();
+            await UnitOfWork.Complete();
         }
 
-        public static async Task DeleteSale(int saleId)
+        public async Task DeleteSale(int saleId)
         {
-            var saleInDb = await context.FinanceSales.SingleOrDefaultAsync(p => p.Id == saleId);
-
-            if (saleInDb == null)
-            {
-                throw new ProcessException(ExceptionType.NotFound, "Sale not found");
-            }
+            var saleInDb = await GetSaleById(saleId);
 
             saleInDb.Deleted = true;
             //context.FinanceSales.Remove(saleInDb); //Delete from database
-            await context.SaveChangesAsync();
+            await UnitOfWork.Complete();
         }
 
         public async Task<IDictionary<int, string>> GetAllProductsLookup()
@@ -250,6 +225,18 @@ namespace MyPortal.Services
             var items = await UnitOfWork.FinanceProducts.GetAvailableProductsByStudent(studentId);
 
             return items;
+        }
+
+        public async Task<FinanceBasketItem> GetBasketItemById(int basketItemId)
+        {
+            var item = await UnitOfWork.FinanceBasketItems.GetByIdAsync(basketItemId);
+
+            if (item == null)
+            {
+                throw new ProcessException(ExceptionType.NotFound, "Item not found");
+            }
+
+            return item;
         }
 
         public async Task<IEnumerable<FinanceBasketItem>> GetBasketItemsByStudent(int studentId)
@@ -321,47 +308,39 @@ namespace MyPortal.Services
 
         public async Task<decimal> GetStudentBalance(int studentId)
         {
-            //ToDo: Write Method
+            using (var studentService = new StudentService(UnitOfWork))
+            {
+                var student = await studentService.GetStudentById(studentId);
 
-            throw new NotImplementedException();
+                return student.AccountBalance;
+            }
         }
 
-        public static async Task ProcessManualTransaction(FinanceTransaction transaction, bool debit = false)
+        public async Task ProcessManualTransaction(FinanceTransaction transaction, bool debit = false)
         {
-            //if (transaction.Amount <= 0)
-            //{
-            //    throw new ProcessException(ExceptionType.BadRequest, "Amount cannot be negative");
-            //}
+            using (var studentService = new StudentService(UnitOfWork))
+            {
+                if (transaction.Amount <= 0)
+                {
+                    throw new ProcessException(ExceptionType.BadRequest, "Amount cannot be negative");
+                }
 
-            //var studentInDb = await context.Students.SingleOrDefaultAsync(s => s.Id == transaction.StudentId);
+                var studentInDb = await studentService.GetStudentById(transaction.StudentId);
 
-            //if (studentInDb == null)
-            //{
-            //    throw new ProcessException(ExceptionType.NotFound, "Student not found");
-            //}
+                if (debit)
+                {
+                    transaction.Amount *= -1;
+                }
 
-            //if (debit)
-            //{
-            //    transaction.Amount *= -1;
-            //}
+                studentInDb.AccountBalance += transaction.Amount;
 
-            //studentInDb.AccountBalance += transaction.Amount;
-
-            //await context.SaveChangesAsync();
-
-            //ToDo: Write Method
-
-            throw new NotImplementedException();
+                await UnitOfWork.Complete();
+            }
         }
 
         public async Task RefundSale(int saleId)
         {
             var saleInDb = await GetSaleById(saleId);
-
-            if (saleInDb == null)
-            {
-                throw new ProcessException(ExceptionType.NotFound, "Sale not found");
-            }
 
             saleInDb.Student.AccountBalance += saleInDb.AmountPaid;
 
@@ -372,17 +351,7 @@ namespace MyPortal.Services
 
         public async Task UpdateProduct(FinanceProduct product)
         {
-            if (product == null)
-            {
-                throw new ProcessException(ExceptionType.NotFound, "Product not found");
-            }
-
             var productInDb = await GetProductById(product.Id);
-
-            if (productInDb == null)
-            {
-                throw new ProcessException(ExceptionType.NotFound, "Product not found");
-            }
 
             productInDb.OnceOnly = product.OnceOnly;
             productInDb.Price = product.Price;
@@ -394,12 +363,7 @@ namespace MyPortal.Services
 
         public async Task MarkSaleProcessed(int saleId)
         {
-            var saleInDb = GetS;
-
-            if (saleInDb == null)
-            {
-                throw new ProcessException(ExceptionType.NotFound, "Sale not found");
-            }
+            var saleInDb = await GetSaleById(saleId);
 
             if (saleInDb.Processed)
             {
@@ -408,7 +372,7 @@ namespace MyPortal.Services
 
             saleInDb.Processed = true;
 
-            await context.SaveChangesAsync();
+            await UnitOfWork.Complete();
         }
     }
 }

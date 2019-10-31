@@ -16,7 +16,7 @@ namespace MyPortal.Repositories
 
         }
 
-        public async Task<Student> GetByUserId(string userId)
+        public async Task<Student> GetByUserIdAsync(string userId)
         {
             return await Context.Students.SingleOrDefaultAsync(x => x.Person.UserId == userId);
         }

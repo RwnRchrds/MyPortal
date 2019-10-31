@@ -9,6 +9,6 @@ namespace MyPortal.Interfaces
 {
     public interface IMedicalPersonDietaryRequirementRepository : IRepository<MedicalPersonDietaryRequirement>
     {
-
+        Task<IEnumerable<MedicalPersonDietaryRequirement>> GetDietaryRequirementsByPerson(int personId);
     }
 }

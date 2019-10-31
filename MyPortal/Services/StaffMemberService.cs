@@ -6,28 +6,34 @@ using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Dtos.GridDtos;
 using MyPortal.Exceptions;
+using MyPortal.Extensions;
+using MyPortal.Interfaces;
 using MyPortal.Models.Database;
 
 namespace MyPortal.Services
 {
-    public static class StaffMemberService
+    public class StaffMemberService : MyPortalService
     {
-        public static async Task CreateStaffMember(StaffMember staffMember, MyPortalDbContext context)
+        public StaffMemberService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        {
+
+        }
+
+        public async Task CreateStaffMember(StaffMember staffMember)
         {
             if (!ValidationService.ModelIsValid(staffMember))
             {
                 throw new ProcessException(ExceptionType.BadRequest, "Invalid data");
             }
 
-            context.Persons.Add(staffMember.Person);
-            context.StaffMembers.Add(staffMember);
+            UnitOfWork.StaffMembers.Add(staffMember);
 
-            await context.SaveChangesAsync();
+            await UnitOfWork.Complete();
         }
 
-        public static async Task DeleteStaffMember(int staffMemberId, string userId, MyPortalDbContext context)
+        public async Task DeleteStaffMember(int staffMemberId, string userId)
         {
-            var staffInDb = context.StaffMembers.Single(x => x.Id == staffMemberId);
+            var staffInDb = await GetStaffMemberById(staffMemberId);
 
             if (staffInDb == null)
             {
@@ -41,47 +47,27 @@ namespace MyPortal.Services
 
             staffInDb.Deleted = true;
 
-            await context.SaveChangesAsync();
+            await UnitOfWork.Complete();
         }
 
-        public static async Task<IEnumerable<StaffMemberDto>> GetAllStaffMembers(MyPortalDbContext context)
+        public async Task<IEnumerable<StaffMember>> GetAllStaffMembers()
         {
-            var staffMembers = await GetAllStaffMembersModel(context);
-
-            return staffMembers.Select(Mapper.Map<StaffMember, StaffMemberDto>);
+            return await UnitOfWork.StaffMembers.GetAllAsync();
         }
 
-        public static async Task<IEnumerable<GridStaffMemberDto>> GetAllStaffMembersDataGrid(MyPortalDbContext context)
-        {
-            var staffMembers = await GetAllStaffMembersModel(context);
 
-            return staffMembers.Select(Mapper.Map<StaffMember, GridStaffMemberDto>);
-        }
-
-        public static async Task<IEnumerable<StaffMember>> GetAllStaffMembersModel(MyPortalDbContext context)
-        {
-            return await context.StaffMembers.Where(x => !x.Deleted).OrderBy(x => x.Person.LastName).ToListAsync();
-        }
-
-        public static string GetDisplayName(this StaffMember staffMember)
-        {
-            return staffMember == null
-                ? null
-                : $"{staffMember.Person.Title} {staffMember.Person.FirstName.Substring(0, 1)} {staffMember.Person.LastName}";
-        }
-
-        public static async Task<string> GetStaffDisplayNameFromUserId(string userId)
+        public async Task<string> GetStaffDisplayNameFromUserId(string userId)
         {
             var context = new MyPortalDbContext();
 
-            var staffMember = await GetStaffFromUserId(userId, context);
+            var staffMember = await GetStaffMemberFromUserId(userId);
 
             return staffMember.GetDisplayName();
         }
 
-        public static async Task<StaffMember> GetStaffFromUserId(string userId, MyPortalDbContext context)
+        public async Task<StaffMember> GetStaffMemberFromUserId(string userId)
         {
-            var staff = await context.StaffMembers.SingleOrDefaultAsync(x => x.Person.UserId == userId);
+            var staff = await UnitOfWork.StaffMembers.GetByUserIdAsync(userId);
 
             if (staff == null)
             {
@@ -91,51 +77,17 @@ namespace MyPortal.Services
             return staff;
         }
 
-        public static string GetFullName(this StaffMember staffMember)
+        public async Task<StaffMember> GetStaffMemberById(int staffMemberId)
         {
-            return $"{staffMember.Person.LastName}, {staffMember.Person.FirstName}";
+            var staff = await UnitOfWork.StaffMembers.GetByIdAsync(staffMemberId);
+
+            return staff;
         }
 
-        public static async Task<StaffMember> GetAuthor(string userId, int authorId, MyPortalDbContext context)
+
+        public async Task UpdateStaffMember(StaffMember staffMember)
         {
-            var author = new StaffMember();
-
-            if (authorId == 0)
-            {
-
-                author = await GetStaffFromUserId(userId, context);
-
-                if (author == null)
-                {
-                    throw new ProcessException(ExceptionType.NotFound, "Staff member not found");
-                }
-            }
-
-            if (authorId != 0) author = context.StaffMembers.SingleOrDefault(x => x.Id == authorId);
-
-            if (author == null)
-            {
-                throw new ProcessException(ExceptionType.NotFound, "Staff member not found");
-            }
-
-            return author;
-        }
-
-        public static async Task<bool> StaffMemberHasWrittenLogs(int staffMemberId, MyPortalDbContext context)
-        {
-            var staffInDb = await context.StaffMembers.SingleOrDefaultAsync(x => x.Id == staffMemberId);
-
-            if (staffInDb == null)
-            {
-                throw new ProcessException(ExceptionType.NotFound, "Staff member not found");
-            }
-
-            return context.ProfileLogs.Any(x => x.AuthorId == staffMemberId);
-        }
-
-        public static async Task UpdateStaffMember(StaffMember staffMember, MyPortalDbContext context)
-        {
-            var staffInDb = context.StaffMembers.SingleOrDefault(x => x.Id == staffMember.Id);
+            var staffInDb = await GetStaffMemberById(staffMember.Id);
 
             if (staffInDb == null)
             {
@@ -147,12 +99,7 @@ namespace MyPortal.Services
             staffInDb.Person.Title = staffMember.Person.Title;
             staffInDb.Code = staffMember.Code;
 
-            await context.SaveChangesAsync();
-        }
-
-        public static async Task<StaffMemberDto> GetStaffMemberById(int staffMemberId, MyPortalDbContext context)
-        {
-
+            await UnitOfWork.Complete();
         }
     }
 }

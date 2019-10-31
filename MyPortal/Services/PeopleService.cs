@@ -7,15 +7,21 @@ using AutoMapper;
 using MyPortal.Dtos.GridDtos;
 using MyPortal.Exceptions;
 using MyPortal.Extensions;
+using MyPortal.Interfaces;
 using MyPortal.Models.Database;
 
 namespace MyPortal.Services
 {
-    public static class PeopleService
+    public class PeopleService : MyPortalService
     {
-        public static async Task<Person> GetPersonByUserId(string userId, MyPortalDbContext context)
+        public PeopleService(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
-            var person = await context.Persons.SingleOrDefaultAsync(x => x.UserId == userId);
+
+        }
+
+        public async Task<Person> GetPersonById(int personId)
+        {
+            var person = await UnitOfWork.People.GetByIdAsync(personId);
 
             if (person == null)
             {
@@ -25,19 +31,21 @@ namespace MyPortal.Services
             return person;
         }
 
-        public static async Task<bool> PersonHasDocuments(int personId, MyPortalDbContext context)
+        public async Task<Person> GetPersonByUserId(string userId)
         {
-            return await context.PersonDocuments.AnyAsync(x => x.PersonId == personId);
-        }
+            var person = await UnitOfWork.People.GetPersonByUserId(userId);
 
-        public static async Task UpdatePerson(Person person, MyPortalDbContext context, bool commitImmediately = true)
-        {
-            var personInDb = await context.Persons.SingleOrDefaultAsync(x => x.Id == person.Id);
-
-            if (personInDb == null)
+            if (person == null)
             {
                 throw new ProcessException(ExceptionType.NotFound, "Person not found");
             }
+
+            return person;
+        }
+
+        public async Task UpdatePerson(Person person, bool commitImmediately = true)
+        {
+            var personInDb = await GetPersonById(person.Id);
 
             personInDb.Title = person.Title;
             personInDb.FirstName = person.FirstName;
@@ -49,10 +57,10 @@ namespace MyPortal.Services
             personInDb.NhsNumber = person.NhsNumber;
             personInDb.Deceased = person.Deceased;
 
-            await context.SaveChangesAsync();
+            await UnitOfWork.Complete();
         }
 
-        public static async Task<int> GetNumberOfBirthdaysThisWeek(MyPortalDbContext context)
+        public async Task<int> GetNumberOfBirthdaysThisWeek(MyPortalDbContext context)
         {
             var weekBeginning = DateTime.Today.GetDayOfWeek(DayOfWeek.Monday);
             var weekEnd = DateTime.Today.GetDayOfWeek(DayOfWeek.Sunday);
@@ -60,43 +68,23 @@ namespace MyPortal.Services
             return await context.Persons.CountAsync(x => x.Dob >= weekBeginning && x.Dob <= weekEnd);
         }
 
-        public static async Task<IEnumerable<Person>> SearchForPerson(Person person, MyPortalDbContext context)
+        public async Task<IEnumerable<Person>> SearchForPerson(Person person)
         {
-            return await context.Persons.Where(x =>
-                (person.FirstName == null || x.FirstName == person.FirstName) &&
-                (person.LastName == null || x.LastName == person.LastName) &&
-                (person.Dob == null || x.Dob == person.Dob)).ToListAsync();
+            return await UnitOfWork.People.SearchPeople(person);
         }
 
-        public static async Task<IEnumerable<GridMedicalPersonConditionDto>> GetMedicalConditionsByPersonDataGrid(
-            int personId, MyPortalDbContext context)
-        {
-            var conditions = await GetMedicalConditionsByPersonModel(personId, context);
-
-            return conditions.Select(Mapper.Map<MedicalPersonCondition, GridMedicalPersonConditionDto>);
-        }
-
-        public static async Task<IEnumerable<MedicalPersonCondition>> GetMedicalConditionsByPersonModel(int personId,
+        public async Task<IEnumerable<MedicalPersonCondition>> GetMedicalConditionsByPerson(int personId,
             MyPortalDbContext context)
         {
-            var conditions = await context.MedicalPersonConditions.Where(x => x.PersonId == personId).ToListAsync();
+            var conditions = await UnitOfWork.MedicalPersonConditions.GetMedicalConditionsByPerson(personId);
 
             return conditions;
         }
 
-        public static async Task<IEnumerable<GridMedicalPersonDietaryRequirementDto>>
-            GetMedicalDietaryRequirementsByPersonDataGrid(int personId, MyPortalDbContext context)
+        public async Task<IEnumerable<MedicalPersonDietaryRequirement>> GetMedicalDietaryRequirementsByPerson(
+            int personId)
         {
-            var dietaryRequirements = await GetMedicalDietaryRequirementsByPersonModel(personId, context);
-
-            return dietaryRequirements.Select(Mapper
-                .Map<MedicalPersonDietaryRequirement, GridMedicalPersonDietaryRequirementDto>);
-        }
-
-        public static async Task<IEnumerable<MedicalPersonDietaryRequirement>> GetMedicalDietaryRequirementsByPersonModel(
-            int personId, MyPortalDbContext context)
-        {
-            var dietaryRequirements = await context.MedicalPersonDietaryRequirements.Where(x => x.PersonId == personId).ToListAsync();
+            var dietaryRequirements = await UnitOfWork.MedicalPersonDietaryRequirements.GetDietaryRequirementsByPerson(personId);
 
             return dietaryRequirements;
         }

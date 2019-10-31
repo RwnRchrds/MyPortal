@@ -374,6 +374,8 @@
     <Compile Include="Dtos\SystemSchoolDto.cs" />
     <Compile Include="Extensions\CurriculumExtensions.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
+    <Compile Include="Extensions\StaffMemberExtensions.cs" />
+    <Compile Include="Extensions\StudentExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

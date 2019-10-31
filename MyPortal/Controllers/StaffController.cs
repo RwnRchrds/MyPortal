@@ -532,7 +532,7 @@ namespace MyPortal.Controllers
         {
             var userId = User.Identity.GetUserId();
 
-            var staff = await StaffMemberService.GetStaffFromUserId(userId, _context);
+            var staff = await StaffMemberService.GetStaffMemberFromUserId(userId, _context);
 
             var academicYears = await CurriculumService.GetAcademicYearsModel(_context);
 

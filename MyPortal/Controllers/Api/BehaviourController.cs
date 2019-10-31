@@ -70,7 +70,7 @@ namespace MyPortal.Controllers.Api
         public async Task<IHttpActionResult> CreateAchievement([FromBody] BehaviourAchievement achievement)
         {
             var userId = User.Identity.GetUserId();
-            var staff = await StaffMemberService.GetStaffFromUserId(userId, _context);
+            var staff = await StaffMemberService.GetStaffMemberFromUserId(userId, _context);
 
             var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
 
@@ -162,7 +162,7 @@ namespace MyPortal.Controllers.Api
         public async Task<IHttpActionResult> CreateIncident([FromBody] BehaviourIncident incident)
         {
             var userId = User.Identity.GetUserId();
-            var staff = await StaffMemberService.GetStaffFromUserId(userId, _context);
+            var staff = await StaffMemberService.GetStaffMemberFromUserId(userId, _context);
             var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             incident.AcademicYearId = academicYearId;
