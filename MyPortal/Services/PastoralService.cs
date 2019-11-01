@@ -2,6 +2,7 @@
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls;
 using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Exceptions;
@@ -17,149 +18,135 @@ namespace MyPortal.Services
 
         }
 
-        public static async Task CreateRegGroup(PastoralRegGroup regGroup, MyPortalDbContext context)
+        public async Task CreateRegGroup(PastoralRegGroup regGroup)
         {
             if (!ValidationService.ModelIsValid(regGroup))
             {
                 throw new ProcessException(ExceptionType.BadRequest, "Invalid data");
             }
 
-            context.PastoralRegGroups.Add(regGroup);
-            await context.SaveChangesAsync();
+            UnitOfWork.PastoralRegGroups.Add(regGroup);
+            await UnitOfWork.Complete();
         }
 
-        public static async Task CreateYearGroup(PastoralYearGroup yearGroup, MyPortalDbContext context)
+        public async Task CreateYearGroup(PastoralYearGroup yearGroup)
         {
             if (!ValidationService.ModelIsValid(yearGroup))
             {
                 throw new ProcessException(ExceptionType.BadRequest, "Invalid data");
             }
 
-            context.PastoralYearGroups.Add(yearGroup);
-            await context.SaveChangesAsync();
+            UnitOfWork.PastoralYearGroups.Add(yearGroup);
+            await UnitOfWork.Complete();
         }
 
-        public static async Task DeleteRegGroup(int regGroupId, MyPortalDbContext context)
+        public async Task DeleteRegGroup(int regGroupId)
         {
-            var regGroupInDb = context.PastoralRegGroups.SingleOrDefault(x => x.Id == regGroupId);
+            var regGroupInDb = await GetRegGroupById(regGroupId);
 
-            if (regGroupInDb == null)
-            {
-                throw new ProcessException(ExceptionType.NotFound, "Reg group not found");
-            }
-
-            context.PastoralRegGroups.Remove(regGroupInDb);
-            await context.SaveChangesAsync();
+            UnitOfWork.PastoralRegGroups.Remove(regGroupInDb);
+            await UnitOfWork.Complete();
         }
 
-        public static async Task DeleteYearGroup(int yearGroupId, MyPortalDbContext context)
+        public async Task DeleteYearGroup(int yearGroupId)
         {
-            var yearGroupInDb = context.PastoralYearGroups.SingleOrDefault(x => x.Id == yearGroupId);
+            var yearGroupInDb = await GetYearGroupById(yearGroupId);
 
-            if (yearGroupInDb == null)
+            UnitOfWork.PastoralYearGroups.Remove(yearGroupInDb);
+            await UnitOfWork.Complete();
+        }
+
+        public async Task<IEnumerable<PastoralRegGroup>> GetAllRegGroups()
+        {
+            var regGroups = await UnitOfWork.PastoralRegGroups.GetAllAsync();
+
+            return regGroups;
+        }
+
+        public async Task<IEnumerable<PastoralYearGroup>> GetAllYearGroups()
+        {
+            var yearGroups = await UnitOfWork.PastoralYearGroups.GetAllAsync();
+
+            return yearGroups;
+        }
+
+        public async Task<PastoralYearGroup> GetYearGroupById(int yearGroupId)
+        {
+            var yearGroup = await UnitOfWork.PastoralYearGroups.GetByIdAsync(yearGroupId);
+
+            if (yearGroup == null)
             {
                 throw new ProcessException(ExceptionType.NotFound, "Year group not found");
             }
 
-            context.PastoralYearGroups.Remove(yearGroupInDb);
-            await context.SaveChangesAsync();
+            return yearGroup;
         }
 
-        public static async Task<IEnumerable<PastoralRegGroupDto>> GetAllRegGroups(MyPortalDbContext context)
+        public async Task<PastoralRegGroup> GetRegGroupById(int regGroupId)
         {
-            var regGroups = await context.PastoralRegGroups.OrderBy(x => x.Name).ToListAsync();
-
-            return regGroups.Select(Mapper.Map<PastoralRegGroup, PastoralRegGroupDto>);
-        }
-
-        public static async Task<IEnumerable<PastoralYearGroupDto>> GetAllYearGroups(MyPortalDbContext context)
-        {
-            var yearGroups = await context.PastoralYearGroups.OrderBy(x => x.Id).ToListAsync();
-
-            return yearGroups.Select(Mapper.Map<PastoralYearGroup, PastoralYearGroupDto>);
-        }
-
-        public static async Task<PastoralRegGroupDto> GetRegGroupById(int regGroupId, MyPortalDbContext context)
-        {
-            var regGroup = await context.PastoralRegGroups.SingleOrDefaultAsync(x => x.Id == regGroupId);
+            var regGroup = await UnitOfWork.PastoralRegGroups.GetByIdAsync(regGroupId);
 
             if (regGroup == null)
             {
                 throw new ProcessException(ExceptionType.NotFound, "Reg group not found");
             }
 
-            return Mapper.Map<PastoralRegGroup, PastoralRegGroupDto>(regGroup);
+            return regGroup;
         }
 
-        public static async Task<IEnumerable<PastoralRegGroupDto>> GetRegGroupsByYearGroup(int yearGroupId,
-            MyPortalDbContext context)
+        public async Task<IEnumerable<PastoralRegGroup>> GetRegGroupsByYearGroup(int yearGroupId)
         {
-            var yearGroups = await context.PastoralRegGroups.Where(x => x.YearGroupId == yearGroupId).ToListAsync();
-
-            return yearGroups.Select(Mapper.Map<PastoralRegGroup, PastoralRegGroupDto>);
-        }
-
-        public static async Task<bool> RegGroupContainsStudents(int regGroupId, MyPortalDbContext context)
-        {
-            return await context.Students.AnyAsync(x => x.RegGroupId == regGroupId);
-        }
-
-        public static async Task UpdateRegGroup(PastoralRegGroup regGroup, MyPortalDbContext context)
-        {
-            var regGroupInDb = await context.PastoralRegGroups.SingleOrDefaultAsync(x => x.Id == regGroup.Id);
-
-            if (regGroupInDb == null)
-            {
-                throw new ProcessException(ExceptionType.NotFound, "Reg group not found");
-            }
-
-            regGroupInDb.Name = regGroup.Name;
-            regGroupInDb.TutorId = regGroup.TutorId;
-
-            await context.SaveChangesAsync();
-        }
-
-        public static async Task UpdateYearGroup(PastoralYearGroup yearGroup, MyPortalDbContext context)
-        {
-            if (!ValidationService.ModelIsValid(yearGroup))
-            {
-                throw new ProcessException(ExceptionType.BadRequest, "Invalid data");
-            }
-
-            var yearGroupInDb = await context.PastoralYearGroups.SingleOrDefaultAsync(x => x.Id == yearGroup.Id);
-
-            if (yearGroupInDb == null)
-            {
-                throw new ProcessException(ExceptionType.NotFound, "Year group not found");
-            }
-
-            yearGroupInDb.Name = yearGroup.Name;
-            yearGroupInDb.HeadId = yearGroup.HeadId;
-
-            await context.SaveChangesAsync();
-        }
-        
-        public static async Task<IDictionary<int, string>> GetAllYearGroupsLookup(MyPortalDbContext context)
-        {
-            var yearGroups = await context.PastoralYearGroups.OrderBy(x => x.Name)
-                .ToDictionaryAsync(x => x.Id, x => x.Name);
+            var yearGroups = await UnitOfWork.PastoralRegGroups.GetRegGroupsByYearGroup(yearGroupId);
 
             return yearGroups;
         }
 
-        public static async Task<IDictionary<int, string>> GetAllRegGroupsLookup(MyPortalDbContext context)
+        public async Task UpdateRegGroup(PastoralRegGroup regGroup)
         {
-            var regGroups = await context.PastoralRegGroups.OrderBy(x => x.Name)
-                .ToDictionaryAsync(x => x.Id, x => x.Name);
+            var regGroupInDb = await GetRegGroupById(regGroup.Id);
 
-            return regGroups;
+            regGroupInDb.Name = regGroup.Name;
+            regGroupInDb.TutorId = regGroup.TutorId;
+
+            await UnitOfWork.Complete();
         }
 
-        public static async Task<IDictionary<int, string>> GetAllHousesLookup(MyPortalDbContext context)
+        public async Task UpdateYearGroup(PastoralYearGroup yearGroup)
         {
-            var houses = await context.PastoralHouses.OrderBy(x => x.Name).ToDictionaryAsync(x => x.Id, x => x.Name);
+            var yearGroupInDb = await UnitOfWork.PastoralYearGroups.GetByIdAsync(yearGroup.Id);
+
+            yearGroupInDb.Name = yearGroup.Name;
+            yearGroupInDb.HeadId = yearGroup.HeadId;
+
+            await UnitOfWork.Complete();
+        }
+        
+        public async Task<IDictionary<int, string>> GetAllYearGroupsLookup()
+        {
+            var yearGroups = await GetAllYearGroups();
+
+            return yearGroups.ToDictionary(x => x.Id, x => x.Name);
+        }
+
+        public async Task<IDictionary<int, string>> GetAllRegGroupsLookup()
+        {
+            var regGroups = await GetAllRegGroups();
+
+            return regGroups.ToDictionary(x => x.Id, x => x.Name);
+        }
+
+        public async Task<IEnumerable<PastoralHouse>> GetAllHouses()
+        {
+            var houses = await UnitOfWork.PastoralHouses.GetAllAsync();
 
             return houses;
+        }
+
+        public async Task<IDictionary<int, string>> GetAllHousesLookup()
+        {
+            var houses = await GetAllHouses();
+
+            return houses.ToDictionary(x => x.Id, x => x.Name);
         }
     }
 }

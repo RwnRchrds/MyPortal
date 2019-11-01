@@ -9,6 +9,6 @@ namespace MyPortal.Interfaces
 {
     public interface IPastoralRegGroupRepository : IRepository<PastoralRegGroup>
     {
-
+        Task<IEnumerable<PastoralRegGroup>> GetRegGroupsByYearGroup(int yearGroupId);
     }
 }

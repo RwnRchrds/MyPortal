@@ -62,7 +62,7 @@ namespace MyPortal.Services
 
         public async Task<int> GetNumberOfBirthdaysThisWeek(MyPortalDbContext context)
         {
-            var weekBeginning = DateTime.Today.GetDayOfWeek(DayOfWeek.Monday);
+            var weekBeginning = DateTime.Today.StartOfWeek();
             var weekEnd = DateTime.Today.GetDayOfWeek(DayOfWeek.Sunday);
 
             return await context.Persons.CountAsync(x => x.Dob >= weekBeginning && x.Dob <= weekEnd);
