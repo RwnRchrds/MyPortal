@@ -12,5 +12,7 @@ namespace MyPortal.Interfaces
         Task<Person> GetPersonByUserId(string userId);
 
         Task<IEnumerable<Person>> SearchPeople(Person person);
+
+        Task<int> GetNumberOfBirthdaysThisWeek();
     }
 }

@@ -60,12 +60,12 @@ namespace MyPortal.Services
             await UnitOfWork.Complete();
         }
 
-        public async Task<int> GetNumberOfBirthdaysThisWeek(MyPortalDbContext context)
+        public async Task<int> GetNumberOfBirthdaysThisWeek()
         {
             var weekBeginning = DateTime.Today.StartOfWeek();
             var weekEnd = DateTime.Today.GetDayOfWeek(DayOfWeek.Sunday);
 
-            return await context.Persons.CountAsync(x => x.Dob >= weekBeginning && x.Dob <= weekEnd);
+            return await UnitOfWork.People.GetNumberOfBirthdaysThisWeek();
         }
 
         public async Task<IEnumerable<Person>> SearchForPerson(Person person)
@@ -81,10 +81,10 @@ namespace MyPortal.Services
             return conditions;
         }
 
-        public async Task<IEnumerable<MedicalPersonDietaryRequirement>> GetMedicalDietaryRequirementsByPerson(
-            int personId)
+        public async Task<IEnumerable<MedicalPersonDietaryRequirement>> GetMedicalDietaryRequirementsByPerson(int personId)
         {
-            var dietaryRequirements = await UnitOfWork.MedicalPersonDietaryRequirements.GetDietaryRequirementsByPerson(personId);
+            var dietaryRequirements =
+                await UnitOfWork.MedicalPersonDietaryRequirements.GetDietaryRequirementsByPerson(personId);
 
             return dietaryRequirements;
         }

@@ -1,362 +1,189 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Web.Query.Dynamic;
+using System.Web.UI.WebControls;
 using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Dtos.GridDtos;
+using MyPortal.Exceptions;
+using MyPortal.Interfaces;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
 
 namespace MyPortal.Services
 {
-    public static class PersonnelService
+    public class PersonnelService : MyPortalService
     {
-        public static ProcessResponse<object> CreateCourse(PersonnelTrainingCourse course, MyPortalDbContext context)
+        public PersonnelService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        {
+            
+        }
+        
+        public async Task CreateCourse(PersonnelTrainingCourse course)
         {
             if (!ValidationService.ModelIsValid(course))
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
+                throw new ProcessException(ExceptionType.BadRequest, "Invalid data");
             }
 
-            context.PersonnelTrainingCourses.Add(course);
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Course created", null);
+            UnitOfWork.PersonnelTrainingCourses.Add(course);
+            await UnitOfWork.Complete();
         }
 
-        public static ProcessResponse<object> CreateObservation(PersonnelObservation observation,
-            string userId, MyPortalDbContext context)
+        public async Task CreateObservation(PersonnelObservation observation,
+            string userId)
         {
             observation.Date = DateTime.Now;
 
-            var observer = context.StaffMembers.SingleOrDefault(x => x.Id == observation.ObserverId);
-
-            var observee = context.StaffMembers.Single(x => x.Id == observation.ObserveeId);
-
-            if (observee == null)
+            if (!await UnitOfWork.StaffMembers.AnyAsync(x => x.Id == observation.ObserveeId))
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Observee not found", null);
+                throw new ProcessException(ExceptionType.NotFound, "Observee not found");
             }
 
-            if (observer == null)
+            if (!await UnitOfWork.StaffMembers.AnyAsync(x => x.Id == observation.ObserverId))
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Observer not found", null);
+                throw new ProcessException(ExceptionType.NotFound, "Observer not found");
             }
 
-            observation.ObserverId = observer.Id;
-
-            context.PersonnelObservations.Add(observation);
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Observation created", null);
+            UnitOfWork.PersonnelObservations.Add(observation);
+            await UnitOfWork.Complete();
         }
 
-        public static ProcessResponse<object> CreateTrainingCertificate(PersonnelTrainingCertificate certificate,
-                            string userId, MyPortalDbContext context)
+        public async Task CreateTrainingCertificate(PersonnelTrainingCertificate certificate,
+                            string userId)
         {
             if (!ValidationService.ModelIsValid(certificate))
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Invalid data", null);
+                throw new ProcessException(ExceptionType.BadRequest, "Invalid data");
             }
 
-            context.PersonnelTrainingCertificates.Add(certificate);
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Certificate created", null);
+            UnitOfWork.PersonnelTrainingCertificates.Add(certificate);
+            await UnitOfWork.Complete();
         }
 
-        public static ProcessResponse<object> DeleteCourse(int courseId, MyPortalDbContext context)
+        public async Task DeleteCourse(int courseId)
         {
-            var courseInDb = context.PersonnelTrainingCourses.Single(x => x.Id == courseId);
-
-            if (courseInDb == null)
-            {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Course not found", null);
-            }
+            var courseInDb = await UnitOfWork.PersonnelTrainingCourses.GetByIdAsync(courseId);
 
             if (courseInDb.Certificates.Any())
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Cannot delete a course with issued certificates", null);
+                throw new ProcessException(ExceptionType.Forbidden, "Cannot delete a course with issued certificates");
             }
 
-            context.PersonnelTrainingCourses.Remove(courseInDb);
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Course deleted", null);
+            UnitOfWork.PersonnelTrainingCourses.Remove(courseInDb);
+            await UnitOfWork.Complete();
         }
 
-        public static ProcessResponse<object> DeleteObservation(int observationId, string userId, MyPortalDbContext context)
+        public async Task DeleteObservation(int observationId)
         {
-            var observation = context.PersonnelObservations.Single(x => x.Id == observationId);
+            var observation = await UnitOfWork.PersonnelObservations.GetByIdAsync(observationId);
 
-            var staff = context.StaffMembers.SingleOrDefault(x => x.Person.UserId == userId);
-
-            if (staff == null)
-            {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Staff member not found", null);
-            }
-
-            if (observation == null)
-            {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Observation not found", null);
-            }
-
-            if (observation.ObserveeId == staff.Id)
-            {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Cannot delete an observation for yourself", null);
-            }
-
-            context.PersonnelObservations.Remove(observation);
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Observation deleted", null);
+            UnitOfWork.PersonnelObservations.Remove(observation);
+            await UnitOfWork.Complete();
         }
 
-        public static ProcessResponse<object> DeleteTrainingCertificate(int staffId, int courseId, string userId, MyPortalDbContext context)
+        public async Task DeleteTrainingCertificate(int staffId, int courseId)
         {
             var certInDb =
-                context.PersonnelTrainingCertificates.SingleOrDefault(l => l.StaffId == staffId && l.CourseId == courseId);
+                await GetCertificate(staffId, courseId);
+
+            UnitOfWork.PersonnelTrainingCertificates.Remove(certInDb);
+            await UnitOfWork.Complete();
+        }
+
+        public async Task<IEnumerable<PersonnelTrainingCourse>> GetAllTrainingCourses()
+        {
+            return await UnitOfWork.PersonnelTrainingCourses.GetAllAsync();
+        }
+
+        public async Task<PersonnelTrainingCertificate> GetCertificate(int staffId, int courseId)
+        {
+            var certInDb = await UnitOfWork.PersonnelTrainingCertificates.GetCertificate(staffId, courseId);
 
             if (certInDb == null)
             {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Certificate not found", null);
+                throw new ProcessException(ExceptionType.NotFound, "Certificate not found");
             }
 
-            context.PersonnelTrainingCertificates.Remove(certInDb);
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Certificate deleted", null);
+            return certInDb;
         }
 
-        public static ProcessResponse<IEnumerable<PersonnelTrainingCourseDto>> GetAllTrainingCourses(MyPortalDbContext context)
+        public async Task<IEnumerable<PersonnelTrainingCertificate>> GetCertificatesByStaffMember(
+            int staffId)
         {
-            return new ProcessResponse<IEnumerable<PersonnelTrainingCourseDto>>(ResponseType.Ok, null,
-                GetAllTrainingCourses_Model(context).ResponseObject
-                    .Select(Mapper.Map<PersonnelTrainingCourse, PersonnelTrainingCourseDto>));
+            var certificates = await UnitOfWork.PersonnelTrainingCertificates.GetCertificatesByStaffMember(staffId);
+
+            return certificates;
         }
-
-        public static ProcessResponse<IEnumerable<GridPersonnelTrainingCourseDto>> GetAllTrainingCourses_DataGrid(MyPortalDbContext context)
+        
+        public async Task<PersonnelTrainingCourse> GetCourseById(int courseId)
         {
-            return new ProcessResponse<IEnumerable<GridPersonnelTrainingCourseDto>>(ResponseType.Ok, null,
-                GetAllTrainingCourses_Model(context).ResponseObject
-                    .Select(Mapper.Map<PersonnelTrainingCourse, GridPersonnelTrainingCourseDto>));
-        }
-
-        public static ProcessResponse<IEnumerable<PersonnelTrainingCourse>> GetAllTrainingCourses_Model(MyPortalDbContext context)
-        {
-            return new ProcessResponse<IEnumerable<PersonnelTrainingCourse>>(ResponseType.Ok, null,
-                context.PersonnelTrainingCourses
-                    .ToList());
-        }
-
-        public static ProcessResponse<PersonnelTrainingCertificateDto> GetCertificate(int staffId, int courseId,
-                                    MyPortalDbContext context)
-        {
-            var certInDb = context.PersonnelTrainingCertificates.Single(x => x.StaffId == staffId && x.CourseId == courseId);
-
-            if (certInDb == null)
-            {
-                return new ProcessResponse<PersonnelTrainingCertificateDto>(ResponseType.NotFound, "Certificate not found", null);
-            }
-
-            return new ProcessResponse<PersonnelTrainingCertificateDto>(ResponseType.Ok, null,
-                Mapper.Map<PersonnelTrainingCertificate, PersonnelTrainingCertificateDto>(certInDb));
-        }
-
-        public static ProcessResponse<IEnumerable<PersonnelTrainingCertificateDto>> GetCertificatesByStaffMember(
-            int staffId, MyPortalDbContext context)
-        {
-            var staffInDb = context.StaffMembers.Single(x => x.Id == staffId);
-
-            if (staffInDb == null)
-            {
-                return new ProcessResponse<IEnumerable<PersonnelTrainingCertificateDto>>(ResponseType.NotFound, "Staff member not found", null);
-            }
-
-            return new ProcessResponse<IEnumerable<PersonnelTrainingCertificateDto>>(ResponseType.Ok, null,
-                GetCertificatesForStaffMember_Model(staffId, context).ResponseObject
-                    .Select(Mapper.Map<PersonnelTrainingCertificate, PersonnelTrainingCertificateDto>));
-        }
-
-        public static ProcessResponse<IEnumerable<GridPersonnelTrainingCertificateDto>> GetCertificatesForStaffMember_DataGrid(
-            int staffId, MyPortalDbContext context)
-        {
-            var staffInDb = context.StaffMembers.Single(x => x.Id == staffId);
-
-            if (staffInDb == null)
-            {
-                return new ProcessResponse<IEnumerable<GridPersonnelTrainingCertificateDto>>(ResponseType.NotFound, "Staff member not found", null);
-            }
-
-            return new ProcessResponse<IEnumerable<GridPersonnelTrainingCertificateDto>>(ResponseType.Ok, null,
-                GetCertificatesForStaffMember_Model(staffId, context).ResponseObject
-                    .Select(Mapper.Map<PersonnelTrainingCertificate, GridPersonnelTrainingCertificateDto>));
-        }
-
-        public static ProcessResponse<IEnumerable<PersonnelTrainingCertificate>> GetCertificatesForStaffMember_Model(
-                            int staffId, MyPortalDbContext context)
-        {
-            var staffInDb = context.StaffMembers.Single(x => x.Id == staffId);
-
-            if (staffInDb == null)
-            {
-                return new ProcessResponse<IEnumerable<PersonnelTrainingCertificate>>(ResponseType.NotFound, "Staff member not found", null);
-            }
-
-            return new ProcessResponse<IEnumerable<PersonnelTrainingCertificate>>(ResponseType.Ok, null,
-                context.PersonnelTrainingCertificates
-                    .Where(c => c.StaffId == staffId)
-                    .ToList());
-        }
-        public static ProcessResponse<PersonnelTrainingCourseDto> GetCourseById(int courseId, MyPortalDbContext context)
-        {
-            var courseInDb = context.PersonnelTrainingCourses.Single(x => x.Id == courseId);
+            var courseInDb = await UnitOfWork.PersonnelTrainingCourses.GetByIdAsync(courseId);
 
             if (courseInDb == null)
             {
-                return new ProcessResponse<PersonnelTrainingCourseDto>(ResponseType.NotFound, "Course not found", null);
+                throw new ProcessException(ExceptionType.NotFound, "Course not found");
             }
 
-            return new ProcessResponse<PersonnelTrainingCourseDto>(ResponseType.Ok, null,
-                Mapper.Map<PersonnelTrainingCourse, PersonnelTrainingCourseDto>(courseInDb));
+            return courseInDb;
         }
 
-        public static ProcessResponse<PersonnelObservationDto> GetObservationById(int observationId,
-            MyPortalDbContext context)
+        public async Task<PersonnelObservation> GetObservationById(int observationId)
         {
-            var observation = context.PersonnelObservations.SingleOrDefault(x => x.Id == observationId);
+            var observation = await UnitOfWork.PersonnelObservations.GetByIdAsync(observationId);
 
             if (observation == null)
             {
-                return new ProcessResponse<PersonnelObservationDto>(ResponseType.NotFound, "Observation not found", null);
+                throw new ProcessException(ExceptionType.NotFound, "Observation not found");
             }
 
-            return new ProcessResponse<PersonnelObservationDto>(ResponseType.Ok, null,
-                Mapper.Map<PersonnelObservation, PersonnelObservationDto>(observation));
+            return observation;
         }
 
-        public static ProcessResponse<IEnumerable<PersonnelObservationDto>> GetObservationsByStaffMember(
-            int staffMemberId, MyPortalDbContext context)
+        public async Task<IEnumerable<PersonnelObservation>> GetObservationsByStaffMember(
+            int staffMemberId)
         {
-            var staff = context.StaffMembers.Single(x => x.Id == staffMemberId);
+            var observations = await UnitOfWork.PersonnelObservations.GetObservationsByStaffMember(staffMemberId);
 
-            if (staff == null)
-            {
-                return new ProcessResponse<IEnumerable<PersonnelObservationDto>>(ResponseType.NotFound, "Staff member not found", null);
-            }
-
-            var observations = GetObservationsForStaffMember_Model(staffMemberId, context).ResponseObject
-                .Select(Mapper.Map<PersonnelObservation, PersonnelObservationDto>);
-
-            return new ProcessResponse<IEnumerable<PersonnelObservationDto>>(ResponseType.Ok, null, observations);
+            return observations;
         }
 
-        public static ProcessResponse<IEnumerable<GridPersonnelObservationDto>> GetObservationsForStaffMember_DataGrid(
-            int staffMemberId, MyPortalDbContext context)
-        {
-            var staff = context.StaffMembers.Single(x => x.Id == staffMemberId);
-
-            if (staff == null)
-            {
-                return new ProcessResponse<IEnumerable<GridPersonnelObservationDto>>(ResponseType.NotFound, "Staff member not found", null);
-            }
-
-            var observations = GetObservationsForStaffMember_Model(staffMemberId, context).ResponseObject
-                .Select(Mapper.Map<PersonnelObservation, GridPersonnelObservationDto>);
-
-            return new ProcessResponse<IEnumerable<GridPersonnelObservationDto>>(ResponseType.Ok, null, observations);
-        }
-
-        public static ProcessResponse<IEnumerable<PersonnelObservation>> GetObservationsForStaffMember_Model(
-            int staffMemberId, MyPortalDbContext context)
-        {
-            var staff = context.StaffMembers.Single(x => x.Id == staffMemberId);
-
-            if (staff == null)
-            {
-                return new ProcessResponse<IEnumerable<PersonnelObservation>>(ResponseType.NotFound, "Staff member not found", null);
-            }
-
-            var observations = context.PersonnelObservations
-                .Where(x => x.ObserveeId == staffMemberId)
-                .ToList();
-
-            return new ProcessResponse<IEnumerable<PersonnelObservation>>(ResponseType.Ok, null, observations);
-        }
-
-        public static ProcessResponse<object> UpdateCertificate(PersonnelTrainingCertificate certificate,
-                                                    string userId, MyPortalDbContext context)
+        public async Task UpdateCertificate(PersonnelTrainingCertificate certificate,
+                                                    string userId)
         {
             var certInDb =
-                context.PersonnelTrainingCertificates.Single(x => x.StaffId == certificate.StaffId && x.CourseId == certificate.CourseId);
-
-            if (certInDb == null)
-            {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Certificate not found", null);
-            }
+                await GetCertificate(certificate.StaffId, certificate.CourseId);
 
             if (certInDb.Status == CertificateStatus.Completed)
             {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Cannot modify a completed certificate", null);
+                throw new ProcessException(ExceptionType.Forbidden, "Cannot modify a completed certificate");
             }
 
             certInDb.Status = certificate.Status;
 
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Certificate updated", null);
+            await UnitOfWork.Complete();
         }
-        public static ProcessResponse<object> UpdateCourse(PersonnelTrainingCourse course, MyPortalDbContext context)
+        
+        public async Task UpdateCourse(PersonnelTrainingCourse course)
         {
-            var courseInDb = context.PersonnelTrainingCourses.Single(x => x.Id == course.Id);
-
-            if (courseInDb == null)
-            {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Course not found", null);
-            }
+            var courseInDb = await GetCourseById(course.Id);
 
             courseInDb.Code = course.Code;
             courseInDb.Description = course.Description;
 
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Course updated", null);
+            await UnitOfWork.Complete();
         }
-        public static ProcessResponse<object> UpdateObservation(PersonnelObservation observation,
-            string userId, MyPortalDbContext context)
+        
+        public async Task UpdateObservation(PersonnelObservation observation)
         {
-            var observationInDb = context.PersonnelObservations.Single(x => x.Id == observation.Id);
-
-            var observer = context.StaffMembers.SingleOrDefault(x => x.Id == observation.ObserverId);
-
-            var staff = context.StaffMembers.SingleOrDefault(x => x.Person.UserId == userId);
-
-            if (staff == null)
-            {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Staff member not found", null);
-            }
-
-            if (observer == null)
-            {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Observer not found", null);
-            }
-
-            if (observationInDb == null)
-            {
-                return new ProcessResponse<object>(ResponseType.NotFound, "Observation not found", null);
-            }
-
-            if (observationInDb.ObserveeId == staff.Id)
-            {
-                return new ProcessResponse<object>(ResponseType.BadRequest, "Cannot update an observation for yourself", null);
-            }
+            var observationInDb = await GetObservationById(observation.Id);
 
             observationInDb.Outcome = observation.Outcome;
-            observationInDb.ObserverId = observer.Id;
+            observationInDb.ObserverId = observation.ObserverId;
 
-            context.SaveChanges();
-
-            return new ProcessResponse<object>(ResponseType.Ok, "Observation updated", null);
+            await UnitOfWork.Complete();
         }
     }
 }

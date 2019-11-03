@@ -9,6 +9,6 @@ namespace MyPortal.Interfaces
 {
     public interface IProfileCommentRepository : IRepository<ProfileComment>
     {
-
+        Task<IEnumerable<ProfileComment>> GetCommentsByCommentBank(int commentBankId);
     }
 }
