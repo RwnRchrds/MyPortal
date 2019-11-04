@@ -22,6 +22,24 @@ namespace MyPortal.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<FinanceSale>> GetPending(int academicYearId)
+        {
+            return await Context.FinanceSales
+                .Where(x => x.AcademicYearId == academicYearId && !x.Deleted && !x.Processed && !x.Refunded)
+                .OrderByDescending(x => x.Date).ToListAsync();
+        }
 
+        public async Task<IEnumerable<FinanceSale>> GetProcessed(int academicYearId)
+        {
+            return await Context.FinanceSales
+                .Where(x => x.AcademicYearId == academicYearId && !x.Deleted && x.Processed)
+                .OrderByDescending(x => x.Date).ToListAsync();
+        }
+
+        public async Task<IEnumerable<FinanceSale>> GetSalesByStudent(int studentId, int academicYearId)
+        {
+            return await Context.FinanceSales.Where(x => x.StudentId == studentId && x.AcademicYearId == academicYearId)
+                .OrderByDescending(x => x.Date).ToListAsync();
+        }
     }
 }

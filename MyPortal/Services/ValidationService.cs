@@ -46,6 +46,52 @@ namespace MyPortal.Services
             return false;
         }
 
+        public static bool CheckUserType(this IPrincipal principal, UserType userType)
+        {
+            var identity = new IdentityContext();
+            var userStore = new UserStore<ApplicationUser>(identity);
+            var userManager = new UserManager<ApplicationUser, string>(userStore);
+
+            var userId = principal.Identity.GetUserId();
+
+            var user = userManager.FindById(userId);
+
+            return user.UserType == userType;
+        }
+
+        public static async Task<bool> CheckUserTypeAsync(this IPrincipal principal, UserType userType)
+        {
+            var principalUserType = await principal.GetUserTypeAsync();
+            
+            return principalUserType == userType;
+        }
+
+        public static async Task<UserType> GetUserTypeAsync(this IPrincipal principal)
+        {
+            var identity = new IdentityContext();
+            var userStore = new UserStore<ApplicationUser>(identity);
+            var userManager = new UserManager<ApplicationUser, string>(userStore);
+
+            var userId = principal.Identity.GetUserId();
+
+            var user = await userManager.FindByIdAsync(userId);
+
+            return user.UserType;
+        }
+
+        public static UserType GetUserType(this IPrincipal principal)
+        {
+            var identity = new IdentityContext();
+            var userStore = new UserStore<ApplicationUser>(identity);
+            var userManager = new UserManager<ApplicationUser, string>(userStore);
+
+            var userId = principal.Identity.GetUserId();
+
+            var user = userManager.FindById(userId);
+
+            return user.UserType;
+        }
+
         public static async Task<bool> HasPermissionAsync(this IPrincipal principal, string permission)
         {
             var identity = new IdentityContext();

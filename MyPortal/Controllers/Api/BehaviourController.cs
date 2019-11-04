@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Web.Http;
+using AutoMapper;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Attributes;
+using MyPortal.Attributes.HttpAuthorise;
+using MyPortal.Dtos.GridDtos;
 using MyPortal.Models.Database;
 using MyPortal.Services;
 using Syncfusion.EJ2.Base;
@@ -14,16 +19,28 @@ namespace MyPortal.Controllers.Api
     [RoutePrefix("api/behaviour")]
     public class BehaviourController : MyPortalApiController
     {
+        private readonly BehaviourService _service;
+
+        public BehaviourController()
+        {
+            _service = new BehaviourService(UnitOfWork);
+        }
+        
         [HttpGet]
         [RequiresPermission("ViewBehaviour")]
         [Route("points/get/{studentId:int}", Name = "ApiBehaviourGetBehaviourPointsByStudent")]
         public async Task<int> GetBehaviourPointsByStudent([FromUri] int studentId)
         {
-            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
-
             try
             {
-                return await BehaviourService.GetBehaviourPointsCountByStudent(studentId, academicYearId, _context);
+                using (var curriculumService = new CurriculumService(UnitOfWork))
+                {
+                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
+
+                    var points = await _service.GetBehaviourPointsCountByStudent(studentId, academicYearId);
+
+                    return points;
+                }
             }
             catch (Exception e)
             {
@@ -36,12 +53,17 @@ namespace MyPortal.Controllers.Api
         [Route("achievements/get/byStudent/dataGrid/{studentId:int}", Name = "ApiBehaviourGetAchievementsByStudentDataGrid")]
         public async Task<IHttpActionResult> GetAchievementsByStudentDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
         {
-            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
-
             try
             {
-                var achievements = await BehaviourService.GetAchievementsByStudentDataGrid(studentId, academicYearId, _context);
-                return PrepareDataGridObject(achievements, dm);
+                using (var curriculumService = new CurriculumService(UnitOfWork))
+                {
+                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
+                    var achievements = await _service.GetAchievementsByStudent(studentId, academicYearId);
+
+                    var list = achievements.Select(Mapper.Map<BehaviourAchievement, GridBehaviourAchievementDto>);
+                    
+                    return PrepareDataGridObject(list, dm);   
+                }
             }
             catch (Exception e)
             {
@@ -56,7 +78,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await BehaviourService.GetAchievementById(achievementId, _context);
+                var achievement = await _service.GetAchievementById(achievementId);
+
+                return Mapper.Map<BehaviourAchievement, BehaviourAchievementDto>(achievement);
             }
             catch (Exception e)
             {
@@ -69,17 +93,21 @@ namespace MyPortal.Controllers.Api
         [Route("achievements/create", Name = "ApiBehaviourCreateAchievement")]
         public async Task<IHttpActionResult> CreateAchievement([FromBody] BehaviourAchievement achievement)
         {
-            var userId = User.Identity.GetUserId();
-            var staff = await StaffMemberService.GetStaffMemberFromUserId(userId, _context);
-
-            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
-
-            achievement.AcademicYearId = academicYearId;
-            achievement.RecordedById = staff.Id;
-
             try
             {
-                await BehaviourService.CreateAchievement(achievement, _context);
+                using (var curriculumService = new CurriculumService(UnitOfWork))
+                using(var staffService = new StaffMemberService(UnitOfWork))
+                {
+                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
+                    var userId = User.Identity.GetUserId();
+
+                    var recordedBy = staffService.GetStaffMemberFromUserId(userId);
+
+                    achievement.RecordedById = recordedBy.Id;
+                    achievement.AcademicYearId = academicYearId;
+
+                    await _service.CreateAchievement(achievement);
+                }
             }
             catch (Exception e)
             {
@@ -96,7 +124,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await BehaviourService.UpdateAchievement(achievement, _context);
+                await _service.UpdateAchievement(achievement);
             }
             catch (Exception e)
             {
@@ -113,7 +141,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await BehaviourService.DeleteAchievement(achievementId, _context);
+                await _service.DeleteAchievement(achievementId);
             }
             catch (Exception e)
             {
@@ -128,12 +156,18 @@ namespace MyPortal.Controllers.Api
         [Route("incidents/get/byStudent/dataGrid/{studentId:int}", Name = "ApiBehaviourGetBehaviourIncidentsByStudentDataGrid")]
         public async Task<IHttpActionResult> GetBehaviourIncidentsByStudentDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
         {
-            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
-
             try
             {
-                var incidents = await BehaviourService.GetBehaviourIncidentsForGrid(studentId, academicYearId, _context);
-                return PrepareDataGridObject(incidents, dm);
+                using (var curriculumService = new CurriculumService(UnitOfWork))
+                {
+                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
+
+                    var incidents = await _service.GetBehaviourIncidentsByStudent(studentId, academicYearId);
+
+                    var list = incidents.Select(Mapper.Map<BehaviourIncident, GridBehaviourIncidentDto>);
+
+                    return PrepareDataGridObject(list, dm);
+                }
             }
             catch (Exception e)
             {
@@ -148,7 +182,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await BehaviourService.GetBehaviourIncidentById(incidentId, _context);
+                var incident = await _service.GetBehaviourIncidentById(incidentId);
+
+                return Mapper.Map<BehaviourIncident, BehaviourIncidentDto>(incident);
             }
             catch (Exception e)
             {
@@ -161,16 +197,20 @@ namespace MyPortal.Controllers.Api
         [Route("incidents/create", Name = "ApiBehaviourCreateIncident")]
         public async Task<IHttpActionResult> CreateIncident([FromBody] BehaviourIncident incident)
         {
-            var userId = User.Identity.GetUserId();
-            var staff = await StaffMemberService.GetStaffMemberFromUserId(userId, _context);
-            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
-
-            incident.AcademicYearId = academicYearId;
-            incident.RecordedById = staff.Id;
-
             try
             {
-                await BehaviourService.CreateBehaviourIncident(incident, _context);
+                using (var curriculumService = new CurriculumService(UnitOfWork))
+                using (var staffService = new StaffMemberService(UnitOfWork))
+                {
+                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
+                    var userId = User.Identity.GetUserId();
+                    var recordedBy = await staffService.GetStaffMemberFromUserId(userId);
+
+                    incident.RecordedById = recordedBy.Id;
+                    incident.AcademicYearId = academicYearId;
+
+                    await _service.CreateBehaviourIncident(incident);
+                }
             }
             catch (Exception e)
             {
@@ -187,7 +227,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await BehaviourService.UpdateBehaviourIncident(incident, _context);
+                await _service.UpdateBehaviourIncident(incident);
             }
             catch (Exception e)
             {
@@ -204,7 +244,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await BehaviourService.DeleteBehaviourIncident(incidentId, _context);
+                await _service.DeleteBehaviourIncident(incidentId);
             }
             catch (Exception e)
             {

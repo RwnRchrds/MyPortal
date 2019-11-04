@@ -13,8 +13,8 @@ namespace MyPortal.Interfaces
 
         Task<IEnumerable<FinanceSale>> GetSalesByStudent(int studentId, int academicYearId);
 
-        Task<IEnumerable<FinanceSale>> GetPending();
+        Task<IEnumerable<FinanceSale>> GetPending(int academicYearId);
 
-        Task<IEnumerable<FinanceSale>> GetProcessed();
+        Task<IEnumerable<FinanceSale>> GetProcessed(int academicYearId);
     }
 }

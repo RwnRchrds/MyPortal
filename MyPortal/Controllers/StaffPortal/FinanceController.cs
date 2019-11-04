@@ -1,12 +1,14 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Mvc;
 using MyPortal.Attributes;
+using MyPortal.Attributes.HttpAuthorise;
 using MyPortal.Services;
 using MyPortal.ViewModels;
 
-namespace MyPortal.Controllers
+namespace MyPortal.Controllers.StaffPortal
 {
     [Authorize]
+    [RequiresPermission("AccessStaffPortal")]
     [RoutePrefix("Staff/Finance")]
     public class FinanceController : MyPortalController
     {

@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.Ajax.Utilities;
 using MyPortal.Interfaces;
 using MyPortal.Models.Database;
 
@@ -19,6 +20,11 @@ namespace MyPortal.Repositories
         public async Task<Student> GetByUserIdAsync(string userId)
         {
             return await Context.Students.SingleOrDefaultAsync(x => x.Person.UserId == userId);
+        }
+
+        public new async Task<IEnumerable<Student>> GetAllAsync()
+        {
+            return await Context.Students.OrderBy(x => x.Person.LastName).ToListAsync();
         }
 
         public async Task<IEnumerable<Student>> GetOnRoll()
@@ -38,6 +44,17 @@ namespace MyPortal.Repositories
         {
             return await Context.Students.Where(x => !x.Deleted && x.DateStarting > DateTime.Today)
                 .OrderBy(x => x.Person.LastName).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Student>> GetStudentsByRegGroup(int regGroupId)
+        {
+            return await Context.Students.Where(x => x.RegGroupId == regGroupId).OrderBy(x => x.Person.LastName).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Student>> GetStudentsByYearGroup(int yearGroupId)
+        {
+            return await Context.Students.Where(x => x.YearGroupId == yearGroupId).OrderBy(x => x.Person.LastName)
+                .ToListAsync();
         }
     }
 }

@@ -255,12 +255,12 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<FinanceSale>> GetPendingSales(int academicYearId)
         {
-            return await UnitOfWork.FinanceSales.GetPending();
+            return await UnitOfWork.FinanceSales.GetPending(TODO);
         }
 
         public async Task<IEnumerable<FinanceSale>> GetProcessedSales(int academicYearId)
         {
-            return await UnitOfWork.FinanceSales.GetProcessed();
+            return await UnitOfWork.FinanceSales.GetProcessed(TODO);
         }
 
         public async Task<FinanceProduct> GetProductById(int productId)

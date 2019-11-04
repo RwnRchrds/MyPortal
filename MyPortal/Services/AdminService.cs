@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using MyPortal.Dtos.GridDtos;
 using MyPortal.Dtos.Identity;
 using MyPortal.Exceptions;
+using MyPortal.Interfaces;
 using MyPortal.Models;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
@@ -16,12 +17,17 @@ using MyPortal.ViewModels;
 
 namespace MyPortal.Services
 {
-    public static class AdminService
+    public class AdminService : IdentityService
     {
-        public static async Task AddUserToRole(UserRoleModel roleModel, UserManager<ApplicationUser, string> userManager, RoleManager<ApplicationRole, string> roleManager)
+        public AdminService(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
-            var userInDb = await userManager.FindByIdAsync(roleModel.UserId);
-            var roleInDb = await roleManager.FindByNameAsync(roleModel.RoleName);
+            
+        }
+        
+        public async Task AddUserToRole(UserRoleModel roleModel)
+        {
+            var userInDb = await UserManager.FindByIdAsync(roleModel.UserId);
+            var roleInDb = await RoleManager.FindByNameAsync(roleModel.RoleName);
 
             if (userInDb == null)
             {
@@ -40,7 +46,7 @@ namespace MyPortal.Services
                 case "SeniorStaff":
                 case "Staff":
 
-                    if (await userManager.IsInRoleAsync(roleModel.UserId, "Student"))
+                    if (await UserManager.IsInRoleAsync(roleModel.UserId, "Student"))
                     {
                         throw new ProcessException(ExceptionType.BadRequest, "Users cannot be added to student and staff roles simultaneously");
                     }
@@ -48,7 +54,7 @@ namespace MyPortal.Services
 
                 case "Student":
 
-                    if (await userManager.IsInRoleAsync(roleModel.UserId, "Staff"))
+                    if (await UserManager.IsInRoleAsync(roleModel.UserId, "Staff"))
                     {
                         throw new ProcessException(ExceptionType.BadRequest, "Users cannot be added to student and staff roles simultaneously");
                     }
@@ -57,12 +63,12 @@ namespace MyPortal.Services
 
             }
 
-            if (await userManager.IsInRoleAsync(roleModel.UserId, roleModel.RoleName))
+            if (await UserManager.IsInRoleAsync(roleModel.UserId, roleModel.RoleName))
             {
                 throw new ProcessException(ExceptionType.BadRequest,"User is already in role");
             }
 
-            var result = await userManager.AddToRoleAsync(roleModel.UserId, roleModel.RoleName);
+            var result = await UserManager.AddToRoleAsync(roleModel.UserId, roleModel.RoleName);
 
             if (result.Succeeded)
             {
@@ -72,14 +78,13 @@ namespace MyPortal.Services
             throw new ProcessException(ExceptionType.BadRequest,"An unknown error occurred");
         }
 
-        public static async Task AttachPersonToUser(UserProfile userProfile,
-            UserManager<ApplicationUser, string> userManager, IdentityContext identity, MyPortalDbContext context)
+        public async Task AttachPersonToUser(UserProfile userProfile)
         {
-            var userInDb = identity.Users.FirstOrDefault(u => u.Id == userProfile.UserId);
-            var roleInDb = identity.Roles.FirstOrDefault(r => r.Name == userProfile.RoleName);
+            var userInDb = Identity.Users.FirstOrDefault(u => u.Id == userProfile.UserId);
+            var roleInDb = Identity.Roles.FirstOrDefault(r => r.Name == userProfile.RoleName);
 
-            var userIsAttached = context.Students.Any(x => x.Person.UserId == userProfile.UserId) ||
-                                 context.StaffMembers.Any(x => x.Person.UserId == userProfile.UserId);                       
+            var userIsAttached = await UnitOfWork.Students.AnyAsync(x => x.Person.UserId == userProfile.UserId) ||
+                                 await UnitOfWork.StaffMembers.AnyAsync(x => x.Person.UserId == userProfile.UserId);                       
 
             if (userInDb == null)
             {
@@ -100,39 +105,38 @@ namespace MyPortal.Services
             {
                 case "Staff":
                 {
-                    var roles = await userManager.GetRolesAsync(userProfile.UserId);
-                    await userManager.RemoveFromRolesAsync(userProfile.UserId, roles.ToArray());
-                    await userManager.AddToRoleAsync(userProfile.UserId, "Staff");
-                    var personInDb = context.StaffMembers.Single(x => x.Id == userProfile.PersonId);
-                    if (personInDb.Person.UserId != null)
+                    var roles = await UserManager.GetRolesAsync(userProfile.UserId);
+                    await UserManager.RemoveFromRolesAsync(userProfile.UserId, roles.ToArray());
+                    await UserManager.AddToRoleAsync(userProfile.UserId, "Staff");
+                    var personInDb = await UnitOfWork.People.GetByIdAsync(userProfile.PersonId);
+                    if (personInDb.UserId != null)
                     {
                         throw new ProcessException(ExceptionType.BadRequest,"This person is attached to another user");
                     }
 
-                    personInDb.Person.UserId = userInDb.Id;
-                    context.SaveChanges();
+                    personInDb.UserId = userInDb.Id;
+                    await UnitOfWork.Complete();
                     break;
                 }
                 case "Student":
                 {
-                    var roles = await userManager.GetRolesAsync(userProfile.UserId);
-                    await userManager.RemoveFromRolesAsync(userProfile.UserId, roles.ToArray());
-                    await userManager.AddToRoleAsync(userProfile.UserId, "Student");
-                    var personInDb = context.Students.Single(x => x.Id == userProfile.PersonId);
-                    if (personInDb.Person.UserId != null)
+                    var roles = await UserManager.GetRolesAsync(userProfile.UserId);
+                    await UserManager.RemoveFromRolesAsync(userProfile.UserId, roles.ToArray());
+                    await UserManager.AddToRoleAsync(userProfile.UserId, "Student");
+                    var personInDb = await UnitOfWork.People.GetByIdAsync(userProfile.PersonId);
+                    if (personInDb.UserId != null)
                     {
                         throw new ProcessException(ExceptionType.BadRequest,"This person is attached to another user");
                     }
 
-                    personInDb.Person.UserId = userInDb.Id;
-                    context.SaveChanges();
+                    personInDb.UserId = userInDb.Id;
+                    await UnitOfWork.Complete();
                     break;
                 }
             }
         }
 
-        public static async Task ChangePassword(ChangePasswordModel data,
-            UserManager<ApplicationUser, string> userManager)
+        public async Task ChangePassword(ChangePasswordModel data)
         {
             if (data.Password != data.Confirm)
             {
@@ -140,18 +144,18 @@ namespace MyPortal.Services
             }
 
 
-            var userInDb = await userManager.FindByIdAsync(data.UserId);
+            var userInDb = await UserManager.FindByIdAsync(data.UserId);
 
             if (userInDb == null)
             {
                 throw new ProcessException(ExceptionType.NotFound,"User not found");
             }
 
-            var removePassword = await userManager.RemovePasswordAsync(data.UserId);
+            var removePassword = await UserManager.RemovePasswordAsync(data.UserId);
 
             if (removePassword.Succeeded)
             {
-                var addNewPassword = await userManager.AddPasswordAsync(data.UserId, data.Password);
+                var addNewPassword = await UserManager.AddPasswordAsync(data.UserId, data.Password);
 
                 if (addNewPassword.Succeeded)
                 {
@@ -162,7 +166,7 @@ namespace MyPortal.Services
             throw new ProcessException(ExceptionType.BadRequest,"An unknown error occurred");
         }
 
-        public static async Task CreateRole(ApplicationRole role, RoleManager<ApplicationRole, string> roleManager)
+        public async Task CreateRole(ApplicationRole role, RoleManager<ApplicationRole, string> roleManager)
         {
             role.System = false;
             role.Id = UtilityService.GenerateId();
@@ -182,7 +186,7 @@ namespace MyPortal.Services
             throw new ProcessException(ExceptionType.BadRequest,"An unknown error occurred");
         }
 
-        public static async Task CreateUser(NewUserViewModel model, UserManager<ApplicationUser, string> userManager)
+        public async Task CreateUser(NewUserViewModel model, UserManager<ApplicationUser, string> UserManager)
         {
             model.Id = UtilityService.GenerateId();
 
@@ -197,7 +201,7 @@ namespace MyPortal.Services
                 UserName = model.Username
             };
 
-            var result = await userManager.CreateAsync(user, model.Password);
+            var result = await UserManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
             {
@@ -207,7 +211,7 @@ namespace MyPortal.Services
             throw new ProcessException(ExceptionType.BadRequest,"An unknown error occurred");
         }
 
-        public static async Task DeleteRole(string roleId, RoleManager<ApplicationRole, string> roleManager)
+        public async Task DeleteRole(string roleId, RoleManager<ApplicationRole, string> roleManager)
         {
             var roleInDb = await roleManager.FindByIdAsync(roleId);
 
@@ -219,24 +223,24 @@ namespace MyPortal.Services
             await roleManager.DeleteAsync(roleInDb);
         }
 
-        public static async Task DeleteUser(string userId,
-                                    UserManager<ApplicationUser, string> userManager)
+        public async Task DeleteUser(string userId,
+                                    UserManager<ApplicationUser, string> UserManager)
         {
-            var userInDb = await userManager.FindByIdAsync(userId);
+            var userInDb = await UserManager.FindByIdAsync(userId);
 
             if (userInDb == null)
             {
                 throw new ProcessException(ExceptionType.NotFound,"User not found");
             }
 
-            var userRoles = await userManager.GetRolesAsync(userId);
+            var userRoles = await UserManager.GetRolesAsync(userId);
 
             foreach (var role in userRoles)
             {
-                await userManager.RemoveFromRoleAsync(userId, role);
+                await UserManager.RemoveFromRoleAsync(userId, role);
             }
 
-            var result = await userManager.DeleteAsync(userInDb);
+            var result = await UserManager.DeleteAsync(userInDb);
 
             if (result.Succeeded)
             {
@@ -246,8 +250,8 @@ namespace MyPortal.Services
             throw new ProcessException(ExceptionType.BadRequest,"An unknown error occurred");
         }
 
-        public static async Task DetachPerson(ApplicationUser user,
-            UserManager<ApplicationUser, string> userManager, MyPortalDbContext context)
+        public async Task DetachPerson(ApplicationUser user,
+            UserManager<ApplicationUser, string> UserManager, MyPortalDbContext context)
         {
             var userIsAttached = context.Students.Any(x => x.Person.UserId == user.Id) ||
                                  context.StaffMembers.Any(x => x.Person.UserId == user.Id);
@@ -261,8 +265,8 @@ namespace MyPortal.Services
             personInDb.UserId = null;
             context.SaveChanges();
 
-            var roles = await userManager.GetRolesAsync(user.Id);
-            var result = await userManager.RemoveFromRolesAsync(user.Id, roles.ToArray());
+            var roles = await UserManager.GetRolesAsync(user.Id);
+            var result = await UserManager.RemoveFromRolesAsync(user.Id, roles.ToArray());
 
             if (result.Succeeded)
             {
@@ -271,47 +275,22 @@ namespace MyPortal.Services
 
             throw new ProcessException(ExceptionType.BadRequest,"An unknown error occurred");
         }
-
-        public static async Task<IEnumerable<ApplicationRoleDto>> GetAllRoles(IdentityContext identity)
-        {
-            var roles = await GetAllRolesModel(identity);
-
-            return roles.Select(Mapper.Map<ApplicationRole, ApplicationRoleDto>);
-        }
-
-        public static async Task<IEnumerable<ApplicationRole>> GetAllRolesModel(IdentityContext identity)
+        
+        public async Task<IEnumerable<ApplicationRole>> GetAllRoles(IdentityContext identity)
         {
             var roles = await identity.Roles.Where(x => !x.System).OrderBy(x => x.Name).ToListAsync();
 
             return roles;
         }
-
-        public static async Task<IEnumerable<ApplicationUserDto>> GetAllUsers(IdentityContext identity)
-        {
-            var users = await GetAllUsersModel(identity);
-
-            var list = users.Select(Mapper.Map<ApplicationUser, ApplicationUserDto>);
-
-            return list;
-        }
-
-        public static async Task<IEnumerable<GridApplicationUserDto>> GetAllUsersDataGrid(IdentityContext identity)
-        {
-            var users = await GetAllUsersModel(identity);
-
-            var list = users.Select(Mapper.Map<ApplicationUser, GridApplicationUserDto>);
-
-            return list;
-        }
-
-        public static async Task<IEnumerable<ApplicationUser>> GetAllUsersModel(IdentityContext identity)
+        
+        public async Task<IEnumerable<ApplicationUser>> GetAllUsers(IdentityContext identity)
         {
             var users = await identity.Users.OrderBy(x => x.UserName).ToListAsync();
 
             return users;
         }
 
-        public static async Task<IEnumerable<PermissionIndicator>> GetPermissionsByRole(string roleId,
+        public async Task<IEnumerable<PermissionIndicator>> GetPermissionsByRole(string roleId,
             RoleManager<ApplicationRole, string> roleManager, IdentityContext identity)
         {
             var permissions = await identity.Permissions.ToListAsync();
@@ -327,15 +306,7 @@ namespace MyPortal.Services
             return permList;
         }
 
-        public static async Task<ApplicationRoleDto> GetRoleById(string roleId,
-            RoleManager<ApplicationRole, string> roleManager)
-        {
-            var roleInDb = await GetRoleByIdModel(roleId, roleManager);
-
-            return Mapper.Map<ApplicationRole, ApplicationRoleDto>(roleInDb);
-        }
-
-        public static async Task<ApplicationRole> GetRoleByIdModel(string roleId,
+        public async Task<ApplicationRole> GetRoleById(string roleId,
             RoleManager<ApplicationRole, string> roleManager)
         {
             var roleInDb = await roleManager.FindByIdAsync(roleId);
@@ -348,34 +319,24 @@ namespace MyPortal.Services
             return roleInDb;
         }
 
-        public static async Task<IEnumerable<ApplicationRoleDto>> GetRolesByUser(string userId, RoleManager<ApplicationRole, string> roleManager)
+        public async Task<IEnumerable<ApplicationRole>> GetRolesByUser(string userId)
         {
-            var result = await GetRolesByUserModel(userId, roleManager);
-
-            var roles = result.Select(Mapper.Map<ApplicationRole, ApplicationRoleDto>);
-
-            return roles;
-        }
-
-        public static async Task<IEnumerable<ApplicationRole>> GetRolesByUserModel(string userId, RoleManager<ApplicationRole, string> roleManager)
-        {
-            var roles = await roleManager.Roles.Where(x => x.Users.Any(u => u.UserId == userId)).OrderBy(x => x.Name)
+            var roles = await RoleManager.Roles.Where(x => x.Users.Any(u => u.UserId == userId)).OrderBy(x => x.Name)
                 .ToListAsync();
 
             return roles;
         }
 
-        public static async Task RemoveFromRole(string userId, string roleName,
-                                                    UserManager<ApplicationUser, string> userManager, IdentityContext identity)
+        public async Task RemoveFromRole(string userId, string roleName)
         {
-            var userInDb = identity.Users.FirstOrDefault(user => user.Id == userId);
+            var userInDb = await Identity.Users.FirstOrDefaultAsync(user => user.Id == userId);
 
             if (userInDb == null)
             {
                 throw new ProcessException(ExceptionType.NotFound,"User not found");
             }
 
-            var userRoles = await userManager.GetRolesAsync(userId);
+            var userRoles = await UserManager.GetRolesAsync(userId);
 
             var roleToRemove =
                 userRoles.FirstOrDefault(role => role.Equals(roleName, StringComparison.InvariantCultureIgnoreCase));
@@ -385,7 +346,7 @@ namespace MyPortal.Services
                 throw new ProcessException(ExceptionType.NotFound,"User is not in role");
             }
 
-            var result = await userManager.RemoveFromRoleAsync(userId, roleToRemove);
+            var result = await UserManager.RemoveFromRoleAsync(userId, roleToRemove);
 
             if (result.Succeeded)
             {
@@ -395,38 +356,37 @@ namespace MyPortal.Services
             throw new ProcessException(ExceptionType.BadRequest,"An unknown error occurred");
         }
 
-        public static async Task ToggleRolePermission(RolePermission rolePermission,
-            RoleManager<ApplicationRole, string> roleManager, IdentityContext identity)
+        public async Task ToggleRolePermission(RolePermission rolePermission)
         {
-            if (await roleManager.FindByIdAsync(rolePermission.RoleId) == null)
+            if (await RoleManager.FindByIdAsync(rolePermission.RoleId) == null)
             {
                 throw new ProcessException(ExceptionType.NotFound,"Role not found");
             }
 
-            if (!identity.Permissions.Any(x => x.Id == rolePermission.PermissionId))
+            if (!await Identity.Permissions.AnyAsync(x => x.Id == rolePermission.PermissionId))
             {
                 throw new ProcessException(ExceptionType.NotFound,"Permission not found");
             }
 
-            var rolePermissionInDb = await identity.RolePermissions.SingleOrDefaultAsync(x =>
+            var rolePermissionInDb = await Identity.RolePermissions.SingleOrDefaultAsync(x =>
                 x.PermissionId == rolePermission.PermissionId && x.RoleId == rolePermission.RoleId);
 
             if (rolePermissionInDb != null)
             {
-                identity.RolePermissions.Remove(rolePermissionInDb);
-                await identity.SaveChangesAsync();
+                Identity.RolePermissions.Remove(rolePermissionInDb);
+                await Identity.SaveChangesAsync();
             }
 
             else
             {
-                identity.RolePermissions.Add(rolePermission);
-                await identity.SaveChangesAsync();
+                Identity.RolePermissions.Add(rolePermission);
+                await Identity.SaveChangesAsync();
             }
         }
 
-        public static async Task UpdateRole(ApplicationRole role, RoleManager<ApplicationRole, string> roleManager)
+        public async Task UpdateRole(ApplicationRole role)
         {
-            await roleManager.UpdateAsync(role);
+            await RoleManager.UpdateAsync(role);
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using MyPortal.Attributes;
+using MyPortal.Attributes.HttpAuthorise;
 using MyPortal.Models.Misc;
 using MyPortal.Services;
 

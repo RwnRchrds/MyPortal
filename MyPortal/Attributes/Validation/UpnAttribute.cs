@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using MyPortal.Services;
+using MyPortal.Extensions;
 
-namespace MyPortal.Attributes
+namespace MyPortal.Attributes.Validation
 {
     public class UpnAttribute : ValidationAttribute
     {
@@ -12,7 +12,7 @@ namespace MyPortal.Attributes
                 return ValidationResult.Success;
             }
 
-            return SystemService.ValidateUpn(value.ToString())
+            return StudentExtensions.ValidateUpn(value.ToString())
                 ? ValidationResult.Success
                 : new ValidationResult("Upn is not valid");
         }

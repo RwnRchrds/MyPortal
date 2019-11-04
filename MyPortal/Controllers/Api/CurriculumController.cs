@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web.Http;
+using AutoMapper;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Attributes;
+using MyPortal.Attributes.HttpAuthorise;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
 using MyPortal.Services;
@@ -18,13 +21,22 @@ namespace MyPortal.Controllers.Api
     [RoutePrefix("api/curriculum")]
     public class CurriculumController : MyPortalApiController
     {
+        protected readonly CurriculumService _service;
+
+        public CurriculumController()
+        {
+            _service = new CurriculumService(UnitOfWork);
+        }
+        
         [HttpGet]
         [Route("academicYears/get/all", Name = "ApiCurriculumGetAcademicYears")]
         public async Task<IEnumerable<CurriculumAcademicYearDto>> GetAcademicYears()
         {
             try
             {
-                return await CurriculumService.GetAcademicYears(_context);
+                var academicYears = await _service.GetAcademicYears();
+
+                return academicYears.Select(Mapper.Map<CurriculumAcademicYear, CurriculumAcademicYearDto>);
             }
             catch (Exception e)
             {
@@ -38,7 +50,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumService.GetAcademicYearById(academicYearId, _context);
+                var academicYear = await _service.GetAcademicYearById(academicYearId);
+
+                return Mapper.Map<CurriculumAcademicYear, CurriculumAcademicYearDto>(academicYear);
             }
             catch (Exception e)
             {
@@ -52,6 +66,7 @@ namespace MyPortal.Controllers.Api
         public async Task<IHttpActionResult> ChangeSelectedAcademicYear([FromBody] CurriculumAcademicYear year)
         {
             await User.ChangeSelectedAcademicYear(year.Id);
+            
             return Ok("Selected academic year changed");
         }
 

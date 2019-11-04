@@ -8,32 +8,35 @@ namespace MyPortal.Controllers.Api
 {
     public class MyPortalIdentityApiController : MyPortalApiController
     {
-        protected readonly IdentityContext _identity;
-        protected readonly UserManager<ApplicationUser, string> _userManager;
+        protected readonly IdentityContext Identity;
+        protected readonly MyPortalDbContext Context;
+        protected readonly UserManager<ApplicationUser, string> UserManager;
         protected readonly UserStore<ApplicationUser, ApplicationRole, string, IdentityUserLogin, IdentityUserRole,
-            IdentityUserClaim> _userStore;
+            IdentityUserClaim> UserStore;
 
-        protected readonly RoleManager<ApplicationRole, string> _roleManager;
-        protected readonly RoleStore<ApplicationRole> _roleStore;
+        protected readonly RoleManager<ApplicationRole, string> RoleManager;
+        protected readonly RoleStore<ApplicationRole> RoleStore;
 
         public MyPortalIdentityApiController()
         {
-            _identity = new IdentityContext();
-            _userStore = new UserStore<ApplicationUser, ApplicationRole, string, IdentityUserLogin, IdentityUserRole,
-                IdentityUserClaim>(_identity);
-            _userManager = new UserManager<ApplicationUser, string>(_userStore);
-            _roleStore = new RoleStore<ApplicationRole>(_identity);
-            _roleManager = new RoleManager<ApplicationRole, string>(_roleStore);
+            Identity = new IdentityContext();
+            Context = new MyPortalDbContext();
+            UserStore = new UserStore<ApplicationUser, ApplicationRole, string, IdentityUserLogin, IdentityUserRole,
+                IdentityUserClaim>(Identity);
+            UserManager = new UserManager<ApplicationUser, string>(UserStore);
+            RoleStore = new RoleStore<ApplicationRole>(Identity);
+            RoleManager = new RoleManager<ApplicationRole, string>(RoleStore);
         }
 
         public MyPortalIdentityApiController(IUnitOfWork unitOfWork, IdentityContext identity) : base(unitOfWork)
         {
-            _identity = identity;
-            _userStore = new UserStore<ApplicationUser, ApplicationRole, string, IdentityUserLogin, IdentityUserRole,
-                IdentityUserClaim>(_identity);
-            _userManager = new UserManager<ApplicationUser, string>(_userStore);
-            _roleStore = new RoleStore<ApplicationRole>(_identity);
-            _roleManager = new RoleManager<ApplicationRole, string>(_roleStore);
+            Identity = identity;
+            Context = new MyPortalDbContext();
+            UserStore = new UserStore<ApplicationUser, ApplicationRole, string, IdentityUserLogin, IdentityUserRole,
+                IdentityUserClaim>(Identity);
+            UserManager = new UserManager<ApplicationUser, string>(UserStore);
+            RoleStore = new RoleStore<ApplicationRole>(Identity);
+            RoleManager = new RoleManager<ApplicationRole, string>(RoleStore);
         }
     }
 }

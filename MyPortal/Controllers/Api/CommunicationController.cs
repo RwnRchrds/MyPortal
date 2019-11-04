@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using MyPortal.Attributes;
+using MyPortal.Attributes.HttpAuthorise;
 using MyPortal.Models.Database;
 using MyPortal.Services;
 
@@ -15,6 +16,13 @@ namespace MyPortal.Controllers.Api
     [RoutePrefix("api/communication")]
     public class CommunicationController : MyPortalApiController
     {
+        private readonly CommunicationService _service;
+
+        public CommunicationController()
+        {
+            _service = new CommunicationService(UnitOfWork);
+        }
+        
         [HttpPost]
         [Route("emailAddresses/create")]
         [RequiresPermission("EditContactInformation")]
@@ -22,7 +30,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CommunicationService.CreateEmailAddress(emailAddress, _context);
+                await _service.CreateEmailAddress(emailAddress);
             }
             catch (Exception e)
             {
@@ -30,6 +38,38 @@ namespace MyPortal.Controllers.Api
             }
 
             return Ok("Email address created");
+        }
+
+        [HttpPost]
+        [Route("emailAddresses/update")]
+        [RequiresPermission("EditContactInformation")]
+        public async Task<IHttpActionResult> UpdateEmailAddress([FromBody] CommunicationEmailAddress emailAddress)
+        {
+            try
+            {
+                await _service.UpdateEmailAddress(emailAddress);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Email address updated");
+        }
+
+        [HttpDelete]
+        [Route("emailAddresses/delete/{emailAddressId:int}")]
+        [RequiresPermission("EditContactInformation")]
+        public async Task<IHttpActionResult> DeleteEmailAddress([FromUri] int emailAddressId)
+        {
+            try
+            {
+                await _service.DeleteEmailAddress(emailAddressId);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
     }
 }

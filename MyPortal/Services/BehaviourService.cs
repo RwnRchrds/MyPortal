@@ -203,6 +203,18 @@ namespace MyPortal.Services
 
             return achievementPoints - behaviourPoints;
         }
+
+        public async Task<IEnumerable<BehaviourAchievement>> GetAchievementsByStudent(int studentId, int academicYearId)
+        {
+            return await UnitOfWork.BehaviourAchievements.GetAchievementsByStudent(studentId, academicYearId);
+        }
+
+        public async Task<IEnumerable<BehaviourIncident>> GetBehaviourIncidentsByStudent(int studentId,
+            int academicYearId)
+        {
+            return await UnitOfWork.BehaviourIncidents.GetBehaviourIncidentsByStudent(studentId, academicYearId);
+        }
+        
         public async Task UpdateAchievement(BehaviourAchievement achievement)
         {
             var achievementInDb = await GetAchievementById(achievement.Id);

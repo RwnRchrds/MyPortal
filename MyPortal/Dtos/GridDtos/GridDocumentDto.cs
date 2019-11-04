@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using MyPortal.Interfaces;
 
 namespace MyPortal.Dtos.GridDtos
 {
-    public class GridDocumentDto
+    public class GridDocumentDto : IGridDto
     {
         public int DocumentId { get; set; }
         public DateTime Date { get; set; }

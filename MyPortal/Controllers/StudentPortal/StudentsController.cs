@@ -1,16 +1,17 @@
 ﻿using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using MyPortal.Attributes;
+using MyPortal.Attributes.MvcAuthorise;
+using MyPortal.Models;
 using MyPortal.Services;
 using MyPortal.ViewModels;
 
-namespace MyPortal.Controllers
+namespace MyPortal.Controllers.StudentPortal
 {
     //MyPortal Students Controller --> Controller methods for Student areas
-    [RequiresPermission("AccessStudentPortal")]
+    [UserType(UserType.Student)]
     [RoutePrefix("Students")]
     public class StudentsController : MyPortalController
     {

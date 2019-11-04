@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.Ajax.Utilities;
@@ -645,6 +646,44 @@ namespace MyPortal.Services
             var academicYear = await GetAcademicYearById(academicYearId);
 
             return date >= academicYear.FirstDate && date <= academicYear.LastDate;
+        }
+        
+        public async Task<int> GetCurrentAcademicYearId()
+        {
+            var academicYear = await UnitOfWork.CurriculumAcademicYears.GetCurrentAcademicYear();
+
+            if (academicYear == null)
+            {
+                throw new ProcessException(ExceptionType.NotFound, "No academic years found");
+            }
+
+            return academicYear.Id;
+        }
+
+        public async Task<int?> GetCurrentAcademicYearIdNullable()
+        {
+            var academicYear = await UnitOfWork.CurriculumAcademicYears.GetCurrentAcademicYear();
+
+            return academicYear?.Id;
+        }
+
+        public async Task<int> GetCurrentOrSelectedAcademicYearId(IPrincipal user)
+        {
+            var academicYear = await UnitOfWork.CurriculumAcademicYears.GetCurrentOrSelectedAcademicYear(user);
+            
+            if (academicYear == null)
+            {
+                throw new ProcessException(ExceptionType.NotFound, "No academic years found");
+            }
+
+            return academicYear.Id;
+        }
+        
+        public async Task<int?> GetCurrentOrSelectedAcademicYearIdNullable(IPrincipal user)
+        {
+            var academicYear = await UnitOfWork.CurriculumAcademicYears.GetCurrentOrSelectedAcademicYear(user);
+
+            return academicYear?.Id;
         }
     }
 }

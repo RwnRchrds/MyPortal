@@ -9,6 +9,6 @@ namespace MyPortal.Controllers.Api
 {
     public class AdmissionsController : MyPortalApiController
     {
-
+        
     }
 }

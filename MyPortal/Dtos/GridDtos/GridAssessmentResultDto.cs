@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using MyPortal.Interfaces;
 
 namespace MyPortal.Dtos.GridDtos
 {
-    public class GridAssessmentResultDto
+    public class GridAssessmentResultDto : IGridDto
     {
         public string StudentName { get; set; }
         public string ResultSet { get; set; }

@@ -1,20 +1,14 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using AutoMapper;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using MyPortal.Dtos.Identity;
+using MyPortal.Attributes.MvcAuthorise;
 using MyPortal.Models;
-using MyPortal.Attributes;
-using MyPortal.Models.Database;
 using MyPortal.Services;
 using MyPortal.ViewModels;
 
-namespace MyPortal.Controllers
+namespace MyPortal.Controllers.StaffPortal
 {
-    
-    [Authorize]
+    [UserType(UserType.Staff)]
     [RoutePrefix("Staff/Admin")]
     public class AdminController : MyPortalIdentityController
     {
@@ -82,7 +76,7 @@ namespace MyPortal.Controllers
         {
             var viewModel = new RolePermissionsViewModel();
 
-            var result = await AdminService.GetRoleByIdModel(roleId, _roleManager);
+            var result = await AdminService.GetRoleById(roleId, _roleManager);
 
             viewModel.Role = result;
 

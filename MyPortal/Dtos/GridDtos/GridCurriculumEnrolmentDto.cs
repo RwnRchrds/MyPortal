@@ -1,6 +1,8 @@
+using MyPortal.Interfaces;
+
 namespace MyPortal.Dtos.GridDtos
 {
-    public class GridCurriculumEnrolmentDto
+    public class GridCurriculumEnrolmentDto : IGridDto
     {
         public int Id { get; set; }
         public string StudentName { get; set; }

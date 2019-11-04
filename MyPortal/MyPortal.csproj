@@ -243,8 +243,12 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Attributes\HttpAuthorise\RequiresPermissionAttribute.cs" />
+    <Compile Include="Attributes\HttpAuthorise\UserTypeAttribute.cs" />
+    <Compile Include="Attributes\MvcAuthorise\RequiresPermissionAttribute.cs" />
+    <Compile Include="Attributes\MvcAuthorise\UserTypeAttribute.cs" />
+    <Compile Include="Attributes\Validation\UpnAttribute.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\Api\AdminController.cs" />
     <Compile Include="Controllers\Api\AdmissionsController.cs" />
     <Compile Include="Controllers\Api\AssessmentController.cs" />
@@ -266,11 +270,17 @@
     <Compile Include="Controllers\Api\SystemController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\FinanceController.cs" />
     <Compile Include="Controllers\MyPortalController.cs" />
     <Compile Include="Controllers\MyPortalIdentityController.cs" />
-    <Compile Include="Controllers\StaffController.cs" />
-    <Compile Include="Controllers\StudentsController.cs" />
+    <Compile Include="Controllers\StaffPortal\AdminController.cs" />
+    <Compile Include="Controllers\StaffPortal\AssessmentController.cs" />
+    <Compile Include="Controllers\StaffPortal\AttendanceController.cs" />
+    <Compile Include="Controllers\StaffPortal\BehaviourController.cs" />
+    <Compile Include="Controllers\StaffPortal\CurriculumController.cs" />
+    <Compile Include="Controllers\StaffPortal\DocumentsController.cs" />
+    <Compile Include="Controllers\StaffPortal\FinanceController.cs" />
+    <Compile Include="Controllers\StaffPortal\StaffController.cs" />
+    <Compile Include="Controllers\StudentPortal\StudentsController.cs" />
     <Compile Include="Dtos\AssessmentAspectDto.cs" />
     <Compile Include="Dtos\AssessmentAspectTypeDto.cs" />
     <Compile Include="Dtos\AssessmentGradeDto.cs" />
@@ -372,6 +382,7 @@
     <Compile Include="Dtos\SystemBulletinDto.cs" />
     <Compile Include="Dtos\SystemReportDto.cs" />
     <Compile Include="Dtos\SystemSchoolDto.cs" />
+    <Compile Include="Extensions\AttendanceExtensions.cs" />
     <Compile Include="Extensions\CurriculumExtensions.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\StaffMemberExtensions.cs" />
@@ -400,6 +411,7 @@
     <Compile Include="Interfaces\ICommunicationPhoneNumberTypeRepository.cs" />
     <Compile Include="Interfaces\ICommunicationTypeRepository.cs" />
     <Compile Include="Interfaces\IContactRepository.cs" />
+    <Compile Include="Interfaces\IGridDto.cs" />
     <Compile Include="Interfaces\IRelationshipTypeRepository.cs" />
     <Compile Include="Interfaces\ICurriculumAcademicYearRepository.cs" />
     <Compile Include="Interfaces\ICurriculumClassRepository.cs" />
@@ -480,8 +492,6 @@
       <DependentUpon>201910221612298_StructureUpdate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Attributes\RequiresPermissionAttribute.cs" />
-    <Compile Include="Attributes\UpnAttribute.cs" />
     <Compile Include="Models\Database\AssessmentAspect.cs" />
     <Compile Include="Models\Database\AssessmentAspectType.cs" />
     <Compile Include="Models\Database\CommunicationAddress.cs" />
@@ -543,6 +553,7 @@
     <Compile Include="Services\CurriculumService.cs" />
     <Compile Include="Services\DocumentService.cs" />
     <Compile Include="Services\FinanceService.cs" />
+    <Compile Include="Services\IdentityService.cs" />
     <Compile Include="Services\LookupService.cs" />
     <Compile Include="Services\MyPortalService.cs" />
     <Compile Include="Services\PastoralService.cs" />
@@ -1178,6 +1189,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Results\" />
+    <Folder Include="Controllers\ParentPortal" />
     <Folder Include="Views\Staff\Admissions\" />
     <Folder Include="Views\Staff\Behaviour\" />
     <Folder Include="Views\Staff\Communication\" />

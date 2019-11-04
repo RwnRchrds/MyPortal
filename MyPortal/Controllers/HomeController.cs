@@ -5,16 +5,14 @@ using MyPortal.Services;
 
 namespace MyPortal.Controllers
 {
-    [AllowAnonymous]
     public class HomeController : MyPortalController
     {
-        [Authorize]
         [Route("User/Home", Name = "Home")]
         public async Task<ActionResult> Home()
         {
             if (Request.IsAuthenticated)
             {
-                switch (await User.GetUserType())
+                switch (await User.GetUserTypeAsync())
                 {
                     case UserType.Staff:
                         return RedirectToAction("Index", "Staff");
@@ -28,6 +26,7 @@ namespace MyPortal.Controllers
             return RedirectToAction("Login", "Account");
         }
 
+        [AllowAnonymous]
         public ActionResult Index()
         {
             if (System.Web.HttpContext.Current.User != null &&

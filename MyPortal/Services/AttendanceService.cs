@@ -121,16 +121,6 @@ namespace MyPortal.Services
             return week.Beginning.GetDayOfWeek(period.Weekday);
         }
 
-        public string GetAttendancePeriodTime(AttendancePeriod period)
-        {
-            var startTime = period.StartTime.ToString(@"hh\:mm");
-            var endTime = period.EndTime.ToString(@"hh\:mm");
-
-            var periodTime = $"{startTime} - {endTime}";
-
-            return periodTime;
-        }
-
         public async Task<IEnumerable<StudentAttendanceMarkCollection>> GetRegisterMarks(int weekId,
             int sessionId)
         {

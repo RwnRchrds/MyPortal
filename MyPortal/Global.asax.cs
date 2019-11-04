@@ -14,6 +14,7 @@ namespace MyPortal
         {
             //Register Syncfusion license
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MTA5NzE1QDMxMzcyZTMxMmUzMEpmWjBrYm9HNVRMYzEwTXZqUTFDS1I1MHc4TVRZQU5xK09JQmNwdDdmdjg9");
+            
             Mapper.Initialize(c => c.AddProfile<MappingProfile>());
             GlobalConfiguration.Configure(WebApiConfig.Register);
             AreaRegistration.RegisterAllAreas();
@@ -22,15 +23,5 @@ namespace MyPortal
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             Directory.CreateDirectory(@"C:\MyPortal\Files\Results");
         }
-
-//#if !DEBUG
-//        protected void Application_BeginRequest()
-//        {
-//            if (Request.Url.Scheme != "http") return;
-//            var path = "https://" + Request.Url.Host + Request.Url.PathAndQuery;
-//            Response.Status = "301 Moved Permanently";
-//            Response.AddHeader("Location", path);
-//        }
-//#endif
     }
 }

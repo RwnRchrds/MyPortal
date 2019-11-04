@@ -77,6 +77,10 @@ namespace MyPortal.Controllers
         [Route("Login", Name = "AccountLogin")]
         public ActionResult Login(string returnUrl)
         {
+            if (System.Web.HttpContext.Current.User != null &&
+                System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
+                return RedirectToAction("Home", "Home");
+            
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }

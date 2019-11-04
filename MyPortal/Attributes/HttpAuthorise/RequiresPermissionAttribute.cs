@@ -4,11 +4,11 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using MyPortal.Services;
 
-namespace MyPortal.Attributes
+namespace MyPortal.Attributes.HttpAuthorise
 {
     public class RequiresPermissionAttribute : AuthorizeAttribute
     {
-        private List<string> _permissions;
+        private readonly List<string> _permissions;
 
         public RequiresPermissionAttribute(string permissions)
         {

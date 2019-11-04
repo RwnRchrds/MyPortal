@@ -10,6 +10,7 @@ using MyPortal.Extensions;
 using MyPortal.Models;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
+using MyPortal.Persistence;
 using MyPortal.Services;
 using Syncfusion.EJ2.Grids;
 
@@ -203,7 +204,7 @@ namespace MyPortal
                 .ForMember(dest => dest.Teacher,
                     opts => opts.MapFrom(src => src.Class.Teacher.GetDisplayName()))
                 .ForMember(dest => dest.Time,
-                    opts => opts.MapFrom(src => AttendanceService.GetAttendancePeriodTime(src.Period)));
+                    opts => opts.MapFrom(src => src.Period.GetTimeDisplay()));
 
             CreateMap<CurriculumClass, GridCurriculumClassDto>()
                 .ForMember(dest => dest.Subject,

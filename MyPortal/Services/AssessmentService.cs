@@ -95,16 +95,6 @@ namespace MyPortal.Services
             return resultSets;
         }
 
-        public async Task<bool> ResultSetContainsResults(int resultSetId)
-        {
-            if (!await UnitOfWork.AssessmentResultSets.AnyAsync(x => x.Id == resultSetId))
-            {
-                throw new ProcessException(ExceptionType.NotFound,"Result set not found");
-            }
-
-            return await UnitOfWork.AssessmentResults.AnyAsync(x => x.ResultSetId == resultSetId);
-        }
-
         public async Task SetResultSetAsCurrent(int resultSetId)
         {
             var resultSet = await GetResultSetById(resultSetId);

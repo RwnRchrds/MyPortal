@@ -8,6 +8,7 @@ using System.Web.DynamicData;
 using System.Web.Http;
 using MyPortal.Dtos;
 using MyPortal.Attributes;
+using MyPortal.Attributes.HttpAuthorise;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
 using MyPortal.Services;

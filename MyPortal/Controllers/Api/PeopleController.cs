@@ -7,6 +7,7 @@ using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using System.Web.Http;
 using MyPortal.Attributes;
+using MyPortal.Attributes.HttpAuthorise;
 using MyPortal.Services;
 using Syncfusion.EJ2.Base;
 

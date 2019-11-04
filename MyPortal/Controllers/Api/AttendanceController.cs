@@ -7,6 +7,8 @@ using System.Web.Http;
 using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Attributes;
+using MyPortal.Attributes.HttpAuthorise;
+using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
 using MyPortal.Services;
 using Syncfusion.EJ2.Base;
@@ -17,19 +19,23 @@ namespace MyPortal.Controllers.Api
     [Authorize]
     public class AttendanceController : MyPortalApiController
     {
+        private readonly AttendanceService _service;
+
+        public AttendanceController()
+        {
+            _service = new AttendanceService(UnitOfWork);
+        }
+        
         [HttpGet]
         [RequiresPermission("TakeRegister")]
         [Route("marks/takeRegister/{weekId:int}/{sessionId:int}", Name = "ApiAttendanceLoadRegister")]
         public async Task<IEnumerable<StudentAttendanceMarkCollection>> LoadRegister([FromUri] int weekId, [FromUri] int sessionId)
         {
-            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(User);
-
             try
             {
-                using (var service = new AttendanceService(UnitOfWork))
-                {
-                    return await service.GetRegisterMarks( weekId, sessionId);
-                }
+                var registerMarks = await _service.GetRegisterMarks(weekId, sessionId);
+
+                return registerMarks;
             }
             catch (Exception e)
             {
@@ -43,15 +49,10 @@ namespace MyPortal.Controllers.Api
         public async Task<IHttpActionResult> LoadRegisterDataGrid([FromBody] DataManagerRequest dm, [FromUri] int weekId,
             [FromUri] int sessionId)
         {
-            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(UnitOfWork, User);
-
             try
             {
-                using (var service = new AttendanceService(UnitOfWork))
-                {
-                    var marks = await service.GetRegisterMarks(weekId, sessionId);
-                    return PrepareDataGridObject(marks, dm);
-                }
+                var marks = await _service.GetRegisterMarks(weekId, sessionId);
+                return PrepareDataGridObject(marks, dm);
             }
             catch (Exception e)
             {
@@ -68,10 +69,7 @@ namespace MyPortal.Controllers.Api
             {
                 try
                 {
-                    using (var service = new AttendanceService(UnitOfWork))
-                    {
-                        await service.SaveRegisterMarks(register.Changed);
-                    }
+                    await _service.SaveRegisterMarks(register.Changed);
                 }
                 catch (Exception e)
                 {
@@ -87,15 +85,17 @@ namespace MyPortal.Controllers.Api
         [Route("summary/raw/{studentId:int}", Name = "ApiAttendanceGetRawAttendanceSummary")]
         public async Task<AttendanceSummary> GetRawAttendanceSummary([FromUri] int studentId)
         {
-            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(UnitOfWork, User);
-            
             await AuthenticateStudentRequest(studentId);
 
             try
             {
-                using (var service = new AttendanceService(UnitOfWork))
+                using (var curriculumService = new CurriculumService(UnitOfWork))
                 {
-                    return await service.GetSummary(studentId, academicYearId);
+                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
+                    
+                    var summary = await _service.GetSummary(studentId, academicYearId);
+
+                    return summary;
                 }
             }
             catch (Exception e)
@@ -109,15 +109,17 @@ namespace MyPortal.Controllers.Api
         [Route("summary/percent/{studentId:int}", Name = "ApiAttendanceGetPercentageAttendanceSummary")]
         public async Task<AttendanceSummary> GetPercentageAttendanceSummary([FromUri] int studentId)
         {
-            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(UnitOfWork, User);
-            
             await AuthenticateStudentRequest(studentId);
-
+            
             try
             {
-                using (var service = new AttendanceService(UnitOfWork))
+                using (var curriculumService = new CurriculumService(UnitOfWork))
                 {
-                    return await service.GetSummary(studentId, academicYearId, true);
+                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
+
+                    var summary = await _service.GetSummary(studentId, academicYearId, true);
+
+                    return summary;
                 }
             }
             catch (Exception e)
@@ -132,10 +134,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var service = new AttendanceService(UnitOfWork))
-                {
-                    return await service.GetAllPeriods();
-                }
+                var periods = await _service.GetAllPeriods();
+
+                return periods.Select(Mapper.Map<AttendancePeriod, AttendancePeriodDto>);
             }
             catch (Exception e)
             {
@@ -149,10 +150,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var service = new AttendanceService(UnitOfWork))
-                {
-                    return await service.GetPeriodById(periodId);
-                }
+                var period = await _service.GetPeriodById(periodId);
+
+                return Mapper.Map<AttendancePeriod, AttendancePeriodDto>(period);
             }
             catch (Exception e)
             {
@@ -167,10 +167,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var service = new AttendanceService(UnitOfWork))
-                {
-                    await service.CreateAttendanceWeeksForAcademicYear(academicYearId);
-                }
+                await _service.CreateAttendanceWeeksForAcademicYear(academicYearId);
             }
             catch (Exception e)
             {
@@ -184,19 +181,21 @@ namespace MyPortal.Controllers.Api
         [Route("weeks/get/byDate/{date:datetime}", Name = "ApiAttendanceGetWeekByDate")]
         public async Task<AttendanceWeekDto> GetWeekByDate([FromUri] DateTime date)
         {
-             var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(UnitOfWork, User);
+            try
+            {
+                using (var curriculumService = new CurriculumService(UnitOfWork))
+                {
+                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
 
-             try
-             {
-                 using (var service = new AttendanceService(UnitOfWork))
-                 {
-                     return await service.GetWeekByDate(academicYearId, date);
-                 }
-             }
-             catch (Exception e)
-             {
-                 throw GetException(e);
-             }
+                    var week = await _service.GetWeekByDate(academicYearId, date);
+
+                    return Mapper.Map<AttendanceWeek, AttendanceWeekDto>(week);
+                }
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
     }
 }

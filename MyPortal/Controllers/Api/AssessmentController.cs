@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web.Http;
+using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Attributes;
+using MyPortal.Attributes.HttpAuthorise;
+using MyPortal.Dtos.GridDtos;
 using MyPortal.Models.Database;
 using MyPortal.Persistence;
 using MyPortal.Services;
@@ -17,6 +21,13 @@ namespace MyPortal.Controllers.Api
     [RoutePrefix("api/assessment")]
     public class AssessmentController : MyPortalApiController
     {
+        private readonly AssessmentService _service;
+
+        public AssessmentController()
+        {
+            _service = new AssessmentService(UnitOfWork);
+        }
+
         [HttpPost]
         [RequiresPermission("EditResults")]
         [Route("results/create", Name = "ApiAssessmentCreateResult")]
@@ -24,10 +35,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var service = new AssessmentService(UnitOfWork))
-                {
-                    await service.CreateResult(result);
-                }
+                await _service.CreateResult(result);
             }
             catch (Exception e)
             {
@@ -44,10 +52,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var service = new AssessmentService(UnitOfWork))
-                {
-                    return await service.GetResultsByStudentDto(studentId, resultSetId);
-                }
+                var results = await _service.GetResultsByStudent(studentId, resultSetId);
+
+                return results.Select(Mapper.Map<AssessmentResult, AssessmentResultDto>);
             }
             catch (Exception e)
             {
@@ -63,11 +70,11 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var service = new AssessmentService(UnitOfWork))
-                {
-                    var results = await service.GetResultsByStudentDataGrid(studentId, resultSetId);
-                    return PrepareDataGridObject(results, dm);
-                }
+                var results = await _service.GetResultsByStudent(studentId, resultSetId);
+
+                var list = results.Select(Mapper.Map<AssessmentResult, GridAssessmentResultDto>);
+
+                return PrepareDataGridObject(list, dm);
             }
             catch (Exception e)
             {
@@ -82,10 +89,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var service = new AssessmentService(UnitOfWork))
-                {
-                    await service.CreateResultSet(resultSet);
-                }
+                await _service.CreateResultSet(resultSet);
             }
             catch (Exception e)
             {
@@ -102,10 +106,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var service = new AssessmentService(UnitOfWork))
-                {
-                    await service.DeleteResultSet(resultSetId);
-                }
+                await _service.DeleteResultSet(resultSetId);
             }
             catch (Exception e)
             {
@@ -122,10 +123,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var service = new AssessmentService(UnitOfWork))
-                {
-                    return await service.GetResultSetByIdDto(resultSetId);
-                }
+                var resultSet = await _service.GetResultSetById(resultSetId);
+
+                return Mapper.Map<AssessmentResultSet, AssessmentResultSetDto>(resultSet);
             }
             catch (Exception e)
             {
@@ -140,10 +140,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var service = new AssessmentService(UnitOfWork))
-                {
-                    return await service.GetAllResultSetsDto();
-                }
+                var resultSets = await _service.GetAllResultSets();
+
+                return resultSets.Select(Mapper.Map<AssessmentResultSet, AssessmentResultSetDto>);
             }
             catch (Exception e)
             {
@@ -158,7 +157,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await _service.GetResultSetsByStudent(studentId);
+                var resultSets = await _service.GetResultSetsByStudent(studentId);
+
+                return resultSets.Select(Mapper.Map<AssessmentResultSet, AssessmentResultSetDto>);
             }
             catch (Exception e)
             {
@@ -173,27 +174,15 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var resultSets = await _service.GetAllResultSetsDataGrid();
-                return PrepareDataGridObject(resultSets, dm);
+                var resultSets = await _service.GetAllResultSets();
+
+                var list = resultSets.Select(Mapper.Map<AssessmentResultSet, GridAssessmentResultSetDto>);
+                
+                return PrepareDataGridObject(list, dm);
             }
             catch (Exception e)
             {
                 return HandleException(e);
-            }
-        }
-
-        [HttpGet]
-        [RequiresPermission("EditResultSets")]
-        [Route("resultSets/hasResults/{resultSetId:int}", Name = "ApiAssessmentResultSetHasResults")]
-        public async Task<bool> ResultSetHasResults([FromUri] int resultSetId)
-        {
-            try
-            {
-                return await _service.ResultSetContainsResults(resultSetId);
-            }
-            catch (Exception e)
-            {
-                throw GetException(e);
             }
         }
 

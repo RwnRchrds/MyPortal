@@ -116,7 +116,7 @@ namespace MyPortal.Controllers.Api
             throw new HttpResponseException(HttpStatusCode.BadRequest);
         }
 
-        protected IHttpActionResult PrepareDataGridObject<T>(IEnumerable<T> list, DataManagerRequest dm)
+        protected IHttpActionResult PrepareDataGridObject(IEnumerable<IGridDto> list, DataManagerRequest dm)
         {
             var result = list.PerformDataOperations(dm);
 
@@ -127,7 +127,7 @@ namespace MyPortal.Controllers.Api
 
         protected async Task AuthenticateStudentRequest(int studentId)
         {
-            var userType = await User.GetUserType();
+            var userType = await User.GetUserTypeAsync();
             if (userType == UserType.Student)
             {
                 var userId = User.Identity.GetUserId();

@@ -1,6 +1,8 @@
+using MyPortal.Interfaces;
+
 namespace MyPortal.Dtos.GridDtos
 {
-    public class GridFinanceBasketItemDto
+    public class GridFinanceBasketItemDto : IGridDto
     {
         public int Id { get; set; }
 

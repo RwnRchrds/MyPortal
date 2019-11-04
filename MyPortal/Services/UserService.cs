@@ -1,60 +1,28 @@
 ﻿using System.Data.Entity;
+using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using MyPortal.Exceptions;
+using MyPortal.Interfaces;
 using MyPortal.Models;
 
 namespace MyPortal.Services
 {    
-    public static class UserService
+    public class UserService : IdentityService
     {
-        private static readonly IdentityContext _identity;
-        static UserService()
+        public UserService(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
-           _identity = new IdentityContext(); 
+            
         }
-
-        public static async Task ChangeSelectedAcademicYear(this IPrincipal user, int academicYearId)
+        
+        public async Task ChangeSelectedAcademicYear(string userId, int academicYearId)
         {
-            var applicationUser = await user.GetApplicationUser();
+            var user = await UserManager.FindByIdAsync(userId);
 
-            if (applicationUser == null)
-            {
-                throw new ProcessException(ExceptionType.NotFound, "User not found");
-            }
+            user.SelectedAcademicYearId = academicYearId;
 
-            applicationUser.SelectedAcademicYearId = academicYearId;
-
-            await _identity.SaveChangesAsync();
-        }
-
-        public static async Task<UserType> GetUserType(this IPrincipal user)
-        {
-            var applicationUser = await user.GetApplicationUser();
-
-            return applicationUser.UserType;
-        }
-
-        public static async Task<ApplicationUser> GetApplicationUser(this IPrincipal user)
-        {
-            var userId = user.Identity.GetUserId();
-            var applicationUser = await _identity.Users.SingleOrDefaultAsync(x => x.Id == userId);
-
-            return applicationUser;
-        }
-
-        public static async Task<int?> GetSelectedAcademicYearId(this IPrincipal user)
-        {
-            var userId = user.Identity.GetUserId();
-            var applicationUser = await _identity.Users.SingleOrDefaultAsync(x => x.Id == userId);
-
-            if (applicationUser == null)
-            {
-                throw new ProcessException(ExceptionType.NotFound, "User not found");
-            }
-
-            return applicationUser.SelectedAcademicYearId;
+            await UserManager.UpdateAsync(user);
         }
     }
 }
