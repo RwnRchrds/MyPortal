@@ -28,9 +28,9 @@ namespace MyPortal.Controllers.Api
             RoleManager = new RoleManager<ApplicationRole, string>(RoleStore);
         }
 
-        public MyPortalIdentityApiController(IUnitOfWork unitOfWork, IdentityContext identity) : base(unitOfWork)
+        public MyPortalIdentityApiController(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
-            Identity = identity;
+            Identity = new IdentityContext();
             Context = new MyPortalDbContext();
             UserStore = new UserStore<ApplicationUser, ApplicationRole, string, IdentityUserLogin, IdentityUserRole,
                 IdentityUserClaim>(Identity);

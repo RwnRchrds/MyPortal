@@ -27,7 +27,7 @@ namespace MyPortal.Services
             {
                 if (!ValidationService.ModelIsValid(bulletin))
                 {
-                    throw new ProcessException(ExceptionType.BadRequest, "Invalid data");
+                    throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
                 }
 
                 var author = await staffService.GetStaffMemberFromUserId(userId);
@@ -91,7 +91,7 @@ namespace MyPortal.Services
 
             if (bulletin == null)
             {
-                throw new ProcessException(ExceptionType.NotFound, "Bulletin not found");
+                throw new ServiceException(ExceptionType.NotFound, "Bulletin not found");
             }
 
             return bulletin;

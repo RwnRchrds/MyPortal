@@ -24,12 +24,12 @@ namespace MyPortal.Services
 
             if (!ValidationService.ModelIsValid(achievement))
             {
-                throw new ProcessException(ExceptionType.BadRequest,"Invalid data");
+                throw new ServiceException(ExceptionType.BadRequest,"Invalid data");
             }
 
             if (!await UnitOfWork.CurriculumAcademicYears.AnyAsync(x => x.Id == achievement.AcademicYearId))
             {
-                throw new ProcessException(ExceptionType.NotFound,"Academic year not found");
+                throw new ServiceException(ExceptionType.NotFound,"Academic year not found");
             }
 
             UnitOfWork.BehaviourAchievements.Add(achievement);
@@ -42,12 +42,12 @@ namespace MyPortal.Services
 
             if (!ValidationService.ModelIsValid(incident))
             {
-                throw new ProcessException(ExceptionType.BadRequest,"Invalid data");
+                throw new ServiceException(ExceptionType.BadRequest,"Invalid data");
             }
 
             if (!await UnitOfWork.CurriculumAcademicYears.AnyAsync(x => x.Id == incident.AcademicYearId))
             {
-                throw new ProcessException(ExceptionType.NotFound,"Academic year not found");
+                throw new ServiceException(ExceptionType.NotFound,"Academic year not found");
             }
 
             UnitOfWork.BehaviourIncidents.Add(incident);
@@ -80,7 +80,7 @@ namespace MyPortal.Services
 
             if (achievement == null)
             {
-                throw new ProcessException(ExceptionType.NotFound,"Achievement not found");
+                throw new ServiceException(ExceptionType.NotFound,"Achievement not found");
             }
 
             return achievement;
@@ -90,7 +90,7 @@ namespace MyPortal.Services
         {
             if (!await UnitOfWork.Students.AnyAsync(x => x.Id == studentId))
             {
-                throw new ProcessException(ExceptionType.NotFound,"Student not found");
+                throw new ServiceException(ExceptionType.NotFound,"Student not found");
             }
 
             var achievementCount =
@@ -98,7 +98,7 @@ namespace MyPortal.Services
 
             if (achievementCount < 0)
             {
-                throw new ProcessException(ExceptionType.BadRequest,"Cannot have negative achievement count");
+                throw new ServiceException(ExceptionType.BadRequest,"Cannot have negative achievement count");
             }
 
             return achievementCount;
@@ -108,7 +108,7 @@ namespace MyPortal.Services
         {
             if (!await UnitOfWork.Students.AnyAsync(x => x.Id == studentId))
             {
-                throw new ProcessException(ExceptionType.NotFound,"Student not found");
+                throw new ServiceException(ExceptionType.NotFound,"Student not found");
             }
 
             var points =
@@ -116,7 +116,7 @@ namespace MyPortal.Services
 
             if (points < 0)
             {
-                throw new ProcessException(ExceptionType.BadRequest,"Cannot have negative points count");
+                throw new ServiceException(ExceptionType.BadRequest,"Cannot have negative points count");
             }
 
             return points;
@@ -128,7 +128,7 @@ namespace MyPortal.Services
 
             if (incident == null)
             {
-                throw new ProcessException(ExceptionType.NotFound,"Incident not found");
+                throw new ServiceException(ExceptionType.NotFound,"Incident not found");
             }
 
             return incident;
@@ -138,7 +138,7 @@ namespace MyPortal.Services
         {
             if (! await UnitOfWork.Students.AnyAsync(x => x.Id == studentId))
             {
-                throw new ProcessException(ExceptionType.NotFound,"Student not found");
+                throw new ServiceException(ExceptionType.NotFound,"Student not found");
             }
 
             var negPoints =
@@ -146,7 +146,7 @@ namespace MyPortal.Services
 
             if (negPoints < 0)
             {
-                throw new ProcessException(ExceptionType.BadRequest,"Cannot have negative incident count");
+                throw new ServiceException(ExceptionType.BadRequest,"Cannot have negative incident count");
             }
 
             return negPoints;
@@ -156,7 +156,7 @@ namespace MyPortal.Services
         {
             if (!await UnitOfWork.Students.AnyAsync(x => x.Id == studentId))
             {
-                throw new ProcessException(ExceptionType.NotFound,"Student not found");
+                throw new ServiceException(ExceptionType.NotFound,"Student not found");
             }
 
             var points =
@@ -165,7 +165,7 @@ namespace MyPortal.Services
 
             if (points < 0)
             {
-                throw new ProcessException(ExceptionType.BadRequest,"Cannot have negative points count");
+                throw new ServiceException(ExceptionType.BadRequest,"Cannot have negative points count");
             }
 
             return points;
@@ -191,7 +191,7 @@ namespace MyPortal.Services
         {
             if (!await UnitOfWork.Students.AnyAsync(x => x.Id == studentId))
             {
-                throw new ProcessException(ExceptionType.NotFound,"Student not found");
+                throw new ServiceException(ExceptionType.NotFound,"Student not found");
             }
 
             var achievementPoints =

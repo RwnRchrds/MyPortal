@@ -22,7 +22,7 @@ namespace MyPortal.Services
         {
             if (!ValidationService.ModelIsValid(regGroup))
             {
-                throw new ProcessException(ExceptionType.BadRequest, "Invalid data");
+                throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
             }
 
             UnitOfWork.PastoralRegGroups.Add(regGroup);
@@ -33,7 +33,7 @@ namespace MyPortal.Services
         {
             if (!ValidationService.ModelIsValid(yearGroup))
             {
-                throw new ProcessException(ExceptionType.BadRequest, "Invalid data");
+                throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
             }
 
             UnitOfWork.PastoralYearGroups.Add(yearGroup);
@@ -76,7 +76,7 @@ namespace MyPortal.Services
 
             if (yearGroup == null)
             {
-                throw new ProcessException(ExceptionType.NotFound, "Year group not found");
+                throw new ServiceException(ExceptionType.NotFound, "Year group not found");
             }
 
             return yearGroup;
@@ -88,7 +88,7 @@ namespace MyPortal.Services
 
             if (regGroup == null)
             {
-                throw new ProcessException(ExceptionType.NotFound, "Reg group not found");
+                throw new ServiceException(ExceptionType.NotFound, "Reg group not found");
             }
 
             return regGroup;

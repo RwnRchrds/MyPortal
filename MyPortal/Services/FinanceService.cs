@@ -32,7 +32,7 @@ namespace MyPortal.Services
 
                 if (product == null)
                 {
-                    throw new ProcessException(ExceptionType.NotFound, "Product not found");
+                    throw new ServiceException(ExceptionType.NotFound, "Product not found");
                 }
 
                 if (product.Type.IsMeal && student.FreeSchoolMeals)
@@ -54,12 +54,12 @@ namespace MyPortal.Services
 
                 if (!basket.Any())
                 {
-                    throw new ProcessException(ExceptionType.BadRequest, "There are no items in your basket");
+                    throw new ServiceException(ExceptionType.BadRequest, "There are no items in your basket");
                 }
 
                 if (basket.Sum(x => x.Product.Price) > student.AccountBalance)
                 {
-                    throw new ProcessException(ExceptionType.Forbidden, "Insufficient funds");
+                    throw new ServiceException(ExceptionType.Forbidden, "Insufficient funds");
                 }
 
                 //Process sales for each item
@@ -89,18 +89,18 @@ namespace MyPortal.Services
 
                 if (product == null)
                 {
-                    throw new ProcessException(ExceptionType.NotFound, "Product not found");
+                    throw new ServiceException(ExceptionType.NotFound, "Product not found");
                 }
 
                 if (!product.Visible)
                 {
-                    throw new ProcessException(ExceptionType.Forbidden, "Product not available");
+                    throw new ServiceException(ExceptionType.Forbidden, "Product not available");
                 }
 
                 if ((student.FinanceBasketItems.Any(x => x.ProductId == basketItem.ProductId) ||
                      student.FinanceSales.Any(x => x.ProductId == basketItem.ProductId)) && product.OnceOnly)
                 {
-                    throw new ProcessException(ExceptionType.Forbidden, "This product cannot be purchased more than once");
+                    throw new ServiceException(ExceptionType.Forbidden, "This product cannot be purchased more than once");
                 }
 
                 UnitOfWork.FinanceBasketItems.Add(basketItem);
@@ -112,7 +112,7 @@ namespace MyPortal.Services
         {
             if (!ValidationService.ModelIsValid(product))
             {
-                throw new ProcessException(ExceptionType.BadRequest, "Invalid data");
+                throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
             }
 
             UnitOfWork.FinanceProducts.Add(product);
@@ -131,7 +131,7 @@ namespace MyPortal.Services
 
                 if (product == null)
                 {
-                    throw new ProcessException(ExceptionType.NotFound, "Product not found");
+                    throw new ServiceException(ExceptionType.NotFound, "Product not found");
                 }
 
                 if (product.Type.IsMeal)
@@ -233,7 +233,7 @@ namespace MyPortal.Services
 
             if (item == null)
             {
-                throw new ProcessException(ExceptionType.NotFound, "Item not found");
+                throw new ServiceException(ExceptionType.NotFound, "Item not found");
             }
 
             return item;
@@ -255,12 +255,12 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<FinanceSale>> GetPendingSales(int academicYearId)
         {
-            return await UnitOfWork.FinanceSales.GetPending(TODO);
+            return await UnitOfWork.FinanceSales.GetPending(academicYearId);
         }
 
         public async Task<IEnumerable<FinanceSale>> GetProcessedSales(int academicYearId)
         {
-            return await UnitOfWork.FinanceSales.GetProcessed(TODO);
+            return await UnitOfWork.FinanceSales.GetProcessed(academicYearId);
         }
 
         public async Task<FinanceProduct> GetProductById(int productId)
@@ -269,7 +269,7 @@ namespace MyPortal.Services
 
             if (product == null)
             {
-                throw new ProcessException(ExceptionType.NotFound, "Product not found");
+                throw new ServiceException(ExceptionType.NotFound, "Product not found");
             }
 
             return product;
@@ -281,7 +281,7 @@ namespace MyPortal.Services
 
             if (sale == null)
             {
-                throw new ProcessException(ExceptionType.NotFound, "Sale not found");
+                throw new ServiceException(ExceptionType.NotFound, "Sale not found");
             }
 
             return sale;
@@ -322,7 +322,7 @@ namespace MyPortal.Services
             {
                 if (transaction.Amount <= 0)
                 {
-                    throw new ProcessException(ExceptionType.BadRequest, "Amount cannot be negative");
+                    throw new ServiceException(ExceptionType.BadRequest, "Amount cannot be negative");
                 }
 
                 var studentInDb = await studentService.GetStudentById(transaction.StudentId);
@@ -367,7 +367,7 @@ namespace MyPortal.Services
 
             if (saleInDb.Processed)
             {
-                throw new ProcessException(ExceptionType.BadRequest, "Sale already processed");
+                throw new ServiceException(ExceptionType.BadRequest, "Sale already processed");
             }
 
             saleInDb.Processed = true;

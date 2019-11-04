@@ -70,6 +70,8 @@ namespace MyPortal.Controllers.Api
             {
                 return HandleException(e);
             }
+
+            return Ok("Email address deleted");
         }
     }
 }

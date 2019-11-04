@@ -12,6 +12,8 @@ using MyPortal.Dtos.Identity;
 using MyPortal.Models;
 using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
+using MyPortal.Dtos.GridDtos;
+using MyPortal.Interfaces;
 using MyPortal.Models.Misc;
 using MyPortal.Services;
 using MyPortal.ViewModels;
@@ -21,8 +23,15 @@ namespace MyPortal.Controllers.Api
 {
     [RoutePrefix("api/admin")]
     [Authorize]
-    public class AdminController : MyPortalIdentityApiController
+    public class AdminController : MyPortalApiController
     {
+        private readonly AdminService _service;
+
+        public AdminController(IUnitOfWork unitOfWork) : base(unitOfWork)
+        {
+
+        }
+
         [HttpPost]
         [RequiresPermission("EditUsers")]
         [Route("users/addToRole", Name = "ApiAdminAddUserToRole")]
@@ -30,7 +39,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await AdminService.AddUserToRole(roleModel, UserManager, RoleManager);
+                await _service.AddUserToRole(roleModel);
             }
             catch (Exception e)
             {
@@ -47,7 +56,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await AdminService.AttachPersonToUser(userProfile, UserManager, Identity, Context);
+                await _service.AttachPersonToUser(userProfile);
             }
             catch (Exception e)
             {
@@ -64,7 +73,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await AdminService.ChangePassword(data, UserManager);
+                await _service.ChangePassword(data);
             }
             catch (Exception e)
             {
@@ -81,7 +90,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await AdminService.DeleteUser(userId, UserManager);
+                await _service.DeleteUser(userId);
             }
             catch (Exception e)
             {
@@ -98,7 +107,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await AdminService.DetachPerson(user, UserManager, Context);
+                await _service.DetachPerson(user);
             }
             catch (Exception e)
             {
@@ -115,7 +124,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await AdminService.GetAllUsers(Identity);
+                var users = await _service.GetAllUsers();
+
+                return users.Select(Mapper.Map<ApplicationUser, ApplicationUserDto>);
             }
             catch (Exception e)
             {
@@ -130,8 +141,11 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var users = await AdminService.GetAllUsersDataGrid(Identity);
-                return PrepareDataGridObject(users, dm);
+                var users = await _service.GetAllUsers();
+
+                var list = users.Select(Mapper.Map<ApplicationUser, GridApplicationUserDto>);
+
+                return PrepareDataGridObject(list, dm);
             }
             catch (Exception e)
             {
@@ -146,7 +160,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await AdminService.CreateUser(model, UserManager);
+                await _service.CreateUser(model);
             }
             catch (Exception e)
             {
@@ -163,7 +177,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await AdminService.RemoveFromRole(roleModel.UserId, roleModel.RoleName, UserManager, Identity);
+                await _service.RemoveFromRole(roleModel.UserId, roleModel.RoleName);
             }
             catch (Exception e)
             {
@@ -180,7 +194,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await AdminService.CreateRole(role, RoleManager);
+                await _service.CreateRole(role);
             }
             catch (Exception e)
             {
@@ -197,7 +211,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await AdminService.UpdateRole(role, RoleManager);
+                await _service.UpdateRole(role);
             }
             catch (Exception e)
             {
@@ -214,7 +228,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await AdminService.DeleteRole(roleId, RoleManager);
+                await _service.DeleteRole(roleId);
             }
             catch (Exception e)
             {
@@ -231,7 +245,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await AdminService.GetRoleById(roleId, RoleManager);
+                var role = await _service.GetRoleById(roleId);
+
+                return Mapper.Map<ApplicationRole, ApplicationRoleDto>(role);
             }
             catch (Exception e)
             {
@@ -246,7 +262,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await AdminService.GetAllRoles(Identity);
+                var roles = await _service.GetAllRoles();
+
+                return roles.Select(Mapper.Map<ApplicationRole, ApplicationRoleDto>);
             }
             catch (Exception e)
             {
@@ -261,7 +279,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await AdminService.GetRolesByUser(userId, RoleManager);
+                var roles = await _service.GetRolesByUser(userId);
+
+                return roles.Select(Mapper.Map<ApplicationRole, ApplicationRoleDto>);
             }
             catch (Exception e)
             {
@@ -277,8 +297,11 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var roles = await AdminService.GetRolesByUser(userId, RoleManager);
-                return PrepareDataGridObject(roles, dm);
+                var roles = await _service.GetRolesByUser(userId);
+
+                var list = roles.Select(Mapper.Map<ApplicationRole, ApplicationRoleDto>);
+
+                return PrepareDataGridObject(list, dm);
             }
             catch (Exception e)
             {
@@ -293,8 +316,11 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var roles = await AdminService.GetAllRoles(Identity);
-                return PrepareDataGridObject(roles, dm);
+                var roles = await _service.GetAllRoles();
+
+                var list = roles.Select(Mapper.Map<ApplicationRole, ApplicationRoleDto>);
+
+                return PrepareDataGridObject(list, dm);
             }
             catch (Exception e)
             {
@@ -309,7 +335,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await AdminService.ToggleRolePermission(rolePermission, RoleManager, Identity);
+                await _service.ToggleRolePermission(rolePermission);
             }
             catch (Exception e)
             {
@@ -326,7 +352,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await AdminService.GetPermissionsByRole(roleId, RoleManager, Identity);
+                return await _service.GetPermissionsByRole(roleId);
             }
             catch (Exception e)
             {
@@ -341,7 +367,8 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var permissions = await AdminService.GetPermissionsByRole(roleId, RoleManager, Identity);
+                var permissions = await _service.GetPermissionsByRole(roleId);
+
                 return PrepareDataGridObject(permissions, dm);
             }
             catch (Exception e)

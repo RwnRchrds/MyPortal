@@ -23,7 +23,7 @@ namespace MyPortal.Services
         {
             if (!ValidationService.ModelIsValid(student))
             {
-                throw new ProcessException(ExceptionType.BadRequest, "Invalid data");
+                throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
             }
 
             UnitOfWork.Students.Add(student);
@@ -37,7 +37,7 @@ namespace MyPortal.Services
 
             if (studentInDb == null)
             {
-                throw new ProcessException(ExceptionType.NotFound, "Student not found");
+                throw new ServiceException(ExceptionType.NotFound, "Student not found");
             }
 
             studentInDb.Deleted = true;
@@ -58,7 +58,7 @@ namespace MyPortal.Services
 
             if (student == null)
             {
-                throw new ProcessException(ExceptionType.NotFound, "Student not found");
+                throw new ServiceException(ExceptionType.NotFound, "Student not found");
             }
 
             return student;
@@ -77,7 +77,7 @@ namespace MyPortal.Services
 
             if (student == null)
             {
-                throw new ProcessException(ExceptionType.NotFound, "Student not found");
+                throw new ServiceException(ExceptionType.NotFound, "Student not found");
             }
 
             return student;
@@ -100,7 +100,7 @@ namespace MyPortal.Services
         {
             if (!ValidationService.ModelIsValid(student))
             {
-                throw new ProcessException(ExceptionType.BadRequest, "Invalid data");
+                throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
             }
 
             var studentInDb = await GetStudentById(student.Id);

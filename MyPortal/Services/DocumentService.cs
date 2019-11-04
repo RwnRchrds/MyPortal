@@ -28,7 +28,7 @@ namespace MyPortal.Services
 
                 if (uploader == null)
                 {
-                    throw new ProcessException(ExceptionType.NotFound,"Uploader not found");
+                    throw new ServiceException(ExceptionType.NotFound,"Uploader not found");
                 }
 
                 document.UploaderId = uploader.Id;
@@ -36,7 +36,7 @@ namespace MyPortal.Services
 
             else if (document.UploaderId != 0 && ! await UnitOfWork.StaffMembers.AnyAsync(x => x.Id == document.UploaderId))
             {
-                throw new ProcessException(ExceptionType.NotFound,"Uploader not found");
+                throw new ServiceException(ExceptionType.NotFound,"Uploader not found");
             }
 
             document.IsGeneral = true;
@@ -52,14 +52,14 @@ namespace MyPortal.Services
         {
             if (!await UnitOfWork.People.AnyAsync(x => x.Id == document.PersonId))
             {
-                throw new ProcessException(ExceptionType.NotFound,"Person not found");
+                throw new ServiceException(ExceptionType.NotFound,"Person not found");
             }
 
             var uploader = await UnitOfWork.StaffMembers.GetByUserIdAsync(userId);
 
             if (uploader == null)
             {
-                throw new ProcessException(ExceptionType.NotFound,"Staff member not found");
+                throw new ServiceException(ExceptionType.NotFound,"Staff member not found");
             }
 
             document.Document.IsGeneral = false;
@@ -84,7 +84,7 @@ namespace MyPortal.Services
 
             if (documentInDb == null)
             {
-                throw new ProcessException(ExceptionType.NotFound,"Document not found");
+                throw new ServiceException(ExceptionType.NotFound,"Document not found");
             }
 
             documentInDb.Deleted = true;
@@ -98,14 +98,14 @@ namespace MyPortal.Services
 
             if (staffDocument == null)
             {
-                throw new ProcessException(ExceptionType.NotFound,"Document not found");
+                throw new ServiceException(ExceptionType.NotFound,"Document not found");
             }
 
             var attachedDocument = staffDocument.Document;
 
             if (attachedDocument == null)
             {
-                throw new ProcessException(ExceptionType.NotFound,"Document not found");
+                throw new ServiceException(ExceptionType.NotFound,"Document not found");
             }
 
             UnitOfWork.PersonDocuments.Remove(staffDocument);
@@ -131,7 +131,7 @@ namespace MyPortal.Services
 
             if (document == null)
             {
-                throw new ProcessException(ExceptionType.NotFound, "Document not found");
+                throw new ServiceException(ExceptionType.NotFound, "Document not found");
             }
 
             return document;
@@ -143,7 +143,7 @@ namespace MyPortal.Services
 
             if (document == null)
             {
-                throw new ProcessException(ExceptionType.NotFound, "Document not found");
+                throw new ServiceException(ExceptionType.NotFound, "Document not found");
             }
 
             return document;

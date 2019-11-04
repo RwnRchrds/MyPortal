@@ -25,7 +25,7 @@ namespace MyPortal.Services
         {
             if (!ValidationService.ModelIsValid(course))
             {
-                throw new ProcessException(ExceptionType.BadRequest, "Invalid data");
+                throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
             }
 
             UnitOfWork.PersonnelTrainingCourses.Add(course);
@@ -39,12 +39,12 @@ namespace MyPortal.Services
 
             if (!await UnitOfWork.StaffMembers.AnyAsync(x => x.Id == observation.ObserveeId))
             {
-                throw new ProcessException(ExceptionType.NotFound, "Observee not found");
+                throw new ServiceException(ExceptionType.NotFound, "Observee not found");
             }
 
             if (!await UnitOfWork.StaffMembers.AnyAsync(x => x.Id == observation.ObserverId))
             {
-                throw new ProcessException(ExceptionType.NotFound, "Observer not found");
+                throw new ServiceException(ExceptionType.NotFound, "Observer not found");
             }
 
             UnitOfWork.PersonnelObservations.Add(observation);
@@ -56,7 +56,7 @@ namespace MyPortal.Services
         {
             if (!ValidationService.ModelIsValid(certificate))
             {
-                throw new ProcessException(ExceptionType.BadRequest, "Invalid data");
+                throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
             }
 
             UnitOfWork.PersonnelTrainingCertificates.Add(certificate);
@@ -69,7 +69,7 @@ namespace MyPortal.Services
 
             if (courseInDb.Certificates.Any())
             {
-                throw new ProcessException(ExceptionType.Forbidden, "Cannot delete a course with issued certificates");
+                throw new ServiceException(ExceptionType.Forbidden, "Cannot delete a course with issued certificates");
             }
 
             UnitOfWork.PersonnelTrainingCourses.Remove(courseInDb);
@@ -104,7 +104,7 @@ namespace MyPortal.Services
 
             if (certInDb == null)
             {
-                throw new ProcessException(ExceptionType.NotFound, "Certificate not found");
+                throw new ServiceException(ExceptionType.NotFound, "Certificate not found");
             }
 
             return certInDb;
@@ -124,7 +124,7 @@ namespace MyPortal.Services
 
             if (courseInDb == null)
             {
-                throw new ProcessException(ExceptionType.NotFound, "Course not found");
+                throw new ServiceException(ExceptionType.NotFound, "Course not found");
             }
 
             return courseInDb;
@@ -136,7 +136,7 @@ namespace MyPortal.Services
 
             if (observation == null)
             {
-                throw new ProcessException(ExceptionType.NotFound, "Observation not found");
+                throw new ServiceException(ExceptionType.NotFound, "Observation not found");
             }
 
             return observation;
@@ -158,7 +158,7 @@ namespace MyPortal.Services
 
             if (certInDb.Status == CertificateStatus.Completed)
             {
-                throw new ProcessException(ExceptionType.Forbidden, "Cannot modify a completed certificate");
+                throw new ServiceException(ExceptionType.Forbidden, "Cannot modify a completed certificate");
             }
 
             certInDb.Status = certificate.Status;

@@ -75,7 +75,7 @@ namespace MyPortal.Services
 
             if (week == null)
             {
-                throw new ProcessException(ExceptionType.NotFound, "Attendance week not found");
+                throw new ServiceException(ExceptionType.NotFound, "Attendance week not found");
             }
 
             return week;
@@ -87,7 +87,7 @@ namespace MyPortal.Services
 
             if (codeInDb == null)
             {
-                throw new ProcessException(ExceptionType.NotFound, "Attendance code not found");
+                throw new ServiceException(ExceptionType.NotFound, "Attendance code not found");
             }
 
             return codeInDb;
@@ -106,7 +106,7 @@ namespace MyPortal.Services
 
             if (period == null)
             {
-                throw new ProcessException(ExceptionType.NotFound,"Period not found");
+                throw new ServiceException(ExceptionType.NotFound,"Period not found");
             }
 
             return period;
@@ -127,14 +127,14 @@ namespace MyPortal.Services
 
             if (!await UnitOfWork.AttendanceWeeks.AnyAsync(x => x.Id == weekId))
             {
-                throw new ProcessException(ExceptionType.NotFound,"Attendance week not found");
+                throw new ServiceException(ExceptionType.NotFound,"Attendance week not found");
             }
 
             var session = await UnitOfWork.CurriculumSessions.GetByIdAsync(sessionId);
 
             if (session == null)
             {
-                throw new ProcessException(ExceptionType.NotFound,"Session not found");
+                throw new ServiceException(ExceptionType.NotFound,"Session not found");
             }
 
             var markList = new List<StudentAttendanceMarkCollection>();
@@ -219,7 +219,7 @@ namespace MyPortal.Services
 
             if (selectedWeek == null)
             {
-               throw new ProcessException(ExceptionType.NotFound,"Attendance week not found");
+               throw new ServiceException(ExceptionType.NotFound,"Attendance week not found");
             }
 
             return selectedWeek;
@@ -267,7 +267,7 @@ namespace MyPortal.Services
 
                         if (markInDb == null)
                         {
-                            throw new ProcessException(ExceptionType.NotFound,"Attendance mark not found");
+                            throw new ServiceException(ExceptionType.NotFound,"Attendance mark not found");
                         }
 
                         markInDb.Mark = mark.Mark;
@@ -282,7 +282,7 @@ namespace MyPortal.Services
         {
             if (!await UnitOfWork.CurriculumClasses.AnyAsync(x => x.Id == classId))
             {
-                throw new ProcessException(ExceptionType.NotFound,"Class not found");
+                throw new ServiceException(ExceptionType.NotFound,"Class not found");
             }
 
             return await UnitOfWork.AttendancePeriods.GetPeriodsByClass(classId);

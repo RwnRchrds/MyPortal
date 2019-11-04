@@ -57,7 +57,7 @@ namespace MyPortal.Controllers.Api
         {
             var statusCode = HttpStatusCode.BadRequest;
 
-            if (ex is ProcessException e)
+            if (ex is ServiceException e)
             {
                 switch (e.ExceptionType)
                 {
@@ -80,7 +80,7 @@ namespace MyPortal.Controllers.Api
         {
             var statusCode = HttpStatusCode.BadRequest;
 
-            if (ex is ProcessException e)
+            if (ex is ServiceException e)
             {
                 switch (e.ExceptionType)
                 {

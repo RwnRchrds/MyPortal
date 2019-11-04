@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
+using MyPortal.Dtos.GridDtos;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
 using MyPortal.Services;
@@ -65,7 +66,11 @@ namespace MyPortal.Controllers.Api
         [Route("academicYears/select", Name = "ApiCurriculumChangeSelectedAcademicYear")]
         public async Task<IHttpActionResult> ChangeSelectedAcademicYear([FromBody] CurriculumAcademicYear year)
         {
-            await User.ChangeSelectedAcademicYear(year.Id);
+            using (var userService = new UserService(UnitOfWork))
+            {
+                var userId = User.Identity.GetUserId();
+                await userService.ChangeSelectedAcademicYear(userId, year.Id);
+            }
             
             return Ok("Selected academic year changed");
         }
@@ -75,11 +80,13 @@ namespace MyPortal.Controllers.Api
         [Route("sessions/get/byTeacherAndDate/{teacherId:int}/{date:datetime}", Name = "ApiCurriculumGetSessionsByTeacherAndDate")]
         public async Task<IEnumerable<CurriculumSessionDto>> GetSessionsByTeacherOnDayOfWeek([FromUri] int teacherId, [FromUri] DateTime date)
         {
-            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
-
             try
             {
-                return await CurriculumService.GetSessionsByDateDto(teacherId, academicYearId, date, _context);
+                var academicYearId = await _service.GetCurrentOrSelectedAcademicYearId(User);
+
+                var sessions = await _service.GetSessionsByDate(teacherId, academicYearId, date);
+
+                return sessions.Select(Mapper.Map<CurriculumSession, CurriculumSessionDto>);
             }
             catch (Exception e)
             {
@@ -93,15 +100,15 @@ namespace MyPortal.Controllers.Api
         public async Task<IHttpActionResult> GetSessionsByTeacherDataGrid([FromUri] int teacherId, [FromUri] DateTime date,
             [FromBody] DataManagerRequest dm)
         {
-            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
-
             try
             {
-                var sessions =
-                    await CurriculumService.GetSessionsByDateDto(teacherId, academicYearId, date,
-                        _context);
+                var academicYearId = await _service.GetCurrentOrSelectedAcademicYearId(User);
 
-                return PrepareDataGridObject(sessions, dm);
+                var sessions = await _service.GetSessionsByDate(teacherId, academicYearId, date);
+
+                var list = sessions.Select(Mapper.Map<CurriculumSession, GridCurriculumSessionDto>);
+
+                return PrepareDataGridObject(list, dm);
             }
             catch (Exception e)
             {

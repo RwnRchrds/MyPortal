@@ -19,7 +19,7 @@ namespace MyPortal.Services
         {
             if (!ValidationService.ModelIsValid(result))
             {
-                throw new ProcessException(ExceptionType.BadRequest, "Invalid data");
+                throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
             }
 
             UnitOfWork.AssessmentResults.Add(result);
@@ -30,7 +30,7 @@ namespace MyPortal.Services
         {
             if (!ValidationService.ModelIsValid(resultSet))
             {
-                throw new ProcessException(ExceptionType.BadRequest,"Invalid data");
+                throw new ServiceException(ExceptionType.BadRequest,"Invalid data");
             }
 
             var currentRsExists = await UnitOfWork.AssessmentResultSets.AnyAsync(x => x.IsCurrent);
@@ -50,7 +50,7 @@ namespace MyPortal.Services
 
             if (resultSet.IsCurrent)
             {
-                throw new ProcessException(ExceptionType.BadRequest,"Result set is marked as current");
+                throw new ServiceException(ExceptionType.BadRequest,"Result set is marked as current");
             }
 
             UnitOfWork.AssessmentResultSets.Remove(resultSet);
@@ -82,7 +82,7 @@ namespace MyPortal.Services
 
             if (resultSet == null)
             {
-                throw new ProcessException(ExceptionType.NotFound,"Result set not found");
+                throw new ServiceException(ExceptionType.NotFound,"Result set not found");
             }
 
             return resultSet;
@@ -101,7 +101,7 @@ namespace MyPortal.Services
 
             if (resultSet.IsCurrent)
             {
-                throw new ProcessException(ExceptionType.BadRequest,"Result set is already marked as current");
+                throw new ServiceException(ExceptionType.BadRequest,"Result set is already marked as current");
             }
 
             var currentResultSet = await UnitOfWork.AssessmentResultSets.GetCurrent();

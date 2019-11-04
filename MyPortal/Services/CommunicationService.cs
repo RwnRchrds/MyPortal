@@ -19,7 +19,7 @@ namespace MyPortal.Services
         {
             if (!ValidationService.ModelIsValid(emailAddress))
             {
-                throw new ProcessException(ExceptionType.BadRequest, "Invalid data");
+                throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
             }
 
             UnitOfWork.CommunicationEmailAddresses.Add(emailAddress);
@@ -33,7 +33,7 @@ namespace MyPortal.Services
 
             if (emailInDb == null)
             {
-                throw new ProcessException(ExceptionType.NotFound, "Email address not found");
+                throw new ServiceException(ExceptionType.NotFound, "Email address not found");
             }
 
             emailInDb.Address = emailAddress.Address;
@@ -50,7 +50,7 @@ namespace MyPortal.Services
 
             if (emailInDb == null)
             {
-                throw new ProcessException(ExceptionType.NotFound, "Email address not found");
+                throw new ServiceException(ExceptionType.NotFound, "Email address not found");
             }
 
             UnitOfWork.CommunicationEmailAddresses.Remove(emailInDb);
@@ -64,7 +64,7 @@ namespace MyPortal.Services
 
             if (emailInDb == null)
             {
-                throw new ProcessException(ExceptionType.NotFound, "Email address not found");
+                throw new ServiceException(ExceptionType.NotFound, "Email address not found");
             }
 
             return emailInDb;

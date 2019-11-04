@@ -23,7 +23,7 @@ namespace MyPortal.Services
         {
             if (!ValidationService.ModelIsValid(staffMember))
             {
-                throw new ProcessException(ExceptionType.BadRequest, "Invalid data");
+                throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
             }
 
             UnitOfWork.StaffMembers.Add(staffMember);
@@ -37,12 +37,12 @@ namespace MyPortal.Services
 
             if (staffInDb == null)
             {
-                throw new ProcessException(ExceptionType.NotFound, "Staff member not found");
+                throw new ServiceException(ExceptionType.NotFound, "Staff member not found");
             }
 
             if (staffInDb.Person.UserId == userId)
             {
-                throw new ProcessException(ExceptionType.Forbidden, "Cannot delete yourself");
+                throw new ServiceException(ExceptionType.Forbidden, "Cannot delete yourself");
             }
 
             staffInDb.Deleted = true;
@@ -71,7 +71,7 @@ namespace MyPortal.Services
 
             if (staff == null)
             {
-                throw new ProcessException(ExceptionType.NotFound, "Staff member not found");
+                throw new ServiceException(ExceptionType.NotFound, "Staff member not found");
             }
 
             return staff;
@@ -91,7 +91,7 @@ namespace MyPortal.Services
 
             if (staffInDb == null)
             {
-                throw new ProcessException(ExceptionType.NotFound, "Staff member not found");
+                throw new ServiceException(ExceptionType.NotFound, "Staff member not found");
             }
 
             staffInDb.Person.FirstName = staffMember.Person.FirstName;

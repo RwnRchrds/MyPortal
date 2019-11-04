@@ -1,0 +1,257 @@
+﻿@using MyPortal.Services
+@model MyPortal.ViewModels.ResultSetsViewModel
+@{
+    ViewBag.Title = "Result Sets";
+    ViewBag.DisplayTitle = "Result Sets";
+    Layout = "~/Views/Portal/_LayoutStaff.cshtml";
+}
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Result Sets</h1>
+</div>
+
+@if (User.HasPermission("EditResultSets"))
+{
+    <div class="row">
+
+        <div class="col-xl-12 col-md-12 mb-4">
+
+            <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" data-target="#NewResultSetModal">New Result Set</button>
+
+        </div>
+
+    </div>
+}
+
+
+<div class="row">
+    
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Result Sets</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                @Html.EJS().Grid("ResultSets").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiAssessmentGetAllResultSetsDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+                {
+                    c.Field("Name").HeaderText("Name").Template("#resultSetsNameTemplate").Width("150").Add();
+                    c.HeaderText("Status").Template("#resultSetsStatusTemplate").Width("150").Add();
+                    c.HeaderText("Actions").Template("#resultSetsActionsTemplate").Width("170").Add();
+                }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string> {"Search"}).Render()
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<div id="NewResultSetModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!--content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">New Result Set</h4>
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
+                </div>
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiAssessmentCreateResultSet", new {}), HttpMethod = "POST", OnSuccess = "newResultSetSuccess", OnFailure = "newResultSetFailure" }, new { id = "newResultSetForm" }))
+                {
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @Html.Label("Name")
+                            @Html.TextBoxFor(x => x.ResultSet.Name, new { @class = "form-control", Name = "Name" })
+                            @Html.ValidationMessageFor(x => x.ResultSet.Name)
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div id="EditResultSetModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!--content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Result Set</h4>
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
+                </div>
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiAssessmentUpdateResultSet", new {}), HttpMethod = "POST", OnSuccess = "editResultSetSuccess", OnFailure = "editResultSetFailure" }, new { id = "editResultSetForm" }))
+                {
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.ResultSet.Name)
+                            @Html.TextBoxFor(x => x.ResultSet.Name, new { @class = "form-control", Name = "Name", id = "EditResultSetNameControl" })
+                            @Html.ValidationMessageFor(x => x.ResultSet.Name)
+                        </div>
+                        <div class="form-group">
+                            @Html.HiddenFor(x => x.ResultSet.Id, new { Name = "Id", id = "EditResultSetIdControl" })
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+@section scripts
+{
+    <script>
+
+        var urlGetResultSetById = "@Url.HttpRouteUrl("ApiAssessmentGetResultSetById", new {resultSetId = 9999})";
+        var urlSetResultSetCurrent =
+            "@Url.HttpRouteUrl("ApiAssessmentSetResultSetAsCurrent", new {resutlSetId = 9999})";
+        var urlDeleteResultSet = "@Url.HttpRouteUrl("ApiAssessmentDeleteResultSet", new {resultSetId = 9999})";
+
+        $(document).ready(function() {
+            $('.modal').on('hidden.bs.modal',
+                function() {
+                    $(this).find('form').trigger('reset');
+                });
+
+            $("#ResultSets").on("click",
+                ".js-edit",
+                function() {
+                    var button = $(this);
+                    var setId = button.attr("data-set-id");
+                    $.ajax({
+                        url: urlGetResultSetById.replace("9999", setId),
+                        method: "GET",
+                        success: function(result) {
+                            $("#EditResultSetNameControl").val(result["name"]);
+                            $("#EditResultSetIdControl").val(result["id"]);
+                        },
+                        error: function() {
+                            toastr.error("Failed to load result set data");
+                        }
+                    });
+                    $("#EditResultSetModal").modal('toggle');
+                });
+
+            $("#ResultSets").on("click",
+                ".js-current",
+                function() {
+                    var button = $(this);
+                    bootbox.confirm("Are you sure you wish to mark this result set as current?",
+                        function(result) {
+                            if (result) {
+                                $.ajax({
+                                    url: urlSetResultSetCurrent.replace("9999", button.attr("data-set-id")),
+                                    method: "POST",
+                                    success: function(a) {
+                                        refreshTable("ResultSets");
+                                        toastr.success(a);
+                                    },
+                                    error: function(e) {
+                                        toastr.error(e.responseJSON);
+                                    }
+                                });
+                            }
+                        });
+                });
+
+            $("#ResultSets").on("click",
+                ".js-delete",
+                function() {
+                    var button = $(this);
+                    bootbox.confirm("Are you sure you wish to delete this result set?",
+                        function(result) {
+                            if (result) {
+                                $.ajax({
+                                    url: urlDeleteResultSet.replace("9999", button.attr("data-set-id")),
+                                    method: "DELETE",
+                                    success: function(a) {
+                                        refreshTable("ResultSets");
+                                        toastr.success(a);
+                                    },
+                                    error: function(e) {
+                                        toastr.error(e.responseJSON);
+                                    }
+                                });
+                            }
+                        });
+                });
+
+        });
+
+        function newResultSetSuccess(result) {
+            $("#NewResultSetModal").modal('hide');
+            refreshTable("ResultSets");
+            toastr.success(result);
+        }
+
+        function newResultSetFailure(result) {
+            $("#NewResultSetModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+
+        function editResultSetSuccess(result) {
+            $("#EditResultSetModal").modal('hide');
+            refreshTable("ResultSets");
+            toastr.success(result);
+        }
+
+        function editResultSetFailure(result) {
+            $("#EditResultSetModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+
+        function renderStatus(current) {
+            if (current) {
+                return "Current";
+            } else {
+                return "Active";
+            }
+        }
+
+        function renderActions(current, id) {
+            var currentButton = "";
+
+            if (!current) {
+                currentButton =
+                    `<button type='button' class='btn btn-xs btn-success mp-btn-action js-current' data-set-id="${id}">
+            <i class="fas fa-calendar-check"></i>
+</button>`;
+            }
+
+            const editButton =
+                `<button type='button' class='btn btn-xs btn-warning mp-btn-action js-edit' data-set-id="${id}">
+            <i class="far fa-edit"></i>
+</button>`;
+
+            const deleteButton =
+                `<button type='button' class='btn btn-xs btn-danger mp-btn-action js-delete' data-set-id="${id}">
+            <i class=\"far fa-trash-alt\"></i>
+</button>`;
+
+            return currentButton + editButton + deleteButton;
+        }
+    </script>
+
+    <script type="text/x-jsrender" id="resultSetsNameTemplate">
+        <div>
+            ${Name}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="resultSetsStatusTemplate">
+        <div>
+            ${renderStatus(IsCurrent)}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="resultSetsActionsTemplate">
+        <div>
+            ${renderActions(IsCurrent, Id)}
+        </div>
+    </script>
+
+    @Scripts.Render("~/bundles/jqueryval")
+}

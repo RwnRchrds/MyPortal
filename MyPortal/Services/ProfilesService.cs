@@ -24,7 +24,7 @@ namespace MyPortal.Services
         {
             if (!ValidationService.ModelIsValid(comment))
             {
-                throw new ProcessException(ExceptionType.BadRequest, "Invalid data");
+                throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
             }
 
             UnitOfWork.ProfileComments.Add(comment);
@@ -35,7 +35,7 @@ namespace MyPortal.Services
         {
             if (ValidationService.ModelIsValid(commentBank) || string.IsNullOrWhiteSpace(commentBank.Name))
             {
-                throw new ProcessException(ExceptionType.BadRequest, "Invalid data");
+                throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
             }
 
             UnitOfWork.ProfileCommentBanks.Add(commentBank);
@@ -54,7 +54,7 @@ namespace MyPortal.Services
 
                 if (!ValidationService.ModelIsValid(log))
                 {
-                    throw new ProcessException(ExceptionType.BadRequest, "Invalid data");
+                    throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
                 }
 
                 UnitOfWork.ProfileLogs.Add(log);
@@ -110,7 +110,7 @@ namespace MyPortal.Services
 
             if (commentBankInDb == null)
             {
-                throw new ProcessException(ExceptionType.NotFound, "Comment bank not found");
+                throw new ServiceException(ExceptionType.NotFound, "Comment bank not found");
             }
 
             return commentBankInDb;
@@ -122,7 +122,7 @@ namespace MyPortal.Services
 
             if (comment == null)
             {
-                throw new ProcessException(ExceptionType.NotFound, "Comment not found");
+                throw new ServiceException(ExceptionType.NotFound, "Comment not found");
             }
 
             return comment;
@@ -141,7 +141,7 @@ namespace MyPortal.Services
 
             if (log == null)
             {
-                throw new ProcessException(ExceptionType.NotFound, "Log not found");
+                throw new ServiceException(ExceptionType.NotFound, "Log not found");
             }
 
             return log;

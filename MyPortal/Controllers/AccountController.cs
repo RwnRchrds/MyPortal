@@ -6,8 +6,10 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using MyPortal.Interfaces;
 using MyPortal.Models;
 using MyPortal.Models.Database;
+using MyPortal.Persistence;
 using MyPortal.Services;
 
 namespace MyPortal.Controllers
@@ -19,12 +21,12 @@ namespace MyPortal.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
         private readonly IdentityContext _identity;
-        private readonly MyPortalDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
         public AccountController()
         {
             _identity = new IdentityContext();
-            _context = new MyPortalDbContext();
+            _unitOfWork = new UnitOfWork(new MyPortalDbContext());
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
@@ -135,18 +137,21 @@ namespace MyPortal.Controllers
 
         public async Task SetDefaultAcademicYear(string userName)
         {
-            var user = _identity.Users.SingleOrDefault(x => x.UserName == userName);
-
-            if (user == null)
+            using (var curriculumService = new CurriculumService(_unitOfWork))
             {
-                throw new Exception("User not found");
+                var user = _identity.Users.SingleOrDefault(x => x.UserName == userName);
+
+                if (user == null)
+                {
+                    throw new Exception("User not found");
+                }
+
+                var academicYearId = await curriculumService.GetCurrentAcademicYearId();
+
+                user.SelectedAcademicYearId = academicYearId;
+
+                _identity.SaveChanges();
             }
-
-            var academicYearId = await SystemService.GetCurrentAcademicYearId(_context);
-
-            user.SelectedAcademicYearId = academicYearId;
-
-            _identity.SaveChanges();
         }
         
         [HttpPost]

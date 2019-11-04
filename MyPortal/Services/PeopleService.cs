@@ -25,7 +25,7 @@ namespace MyPortal.Services
 
             if (person == null)
             {
-                throw new ProcessException(ExceptionType.NotFound, "Person not found");
+                throw new ServiceException(ExceptionType.NotFound, "Person not found");
             }
 
             return person;
@@ -37,7 +37,7 @@ namespace MyPortal.Services
 
             if (person == null)
             {
-                throw new ProcessException(ExceptionType.NotFound, "Person not found");
+                throw new ServiceException(ExceptionType.NotFound, "Person not found");
             }
 
             return person;
