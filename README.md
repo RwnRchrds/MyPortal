@@ -6,8 +6,8 @@
 
 [![Build Status](https://dev.azure.com/Harrods-School/MyPortal/_apis/build/status/RRichards63170.MyPortal?branchName=master)](https://dev.azure.com/11RichR1/MyPortal/_build/latest?definitionId=5?branchName=master)
 
-MyPortal is a web-based school information system developed by Rowan Richards allowing teachers, pupils and parents to collaborate together and promote learning.
+MyPortal is a web-based school information system developed by Rowan Richards that helps to bring all core student and staff data together, allowing schools to report on all key metrics from one system.
 
-MyPortal provides school teams with the tools they always knew they needed but never had. Once implemented, MyPortal surprises them with how easy and quick it is to efficiently manage school life and drive improvement. Whether you want to add functionality alongside your existing school MIS or replace it entirely, MyPortal can help.
+MyPortal provides the tools to efficiently manage daily school life and drive improvement in learner outcomes.
 
 Find MyPortal on Twitter at https://twitter.com/MyPortalEDU
