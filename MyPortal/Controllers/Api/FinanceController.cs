@@ -6,9 +6,12 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web.DynamicData;
 using System.Web.Http;
+using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
+using MyPortal.Dtos.GridDtos;
+using MyPortal.Interfaces;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
 using MyPortal.Services;
@@ -19,6 +22,18 @@ namespace MyPortal.Controllers.Api
     [RoutePrefix("api/finance")]
     public class FinanceController : MyPortalApiController
     {
+        private readonly FinanceService _service;
+
+        public FinanceController()
+        {
+            _service = new FinanceService(UnitOfWork);
+        }
+
+        public FinanceController(IUnitOfWork unitOfWork) : base (unitOfWork)
+        {
+            _service = new FinanceService(UnitOfWork);
+        }
+
         [HttpPost]
         [RequiresPermission("AccessStudentStore")]
         [Route("basketItems/create", Name = "ApiFinanceCreateBasketItem")]
@@ -26,7 +41,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await FinanceService.CreateBasketItem(basketItem, _context);
+                await _service.CreateBasketItem(basketItem);
             }
             catch (Exception e)
             {
@@ -43,7 +58,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await FinanceService.GetBasketItemsByStudent(studentId, _context);
+                var basketItems = await _service.GetBasketItemsByStudent(studentId);
+
+                return basketItems.Select(Mapper.Map<FinanceBasketItem, FinanceBasketItemDto>);
             }
             catch (Exception e)
             {
@@ -58,7 +75,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await FinanceService.GetBasketTotalForStudent(studentId, _context);
+                var total = await _service.GetBasketTotalForStudent(studentId);
+
+                return total;
             }
             catch (Exception e)
             {
@@ -73,7 +92,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await FinanceService.DeleteBasketItem(basketItemId, _context);
+                await _service.DeleteBasketItem(basketItemId);
             }
             catch (Exception e)
             {
@@ -90,7 +109,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await FinanceService.DeleteProduct(productId, _context);
+                await _service.DeleteProduct(productId);
             }
             catch (Exception e)
             {
@@ -107,7 +126,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await FinanceService.GetAvailableProductsByStudent(studentId, _context);
+                var products = await _service.GetAvailableProductsByStudent(studentId);
+
+                return products.Select(Mapper.Map<FinanceProduct, FinanceProductDto>);
             }
             catch (Exception e)
             {
@@ -122,7 +143,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await FinanceService.GetProductPrice(productId, _context);
+                var price = await _service.GetProductPrice(productId);
+
+                return price;
             }
             catch (Exception e)
             {
@@ -137,7 +160,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await FinanceService.GetProductById(productId, _context);
+                var product = await _service.GetProductById(productId);
+
+                return Mapper.Map<FinanceProduct, FinanceProductDto>(product);
             }
             catch (Exception e)
             {
@@ -152,7 +177,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await FinanceService.GetAllProducts(_context);
+                var products = await _service.GetAllProducts();
+
+                return products.Select(Mapper.Map<FinanceProduct, FinanceProductDto>);
             }
             catch (Exception e)
             {
@@ -167,8 +194,11 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var products = await FinanceService.GetAllProductsDataGrid(_context);
-                return PrepareDataGridObject(products, dm);
+                var products = await _service.GetAllProducts();
+
+                var list = products.Select(Mapper.Map<FinanceProduct, GridFinanceProductDto>);
+
+                return PrepareDataGridObject(list, dm);
             }
             catch (Exception e)
             {
@@ -183,7 +213,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await FinanceService.CreateProduct(product, _context);
+                await _service.CreateProduct(product);
             }
             catch (Exception e)
             {
@@ -200,7 +230,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await FinanceService.UpdateProduct(product, _context);
+                await _service.UpdateProduct(product);
             }
             catch (Exception e)
             {
@@ -217,7 +247,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await FinanceService.AssessBalance(sale, _context);
+                var check = await _service.AssessBalance(sale);
+
+                return check;
             }
             catch (Exception e)
             {
@@ -232,7 +264,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await FinanceService.DeleteSale(saleId, _context);
+                await _service.DeleteSale(saleId);
             }
             catch (Exception e)
             {
@@ -247,10 +279,16 @@ namespace MyPortal.Controllers.Api
         [Route("sales/get/processed", Name = "ApiFinanceGetProcessedSales")]
         public async Task<IEnumerable<FinanceSaleDto>> GetProcessedSales()
         {
-            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
             try
             {
-                return await FinanceService.GetProcessedSales(academicYearId, _context);
+                using (var curriculumService = new CurriculumService(UnitOfWork))
+                {
+                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
+
+                    var sales = await _service.GetProcessedSales(academicYearId);
+
+                    return sales.Select(Mapper.Map<FinanceSale, FinanceSaleDto>);
+                }
             }
             catch (Exception e)
             {
@@ -263,12 +301,18 @@ namespace MyPortal.Controllers.Api
         [Route("sales/get/dataGrid/processed", Name = "ApiFinanceGetProcessedSalesDataGrid")]
         public async Task<IHttpActionResult> GetProcessedSalesDataGrid([FromBody] DataManagerRequest dm)
         {
-            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
             try
             {
-                var sales = await FinanceService.GetProcessedSalesDataGrid(academicYearId, _context);
+                using (var curriculumService = new CurriculumService(UnitOfWork))
+                {
+                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
 
-                return PrepareDataGridObject(sales, dm);
+                    var sales = await _service.GetProcessedSales(academicYearId);
+
+                    var list = sales.Select(Mapper.Map<FinanceSale, GridFinanceSaleDto>);
+
+                    return PrepareDataGridObject(list, dm);
+                }
             }
             catch (Exception e)
             {
@@ -281,10 +325,16 @@ namespace MyPortal.Controllers.Api
         [Route("sales/get/all", Name = "ApiFinanceGetAllSales")]
         public async Task<IEnumerable<FinanceSaleDto>> GetAllSales()
         {
-            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
             try
             {
-                return await FinanceService.GetAllSales(academicYearId, _context);
+                using (var curriculumService = new CurriculumService(UnitOfWork))
+                {
+                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
+
+                    var sales = await _service.GetAllSales(academicYearId);
+
+                    return sales.Select(Mapper.Map<FinanceSale, FinanceSaleDto>);
+                }
             }
             catch (Exception e)
             {
@@ -297,12 +347,18 @@ namespace MyPortal.Controllers.Api
         [Route("sales/get/dataGrid/all", Name = "ApiFinanceGetAllSalesDataGrid")]
         public async Task<IHttpActionResult> GetAllSalesDataGrid([FromBody] DataManagerRequest dm)
         {
-            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
             try
             {
-                var sales = await FinanceService.GetAllSalesDataGrid(academicYearId, _context);
+                using (var curriculumService = new CurriculumService(UnitOfWork))
+                {
+                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
 
-                return PrepareDataGridObject(sales, dm);
+                    var sales = await _service.GetAllSales(academicYearId);
+
+                    var list = sales.Select(Mapper.Map<FinanceSale, GridFinanceSaleDto>);
+
+                    return PrepareDataGridObject(list, dm);
+                }
             }
             catch (Exception e)
             {
@@ -315,10 +371,16 @@ namespace MyPortal.Controllers.Api
         [Route("sales/get/byStudent/{studentId:int}", Name = "ApiFinanceGetSalesByStudent")]
         public async Task<IEnumerable<FinanceSaleDto>> GetSalesByStudent([FromUri] int studentId)
         {
-            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
             try
             {
-                return await FinanceService.GetAllSalesByStudent(studentId, academicYearId, _context);
+                using (var curriculumService = new CurriculumService(UnitOfWork))
+                {
+                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
+
+                    var sales = await _service.GetAllSalesByStudent(studentId, academicYearId);
+
+                    return sales.Select(Mapper.Map<FinanceSale, FinanceSaleDto>);
+                }
             }
             catch (Exception e)
             {
@@ -331,11 +393,16 @@ namespace MyPortal.Controllers.Api
         [RequiresPermission("ViewSales")]
         public async Task<IEnumerable<FinanceSaleDto>> GetPendingSales()
         {
-            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
-
             try
             {
-                return await FinanceService.GetPendingSales(academicYearId, _context);
+                using (var curriculumService = new CurriculumService(UnitOfWork))
+                {
+                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
+
+                    var sales = await _service.GetPendingSales(academicYearId);
+
+                    return sales.Select(Mapper.Map<FinanceSale, FinanceSaleDto>);
+                }
             }
             catch (Exception e)
             {
@@ -348,13 +415,18 @@ namespace MyPortal.Controllers.Api
         [RequiresPermission("ViewSales")]
         public async Task<IHttpActionResult> GetPendingSalesDataGrid([FromBody] DataManagerRequest dm)
         {
-            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
-
             try
             {
-                var sales = await FinanceService.GetPendingSalesDataGrid(academicYearId, _context);
+                using (var curriculumService = new CurriculumService(UnitOfWork))
+                {
+                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
 
-                return PrepareDataGridObject(sales, dm);
+                    var sales = await _service.GetPendingSales(academicYearId);
+
+                    var list = sales.Select(Mapper.Map<FinanceSale, GridFinanceSaleDto>);
+
+                    return PrepareDataGridObject(list, dm);
+                }
             }
             catch (Exception e)
             {
@@ -369,7 +441,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await FinanceService.MarkSaleProcessed(saleId, _context);
+                await _service.MarkSaleProcessed(saleId);
             }
             catch (Exception e)
             {
@@ -384,11 +456,14 @@ namespace MyPortal.Controllers.Api
         [Route("sales/create", Name = "ApiFinanceCreateSale")]
         public async Task<IHttpActionResult> CreateSale([FromBody] FinanceSale sale)
         {
-            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
-
             try
             {
-                await FinanceService.CreateSale(sale, academicYearId, _context);
+                using (var curriculumService = new CurriculumService(UnitOfWork))
+                {
+                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
+
+                    await _service.CreateSale(sale, academicYearId);
+                }
             }
             catch (Exception e)
             {
@@ -404,11 +479,15 @@ namespace MyPortal.Controllers.Api
         public async Task<IHttpActionResult> CheckoutBasket([FromBody] int studentId)
         {
             await AuthenticateStudentRequest(studentId);
-            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
 
             try
             {
-                await FinanceService.CheckoutBasketForStudent(studentId, academicYearId, _context);
+                using (var curriculumService = new CurriculumService(UnitOfWork))
+                {
+                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
+                    
+                    await _service.CheckoutBasketForStudent(studentId, academicYearId);
+                }
             }
             catch (Exception e)
             {
@@ -425,7 +504,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await FinanceService.RefundSale(saleId, _context);
+                await _service.RefundSale(saleId);
             }
             catch (Exception e)
             {
@@ -442,7 +521,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await FinanceService.ProcessManualTransaction(transaction, _context);
+                await _service.ProcessManualTransaction(transaction);
             }
             catch (Exception e)
             {
@@ -459,7 +538,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await FinanceService.ProcessManualTransaction(transaction, _context, true);
+                await _service.ProcessManualTransaction(transaction, true);
             }
             catch (Exception e)
             {
@@ -476,7 +555,9 @@ namespace MyPortal.Controllers.Api
             await AuthenticateStudentRequest(studentId);
             try
             {
-                return await FinanceService.GetStudentBalance(studentId, _context);
+                var balance = await _service.GetStudentBalance(studentId);
+
+                return balance;
             }
             catch (Exception e)
             {

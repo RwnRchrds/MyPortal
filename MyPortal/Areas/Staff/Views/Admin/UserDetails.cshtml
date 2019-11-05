@@ -1,0 +1,476 @@
+﻿@model MyPortal.Areas.Staff.ViewModels.UserDetailsViewModel
+@{
+    ViewBag.Title = "User Details: " + Model.User.UserName;
+    ViewBag.DisplayTitle = "User Details";
+    Layout = "~/Views/Portal/_LayoutStaff.cshtml";
+}
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">@Model.User.UserName</h1>
+</div>
+
+
+<div class="row" id="topRow" data-user-id="@Model.User.Id">
+
+    <div class="col-xl-12 col-md-12 mb-4">
+        @if (Model.AttachedProfileName == "")
+        {
+            <p class="text-danger">No user profile attached</p>
+        }
+        else
+        {
+            <p class="text-primary">User profile attached: @Model.AttachedProfileName</p>
+        }
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-xl-12 col-md-12 mb-4">
+
+        <div class="dropdown mp-btn-top inline-block">
+            <button class="btn btn-primary dropdown-toggle px-4" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-user"></i> User
+            </button>
+
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <h6 class="dropdown-header">@Model.User.UserName</h6>
+                <a class="dropdown-item" data-toggle="modal" data-target="#AttachPersonModal" id="AttachPerson">Attach Profile</a>
+                <a class="dropdown-item" data-toggle="modal" id="DetachPerson">Detach Profile</a>
+                <a class="dropdown-item" data-toggle="modal" data-target="#ResetPasswordModal" id="ResetPassword">Reset Password</a>
+                <a class="dropdown-item" id="DeleteUser">Delete User</a>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="card shadow mb-4">
+
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Roles</h6>
+        </div>
+
+        <div class="card-body">
+
+            <div class="mb-4">
+
+                <button type="button" class="btn btn-primary mp-btn-top-auto" id="AddRole" data-toggle="modal" data-target="#AddRoleModal">
+                    <i class="fa fa-plus-circle"></i> Add Role
+                </button>
+
+            </div>
+
+            @Html.EJS().Grid("Roles").DataSource(d =>
+            {
+                d.Url(Url.HttpRouteUrl("ApiAdminGetRolesByUserDataGrid", new { userId = Model.User.Id })).CrossDomain(false).Adaptor("UrlAdaptor");
+            }).Columns(c =>
+            {
+                c.Field("Name").HeaderText("Role").Template("#rolesNameTemplate").Add();
+                c.HeaderText("Actions").Template("#rolesActionsTemplate").Width("170").Add();
+            }).AllowPaging().PageSettings(p => p.PageSize(5)).EnableHover(false).Render()
+
+        </div>
+
+    </div>
+
+</div>
+
+<div id="ResetPasswordModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Reset Password - @Model.User.UserName</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiAdminChangePassword", new { }), HttpMethod = "POST", OnSuccess = "resetPasswordSuccess", OnFailure = "resetPasswordFailure" }, new { id = "ResetPasswordForm" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.Label("Password")
+                        @Html.PasswordFor(p => p.ChangePassword.Password, new { @class = "form-control", id = "enteredPassword", Name = "Password" })
+                        @Html.ValidationMessageFor(p => p.ChangePassword.Password)
+
+                        @Html.HiddenFor(u => u.ChangePassword.UserId, new { Value = Model.User.Id, id = "userIdControl", Name = "UserId" })
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Confirm Password")
+                        @Html.PasswordFor(p => p.ChangePassword.Confirm, new { @class = "form-control", id = "confirmPassword", Name = "Confirm" })
+                        @Html.ValidationMessageFor(p => p.ChangePassword.Confirm)
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+
+<div id="AddRoleModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Role - @Model.User.UserName</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiAdminAddUserToRole", new { }), HttpMethod = "POST", OnSuccess = "addRoleSuccess", OnFailure = "addRoleFailure" }, new { id = "AddRoleForm" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.Label("Role")
+                        @Html.DropDownListFor(r => r.ChangeRole.RoleName, new SelectList(Model.Roles, "Name", "Name"), "Select Role", new { @class = "form-control", Name = "RoleName" })
+
+                        @Html.HiddenFor(u => u.ChangePassword.UserId, new { Value = Model.User.Id, Name = "UserId" })
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+
+<div id="AttachPersonModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Attach Person - @Model.User.UserName</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "" }, new { id = "AttachPersonForm" }))
+            {
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label>User Type</label>
+                        <select class="form-control" id="userTypeSelect">
+                            <option selected disabled>Select User Type</option>
+                            <option value="Staff">Staff</option>
+                            <option value="Student">Student</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="d-none" id="studentYearGroupSelectLabel">Year Group</label>
+                        <select class="form-control disabled d-none" id="studentYearGroupSelect"></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="d-none" id="personSelectLabel">Person</label>
+                        <select class="form-control disabled d-none" id="personSelect"></select>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+
+
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            var urlRemoveUserFromRole = "@Url.HttpRouteUrl("ApiAdminRemoveFromRole", new {})";
+            var urlDeleteUser = "@Url.HttpRouteUrl("ApiAdminDeleteUser", new {userId = "abcd"})";
+            var urlAttachPerson = "@Url.HttpRouteUrl("ApiAdminAttachPersonToUser", new {})";
+            var urlDetachPerson = "@Url.HttpRouteUrl("ApiAdminDetachPersonFromUser", new {})";
+            var urlGetAllStaff = "@Url.HttpRouteUrl("ApiPeopleGetAllStaffMembers", new {})";
+            var urlGetAllYearGroups = "@Url.HttpRouteUrl("ApiPastoralGetAllYearGroups", new {})";
+            var urlGetStudentsByYearGroup = "@Url.HttpRouteUrl("ApiPeopleGetStudentsByYearGroup", new {yearGroupId = 9999})";
+
+            $("#Roles").on("click",
+                ".js-delete",
+                function() {
+                    var button = $(this);
+                    var userId = "@Model.User.Id";
+                    var roleName = button.attr("data-role-id");
+                    bootbox.confirm("Are you sure you want to remove the user from this role?",
+                        function(result) {
+                            if (result) {
+                                $.ajax({
+                                    url: urlRemoveUserFromRole,
+                                    data: {userId: userId, roleName: roleName},
+                                    method: "POST",
+                                    success: function(e) {
+                                        location.reload();
+                                        toastr.success(e);
+                                    },
+                                    error: function(e) {
+                                        toastr.error(e.responseJSON);
+                                    }
+                                });
+                            }
+                        });
+                });
+
+            $("#DeleteUser").on("click",
+                function() {
+                    var button = $("#DeleteUser");
+                    bootbox.confirm("Are you sure you want to DELETE this user?",
+                        function(result) {
+                            if (result) {
+                                $.ajax({
+                                    url: urlDeleteUser.replace("abcd", button.attr("data-user-id")),
+                                    method: "DELETE",
+                                    success: function(e) {
+                                        location.replace("@Url.Action("Users", "Admin")");
+                                        toastr.success(e);
+                                    },
+                                    error: function(e) {
+                                        toastr.error(e.responseJSON);
+                                    }
+                                });
+                            }
+                        });
+                });
+
+            $("#DetachPerson").on("click",
+                function() {
+                    bootbox.confirm("Are you sure you wish to detach the personal profile from this user?",
+                        function(result) {
+                            if (result) {
+                                var data = { Id: "@Model.User.Id" };
+                                $.ajax({
+                                    url: urlDetachPerson,
+                                    data: data,
+                                    method: "POST",
+                                    success: function(e) {
+                                        toastr.success(e);
+                                        location.reload();
+                                    },
+                                    error: function(e) {
+                                        toastr.error(e.responseJSON);
+                                    }
+                                });
+                            }
+                        });
+
+                });
+
+            $('#ResetPasswordModal').on('hidden.bs.modal',
+                function() {
+                    $(this).find('form').trigger('reset');
+                });
+
+            $('#AttachPersonModal').on('hidden.bs.modal',
+                function() {
+                    $(this).find('form').trigger('reset');
+                    $("#studentYearGroupSelectLabel").addClass("d-none");
+                    $("#studentYearGroupSelect").addClass("disabled");
+                    $("#studentYearGroupSelect").addClass("d-none");
+
+                    $("#personSelectLabel").addClass("d-none");
+                    $("#personSelect").addClass("disabled");
+                    $("#personSelect").addClass("d-none");
+                });
+
+            $("#userTypeSelect").on("change",
+                function() {
+
+                    $("#studentYearGroupSelectLabel").addClass("d-none");
+                    $("#studentYearGroupSelect").addClass("disabled");
+                    $("#studentYearGroupSelect").addClass("d-none");
+
+                    $("#personSelectLabel").addClass("d-none");
+                    $("#personSelect").addClass("disabled");
+                    $("#personSelect").addClass("d-none");
+
+                    if ($("#userTypeSelect").val() !== "") {
+                        if ($("#userTypeSelect").val() === "Staff") {
+                            $.ajax({
+                                url: urlGetAllStaff,
+                                method: "GET",
+                                complete: function(data) {
+                                    $("#personSelect").empty();
+                                    $(data.responseJSON).each(function(i) {
+                                        var divData = "<option value=" +
+                                            data.responseJSON[i].id +
+                                            ">" +
+                                            data.responseJSON[i].person.lastName +
+                                            ", " +
+                                            data.responseJSON[i].person.firstName +
+                                            "</option>";
+                                        $(divData).appendTo('#personSelect');
+                                    });
+                                    $("#personSelect").val("");
+                                    $("#personSelect").removeClass("disabled");
+                                    $("#personSelectLabel").removeClass("d-none");
+                                    $("#personSelect").removeClass("d-none");
+                                }
+                            });
+                        }
+
+                        if ($("#userTypeSelect").val() === "Student") {
+                            $.ajax({
+                                url: urlGetAllYearGroups,
+                                method: "GET",
+                                complete: function(data) {
+                                    $("#yearGroupSelect").empty();
+                                    $(data.responseJSON).each(function(i) {
+                                        var divData = "<option value=" +
+                                            data.responseJSON[i].id +
+                                            ">" +
+                                            data.responseJSON[i].name +
+                                            "</option>";
+                                        $(divData).appendTo('#studentYearGroupSelect');
+                                    });
+                                    $("#studentYearGroupSelect").val("");
+                                    $("#studentYearGroupSelect").removeClass("disabled");
+                                    $("#studentYearGroupSelectLabel").removeClass("d-none");
+                                    $("#studentYearGroupSelect").removeClass("d-none");
+                                }
+                            });
+                        }
+                    }
+
+                });
+
+            $("#studentYearGroupSelect").on("change",
+                function() {
+                    if ($("#studentYearGroupSelect").val() !== "") {
+                        $.ajax({
+                            url: urlGetStudentsByYearGroup.replace("9999", $("#studentYearGroupSelect").val()),
+                            method: "GET",
+                            complete: function(data) {
+                                $("#personSelect").empty();
+                                $(data.responseJSON).each(function(i) {
+                                    var divData = "<option value=" +
+                                        data.responseJSON[i].id +
+                                        ">" +
+                                        data.responseJSON[i].person.lastName +
+                                        ", " +
+                                        data.responseJSON[i].person.firstName +
+                                        "</option>";
+                                    $(divData).appendTo('#personSelect');
+                                });
+                                $("#personSelect").val("");
+                                $("#personSelect").removeClass("disabled");
+                                $("#personSelectLabel").removeClass("d-none");
+                                $("#personSelect").removeClass("d-none");
+                            }
+                        });
+                    }
+                });
+
+            $("#AttachPersonForm").on("submit",
+                function(e) {
+
+                    e.preventDefault();
+
+                    $("#AttachPersonForm").validate();
+
+                    var data;
+                    if ($("#userTypeSelect").val() === "Student") {
+                        data = {
+                            UserId: "@Model.User.Id",
+                            RoleName: "Student",
+                            PersonId: $("#personSelect").val()
+                        };
+                        $.ajax({
+                            url: urlAttachPerson,
+                            data: data,
+                            method: "POST",
+                            success: function() {
+                                location.reload();
+                            },
+                            error: function(result) {
+                                $("#AttachPersonModal").modal('hide');
+                                toastr.error(result.responseJSON);
+                            }
+                        });
+                    }
+
+                    if ($("#userTypeSelect").val() === "Staff") {
+                        data = {
+                            UserId: "@Model.User.Id",
+                            RoleName: "Staff",
+                            PersonId: $("#personSelect").val()
+                        };
+                        $.ajax({
+                            url: urlAttachPerson,
+                            data: data,
+                            method: "POST",
+                            success: function() {
+                                location.reload();
+                            },
+                            error: function(result) {
+                                $("#AttachPersonModal").modal('hide');
+                                toastr.error(result.responseJSON);
+                            }
+                        });
+                    }
+                });
+        });
+
+        function resetPasswordSuccess(result) {
+            $("#ResetPasswordModal").modal('hide');
+            toastr.success(result);
+        }
+
+        function resetPasswordFailure(result) {
+            $("#ResetPasswordModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+
+        function addRoleSuccess(result) {
+            $("#AddRoleModal").modal('hide');
+            toastr.success(result);
+            location.reload();
+        }
+
+        function addRoleFailure(result) {
+            $("#AddRoleModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+
+    </script>
+
+    <script type="text/x-jsrender" id="rolesNameTemplate">
+        <div>
+            ${Name}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="rolesActionsTemplate">
+        <div>
+            <button type='button' class='btn btn-xs btn-danger mp-btn-action js-delete' data-role-Id="${Name}">
+                <i class="far fa-trash-alt"></i>
+            </button>
+        </div>
+    </script>
+
+    @Scripts.Render("~/bundles/jqueryval")
+}

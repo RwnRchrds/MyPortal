@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Http;
+using AutoMapper;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Attributes;
@@ -15,31 +17,68 @@ namespace MyPortal.Controllers.Api
     [Authorize]
     public class ProfilesController : MyPortalApiController
     {
+        private readonly ProfilesService _service;
+
+        public ProfilesController()
+        {
+            _service = new ProfilesService(UnitOfWork);
+        }
+        
         [HttpPost]
         [RequiresPermission("EditProfileLogs")]
         [Route("logs/create", Name = "ApiProfilesCreateLog")]
         public async Task<IHttpActionResult> CreateLog([FromBody] ProfileLog log)
         {
-            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
-            var userId = User.Identity.GetUserId();
+            try
+            {
+                using (var curriculumService = new CurriculumService(UnitOfWork))
+                {
+                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
+                    var userId = User.Identity.GetUserId();
 
-            return PrepareResponse(ProfilesService.CreateLog(log, academicYearId, userId, _context));
+                    await _service.CreateLog(log, academicYearId, userId);
+                }
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Log created");
         }
         
         [Route("logs/delete/{logId:int}", Name = "ApiProfilesDeleteLog")]
         [RequiresPermission("EditProfileLogs")]
         [HttpDelete]
-        public IHttpActionResult DeleteLog([FromUri] int logId)
+        public async Task<IHttpActionResult> DeleteLog([FromUri] int logId)
         {
-            return PrepareResponse(ProfilesService.DeleteLog(logId, _context));
+            try
+            {
+                await _service.DeleteLog(logId);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Log deleted");
         }
 
         [HttpGet]
         [Route("logs/get/byId/{logId:int}", Name = "ApiProfilesGetLogById")]
         [RequiresPermission("ViewProfileLogs")]
-        public ProfileLogDto GetLogById([FromUri] int logId)
+        public async Task<ProfileLogDto> GetLogById([FromUri] int logId)
         {
-            return PrepareResponseObject(ProfilesService.GetLogById(logId, _context));
+            try
+            {
+                var log = await _service.GetLogById(logId);
+
+                return Mapper.Map<ProfileLog, ProfileLogDto>(log);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
         
         [HttpGet]
@@ -48,9 +87,20 @@ namespace MyPortal.Controllers.Api
         public async Task<IEnumerable<ProfileLogDto>> GetLogsByStudent([FromUri] int studentId)
         {
             await AuthenticateStudentRequest(studentId);
-            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
+            try
+            {
+                using (var curriculumService = new CurriculumService(UnitOfWork))
+                {
+                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
 
-            return PrepareResponseObject(ProfilesService.GetLogsByStudent(studentId, academicYearId, _context));
+                    var logs = await _service.GetLogsByStudent(studentId);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         [HttpPost]
@@ -69,7 +119,7 @@ namespace MyPortal.Controllers.Api
         [Route("logs/update", Name = "ApiProfilesUpdateLog")]
         [RequiresPermission("EditProfileLogs")]
         [HttpPost]
-        public IHttpActionResult UpdateLog([FromBody] ProfileLog log)
+        public async Task<IHttpActionResult> UpdateLog([FromBody] ProfileLog log)
         {
             return PrepareResponse(ProfilesService.UpdateLog(log, _context));
         }
@@ -85,7 +135,7 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditComments")]
         [Route("commentBanks/create", Name = "ApiProfilesCreateCommentBank")]
-        public IHttpActionResult CreateCommentBank([FromBody] ProfileCommentBank commentBank)
+        public async Task<IHttpActionResult> CreateCommentBank([FromBody] ProfileCommentBank commentBank)
         {
             return PrepareResponse(ProfilesService.CreateCommentBank(commentBank, _context));
         }
@@ -93,7 +143,7 @@ namespace MyPortal.Controllers.Api
         [HttpDelete]
         [RequiresPermission("EditComments")]
         [Route("commentBanks/delete/{commentBankId:int}", Name = "ApiProfilesDeleteCommentBank")]
-        public IHttpActionResult DeleteCommentBank([FromUri] int commentBankId)
+        public async Task<IHttpActionResult> DeleteCommentBank([FromUri] int commentBankId)
         {
             return PrepareResponse(ProfilesService.DeleteCommentBank(commentBankId, _context));
         }
@@ -117,7 +167,7 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("ViewComments")]
         [Route("commentBanks/get/dataGrid/all", Name = "ApiProfilesGetAllCommentBanksDataGrid")]
-        public IHttpActionResult GetAllCommentBanksDataGrid([FromBody] DataManagerRequest dm)
+        public async Task<IHttpActionResult> GetAllCommentBanksDataGrid([FromBody] DataManagerRequest dm)
         {
             var commentBanks = PrepareResponseObject(ProfilesService.GetAllCommentBanksDataGrid(_context));
 
@@ -127,7 +177,7 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditComments")]
         [Route("commentBanks/update", Name = "ApiProfilesUpdateCommentBank")]
-        public IHttpActionResult UpdateCommentBank([FromBody] ProfileCommentBank commentBank)
+        public async Task<IHttpActionResult> UpdateCommentBank([FromBody] ProfileCommentBank commentBank)
         {
             return PrepareResponse(ProfilesService.UpdateCommentBank(commentBank, _context));
         }
@@ -135,7 +185,7 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditComments")]
         [Route("comments/create", Name = "ApiProfilesCreateComment")]
-        public IHttpActionResult CreateComment([FromBody] ProfileComment comment)
+        public async Task<IHttpActionResult> CreateComment([FromBody] ProfileComment comment)
         {
             return PrepareResponse(ProfilesService.CreateComment(comment, _context));
         }
@@ -143,7 +193,7 @@ namespace MyPortal.Controllers.Api
         [HttpDelete]
         [RequiresPermission("EditComments")]
         [Route("comments/delete/{commentId:int}", Name = "ApiProfilesDeleteComment")]
-        public IHttpActionResult DeleteComment(int commentId)
+        public async Task<IHttpActionResult> DeleteComment(int commentId)
         {
             return PrepareResponse(ProfilesService.DeleteComment(commentId, _context));
         }
@@ -175,7 +225,7 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("ViewComments")]
         [Route("comments/get/byBank/dataGrid/{commentBankId:int}", Name = "ApiProfilesGetCommentsByCommentBankDataGrid")]
-        public IHttpActionResult GetCommentsByCommentBankDataGrid([FromUri] int commentBankId,
+        public async Task<IHttpActionResult> GetCommentsByCommentBankDataGrid([FromUri] int commentBankId,
             [FromBody] DataManagerRequest dm)
         {
             var comments = PrepareResponseObject(ProfilesService.GetCommentsByBank_DataGrid(commentBankId, _context));
@@ -186,7 +236,7 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditComments")]
         [Route("comments/update", Name = "ApiProfilesUpdateComment")]
-        public IHttpActionResult UpdateComment([FromBody] ProfileComment comment)
+        public async Task<IHttpActionResult> UpdateComment([FromBody] ProfileComment comment)
         {
             return PrepareResponse(ProfilesService.UpdateComment(comment, _context));
         }

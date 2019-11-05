@@ -111,6 +111,9 @@ namespace MyPortal.Services
             await UnitOfWork.Complete();
         }
 
+        /// <summary>
+        /// Update an existing year group.
+        /// </summary>
         public async Task UpdateYearGroup(PastoralYearGroup yearGroup)
         {
             var yearGroupInDb = await UnitOfWork.PastoralYearGroups.GetByIdAsync(yearGroup.Id);

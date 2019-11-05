@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
+using AutoMapper;
+using Microsoft.ApplicationInsights.WindowsServer;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
+using MyPortal.Dtos.GridDtos;
+using MyPortal.Interfaces;
 using MyPortal.Models.Database;
 using MyPortal.Services;
 using Syncfusion.EJ2.Base;
@@ -17,17 +22,22 @@ namespace MyPortal.Controllers.Api
     [RoutePrefix("api/documents")]
     public class DocumentsController : MyPortalApiController
     {
-
+        private readonly DocumentService _service;
+        
+        public DocumentsController()
+        {
+            _service = new DocumentService(UnitOfWork);
+        }
+            
         [HttpPost]
         [RequiresPermission("EditDocuments")]
         [Route("create", Name = "ApiDocumentsCreateDocument")]
         public async Task<IHttpActionResult> CreateDocument([FromBody] Document document)
         {
-            var userId = User.Identity.GetUserId();
-
             try
             {
-                await DocumentService.CreateDocument(document, userId, _context);
+                var userId = User.Identity.GetUserId();
+                await _service.CreateDocument(document, userId);
             }
             catch (Exception e)
             {
@@ -44,7 +54,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await DocumentService.GetApprovedGeneralDocumentsDto(_context);
+                var documents = await _service.GetApprovedGeneralDocuments();
+
+                return documents.Select(Mapper.Map<Document, DocumentDto>);
             }
             catch (Exception e)
             {
@@ -59,9 +71,11 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var documents = await DocumentService.GetApprovedGeneralDocumentsDataGrid(_context);
+                var documents = await _service.GetApprovedGeneralDocuments();
 
-                return PrepareDataGridObject(documents, dm);
+                var list = documents.Select(Mapper.Map<Document, GridDocumentDto>);
+
+                return PrepareDataGridObject(list, dm);
             }
             catch (Exception e)
             {
@@ -76,7 +90,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await DocumentService.GetDocumentById(documentId, _context);
+                var document = await _service.GetDocumentById(documentId);
+
+                return Mapper.Map<Document, DocumentDto>(document);
             }
             catch (Exception e)
             {
@@ -91,7 +107,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await DocumentService.GetAllGeneralDocumentsDto(_context);
+                var documents = await _service.GetAllGeneralDocuments();
+
+                return documents.Select(Mapper.Map<Document, DocumentDto>);
             }
             catch (Exception e)
             {
@@ -106,9 +124,11 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var documents = await DocumentService.GetAllGeneralDocumentsDataGrid(_context);
+                var documents = await _service.GetAllGeneralDocuments();
 
-                return PrepareDataGridObject(documents, dm);
+                var list = documents.Select(Mapper.Map<Document, GridDocumentDto>);
+
+                return PrepareDataGridObject(list, dm);
             }
             catch (Exception e)
             {
@@ -123,9 +143,11 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var documents = await DocumentService.GetPersonalDocumentsDataGrid(personId, _context);
+                var documents = await _service.GetPersonalDocuments(personId);
 
-                return PrepareDataGridObject(documents, dm);
+                var list = documents.Select(Mapper.Map<PersonDocument, GridPersonDocumentDto>);
+
+                return PrepareDataGridObject(list, dm);
             }
             catch (Exception e)
             {
@@ -140,7 +162,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await DocumentService.DeleteDocument(documentId, _context);
+                await _service.DeleteDocument(documentId);
             }
             catch (Exception e)
             {
@@ -157,7 +179,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await DocumentService.UpdateDocument(document, _context);
+                await _service.UpdateDocument(document);
             }
             catch (Exception e)
             {
@@ -172,10 +194,10 @@ namespace MyPortal.Controllers.Api
         [Route("personal/create", Name = "ApiDocumentsCreatePersonalDocument")]
         public async Task<IHttpActionResult> CreatePersonalDocument([FromBody] PersonDocument document)
         {
-            var uploaderId = User.Identity.GetUserId();
             try
             {
-                await DocumentService.CreatePersonalDocument(document, uploaderId, _context);
+                var userId = User.Identity.GetUserId();
+                await _service.CreatePersonalDocument(document, userId);
             }
             catch (Exception e)
             {
@@ -192,7 +214,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await DocumentService.GetPersonalDocumentById(documentId, _context);
+                var document = await _service.GetPersonalDocumentById(documentId);
+
+                return Mapper.Map<PersonDocument, PersonDocumentDto>(document);
             }
             catch (Exception e)
             {
@@ -207,7 +231,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await DocumentService.GetPersonalDocuments(personId, _context);
+                var documents = await _service.GetPersonalDocuments(personId);
+
+                return documents.Select(Mapper.Map<PersonDocument, PersonDocumentDto>);
             }
             catch (Exception e)
             {
@@ -222,7 +248,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await DocumentService.DeletePersonalDocument(documentId, _context);
+                await _service.DeletePersonalDocument(documentId);
             }
             catch (Exception e)
             {
@@ -239,7 +265,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await DocumentService.UpdatePersonalDocument(document, _context);
+                await _service.UpdatePersonalDocument(document);
             }
             catch (Exception e)
             {

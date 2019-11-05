@@ -121,11 +121,12 @@ namespace MyPortal.Controllers.Api
         [Route("classes/get/all", Name = "ApiCurriculumGetAllClasses")]
         public async Task<IEnumerable<CurriculumClassDto>> GetAllClasses()
         {
-            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
-
             try
             {
-                return await CurriculumService.GetAllClasses(academicYearId, _context);
+                var academicYearId = await _service.GetCurrentOrSelectedAcademicYearId(User);
+                var classes = await _service.GetAllClasses(academicYearId);
+
+                return classes.Select(Mapper.Map<CurriculumClass, CurriculumClassDto>);
             }
             catch (Exception e)
             {
@@ -138,13 +139,15 @@ namespace MyPortal.Controllers.Api
         [Route("classes/get/dataGrid/all", Name = "ApiCurriculumGetAllClassesDataGrid")]
         public async Task<IHttpActionResult> GetAllClassesDataGrid([FromBody] DataManagerRequest dm)
         {
-            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
-
             try
             {
-                var classes = await CurriculumService.GetAllClasses(academicYearId, _context);
+                var academicYearId = await _service.GetCurrentOrSelectedAcademicYearId(User);
 
-                return PrepareDataGridObject(classes, dm);
+                var classes = await _service.GetAllClasses(academicYearId);
+
+                var list = classes.Select(Mapper.Map<CurriculumClass, GridCurriculumClassDto>);
+
+                return PrepareDataGridObject(list, dm);
             }
             catch (Exception e)
             {
@@ -159,7 +162,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumService.GetClassById(classId, _context);
+                var @class = await _service.GetClassById(classId);
+
+                return Mapper.Map<CurriculumClass, CurriculumClassDto>(@class);
             }
             catch (Exception e)
             {
@@ -172,11 +177,13 @@ namespace MyPortal.Controllers.Api
         [Route("classes/create", Name = "ApiCurriculumCreateClass")]
         public async Task<IHttpActionResult> CreateClass([FromBody] CurriculumClass @class)
         {
-            @class.AcademicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
-
             try
             {
-                await CurriculumService.CreateClass(@class, _context);
+                var academicYearId = await _service.GetCurrentOrSelectedAcademicYearId(User);
+
+                @class.AcademicYearId = academicYearId;
+
+                await _service.CreateClass(@class);
             }
             catch (Exception e)
             {
@@ -193,7 +200,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumService.UpdateClass(@class, _context);
+                await _service.UpdateClass(@class);
             }
             catch (Exception e)
             {
@@ -210,7 +217,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumService.DeleteClass(classId, _context);
+                await _service.DeleteClass(classId);
             }
             catch (Exception e)
             {
@@ -227,7 +234,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumService.GetSessionsByClassDto(classId, _context);
+                var sessions = await _service.GetSessionsByClass(classId);
+
+                return sessions.Select(Mapper.Map<CurriculumSession, CurriculumSessionDto>);
             }
             catch (Exception e)
             {
@@ -242,9 +251,11 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var sessions = await CurriculumService.GetSessionsByClassDto(classId, _context);
+                var sessions = await _service.GetSessionsByClass(classId);
 
-                return PrepareDataGridObject(sessions, dm);
+                var list = sessions.Select(Mapper.Map<CurriculumSession, GridCurriculumSessionDto>);
+
+                return PrepareDataGridObject(list, dm);
             }
             catch (Exception e)
             {
@@ -259,7 +270,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumService.GetSessionById(sessionId, _context);
+                var session = await _service.GetSessionById(sessionId);
+
+                return Mapper.Map<CurriculumSession, CurriculumSessionDto>(session);
             }
             catch (Exception e)
             {
@@ -274,7 +287,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumService.CreateSession(session, _context);
+                await _service.CreateSession(session);
             }
             catch (Exception e)
             {
@@ -291,7 +304,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumService.CreateSessionForRegPeriods(session, _context);
+                await _service.CreateSessionForRegPeriods(session);
             }
             catch (Exception e)
             {
@@ -308,7 +321,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumService.UpdateSession(session, _context);
+                await _service.UpdateSession(session);
             }
             catch (Exception e)
             {
@@ -325,7 +338,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumService.DeleteSession(sessionId, _context);
+                await _service.DeleteSession(sessionId);
             }
             catch (Exception e)
             {
@@ -342,7 +355,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumService.GetEnrolmentsForClassDto(classId, _context);
+                var enrolments = await _service.GetEnrolmentsByClass(classId);
+
+                return enrolments.Select(Mapper.Map<CurriculumEnrolment, CurriculumEnrolmentDto>);
             }
             catch (Exception e)
             {
@@ -358,9 +373,11 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var enrolments = await CurriculumService.GetEnrolmentsForClassDataGrid(classId, _context);
+                var enrolments = await _service.GetEnrolmentsByClass(classId);
 
-                return PrepareDataGridObject(enrolments, dm);
+                var list = enrolments.Select(Mapper.Map<CurriculumEnrolment, GridCurriculumEnrolmentDto>);
+
+                return PrepareDataGridObject(list, dm);
             }
             catch (Exception e)
             {
@@ -375,7 +392,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumService.GetEnrolmentsForStudentDto(studentId, _context);
+                var enrolments = await _service.GetEnrolmentsByStudent(studentId);
+
+                return enrolments.Select(Mapper.Map<CurriculumEnrolment, CurriculumEnrolmentDto>);
             }
             catch (Exception e)
             {
@@ -391,9 +410,11 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var enrolments = await CurriculumService.GetEnrolmentsForStudentDataGrid(studentId, _context);
+                var enrolments = await _service.GetEnrolmentsByStudent(studentId);
 
-                return PrepareDataGridObject(enrolments, dm);
+                var list = enrolments.Select(Mapper.Map<CurriculumEnrolment, GridCurriculumEnrolmentDto>);
+
+                return PrepareDataGridObject(list, dm);
             }
             catch (Exception e)
             {
@@ -404,11 +425,13 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ViewEnrolments")]
         [Route("enrolments/get/byId/{enrolmentId:int}", Name = "ApiCurriculumGetEnrolment")]
-        public async Task<CurriculumEnrolmentDto> GetEnrolment([FromUri] int enrolmentId)
+        public async Task<CurriculumEnrolmentDto> GetEnrolmentById([FromUri] int enrolmentId)
         {
             try
             {
-                return await CurriculumService.GetEnrolmentById(enrolmentId, _context);
+                var enrolment = await _service.GetEnrolmentById(enrolmentId);
+
+                return Mapper.Map<CurriculumEnrolment, CurriculumEnrolmentDto>(enrolment);
             }
             catch (Exception e)
             {
@@ -423,7 +446,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumService.CreateEnrolment(enrolment, _context);
+                await _service.CreateEnrolment(enrolment);
             }
             catch (Exception e)
             {
@@ -440,7 +463,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumService.CreateEnrolmentsForRegGroup(enrolment, _context);
+                await _service.CreateEnrolmentsForRegGroup(enrolment);
             }
             catch (Exception e)
             {
@@ -457,7 +480,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumService.DeleteEnrolment(enrolmentId, _context);
+                await _service.DeleteEnrolment(enrolmentId);
             }
             catch (Exception e)
             {
@@ -474,7 +497,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumService.CreateSubject(subject, _context);
+                await _service.CreateSubject(subject);
             }
             catch (Exception e)
             {
@@ -491,7 +514,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumService.DeleteSubject(subjectId, _context);
+                await _service.DeleteSubject(subjectId);
             }
             catch (Exception e)
             {
@@ -508,7 +531,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumService.GetSubjectById(subjectId, _context);
+                var subject = await _service.GetSubjectById(subjectId);
+
+                return Mapper.Map<CurriculumSubject, CurriculumSubjectDto>(subject);
             }
             catch (Exception e)
             {
@@ -523,7 +548,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumService.GetAllSubjectsDto(_context);
+                var subjects = await _service.GetAllSubjects();
+
+                return subjects.Select(Mapper.Map<CurriculumSubject, CurriculumSubjectDto>);
             }
             catch (Exception e)
             {
@@ -538,9 +565,11 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var subjects = await CurriculumService.GetAllSubjectsDataGrid(_context);
+                var subjects = await _service.GetAllSubjects();
 
-                return PrepareDataGridObject(subjects, dm);
+                var list = subjects.Select(Mapper.Map<CurriculumSubject, GridCurriculumSubjectDto>);
+
+                return PrepareDataGridObject(list, dm);
             }
             catch (Exception e)
             {
@@ -555,7 +584,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumService.UpdateSubject(subject, _context);
+                await _service.UpdateSubject(subject);
             }
             catch (Exception e)
             {
@@ -572,7 +601,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumService.CreateStudyTopic(studyTopic, _context);
+                await _service.UpdateStudyTopic(studyTopic);
             }
             catch (Exception e)
             {
@@ -589,7 +618,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumService.DeleteStudyTopic(studyTopicId, _context);
+                await _service.DeleteStudyTopic(studyTopicId);
             }
             catch (Exception e)
             {
@@ -606,7 +635,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumService.GetStudyTopicById(studyTopicId, _context);
+                var studyTopic = await _service.GetStudyTopicById(studyTopicId);
+
+                return Mapper.Map<CurriculumStudyTopic, CurriculumStudyTopicDto>(studyTopic);
             }
             catch (Exception e)
             {
@@ -621,7 +652,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumService.GetAllStudyTopicsDto(_context);
+                var studyTopics = await _service.GetAllStudyTopics();
+
+                return studyTopics.Select(Mapper.Map<CurriculumStudyTopic, CurriculumStudyTopicDto>);
             }
             catch (Exception e)
             {
@@ -636,9 +669,11 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var studyTopics = await CurriculumService.GetAllStudyTopicsDataGrid(_context);
+                var studyTopics = await _service.GetAllStudyTopics();
 
-                return PrepareDataGridObject(studyTopics, dm);
+                var list = studyTopics.Select(Mapper.Map<CurriculumStudyTopic, GridCurriculumStudyTopicDto>);
+
+                return PrepareDataGridObject(list, dm);
             }
             catch (Exception e)
             {
@@ -653,7 +688,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumService.UpdateStudyTopic(studyTopic, _context);
+                await _service.UpdateStudyTopic(studyTopic);
             }
             catch (Exception e)
             {
@@ -670,7 +705,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumService.GetAllLessonPlans(_context);
+                var lessonPlans = await _service.GetAllLessonPlans();
+
+                return lessonPlans.Select(Mapper.Map<CurriculumLessonPlan, CurriculumLessonPlanDto>);
             }
             catch (Exception e)
             {
@@ -685,7 +722,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await CurriculumService.GetLessonPlanById(lessonPlanId, _context);
+                var lessonPlan = await _service.GetLessonPlanById(lessonPlanId);
+
+                return Mapper.Map<CurriculumLessonPlan, CurriculumLessonPlanDto>(lessonPlan);
             }
             catch (Exception e)
             {
@@ -696,11 +735,13 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ViewLessonPlans")]
         [Route("lessonPlans/get/byTopic/{studyTopicId:int}", Name = "ApiCurriculumGetLessonPlansByTopic")]
-        public async Task<IEnumerable<CurriculumLessonPlanDto>> GetLessonPlansByTopic([FromUri] int studyTopicId)
+        public async Task<IEnumerable<CurriculumLessonPlanDto>> GetLessonPlansByStudyTopic([FromUri] int studyTopicId)
         {
             try
             {
-                return await CurriculumService.GetLessonPlansByStudyTopicDto(studyTopicId, _context);
+                var lessonPlans = await _service.GetLessonPlansByStudyTopic(studyTopicId);
+
+                return lessonPlans.Select(Mapper.Map<CurriculumLessonPlan, CurriculumLessonPlanDto>);
             }
             catch (Exception e)
             {
@@ -716,9 +757,11 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var lessonPlans = await CurriculumService.GetLessonPlansByStudyTopicDataGrid(studyTopicId, _context);
+                var lessonPlans = await _service.GetLessonPlansByStudyTopic(studyTopicId);
 
-                return PrepareDataGridObject(lessonPlans, dm);
+                var list = lessonPlans.Select(Mapper.Map<CurriculumLessonPlan, GridCurriculumLessonPlanDto>);
+
+                return PrepareDataGridObject(list, dm);
             }
             catch (Exception e)
             {
@@ -731,10 +774,10 @@ namespace MyPortal.Controllers.Api
         [Route("lessonPlans/create", Name = "ApiCurriculumCreateLessonPlan")]
         public async Task<IHttpActionResult> CreateLessonPlan([FromBody] CurriculumLessonPlan plan)
         {
-            var userId = User.Identity.GetUserId();
             try
             {
-                await CurriculumService.CreateLessonPlan(plan, userId, _context);
+                var userId = User.Identity.GetUserId();
+                await _service.CreateLessonPlan(plan, userId);
             }
             catch (Exception e)
             {
@@ -751,7 +794,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await CurriculumService.UpdateLessonPlan(plan, _context);
+                await _service.UpdateLessonPlan(plan);
             }
             catch (Exception e)
             {
@@ -766,11 +809,13 @@ namespace MyPortal.Controllers.Api
         [Route("lessonPlans/delete/{lessonPlanId:int}", Name = "ApiCurriculumDeleteLessonPlan")]
         public async Task<IHttpActionResult> DeleteLessonPlan([FromUri] int lessonPlanId)
         {
-            var userId = User.Identity.GetUserId();
             try
             {
-                await CurriculumService.DeleteLessonPlan(lessonPlanId, userId,
-                    await User.HasPermissionAsync("DeleteAllLessonPlans"), _context);
+                var userId = User.Identity.GetUserId();
+
+                var canDeleteAll = User.HasPermission("DeleteAllLessonPlans");
+
+                await _service.DeleteLessonPlan(lessonPlanId, userId, canDeleteAll);
             }
             catch (Exception e)
             {

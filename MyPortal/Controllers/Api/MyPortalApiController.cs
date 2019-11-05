@@ -17,23 +17,23 @@ using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
 {
-    public class MyPortalApiController : ApiController
+    public abstract class MyPortalApiController : ApiController
     {
         protected readonly IUnitOfWork UnitOfWork;
 
-        public MyPortalApiController()
+        protected MyPortalApiController()
         {
             UnitOfWork = new UnitOfWork(new MyPortalDbContext());
         }
 
-        public MyPortalApiController(IUnitOfWork unitOfWork)
+        protected MyPortalApiController(IUnitOfWork unitOfWork)
         {
             UnitOfWork = unitOfWork;
         }
 
         protected override void Dispose(bool disposing)
         {
-            
+            UnitOfWork.Dispose();
         }
 
         //If ProcessResponse does NOT return an object

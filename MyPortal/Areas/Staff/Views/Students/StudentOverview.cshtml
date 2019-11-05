@@ -1,0 +1,864 @@
+﻿@using MyPortal.Models.Database
+@using MyPortal.Services
+@using Syncfusion.EJ2.Grids
+@model MyPortal.Areas.Staff.ViewModels.StudentOverviewViewModel
+@{
+    ViewBag.Title = $"Student Overview: {PeopleService.GetStudentDisplayName(Model.Student).ResponseObject}";
+    ViewBag.DisplayTitle = "Student Overview";
+    Layout = "_LayoutStaff.cshtml";
+}
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">@PeopleService.GetStudentDisplayName(Model.Student).ResponseObject</h1>
+</div>
+
+<div class="row">
+    
+    <div class="col-xl-12 col-md-12 mb-4">
+        <div class="dropdown inline-block">
+            <button class="btn btn-primary dropdown-toggle mp-btn-top" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-user-graduate"></i> Student
+            </button>
+
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                @if (User.HasPermission("EditStudents"))
+                {
+                    <h6 class="dropdown-header">@Model.Student.GetDisplayName()</h6>
+                }
+                <a href="@Url.HttpRouteUrl("PeopleStudentExtendedDetails", new {studentId = Model.Student.Id})" class="dropdown-item">Details</a>
+                <a href="@Url.HttpRouteUrl("PeopleStudentBehaviourDetails", new {studentId = Model.Student.Id})" class="dropdown-item">Behaviour</a>
+                <a href="@Url.HttpRouteUrl("PeopleStudentAssessmentResults", new {studentId = Model.Student.Id})" class="dropdown-item">Results</a>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<div class="row">
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Account Balance</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            £@Model.Student.AccountBalance
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-pound-sign fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card shadow h-100 py-2" id="attendanceBlock">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Attendance</div>
+                        @if (Model.HasAttendaceData && Model.Attendance != null)
+                        {
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" data-hasdata="true" id="attendanceDetail">
+                                @Model.Attendance%
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="attendanceDetail">
+                                --
+                            </div>
+                        }
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card shadow h-100 py-2" id="achievementBlock">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Achievement</div>
+                        @if (Model.AchievementCount.HasValue)
+                        {
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="achievementDetail">
+                                @Model.AchievementCount
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="achievementDetail">
+                                --
+                            </div>
+                        }
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-smile fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card shadow h-100 py-2" id="behaviourBlock">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Behaviour</div>
+                        @if (Model.BehaviourCount.HasValue)
+                        {
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="behaviourDetail">
+                                @Model.BehaviourCount
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="behaviourDetail">
+                                --
+                            </div>
+                        }
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-frown fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-3">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Basic Details</h6>
+            </div>
+
+            <div class="card-body">
+                <table class="table-condensed mp-table-condensed">
+                    <tr>
+                        <td>
+                            <b>First Name</b>
+                        </td>
+                        <td>@Model.Student.Person.FirstName</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Last Name</b>
+                        </td>
+                        <td>@Model.Student.Person.LastName</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Gender</b>
+                        </td>
+                        <td>@PeopleService.GetGenderDisplayName(Model.Student.Person.Gender)</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Year Group</b>
+                        </td>
+                        <td>@Model.Student.PastoralYearGroup.Name</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Reg Group</b>
+                        </td>
+                        <td>@Model.Student.PastoralRegGroup.Name</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Reg Tutor</b>
+                        </td>
+                        <td>@Model.Student.PastoralRegGroup.Tutor.Person.Title @Model.Student.PastoralRegGroup.Tutor.Person.FirstName.Substring(0, 1) @Model.Student.PastoralRegGroup.Tutor.Person.LastName</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Head of Year</b>
+                        </td>
+                        <td>@Model.Student.PastoralYearGroup.HeadOfYear.Person.Title @Model.Student.PastoralYearGroup.HeadOfYear.Person.FirstName.Substring(0, 1) @Model.Student.PastoralYearGroup.HeadOfYear.Person.LastName</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Head of House</b>
+                        </td>
+                        <td>@*@PeopleProcesses.GetStaffDisplayName(Model.Student.House.HeadOfHouse).ResponseObject*@</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Log Notes</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                
+                <div class="mb-4">
+                    
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#NewLogModal">
+                        <i class="fa fa-plus-circle"></i> New Log Note
+                    </button>
+
+                </div>
+
+                @Html.EJS().Grid("logs").DataSource(dataManager => { dataManager.Url("/api/profiles/logs/get/byStudent/dataGrid/" + Model.Student.Id).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+                {
+                    c.Field("Date").HeaderText("Date").Template("#logDateTemplate").Width("105").Add();
+                    c.Field("AuthorName").HeaderText("Author").Template("#logAuthorTemplate").Width("110").Add();
+                    c.Field("LogTypeName").HeaderText("Log Type").Template("#logTypeTemplate").Width("150").Add();
+                    c.Field("Message").HeaderText("Message").Width("500").Template("#logMessageTemplate").Add();
+                    c.HeaderText("Actions").Template("#logActionsTemplate").Width("150").Add();
+                }).AllowPaging().AllowTextWrap().PageSettings(p => p.PageSize(5)).TextWrapSettings(w => { w.WrapMode(WrapMode.Content); }).QueryCellInfo("logQuery").EnableHover(false).Render()
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Documents</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                
+                <div class="mb-4">
+                    
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#NewDocumentModal">
+                        <i class="fa fa-plus-circle"></i> New Document
+                    </button>
+
+                </div>
+
+                @Html.EJS().Grid("documents").DataSource(dataManager => { dataManager.Url("/api/documents/personal/get/dataGrid/" + Model.Student.Person.Id).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+                {
+                    c.Field("Description").HeaderText("Description").Template("#docsDescriptionTemplate").Width("700").Add();
+                    c.Field("Date").HeaderText("Date").Template("#docsDateTemplate").Width("110").Add();
+                    c.HeaderText("Actions").Template("#logActionsTemplate").Width("170").Add();
+                }).AllowPaging().PageSettings(p => p.PageSize(5)).Render()
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="NewLogModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New Log - @Model.Student.Person.LastName, @Model.Student.Person.FirstName</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/profiles/logs/create", HttpMethod = "POST", OnSuccess = "newLogSuccess", OnFailure = "newLogFailure"}, new {id = "NewLogForm"}))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.Label("Log Type")
+                        @Html.DropDownListFor(l => l.Log.TypeId, new SelectList(Model.LogTypes, "Key", "Value"), "Select Log Type", new {@class = "form-control", Name = "TypeId"})
+                        @Html.ValidationMessageFor(l => l.Log.TypeId)
+                    </div>
+                    <hr/>
+                    <button type="button" class="btn btn-sm btn-primary" id="addComment"><i class="fa fa-plus-circle"></i> Add Comment</button>
+                    <hr/>
+                    <div class="form-group">
+                        @Html.Label("Message")
+                        @Html.TextAreaFor(l => l.Log.Message, new {@class = "form-control mp-textarea-lg", Name = "Message", id = "newLogMessageControl"})
+                        @Html.ValidationMessageFor(l => l.Log.Message)
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(l => l.Log.StudentId, new {Value = Model.Student.Id, Name = "StudentId"})
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+<div id="EditLogModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New Log - @Model.Student.Person.LastName, @Model.Student.Person.FirstName</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/profiles/logs/update", HttpMethod = "POST", OnSuccess = "editLogSuccess", OnFailure = "editLogFailure"}, new {id = "EditLogForm"}))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.Label("Log Type")
+                        @Html.DropDownListFor(l => l.Log.TypeId, new SelectList(Model.LogTypes, "Value", "Key"), "Select Log Type", new {@class = "form-control", id = "EditLogTypeControl", Name = "TypeId"})
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Message")
+                        @Html.TextAreaFor(l => l.Log.Message, new {@class = "form-control mp-textarea-lg", id = "EditLogMessageControl", Name = "Message"})
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(l => l.Log.StudentId, new {Value = Model.Student.Id, Name = "StudentId"})
+                        @Html.HiddenFor(l => l.Log.Id, new {Name = "Id", id = "EditLogIdControl"})
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" id="EditLogSave" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+<div id="NewDocumentModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New Document - @Model.Student.Person.LastName, @Model.Student.Person.FirstName</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/documents/personal/create", HttpMethod = "POST", OnSuccess = "newDocumentSuccess", OnFailure = "newDocumentFailure"}, new {id = "newDocumentForm"}))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.Label("Description")
+                        @Html.TextBoxFor(x => x.Upload.Document.Description, new {@class = "form-control", Name = "Document.Description"})
+                        @Html.ValidationMessageFor(x => x.Upload.Document.Description)
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("URL")
+                        @Html.TextBoxFor(x => x.Upload.Document.Url, new {@class = "form-control", Name = "Document.Url"})
+                        @Html.ValidationMessageFor(x => x.Upload.Document.Url)
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(x => x.Upload.PersonId, new {@class = "form-control", Value = Model.Student.Person.Id, Name = "PersonId"})
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="EditDocumentModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Document - @Model.Student.Person.LastName, @Model.Student.Person.FirstName</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/documents/personal/update", HttpMethod = "POST", OnSuccess = "editDocumentSuccess", OnFailure = "editDocumentFailure"}, new {id = "editDocumentForm"}))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.Label("Description")
+                        @Html.TextBoxFor(x => x.Upload.Document.Description, new {@class = "form-control", Name = "Description", id = "EditDocumentDescriptionControl"})
+                        @Html.ValidationMessageFor(x => x.Upload.Document.Description)
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("URL")
+                        @Html.TextBoxFor(x => x.Upload.Document.Url, new {@class = "form-control", Name = "Url", id = "EditDocumentUrlControl"})
+                        @Html.ValidationMessageFor(x => x.Upload.Document.Url)
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(x => x.Upload.Document.Id, new {Name = "Id", id = "EditDocumentIdControl"})
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="AddCommentModal" class="modal fade" role="dialog">
+    <div class="modal-dialog" role="document">
+
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Comment to Log</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    @Html.Label("Comment Bank")
+                    @Html.DropDownList("SelectedStatus", new SelectList(Model.CommentBanks, "Key", "Value"), "Select Comment Bank", new {@class = "form-control", Name = "Id", id = "selectedBank"})
+                </div>
+
+                <div class="container">
+                    <table class="table table-bordered table-hover mp-table" id="comments">
+                        <thead>
+                        <tr>
+                            <th>Comment</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" data-dismiss="modal">Back</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+
+        $(document).ready(function() {
+            overviewCalc();
+            $("#logs").on("click",
+                ".js-delete",
+                function() {
+                    var button = $(this);
+                    bootbox.confirm("Are you sure you wish to delete this log note?",
+                        function(result) {
+                            if (result) {
+                                $.ajax({
+                                    url: `/api/profiles/logs/delete/${button.attr("data-log-id")}`,
+                                    method: "DELETE",
+                                    success: function(result) {
+                                        refreshTable("logs");
+                                        toastr.success(result);
+                                    },
+                                    error: function(result) {
+                                        toastr.error(result.responseJSON);
+                                    }
+                                });
+                            }
+                        });
+                });
+
+            $("#documents").on("click",
+                ".js-delete",
+                function() {
+                    var button = $(this);
+                    bootbox.confirm("Are you sure you wish to delete this document?",
+                        function(result) {
+                            if (result) {
+                                $.ajax({
+                                    url: `/api/documents/personal/delete/${button.attr("data-document-id")}`,
+                                    method: "DELETE",
+                                    success: function(ajaxResult) {
+                                        refreshTable("documents");
+                                        toastr.success(ajaxResult);
+                                    },
+                                    error: function(ajaxResult) {
+                                        toastr.error(ajaxResult.responseJSON);
+                                    }
+                                });
+                            }
+                        });
+                });
+
+            $('.modal').on('hidden.bs.modal',
+                function() {
+                    $(this).find('form').trigger('reset');
+                });
+
+            $("#AddCommentModal").on('hidden.bs.modal',
+                function() {
+                    $("#comments").DataTable().clear().destroy();
+                    $("#selectedBank").prop("selectedIndex", 0);
+                });
+
+            $("#NewLogModal").on('hidden.bs.modal',
+                function() {
+                    $("#newLogMessageControl").val("");
+                });
+
+            $("#addComment").on("click",
+                function() {
+                    $("#AddCommentModal").modal('toggle');
+                });
+
+            $('#AddCommentModal').on('shown.bs.modal',
+                function() {
+                    loadComments();
+                });
+
+            $("#comments").on("click",
+                ".js-add",
+                function() {
+                    var message = $(this).parent().siblings(":first").text();
+                    $("#newLogMessageControl").val(function(i, val) {
+                        return val + message;
+                    });
+                    toastr.success("Added comment to log");
+                    $("#AddCommentModal").modal('hide');
+                });
+
+            $("#selectedBank").on("change",
+                function() {
+                    $("#comments").DataTable().clear().destroy();
+                    loadComments();
+                });
+
+
+            $("#logs").on("click",
+                ".js-edit",
+                function() {
+                    var button = $(this);
+                    var logId = button.attr("data-log-id");
+                    $.ajax({
+                        url: `/api/profiles/logs/get/byId/${logId}`,
+                        method: "GET",
+                        success: function(result) {
+                            $("#EditLogTypeControl").val(result["typeId"]);
+                            $("#EditLogMessageControl").val(result["message"]);
+                            $("#EditLogIdControl").val(result["id"]);
+                        },
+                        error: function() {
+                            toastr.error("Failed to load log data");
+                        }
+                    });
+                    $("#EditLogModal").modal('toggle');
+                });
+
+            $("#documents").on("click",
+                ".js-edit",
+                function() {
+                    var button = $(this);
+                    var docId = button.attr("data-document-id");
+                    $.ajax({
+                        url: `/api/documents/personal/get/byId/${docId}`,
+                        method: "GET",
+                        success: function(result) {
+                            $("#EditDocumentDescriptionControl").val(result["description"]);
+                            $("#EditDocumentUrlControl").val(result["url"]);
+                            $("#EditDocumentIdControl").val(result["id"]);
+                        },
+                        error: function() {
+                            toastr.error("Failed to load document data");
+                        }
+                    });
+                    $("#EditDocumentModal").modal('toggle');
+                });
+
+            $('#EditDetailsModal').on('hidden.bs.modal',
+                function() {
+                    $("#editDetailsFirstNameControl").val("@Model.Student.Person.FirstName");
+                    $("#editDetailsLastNameControl").val("@Model.Student.Person.LastName");
+                    $("#editDetailsYearGroupControl").val("@Model.Student.YearGroupId");
+                    $("#editDetailsRegGroupControl").val("@Model.Student.RegGroupId");
+                });
+
+
+            $("#ViewResultsButton").on("click",
+                function() {
+                    var button = $(this);
+                    location.replace(`/Staff/People/Students/${button.attr("data-student-id")}/Results`);
+                });
+        });
+
+        function newDocumentSuccess(result) {
+            $("#NewDocumentModal").modal('hide');
+            refreshTable("documents");
+            toastr.success(result);
+        }
+
+        function newDocumentFailure(result) {
+            $("#NewDocumentModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+
+        function editDocumentSuccess(result) {
+            $("#EditDocumentModal").modal('hide');
+            refreshTable("documents");
+            toastr.success(result);
+        }
+
+        function editDocumentFailure(result) {
+            $("#EditDocumentModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+
+        function editLogSuccess(result) {
+            $("#EditLogModal").modal('hide');
+            refreshTable("logs");
+            toastr.success(result);
+        }
+
+        function editLogFailure(result) {
+            $("#EditLogModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+
+        function newLogSuccess(result) {
+            $("#NewLogModal").modal('hide');
+            refreshTable("logs");
+            toastr.success(result);
+        }
+
+        function newLogFailure(result) {
+            $("#NewLogModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+
+        function loadComments() {
+            var commentBank = $("#selectedBank").val();
+
+            if (commentBank === "") {
+                $("#comments").hide();
+                return;
+            }
+
+            var url = `/api/profiles/comments/get/byBank/${commentBank}`;
+
+            $("#comments").DataTable({
+                ajax: {
+                    url: url,
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "value",
+                        render: function(data) {
+                            return data.replace(/</g, "&lt;")
+                                .replace(/>/g, "&gt;");
+                        }
+                    },
+                    {
+                        data: "id",
+                        render: function(data) {
+                            return `<button type='button' class='btn btn-xs btn-success js-add' data-comment-id=${data
+                                }><i class="fas fa-plus"></i></button>`;
+                        }
+                    }
+                ],
+                paging: true,
+                ordering: false,
+                searching: false,
+                responsive: true,
+                info: false,
+                lengthChange: false,
+                pageLength: 5,
+                "language": {
+                    "emptyTable": "No comments to display"
+                }
+            });
+
+            $("#comments").show();
+        }
+
+        function overviewCalc() {
+
+            if ($("#attendanceDetail").attr("data-hasdata") === "true") {
+                if (parseInt($("#attendanceDetail").text()) >= 95) {
+                    $("#attendanceBlock").addClass("border-left-success");
+                } else if (parseInt($("#attendanceDetail").text()) < 90) {
+                    $("#attendanceBlock").addClass("border-left-danger");
+                } else if (parseInt($("#attendanceDetail").text()) < 95) {
+                    $("#attendanceBlock").addClass("border-left-warning");
+                }
+            }
+
+            if (parseInt($("#achievementDetail").text()) < @Model.BehaviourCount) {
+                $("#achievementBlock").addClass("border-left-danger");
+            }
+            if (parseInt($("#achievementDetail").text()) === @Model.BehaviourCount) {
+                $("#achievementBlock").addClass("border-left-warning");
+            }
+            if (parseInt($("#achievementDetail").text()) > @Model.BehaviourCount) {
+                $("#achievementBlock").addClass("border-left-success");
+            }
+
+
+            if (parseInt($("#behaviourDetail").text()) === 0) {
+                $("#behaviourBlock").addClass("border-left-success");
+            }
+            if (parseInt($("#behaviourDetail").text()) > 9) {
+                $("#behaviourBlock").addClass("border-left-danger");
+            }
+            if (parseInt($("#behaviourDetail").text()) > 0) {
+                $("#behaviourBlock").addClass("border-left-warning");
+            }
+        }
+
+        function renderLogMessage(data) {
+            if ("@Model.Student.Person.Gender" === "M") {
+                return data.replace(/<name>/g, "@Model.Student.Person.FirstName")
+                    .replace(/<he>/g, "he")
+                    .replace(/<He>/g, "He")
+                    .replace(/<him>/g, "him")
+                    .replace(/<Him>/g, "Him")
+                    .replace(/<his>/g, "his")
+                    .replace(/<His>/g, "His")
+                    .replace(/<himself>/g, "himself")
+                    .replace(/<Himself>/g, "Himself")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/\n/g, "<br/>");
+            }
+
+            if ("@Model.Student.Person.Gender" === "F") {
+                return data.replace("<name>", "@Model.Student.Person.FirstName")
+                    .replace(/<he>/g, "she")
+                    .replace(/<He>/g, "She")
+                    .replace(/<him>/g, "her")
+                    .replace(/<Him>/g, "Her")
+                    .replace(/<his>/g, "her")
+                    .replace(/<His>/g, "Her")
+                    .replace(/<himself>/g, "herself")
+                    .replace(/<Himself>/g, "Herself")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/\n/g, "<br/>");
+            }
+
+            if ("@Model.Student.Person.Gender" === "X") {
+                return data.replace("<name>", "@Model.Student.Person.FirstName")
+                    .replace(/<he>/g, "they")
+                    .replace(/<He>/g, "They")
+                    .replace(/<him>/g, "them")
+                    .replace(/<Him>/g, "Them")
+                    .replace(/<his>/g, "their")
+                    .replace(/<His>/g, "Their")
+                    .replace(/<himself>/g, "themselves")
+                    .replace(/<Himself>/g, "Themselves")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/\n/g, "<br/>");
+            }
+
+            return data;
+        }
+
+        function logQuery(args) {
+
+            if (args.column.field === "LogTypeName") {
+                if (args.cell.textContent === "Academic Support") {
+                    args.cell.classList.add("mp-log-academic-support");
+                }
+                else if (args.cell.textContent === "Behaviour Log") {
+                    args.cell.classList.add("mp-log-behaviour");
+                }
+                else if (args.cell.textContent === "Report") {
+                    args.cell.classList.add("mp-log-report");
+                }
+                else if (args.cell.textContent === "Praise") {
+                    args.cell.classList.add("mp-log-praise");
+                }
+                else if (args.cell.textContent === "SEN Note") {
+                    args.cell.classList.add("mp-log-sen");
+                }
+                else if (args.cell.textContent === "Tutor Note") {
+                    args.cell.classList.add("mp-log-tutor-note");
+                }
+                else if (args.cell.textContent === "Medical Event") {
+                    args.cell.classList.add("mp-log-medical-event");
+                }
+                else if (args.cell.textContent === "Student Feed") {
+                    args.cell.classList.add("mp-log-student-feed");
+                }
+            }
+        }
+
+    </script>
+
+    <script type="text/x-jsrender" id="logAuthorTemplate">
+        <div>
+            ${AuthorName}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="logDateTemplate">
+        <div>
+            ${formatDate(Date.toString())}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="logTypeTemplate">
+        <div>
+            ${LogTypeName}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="logMessageTemplate">
+        <div>
+            <b>${renderLogMessage(Message.toString())}</b>
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="logActionsTemplate">
+        <div>
+            <button type="button" class="btn btn-xs btn-warning mp-btn-action js-edit" data-log-id="${Id}">
+                <i class="far fa-edit"></i>
+            </button>
+            <button type="button" class="btn btn-xs btn-danger mp-btn-action js-delete" data-log-id="${Id}">
+                <i class="far fa-trash-alt"></i>
+            </button>
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="docsDescriptionTemplate">
+        <div>
+            <b><a href="${Url}" target="_blank">${Description}</a></b>
+        </div>
+    </script>
+
+
+    <script type="text/x-jsrender" id="docsDateTemplate">
+        <div>
+            ${formatDate(Date.toString())}
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="docsActionsTemplate">
+        <div>
+            <button type="button" class="btn btn-xs btn-warning mp-btn-action js-edit" data-document-id="${Id}">
+                <i class="far fa-edit"></i>
+            </button>
+            <button type="button" class="btn btn-xs btn-danger mp-btn-action js-delete" data-document-id="${Id}">
+                <i class="far fa-trash-alt"></i>
+            </button>
+        </div>
+    </script>
+
+    @Scripts.Render("~/bundles/jqueryval")
+}

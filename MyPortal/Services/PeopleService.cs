@@ -73,8 +73,7 @@ namespace MyPortal.Services
             return await UnitOfWork.People.SearchPeople(person);
         }
 
-        public async Task<IEnumerable<MedicalPersonCondition>> GetMedicalConditionsByPerson(int personId,
-            MyPortalDbContext context)
+        public async Task<IEnumerable<MedicalPersonCondition>> GetMedicalConditionsByPerson(int personId)
         {
             var conditions = await UnitOfWork.MedicalPersonConditions.GetMedicalConditionsByPerson(personId);
 

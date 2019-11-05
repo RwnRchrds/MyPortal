@@ -89,6 +89,11 @@ namespace MyPortal.Services
             return students;
         }
 
+        /// <summary>
+        /// Get all the students in a particular year group.
+        /// </summary>
+        /// <param name="yearGroupId"></param>
+        /// <returns></returns>
         public async Task<IEnumerable<Student>> GetStudentsByYearGroup(int yearGroupId)
         {
             var students = await UnitOfWork.Students.GetStudentsByYearGroup(yearGroupId);

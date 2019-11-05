@@ -95,14 +95,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ProcessTests\AssessmentProcessTests.cs" />
-    <Compile Include="ProcessTests\AttendanceProcessTests.cs" />
-    <Compile Include="ProcessTests\MyPortalTestFixture.cs" />
-    <Compile Include="ProcessTests\PeopleProcessTests.cs" />
-    <Compile Include="ProcessTests\SystemProcessTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestData\ContextControl.cs" />
-    <Compile Include="TestData\EffortProviderFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -113,6 +106,10 @@
       <Project>{DB3E3382-E173-4C79-BE4E-13230F34FDF6}</Project>
       <Name>MyPortal</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ServiceTests\" />
+    <Folder Include="TestData\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

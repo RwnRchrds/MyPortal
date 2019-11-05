@@ -6,8 +6,11 @@ using System.Net.Http;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using System.Web.Http;
+using AutoMapper;
 using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
+using MyPortal.Dtos.GridDtos;
+using MyPortal.Models.Database;
 using MyPortal.Services;
 using Syncfusion.EJ2.Base;
 
@@ -17,6 +20,13 @@ namespace MyPortal.Controllers.Api
     [RoutePrefix("api/people")]
     public class PeopleController : MyPortalApiController
     {
+        private readonly PeopleService _service;
+
+        public PeopleController()
+        {
+            _service = new PeopleService(UnitOfWork);
+        }
+        
         [HttpPost]
         [RequiresPermission("ViewMedical, EditStudents")]
         [Route("medical/conditions/get/byPerson/{personId:int}", Name = "ApiPeopleGetMedicalConditionsByPersonDataGrid")]
@@ -25,9 +35,11 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var medicalConditions = await PeopleService.GetMedicalConditionsByPersonDataGrid(personId, _context);
+                var medicalConditions = await _service.GetMedicalConditionsByPerson(personId);
 
-                return PrepareDataGridObject(medicalConditions, dm);
+                var list = medicalConditions.Select(Mapper.Map<MedicalPersonCondition, GridMedicalPersonConditionDto>);
+
+                return PrepareDataGridObject(list, dm);
             }
             catch (Exception e)
             {
@@ -45,9 +57,12 @@ namespace MyPortal.Controllers.Api
             try
             {
                 var dietaryRequirements =
-                    await PeopleService.GetMedicalDietaryRequirementsByPersonDataGrid(personId, _context);
+                    await _service.GetMedicalDietaryRequirementsByPerson(personId);
 
-                return PrepareDataGridObject(dietaryRequirements, dm);
+                var list = dietaryRequirements.Select(Mapper
+                    .Map<MedicalPersonDietaryRequirement, GridMedicalPersonDietaryRequirementDto>);
+
+                return PrepareDataGridObject(list, dm);
             }
             catch (Exception e)
             {

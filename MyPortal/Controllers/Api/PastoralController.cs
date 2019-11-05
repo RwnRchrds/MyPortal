@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
+using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
@@ -13,7 +15,13 @@ namespace MyPortal.Controllers.Api
     [RoutePrefix("api/pastoral")]
     public class PastoralController : MyPortalApiController
     {
+        private readonly PastoralService _service;
 
+        public PastoralController()
+        {
+            _service = new PastoralService(UnitOfWork);
+        }
+        
         [HttpPost]
         [RequiresPermission("EditRegGroups")]
         [Route("regGroups/create", Name = "ApiPastoralCreateRegGroup")]
@@ -21,7 +29,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await PastoralService.CreateRegGroup(regGroup, _context);
+                await _service.CreateRegGroup(regGroup);
             }
             catch (Exception e)
             {
@@ -38,7 +46,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await PastoralService.DeleteRegGroup(regGroupId, _context);
+                await _service.DeleteRegGroup(regGroupId);
             }
             catch (Exception e)
             {
@@ -55,7 +63,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await PastoralService.GetRegGroupById(regGroupId, _context);
+                await _service.GetRegGroupById(regGroupId);
             }
             catch (Exception e)
             {
@@ -70,7 +78,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await PastoralService.GetRegGroupsByYearGroup(yearGroupId, _context);
+                var regGroups = await _service.GetRegGroupsByYearGroup(yearGroupId);
+
+                return regGroups.Select(Mapper.Map<PastoralRegGroup, PastoralRegGroupDto>);
             }
             catch (Exception e)
             {
@@ -85,7 +95,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await PastoralService.GetAllRegGroups(_context);
+                var regGroups = await _service.GetAllRegGroups();
+
+                return regGroups.Select(Mapper.Map<PastoralRegGroup, PastoralRegGroupDto>);
             }
             catch (Exception e)
             {
@@ -93,21 +105,6 @@ namespace MyPortal.Controllers.Api
             }
         }
 
-        [HttpGet]
-        [RequiresPermission("EditRegGroups")]
-        [Route("regGroups/hasStudents/{regGroupId:int}", Name = "ApiPastoralRegGroupHasStudents")]
-        public async Task<bool> RegGroupHasStudents([FromUri] int regGroupId)
-        {
-            try
-            {
-                return await PastoralService.RegGroupContainsStudents(regGroupId, _context);
-            }
-            catch (Exception e)
-            {
-                throw GetException(e);
-            }
-        }
- 
         [HttpPost]
         [RequiresPermission("EditRegGroups")]
         [Route("regGroups/update", Name = "ApiPastoralUpdateRegGroup")]
@@ -115,7 +112,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await PastoralService.UpdateRegGroup(regGroup, _context);
+                await _service.UpdateRegGroup(regGroup);
             }
             catch (Exception e)
             {
@@ -132,7 +129,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await PastoralService.CreateYearGroup(yearGroup, _context);
+                await _service.CreateYearGroup(yearGroup);
             }
             catch (Exception e)
             {
@@ -149,7 +146,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await PastoralService.DeleteYearGroup(yearGroupId, _context);
+                await _service.DeleteYearGroup(yearGroupId);
             }
             catch (Exception e)
             {
@@ -166,7 +163,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await PastoralService.GetAllYearGroups(_context);
+                var yearGroups = await _service.GetAllYearGroups();
+
+                return yearGroups.Select(Mapper.Map<PastoralYearGroup, PastoralYearGroupDto>);
             }
             catch (Exception e)
             {
@@ -181,7 +180,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await PastoralService.UpdateYearGroup(yearGroup, _context);
+                await _service.UpdateYearGroup(yearGroup);
             }
             catch (Exception e)
             {

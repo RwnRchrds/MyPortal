@@ -414,14 +414,14 @@ namespace MyPortal.Services
             return enrolment;
         }
 
-        public async Task<IEnumerable<CurriculumEnrolment>> GetEnrolmentsForClass(int classId)
+        public async Task<IEnumerable<CurriculumEnrolment>> GetEnrolmentsByClass(int classId)
         {
             var list = await UnitOfWork.CurriculumEnrolments.GetEnrolmentsByClass(classId);
 
             return list;
         }
 
-        public async Task<IEnumerable<CurriculumEnrolment>> GetEnrolmentsForStudent(int studentId)
+        public async Task<IEnumerable<CurriculumEnrolment>> GetEnrolmentsByStudent(int studentId)
         {
             var list = await UnitOfWork.CurriculumEnrolments.GetEnrolmentsByStudent(studentId);
 

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
+using MyPortal.Areas.Staff.ViewModels;
 using MyPortal.Dtos.GridDtos;
 using MyPortal.Dtos.Identity;
 using MyPortal.Exceptions;
@@ -383,6 +384,18 @@ namespace MyPortal.Services
         public async Task UpdateRole(ApplicationRole role)
         {
             await RoleManager.UpdateAsync(role);
+        }
+
+        public async Task<ApplicationUser> GetUserById(string userId)
+        {
+            var user = await UserManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "User not found");
+            }
+
+            return user;
         }
     }
 }

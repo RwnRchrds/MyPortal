@@ -1,9 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Http;
+using AutoMapper;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
-using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
+using MyPortal.Dtos.GridDtos;
 using MyPortal.Models.Database;
 using MyPortal.Services;
 using Syncfusion.EJ2.Base;
@@ -14,155 +18,311 @@ namespace MyPortal.Controllers.Api
     [Authorize]
     public class PersonnelController : MyPortalApiController
     {
+        private readonly PersonnelService _service;
+
+        public PersonnelController()
+        {
+            _service = new PersonnelService(UnitOfWork);
+        }
+        
         [HttpPost]
         [RequiresPermission("EditTrainingCertificates")]
         [Route("certificates/create", Name = "ApiPersonnelCreateTrainingCertificate")]
-        public IHttpActionResult CreateTrainingCertificate([FromBody] PersonnelTrainingCertificate certificate)
+        public async Task<IHttpActionResult> CreateTrainingCertificate([FromBody] PersonnelTrainingCertificate certificate)
         {
-            var userId = User.Identity.GetUserId();
-            return PrepareResponse(PersonnelService.CreateTrainingCertificate(certificate, userId, _context));
+            try
+            {
+                var userId = User.Identity.GetUserId();
+
+                await _service.CreateTrainingCertificate(certificate, userId);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Certificate created");
         }
 
         [HttpDelete]
         [RequiresPermission("EditTrainingCertificates")]
         [Route("certificates/delete/{staffId:int}/{courseId:int}", Name = "ApiPersonnelDeleteTrainingCertificate")]
-        public IHttpActionResult DeleteCertificate([FromUri] int staffId, [FromUri] int courseId)
+        public async Task<IHttpActionResult> DeleteCertificate([FromUri] int staffId, [FromUri] int courseId)
         {
-            var userId = User.Identity.GetUserId();
-            return PrepareResponse(PersonnelService.DeleteTrainingCertificate(staffId, courseId, userId, _context));
+            try
+            {
+                await _service.DeleteTrainingCertificate(staffId, courseId);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Certificate deleted");
         }
         
         [HttpGet]
         [RequiresPermission("ViewTrainingCertificates")]
         [Route("certificates/get/{staffId:int}/{courseId:int}", Name = "ApiPersonnelGetTrainingCertificate")]
-        public PersonnelTrainingCertificateDto GetTrainingCertificate([FromUri] int staffId, [FromUri] int courseId)
+        public async Task<PersonnelTrainingCertificateDto> GetTrainingCertificate([FromUri] int staffId, [FromUri] int courseId)
         {
-            return PrepareResponseObject(PersonnelService.GetCertificate(staffId, courseId, _context));
+            try
+            {
+                var certificate = await _service.GetCertificate(staffId, courseId);
+
+                return Mapper.Map<PersonnelTrainingCertificate, PersonnelTrainingCertificateDto>(certificate);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
 
         [HttpGet]
         [RequiresPermission("ViewTrainingCertificates")]
         [Route("certificates/get/byStaff/{staffId:int}", Name = "ApiPersonnelGetTrainingCertificatesByStaffMember")]
-        public IEnumerable<PersonnelTrainingCertificateDto> GetCertificatesByStaffMember([FromUri] int staffId)
+        public async Task<IEnumerable<PersonnelTrainingCertificateDto>> GetCertificatesByStaffMember([FromUri] int staffId)
         {
-            return PrepareResponseObject(PersonnelService.GetCertificatesByStaffMember(staffId, _context));
+            try
+            {
+                var certificates = await _service.GetCertificatesByStaffMember(staffId);
+
+                return certificates.Select(Mapper.Map<PersonnelTrainingCertificate, PersonnelTrainingCertificateDto>);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
 
         [HttpPost]
         [RequiresPermission("ViewTrainingCertificates")]
         [Route("certificates/get/byStaff/dataGrid/{staffId:int}", Name = "ApiPersonnelGetTrainingCertificatesByStaffMemberDataGrid")]
-        public IHttpActionResult GetCertificatesForStaffMemberDataGrid([FromUri] int staffId, [FromBody] DataManagerRequest dm)
+        public async Task<IHttpActionResult> GetCertificatesForStaffMemberDataGrid([FromUri] int staffId, [FromBody] DataManagerRequest dm)
         {
-            var certs = PrepareResponseObject(PersonnelService.GetCertificatesForStaffMember_DataGrid(staffId, _context));
+            try
+            {
+                var certificates = await _service.GetCertificatesByStaffMember(staffId);
 
-            return PrepareDataGridObject(certs, dm);
+                var list = certificates.Select(Mapper.Map<PersonnelTrainingCertificate, GridPersonnelTrainingCertificateDto>);
+
+                return PrepareDataGridObject(list, dm);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpPost]
         [RequiresPermission("EditTrainingCertificates")]
         [Route("certificates/update", Name = "ApiPersonnelUpdateTrainingCertificate")]
-        public IHttpActionResult UpdateCertificate([FromBody] PersonnelTrainingCertificate certificate)
+        public async Task<IHttpActionResult> UpdateCertificate([FromBody] PersonnelTrainingCertificate certificate)
         {
-            var userId = User.Identity.GetUserId();
-            return PrepareResponse(PersonnelService.UpdateCertificate(certificate, userId, _context));
+            try
+            {
+                var userId = User.Identity.GetUserId();
+                await _service.UpdateCertificate(certificate, userId);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Certificate updated");
         }
 
         [HttpDelete]
         [RequiresPermission("EditTrainingCourses")]
         [Route("courses/remove/{courseId:int}", Name = "ApiPersonnelDeleteTrainingCourse")]
-        public IHttpActionResult DeleteCourse([FromUri] int courseId)
+        public async Task<IHttpActionResult> DeleteCourse([FromUri] int courseId)
         {
-            return PrepareResponse(PersonnelService.DeleteCourse(courseId, _context));
+            try
+            {
+                await _service.DeleteCourse(courseId);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Course deleted");
         }
 
         [HttpGet]
         [Route("courses/get/byId/{courseId:int}", Name = "ApiPersonnelGetTrainingCourseById")]
         [RequiresPermission("ViewTrainingCourses")]
-        public PersonnelTrainingCourseDto GetCourseById([FromUri] int courseId)
+        public async Task<PersonnelTrainingCourseDto> GetCourseById([FromUri] int courseId)
         {
-            return PrepareResponseObject(PersonnelService.GetCourseById(courseId, _context));
+            try
+            {
+                var course = await _service.GetCourseById(courseId);
+
+                return Mapper.Map<PersonnelTrainingCourse, PersonnelTrainingCourseDto>(course);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
 
         [HttpGet]
         [Route("courses/get/all", Name = "ApiPersonnelGetAllTrainingCourses")]
         [RequiresPermission("ViewTrainingCourses")]
-        public IEnumerable<PersonnelTrainingCourseDto> GetCourses()
+        public async Task<IEnumerable<PersonnelTrainingCourseDto>> GetCourses()
         {
-            return PrepareResponseObject(PersonnelService.GetAllTrainingCourses(_context));
+            try
+            {
+                var courses = await _service.GetAllTrainingCourses();
+
+                return courses.Select(Mapper.Map<PersonnelTrainingCourse, PersonnelTrainingCourseDto>);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
 
         [HttpPost]
         [Route("courses/get/dataGrid/all", Name = "ApiPersonnelGetAllTrainingCoursesDataGrid")]
         [RequiresPermission("ViewTrainingCourses")]
-        public IHttpActionResult GetAllTrainingCourseDataGrid([FromBody] DataManagerRequest dm)
+        public async Task<IHttpActionResult> GetAllTrainingCourseDataGrid([FromBody] DataManagerRequest dm)
         {
-            var trainingCourses = PrepareResponseObject(PersonnelService.GetAllTrainingCourses_DataGrid(_context));
+            try
+            {
+                var courses = await _service.GetAllTrainingCourses();
 
-            return PrepareDataGridObject(trainingCourses, dm);
+                var list = courses.Select(Mapper.Map<PersonnelTrainingCourse, GridPersonnelTrainingCourseDto>);
+
+                return PrepareDataGridObject(list, dm);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpPost]
         [Route("courses/edit", Name = "ApiPersonnelUpdateTrainingCourse")]
         [RequiresPermission("EditTrainingCourses")]
-        public IHttpActionResult UpdateCourse([FromBody] PersonnelTrainingCourse course)
+        public async Task<IHttpActionResult> UpdateCourse([FromBody] PersonnelTrainingCourse course)
         {
-            return PrepareResponse(PersonnelService.UpdateCourse(course, _context));
+            try
+            {
+                await _service.UpdateCourse(course);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Course updated");
         }
 
         [HttpPost]
         [Route("observations/create", Name = "ApiPersonnelCreateObservation")]
         [RequiresPermission("EditObservations")]
-        public IHttpActionResult CreateObservation([FromBody] PersonnelObservation data)
+        public async Task<IHttpActionResult> CreateObservation([FromBody] PersonnelObservation data)
         {
-            var userId = User.Identity.GetUserId();
-            return PrepareResponse(PersonnelService.CreateObservation(data, userId, _context));
+            try
+            {
+                var userId = User.Identity.GetUserId();
+                await _service.CreateObservation(data, userId);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Observation created");
         }
 
         [HttpGet]
         [RequiresPermission("ViewObservations")]
         [Route("observations/get/byId/{observationId:int}", Name = "ApiPersonnelGetObservationById")]
-        public PersonnelObservationDto GetObservation([FromUri] int observationId)
+        public async Task<PersonnelObservationDto> GetObservation([FromUri] int observationId)
         {
-            return PrepareResponseObject(PersonnelService.GetObservationById(observationId, _context));
+            try
+            {
+                var observation = await _service.GetObservationById(observationId);
+
+                return Mapper.Map<PersonnelObservation, PersonnelObservationDto>(observation);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }  
         
         [HttpGet]
         [RequiresPermission("ViewObservations")]
         [Route("observations/get/byStaff/{staffMemberId:int}", Name = "ApiPersonnelGetObservationsByStaffMember")]
-        public IEnumerable<PersonnelObservationDto> GetObservationsByStaffMember([FromUri] int staffMemberId)
+        public async Task<IEnumerable<PersonnelObservationDto>> GetObservationsByStaffMember([FromUri] int staffMemberId)
         {
-            return PrepareResponseObject(PersonnelService.GetObservationsByStaffMember(staffMemberId, _context));
+            try
+            {
+                var observations = await _service.GetObservationsByStaffMember(staffMemberId);
+
+                return observations.Select(Mapper.Map<PersonnelObservation, PersonnelObservationDto>);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
 
         [HttpPost]
         [RequiresPermission("ViewObservations")]
         [Route("observations/get/byStaff/dataGrid/{staffMemberId:int}", Name = "ApiPersonnelGetObservationsByStaffMemberDataGrid")]
-        public IHttpActionResult GetObservationsForStaffMemberDataGrid([FromUri] int staffMemberId,
+        public async Task<IHttpActionResult> GetObservationsForStaffMemberDataGrid([FromUri] int staffMemberId,
             [FromBody] DataManagerRequest dm)
         {
-            var observations =
-                PrepareResponseObject(
-                    PersonnelService.GetObservationsForStaffMember_DataGrid(staffMemberId, _context));
+            try
+            {
+                var observations = await _service.GetObservationsByStaffMember(staffMemberId);
 
-            return PrepareDataGridObject(observations, dm);
+                var list = observations.Select(Mapper.Map<PersonnelObservation, GridPersonnelObservationDto>);
+
+                return PrepareDataGridObject(list, dm);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpDelete]
         [RequiresPermission("EditObservations")]
         [Route("observations/delete/{observationId:int}", Name = "ApiPersonnelDeleteObservation")]
-        public IHttpActionResult RemoveObservation([FromUri] int observationId)
+        public async Task<IHttpActionResult> RemoveObservation([FromUri] int observationId)
         {
-            var userId = User.Identity.GetUserId();
-            return PrepareResponse(PersonnelService.DeleteObservation(observationId, userId, _context));
+            try
+            {
+                await _service.DeleteObservation(observationId);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Observation deleted");
         }
 
         [HttpPost]
         [RequiresPermission("EditObservations")]
         [Route("observations/update", Name = "ApiPersonnelUpdateObservation")]
-        public IHttpActionResult UpdateObservation([FromBody] PersonnelObservation observation)
+        public async Task<IHttpActionResult> UpdateObservation([FromBody] PersonnelObservation observation)
         {
-            var userId = User.Identity.GetUserId();
-            return PrepareResponse(PersonnelService.UpdateObservation(observation, userId, _context));
+            try
+            {
+                await _service.UpdateObservation(observation);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Observation updated");
         }
     }
 }

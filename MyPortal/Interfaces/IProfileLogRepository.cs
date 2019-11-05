@@ -9,6 +9,6 @@ namespace MyPortal.Interfaces
 {
     public interface IProfileLogRepository : IRepository<ProfileLog>
     {
-        Task<IEnumerable<ProfileLog>> GetLogsByStudent(int studentId);
+        Task<IEnumerable<ProfileLog>> GetLogsByStudent(int studentId, int academicYearId);
     }
 }

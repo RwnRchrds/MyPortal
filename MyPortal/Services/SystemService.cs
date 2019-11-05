@@ -109,5 +109,12 @@ namespace MyPortal.Services
 
             await UnitOfWork.Complete();
         }
+
+        public async Task<IEnumerable<SchoolLocation>> GetLocations()
+        {
+            var locations = await UnitOfWork.SchoolLocations.GetAllAsync();
+
+            return locations;
+        }
     }
 }

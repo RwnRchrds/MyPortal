@@ -147,9 +147,9 @@ namespace MyPortal.Services
             return log;
         }
 
-        public async Task<IEnumerable<ProfileLog>> GetLogsByStudent(int studentId)
+        public async Task<IEnumerable<ProfileLog>> GetLogsByStudent(int studentId, int academicYearId)
         {
-            var logs = await UnitOfWork.ProfileLogs.GetLogsByStudent(studentId);
+            var logs = await UnitOfWork.ProfileLogs.GetLogsByStudent(studentId, academicYearId);
 
             return logs;
         }

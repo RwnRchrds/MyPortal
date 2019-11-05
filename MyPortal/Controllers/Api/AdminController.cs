@@ -8,6 +8,7 @@ using System.Web.Http;
 using AutoMapper;
 using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity.EntityFramework;
+using MyPortal.Areas.Staff.ViewModels;
 using MyPortal.Dtos.Identity;
 using MyPortal.Models;
 using MyPortal.Attributes;
@@ -27,9 +28,9 @@ namespace MyPortal.Controllers.Api
     {
         private readonly AdminService _service;
 
-        public AdminController(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public AdminController()
         {
-
+            _service = new AdminService(UnitOfWork);
         }
 
         [HttpPost]

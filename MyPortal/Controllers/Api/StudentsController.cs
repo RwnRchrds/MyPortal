@@ -15,14 +15,10 @@ namespace MyPortal.Controllers.Api
     [RoutePrefix("api/people/students")]
     public class StudentsController : MyPortalApiController
     {
-        
-
-        
-
-        [Authorize]
+        [HttpGet]
         [RequiresPermission("ViewStudents")]
         [Route("get/byId/{studentId:int}", Name = "ApiPeopleGetStudentById")]
-        public async Task<StudentDto> GetStudentById(int studentId)
+        public async Task<StudentDto> GetStudentById([FromUri] int studentId)
         {
             await AuthenticateStudentRequest(studentId);
             return await StudentService.GetStudentById(studentId, _context);

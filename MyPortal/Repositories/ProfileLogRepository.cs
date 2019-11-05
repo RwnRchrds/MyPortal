@@ -16,9 +16,9 @@ namespace MyPortal.Repositories
 
         }
 
-        public async Task<IEnumerable<ProfileLog>> GetLogsByStudent(int studentId)
+        public async Task<IEnumerable<ProfileLog>> GetLogsByStudent(int studentId, int academicYearId)
         {
-            return await Context.ProfileLogs.Where(x => x.StudentId == studentId).OrderByDescending(x => x.Date)
+            return await Context.ProfileLogs.Where(x => x.StudentId == studentId && x.AcademicYearId == academicYearId).OrderByDescending(x => x.Date)
                 .ToListAsync();
         }
     }

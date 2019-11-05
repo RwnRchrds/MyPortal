@@ -1,0 +1,389 @@
+﻿@using MyPortal.Services
+@model MyPortal.Areas.Staff.ViewModels.StudentDetailsViewModel
+@{
+    ViewBag.Title = "Extended Details";
+    ViewBag.DisplayTitle = "Student Details";
+    Layout = "~/Views/Portal/_LayoutStaff.cshtml";
+}
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">@PeopleService.GetStudentDisplayName(Model.Student).ResponseObject</h1>
+</div>
+
+<div class="row">
+    <div class="col mb-4">
+        <button type="button" class="btn btn-primary mr-2" id="backButton">Back</button>
+        <button type="button" class="btn btn-primary" id="saveButton">Save</button>
+    </div>
+</div>
+
+<form id="studentDetails">
+    
+    @Html.HiddenFor(x => x.Student.Id, new {Name = "Id"})
+
+    <div class="row">
+        <div class="col-sm-6">
+
+            <div class="card shadow mb-4">
+
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Basic Details</h6>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="form-row">
+
+                        <div class="col form-group">
+
+                            @Html.Label("First Name")
+                            @Html.TextBoxFor(x => x.Student.Person.FirstName, new {@class = "form-control form-control-sm", Name = "Person.FirstName"})
+
+                        </div>
+
+                        <div class="col form-group">
+
+                            @Html.Label("Middle Name")
+                            @Html.TextBoxFor(x => x.Student.Person.MiddleName, new {@class = "form-control form-control-sm", Name = "Person.MiddleName"})
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-row">
+
+                        <div class="col form-group">
+
+                            @Html.Label("Last Name")
+                            @Html.TextBoxFor(x => x.Student.Person.LastName, new { @class = "form-control form-control-sm", Name = "Person.LastName" })
+
+                        </div>
+
+                        <div class="col form-group">
+
+                            @Html.Label("Date of Birth")
+                            @Html.TextBoxFor(x => x.Student.Person.Dob, new { @class = "form-control form-control-sm", Name = "Person.Dob", id ="dobControl" })
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-row">
+                        
+                        <div class="col form-group">
+
+                            @Html.Label("Gender")
+                            @Html.DropDownListFor(x => x.Student.Person.Gender, new SelectList(PeopleService.GetGenderLookup(), "Key", "Value"), new {@class = "form-control form-control-sm", Name = "Person.Gender"})
+
+                        </div>
+                        
+                        <div class="col form-group">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-sm-6">
+
+            <div class="card shadow mb-4">
+
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Registration</h6>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="form-row">
+                        <div class="col form-group">
+                            @Html.Label("Year Group")
+                            @Html.DropDownListFor(x => x.Student.YearGroupId, new SelectList(Model.YearGroups, "Key", "Value"), "Select Year Group", new {@class = "form-control form-control-sm", Name = "YearGroupId"})
+                        </div>
+
+                        <div class="col form-group">
+                            @Html.Label("Reg Group")
+                            @Html.DropDownListFor(x => x.Student.RegGroupId, new SelectList(Model.RegGroups, "Key", "Value"), "Select Reg Group", new {@class = "form-control form-control-sm", Name = "RegGroupId"})
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+
+                        <div class="col form-group">
+                            @Html.Label("House")
+                            @Html.DropDownListFor(x => x.Student.HouseId, new SelectList(Model.Houses, "Key", "Value"), "Select House", new {@class = "form-control form-control-sm", Name = "HouseId"})
+                        </div>
+
+                        <div class="col form-group">
+                            @Html.Label("UPN")
+                            <div class="input-group input-group-sm">
+                                @Html.TextBoxFor(x => x.Student.Upn, new {@class = "form-control form-control-sm", Name = "Upn"})
+                                <div class="input-group-append">
+                                    <button class="input-group-text">
+                                        <i class="fas fa-cog"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-row">
+
+                        <div class="col form-group">
+
+                            @Html.Label("Admission Number")
+                            @Html.TextBoxFor(x => x.Student.AdmissionNumber, new {@class = "form-control form-control-sm", Name = "AdmissionNumber", disabled = "true"})
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
+
+            <div class="card shadow mb-4">
+
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Addresses</h6>
+                </div>
+
+                <div class="card-body">
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-sm-6">
+
+            <div class="card shadow mb-4">
+
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Telephones and Email Addresses</h6>
+                </div>
+
+                <div class="card-body">
+
+                    <h6>Telephones</h6>
+                    @Html.EJS().Grid("Telephones").DataSource(d =>
+               {
+                   d.Url("").CrossDomain(false).Adaptor("UrlAdaptor");
+               }).Columns(c =>
+               {
+                   c.Field("Type").Width("150").Add();
+                   c.Field("Number").Width("200").Add();
+                   c.HeaderText("Actions").Width("170").Add();
+               }).AllowPaging().PageSettings(p => p.PageSize(5)).Render()
+                    <hr/>
+
+                    <h6>Email Addresses</h6>
+                    @Html.EJS().Grid("EmailAddresses").DataSource(d =>
+                    {
+                        d.Url("").CrossDomain(false).Adaptor("UrlAdaptor");
+                    }).Columns(c =>
+                    {
+                        c.Field("Type").Width("150").Add();
+                        c.Field("Number").Width("200").Add();
+                        c.HeaderText("Actions").Width("170").Add();
+                    }).AllowPaging().PageSettings(p => p.PageSize(5)).Render()
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    
+<div class="row">
+    
+    <div class="col-sm-6">
+
+        <div class="card shadow mb-4">
+
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Family/Home</h6>
+            </div>
+
+            <div class="card-body">
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-sm-6">
+
+        <div class="card shadow mb-4">
+
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Medical Details</h6>
+            </div>
+
+            <div class="card-body">
+
+                <div class="form-row">
+
+                    <div class="col form-group">
+
+                        @Html.Label("NHS Number")
+                        @Html.TextBoxFor(x => x.Student.Person.NhsNumber, new {@class = "form-control form-control-sm", Name = "Person.NhsNumber"})
+
+                    </div>
+
+                </div>
+
+                <hr/>
+
+                <h6>Dietary Requirements</h6>
+                @Html.EJS().Grid("DietaryRequirements").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiPeopleGetMedicalDietaryRequirementsByPersonDataGrid", new {personId = Model.Student.Person.Id})).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+                {
+                    c.Field("Description").HeaderText("Requirement").Width("200").Add();
+                    c.HeaderText("Actions").Add();
+                }).AllowPaging().PageSettings(p => p.PageSize(5)).Render()
+
+                <hr/>
+
+                <h6>Medical Conditions</h6>
+                @Html.EJS().Grid("MedicalConditions").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiPeopleGetMedicalConditionsByPersonDataGrid", new {personId = Model.Student.Person.Id})).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+                {
+                    c.Field("Condition").Width("200").Add();
+                    c.Field("MedicationTaken").HeaderText("On Medication").Width("200").DisplayAsCheckBox(true).Add();
+                    c.HeaderText("Actions").Add();
+                }).AllowPaging().PageSettings(p => p.PageSize(5)).Render()
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row">
+    
+    <div class="col-sm-6">
+
+        <div class="card shadow mb-4">
+
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Ethnic/Cultural</h6>
+            </div>
+
+            <div class="card-body">
+
+
+            </div>
+
+        </div>
+
+    </div>
+    
+    <div class="col-sm-6">
+
+        <div class="card shadow mb-4">
+
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Additional Information</h6>
+            </div>
+
+            <div class="card-body">
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row">
+    
+    <div class="col-sm-6">
+
+        <div class="card shadow mb-4">
+
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Welfare</h6>
+            </div>
+
+            <div class="card-body">
+
+
+            </div>
+
+        </div>
+
+    </div>
+    
+    <div class="col-sm-6">
+
+        <div class="card shadow mb-4">
+
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">School History</h6>
+            </div>
+
+            <div class="card-body">
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</form>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+
+            $("#dobControl").val(formatDate($("#dobControl").val()));
+
+            $("#saveButton").on("click",
+                function() {
+                    saveStudent();
+                });
+
+            $("#backButton").on("click",
+                function() {
+                    location.replace("@Url.HttpRouteUrl("PeopleStudentDetails", new {studentId = Model.Student.Id})");
+                });
+
+        });
+
+        function saveStudent() {
+            var data = $("#studentDetails").serialize();
+            $.ajax({
+                url: "@Url.HttpRouteUrl("ApiPeopleUpdateStudent", new {})",
+                method: "POST",
+                data: data,
+                success: function(data) {
+                    toastr.success(data);
+                },
+                error: function(data) {
+                    toastr.error(data.responseJSON);
+                }
+            });
+        }
+    </script>
+}
