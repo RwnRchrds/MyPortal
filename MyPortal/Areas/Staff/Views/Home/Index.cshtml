@@ -1,15 +1,15 @@
-﻿@using MyPortal.Services
+﻿@using MyPortal.Extensions
+@using MyPortal.Services
 @using Syncfusion.EJ2.Grids
 @model MyPortal.Areas.Staff.ViewModels.StaffHomeViewModel
 @{
-    ViewBag.Title = "Home: " + Model.CurrentUser.Person.Title + " " + Model.CurrentUser.Person.FirstName.Substring(0, 1) + " " + Model.CurrentUser.Person.LastName;
+    ViewBag.Title = $"Home: {Model.CurrentUser.GetDisplayName()}";
     ViewBag.DisplayTitle = "Staff Home";
     ViewBag.Active = "Home";
-    Layout = "~/Views/Portal/_LayoutStaff.cshtml";
 }
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">@PeopleService.GetDisplayName(Model.CurrentUser).ResponseObject</h1>
+    <h1 class="h3 mb-0 text-gray-800">@Model.CurrentUser.GetDisplayName()</h1>
 </div>
 
 @if (Model.SelectedAcademicYearId == 0)

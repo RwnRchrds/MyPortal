@@ -503,6 +503,10 @@
     <Compile Include="Migrations\201910221612298_StructureUpdate.Designer.cs">
       <DependentUpon>201910221612298_StructureUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201911060107386_UpdatedModel.cs" />
+    <Compile Include="Migrations\201911060107386_UpdatedModel.Designer.cs">
+      <DependentUpon>201911060107386_UpdatedModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Database\AssessmentAspect.cs" />
     <Compile Include="Models\Database\AssessmentAspectType.cs" />
@@ -1240,6 +1244,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201910221612298_StructureUpdate.resx">
       <DependentUpon>201910221612298_StructureUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911060107386_UpdatedModel.resx">
+      <DependentUpon>201911060107386_UpdatedModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

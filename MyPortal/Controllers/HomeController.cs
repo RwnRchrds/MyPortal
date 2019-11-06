@@ -15,9 +15,9 @@ namespace MyPortal.Controllers
                 switch (await User.GetUserTypeAsync())
                 {
                     case UserType.Staff:
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Home", new {area = "Staff"});
                     case UserType.Student:
-                        return RedirectToAction("Index", "Students");
+                        return RedirectToAction("Index", "Home", new {area = "Students"});
                     default:
                         return RedirectToAction("RestrictedAccess", "Account");
                 }

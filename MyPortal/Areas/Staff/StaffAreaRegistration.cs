@@ -17,7 +17,8 @@ namespace MyPortal.Areas.Staff
             context.MapRoute(
                 "Staff_default",
                 "Staff/{controller}/{action}/{id}",
-                new { action = "Index", id = UrlParameter.Optional }
+                new { action = "Index", id = UrlParameter.Optional },
+                new[] { "MyPortal.Areas.Staff.Controllers" }
             );
         }
     }

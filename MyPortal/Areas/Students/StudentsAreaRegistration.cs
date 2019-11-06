@@ -17,7 +17,8 @@ namespace MyPortal.Areas.Students
             context.MapRoute(
                 "Students_default",
                 "Students/{controller}/{action}/{id}",
-                new { action = "Index", id = UrlParameter.Optional }
+                new { action = "Index", id = UrlParameter.Optional },
+                new[] { "MyPortal.Areas.Students.Controllers" }
             );
         }
     }

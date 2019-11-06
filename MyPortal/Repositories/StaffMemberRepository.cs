@@ -18,7 +18,7 @@ namespace MyPortal.Repositories
 
         public async Task<StaffMember> GetByUserIdAsync(string userId)
         {
-            return await Context.StaffMembers.SingleOrDefaultAsync(x => x.Person.UserId == userId);
+            return await Context.StaffMembers.Include(x => x.Person).SingleOrDefaultAsync(x => x.Person.UserId == userId);
         }
     }
 }
