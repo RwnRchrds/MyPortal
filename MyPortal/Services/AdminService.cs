@@ -14,7 +14,6 @@ using MyPortal.Interfaces;
 using MyPortal.Models;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
-using MyPortal.ViewModels;
 
 namespace MyPortal.Services
 {

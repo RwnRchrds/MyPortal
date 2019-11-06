@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
@@ -7,6 +8,7 @@ using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
+using MyPortal.Dtos.GridDtos;
 using MyPortal.Models.Database;
 using MyPortal.Services;
 using Syncfusion.EJ2.Base;
@@ -93,13 +95,14 @@ namespace MyPortal.Controllers.Api
                 {
                     var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
 
-                    var logs = await _service.GetLogsByStudent(studentId);
+                    var logs = await _service.GetLogsByStudent(studentId, academicYearId);
+
+                    return logs.Select(Mapper.Map<ProfileLog, ProfileLogDto>);
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                throw GetException(e);
             }
         }
 
@@ -108,12 +111,23 @@ namespace MyPortal.Controllers.Api
         [RequiresPermission("ViewProfileLogs, AccessStudentPortal")]
         public async Task<IHttpActionResult> GetLogsByStudentDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
         {
-            await AuthenticateStudentRequest(studentId);
-            var academicYearId = await SystemService.GetCurrentOrSelectedAcademicYearId(_context, User);
-            var logs = PrepareResponseObject(
-                ProfilesService.GetLogsByStudent_DataGrid(studentId, academicYearId, _context));
+            try
+            {
+                using (var curriculumService = new CurriculumService(UnitOfWork))
+                {
+                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
 
-            return PrepareDataGridObject(logs, dm);
+                    var logs = await _service.GetLogsByStudent(studentId, academicYearId);
+
+                    var list = logs.Select(Mapper.Map<ProfileLog, GridProfileLogDto>);
+
+                    return PrepareDataGridObject(list, dm);
+                }
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [Route("logs/update", Name = "ApiProfilesUpdateLog")]
@@ -121,23 +135,33 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         public async Task<IHttpActionResult> UpdateLog([FromBody] ProfileLog log)
         {
-            return PrepareResponse(ProfilesService.UpdateLog(log, _context));
+            try
+            {
+                await _service.UpdateLog(log);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Log updated");
         }
 
-        [HttpGet]
-        [RequiresPermission("ViewComments")]
-        [Route("commentBanks/hasComments/{bankId:int}", Name = "ApiProfilesCommentBankHasComments")]
-        public bool CommentBankHasComments([FromUri] int bankId)
-        {
-            return PrepareResponseObject(ProfilesService.CommentBankHasComments(bankId, _context));
-        }
-        
         [HttpPost]
         [RequiresPermission("EditComments")]
         [Route("commentBanks/create", Name = "ApiProfilesCreateCommentBank")]
         public async Task<IHttpActionResult> CreateCommentBank([FromBody] ProfileCommentBank commentBank)
         {
-            return PrepareResponse(ProfilesService.CreateCommentBank(commentBank, _context));
+            try
+            {
+                await _service.CreateCommentBank(commentBank);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Comment bank created");
         }
 
         [HttpDelete]
@@ -145,23 +169,50 @@ namespace MyPortal.Controllers.Api
         [Route("commentBanks/delete/{commentBankId:int}", Name = "ApiProfilesDeleteCommentBank")]
         public async Task<IHttpActionResult> DeleteCommentBank([FromUri] int commentBankId)
         {
-            return PrepareResponse(ProfilesService.DeleteCommentBank(commentBankId, _context));
+            try
+            {
+                await _service.DeleteCommentBank(commentBankId);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Comment bank deleted");
         }
 
         [HttpGet]
         [RequiresPermission("ViewComments")]
         [Route("commentBanks/get/byId/{commentBankId:int}", Name = "ApiProfilesGetCommentBankById")]
-        public ProfileCommentBankDto GetCommentBankById([FromUri] int commentBankId)
+        public async Task<ProfileCommentBankDto> GetCommentBankById([FromUri] int commentBankId)
         {
-            return PrepareResponseObject(ProfilesService.GetCommentBankById(commentBankId, _context));
+            try
+            {
+                var commentBank = await _service.GetCommentBankById(commentBankId);
+
+                return Mapper.Map<ProfileCommentBank, ProfileCommentBankDto>(commentBank);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
 
         [HttpGet]
         [RequiresPermission("ViewComments")]
         [Route("commentBanks/get/all", Name = "ApiProfilesGetAllCommentBanks")]
-        public IEnumerable<ProfileCommentBankDto> GetAllCommentBanks()
+        public async Task<IEnumerable<ProfileCommentBankDto>> GetAllCommentBanks()
         {
-            return PrepareResponseObject(ProfilesService.GetAllCommentBanks(_context));
+            try
+            {
+                var commentBanks = await _service.GetAllCommentBanks();
+
+                return commentBanks.Select(Mapper.Map<ProfileCommentBank, ProfileCommentBankDto>);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
 
         [HttpPost]
@@ -169,9 +220,18 @@ namespace MyPortal.Controllers.Api
         [Route("commentBanks/get/dataGrid/all", Name = "ApiProfilesGetAllCommentBanksDataGrid")]
         public async Task<IHttpActionResult> GetAllCommentBanksDataGrid([FromBody] DataManagerRequest dm)
         {
-            var commentBanks = PrepareResponseObject(ProfilesService.GetAllCommentBanksDataGrid(_context));
+            try
+            {
+                var commentBanks = await _service.GetAllCommentBanks();
 
-            return PrepareDataGridObject(commentBanks, dm);
+                var list = commentBanks.Select(Mapper.Map<ProfileCommentBank, GridProfileCommentBankDto>);
+
+                return PrepareDataGridObject(list, dm);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpPost]
@@ -179,7 +239,16 @@ namespace MyPortal.Controllers.Api
         [Route("commentBanks/update", Name = "ApiProfilesUpdateCommentBank")]
         public async Task<IHttpActionResult> UpdateCommentBank([FromBody] ProfileCommentBank commentBank)
         {
-            return PrepareResponse(ProfilesService.UpdateCommentBank(commentBank, _context));
+            try
+            {
+                await _service.UpdateCommentBank(commentBank);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Comment bank updated");
         }
 
         [HttpPost]
@@ -187,7 +256,16 @@ namespace MyPortal.Controllers.Api
         [Route("comments/create", Name = "ApiProfilesCreateComment")]
         public async Task<IHttpActionResult> CreateComment([FromBody] ProfileComment comment)
         {
-            return PrepareResponse(ProfilesService.CreateComment(comment, _context));
+            try
+            {
+                await _service.CreateComment(comment);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Comment created");
         }
 
         [HttpDelete]
@@ -195,31 +273,67 @@ namespace MyPortal.Controllers.Api
         [Route("comments/delete/{commentId:int}", Name = "ApiProfilesDeleteComment")]
         public async Task<IHttpActionResult> DeleteComment(int commentId)
         {
-            return PrepareResponse(ProfilesService.DeleteComment(commentId, _context));
+            try
+            {
+                await _service.DeleteComment(commentId);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Comment deleted");
         }
 
         [HttpGet]
         [RequiresPermission("ViewComments")]
         [Route("comments/get/byId/{commentId:int}", Name = "ApiProfilesGetCommentById")]
-        public ProfileCommentDto GetCommentById([FromUri] int commentId)
+        public async Task<ProfileCommentDto> GetCommentById([FromUri] int commentId)
         {
-            return PrepareResponseObject(ProfilesService.GetCommentById(commentId, _context));
+            try
+            {
+                var comment = await _service.GetCommentById(commentId);
+
+                return Mapper.Map<ProfileComment, ProfileCommentDto>(comment);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
 
         [HttpGet]
         [RequiresPermission("ViewComments")]
         [Route("comments/get/all", Name = "ApiProfilesGetAllComments")]
-        public IEnumerable<ProfileCommentDto> GetAllComments()
+        public async Task<IEnumerable<ProfileCommentDto>> GetAllComments()
         {
-            return PrepareResponseObject(ProfilesService.GetAllComments(_context));
+            try
+            {
+                var comments = await _service.GetAllComments();
+
+                return comments.Select(Mapper.Map<ProfileComment, ProfileCommentDto>);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
 
         [HttpGet]
         [RequiresPermission("ViewComments")]
         [Route("comments/get/byBank/{commentBankId:int}", Name = "ApiProfilesGetCommentsByCommentBank")]
-        public IEnumerable<ProfileCommentDto> GetCommentsByCommentBank([FromUri] int commentBankId)
+        public async Task<IEnumerable<ProfileCommentDto>> GetCommentsByCommentBank([FromUri] int commentBankId)
         {
-            return PrepareResponseObject(ProfilesService.GetCommentsByBank(commentBankId, _context));
+            try
+            {
+                var comments = await _service.GetCommentsByBank(commentBankId);
+
+                return comments.Select(Mapper.Map<ProfileComment, ProfileCommentDto>);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
 
         [HttpPost]
@@ -228,9 +342,18 @@ namespace MyPortal.Controllers.Api
         public async Task<IHttpActionResult> GetCommentsByCommentBankDataGrid([FromUri] int commentBankId,
             [FromBody] DataManagerRequest dm)
         {
-            var comments = PrepareResponseObject(ProfilesService.GetCommentsByBank_DataGrid(commentBankId, _context));
+            try
+            {
+                var comments = await _service.GetCommentsByBank(commentBankId);
 
-            return PrepareDataGridObject(comments, dm);
+                var list = comments.Select(Mapper.Map<ProfileComment, GridProfileCommentDto>);
+
+                return PrepareDataGridObject(list, dm);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
 
         [HttpPost]
@@ -238,7 +361,16 @@ namespace MyPortal.Controllers.Api
         [Route("comments/update", Name = "ApiProfilesUpdateComment")]
         public async Task<IHttpActionResult> UpdateComment([FromBody] ProfileComment comment)
         {
-            return PrepareResponse(ProfilesService.UpdateComment(comment, _context));
+            try
+            {
+                await _service.UpdateComment(comment);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Comment updated");
         }
     }
 }

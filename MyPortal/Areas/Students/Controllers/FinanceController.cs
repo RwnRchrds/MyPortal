@@ -1,51 +1,53 @@
-﻿using System.Web.Mvc;
+﻿using System.Threading.Tasks;
+using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using MyPortal.Areas.Students.ViewModels;
 using MyPortal.Attributes.HttpAuthorise;
 using MyPortal.Controllers;
 using MyPortal.Models;
+using MyPortal.Services;
 
 namespace MyPortal.Areas.Students.Controllers
 {
-    [RoutePrefix("Students/Finance")]
+    [RoutePrefix("Finance")]
     [UserType(UserType.Student)]
     public class FinanceController : MyPortalController
     {
         [Route("Store/SalesHistory")]
-        public ActionResult SalesHistory()
+        public async Task<ActionResult> SalesHistory()
         {
-            var userId = User.Identity.GetUserId();
-
-            var studentInDb = _context.Students.SingleOrDefault(s => s.Person.UserId == userId);
-
-            if (studentInDb == null)
-                return HttpNotFound();
-
-            var viewModel = new StudentSalesHistoryViewModel
+            using (var studentService = new StudentService(UnitOfWork))
             {
-                Student = studentInDb
-            };
+                var userId = User.Identity.GetUserId();
 
-            return View("~/Views/Students/Store/SalesHistory.cshtml", viewModel);
+                var studentInDb = await studentService.GetStudentFromUserId(userId);
+
+                var viewModel = new StudentSalesHistoryViewModel
+                {
+                    Student = studentInDb
+                };
+
+                return View(viewModel);   
+            }
         }
 
         //Store Page
         [Route("Store/Store")]
-        public ActionResult Store()
+        public async Task<ActionResult> Store()
         {
-            var userId = User.Identity.GetUserId();
-
-            var studentInDb = _context.Students.SingleOrDefault(s => s.Person.UserId == userId);
-
-            if (studentInDb == null)
-                return HttpNotFound();
-
-            var viewModel = new StudentStoreViewModel
+            using (var studentService = new StudentService(UnitOfWork))
             {
-                Student = studentInDb
-            };
+                var userId = User.Identity.GetUserId();
 
-            return View("~/Views/Students/Store/Store.cshtml", viewModel);
+                var studentInDb = await studentService.GetStudentFromUserId(userId);
+
+                var viewModel = new StudentStoreViewModel
+                {
+                    Student = studentInDb
+                };
+
+                return View(viewModel);   
+            }
         }
     }
 }

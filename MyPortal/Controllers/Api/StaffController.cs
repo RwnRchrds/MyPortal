@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
+using AutoMapper;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
+using MyPortal.Dtos.GridDtos;
 using MyPortal.Models.Database;
 using MyPortal.Services;
 using Syncfusion.EJ2.Base;
@@ -16,6 +19,13 @@ namespace MyPortal.Controllers.Api
     [RoutePrefix("api/people/staff")]
     public class StaffController : MyPortalApiController
     {
+        private readonly StaffMemberService _service;
+
+        public StaffController()
+        {
+            _service = new StaffMemberService(UnitOfWork);
+        }
+
         [HttpPost]
         [RequiresPermission("EditStaff")]
         [Route("create", Name = "ApiPeopleCreateStaff")]
@@ -23,7 +33,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await StaffMemberService.CreateStaffMember(staffMember, _context);
+                await _service.CreateStaffMember(staffMember);
             }
             catch (Exception e)
             {
@@ -38,11 +48,10 @@ namespace MyPortal.Controllers.Api
         [Route("delete/{staffMemberId:int}", Name = "ApiPeopleDeleteStaffMember")]
         public async Task<IHttpActionResult> DeleteStaff([FromUri] int staffMemberId)
         {
-            var userId = User.Identity.GetUserId();
-
             try
             {
-                await StaffMemberService.DeleteStaffMember(staffMemberId, userId, _context);
+                var userId = User.Identity.GetUserId();
+                await _service.DeleteStaffMember(staffMemberId, userId);
             }
             catch (Exception e)
             {
@@ -59,7 +68,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await StaffMemberService.UpdateStaffMember(staffMember, _context);
+                await _service.UpdateStaffMember(staffMember);
             }
             catch (Exception e)
             {
@@ -76,7 +85,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await StaffMemberService.GetAllStaffMembers(_context);
+                var staff = await _service.GetAllStaffMembers();
+
+                return staff.Select(Mapper.Map<StaffMember, StaffMemberDto>);
             }
             catch (Exception e)
             {
@@ -91,9 +102,11 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var staff = await StaffMemberService.GetAllStaffMembersDataGrid(_context);
+                var staff = await _service.GetAllStaffMembers();
 
-                return PrepareDataGridObject(staff, dm);
+                var list = staff.Select(Mapper.Map<StaffMember, GridStaffMemberDto>);
+
+                return PrepareDataGridObject(list, dm);
             }
             catch (Exception e)
             {
@@ -107,7 +120,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                return await StaffMemberService.GetStaffMemberById(staffMemberId, _context);
+                var staff = await _service.GetStaffMemberById(staffMemberId);
+
+                return Mapper.Map<StaffMember, StaffMemberDto>(staff);
             }
             catch (Exception e)
             {

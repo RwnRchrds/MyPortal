@@ -17,7 +17,6 @@ using MyPortal.Dtos.GridDtos;
 using MyPortal.Interfaces;
 using MyPortal.Models.Misc;
 using MyPortal.Services;
-using MyPortal.ViewModels;
 using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api

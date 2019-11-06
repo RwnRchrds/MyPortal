@@ -247,7 +247,7 @@
     <Compile Include="Areas\Staff\StaffAreaRegistration.cs" />
     <Compile Include="Areas\Students\Controllers\AssessmentController.cs" />
     <Compile Include="Areas\Students\Controllers\FinanceController.cs" />
-    <Compile Include="Areas\Students\Controllers\StudentsController.cs" />
+    <Compile Include="Areas\Students\Controllers\HomeController.cs" />
     <Compile Include="Areas\Students\StudentsAreaRegistration.cs" />
     <Compile Include="Areas\Students\ViewModels\StudentHomeViewModel.cs" />
     <Compile Include="Areas\Students\ViewModels\StudentResultsViewModel.cs" />
@@ -274,7 +274,6 @@
     <Compile Include="Controllers\Api\PeopleController.cs" />
     <Compile Include="Controllers\Api\PersonnelController.cs" />
     <Compile Include="Controllers\Api\ProfilesController.cs" />
-    <Compile Include="Controllers\Api\ReportsController.cs" />
     <Compile Include="Controllers\Api\StaffController.cs" />
     <Compile Include="Controllers\Api\StudentsController.cs" />
     <Compile Include="Controllers\Api\SystemController.cs" />

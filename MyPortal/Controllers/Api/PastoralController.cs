@@ -63,7 +63,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await _service.GetRegGroupById(regGroupId);
+                var regGroup = await _service.GetRegGroupById(regGroupId);
+
+                return Mapper.Map<PastoralRegGroup, PastoralRegGroupDto>(regGroup);
             }
             catch (Exception e)
             {

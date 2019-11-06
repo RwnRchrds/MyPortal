@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
+using AutoMapper;
 using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Attributes;
@@ -14,18 +17,32 @@ namespace MyPortal.Controllers.Api
     [RoutePrefix("api/system")]
     public class SystemController : MyPortalApiController
     {
+        private readonly SystemService _service;
+
+        public SystemController()
+        {
+            _service = new SystemService(UnitOfWork);
+        }
+        
         [HttpPost]
         [RequiresPermission("EditBulletins")]
         [Route("bulletins/create", Name = "ApiSystemCreateBulletin")]
         public async Task<IHttpActionResult> CreateBulletin([FromBody] SystemBulletin bulletin)
         {
-            var userId = User.Identity.GetUserId();
+            try
+            {
+                var userId = User.Identity.GetUserId();
 
-            var autoApprove = await User.HasPermissionAsync("ApproveBulletins");
+                var autoApprove = await User.HasPermissionAsync("ApproveBulletins");
 
-            var result = await SystemService.CreateBulletin(bulletin, userId, _context, autoApprove);
+                await _service.CreateBulletin(bulletin, userId, autoApprove);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
 
-            return PrepareResponse(result);
+            return Ok("Bulletin created");
         }
 
         [HttpPost]
@@ -33,50 +50,108 @@ namespace MyPortal.Controllers.Api
         [Route("bulletins/update", Name = "ApiSystemUpdateBulletin")]
         public async Task<IHttpActionResult> UpdateBulletin([FromBody] SystemBulletin bulletin)
         {
-            var approvable = await User.HasPermissionAsync("ApproveBulletins");
+            try
+            {
+                await _service.UpdateBulletin(bulletin);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
 
-            return PrepareResponse(SystemService.UpdateBulletin(bulletin, _context, approvable));
+            return Ok("Bulletin updated");
         }
 
         [HttpDelete]
         [RequiresPermission("EditBulletins")]
         [Route("bulletins/delete/{bulletinId:int}", Name = "ApiSystemDeleteBulletin")]
-        public IHttpActionResult DeleteBulletin([FromUri] int bulletinId)
+        public async Task<IHttpActionResult> DeleteBulletin([FromUri] int bulletinId)
         {
-            return PrepareResponse(SystemService.DeleteBulletin(bulletinId, _context));
+            try
+            {
+                await _service.DeleteBulletin(bulletinId);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Bulletin deleted");
         }
 
         [HttpGet]
         [RequiresPermission("ApproveBulletins")]
         [Route("bulletins/get/all", Name = "ApiSystemGetAllBulletins")]
-        public IEnumerable<SystemBulletinDto> GetAllBulletins()
+        public async Task<IEnumerable<SystemBulletinDto>> GetAllBulletins()
         {
-            return PrepareResponseObject(SystemService.GetAllBulletins(_context));
+            try
+            {
+                var bulletins = await _service.GetAllBulletins();
+
+                return bulletins.Select(Mapper.Map<SystemBulletin, SystemBulletinDto>);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
 
         [HttpGet]
         [RequiresPermission("ViewStaffBulletins")]
         [Route("bulletins/get/approved", Name = "ApiSystemGetApprovedBulletins")]
-        public IEnumerable<SystemBulletinDto> GetApprovedBulletins()
+        public async Task<IEnumerable<SystemBulletinDto>> GetApprovedBulletins()
         {
-            return PrepareResponseObject(SystemService.GetApprovedBulletins(_context));
+            try
+            {
+                var bulletins = await _service.GetApprovedBulletins();
+
+                return bulletins.Select(Mapper.Map<SystemBulletin, SystemBulletinDto>);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
 
         [HttpGet]
         [RequiresPermission("ViewStaffBulletins")]
         [Route("bulletins/get/own", Name = "ApiSystemGetOwnBulletins")]
-        public IEnumerable<SystemBulletinDto> GetOwnBulletins()
+        public async Task<IEnumerable<SystemBulletinDto>> GetOwnBulletins()
         {
-            var userId = User.Identity.GetUserId();
-            return PrepareResponseObject(SystemService.GetOwnBulletins(userId, _context));
+            try
+            {
+                using (var staffService = new StaffMemberService(UnitOfWork))
+                {
+                    var userId = User.Identity.GetUserId();
+
+                    var staff = await staffService.GetStaffMemberFromUserId(userId);
+                    
+                    var bulletins = await _service.GetOwnBulletins(staff.Id);
+
+                    return bulletins.Select(Mapper.Map<SystemBulletin, SystemBulletinDto>);
+                }
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
 
         [HttpGet]
         [RequiresPermission("ViewStudentBulletins")]
         [Route("bulletins/get/student", Name = "ApiSystemGetStudentBulletins")]
-        public IEnumerable<SystemBulletinDto> GetStudentBulletins()
+        public async Task<IEnumerable<SystemBulletinDto>> GetStudentBulletins()
         {
-            return PrepareResponseObject(SystemService.GetApprovedStudentBulletins(_context));
+            try
+            {
+                var bulletins = await _service.GetApprovedStudentBulletins();
+
+                return bulletins.Select(Mapper.Map<SystemBulletin, SystemBulletinDto>);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
         }
     }
 }
