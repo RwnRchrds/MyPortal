@@ -11,8 +11,8 @@ using MyPortal.Services;
 
 namespace MyPortal.Areas.Students.Controllers
 {
-    //MyPortal Students Controller --> Controller methods for Student areas
     [UserType(UserType.Student)]
+    [RouteArea("Students")]
     [RoutePrefix("Home")]
     public class HomeController : MyPortalController
     {

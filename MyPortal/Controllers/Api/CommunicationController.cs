@@ -24,7 +24,7 @@ namespace MyPortal.Controllers.Api
         }
         
         [HttpPost]
-        [Route("emailAddresses/create")]
+        [Route("emailAddresses/create", Name = "ApiCreateEmailAddress")]
         [RequiresPermission("EditContactInformation")]
         public async Task<IHttpActionResult> CreateEmailAddress([FromBody] CommunicationEmailAddress emailAddress)
         {
@@ -41,7 +41,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [Route("emailAddresses/update")]
+        [Route("emailAddresses/update", Name = "ApiUpdateEmailAddress")]
         [RequiresPermission("EditContactInformation")]
         public async Task<IHttpActionResult> UpdateEmailAddress([FromBody] CommunicationEmailAddress emailAddress)
         {
@@ -58,7 +58,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpDelete]
-        [Route("emailAddresses/delete/{emailAddressId:int}")]
+        [Route("emailAddresses/delete/{emailAddressId:int}", Name = "ApiDeleteEmailAddress")]
         [RequiresPermission("EditContactInformation")]
         public async Task<IHttpActionResult> DeleteEmailAddress([FromUri] int emailAddressId)
         {

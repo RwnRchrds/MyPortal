@@ -245,6 +245,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Parents\ParentsAreaRegistration.cs" />
     <Compile Include="Areas\Staff\StaffAreaRegistration.cs" />
+    <Compile Include="Areas\Staff\ViewModels\UsersViewModel.cs" />
     <Compile Include="Areas\Students\Controllers\AssessmentController.cs" />
     <Compile Include="Areas\Students\Controllers\FinanceController.cs" />
     <Compile Include="Areas\Students\Controllers\HomeController.cs" />
@@ -707,7 +708,7 @@
     <Compile Include="Repositories\SystemSchoolRepository.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Areas\Staff\ViewModels\AccountsViewModel.cs" />
-    <Compile Include="Areas\Staff\ViewModels\ClassEnrolmentsViewModel.cs" />
+    <Compile Include="Areas\Staff\ViewModels\EnrolmentsViewModel.cs" />
     <Compile Include="Areas\Staff\ViewModels\ClassesViewModel.cs" />
     <Compile Include="Areas\Staff\ViewModels\RolePermissionsViewModel.cs" />
     <Compile Include="Areas\Staff\ViewModels\RolesViewModel.cs" />
@@ -719,7 +720,7 @@
     <Compile Include="Areas\Staff\ViewModels\ImportResultsViewModel.cs" />
     <Compile Include="Areas\Staff\ViewModels\LessonPlanDetailsViewModel.cs" />
     <Compile Include="Areas\Staff\ViewModels\LessonPlansViewModel.cs" />
-    <Compile Include="Areas\Staff\ViewModels\NewProductViewModel.cs" />
+    <Compile Include="Areas\Staff\ViewModels\ProductsViewModel.cs" />
     <Compile Include="Areas\Staff\ViewModels\NewSaleViewModel.cs" />
     <Compile Include="Areas\Staff\ViewModels\NewStaffViewModel.cs" />
     <Compile Include="Areas\Staff\ViewModels\NewStudentViewModel.cs" />
@@ -1160,7 +1161,8 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Account\Login.cshtml" />
+    <None Include="Views\Account\Login.cshtml" />
+    <None Include="Views\Account\Login.cshtml.old" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
@@ -1202,6 +1204,7 @@
     <Content Include="Areas\Students\Views\Shared\_NavBar.cshtml" />
     <Content Include="Areas\Staff\Views\Shared\_SideBar.cshtml" />
     <Content Include="Areas\Students\Views\Shared\_SideBar.cshtml" />
+    <Content Include="Views\Shared\_LoginLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Results\" />

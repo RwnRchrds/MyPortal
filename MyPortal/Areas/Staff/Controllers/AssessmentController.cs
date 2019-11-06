@@ -10,9 +10,9 @@ using MyPortal.Services;
 
 namespace MyPortal.Areas.Staff.Controllers
 {
-    [Authorize]
-    [RoutePrefix("Assessment")]
     [UserType(UserType.Staff)]
+    [RouteArea("Staff")]
+    [RoutePrefix("Assessment")]
     public class AssessmentController : MyPortalController
     {
         [RequiresPermission("ImportResults")]

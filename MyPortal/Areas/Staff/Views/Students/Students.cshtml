@@ -35,7 +35,7 @@
                 <div class="card-body">
                     @Html.EJS().Grid("Students").DataSource(dataManager =>
                     {
-                        dataManager.Url("/api/people/students/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor");
+                        dataManager.Url(Url.HttpRouteUrl("ApiGetAllStudentsDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor");
                    
                     }).Columns(c =>
                     {
@@ -57,13 +57,19 @@
     <script>
         $(document).ready(function() {
         });
+
+        function getStudentOverviewUrl(studentId) {
+            var urlStudentOverView = "@Url.Action("StudentOverview", new {studentId = 9999})";
+
+            return urlStudentOverView.replace("9999", studentId);
+        }
     </script>
 
     <script type="text/x-jsrender" id="nameTemplate">
         <div>
-            <span id="Studtext" class="student-name"><a href="/Staff/People/Students/${Id}">${DisplayName}</a></span>
+            <span id="Studtext" class="student-name"><a href="${getStudentOverviewUrl(Id)}">${DisplayName}</a></span>
         </div>        
     </script>
 
-    
+
 }

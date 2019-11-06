@@ -1,8 +1,7 @@
 ﻿@model MyPortal.Areas.Staff.ViewModels.UserDetailsViewModel
 @{
-    ViewBag.Title = "User Details: " + Model.User.UserName;
+    ViewBag.Title = $"User Details: {Model.User.UserName}";
     ViewBag.DisplayTitle = "User Details";
-    Layout = "~/Views/Portal/_LayoutStaff.cshtml";
 }
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -67,7 +66,7 @@
 
             @Html.EJS().Grid("Roles").DataSource(d =>
             {
-                d.Url(Url.HttpRouteUrl("ApiAdminGetRolesByUserDataGrid", new { userId = Model.User.Id })).CrossDomain(false).Adaptor("UrlAdaptor");
+                d.Url(Url.HttpRouteUrl("ApiGetRolesByUserDataGrid", new { userId = Model.User.Id })).CrossDomain(false).Adaptor("UrlAdaptor");
             }).Columns(c =>
             {
                 c.Field("Name").HeaderText("Role").Template("#rolesNameTemplate").Add();
@@ -91,7 +90,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiAdminChangePassword", new { }), HttpMethod = "POST", OnSuccess = "resetPasswordSuccess", OnFailure = "resetPasswordFailure" }, new { id = "ResetPasswordForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiChangePassword", new { }), HttpMethod = "POST", OnSuccess = "resetPasswordSuccess", OnFailure = "resetPasswordFailure" }, new { id = "ResetPasswordForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -129,7 +128,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiAdminAddUserToRole", new { }), HttpMethod = "POST", OnSuccess = "addRoleSuccess", OnFailure = "addRoleFailure" }, new { id = "AddRoleForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiAddUserToRole", new { }), HttpMethod = "POST", OnSuccess = "addRoleSuccess", OnFailure = "addRoleFailure" }, new { id = "AddRoleForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -203,10 +202,10 @@
     <script>
         $(document).ready(function () {
 
-            var urlRemoveUserFromRole = "@Url.HttpRouteUrl("ApiAdminRemoveFromRole", new {})";
-            var urlDeleteUser = "@Url.HttpRouteUrl("ApiAdminDeleteUser", new {userId = "abcd"})";
-            var urlAttachPerson = "@Url.HttpRouteUrl("ApiAdminAttachPersonToUser", new {})";
-            var urlDetachPerson = "@Url.HttpRouteUrl("ApiAdminDetachPersonFromUser", new {})";
+            var urlRemoveUserFromRole = "@Url.HttpRouteUrl("ApiRemoveFromRole", new {})";
+            var urlDeleteUser = "@Url.HttpRouteUrl("ApiDeleteUser", new {userId = "abcd"})";
+            var urlAttachPerson = "@Url.HttpRouteUrl("ApiAttachPersonToUser", new {})";
+            var urlDetachPerson = "@Url.HttpRouteUrl("ApiDetachPersonFromUser", new {})";
             var urlGetAllStaff = "@Url.HttpRouteUrl("ApiPeopleGetAllStaffMembers", new {})";
             var urlGetAllYearGroups = "@Url.HttpRouteUrl("ApiPastoralGetAllYearGroups", new {})";
             var urlGetStudentsByYearGroup = "@Url.HttpRouteUrl("ApiPeopleGetStudentsByYearGroup", new {yearGroupId = 9999})";

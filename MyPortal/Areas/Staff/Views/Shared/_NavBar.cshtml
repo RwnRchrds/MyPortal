@@ -18,7 +18,7 @@
                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">@nameDisplay</span>
             </a>
             <!-- Dropdown - User Information -->
-            @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new {id = "logoutForm", @class = ""}))
+            @using (Html.BeginForm("LogOff", "Account",new {area = ""}, FormMethod.Post, new {id = "logoutForm", @class = ""}))
             {
                 @Html.AntiForgeryToken()
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">

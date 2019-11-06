@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Mvc;
 using MyPortal.Areas.Staff.ViewModels;
-using MyPortal.Attributes.HttpAuthorise;
+using MyPortal.Attributes.MvcAuthorise;
 using MyPortal.Controllers;
 using MyPortal.Models;
 using MyPortal.Services;
@@ -9,6 +9,7 @@ using MyPortal.Services;
 namespace MyPortal.Areas.Staff.Controllers
 {
     [UserType(UserType.Staff)]
+    [RouteArea("Staff")]
     [RoutePrefix("Finance")]
     public class FinanceController : MyPortalController
     {
@@ -25,7 +26,7 @@ namespace MyPortal.Areas.Staff.Controllers
         {
             using (var financeService = new FinanceService(UnitOfWork))
             {
-                var viewModel = new NewProductViewModel {ProductTypes = await financeService.GetAllProductTypes()};
+                var viewModel = new ProductsViewModel {ProductTypes = await financeService.GetAllProductTypes()};
 
                 return View(viewModel);
             }

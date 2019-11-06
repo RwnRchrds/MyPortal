@@ -36,23 +36,6 @@ namespace MyPortal.Controllers.Api
             UnitOfWork.Dispose();
         }
 
-        //If ProcessResponse does NOT return an object
-        [Obsolete]
-        protected IHttpActionResult PrepareResponse(ProcessResponse<object> response)
-        {
-            if (response.ResponseType == ResponseType.NotFound)
-            {
-                return Content(HttpStatusCode.NotFound, response.ResponseMessage);
-            }
-
-            if (response.ResponseType == ResponseType.Ok)
-            {
-                return Ok(response.ResponseMessage);
-            }
-
-            return Content(HttpStatusCode.BadRequest, response.ResponseMessage);
-        }
-
         protected IHttpActionResult HandleException(Exception ex)
         {
             var statusCode = HttpStatusCode.BadRequest;
@@ -99,24 +82,7 @@ namespace MyPortal.Controllers.Api
             return new HttpResponseException(statusCode);
         }
 
-        //If ProcessResponse returns an object
-        [Obsolete]
-        protected T PrepareResponseObject<T>(ProcessResponse<T> response)
-        {
-            if (response.ResponseType == ResponseType.NotFound)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            if (response.ResponseType == ResponseType.Ok)
-            {
-                return response.ResponseObject;
-            }
-
-            throw new HttpResponseException(HttpStatusCode.BadRequest);
-        }
-
-        protected IHttpActionResult PrepareDataGridObject(IEnumerable<IGridDto> list, DataManagerRequest dm)
+        protected IHttpActionResult PrepareDataGridObject<T>(IEnumerable<T> list, DataManagerRequest dm)
         {
             var result = list.PerformDataOperations(dm);
 

@@ -1,15 +1,15 @@
-﻿@using MyPortal.Models.Database
+﻿@using MyPortal.Extensions
+@using MyPortal.Models.Database
 @using MyPortal.Services
 @using Syncfusion.EJ2.Grids
 @model MyPortal.Areas.Staff.ViewModels.StudentOverviewViewModel
 @{
-    ViewBag.Title = $"Student Overview: {PeopleService.GetStudentDisplayName(Model.Student).ResponseObject}";
+    ViewBag.Title = $"Student Overview";
     ViewBag.DisplayTitle = "Student Overview";
-    Layout = "_LayoutStaff.cshtml";
 }
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">@PeopleService.GetStudentDisplayName(Model.Student).ResponseObject</h1>
+    <h1 class="h3 mb-0 text-gray-800">@Model.Student.GetDisplayName()</h1>
 </div>
 
 <div class="row">

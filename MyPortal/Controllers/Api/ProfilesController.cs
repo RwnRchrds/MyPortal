@@ -28,7 +28,7 @@ namespace MyPortal.Controllers.Api
         
         [HttpPost]
         [RequiresPermission("EditProfileLogs")]
-        [Route("logs/create", Name = "ApiProfilesCreateLog")]
+        [Route("logs/create", Name = "ApiCreateProfileLog")]
         public async Task<IHttpActionResult> CreateLog([FromBody] ProfileLog log)
         {
             try
@@ -49,7 +49,7 @@ namespace MyPortal.Controllers.Api
             return Ok("Log created");
         }
         
-        [Route("logs/delete/{logId:int}", Name = "ApiProfilesDeleteLog")]
+        [Route("logs/delete/{logId:int}", Name = "ApiDeleteProfileLog")]
         [RequiresPermission("EditProfileLogs")]
         [HttpDelete]
         public async Task<IHttpActionResult> DeleteLog([FromUri] int logId)
@@ -67,7 +67,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Route("logs/get/byId/{logId:int}", Name = "ApiProfilesGetLogById")]
+        [Route("logs/get/byId/{logId:int}", Name = "ApiGetProfileLogById")]
         [RequiresPermission("ViewProfileLogs")]
         public async Task<ProfileLogDto> GetLogById([FromUri] int logId)
         {
@@ -84,7 +84,7 @@ namespace MyPortal.Controllers.Api
         }
         
         [HttpGet]
-        [Route("logs/get/byStudent/{studentId:int}", Name = "ApiProfilesGetLogsByStudent")]
+        [Route("logs/get/byStudent/{studentId:int}", Name = "ApiGetProfileLogsByStudent")]
         [RequiresPermission("ViewProfileLogs")]
         public async Task<IEnumerable<ProfileLogDto>> GetLogsByStudent([FromUri] int studentId)
         {
@@ -107,7 +107,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [Route("logs/get/byStudent/dataGrid/{studentId:int}", Name = "ApiProfilesGetLogsByStudentDataGrid")]
+        [Route("logs/get/byStudent/dataGrid/{studentId:int}", Name = "ApiGetProfileLogsByStudentDataGrid")]
         [RequiresPermission("ViewProfileLogs, AccessStudentPortal")]
         public async Task<IHttpActionResult> GetLogsByStudentDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
         {
@@ -130,7 +130,7 @@ namespace MyPortal.Controllers.Api
             }
         }
 
-        [Route("logs/update", Name = "ApiProfilesUpdateLog")]
+        [Route("logs/update", Name = "ApiUpdateProfileLog")]
         [RequiresPermission("EditProfileLogs")]
         [HttpPost]
         public async Task<IHttpActionResult> UpdateLog([FromBody] ProfileLog log)
@@ -149,7 +149,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditComments")]
-        [Route("commentBanks/create", Name = "ApiProfilesCreateCommentBank")]
+        [Route("commentBanks/create", Name = "ApiCreateCommentBank")]
         public async Task<IHttpActionResult> CreateCommentBank([FromBody] ProfileCommentBank commentBank)
         {
             try
@@ -166,7 +166,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditComments")]
-        [Route("commentBanks/delete/{commentBankId:int}", Name = "ApiProfilesDeleteCommentBank")]
+        [Route("commentBanks/delete/{commentBankId:int}", Name = "ApiDeleteCommentBank")]
         public async Task<IHttpActionResult> DeleteCommentBank([FromUri] int commentBankId)
         {
             try
@@ -183,7 +183,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewComments")]
-        [Route("commentBanks/get/byId/{commentBankId:int}", Name = "ApiProfilesGetCommentBankById")]
+        [Route("commentBanks/get/byId/{commentBankId:int}", Name = "ApiGetCommentBankById")]
         public async Task<ProfileCommentBankDto> GetCommentBankById([FromUri] int commentBankId)
         {
             try
@@ -200,7 +200,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewComments")]
-        [Route("commentBanks/get/all", Name = "ApiProfilesGetAllCommentBanks")]
+        [Route("commentBanks/get/all", Name = "ApiGetAllCommentBanks")]
         public async Task<IEnumerable<ProfileCommentBankDto>> GetAllCommentBanks()
         {
             try
@@ -217,7 +217,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewComments")]
-        [Route("commentBanks/get/dataGrid/all", Name = "ApiProfilesGetAllCommentBanksDataGrid")]
+        [Route("commentBanks/get/dataGrid/all", Name = "ApiGetAllCommentBanksDataGrid")]
         public async Task<IHttpActionResult> GetAllCommentBanksDataGrid([FromBody] DataManagerRequest dm)
         {
             try
@@ -236,7 +236,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditComments")]
-        [Route("commentBanks/update", Name = "ApiProfilesUpdateCommentBank")]
+        [Route("commentBanks/update", Name = "ApiUpdateCommentBank")]
         public async Task<IHttpActionResult> UpdateCommentBank([FromBody] ProfileCommentBank commentBank)
         {
             try
@@ -253,7 +253,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditComments")]
-        [Route("comments/create", Name = "ApiProfilesCreateComment")]
+        [Route("comments/create", Name = "ApiCreateComment")]
         public async Task<IHttpActionResult> CreateComment([FromBody] ProfileComment comment)
         {
             try
@@ -270,7 +270,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditComments")]
-        [Route("comments/delete/{commentId:int}", Name = "ApiProfilesDeleteComment")]
+        [Route("comments/delete/{commentId:int}", Name = "ApiDeleteComment")]
         public async Task<IHttpActionResult> DeleteComment(int commentId)
         {
             try
@@ -287,7 +287,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewComments")]
-        [Route("comments/get/byId/{commentId:int}", Name = "ApiProfilesGetCommentById")]
+        [Route("comments/get/byId/{commentId:int}", Name = "ApiGetCommentById")]
         public async Task<ProfileCommentDto> GetCommentById([FromUri] int commentId)
         {
             try
@@ -304,7 +304,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewComments")]
-        [Route("comments/get/all", Name = "ApiProfilesGetAllComments")]
+        [Route("comments/get/all", Name = "ApiGetAllComments")]
         public async Task<IEnumerable<ProfileCommentDto>> GetAllComments()
         {
             try
@@ -321,7 +321,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewComments")]
-        [Route("comments/get/byBank/{commentBankId:int}", Name = "ApiProfilesGetCommentsByCommentBank")]
+        [Route("comments/get/byBank/{commentBankId:int}", Name = "ApiGetCommentsByCommentBank")]
         public async Task<IEnumerable<ProfileCommentDto>> GetCommentsByCommentBank([FromUri] int commentBankId)
         {
             try
@@ -338,7 +338,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewComments")]
-        [Route("comments/get/byBank/dataGrid/{commentBankId:int}", Name = "ApiProfilesGetCommentsByCommentBankDataGrid")]
+        [Route("comments/get/byBank/dataGrid/{commentBankId:int}", Name = "ApiGetCommentsByCommentBankDataGrid")]
         public async Task<IHttpActionResult> GetCommentsByCommentBankDataGrid([FromUri] int commentBankId,
             [FromBody] DataManagerRequest dm)
         {
@@ -358,7 +358,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditComments")]
-        [Route("comments/update", Name = "ApiProfilesUpdateComment")]
+        [Route("comments/update", Name = "ApiUpdateComment")]
         public async Task<IHttpActionResult> UpdateComment([FromBody] ProfileComment comment)
         {
             try

@@ -3,15 +3,16 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using MyPortal.Areas.Students.ViewModels;
-using MyPortal.Attributes.HttpAuthorise;
 using MyPortal.Controllers;
 using MyPortal.Models;
+using MyPortal.Attributes.MvcAuthorise;
 using MyPortal.Services;
 
 namespace MyPortal.Areas.Students.Controllers
 {
-    [RoutePrefix("Assessment")]
     [UserType(UserType.Student)]
+    [RouteArea("Students")]
+    [RoutePrefix("Assessment")]
     public class AssessmentController : MyPortalController
     {
         [Route("Results")]

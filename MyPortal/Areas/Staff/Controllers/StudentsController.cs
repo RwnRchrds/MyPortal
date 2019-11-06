@@ -2,28 +2,28 @@
 using System.Web.Mvc;
 using MyPortal.Areas.Staff.ViewModels;
 using MyPortal.Areas.Students.ViewModels;
-using MyPortal.Attributes.HttpAuthorise;
+using MyPortal.Attributes.MvcAuthorise;
 using MyPortal.Controllers;
-using MyPortal.Controllers.Api;
 using MyPortal.Models;
 using MyPortal.Models.Database;
 using MyPortal.Services;
 
 namespace MyPortal.Areas.Staff.Controllers
 {
-    [RoutePrefix("People/Students")]
     [UserType(UserType.Staff)]
+    [RouteArea("Staff")]
+    [RoutePrefix("Students")]
     public class StudentsController : MyPortalController
     {
         [RequiresPermission("ViewStudents")]
-        [Route("People/Students")]
+        [Route("")]
         public ActionResult Students()
         {
             return View();
         }
 
         [RequiresPermission("EditStudents")]
-        [Route("People/Students/New")]
+        [Route("NewStudent")]
         public ActionResult NewStudent()
         {
             var viewModel = new NewStudentViewModel
@@ -48,7 +48,7 @@ namespace MyPortal.Areas.Staff.Controllers
 
         
         [RequiresPermission("ViewStudents")]
-        [Route("People/Students/{studentId:int}", Name = "PeopleStudentDetails")]
+        [Route("{studentId:int}")]
         public async Task<ActionResult> StudentOverview(int studentId)
         {
             using (var behaviourService = new BehaviourService(UnitOfWork))
@@ -95,7 +95,7 @@ namespace MyPortal.Areas.Staff.Controllers
         }
 
         [RequiresPermission("EditStudents")]
-        [Route("People/Students/{studentId:int}/Details", Name = "PeopleStudentExtendedDetails")]
+        [Route("{studentId:int}/Details", Name = "PeopleStudentExtendedDetails")]
         public async Task<ActionResult> StudentDetails(int studentId)
         {
             using (var pastoralService = new PastoralService(UnitOfWork))
@@ -122,7 +122,7 @@ namespace MyPortal.Areas.Staff.Controllers
         }
 
         [RequiresPermission("ViewStudents")]
-        [Route("People/Students/{studentId:int}/Results", Name = "PeopleStudentAssessmentResults")]
+        [Route("{studentId:int}/Results", Name = "PeopleStudentAssessmentResults")]
         public async Task<ActionResult> StudentResults(int studentId)
         {
             using (var curriculumService = new CurriculumService(UnitOfWork))
@@ -147,7 +147,7 @@ namespace MyPortal.Areas.Staff.Controllers
         }
 
         [RequiresPermission("ViewStudents")]
-        [Route("People/Students/{studentId:int}/Behaviour", Name = "PeopleStudentBehaviourDetails")]
+        [Route("{studentId:int}/Behaviour", Name = "PeopleStudentBehaviourDetails")]
         public async Task<ActionResult> BehaviourManagement(int studentId)
         {
             using (var systemService = new SystemService(UnitOfWork))

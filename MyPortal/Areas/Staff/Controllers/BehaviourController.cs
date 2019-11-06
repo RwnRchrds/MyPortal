@@ -1,12 +1,13 @@
-using System.Web.Http;
+using System.Web.Mvc;
 using MyPortal.Attributes.MvcAuthorise;
 using MyPortal.Controllers;
 using MyPortal.Models;
 
 namespace MyPortal.Areas.Staff.Controllers
 {
-    [RoutePrefix("Behaviour")]
     [UserType(UserType.Staff)]
+    [RouteArea("Staff")]
+    [System.Web.Http.RoutePrefix("Behaviour")]
     public class BehaviourController : MyPortalController
     {
         

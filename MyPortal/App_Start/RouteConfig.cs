@@ -11,6 +11,8 @@ namespace MyPortal
 
             routes.MapMvcAttributeRoutes();
 
+            AreaRegistration.RegisterAllAreas();
+
             routes.MapRoute(
                 "Default",
                 "{controller}/{action}/{id}",

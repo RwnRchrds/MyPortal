@@ -10,9 +10,9 @@ using MyPortal.Services;
 
 namespace MyPortal.Areas.Staff.Controllers
 {
-    [Authorize]
-    [RoutePrefix("Attendance")]
     [UserType(UserType.Staff)]
+    [RouteArea("Staff")]
+    [RoutePrefix("Attendance")]
     public class AttendanceController : MyPortalController
     {
         [RequiresPermission("TakeRegister")]

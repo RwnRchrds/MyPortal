@@ -36,7 +36,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("AccessStudentStore")]
-        [Route("basketItems/create", Name = "ApiFinanceCreateBasketItem")]
+        [Route("basketItems/create", Name = "ApiCreateBasketItem")]
         public async Task<IHttpActionResult> CreateBasketItem([FromBody] FinanceBasketItem basketItem)
         {
             try
@@ -53,7 +53,7 @@ namespace MyPortal.Controllers.Api
 
         [RequiresPermission("AccessStudentStore")]
         [HttpGet]
-        [Route("basketItems/get/byStudent/{studentId:int}", Name = "ApiFinanceGetBasketItemsByStudent")]
+        [Route("basketItems/get/byStudent/{studentId:int}", Name = "ApiGetBasketItemsByStudent")]
         public async Task<IEnumerable<FinanceBasketItemDto>> GetBasketItemsByStudent([FromUri] int studentId)
         {
             try
@@ -70,7 +70,7 @@ namespace MyPortal.Controllers.Api
 
         [RequiresPermission("AccessStudentStore")]
         [HttpGet]
-        [Route("basket/total/{studentId:int}", Name = "ApiFinanceGetBasketTotalForStudent")]
+        [Route("basket/total/{studentId:int}", Name = "ApiGetBasketTotalForStudent")]
         public async Task<decimal> GetBasketTotalForStudent([FromUri] int studentId)
         {
             try
@@ -87,7 +87,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("AccessStudentStore")]
-        [Route("basketItems/delete/{basketItemId:int}", Name = "ApiFinanceDeleteBasketItem")]
+        [Route("basketItems/delete/{basketItemId:int}", Name = "ApiDeleteBasketItem")]
         public async Task<IHttpActionResult> RemoveFromBasket([FromUri] int basketItemId)
         {
             try
@@ -104,7 +104,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditProducts")]
-        [Route("products/delete/{productId:int}", Name = "ApiFinanceDeleteProduct")]
+        [Route("products/delete/{productId:int}", Name = "ApiDeleteProduct")]
         public async Task<IHttpActionResult> DeleteProduct([FromUri] int productId)
         {
             try
@@ -121,7 +121,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("AccessStudentStore")]
-        [Route("products/get/available/{studentId:int}", Name = "ApiFinanceGetAvailableProductsByStudent")]
+        [Route("products/get/available/{studentId:int}", Name = "ApiGetAvailableProductsByStudent")]
         public async Task<IEnumerable<FinanceProductDto>> GetAvailableProductsByStudent([FromUri] int studentId)
         {
             try
@@ -138,7 +138,7 @@ namespace MyPortal.Controllers.Api
  
         [HttpGet]
         [RequiresPermission("ViewProducts, AccessStudentStore")]
-        [Route("products/price/{productId:int}", Name = "ApiFinanceGetProductPrice")]
+        [Route("products/price/{productId:int}", Name = "ApiGetProductPrice")]
         public async Task<decimal> GetProductPrice([FromUri] int productId)
         {
             try
@@ -155,7 +155,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewProducts, AccessStudentStore")]
-        [Route("products/get/byId/{productId:int}", Name = "ApiFinanceGetProductById")]
+        [Route("products/get/byId/{productId:int}", Name = "ApiGetProductById")]
         public async Task<FinanceProductDto> GetProductById([FromUri] int productId)
         {
             try
@@ -172,7 +172,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewProducts")]
-        [Route("products/get/all", Name = "ApiFinanceGetAllProducts")]
+        [Route("products/get/all", Name = "ApiGetAllProducts")]
         public async Task<IEnumerable<FinanceProductDto>> GetAllProducts()
         {
             try
@@ -189,7 +189,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewProducts")]
-        [Route("products/get/dataGrid/all", Name = "ApiFinanceGetAllProductsDataGrid")]
+        [Route("products/get/dataGrid/all", Name = "ApiGetAllProductsDataGrid")]
         public async Task<IHttpActionResult> GetAllProductsDataGrid([FromBody] DataManagerRequest dm)
         {
             try
@@ -208,7 +208,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditProducts")]
-        [Route("products/create", Name = "ApiFinanceCreateProduct")]
+        [Route("products/create", Name = "ApiCreateProduct")]
         public async Task<IHttpActionResult> CreateProduct([FromBody] FinanceProduct product)
         {
             try
@@ -225,7 +225,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditProducts")]
-        [Route("products/update", Name = "ApiFinanceUpdateProduct")]
+        [Route("products/update", Name = "ApiUpdateProduct")]
         public async Task<IHttpActionResult> UpdateProduct([FromBody] FinanceProduct product)
         {
             try
@@ -242,7 +242,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditSales")]
-        [Route("sales/queryBalance", Name = "ApiFinanceAssessBalance")]
+        [Route("sales/queryBalance", Name = "ApiAssessBalance")]
         public async Task<bool> AssessBalance([FromBody] FinanceSale sale)
         {
             try
@@ -259,7 +259,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditSales")]
-        [Route("sales/delete/{saleId:int}", Name = "ApiFinanceDeleteSale")]
+        [Route("sales/delete/{saleId:int}", Name = "ApiDeleteSale")]
         public async Task<IHttpActionResult> DeleteSale([FromUri] int saleId)
         {
             try
@@ -276,7 +276,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewSales")]
-        [Route("sales/get/processed", Name = "ApiFinanceGetProcessedSales")]
+        [Route("sales/get/processed", Name = "ApiGetProcessedSales")]
         public async Task<IEnumerable<FinanceSaleDto>> GetProcessedSales()
         {
             try
@@ -298,7 +298,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewSales")]
-        [Route("sales/get/dataGrid/processed", Name = "ApiFinanceGetProcessedSalesDataGrid")]
+        [Route("sales/get/dataGrid/processed", Name = "ApiGetProcessedSalesDataGrid")]
         public async Task<IHttpActionResult> GetProcessedSalesDataGrid([FromBody] DataManagerRequest dm)
         {
             try
@@ -322,7 +322,7 @@ namespace MyPortal.Controllers.Api
  
         [HttpGet]
         [RequiresPermission("ViewSales")]
-        [Route("sales/get/all", Name = "ApiFinanceGetAllSales")]
+        [Route("sales/get/all", Name = "ApiGetAllSales")]
         public async Task<IEnumerable<FinanceSaleDto>> GetAllSales()
         {
             try
@@ -344,7 +344,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewSales")]
-        [Route("sales/get/dataGrid/all", Name = "ApiFinanceGetAllSalesDataGrid")]
+        [Route("sales/get/dataGrid/all", Name = "ApiGetAllSalesDataGrid")]
         public async Task<IHttpActionResult> GetAllSalesDataGrid([FromBody] DataManagerRequest dm)
         {
             try
@@ -368,7 +368,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewSales, AccessStudentPortal")]
-        [Route("sales/get/byStudent/{studentId:int}", Name = "ApiFinanceGetSalesByStudent")]
+        [Route("sales/get/byStudent/{studentId:int}", Name = "ApiGetSalesByStudent")]
         public async Task<IEnumerable<FinanceSaleDto>> GetSalesByStudent([FromUri] int studentId)
         {
             try
@@ -389,7 +389,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Route("sales/get/pending", Name = "ApiFinanceGetPendingSales")]
+        [Route("sales/get/pending", Name = "ApiGetPendingSales")]
         [RequiresPermission("ViewSales")]
         public async Task<IEnumerable<FinanceSaleDto>> GetPendingSales()
         {
@@ -411,7 +411,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [Route("sales/get/dataGrid/pending", Name = "ApiFinanceGetPendingSalesDataGrid")]
+        [Route("sales/get/dataGrid/pending", Name = "ApiGetPendingSalesDataGrid")]
         [RequiresPermission("ViewSales")]
         public async Task<IHttpActionResult> GetPendingSalesDataGrid([FromBody] DataManagerRequest dm)
         {
@@ -436,7 +436,7 @@ namespace MyPortal.Controllers.Api
  
         [HttpPost]
         [RequiresPermission("EditSales")]
-        [Route("sales/markComplete/{saleId:int}", Name = "ApiFinanceMarkSaleProcessed")]
+        [Route("sales/markComplete/{saleId:int}", Name = "ApiMarkSaleProcessed")]
         public async Task<IHttpActionResult> MarkSaleProcessed([FromUri] int saleId)
         {
             try
@@ -453,7 +453,7 @@ namespace MyPortal.Controllers.Api
  
         [HttpPost]
         [RequiresPermission("EditSales")]
-        [Route("sales/create", Name = "ApiFinanceCreateSale")]
+        [Route("sales/create", Name = "ApiCreateSale")]
         public async Task<IHttpActionResult> CreateSale([FromBody] FinanceSale sale)
         {
             try
@@ -475,7 +475,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("AccessStudentStore")]
-        [Route("sales/checkoutBasket/{studentId:int}", Name = "ApiFinanceCheckoutBasket")]
+        [Route("sales/checkoutBasket/{studentId:int}", Name = "ApiCheckoutBasket")]
         public async Task<IHttpActionResult> CheckoutBasket([FromBody] int studentId)
         {
             await AuthenticateStudentRequest(studentId);
@@ -499,7 +499,7 @@ namespace MyPortal.Controllers.Api
  
         [HttpPost]
         [RequiresPermission("EditSales")]
-        [Route("sales/refund/{saleId:int}", Name = "ApiFinanceRefundSale")]
+        [Route("sales/refund/{saleId:int}", Name = "ApiRefundSale")]
         public async Task<IHttpActionResult> RefundSale([FromUri] int saleId)
         {
             try
@@ -516,7 +516,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditAccounts")]
-        [Route("creditStudent", Name = "ApiFinanceCreditStudent")]
+        [Route("creditStudent", Name = "ApiCreditStudent")]
         public async Task<IHttpActionResult> CreditStudentAccount([FromBody] FinanceTransaction transaction)
         {
             try
@@ -532,7 +532,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [Route("debitStudent", Name = "ApiFinanceDebitStudent")]
+        [Route("debitStudent", Name = "ApiDebitStudent")]
         [RequiresPermission("EditAccounts")]
         public async Task<IHttpActionResult> DebitStudentAccount([FromBody] FinanceTransaction transaction)
         {
@@ -549,7 +549,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Route("getStudentBalance/{studentId:int}", Name = "ApiFinanceGetStudentBalance")]
+        [Route("getStudentBalance/{studentId:int}", Name = "ApiGetStudentBalance")]
         public async Task<decimal> GetBalance([FromUri] int studentId)
         {
             await AuthenticateStudentRequest(studentId);

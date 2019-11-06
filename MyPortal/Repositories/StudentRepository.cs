@@ -24,7 +24,7 @@ namespace MyPortal.Repositories
 
         public new async Task<IEnumerable<Student>> GetAllAsync()
         {
-            return await Context.Students.OrderBy(x => x.Person.LastName).ToListAsync();
+            return await Context.Students.Include(x => x.Person).OrderBy(x => x.Person.LastName).ToListAsync();
         }
 
         public async Task<IEnumerable<Student>> GetOnRoll()

@@ -29,7 +29,7 @@ namespace MyPortal.Controllers.Api
         
         [HttpPost]
         [RequiresPermission("ViewMedical, EditStudents")]
-        [Route("medical/conditions/get/byPerson/{personId:int}", Name = "ApiPeopleGetMedicalConditionsByPersonDataGrid")]
+        [Route("medical/conditions/get/byPerson/{personId:int}", Name = "ApiGetMedicalConditionsByPersonDataGrid")]
         public async Task<IHttpActionResult> GetMedicalConditionsByPersonDataGrid([FromUri] int personId,
             [FromBody] DataManagerRequest dm)
         {
@@ -50,7 +50,7 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("ViewMedical, EditStudents")]
         [Route("medical/dietaryRequirements/get/byPerson/{personId:int}", Name =
-            "ApiPeopleGetMedicalDietaryRequirementsByPersonDataGrid")]
+            "ApiGetMedicalDietaryRequirementsByPersonDataGrid")]
         public async Task<IHttpActionResult> GetMedicalDietaryRequirementsByPersonDataGrid([FromUri] int personId,
             [FromBody] DataManagerRequest dm)
         {

@@ -24,7 +24,7 @@ namespace MyPortal.Controllers.Api
         
         [HttpPost]
         [RequiresPermission("EditRegGroups")]
-        [Route("regGroups/create", Name = "ApiPastoralCreateRegGroup")]
+        [Route("regGroups/create", Name = "ApiCreateRegGroup")]
         public async Task<IHttpActionResult> CreateRegGroup([FromBody] PastoralRegGroup regGroup)
         {
             try
@@ -41,7 +41,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditRegGroups")]
-        [Route("regGroups/delete/{regGroupId:int}", Name = "ApiPastoralDeleteRegGroup")]
+        [Route("regGroups/delete/{regGroupId:int}", Name = "ApiDeleteRegGroup")]
         public async Task<IHttpActionResult> DeleteRegGroup([FromUri] int regGroupId)
         {
             try
@@ -58,7 +58,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewRegGroups")]
-        [Route("regGroups/get/byId/{regGroupId:int}", Name = "ApiPastoralGetRegGroupById")]
+        [Route("regGroups/get/byId/{regGroupId:int}", Name = "ApiGetRegGroupById")]
         public async Task<PastoralRegGroupDto> GetRegGroupById([FromUri] int regGroupId)
         {
             try
@@ -75,7 +75,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewRegGroups")]
-        [Route("regGroups/get/byYearGroup/{yearGroupId:int}", Name = "ApiPastoralGetRegGroupsByYearGroup")]
+        [Route("regGroups/get/byYearGroup/{yearGroupId:int}", Name = "ApiGetRegGroupsByYearGroup")]
         public async Task<IEnumerable<PastoralRegGroupDto>> GetRegGroupsByYearGroup([FromUri] int yearGroupId)
         {
             try
@@ -91,7 +91,7 @@ namespace MyPortal.Controllers.Api
         }
  
         [HttpGet]
-        [Route("regGroups/get/all", Name = "ApiPastoralGetAllRegGroups")]
+        [Route("regGroups/get/all", Name = "ApiGetAllRegGroups")]
         [RequiresPermission("ViewRegGroups")]
         public async Task<IEnumerable<PastoralRegGroupDto>> GetAllRegGroups()
         {
@@ -109,7 +109,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditRegGroups")]
-        [Route("regGroups/update", Name = "ApiPastoralUpdateRegGroup")]
+        [Route("regGroups/update", Name = "ApiUpdateRegGroup")]
         public async Task<IHttpActionResult> UpdateRegGroup([FromBody] PastoralRegGroup regGroup)
         {
             try
@@ -126,7 +126,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditYearGroups")]
-        [Route("yearGroups/create", Name = "ApiPastoralCreateYearGroup")]
+        [Route("yearGroups/create", Name = "ApiCreateYearGroup")]
         public async Task<IHttpActionResult> CreateYearGroup([FromBody] PastoralYearGroup yearGroup)
         {
             try
@@ -143,7 +143,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditYearGroups")]
-        [Route("yearGroups/delete/{yearGroupId:int}", Name = "ApiPastoralDeleteYearGroup")]
+        [Route("yearGroups/delete/{yearGroupId:int}", Name = "ApiDeleteYearGroup")]
         public async Task<IHttpActionResult> DeleteYearGroup([FromUri] int yearGroupId)
         {
             try
@@ -160,7 +160,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewYearGroups")]
-        [Route("yearGroups/get/all", Name = "ApiPastoralGetAllYearGroups")]
+        [Route("yearGroups/get/all", Name = "ApiGetAllYearGroups")]
         public async Task<IEnumerable<PastoralYearGroupDto>> GetAllYearGroups()
         {
             try
@@ -177,7 +177,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditYearGroups")]
-        [Route("yearGroups/update", Name = "ApiPastoralUpdateYearGroup")]
+        [Route("yearGroups/update", Name = "ApiUpdateYearGroup")]
         public async Task<IHttpActionResult> UpdateYearGroup([FromBody] PastoralYearGroup yearGroup)
         {
             try

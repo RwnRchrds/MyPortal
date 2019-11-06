@@ -34,7 +34,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditUsers")]
-        [Route("users/addToRole", Name = "ApiAdminAddUserToRole")]
+        [Route("users/addToRole", Name = "ApiAddUserToRole")]
         public async Task<IHttpActionResult> AddUserToRole([FromBody] UserRoleModel roleModel)
         {
             try
@@ -51,7 +51,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditUsers")]
-        [Route("users/attachPerson", Name = "ApiAdminAttachPersonToUser")]
+        [Route("users/attachPerson", Name = "ApiAttachPersonToUser")]
         public async Task<IHttpActionResult> AttachPersonToUser([FromBody] UserProfile userProfile)
         {
             try
@@ -68,7 +68,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditUsers")]
-        [Route("users/resetPassword", Name = "ApiAdminChangePassword")]
+        [Route("users/resetPassword", Name = "ApiChangePassword")]
         public async Task<IHttpActionResult> ChangePassword([FromBody] ChangePasswordModel data)
         {
             try
@@ -85,7 +85,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditUsers")]
-        [Route("users/delete/{userId}", Name = "ApiAdminDeleteUser")]
+        [Route("users/delete/{userId}", Name = "ApiDeleteUser")]
         public async Task<IHttpActionResult> DeleteUser(string userId)
         {
             try
@@ -102,7 +102,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditUsers")]
-        [Route("users/detachPerson", Name = "ApiAdminDetachPersonFromUser")]
+        [Route("users/detachPerson", Name = "ApiDetachPersonFromUser")]
         public async Task<IHttpActionResult> DetachPersonFromUser(ApplicationUser user)
         {
             try
@@ -119,7 +119,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("EditUsers")]
-        [Route("users/get/all", Name = "ApiAdminGetAllUsers")]
+        [Route("users/get/all", Name = "ApiGetAllUsers")]
         public async Task<IEnumerable<ApplicationUserDto>> GetAllUsers()
         {
             try
@@ -136,7 +136,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditUsers")]
-        [Route("users/get/dataGrid/all", Name = "ApiAdminGetAllUsersDataGrid")]
+        [Route("users/get/dataGrid/all", Name = "ApiGetAllUsersDataGrid")]
         public async Task<IHttpActionResult> GetAllUsersDataGrid([FromBody] DataManagerRequest dm)
         {
             try
@@ -155,7 +155,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditUsers")]
-        [Route("users/create", Name = "ApiAdminCreateUser")]
+        [Route("users/create", Name = "ApiCreateUser")]
         public async Task<IHttpActionResult> CreateUser([FromBody] NewUserViewModel model)
         {
             try
@@ -170,7 +170,7 @@ namespace MyPortal.Controllers.Api
             return Ok( "User created");
         }
 
-        [Route("users/removeFromRole", Name = "ApiAdminRemoveFromRole")]
+        [Route("users/removeFromRole", Name = "ApiRemoveFromRole")]
         [HttpPost]
         [RequiresPermission("EditUsers")]
         public async Task<IHttpActionResult> RemoveFromRole([FromBody] UserRoleModel roleModel)
@@ -188,7 +188,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [RequiresPermission("EditRoles")]
-        [Route("roles/create", Name = "ApiAdminCreateRole")]
+        [Route("roles/create", Name = "ApiCreateRole")]
         [HttpPost]
         public async Task<IHttpActionResult> CreateRole([FromBody] ApplicationRole role)
         {
@@ -205,7 +205,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [RequiresPermission("EditRoles")]
-        [Route("roles/update", Name = "ApiAdminUpdateRole")]
+        [Route("roles/update", Name = "ApiUpdateRole")]
         [HttpPost]
         public async Task<IHttpActionResult> UpdateRole([FromBody] ApplicationRole role)
         {
@@ -222,7 +222,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [RequiresPermission("EditRoles")]
-        [Route("roles/delete/{roleId}", Name = "ApiAdminDeleteRole")]
+        [Route("roles/delete/{roleId}", Name = "ApiDeleteRole")]
         [HttpDelete]
         public async Task<IHttpActionResult> DeleteRole([FromUri] string roleId)
         {
@@ -239,7 +239,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [RequiresPermission("EditRoles")]
-        [Route("roles/get/byId/{roleId}", Name = "ApiAdminGetRoleById")]
+        [Route("roles/get/byId/{roleId}", Name = "ApiGetRoleById")]
         [HttpGet]
         public async Task<ApplicationRoleDto> GetRoleById([FromUri] string roleId)
         {
@@ -256,7 +256,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [RequiresPermission("EditRoles")]
-        [Route("roles/get/all", Name = "ApiAdminGetAllRoles")]
+        [Route("roles/get/all", Name = "ApiGetAllRoles")]
         [HttpGet]
         public async Task<IEnumerable<ApplicationRoleDto>> GetAllRoles()
         {
@@ -273,7 +273,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [RequiresPermission("EditUsers")]
-        [Route("roles/get/byUser", Name = "ApiAdminGetRolesByUser")]
+        [Route("roles/get/byUser", Name = "ApiGetRolesByUser")]
         [HttpGet]
         public async Task<IEnumerable<ApplicationRoleDto>> GetRolesByUser([FromUri] string userId)
         {
@@ -290,7 +290,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [RequiresPermission("EditUsers")]
-        [Route("roles/get/dataGrid/byUser", Name = "ApiAdminGetRolesByUserDataGrid")]
+        [Route("roles/get/dataGrid/byUser", Name = "ApiGetRolesByUserDataGrid")]
         [HttpPost]
         public async Task<IHttpActionResult> GetRolesByUserDataGrid([FromUri] string userId,
             [FromBody] DataManagerRequest dm)
@@ -310,7 +310,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [RequiresPermission("EditRoles")]
-        [Route("roles/get/dataGrid/all", Name = "ApiAdminGetAllRolesDataGrid")]
+        [Route("roles/get/dataGrid/all", Name = "ApiGetAllRolesDataGrid")]
         [HttpPost]
         public async Task<IHttpActionResult> GetAllRolesDataGrid([FromBody] DataManagerRequest dm)
         {
@@ -329,7 +329,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [RequiresPermission("EditRoles")]
-        [Route("rolePermissions/toggle", Name = "ApiAdminToggleRolePermission")]
+        [Route("rolePermissions/toggle", Name = "ApiToggleRolePermission")]
         [HttpPost]
         public async Task<IHttpActionResult> ToggleRolePermission([FromBody] RolePermission rolePermission)
         {
@@ -346,7 +346,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [RequiresPermission("EditRoles")]
-        [Route("rolePermissions/get/byRole/{roleId}", Name = "ApiAdminGetPermissionsByRole")]
+        [Route("rolePermissions/get/byRole/{roleId}", Name = "ApiGetPermissionsByRole")]
         [HttpGet]
         public async Task<IEnumerable<PermissionIndicator>> GetPermissionsByRole([FromUri] string roleId)
         {
@@ -361,7 +361,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [RequiresPermission("EditRoles")]
-        [Route("rolePermissions/get/byRole/dataGrid/{roleId}", Name = "ApiAdminGetPermissionsByRoleDataGrid")]
+        [Route("rolePermissions/get/byRole/dataGrid/{roleId}", Name = "ApiGetPermissionsByRoleDataGrid")]
         [HttpPost]
         public async Task<IHttpActionResult> GetPermissionsByRoleDataGrid([FromUri] string roleId, [FromBody] DataManagerRequest dm)
         {

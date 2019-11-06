@@ -115,7 +115,7 @@ namespace MyPortal.Controllers
                     return View("Lockout");
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
+                    ModelState.AddModelError("", "Username/password incorrect");
                     return View("~/Views/Account/Login.cshtml", model);
             }
         }

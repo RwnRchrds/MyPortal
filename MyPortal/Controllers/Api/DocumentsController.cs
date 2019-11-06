@@ -31,7 +31,7 @@ namespace MyPortal.Controllers.Api
             
         [HttpPost]
         [RequiresPermission("EditDocuments")]
-        [Route("create", Name = "ApiDocumentsCreateDocument")]
+        [Route("create", Name = "ApiCreateDocument")]
         public async Task<IHttpActionResult> CreateDocument([FromBody] Document document)
         {
             try
@@ -49,7 +49,7 @@ namespace MyPortal.Controllers.Api
         
         [HttpGet]
         [RequiresPermission("ViewApprovedDocuments")]
-        [Route("general/get/approved", Name = "ApiDocumentsGetApprovedDocuments")]
+        [Route("general/get/approved", Name = "ApiGetApprovedDocuments")]
         public async Task<IEnumerable<DocumentDto>> GetApprovedGeneralDocuments()
         {
             try
@@ -66,7 +66,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewApprovedDocuments")]
-        [Route("general/get/dataGrid/approved", Name = "ApiDocumentsGetApprovedDocumentsDataGrid")]
+        [Route("general/get/dataGrid/approved", Name = "ApiGetApprovedDocumentsDataGrid")]
         public async Task<IHttpActionResult> GetApprovedGeneralDocumentsDataGrid([FromBody] DataManagerRequest dm)
         {
             try
@@ -85,7 +85,7 @@ namespace MyPortal.Controllers.Api
         
         [HttpGet]
         [RequiresPermission("ViewApprovedDocuments, ViewAllDocuments")]
-        [Route("get/byId/{documentId:int}", Name = "ApiDocumentsGetDocumentById")]
+        [Route("get/byId/{documentId:int}", Name = "ApiGetDocumentById")]
         public async Task<DocumentDto> GetDocumentById([FromUri] int documentId)
         {
             try
@@ -102,7 +102,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewAllDocuments")]
-        [Route("general/get/all", Name = "ApiDocumentsGetAllDocuments")]
+        [Route("general/get/all", Name = "ApiGetAllDocuments")]
         public async Task<IEnumerable<DocumentDto>> GetAllGeneralDocuments()
         {
             try
@@ -119,7 +119,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewAllDocuments")]
-        [Route("general/get/dataGrid/all", Name = "ApiDocumentsGetAllDocumentsDataGrid")]
+        [Route("general/get/dataGrid/all", Name = "ApiGetAllDocumentsDataGrid")]
         public async Task<IHttpActionResult> GetAllGeneralDocumentsDataGrid([FromBody] DataManagerRequest dm)
         {
             try
@@ -138,7 +138,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewPersonalDocuments")]
-        [Route("personal/get/dataGrid/{personId}", Name = "ApiDocumentsGetPersonalDocumentsByPersonDataGrid")]
+        [Route("personal/get/dataGrid/{personId}", Name = "ApiGetPersonalDocumentsByPersonDataGrid")]
         public async Task<IHttpActionResult> GetDocumentsByPersonDataGrid([FromBody] DataManagerRequest dm, [FromUri] int personId)
         {
             try
@@ -157,7 +157,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditDocuments")]
-        [Route("delete/{documentId:int}", Name = "ApiDocumentsDeleteDocument")]
+        [Route("delete/{documentId:int}", Name = "ApiDeleteDocument")]
         public async Task<IHttpActionResult> DeleteDocument([FromUri] int documentId)
         {
             try
@@ -174,7 +174,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditDocuments")]
-        [Route("update", Name = "ApiDocumentsUpdateDocument")]
+        [Route("update", Name = "ApiUpdateDocument")]
         public async Task<IHttpActionResult> UpdateDocument([FromBody] Document document)
         {
             try
@@ -191,7 +191,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditPersonalDocuments")]
-        [Route("personal/create", Name = "ApiDocumentsCreatePersonalDocument")]
+        [Route("personal/create", Name = "ApiCreatePersonalDocument")]
         public async Task<IHttpActionResult> CreatePersonalDocument([FromBody] PersonDocument document)
         {
             try
@@ -209,7 +209,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewPersonalDocuments")]
-        [Route("personal/get/byId/{documentId:int}", Name = "ApiDocumentsGetPersonalDocumentById")]
+        [Route("personal/get/byId/{documentId:int}", Name = "ApiGetPersonalDocumentById")]
         public async Task<PersonDocumentDto> GetPersonalDocumentById([FromUri] int documentId)
         {
             try
@@ -226,7 +226,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewPersonalDocuments")]
-        [Route("personal/get/{personId:int}", Name = "ApiDocumentsGetPersonalDocumentsByPerson")]
+        [Route("personal/get/{personId:int}", Name = "ApiGetPersonalDocumentsByPerson")]
         public async Task<IEnumerable<PersonDocumentDto>> GetPersonalDocumentsByPerson([FromUri] int personId)
         {
             try
@@ -243,7 +243,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditPersonalDocuments")]
-        [Route("personal/delete/{documentId:int}", Name = "ApiDocumentsDeletePersonalDocument")]
+        [Route("personal/delete/{documentId:int}", Name = "ApiDeletePersonalDocument")]
         public async Task<IHttpActionResult> DeletePersonalDocument([FromUri] int documentId)
         {
             try
@@ -260,7 +260,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditPersonalDocuments")]
-        [Route("personal/update", Name = "ApiDocumentsUpdatePersonalDocument")]
+        [Route("personal/update", Name = "ApiUpdatePersonalDocument")]
         public async Task<IHttpActionResult> UpdatePersonalDocument([FromBody] PersonDocument document)
         {
             try

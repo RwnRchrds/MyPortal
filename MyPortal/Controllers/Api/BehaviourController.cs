@@ -28,7 +28,7 @@ namespace MyPortal.Controllers.Api
         
         [HttpGet]
         [RequiresPermission("ViewBehaviour")]
-        [Route("points/get/{studentId:int}", Name = "ApiBehaviourGetBehaviourPointsByStudent")]
+        [Route("points/get/{studentId:int}", Name = "ApiGetBehaviourPointsByStudent")]
         public async Task<int> GetBehaviourPointsByStudent([FromUri] int studentId)
         {
             try
@@ -50,7 +50,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewBehaviour")]
-        [Route("achievements/get/byStudent/dataGrid/{studentId:int}", Name = "ApiBehaviourGetAchievementsByStudentDataGrid")]
+        [Route("achievements/get/byStudent/dataGrid/{studentId:int}", Name = "ApiGetAchievementsByStudentDataGrid")]
         public async Task<IHttpActionResult> GetAchievementsByStudentDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
         {
             try
@@ -73,7 +73,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewBehaviour")]
-        [Route("achievements/get/byId/{achievementId:int}", Name = "ApiBehaviourGetAchievementById")]
+        [Route("achievements/get/byId/{achievementId:int}", Name = "ApiGetAchievementById")]
         public async Task<BehaviourAchievementDto> GetAchievementById([FromUri] int achievementId)
         {
             try
@@ -90,7 +90,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditBehaviour")]
-        [Route("achievements/create", Name = "ApiBehaviourCreateAchievement")]
+        [Route("achievements/create", Name = "ApiCreateAchievement")]
         public async Task<IHttpActionResult> CreateAchievement([FromBody] BehaviourAchievement achievement)
         {
             try
@@ -119,7 +119,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditBehaviour")]
-        [Route("achievements/update", Name = "ApiBehaviourUpdateAchievement")]
+        [Route("achievements/update", Name = "ApiUpdateAchievement")]
         public async Task<IHttpActionResult> UpdateAchievement([FromBody] BehaviourAchievement achievement)
         {
             try
@@ -136,7 +136,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditBehaviour")]
-        [Route("achievements/delete/{achievementId:int}", Name = "ApiBehaviourDeleteAchievement")]
+        [Route("achievements/delete/{achievementId:int}", Name = "ApiDeleteAchievement")]
         public async Task<IHttpActionResult> DeleteAchievement([FromUri] int achievementId)
         {
             try
@@ -153,7 +153,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewBehaviour")]
-        [Route("incidents/get/byStudent/dataGrid/{studentId:int}", Name = "ApiBehaviourGetBehaviourIncidentsByStudentDataGrid")]
+        [Route("incidents/get/byStudent/dataGrid/{studentId:int}", Name = "ApiGetBehaviourIncidentsByStudentDataGrid")]
         public async Task<IHttpActionResult> GetBehaviourIncidentsByStudentDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
         {
             try
@@ -177,7 +177,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewBehaviour")]
-        [Route("incidents/get/byId/{incidentId:int}", Name = "ApiBehaviourGetBehaviourIncidentById")]
+        [Route("incidents/get/byId/{incidentId:int}", Name = "ApiGetBehaviourIncidentById")]
         public async  Task<BehaviourIncidentDto> GetBehaviourIncidentById([FromUri] int incidentId)
         {
             try
@@ -194,7 +194,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditBehaviour")]
-        [Route("incidents/create", Name = "ApiBehaviourCreateIncident")]
+        [Route("incidents/create", Name = "ApiCreateIncident")]
         public async Task<IHttpActionResult> CreateIncident([FromBody] BehaviourIncident incident)
         {
             try
@@ -222,7 +222,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditBehaviour")]
-        [Route("incidents/update", Name = "ApiBehaviourUpdateIncident")]
+        [Route("incidents/update", Name = "ApiUpdateIncident")]
         public async Task<IHttpActionResult> UpdateIncident([FromBody] BehaviourIncident incident)
         {
             try
@@ -239,7 +239,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditBehaviour")]
-        [Route("incidents/delete/{incidentId:int}", Name = "ApiBehaviourDeleteIncident")]
+        [Route("incidents/delete/{incidentId:int}", Name = "ApiDeleteIncident")]
         public async Task<IHttpActionResult> DeleteIncident([FromUri] int incidentId)
         {
             try

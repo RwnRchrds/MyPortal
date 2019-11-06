@@ -2,15 +2,16 @@
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using MyPortal.Areas.Students.ViewModels;
-using MyPortal.Attributes.HttpAuthorise;
+using MyPortal.Attributes.MvcAuthorise;
 using MyPortal.Controllers;
 using MyPortal.Models;
 using MyPortal.Services;
 
 namespace MyPortal.Areas.Students.Controllers
 {
-    [RoutePrefix("Finance")]
     [UserType(UserType.Student)]
+    [RouteArea("Students")]
+    [RoutePrefix("Finance")]
     public class FinanceController : MyPortalController
     {
         [Route("Store/SalesHistory")]

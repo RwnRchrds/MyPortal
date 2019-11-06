@@ -2,7 +2,6 @@
 @{
     ViewBag.Title = "Role Permissions";
     ViewBag.DisplayTitle = "Role Permission";
-    Layout = "~/Views/Portal/_LayoutStaff.cshtml";
 }
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -20,7 +19,7 @@
             <div class="card-body">
                 @Html.EJS().Grid("Permissions").DataSource(d =>
                    {
-                       d.Url(Url.HttpRouteUrl("ApiAdminGetPermissionsByRoleDataGrid", new{roleId = Model.Role.Id})).CrossDomain(false).Adaptor("UrlAdaptor");
+                       d.Url(Url.HttpRouteUrl("ApiGetPermissionsByRoleDataGrid", new{roleId = Model.Role.Id})).CrossDomain(false).Adaptor("UrlAdaptor");
                    }).Columns(c =>
                    {
                        c.Field("Permission.Area").HeaderText("Area").Template("#permissionAreaTemplate").Width("200").Add();
@@ -38,7 +37,7 @@
     <script>
         $(document).ready(function () {
 
-            var urlTogglePermission =  "@Url.HttpRouteUrl("ApiAdminToggleRolePermission", new{})";
+            var urlTogglePermission =  "@Url.HttpRouteUrl("ApiToggleRolePermission", new{})";
 
             $("#Permissions").on("click",
                 ".js-toggle",

@@ -2,7 +2,7 @@
 
 namespace MyPortal.Areas.Staff.ViewModels
 {
-    public class ClassEnrolmentsViewModel
+    public class EnrolmentsViewModel
     {
         public CurriculumClass Class { get; set; }
         public CurriculumEnrolment Enrolment { get; set; }

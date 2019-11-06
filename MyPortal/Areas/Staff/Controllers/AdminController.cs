@@ -10,6 +10,7 @@ using MyPortal.Services;
 namespace MyPortal.Areas.Staff.Controllers
 {
     [UserType(UserType.Staff)]
+    [RouteArea("Staff")]
     [RoutePrefix("Admin")]
     public class AdminController : MyPortalIdentityController
     {
@@ -21,26 +22,26 @@ namespace MyPortal.Areas.Staff.Controllers
         }
 
         [RequiresPermission("EditUsers")]
-        [Route("Users/{id}", Name = "AdminUserDetails")]
-        public async Task<ActionResult> UserDetails(string id)
+        [Route("Users/{userId}")]
+        public async Task<ActionResult> UserDetails(string userId)
         {
             using (var adminService = new AdminService(UnitOfWork))
             using (var staffService = new StaffMemberService(UnitOfWork))
             using (var studentService = new StudentService(UnitOfWork))
             {
-                var user = await adminService.GetUserById(id);
+                var user = await adminService.GetUserById(userId);
 
                 if (user == null)
                     return HttpNotFound();
 
-                var userRoles = await adminService.GetRolesByUser(id);
+                var userRoles = await adminService.GetRolesByUser(userId);
 
                 var roles = await adminService.GetAllRoles();
 
                 var attachedProfile = "";
 
-                var studentProfile = await studentService.GetStudentFromUserId(id);
-                var staffProfile = await staffService.GetStaffMemberFromUserId(id);
+                var studentProfile = await studentService.GetStudentFromUserId(userId);
+                var staffProfile = await staffService.GetStaffMemberFromUserId(userId);
 
                 if (studentProfile != null)
                     attachedProfile = $"{studentProfile.GetDisplayName()} (Student)";

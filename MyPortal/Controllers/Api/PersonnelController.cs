@@ -27,7 +27,7 @@ namespace MyPortal.Controllers.Api
         
         [HttpPost]
         [RequiresPermission("EditTrainingCertificates")]
-        [Route("certificates/create", Name = "ApiPersonnelCreateTrainingCertificate")]
+        [Route("certificates/create", Name = "ApiCreateTrainingCertificate")]
         public async Task<IHttpActionResult> CreateTrainingCertificate([FromBody] PersonnelTrainingCertificate certificate)
         {
             try
@@ -46,7 +46,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditTrainingCertificates")]
-        [Route("certificates/delete/{staffId:int}/{courseId:int}", Name = "ApiPersonnelDeleteTrainingCertificate")]
+        [Route("certificates/delete/{staffId:int}/{courseId:int}", Name = "ApiDeleteTrainingCertificate")]
         public async Task<IHttpActionResult> DeleteCertificate([FromUri] int staffId, [FromUri] int courseId)
         {
             try
@@ -63,7 +63,7 @@ namespace MyPortal.Controllers.Api
         
         [HttpGet]
         [RequiresPermission("ViewTrainingCertificates")]
-        [Route("certificates/get/{staffId:int}/{courseId:int}", Name = "ApiPersonnelGetTrainingCertificate")]
+        [Route("certificates/get/{staffId:int}/{courseId:int}", Name = "ApiGetTrainingCertificate")]
         public async Task<PersonnelTrainingCertificateDto> GetTrainingCertificate([FromUri] int staffId, [FromUri] int courseId)
         {
             try
@@ -80,7 +80,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewTrainingCertificates")]
-        [Route("certificates/get/byStaff/{staffId:int}", Name = "ApiPersonnelGetTrainingCertificatesByStaffMember")]
+        [Route("certificates/get/byStaff/{staffId:int}", Name = "ApiGetTrainingCertificatesByStaffMember")]
         public async Task<IEnumerable<PersonnelTrainingCertificateDto>> GetCertificatesByStaffMember([FromUri] int staffId)
         {
             try
@@ -97,7 +97,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewTrainingCertificates")]
-        [Route("certificates/get/byStaff/dataGrid/{staffId:int}", Name = "ApiPersonnelGetTrainingCertificatesByStaffMemberDataGrid")]
+        [Route("certificates/get/byStaff/dataGrid/{staffId:int}", Name = "ApiGetTrainingCertificatesByStaffMemberDataGrid")]
         public async Task<IHttpActionResult> GetCertificatesForStaffMemberDataGrid([FromUri] int staffId, [FromBody] DataManagerRequest dm)
         {
             try
@@ -116,7 +116,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditTrainingCertificates")]
-        [Route("certificates/update", Name = "ApiPersonnelUpdateTrainingCertificate")]
+        [Route("certificates/update", Name = "ApiUpdateTrainingCertificate")]
         public async Task<IHttpActionResult> UpdateCertificate([FromBody] PersonnelTrainingCertificate certificate)
         {
             try
@@ -134,7 +134,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditTrainingCourses")]
-        [Route("courses/remove/{courseId:int}", Name = "ApiPersonnelDeleteTrainingCourse")]
+        [Route("courses/remove/{courseId:int}", Name = "ApiDeleteTrainingCourse")]
         public async Task<IHttpActionResult> DeleteCourse([FromUri] int courseId)
         {
             try
@@ -150,7 +150,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Route("courses/get/byId/{courseId:int}", Name = "ApiPersonnelGetTrainingCourseById")]
+        [Route("courses/get/byId/{courseId:int}", Name = "ApiGetTrainingCourseById")]
         [RequiresPermission("ViewTrainingCourses")]
         public async Task<PersonnelTrainingCourseDto> GetCourseById([FromUri] int courseId)
         {
@@ -167,7 +167,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Route("courses/get/all", Name = "ApiPersonnelGetAllTrainingCourses")]
+        [Route("courses/get/all", Name = "ApiGetAllTrainingCourses")]
         [RequiresPermission("ViewTrainingCourses")]
         public async Task<IEnumerable<PersonnelTrainingCourseDto>> GetCourses()
         {
@@ -184,7 +184,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [Route("courses/get/dataGrid/all", Name = "ApiPersonnelGetAllTrainingCoursesDataGrid")]
+        [Route("courses/get/dataGrid/all", Name = "ApiGetAllTrainingCoursesDataGrid")]
         [RequiresPermission("ViewTrainingCourses")]
         public async Task<IHttpActionResult> GetAllTrainingCourseDataGrid([FromBody] DataManagerRequest dm)
         {
@@ -203,7 +203,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [Route("courses/edit", Name = "ApiPersonnelUpdateTrainingCourse")]
+        [Route("courses/edit", Name = "ApiUpdateTrainingCourse")]
         [RequiresPermission("EditTrainingCourses")]
         public async Task<IHttpActionResult> UpdateCourse([FromBody] PersonnelTrainingCourse course)
         {
@@ -220,7 +220,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [Route("observations/create", Name = "ApiPersonnelCreateObservation")]
+        [Route("observations/create", Name = "ApiCreateObservation")]
         [RequiresPermission("EditObservations")]
         public async Task<IHttpActionResult> CreateObservation([FromBody] PersonnelObservation data)
         {
@@ -239,7 +239,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewObservations")]
-        [Route("observations/get/byId/{observationId:int}", Name = "ApiPersonnelGetObservationById")]
+        [Route("observations/get/byId/{observationId:int}", Name = "ApiGetObservationById")]
         public async Task<PersonnelObservationDto> GetObservation([FromUri] int observationId)
         {
             try
@@ -256,7 +256,7 @@ namespace MyPortal.Controllers.Api
         
         [HttpGet]
         [RequiresPermission("ViewObservations")]
-        [Route("observations/get/byStaff/{staffMemberId:int}", Name = "ApiPersonnelGetObservationsByStaffMember")]
+        [Route("observations/get/byStaff/{staffMemberId:int}", Name = "ApiGetObservationsByStaffMember")]
         public async Task<IEnumerable<PersonnelObservationDto>> GetObservationsByStaffMember([FromUri] int staffMemberId)
         {
             try
@@ -273,7 +273,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewObservations")]
-        [Route("observations/get/byStaff/dataGrid/{staffMemberId:int}", Name = "ApiPersonnelGetObservationsByStaffMemberDataGrid")]
+        [Route("observations/get/byStaff/dataGrid/{staffMemberId:int}", Name = "ApiGetObservationsByStaffMemberDataGrid")]
         public async Task<IHttpActionResult> GetObservationsForStaffMemberDataGrid([FromUri] int staffMemberId,
             [FromBody] DataManagerRequest dm)
         {
@@ -293,7 +293,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditObservations")]
-        [Route("observations/delete/{observationId:int}", Name = "ApiPersonnelDeleteObservation")]
+        [Route("observations/delete/{observationId:int}", Name = "ApiDeleteObservation")]
         public async Task<IHttpActionResult> RemoveObservation([FromUri] int observationId)
         {
             try
@@ -310,7 +310,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditObservations")]
-        [Route("observations/update", Name = "ApiPersonnelUpdateObservation")]
+        [Route("observations/update", Name = "ApiUpdateObservation")]
         public async Task<IHttpActionResult> UpdateObservation([FromBody] PersonnelObservation observation)
         {
             try

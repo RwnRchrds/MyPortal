@@ -13,6 +13,83 @@ namespace MyPortal.Persistence
     {
         private readonly MyPortalDbContext _context;
 
+        public UnitOfWork()
+        {
+            var context = new MyPortalDbContext();
+            _context = context;
+            AssessmentAspects = new AssessmentAspectRepository(context);
+            AssessmentAspectTypes = new AssessmentAspectTypeRepository(context);
+            AssessmentGrades = new AssessmentGradeRepository(context);
+            AssessmentGradeSets = new AssessmentGradeSetRepository(context);
+            AssessmentResults = new AssessmentResultRepository(context);
+            AssessmentResultSets = new AssessmentResultSetRepository(context);
+            AttendanceCodes = new AttendanceCodeRepository(context);
+            AttendanceMarks = new AttendanceMarkRepository(context);
+            AttendancePeriods = new AttendancePeriodRepository(context);
+            AttendanceWeeks = new AttendanceWeekRepository(context);
+            BehaviourAchievements = new BehaviourAchievementRepository(context);
+            BehaviourAchievementTypes = new BehaviourAchievementTypeRepository(context);
+            BehaviourIncidents = new BehaviourIncidentRepository(context);
+            BehaviourIncidentTypes = new BehaviourIncidentTypeRepository(context);
+            CommunicationAddresses = new CommunicationAddressRepository(context);
+            CommunicationAddressPersons = new CommunicationAddressPersonRepository(context);
+            CommunicationEmailAddresses = new CommunicationEmailAddressRepository(context);
+            CommunicationLogs = new CommunicationLogRepository(context);
+            CommunicationPhoneNumbers = new CommunicationPhoneNumberRepository(context);
+            CommunicationPhoneNumberTypes = new CommunicationPhoneNumberTypeRepository(context);
+            CommunicationTypes = new CommunicationTypeRepository(context);
+            Contacts = new ContactRepository(context);
+            CurriculumAcademicYears = new CurriculumAcademicYearRepository(context);
+            CurriculumClasses = new CurriculumClassRepository(context);
+            CurriculumEnrolments = new CurriculumEnrolmentRepository(context);
+            CurriculumLessonPlans = new CurriculumLessonPlanRepository(context);
+            CurriculumLessonPlanTemplates = new CurriculumLessonPlanTemplateRepository(context);
+            CurriculumSessions = new CurriculumSessionRepository(context);
+            CurriculumStudyTopics = new CurriculumStudyTopicRepository(context);
+            CurriculumSubjects = new CurriculumSubjectRepository(context);
+            Documents = new DocumentRepository(context);
+            DocumentTypes = new DocumentTypeRepository(context);
+            FinanceBasketItems = new FinanceBasketItemRepository(context);
+            FinanceProducts = new FinanceProductRepository(context);
+            FinanceProductTypes = new FinanceProductTypeRepository(context);
+            FinanceSales = new FinanceSaleRepository(context);
+            MedicalConditions = new MedicalConditionRepository(context);
+            MedicalDietaryRequirements = new MedicalDietaryRequirementRepository(context);
+            MedicalPersonConditions = new MedicalPersonConditionRepository(context);
+            MedicalPersonDietaryRequirements = new MedicalPersonDietaryRequirementRepository(context);
+            PastoralHouses = new PastoralHouseRepository(context);
+            PastoralRegGroups = new PastoralRegGroupRepository(context);
+            PastoralYearGroups = new PastoralYearGroupRepository(context);
+            People = new PersonRepository(context);
+            PersonDocuments = new PersonDocumentRepository(context);
+            PersonnelObservations = new PersonnelObservationRepository(context);
+            PersonnelTrainingCertificates = new PersonnelTrainingCertificateRepository(context);
+            PersonnelTrainingCourses = new PersonnelTrainingCourseRepository(context);
+            ProfileComments = new ProfileCommentRepository(context);
+            ProfileCommentBanks = new ProfileCommentBankRepository(context);
+            ProfileLogs = new ProfileLogRepository(context);
+            ProfileLogTypes = new ProfileLogTypeRepository(context);
+            RelationshipTypes = new RelationshipTypeRepository(context);
+            SchoolGovernanceTypes = new SchoolGovernanceTypeRepository(context);
+            SchoolIntakeTypes = new SchoolIntakeTypeRepository(context);
+            SchoolLocations = new SchoolLocationRepository(context);
+            SchoolPhases = new SchoolPhaseRepository(context);
+            SchoolTypes = new SchoolTypeRepository(context);
+            SenEventTypes = new SenEventTypeRepository(context);
+            SenEvents = new SenEventRepository(context);
+            SenGiftedTalented = new SenGiftedTalentedRepository(context);
+            SenProvisionTypes = new SenProvisionTypeRepository(context);
+            SenProvisions = new SenProvisionRepository(context);
+            SenReviewTypes = new SenReviewTypeRepository(context);
+            SenStatus = new SenStatusRepository(context);
+            StaffMembers = new StaffMemberRepository(context);
+            Students = new StudentRepository(context);
+            SystemAreas = new SystemAreaRepository(context);
+            SystemBulletins = new SystemBulletinRepository(context);
+            SystemReports = new SystemReportRepository(context);
+            SystemSchools = new SystemSchoolRepository(context);
+        }
+
         public UnitOfWork(MyPortalDbContext context)
         {
             _context = context;

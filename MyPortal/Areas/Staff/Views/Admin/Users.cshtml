@@ -1,7 +1,7 @@
-﻿@{
+﻿@model MyPortal.Areas.Staff.ViewModels.UsersViewModel
+@{
     ViewBag.Title = "Users";
     ViewBag.DisplayTitle = "Users";
-    Layout = "~/Views/Portal/_LayoutStaff.cshtml";
 }
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -28,7 +28,7 @@
                 
                 @Html.EJS().Grid("Users").DataSource(d =>
                 {
-                    d.Url(Url.HttpRouteUrl("ApiAdminGetAllUsersDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor");
+                    d.Url(Url.HttpRouteUrl("ApiGetAllUsersDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor");
                 }).Columns(c =>
                 {
                     c.Field("Username").HeaderText("Username").Template("#usersUserNameTemplate").Add();
@@ -46,20 +46,20 @@
 {
     <script>
 
-        var urlUserDetails = "@Url.HttpRouteUrl("AdminUserDetails", new {id = "abcd"})";
+        var urlUserDetails = "@Url.Action("UserDetails", new {userId = "abcd"})";
 
         $(document).ready(function() {
 
         });
 
-        function renderUserDetailsUrl(id) {
+        function getUserDetailsUrl(id) {
             return urlUserDetails.replace("abcd", id);
         }
     </script>
 
     <script type="text/x-jsrender" id="usersUserNameTemplate">
         <div>
-            <span><a href=${renderUserDetailsUrl(Id)}>${Username}</a></span>
+            <span><a href=${getUserDetailsUrl(Id)}>${Username}</a></span>
         </div>
     </script>
 }

@@ -26,7 +26,7 @@ namespace MyPortal.Controllers.Api
         
         [HttpPost]
         [RequiresPermission("EditBulletins")]
-        [Route("bulletins/create", Name = "ApiSystemCreateBulletin")]
+        [Route("bulletins/create", Name = "ApiCreateBulletin")]
         public async Task<IHttpActionResult> CreateBulletin([FromBody] SystemBulletin bulletin)
         {
             try
@@ -47,7 +47,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditBulletins")]
-        [Route("bulletins/update", Name = "ApiSystemUpdateBulletin")]
+        [Route("bulletins/update", Name = "ApiUpdateBulletin")]
         public async Task<IHttpActionResult> UpdateBulletin([FromBody] SystemBulletin bulletin)
         {
             try
@@ -64,7 +64,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditBulletins")]
-        [Route("bulletins/delete/{bulletinId:int}", Name = "ApiSystemDeleteBulletin")]
+        [Route("bulletins/delete/{bulletinId:int}", Name = "ApiDeleteBulletin")]
         public async Task<IHttpActionResult> DeleteBulletin([FromUri] int bulletinId)
         {
             try
@@ -81,7 +81,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ApproveBulletins")]
-        [Route("bulletins/get/all", Name = "ApiSystemGetAllBulletins")]
+        [Route("bulletins/get/all", Name = "ApiGetAllBulletins")]
         public async Task<IEnumerable<SystemBulletinDto>> GetAllBulletins()
         {
             try
@@ -98,7 +98,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewStaffBulletins")]
-        [Route("bulletins/get/approved", Name = "ApiSystemGetApprovedBulletins")]
+        [Route("bulletins/get/approved", Name = "ApiGetApprovedBulletins")]
         public async Task<IEnumerable<SystemBulletinDto>> GetApprovedBulletins()
         {
             try
@@ -115,7 +115,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewStaffBulletins")]
-        [Route("bulletins/get/own", Name = "ApiSystemGetOwnBulletins")]
+        [Route("bulletins/get/own", Name = "ApiGetOwnBulletins")]
         public async Task<IEnumerable<SystemBulletinDto>> GetOwnBulletins()
         {
             try
@@ -139,7 +139,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewStudentBulletins")]
-        [Route("bulletins/get/student", Name = "ApiSystemGetStudentBulletins")]
+        [Route("bulletins/get/student", Name = "ApiGetStudentBulletins")]
         public async Task<IEnumerable<SystemBulletinDto>> GetStudentBulletins()
         {
             try

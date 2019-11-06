@@ -28,7 +28,7 @@ namespace MyPortal.Controllers.Api
         
         [HttpGet]
         [RequiresPermission("TakeRegister")]
-        [Route("marks/takeRegister/{weekId:int}/{sessionId:int}", Name = "ApiAttendanceLoadRegister")]
+        [Route("marks/takeRegister/{weekId:int}/{sessionId:int}", Name = "ApiLoadRegister")]
         public async Task<IEnumerable<StudentAttendanceMarkCollection>> LoadRegister([FromUri] int weekId, [FromUri] int sessionId)
         {
             try
@@ -45,7 +45,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("TakeRegister")]
-        [Route("marks/takeRegister/dataGrid/{weekId:int}/{sessionId:int}", Name = "ApiAttendanceLoadRegisterDataGrid")]
+        [Route("marks/takeRegister/dataGrid/{weekId:int}/{sessionId:int}", Name = "ApiLoadRegisterDataGrid")]
         public async Task<IHttpActionResult> LoadRegisterDataGrid([FromBody] DataManagerRequest dm, [FromUri] int weekId,
             [FromUri] int sessionId)
         {
@@ -62,7 +62,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("TakeRegister")]
-        [Route("marks/saveRegister", Name = "ApiAttendanceSaveRegisterMarks")]
+        [Route("marks/saveRegister", Name = "ApiSaveRegisterMarks")]
         public async Task<IHttpActionResult> SaveRegisterMarks(DataGridUpdate<StudentAttendanceMarkCollection> register)
         {
             if (register.Changed != null)
@@ -82,7 +82,7 @@ namespace MyPortal.Controllers.Api
         
         [HttpGet]
         [RequiresPermission("ViewAttendance")]
-        [Route("summary/raw/{studentId:int}", Name = "ApiAttendanceGetRawAttendanceSummary")]
+        [Route("summary/raw/{studentId:int}", Name = "ApiGetRawAttendanceSummary")]
         public async Task<AttendanceSummary> GetRawAttendanceSummary([FromUri] int studentId)
         {
             await AuthenticateStudentRequest(studentId);
@@ -106,7 +106,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewAttendance")]
-        [Route("summary/percent/{studentId:int}", Name = "ApiAttendanceGetPercentageAttendanceSummary")]
+        [Route("summary/percent/{studentId:int}", Name = "ApiGetPercentageAttendanceSummary")]
         public async Task<AttendanceSummary> GetPercentageAttendanceSummary([FromUri] int studentId)
         {
             await AuthenticateStudentRequest(studentId);
@@ -129,7 +129,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Route("periods/get/all", Name = "ApiAttendanceGetAllPeriods")]
+        [Route("periods/get/all", Name = "ApiGetAllPeriods")]
         public async Task<IEnumerable<AttendancePeriodDto>> GetAllPeriods()
         {
             try
@@ -145,7 +145,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Route("periods/get/byId/{periodId:int}", Name = "ApiAttendanceGetPeriodById")]
+        [Route("periods/get/byId/{periodId:int}", Name = "ApiGetPeriodById")]
         public async Task<AttendancePeriodDto> GetPeriodById([FromUri] int periodId)
         {
             try
@@ -162,7 +162,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditAcademicYears")]
-        [Route("weeks/createForYear/{academicYearId:int}", Name = "ApiAttendanceCreateAttendanceWeeksForAcademicYear")]
+        [Route("weeks/createForYear/{academicYearId:int}", Name = "ApiCreateAttendanceWeeksForAcademicYear")]
         public async Task<IHttpActionResult> CreateAttendanceWeeksForAcademicYear([FromUri] int academicYearId)
         {
             try
@@ -178,8 +178,8 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Route("weeks/get/byDate/{date:datetime}", Name = "ApiAttendanceGetWeekByDate")]
-        public async Task<AttendanceWeekDto> GetWeekByDate([FromUri] DateTime date)
+        [Route("weeks/get/byDate/{date:datetime}", Name = "ApiGetAttendanceWeekByDate")]
+        public async Task<AttendanceWeekDto> GetAttendanceWeekByDate([FromUri] DateTime date)
         {
             try
             {

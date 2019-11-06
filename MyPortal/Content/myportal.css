@@ -259,5 +259,11 @@
     padding-left: 10px;
 }
 
+.mp-login-image {
+    background: url("https://www.cranbornemid.dorset.sch.uk/uploads/5/0/8/2/50822243/029-cranborne-middle-school-6thoctober2015-ash-mills_2_orig.jpg");
+    background-position: center;
+    background-size: cover;
+}
+
 
 

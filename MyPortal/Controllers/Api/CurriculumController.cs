@@ -30,7 +30,7 @@ namespace MyPortal.Controllers.Api
         }
         
         [HttpGet]
-        [Route("academicYears/get/all", Name = "ApiCurriculumGetAcademicYears")]
+        [Route("academicYears/get/all", Name = "ApiGetAcademicYears")]
         public async Task<IEnumerable<CurriculumAcademicYearDto>> GetAcademicYears()
         {
             try
@@ -46,7 +46,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [Route("academicYears/get/byId/{academicYearId:int}", Name = "ApiCurriculumGetAcademicYearById")]
+        [Route("academicYears/get/byId/{academicYearId:int}", Name = "ApiGetAcademicYearById")]
         public async Task<CurriculumAcademicYearDto> GetAcademicYearById([FromUri] int academicYearId)
         {
             try
@@ -63,7 +63,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ChangeAcademicYear")]
-        [Route("academicYears/select", Name = "ApiCurriculumChangeSelectedAcademicYear")]
+        [Route("academicYears/select", Name = "ApiChangeSelectedAcademicYear")]
         public async Task<IHttpActionResult> ChangeSelectedAcademicYear([FromBody] CurriculumAcademicYear year)
         {
             using (var userService = new UserService(UnitOfWork))
@@ -77,7 +77,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewSessions")]
-        [Route("sessions/get/byTeacherAndDate/{teacherId:int}/{date:datetime}", Name = "ApiCurriculumGetSessionsByTeacherAndDate")]
+        [Route("sessions/get/byTeacherAndDate/{teacherId:int}/{date:datetime}", Name = "ApiGetSessionsByTeacherAndDate")]
         public async Task<IEnumerable<CurriculumSessionDto>> GetSessionsByTeacherOnDayOfWeek([FromUri] int teacherId, [FromUri] DateTime date)
         {
             try
@@ -96,7 +96,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewSessions")]
-        [Route("sessions/get/byTeacherAndDate/dataGrid/{teacherId:int}/{date:datetime}", Name = "ApiCurriculumGetSessionsByTeacherAndDateDataGrid")]
+        [Route("sessions/get/byTeacherAndDate/dataGrid/{teacherId:int}/{date:datetime}", Name = "ApiGetSessionsByTeacherAndDateDataGrid")]
         public async Task<IHttpActionResult> GetSessionsByTeacherDataGrid([FromUri] int teacherId, [FromUri] DateTime date,
             [FromBody] DataManagerRequest dm)
         {
@@ -118,7 +118,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewClasses")]
-        [Route("classes/get/all", Name = "ApiCurriculumGetAllClasses")]
+        [Route("classes/get/all", Name = "ApiGetAllClasses")]
         public async Task<IEnumerable<CurriculumClassDto>> GetAllClasses()
         {
             try
@@ -136,7 +136,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewClasses")]
-        [Route("classes/get/dataGrid/all", Name = "ApiCurriculumGetAllClassesDataGrid")]
+        [Route("classes/get/dataGrid/all", Name = "ApiGetAllClassesDataGrid")]
         public async Task<IHttpActionResult> GetAllClassesDataGrid([FromBody] DataManagerRequest dm)
         {
             try
@@ -157,7 +157,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewClasses")]
-        [Route("classes/get/byId/{classId:int}", Name = "ApiCurriculumGetClassById")]
+        [Route("classes/get/byId/{classId:int}", Name = "ApiGetClassById")]
         public async Task<CurriculumClassDto> GetClassById([FromUri] int classId)
         {
             try
@@ -174,7 +174,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditClasses")]
-        [Route("classes/create", Name = "ApiCurriculumCreateClass")]
+        [Route("classes/create", Name = "ApiCreateClass")]
         public async Task<IHttpActionResult> CreateClass([FromBody] CurriculumClass @class)
         {
             try
@@ -195,7 +195,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditClasses")]
-        [Route("classes/update", Name = "ApiCurriculumUpdateClass")]
+        [Route("classes/update", Name = "ApiUpdateClass")]
         public async Task<IHttpActionResult> UpdateClass([FromBody] CurriculumClass @class)
         {
             try
@@ -212,7 +212,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditClasses")]
-        [Route("classes/delete/{classId:int}", Name = "ApiCurriculumDeleteClass")]
+        [Route("classes/delete/{classId:int}", Name = "ApiDeleteClass")]
         public async Task<IHttpActionResult> DeleteClass([FromUri] int classId)
         {
             try
@@ -229,7 +229,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewSessions")]
-        [Route("sessions/get/byClass/{classId:int}", Name = "ApiCurriculumGetSessionsByClass")]
+        [Route("sessions/get/byClass/{classId:int}", Name = "ApiGetSessionsByClass")]
         public async Task<IEnumerable<CurriculumSessionDto>> GetSessionsByClass([FromUri] int classId)
         {
             try
@@ -246,7 +246,7 @@ namespace MyPortal.Controllers.Api
 
         [RequiresPermission("ViewSessions")]
         [HttpPost]
-        [Route("sessions/get/byClass/dataGrid/{classId:int}", Name = "ApiCurriculumGetSessionsByClassDataGrid")]
+        [Route("sessions/get/byClass/dataGrid/{classId:int}", Name = "ApiGetSessionsByClassDataGrid")]
         public async Task<IHttpActionResult> GetSessionsByClassDataGrid([FromUri] int classId, [FromBody] DataManagerRequest dm)
         {
             try
@@ -265,7 +265,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewSessions")]
-        [Route("sessions/get/byId/{sessionId:int}", Name = "ApiCurriculumGetSessionById")]
+        [Route("sessions/get/byId/{sessionId:int}", Name = "ApiGetSessionById")]
         public async Task<CurriculumSessionDto> GetSessionById([FromUri] int sessionId)
         {
             try
@@ -282,7 +282,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditClasses")]
-        [Route("sessions/create", Name = "ApiCurriculumCreateSession")]
+        [Route("sessions/create", Name = "ApiCreateSession")]
         public async Task<IHttpActionResult> CreateSession([FromBody] CurriculumSession session)
         {
             try
@@ -299,7 +299,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditClasses")]
-        [Route("sessions/addRegPeriods", Name = "ApiCurriculumCreateSessionsForRegPeriods")]
+        [Route("sessions/addRegPeriods", Name = "ApiCreateSessionsForRegPeriods")]
         public async Task<IHttpActionResult> CreateSessionsForRegPeriods([FromBody] CurriculumSession session)
         {
             try
@@ -316,7 +316,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditClasses")]
-        [Route("sessions/update", Name = "ApiCurriculumUpdateSession")]
+        [Route("sessions/update", Name = "ApiUpdateSession")]
         public async Task<IHttpActionResult> UpdateSession([FromBody] CurriculumSession session)
         {
             try
@@ -333,7 +333,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditClasses")]
-        [Route("sessions/delete/{sessionId:int}", Name = "ApiCurriculumDeleteSession")]
+        [Route("sessions/delete/{sessionId:int}", Name = "ApiDeleteSession")]
         public async Task<IHttpActionResult> DeleteSession([FromUri] int sessionId)
         {
             try
@@ -350,7 +350,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewEnrolments")]
-        [Route("enrolments/get/byClass/{classId:int}", Name = "ApiCurriculumGetEnrolmentsByClass")]
+        [Route("enrolments/get/byClass/{classId:int}", Name = "ApiGetEnrolmentsByClass")]
         public async Task<IEnumerable<CurriculumEnrolmentDto>> GetEnrolmentsByClass([FromUri] int classId)
         {
             try
@@ -367,7 +367,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewEnrolments")]
-        [Route("enrolments/get/byClass/dataGrid/{classId:int}", Name = "ApiCurriculumGetEnrolmentsByClassDataGrid")]
+        [Route("enrolments/get/byClass/dataGrid/{classId:int}", Name = "ApiGetEnrolmentsByClassDataGrid")]
         public async Task<IHttpActionResult> GetEnrolmentsByClassDataGrid([FromUri] int classId,
             [FromBody] DataManagerRequest dm)
         {
@@ -387,7 +387,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewEnrolments")]
-        [Route("enrolments/get/byStudent/{studentId:int}", Name = "ApiCurriculumGetEnrolmentsByStudent")]
+        [Route("enrolments/get/byStudent/{studentId:int}", Name = "ApiGetEnrolmentsByStudent")]
         public async Task<IEnumerable<CurriculumEnrolmentDto>> GetEnrolmentsByStudent([FromUri] int studentId)
         {
             try
@@ -404,7 +404,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewEnrolments")]
-        [Route("enrolments/get/byStudent/dataGrid/{studentId:int}", Name = "ApiCurriculumGetEnrolmentsByStudentDataGrid")]
+        [Route("enrolments/get/byStudent/dataGrid/{studentId:int}", Name = "ApiGetEnrolmentsByStudentDataGrid")]
         public async Task<IHttpActionResult> GetEnrolmentsByStudentDataGrid([FromUri] int studentId,
             [FromBody] DataManagerRequest dm)
         {
@@ -424,7 +424,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewEnrolments")]
-        [Route("enrolments/get/byId/{enrolmentId:int}", Name = "ApiCurriculumGetEnrolment")]
+        [Route("enrolments/get/byId/{enrolmentId:int}", Name = "ApiGetEnrolment")]
         public async Task<CurriculumEnrolmentDto> GetEnrolmentById([FromUri] int enrolmentId)
         {
             try
@@ -441,7 +441,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditClasses")]
-        [Route("enrolments/create", Name = "ApiCurriculumCreateEnrolment")]
+        [Route("enrolments/create", Name = "ApiCreateEnrolment")]
         public async Task<IHttpActionResult> CreateEnrolment([FromBody] CurriculumEnrolment enrolment)
         {
             try
@@ -458,7 +458,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditClasses")]
-        [Route("enrolments/create/group", Name = "ApiCurriculumEnrolRegGroup")]
+        [Route("enrolments/create/group", Name = "ApiEnrolRegGroup")]
         public async Task<IHttpActionResult> EnrolRegGroup([FromBody] GroupEnrolment enrolment)
         {
             try
@@ -475,7 +475,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditClasses")]
-        [Route("classes/enrolments/delete/{enrolmentId:int}", Name = "ApiCurriculumDeleteEnrolment")]
+        [Route("classes/enrolments/delete/{enrolmentId:int}", Name = "ApiDeleteEnrolment")]
         public async Task<IHttpActionResult> DeleteEnrolment([FromUri] int enrolmentId)
         {
             try
@@ -492,7 +492,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditSubjects")]
-        [Route("subjects/new", Name = "ApiCurriculumCreateSubject")]
+        [Route("subjects/new", Name = "ApiCreateSubject")]
         public async Task<IHttpActionResult> CreateSubject([FromBody] CurriculumSubject subject)
         {
             try
@@ -509,7 +509,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditSubjects")]
-        [Route("subjects/delete/{subjectId:int}", Name = "ApiCurriculumDeleteSubject")]
+        [Route("subjects/delete/{subjectId:int}", Name = "ApiDeleteSubject")]
         public async Task<IHttpActionResult> DeleteSubject([FromUri] int subjectId)
         {
             try
@@ -526,7 +526,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("EditSubjects")]
-        [Route("subjects/get/byId/{subjectId:int}", Name = "ApiCurriculumGetSubjectById")]
+        [Route("subjects/get/byId/{subjectId:int}", Name = "ApiGetSubjectById")]
         public async Task<CurriculumSubjectDto> GetSubjectById([FromUri] int subjectId)
         {
             try
@@ -543,7 +543,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("EditSubjects")]
-        [Route("subjects/get/all", Name = "ApiCurriculumGetAllSubjects")]
+        [Route("subjects/get/all", Name = "ApiGetAllSubjects")]
         public async Task<IEnumerable<CurriculumSubjectDto>> GetAllSubjects()
         {
             try
@@ -560,7 +560,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditSubjects")]
-        [Route("subjects/get/dataGrid/all", Name = "ApiCurriculumGetAllSubjectsDataGrid")]
+        [Route("subjects/get/dataGrid/all", Name = "ApiGetAllSubjectsDataGrid")]
         public async Task<IHttpActionResult> GetAllSubjectsDataGrid([FromBody] DataManagerRequest dm)
         {
             try
@@ -579,7 +579,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditSubjects")]
-        [Route("subjects/update", Name = "ApiCurriculumUpdateSubject")]
+        [Route("subjects/update", Name = "ApiUpdateSubject")]
         public async Task<IHttpActionResult> UpdateSubject([FromBody] CurriculumSubject subject)
         {
             try
@@ -596,7 +596,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditStudyTopics")]
-        [Route("studyTopics/create", Name = "ApiCurriculumCreateStudyTopic")]
+        [Route("studyTopics/create", Name = "ApiCreateStudyTopic")]
         public async Task<IHttpActionResult> CreateStudyTopic([FromBody] CurriculumStudyTopic studyTopic)
         {
             try
@@ -613,7 +613,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditStudyTopics")]
-        [Route("studyTopics/delete/{studyTopicId:int}", Name = "ApiCurriculumDeleteStudyTopic")]
+        [Route("studyTopics/delete/{studyTopicId:int}", Name = "ApiDeleteStudyTopic")]
         public async Task<IHttpActionResult> DeleteStudyTopic([FromUri] int studyTopicId)
         {
             try
@@ -630,7 +630,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewStudyTopics")]
-        [Route("studyTopics/get/byId/{studyTopicId:int}", Name = "ApiCurriculumGetStudyTopicById")]
+        [Route("studyTopics/get/byId/{studyTopicId:int}", Name = "ApiGetStudyTopicById")]
         public async Task<CurriculumStudyTopicDto> GetStudyTopicById([FromUri] int studyTopicId)
         {
             try
@@ -647,7 +647,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewStudyTopics")]
-        [Route("studyTopics/get/all", Name = "ApiCurriculumGetAllStudyTopics")]
+        [Route("studyTopics/get/all", Name = "ApiGetAllStudyTopics")]
         public async Task<IEnumerable<CurriculumStudyTopicDto>> GetAllStudyTopics()
         {
             try
@@ -664,7 +664,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewStudyTopics")]
-        [Route("studyTopics/get/dataGrid/all", Name = "ApiCurriculumGetAllStudyTopicsDataGrid")]
+        [Route("studyTopics/get/dataGrid/all", Name = "ApiGetAllStudyTopicsDataGrid")]
         public async Task<IHttpActionResult> GetAllStudyTopicsDataGrid([FromBody] DataManagerRequest dm)
         {
             try
@@ -683,7 +683,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditStudyTopics")]
-        [Route("studyTopics/update", Name = "ApiCurriculumUpdateStudyTopic")]
+        [Route("studyTopics/update", Name = "ApiUpdateStudyTopic")]
         public async Task<IHttpActionResult> UpdateStudyTopic([FromBody] CurriculumStudyTopic studyTopic)
         {
             try
@@ -700,7 +700,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewLessonPlans")]
-        [Route("lessonPlans/get/all", Name = "ApiCurriculumGetAllLessonPlans")]
+        [Route("lessonPlans/get/all", Name = "ApiGetAllLessonPlans")]
         public async Task<IEnumerable<CurriculumLessonPlanDto>> GetAllLessonPlans()
         {
             try
@@ -717,7 +717,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewLessonPlans")]
-        [Route("lessonPlans/get/byId/{lessonPlanId:int}", Name = "ApiCurriculumGetLessonPlanById")]
+        [Route("lessonPlans/get/byId/{lessonPlanId:int}", Name = "ApiGetLessonPlanById")]
         public async Task<CurriculumLessonPlanDto> GetLessonPlanById([FromUri] int lessonPlanId)
         {
             try
@@ -734,7 +734,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewLessonPlans")]
-        [Route("lessonPlans/get/byTopic/{studyTopicId:int}", Name = "ApiCurriculumGetLessonPlansByTopic")]
+        [Route("lessonPlans/get/byTopic/{studyTopicId:int}", Name = "ApiGetLessonPlansByTopic")]
         public async Task<IEnumerable<CurriculumLessonPlanDto>> GetLessonPlansByStudyTopic([FromUri] int studyTopicId)
         {
             try
@@ -751,7 +751,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewLessonPlans")]
-        [Route("lessonPlans/get/byTopic/dataGrid/{studyTopicId:int}", Name = "ApiCurriculumGetLessonPlansByStudyTopicDatagrid")]
+        [Route("lessonPlans/get/byTopic/dataGrid/{studyTopicId:int}", Name = "ApiGetLessonPlansByStudyTopicDatagrid")]
         public async Task<IHttpActionResult> GetLessonPlansByStudyTopicDataGrid([FromUri] int studyTopicId,
             [FromBody] DataManagerRequest dm)
         {
@@ -771,7 +771,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditLessonPlans")]
-        [Route("lessonPlans/create", Name = "ApiCurriculumCreateLessonPlan")]
+        [Route("lessonPlans/create", Name = "ApiCreateLessonPlan")]
         public async Task<IHttpActionResult> CreateLessonPlan([FromBody] CurriculumLessonPlan plan)
         {
             try
@@ -789,7 +789,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditLessonPlans")]
-        [Route("lessonPlans/update", Name = "ApiCurriculumUpdateLessonPlan")]
+        [Route("lessonPlans/update", Name = "ApiUpdateLessonPlan")]
         public async Task<IHttpActionResult> UpdateLessonPlan([FromBody] CurriculumLessonPlan plan)
         {
             try
@@ -806,7 +806,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditLessonPlans")]
-        [Route("lessonPlans/delete/{lessonPlanId:int}", Name = "ApiCurriculumDeleteLessonPlan")]
+        [Route("lessonPlans/delete/{lessonPlanId:int}", Name = "ApiDeleteLessonPlan")]
         public async Task<IHttpActionResult> DeleteLessonPlan([FromUri] int lessonPlanId)
         {
             try

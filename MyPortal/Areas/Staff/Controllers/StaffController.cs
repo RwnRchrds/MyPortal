@@ -2,15 +2,16 @@
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using MyPortal.Areas.Staff.ViewModels;
-using MyPortal.Attributes.HttpAuthorise;
+using MyPortal.Attributes.MvcAuthorise;
 using MyPortal.Controllers;
 using MyPortal.Models;
 using MyPortal.Services;
 
 namespace MyPortal.Areas.Staff.Controllers
 {
-    [RoutePrefix("People/Staff")]
     [UserType(UserType.Staff)]
+    [RouteArea("Staff")]
+    [RoutePrefix("Staff")]
     public class StaffController : MyPortalController
     {
         [Route("Staff")]

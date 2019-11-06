@@ -7,6 +7,7 @@ using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
+using MyPortal.Dtos.GridDtos;
 using MyPortal.Models.Database;
 using MyPortal.Services;
 using Syncfusion.EJ2.Base;
@@ -14,7 +15,7 @@ using Syncfusion.EJ2.Base;
 namespace MyPortal.Controllers.Api
 {
     [Authorize]
-    [RoutePrefix("api/people/students")]
+    [RoutePrefix("api/students")]
     public class StudentsController : MyPortalApiController
     {
         private readonly StudentService _service;
@@ -26,7 +27,7 @@ namespace MyPortal.Controllers.Api
         
         [HttpGet]
         [RequiresPermission("ViewStudents")]
-        [Route("get/byId/{studentId:int}", Name = "ApiPeopleGetStudentById")]
+        [Route("get/byId/{studentId:int}", Name = "ApiGetStudentById")]
         public async Task<StudentDto> GetStudentById([FromUri] int studentId)
         {
             await AuthenticateStudentRequest(studentId);
@@ -42,9 +43,28 @@ namespace MyPortal.Controllers.Api
             }
         }
 
+        [HttpPost]
+        [RequiresPermission("ViewStudents")]
+        [Route("get/all/dataGrid", Name = "ApiGetAllStudentsDataGrid")]
+        public async Task<IHttpActionResult> GetAllStudentsDataGrid([FromBody] DataManagerRequest dm)
+        {
+            try
+            {
+                var students = await _service.GetAllStudents();
+
+                var list = students.Select(Mapper.Map<Student, GridStudentDto>);
+
+                return PrepareDataGridObject(list, dm);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
+
         [HttpGet]
         [RequiresPermission("ViewStudents")]
-        [Route("get/byRegGroup/{regGroupId:int}", Name = "ApiPeopleGetStudentsByRegGroup")]
+        [Route("get/byRegGroup/{regGroupId:int}", Name = "ApiGetStudentsByRegGroup")]
         public async Task<IEnumerable<StudentDto>> GetStudentsByRegGroup([FromUri] int regGroupId)
         {
             try
@@ -61,7 +81,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewStudents")]
-        [Route("get/byYearGroup/{yearGroupId:int}", Name = "ApiPeopleGetStudentsByYearGroup")]
+        [Route("get/byYearGroup/{yearGroupId:int}", Name = "ApiGetStudentsByYearGroup")]
         public async Task<IEnumerable<StudentDto>> GetStudentsByYearGroup([FromUri] int yearGroupId)
         {
             try
@@ -78,7 +98,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditStudents")]
-        [Route("api/students/update", Name = "ApiPeopleUpdateStudent")]
+        [Route("update", Name = "ApiUpdateStudent")]
         public async Task<IHttpActionResult> UpdateStudent([FromBody] Student student)
         {
             try

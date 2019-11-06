@@ -30,7 +30,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditResults")]
-        [Route("results/create", Name = "ApiAssessmentCreateResult")]
+        [Route("results/create", Name = "ApiCreateResult")]
         public async Task<IHttpActionResult> CreateResult([FromBody] AssessmentResult result)
         {
             try
@@ -47,7 +47,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewResults")]
-        [Route("results/get/byStudent/{studentId:int}/{resultSetId:int}", Name = "ApiAssessmentGetResultsByStudent")]
+        [Route("results/get/byStudent/{studentId:int}/{resultSetId:int}", Name = "ApiGetResultsByStudent")]
         public async Task<IEnumerable<AssessmentResultDto>> GetResultsByStudent([FromUri] int studentId, [FromUri] int resultSetId)
         {
             try
@@ -64,7 +64,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewResults")]
-        [Route("results/get/byStudent/{studentId:int}/{resultsetId:int}", Name = "ApiAssessmentGetResultsByStudentDataGrid")]
+        [Route("results/get/byStudent/{studentId:int}/{resultsetId:int}", Name = "ApiGetResultsByStudentDataGrid")]
         public async Task<IHttpActionResult> GetResultsByStudentDataGrid([FromUri] int studentId, [FromUri] int resultSetId,
             [FromBody] DataManagerRequest dm)
         {
@@ -84,7 +84,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditResults")]
-        [Route("resultSets/create", Name = "ApiAssessmentCreateResultSet")]
+        [Route("resultSets/create", Name = "ApiCreateResultSet")]
         public async Task<IHttpActionResult> CreateResultSet([FromBody] AssessmentResultSet resultSet)
         {
             try
@@ -101,7 +101,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditResultSets")]
-        [Route("resultSets/delete/{resultSetId:int}", Name = "ApiAssessmentDeleteResultSet")]
+        [Route("resultSets/delete/{resultSetId:int}", Name = "ApiDeleteResultSet")]
         public async Task<IHttpActionResult> DeleteResultSet([FromUri] int resultSetId)
         {
             try
@@ -118,7 +118,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewResultSets")]
-        [Route("resultSets/get/byId/{resultSetId:int}", Name = "ApiAssessmentGetResultSetById")]
+        [Route("resultSets/get/byId/{resultSetId:int}", Name = "ApiGetResultSetById")]
         public async Task<AssessmentResultSetDto> GetResultSetById([FromUri] int resultSetId)
         {
             try
@@ -135,7 +135,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewResultSets")]
-        [Route("resultSets/get/all", Name = "ApiAssessmentGetAllResultSets")]
+        [Route("resultSets/get/all", Name = "ApiGetAllResultSets")]
         public async Task<IEnumerable<AssessmentResultSetDto>> GetAllResultSets()
         {
             try
@@ -152,7 +152,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewResultSets")]
-        [Route("resultSets/get/byStudent/{studentId:int}", Name = "ApiAssessmentGetResultSetsByStudent")]
+        [Route("resultSets/get/byStudent/{studentId:int}", Name = "ApiGetResultSetsByStudent")]
         public async Task<IEnumerable<AssessmentResultSetDto>> GetResultSetsByStudent([FromUri] int studentId)
         {
             try
@@ -169,7 +169,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewResultSets")]
-        [Route("resultSets/get/dataGrid/all", Name = "ApiAssessmentGetAllResultSetsDataGrid")]
+        [Route("resultSets/get/dataGrid/all", Name = "ApiGetAllResultSetsDataGrid")]
         public async Task<IHttpActionResult> GetAllResultSetsDataGrid([FromBody] DataManagerRequest dm)
         {
             try
@@ -188,7 +188,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditResultSets")]
-        [Route("resultSets/setCurrent/{resultSetId:int}", Name = "ApiAssessmentSetResultSetAsCurrent")]
+        [Route("resultSets/setCurrent/{resultSetId:int}", Name = "ApiSetResultSetAsCurrent")]
         public async Task<IHttpActionResult> SetResultSetAsCurrent([FromUri] int resultSetId)
         {
             try
@@ -205,7 +205,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditResultSets")]
-        [Route("resultSets/update", Name = "ApiAssessmentUpdateResultSet")]
+        [Route("resultSets/update", Name = "ApiUpdateResultSet")]
         public async Task<IHttpActionResult> UpdateResultSet([FromBody] AssessmentResultSet resultSet)
         {
             try

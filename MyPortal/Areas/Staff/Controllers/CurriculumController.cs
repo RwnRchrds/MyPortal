@@ -8,12 +8,13 @@ using MyPortal.Services;
 
 namespace MyPortal.Areas.Staff.Controllers
 {
-    [RoutePrefix("Curriculum")]
     [UserType(UserType.Staff)]
+    [RouteArea("Staff")]
+    [RoutePrefix("Curriculum")]
     public class CurriculumController : MyPortalController
     {
         [RequiresPermission("EditSubjects")]
-        [Route("Curriculum/Subjects")]
+        [Route("Subjects")]
         public async Task<ActionResult> Subjects()
         {
             using (var staffService = new StaffMemberService(UnitOfWork))
@@ -45,6 +46,7 @@ namespace MyPortal.Areas.Staff.Controllers
             }
         }
 
+        [HttpGet]
         [RequiresPermission("ViewLessonPlans")]
         [Route("LessonPlans")]
         public async Task<ActionResult> LessonPlans()
@@ -117,7 +119,7 @@ namespace MyPortal.Areas.Staff.Controllers
         {
             using (var curriculumService = new CurriculumService(UnitOfWork))
             {
-                var viewModel = new ClassEnrolmentsViewModel();
+                var viewModel = new EnrolmentsViewModel();
 
                 var currClass = await curriculumService.GetClassById(classId);
 

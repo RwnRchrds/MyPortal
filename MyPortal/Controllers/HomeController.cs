@@ -5,9 +5,9 @@ using MyPortal.Services;
 
 namespace MyPortal.Controllers
 {
+    [RoutePrefix("Home")]
     public class HomeController : MyPortalController
     {
-        [Route("User/Home", Name = "Home")]
         public async Task<ActionResult> Home()
         {
             if (Request.IsAuthenticated)
@@ -32,7 +32,7 @@ namespace MyPortal.Controllers
             if (System.Web.HttpContext.Current.User != null &&
                 System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
                 return RedirectToAction("Home", "Home");
-            return View();
+            return RedirectToAction("Login", "Account");
         }
     }
 }

@@ -2,7 +2,7 @@
 @model MyPortal.Areas.Staff.ViewModels.RolesViewModel
 @{
     ViewBag.Title = "Roles";
-    Layout = "~/Views/Portal/_LayoutStaff.cshtml";
+    ViewBag.DisplayTitle = "Roles";
 }
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -32,7 +32,7 @@
             </div>
             
             <div class="card-body">
-                @Html.EJS().Grid("Roles").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiAdminGetAllRolesDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+                @Html.EJS().Grid("Roles").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiGetAllRolesDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
                 {
                     c.Field("Name").HeaderText("Role").Template("#roleNameTemplate").Width("200").Add();
                     c.HeaderText("Actions").Template("#roleActionsTemplate").Width("170").Add();
@@ -53,7 +53,7 @@
                 <h4 class="modal-title">New Study Topic</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiAdminCreateRole", new {}), HttpMethod = "POST", OnSuccess = "newRolesuccess", OnFailure = "newRoleFailure"}, new {id = "newRoleForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiCreateRole", new {}), HttpMethod = "POST", OnSuccess = "newRolesuccess", OnFailure = "newRoleFailure"}, new {id = "newRoleForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -79,7 +79,7 @@
                 <h4 class="modal-title">New Study Topic</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiAdminUpdateRole", new {}), HttpMethod = "POST", OnSuccess = "editRolesuccess", OnFailure = "editRoleFailure"}, new {id = "editRoleForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiUpdateRole", new {}), HttpMethod = "POST", OnSuccess = "editRolesuccess", OnFailure = "editRoleFailure"}, new {id = "editRoleForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -105,10 +105,10 @@
     <script>
         $(document).ready(function () {
 
-            var urlDeleteRole = "@Url.HttpRouteUrl("ApiAdminDeleteRole", new { roleId = "abcd" })";
-            var urlGetRoleById = "@Url.HttpRouteUrl("ApiAdminGetRoleById", new { roleId = "abcd" })";
+            var urlDeleteRole = "@Url.HttpRouteUrl("ApiDeleteRole", new { roleId = "abcd" })";
+            var urlGetRoleById = "@Url.HttpRouteUrl("ApiGetRoleById", new { roleId = "abcd" })";
 
-            var urlRolePermissions = "@Url.RouteUrl("AdminRolePermissions", new { roleId = "abcd" })";
+            var urlRolePermissions = "@Url.RouteUrl("AdminPermissions", new { roleId = "abcd" })";
 
             $('.modal').on('hidden.bs.modal',
                 function() {

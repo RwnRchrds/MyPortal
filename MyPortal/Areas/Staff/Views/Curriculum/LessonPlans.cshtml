@@ -3,7 +3,6 @@
 @{
     ViewBag.Title = "Lesson Plans";
     ViewBag.DisplayTitle = "Lesson Plans";
-    Layout = "~/Views/Portal/_LayoutStaff.cshtml";
 }
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -43,7 +42,7 @@
             </div>
             <!-- Card Body -->
             <div class="card-body">
-                @Html.EJS().Grid("LessonPlans").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiCurriculumGetLessonPlansByStudyTopicDataGrid", new {studyTopicId = 0})).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+                @Html.EJS().Grid("LessonPlans").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiGetLessonPlansByStudyTopicDataGrid", new {studyTopicId = 0})).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
                 {
                     c.Field("Title").HeaderText("Title").Template("#lessonPlansTitleTemplate").Width("300").Add();
                     c.Field("StudyTopic").HeaderText("StudyTopic").Template("#lessonPlansStudyTopicTemplate").Width("200").Add();
@@ -64,7 +63,7 @@
                 <h4 class="modal-title">New Lesson Plan</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiCurriculumCreateLessonPlan", new {}), HttpMethod = "POST", OnSuccess = "newLessonPlanSuccess", OnFailure = "newLessonPlanFailure"}, new {id = "newLessonPlanForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiCreateLessonPlan", new {}), HttpMethod = "POST", OnSuccess = "newLessonPlanSuccess", OnFailure = "newLessonPlanFailure"}, new {id = "newLessonPlanForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -110,7 +109,7 @@
                 <h4 class="modal-title">Edit Lesson Plan</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiCurriculumUpdateLessonPlan", new {}), HttpMethod = "POST", OnSuccess = "editLessonPlanSuccess", OnFailure = "editLessonPlanFailure"}, new {id = "editLessonPlanForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiUpdateLessonPlan", new {}), HttpMethod = "POST", OnSuccess = "editLessonPlanSuccess", OnFailure = "editLessonPlanFailure"}, new {id = "editLessonPlanForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -156,10 +155,10 @@
     <script>
 
         var urlGetLessonPlansByStudyTopic =
-            "@Url.HttpRouteUrl("ApiCurriculumGetLessonPlansByStudyTopicDataGrid", new {studyTopicId = 9999})";
-        var urlGetLessonPlanById = "@Url.HttpRouteUrl("ApiCurriculumGetLessonPlanById", new {lessonPlanId = 9999})";
+            "@Url.HttpRouteUrl("ApiGetLessonPlansByStudyTopicDataGrid", new {studyTopicId = 9999})";
+        var urlGetLessonPlanById = "@Url.HttpRouteUrl("ApiGetLessonPlanById", new {lessonPlanId = 9999})";
         var urlViewLessonPlan = "@Url.HttpRouteUrl("CurriculumLessonPlanDetails", new {id = "abcd"})";
-        var urlDeleteLessonPlan = "@Url.HttpRouteUrl("ApiCurriculumDeleteLessonPlan", new {lessonPlanId = 9999})";
+        var urlDeleteLessonPlan = "@Url.HttpRouteUrl("ApiDeleteLessonPlan", new {lessonPlanId = 9999})";
 
         $(document).ready(function() {
             $('.modal').on('hidden.bs.modal',

@@ -16,7 +16,7 @@ using Syncfusion.EJ2.Base;
 namespace MyPortal.Controllers.Api
 {
     [Authorize]
-    [RoutePrefix("api/people/staff")]
+    [RoutePrefix("api/staff")]
     public class StaffController : MyPortalApiController
     {
         private readonly StaffMemberService _service;
@@ -28,7 +28,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditStaff")]
-        [Route("create", Name = "ApiPeopleCreateStaff")]
+        [Route("create", Name = "ApiCreateStaff")]
         public async Task<IHttpActionResult> CreateStaff([FromBody] StaffMember staffMember)
         {
             try
@@ -45,7 +45,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [RequiresPermission("EditStaff")]
-        [Route("delete/{staffMemberId:int}", Name = "ApiPeopleDeleteStaffMember")]
+        [Route("delete/{staffMemberId:int}", Name = "ApiDeleteStaffMember")]
         public async Task<IHttpActionResult> DeleteStaff([FromUri] int staffMemberId)
         {
             try
@@ -63,7 +63,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditStaff")]
-        [Route("update", Name = "ApiPeopleUpdateStaffMember")]
+        [Route("update", Name = "ApiUpdateStaffMember")]
         public async Task<IHttpActionResult> UpdateStaffMember([FromBody] StaffMember staffMember)
         {
             try
@@ -80,7 +80,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [RequiresPermission("ViewStaff")]
-        [Route("get/all", Name = "ApiPeopleGetAllStaffMembers")]
+        [Route("get/all", Name = "ApiGetAllStaffMembers")]
         public async Task<IEnumerable<StaffMemberDto>> GetAllStaffMembers()
         {
             try
@@ -96,7 +96,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [Route("get/dataGrid/all", Name = "ApiPeopleGetAllStaffMembersDataGrid")]
+        [Route("get/dataGrid/all", Name = "ApiGetAllStaffMembersDataGrid")]
         [RequiresPermission("ViewStaff")]
         public async Task<IHttpActionResult> GetAllStaffMembersDataGrid([FromBody] DataManagerRequest dm)
         {
@@ -114,7 +114,7 @@ namespace MyPortal.Controllers.Api
             }
         }
 
-        [Route("get/byId/{staffMemberId:int}", Name = "ApiPeopleGetStaffMemberById")]
+        [Route("get/byId/{staffMemberId:int}", Name = "ApiGetStaffMemberById")]
         [RequiresPermission("ViewStaff")]
         public async Task<StaffMemberDto> GetStaffMemberById([FromUri] int staffMemberId)
         {

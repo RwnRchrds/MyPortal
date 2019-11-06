@@ -11643,9 +11643,10 @@ a:focus {
 }
 
 .bg-login-image {
-  background: url("https://source.unsplash.com/K4mSJ7kc0As/600x800");
-  background-position: center;
-  background-size: cover;
+    background: url("https://www.clipartmax.com/png/middle/250-2508335_draco-dormiens-nunquam-titillandus-logo-3-by-michelle-hogwarts-school-of-witchcraft.png");
+    max-height: 800px;
+    background-position: center;
+    background-size: cover;
 }
 
 .bg-register-image {
