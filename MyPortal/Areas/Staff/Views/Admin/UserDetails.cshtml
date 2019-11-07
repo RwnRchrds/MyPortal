@@ -206,9 +206,9 @@
             var urlDeleteUser = "@Url.HttpRouteUrl("ApiDeleteUser", new {userId = "abcd"})";
             var urlAttachPerson = "@Url.HttpRouteUrl("ApiAttachPersonToUser", new {})";
             var urlDetachPerson = "@Url.HttpRouteUrl("ApiDetachPersonFromUser", new {})";
-            var urlGetAllStaff = "@Url.HttpRouteUrl("ApiPeopleGetAllStaffMembers", new {})";
-            var urlGetAllYearGroups = "@Url.HttpRouteUrl("ApiPastoralGetAllYearGroups", new {})";
-            var urlGetStudentsByYearGroup = "@Url.HttpRouteUrl("ApiPeopleGetStudentsByYearGroup", new {yearGroupId = 9999})";
+            var urlGetAllStaff = "@Url.HttpRouteUrl("ApiGetAllStaffMembers", new {})";
+            var urlGetAllYearGroups = "@Url.HttpRouteUrl("ApiGetAllYearGroups", new {})";
+            var urlGetStudentsByYearGroup = "@Url.HttpRouteUrl("ApiGetStudentsByYearGroup", new {yearGroupId = 9999})";
 
             $("#Roles").on("click",
                 ".js-delete",

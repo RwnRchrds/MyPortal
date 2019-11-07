@@ -21,7 +21,7 @@ namespace MyPortal.Areas.Students.Controllers
             {
                 var userId = User.Identity.GetUserId();
 
-                var studentInDb = await studentService.GetStudentFromUserId(userId);
+                var studentInDb = await studentService.GetStudentByUserId(userId);
 
                 var viewModel = new StudentSalesHistoryViewModel
                 {
@@ -40,7 +40,7 @@ namespace MyPortal.Areas.Students.Controllers
             {
                 var userId = User.Identity.GetUserId();
 
-                var studentInDb = await studentService.GetStudentFromUserId(userId);
+                var studentInDb = await studentService.GetStudentByUserId(userId);
 
                 var viewModel = new StudentStoreViewModel
                 {

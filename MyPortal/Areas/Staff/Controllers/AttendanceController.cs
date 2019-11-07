@@ -15,7 +15,7 @@ namespace MyPortal.Areas.Staff.Controllers
     [RoutePrefix("Attendance")]
     public class AttendanceController : MyPortalController
     {
-        [RequiresPermission("TakeRegister")]
+        [RequiresPermission("EditAttendance")]
         [Route("Registers")]
         public async Task<ActionResult> Registers()
         {
@@ -26,7 +26,7 @@ namespace MyPortal.Areas.Staff.Controllers
 
                 if (userId != null)
                 {
-                    currentUser = await staffService.GetStaffMemberFromUserId(userId);
+                    currentUser = await staffService.GetStaffMemberByUserId(userId);
                 }
 
                 var staffMembers = await staffService.GetAllStaffMembers();
@@ -37,8 +37,8 @@ namespace MyPortal.Areas.Staff.Controllers
             }
         }
 
-        [RequiresPermission("TakeRegister")]
-        [Route("TakeRegister/{weekId:int}/{sessionId:int}", Name = "AttendanceTakeRegister")]
+        [RequiresPermission("EditAttendance")]
+        [Route("EditAttendance/{weekId:int}/{sessionId:int}")]
         public async Task<ActionResult> TakeRegister(int weekId, int sessionId)
         {
             using (var curriculumService = new CurriculumService(UnitOfWork))

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
@@ -66,12 +67,12 @@ namespace MyPortal.Services
 
         public async Task<string> GetStudentDisplayNameFromUserId(string userId)
         {
-            var student = await GetStudentFromUserId(userId);
+            var student = await GetStudentByUserId(userId);
 
             return student.GetDisplayName();
         }
 
-        public async Task<Student> GetStudentFromUserId(string userId)
+        public async Task<Student> GetStudentByUserId(string userId)
         {
             var student = await UnitOfWork.Students.GetByUserIdAsync(userId);
 
@@ -82,6 +83,14 @@ namespace MyPortal.Services
 
             return student;
         }
+
+        public async Task<Student> TryGetStudentByUserId(string userId)
+        {
+            var student = await UnitOfWork.Students.GetByUserIdAsync(userId);
+
+            return student;
+        }
+
         public async Task<IEnumerable<Student>> GetStudentsByRegGroup(int regGroupId)
         {
             var students = await UnitOfWork.Students.GetStudentsByRegGroup(regGroupId);

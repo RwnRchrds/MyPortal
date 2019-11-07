@@ -60,12 +60,12 @@ namespace MyPortal.Services
         {
             var context = new MyPortalDbContext();
 
-            var staffMember = await GetStaffMemberFromUserId(userId);
+            var staffMember = await GetStaffMemberByUserId(userId);
 
             return staffMember.GetDisplayName();
         }
 
-        public async Task<StaffMember> GetStaffMemberFromUserId(string userId)
+        public async Task<StaffMember> GetStaffMemberByUserId(string userId)
         {
             var staff = await UnitOfWork.StaffMembers.GetByUserIdAsync(userId);
 
@@ -73,6 +73,13 @@ namespace MyPortal.Services
             {
                 throw new ServiceException(ExceptionType.NotFound, "Staff member not found");
             }
+
+            return staff;
+        }
+
+        public async Task<StaffMember> TryGetStaffMemberByUserId(string userId)
+        {
+            var staff = await UnitOfWork.StaffMembers.GetByUserIdAsync(userId);
 
             return staff;
         }

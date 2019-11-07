@@ -53,7 +53,7 @@
                 <h4 class="modal-title">New Study Topic</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiCreateRole", new {}), HttpMethod = "POST", OnSuccess = "newRolesuccess", OnFailure = "newRoleFailure"}, new {id = "newRoleForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiCreateRole", new {}), HttpMethod = "POST", OnSuccess = "newRoleSuccess", OnFailure = "newRoleFailure"}, new {id = "newRoleForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -79,7 +79,7 @@
                 <h4 class="modal-title">New Study Topic</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiUpdateRole", new {}), HttpMethod = "POST", OnSuccess = "editRolesuccess", OnFailure = "editRoleFailure"}, new {id = "editRoleForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiUpdateRole", new {}), HttpMethod = "POST", OnSuccess = "editRoleSuccess", OnFailure = "editRoleFailure"}, new {id = "editRoleForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -108,7 +108,7 @@
             var urlDeleteRole = "@Url.HttpRouteUrl("ApiDeleteRole", new { roleId = "abcd" })";
             var urlGetRoleById = "@Url.HttpRouteUrl("ApiGetRoleById", new { roleId = "abcd" })";
 
-            var urlRolePermissions = "@Url.RouteUrl("AdminPermissions", new { roleId = "abcd" })";
+            var urlRolePermissions = "@Url.Action("RolePermissions", new {roleId = "abcd"})";
 
             $('.modal').on('hidden.bs.modal',
                 function() {

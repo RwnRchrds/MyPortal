@@ -34,6 +34,7 @@ namespace MyPortal.Controllers.Api
         protected override void Dispose(bool disposing)
         {
             UnitOfWork.Dispose();
+            GC.Collect();
         }
 
         protected IHttpActionResult HandleException(Exception ex)

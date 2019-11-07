@@ -23,7 +23,7 @@ namespace MyPortal.Areas.Students.Controllers
             {
                 var userId = User.Identity.GetUserId();
 
-                var student = await studentService.GetStudentFromUserId(userId);
+                var student = await studentService.GetStudentByUserId(userId);
 
                 var resultSets = await assessmentService.GetAllResultSets();
 

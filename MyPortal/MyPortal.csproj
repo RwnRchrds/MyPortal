@@ -1161,8 +1161,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <None Include="Views\Account\Login.cshtml" />
-    <None Include="Views\Account\Login.cshtml.old" />
+    <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Manage\AddPhoneNumber.cshtml" />

@@ -22,7 +22,7 @@ namespace MyPortal.Areas.Staff.Controllers
             {
                 var userId = User.Identity.GetUserId();
 
-                var staff = await staffService.GetStaffMemberFromUserId(userId);
+                var staff = await staffService.GetStaffMemberByUserId(userId);
 
                 var academicYears = await curriculumService.GetAcademicYears();
 

@@ -27,8 +27,8 @@ namespace MyPortal.Controllers.Api
         }
         
         [HttpGet]
-        [RequiresPermission("TakeRegister")]
-        [Route("marks/takeRegister/{weekId:int}/{sessionId:int}", Name = "ApiLoadRegister")]
+        [RequiresPermission("EditAttendance")]
+        [Route("marks/TakeRegister/{weekId:int}/{sessionId:int}", Name = "ApiLoadRegister")]
         public async Task<IEnumerable<StudentAttendanceMarkCollection>> LoadRegister([FromUri] int weekId, [FromUri] int sessionId)
         {
             try
@@ -44,8 +44,8 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [RequiresPermission("TakeRegister")]
-        [Route("marks/takeRegister/dataGrid/{weekId:int}/{sessionId:int}", Name = "ApiLoadRegisterDataGrid")]
+        [RequiresPermission("EditAttendance")]
+        [Route("marks/EditAttendance/dataGrid/{weekId:int}/{sessionId:int}", Name = "ApiLoadRegisterDataGrid")]
         public async Task<IHttpActionResult> LoadRegisterDataGrid([FromBody] DataManagerRequest dm, [FromUri] int weekId,
             [FromUri] int sessionId)
         {
@@ -61,7 +61,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [RequiresPermission("TakeRegister")]
+        [RequiresPermission("EditAttendance")]
         [Route("marks/saveRegister", Name = "ApiSaveRegisterMarks")]
         public async Task<IHttpActionResult> SaveRegisterMarks(DataGridUpdate<StudentAttendanceMarkCollection> register)
         {

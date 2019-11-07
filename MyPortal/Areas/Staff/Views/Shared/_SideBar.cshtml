@@ -70,7 +70,7 @@
             <div id="collapseAttendance" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Attendance</h6>
-                    @if (User.HasPermission("TakeRegister"))
+                    @if (User.HasPermission("EditAttendance"))
                     {
                         @Html.ActionLink("Take Register", "Registers", "Attendance", null, new { @class = "collapse-item" })
                     }

@@ -62,7 +62,7 @@
         var urlGetAllStaff = "@Url.HttpRouteUrl("ApiPeopleGetAllStaffMembers", new {})";
         var urlGetRegisters =
             "@Url.HttpRouteUrl("ApiCurriculumGetSessionsByTeacherDataGrid", new {teacherId = 9999, date = "2000-01-01"})";
-        var urlTakeRegister = "@Url.HttpRouteUrl("AttendanceTakeRegister", new {weekId = 9999, sessionId = 8888})";
+        var urlEditAttendance = "@Url.HttpRouteUrl("AttendanceEditAttendance", new {weekId = 9999, sessionId = 8888})";
         var urlGetWeekByDate = "@Url.HttpRouteUrl("ApiAttendanceGetWeekByDate", new {date = "2000-01-01"})";
 
         $(document).ready(function() {
@@ -102,12 +102,12 @@
                 });
 
             $("#Registers").on("click",
-                ".js-takeRegister",
+                ".js-EditAttendance",
                 function() {
                     var button = $(this);
                     var weekId = $("#Registers").attr("data-week-id");
                     var sessionId = button.attr("data-session-id");
-                    location.replace(urlTakeRegister.replace("9999", weekId).replace("8888", sessionId));
+                    location.replace(urlEditAttendance.replace("9999", weekId).replace("8888", sessionId));
                 });
         });
 
@@ -145,7 +145,7 @@
 
     <script type="text/x-jsrender" id="registersActionsTemplate">
         <div>
-            <button type='button' class='btn btn-xs btn-success js-takeRegister' data-session-id='${Id}'>
+            <button type='button' class='btn btn-xs btn-success js-EditAttendance' data-session-id='${Id}'>
                 <i class="fas fa-clipboard-check"></i>
             </button>
         </div>

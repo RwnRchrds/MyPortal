@@ -107,7 +107,7 @@ namespace MyPortal.Models
                 .HasMany(e => e.RolePermissions)
                 .WithRequired(e => e.Role)
                 .HasForeignKey(e => e.RoleId)
-                .WillCascadeOnDelete(false);
+                .WillCascadeOnDelete(true);
         }
 
         public static IdentityContext Create()

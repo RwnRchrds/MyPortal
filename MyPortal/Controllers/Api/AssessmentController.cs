@@ -83,7 +83,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [RequiresPermission("EditResults")]
+        [RequiresPermission("EditResultSets")]
         [Route("resultSets/create", Name = "ApiCreateResultSet")]
         public async Task<IHttpActionResult> CreateResultSet([FromBody] AssessmentResultSet resultSet)
         {

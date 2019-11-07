@@ -35,7 +35,7 @@ namespace MyPortal.Areas.Staff.Controllers
 
                 var currentStaffId = 0;
 
-                var currentUser = await staffService.GetStaffMemberFromUserId(userId);
+                var currentUser = await staffService.GetStaffMemberByUserId(userId);
 
                 if (currentUser != null)
                 {

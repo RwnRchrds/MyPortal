@@ -101,7 +101,7 @@ namespace MyPortal.Controllers.Api
                     var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
                     var userId = User.Identity.GetUserId();
 
-                    var recordedBy = staffService.GetStaffMemberFromUserId(userId);
+                    var recordedBy = staffService.GetStaffMemberByUserId(userId);
 
                     achievement.RecordedById = recordedBy.Id;
                     achievement.AcademicYearId = academicYearId;
@@ -204,7 +204,7 @@ namespace MyPortal.Controllers.Api
                 {
                     var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
                     var userId = User.Identity.GetUserId();
-                    var recordedBy = await staffService.GetStaffMemberFromUserId(userId);
+                    var recordedBy = await staffService.GetStaffMemberByUserId(userId);
 
                     incident.RecordedById = recordedBy.Id;
                     incident.AcademicYearId = academicYearId;

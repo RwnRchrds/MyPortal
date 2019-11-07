@@ -124,7 +124,7 @@ namespace MyPortal.Controllers.Api
                 {
                     var userId = User.Identity.GetUserId();
 
-                    var staff = await staffService.GetStaffMemberFromUserId(userId);
+                    var staff = await staffService.GetStaffMemberByUserId(userId);
                     
                     var bulletins = await _service.GetOwnBulletins(staff.Id);
 

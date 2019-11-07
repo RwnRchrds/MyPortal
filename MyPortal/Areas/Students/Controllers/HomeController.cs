@@ -26,7 +26,7 @@ namespace MyPortal.Areas.Students.Controllers
             {
                 var userId = User.Identity.GetUserId();
 
-                var student = await studentService.GetStudentFromUserId(userId);
+                var student = await studentService.GetStudentByUserId(userId);
                 
                 var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
 

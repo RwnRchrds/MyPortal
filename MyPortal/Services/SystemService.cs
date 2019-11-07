@@ -30,7 +30,7 @@ namespace MyPortal.Services
                     throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
                 }
 
-                var author = await staffService.GetStaffMemberFromUserId(userId);
+                var author = await staffService.GetStaffMemberByUserId(userId);
 
                 bulletin.CreateDate = DateTime.Today;
                 bulletin.Approved = autoApprove;

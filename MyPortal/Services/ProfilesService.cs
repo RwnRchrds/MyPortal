@@ -46,7 +46,7 @@ namespace MyPortal.Services
         {
             using (var staffService = new StaffMemberService(UnitOfWork))
             {
-                var author = await staffService.GetStaffMemberFromUserId(userId);
+                var author = await staffService.GetStaffMemberByUserId(userId);
 
                 log.Date = DateTime.Now;
                 log.AuthorId = author.Id;

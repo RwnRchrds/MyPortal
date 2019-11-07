@@ -1,4 +1,5 @@
-﻿@using MyPortal.Services
+﻿@using MyPortal.Extensions
+@using MyPortal.Services
 @model MyPortal.Areas.Staff.ViewModels.StudentDetailsViewModel
 @{
     ViewBag.Title = "Student Details";
@@ -6,7 +7,7 @@
 }
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">@PeopleService.GetStudentDisplayName(Model.Student).ResponseObject</h1>
+    <h1 class="h3 mb-0 text-gray-800">@Model.Student.GetDisplayName()</h1>
 </div>
 
 <div class="row">
@@ -249,7 +250,7 @@
                 <hr/>
 
                 <h6>Dietary Requirements</h6>
-                @Html.EJS().Grid("DietaryRequirements").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiPeopleGetMedicalDietaryRequirementsByPersonDataGrid", new {personId = Model.Student.Person.Id})).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+                @Html.EJS().Grid("DietaryRequirements").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiGetMedicalDietaryRequirementsByPersonDataGrid", new {personId = Model.Student.Person.Id})).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
                 {
                     c.Field("Description").HeaderText("Requirement").Width("200").Add();
                     c.HeaderText("Actions").Add();
@@ -258,7 +259,7 @@
                 <hr/>
 
                 <h6>Medical Conditions</h6>
-                @Html.EJS().Grid("MedicalConditions").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiPeopleGetMedicalConditionsByPersonDataGrid", new {personId = Model.Student.Person.Id})).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+                @Html.EJS().Grid("MedicalConditions").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiGetMedicalConditionsByPersonDataGrid", new {personId = Model.Student.Person.Id})).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
                 {
                     c.Field("Condition").Width("200").Add();
                     c.Field("MedicationTaken").HeaderText("On Medication").Width("200").DisplayAsCheckBox(true).Add();
@@ -365,7 +366,7 @@
 
             $("#backButton").on("click",
                 function() {
-                    location.replace("@Url.HttpRouteUrl("PeopleStudentDetails", new {studentId = Model.Student.Id})");
+                    location.replace("@Url.Action("StudentOverview", new {studentId = Model.Student.Id})");
                 });
 
         });
@@ -373,7 +374,7 @@
         function saveStudent() {
             var data = $("#studentDetails").serialize();
             $.ajax({
-                url: "@Url.HttpRouteUrl("ApiPeopleUpdateStudent", new {})",
+                url: "@Url.HttpRouteUrl("ApiUpdateStudent", new {})",
                 method: "POST",
                 data: data,
                 success: function(data) {
