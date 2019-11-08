@@ -33,9 +33,9 @@ namespace MyPortal.Controllers.Api
             {
                 var userId = User.Identity.GetUserId();
 
-                var autoApprove = await User.HasPermissionAsync("ApproveBulletins");
+                var approvePermissions = await User.HasPermissionAsync("ApproveBulletins");
 
-                await _service.CreateBulletin(bulletin, userId, autoApprove);
+                await _service.CreateBulletin(bulletin, userId, approvePermissions);
             }
             catch (Exception e)
             {
@@ -52,7 +52,8 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await _service.UpdateBulletin(bulletin);
+                var approvePermissions = await User.HasPermissionAsync("ApproveBulletins");
+                await _service.UpdateBulletin(bulletin, approvePermissions);
             }
             catch (Exception e)
             {
@@ -97,7 +98,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [RequiresPermission("ViewStaffBulletins")]
+        [RequiresPermission("ViewApprovedBulletins")]
         [Route("bulletins/get/approved", Name = "ApiGetApprovedBulletins")]
         public async Task<IEnumerable<SystemBulletinDto>> GetApprovedBulletins()
         {
@@ -114,7 +115,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [RequiresPermission("ViewStaffBulletins")]
+        [RequiresPermission("ViewApprovedBulletins")]
         [Route("bulletins/get/own", Name = "ApiGetOwnBulletins")]
         public async Task<IEnumerable<SystemBulletinDto>> GetOwnBulletins()
         {

@@ -146,8 +146,8 @@ namespace MyPortal.Areas.Staff.Controllers
             }
         }
 
-        [RequiresPermission("ViewStudents")]
-        [Route("{studentId:int}/Behaviour", Name = "PeopleStudentBehaviourDetails")]
+        [RequiresPermission("ViewBehaviour")]
+        [Route("{studentId:int}/Behaviour")]
         public async Task<ActionResult> BehaviourManagement(int studentId)
         {
             using (var systemService = new SystemService(UnitOfWork))
