@@ -26,6 +26,11 @@ namespace MyPortal.Controllers.Api
             _service = new StaffMemberService(UnitOfWork);
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            _service.Dispose();
+        }
+
         [HttpPost]
         [RequiresPermission("EditStaff")]
         [Route("create", Name = "ApiCreateStaff")]

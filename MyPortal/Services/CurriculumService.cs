@@ -660,7 +660,7 @@ namespace MyPortal.Services
             return academicYear.Id;
         }
 
-        public async Task<int?> GetCurrentAcademicYearIdNullable()
+        public async Task<int?> TryGetCurrentAcademicYearId()
         {
             var academicYear = await UnitOfWork.CurriculumAcademicYears.GetCurrentAcademicYear();
 
@@ -679,7 +679,7 @@ namespace MyPortal.Services
             return academicYear.Id;
         }
         
-        public async Task<int?> GetCurrentOrSelectedAcademicYearIdNullable(IPrincipal user)
+        public async Task<int?> TryGetCurrentOrSelectedAcademicYearId(IPrincipal user)
         {
             var academicYear = await UnitOfWork.CurriculumAcademicYears.GetCurrentOrSelectedAcademicYear(user);
 

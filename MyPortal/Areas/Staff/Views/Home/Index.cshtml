@@ -11,7 +11,7 @@
     <h1 class="h3 mb-0 text-gray-800">@Model.CurrentUser.GetDisplayName()</h1>
 </div>
 
-@if (Model.SelectedAcademicYearId == 0)
+@if (Model.SelectedAcademicYearId == 0 || Model.SelectedAcademicYearId == null)
 {
     <div class="row">
         <div class="col-xl-12 col-md-12">
@@ -22,15 +22,18 @@
     </div>
 }
 
-<div class="row">
-    <div class="col mb-4">
-        <button type="button" class="btn btn-primary mp-btn-top" data-toggle="modal" data-target="#ChangeAcademicYearModal">
+@if (User.HasPermission("ChangeAcademicYear"))
+{
+    <div class="row">
+        <div class="col mb-4">
+            <button type="button" class="btn btn-primary mp-btn-top" data-toggle="modal" data-target="#ChangeAcademicYearModal">
 
-            Academic Year
+                Academic Year
 
-        </button>
+            </button>
+        </div>
     </div>
-</div>
+}
 
 <div class="row">
     <div class="col-xl-3 col-lg-3">
@@ -70,113 +73,129 @@
             </div>
         </div>
     </div>
-
-    <div class="col-xl-9 col-lg-9">
-        <div class="card shadow mb-4">
-            <!-- Card Header - Dropdown -->
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Bulletins</h6>
-            </div>
-            <!-- Card Body -->
-            <div class="card-body">
-                
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-xl-12 col-lg-12">
-        <div class="card shadow mb-4">
-            <!-- Card Header - Dropdown -->
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Training</h6>
-            </div>
-            <!-- Card Body -->
-            <div class="card-body">
-                @Html.EJS().Grid("Training").DataSource(dataManager =>
-                {
-                    dataManager.Url("/api/personnel/certificates/get/byStaff/dataGrid/" + Model.CurrentUser.Id).CrossDomain(false).Adaptor("UrlAdaptor");
-                }).Columns(col =>
-                {
-                    col.Field("CourseCode").HeaderText("Code").Template("#trainingCodeTemplate").Width("200").Add();
-                    col.Field("CourseDescription").HeaderText("Description").Template("#trainingDescriptionTemplate").Width("300").Add();
-                    col.Field("Status").HeaderText("Status").Template("#trainingStatusTemplate").Width("250").Add();
-                }).AllowPaging().PageSettings(p => p.PageSize(5)).QueryCellInfo("trainingQuery").EnableHover(false).Render()
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-xl-12 col-lg-12">
-        <div class="card shadow mb-4">
-            <!-- Card Header - Dropdown -->
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Observations</h6>
-            </div>
-            <!-- Card Body -->
-            <div class="card-body">
-                @Html.EJS().Grid("Observations").DataSource(dataManager =>
-                {
-                    dataManager.Url("/api/personnel/observations/get/byStaff/dataGrid/" + Model.CurrentUser.Id).CrossDomain(false).Adaptor("UrlAdaptor");
-                }).Columns(col =>
-                {
-                    col.Field("Date").HeaderText("Date").Template("#observationsDateTemplate").Width("250").Add();
-                    col.Field("ObserverName").HeaderText("Observed By").Template("#observationsObserverTemplate").Width("300").Add();
-                    col.Field("Outcome").HeaderText("Outcome").Template("#observationsOutcomeTemplate").Width("300").Add();
-                }).AllowPaging().PageSettings(p => p.PageSize(5)).QueryCellInfo("observationQuery").EnableHover(false).Render()
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-xl-12 col-lg-12">
-        <div class="card shadow mb-4">
-            <!-- Card Header - Dropdown -->
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Documents</h6>
-            </div>
-            <!-- Card Body -->
-            <div class="card-body">
-                @Html.EJS().Grid("Documents").DataSource(dataManager =>
-                {
-                    dataManager.Url("/api/documents/personal/get/dataGrid/" + Model.CurrentUser.Person.Id).CrossDomain(false).Adaptor("UrlAdaptor");
-                }).Columns(col =>
-                {
-                    col.Field("Description").HeaderText("Description").Template("#documentsDescriptionTemplate").Width("300").Add();
-                    col.Field("Date").HeaderText("Date").Template("#documentsDateTemplate").Width("250").Add();
-                }).AllowPaging().PageSettings(p => p.PageSize(5)).EnableHover(false).Render()
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="ChangeAcademicYearModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <!--content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Select Academic Year</h4>
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
-            </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/curriculum/academicYears/select", HttpMethod = "POST", OnSuccess = "selectYearSuccess", OnFailure = "selectYearFailure" }, new { id = "newLessonPlanForm" }))
-            {
-                <div class="modal-body">
-                    <div class="form-group">
-                        @Html.Label("Academic Year")
-                        @Html.DropDownList("Id", new SelectList(Model.CurriculumAcademicYears, "Id", "Name", Model.SelectedAcademicYearId), new { @class = "form-control", id = "selectedYear" })
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
+    
+    
+    @if (User.HasPermission("ViewApprovedBulletins"))
+    {
+        <div class="col-xl-9 col-lg-9">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Bulletins</h6>
                 </div>
-            }
+                <!-- Card Body -->
+                <div class="card-body">
+                
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@if (User.HasPermission("ViewTrainingCertificates"))
+{
+    <div class="row">
+        <div class="col-xl-12 col-lg-12">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Training</h6>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    @Html.EJS().Grid("Training").DataSource(dataManager =>
+                    {
+                        dataManager.Url("/api/personnel/certificates/get/byStaff/dataGrid/" + Model.CurrentUser.Id).CrossDomain(false).Adaptor("UrlAdaptor");
+                    }).Columns(col =>
+                    {
+                        col.Field("CourseCode").HeaderText("Code").Template("#trainingCodeTemplate").Width("200").Add();
+                        col.Field("CourseDescription").HeaderText("Description").Template("#trainingDescriptionTemplate").Width("300").Add();
+                        col.Field("Status").HeaderText("Status").Template("#trainingStatusTemplate").Width("250").Add();
+                    }).AllowPaging().PageSettings(p => p.PageSize(5)).QueryCellInfo("trainingQuery").EnableHover(false).Render()
+                </div>
+            </div>
         </div>
     </div>
-</div>
+}
+
+@if (User.HasPermission("ViewObservations"))
+{
+    <div class="row">
+        <div class="col-xl-12 col-lg-12">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Observations</h6>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    @Html.EJS().Grid("Observations").DataSource(dataManager =>
+                    {
+                        dataManager.Url("/api/personnel/observations/get/byStaff/dataGrid/" + Model.CurrentUser.Id).CrossDomain(false).Adaptor("UrlAdaptor");
+                    }).Columns(col =>
+                    {
+                        col.Field("Date").HeaderText("Date").Template("#observationsDateTemplate").Width("250").Add();
+                        col.Field("ObserverName").HeaderText("Observed By").Template("#observationsObserverTemplate").Width("300").Add();
+                        col.Field("Outcome").HeaderText("Outcome").Template("#observationsOutcomeTemplate").Width("300").Add();
+                    }).AllowPaging().PageSettings(p => p.PageSize(5)).QueryCellInfo("observationQuery").EnableHover(false).Render()
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (User.HasPermission("ViewPersonalDocuments"))
+{
+    <div class="row">
+        <div class="col-xl-12 col-lg-12">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Documents</h6>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    @Html.EJS().Grid("Documents").DataSource(dataManager =>
+                    {
+                        dataManager.Url("/api/documents/personal/get/dataGrid/" + Model.CurrentUser.Person.Id).CrossDomain(false).Adaptor("UrlAdaptor");
+                    }).Columns(col =>
+                    {
+                        col.Field("Description").HeaderText("Description").Template("#documentsDescriptionTemplate").Width("300").Add();
+                        col.Field("Date").HeaderText("Date").Template("#documentsDateTemplate").Width("250").Add();
+                    }).AllowPaging().PageSettings(p => p.PageSize(5)).EnableHover(false).Render()
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (User.HasPermission("ChangeAcademicYear"))
+{
+    <div id="ChangeAcademicYearModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!--content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Select Academic Year</h4>
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
+                </div>
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/curriculum/academicYears/select", HttpMethod = "POST", OnSuccess = "selectYearSuccess", OnFailure = "selectYearFailure" }, new { id = "newLessonPlanForm" }))
+                {
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @Html.Label("Academic Year")
+                            @Html.DropDownList("Id", new SelectList(Model.CurriculumAcademicYears, "Id", "Name", Model.SelectedAcademicYearId), new { @class = "form-control", id = "selectedYear" })
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
 
 @section scripts
 {

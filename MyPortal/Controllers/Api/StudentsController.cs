@@ -24,6 +24,11 @@ namespace MyPortal.Controllers.Api
         {
             _service = new StudentService(UnitOfWork);
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            _service.Dispose();
+        }
         
         [HttpGet]
         [RequiresPermission("ViewStudents")]

@@ -22,6 +22,11 @@ namespace MyPortal.Controllers.Api
         {
             _service = new CommunicationService(UnitOfWork);
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            _service.Dispose();
+        }
         
         [HttpPost]
         [Route("emailAddresses/create", Name = "ApiCreateEmailAddress")]

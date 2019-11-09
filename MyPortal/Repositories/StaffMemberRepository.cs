@@ -16,6 +16,11 @@ namespace MyPortal.Repositories
 
         }
 
+        public new async Task<IEnumerable<StaffMember>> GetAllAsync()
+        {
+            return await Context.StaffMembers.Include(x => x.Person).OrderBy(x => x.Person.LastName).ToListAsync();
+        }
+
         public async Task<StaffMember> GetByUserIdAsync(string userId)
         {
             return await Context.StaffMembers.Include(x => x.Person).SingleOrDefaultAsync(x => x.Person.UserId == userId);

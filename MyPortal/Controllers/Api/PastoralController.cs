@@ -21,6 +21,11 @@ namespace MyPortal.Controllers.Api
         {
             _service = new PastoralService(UnitOfWork);
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            _service.Dispose();
+        }
         
         [HttpPost]
         [RequiresPermission("EditRegGroups")]

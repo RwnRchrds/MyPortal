@@ -28,6 +28,11 @@ namespace MyPortal.Controllers.Api
             _service = new AssessmentService(UnitOfWork);
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            _service.Dispose();
+        }
+
         [HttpPost]
         [RequiresPermission("EditResults")]
         [Route("results/create", Name = "ApiCreateResult")]

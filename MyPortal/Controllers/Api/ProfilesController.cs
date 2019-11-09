@@ -25,6 +25,11 @@ namespace MyPortal.Controllers.Api
         {
             _service = new ProfilesService(UnitOfWork);
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            _service.Dispose();
+        }
         
         [HttpPost]
         [RequiresPermission("EditProfileLogs")]

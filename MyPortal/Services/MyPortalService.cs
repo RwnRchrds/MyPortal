@@ -16,7 +16,7 @@ namespace MyPortal.Services
 
         public void Dispose()
         {
-            //UnitOfWork.Dispose();
+            UnitOfWork.Dispose();
         }
     }
 }

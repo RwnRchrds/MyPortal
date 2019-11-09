@@ -24,6 +24,11 @@ namespace MyPortal.Controllers.Api
         {
             _service = new PersonnelService(UnitOfWork);
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            _service.Dispose();
+        }
         
         [HttpPost]
         [RequiresPermission("EditTrainingCertificates")]

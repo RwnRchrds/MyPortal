@@ -47,6 +47,8 @@ namespace MyPortal.Dtos
 
         public bool Deleted { get; set; }
 
+        public virtual PersonDto Person { get; set; }
+
         
         
 

@@ -53,7 +53,7 @@ namespace MyPortal.Repositories
 
         public async Task<IEnumerable<Student>> GetStudentsByYearGroup(int yearGroupId)
         {
-            return await Context.Students.Where(x => x.YearGroupId == yearGroupId).OrderBy(x => x.Person.LastName)
+            return await Context.Students.Where(x => x.YearGroupId == yearGroupId).Include(x => x.Person).OrderBy(x => x.Person.LastName)
                 .ToListAsync();
         }
     }

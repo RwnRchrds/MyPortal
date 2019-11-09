@@ -28,6 +28,11 @@ namespace MyPortal.Controllers.Api
         {
             _service = new CurriculumService(UnitOfWork);
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            _service.Dispose();
+        }
         
         [HttpGet]
         [Route("academicYears/get/all", Name = "ApiGetAcademicYears")]

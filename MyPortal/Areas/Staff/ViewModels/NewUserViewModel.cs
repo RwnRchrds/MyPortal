@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using MyPortal.Models;
 
 namespace MyPortal.Areas.Staff.ViewModels
 {
@@ -20,5 +21,7 @@ namespace MyPortal.Areas.Staff.ViewModels
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        public UserType UserType { get; set; }
     }
 }

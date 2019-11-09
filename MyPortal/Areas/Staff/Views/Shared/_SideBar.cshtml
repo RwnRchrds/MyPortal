@@ -54,7 +54,7 @@
                     {
                         @Html.ActionLink("Import Results", "ImportResults", "Assessment", null, new { @class = "collapse-item" })
                     }
-                    @if (User.HasPermission("ViewResultSets"))
+                    @if (User.HasPermission("EditResultSets"))
                     {
                         @Html.ActionLink("Result Sets", "ResultSets", "Assessment", null, new { @class = "collapse-item" })
                     }
@@ -94,11 +94,11 @@
                     {
                         @Html.ActionLink("Classes", "Classes", "Curriculum", null, new { @class = "collapse-item" })
                     }
-                    @if (User.HasPermission("ViewSubjects"))
+                    @if (User.HasPermission("EditSubjects"))
                     {
                         @Html.ActionLink("Subjects", "Subjects", "Curriculum", null, new { @class = "collapse-item" })
                     }
-                    @if (User.HasPermission("ViewStudyTopics"))
+                    @if (User.HasPermission("EditStudyTopics"))
                     {
                         @Html.ActionLink("Study Topics", "StudyTopics", "Curriculum", null, new { @class = "collapse-item" })
                     }
@@ -114,7 +114,7 @@
             <div id="collapseDocuments" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Documents</h6>
-                    @if (User.HasPermission("ViewApprovedDocuments, ViewAllDocuments"))
+                    @if (User.HasPermission("ViewApprovedDocuments") || User.HasPermission("ViewAllDocuments"))
                     {
                         @Html.ActionLink("Documents", "Documents", "Documents", null, new { @class = "collapse-item" })
                     }
@@ -134,11 +134,11 @@
                     {
                         @Html.ActionLink("Accounts", "Accounts", "Finance", null, new { @class = "collapse-item" })
                     }
-                    @if (User.HasPermission("ViewProducts"))
+                    @if (User.HasPermission("EditProducts"))
                     {
                         @Html.ActionLink("Products", "Products", "Finance", null, new { @class = "collapse-item" })
                     }
-                    @if (User.HasPermission("ViewSales"))
+                    @if (User.HasPermission("EditSales"))
                     {
                         @Html.ActionLink("Sales", "Sales", "Finance", null, new { @class = "collapse-item" })
                     }

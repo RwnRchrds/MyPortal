@@ -1204,6 +1204,7 @@
     <Content Include="Areas\Staff\Views\Shared\_SideBar.cshtml" />
     <Content Include="Areas\Students\Views\Shared\_SideBar.cshtml" />
     <Content Include="Views\Shared\_LoginLayout.cshtml" />
+    <Content Include="Views\Shared\_AdminApiUrls.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Results\" />

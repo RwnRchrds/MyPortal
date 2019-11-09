@@ -25,6 +25,11 @@ namespace MyPortal.Controllers.Api
         {
             _service = new BehaviourService(UnitOfWork);
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            _service.Dispose();
+        }
         
         [HttpGet]
         [RequiresPermission("ViewBehaviour")]

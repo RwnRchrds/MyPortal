@@ -22,11 +22,11 @@ namespace MyPortal.Areas.Staff.Controllers
             {
                 var userId = User.Identity.GetUserId();
 
-                var staff = await staffService.GetStaffMemberByUserId(userId);
+                var staff = await staffService.TryGetStaffMemberByUserId(userId);
 
                 var academicYears = await curriculumService.GetAcademicYears();
 
-                var selectedAcademicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearIdNullable(User);
+                var selectedAcademicYearId = await curriculumService.TryGetCurrentOrSelectedAcademicYearId(User);
 
                 var viewModel = new StaffHomeViewModel
                 {

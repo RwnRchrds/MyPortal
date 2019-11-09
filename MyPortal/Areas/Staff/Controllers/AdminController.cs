@@ -39,17 +39,17 @@ namespace MyPortal.Areas.Staff.Controllers
 
                 var roles = await adminService.GetAllRoles();
 
-                var attachedProfile = "";
+                string attachedProfile = null;
 
                 Student studentProfile = await studentService.TryGetStudentByUserId(userId);
 
                 StaffMember staffProfile = await staffService.TryGetStaffMemberByUserId(userId);
 
                 if (studentProfile != null)
-                    attachedProfile = $"{studentProfile.GetDisplayName()} (Student)";
+                    attachedProfile = $"{studentProfile.GetDisplayName()}";
 
                 else if (staffProfile != null)
-                    attachedProfile = $"{staffProfile.GetDisplayName()} (Staff)";
+                    attachedProfile = $"{staffProfile.GetDisplayName()}";
 
                 var viewModel = new UserDetailsViewModel
                 {

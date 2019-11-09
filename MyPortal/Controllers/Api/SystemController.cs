@@ -23,6 +23,11 @@ namespace MyPortal.Controllers.Api
         {
             _service = new SystemService(UnitOfWork);
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            _service.Dispose();
+        }
         
         [HttpPost]
         [RequiresPermission("EditBulletins")]

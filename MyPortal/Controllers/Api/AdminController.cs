@@ -32,6 +32,11 @@ namespace MyPortal.Controllers.Api
             _service = new AdminService(UnitOfWork);
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            _service.Dispose();
+        }
+
         [HttpPost]
         [RequiresPermission("EditUsers")]
         [Route("users/addToRole", Name = "ApiAddUserToRole")]
@@ -46,7 +51,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Ok( "User added to role");
+            return Ok("User added to role");
         }
 
         [HttpPost]
@@ -63,7 +68,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Ok( "Person attached");
+            return Ok("Person attached");
         }
 
         [HttpPost]
@@ -80,7 +85,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Ok( "Password changed");
+            return Ok("Password changed");
         }
 
         [HttpDelete]
@@ -97,7 +102,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Ok( "User deleted");
+            return Ok("User deleted");
         }
 
         [HttpPost]
@@ -114,7 +119,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Ok( "Person detached");
+            return Ok("Person detached");
         }
 
         [HttpGet]
@@ -160,20 +165,37 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await _service.CreateUser(model);
+                var result = await _service.CreateUser(model);
+
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
+
+        [HttpPost]
+        [RequiresPermission("EditUsers")]
+        [Route("users/changeType", Name = "ApiChangeUserType")]
+        public async Task<IHttpActionResult> ChangeUserType([FromBody] ApplicationUser user)
+        {
+            try
+            {
+                await _service.ChangeUserType(user.Id, user.UserType);
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
 
-            return Ok( "User created");
+            return Ok("User type changed");
         }
 
-        [Route("users/removeFromRole", Name = "ApiRemoveFromRole")]
+        [Route("users/removeFromRole", Name = "ApiRemoveUserFromRole")]
         [HttpPost]
         [RequiresPermission("EditUsers")]
-        public async Task<IHttpActionResult> RemoveFromRole([FromBody] UserRoleModel roleModel)
+        public async Task<IHttpActionResult> RemoveUserFromRole([FromBody] UserRoleModel roleModel)
         {
             try
             {
@@ -184,7 +206,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Ok( "User removed from role");
+            return Ok("User removed from role");
         }
 
         [RequiresPermission("EditRoles")]
@@ -201,7 +223,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Ok( "Role created");
+            return Ok("Role created");
         }
 
         [RequiresPermission("EditRoles")]
@@ -218,7 +240,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Ok( "Role updated");
+            return Ok("Role updated");
         }
 
         [RequiresPermission("EditRoles")]
@@ -235,7 +257,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Ok( "Role deleted");
+            return Ok("Role deleted");
         }
 
         [RequiresPermission("EditRoles")]
@@ -256,13 +278,13 @@ namespace MyPortal.Controllers.Api
         }
 
         [RequiresPermission("EditRoles")]
-        [Route("roles/get/all", Name = "ApiGetAllRoles")]
+        [Route("roles/get/userDefined", Name = "ApiGetUserDefinedRoles")]
         [HttpGet]
-        public async Task<IEnumerable<ApplicationRoleDto>> GetAllRoles()
+        public async Task<IEnumerable<ApplicationRoleDto>> GetUserDefinedRoles()
         {
             try
             {
-                var roles = await _service.GetAllRoles();
+                var roles = await _service.GetUserDefinedRoles();
 
                 return roles.Select(Mapper.Map<ApplicationRole, ApplicationRoleDto>);
             }
@@ -310,13 +332,13 @@ namespace MyPortal.Controllers.Api
         }
 
         [RequiresPermission("EditRoles")]
-        [Route("roles/get/dataGrid/all", Name = "ApiGetAllRolesDataGrid")]
+        [Route("roles/get/dataGrid/userDefined", Name = "ApiGetUserDefinedRolesDataGrid")]
         [HttpPost]
-        public async Task<IHttpActionResult> GetAllRolesDataGrid([FromBody] DataManagerRequest dm)
+        public async Task<IHttpActionResult> GetUserDefinedRolesDataGrid([FromBody] DataManagerRequest dm)
         {
             try
             {
-                var roles = await _service.GetAllRoles();
+                var roles = await _service.GetUserDefinedRoles();
 
                 var list = roles.Select(Mapper.Map<ApplicationRole, ApplicationRoleDto>);
 
@@ -342,7 +364,7 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
 
-            return Ok( "Permissions updated");
+            return Ok("Permissions updated");
         }
 
         [RequiresPermission("EditRoles")]

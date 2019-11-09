@@ -80,59 +80,25 @@ namespace MyPortal.Services
 
         public async Task AttachPersonToUser(UserProfile userProfile)
         {
-            var userInDb = Identity.Users.FirstOrDefault(u => u.Id == userProfile.UserId);
-            var roleInDb = Identity.Roles.FirstOrDefault(r => r.Name == userProfile.RoleName);
-
-            var userIsAttached = await UnitOfWork.Students.AnyAsync(x => x.Person.UserId == userProfile.UserId) ||
-                                 await UnitOfWork.StaffMembers.AnyAsync(x => x.Person.UserId == userProfile.UserId);                       
-
-            if (userInDb == null)
+            using (var peopleService = new PeopleService(UnitOfWork))
             {
-                throw new ServiceException(ExceptionType.NotFound,"User not found");
-            }
+                var person = await peopleService.GetPersonById(userProfile.PersonId);
 
-            if (roleInDb == null)
-            {
-                throw new ServiceException(ExceptionType.NotFound,"Role not found");
-            }
-
-            if (userIsAttached)
-            {
-                throw new ServiceException(ExceptionType.BadRequest,"A person is already attached to this user");
-            }
-
-            switch (userProfile.RoleName)
-            {
-                case "Staff":
+                if (await UserManager.FindByIdAsync(userProfile.UserId) == null)
                 {
-                    var roles = await UserManager.GetRolesAsync(userProfile.UserId);
-                    await UserManager.RemoveFromRolesAsync(userProfile.UserId, roles.ToArray());
-                    await UserManager.AddToRoleAsync(userProfile.UserId, "Staff");
-                    var personInDb = await UnitOfWork.People.GetByIdAsync(userProfile.PersonId);
-                    if (personInDb.UserId != null)
-                    {
-                        throw new ServiceException(ExceptionType.BadRequest,"This person is attached to another user");
-                    }
-
-                    personInDb.UserId = userInDb.Id;
-                    await UnitOfWork.Complete();
-                    break;
+                    throw new ServiceException(ExceptionType.NotFound,"User not found");
                 }
-                case "Student":
+
+                var userIsAttached = person.UserId != null;
+
+                if (userIsAttached)
                 {
-                    var roles = await UserManager.GetRolesAsync(userProfile.UserId);
-                    await UserManager.RemoveFromRolesAsync(userProfile.UserId, roles.ToArray());
-                    await UserManager.AddToRoleAsync(userProfile.UserId, "Student");
-                    var personInDb = await UnitOfWork.People.GetByIdAsync(userProfile.PersonId);
-                    if (personInDb.UserId != null)
-                    {
-                        throw new ServiceException(ExceptionType.BadRequest,"This person is attached to another user");
-                    }
-
-                    personInDb.UserId = userInDb.Id;
-                    await UnitOfWork.Complete();
-                    break;
+                    throw new ServiceException(ExceptionType.BadRequest,"A person is already attached to this user");
                 }
+
+                person.UserId = userProfile.UserId;
+
+                await peopleService.UpdatePerson(person);
             }
         }
 
@@ -186,7 +152,7 @@ namespace MyPortal.Services
             throw new ServiceException(ExceptionType.BadRequest,"An unknown error occurred");
         }
 
-        public async Task CreateUser(NewUserViewModel model)
+        public async Task<string> CreateUser(NewUserViewModel model)
         {
             model.Id = UtilityService.GenerateId();
 
@@ -198,14 +164,20 @@ namespace MyPortal.Services
             var user = new ApplicationUser
             {
                 Id = model.Id,
-                UserName = model.Username
+                UserName = model.Username,
+                UserType = model.UserType
             };
 
             var result = await UserManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
             {
-                return;
+                return model.Id;
+            }
+
+            if (result.Errors.Any())
+            {
+                throw new ServiceException(ExceptionType.BadRequest, result.Errors.FirstOrDefault());
             }
 
             throw new ServiceException(ExceptionType.BadRequest,"An unknown error occurred");
@@ -274,9 +246,16 @@ namespace MyPortal.Services
             throw new ServiceException(ExceptionType.BadRequest,"An unknown error occurred");
         }
         
-        public async Task<IEnumerable<ApplicationRole>> GetAllRoles()
+        public async Task<IEnumerable<ApplicationRole>> GetUserDefinedRoles()
         {
             var roles = await Identity.Roles.Where(x => !x.System).OrderBy(x => x.Name).ToListAsync();
+
+            return roles;
+        }
+
+        public async Task<IEnumerable<ApplicationRole>> GetAllRoles()
+        {
+            var roles = await Identity.Roles.OrderBy(x => x.Name).ToListAsync();
 
             return roles;
         }
@@ -382,7 +361,21 @@ namespace MyPortal.Services
 
         public async Task UpdateRole(ApplicationRole role)
         {
-            await RoleManager.UpdateAsync(role);
+            var roleInDb = await RoleManager.FindByIdAsync(role.Id);
+
+            roleInDb.Description = role.Description;
+            roleInDb.Name = role.Name;
+
+            await Identity.SaveChangesAsync();
+        }
+
+        public async Task ChangeUserType(string userId, UserType userType)
+        {
+            var userInDb = await UserManager.FindByIdAsync(userId);
+
+            userInDb.UserType = userType;
+
+            await UserManager.UpdateAsync(userInDb);
         }
 
         public async Task<ApplicationUser> GetUserById(string userId)
