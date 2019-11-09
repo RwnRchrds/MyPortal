@@ -1,6 +1,6 @@
 using MyPortal.Interfaces;
 
-namespace MyPortal.Dtos.GridDtos
+namespace MyPortal.Dtos.DataGrid
 {
     public class GridCurriculumSubjectDto : IGridDto
     {

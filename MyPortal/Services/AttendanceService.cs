@@ -4,7 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using MyPortal.Dtos.LiteDtos;
+using MyPortal.Dtos.Lite;
 using MyPortal.Exceptions;
 using MyPortal.Extensions;
 using MyPortal.Interfaces;
@@ -225,10 +225,10 @@ namespace MyPortal.Services
             return selectedWeek;
         }
 
-        public async Task<IEnumerable<AttendanceMarkLite>> PrepareLiteMarkList(List<AttendanceMark> marks, bool retrieveMeanings)
+        public async Task<IEnumerable<AttendanceMarkLiteDto>> PrepareLiteMarkList(List<AttendanceMark> marks, bool retrieveMeanings)
         {
             var liteMarks = marks.OrderBy(x => x.Period.StartTime)
-                .Select(Mapper.Map<AttendanceMark, AttendanceMarkLite>).ToList();
+                .Select(Mapper.Map<AttendanceMark, AttendanceMarkLiteDto>).ToList();
 
             if (retrieveMeanings)
             {

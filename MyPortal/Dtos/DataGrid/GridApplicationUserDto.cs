@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using MyPortal.Interfaces;
+﻿using MyPortal.Interfaces;
 
-namespace MyPortal.Dtos.GridDtos
+namespace MyPortal.Dtos.DataGrid
 {
     public class GridApplicationUserDto : IGridDto
     {

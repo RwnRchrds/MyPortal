@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using MyPortal.Dtos;
-using MyPortal.Dtos.GridDtos;
 using MyPortal.Exceptions;
 using MyPortal.Extensions;
 using MyPortal.Interfaces;

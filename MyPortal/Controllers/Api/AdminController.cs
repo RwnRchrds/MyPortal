@@ -13,7 +13,7 @@ using MyPortal.Dtos.Identity;
 using MyPortal.Models;
 using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
-using MyPortal.Dtos.GridDtos;
+using MyPortal.Dtos.DataGrid;
 using MyPortal.Interfaces;
 using MyPortal.Models.Misc;
 using MyPortal.Services;

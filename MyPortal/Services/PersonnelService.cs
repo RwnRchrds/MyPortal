@@ -6,7 +6,6 @@ using System.Web.Query.Dynamic;
 using System.Web.UI.WebControls;
 using AutoMapper;
 using MyPortal.Dtos;
-using MyPortal.Dtos.GridDtos;
 using MyPortal.Exceptions;
 using MyPortal.Interfaces;
 using MyPortal.Models.Database;

@@ -3,9 +3,9 @@ using System.Linq;
 using AutoMapper;
 using Microsoft.AspNet.Identity.EntityFramework;
 using MyPortal.Dtos;
-using MyPortal.Dtos.GridDtos;
+using MyPortal.Dtos.DataGrid;
 using MyPortal.Dtos.Identity;
-using MyPortal.Dtos.LiteDtos;
+using MyPortal.Dtos.Lite;
 using MyPortal.Extensions;
 using MyPortal.Models;
 using MyPortal.Models.Database;
@@ -101,8 +101,8 @@ namespace MyPortal
             CreateMap<AttendanceMark, AttendanceMarkDto>();
             CreateMap<AttendanceMarkDto, AttendanceMark>();
 
-            CreateMap<AttendanceMark, AttendanceMarkLite>();
-            CreateMap<AttendanceMarkLite, AttendanceMark>();
+            CreateMap<AttendanceMark, AttendanceMarkLiteDto>();
+            CreateMap<AttendanceMarkLiteDto, AttendanceMark>();
 
             CreateMap<FinanceProductType, FinanceProductTypeDto>();
             CreateMap<FinanceProductTypeDto, FinanceProductType>();
@@ -257,7 +257,7 @@ namespace MyPortal
 
             CreateMap<StudentAttendanceMarkSingular, StudentAttendanceMarkCollection>()
                 .ForMember(dest => dest.Marks,
-                    opts => opts.MapFrom(src => new List<AttendanceMarkLite> {src.Mark}));
+                    opts => opts.MapFrom(src => new List<AttendanceMarkLiteDto> {src.Mark}));
 
             CreateMap<ApplicationUser, GridApplicationUserDto>();
 

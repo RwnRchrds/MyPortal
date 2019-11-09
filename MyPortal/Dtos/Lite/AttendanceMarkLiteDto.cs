@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Web;
-using MyPortal.Models.Database;
+﻿using MyPortal.Models.Database;
 
-namespace MyPortal.Dtos.LiteDtos
+namespace MyPortal.Dtos.Lite
 {    
-    public class AttendanceMarkLite
+    public class AttendanceMarkLiteDto
     {        
         public int Id { get; set; }
         

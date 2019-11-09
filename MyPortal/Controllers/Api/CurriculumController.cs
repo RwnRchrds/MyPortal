@@ -10,7 +10,7 @@ using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
-using MyPortal.Dtos.GridDtos;
+using MyPortal.Dtos.DataGrid;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
 using MyPortal.Services;
