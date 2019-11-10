@@ -27,6 +27,8 @@ namespace MyPortal.Models.Database
 
         public bool Active { get; set; }
 
+        public bool System { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AssessmentAspect> Aspects { get; set; }
 

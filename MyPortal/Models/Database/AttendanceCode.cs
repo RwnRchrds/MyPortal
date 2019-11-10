@@ -8,13 +8,12 @@ namespace MyPortal.Models.Database
 
     public enum AttendanceMeaning
     {
-        Present = 1,
-        AuthorisedAbsence = 2,
-        ApprovedEducationalActivity = 3,
-        UnauthorisedAbsence = 4,
-        AttendanceNotRequired = 5,
-        NoMark = 6,
-        Late = 7
+        Present,
+        AuthorisedAbsence,
+        ApprovedEducationalActivity,
+        UnauthorisedAbsence,
+        AttendanceNotRequired,
+        NoMark
     }
 
     /// <summary>
@@ -35,8 +34,6 @@ namespace MyPortal.Models.Database
         public string Description { get; set; }
 
         public AttendanceMeaning Meaning { get; set; }
-
-        public bool System { get; set; }
 
         public bool DoNotUse { get; set; }
     }

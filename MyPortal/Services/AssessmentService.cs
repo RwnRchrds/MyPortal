@@ -33,13 +33,6 @@ namespace MyPortal.Services
                 throw new ServiceException(ExceptionType.BadRequest,"Invalid data");
             }
 
-            var currentRsExists = await UnitOfWork.AssessmentResultSets.AnyAsync(x => x.IsCurrent);
-
-            if (!currentRsExists)
-            {
-                resultSet.IsCurrent = true;
-            }
-
             UnitOfWork.AssessmentResultSets.Add(resultSet);
             await UnitOfWork.Complete();
         }
@@ -47,11 +40,6 @@ namespace MyPortal.Services
         public async Task DeleteResultSet(int resultSetId)
         {
             var resultSet = await GetResultSetById(resultSetId);
-
-            if (resultSet.IsCurrent)
-            {
-                throw new ServiceException(ExceptionType.BadRequest,"Result set is marked as current");
-            }
 
             UnitOfWork.AssessmentResultSets.Remove(resultSet);
             await UnitOfWork.Complete();
@@ -93,27 +81,6 @@ namespace MyPortal.Services
             var resultSets = await UnitOfWork.AssessmentResultSets.GetResultSetsByStudent(studentId);
 
             return resultSets;
-        }
-
-        public async Task SetResultSetAsCurrent(int resultSetId)
-        {
-            var resultSet = await GetResultSetById(resultSetId);
-
-            if (resultSet.IsCurrent)
-            {
-                throw new ServiceException(ExceptionType.BadRequest,"Result set is already marked as current");
-            }
-
-            var currentResultSet = await UnitOfWork.AssessmentResultSets.GetCurrent();
-
-            if (currentResultSet != null)
-            {
-                currentResultSet.IsCurrent = false;
-            }
-
-            resultSet.IsCurrent = true;
-
-            await UnitOfWork.Complete();
         }
 
         public async Task UpdateResultSet(AssessmentResultSet resultSet)

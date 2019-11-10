@@ -193,23 +193,6 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditResultSets")]
-        [Route("resultSets/setCurrent/{resultSetId:int}", Name = "ApiSetResultSetAsCurrent")]
-        public async Task<IHttpActionResult> SetResultSetAsCurrent([FromUri] int resultSetId)
-        {
-            try
-            {
-                await _service.SetResultSetAsCurrent(resultSetId);
-            }
-            catch (Exception e)
-            {
-                return HandleException(e);
-            }
-
-            return Ok( "Result set marked as current");
-        }
-
-        [HttpPost]
-        [RequiresPermission("EditResultSets")]
         [Route("resultSets/update", Name = "ApiUpdateResultSet")]
         public async Task<IHttpActionResult> UpdateResultSet([FromBody] AssessmentResultSet resultSet)
         {

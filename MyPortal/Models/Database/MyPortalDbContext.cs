@@ -184,7 +184,7 @@ namespace MyPortal.Models.Database
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<CommunicationType>()
-                .HasMany(e => e.Logs)
+                .HasMany(e => e.CommunicationLogs)
                 .WithRequired(e => e.Type)
                 .HasForeignKey(e => e.CommunicationTypeId)
                 .WillCascadeOnDelete(false);

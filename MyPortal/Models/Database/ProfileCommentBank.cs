@@ -26,6 +26,8 @@ namespace MyPortal.Models.Database
 
         public bool System { get; set; }
 
+        public bool InUse { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProfileComment> Comments { get; set; }
     }

@@ -22,10 +22,5 @@ namespace MyPortal.Repositories
             return await Context.AssessmentResultSets.Where(x => x.Results.Any(r => r.StudentId == studentId))
                 .ToListAsync();
         }
-
-        public async Task<AssessmentResultSet> GetCurrent()
-        {
-            return await Context.AssessmentResultSets.SingleOrDefaultAsync(x => x.IsCurrent);
-        }
     }
 }

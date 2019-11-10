@@ -16,7 +16,7 @@ namespace MyPortal.Models.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public CommunicationType()
         {
-            Logs = new HashSet<CommunicationLog>();
+            CommunicationLogs = new HashSet<CommunicationLog>();
         }
 
         public int Id { get; set; }
@@ -26,6 +26,6 @@ namespace MyPortal.Models.Database
         public string Description { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CommunicationLog> Logs { get; set; }
+        public virtual ICollection<CommunicationLog> CommunicationLogs { get; set; }
     }
 }

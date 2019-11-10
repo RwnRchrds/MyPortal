@@ -508,6 +508,14 @@
     <Compile Include="Migrations\201911060107386_UpdatedModel.Designer.cs">
       <DependentUpon>201911060107386_UpdatedModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201911100045332_RemovedCurrentResultSets.cs" />
+    <Compile Include="Migrations\201911100045332_RemovedCurrentResultSets.Designer.cs">
+      <DependentUpon>201911100045332_RemovedCurrentResultSets.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201911100121053_ModifiedSystemClasses.cs" />
+    <Compile Include="Migrations\201911100121053_ModifiedSystemClasses.Designer.cs">
+      <DependentUpon>201911100121053_ModifiedSystemClasses.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Database\AssessmentAspect.cs" />
     <Compile Include="Models\Database\AssessmentAspectType.cs" />
@@ -1250,6 +1258,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201911060107386_UpdatedModel.resx">
       <DependentUpon>201911060107386_UpdatedModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911100045332_RemovedCurrentResultSets.resx">
+      <DependentUpon>201911100045332_RemovedCurrentResultSets.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911100121053_ModifiedSystemClasses.resx">
+      <DependentUpon>201911100121053_ModifiedSystemClasses.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
