@@ -9,10 +9,10 @@ namespace MyPortal.Interfaces
 {
     public interface ISystemBulletinRepository : IRepository<SystemBulletin>
     {
-        Task<IEnumerable<SystemBulletin>> GetApprovedBulletins();
+        Task<IEnumerable<SystemBulletin>> GetApproved();
 
-        Task<IEnumerable<SystemBulletin>> GetApprovedStudentBulletins();
+        Task<IEnumerable<SystemBulletin>> GetStudent();
 
-        Task<IEnumerable<SystemBulletin>> GetOwnBulletins(int authorId);
+        Task<IEnumerable<SystemBulletin>> GetOwn(int authorId);
     }
 }

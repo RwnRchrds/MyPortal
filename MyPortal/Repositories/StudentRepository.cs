@@ -17,7 +17,7 @@ namespace MyPortal.Repositories
 
         }
 
-        public async Task<Student> GetByUserIdAsync(string userId)
+        public async Task<Student> GetByUserId(string userId)
         {
             return await Context.Students.SingleOrDefaultAsync(x => x.Person.UserId == userId);
         }
@@ -46,12 +46,12 @@ namespace MyPortal.Repositories
                 .OrderBy(x => x.Person.LastName).ToListAsync();
         }
 
-        public async Task<IEnumerable<Student>> GetStudentsByRegGroup(int regGroupId)
+        public async Task<IEnumerable<Student>> GetByRegGroup(int regGroupId)
         {
             return await Context.Students.Where(x => x.RegGroupId == regGroupId).OrderBy(x => x.Person.LastName).ToListAsync();
         }
 
-        public async Task<IEnumerable<Student>> GetStudentsByYearGroup(int yearGroupId)
+        public async Task<IEnumerable<Student>> GetByYearGroup(int yearGroupId)
         {
             return await Context.Students.Where(x => x.YearGroupId == yearGroupId).Include(x => x.Person).OrderBy(x => x.Person.LastName)
                 .ToListAsync();

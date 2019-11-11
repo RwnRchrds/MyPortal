@@ -9,6 +9,6 @@ namespace MyPortal.Interfaces
 {
     public interface ICurriculumLessonPlanRepository : IRepository<CurriculumLessonPlan>
     {
-        Task<IEnumerable<CurriculumLessonPlan>> GetLessonPlansByStudyTopic(int studyTopicId);
+        Task<IEnumerable<CurriculumLessonPlan>> GetByStudyTopic(int studyTopicId);
     }
 }

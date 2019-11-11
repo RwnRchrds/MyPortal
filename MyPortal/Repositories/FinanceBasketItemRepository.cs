@@ -16,12 +16,12 @@ namespace MyPortal.Repositories
 
         }
 
-        public async Task<IEnumerable<FinanceBasketItem>> GetBasketItemsByStudent(int studentId)
+        public async Task<IEnumerable<FinanceBasketItem>> GetByStudent(int studentId)
         {
             return await Context.FinanceBasketItems.Where(x => x.StudentId == studentId).ToListAsync();
         }
 
-        public async Task<decimal> GetBasketTotalForStudent(int studentId)
+        public async Task<decimal> GetTotalForStudent(int studentId)
         {
             return await Context.FinanceBasketItems.Where(x => x.StudentId == studentId)
                        .SumAsync(x => (decimal?) x.Product.Price) ?? 0;

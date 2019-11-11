@@ -25,12 +25,12 @@ namespace MyPortal.Repositories
             return await Context.Persons.CountAsync(x => x.Dob >= monday && x.Dob <= sunday);
         }
 
-        public async Task<Person> GetPersonByUserId(string userId)
+        public async Task<Person> GetByUserId(string userId)
         {
             return await Context.Persons.SingleOrDefaultAsync(x => x.UserId == userId);
         }
 
-        public async Task<IEnumerable<Person>> SearchPeople(Person person)
+        public async Task<IEnumerable<Person>> Search(Person person)
         {
             return await Context.Persons
                 .Where(x => (person.LastName == null || x.LastName == person.LastName) &&

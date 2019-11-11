@@ -73,7 +73,7 @@ namespace MyPortal.Services
 
         public async Task<Student> GetStudentByUserId(string userId)
         {
-            var student = await UnitOfWork.Students.GetByUserIdAsync(userId);
+            var student = await UnitOfWork.Students.GetByUserId(userId);
 
             if (student == null)
             {
@@ -85,21 +85,21 @@ namespace MyPortal.Services
 
         public async Task<Student> TryGetStudentByUserId(string userId)
         {
-            var student = await UnitOfWork.Students.GetByUserIdAsync(userId);
+            var student = await UnitOfWork.Students.GetByUserId(userId);
 
             return student;
         }
 
         public async Task<IEnumerable<Student>> GetStudentsByRegGroup(int regGroupId)
         {
-            var students = await UnitOfWork.Students.GetStudentsByRegGroup(regGroupId);
+            var students = await UnitOfWork.Students.GetByRegGroup(regGroupId);
 
             return students;
         }
         
         public async Task<IEnumerable<Student>> GetStudentsByYearGroup(int yearGroupId)
         {
-            var students = await UnitOfWork.Students.GetStudentsByYearGroup(yearGroupId);
+            var students = await UnitOfWork.Students.GetByYearGroup(yearGroupId);
 
             return students;
         }

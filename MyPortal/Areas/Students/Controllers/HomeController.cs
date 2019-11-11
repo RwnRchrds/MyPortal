@@ -16,7 +16,6 @@ namespace MyPortal.Areas.Students.Controllers
     [RoutePrefix("Home")]
     public class HomeController : MyPortalController
     {
-        // Student Landing Page
         public async Task<ActionResult> Index()
         {
             using (var curriculumService = new CurriculumService(UnitOfWork))
@@ -32,7 +31,7 @@ namespace MyPortal.Areas.Students.Controllers
 
                 var attendanceData = await attendanceService.GetSummary(student.Id, academicYearId);
             
-                var attendance = attendanceData?.Present + attendanceData?.Late;
+                var attendance = attendanceData?.Present;
 
                 var achievementCount =
                     await behaviourService.GetAchievementPointsCountByStudent(student.Id, academicYearId);

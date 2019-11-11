@@ -1,6 +1,7 @@
 ﻿@model MyPortal.Areas.Staff.ViewModels.ClassesViewModel
 @{
     ViewBag.Title = "Classes";
+    ViewBag.DisplayTitle = "Classes";
 }
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -29,7 +30,7 @@
             <div class="card-body">
                 @Html.EJS().Grid("Classes").DataSource(d =>
                 {
-                    d.Url(Url.HttpRouteUrl("ApiCurriculumGetAllClassesDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor");
+                    d.Url(Url.HttpRouteUrl("ApiGetAllClassesDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor");
                 }).Columns(c =>
                 {
                     c.Field("Name").HeaderText("Name").Template("#classesNameTemplate").Width("200").Add();
@@ -51,7 +52,7 @@
                 <h4 class="modal-title">New Class</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiCurriculumCreateClass", new {}), HttpMethod = "POST", OnSuccess = "newClassSuccess", OnFailure = "newClassFailure" }, new { id = "newClassForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiCreateClass", new {}), HttpMethod = "POST", OnSuccess = "newClassSuccess", OnFailure = "newClassFailure" }, new { id = "newClassForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -87,7 +88,7 @@
                 <h4 class="modal-title">Edit Class</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiCurriculumUpdateClass", new {}), HttpMethod = "POST", OnSuccess = "editClassSuccess", OnFailure = "editClassFailure" }, new { id = "editClassForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiUpdateClass", new {}), HttpMethod = "POST", OnSuccess = "editClassSuccess", OnFailure = "editClassFailure" }, new { id = "editClassForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -122,9 +123,9 @@
 {
     <script>
 
-        var urlGetClassById = "@Url.HttpRouteUrl("ApiCurriculumGetClassById", new {classId = 9999})";
-        var urlEnrolments = "@Url.HttpRouteUrl("CurriculumEnrolments", new {classId = 9999})";
-        var urlDeleteClass = "@Url.HttpRouteUrl("ApiCurriculumDeleteClass", new {classId = 9999})";
+        var urlGetClassById = "@Url.HttpRouteUrl("ApiGetClassById", new {classId = 9999})";
+        var urlEnrolments = "@Url.Action("Enrolments", new {classId = 9999})";
+        var urlDeleteClass = "@Url.HttpRouteUrl("ApiDeleteClass", new {classId = 9999})";
 
         $(document).ready(function() {
             $('.modal').on('hidden.bs.modal',

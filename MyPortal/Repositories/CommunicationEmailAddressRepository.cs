@@ -16,7 +16,7 @@ namespace MyPortal.Repositories
 
         }
 
-        public async Task<IEnumerable<CommunicationEmailAddress>> GetEmailAddressesByPerson(int personId)
+        public async Task<IEnumerable<CommunicationEmailAddress>> GetByPerson(int personId)
         {
             return await Context.CommunicationEmailAddresses.Where(x => x.PersonId == personId).ToListAsync();
         }

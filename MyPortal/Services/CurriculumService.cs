@@ -137,7 +137,7 @@ namespace MyPortal.Services
 
             if (authorId == 0)
             {
-                author = await UnitOfWork.StaffMembers.GetByUserIdAsync(userId);
+                author = await UnitOfWork.StaffMembers.GetByUserId(userId);
                 if (author == null)
                 {
                     throw new ServiceException(ExceptionType.NotFound,"Staff member not found");
@@ -376,11 +376,9 @@ namespace MyPortal.Services
             return await UnitOfWork.CurriculumStudyTopics.GetAllAsync();
         }
 
-        public async Task<IDictionary<int, string>> GetAllSubjectsLookup()
+        public async Task<IEnumerable<CurriculumStudyTopic>> GetAllStudyTopicsBySubject(int subjectId)
         {
-            var subjects = await GetAllSubjects();
-
-            return subjects.ToDictionary(x => x.Id, x => x.Name);
+            return await UnitOfWork.CurriculumStudyTopics.GetBySubject(subjectId);
         }
 
         public async Task<IEnumerable<CurriculumSubject>> GetAllSubjects()
@@ -416,14 +414,14 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<CurriculumEnrolment>> GetEnrolmentsByClass(int classId)
         {
-            var list = await UnitOfWork.CurriculumEnrolments.GetEnrolmentsByClass(classId);
+            var list = await UnitOfWork.CurriculumEnrolments.GetByClass(classId);
 
             return list;
         }
 
         public async Task<IEnumerable<CurriculumEnrolment>> GetEnrolmentsByStudent(int studentId)
         {
-            var list = await UnitOfWork.CurriculumEnrolments.GetEnrolmentsByStudent(studentId);
+            var list = await UnitOfWork.CurriculumEnrolments.GetByStudent(studentId);
 
             return list;
         }
@@ -442,7 +440,7 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<CurriculumLessonPlan>> GetLessonPlansByStudyTopic(int studyTopicId)
         {
-            return await UnitOfWork.CurriculumLessonPlans.GetLessonPlansByStudyTopic(studyTopicId);
+            return await UnitOfWork.CurriculumLessonPlans.GetByStudyTopic(studyTopicId);
         }
 
         public async Task<CurriculumSession> GetSessionById(int sessionId)
@@ -459,7 +457,7 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<CurriculumSession>> GetSessionsByClass(int classId)
         {
-            var sessions = await UnitOfWork.CurriculumSessions.GetSessionsByClass(classId);
+            var sessions = await UnitOfWork.CurriculumSessions.GetByClass(classId);
 
             return sessions;
         }
@@ -480,7 +478,7 @@ namespace MyPortal.Services
                 throw new ServiceException(ExceptionType.BadRequest,"Selected date is outside academic year");
             }
 
-            var currentWeek = await UnitOfWork.AttendanceWeeks.GetAttendanceWeekByDate(academicYearId, weekBeginning);
+            var currentWeek = await UnitOfWork.AttendanceWeeks.GetByDate(academicYearId, weekBeginning);
 
             if (currentWeek == null)
             {
@@ -493,7 +491,7 @@ namespace MyPortal.Services
                 return new List<CurriculumSession>();
             }
 
-            var classList = await UnitOfWork.CurriculumSessions.GetSessionsByDayOfWeek(academicYearId, staffId, date.DayOfWeek);
+            var classList = await UnitOfWork.CurriculumSessions.GetByDayOfWeek(academicYearId, staffId, date.DayOfWeek);
 
             return classList;
         }
@@ -650,7 +648,7 @@ namespace MyPortal.Services
         
         public async Task<int> GetCurrentAcademicYearId()
         {
-            var academicYear = await UnitOfWork.CurriculumAcademicYears.GetCurrentAcademicYear();
+            var academicYear = await UnitOfWork.CurriculumAcademicYears.GetCurrent();
 
             if (academicYear == null)
             {
@@ -662,14 +660,14 @@ namespace MyPortal.Services
 
         public async Task<int?> TryGetCurrentAcademicYearId()
         {
-            var academicYear = await UnitOfWork.CurriculumAcademicYears.GetCurrentAcademicYear();
+            var academicYear = await UnitOfWork.CurriculumAcademicYears.GetCurrent();
 
             return academicYear?.Id;
         }
 
         public async Task<int> GetCurrentOrSelectedAcademicYearId(IPrincipal user)
         {
-            var academicYear = await UnitOfWork.CurriculumAcademicYears.GetCurrentOrSelectedAcademicYear(user);
+            var academicYear = await UnitOfWork.CurriculumAcademicYears.GetCurrentOrSelected(user);
             
             if (academicYear == null)
             {
@@ -681,7 +679,7 @@ namespace MyPortal.Services
         
         public async Task<int?> TryGetCurrentOrSelectedAcademicYearId(IPrincipal user)
         {
-            var academicYear = await UnitOfWork.CurriculumAcademicYears.GetCurrentOrSelectedAcademicYear(user);
+            var academicYear = await UnitOfWork.CurriculumAcademicYears.GetCurrentOrSelected(user);
 
             return academicYear?.Id;
         }

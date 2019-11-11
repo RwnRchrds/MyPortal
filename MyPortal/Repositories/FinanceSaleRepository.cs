@@ -36,7 +36,7 @@ namespace MyPortal.Repositories
                 .OrderByDescending(x => x.Date).ToListAsync();
         }
 
-        public async Task<IEnumerable<FinanceSale>> GetSalesByStudent(int studentId, int academicYearId)
+        public async Task<IEnumerable<FinanceSale>> GetByStudent(int studentId, int academicYearId)
         {
             return await Context.FinanceSales.Where(x => x.StudentId == studentId && x.AcademicYearId == academicYearId)
                 .OrderByDescending(x => x.Date).ToListAsync();

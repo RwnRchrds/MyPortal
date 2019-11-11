@@ -157,7 +157,7 @@
         var urlGetLessonPlansByStudyTopic =
             "@Url.HttpRouteUrl("ApiGetLessonPlansByStudyTopicDataGrid", new {studyTopicId = 9999})";
         var urlGetLessonPlanById = "@Url.HttpRouteUrl("ApiGetLessonPlanById", new {lessonPlanId = 9999})";
-        var urlViewLessonPlan = "@Url.HttpRouteUrl("CurriculumLessonPlanDetails", new {id = "abcd"})";
+        var urlViewLessonPlan = "@Url.Action("LessonPlanDetails", new {lessonPlanId = 9999})";
         var urlDeleteLessonPlan = "@Url.HttpRouteUrl("ApiDeleteLessonPlan", new {lessonPlanId = 9999})";
 
         $(document).ready(function() {
@@ -200,7 +200,7 @@
                 ".js-view",
                 function() {
                     var button = $(this);
-                    location.href = urlViewLessonPlan.replace("abcd", button.attr("data-plan-id"));
+                    location.href = urlViewLessonPlan.replace("9999", button.attr("data-plan-id"));
                 });
 
             $("#LessonPlans").on("click",

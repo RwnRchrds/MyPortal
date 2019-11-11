@@ -51,14 +51,14 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<AttendancePeriod>> GetAllPeriods()
         {
-            var attendancePeriods = await UnitOfWork.AttendancePeriods.GetAllPeriods();
+            var attendancePeriods = await UnitOfWork.AttendancePeriods.GetAllAsync();
 
             return attendancePeriods;
         }
 
         public async Task<AttendanceMark> GetAttendanceMark(int attendanceWeekId, int periodId, int studentId)
         {
-            var mark = await UnitOfWork.AttendanceMarks.GetAttendanceMark(studentId, attendanceWeekId, periodId) ?? new AttendanceMark
+            var mark = await UnitOfWork.AttendanceMarks.Get(studentId, attendanceWeekId, periodId) ?? new AttendanceMark
             {
                 Mark = "-",
                 WeekId = attendanceWeekId,
@@ -83,7 +83,7 @@ namespace MyPortal.Services
 
         public async Task<AttendanceCode> GetAttendanceCode(string mark)
         {
-            var codeInDb = await UnitOfWork.AttendanceCodes.GetAttendanceCode(mark);
+            var codeInDb = await UnitOfWork.AttendanceCodes.Get(mark);
 
             if (codeInDb == null)
             {
@@ -145,7 +145,7 @@ namespace MyPortal.Services
                 markObject.StudentName = enrolment.Student.GetDisplayName();
                 var marks = new List<AttendanceMark>();
 
-                var periodsInDay = await UnitOfWork.AttendancePeriods.GetPeriodsByDayOfWeek(session.Period.Weekday);
+                var periodsInDay = await UnitOfWork.AttendancePeriods.GetByDayOfWeek(session.Period.Weekday);
 
                 foreach (var period in periodsInDay)
                 {
@@ -165,7 +165,7 @@ namespace MyPortal.Services
 
         public async Task<AttendanceSummary> GetSummary(int studentId, int academicYearId, bool asPercentage = false)
         {
-            var marksForStudent = await UnitOfWork.AttendanceMarks.GetAllAttendanceMarksByStudent(studentId, academicYearId);
+            var marksForStudent = await UnitOfWork.AttendanceMarks.GetByStudent(studentId, academicYearId);
 
             var marksList = marksForStudent.ToList();
 
@@ -197,9 +197,6 @@ namespace MyPortal.Services
                     case AttendanceMeaning.AttendanceNotRequired:
                         summary.NotRequired++;
                         break;
-                    case AttendanceMeaning.Late:
-                        summary.Late++;
-                        break;
                 }
             }
 
@@ -215,7 +212,7 @@ namespace MyPortal.Services
         {
             var weekBeginning = date.StartOfWeek();
 
-            var selectedWeek = await UnitOfWork.AttendanceWeeks.GetAttendanceWeekByDate(academicYearId, date);
+            var selectedWeek = await UnitOfWork.AttendanceWeeks.GetByDate(academicYearId, date);
 
             if (selectedWeek == null)
             {
@@ -285,7 +282,7 @@ namespace MyPortal.Services
                 throw new ServiceException(ExceptionType.NotFound,"Class not found");
             }
 
-            return await UnitOfWork.AttendancePeriods.GetPeriodsByClass(classId);
+            return await UnitOfWork.AttendancePeriods.GetByClass(classId);
         }
     }
 }

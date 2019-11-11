@@ -96,7 +96,7 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<PastoralRegGroup>> GetRegGroupsByYearGroup(int yearGroupId)
         {
-            var yearGroups = await UnitOfWork.PastoralRegGroups.GetRegGroupsByYearGroup(yearGroupId);
+            var yearGroups = await UnitOfWork.PastoralRegGroups.GetByYearGroup(yearGroupId);
 
             return yearGroups;
         }

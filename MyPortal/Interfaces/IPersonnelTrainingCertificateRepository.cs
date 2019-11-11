@@ -9,8 +9,8 @@ namespace MyPortal.Interfaces
 {
     public interface IPersonnelTrainingCertificateRepository : IRepository<PersonnelTrainingCertificate>
     {
-        Task<PersonnelTrainingCertificate> GetCertificate(int staffId, int courseId);
+        Task<PersonnelTrainingCertificate> Get(int staffId, int courseId);
 
-        Task<IEnumerable<PersonnelTrainingCertificate>> GetCertificatesByStaffMember(int staffId);
+        Task<IEnumerable<PersonnelTrainingCertificate>> GetByStaffMember(int staffId);
     }
 }

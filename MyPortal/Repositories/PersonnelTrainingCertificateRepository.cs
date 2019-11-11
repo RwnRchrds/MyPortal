@@ -16,13 +16,13 @@ namespace MyPortal.Repositories
 
         }
 
-        public async Task<PersonnelTrainingCertificate> GetCertificate(int staffId, int courseId)
+        public async Task<PersonnelTrainingCertificate> Get(int staffId, int courseId)
         {
             return await Context.PersonnelTrainingCertificates.SingleOrDefaultAsync(x =>
                 x.StaffId == staffId && x.CourseId == courseId);
         }
 
-        public async Task<IEnumerable<PersonnelTrainingCertificate>> GetCertificatesByStaffMember(int staffId)
+        public async Task<IEnumerable<PersonnelTrainingCertificate>> GetByStaffMember(int staffId)
         {
             return await Context.PersonnelTrainingCertificates.Where(x => x.StaffId == staffId).ToListAsync();
         }

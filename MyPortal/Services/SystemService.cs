@@ -65,14 +65,14 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<SystemBulletin>> GetApprovedBulletins()
         {
-            var bulletins = await UnitOfWork.SystemBulletins.GetApprovedBulletins();
+            var bulletins = await UnitOfWork.SystemBulletins.GetApproved();
 
             return bulletins;
         }
 
         public async Task<IEnumerable<SystemBulletin>> GetApprovedStudentBulletins()
         {
-            var bulletins = await UnitOfWork.SystemBulletins.GetApprovedStudentBulletins();
+            var bulletins = await UnitOfWork.SystemBulletins.GetStudent();
 
             return bulletins;
         }
@@ -80,7 +80,7 @@ namespace MyPortal.Services
         
         public async Task<IEnumerable<SystemBulletin>> GetOwnBulletins(int authorId)
         {
-            var bulletins = await UnitOfWork.SystemBulletins.GetOwnBulletins(authorId);
+            var bulletins = await UnitOfWork.SystemBulletins.GetOwn(authorId);
 
             return bulletins;
         }
@@ -115,6 +115,13 @@ namespace MyPortal.Services
             var locations = await UnitOfWork.SchoolLocations.GetAllAsync();
 
             return locations;
+        }
+
+        public async Task<School> GetLocalSchool()
+        {
+            var school = await UnitOfWork.Schools.GetLocal();
+
+            return school;
         }
     }
 }

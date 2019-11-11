@@ -9,8 +9,8 @@ namespace MyPortal.Interfaces
 {
     public interface ICurriculumSessionRepository : IRepository<CurriculumSession>
     {
-        Task<IEnumerable<CurriculumSession>> GetSessionsByDayOfWeek(int academicYearId, int staffId, DayOfWeek dayOfWeek);
+        Task<IEnumerable<CurriculumSession>> GetByDayOfWeek(int academicYearId, int staffId, DayOfWeek dayOfWeek);
 
-        Task<IEnumerable<CurriculumSession>> GetSessionsByClass(int classId);
+        Task<IEnumerable<CurriculumSession>> GetByClass(int classId);
     }
 }

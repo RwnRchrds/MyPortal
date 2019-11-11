@@ -2,24 +2,22 @@
 using System.Net;
 using System.Web.Mvc;
 using MyPortal.Models.Database;
-using MyPortal.Exceptions;
 using MyPortal.Interfaces;
-using MyPortal.Models.Misc;
 using MyPortal.Persistence;
 
 namespace MyPortal.Controllers
 {
-    [System.Web.Mvc.Authorize]
+    [Authorize]
     public abstract class MyPortalController : Controller
     {
         protected readonly IUnitOfWork UnitOfWork;
 
-        public MyPortalController()
+        protected MyPortalController()
         {
             UnitOfWork = new UnitOfWork(new MyPortalDbContext());
         }
 
-        public MyPortalController(IUnitOfWork unitOfWork)
+        protected MyPortalController(IUnitOfWork unitOfWork)
         {
             UnitOfWork = unitOfWork;
         }

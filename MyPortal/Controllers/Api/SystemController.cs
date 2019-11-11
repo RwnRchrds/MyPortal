@@ -28,7 +28,7 @@ namespace MyPortal.Controllers.Api
         {
             _service.Dispose();
         }
-        
+
         [HttpPost]
         [RequiresPermission("EditBulletins")]
         [Route("bulletins/create", Name = "ApiCreateBulletin")]

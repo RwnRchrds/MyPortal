@@ -79,7 +79,7 @@ namespace MyPortal.Interfaces
         ISystemAreaRepository SystemAreas { get; }
         ISystemBulletinRepository SystemBulletins { get; }
         ISystemReportRepository SystemReports { get; }
-        ISystemSchoolRepository SystemSchools { get; }
+        ISystemSchoolRepository Schools { get; }
 
         Task<int> Complete();
     }

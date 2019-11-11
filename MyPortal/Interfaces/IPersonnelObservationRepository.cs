@@ -9,6 +9,6 @@ namespace MyPortal.Interfaces
 {
     public interface IPersonnelObservationRepository : IRepository<PersonnelObservation>
     {
-        Task<IEnumerable<PersonnelObservation>> GetObservationsByStaffMember(int staffId);
+        Task<IEnumerable<PersonnelObservation>> GetByStaffMember(int staffId);
     }
 }

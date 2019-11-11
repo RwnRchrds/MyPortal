@@ -29,7 +29,7 @@
             </div>
             <!-- Card Body -->
             <div class="card-body">
-                @Html.EJS().Grid("StudyTopics").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiCurriculumGetAllStudyTopicsDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+                @Html.EJS().Grid("StudyTopics").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiGetAllStudyTopicsDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
                 {
                     c.Field("Name").HeaderText("Name").Template("#studyTopicsNameTemplate").Width("300").Add();
                     c.Field("SubjectName").HeaderText("Subject").Template("#studyTopicsSubjectTemplate").Width("150").Add();
@@ -50,7 +50,7 @@
                 <h4 class="modal-title">New Study Topic</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiCurriculumCreateStudyTopic", new {}), HttpMethod = "POST", OnSuccess = "newStudyTopicsuccess", OnFailure = "newStudyTopicFailure"}, new {id = "newStudyTopicForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiCreateStudyTopic", new {}), HttpMethod = "POST", OnSuccess = "newStudyTopicsuccess", OnFailure = "newStudyTopicFailure"}, new {id = "newStudyTopicForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -86,7 +86,7 @@
                 <h4 class="modal-title">New Study Topic</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiCurriculumUpdateStudyTopic", new {}), HttpMethod = "POST", OnSuccess = "editStudyTopicsuccess", OnFailure = "editStudyTopicFailure"}, new {id = "editStudyTopicForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiUpdateStudyTopic", new {}), HttpMethod = "POST", OnSuccess = "editStudyTopicsuccess", OnFailure = "editStudyTopicFailure"}, new {id = "editStudyTopicForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -122,8 +122,8 @@
     @Scripts.Render("~/bundles/jqueryval")
     <script>
 
-        var urlGetStudyTopicById = "@Url.HttpRouteUrl("ApiCurriculumGetStudyTopicById", new {studyTopicId = 9999})";
-        var urlDeleteStudyTopic = "@Url.HttpRouteUrl("ApiCurriculumDeleteStudyTopic", new {studyTopicId = 9999})";
+        var urlGetStudyTopicById = "@Url.HttpRouteUrl("ApiGetStudyTopicById", new {studyTopicId = 9999})";
+        var urlDeleteStudyTopic = "@Url.HttpRouteUrl("ApiDeleteStudyTopic", new {studyTopicId = 9999})";
 
         $(document).ready(function() {
             $('.modal').on('hidden.bs.modal',

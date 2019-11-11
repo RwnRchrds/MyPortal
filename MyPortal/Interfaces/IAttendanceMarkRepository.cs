@@ -9,8 +9,8 @@ namespace MyPortal.Interfaces
 {
     public interface IAttendanceMarkRepository : IRepository<AttendanceMark>
     {
-        Task<AttendanceMark> GetAttendanceMark(int studentId, int weekId, int periodId);
+        Task<AttendanceMark> Get(int studentId, int weekId, int periodId);
 
-        Task<IEnumerable<AttendanceMark>> GetAllAttendanceMarksByStudent(int studentId, int academicYearId);
+        Task<IEnumerable<AttendanceMark>> GetByStudent(int studentId, int academicYearId);
     }
 }

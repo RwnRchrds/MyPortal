@@ -16,7 +16,7 @@ namespace MyPortal.Repositories
 
         }
 
-        public async Task<IEnumerable<BehaviourAchievementType>> GetAllRecordedAchievementTypes(int academicYearId)
+        public async Task<IEnumerable<BehaviourAchievementType>> GetRecorded(int academicYearId)
         {
             return await Context.BehaviourAchievementTypes
                 .Where(x => x.Achievements.Any(a => a.AcademicYearId == academicYearId)).ToListAsync();

@@ -6,7 +6,6 @@ namespace MyPortal.Dtos.DataGrid
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string LeaderName { get; set; }
         public string Code { get; set; }
     }
 }

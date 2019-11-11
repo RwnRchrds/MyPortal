@@ -28,7 +28,7 @@ namespace MyPortal.Models.Database
             PersonalDocuments = new HashSet<PersonDocument>();
             MedicalConditions = new HashSet<MedicalPersonCondition>();
             DietaryRequirements = new HashSet<MedicalPersonDietaryRequirement>();
-            Schools = new HashSet<SystemSchool>();
+            Schools = new HashSet<School>();
             EmailAddresses = new HashSet<CommunicationEmailAddress>();
         }
 
@@ -89,7 +89,7 @@ namespace MyPortal.Models.Database
         public virtual ICollection<Student> StudentDetails { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SystemSchool> Schools { get; set; }
+        public virtual ICollection<School> Schools { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CommunicationEmailAddress> EmailAddresses { get; set; }

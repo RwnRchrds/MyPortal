@@ -230,9 +230,7 @@ namespace MyPortal
                 .ForMember(dest => dest.YearGroup,
                     opts => opts.MapFrom(src => src.PastoralYearGroup.Name));
 
-            CreateMap<CurriculumSubject, GridCurriculumSubjectDto>()
-                .ForMember(dest => dest.LeaderName,
-                    opts => opts.MapFrom(src => src.Leader.GetDisplayName()));
+            CreateMap<CurriculumSubject, GridCurriculumSubjectDto>();
 
             CreateMap<StaffMember, GridStaffMemberDto>()
                 .ForMember(dest => dest.DisplayName,

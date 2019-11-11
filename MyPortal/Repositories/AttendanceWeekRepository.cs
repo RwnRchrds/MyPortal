@@ -18,7 +18,7 @@ namespace MyPortal.Repositories
 
         }
 
-        public async Task<AttendanceWeek> GetAttendanceWeekByDate(int academicYearId, DateTime date)
+        public async Task<AttendanceWeek> GetByDate(int academicYearId, DateTime date)
         {
             return await Context.AttendanceWeeks.SingleOrDefaultAsync(x =>
                 x.AcademicYearId == academicYearId && x.Beginning == date.StartOfWeek());

@@ -16,12 +16,12 @@ namespace MyPortal.Repositories
 
         }
 
-        public async Task<IEnumerable<CurriculumSession>> GetSessionsByClass(int classId)
+        public async Task<IEnumerable<CurriculumSession>> GetByClass(int classId)
         {
             return await Context.CurriculumSessions.Where(x => x.ClassId == classId).ToListAsync();
         }
 
-        public async Task<IEnumerable<CurriculumSession>> GetSessionsByDayOfWeek(int academicYearId, int staffId, DayOfWeek dayOfWeek)
+        public async Task<IEnumerable<CurriculumSession>> GetByDayOfWeek(int academicYearId, int staffId, DayOfWeek dayOfWeek)
         {
             return await Context.CurriculumSessions.Where(x =>
                 x.Class.TeacherId == staffId && x.Class.AcademicYearId == academicYearId &&

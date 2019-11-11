@@ -21,12 +21,12 @@ namespace MyPortal.Repositories
             return await Context.AttendancePeriods.OrderBy(x => x.Weekday).ThenBy(x => x.StartTime).ToListAsync();
         }
 
-        public async Task<IEnumerable<AttendancePeriod>> GetPeriodsByDayOfWeek(DayOfWeek weekDay)
+        public async Task<IEnumerable<AttendancePeriod>> GetByDayOfWeek(DayOfWeek weekDay)
         {
             return await Context.AttendancePeriods.Where(x => x.Weekday == weekDay).ToListAsync();
         }
 
-        public async Task<IEnumerable<AttendancePeriod>> GetPeriodsByClass(int classId)
+        public async Task<IEnumerable<AttendancePeriod>> GetByClass(int classId)
         {
             return await Context.AttendancePeriods.Where(x => x.Sessions.Any(s => s.ClassId == classId)).ToListAsync();
         }

@@ -77,14 +77,24 @@ namespace MyPortal.Controllers
         
         [AllowAnonymous]
         [Route("Login", Name = "AccountLogin")]
-        public ActionResult Login(string returnUrl)
+        public async Task<ActionResult> Login(string returnUrl)
         {
-            if (System.Web.HttpContext.Current.User != null &&
-                System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
-                return RedirectToAction("Home", "Home");
-            
-            ViewBag.ReturnUrl = returnUrl;
-            return View();
+            using (var systemService = new SystemService(new UnitOfWork()))
+            {
+                var localSchool = await systemService.GetLocalSchool();
+
+                var viewModel = new LoginViewModel
+                {
+                    SchoolName = localSchool.Name
+                };
+
+                if (System.Web.HttpContext.Current.User != null &&
+                    System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
+                    return RedirectToAction("Home", "Home");
+
+                ViewBag.ReturnUrl = returnUrl;
+                return View(viewModel);
+            }
         }
 
         [Route("Restricted", Name = "AccountRestrictedAccess")]
@@ -96,11 +106,11 @@ namespace MyPortal.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> LoginPost(LoginViewModel model, string returnUrl)
+        public async Task<ActionResult> LoginPost(LoginModel model, string returnUrl)
         {
             if (!ModelState.IsValid)
             {
-                return View("~/Views/Account/Login.cshtml", model);
+                return await Login(returnUrl);
             }
             
             var result =

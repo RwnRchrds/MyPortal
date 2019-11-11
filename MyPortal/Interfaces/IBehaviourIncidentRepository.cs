@@ -9,9 +9,9 @@ namespace MyPortal.Interfaces
 {
     public interface IBehaviourIncidentRepository : IRepository<BehaviourIncident>
     {
-        Task<int> GetBehaviourIncidentCountByStudent(int studentId, int academicYearId);
-        Task<int> GetBehaviourIncidentPointsCountByStudent(int studentId, int academicYearId);
-        Task<IEnumerable<BehaviourIncident>> GetBehaviourIncidentsByStudent(int studentId, int academicYearId);
-        Task<int> GetBehaviourIncidentPointsToday();
+        Task<int> GetCountByStudent(int studentId, int academicYearId);
+        Task<int> GetPointsByStudent(int studentId, int academicYearId);
+        Task<IEnumerable<BehaviourIncident>> GetByStudent(int studentId, int academicYearId);
+        Task<int> GetPointsToday();
     }
 }

@@ -9,6 +9,6 @@ namespace MyPortal.Interfaces
 {
     public interface ICurriculumStudyTopicRepository : IRepository<CurriculumStudyTopic>
     {
-
+        Task<IEnumerable<CurriculumStudyTopic>> GetBySubject(int subjectId);
     }
 }

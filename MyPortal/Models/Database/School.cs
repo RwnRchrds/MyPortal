@@ -8,7 +8,7 @@ using System.Web;
 namespace MyPortal.Models.Database
 {
     [Table("System_Schools")]
-    public class SystemSchool
+    public class School
     {
         public int Id { get; set; }
 
@@ -61,5 +61,6 @@ namespace MyPortal.Models.Database
         public virtual SchoolGovernanceType GovernanceType { get; set; }
         public virtual SchoolIntakeType IntakeType { get; set; }
         public virtual Person HeadTeacher { get; set; }
+        public virtual LocalAuthority LocalAuthority { get; set; }
     }
 }

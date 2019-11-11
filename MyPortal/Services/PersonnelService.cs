@@ -99,7 +99,7 @@ namespace MyPortal.Services
 
         public async Task<PersonnelTrainingCertificate> GetCertificate(int staffId, int courseId)
         {
-            var certInDb = await UnitOfWork.PersonnelTrainingCertificates.GetCertificate(staffId, courseId);
+            var certInDb = await UnitOfWork.PersonnelTrainingCertificates.Get(staffId, courseId);
 
             if (certInDb == null)
             {
@@ -112,7 +112,7 @@ namespace MyPortal.Services
         public async Task<IEnumerable<PersonnelTrainingCertificate>> GetCertificatesByStaffMember(
             int staffId)
         {
-            var certificates = await UnitOfWork.PersonnelTrainingCertificates.GetCertificatesByStaffMember(staffId);
+            var certificates = await UnitOfWork.PersonnelTrainingCertificates.GetByStaffMember(staffId);
 
             return certificates;
         }
@@ -144,7 +144,7 @@ namespace MyPortal.Services
         public async Task<IEnumerable<PersonnelObservation>> GetObservationsByStaffMember(
             int staffMemberId)
         {
-            var observations = await UnitOfWork.PersonnelObservations.GetObservationsByStaffMember(staffMemberId);
+            var observations = await UnitOfWork.PersonnelObservations.GetByStaffMember(staffMemberId);
 
             return observations;
         }

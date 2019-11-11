@@ -16,7 +16,7 @@ namespace MyPortal.Repositories
 
         }
 
-        public async Task<IEnumerable<FinanceProduct>> GetAvailableProductsByStudent(int studentId)
+        public async Task<IEnumerable<FinanceProduct>> GetAvailableByStudent(int studentId)
         {
             return await Context.FinanceProducts
                 .Where(x => !x.Deleted && x.Visible &&

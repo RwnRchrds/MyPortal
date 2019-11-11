@@ -21,16 +21,16 @@ namespace MyPortal.Repositories
 
         }
 
-        public async Task<CurriculumAcademicYear> GetCurrentAcademicYear()
+        public async Task<CurriculumAcademicYear> GetCurrent()
         {
             return await Context.CurriculumAcademicYears.SingleOrDefaultAsync(x =>
                        x.FirstDate >= DateTime.Today && x.LastDate <= DateTime.Today) ?? await Context
                        .CurriculumAcademicYears.OrderByDescending(x => x.FirstDate).FirstOrDefaultAsync();
         }
 
-        public async Task<CurriculumAcademicYear> GetCurrentOrSelectedAcademicYear(IPrincipal user)
+        public async Task<CurriculumAcademicYear> GetCurrentOrSelected(IPrincipal user)
         {
-            var academicYear = await GetCurrentAcademicYear();
+            var academicYear = await GetCurrent();
 
             if (await user.HasPermissionAsync("ChangeAcademicYear"))
             {

@@ -9,8 +9,8 @@ namespace MyPortal.Interfaces
 {
     public interface IFinanceBasketItemRepository : IRepository<FinanceBasketItem>
     {
-        Task<IEnumerable<FinanceBasketItem>> GetBasketItemsByStudent(int studentId);
+        Task<IEnumerable<FinanceBasketItem>> GetByStudent(int studentId);
 
-        Task<decimal> GetBasketTotalForStudent(int studentId);
+        Task<decimal> GetTotalForStudent(int studentId);
     }
 }

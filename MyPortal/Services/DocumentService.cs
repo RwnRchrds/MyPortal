@@ -23,7 +23,7 @@ namespace MyPortal.Services
             if (document.UploaderId == 0)
             {
                 
-                var uploader = await UnitOfWork.StaffMembers.GetByUserIdAsync(userId);
+                var uploader = await UnitOfWork.StaffMembers.GetByUserId(userId);
 
                 if (uploader == null)
                 {
@@ -54,7 +54,7 @@ namespace MyPortal.Services
                 throw new ServiceException(ExceptionType.NotFound,"Person not found");
             }
 
-            var uploader = await UnitOfWork.StaffMembers.GetByUserIdAsync(userId);
+            var uploader = await UnitOfWork.StaffMembers.GetByUserId(userId);
 
             if (uploader == null)
             {
@@ -116,12 +116,12 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<Document>> GetAllGeneralDocuments()
         {
-            return await UnitOfWork.Documents.GetAllDocuments();
+            return await UnitOfWork.Documents.GetGeneral();
         }
 
         public async Task<IEnumerable<Document>> GetApprovedGeneralDocuments()
         {
-            return await UnitOfWork.Documents.GetApprovedDocuments();
+            return await UnitOfWork.Documents.GetApproved();
         }
         
         public async Task<Document> GetDocumentById(int documentId)
@@ -150,7 +150,7 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<PersonDocument>> GetPersonalDocuments(int personId)
         {
-            var documents = await UnitOfWork.PersonDocuments.GetDocumentsByPerson(personId);
+            var documents = await UnitOfWork.PersonDocuments.GetByPerson(personId);
 
             return documents;
         }

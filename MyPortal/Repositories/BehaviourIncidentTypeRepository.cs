@@ -16,7 +16,7 @@ namespace MyPortal.Repositories
 
         }
 
-        public async Task<IEnumerable<BehaviourIncidentType>> GetAllRecordedIncidentTypes(int academicYearId)
+        public async Task<IEnumerable<BehaviourIncidentType>> GetRecorded(int academicYearId)
         {
             return await Context.BehaviourIncidentTypes
                 .Where(x => x.Incidents.Any(i => i.AcademicYearId == academicYearId)).ToListAsync();

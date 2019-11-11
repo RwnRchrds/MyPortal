@@ -16,7 +16,7 @@ namespace MyPortal.Repositories
 
         }
 
-        public async Task<IEnumerable<PersonDocument>> GetDocumentsByPerson(int personId)
+        public async Task<IEnumerable<PersonDocument>> GetByPerson(int personId)
         {
             return await Context.PersonDocuments.Where(x => x.PersonId == personId).ToListAsync();
         }

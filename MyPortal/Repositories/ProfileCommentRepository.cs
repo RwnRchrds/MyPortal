@@ -16,7 +16,7 @@ namespace MyPortal.Repositories
 
         }
 
-        public async Task<IEnumerable<ProfileComment>> GetCommentsByCommentBank(int commentBankId)
+        public async Task<IEnumerable<ProfileComment>> GetByCommentBank(int commentBankId)
         {
             return await Context.ProfileComments.Where(x => x.CommentBankId == commentBankId).OrderBy(x => x.Value).ToListAsync();
         }

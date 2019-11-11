@@ -31,7 +31,7 @@
             <div class="card-body">
                 @Html.EJS().Grid("Sessions").DataSource(d =>
                 {
-                    d.Url(Url.HttpRouteUrl("ApiCurriculumGetSessionsByClassDataGrid", new{classId = Model.Class.Id})).CrossDomain(false).Adaptor("UrlAdaptor");
+                    d.Url(Url.HttpRouteUrl("ApiGetSessionsByClassDataGrid", new{classId = Model.Class.Id})).CrossDomain(false).Adaptor("UrlAdaptor");
                 }).Columns(c =>
                 {
                     c.Field("PeriodName").HeaderText("Period").Template("#sessionsPeriodTemplate").Width("150").Add();
@@ -61,7 +61,7 @@
                 <h4 class="modal-title">Add Period for Class</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiCurriculumCreateSession", new {}), HttpMethod = "POST", OnSuccess = "newSessionSuccess", OnFailure = "newSessionFailure" }, new { id = "newSessionForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiCreateSession", new {}), HttpMethod = "POST", OnSuccess = "newSessionSuccess", OnFailure = "newSessionFailure" }, new { id = "newSessionForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -90,7 +90,7 @@
                 <h4 class="modal-title">Edit Session</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiCurriculumUpdateSession", new {}), HttpMethod = "POST", OnSuccess = "editSessionSuccess", OnFailure = "editSessionFailure" }, new { id = "editSessionForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiUpdateSession", new {}), HttpMethod = "POST", OnSuccess = "editSessionSuccess", OnFailure = "editSessionFailure" }, new { id = "editSessionForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -116,9 +116,9 @@
 {
     <script>
 
-        var urlGetSessionById = "@Url.HttpRouteUrl("ApiCurriculumGetSessionById", new {sessionId = 9999})";
-        var urlDeleteSession = "@Url.HttpRouteUrl("ApiCurriculumDeleteSession", new {sessionId = 9999})";
-        var urlAddRegPeriods = "@Url.HttpRouteUrl("ApiCurriculumCreateSessionsForRegPeriods", new {})";
+        var urlGetSessionById = "@Url.HttpRouteUrl("ApiGetSessionById", new {sessionId = 9999})";
+        var urlDeleteSession = "@Url.HttpRouteUrl("ApiDeleteSession", new {sessionId = 9999})";
+        var urlAddRegPeriods = "@Url.HttpRouteUrl("ApiCreateSessionsForRegPeriods", new {})";
 
         $(document).ready(function() {
             $('.modal').on('hidden.bs.modal',
@@ -128,7 +128,7 @@
 
             $("#backButton").on("click",
                 function () {
-                    location.replace("@Url.Action("Classes", "Home")");
+                    location.replace("@Url.Action("Classes")");
                 });           
 
             $("#Sessions").on("click",

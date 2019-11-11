@@ -94,7 +94,7 @@ namespace MyPortal.Services
             }
 
             var achievementCount =
-                await UnitOfWork.BehaviourAchievements.GetAchievementCountByStudent(studentId, academicYearId);
+                await UnitOfWork.BehaviourAchievements.GetCountByStudent(studentId, academicYearId);
 
             if (achievementCount < 0)
             {
@@ -112,7 +112,7 @@ namespace MyPortal.Services
             }
 
             var points =
-                await UnitOfWork.BehaviourAchievements.GetAchievementPointsCountByStudent(studentId, academicYearId);
+                await UnitOfWork.BehaviourAchievements.GetPointsByStudent(studentId, academicYearId);
 
             if (points < 0)
             {
@@ -142,7 +142,7 @@ namespace MyPortal.Services
             }
 
             var negPoints =
-                await UnitOfWork.BehaviourIncidents.GetBehaviourIncidentCountByStudent(studentId, academicYearId);
+                await UnitOfWork.BehaviourIncidents.GetCountByStudent(studentId, academicYearId);
 
             if (negPoints < 0)
             {
@@ -160,7 +160,7 @@ namespace MyPortal.Services
             }
 
             var points =
-                await UnitOfWork.BehaviourIncidents.GetBehaviourIncidentPointsCountByStudent(studentId,
+                await UnitOfWork.BehaviourIncidents.GetPointsByStudent(studentId,
                     academicYearId);
 
             if (points < 0)
@@ -174,7 +174,7 @@ namespace MyPortal.Services
         public async Task<IEnumerable<ChartDataCategoric>> GetChartDataAchievementsByType(int academicYearId)
         {
             var recordedAchievementTypes =
-                await UnitOfWork.BehaviourAchievementTypes.GetAllRecordedAchievementTypes(academicYearId);
+                await UnitOfWork.BehaviourAchievementTypes.GetRecorded(academicYearId);
 
             return recordedAchievementTypes.Select(achievementType => new ChartDataCategoric(achievementType.Description, achievementType.Achievements.Count)).ToList();
         }
@@ -182,7 +182,7 @@ namespace MyPortal.Services
         public async Task<IEnumerable<ChartDataCategoric>> GetChartDataBehaviourIncidentsByType(int academicYearId)
         {
             var recordedBehaviourTypes =
-                await UnitOfWork.BehaviourIncidentTypes.GetAllRecordedIncidentTypes(academicYearId);
+                await UnitOfWork.BehaviourIncidentTypes.GetRecorded(academicYearId);
 
             return recordedBehaviourTypes.Select(behaviourType => new ChartDataCategoric(behaviourType.Description, behaviourType.Incidents.Count)).ToList();
         }
@@ -206,13 +206,13 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<BehaviourAchievement>> GetAchievementsByStudent(int studentId, int academicYearId)
         {
-            return await UnitOfWork.BehaviourAchievements.GetAchievementsByStudent(studentId, academicYearId);
+            return await UnitOfWork.BehaviourAchievements.GetByStudent(studentId, academicYearId);
         }
 
         public async Task<IEnumerable<BehaviourIncident>> GetBehaviourIncidentsByStudent(int studentId,
             int academicYearId)
         {
-            return await UnitOfWork.BehaviourIncidents.GetBehaviourIncidentsByStudent(studentId, academicYearId);
+            return await UnitOfWork.BehaviourIncidents.GetByStudent(studentId, academicYearId);
         }
         
         public async Task UpdateAchievement(BehaviourAchievement achievement)
@@ -257,12 +257,12 @@ namespace MyPortal.Services
 
         public async Task<int> GetAchievementPointsToday()
         {
-            return await UnitOfWork.BehaviourAchievements.GetBehaviourAchievementPointsToday();
+            return await UnitOfWork.BehaviourAchievements.GetPointsToday();
         }
 
         public async Task<int> GetBehaviourPointsToday()
         {
-            return await UnitOfWork.BehaviourIncidents.GetBehaviourIncidentPointsToday();
+            return await UnitOfWork.BehaviourIncidents.GetPointsToday();
         }
     }
 }

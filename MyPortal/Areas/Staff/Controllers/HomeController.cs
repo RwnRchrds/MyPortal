@@ -14,7 +14,6 @@ namespace MyPortal.Areas.Staff.Controllers
     [RoutePrefix("Home")]
     public class HomeController : MyPortalController
     {
-        [Route("Home")]
         public async Task<ActionResult> Index()
         {
             using (var staffService = new StaffMemberService(UnitOfWork))

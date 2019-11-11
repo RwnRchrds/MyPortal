@@ -230,7 +230,7 @@ namespace MyPortal.Services
                 throw new ServiceException(ExceptionType.BadRequest,"User is not attached");
             }
 
-            var personInDb = await UnitOfWork.People.GetPersonByUserId(user.Id);
+            var personInDb = await UnitOfWork.People.GetByUserId(user.Id);
             personInDb.UserId = null;
             await UnitOfWork.Complete();
 

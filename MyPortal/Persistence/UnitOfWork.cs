@@ -87,7 +87,7 @@ namespace MyPortal.Persistence
             SystemAreas = new SystemAreaRepository(context);
             SystemBulletins = new SystemBulletinRepository(context);
             SystemReports = new SystemReportRepository(context);
-            SystemSchools = new SystemSchoolRepository(context);
+            Schools = new SystemSchoolRepository(context);
         }
 
         public UnitOfWork(MyPortalDbContext context)
@@ -163,7 +163,7 @@ namespace MyPortal.Persistence
             SystemAreas = new SystemAreaRepository(context);
             SystemBulletins = new SystemBulletinRepository(context);
             SystemReports = new SystemReportRepository(context);
-            SystemSchools = new SystemSchoolRepository(context);
+            Schools = new SystemSchoolRepository(context);
         }
 
         public IAssessmentAspectRepository AssessmentAspects { get; private set; }
@@ -237,7 +237,7 @@ namespace MyPortal.Persistence
         public ISystemAreaRepository SystemAreas { get; private set; }
         public ISystemBulletinRepository SystemBulletins { get; private set; }
         public ISystemReportRepository SystemReports { get; private set; }
-        public ISystemSchoolRepository SystemSchools { get; private set; }
+        public ISystemSchoolRepository Schools { get; private set; }
 
         public async Task<int> Complete()
         {

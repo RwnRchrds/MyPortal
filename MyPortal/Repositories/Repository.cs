@@ -10,7 +10,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+    public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         protected readonly MyPortalDbContext Context;
 

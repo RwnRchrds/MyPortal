@@ -16,12 +16,12 @@ namespace MyPortal.Repositories
 
         }
 
-        public async Task<IEnumerable<CurriculumEnrolment>> GetEnrolmentsByClass(int classId)
+        public async Task<IEnumerable<CurriculumEnrolment>> GetByClass(int classId)
         {
             return await Context.CurriculumEnrolments.Where(x => x.ClassId == classId).ToListAsync();
         }
 
-        public async Task<IEnumerable<CurriculumEnrolment>> GetEnrolmentsByStudent(int studentId)
+        public async Task<IEnumerable<CurriculumEnrolment>> GetByStudent(int studentId)
         {
             return await Context.CurriculumEnrolments.Where(x => x.StudentId == studentId).ToListAsync();
         }

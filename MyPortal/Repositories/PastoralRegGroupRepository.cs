@@ -17,7 +17,7 @@ namespace MyPortal.Repositories
 
         }
 
-        public async Task<IEnumerable<PastoralRegGroup>> GetRegGroupsByYearGroup(int yearGroupId)
+        public async Task<IEnumerable<PastoralRegGroup>> GetByYearGroup(int yearGroupId)
         {
             return await Context.PastoralRegGroups.Where(x => x.YearGroupId == yearGroupId).OrderBy(x => x.Name).ToListAsync();
         }

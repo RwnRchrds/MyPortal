@@ -9,6 +9,6 @@ namespace MyPortal.Interfaces
 {
     public interface IAttendanceWeekRepository : IRepository<AttendanceWeek>
     {
-        Task<AttendanceWeek> GetAttendanceWeekByDate(int academicYearId, DateTime date);
+        Task<AttendanceWeek> GetByDate(int academicYearId, DateTime date);
     }
 }

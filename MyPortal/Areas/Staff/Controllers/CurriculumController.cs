@@ -64,12 +64,12 @@ namespace MyPortal.Areas.Staff.Controllers
         }
 
         [RequiresPermission("ViewLessonPlans")]
-        [Route("LessonPlans/View/{id}", Name = "CurriculumLessonPlanDetails")]
-        public async Task<ActionResult> LessonPlanDetails(int id)
+        [Route("LessonPlans/View/{lessonPlanId:int}", Name = "CurriculumLessonPlanDetails")]
+        public async Task<ActionResult> LessonPlanDetails(int lessonPlanId)
         {
             using (var curriculumService = new CurriculumService(UnitOfWork))
             {
-                var lessonPlan = await curriculumService.GetLessonPlanById(id);
+                var lessonPlan = await curriculumService.GetLessonPlanById(lessonPlanId);
 
                 var viewModel = new LessonPlanDetailsViewModel {LessonPlan = lessonPlan};
 

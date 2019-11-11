@@ -105,7 +105,6 @@
     <script>
 
         var urlGetResultSetById = "@Url.HttpRouteUrl("ApiGetResultSetById", new {resultSetId = 9999})";
-        var urlSetResultSetCurrent = "@Url.HttpRouteUrl("ApiSetResultSetAsCurrent", new {resultSetId = 9999})";
         var urlDeleteResultSet = "@Url.HttpRouteUrl("ApiDeleteResultSet", new {resultSetId = 9999})";
 
         $(document).ready(function() {
@@ -131,28 +130,6 @@
                         }
                     });
                     $("#EditResultSetModal").modal('toggle');
-                });
-
-            $("#ResultSets").on("click",
-                ".js-current",
-                function() {
-                    var button = $(this);
-                    bootbox.confirm("Are you sure you wish to mark this result set as current?",
-                        function(result) {
-                            if (result) {
-                                $.ajax({
-                                    url: urlSetResultSetCurrent.replace("9999", button.attr("data-set-id")),
-                                    method: "POST",
-                                    success: function(a) {
-                                        refreshTable("ResultSets");
-                                        toastr.success(a);
-                                    },
-                                    error: function(e) {
-                                        toastr.error(e.responseJSON);
-                                    }
-                                });
-                            }
-                        });
                 });
 
             $("#ResultSets").on("click",
@@ -212,13 +189,6 @@
         function renderActions(current, id) {
             var currentButton = "";
 
-            if (!current) {
-                currentButton =
-                    `<button type='button' class='btn btn-xs btn-success mp-btn-action js-current' data-set-id="${id}">
-            <i class="fas fa-calendar-check"></i>
-</button>`;
-            }
-
             const editButton =
                 `<button type='button' class='btn btn-xs btn-warning mp-btn-action js-edit' data-set-id="${id}">
             <i class="far fa-edit"></i>
@@ -229,7 +199,7 @@
             <i class=\"far fa-trash-alt\"></i>
 </button>`;
 
-            return currentButton + editButton + deleteButton;
+            return editButton + deleteButton;
         }
     </script>
 

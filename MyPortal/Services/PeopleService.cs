@@ -32,7 +32,7 @@ namespace MyPortal.Services
 
         public async Task<Person> GetPersonByUserId(string userId)
         {
-            var person = await UnitOfWork.People.GetPersonByUserId(userId);
+            var person = await UnitOfWork.People.GetByUserId(userId);
 
             if (person == null)
             {
@@ -69,12 +69,12 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<Person>> SearchForPerson(Person person)
         {
-            return await UnitOfWork.People.SearchPeople(person);
+            return await UnitOfWork.People.Search(person);
         }
 
         public async Task<IEnumerable<MedicalPersonCondition>> GetMedicalConditionsByPerson(int personId)
         {
-            var conditions = await UnitOfWork.MedicalPersonConditions.GetMedicalConditionsByPerson(personId);
+            var conditions = await UnitOfWork.MedicalPersonConditions.GetByPerson(personId);
 
             return conditions;
         }
@@ -82,7 +82,7 @@ namespace MyPortal.Services
         public async Task<IEnumerable<MedicalPersonDietaryRequirement>> GetMedicalDietaryRequirementsByPerson(int personId)
         {
             var dietaryRequirements =
-                await UnitOfWork.MedicalPersonDietaryRequirements.GetDietaryRequirementsByPerson(personId);
+                await UnitOfWork.MedicalPersonDietaryRequirements.GetByPerson(personId);
 
             return dietaryRequirements;
         }

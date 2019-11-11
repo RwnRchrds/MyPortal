@@ -16,7 +16,7 @@ namespace MyPortal.Repositories
 
         }
 
-        public async Task<IEnumerable<MedicalPersonDietaryRequirement>> GetDietaryRequirementsByPerson(int personId)
+        public async Task<IEnumerable<MedicalPersonDietaryRequirement>> GetByPerson(int personId)
         {
             return await Context.MedicalPersonDietaryRequirements.Where(x => x.PersonId == personId)
                 .OrderBy(x => x.DietaryRequirement.Description).ToListAsync();

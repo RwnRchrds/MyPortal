@@ -13,7 +13,6 @@ namespace MyPortal.Models.Misc
         public double ApprovedEdActivity { get; set; }
         public double UnauthorisedAbsence { get; set; }
         public double NotRequired { get; set; }
-        public double Late { get; set; }
         public bool IsPercentage { get; set; }
 
         public AttendanceSummary()
@@ -24,7 +23,6 @@ namespace MyPortal.Models.Misc
             ApprovedEdActivity = 0;
             UnauthorisedAbsence = 0;
             NotRequired = 0;
-            Late = 0;
             IsPercentage = false;
         }
 
@@ -32,22 +30,19 @@ namespace MyPortal.Models.Misc
         {
             if (!IsPercentage)
             {
-                var totalMarks = Present + AuthorisedAbsence + ApprovedEdActivity + UnauthorisedAbsence + NotRequired +
-                                 Late;
+                var totalMarks = Present + AuthorisedAbsence + ApprovedEdActivity + UnauthorisedAbsence + NotRequired;
 
                 var present = (Present / totalMarks) * 100;
                 var authorisedAbsence = (AuthorisedAbsence / totalMarks) * 100;
                 var approvedEdActivity = (ApprovedEdActivity / totalMarks) * 100;
                 var unauthorisedAbsence = (UnauthorisedAbsence / totalMarks) * 100;
                 var notRequired = (NotRequired / totalMarks) * 100;
-                var late = (Late / totalMarks) * 100;
 
                 Present = Math.Round(present, 1);
                 AuthorisedAbsence = Math.Round(authorisedAbsence, 1);
                 ApprovedEdActivity = Math.Round(approvedEdActivity, 1);
                 UnauthorisedAbsence = Math.Round(unauthorisedAbsence, 1);
                 NotRequired = Math.Round(notRequired, 1);
-                Late = Math.Round(late, 1);
 
                 IsPercentage = true;
             }

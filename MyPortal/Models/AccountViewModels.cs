@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
+using MyPortal.Persistence;
+using MyPortal.Services;
 
 namespace MyPortal.Models
 {
@@ -41,7 +43,7 @@ namespace MyPortal.Models
         [Required] [Display(Name = "Email")] public string Email { get; set; }
     }
 
-    public class LoginViewModel
+    public class LoginModel
     {
         [Required]
         [Display(Name = "Username")]
@@ -53,6 +55,12 @@ namespace MyPortal.Models
         public string Password { get; set; }
 
         [Display(Name = "Remember me?")] public bool RememberMe { get; set; }
+    }
+
+    public class LoginViewModel
+    {
+        public LoginModel Login { get; set; }
+        public string SchoolName { get; set; }
     }
 
     public class RegisterViewModel

@@ -6,7 +6,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Controllers.Api
 {
-    public class MyPortalIdentityApiController : MyPortalApiController
+    public abstract class MyPortalIdentityApiController : MyPortalApiController
     {
         protected readonly IdentityContext Identity;
         protected readonly MyPortalDbContext Context;

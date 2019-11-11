@@ -377,6 +377,7 @@
     <Compile Include="Dtos\ProfileCommentBankDto.cs" />
     <Compile Include="Dtos\ProfileLogDto.cs" />
     <Compile Include="Dtos\ProfileLogTypeDto.cs" />
+    <Compile Include="Dtos\SchoolDto.cs" />
     <Compile Include="Dtos\SchoolGovernanceTypeDto.cs" />
     <Compile Include="Dtos\SchoolIntakeTypeDto.cs" />
     <Compile Include="Dtos\SchoolLocationDto.cs" />
@@ -516,6 +517,14 @@
     <Compile Include="Migrations\201911100121053_ModifiedSystemClasses.Designer.cs">
       <DependentUpon>201911100121053_ModifiedSystemClasses.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201911111440419_AddedSubjectMultipleStaff.cs" />
+    <Compile Include="Migrations\201911111440419_AddedSubjectMultipleStaff.Designer.cs">
+      <DependentUpon>201911111440419_AddedSubjectMultipleStaff.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201911111551130_AddedLEAs.cs" />
+    <Compile Include="Migrations\201911111551130_AddedLEAs.Designer.cs">
+      <DependentUpon>201911111551130_AddedLEAs.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Database\AssessmentAspect.cs" />
     <Compile Include="Models\Database\AssessmentAspectType.cs" />
@@ -528,6 +537,8 @@
     <Compile Include="Models\Database\BehaviourAchievementType.cs" />
     <Compile Include="Models\Database\BehaviourIncident.cs" />
     <Compile Include="Models\Database\Contact.cs" />
+    <Compile Include="Models\Database\CurriculumSubjectStaffMember.cs" />
+    <Compile Include="Models\Database\LocalAuthority.cs" />
     <Compile Include="Models\Database\RelationshipType.cs" />
     <Compile Include="Models\Database\MedicalDietaryRequirement.cs" />
     <Compile Include="Models\Database\MedicalPersonCondition.cs" />
@@ -557,7 +568,7 @@
     <Compile Include="Models\Database\SystemBulletin.cs" />
     <Compile Include="Models\Database\SystemArea.cs" />
     <Compile Include="Models\Database\SystemReport.cs" />
-    <Compile Include="Models\Database\SystemSchool.cs" />
+    <Compile Include="Models\Database\School.cs" />
     <Compile Include="Exceptions\ServiceException.cs" />
     <Compile Include="Models\Misc\ApiResponse.cs" />
     <Compile Include="Models\Misc\AttendanceSummary.cs" />
@@ -1264,6 +1275,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201911100121053_ModifiedSystemClasses.resx">
       <DependentUpon>201911100121053_ModifiedSystemClasses.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911111440419_AddedSubjectMultipleStaff.resx">
+      <DependentUpon>201911111440419_AddedSubjectMultipleStaff.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911111551130_AddedLEAs.resx">
+      <DependentUpon>201911111551130_AddedLEAs.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

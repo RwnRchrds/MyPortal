@@ -16,7 +16,7 @@ namespace MyPortal.Repositories
 
         }
 
-        public async Task<IEnumerable<PersonnelObservation>> GetObservationsByStaffMember(int staffId)
+        public async Task<IEnumerable<PersonnelObservation>> GetByStaffMember(int staffId)
         {
             return await Context.PersonnelObservations.Where(x => x.ObserveeId == staffId).ToListAsync();
         }

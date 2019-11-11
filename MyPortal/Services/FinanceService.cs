@@ -214,14 +214,14 @@ namespace MyPortal.Services
         public async Task<IEnumerable<FinanceSale>> GetAllSalesByStudent(int studentId,
             int academicYearId)
         {
-            var sales = await UnitOfWork.FinanceSales.GetSalesByStudent(studentId, academicYearId);
+            var sales = await UnitOfWork.FinanceSales.GetByStudent(studentId, academicYearId);
             
             return sales;
         }
 
         public async Task<IEnumerable<FinanceProduct>> GetAvailableProductsByStudent(int studentId)
         {
-            var items = await UnitOfWork.FinanceProducts.GetAvailableProductsByStudent(studentId);
+            var items = await UnitOfWork.FinanceProducts.GetAvailableByStudent(studentId);
 
             return items;
         }
@@ -240,14 +240,14 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<FinanceBasketItem>> GetBasketItemsByStudent(int studentId)
         {
-            var basketItems = await UnitOfWork.FinanceBasketItems.GetBasketItemsByStudent(studentId);
+            var basketItems = await UnitOfWork.FinanceBasketItems.GetByStudent(studentId);
 
             return basketItems;
         }
 
         public async Task<decimal> GetBasketTotalForStudent(int studentId)
         {
-            var total = await UnitOfWork.FinanceBasketItems.GetBasketTotalForStudent(studentId);
+            var total = await UnitOfWork.FinanceBasketItems.GetTotalForStudent(studentId);
 
             return total;
         }

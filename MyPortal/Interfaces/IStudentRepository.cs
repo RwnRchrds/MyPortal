@@ -9,7 +9,7 @@ namespace MyPortal.Interfaces
 {
     public interface IStudentRepository : IRepository<Student>
     {
-        Task<Student> GetByUserIdAsync(string userId);
+        Task<Student> GetByUserId(string userId);
 
         Task<IEnumerable<Student>> GetOnRoll();
 
@@ -17,8 +17,8 @@ namespace MyPortal.Interfaces
 
         Task<IEnumerable<Student>> GetFuture();
 
-        Task<IEnumerable<Student>> GetStudentsByRegGroup(int regGroupId);
+        Task<IEnumerable<Student>> GetByRegGroup(int regGroupId);
 
-        Task<IEnumerable<Student>> GetStudentsByYearGroup(int yearGroupId);
+        Task<IEnumerable<Student>> GetByYearGroup(int yearGroupId);
     }
 }

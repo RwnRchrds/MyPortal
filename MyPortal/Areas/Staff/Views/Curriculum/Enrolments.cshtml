@@ -31,7 +31,7 @@
             <div class="card-body">
                 @Html.EJS().Grid("Enrolments").DataSource(d =>
                 {
-                    d.Url(Url.HttpRouteUrl("ApiCurriculumGetEnrolmentsByClassDataGrid", new {classId = Model.Class.Id})).CrossDomain(false).Adaptor("UrlAdaptor");
+                    d.Url(Url.HttpRouteUrl("ApiGetEnrolmentsByClassDataGrid", new {classId = Model.Class.Id})).CrossDomain(false).Adaptor("UrlAdaptor");
                 }).Columns(c =>
                 {
                     c.Field("StudentName").HeaderText("Student").Template("#enrolmentsStudentTemplate").Width("150").Add();
@@ -61,7 +61,7 @@
                 <h4 class="modal-title">Enrol Student</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiCurriculumCreateEnrolment", new {}), HttpMethod = "POST", OnSuccess = "newEnrolIndSuccess", OnFailure = "newEnrolIndFailure" }, new { id = "newEnrolmentForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiCreateEnrolment", new {}), HttpMethod = "POST", OnSuccess = "newEnrolIndSuccess", OnFailure = "newEnrolIndFailure" }, new { id = "newEnrolmentForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -93,7 +93,7 @@
                 <h4 class="modal-title">Enrol Group</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiCurriculumEnrolRegGroup", new {}), HttpMethod = "POST", OnSuccess = "newEnrolGroupSuccess", OnFailure = "newEnrolGroupFailure" }, new { id = "newEnrolmentForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiEnrolRegGroup", new {}), HttpMethod = "POST", OnSuccess = "newEnrolGroupSuccess", OnFailure = "newEnrolGroupFailure" }, new { id = "newEnrolmentForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -117,11 +117,11 @@
 {
     <script>
 
-        var urlGetAllYearGroups = "@Url.HttpRouteUrl("ApiPastoralGetAllYearGroups", new {})";
-        var urlGetAllRegGroups = "@Url.HttpRouteUrl("ApiPastoralGetAllRegGroups", new {})";
+        var urlGetAllYearGroups = "@Url.HttpRouteUrl("ApiGetAllYearGroups", new {})";
+        var urlGetAllRegGroups = "@Url.HttpRouteUrl("ApiGetAllRegGroups", new {})";
         var urlGetStudentsByYearGroup =
-            "@Url.HttpRouteUrl("ApiPeopleGetStudentsByYearGroup", new {yearGroupId = 9999})";
-        var urlDeleteEnrolment = "@Url.HttpRouteUrl("ApiCurriculumDeleteEnrolment", new {enrolmentId = 9999})";
+            "@Url.HttpRouteUrl("ApiGetStudentsByYearGroup", new {yearGroupId = 9999})";
+        var urlDeleteEnrolment = "@Url.HttpRouteUrl("ApiDeleteEnrolment", new {enrolmentId = 9999})";
 
         $(document).ready(function() {
             
@@ -137,7 +137,7 @@
 
             $("#backButton").on("click",
                 function () {
-                    location.replace("@Url.Action("Classes", "Home")");
+                    location.replace("@Url.Action("Classes")");
                 });
 
             $.ajax({

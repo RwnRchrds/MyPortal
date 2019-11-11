@@ -10,7 +10,9 @@ namespace MyPortal.Extensions
     {
         public static string GetTimeDisplay(this AttendancePeriod period)
         {
-            return $"{period.StartTime:hh:mm} - {period.EndTime:hh:mm}";
+            var time = $"{period.StartTime.ToString(@"hh\:mm")} - {period.EndTime.ToString(@"hh\:mm")}";
+
+            return time;
         }
     }
 }

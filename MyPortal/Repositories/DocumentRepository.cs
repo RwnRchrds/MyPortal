@@ -16,12 +16,12 @@ namespace MyPortal.Repositories
 
         }
 
-        public async Task<IEnumerable<Document>> GetAllDocuments()
+        public async Task<IEnumerable<Document>> GetGeneral()
         {
             return await Context.Documents.Where(x => x.IsGeneral).ToListAsync();
         }
 
-        public async Task<IEnumerable<Document>> GetApprovedDocuments()
+        public async Task<IEnumerable<Document>> GetApproved()
         {
             return await Context.Documents.Where(x => x.IsGeneral && x.Approved).ToListAsync();
         }

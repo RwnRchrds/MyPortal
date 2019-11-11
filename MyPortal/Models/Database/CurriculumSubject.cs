@@ -18,6 +18,7 @@ namespace MyPortal.Models.Database
             Classes = new HashSet<CurriculumClass>();
             StudyTopics = new HashSet<CurriculumStudyTopic>();
             GiftedTalentedStudents = new HashSet<SenGiftedTalented>();
+            StaffMembers = new HashSet<CurriculumSubjectStaffMember>();
         }
 
         public int Id { get; set; }
@@ -34,8 +35,6 @@ namespace MyPortal.Models.Database
 
         public bool Deleted { get; set; }
 
-        public virtual StaffMember Leader { get; set; }
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CurriculumClass> Classes { get; set; }
 
@@ -44,5 +43,8 @@ namespace MyPortal.Models.Database
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SenGiftedTalented> GiftedTalentedStudents { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CurriculumSubjectStaffMember> StaffMembers { get; set; } 
     }
 }

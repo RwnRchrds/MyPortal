@@ -10,8 +10,8 @@ namespace MyPortal.Interfaces
 {
     public interface ICurriculumAcademicYearRepository : IRepository<CurriculumAcademicYear>
     {
-        Task<CurriculumAcademicYear> GetCurrentAcademicYear();
+        Task<CurriculumAcademicYear> GetCurrent();
 
-        Task<CurriculumAcademicYear> GetCurrentOrSelectedAcademicYear(IPrincipal user);
+        Task<CurriculumAcademicYear> GetCurrentOrSelected(IPrincipal user);
     }
 }

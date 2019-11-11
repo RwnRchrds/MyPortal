@@ -66,7 +66,7 @@ namespace MyPortal.Services
 
         public async Task<StaffMember> GetStaffMemberByUserId(string userId)
         {
-            var staff = await UnitOfWork.StaffMembers.GetByUserIdAsync(userId);
+            var staff = await UnitOfWork.StaffMembers.GetByUserId(userId);
 
             if (staff == null)
             {
@@ -78,7 +78,7 @@ namespace MyPortal.Services
 
         public async Task<StaffMember> TryGetStaffMemberByUserId(string userId)
         {
-            var staff = await UnitOfWork.StaffMembers.GetByUserIdAsync(userId);
+            var staff = await UnitOfWork.StaffMembers.GetByUserId(userId);
 
             return staff;
         }

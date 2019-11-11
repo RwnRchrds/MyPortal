@@ -129,7 +129,7 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<ProfileComment>> GetCommentsByBank(int commentBankId)
         {
-            var comments = await UnitOfWork.ProfileComments.GetCommentsByCommentBank(commentBankId);
+            var comments = await UnitOfWork.ProfileComments.GetByCommentBank(commentBankId);
 
             return comments;
         }
@@ -148,7 +148,7 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<ProfileLog>> GetLogsByStudent(int studentId, int academicYearId)
         {
-            var logs = await UnitOfWork.ProfileLogs.GetLogsByStudent(studentId, academicYearId);
+            var logs = await UnitOfWork.ProfileLogs.GetByStudent(studentId, academicYearId);
 
             return logs;
         }

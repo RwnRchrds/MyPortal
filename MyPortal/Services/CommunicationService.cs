@@ -73,7 +73,7 @@ namespace MyPortal.Services
         public async Task<IEnumerable<CommunicationEmailAddress>> GetEmailAddressesByPerson(int personId)
         {
             var emailAddresses =
-                await UnitOfWork.CommunicationEmailAddresses.GetEmailAddressesByPerson(personId);
+                await UnitOfWork.CommunicationEmailAddresses.GetByPerson(personId);
 
             return emailAddresses;
         }

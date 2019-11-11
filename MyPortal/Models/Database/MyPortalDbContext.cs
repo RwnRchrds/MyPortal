@@ -49,12 +49,14 @@ namespace MyPortal.Models.Database
         public virtual DbSet<CurriculumSession> CurriculumSessions { get; set; }
         public virtual DbSet<CurriculumStudyTopic> CurriculumStudyTopics { get; set; }
         public virtual DbSet<CurriculumSubject> CurriculumSubjects { get; set; }
+        public virtual DbSet<CurriculumSubjectStaffMember> SubjectStaffMembers { get; set; }
         public virtual DbSet<Document> Documents { get; set; }
         public virtual DbSet<DocumentType> DocumentTypes { get; set; }
         public virtual DbSet<FinanceBasketItem> FinanceBasketItems { get; set; }
         public virtual DbSet<FinanceProduct> FinanceProducts { get; set; }
         public virtual DbSet<FinanceProductType> FinanceProductTypes { get; set; }
         public virtual DbSet<FinanceSale> FinanceSales { get; set; }
+        public virtual DbSet<LocalAuthority> LocalAuthorities { get; set; }
         public virtual DbSet<MedicalCondition> MedicalConditions { get; set; }
         public virtual DbSet<MedicalDietaryRequirement> MedicalDietaryRequirements { get; set; }
         public virtual DbSet<MedicalEvent> MedicalEvents { get; set; }
@@ -89,7 +91,7 @@ namespace MyPortal.Models.Database
         public virtual DbSet<SystemArea> SystemAreas { get; set; }
         public virtual DbSet<SystemBulletin> SystemBulletins { get; set; }
         public virtual DbSet<SystemReport> SystemReports { get; set; }
-        public virtual DbSet<SystemSchool> SystemSchools { get; set; }
+        public virtual DbSet<School> SystemSchools { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -250,6 +252,12 @@ namespace MyPortal.Models.Database
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<CurriculumSubject>()
+                .HasMany(e => e.StaffMembers)
+                .WithRequired(e => e.Subject)
+                .HasForeignKey(e => e.SubjectId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<CurriculumSubject>()
                 .HasMany(e => e.StudyTopics)
                 .WithRequired(e => e.CurriculumSubject)
                 .HasForeignKey(e => e.SubjectId)
@@ -298,6 +306,12 @@ namespace MyPortal.Models.Database
             modelBuilder.Entity<FinanceSale>()
                 .Property(e => e.AmountPaid)
                 .HasPrecision(10, 2);
+
+            modelBuilder.Entity<LocalAuthority>()
+                .HasMany(e => e.Schools)
+                .WithRequired(e => e.LocalAuthority)
+                .HasForeignKey(e => e.LocalAuthorityId)
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<MedicalCondition>()
                 .HasMany(e => e.PersonConditions)
@@ -506,12 +520,6 @@ namespace MyPortal.Models.Database
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.CurriculumSubjects)
-                .WithRequired(e => e.Leader)
-                .HasForeignKey(e => e.LeaderId)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.Documents)
                 .WithRequired(e => e.Uploader)
                 .HasForeignKey(e => e.UploaderId)
@@ -542,7 +550,7 @@ namespace MyPortal.Models.Database
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.PersonnelObservationsOwn)
+                .HasMany(e => e.PersonnelObservations)
                 .WithRequired(e => e.Observee)
                 .HasForeignKey(e => e.ObserveeId)
                 .WillCascadeOnDelete(false);
@@ -557,6 +565,12 @@ namespace MyPortal.Models.Database
                 .HasMany(e => e.ProfileLogs)
                 .WithRequired(e => e.Author)
                 .HasForeignKey(e => e.AuthorId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<StaffMember>()
+                .HasMany(e => e.Subjects)
+                .WithRequired(e => e.StaffMember)
+                .HasForeignKey(e => e.StaffMemberId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Student>()

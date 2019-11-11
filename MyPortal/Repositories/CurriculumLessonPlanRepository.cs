@@ -16,7 +16,7 @@ namespace MyPortal.Repositories
 
         }
 
-        public async Task<IEnumerable<CurriculumLessonPlan>> GetLessonPlansByStudyTopic(int studyTopicId)
+        public async Task<IEnumerable<CurriculumLessonPlan>> GetByStudyTopic(int studyTopicId)
         {
             return await Context.CurriculumLessonPlans.Where(x => x.StudyTopicId == studyTopicId).ToListAsync();
         }

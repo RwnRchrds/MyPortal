@@ -16,25 +16,25 @@ namespace MyPortal.Repositories
 
         }
 
-        public async Task<int> GetAchievementCountByStudent(int studentId, int academicYearId)
+        public async Task<int> GetCountByStudent(int studentId, int academicYearId)
         {
             return await Context.BehaviourAchievements.CountAsync(x => x.StudentId == studentId && x.AcademicYearId == academicYearId);
         }
 
-        public async Task<int> GetAchievementPointsCountByStudent(int studentId, int academicYearId)
+        public async Task<int> GetPointsByStudent(int studentId, int academicYearId)
         {
             return await Context.BehaviourAchievements
                        .Where(x => x.StudentId == studentId && x.AcademicYearId == academicYearId)
                        .SumAsync(x => (int?) x.Points) ?? 0;
         }
 
-        public async Task<IEnumerable<BehaviourAchievement>> GetAchievementsByStudent(int studentId, int academicYearId)
+        public async Task<IEnumerable<BehaviourAchievement>> GetByStudent(int studentId, int academicYearId)
         {
             return await Context.BehaviourAchievements
                 .Where(x => x.StudentId == studentId && x.AcademicYearId == academicYearId).ToListAsync();
         }
 
-        public async Task<int> GetBehaviourAchievementPointsToday()
+        public async Task<int> GetPointsToday()
         {
             return await Context.BehaviourAchievements.Where(x => x.Date == DateTime.Today)
                        .SumAsync(x => (int?) x.Points) ?? 0;
