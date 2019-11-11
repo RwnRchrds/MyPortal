@@ -71,7 +71,7 @@ namespace MyPortal.Areas.Staff.Controllers
 
                 if (attendanceData != null)
                 {
-                    attendance = attendanceData.Present;
+                    attendance = attendanceData.Present + attendanceData.ApprovedEdActivity;
                 }
 
                 int? achievementCount = await behaviourService.GetAchievementPointsCountByStudent(student.Id, academicYearId);
