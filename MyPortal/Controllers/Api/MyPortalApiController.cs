@@ -98,7 +98,7 @@ namespace MyPortal.Controllers.Api
             {
                 var userId = User.Identity.GetUserId();
                 var studentUser = await UnitOfWork.Students.GetByUserId(userId);
-                var requestedStudent = await UnitOfWork.Students.GetByIdAsync(studentId);
+                var requestedStudent = await UnitOfWork.Students.GetById(studentId);
 
                 if (studentUser == null || requestedStudent == null)
                 {

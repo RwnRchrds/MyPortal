@@ -97,7 +97,7 @@ namespace MyPortal.Services
                 }
 
                 if ((student.FinanceBasketItems.Any(x => x.ProductId == basketItem.ProductId) ||
-                     student.FinanceSales.Any(x => x.ProductId == basketItem.ProductId)) && product.OnceOnly)
+                     student.Sales.Any(x => x.ProductId == basketItem.ProductId)) && product.OnceOnly)
                 {
                     throw new ServiceException(ExceptionType.Forbidden, "This product cannot be purchased more than once");
                 }
@@ -203,7 +203,7 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<FinanceProduct>> GetAllProducts()
         {
-            return await UnitOfWork.FinanceProducts.GetAllAsync();
+            return await UnitOfWork.FinanceProducts.GetAll();
         }
 
         public async Task<IEnumerable<FinanceSale>> GetAllSales(int academicYearId)
@@ -228,7 +228,7 @@ namespace MyPortal.Services
 
         public async Task<FinanceBasketItem> GetBasketItemById(int basketItemId)
         {
-            var item = await UnitOfWork.FinanceBasketItems.GetByIdAsync(basketItemId);
+            var item = await UnitOfWork.FinanceBasketItems.GetById(basketItemId);
 
             if (item == null)
             {
@@ -264,7 +264,7 @@ namespace MyPortal.Services
 
         public async Task<FinanceProduct> GetProductById(int productId)
         {
-            var product = await UnitOfWork.FinanceProducts.GetByIdAsync(productId);
+            var product = await UnitOfWork.FinanceProducts.GetById(productId);
 
             if (product == null)
             {
@@ -276,7 +276,7 @@ namespace MyPortal.Services
 
         public async Task<FinanceSale> GetSaleById(int saleId)
         {
-            var sale = await UnitOfWork.FinanceSales.GetByIdAsync(saleId);
+            var sale = await UnitOfWork.FinanceSales.GetById(saleId);
 
             if (sale == null)
             {
@@ -295,7 +295,7 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<FinanceProductType>> GetAllProductTypes()
         {
-            return await UnitOfWork.FinanceProductTypes.GetAllAsync();
+            return await UnitOfWork.FinanceProductTypes.GetAll();
         }
 
         public async Task<IDictionary<int, string>> GetAllProductTypesLookup()

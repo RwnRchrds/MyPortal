@@ -58,7 +58,7 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<SystemBulletin>> GetAllBulletins()
         {
-            var bulletins = await UnitOfWork.SystemBulletins.GetAllAsync();
+            var bulletins = await UnitOfWork.SystemBulletins.GetAll();
 
             return bulletins;
         }
@@ -87,7 +87,7 @@ namespace MyPortal.Services
 
         public async Task<SystemBulletin> GetBulletinById(int bulletinId)
         {
-            var bulletin = await UnitOfWork.SystemBulletins.GetByIdAsync(bulletinId);
+            var bulletin = await UnitOfWork.SystemBulletins.GetById(bulletinId);
 
             if (bulletin == null)
             {
@@ -112,7 +112,7 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<SchoolLocation>> GetLocations()
         {
-            var locations = await UnitOfWork.SchoolLocations.GetAllAsync();
+            var locations = await UnitOfWork.SchoolLocations.GetAll();
 
             return locations;
         }

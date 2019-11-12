@@ -51,7 +51,7 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<StaffMember>> GetAllStaffMembers()
         {
-            return await UnitOfWork.StaffMembers.GetAllAsync();
+            return await UnitOfWork.StaffMembers.GetAll();
         }
 
 
@@ -85,7 +85,7 @@ namespace MyPortal.Services
 
         public async Task<StaffMember> GetStaffMemberById(int staffMemberId)
         {
-            var staff = await UnitOfWork.StaffMembers.GetByIdAsync(staffMemberId);
+            var staff = await UnitOfWork.StaffMembers.GetById(staffMemberId);
 
             return staff;
         }

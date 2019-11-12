@@ -47,12 +47,12 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<AssessmentResultSet>> GetAllResultSets()
         {
-            return await UnitOfWork.AssessmentResultSets.GetAllAsync();
+            return await UnitOfWork.AssessmentResultSets.GetAll();
         }
 
         public async Task<AssessmentResult> GetResultById(int resultId)
         {
-            var result = await UnitOfWork.AssessmentResults.GetByIdAsync(resultId);
+            var result = await UnitOfWork.AssessmentResults.GetById(resultId);
 
             return result;
         }
@@ -66,7 +66,7 @@ namespace MyPortal.Services
 
         public async Task<AssessmentResultSet> GetResultSetById(int resultSetId)
         {
-            var resultSet = await UnitOfWork.AssessmentResultSets.GetByIdAsync(resultSetId);
+            var resultSet = await UnitOfWork.AssessmentResultSets.GetById(resultSetId);
 
             if (resultSet == null)
             {

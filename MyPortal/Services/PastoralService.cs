@@ -58,21 +58,21 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<PastoralRegGroup>> GetAllRegGroups()
         {
-            var regGroups = await UnitOfWork.PastoralRegGroups.GetAllAsync();
+            var regGroups = await UnitOfWork.PastoralRegGroups.GetAll();
 
             return regGroups;
         }
 
         public async Task<IEnumerable<PastoralYearGroup>> GetAllYearGroups()
         {
-            var yearGroups = await UnitOfWork.PastoralYearGroups.GetAllAsync();
+            var yearGroups = await UnitOfWork.PastoralYearGroups.GetAll();
 
             return yearGroups;
         }
 
         public async Task<PastoralYearGroup> GetYearGroupById(int yearGroupId)
         {
-            var yearGroup = await UnitOfWork.PastoralYearGroups.GetByIdAsync(yearGroupId);
+            var yearGroup = await UnitOfWork.PastoralYearGroups.GetById(yearGroupId);
 
             if (yearGroup == null)
             {
@@ -84,7 +84,7 @@ namespace MyPortal.Services
 
         public async Task<PastoralRegGroup> GetRegGroupById(int regGroupId)
         {
-            var regGroup = await UnitOfWork.PastoralRegGroups.GetByIdAsync(regGroupId);
+            var regGroup = await UnitOfWork.PastoralRegGroups.GetById(regGroupId);
 
             if (regGroup == null)
             {
@@ -116,7 +116,7 @@ namespace MyPortal.Services
         /// </summary>
         public async Task UpdateYearGroup(PastoralYearGroup yearGroup)
         {
-            var yearGroupInDb = await UnitOfWork.PastoralYearGroups.GetByIdAsync(yearGroup.Id);
+            var yearGroupInDb = await UnitOfWork.PastoralYearGroups.GetById(yearGroup.Id);
 
             yearGroupInDb.Name = yearGroup.Name;
             yearGroupInDb.HeadId = yearGroup.HeadId;
@@ -140,7 +140,7 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<PastoralHouse>> GetAllHouses()
         {
-            var houses = await UnitOfWork.PastoralHouses.GetAllAsync();
+            var houses = await UnitOfWork.PastoralHouses.GetAll();
 
             return houses;
         }

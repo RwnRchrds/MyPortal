@@ -80,11 +80,11 @@
 
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 <h6 class="dropdown-header">@Model.User.UserName</h6>
-                <a class="dropdown-item" data-toggle="modal" data-target="#ChangeUserTypeModal" id="ChangeUserType">Change User Type</a>
-                <a class="dropdown-item" data-toggle="modal" data-target="#AttachPersonModal" id="AttachPerson">Attach Person</a>
-                <a class="dropdown-item" data-toggle="modal" id="DetachPerson">Detach Person</a>
-                <a class="dropdown-item" data-toggle="modal" data-target="#ResetPasswordModal" id="ResetPassword">Reset Password</a>
-                <a class="dropdown-item" id="DeleteUser">Delete User</a>
+                <a class="dropdown-item" data-toggle="modal" data-target="#ChangeUserTypeModal" id="ChangeUserType"><i class="fa fa-fw fa-user-friends"></i> Change User Type</a>
+                <a class="dropdown-item" data-toggle="modal" data-target="#AttachPersonModal" id="AttachPerson"><i class="fa fa-fw fa-user-plus"></i> Attach Person</a>
+                <a class="dropdown-item" data-toggle="modal" id="DetachPerson"><i class="fa fa-fw fa-user-minus"></i> Detach Person</a>
+                <a class="dropdown-item" data-toggle="modal" data-target="#ResetPasswordModal" id="ResetPassword"><i class="fa fa-fw fa-key"></i> Reset Password</a>
+                <a class="dropdown-item" id="DeleteUser"><i class="fa fa-fw fa-user-slash"></i> Delete User</a>
             </div>
         </div>
 
@@ -560,8 +560,8 @@
 
     <script type="text/x-jsrender" id="rolesActionsTemplate">
         <div>
-            <button type='button' class='btn btn-xs btn-danger mp-btn-action js-delete' data-role-Id="${Name}">
-                <i class="far fa-trash-alt"></i>
+            <button type='button' class='btn btn-link js-delete' data-role-Id="${Name}">
+                <i class="far fa-trash-alt text-danger"></i>
             </button>
         </div>
     </script>

@@ -51,7 +51,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">New Role</h4>
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
+                <button type="button" class="close" data-dismiss="modal" data-toggle="tooltip" data-placement="top" title="View role permissions"><span aria-hidden="true"></span>&times;</button>
             </div>
             @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiCreateRole", new {}), HttpMethod = "POST", OnSuccess = "newRoleSuccess", OnFailure = "newRoleFailure"}, new {id = "newRoleForm"}))
             {
@@ -197,6 +197,12 @@
             $("#EditRoleModal").modal('hide');
             toastr.error(result.responseJSON);
         }
+
+        function initTooltips() {
+            $(function() {
+                $('[data-toggle="tooltip"]').tooltip();
+            });
+        }
     </script>
     
     <script type="text/x-jsrender" id="roleNameTemplate">
@@ -207,14 +213,14 @@
     
     <script type="text/x-jsrender" id="roleActionsTemplate">
         <div>
-            <button type="button" class="btn btn-xs btn-success mp-btn-action js-permissions" data-role-id="${Id}">
+            <button type="button" class="btn btn-link js-permissions" data-toggle="tooltip" data-placement="top" title="View role permissions" data-role-id="${Id}">
                 <i class="far fa-check-circle"></i>
             </button>
-            <button type="button" class="btn btn-xs btn-warning mp-btn-action js-edit" data-role-id="${Id}">
+            <button type="button" class="btn btn-link js-edit" data-toggle="tooltip" data-placement="top" title="Edit role" data-role-id="${Id}">
                 <i class="far fa-edit"></i>
             </button>
-            <button type="button" class="btn btn-xs btn-danger mp-btn-action js-delete" data-role-id="${Id}">
-                <i class="far fa-trash-alt"></i>
+            <button type="button" class="btn btn-link js-delete" data-toggle="tooltip" data-placement="top" title="Delete role" data-role-id="${Id}">
+                <i class="far fa-trash-alt text-danger"></i>
             </button>
         </div>
     </script>

@@ -27,7 +27,7 @@ namespace MyPortal.Services
                 throw new ServiceException(ExceptionType.BadRequest,"Invalid data");
             }
 
-            if (!await UnitOfWork.CurriculumAcademicYears.AnyAsync(x => x.Id == achievement.AcademicYearId))
+            if (!await UnitOfWork.CurriculumAcademicYears.Any(x => x.Id == achievement.AcademicYearId))
             {
                 throw new ServiceException(ExceptionType.NotFound,"Academic year not found");
             }
@@ -45,7 +45,7 @@ namespace MyPortal.Services
                 throw new ServiceException(ExceptionType.BadRequest,"Invalid data");
             }
 
-            if (!await UnitOfWork.CurriculumAcademicYears.AnyAsync(x => x.Id == incident.AcademicYearId))
+            if (!await UnitOfWork.CurriculumAcademicYears.Any(x => x.Id == incident.AcademicYearId))
             {
                 throw new ServiceException(ExceptionType.NotFound,"Academic year not found");
             }
@@ -76,7 +76,7 @@ namespace MyPortal.Services
 
         public async Task<BehaviourAchievement> GetAchievementById(int achievementId)
         {
-            var achievement = await UnitOfWork.BehaviourAchievements.GetByIdAsync(achievementId);
+            var achievement = await UnitOfWork.BehaviourAchievements.GetById(achievementId);
 
             if (achievement == null)
             {
@@ -88,7 +88,7 @@ namespace MyPortal.Services
 
         public async Task<int> GetAchievementCountByStudent(int studentId, int academicYearId)
         {
-            if (!await UnitOfWork.Students.AnyAsync(x => x.Id == studentId))
+            if (!await UnitOfWork.Students.Any(x => x.Id == studentId))
             {
                 throw new ServiceException(ExceptionType.NotFound,"Student not found");
             }
@@ -106,7 +106,7 @@ namespace MyPortal.Services
 
         public async Task<int> GetAchievementPointsCountByStudent(int studentId, int academicYearId)
         {
-            if (!await UnitOfWork.Students.AnyAsync(x => x.Id == studentId))
+            if (!await UnitOfWork.Students.Any(x => x.Id == studentId))
             {
                 throw new ServiceException(ExceptionType.NotFound,"Student not found");
             }
@@ -124,7 +124,7 @@ namespace MyPortal.Services
 
         public async Task<BehaviourIncident> GetBehaviourIncidentById(int incidentId)
         {
-            var incident = await UnitOfWork.BehaviourIncidents.GetByIdAsync(incidentId);
+            var incident = await UnitOfWork.BehaviourIncidents.GetById(incidentId);
 
             if (incident == null)
             {
@@ -136,7 +136,7 @@ namespace MyPortal.Services
 
         public async Task<int> GetBehaviourIncidentCountByStudent(int studentId, int academicYearId)
         {
-            if (! await UnitOfWork.Students.AnyAsync(x => x.Id == studentId))
+            if (! await UnitOfWork.Students.Any(x => x.Id == studentId))
             {
                 throw new ServiceException(ExceptionType.NotFound,"Student not found");
             }
@@ -154,7 +154,7 @@ namespace MyPortal.Services
 
         public async Task<int> GetBehaviourPointsCountByStudent(int studentId, int academicYearId)
         {
-            if (!await UnitOfWork.Students.AnyAsync(x => x.Id == studentId))
+            if (!await UnitOfWork.Students.Any(x => x.Id == studentId))
             {
                 throw new ServiceException(ExceptionType.NotFound,"Student not found");
             }
@@ -189,7 +189,7 @@ namespace MyPortal.Services
 
         public async Task<int> GetTotalConductPointsByStudent(int studentId, int academicYearId)
         {
-            if (!await UnitOfWork.Students.AnyAsync(x => x.Id == studentId))
+            if (!await UnitOfWork.Students.Any(x => x.Id == studentId))
             {
                 throw new ServiceException(ExceptionType.NotFound,"Student not found");
             }
@@ -243,14 +243,14 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<BehaviourAchievementType>> GetAchievementTypes()
         {
-            var achievementTypes = await UnitOfWork.BehaviourAchievementTypes.GetAllAsync();
+            var achievementTypes = await UnitOfWork.BehaviourAchievementTypes.GetAll();
 
             return achievementTypes;
         }
 
         public async Task<IEnumerable<BehaviourIncidentType>> GetBehaviourIncidentTypes()
         {
-            var incidentTypes = await UnitOfWork.BehaviourIncidentTypes.GetAllAsync();
+            var incidentTypes = await UnitOfWork.BehaviourIncidentTypes.GetAll();
 
             return incidentTypes;
         }

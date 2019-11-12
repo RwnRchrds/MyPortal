@@ -33,7 +33,7 @@ namespace MyPortal.Services
                 document.UploaderId = uploader.Id;
             }
 
-            else if (document.UploaderId != 0 && ! await UnitOfWork.StaffMembers.AnyAsync(x => x.Id == document.UploaderId))
+            else if (document.UploaderId != 0 && ! await UnitOfWork.StaffMembers.Any(x => x.Id == document.UploaderId))
             {
                 throw new ServiceException(ExceptionType.NotFound,"Uploader not found");
             }
@@ -49,7 +49,7 @@ namespace MyPortal.Services
 
         public async Task CreatePersonalDocument(PersonDocument document, string userId)
         {
-            if (!await UnitOfWork.People.AnyAsync(x => x.Id == document.PersonId))
+            if (!await UnitOfWork.People.Any(x => x.Id == document.PersonId))
             {
                 throw new ServiceException(ExceptionType.NotFound,"Person not found");
             }
@@ -126,7 +126,7 @@ namespace MyPortal.Services
         
         public async Task<Document> GetDocumentById(int documentId)
         {
-            var document = await UnitOfWork.Documents.GetByIdAsync(documentId);
+            var document = await UnitOfWork.Documents.GetById(documentId);
 
             if (document == null)
             {
@@ -138,7 +138,7 @@ namespace MyPortal.Services
         
         public async Task<PersonDocument> GetPersonalDocumentById(int documentId)
         {
-            var document = await UnitOfWork.PersonDocuments.GetByIdAsync(documentId);
+            var document = await UnitOfWork.PersonDocuments.GetById(documentId);
 
             if (document == null)
             {

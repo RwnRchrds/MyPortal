@@ -19,17 +19,47 @@ namespace MyPortal.Repositories
             Context = context;
         }
 
-        public async Task<TEntity> GetByIdAsync(int id)
+        public async Task<TEntity> GetById(int id)
         {
             return await Context.Set<TEntity>().FindAsync(id);
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllAsync()
+        public async Task<IEnumerable<TEntity>> Get<TOrderBy>(Expression<Func<TEntity, bool>> predicate,
+            Expression<Func<TEntity, TOrderBy>> orderBy, params string[] includes)
+        {
+            var query = Context.Set<TEntity>().Where(predicate).OrderBy(orderBy).AsQueryable();
+
+            foreach (var property in includes)
+            {
+                query = query.Include(property);
+            }
+
+            return await query.ToListAsync();
+        }
+
+        public async Task<TEntity> GetSingle(Expression<Func<TEntity, bool>> predicate, params string[] includes)
+        {
+            var query = Context.Set<TEntity>().AsQueryable();
+
+            foreach (var property in includes)
+            {
+                query = query.Include(property);
+            }
+
+            return await query.SingleOrDefaultAsync(predicate);
+        }
+
+        public async Task<IEnumerable<TEntity>> GetAll()
         {
             return await Context.Set<TEntity>().ToListAsync();
         }
 
-        public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate)
+        public async Task<IEnumerable<TEntity>> GetAll<TOrderBy>(Expression<Func<TEntity, TOrderBy>> orderBy)
+        {
+            return await Context.Set<TEntity>().OrderBy(orderBy).ToListAsync();
+        }
+
+        public async Task<bool> Any(Expression<Func<TEntity, bool>> predicate)
         {
             return await Context.Set<TEntity>().AnyAsync(predicate);
         }

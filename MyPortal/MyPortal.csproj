@@ -425,6 +425,7 @@
     <Compile Include="Interfaces\ICommunicationPhoneNumberTypeRepository.cs" />
     <Compile Include="Interfaces\ICommunicationTypeRepository.cs" />
     <Compile Include="Interfaces\IContactRepository.cs" />
+    <Compile Include="Interfaces\IDeletable.cs" />
     <Compile Include="Interfaces\IGridDto.cs" />
     <Compile Include="Interfaces\IRelationshipTypeRepository.cs" />
     <Compile Include="Interfaces\ICurriculumAcademicYearRepository.cs" />

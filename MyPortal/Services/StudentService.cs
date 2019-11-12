@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.Ajax.Utilities;
 using MyPortal.Dtos;
 using MyPortal.Exceptions;
 using MyPortal.Extensions;
@@ -47,14 +49,14 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<Student>> GetAllStudents()
         {
-            var result = await UnitOfWork.Students.GetAllAsync();
+            var result = await UnitOfWork.Students.GetAll();
 
             return result;
         }
 
         public async Task<Student> GetStudentById(int studentId)
         {
-            var student = await UnitOfWork.Students.GetByIdAsync(studentId);
+            var student = await UnitOfWork.Students.GetById(studentId);
 
             if (student == null)
             {
@@ -64,11 +66,16 @@ namespace MyPortal.Services
             return student;
         }
 
-        public async Task<string> GetStudentDisplayNameFromUserId(string userId)
+        public async Task<Student> GetStudent(Expression<Func<Student, bool>> predicate, params string[] includeProperties)
         {
-            var student = await GetStudentByUserId(userId);
+            var student = await UnitOfWork.Students.GetSingle(predicate, includeProperties);
 
-            return student.GetDisplayName();
+            if (student == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Student not found");
+            }
+
+            return student;
         }
 
         public async Task<Student> GetStudentByUserId(string userId)

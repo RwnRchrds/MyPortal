@@ -31,7 +31,7 @@ namespace MyPortal.Services
                 {
                     var weekBeginning = pointer.StartOfWeek();
 
-                    if (!await UnitOfWork.AttendanceWeeks.AnyAsync(x => x.Beginning == weekBeginning))
+                    if (!await UnitOfWork.AttendanceWeeks.Any(x => x.Beginning == weekBeginning))
                     {
                         var attendanceWeek = new AttendanceWeek()
                         {
@@ -51,7 +51,7 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<AttendancePeriod>> GetAllPeriods()
         {
-            var attendancePeriods = await UnitOfWork.AttendancePeriods.GetAllAsync();
+            var attendancePeriods = await UnitOfWork.AttendancePeriods.GetAll();
 
             return attendancePeriods;
         }
@@ -71,7 +71,7 @@ namespace MyPortal.Services
 
         public async Task<AttendanceWeek> GetAttendanceWeekById(int attendanceWeekId)
         {
-            var week = await UnitOfWork.AttendanceWeeks.GetByIdAsync(attendanceWeekId);
+            var week = await UnitOfWork.AttendanceWeeks.GetById(attendanceWeekId);
 
             if (week == null)
             {
@@ -102,7 +102,7 @@ namespace MyPortal.Services
 
         public async Task<AttendancePeriod> GetPeriodById(int periodId)
         {
-            var period = await UnitOfWork.AttendancePeriods.GetByIdAsync(periodId);
+            var period = await UnitOfWork.AttendancePeriods.GetById(periodId);
 
             if (period == null)
             {
@@ -125,12 +125,12 @@ namespace MyPortal.Services
             int sessionId)
         {
 
-            if (!await UnitOfWork.AttendanceWeeks.AnyAsync(x => x.Id == weekId))
+            if (!await UnitOfWork.AttendanceWeeks.Any(x => x.Id == weekId))
             {
                 throw new ServiceException(ExceptionType.NotFound,"Attendance week not found");
             }
 
-            var session = await UnitOfWork.CurriculumSessions.GetByIdAsync(sessionId);
+            var session = await UnitOfWork.CurriculumSessions.GetById(sessionId);
 
             if (session == null)
             {
@@ -260,7 +260,7 @@ namespace MyPortal.Services
 
                     else
                     {
-                        var markInDb = await UnitOfWork.AttendanceMarks.GetByIdAsync(mark.Id);
+                        var markInDb = await UnitOfWork.AttendanceMarks.GetById(mark.Id);
 
                         if (markInDb == null)
                         {
@@ -277,7 +277,7 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<AttendancePeriod>> GetPeriodsByClass(int classId)
         {
-            if (!await UnitOfWork.CurriculumClasses.AnyAsync(x => x.Id == classId))
+            if (!await UnitOfWork.CurriculumClasses.Any(x => x.Id == classId))
             {
                 throw new ServiceException(ExceptionType.NotFound,"Class not found");
             }
