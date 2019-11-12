@@ -18,11 +18,6 @@ namespace MyPortal.Repositories
 
         }
 
-        public new async Task<Student> GetById(int id)
-        {
-            return await Context.Students.Include(x => x.Person).FirstOrDefaultAsync(x => x.Id == id);
-        }
-
         public async Task<Student> GetByUserId(string userId)
         {
             return await Context.Students.Include(x => x.Person).SingleOrDefaultAsync(x => x.Person.UserId == userId);
