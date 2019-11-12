@@ -130,25 +130,25 @@
                         <td>
                             <b>Year Group</b>
                         </td>
-                        <td>@Model.Student.PastoralYearGroup.Name</td>
+                        <td>@Model.Student.YearGroup.Name</td>
                     </tr>
                     <tr>
                         <td>
                             <b>Reg Group</b>
                         </td>
-                        <td>@Model.Student.PastoralRegGroup.Name</td>
+                        <td>@Model.Student.RegGroup.Name</td>
                     </tr>
                     <tr>
                         <td>
                             <b>Reg Tutor</b>
                         </td>
-                        <td>@Model.Student.PastoralRegGroup.Tutor.Person.Title @Model.Student.PastoralRegGroup.Tutor.Person.FirstName.Substring(0, 1) @Model.Student.PastoralRegGroup.Tutor.Person.LastName</td>
+                        <td>@Model.Student.RegGroup.Tutor.Person.Title @Model.Student.RegGroup.Tutor.Person.FirstName.Substring(0, 1) @Model.Student.RegGroup.Tutor.Person.LastName</td>
                     </tr>
                     <tr>
                         <td>
                             <b>Head of Year</b>
                         </td>
-                        <td>@Model.Student.PastoralYearGroup.HeadOfYear.Person.Title @Model.Student.PastoralYearGroup.HeadOfYear.Person.FirstName.Substring(0, 1) @Model.Student.PastoralYearGroup.HeadOfYear.Person.LastName</td>
+                        <td>@Model.Student.YearGroup.HeadOfYear.Person.Title @Model.Student.YearGroup.HeadOfYear.Person.FirstName.Substring(0, 1) @Model.Student.YearGroup.HeadOfYear.Person.LastName</td>
                     </tr>
                 </table>
             </div>

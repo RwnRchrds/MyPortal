@@ -120,9 +120,9 @@ namespace MyPortal
                 .ForMember(dest => dest.HouseName,
                     opts => opts.MapFrom(src => src.House.Name))
                 .ForMember(dest => dest.RegGroupName,
-                    opts => opts.MapFrom(src => src.PastoralRegGroup.Name))
+                    opts => opts.MapFrom(src => src.RegGroup.Name))
                 .ForMember(dest => dest.YearGroupName,
-                    opts => opts.MapFrom(src => src.PastoralYearGroup.Name));
+                    opts => opts.MapFrom(src => src.YearGroup.Name));
 
             CreateMap<ProfileLog, GridProfileLogDto>()
                 .ForMember(dest => dest.Id,

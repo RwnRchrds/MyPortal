@@ -36,12 +36,12 @@ namespace MyPortal.Services
         {
             observation.Date = DateTime.Now;
 
-            if (!await UnitOfWork.StaffMembers.AnyAsync(x => x.Id == observation.ObserveeId))
+            if (!await UnitOfWork.StaffMembers.Any(x => x.Id == observation.ObserveeId))
             {
                 throw new ServiceException(ExceptionType.NotFound, "Observee not found");
             }
 
-            if (!await UnitOfWork.StaffMembers.AnyAsync(x => x.Id == observation.ObserverId))
+            if (!await UnitOfWork.StaffMembers.Any(x => x.Id == observation.ObserverId))
             {
                 throw new ServiceException(ExceptionType.NotFound, "Observer not found");
             }
@@ -64,7 +64,7 @@ namespace MyPortal.Services
 
         public async Task DeleteCourse(int courseId)
         {
-            var courseInDb = await UnitOfWork.PersonnelTrainingCourses.GetByIdAsync(courseId);
+            var courseInDb = await UnitOfWork.PersonnelTrainingCourses.GetById(courseId);
 
             if (courseInDb.Certificates.Any())
             {
@@ -77,7 +77,7 @@ namespace MyPortal.Services
 
         public async Task DeleteObservation(int observationId)
         {
-            var observation = await UnitOfWork.PersonnelObservations.GetByIdAsync(observationId);
+            var observation = await UnitOfWork.PersonnelObservations.GetById(observationId);
 
             UnitOfWork.PersonnelObservations.Remove(observation);
             await UnitOfWork.Complete();
@@ -94,7 +94,7 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<PersonnelTrainingCourse>> GetAllTrainingCourses()
         {
-            return await UnitOfWork.PersonnelTrainingCourses.GetAllAsync();
+            return await UnitOfWork.PersonnelTrainingCourses.GetAll();
         }
 
         public async Task<PersonnelTrainingCertificate> GetCertificate(int staffId, int courseId)
@@ -119,7 +119,7 @@ namespace MyPortal.Services
         
         public async Task<PersonnelTrainingCourse> GetCourseById(int courseId)
         {
-            var courseInDb = await UnitOfWork.PersonnelTrainingCourses.GetByIdAsync(courseId);
+            var courseInDb = await UnitOfWork.PersonnelTrainingCourses.GetById(courseId);
 
             if (courseInDb == null)
             {
@@ -131,7 +131,7 @@ namespace MyPortal.Services
 
         public async Task<PersonnelObservation> GetObservationById(int observationId)
         {
-            var observation = await UnitOfWork.PersonnelObservations.GetByIdAsync(observationId);
+            var observation = await UnitOfWork.PersonnelObservations.GetById(observationId);
 
             if (observation == null)
             {

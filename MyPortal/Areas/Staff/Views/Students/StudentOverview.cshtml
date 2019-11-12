@@ -1,5 +1,4 @@
 ﻿@using MyPortal.Extensions
-@using MyPortal.Models.Database
 @using MyPortal.Services
 @using Syncfusion.EJ2.Grids
 @model MyPortal.Areas.Staff.ViewModels.StudentOverviewViewModel
@@ -25,9 +24,9 @@
                 {
                     <h6 class="dropdown-header">@Model.Student.GetDisplayName()</h6>
                 }
-                <a href="@Url.HttpRouteUrl("PeopleStudentExtendedDetails", new {studentId = Model.Student.Id})" class="dropdown-item">Details</a>
-                <a href="@Url.HttpRouteUrl("PeopleStudentBehaviourDetails", new {studentId = Model.Student.Id})" class="dropdown-item">Behaviour</a>
-                <a href="@Url.HttpRouteUrl("PeopleStudentAssessmentResults", new {studentId = Model.Student.Id})" class="dropdown-item">Results</a>
+                <a href="@Url.Action("StudentDetails", new {studentId = Model.Student.Id})" class="dropdown-item"><i class="fas fa-address-card fa-fw text-secondary"></i> Details</a>
+                <a href="@Url.Action("BehaviourManagement", new {studentId = Model.Student.Id})" class="dropdown-item"><i class="fas fa-smile fa-fw text-secondary"></i> Behaviour Management</a>
+                <a href="@Url.Action("StudentResults", new {studentId = Model.Student.Id})" class="dropdown-item"><i class="fas fa-tasks fa-fw text-secondary"></i> Results</a>
             </div>
         </div>
     </div>
@@ -59,7 +58,7 @@
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Attendance</div>
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Attendance (Present + AEA)</div>
                         @if (Model.HasAttendaceData && Model.Attendance != null)
                         {
                             <div class="h5 mb-0 font-weight-bold text-gray-800" data-hasdata="true" id="attendanceDetail">
@@ -86,7 +85,7 @@
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Achievement</div>
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Achievement Points</div>
                         @if (Model.AchievementCount.HasValue)
                         {
                             <div class="h5 mb-0 font-weight-bold text-gray-800" id="achievementDetail">
@@ -113,7 +112,7 @@
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Behaviour</div>
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Behaviour Points</div>
                         @if (Model.BehaviourCount.HasValue)
                         {
                             <div class="h5 mb-0 font-weight-bold text-gray-800" id="behaviourDetail">
@@ -137,7 +136,7 @@
 </div>
 
 <div class="row">
-    <div class="col-xl-3">
+    <div class="col-lg-3">
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary">Basic Details</h6>
@@ -167,33 +166,57 @@
                         <td>
                             <b>Year Group</b>
                         </td>
-                        <td>@Model.Student.PastoralYearGroup.Name</td>
+                        <td>@Model.Student.YearGroup.Name</td>
                     </tr>
                     <tr>
                         <td>
                             <b>Reg Group</b>
                         </td>
-                        <td>@Model.Student.PastoralRegGroup.Name</td>
+                        <td>@Model.Student.RegGroup.Name</td>
                     </tr>
                     <tr>
                         <td>
                             <b>Reg Tutor</b>
                         </td>
-                        <td>@Model.Student.PastoralRegGroup.Tutor.Person.Title @Model.Student.PastoralRegGroup.Tutor.Person.FirstName.Substring(0, 1) @Model.Student.PastoralRegGroup.Tutor.Person.LastName</td>
+                        <td>@Model.Student.RegGroup.Tutor.GetDisplayName()</td>
                     </tr>
                     <tr>
                         <td>
                             <b>Head of Year</b>
                         </td>
-                        <td>@Model.Student.PastoralYearGroup.HeadOfYear.Person.Title @Model.Student.PastoralYearGroup.HeadOfYear.Person.FirstName.Substring(0, 1) @Model.Student.PastoralYearGroup.HeadOfYear.Person.LastName</td>
+                        <td>@Model.Student.YearGroup.HeadOfYear.GetDisplayName()</td>
                     </tr>
                     <tr>
                         <td>
                             <b>Head of House</b>
                         </td>
-                        <td>@*@PeopleProcesses.GetStaffDisplayName(Model.Student.House.HeadOfHouse).ResponseObject*@</td>
+                        <td>@Model.Student.House.HeadOfHouse.GetDisplayName()</td>
                     </tr>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Timetable</h6>
+            </div>
+
+            <div class="card-body">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Assessment Key Indicators</h6>
+            </div>
+
+            <div class="card-body">
+
             </div>
         </div>
     </div>
@@ -265,7 +288,7 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">New Log - @Model.Student.Person.LastName, @Model.Student.Person.FirstName</h4>
+                <h4 class="modal-title">New Log Note - @Model.Student.Person.LastName, @Model.Student.Person.FirstName</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -306,7 +329,7 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">New Log - @Model.Student.Person.LastName, @Model.Student.Person.FirstName</h4>
+                <h4 class="modal-title">Edit Log Note - @Model.Student.Person.LastName, @Model.Student.Person.FirstName</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -317,7 +340,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Log Type")
-                        @Html.DropDownListFor(l => l.Log.TypeId, new SelectList(Model.LogTypes, "Value", "Key"), "Select Log Type", new {@class = "form-control", id = "EditLogTypeControl", Name = "TypeId"})
+                        @Html.DropDownListFor(l => l.Log.TypeId, new SelectList(Model.LogTypes, "Key", "Value"), "Select Log Type", new {@class = "form-control", id = "EditLogTypeControl", Name = "TypeId"})
                     </div>
                     <div class="form-group">
                         @Html.Label("Message")
@@ -827,11 +850,11 @@
 
     <script type="text/x-jsrender" id="logActionsTemplate">
         <div>
-            <button type="button" class="btn btn-xs btn-warning mp-btn-action js-edit" data-log-id="${Id}">
+            <button type="button" class="btn btn-link js-edit" data-log-id="${Id}">
                 <i class="far fa-edit"></i>
             </button>
-            <button type="button" class="btn btn-xs btn-danger mp-btn-action js-delete" data-log-id="${Id}">
-                <i class="far fa-trash-alt"></i>
+            <button type="button" class="btn btn-link js-delete" data-log-id="${Id}">
+                <i class="far fa-trash-alt text-danger"></i>
             </button>
         </div>
     </script>
@@ -851,11 +874,11 @@
 
     <script type="text/x-jsrender" id="docsActionsTemplate">
         <div>
-            <button type="button" class="btn btn-xs btn-warning mp-btn-action js-edit" data-document-id="${Id}">
+            <button type="button" class="btn btn-link js-edit" data-document-id="${Id}">
                 <i class="far fa-edit"></i>
             </button>
-            <button type="button" class="btn btn-xs btn-danger mp-btn-action js-delete" data-document-id="${Id}">
-                <i class="far fa-trash-alt"></i>
+            <button type="button" class="btn btn-link js-delete" data-document-id="${Id}">
+                <i class="far fa-trash-alt text-danger"></i>
             </button>
         </div>
     </script>

@@ -222,8 +222,8 @@ namespace MyPortal.Services
 
         public async Task DetachPerson(ApplicationUser user)
         {
-            var userIsAttached = await UnitOfWork.Students.AnyAsync(x => x.Person.UserId == user.Id) ||
-                                 await UnitOfWork.StaffMembers.AnyAsync(x => x.Person.UserId == user.Id);
+            var userIsAttached = await UnitOfWork.Students.Any(x => x.Person.UserId == user.Id) ||
+                                 await UnitOfWork.StaffMembers.Any(x => x.Person.UserId == user.Id);
 
             if (!userIsAttached)
             {

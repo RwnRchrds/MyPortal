@@ -18,13 +18,13 @@ namespace MyPortal.Models.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Student()
         {
-            AssessmentResults = new HashSet<AssessmentResult>();
-            AttendanceRegisterMarks = new HashSet<AttendanceMark>();
-            BehaviourAchievements = new HashSet<BehaviourAchievement>();
-            BehaviourIncidents = new HashSet<BehaviourIncident>();
+            Results = new HashSet<AssessmentResult>();
+            AttendanceMarks = new HashSet<AttendanceMark>();
+            Achievements = new HashSet<BehaviourAchievement>();
+            Incidents = new HashSet<BehaviourIncident>();
             Enrolments = new HashSet<CurriculumEnrolment>();
             FinanceBasketItems = new HashSet<FinanceBasketItem>();
-            FinanceSales = new HashSet<FinanceSale>();
+            Sales = new HashSet<FinanceSale>();
             MedicalEvents = new HashSet<MedicalEvent>();
             SenEvents = new HashSet<SenEvent>();
             SenProvisions = new HashSet<SenProvision>();
@@ -76,16 +76,16 @@ namespace MyPortal.Models.Database
         public bool Deleted { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AssessmentResult> AssessmentResults { get; set; }
+        public virtual ICollection<AssessmentResult> Results { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AttendanceMark> AttendanceRegisterMarks { get; set; }
+        public virtual ICollection<AttendanceMark> AttendanceMarks { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BehaviourAchievement> BehaviourAchievements { get; set; }
+        public virtual ICollection<BehaviourAchievement> Achievements { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BehaviourIncident> BehaviourIncidents { get; set; }
+        public virtual ICollection<BehaviourIncident> Incidents { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CurriculumEnrolment> Enrolments { get; set; }
@@ -94,14 +94,14 @@ namespace MyPortal.Models.Database
         public virtual ICollection<FinanceBasketItem> FinanceBasketItems { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<FinanceSale> FinanceSales { get; set; }
+        public virtual ICollection<FinanceSale> Sales { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MedicalEvent> MedicalEvents { get; set; }
 
-        public virtual PastoralRegGroup PastoralRegGroup { get; set; }
+        public virtual PastoralRegGroup RegGroup { get; set; }
 
-        public virtual PastoralYearGroup PastoralYearGroup { get; set; }
+        public virtual PastoralYearGroup YearGroup { get; set; }
 
         public virtual Person Person { get; set; }
 

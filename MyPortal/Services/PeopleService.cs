@@ -20,7 +20,7 @@ namespace MyPortal.Services
 
         public async Task<Person> GetPersonById(int personId)
         {
-            var person = await UnitOfWork.People.GetByIdAsync(personId);
+            var person = await UnitOfWork.People.GetById(personId);
 
             if (person == null)
             {

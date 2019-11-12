@@ -10,7 +10,7 @@ namespace MyPortal.Models.Database
     /// <summary>
     /// [SYSTEM] A status of special educational needs a student may have.
     /// </summary>
-    [Table("Sen_Statuses")]
+    [Table("Sen_Status")]
     public partial class SenStatus
     {
         //THIS IS A SYSTEM CLASS AND SHOULD NOT HAVE FEATURES TO ADD, MODIFY OR DELETE DATABASE OBJECTS

@@ -16,7 +16,7 @@ namespace MyPortal.Repositories
 
         }
 
-        public new async Task<IEnumerable<StaffMember>> GetAllAsync()
+        public new async Task<IEnumerable<StaffMember>> GetAll()
         {
             return await Context.StaffMembers.Include(x => x.Person).OrderBy(x => x.Person.LastName).ToListAsync();
         }

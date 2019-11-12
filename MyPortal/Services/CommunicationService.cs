@@ -29,7 +29,7 @@ namespace MyPortal.Services
 
         public async Task UpdateEmailAddress(CommunicationEmailAddress emailAddress)
         {
-            var emailInDb = await UnitOfWork.CommunicationEmailAddresses.GetByIdAsync(emailAddress.Id);
+            var emailInDb = await UnitOfWork.CommunicationEmailAddresses.GetById(emailAddress.Id);
 
             if (emailInDb == null)
             {
@@ -46,7 +46,7 @@ namespace MyPortal.Services
 
         public async Task DeleteEmailAddress(int emailAddressId)
         {
-            var emailInDb = await UnitOfWork.CommunicationEmailAddresses.GetByIdAsync(emailAddressId);
+            var emailInDb = await UnitOfWork.CommunicationEmailAddresses.GetById(emailAddressId);
 
             if (emailInDb == null)
             {
@@ -60,7 +60,7 @@ namespace MyPortal.Services
 
         public async Task<CommunicationEmailAddress> GetEmailAddressById(int emailAddressId)
         {
-            var emailInDb = await UnitOfWork.CommunicationEmailAddresses.GetByIdAsync(emailAddressId);
+            var emailInDb = await UnitOfWork.CommunicationEmailAddresses.GetById(emailAddressId);
 
             if (emailInDb == null)
             {

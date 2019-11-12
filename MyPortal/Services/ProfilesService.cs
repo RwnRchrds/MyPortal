@@ -71,7 +71,7 @@ namespace MyPortal.Services
 
         public async Task DeleteCommentBank(int commentBankId)
         {
-            var commentBank = await UnitOfWork.ProfileCommentBanks.GetByIdAsync(commentBankId);
+            var commentBank = await UnitOfWork.ProfileCommentBanks.GetById(commentBankId);
 
             UnitOfWork.ProfileCommentBanks.Remove(commentBank);
             await UnitOfWork.Complete();
@@ -88,7 +88,7 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<ProfileCommentBank>> GetAllCommentBanks()
         {
-            return await UnitOfWork.ProfileCommentBanks.GetAllAsync();
+            return await UnitOfWork.ProfileCommentBanks.GetAll();
         }
 
         public async Task<IDictionary<int, string>> GetAllCommentBanksLookup()
@@ -100,12 +100,12 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<ProfileComment>> GetAllComments()
         {
-            return await UnitOfWork.ProfileComments.GetAllAsync();
+            return await UnitOfWork.ProfileComments.GetAll();
         }
 
         public async Task<ProfileCommentBank> GetCommentBankById(int commentBankId)
         {
-            var commentBankInDb = await UnitOfWork.ProfileCommentBanks.GetByIdAsync(commentBankId);
+            var commentBankInDb = await UnitOfWork.ProfileCommentBanks.GetById(commentBankId);
 
             if (commentBankInDb == null)
             {
@@ -117,7 +117,7 @@ namespace MyPortal.Services
 
         public async Task<ProfileComment> GetCommentById(int commentId)
         {
-            var comment = await UnitOfWork.ProfileComments.GetByIdAsync(commentId);
+            var comment = await UnitOfWork.ProfileComments.GetById(commentId);
 
             if (comment == null)
             {
@@ -136,7 +136,7 @@ namespace MyPortal.Services
 
         public async Task<ProfileLog> GetLogById(int logId)
         {
-            var log = await UnitOfWork.ProfileLogs.GetByIdAsync(logId);
+            var log = await UnitOfWork.ProfileLogs.GetById(logId);
 
             if (log == null)
             {
@@ -184,7 +184,7 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<ProfileLogType>> GetAllLogTypes()
         {
-            var logTypes = await UnitOfWork.ProfileLogTypes.GetAllAsync();
+            var logTypes = await UnitOfWork.ProfileLogTypes.GetAll();
 
             return logTypes;
         }

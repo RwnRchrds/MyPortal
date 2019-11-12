@@ -10,28 +10,11 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+    public abstract class Repository<TEntity> : ReadOnlyRepository<TEntity>, IRepository<TEntity> where TEntity : class
     {
-        protected readonly MyPortalDbContext Context;
-
-        public Repository(MyPortalDbContext context)
+        public Repository(MyPortalDbContext context) : base (context)
         {
-            Context = context;
-        }
 
-        public async Task<TEntity> GetByIdAsync(int id)
-        {
-            return await Context.Set<TEntity>().FindAsync(id);
-        }
-
-        public async Task<IEnumerable<TEntity>> GetAllAsync()
-        {
-            return await Context.Set<TEntity>().ToListAsync();
-        }
-
-        public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate)
-        {
-            return await Context.Set<TEntity>().AnyAsync(predicate);
         }
 
         public void Add(TEntity entity)

@@ -5,11 +5,16 @@ using MyPortal.Persistence;
 
 namespace MyPortal.Services
 {
-    public class MyPortalService : IService
+    public abstract class MyPortalService : IService
     {
         protected readonly IUnitOfWork UnitOfWork;
 
-        public MyPortalService(IUnitOfWork unitOfWork)
+        protected MyPortalService()
+        {
+            UnitOfWork = new UnitOfWork();
+        }
+
+        protected MyPortalService(IUnitOfWork unitOfWork)
         {
             UnitOfWork = unitOfWork;
         }

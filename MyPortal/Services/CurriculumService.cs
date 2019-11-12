@@ -28,12 +28,12 @@ namespace MyPortal.Services
                 throw new ServiceException(ExceptionType.BadRequest,"Invalid data");
             }
 
-            if (!await UnitOfWork.CurriculumAcademicYears.AnyAsync(x => x.Id == @class.AcademicYearId))
+            if (!await UnitOfWork.CurriculumAcademicYears.Any(x => x.Id == @class.AcademicYearId))
             {
                 throw new ServiceException(ExceptionType.NotFound,"Academic year not found");
             }
 
-            if (await UnitOfWork.CurriculumClasses.AnyAsync(x => x.Name == @class.Name && x.AcademicYearId == @class.AcademicYearId))
+            if (await UnitOfWork.CurriculumClasses.Any(x => x.Name == @class.Name && x.AcademicYearId == @class.AcademicYearId))
             {
                 throw new ServiceException(ExceptionType.BadRequest, "Class already exists");
             }
@@ -50,22 +50,22 @@ namespace MyPortal.Services
                 throw new ServiceException(ExceptionType.BadRequest,"Invalid data");
             }
 
-            if (!await UnitOfWork.CurriculumClasses.AnyAsync(x => x.Id == enrolment.ClassId))
+            if (!await UnitOfWork.CurriculumClasses.Any(x => x.Id == enrolment.ClassId))
             {
                 throw new ServiceException(ExceptionType.NotFound,"Class not found");
             }
 
-            if (!await UnitOfWork.Students.AnyAsync(x => x.Id == enrolment.StudentId))
+            if (!await UnitOfWork.Students.Any(x => x.Id == enrolment.StudentId))
             {
                 throw new ServiceException(ExceptionType.NotFound,"Student not found");
             }
 
-            if (!await UnitOfWork.CurriculumSessions.AnyAsync(x => x.ClassId == enrolment.ClassId))
+            if (!await UnitOfWork.CurriculumSessions.Any(x => x.ClassId == enrolment.ClassId))
             {
                 throw new ServiceException(ExceptionType.NotFound,"Cannot add students to a class with no sessions");
             }
 
-            if (await UnitOfWork.CurriculumEnrolments.AnyAsync(x =>
+            if (await UnitOfWork.CurriculumEnrolments.Any(x =>
                 x.ClassId == enrolment.ClassId && x.StudentId == enrolment.StudentId))
             {
                 throw new ServiceException(ExceptionType.BadRequest,
@@ -103,7 +103,7 @@ namespace MyPortal.Services
 
         public async Task CreateEnrolmentsForRegGroup(GroupEnrolment enrolment)
         {
-            var group = await UnitOfWork.PastoralRegGroups.GetByIdAsync(enrolment.GroupId);
+            var group = await UnitOfWork.PastoralRegGroups.GetById(enrolment.GroupId);
 
             if (group == null)
             {
@@ -146,7 +146,7 @@ namespace MyPortal.Services
 
             if (authorId != 0)
             {
-                author = await UnitOfWork.StaffMembers.GetByIdAsync(authorId);
+                author = await UnitOfWork.StaffMembers.GetById(authorId);
             }
 
             if (author == null)
@@ -167,7 +167,7 @@ namespace MyPortal.Services
                 throw new ServiceException(ExceptionType.BadRequest,"Invalid data");
             }
 
-            if (!await UnitOfWork.CurriculumClasses.AnyAsync(x => x.Id == session.ClassId))
+            if (!await UnitOfWork.CurriculumClasses.Any(x => x.Id == session.ClassId))
             {
                 throw new ServiceException(ExceptionType.NotFound,"Class not found");
             }
@@ -177,7 +177,7 @@ namespace MyPortal.Services
                 throw new ServiceException(ExceptionType.BadRequest,"Cannot modify class schedule while students are enrolled");
             }
 
-            if (await UnitOfWork.CurriculumSessions.AnyAsync(x =>
+            if (await UnitOfWork.CurriculumSessions.Any(x =>
                 x.ClassId == session.ClassId && x.PeriodId == session.PeriodId))
             {
                 throw new ServiceException(ExceptionType.BadRequest,"Class is already assigned to this period");
@@ -193,7 +193,7 @@ namespace MyPortal.Services
 
             var regPeriods = await UnitOfWork.AttendancePeriods.GetRegPeriods();
 
-            if (! await UnitOfWork.CurriculumClasses.AnyAsync(x => x.Id == session.ClassId))
+            if (! await UnitOfWork.CurriculumClasses.Any(x => x.Id == session.ClassId))
             {
                 throw new ServiceException(ExceptionType.NotFound,"Class not found");
             }
@@ -255,7 +255,7 @@ namespace MyPortal.Services
 
         public async Task DeleteEnrolment(int enrolmentId)
         {
-            var enrolment = await UnitOfWork.CurriculumEnrolments.GetByIdAsync(enrolmentId);
+            var enrolment = await UnitOfWork.CurriculumEnrolments.GetById(enrolmentId);
 
             if (enrolment == null)
             {
@@ -312,7 +312,7 @@ namespace MyPortal.Services
 
         public async Task DeleteSubject(int subjectId)
         {
-            var subjectInDb = await UnitOfWork.CurriculumSubjects.GetByIdAsync(subjectId);
+            var subjectInDb = await UnitOfWork.CurriculumSubjects.GetById(subjectId);
 
             if (subjectInDb == null)
             {
@@ -322,8 +322,8 @@ namespace MyPortal.Services
             subjectInDb.Deleted = true; //Flag as deleted
 
             //Delete from database
-            if (await UnitOfWork.CurriculumClasses.AnyAsync(x => x.SubjectId == subjectId) ||
-                await UnitOfWork.CurriculumStudyTopics.AnyAsync(x => x.SubjectId == subjectId))
+            if (await UnitOfWork.CurriculumClasses.Any(x => x.SubjectId == subjectId) ||
+                await UnitOfWork.CurriculumStudyTopics.Any(x => x.SubjectId == subjectId))
             {
                 throw new ServiceException(ExceptionType.BadRequest,"This subject cannot be deleted");
             }
@@ -335,7 +335,7 @@ namespace MyPortal.Services
 
         public async Task<CurriculumAcademicYear> GetAcademicYearById(int academicYearId)
         {
-            var academicYear = await UnitOfWork.CurriculumAcademicYears.GetByIdAsync(academicYearId);
+            var academicYear = await UnitOfWork.CurriculumAcademicYears.GetById(academicYearId);
 
             if (academicYear == null)
             {
@@ -347,7 +347,7 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<CurriculumAcademicYear>> GetAcademicYears()
         {
-            var academicYears = await UnitOfWork.CurriculumAcademicYears.GetAllAsync();
+            var academicYears = await UnitOfWork.CurriculumAcademicYears.GetAll();
                 
             return academicYears;
         }
@@ -366,14 +366,14 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<CurriculumLessonPlan>> GetAllLessonPlans()
         {
-            var lessonPlans = await UnitOfWork.CurriculumLessonPlans.GetAllAsync();
+            var lessonPlans = await UnitOfWork.CurriculumLessonPlans.GetAll();
 
             return lessonPlans;
         }
 
         public async Task<IEnumerable<CurriculumStudyTopic>> GetAllStudyTopics()
         {
-            return await UnitOfWork.CurriculumStudyTopics.GetAllAsync();
+            return await UnitOfWork.CurriculumStudyTopics.GetAll();
         }
 
         public async Task<IEnumerable<CurriculumStudyTopic>> GetAllStudyTopicsBySubject(int subjectId)
@@ -383,14 +383,14 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<CurriculumSubject>> GetAllSubjects()
         {
-            var subjects = await UnitOfWork.CurriculumSubjects.GetAllAsync();
+            var subjects = await UnitOfWork.CurriculumSubjects.GetAll();
 
             return subjects;
         }
 
         public async Task<CurriculumClass> GetClassById(int classId)
         {
-            var currClass = await UnitOfWork.CurriculumClasses.GetByIdAsync(classId);
+            var currClass = await UnitOfWork.CurriculumClasses.GetById(classId);
 
             if (currClass == null)
             {
@@ -402,7 +402,7 @@ namespace MyPortal.Services
 
         public async Task<CurriculumEnrolment> GetEnrolmentById(int enrolmentId)
         {
-            var enrolment = await UnitOfWork.CurriculumEnrolments.GetByIdAsync(enrolmentId);
+            var enrolment = await UnitOfWork.CurriculumEnrolments.GetById(enrolmentId);
 
             if (enrolment == null)
             {
@@ -428,7 +428,7 @@ namespace MyPortal.Services
 
         public async Task<CurriculumLessonPlan> GetLessonPlanById(int lessonPlanId)
         {
-            var lessonPlan = await UnitOfWork.CurriculumLessonPlans.GetByIdAsync(lessonPlanId);
+            var lessonPlan = await UnitOfWork.CurriculumLessonPlans.GetById(lessonPlanId);
 
             if (lessonPlan == null)
             {
@@ -445,7 +445,7 @@ namespace MyPortal.Services
 
         public async Task<CurriculumSession> GetSessionById(int sessionId)
         {
-            var session = await UnitOfWork.CurriculumSessions.GetByIdAsync(sessionId);
+            var session = await UnitOfWork.CurriculumSessions.GetById(sessionId);
 
             if (session == null)
             {
@@ -498,7 +498,7 @@ namespace MyPortal.Services
 
         public async Task<CurriculumStudyTopic> GetStudyTopicById(int studyTopicId)
         {
-            var studyTopic = await UnitOfWork.CurriculumStudyTopics.GetByIdAsync(studyTopicId);
+            var studyTopic = await UnitOfWork.CurriculumStudyTopics.GetById(studyTopicId);
 
             if (studyTopic == null)
             {
@@ -510,7 +510,7 @@ namespace MyPortal.Services
 
         public async Task<CurriculumSubject> GetSubjectById(int subjectId)
         {
-            var subject = await UnitOfWork.CurriculumSubjects.GetByIdAsync(subjectId);
+            var subject = await UnitOfWork.CurriculumSubjects.GetById(subjectId);
 
             if (subject == null)
             {
@@ -522,33 +522,33 @@ namespace MyPortal.Services
 
         public async Task<bool> ClassHasEnrolments(int classId)
         {
-            return await UnitOfWork.CurriculumEnrolments.AnyAsync(x => x.ClassId == classId);
+            return await UnitOfWork.CurriculumEnrolments.Any(x => x.ClassId == classId);
         }
 
         public async Task<bool> ClassHasSessions(int classId)
         {
-            return await UnitOfWork.CurriculumSessions.AnyAsync(x => x.ClassId == classId);
+            return await UnitOfWork.CurriculumSessions.Any(x => x.ClassId == classId);
         }
 
         public async Task<bool> PeriodIsFree(int studentId, int periodId)
         {
-            return !await UnitOfWork.CurriculumEnrolments.AnyAsync(x =>
+            return !await UnitOfWork.CurriculumEnrolments.Any(x =>
                 x.StudentId == studentId && x.Class.Sessions.Any(p => p.PeriodId == periodId));
         }
 
         public async Task<bool> StudentCanEnrol(int studentId, int classId)
         {
-            if (!await UnitOfWork.Students.AnyAsync(x => x.Id == studentId))
+            if (!await UnitOfWork.Students.Any(x => x.Id == studentId))
             {
                 throw new ServiceException(ExceptionType.NotFound,"Student not found");
             }
 
-            if (!await UnitOfWork.CurriculumClasses.AnyAsync(x => x.Id == classId))
+            if (!await UnitOfWork.CurriculumClasses.Any(x => x.Id == classId))
             {
                 throw new ServiceException(ExceptionType.NotFound,"Class not found");
             }
 
-            if (await UnitOfWork.CurriculumEnrolments.AnyAsync(x =>
+            if (await UnitOfWork.CurriculumEnrolments.Any(x =>
                 x.ClassId == classId && x.StudentId == studentId))
             {
                 throw new ServiceException(ExceptionType.BadRequest,"Student is already enrolled in class");
@@ -604,7 +604,7 @@ namespace MyPortal.Services
                 throw new ServiceException(ExceptionType.BadRequest,"Cannot modify class schedule while students are enrolled");
             }
 
-            if (await UnitOfWork.CurriculumSessions.AnyAsync(x =>
+            if (await UnitOfWork.CurriculumSessions.Any(x =>
                 x.ClassId == session.ClassId && x.PeriodId == session.PeriodId))
             {
                 throw new ServiceException(ExceptionType.BadRequest,"Class already assigned to this period");

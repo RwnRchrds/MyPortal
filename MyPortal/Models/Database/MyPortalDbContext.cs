@@ -333,7 +333,7 @@ namespace MyPortal.Models.Database
 
             modelBuilder.Entity<PastoralRegGroup>()
                 .HasMany(e => e.Students)
-                .WithRequired(e => e.PastoralRegGroup)
+                .WithRequired(e => e.RegGroup)
                 .HasForeignKey(e => e.RegGroupId)
                 .WillCascadeOnDelete(false);
 
@@ -356,7 +356,7 @@ namespace MyPortal.Models.Database
 
             modelBuilder.Entity<PastoralYearGroup>()
                 .HasMany(e => e.Students)
-                .WithRequired(e => e.PastoralYearGroup)
+                .WithRequired(e => e.YearGroup)
                 .HasForeignKey(e => e.YearGroupId)
                 .WillCascadeOnDelete(false);
 
@@ -574,25 +574,25 @@ namespace MyPortal.Models.Database
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Student>()
-                .HasMany(e => e.AssessmentResults)
+                .HasMany(e => e.Results)
                 .WithRequired(e => e.Student)
                 .HasForeignKey(e => e.StudentId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Student>()
-                .HasMany(e => e.AttendanceRegisterMarks)
+                .HasMany(e => e.AttendanceMarks)
                 .WithRequired(e => e.Student)
                 .HasForeignKey(e => e.StudentId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Student>()
-                .HasMany(e => e.BehaviourAchievements)
+                .HasMany(e => e.Achievements)
                 .WithRequired(e => e.Student)
                 .HasForeignKey(e => e.StudentId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Student>()
-                .HasMany(e => e.BehaviourIncidents)
+                .HasMany(e => e.Incidents)
                 .WithRequired(e => e.Student)
                 .HasForeignKey(e => e.StudentId)
                 .WillCascadeOnDelete(false);
@@ -610,7 +610,7 @@ namespace MyPortal.Models.Database
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Student>()
-                .HasMany(e => e.FinanceSales)
+                .HasMany(e => e.Sales)
                 .WithRequired(e => e.Student)
                 .HasForeignKey(e => e.StudentId)
                 .WillCascadeOnDelete(false);
