@@ -24,9 +24,9 @@
                 {
                     <h6 class="dropdown-header">@Model.Student.GetDisplayName()</h6>
                 }
-                <a href="@Url.Action("StudentDetails", new {studentId = Model.Student.Id})" class="dropdown-item">Details</a>
-                <a href="@Url.Action("BehaviourManagement", new {studentId = Model.Student.Id})" class="dropdown-item">Behaviour</a>
-                <a href="@Url.Action("StudentResults", new {studentId = Model.Student.Id})" class="dropdown-item">Results</a>
+                <a href="@Url.Action("StudentDetails", new {studentId = Model.Student.Id})" class="dropdown-item"><i class="fas fa-address-card fa-fw text-secondary"></i> Details</a>
+                <a href="@Url.Action("BehaviourManagement", new {studentId = Model.Student.Id})" class="dropdown-item"><i class="fas fa-smile fa-fw text-secondary"></i> Behaviour Management</a>
+                <a href="@Url.Action("StudentResults", new {studentId = Model.Student.Id})" class="dropdown-item"><i class="fas fa-tasks fa-fw text-secondary"></i> Results</a>
             </div>
         </div>
     </div>
@@ -136,7 +136,7 @@
 </div>
 
 <div class="row">
-    <div class="col-xl-3">
+    <div class="col-lg-3">
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary">Basic Details</h6>
@@ -193,6 +193,30 @@
                         <td>@Model.Student.House.HeadOfHouse.GetDisplayName()</td>
                     </tr>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Timetable</h6>
+            </div>
+
+            <div class="card-body">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Assessment Key Indicators</h6>
+            </div>
+
+            <div class="card-body">
+
             </div>
         </div>
     </div>

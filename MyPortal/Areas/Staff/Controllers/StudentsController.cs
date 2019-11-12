@@ -60,8 +60,7 @@ namespace MyPortal.Areas.Staff.Controllers
                 var student = await studentService.GetStudentById(studentId, "Person",
                     "RegGroup.Tutor.Person",
                     "YearGroup.HeadOfYear.Person",
-                    "House.HeadOfHouse.Person",
-                    "SenStatus");
+                    "House.HeadOfHouse.Person");
 
                 var logTypes = await profilesService.GetAllLogTypesLookup();
 

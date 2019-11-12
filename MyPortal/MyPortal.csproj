@@ -526,6 +526,10 @@
     <Compile Include="Migrations\201911111551130_AddedLEAs.Designer.cs">
       <DependentUpon>201911111551130_AddedLEAs.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201911121639411_ChangeSenStatusTableName.cs" />
+    <Compile Include="Migrations\201911121639411_ChangeSenStatusTableName.Designer.cs">
+      <DependentUpon>201911121639411_ChangeSenStatusTableName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Database\AssessmentAspect.cs" />
     <Compile Include="Models\Database\AssessmentAspectType.cs" />
@@ -1282,6 +1286,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201911111551130_AddedLEAs.resx">
       <DependentUpon>201911111551130_AddedLEAs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911121639411_ChangeSenStatusTableName.resx">
+      <DependentUpon>201911121639411_ChangeSenStatusTableName.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
