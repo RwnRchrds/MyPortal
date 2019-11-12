@@ -57,8 +57,11 @@ namespace MyPortal.Areas.Staff.Controllers
             using (var profilesService = new ProfilesService(UnitOfWork))
             using (var studentService = new StudentService(UnitOfWork))
             {
-                var student = await studentService.GetStudent(x => x.Id == studentId, "Person", "RegGroup.Tutor.Person",
-                    "YearGroup.HeadOfYear.Person", "House.HeadOfHouse.Person");
+                var student = await studentService.GetStudentById(studentId, "Person",
+                    "RegGroup.Tutor.Person",
+                    "YearGroup.HeadOfYear.Person",
+                    "House.HeadOfHouse.Person",
+                    "SenStatus");
 
                 var logTypes = await profilesService.GetAllLogTypesLookup();
 

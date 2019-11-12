@@ -18,7 +18,7 @@ namespace MyPortal.Interfaces
         Task<IEnumerable<TEntity>> Get<TOrderBy>(Expression<Func<TEntity, bool>> predicate,
             Expression<Func<TEntity, TOrderBy>> orderBy, params string[] includes);
 
-        Task<TEntity> GetSingle(Expression<Func<TEntity, bool>> predicate, params string[] includes);
+        Task<TEntity> GetSingle(Expression<Func<TEntity, bool>> predicate, params string[] includeProperties);
 
         Task<bool> Any(Expression<Func<TEntity, bool>> predicate);
     }

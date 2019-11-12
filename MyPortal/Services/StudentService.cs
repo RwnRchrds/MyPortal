@@ -66,9 +66,9 @@ namespace MyPortal.Services
             return student;
         }
 
-        public async Task<Student> GetStudent(Expression<Func<Student, bool>> predicate, params string[] includeProperties)
+        public async Task<Student> GetStudentById(int studentId, params string[] includeProperties)
         {
-            var student = await UnitOfWork.Students.GetSingle(predicate, includeProperties);
+            var student = await UnitOfWork.Students.GetSingle(x => x.Id == studentId, includeProperties);
 
             if (student == null)
             {

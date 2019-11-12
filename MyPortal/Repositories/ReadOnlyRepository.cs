@@ -37,11 +37,11 @@ namespace MyPortal.Repositories
             return await query.ToListAsync();
         }
 
-        public async Task<TEntity> GetSingle(Expression<Func<TEntity, bool>> predicate, params string[] includes)
+        public async Task<TEntity> GetSingle(Expression<Func<TEntity, bool>> predicate, params string[] includeProperties)
         {
             var query = Context.Set<TEntity>().AsQueryable();
 
-            foreach (var property in includes)
+            foreach (var property in includeProperties)
             {
                 query = query.Include(property);
             }
