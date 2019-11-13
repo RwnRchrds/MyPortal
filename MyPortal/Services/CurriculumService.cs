@@ -319,8 +319,6 @@ namespace MyPortal.Services
                 throw new ServiceException(ExceptionType.NotFound,"Student not found");
             }
 
-            subjectInDb.Deleted = true; //Flag as deleted
-
             //Delete from database
             if (await UnitOfWork.CurriculumClasses.Any(x => x.SubjectId == subjectId) ||
                 await UnitOfWork.CurriculumStudyTopics.Any(x => x.SubjectId == subjectId))
@@ -450,6 +448,18 @@ namespace MyPortal.Services
             if (session == null)
             {
                 throw new ServiceException(ExceptionType.NotFound,"Session not found");
+            }
+
+            return session;
+        }
+
+        public async Task<CurriculumSession> GetSessionByIdWithRelated(int sessionId)
+        {
+            var session = await UnitOfWork.CurriculumSessions.GetByIdWithRelated(sessionId);
+
+            if (session == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Session not found");
             }
 
             return session;

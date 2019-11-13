@@ -249,7 +249,7 @@
                     c.Field("Date").HeaderText("Date").Template("#logDateTemplate").Width("105").Add();
                     c.Field("AuthorName").HeaderText("Author").Template("#logAuthorTemplate").Width("110").Add();
                     c.Field("LogTypeName").HeaderText("Log Type").Template("#logTypeTemplate").Width("150").Add();
-                    c.Field("Message").HeaderText("Message").Width("500").Template("#logMessageTemplate").Add();
+                    c.Field("Message").HeaderText("Note").Width("500").Template("#logMessageTemplate").Add();
                     c.HeaderText("Actions").Template("#logActionsTemplate").Width("150").Add();
                 }).AllowPaging().AllowTextWrap().PageSettings(p => p.PageSize(5)).TextWrapSettings(w => { w.WrapMode(WrapMode.Content); }).QueryCellInfo("logQuery").EnableHover(false).Render()
             </div>
@@ -841,14 +841,14 @@
     </script>
 
     <script type="text/x-jsrender" id="logTypeTemplate">
-        <div>
+        <div class="font-weight-bold">
             ${LogTypeName}
         </div>
     </script>
 
     <script type="text/x-jsrender" id="logMessageTemplate">
         <div>
-            <b>${renderLogMessage(Message.toString())}</b>
+            ${renderLogMessage(Message.toString())}
         </div>
     </script>
 

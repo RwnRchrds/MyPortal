@@ -86,7 +86,7 @@ namespace MyPortal.Services
                 throw new ServiceException(ExceptionType.NotFound,"Document not found");
             }
 
-            documentInDb.Deleted = true;
+            UnitOfWork.Documents.Remove(documentInDb);
 
             await UnitOfWork.Complete();
         }

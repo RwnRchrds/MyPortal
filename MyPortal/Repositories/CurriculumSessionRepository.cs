@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using MyPortal.Extensions;
 using MyPortal.Interfaces;
 using MyPortal.Models.Database;
 
@@ -14,6 +15,13 @@ namespace MyPortal.Repositories
         public CurriculumSessionRepository(MyPortalDbContext context) : base(context)
         {
 
+        }
+
+        public async Task<CurriculumSession> GetByIdWithRelated(int sessionId)
+        {
+            return await Context.CurriculumSessions.IncludeMultiple(
+                x => x.Period,
+                x => x.Class.Teacher.Person).SingleOrDefaultAsync(x => x.Id == sessionId);
         }
 
         public async Task<IEnumerable<CurriculumSession>> GetByClass(int classId)

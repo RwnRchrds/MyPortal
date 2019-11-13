@@ -23,7 +23,7 @@ namespace MyPortal.Repositories
 
         public async Task<IEnumerable<AttendancePeriod>> GetByDayOfWeek(DayOfWeek weekDay)
         {
-            return await Context.AttendancePeriods.Where(x => x.Weekday == weekDay).ToListAsync();
+            return await Context.AttendancePeriods.Where(x => x.Weekday == weekDay).OrderBy(x => x.StartTime).ToListAsync();
         }
 
         public async Task<IEnumerable<AttendancePeriod>> GetByClass(int classId)

@@ -42,8 +42,8 @@ namespace MyPortal.Services
                 throw new ServiceException(ExceptionType.NotFound, "Student not found");
             }
 
-            studentInDb.Deleted = true;
-            //context.Students.Remove(studentInDb);
+            UnitOfWork.Students.Remove(studentInDb);
+
             await UnitOfWork.Complete();
         }
 

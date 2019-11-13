@@ -81,8 +81,8 @@ namespace MyPortal.Services
         {
             var logInDb = await GetLogById(logId);
 
-            logInDb.Deleted = true;
-            //_context.ProfileLogs.Remove(logInDb); //Delete from database
+            UnitOfWork.ProfileLogs.Remove(logInDb); //Delete from database
+
             await UnitOfWork.Complete();
         }
 

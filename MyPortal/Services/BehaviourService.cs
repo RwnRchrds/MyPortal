@@ -58,9 +58,8 @@ namespace MyPortal.Services
         {
             var achievement = await GetAchievementById(achievementId);
 
-            achievement.Deleted = true; //Flag as deleted
+            UnitOfWork.BehaviourAchievements.Remove(achievement);
 
-            //_unitOfWork.BehaviourAchievements.Remove(achievement); //Enable this to delete from the database
             await UnitOfWork.Complete();
         }
 
@@ -68,9 +67,8 @@ namespace MyPortal.Services
         {
             var incident = await GetBehaviourIncidentById(incidentId);
 
-            incident.Deleted = true;
+            UnitOfWork.BehaviourIncidents.Remove(incident);
 
-            //__unitOfWork.BehaviourIncidents.Remove(incident);
             await UnitOfWork.Complete();
         }
 

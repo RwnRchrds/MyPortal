@@ -8,6 +8,7 @@ using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
+using MyPortal.Dtos.Lite;
 using MyPortal.Models.Database;
 using MyPortal.Models.Misc;
 using MyPortal.Services;
@@ -50,31 +51,14 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditAttendance")]
-        [Route("marks/EditAttendance/dataGrid/{weekId:int}/{sessionId:int}", Name = "ApiLoadRegisterDataGrid")]
-        public async Task<IHttpActionResult> LoadRegisterDataGrid([FromBody] DataManagerRequest dm, [FromUri] int weekId,
-            [FromUri] int sessionId)
-        {
-            try
-            {
-                var marks = await _service.GetRegisterMarks(weekId, sessionId);
-                return PrepareDataGridObject(marks, dm);
-            }
-            catch (Exception e)
-            {
-                return HandleException(e);
-            }
-        }
-
-        [HttpPost]
-        [RequiresPermission("EditAttendance")]
         [Route("marks/saveRegister", Name = "ApiSaveRegisterMarks")]
-        public async Task<IHttpActionResult> SaveRegisterMarks(DataGridUpdate<StudentAttendanceMarkCollection> register)
+        public async Task<IHttpActionResult> SaveRegisterMarks([FromBody] IEnumerable<AttendanceMarkLiteDto> attendanceMarks)
         {
-            if (register.Changed != null)
+            if (attendanceMarks != null)
             {
                 try
                 {
-                    await _service.SaveRegisterMarks(register.Changed);
+                    await _service.SaveRegisterMarks(attendanceMarks);
                 }
                 catch (Exception e)
                 {
@@ -82,7 +66,7 @@ namespace MyPortal.Controllers.Api
                 }
             }
 
-            return Json(new List<StudentAttendanceMarkCollection>());
+            return Ok("Register saved");
         }
         
         [HttpGet]

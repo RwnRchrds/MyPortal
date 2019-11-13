@@ -44,7 +44,7 @@ namespace MyPortal.Services
                 throw new ServiceException(ExceptionType.Forbidden, "Cannot delete yourself");
             }
 
-            staffInDb.Deleted = true;
+            UnitOfWork.StaffMembers.Remove(staffInDb);
 
             await UnitOfWork.Complete();
         }

@@ -1,12 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using MyPortal.Models.Database;
+using MyPortal.Models.Misc;
 
 namespace MyPortal.Areas.Staff.ViewModels
 {
     public class TakeRegisterViewModel
     {
-        public int WeekId { get; set; }
+        public AttendanceWeek Week { get; set; }
         public DateTime SessionDate { get; set; }
         public CurriculumSession Session { get; set; }
+        public IEnumerable<AttendancePeriod> Periods { get; set; }
+        public IEnumerable<StudentAttendanceMarkCollection> AttendanceMarks { get; set; }
+        public List<string> AttendanceCodes { get; set; }
     }
 }

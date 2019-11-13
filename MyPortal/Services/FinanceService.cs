@@ -180,8 +180,8 @@ namespace MyPortal.Services
         {
             var productInDb = await GetProductById(productId);
 
-            productInDb.Deleted = true;
-            //context.FinanceProducts.Remove(productInDb); //Delete from database
+            UnitOfWork.FinanceProducts.Remove(productInDb); //Delete from database
+
             await UnitOfWork.Complete();
         }
 
@@ -189,8 +189,8 @@ namespace MyPortal.Services
         {
             var saleInDb = await GetSaleById(saleId);
 
-            saleInDb.Deleted = true;
-            //context.FinanceSales.Remove(saleInDb); //Delete from database
+            UnitOfWork.FinanceSales.Remove(saleInDb); //Delete from database
+
             await UnitOfWork.Complete();
         }
 

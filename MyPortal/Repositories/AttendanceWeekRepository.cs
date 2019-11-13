@@ -20,8 +20,10 @@ namespace MyPortal.Repositories
 
         public async Task<AttendanceWeek> GetByDate(int academicYearId, DateTime date)
         {
+            var weekBeginning = date.StartOfWeek();
+
             return await Context.AttendanceWeeks.SingleOrDefaultAsync(x =>
-                x.AcademicYearId == academicYearId && x.Beginning == date.StartOfWeek());
+                x.AcademicYearId == academicYearId && x.Beginning == weekBeginning);
         }
     }
 }

@@ -56,6 +56,13 @@ namespace MyPortal.Services
             return attendancePeriods;
         }
 
+        public async Task<IEnumerable<AttendanceCode>> GetAllAttendanceCodes()
+        {
+            var codes = await UnitOfWork.AttendanceCodes.GetAll();
+
+            return codes;
+        }
+
         public async Task<AttendanceMark> GetAttendanceMark(int attendanceWeekId, int periodId, int studentId)
         {
             var mark = await UnitOfWork.AttendanceMarks.Get(studentId, attendanceWeekId, periodId) ?? new AttendanceMark
@@ -121,6 +128,13 @@ namespace MyPortal.Services
             return week.Beginning.GetDayOfWeek(period.Weekday);
         }
 
+        public async Task<IEnumerable<AttendancePeriod>> GetPeriodsByDayOfWeek(DayOfWeek dayOfWeek)
+        {
+            var periods = await UnitOfWork.AttendancePeriods.GetByDayOfWeek(dayOfWeek);
+
+            return periods;
+        }
+
         public async Task<IEnumerable<StudentAttendanceMarkCollection>> GetRegisterMarks(int weekId,
             int sessionId)
         {
@@ -145,7 +159,7 @@ namespace MyPortal.Services
                 markObject.StudentName = enrolment.Student.GetDisplayName();
                 var marks = new List<AttendanceMark>();
 
-                var periodsInDay = await UnitOfWork.AttendancePeriods.GetByDayOfWeek(session.Period.Weekday);
+                var periodsInDay = await GetPeriodsByDayOfWeek(session.Period.Weekday);
 
                 foreach (var period in periodsInDay)
                 {
@@ -224,8 +238,7 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<AttendanceMarkLiteDto>> PrepareLiteMarkList(List<AttendanceMark> marks, bool retrieveMeanings)
         {
-            var liteMarks = marks.OrderBy(x => x.Period.StartTime)
-                .Select(Mapper.Map<AttendanceMark, AttendanceMarkLiteDto>).ToList();
+            var liteMarks = marks.Select(Mapper.Map<AttendanceMark, AttendanceMarkLiteDto>).ToList();
 
             if (retrieveMeanings)
             {
@@ -239,36 +252,28 @@ namespace MyPortal.Services
             return liteMarks;
         }
 
-        public async Task SaveRegisterMarks(IEnumerable<StudentAttendanceMarkCollection> markCollections)
+        public async Task SaveRegisterMarks(IEnumerable<AttendanceMarkLiteDto> marks)
         {
-            foreach (var collection in markCollections)
+            foreach (var mark in marks)
             {
-                foreach (var mark in collection.Marks)
+                var markInDb = await UnitOfWork.AttendanceMarks.Get(mark.StudentId, mark.WeekId, mark.PeriodId);
+
+                if (markInDb != null)
                 {
-                    if (mark.Id == 0)
+                    markInDb.Mark = mark.Mark;
+                }
+
+                else
+                {
+                    var newMark = new AttendanceMark
                     {
-                        var attMark = new AttendanceMark
-                        {
-                            Mark = mark.Mark,
-                            PeriodId = mark.PeriodId,
-                            WeekId = mark.WeekId,
-                            StudentId = mark.StudentId
-                        };
+                        Mark = mark.Mark,
+                        PeriodId = mark.PeriodId,
+                        WeekId = mark.WeekId,
+                        StudentId = mark.StudentId
+                    };
 
-                        UnitOfWork.AttendanceMarks.Add(attMark);
-                    }
-
-                    else
-                    {
-                        var markInDb = await UnitOfWork.AttendanceMarks.GetById(mark.Id);
-
-                        if (markInDb == null)
-                        {
-                            throw new ServiceException(ExceptionType.NotFound,"Attendance mark not found");
-                        }
-
-                        markInDb.Mark = mark.Mark;
-                    }
+                    UnitOfWork.AttendanceMarks.Add(newMark);
                 }
             }
 

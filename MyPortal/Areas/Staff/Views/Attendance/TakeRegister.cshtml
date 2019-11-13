@@ -1,8 +1,9 @@
-﻿@using MyPortal.Services
+﻿@using MyPortal.Extensions
+@using MyPortal.Services
 @using Syncfusion.EJ2.Grids
 @model MyPortal.Areas.Staff.ViewModels.TakeRegisterViewModel
 @{
-    ViewBag.Title = "Take Register: " + @Model.Session.Period.Name + " - " + @Model.Session.CurriculumClass.Name;
+    ViewBag.Title = $"Take Register: {Model.Session.Period.Name} - {Model.Session.Class.Name}";
     ViewBag.DisplayTitle = "Take Register";
 }
 
@@ -16,26 +17,62 @@
     <h1 class="h3 mb-0 text-gray-800">Take Register</h1>
 </div>*@
 
+<div class="row">
+
+    <div class="col-xl-12 col-md-12">
+
+        <div class="form-group">
+            <button type="button" class="btn btn-primary" id="buttonBack">Back</button>
+            <button type="button" class="btn btn-primary" id="buttonSave">Save</button>
+        </div>
+
+    </div>
+
+</div>
+
 @if (User.HasPermission("EditAttendance"))
 {
     <div class="row">
     
         <div class="col-xl-12 col-lg-12 mb-4">
-            <div class="card shadow mb-4">
+            <div class="card w-fit-content shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">@Model.SessionDate.ToLongDateString() -  @Model.Session.CurriculumClass.Name (@Model.Session.Period.Name) - @PeopleService.GetDisplayName(Model.Session.CurriculumClass.Teacher).ResponseObject</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">@Model.SessionDate.ToLongDateString() -  @Model.Session.Class.Name (@Model.Session.Period.Name) - @Model.Session.Class.Teacher.GetDisplayName()</h6>
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
-                    @Html.EJS().Grid("Marks").DataSource(d =>
-                    {
-                        d.Url(Url.HttpRouteUrl("ApiAttendanceLoadRegisterDataGrid", new {weekId = Model.WeekId, sessionId = Model.Session.Id})).BatchUrl(Url.HttpRouteUrl("ApiAttendanceSaveRegisterMarks", new {})).CrossDomain(false).Adaptor("UrlAdaptor");
-                    }).Columns(c =>
-                    {
-                        c.Field("StudentName").HeaderText("Student").Template("#marksStudentTemplate").Width("150").Add();
-                        c.Field("Mark.Mark").HeaderText(Model.Session.Period.Name).Width("150").Add();
-                    }).EditSettings(e => { e.AllowEditing(true).Mode(EditMode.Batch);}).EnableHover().Toolbar(new List<string>() {"Update", "Cancel"}).ActionComplete("dataGridActionComplete").CellEdit("cellEdit").Render()
+                    <table class="table table-bordered w-fit-content" id="register">
+                        <thead>
+                        <tr>
+                            <th scope="col" class="register-student">Student</th>
+                            @foreach (var period in Model.Periods)
+                            {
+                                <th scope="col" class="text-center register-period">@period.Name</th>
+                            }
+                        </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.AttendanceMarks.Count(); i++)
+                            {
+                                var entry = Model.AttendanceMarks.ElementAt(i);
+                                <tr>
+                                    <th scope="row">@entry.StudentName</th>
+                                    @foreach (var attendanceMark in entry.Marks)
+                                    {
+                                        if (attendanceMark.PeriodId == Model.Session.PeriodId)
+                                        {
+                                            <td class="text-center register-current js-mark" data-student-id="@attendanceMark.StudentId" data-mark-id="@attendanceMark.Id" tabindex="0">@attendanceMark.Mark</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="text-center">@attendanceMark.Mark</td>
+                                        }
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -43,26 +80,30 @@
     </div>
 }
 
-<div class="row">
-    
-    <div class="col-xl-12 col-md-12">
-        
-        <div class="form-group">
-            <button type="button" class="btn btn-primary" id="buttonBack">Back</button>
-            <button type="button" class="btn btn-primary" id="buttonSearch">Save</button>
-        </div>
-
-    </div>
-
-</div>
-
 @section scripts
 {
     <script>
+
+        var codes = @Html.Raw(Json.Encode(Model.AttendanceCodes));
+
+        var saveRegisterUrl = "@Url.HttpRouteUrl("ApiSaveRegisterMarks", new {})";
+
         $(document).ready(function () {
             $("#buttonBack").on("click",
                 function () {
-                    location.replace("@Url.Action("Registers", "Home")");
+                    location.replace("@Url.Action("Registers")");
+                });
+
+            $("td.js-mark:first").focus();
+
+            $(".js-mark").on("keypress", function(e) {
+                var attendanceCode = String.fromCharCode(e.which).toUpperCase();
+                updateMark(attendanceCode);
+            });
+
+            $("#buttonSave").on("click",
+                function() {
+                    saveRegister();
                 });
         }); 
 
@@ -77,6 +118,52 @@
                     this.cell.querySelector("input").select();
                 }.bind(args),
                 0);
+        }
+
+        function updateMark(attendanceCode) {
+            var mark = $(":focus");
+
+            if (codes.includes(attendanceCode)) {
+                mark.text(attendanceCode);
+
+                var marks = $(".js-mark");
+                var index = marks.index(mark);
+                marks.eq(index + 1).focus();
+            } else {
+                alert("Please enter a valid register code.");
+            }
+        }
+
+        function saveRegister() {
+            var attendanceMarks = [];
+
+            $(".js-mark").each(function() {
+                var data = $(this);
+
+                attendanceMarks.push({
+                    "Id": parseInt(data.attr("data-mark-id"), 10),
+                    "StudentId": parseInt(data.attr("data-student-id"), 10),
+                    "WeekId": @Model.Week.Id,
+                    "PeriodId": @Model.Session.PeriodId,
+                    "Mark": data.text(),
+                    "Meaning": 0
+                });
+            });
+
+            console.log(attendanceMarks.attendanceMarks);
+
+            $.ajax({
+                url: saveRegisterUrl,
+                method: "POST",
+                data: JSON.stringify(attendanceMarks),
+                contentType: "application/json; charset=utf-8",
+                success: function(result) {
+                    toastr.success(result);
+                },
+                error: function(result) {
+                    toastr.error(result.responeJSON);
+                }
+            });
         }
     </script>
 

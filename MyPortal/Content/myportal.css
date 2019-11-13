@@ -241,8 +241,8 @@
     max-width: 280px;
 }
 
-.register-column-current {
-    background-color: yellow;
+.register-current {
+    background-color: #f0f4ff;
 }
 
 .myportal-font {
@@ -263,6 +263,19 @@
     background: url("https://www.cranbornemid.dorset.sch.uk/uploads/5/0/8/2/50822243/029-cranborne-middle-school-6thoctober2015-ash-mills_2_orig.jpg");
     background-position: center;
     background-size: cover;
+}
+
+.register-student {
+    min-width: 15rem !important;
+}
+
+.register-period {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.w-fit-content {
+    width: fit-content !important;
 }
 
 

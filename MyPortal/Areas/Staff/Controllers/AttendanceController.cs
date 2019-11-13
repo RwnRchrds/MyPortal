@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
@@ -44,21 +46,27 @@ namespace MyPortal.Areas.Staff.Controllers
             using (var curriculumService = new CurriculumService(UnitOfWork))
             using (var attendanceService = new AttendanceService(UnitOfWork))
             {
-                var viewModel = new TakeRegisterViewModel();
                 var attendanceWeek = await attendanceService.GetAttendanceWeekById(weekId);
-                var session = await curriculumService.GetSessionById(sessionId);
+                var session = await curriculumService.GetSessionByIdWithRelated(sessionId);
+                var sessionDate = await attendanceService.GetAttendancePeriodDate(weekId, session.PeriodId);
+                var attendanceMarks = await attendanceService.GetRegisterMarks(weekId, sessionId);
+                var periods = await attendanceService.GetPeriodsByDayOfWeek(sessionDate.DayOfWeek);
+                var codes = await attendanceService.GetAllAttendanceCodes();
 
-                if (attendanceWeek == null || session == null || attendanceWeek.IsHoliday || attendanceWeek.IsNonTimetable)
+                if (attendanceWeek.IsHoliday || attendanceWeek.IsNonTimetable)
                 {
                     return RedirectToAction("Registers");
                 }
 
-                var sessionDate = await attendanceService.GetAttendancePeriodDate(weekId, session.PeriodId);
-
-                viewModel.Session = session;
-                viewModel.WeekId = attendanceWeek.Id;
-
-                viewModel.SessionDate = sessionDate;
+                var viewModel = new TakeRegisterViewModel
+                {
+                    Session = session,
+                    AttendanceMarks = attendanceMarks,
+                    Week = attendanceWeek,
+                    Periods = periods,
+                    SessionDate = sessionDate,
+                    AttendanceCodes = codes.Where(x => !x.DoNotUse).Select(attendanceCode => attendanceCode.Code).ToList()
+                };
 
                 return View(viewModel);
             }

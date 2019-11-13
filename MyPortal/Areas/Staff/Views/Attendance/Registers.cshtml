@@ -40,7 +40,7 @@
             <div class="card-body">
                 @Html.EJS().Grid("Registers").DataSource(d =>
                 {
-                    d.Url(Url.HttpRouteUrl("ApiCurriculumGetSessionsByTeacherDataGrid", new {teacherId = Model.CurrentUser.Id, date = DateTime.Today.ToDisplayString()})).CrossDomain(false).Adaptor("UrlAdaptor");
+                    d.Url(Url.HttpRouteUrl("ApiGetSessionsByTeacherAndDateDataGrid", new {teacherId = Model.CurrentUser.Id, date = DateTime.Today.ToDisplayString()})).CrossDomain(false).Adaptor("UrlAdaptor");
                 }).Columns(c =>
                 {
                     c.Field("PeriodName").HeaderText("Period").Template("#registersPeriodTemplate").Width("200").Add();
@@ -59,11 +59,11 @@
 {
     <script>
 
-        var urlGetAllStaff = "@Url.HttpRouteUrl("ApiPeopleGetAllStaffMembers", new {})";
+        var urlGetAllStaff = "@Url.HttpRouteUrl("ApiGetAllStaffMembers", new {})";
         var urlGetRegisters =
-            "@Url.HttpRouteUrl("ApiCurriculumGetSessionsByTeacherDataGrid", new {teacherId = 9999, date = "2000-01-01"})";
-        var urlEditAttendance = "@Url.HttpRouteUrl("AttendanceEditAttendance", new {weekId = 9999, sessionId = 8888})";
-        var urlGetWeekByDate = "@Url.HttpRouteUrl("ApiAttendanceGetWeekByDate", new {date = "2000-01-01"})";
+            "@Url.HttpRouteUrl("ApiGetSessionsByTeacherAndDateDataGrid", new {teacherId = 9999, date = "2000-01-01"})";
+        var urlEditAttendance = "@Url.Action("TakeRegister", new {weekId = 9999, sessionId = 8888})";
+        var urlGetWeekByDate = "@Url.HttpRouteUrl("ApiGetAttendanceWeekByDate", new {date = "2000-01-01"})";
 
         $(document).ready(function() {
             $('.modal').on('hidden.bs.modal',
