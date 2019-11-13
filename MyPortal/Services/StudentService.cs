@@ -66,9 +66,9 @@ namespace MyPortal.Services
             return student;
         }
 
-        public async Task<Student> GetStudentById(int studentId, params string[] includeProperties)
+        public async Task<Student> GetStudentByIdWithRelated(int studentId)
         {
-            var student = await UnitOfWork.Students.GetSingle(x => x.Id == studentId, includeProperties);
+            var student = await UnitOfWork.Students.GetByIdWithRelated(studentId);
 
             if (student == null)
             {

@@ -57,10 +57,7 @@ namespace MyPortal.Areas.Staff.Controllers
             using (var profilesService = new ProfilesService(UnitOfWork))
             using (var studentService = new StudentService(UnitOfWork))
             {
-                var student = await studentService.GetStudentById(studentId, "Person",
-                    "RegGroup.Tutor.Person",
-                    "YearGroup.HeadOfYear.Person",
-                    "House.HeadOfHouse.Person");
+                var student = await studentService.GetStudentByIdWithRelated(studentId);
 
                 var logTypes = await profilesService.GetAllLogTypesLookup();
 
@@ -74,7 +71,7 @@ namespace MyPortal.Areas.Staff.Controllers
 
                 if (attendanceData != null)
                 {
-                    attendance = attendanceData.Present;
+                    attendance = attendanceData.Present + attendanceData.ApprovedEdActivity;
                 }
 
                 int? achievementCount = await behaviourService.GetAchievementPointsCountByStudent(student.Id, academicYearId);

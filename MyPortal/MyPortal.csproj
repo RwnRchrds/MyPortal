@@ -398,6 +398,7 @@
     <Compile Include="Dtos\SystemSchoolDto.cs" />
     <Compile Include="Extensions\AttendanceExtensions.cs" />
     <Compile Include="Extensions\CurriculumExtensions.cs" />
+    <Compile Include="Extensions\DataExtensions.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\StaffMemberExtensions.cs" />
     <Compile Include="Extensions\StudentExtensions.cs" />
@@ -529,6 +530,10 @@
     <Compile Include="Migrations\201911121639411_ChangeSenStatusTableName.cs" />
     <Compile Include="Migrations\201911121639411_ChangeSenStatusTableName.Designer.cs">
       <DependentUpon>201911121639411_ChangeSenStatusTableName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201911121840019_SenStatusOptional.cs" />
+    <Compile Include="Migrations\201911121840019_SenStatusOptional.Designer.cs">
+      <DependentUpon>201911121840019_SenStatusOptional.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Database\AssessmentAspect.cs" />
@@ -934,6 +939,7 @@
     <Content Include="Content\DataTables\swf\flashExport.swf" />
     <Content Include="Content\ej2\bootstrap.css" />
     <Content Include="Content\ej2\bootstrap4.css" />
+    <Content Include="Content\ej2\bootstrap4.min.css" />
     <Content Include="Content\ej2\compatibility\bootstrap.css" />
     <Content Include="Content\ej2\compatibility\fabric.css" />
     <Content Include="Content\ej2\compatibility\highcontrast.css" />
@@ -1024,6 +1030,8 @@
     <Content Include="Areas\Students\web.config" />
     <Content Include="Areas\Staff\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Students\Views\_ViewStart.cshtml" />
+    <Content Include="Content\ej2\bootstrap4.scss" />
+    <Content Include="Content\ej2\settings.json" />
     <None Include="Properties\PublishProfiles\IIS.pubxml" />
     <None Include="Properties\PublishProfiles\Software Development Directory.pubxml" />
     <Content Include="Scripts\bootstrap.bundle.js" />
@@ -1289,6 +1297,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201911121639411_ChangeSenStatusTableName.resx">
       <DependentUpon>201911121639411_ChangeSenStatusTableName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911121840019_SenStatusOptional.resx">
+      <DependentUpon>201911121840019_SenStatusOptional.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
