@@ -24,31 +24,6 @@ namespace MyPortal.Repositories
             return await Context.Set<TEntity>().FindAsync(id);
         }
 
-        public async Task<IEnumerable<TEntity>> Get<TOrderBy>(Expression<Func<TEntity, bool>> predicate,
-            Expression<Func<TEntity, TOrderBy>> orderBy, params string[] includes)
-        {
-            var query = Context.Set<TEntity>().Where(predicate).OrderBy(orderBy).AsQueryable();
-
-            foreach (var property in includes)
-            {
-                query = query.Include(property);
-            }
-
-            return await query.ToListAsync();
-        }
-
-        public async Task<TEntity> GetSingle(Expression<Func<TEntity, bool>> predicate, params string[] includeProperties)
-        {
-            var query = Context.Set<TEntity>().AsQueryable();
-
-            foreach (var property in includeProperties)
-            {
-                query = query.Include(property);
-            }
-
-            return await query.SingleOrDefaultAsync(predicate);
-        }
-
         public async Task<IEnumerable<TEntity>> GetAll()
         {
             return await Context.Set<TEntity>().ToListAsync();

@@ -481,7 +481,7 @@ namespace MyPortal.Models.Database
 
             modelBuilder.Entity<SenStatus>()
                 .HasMany(x => x.Students)
-                .WithRequired(x => x.SenStatus)
+                .WithOptional(x => x.SenStatus)
                 .HasForeignKey(x => x.SenStatusId);
 
             modelBuilder.Entity<SenStatus>()

@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.Ajax.Utilities;
+using MyPortal.Extensions;
 using MyPortal.Interfaces;
 using MyPortal.Models.Database;
 
@@ -21,6 +22,20 @@ namespace MyPortal.Repositories
         public new async Task<Student> GetById(int id)
         {
             return await Context.Students.Include(x => x.Person).FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<Student> GetByIdWithRelated(int studentId)
+        {
+            var query = Context.Students.AsQueryable();
+
+            query = query.IncludeMultiple(
+                x => x.Person,
+                x => x.House.HeadOfHouse.Person,
+                x => x.RegGroup.Tutor.Person,
+                x => x.SenStatus,
+                x => x.YearGroup.HeadOfYear.Person);
+
+            return await query.SingleOrDefaultAsync(x => x.Id == studentId);
         }
 
         public async Task<Student> GetByUserId(string userId)

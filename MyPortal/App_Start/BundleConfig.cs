@@ -42,7 +42,7 @@ namespace MyPortal
                 "~/content/solid.min.css",
                 "~/Content/brands.min.css",
                 "~/Content/site.css",
-                "~/Content/ej2/material.min.css"));
+                "~/Content/ej2/bootstrap4.css"));
         }
     }
 }
