@@ -1,6 +1,5 @@
 ﻿@using MyPortal.Extensions
 @using MyPortal.Services
-@using Syncfusion.EJ2.Grids
 @model MyPortal.Areas.Staff.ViewModels.TakeRegisterViewModel
 @{
     ViewBag.Title = $"Take Register: {Model.Session.Period.Name} - {Model.Session.Class.Name}";
@@ -35,29 +34,29 @@
     <div class="row">
     
         <div class="col-xl-12 col-lg-12 mb-4">
-            <div class="card w-fit-content shadow mb-4">
+            <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold text-primary">@Model.SessionDate.ToLongDateString() -  @Model.Session.Class.Name (@Model.Session.Period.Name) - @Model.Session.Class.Teacher.GetDisplayName()</h6>
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
-                    <table class="table table-bordered w-fit-content" id="register">
+                    <table class="table table-bordered table-responsive" id="register">
                         <thead>
                         <tr>
-                            <th scope="col" class="register-student">Student</th>
+                            <th class="register-student">Student</th>
                             @foreach (var period in Model.Periods)
                             {
-                                <th scope="col" class="text-center register-period">@period.Name</th>
+                                <th class="text-center register-period">@period.Name</th>
                             }
                         </tr>
                         </thead>
                         <tbody>
-                            @for (int i = 0; i < Model.AttendanceMarks.Count(); i++)
+                            @for (var i = 0; i < Model.AttendanceMarks.Count(); i++)
                             {
                                 var entry = Model.AttendanceMarks.ElementAt(i);
                                 <tr>
-                                    <th scope="row">@entry.StudentName</th>
+                                    <th>@entry.StudentName</th>
                                     @foreach (var attendanceMark in entry.Marks)
                                     {
                                         if (attendanceMark.PeriodId == Model.Session.PeriodId)
@@ -149,8 +148,6 @@
                     "Meaning": 0
                 });
             });
-
-            console.log(attendanceMarks.attendanceMarks);
 
             $.ajax({
                 url: saveRegisterUrl,

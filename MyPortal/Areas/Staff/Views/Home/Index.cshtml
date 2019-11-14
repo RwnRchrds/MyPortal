@@ -95,7 +95,7 @@
 @if (User.HasPermission("ViewTrainingCertificates"))
 {
     <div class="row">
-        <div class="col-xl-12 col-lg-12">
+        <div class="col-lg-6">
             <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -108,20 +108,15 @@
                         dataManager.Url("/api/personnel/certificates/get/byStaff/dataGrid/" + Model.CurrentUser.Id).CrossDomain(false).Adaptor("UrlAdaptor");
                     }).Columns(col =>
                     {
-                        col.Field("CourseCode").HeaderText("Code").Template("#trainingCodeTemplate").Width("200").Add();
-                        col.Field("CourseDescription").HeaderText("Description").Template("#trainingDescriptionTemplate").Width("300").Add();
-                        col.Field("Status").HeaderText("Status").Template("#trainingStatusTemplate").Width("250").Add();
+                        col.Field("CourseCode").HeaderText("Code").Template("#trainingCodeTemplate").HideAtMedia("(min-width: 1200px)").Width("50").Add();
+                        col.Field("CourseDescription").HeaderText("Description").Template("#trainingDescriptionTemplate").Width("100").Add();
+                        col.Field("Status").HeaderText("Status").Template("#trainingStatusTemplate").Width("50").Add();
                     }).AllowPaging().PageSettings(p => p.PageSize(5)).QueryCellInfo("trainingQuery").EnableHover(false).Render()
                 </div>
             </div>
         </div>
-    </div>
-}
-
-@if (User.HasPermission("ViewObservations"))
-{
-    <div class="row">
-        <div class="col-xl-12 col-lg-12">
+        
+        <div class="col-lg-6">
             <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -134,13 +129,20 @@
                         dataManager.Url("/api/personnel/observations/get/byStaff/dataGrid/" + Model.CurrentUser.Id).CrossDomain(false).Adaptor("UrlAdaptor");
                     }).Columns(col =>
                     {
-                        col.Field("Date").HeaderText("Date").Template("#observationsDateTemplate").Width("250").Add();
-                        col.Field("ObserverName").HeaderText("Observed By").Template("#observationsObserverTemplate").Width("300").Add();
-                        col.Field("Outcome").HeaderText("Outcome").Template("#observationsOutcomeTemplate").Width("300").Add();
+                        col.Field("Date").HeaderText("Date").Template("#observationsDateTemplate").Width("50").Add();
+                        col.Field("ObserverName").HeaderText("Observed By").Template("#observationsObserverTemplate").HideAtMedia("(min-width: 1200px)").Width("100").Add();
+                        col.Field("Outcome").HeaderText("Outcome").Template("#observationsOutcomeTemplate").Width("100").Add();
                     }).AllowPaging().PageSettings(p => p.PageSize(5)).QueryCellInfo("observationQuery").EnableHover(false).Render()
                 </div>
             </div>
         </div>
+    </div>
+}
+
+@if (User.HasPermission("ViewObservations"))
+{
+    <div class="row">
+        
     </div>
 }
 
@@ -245,6 +247,10 @@
                 }
             }
         }
+
+        function trainingDataBound(args) {
+            this.autoFitColumns();
+        }
     </script>
 
     <script type="text/x-jsrender" id="documentsDescriptionTemplate">
@@ -290,7 +296,7 @@
     </script>
 
     <script type="text/x-jsrender" id="trainingStatusTemplate">
-        <div>
+        <div class="text-center font-weight-bold">
             ${Status}
         </div>
     </script>

@@ -47,16 +47,17 @@ namespace MyPortal.Areas.Staff.Controllers
             using (var attendanceService = new AttendanceService(UnitOfWork))
             {
                 var attendanceWeek = await attendanceService.GetAttendanceWeekById(weekId);
-                var session = await curriculumService.GetSessionByIdWithRelated(sessionId);
-                var sessionDate = await attendanceService.GetAttendancePeriodDate(weekId, session.PeriodId);
-                var attendanceMarks = await attendanceService.GetRegisterMarks(weekId, sessionId);
-                var periods = await attendanceService.GetPeriodsByDayOfWeek(sessionDate.DayOfWeek);
-                var codes = await attendanceService.GetAllAttendanceCodes();
 
                 if (attendanceWeek.IsHoliday || attendanceWeek.IsNonTimetable)
                 {
                     return RedirectToAction("Registers");
                 }
+
+                var session = await curriculumService.GetSessionByIdWithRelated(sessionId);
+                var sessionDate = await attendanceService.GetAttendancePeriodDate(weekId, session.PeriodId);
+                var attendanceMarks = await attendanceService.GetRegisterMarks(weekId, sessionId);
+                var periods = await attendanceService.GetPeriodsByDayOfWeek(sessionDate.DayOfWeek);
+                var codes = await attendanceService.GetAllAttendanceCodes();
 
                 var viewModel = new TakeRegisterViewModel
                 {
