@@ -9,20 +9,6 @@
     <h1 class="h3 mb-0 text-gray-800">Result Sets</h1>
 </div>
 
-@if (User.HasPermission("EditResultSets"))
-{
-    <div class="row">
-
-        <div class="col-xl-12 col-md-12 mb-4">
-
-            <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" data-target="#NewResultSetModal">New Result Set</button>
-
-        </div>
-
-    </div>
-}
-
-
 <div class="row">
     
     <div class="col-xl-12 col-lg-12">
@@ -33,6 +19,11 @@
             </div>
             <!-- Card Body -->
             <div class="card-body">
+                
+                <div class="mb-4">
+                    <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#NewResultSetModal"><i class="fas fa-plus"></i> New Result Set</button>
+                </div>
+
                 @Html.EJS().Grid("ResultSets").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiGetAllResultSetsDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
                 {
                     c.Field("Name").HeaderText("Name").Template("#resultSetsNameTemplate").Width("150").Add();
@@ -58,7 +49,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             @Html.Label("Name")
-                            @Html.TextBoxFor(x => x.ResultSet.Name, new { @class = "form-control", Name = "Name" })
+                            @Html.TextBoxFor(x => x.ResultSet.Name, new { @class = "form-control form-control-sm", Name = "Name" })
                             @Html.ValidationMessageFor(x => x.ResultSet.Name)
                         </div>
                         <div class="modal-footer">
@@ -84,15 +75,15 @@
                     <div class="modal-body">
                         <div class="form-group">
                             @Html.LabelFor(x => x.ResultSet.Name)
-                            @Html.TextBoxFor(x => x.ResultSet.Name, new { @class = "form-control", Name = "Name", id = "EditResultSetNameControl" })
+                            @Html.TextBoxFor(x => x.ResultSet.Name, new { @class = "form-control form-control-sm", Name = "Name", id = "EditResultSetNameControl" })
                             @Html.ValidationMessageFor(x => x.ResultSet.Name)
                         </div>
                         <div class="form-group">
                             @Html.HiddenFor(x => x.ResultSet.Id, new { Name = "Id", id = "EditResultSetIdControl" })
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-sm btn-primary">Save</button>
                         </div>
                     </div>
                 }
@@ -187,16 +178,14 @@
         }
 
         function renderActions(current, id) {
-            var currentButton = "";
-
             const editButton =
-                `<button type='button' class='btn btn-xs btn-warning mp-btn-action js-edit' data-set-id="${id}">
-            <i class="far fa-edit"></i>
+                `<button type='button' class='btn btn-sm btn-primary mr-1 js-edit' data-set-id="${id}">
+            <i class="fas fa-pencil-alt"></i> Edit
 </button>`;
 
             const deleteButton =
-                `<button type='button' class='btn btn-xs btn-danger mp-btn-action js-delete' data-set-id="${id}">
-            <i class=\"far fa-trash-alt\"></i>
+                `<button type='button' class='btn btn-sm btn-danger js-delete' data-set-id="${id}">
+            <i class="fas fa-trash-alt"></i> Delete
 </button>`;
 
             return editButton + deleteButton;

@@ -12,18 +12,6 @@
 <div class="row">
     
     <div class="col-xl-12 col-md-12 mb-4">
-        @if (User.HasPermission("EditRoles"))
-            {
-                <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" data-target="#NewRoleModal">New Role</button>
-                <hr/>
-            }
-    </div>
-    
-</div>
-
-<div class="row">
-    
-    <div class="col-xl-12 col-md-12 mb-4">
         
         <div class="card shadow mb-4">
             
@@ -32,6 +20,11 @@
             </div>
             
             <div class="card-body">
+                
+                <div class="mb-4">
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#NewRoleModal"><i class="fas fa-plus"></i> New Role</button>
+                </div>
+
                 @Html.EJS().Grid("Roles").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiGetUserDefinedRolesDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
                 {
                     c.Field("Name").HeaderText("Role").Template("#roleNameTemplate").Width("200").Add();
@@ -58,12 +51,12 @@
         <div class="modal-body">
             <div class="form-group">
                 @Html.Label("Name")
-                @Html.TextBoxFor(x => x.Role.Name, new { @class = "form-control", Name = "Name" })
+                @Html.TextBoxFor(x => x.Role.Name, new { @class = "form-control form-control-sm", Name = "Name" })
                 @Html.ValidationMessageFor(x => x.Role.Name)
             </div>
             <div class="form-group">
                 @Html.Label("Description")
-                @Html.TextBoxFor(x => x.Role.Description, new { @class = "form-control", Name = "Description" })
+                @Html.TextBoxFor(x => x.Role.Description, new { @class = "form-control form-control-sm", Name = "Description" })
                 @Html.ValidationMessageFor(x => x.Role.Description)
             </div>
             <div class="modal-footer">
@@ -89,12 +82,12 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Name")
-                        @Html.TextBoxFor(x => x.Role.Name, new {@class = "form-control", Name = "Name", id = "EditRoleNameControl"})
+                        @Html.TextBoxFor(x => x.Role.Name, new {@class = "form-control form-control-sm", Name = "Name", id = "EditRoleNameControl"})
                         @Html.ValidationMessageFor(x => x.Role.Name)
                     </div>
                     <div class="form-group">
                         @Html.Label("Description")
-                        @Html.TextBoxFor(x => x.Role.Description, new { @class = "form-control", Name = "Description", id = "EditRoleDescriptionControl" })
+                        @Html.TextBoxFor(x => x.Role.Description, new { @class = "form-control form-control-sm", Name = "Description", id = "EditRoleDescriptionControl" })
                         @Html.ValidationMessageFor(x => x.Role.Description)
                     </div>
                     <div class="form-group">
@@ -213,14 +206,14 @@
     
     <script type="text/x-jsrender" id="roleActionsTemplate">
         <div>
-            <button type="button" class="btn btn-link js-permissions" data-toggle="tooltip" data-placement="top" title="View role permissions" data-role-id="${Id}">
-                <i class="far fa-check-circle"></i>
+            <button type="button" class="btn btn-sm btn-primary mr-1 js-permissions" data-toggle="tooltip" data-placement="top" title="View role permissions" data-role-id="${Id}">
+                <i class="fas fa-check"></i> Permissions
             </button>
-            <button type="button" class="btn btn-link js-edit" data-toggle="tooltip" data-placement="top" title="Edit role" data-role-id="${Id}">
-                <i class="far fa-edit"></i>
+            <button type="button" class="btn btn-sm btn-primary mr-1 js-edit" data-toggle="tooltip" data-placement="top" title="Edit role" data-role-id="${Id}">
+                <i class="fas fa-pencil-alt"></i> Edit
             </button>
-            <button type="button" class="btn btn-link js-delete" data-toggle="tooltip" data-placement="top" title="Delete role" data-role-id="${Id}">
-                <i class="far fa-trash-alt text-danger"></i>
+            <button type="button" class="btn btn-sm btn-danger js-delete" data-toggle="tooltip" data-placement="top" title="Delete role" data-role-id="${Id}">
+                <i class="fas fa-trash-alt"></i> Delete
             </button>
         </div>
     </script>

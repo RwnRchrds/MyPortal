@@ -74,7 +74,7 @@
     <div class="col-xl-12 col-md-12 mb-4">
 
         <div class="dropdown mp-btn-top inline-block">
-            <button class="btn btn-primary dropdown-toggle px-4" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-user"></i> User
             </button>
 
@@ -104,7 +104,7 @@
 
             <div class="mb-4">
 
-                <button type="button" class="btn btn-primary mp-btn-top-auto" id="AddRole" data-toggle="modal" data-target="#AddRoleModal">
+                <button type="button" class="btn btn-sm btn-primary" id="AddRole" data-toggle="modal" data-target="#AddRoleModal">
                     <i class="fa fa-plus-circle"></i> Add Role
                 </button>
 
@@ -141,14 +141,14 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Password")
-                        @Html.PasswordFor(p => p.ChangePassword.Password, new { @class = "form-control", id = "enteredPassword", Name = "Password" })
+                        @Html.PasswordFor(p => p.ChangePassword.Password, new { @class = "form-control form-control-sm", id = "enteredPassword", Name = "Password" })
                         @Html.ValidationMessageFor(p => p.ChangePassword.Password)
 
                         @Html.HiddenFor(u => u.ChangePassword.UserId, new { Value = Model.User.Id, id = "userIdControl", Name = "UserId" })
                     </div>
                     <div class="form-group">
                         @Html.Label("Confirm Password")
-                        @Html.PasswordFor(p => p.ChangePassword.Confirm, new { @class = "form-control", id = "confirmPassword", Name = "Confirm" })
+                        @Html.PasswordFor(p => p.ChangePassword.Confirm, new { @class = "form-control form-control-sm", id = "confirmPassword", Name = "Confirm" })
                         @Html.ValidationMessageFor(p => p.ChangePassword.Confirm)
                     </div>
                     <div class="modal-footer">
@@ -179,13 +179,13 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Role")
-                        @Html.DropDownListFor(r => r.ChangeRole.RoleName, new SelectList(Model.Roles, "Name", "Description"), "Select Role", new { @class = "form-control", Name = "RoleName" })
+                        @Html.DropDownListFor(r => r.ChangeRole.RoleName, new SelectList(Model.Roles, "Name", "Description"), "Select Role", new { @class = "form-control form-control-sm", Name = "RoleName" })
 
                         @Html.HiddenFor(u => u.ChangePassword.UserId, new { Value = Model.User.Id, Name = "UserId" })
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-sm btn-primary">Save</button>
                     </div>
                 </div>
             }
@@ -212,7 +212,7 @@
 
                     <div class="form-group">
                         <label>Person Type</label>
-                        <select class="form-control" id="userTypeSelect">
+                        <select class="form-control form-control-sm" id="userTypeSelect">
                             <option selected disabled>Select Person Type</option>
                             <option value="Staff">Staff</option>
                             <option value="Student">Student</option>
@@ -221,17 +221,17 @@
 
                     <div class="form-group">
                         <label class="d-none" id="studentYearGroupSelectLabel">Year Group</label>
-                        <select class="form-control disabled d-none" id="studentYearGroupSelect"></select>
+                        <select class="form-control form-control-sm disabled d-none" id="studentYearGroupSelect"></select>
                     </div>
 
                     <div class="form-group">
                         <label class="d-none" id="personSelectLabel">Person</label>
-                        <select class="form-control disabled d-none" id="personSelect"></select>
+                        <select class="form-control form-control-sm disabled d-none" id="personSelect"></select>
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-sm btn-primary">Save</button>
                     </div>
 
 
@@ -259,12 +259,12 @@
                     <div class="form-group">
                         @Html.HiddenFor(x => x.User.Id, new {Name = "Id"})
                         @Html.Label("User Type")
-                        @Html.EnumDropDownListFor(e => e.User.UserType, new {@class = "form-control", Name = "UserType"})
+                        @Html.EnumDropDownListFor(e => e.User.UserType, new {@class = "form-control form-control-sm", Name = "UserType"})
                         @Html.ValidationMessageFor(x => x.User.UserType)
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-sm btn-primary">Save</button>
                     </div>
                 </div>
             }
@@ -560,8 +560,8 @@
 
     <script type="text/x-jsrender" id="rolesActionsTemplate">
         <div>
-            <button type='button' class='btn btn-link js-delete' data-role-Id="${Name}">
-                <i class="far fa-trash-alt text-danger"></i>
+            <button type='button' class='btn btn-sm btn-danger js-delete' data-role-Id="${Name}">
+                Remove
             </button>
         </div>
     </script>

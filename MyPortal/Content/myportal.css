@@ -274,8 +274,8 @@
     white-space: nowrap;
 }
 
-.w-fit-content {
-    width: fit-content !important;
+.text-sm {
+    font-size: small !important;
 }
 
 

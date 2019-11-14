@@ -10,16 +10,6 @@
 
 <div class="row">
     
-    <div class="col-xl-12 col-md-12 mb-4">
-
-        <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" data-target="#newClassModal">New Class</button>
-
-    </div>
-
-</div>
-
-<div class="row">
-    
     <div class="col-xl-12 col-lg-12">
         <div class="card shadow mb-4">
             <!-- Card Header - Dropdown -->
@@ -28,6 +18,11 @@
             </div>
             <!-- Card Body -->
             <div class="card-body">
+                
+                <div class="mb-4">
+                    <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#newClassModal"><i class="fas fa-plus"></i> New Class</button>
+                </div>
+
                 @Html.EJS().Grid("Classes").DataSource(d =>
                 {
                     d.Url(Url.HttpRouteUrl("ApiGetAllClassesDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor");
@@ -37,7 +32,7 @@
                     c.Field("Subject").HeaderText("Subject").Template("#classesSubjectTemplate").Width("200").Add();
                     c.Field("Teacher").HeaderText("Main Teacher").Template("#classesTeacherTemplate").Width("200").Add();
                     c.HeaderText("Actions").Template("#classesActionsTemplate").Width("170").Add();
-                }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string>() { "Search" }).Render()
+                }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string>() {"Search"}).Render()
             </div>
         </div>
     </div>
@@ -57,22 +52,22 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Name")
-                        @Html.TextBoxFor(x => x.Class.Name, new { @class = "form-control", Name = "Name" })
+                        @Html.TextBoxFor(x => x.Class.Name, new { @class = "form-control form-control-sm", Name = "Name" })
                         @Html.ValidationMessageFor(x => x.Class.Name)
                     </div>
                     <div class="form-group">
                         @Html.Label("Subject")
-                        @Html.DropDownListFor(l => l.Class.SubjectId, new SelectList(Model.Subjects, "Id", "Name"), "Select Subject", new { @class = "form-control", Name = "SubjectId" })
+                        @Html.DropDownListFor(l => l.Class.SubjectId, new SelectList(Model.Subjects, "Id", "Name"), "Select Subject", new { @class = "form-control form-control-sm", Name = "SubjectId" })
                         @Html.ValidationMessageFor(l => l.Class.SubjectId)
                     </div>
                     <div class="form-group">
                         @Html.Label("Teacher")
-                        @Html.DropDownListFor(l => l.Class.TeacherId, new SelectList(from x in Model.Staff select new { x.Id, FullName = x.Person.LastName + ", " + x.Person.FirstName }, "Id", "FullName"), "Select Teacher", new { @class = "form-control", Name = "TeacherId" })
+                        @Html.DropDownListFor(l => l.Class.TeacherId, new SelectList(from x in Model.Staff select new { x.Id, FullName = x.Person.LastName + ", " + x.Person.FirstName }, "Id", "FullName"), "Select Teacher", new { @class = "form-control form-control-sm", Name = "TeacherId" })
                         @Html.ValidationMessageFor(l => l.Class.TeacherId)
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-sm btn-primary">Save</button>
                     </div>
                 </div>
             }
@@ -93,17 +88,17 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Name")
-                        @Html.TextBoxFor(x => x.Class.Name, new { @class = "form-control", Name = "Name", id="editClassNameControl" })
+                        @Html.TextBoxFor(x => x.Class.Name, new { @class = "form-control form-control-sm", Name = "Name", id="editClassNameControl" })
                         @Html.ValidationMessageFor(x => x.Class.Name)
                     </div>
                     <div class="form-group">
                         @Html.Label("Subject")
-                        @Html.DropDownListFor(l => l.Class.SubjectId, new SelectList(Model.Subjects, "Id", "Name"), "Select Subject", new { @class = "form-control", Name = "SubjectId", id = "editClassSubjectControl" })
+                        @Html.DropDownListFor(l => l.Class.SubjectId, new SelectList(Model.Subjects, "Id", "Name"), "Select Subject", new { @class = "form-control form-control-sm", Name = "SubjectId", id = "editClassSubjectControl" })
                         @Html.ValidationMessageFor(l => l.Class.SubjectId)
                     </div>
                     <div class="form-group">
                         @Html.Label("Teacher")
-                        @Html.DropDownListFor(l => l.Class.TeacherId, new SelectList(from x in Model.Staff select new { x.Id, FullName = x.Person.LastName + ", " + x.Person.FirstName }, "Id", "FullName"), "Select Teacher", new { @class = "form-control", Name = "TeacherId", id = "editClassTeacherControl" })
+                        @Html.DropDownListFor(l => l.Class.TeacherId, new SelectList(from x in Model.Staff select new { x.Id, FullName = x.Person.LastName + ", " + x.Person.FirstName }, "Id", "FullName"), "Select Teacher", new { @class = "form-control form-control-sm", Name = "TeacherId", id = "editClassTeacherControl" })
                         @Html.ValidationMessageFor(l => l.Class.TeacherId)
                     </div>
                     <div class="form-group">
@@ -228,16 +223,16 @@
 
     <script type="text/x-jsrender" id="classesActionsTemplate">
         <div>
-            <button type='button' class='btn btn-xs btn-success mp-btn-action js-enrolment' data-class-id="${Id}">
-                <i class="fas fa-user-graduate"></i>
+            <button type='button' class='btn btn-sm btn-primary' data-class-id="${Id}">
+                <i class="fas fa-user-graduate"></i> Students
             </button>
             
-            <button type='button' class='btn btn-xs btn-warning mp-btn-action js-edit' data-class-id="${Id}">
-                <i class="far fa-edit"></i>
+            <button type='button' class='btn btn-sm btn-primary js-edit' data-class-id="${Id}">
+                <i class="far fa-edit"></i> Edit
             </button>
             
-            <button type='button' class='btn btn-xs btn-danger mp-btn-action js-delete' data-class-id="${Id}">
-                <i class="far fa-trash-alt"></i>
+            <button type='button' class='btn btn-sm btn-danger js-delete' data-class-id="${Id}">
+                <i class="far fa-trash-alt"></i> Delete
             </button>
         </div>
     </script>

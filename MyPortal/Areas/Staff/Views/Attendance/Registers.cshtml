@@ -13,16 +13,7 @@
     
     <div class="col-xl-12 col-md-12 mb-4" id="registerSelectors">
         
-        <div class="form-group">
-            @Html.Label("Date", new { @class = "control-label" })
-            @Html.EJS().DatePicker("selectedDate").Format("dd-MMM-yyyy").AllowEdit(false).HtmlAttributes(new Dictionary<string, object> { { "Name", "Date" } }).Render()
-        </div>
-        <div class="form-group">
-            @Html.Label("Teacher")
-            <select class="form-control" id="selectedTeacher"></select>
-        </div>
-
-        <button type="button" class="btn btn-primary" id="buttonSearch">Search Lessons</button>
+        
 
     </div>
 
@@ -38,16 +29,30 @@
             </div>
             <!-- Card Body -->
             <div class="card-body">
+                
+                <div class="mb-4">
+                    <form class="form-inline">
+                        <div class="mr-2">
+                            @Html.EJS().DatePicker("selectedDate").Format("dd-MMM-yyyy").HtmlAttributes(new Dictionary<string, object> { { "Name", "Date" } }).Render()
+                        </div>
+                        <div class="mr-2">
+                            <select class="form-control form-control-sm" id="selectedTeacher"></select>
+                        </div>
+
+                        <button type="button" class="btn btn-sm btn-primary" id="buttonSearch"><span><i class="fas fa-search"></i> Search</span></button>
+                    </form>
+                </div>
+
                 @Html.EJS().Grid("Registers").DataSource(d =>
                 {
                     d.Url(Url.HttpRouteUrl("ApiGetSessionsByTeacherAndDateDataGrid", new {teacherId = Model.CurrentUser.Id, date = DateTime.Today.ToDisplayString()})).CrossDomain(false).Adaptor("UrlAdaptor");
                 }).Columns(c =>
                 {
-                    c.Field("PeriodName").HeaderText("Period").Template("#registersPeriodTemplate").Width("200").Add();
-                    c.Field("ClassName").HeaderText("Class").Template("#registersClassTemplate").Width("200").Add();
-                    c.Field("Teacher").HeaderText("Teacher").Template("#registersTeacherTemplate").Width("200").Add();
-                    c.HeaderText("Actions").Template("#registersActionsTemplate").Width("200").Add();
-                }).AllowPaging().PageSettings(p => p.PageSize(8)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string>() { "Search" }).Render()
+                    c.Field("PeriodName").HeaderText("Period").Template("#registersPeriodTemplate").Width("50").Add();
+                    c.Field("ClassName").HeaderText("Class").Template("#registersClassTemplate").Width("50").Add();
+                    c.Field("Teacher").HeaderText("Teacher").Template("#registersTeacherTemplate").Width("80").Add();
+                    c.HeaderText("Actions").Template("#registersActionsTemplate").Width("170").Add();
+                }).AllowPaging().PageSettings(p => p.PageSize(10)).Render()
             </div>
         </div>
     </div>
@@ -145,8 +150,8 @@
 
     <script type="text/x-jsrender" id="registersActionsTemplate">
         <div>
-            <button type='button' class='btn btn-xs btn-success js-EditAttendance' data-session-id='${Id}'>
-                <i class="fas fa-clipboard-check"></i>
+            <button type='button' class='btn btn-sm btn-primary js-EditAttendance' data-session-id='${Id}'>
+                Take Register
             </button>
         </div>
     </script>

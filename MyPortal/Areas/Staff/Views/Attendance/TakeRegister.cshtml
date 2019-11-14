@@ -21,8 +21,8 @@
     <div class="col-xl-12 col-md-12">
 
         <div class="form-group">
-            <button type="button" class="btn btn-primary" id="buttonBack">Back</button>
-            <button type="button" class="btn btn-primary" id="buttonSave">Save</button>
+            <button type="button" class="btn btn-sm btn-primary" id="buttonBack"><i class="fas fa-arrow-left"></i> Back</button>
+            <button type="button" class="btn btn-sm btn-primary" id="buttonSave"><i class="fas fa-cloud-upload-alt"></i> Save</button>
         </div>
 
     </div>
@@ -41,13 +41,13 @@
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
-                    <table class="table table-bordered table-responsive" id="register">
+                    <table class="table table-bordered table-responsive text-sm" id="register">
                         <thead>
                         <tr>
-                            <th class="register-student">Student</th>
+                            <th scope="col">Student</th>
                             @foreach (var period in Model.Periods)
                             {
-                                <th class="text-center register-period">@period.Name</th>
+                                <th scope="col" class="text-center">@period.Name</th>
                             }
                         </tr>
                         </thead>
@@ -56,16 +56,16 @@
                             {
                                 var entry = Model.AttendanceMarks.ElementAt(i);
                                 <tr>
-                                    <th>@entry.StudentName</th>
+                                    <th scope="row" class="pl-2 pr-4 py-0">@entry.StudentName</th>
                                     @foreach (var attendanceMark in entry.Marks)
                                     {
                                         if (attendanceMark.PeriodId == Model.Session.PeriodId)
                                         {
-                                            <td class="text-center register-current js-mark" data-student-id="@attendanceMark.StudentId" data-mark-id="@attendanceMark.Id" tabindex="0">@attendanceMark.Mark</td>
+                                            <td class="text-center p-0 align-middle register-current js-mark" data-student-id="@attendanceMark.StudentId" data-mark-id="@attendanceMark.Id" tabindex="0">@attendanceMark.Mark</td>
                                         }
                                         else
                                         {
-                                            <td class="text-center">@attendanceMark.Mark</td>
+                                            <td class="text-center p-0 align-middle">@attendanceMark.Mark</td>
                                         }
                                     }
                                 </tr>
@@ -94,6 +94,19 @@
                 });
 
             $("td.js-mark:first").focus();
+
+            $(".js-mark").on("keydown", function(e) {
+                switch (e.which) {
+                case 38:
+                    prevMark();
+                    e.preventDefault();
+                    break;
+                case 40:
+                    nextMark();
+                    e.preventDefault();
+                    break;
+                }
+            });
 
             $(".js-mark").on("keypress", function(e) {
                 var attendanceCode = String.fromCharCode(e.which).toUpperCase();
@@ -124,12 +137,23 @@
 
             if (codes.includes(attendanceCode)) {
                 mark.text(attendanceCode);
-
-                var marks = $(".js-mark");
-                var index = marks.index(mark);
-                marks.eq(index + 1).focus();
+                nextMark();
             } else {
                 alert("Please enter a valid register code.");
+            }
+        }
+
+        function nextMark() {
+            var marks = $(".js-mark");
+            var index = marks.index($(":focus"));
+            marks.eq(index + 1).focus();
+        }
+
+        function prevMark() {
+            var marks = $(".js-mark");
+            var index = marks.index($(":focus"));
+            if (index > 0) {
+                marks.eq(index - 1).focus();
             }
         }
 

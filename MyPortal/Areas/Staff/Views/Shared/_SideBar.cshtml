@@ -50,10 +50,6 @@
             <div id="collapseAssessment" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Assessment</h6>
-                    @if (User.HasPermission("ImportResults"))
-                    {
-                        @Html.ActionLink("Import Results", "ImportResults", "Assessment", null, new { @class = "collapse-item" })
-                    }
                     @if (User.HasPermission("EditResultSets"))
                     {
                         @Html.ActionLink("Result Sets", "ResultSets", "Assessment", null, new { @class = "collapse-item" })
