@@ -15,7 +15,7 @@
     
     <div class="col-xl-12 col-md-12 mb-4">
         <div class="dropdown inline-block">
-            <button class="btn btn-primary dropdown-toggle mp-btn-top" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button class="btn btn-sm btn-primary px-3 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-user-graduate"></i> Student
             </button>
 
@@ -143,54 +143,54 @@
             </div>
 
             <div class="card-body">
-                <div class="col-lg-12">
-                    <div class="row mb-2">
-                        <div class="col-lg-6">
+                <div class="col-lg-12 text-sm">
+                    <div class="row">
+                        <div class="col-lg-6 pb-3">
                             <div class="font-weight-bold text-primary mb-0">Name</div>
                             <div class="font-weight-bold text-gray-800 mb-0">@Model.Student.Person.FirstName @Model.Student.Person.LastName</div>
                         </div>
                         @if (Model.Student.Person.Dob != null)
                         {
-                            <div class="col-lg-6">
+                            <div class="col-lg-6 pb-3">
                                 <div class="font-weight-bold text-primary mb-0">Date of Birth</div>
                                 <div class="font-weight-bold text-gray-800 mb-0">@Model.Student.Person.Dob.Value.ToDisplayString()</div>
                             </div>
                         }
                     </div>
-                    <div class="row mb-2">
-                        <div class="col-lg-6">
+                    <div class="row">
+                        <div class="col-lg-6 pb-3">
                             <div class="font-weight-bold text-primary mb-0">Year Group</div>
                             <div class="font-weight-bold text-gray-800 mb-0">@Model.Student.YearGroup.Name</div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-lg-6 pb-3">
                             <div class="font-weight-bold text-primary mb-0">Head of Year</div>
                             <div class="font-weight-bold text-gray-800 mb-0">@Model.Student.YearGroup.HeadOfYear.GetDisplayName()</div>
                         </div>
                     </div>
-                    <div class="row mb-2">
-                        <div class="col-lg-6">
+                    <div class="row">
+                        <div class="col-lg-6 pb-3">
                             <div class="font-weight-bold text-primary mb-0">Reg Group</div>
                             <div class="font-weight-bold text-gray-800 mb-0">@Model.Student.RegGroup.Name</div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-lg-6 pb-3">
                             <div class="font-weight-bold text-primary mb-0">Reg Tutor</div>
                             <div class="font-weight-bold text-gray-800 mb-0">@Model.Student.RegGroup.Tutor.GetDisplayName()</div>
                         </div>
                     </div>
                     @if (Model.Student.House != null)
                     {
-                        <div class="row mb-2">
-                            <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-lg-6 pb-3">
                                 <div class="font-weight-bold text-primary mb-0">House</div>
                                 <div class="font-weight-bold text-gray-800 mb-0">@Model.Student.House.Name</div>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-6 pb-3">
                                 <div class="font-weight-bold text-primary mb-0">Head of House</div>
                                 <div class="font-weight-bold text-gray-800 mb-0">@Model.Student.House.HeadOfHouse.GetDisplayName()</div>
                             </div>
                         </div>
                     }
-                    <div class="row mb-2">
+                    <div class="row">
                         <div class="col-lg-6">
                             <div class="font-weight-bold text-primary mb-0">Pupil Premium</div>
                             <div class="font-weight-bold text-gray-800 mb-0">@Model.Student.PupilPremium</div>

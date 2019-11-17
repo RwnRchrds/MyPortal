@@ -8,19 +8,6 @@
     <h1 class="h3 mb-0 text-gray-800">Students</h1>
 </div>
 
-@if (User.HasPermission("EditStudents"))
-{
-    <div class="row">
-    
-        <div class="col-xl-12 col-md-12 mb-4">
-
-            @Html.ActionLink("New Student", "NewStudent", "Students", null, new {@class = "btn btn-primary"})
-
-        </div>
-    
-    </div>
-}
-
 @if (User.HasPermission("ViewStudents"))
 {
     <div class="row">
@@ -33,10 +20,18 @@
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
+                    
+                    @if (User.HasPermission("EditStudents"))
+                    {
+                        <div class="mb-4">
+                            <a class="btn btn-sm btn-primary" href="@Url.Action("NewStudent")"><i class="fas fa-plus"></i> New Student</a>
+                        </div>
+                    }
+
                     @Html.EJS().Grid("Students").DataSource(dataManager =>
                     {
                         dataManager.Url(Url.HttpRouteUrl("ApiGetAllStudentsDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor");
-                   
+
                     }).Columns(c =>
                     {
                         c.Field("DisplayName").HeaderText("Name").Template("#nameTemplate").Width("100").Add();

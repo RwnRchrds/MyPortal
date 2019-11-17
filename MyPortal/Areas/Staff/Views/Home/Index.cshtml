@@ -26,7 +26,7 @@
 {
     <div class="row">
         <div class="col mb-4">
-            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#ChangeAcademicYearModal">
+            <button type="button" class="btn btn-sm btn-primary px-3" data-toggle="modal" data-target="#ChangeAcademicYearModal">
 
                 Select Academic Year
 
@@ -44,32 +44,22 @@
             </div>
             <!-- Card Body -->
             <div class="card-body">
-                <table class="mp-table-condensed">
-                    <tr>
-                        <td>
-                            <b>Title</b>
-                        </td>
-                        <td>@Model.CurrentUser.Person.Title</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>First Name</b>
-                        </td>
-                        <td>@Model.CurrentUser.Person.FirstName</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>Last Name</b>
-                        </td>
-                        <td>@Model.CurrentUser.Person.LastName</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>Staff Code</b>
-                        </td>
-                        <td>@Model.CurrentUser.Code</td>
-                    </tr>
-                </table>
+                <div class="col-lg-12 text-sm">
+                    <div class="row">
+                        <div class="col-lg-6 pb-3">
+                            <div class="font-weight-bold text-primary mb-0">Name</div>
+                            <div class="font-weight-bold text-gray-800 mb-0">
+                                @Model.CurrentUser.Person.Title @Model.CurrentUser.Person.FirstName @Model.CurrentUser.Person.LastName
+                            </div>
+                        </div>
+                        <div class="col-lg-6 pb-3">
+                            <div class="font-weight-bold text-primary mb-0">Staff Code</div>
+                            <div class="font-weight-bold text-gray-800 mb-0">
+                                @Model.CurrentUser.Code
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
