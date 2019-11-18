@@ -16,7 +16,7 @@ namespace MyPortal.Services
     {
         public static List<string> ErrorMessages = new List<string>();
 
-        public static bool HasPermission(this IPrincipal principal, string permission)
+        public static bool HasPermission(this IPrincipal principal, string permissionName)
         {
             var identity = new IdentityContext();
             var roleStore = new RoleStore<ApplicationRole>(identity);
@@ -28,15 +28,15 @@ namespace MyPortal.Services
 
             foreach (var role in roles)
             {
-                var permissionObject = identity.Permissions.SingleOrDefault(x => x.Name == permission);
+                var permission = identity.Permissions.SingleOrDefault(x => x.Name == permissionName);
 
-                if (permissionObject == null)
+                if (permission == null)
                 {
-                    throw new Exception($"Permission '{permission}' not found");
+                    throw new Exception($"Permission '{permissionName}' not found");
                 }
 
                 var hasPermission = identity.RolePermissions.Any(x =>
-                    x.PermissionId == permissionObject.Id && x.RoleId == role.Id);
+                    x.PermissionId == permission.Id && x.RoleId == role.Id);
 
                 if (hasPermission)
                 {

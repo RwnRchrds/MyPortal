@@ -7,6 +7,7 @@ namespace MyPortal.Areas.Staff.ViewModels
     {
         public CurriculumClass Class { get; set; }
         public CurriculumSession Session { get; set; }
+        public CurriculumEnrolment Enrolment { get; set; }
         public IEnumerable<AttendancePeriod> Periods { get; set; }  
     }
 }

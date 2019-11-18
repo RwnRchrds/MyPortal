@@ -95,8 +95,8 @@ namespace MyPortal.Areas.Staff.Controllers
         }
 
         [RequiresPermission("EditClasses")]
-        [Route("Classes/Sessions/{classId:int}")]
-        public async Task<ActionResult> Sessions(int classId)
+        [Route("Classes/{classId:int}")]
+        public async Task<ActionResult> ClassDetails(int classId)
         {
             using (var attendanceService = new AttendanceService(UnitOfWork))
             using (var curriculumService = new CurriculumService(UnitOfWork))
@@ -108,22 +108,6 @@ namespace MyPortal.Areas.Staff.Controllers
                 viewModel.Class = currClass;
 
                 viewModel.Periods = await attendanceService.GetAllPeriods();
-
-                return View(viewModel);
-            }
-        }
-
-        [RequiresPermission("EditClasses")]
-        [Route("Classes/Enrolments/{classId:int}", Name = "CurriculumEnrolments")]
-        public async Task<ActionResult> Enrolments(int classId)
-        {
-            using (var curriculumService = new CurriculumService(UnitOfWork))
-            {
-                var viewModel = new EnrolmentsViewModel();
-
-                var currClass = await curriculumService.GetClassById(classId);
-
-                viewModel.Class = currClass;
 
                 return View(viewModel);
             }

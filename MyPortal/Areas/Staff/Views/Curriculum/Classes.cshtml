@@ -105,8 +105,8 @@
                         @Html.HiddenFor(x => x.Class.Id, new {Name = "Id", id = "editClassIdControl"})
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-sm btn-primary">Save</button>
                     </div>
                 </div>
             }
@@ -119,14 +119,14 @@
     <script>
 
         var urlGetClassById = "@Url.HttpRouteUrl("ApiGetClassById", new {classId = 9999})";
-        var urlEnrolments = "@Url.Action("Enrolments", new {classId = 9999})";
         var urlDeleteClass = "@Url.HttpRouteUrl("ApiDeleteClass", new {classId = 9999})";
+        var urlClassDetails = "@Url.Action("ClassDetails", new {classId = 9999})";
 
         $(document).ready(function() {
             $('.modal').on('hidden.bs.modal',
-                function () {
+                function() {
                     $(this).find('form').trigger('reset');
-                });           
+                });
 
             $("#Classes").on("click",
                 ".js-edit",
@@ -151,7 +151,7 @@
 
             $("#Classes").on("click",
                 ".js-enrolment",
-                function () {
+                function() {
                     var button = $(this);
                     var classId = button.attr("data-class-id");
                     location.replace(urlEnrolments.replace("9999", classId));
@@ -201,11 +201,15 @@
             $("#editClassModal").modal('hide');
             toastr.error(result.responseJSON);
         }
+
+        function getClassDetailsUrl(classId) {
+            return urlClassDetails.replace("9999", classId);
+        }
     </script>
 
     <script type="text/x-jsrender" id="classesNameTemplate">
         <div>
-            <span id="NameText" class="student-name"><a href="/Staff/Curriculum/Classes/Sessions/${Id}">${Name}</a></span>
+            <span id="NameText" class="student-name"><a href="${getClassDetailsUrl(Id)}">${Name}</a></span>
         </div>
     </script>
 
@@ -222,12 +226,8 @@
         </script>
 
     <script type="text/x-jsrender" id="classesActionsTemplate">
-        <div>
-            <button type='button' class='btn btn-sm btn-primary' data-class-id="${Id}">
-                <i class="fas fa-user-graduate"></i> Students
-            </button>
-            
-            <button type='button' class='btn btn-sm btn-primary js-edit' data-class-id="${Id}">
+        <div>        
+            <button type='button' class='btn btn-sm btn-primary mr-2 js-edit' data-class-id="${Id}">
                 <i class="far fa-edit"></i> Edit
             </button>
             
