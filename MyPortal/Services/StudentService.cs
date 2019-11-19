@@ -42,6 +42,19 @@ namespace MyPortal.Services
                 throw new ServiceException(ExceptionType.NotFound, "Student not found");
             }
 
+            UnitOfWork.AssessmentResults.RemoveRange(studentInDb.Results);
+            UnitOfWork.AttendanceMarks.RemoveRange(studentInDb.AttendanceMarks);
+            UnitOfWork.BehaviourAchievements.RemoveRange(studentInDb.Achievements);
+            UnitOfWork.BehaviourIncidents.RemoveRange(studentInDb.Incidents);
+            UnitOfWork.CurriculumEnrolments.RemoveRange(studentInDb.Enrolments);
+            UnitOfWork.FinanceBasketItems.RemoveRange(studentInDb.FinanceBasketItems);
+            UnitOfWork.FinanceSales.RemoveRange(studentInDb.Sales);
+            UnitOfWork.MedicalEvent.RemoveRange(studentInDb.MedicalEvents);
+            UnitOfWork.SenEvents.RemoveRange(studentInDb.SenEvents);
+            UnitOfWork.SenProvisions.RemoveRange(studentInDb.SenProvisions);
+            UnitOfWork.ProfileLogs.RemoveRange(studentInDb.ProfileLogs);
+            UnitOfWork.SenGiftedTalented.RemoveRange(studentInDb.GiftedTalentedSubjects);
+
             UnitOfWork.Students.Remove(studentInDb);
 
             await UnitOfWork.Complete();
