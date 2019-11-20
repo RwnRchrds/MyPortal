@@ -19,6 +19,11 @@ namespace MyPortal.Services
         {
             
         }
+
+        public PersonnelService() : base()
+        {
+
+        }
         
         public async Task CreateCourse(PersonnelTrainingCourse course)
         {

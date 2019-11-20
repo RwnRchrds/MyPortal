@@ -21,6 +21,11 @@ namespace MyPortal.Services
 
         }
 
+        public CurriculumService() : base()
+        {
+
+        }
+
         public async Task CreateClass(CurriculumClass @class)
         {
             if (!ValidationService.ModelIsValid(@class))

@@ -20,6 +20,10 @@ namespace MyPortal.Services
 
         }
 
+        public SystemService() : base()
+        {
+
+        }
 
         public async Task CreateBulletin(SystemBulletin bulletin, string userId, bool autoApprove = false)
         {

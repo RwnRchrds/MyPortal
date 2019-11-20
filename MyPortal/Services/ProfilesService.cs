@@ -19,6 +19,11 @@ namespace MyPortal.Services
             
         }
 
+        public ProfilesService() : base()
+        {
+
+        }
+
         public async Task CreateComment(ProfileComment comment)
         {
             if (!ValidationService.ModelIsValid(comment))

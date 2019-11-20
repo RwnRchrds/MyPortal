@@ -18,6 +18,11 @@ namespace MyPortal.Services
 
         }
 
+        public StaffMemberService() : base()
+        {
+
+        }
+
         public async Task CreateStaffMember(StaffMember staffMember)
         {
             if (!ValidationService.ModelIsValid(staffMember))

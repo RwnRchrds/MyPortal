@@ -24,16 +24,11 @@ namespace MyPortal.Repositories
             return await Context.Students.Include(x => x.Person).FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<Student> GetByIdWithRelated(int studentId)
+        public async Task<Student> GetByIdWithRelated(int studentId, params Expression<Func<Student, object>>[] includeProperties)
         {
             var query = Context.Students.AsQueryable();
 
-            query = query.IncludeMultiple(
-                x => x.Person,
-                x => x.House.HeadOfHouse.Person,
-                x => x.RegGroup.Tutor.Person,
-                x => x.SenStatus,
-                x => x.YearGroup.HeadOfYear.Person);
+            query = query.IncludeMultiple(includeProperties);
 
             return await query.SingleOrDefaultAsync(x => x.Id == studentId);
         }

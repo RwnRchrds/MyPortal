@@ -24,5 +24,10 @@ namespace MyPortal.Services
             RoleStore = new RoleStore<ApplicationRole>(Identity);
             RoleManager = new RoleManager<ApplicationRole, string>(RoleStore);
         }
+
+        public IdentityService() : base()
+        {
+
+        }
     }
 }

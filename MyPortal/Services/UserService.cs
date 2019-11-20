@@ -15,6 +15,11 @@ namespace MyPortal.Services
         {
             
         }
+
+        public UserService() : base()
+        {
+
+        }
         
         public async Task ChangeSelectedAcademicYear(string userId, int academicYearId)
         {

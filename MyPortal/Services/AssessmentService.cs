@@ -15,6 +15,11 @@ namespace MyPortal.Services
 
         }
 
+        public AssessmentService() : base()
+        {
+
+        }
+
         public async Task CreateResult(AssessmentResult result)
         {
             if (!ValidationService.ModelIsValid(result))

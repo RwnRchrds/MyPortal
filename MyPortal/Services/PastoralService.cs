@@ -18,6 +18,11 @@ namespace MyPortal.Services
 
         }
 
+        public PastoralService() : base()
+        {
+
+        }
+
         public async Task CreateRegGroup(PastoralRegGroup regGroup)
         {
             if (!ValidationService.ModelIsValid(regGroup))

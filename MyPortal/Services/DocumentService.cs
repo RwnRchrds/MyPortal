@@ -18,6 +18,11 @@ namespace MyPortal.Services
 
         }
 
+        public DocumentService() : base()
+        {
+
+        }
+
         public async Task CreateDocument(Document document, string userId)
         {
             if (document.UploaderId == 0)

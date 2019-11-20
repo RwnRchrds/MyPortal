@@ -1,15 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using MyPortal.Models.Misc;
 
 namespace MyPortal.Services
 {
-    public static class LookupService
+    public class LookupService : IDisposable
     {
-        public static ProcessResponse<IEnumerable<string>> GetTitles()
+        public IEnumerable<string> GetTitles()
         {
             var titles = new List<string> {"Mr", "Miss", "Mrs", "Ms", "Mx", "Prof", "Sir", "Dr", "Lady", "Lord"};
 
-            return new ProcessResponse<IEnumerable<string>>(ResponseType.Ok, null, titles);
+            return titles;
+        }
+
+        public void Dispose()
+        {
+            
         }
     }
 }

@@ -21,6 +21,11 @@ namespace MyPortal.Services
             
         }
 
+        public StudentService() : base()
+        {
+
+        }
+
         public async Task CreateStudent(Student student)
         {
             if (!ValidationService.ModelIsValid(student))
@@ -66,9 +71,9 @@ namespace MyPortal.Services
             return student;
         }
 
-        public async Task<Student> GetStudentByIdWithRelated(int studentId)
+        public async Task<Student> GetStudentByIdWithRelated(int studentId, params Expression<Func<Student, object>>[] includeProperties)
         {
-            var student = await UnitOfWork.Students.GetByIdWithRelated(studentId);
+            var student = await UnitOfWork.Students.GetByIdWithRelated(studentId, includeProperties);
 
             if (student == null)
             {

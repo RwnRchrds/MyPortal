@@ -18,6 +18,11 @@ namespace MyPortal.Services
 
         }
 
+        public PeopleService() : base()
+        {
+
+        }
+
         public async Task<Person> GetPersonById(int personId)
         {
             var person = await UnitOfWork.People.GetById(personId);

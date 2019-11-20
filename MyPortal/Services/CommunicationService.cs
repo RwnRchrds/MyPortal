@@ -15,6 +15,11 @@ namespace MyPortal.Services
 
         }
 
+        public CommunicationService() : base()
+        {
+
+        }
+
         public async Task CreateEmailAddress(CommunicationEmailAddress emailAddress)
         {
             if (!ValidationService.ModelIsValid(emailAddress))

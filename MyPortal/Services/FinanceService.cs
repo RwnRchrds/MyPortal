@@ -21,6 +21,11 @@ namespace MyPortal.Services
             
         }
 
+        public FinanceService() : base()
+        {
+
+        }
+
         public async Task<bool> AssessBalance(FinanceSale sale)
         {
             using (var studentService = new StudentService(UnitOfWork))

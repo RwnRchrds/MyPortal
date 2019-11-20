@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Web;
+using MyPortal.Extensions;
 using MyPortal.Interfaces;
 using MyPortal.Models.Database;
 
@@ -14,7 +15,7 @@ namespace MyPortal.Repositories
     {
         protected readonly MyPortalDbContext Context;
 
-        public ReadOnlyRepository(MyPortalDbContext context)
+        protected ReadOnlyRepository(MyPortalDbContext context)
         {
             Context = context;
         }

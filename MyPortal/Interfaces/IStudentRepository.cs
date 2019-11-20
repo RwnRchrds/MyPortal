@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using MyPortal.Models.Database;
@@ -9,7 +10,7 @@ namespace MyPortal.Interfaces
 {
     public interface IStudentRepository : IRepository<Student>
     {
-        Task<Student> GetByIdWithRelated(int studentId);
+        Task<Student> GetByIdWithRelated(int studentId, params Expression<Func<Student, object>>[] includeProperties);
 
         Task<Student> GetByUserId(string userId);
 

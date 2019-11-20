@@ -22,6 +22,11 @@ namespace MyPortal.Services
         {
             
         }
+
+        public AdminService() : base()
+        {
+
+        }
         
         public async Task AddUserToRole(UserRoleModel roleModel)
         {

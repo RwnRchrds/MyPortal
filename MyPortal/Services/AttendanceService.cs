@@ -20,6 +20,11 @@ namespace MyPortal.Services
 
         }
 
+        public AttendanceService() : base()
+        {
+
+        }
+
         public async Task CreateAttendanceWeeksForAcademicYear(int academicYearId)
         {
             using (var curriculumService = new CurriculumService(UnitOfWork))

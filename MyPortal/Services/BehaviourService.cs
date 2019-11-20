@@ -18,6 +18,11 @@ namespace MyPortal.Services
 
         }
 
+        public BehaviourService() : base()
+        {
+
+        }
+
         public async Task CreateAchievement(BehaviourAchievement achievement)
         {
             achievement.Date = DateTime.Today;

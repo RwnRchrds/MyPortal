@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using MyPortal.Areas.Staff.ViewModels;
 using MyPortal.Areas.Students.ViewModels;
@@ -57,7 +58,12 @@ namespace MyPortal.Areas.Staff.Controllers
             using (var profilesService = new ProfilesService(UnitOfWork))
             using (var studentService = new StudentService(UnitOfWork))
             {
-                var student = await studentService.GetStudentByIdWithRelated(studentId);
+                var student = await studentService.GetStudentByIdWithRelated(studentId, 
+                    x => x.Person,
+                    x => x.House.HeadOfHouse.Person,
+                    x => x.YearGroup.HeadOfYear.Person,
+                    x => x.RegGroup.Tutor.Person,
+                    x => x.SenStatus);
 
                 var logTypes = await profilesService.GetAllLogTypesLookup();
 
