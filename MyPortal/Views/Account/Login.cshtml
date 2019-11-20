@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "Login";
     Layout = "~/Views/Shared/_LoginLayout.cshtml";
+    var version = ViewContext.Controller.GetType().Assembly.GetName().Version;
 }
 
 <div class="row justify-content-center">
@@ -15,46 +16,48 @@
                     </div>
                     <div class="col-lg-6">
                         <div class="p-5">
-                            @using (Html.BeginForm("LoginPost", "Account", new {ViewBag.ReturnUrl}, FormMethod.Post, new {@class = "form-horizontal", role = "form"}))
+                            @using (Html.BeginForm("LoginPost", "Account", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                             {
                                 @Html.AntiForgeryToken()
                                 <h4>MyPortal</h4>
                                 <h5>@Model.SchoolName</h5>
-                                <hr/>
-                                @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+                                <hr />
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                                 <div class="form-group">
                                     @Html.Label("Username")
                                     <div class="col-md-10">
-                                        @Html.TextBoxFor(m => m.Login.Username, new {@class = "form-control", Name = "Username"})
-                                        @Html.ValidationMessageFor(m => m.Login.Username, "", new {@class = "text-danger"})
+                                        @Html.TextBoxFor(m => m.Login.Username, new { @class = "form-control", Name = "Username" })
+                                        @Html.ValidationMessageFor(m => m.Login.Username, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     @Html.Label("Password")
                                     <div class="col-md-10">
-                                        @Html.PasswordFor(m => m.Login.Password, new {@class = "form-control", Name = "Password"})
-                                        @Html.ValidationMessageFor(m => m.Login.Password, "", new {@class = "text-danger"})
+                                        @Html.PasswordFor(m => m.Login.Password, new { @class = "form-control", Name = "Password" })
+                                        @Html.ValidationMessageFor(m => m.Login.Password, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-offset-2 col-md-10">
                                         <div class="checkbox">
-                                            @Html.CheckBoxFor(m => m.Login.RememberMe, new {Name = "RememberMe"})
+                                            @Html.CheckBoxFor(m => m.Login.RememberMe, new { Name = "RememberMe" })
                                             @Html.Label("Remember Me")
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-offset-2 col-md-10">
-                                        <input type="submit" value="Login" class="btn btn-primary"/>
+                                        <input type="submit" value="Login" class="btn btn-primary" />
                                     </div>
                                 </div>
-                                    @* Enable this once you have account confirmation enabled for password reset functionality
-            <p>
-                @Html.ActionLink("Forgot your password?", "ForgotPassword")
-            </p>*@
                             }
                         </div>
+
+                        <div class="text-center py-3">
+                            <span>Version @version.Major.ToString().@version.Minor.ToString().@version.Build.ToString()</span>
+                            <span>&copy; MyPortal Ltd 2019</span>
+                        </div>
+
                     </div>
                 </div>
             </div>
