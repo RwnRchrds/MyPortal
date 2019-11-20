@@ -31,7 +31,7 @@ namespace MyPortal.Controllers
             _roleManager = new RoleManager<ApplicationRole, string>(_roleStore);
         }
 
-        public MyPortalIdentityController(IUnitOfWork unitOfWork, IdentityContext identity) : base(unitOfWork)
+        public MyPortalIdentityController(IUnitOfWork unitOfWork, IdentityContext identity) : base()
         {
             _identity = new IdentityContext();
             _userStore = new UserStore<ApplicationUser, ApplicationRole, string, IdentityUserLogin, IdentityUserRole,

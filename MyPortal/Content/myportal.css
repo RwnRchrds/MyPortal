@@ -156,54 +156,6 @@
     white-space: pre-wrap;
 }
 
-.mp-input-long {
-    max-width: 600px;
-}
-
-.mp-textarea-lg {
-    max-width: 600px;
-    min-height: 330px;
-}
-
-.mp-textarea-long {
-    max-width: 600px;
-    min-height: 50px;
-}
-
-.mp-textarea {
-    min-height: 46px;
-}
-
-.mp-bold-text {
-    font-weight: bold;
-}
-
-.mp-info-block {
-    background-color: #cccccc;
-    width: 150px;
-    height: 150px;
-    margin: 10px 10px 10px 10px;
-    border-radius: 10px;
-    vertical-align: middle;
-}
-
-.mp-info-block-label {
-    position: relative;
-    top: 8px;
-    text-align: center;
-    font-weight: bold;
-    color: white;
-}
-
-.mp-info-block-detail {
-    position: relative;
-    top: 25px;
-    text-align: center;
-    font-size: 40px;
-    font-weight: bold;
-    color: white;
-}
-
 .mp-background-danger {
     background-color: rgba(220, 20, 60, 0.8);
 }
@@ -218,19 +170,6 @@
 
 .inline-block {
     display: inline-block;
-}
-
-.mp-info-block-detail-nodata {
-    position: relative;
-    top: 40px;
-    text-align: center;
-    font-size: 20px;
-    font-weight: bold;
-    color: white;
-}
-
-.overview-card {
-    width: 550px;
 }
 
 .control-label {
@@ -265,17 +204,16 @@
     background-size: cover;
 }
 
-.register-student {
-    min-width: 15rem !important;
-}
-
-.register-period {
-    width: 1%;
-    white-space: nowrap;
-}
-
 .text-sm {
     font-size: 0.9em !important;
+}
+
+.mw-25 {
+    max-width: 25% !important;
+}
+
+.mw-50 {
+    max-width: 50% !important;
 }
 
 

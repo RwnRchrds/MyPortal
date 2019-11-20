@@ -26,7 +26,7 @@ namespace MyPortal.Controllers.Api
         
         public DocumentsController()
         {
-            _service = new DocumentService(UnitOfWork);
+            _service = new DocumentService();
         }
 
         protected override void Dispose(bool disposing)

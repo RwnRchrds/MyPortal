@@ -27,7 +27,12 @@ namespace MyPortal.Services
 
         public IdentityService() : base()
         {
-
+            Identity = new IdentityContext();
+            UserStore = new UserStore<ApplicationUser, ApplicationRole, string, IdentityUserLogin, IdentityUserRole,
+                IdentityUserClaim>(Identity);
+            UserManager = new UserManager<ApplicationUser, string>(UserStore);
+            RoleStore = new RoleStore<ApplicationRole>(Identity);
+            RoleManager = new RoleManager<ApplicationRole, string>(RoleStore);
         }
     }
 }

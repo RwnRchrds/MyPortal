@@ -150,6 +150,12 @@ namespace MyPortal.Services
             await UnitOfWork.Complete();
         }
 
+        public async Task<IEnumerable<CommunicationAddress>> GetAddressesByPerson(int personId)
+        {
+            var addresses = await UnitOfWork.CommunicationAddresses.GetAddressesByPerson(personId);
+
+            return addresses;
+        }
 
     }
 }

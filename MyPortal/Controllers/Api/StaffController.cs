@@ -23,7 +23,7 @@ namespace MyPortal.Controllers.Api
 
         public StaffController()
         {
-            _service = new StaffMemberService(UnitOfWork);
+            _service = new StaffMemberService();
         }
 
         protected override void Dispose(bool disposing)

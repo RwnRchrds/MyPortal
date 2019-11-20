@@ -18,8 +18,8 @@ namespace MyPortal.Areas.Students.Controllers
         [Route("Results")]
         public async Task<ActionResult> Results()
         {
-            using (var assessmentService = new AssessmentService(UnitOfWork))
-            using (var studentService = new StudentService(UnitOfWork))
+            using (var assessmentService = new AssessmentService())
+            using (var studentService = new StudentService())
             {
                 var userId = User.Identity.GetUserId();
 

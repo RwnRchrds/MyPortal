@@ -22,11 +22,11 @@ namespace MyPortal.Controllers.Api
     [RoutePrefix("api/curriculum")]
     public class CurriculumController : MyPortalApiController
     {
-        protected readonly CurriculumService _service;
+        private readonly CurriculumService _service;
 
         public CurriculumController()
         {
-            _service = new CurriculumService(UnitOfWork);
+            _service = new CurriculumService();
         }
 
         protected override void Dispose(bool disposing)

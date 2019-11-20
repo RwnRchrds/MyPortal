@@ -7,9 +7,7 @@
 }
 
 <style>
-    tr {
-        font-weight: bold;
-    }
+    tr { font-weight: bold; }
 </style>
 
 @*<div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -32,12 +30,12 @@
 @if (User.HasPermission("EditAttendance"))
 {
     <div class="row">
-    
+
         <div class="col-xl-12 col-lg-12 mb-4">
             <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">@Model.SessionDate.ToLongDateString() -  @Model.Session.Class.Name (@Model.Session.Period.Name) - @Model.Session.Class.Teacher.GetDisplayName()</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">@Model.SessionDate.ToLongDateString() - @Model.Session.Class.Name (@Model.Session.Period.Name) - @Model.Session.Class.Teacher.GetDisplayName()</h6>
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
@@ -52,30 +50,30 @@
                         </tr>
                         </thead>
                         <tbody>
-                            @for (var i = 0; i < Model.AttendanceMarks.Count(); i++)
-                            {
-                                var entry = Model.AttendanceMarks.ElementAt(i);
-                                <tr>
-                                    <th scope="row" class="pl-2 pr-4 py-0">@entry.StudentName</th>
-                                    @foreach (var attendanceMark in entry.Marks)
+                        @for (var i = 0; i < Model.AttendanceMarks.Count(); i++)
+                        {
+                            var entry = Model.AttendanceMarks.ElementAt(i);
+                            <tr>
+                                <th scope="row" class="pl-2 pr-4 py-0">@entry.StudentName</th>
+                                @foreach (var attendanceMark in entry.Marks)
+                                {
+                                    if (attendanceMark.PeriodId == Model.Session.PeriodId)
                                     {
-                                        if (attendanceMark.PeriodId == Model.Session.PeriodId)
-                                        {
-                                            <td class="text-center p-0 align-middle register-current js-mark" data-student-id="@attendanceMark.StudentId" data-mark-id="@attendanceMark.Id" tabindex="0">@attendanceMark.Mark</td>
-                                        }
-                                        else
-                                        {
-                                            <td class="text-center p-0 align-middle">@attendanceMark.Mark</td>
-                                        }
+                                        <td class="text-center p-0 align-middle register-current js-mark" data-student-id="@attendanceMark.StudentId" data-mark-id="@attendanceMark.Id" tabindex="0">@attendanceMark.Mark</td>
                                     }
-                                </tr>
-                            }
+                                    else
+                                    {
+                                        <td class="text-center p-0 align-middle">@attendanceMark.Mark</td>
+                                    }
+                                }
+                            </tr>
+                        }
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-    
+
     </div>
 }
 
@@ -83,41 +81,43 @@
 {
     <script>
 
-        var codes = @Html.Raw(Json.Encode(Model.AttendanceCodes));
+        var codes = @Html.Raw(Json.Encode(Model.UsableCodes));
 
         var saveRegisterUrl = "@Url.HttpRouteUrl("ApiSaveRegisterMarks", new {})";
 
-        $(document).ready(function () {
+        $(document).ready(function() {
             $("#buttonBack").on("click",
-                function () {
+                function() {
                     location.replace("@Url.Action("Registers")");
                 });
 
             $("td.js-mark:first").focus();
 
-            $(".js-mark").on("keydown", function(e) {
-                switch (e.which) {
-                case 38:
-                    prevMark();
-                    e.preventDefault();
-                    break;
-                case 40:
-                    nextMark();
-                    e.preventDefault();
-                    break;
-                }
-            });
+            $(".js-mark").on("keydown",
+                function(e) {
+                    switch (e.which) {
+                    case 38:
+                        prevMark();
+                        e.preventDefault();
+                        break;
+                    case 40:
+                        nextMark();
+                        e.preventDefault();
+                        break;
+                    }
+                });
 
-            $(".js-mark").on("keypress", function(e) {
-                var attendanceCode = String.fromCharCode(e.which).toUpperCase();
-                updateMark(attendanceCode);
-            });
+            $(".js-mark").on("keypress",
+                function(e) {
+                    const attendanceCode = String.fromCharCode(e.which).toUpperCase();
+                    updateMark(attendanceCode);
+                });
 
             $("#buttonSave").on("click",
                 function() {
                     saveRegister();
                 });
-        }); 
+        });
 
         function dataGridActionComplete(args) {
             if (args.requestType === "save") {
@@ -133,7 +133,7 @@
         }
 
         function updateMark(attendanceCode) {
-            var mark = $(":focus");
+            const mark = $(":focus");
 
             if (codes.includes(attendanceCode)) {
                 mark.text(attendanceCode);
@@ -144,24 +144,37 @@
         }
 
         function nextMark() {
-            var marks = $(".js-mark");
-            var index = marks.index($(":focus"));
+            const marks = $(".js-mark");
+            const index = marks.index($(":focus"));
             marks.eq(index + 1).focus();
         }
 
         function prevMark() {
-            var marks = $(".js-mark");
-            var index = marks.index($(":focus"));
+            const marks = $(".js-mark");
+            const index = marks.index($(":focus"));
             if (index > 0) {
                 marks.eq(index - 1).focus();
             }
+        }
+
+        function checkMarks(attendanceMarks) {
+            var containsBlanks = false;
+
+            for (i = 0; i < attendanceMarks.length; i++) {
+                if (attendanceMarks[i].Mark === "-") {
+                    containsBlanks = true;
+                    break;
+                }
+            }
+
+            return containsBlanks;
         }
 
         function saveRegister() {
             var attendanceMarks = [];
 
             $(".js-mark").each(function() {
-                var data = $(this);
+                const data = $(this);
 
                 attendanceMarks.push({
                     "Id": parseInt(data.attr("data-mark-id"), 10),
@@ -173,18 +186,38 @@
                 });
             });
 
-            $.ajax({
-                url: saveRegisterUrl,
-                method: "POST",
-                data: JSON.stringify(attendanceMarks),
-                contentType: "application/json; charset=utf-8",
-                success: function(result) {
-                    toastr.success(result);
-                },
-                error: function(result) {
-                    toastr.error(result.responeJSON);
-                }
-            });
+            if (checkMarks(attendanceMarks)) {
+                bootbox.confirm("Warning! Do you wish to continue anyway?",
+                    function(result) {
+                        if (result) {
+                            $.ajax({
+                                url: saveRegisterUrl,
+                                method: "POST",
+                                data: JSON.stringify(attendanceMarks),
+                                contentType: "application/json; charset=utf-8",
+                                success: function(e) {
+                                    toastr.success(e);
+                                },
+                                error: function(e) {
+                                    toastr.error(e.responeJSON);
+                                }
+                            });
+                        }
+                    });
+            } else {
+                $.ajax({
+                    url: saveRegisterUrl,
+                    method: "POST",
+                    data: JSON.stringify(attendanceMarks),
+                    contentType: "application/json; charset=utf-8",
+                    success: function(e) {
+                        toastr.success(e);
+                    },
+                    error: function(e) {
+                        toastr.error(e.responeJSON);
+                    }
+                });
+            }
         }
     </script>
 
@@ -194,8 +227,3 @@
         </div>
     </script>
 }
-
-
-
-
-

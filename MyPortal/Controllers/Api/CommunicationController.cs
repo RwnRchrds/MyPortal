@@ -20,7 +20,7 @@ namespace MyPortal.Controllers.Api
 
         public CommunicationController()
         {
-            _service = new CommunicationService(UnitOfWork);
+            _service = new CommunicationService();
         }
 
         protected override void Dispose(bool disposing)

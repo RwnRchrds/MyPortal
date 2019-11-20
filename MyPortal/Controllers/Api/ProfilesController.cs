@@ -23,7 +23,7 @@ namespace MyPortal.Controllers.Api
 
         public ProfilesController()
         {
-            _service = new ProfilesService(UnitOfWork);
+            _service = new ProfilesService();
         }
 
         protected override void Dispose(bool disposing)

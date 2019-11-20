@@ -16,8 +16,8 @@ namespace MyPortal.Areas.Staff.Controllers
     {
         public async Task<ActionResult> Index()
         {
-            using (var staffService = new StaffMemberService(UnitOfWork))
-            using (var curriculumService = new CurriculumService(UnitOfWork))
+            using (var staffService = new StaffMemberService())
+            using (var curriculumService = new CurriculumService())
             {
                 var userId = User.Identity.GetUserId();
 

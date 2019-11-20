@@ -23,7 +23,7 @@ namespace MyPortal.Controllers.Api
 
         public BehaviourController()
         {
-            _service = new BehaviourService(UnitOfWork);
+            _service = new BehaviourService();
         }
 
         protected override void Dispose(bool disposing)

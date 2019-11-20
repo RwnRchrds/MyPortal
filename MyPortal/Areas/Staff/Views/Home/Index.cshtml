@@ -28,7 +28,7 @@
         <div class="col mb-4">
             <button type="button" class="btn btn-sm btn-primary px-3" data-toggle="modal" data-target="#ChangeAcademicYearModal">
 
-                Select Academic Year
+                <i class="fas fa-school"></i> Select Academic Year
 
             </button>
         </div>
@@ -40,7 +40,7 @@
         <div class="card shadow mb-4">
             <!-- Card Header - Dropdown -->
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">My Details</h6>
+                <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-address-card"></i> My Details</h6>
             </div>
             <!-- Card Body -->
             <div class="card-body">
@@ -71,7 +71,7 @@
             <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Bulletins</h6>
+                    <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-rss"></i> Bulletins</h6>
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
@@ -89,13 +89,13 @@
             <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Training</h6>
+                    <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-certificate"></i> Training Courses</h6>
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
                     @Html.EJS().Grid("Training").DataSource(dataManager =>
                     {
-                        dataManager.Url("/api/personnel/certificates/get/byStaff/dataGrid/" + Model.CurrentUser.Id).CrossDomain(false).Adaptor("UrlAdaptor");
+                        dataManager.Url(Url.HttpRouteUrl("ApiGetTrainingCertificatesByStaffMemberDataGrid", new {staffId = Model.CurrentUser.Id})).CrossDomain(false).Adaptor("UrlAdaptor");
                     }).Columns(col =>
                     {
                         col.Field("CourseCode").HeaderText("Code").Template("#trainingCodeTemplate").HideAtMedia("(min-width: 1200px)").Width("50").Add();
@@ -110,13 +110,13 @@
             <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Observations</h6>
+                    <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-clipboard-list"></i> Observations</h6>
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
                     @Html.EJS().Grid("Observations").DataSource(dataManager =>
                     {
-                        dataManager.Url("/api/personnel/observations/get/byStaff/dataGrid/" + Model.CurrentUser.Id).CrossDomain(false).Adaptor("UrlAdaptor");
+                        dataManager.Url(Url.HttpRouteUrl("ApiGetObservationsByStaffMemberDataGrid", new {staffId = Model.CurrentUser.Id})).CrossDomain(false).Adaptor("UrlAdaptor");
                     }).Columns(col =>
                     {
                         col.Field("Date").HeaderText("Date").Template("#observationsDateTemplate").Width("50").Add();
@@ -129,13 +129,6 @@
     </div>
 }
 
-@if (User.HasPermission("ViewObservations"))
-{
-    <div class="row">
-        
-    </div>
-}
-
 @if (User.HasPermission("ViewPersonalDocuments"))
 {
     <div class="row">
@@ -143,13 +136,13 @@
             <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Documents</h6>
+                    <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-file-alt"></i> Documents</h6>
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
                     @Html.EJS().Grid("Documents").DataSource(dataManager =>
                     {
-                        dataManager.Url("/api/documents/personal/get/dataGrid/" + Model.CurrentUser.Person.Id).CrossDomain(false).Adaptor("UrlAdaptor");
+                        dataManager.Url(Url.HttpRouteUrl("ApiGetPersonalDocumentsByPersonDataGrid", new {personId = Model.CurrentUser.Person.Id})).CrossDomain(false).Adaptor("UrlAdaptor");
                     }).Columns(col =>
                     {
                         col.Field("Description").HeaderText("Description").Template("#documentsDescriptionTemplate").Width("300").Add();
@@ -168,19 +161,19 @@
             <!--content-->
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Select Academic Year</h4>
+                    <h5 class="modal-title">Select Academic Year</h5>
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "/api/curriculum/academicYears/select", HttpMethod = "POST", OnSuccess = "selectYearSuccess", OnFailure = "selectYearFailure" }, new { id = "newLessonPlanForm" }))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "ApiChangeSelectedAcademicYear", HttpMethod = "POST", OnSuccess = "selectYearSuccess", OnFailure = "selectYearFailure" }, new { id = "newLessonPlanForm" }))
                 {
                     <div class="modal-body">
                         <div class="form-group">
                             @Html.Label("Academic Year")
-                            @Html.DropDownList("Id", new SelectList(Model.CurriculumAcademicYears, "Id", "Name", Model.SelectedAcademicYearId), new { @class = "form-control", id = "selectedYear" })
+                            @Html.DropDownList("Id", new SelectList(Model.CurriculumAcademicYears, "Id", "Name", Model.SelectedAcademicYearId), new { @class = "form-control form-control-sm", id = "selectedYear" })
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary btn-sm">Save</button>
                         </div>
                     </div>
                 }
@@ -268,7 +261,7 @@
     </script>
 
     <script type="text/x-jsrender" id="observationsOutcomeTemplate">
-        <div>
+        <div class="text-center font-weight-bold">
             ${Outcome}
         </div>
     </script>

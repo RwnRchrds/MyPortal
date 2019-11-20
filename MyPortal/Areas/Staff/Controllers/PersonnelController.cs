@@ -30,7 +30,7 @@ namespace MyPortal.Areas.Staff.Controllers
                 return RedirectToAction("NewTrainingCourse");
             }
 
-            using (var personnelService = new PersonnelService(UnitOfWork))
+            using (var personnelService = new PersonnelService())
             {
                 await personnelService.CreateCourse(course);
 

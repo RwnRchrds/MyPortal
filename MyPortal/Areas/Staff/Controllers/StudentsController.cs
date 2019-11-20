@@ -39,7 +39,7 @@ namespace MyPortal.Areas.Staff.Controllers
         [RequiresPermission("EditStudents")]
         public async Task<ActionResult> SaveStudent(Student student)
         {
-            using (var studentService = new StudentService(UnitOfWork))
+            using (var studentService = new StudentService())
             {
                 await studentService.UpdateStudent(student);
 
@@ -52,11 +52,11 @@ namespace MyPortal.Areas.Staff.Controllers
         [Route("{studentId:int}")]
         public async Task<ActionResult> StudentOverview(int studentId)
         {
-            using (var behaviourService = new BehaviourService(UnitOfWork))
-            using (var attendanceService = new AttendanceService(UnitOfWork))
-            using (var curriculumService =  new CurriculumService(UnitOfWork))
-            using (var profilesService = new ProfilesService(UnitOfWork))
-            using (var studentService = new StudentService(UnitOfWork))
+            using (var behaviourService = new BehaviourService())
+            using (var attendanceService = new AttendanceService())
+            using (var curriculumService =  new CurriculumService())
+            using (var profilesService = new ProfilesService())
+            using (var studentService = new StudentService())
             {
                 var student = await studentService.GetStudentByIdWithRelated(studentId, 
                     x => x.Person,
@@ -104,8 +104,8 @@ namespace MyPortal.Areas.Staff.Controllers
         [Route("{studentId:int}/Details", Name = "PeopleStudentExtendedDetails")]
         public async Task<ActionResult> StudentDetails(int studentId)
         {
-            using (var pastoralService = new PastoralService(UnitOfWork))
-            using (var studentService = new StudentService(UnitOfWork))
+            using (var pastoralService = new PastoralService())
+            using (var studentService = new StudentService())
             {
                 var student = await studentService.GetStudentById(studentId);
 
@@ -131,9 +131,9 @@ namespace MyPortal.Areas.Staff.Controllers
         [Route("{studentId:int}/Results", Name = "PeopleStudentAssessmentResults")]
         public async Task<ActionResult> StudentResults(int studentId)
         {
-            using (var curriculumService = new CurriculumService(UnitOfWork))
-            using (var assessmentService = new AssessmentService(UnitOfWork))
-            using (var studentService = new StudentService(UnitOfWork))
+            using (var curriculumService = new CurriculumService())
+            using (var assessmentService = new AssessmentService())
+            using (var studentService = new StudentService())
             {
                 var student = await studentService.GetStudentById(studentId);
 
@@ -156,9 +156,9 @@ namespace MyPortal.Areas.Staff.Controllers
         [Route("{studentId:int}/Behaviour")]
         public async Task<ActionResult> BehaviourManagement(int studentId)
         {
-            using (var systemService = new SystemService(UnitOfWork))
-            using (var behaviourService = new BehaviourService(UnitOfWork))
-            using (var studentService = new StudentService(UnitOfWork))
+            using (var systemService = new SystemService())
+            using (var behaviourService = new BehaviourService())
+            using (var studentService = new StudentService())
             {
                 var student = await studentService.GetStudentById(studentId);
 

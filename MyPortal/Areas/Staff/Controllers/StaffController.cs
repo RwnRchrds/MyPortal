@@ -26,8 +26,8 @@ namespace MyPortal.Areas.Staff.Controllers
         [Route("Staff/{id:int}", Name = "PeopleStaffDetails")]
         public async Task<ActionResult> StaffDetails(int id)
         {
-            using (var personnelService = new PersonnelService(UnitOfWork))
-            using (var staffService = new StaffMemberService(UnitOfWork))
+            using (var personnelService = new PersonnelService())
+            using (var staffService = new StaffMemberService())
             {
                 var staff = await staffService.GetStaffMemberById(id);
 

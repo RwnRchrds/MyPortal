@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -350,7 +351,7 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<CurriculumAcademicYear>> GetAcademicYears()
         {
-            var academicYears = await UnitOfWork.CurriculumAcademicYears.GetAll();
+            var academicYears = await UnitOfWork.CurriculumAcademicYears.GetAll(x => x.FirstDate);
                 
             return academicYears;
         }
@@ -362,21 +363,16 @@ namespace MyPortal.Services
             return classes;
         }
 
-        public async Task<IEnumerable<CurriculumClass>> GetAllClassesModel(int academicYearId)
-        {
-            return await UnitOfWork.CurriculumClasses.GetByAcademicYear(academicYearId);
-        }
-
         public async Task<IEnumerable<CurriculumLessonPlan>> GetAllLessonPlans()
         {
-            var lessonPlans = await UnitOfWork.CurriculumLessonPlans.GetAll();
+            var lessonPlans = await UnitOfWork.CurriculumLessonPlans.GetAll(x => x.Title);
 
             return lessonPlans;
         }
 
         public async Task<IEnumerable<CurriculumStudyTopic>> GetAllStudyTopics()
         {
-            return await UnitOfWork.CurriculumStudyTopics.GetAll();
+            return await UnitOfWork.CurriculumStudyTopics.GetAll(x => x.Name);
         }
 
         public async Task<IEnumerable<CurriculumStudyTopic>> GetAllStudyTopicsBySubject(int subjectId)
@@ -386,7 +382,7 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<CurriculumSubject>> GetAllSubjects()
         {
-            var subjects = await UnitOfWork.CurriculumSubjects.GetAll();
+            var subjects = await UnitOfWork.CurriculumSubjects.GetAll(x => x.Name);
 
             return subjects;
         }
@@ -458,9 +454,9 @@ namespace MyPortal.Services
             return session;
         }
 
-        public async Task<CurriculumSession> GetSessionByIdWithRelated(int sessionId)
+        public async Task<CurriculumSession> GetSessionByIdWithRelated(int sessionId, params Expression<Func<CurriculumSession, object>>[] includeProperties)
         {
-            var session = await UnitOfWork.CurriculumSessions.GetByIdWithRelated(sessionId);
+            var session = await UnitOfWork.CurriculumSessions.GetByIdWithRelated(sessionId, includeProperties);
 
             if (session == null)
             {

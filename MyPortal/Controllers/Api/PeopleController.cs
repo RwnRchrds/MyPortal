@@ -24,7 +24,7 @@ namespace MyPortal.Controllers.Api
 
         public PeopleController()
         {
-            _service = new PeopleService(UnitOfWork);
+            _service = new PeopleService();
         }
 
         protected override void Dispose(bool disposing)

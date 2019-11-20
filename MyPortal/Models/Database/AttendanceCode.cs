@@ -17,7 +17,7 @@ namespace MyPortal.Models.Database
     }
 
     /// <summary>
-    /// [SYSTEM] Codes available to use when taking the register.
+    /// [READ-ONLY] Codes available to use when taking the register.
     /// </summary>
     [Table("Attendance_Codes")]
     public partial class AttendanceCode

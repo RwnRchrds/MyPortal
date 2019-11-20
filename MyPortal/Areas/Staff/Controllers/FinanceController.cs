@@ -24,7 +24,7 @@ namespace MyPortal.Areas.Staff.Controllers
         [Route("Products", Name = "FinanceProducts")]
         public async Task<ActionResult> Products()
         {
-            using (var financeService = new FinanceService(UnitOfWork))
+            using (var financeService = new FinanceService())
             {
                 var viewModel = new ProductsViewModel {ProductTypes = await financeService.GetAllProductTypes()};
 
@@ -36,7 +36,7 @@ namespace MyPortal.Areas.Staff.Controllers
         [Route("Sales/New", Name = "FinanceSaleEntry")]
         public async Task<ActionResult> SaleEntry()
         {
-            using (var financeService =  new FinanceService(UnitOfWork))
+            using (var financeService =  new FinanceService())
             {
                 var products = await financeService.GetAllProducts();
 

@@ -12,6 +12,7 @@ namespace MyPortal.Areas.Staff.ViewModels
         public CurriculumSession Session { get; set; }
         public IEnumerable<AttendancePeriod> Periods { get; set; }
         public IEnumerable<StudentAttendanceMarkCollection> AttendanceMarks { get; set; }
-        public List<string> AttendanceCodes { get; set; }
+        public IEnumerable<AttendanceCode> AttendanceCodes { get; set; }
+        public List<string> UsableCodes { get; set; }
     }
 }

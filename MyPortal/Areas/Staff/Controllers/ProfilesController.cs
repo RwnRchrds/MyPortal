@@ -24,7 +24,7 @@ namespace MyPortal.Areas.Staff.Controllers
         [Route("Profile/Comments")]
         public async Task<ActionResult> Comments()
         {
-            using (var profilesService = new ProfilesService(UnitOfWork))
+            using (var profilesService = new ProfilesService())
             {
                 var viewModel = new CommentsViewModel();
                 viewModel.CommentBanks = await profilesService.GetAllCommentBanks();

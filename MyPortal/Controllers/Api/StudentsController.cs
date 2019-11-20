@@ -22,7 +22,7 @@ namespace MyPortal.Controllers.Api
 
         public StudentsController()
         {
-            _service = new StudentService(UnitOfWork);
+            _service = new StudentService();
         }
 
         protected override void Dispose(bool disposing)

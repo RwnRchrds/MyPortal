@@ -52,7 +52,7 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<AssessmentResultSet>> GetAllResultSets()
         {
-            return await UnitOfWork.AssessmentResultSets.GetAll();
+            return await UnitOfWork.AssessmentResultSets.GetAll(x => x.Name);
         }
 
         public async Task<AssessmentResult> GetResultById(int resultId)

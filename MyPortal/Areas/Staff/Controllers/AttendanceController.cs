@@ -21,7 +21,7 @@ namespace MyPortal.Areas.Staff.Controllers
         [Route("Registers")]
         public async Task<ActionResult> Registers()
         {
-            using (var staffService = new StaffMemberService(UnitOfWork))
+            using (var staffService = new StaffMemberService())
             {
                 var userId = User.Identity.GetUserId();
                 StaffMember currentUser = null;
@@ -43,8 +43,8 @@ namespace MyPortal.Areas.Staff.Controllers
         [Route("EditAttendance/{weekId:int}/{sessionId:int}")]
         public async Task<ActionResult> TakeRegister(int weekId, int sessionId)
         {
-            using (var curriculumService = new CurriculumService(UnitOfWork))
-            using (var attendanceService = new AttendanceService(UnitOfWork))
+            using (var curriculumService = new CurriculumService())
+            using (var attendanceService = new AttendanceService())
             {
                 var attendanceWeek = await attendanceService.GetAttendanceWeekById(weekId);
 
@@ -53,11 +53,13 @@ namespace MyPortal.Areas.Staff.Controllers
                     return RedirectToAction("Registers");
                 }
 
-                var session = await curriculumService.GetSessionByIdWithRelated(sessionId);
+                var session = await curriculumService.GetSessionByIdWithRelated(sessionId,
+                    x => x.Class.Teacher.Person,
+                    x => x.Period);
                 var sessionDate = await attendanceService.GetAttendancePeriodDate(weekId, session.PeriodId);
                 var attendanceMarks = await attendanceService.GetRegisterMarks(weekId, sessionId);
                 var periods = await attendanceService.GetPeriodsByDayOfWeek(sessionDate.DayOfWeek);
-                var codes = await attendanceService.GetAllAttendanceCodes();
+                var codes = (List<AttendanceCode>) await attendanceService.GetAllAttendanceCodes();
 
                 var viewModel = new TakeRegisterViewModel
                 {
@@ -66,7 +68,8 @@ namespace MyPortal.Areas.Staff.Controllers
                     Week = attendanceWeek,
                     Periods = periods,
                     SessionDate = sessionDate,
-                    AttendanceCodes = codes.Where(x => !x.DoNotUse).Select(attendanceCode => attendanceCode.Code).ToList()
+                    AttendanceCodes = codes,
+                    UsableCodes = codes.Where(x => !x.DoNotUse).Select(x => x.Code).ToList()
                 };
 
                 return View(viewModel);

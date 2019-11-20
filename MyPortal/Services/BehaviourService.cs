@@ -246,14 +246,14 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<BehaviourAchievementType>> GetAchievementTypes()
         {
-            var achievementTypes = await UnitOfWork.BehaviourAchievementTypes.GetAll();
+            var achievementTypes = await UnitOfWork.BehaviourAchievementTypes.GetAll(x => x.Description);
 
             return achievementTypes;
         }
 
         public async Task<IEnumerable<BehaviourIncidentType>> GetBehaviourIncidentTypes()
         {
-            var incidentTypes = await UnitOfWork.BehaviourIncidentTypes.GetAll();
+            var incidentTypes = await UnitOfWork.BehaviourIncidentTypes.GetAll(x => x.Description);
 
             return incidentTypes;
         }

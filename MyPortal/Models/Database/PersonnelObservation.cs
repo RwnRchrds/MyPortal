@@ -8,7 +8,7 @@ namespace MyPortal.Models.Database
 
     public enum ObservationOutcome
     {
-        Oustanding = 1,
+        Outstanding = 1,
 
         Good = 2,
 

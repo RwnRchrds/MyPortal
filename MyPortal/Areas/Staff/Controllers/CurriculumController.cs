@@ -17,7 +17,7 @@ namespace MyPortal.Areas.Staff.Controllers
         [Route("Subjects")]
         public async Task<ActionResult> Subjects()
         {
-            using (var staffService = new StaffMemberService(UnitOfWork))
+            using (var staffService = new StaffMemberService())
             {
                 var viewModel = new SubjectsViewModel {Staff = await staffService.GetAllStaffMembers()};
 
@@ -30,8 +30,8 @@ namespace MyPortal.Areas.Staff.Controllers
         [Route("StudyTopics")]
         public async Task<ActionResult> StudyTopics()
         {
-            using (var curriculumService = new CurriculumService(UnitOfWork))
-            using (var pastoralService = new PastoralService(UnitOfWork))
+            using (var curriculumService = new CurriculumService())
+            using (var pastoralService = new PastoralService())
             {
                 var viewModel = new StudyTopicsViewModel();
 
@@ -51,7 +51,7 @@ namespace MyPortal.Areas.Staff.Controllers
         [Route("LessonPlans")]
         public async Task<ActionResult> LessonPlans()
         {
-            using (var curriculumService = new CurriculumService(UnitOfWork))
+            using (var curriculumService = new CurriculumService())
             {
                 var viewModel = new LessonPlansViewModel();
 
@@ -67,7 +67,7 @@ namespace MyPortal.Areas.Staff.Controllers
         [Route("LessonPlans/View/{lessonPlanId:int}", Name = "CurriculumLessonPlanDetails")]
         public async Task<ActionResult> LessonPlanDetails(int lessonPlanId)
         {
-            using (var curriculumService = new CurriculumService(UnitOfWork))
+            using (var curriculumService = new CurriculumService())
             {
                 var lessonPlan = await curriculumService.GetLessonPlanById(lessonPlanId);
 
@@ -81,8 +81,8 @@ namespace MyPortal.Areas.Staff.Controllers
         [Route("Classes")]
         public async Task<ActionResult> Classes()
         {
-            using (var staffService = new StaffMemberService(UnitOfWork))
-            using (var curriculumService = new CurriculumService(UnitOfWork))
+            using (var staffService = new StaffMemberService())
+            using (var curriculumService = new CurriculumService())
             {
                 var viewModel = new ClassesViewModel
                 {
@@ -98,8 +98,8 @@ namespace MyPortal.Areas.Staff.Controllers
         [Route("Classes/{classId:int}")]
         public async Task<ActionResult> ClassDetails(int classId)
         {
-            using (var attendanceService = new AttendanceService(UnitOfWork))
-            using (var curriculumService = new CurriculumService(UnitOfWork))
+            using (var attendanceService = new AttendanceService())
+            using (var curriculumService = new CurriculumService())
             {
                 var viewModel = new SessionsViewModel();
 

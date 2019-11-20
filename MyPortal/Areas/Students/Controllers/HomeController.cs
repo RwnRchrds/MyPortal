@@ -18,10 +18,10 @@ namespace MyPortal.Areas.Students.Controllers
     {
         public async Task<ActionResult> Index()
         {
-            using (var curriculumService = new CurriculumService(UnitOfWork))
-            using (var attendanceService = new AttendanceService(UnitOfWork))
-            using (var behaviourService = new BehaviourService(UnitOfWork))
-            using (var studentService = new StudentService(UnitOfWork))
+            using (var curriculumService = new CurriculumService())
+            using (var attendanceService = new AttendanceService())
+            using (var behaviourService = new BehaviourService())
+            using (var studentService = new StudentService())
             {
                 var userId = User.Identity.GetUserId();
 

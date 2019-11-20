@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Web;
 using MyPortal.Extensions;
@@ -17,11 +18,9 @@ namespace MyPortal.Repositories
 
         }
 
-        public async Task<CurriculumSession> GetByIdWithRelated(int sessionId)
+        public async Task<CurriculumSession> GetByIdWithRelated(int sessionId, params Expression<Func<CurriculumSession, object>>[] includeProperties)
         {
-            return await Context.CurriculumSessions.IncludeMultiple(
-                x => x.Period,
-                x => x.Class.Teacher.Person).SingleOrDefaultAsync(x => x.Id == sessionId);
+            return await Context.CurriculumSessions.IncludeMultiple(includeProperties).SingleOrDefaultAsync(x => x.Id == sessionId);
         }
 
         public async Task<IEnumerable<CurriculumSession>> GetByClass(int classId)

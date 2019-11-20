@@ -21,7 +21,7 @@ namespace MyPortal.Controllers.Api
 
         public SystemController()
         {
-            _service = new SystemService(UnitOfWork);
+            _service = new SystemService();
         }
 
         protected override void Dispose(bool disposing)

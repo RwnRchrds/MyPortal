@@ -26,9 +26,9 @@ namespace MyPortal.Areas.Staff.Controllers
         [Route("Users/{userId}")]
         public async Task<ActionResult> UserDetails(string userId)
         {
-            using (var adminService = new AdminService(UnitOfWork))
-            using (var staffService = new StaffMemberService(UnitOfWork))
-            using (var studentService = new StudentService(UnitOfWork))
+            using (var adminService = new AdminService())
+            using (var staffService = new StaffMemberService())
+            using (var studentService = new StudentService())
             {
                 var user = await adminService.GetUserById(userId);
 
@@ -82,7 +82,7 @@ namespace MyPortal.Areas.Staff.Controllers
         [Route("Roles/Permissions/{roleId}", Name = "AdminRolePermissions")]
         public async Task<ActionResult> RolePermissions(string roleId)
         {
-            using (var adminService = new AdminService(UnitOfWork))
+            using (var adminService = new AdminService())
             {
                 var viewModel = new RolePermissionsViewModel();
 

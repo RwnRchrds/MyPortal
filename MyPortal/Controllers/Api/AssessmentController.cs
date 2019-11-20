@@ -25,7 +25,7 @@ namespace MyPortal.Controllers.Api
 
         public AssessmentController()
         {
-            _service = new AssessmentService(UnitOfWork);
+            _service = new AssessmentService();
         }
 
         protected override void Dispose(bool disposing)

@@ -24,7 +24,7 @@ namespace MyPortal.Controllers.Api
 
         public AttendanceController()
         {
-            _service = new AttendanceService(UnitOfWork);
+            _service = new AttendanceService();
         }
 
         protected override void Dispose(bool disposing)
@@ -58,7 +58,7 @@ namespace MyPortal.Controllers.Api
             {
                 try
                 {
-                    await _service.SaveRegisterMarks(attendanceMarks);
+                    await _service.SaveRegisterMarks(attendanceMarks, true);       
                 }
                 catch (Exception e)
                 {

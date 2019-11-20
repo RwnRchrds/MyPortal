@@ -18,12 +18,12 @@ namespace MyPortal.Repositories
 
         public async Task<IEnumerable<CurriculumEnrolment>> GetByClass(int classId)
         {
-            return await Context.CurriculumEnrolments.Where(x => x.ClassId == classId).ToListAsync();
+            return await Context.CurriculumEnrolments.Where(x => x.ClassId == classId).OrderBy(x => x.Student.Person.LastName).ToListAsync();
         }
 
         public async Task<IEnumerable<CurriculumEnrolment>> GetByStudent(int studentId)
         {
-            return await Context.CurriculumEnrolments.Where(x => x.StudentId == studentId).ToListAsync();
+            return await Context.CurriculumEnrolments.Where(x => x.StudentId == studentId).OrderBy(x => x.Class.Name).ToListAsync();
         }
     }
 }

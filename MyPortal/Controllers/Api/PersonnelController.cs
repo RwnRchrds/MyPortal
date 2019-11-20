@@ -22,7 +22,7 @@ namespace MyPortal.Controllers.Api
 
         public PersonnelController()
         {
-            _service = new PersonnelService(UnitOfWork);
+            _service = new PersonnelService();
         }
 
         protected override void Dispose(bool disposing)
@@ -278,13 +278,13 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("ViewObservations")]
-        [Route("observations/get/byStaff/dataGrid/{staffMemberId:int}", Name = "ApiGetObservationsByStaffMemberDataGrid")]
-        public async Task<IHttpActionResult> GetObservationsForStaffMemberDataGrid([FromUri] int staffMemberId,
+        [Route("observations/get/byStaff/dataGrid/{staffId:int}", Name = "ApiGetObservationsByStaffMemberDataGrid")]
+        public async Task<IHttpActionResult> GetObservationsForStaffMemberDataGrid([FromUri] int staffId,
             [FromBody] DataManagerRequest dm)
         {
             try
             {
-                var observations = await _service.GetObservationsByStaffMember(staffMemberId);
+                var observations = await _service.GetObservationsByStaffMember(staffId);
 
                 var list = observations.Select(Mapper.Map<PersonnelObservation, GridPersonnelObservationDto>);
 

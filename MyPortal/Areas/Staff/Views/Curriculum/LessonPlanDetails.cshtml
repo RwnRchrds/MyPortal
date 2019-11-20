@@ -10,6 +10,16 @@
 </div>
 
 <div class="row">
+
+    <div class="col-md-12 mb-4">
+
+        <a class="btn btn-sm btn-primary" href="@Url.Action("LessonPlans")"><i class="fas fa-arrow-left"></i> Back</a>
+
+    </div>
+
+</div>
+
+<div class="row">
     
     <div class="col-xl-12 col-lg-12 mb-4">
         <div class="card shadow mb-4">
@@ -32,7 +42,7 @@
         <div class="card shadow mb-4">
             <!-- Card Header - Dropdown -->
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Lesson Plan Content</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Content</h6>
             </div>
             <!-- Card Body -->
             <div class="card-body">
@@ -56,16 +66,6 @@
                 <p class="mp-text-section">@Model.LessonPlan.Homework</p>
             </div>
         </div>
-    </div>
-
-</div>
-
-<div class="row">
-    
-    <div class="col-xl-12 col-md-12">
-
-        @Html.ActionLink("Back", "LessonPlans",  null, new { @class = "btn btn-primary" })
-
     </div>
 
 </div>

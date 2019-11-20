@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Web;
 using MyPortal.Models.Misc;
 using Syncfusion.EJ2.Base;
+using Syncfusion.EJ2.Linq;
 
 namespace MyPortal.Extensions
 {

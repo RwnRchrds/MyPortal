@@ -35,6 +35,11 @@ namespace MyPortal.Repositories
             return await Context.Set<TEntity>().OrderBy(orderBy).ToListAsync();
         }
 
+        public async Task<IEnumerable<TEntity>> GetAll<TOrderBy, TThenBy>(Expression<Func<TEntity, TOrderBy>> orderBy, Expression<Func<TEntity, TThenBy>> thenBy)
+        {
+            return await Context.Set<TEntity>().OrderBy(orderBy).ThenBy(thenBy).ToListAsync();
+        }
+
         public async Task<bool> Any(Expression<Func<TEntity, bool>> predicate)
         {
             return await Context.Set<TEntity>().AnyAsync(predicate);

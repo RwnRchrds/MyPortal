@@ -17,7 +17,7 @@ namespace MyPortal.Areas.Students.Controllers
         [Route("Store/SalesHistory")]
         public async Task<ActionResult> SalesHistory()
         {
-            using (var studentService = new StudentService(UnitOfWork))
+            using (var studentService = new StudentService())
             {
                 var userId = User.Identity.GetUserId();
 
@@ -36,7 +36,7 @@ namespace MyPortal.Areas.Students.Controllers
         [Route("Store/Store")]
         public async Task<ActionResult> Store()
         {
-            using (var studentService = new StudentService(UnitOfWork))
+            using (var studentService = new StudentService())
             {
                 var userId = User.Identity.GetUserId();
 

@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using MyPortal.Models;
 using MyPortal.Models.Database;
 using MyPortal.Exceptions;
+using MyPortal.Extensions;
 using MyPortal.Interfaces;
 using MyPortal.Models.Misc;
 using MyPortal.Persistence;
@@ -21,19 +22,19 @@ namespace MyPortal.Controllers.Api
     {
         protected readonly IUnitOfWork UnitOfWork;
 
-        protected MyPortalApiController()
-        {
-            UnitOfWork = new UnitOfWork(new MyPortalDbContext());
-        }
-
         protected MyPortalApiController(IUnitOfWork unitOfWork)
         {
             UnitOfWork = unitOfWork;
         }
 
+        protected MyPortalApiController()
+        {
+            UnitOfWork = new UnitOfWork();
+        }
+
         protected override void Dispose(bool disposing)
         {
-
+            UnitOfWork.Dispose();
         }
 
         protected IHttpActionResult HandleException(Exception ex)

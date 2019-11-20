@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using AutoMapper;
 using MyPortal.Dtos.Lite;
@@ -56,14 +57,21 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<AttendancePeriod>> GetAllPeriods()
         {
-            var attendancePeriods = await UnitOfWork.AttendancePeriods.GetAll();
+            var attendancePeriods = await UnitOfWork.AttendancePeriods.GetAll(x => x.Weekday, x => x.StartTime);
 
             return attendancePeriods;
         }
 
         public async Task<IEnumerable<AttendanceCode>> GetAllAttendanceCodes()
         {
-            var codes = await UnitOfWork.AttendanceCodes.GetAll();
+            var codes = await UnitOfWork.AttendanceCodes.GetAll(x => x.Code);
+
+            return codes;
+        }
+
+        public async Task<IEnumerable<AttendanceCode>> GetUsableAttendanceCodes()
+        {
+            var codes = await UnitOfWork.AttendanceCodes.GetUsable();
 
             return codes;
         }
@@ -257,19 +265,33 @@ namespace MyPortal.Services
             return liteMarks;
         }
 
-        public async Task SaveRegisterMarks(IEnumerable<AttendanceMarkLiteDto> marks)
+        public async Task SaveRegisterMarks(IEnumerable<AttendanceMarkLiteDto> marks, bool replaceBlanks)
         {
             foreach (var mark in marks)
             {
+                if (replaceBlanks && mark.Mark == "-")
+                {
+                    mark.Mark = "N";
+                }
+
                 var markInDb = await UnitOfWork.AttendanceMarks.Get(mark.StudentId, mark.WeekId, mark.PeriodId);
 
                 if (markInDb != null)
                 {
-                    markInDb.Mark = mark.Mark;
+                    //Update attendance mark (delete if '-')
+                    if (mark.Mark == "-")
+                    {
+                        UnitOfWork.AttendanceMarks.Remove(markInDb);
+                    }
+                    else
+                    {
+                        markInDb.Mark = mark.Mark;
+                    }
                 }
 
                 else
                 {
+                    //Insert new mark
                     var newMark = new AttendanceMark
                     {
                         Mark = mark.Mark,

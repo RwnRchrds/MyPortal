@@ -19,7 +19,7 @@ namespace MyPortal.Controllers.Api
 
         public PastoralController()
         {
-            _service = new PastoralService(UnitOfWork);
+            _service = new PastoralService();
         }
 
         protected override void Dispose(bool disposing)

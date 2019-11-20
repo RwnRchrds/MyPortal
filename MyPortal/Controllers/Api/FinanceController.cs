@@ -26,7 +26,7 @@ namespace MyPortal.Controllers.Api
 
         public FinanceController()
         {
-            _service = new FinanceService(UnitOfWork);
+            _service = new FinanceService();
         }
 
         protected override void Dispose(bool disposing)

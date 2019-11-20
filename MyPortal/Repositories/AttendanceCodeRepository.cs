@@ -20,5 +20,10 @@ namespace MyPortal.Repositories
         {
             return await Context.AttendanceCodes.SingleOrDefaultAsync(x => x.Code == code);
         }
+
+        public async Task<IEnumerable<AttendanceCode>> GetUsable()
+        {
+            return await Context.AttendanceCodes.Where(x => !x.DoNotUse).ToListAsync();
+        }
     }
 }

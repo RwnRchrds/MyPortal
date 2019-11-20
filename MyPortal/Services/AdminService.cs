@@ -138,53 +138,59 @@ namespace MyPortal.Services
 
         public async Task CreateRole(ApplicationRole role)
         {
-            role.System = false;
-            role.Id = UtilityService.GenerateId();
-
-            if (!ValidationService.ModelIsValid(role))
+            using (var utilityService = new UtilityService())
             {
-                throw new ServiceException(ExceptionType.BadRequest,"Invalid data");
+                role.System = false;
+                role.Id = utilityService.GenerateId();
+
+                if (!ValidationService.ModelIsValid(role))
+                {
+                    throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
+                }
+
+                var result = await RoleManager.CreateAsync(role);
+
+                if (result.Succeeded)
+                {
+                    return;
+                }
+
+                throw new ServiceException(ExceptionType.BadRequest, "An unknown error occurred");
             }
-
-            var result = await RoleManager.CreateAsync(role);
-
-            if (result.Succeeded)
-            {
-                return;
-            }
-
-            throw new ServiceException(ExceptionType.BadRequest,"An unknown error occurred");
         }
 
         public async Task<string> CreateUser(NewUserViewModel model)
         {
-            model.Id = UtilityService.GenerateId();
-
-            if (model.Username.IsNullOrWhiteSpace() || model.Password.IsNullOrWhiteSpace())
+            using (var utilityService = new UtilityService())
             {
-                throw new ServiceException(ExceptionType.BadRequest,"Invalid data");
+                model.Id = utilityService.GenerateId();
+
+                if (model.Username.IsNullOrWhiteSpace() || model.Password.IsNullOrWhiteSpace())
+                {
+                    throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
+                }
+
+                var user = new ApplicationUser
+                {
+                    Id = model.Id,
+                    UserName = model.Username,
+                    UserType = model.UserType
+                };
+
+                var result = await UserManager.CreateAsync(user, model.Password);
+
+                if (result.Succeeded)
+                {
+                    return model.Id;
+                }
+
+                if (result.Errors.Any())
+                {
+                    throw new ServiceException(ExceptionType.BadRequest, result.Errors.FirstOrDefault());
+                }
+
+                throw new ServiceException(ExceptionType.BadRequest, "An unknown error occurred");
             }
-
-            var user = new ApplicationUser
-            {
-                Id = model.Id,
-                UserName = model.Username,
-                UserType = model.UserType
-            };
-
-            var result = await UserManager.CreateAsync(user, model.Password);
-
-            if (result.Succeeded)
-            {
-                return model.Id;
-            }
-
-            if (result.Errors.Any())
-            {
-                throw new ServiceException(ExceptionType.BadRequest, result.Errors.FirstOrDefault());
-            }
-
-            throw new ServiceException(ExceptionType.BadRequest,"An unknown error occurred");
         }
 
         public async Task DeleteRole(string roleId)
