@@ -187,7 +187,7 @@
             });
 
             if (checkMarks(attendanceMarks)) {
-                bootbox.confirm("Warning! Do you wish to continue anyway?",
+                bootbox.confirm("Students with missing marks will be marked as absent. Do you wish to proceed?",
                     function(result) {
                         if (result) {
                             $.ajax({

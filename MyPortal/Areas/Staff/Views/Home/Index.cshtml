@@ -164,7 +164,7 @@
                     <h5 class="modal-title">Select Academic Year</h5>
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = "ApiChangeSelectedAcademicYear", HttpMethod = "POST", OnSuccess = "selectYearSuccess", OnFailure = "selectYearFailure" }, new { id = "newLessonPlanForm" }))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiChangeSelectedAcademicYear", new {}), HttpMethod = "POST", OnSuccess = "selectYearSuccess", OnFailure = "selectYearFailure" }, new { id = "newLessonPlanForm" }))
                 {
                     <div class="modal-body">
                         <div class="form-group">
