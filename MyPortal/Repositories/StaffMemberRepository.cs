@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Web;
+using MyPortal.Extensions;
 using MyPortal.Interfaces;
 using MyPortal.Models.Database;
 
@@ -14,6 +16,15 @@ namespace MyPortal.Repositories
         public StaffMemberRepository(MyPortalDbContext context) : base(context)
         {
 
+        }
+
+        public async Task<StaffMember> GetByIdWithRelated(int staffId, params Expression<Func<StaffMember, object>>[] includeProperties)
+        {
+            var query = Context.StaffMembers.AsQueryable();
+
+            query = query.IncludeMultiple(includeProperties);
+
+            return await query.SingleOrDefaultAsync(x => x.Id == staffId);
         }
 
         public new async Task<IEnumerable<StaffMember>> GetAll()

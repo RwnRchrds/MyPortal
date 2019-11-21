@@ -78,7 +78,7 @@ namespace MyPortal.Services
                     $"{enrolment.Student.GetDisplayName()} is already enrolled in {enrolment.Class.Name}");
             }
 
-            if (await StudentCanEnrol(enrolment.StudentId, enrolment.ClassId))
+            if (await StudentCanEnrol(enrolment.StudentId, enrolment.ClassId, enrolment.Class.AcademicYearId))
             {
                 UnitOfWork.CurriculumEnrolments.Add(enrolment);
                 if (commitImmediately)
@@ -541,13 +541,13 @@ namespace MyPortal.Services
             return await UnitOfWork.CurriculumSessions.Any(x => x.ClassId == classId);
         }
 
-        public async Task<bool> PeriodIsFree(int studentId, int periodId)
+        public async Task<bool> PeriodIsFree(int studentId, int periodId, int academicYearId)
         {
             return !await UnitOfWork.CurriculumEnrolments.Any(x =>
-                x.StudentId == studentId && x.Class.Sessions.Any(p => p.PeriodId == periodId));
+                x.StudentId == studentId && x.Class.Sessions.Any(p => p.PeriodId == periodId && p.Class.AcademicYearId == academicYearId));
         }
 
-        public async Task<bool> StudentCanEnrol(int studentId, int classId)
+        public async Task<bool> StudentCanEnrol(int studentId, int classId, int academicYearId)
         {
             if (!await UnitOfWork.Students.Any(x => x.Id == studentId))
             {
@@ -569,7 +569,7 @@ namespace MyPortal.Services
             
                 foreach (var session in sessions)
                 {
-                    if (!await PeriodIsFree(studentId, session.PeriodId))
+                    if (!await PeriodIsFree(studentId, session.PeriodId, academicYearId))
                     {
                         throw new ServiceException(ExceptionType.BadRequest,$"Student is not free during period {session.Period.Name}");
                     }

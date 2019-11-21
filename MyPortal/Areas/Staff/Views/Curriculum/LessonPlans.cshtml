@@ -12,16 +12,6 @@
 <div class="row">
     
     <div class="col-xl-12 col-md-12 mb-4">
-
-        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" onclick="openNewLessonPlanModal()"><i class="fas fa-plus"></i> New Lesson Plan</button>
-
-    </div>
-
-</div>
-
-<div class="row">
-    
-    <div class="col-xl-12 col-md-12 mb-4">
         
         <div class="form-group">
             @Html.Label("Study Topic")
@@ -38,10 +28,15 @@
         <div class="card shadow mb-4">
             <!-- Card Header - Dropdown -->
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Lesson Plans</h6>
+                <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-ruler-combined"></i> Lesson Plans</h6>
             </div>
             <!-- Card Body -->
             <div class="card-body">
+                
+                <div class="mb-4">
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" onclick="openNewLessonPlanModal()"><i class="fas fa-plus"></i> New Lesson Plan</button>
+                </div>
+
                 @Html.EJS().Grid("LessonPlans").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiGetLessonPlansByStudyTopicDataGrid", new {studyTopicId = 0})).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
                 {
                     c.Field("Title").HeaderText("Title").Template("#lessonPlansTitleTemplate").Width("300").Add();

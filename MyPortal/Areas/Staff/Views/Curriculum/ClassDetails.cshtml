@@ -24,7 +24,7 @@
         <div class="card shadow mb-4">
             <!-- Card Header - Dropdown -->
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Students</h6>
+                <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-user-graduate"></i> Students</h6>
             </div>
             <!-- Card Body -->
             <div class="card-body">
@@ -54,7 +54,7 @@
         <div class="card shadow mb-4">
             <!-- Card Header - Dropdown -->
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Sessions</h6>
+                <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-calendar-day"></i> Sessions</h6>
             </div>
             <!-- Card Body -->
             <div class="card-body">
@@ -91,15 +91,15 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Period")
-                        @Html.DropDownListFor(l => l.Session.PeriodId, new SelectList(Model.Periods, "Id", "Name"), "Select Period", new { @class = "form-control", Name = "PeriodId" })
+                        @Html.DropDownListFor(l => l.Session.PeriodId, new SelectList(Model.Periods, "Id", "Name"), "Select Period", new { @class = "form-control form-control-sm", Name = "PeriodId" })
                         @Html.ValidationMessageFor(l => l.Class.SubjectId)
                     </div>
                     <div class="form-group">
                         @Html.HiddenFor(x => x.Class.Id, new { Name = "ClassId" })
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary btn-sm">Save</button>
                     </div>
                 </div>
             }
@@ -120,7 +120,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Period")
-                        @Html.DropDownListFor(l => l.Session.PeriodId, new SelectList(Model.Periods, "Id", "Name"), "Select Period", new { @class = "form-control", Name = "PeriodId", id = "editPeriodControl" })
+                        @Html.DropDownListFor(l => l.Session.PeriodId, new SelectList(Model.Periods, "Id", "Name"), "Select Period", new { @class = "form-control form-control-sm", Name = "PeriodId", id = "editPeriodControl" })
                         @Html.ValidationMessageFor(l => l.Class.SubjectId)
                     </div>
                     <div class="form-group">
@@ -128,8 +128,8 @@
                         @Html.HiddenFor(x => x.Session.Id, new { Name = "Id", id = "editIdControl" })
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary btn-sm">Save</button>
                     </div>
                 </div>
             }
@@ -150,18 +150,18 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Year Group</label>
-                        <select class="form-control" id="yearGroupSelect"></select>
+                        <select class="form-control form-control-sm" id="yearGroupSelect"></select>
                     </div>
                     <div class="form-group" id="selectStudentArea">
                         <label class="d-none" id="studentLabel">Student</label>
-                        <select class="form-control disabled d-none" id="studentSelect" name="StudentId"></select>
+                        <select class="form-control form-control-sm disabled d-none" id="studentSelect" name="StudentId"></select>
                     </div>
                     <div class="form-group">
                         @Html.HiddenFor(x => x.Class.Id, new { Name = "ClassId" })
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary btn-sm">Save</button>
                     </div>
                 </div>
             }
@@ -182,14 +182,14 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Reg Group</label>
-                        <select class="form-control" id="regGroupSelect" name="GroupId"></select>
+                        <select class="form-control form-control-sm" id="regGroupSelect" name="GroupId"></select>
                     </div>
                     <div class="form-group">
                         @Html.HiddenFor(x => x.Class.Id, new { Name = "ClassId" })
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary btn-sm">Save</button>
                     </div>
                 </div>
             }
