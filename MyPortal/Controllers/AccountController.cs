@@ -106,7 +106,7 @@ namespace MyPortal.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> LoginPost(LoginModel model, string returnUrl)
+        public async Task<ActionResult> LoginPost(LoginViewModel model, string returnUrl)
         {
             if (!ModelState.IsValid)
             {
@@ -114,11 +114,11 @@ namespace MyPortal.Controllers
             }
             
             var result =
-                await SignInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, false);
+                await SignInManager.PasswordSignInAsync(model.Login.Username, model.Login.Password, model.Login.RememberMe, false);
             switch (result)
             {
                 case SignInStatus.Success:
-                    var userName = model.Username;
+                    var userName = model.Login.Username;
                     await SetDefaultAcademicYear(userName);
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:

@@ -35,7 +35,8 @@ namespace MyPortal.Areas.Staff.Controllers
                 var viewModel = new SubjectDetailsViewModel
                 {
                     Subject = await curriculumService.GetSubjectById(subjectId),
-                    Staff = await staffService.GetAllStaffMembers()
+                    StaffMembers = await staffService.GetAllStaffMembersLookup(),
+                    SubjectRoles = await curriculumService.GetAllSubjectRolesLookup()
                 };
 
                 return View(viewModel);

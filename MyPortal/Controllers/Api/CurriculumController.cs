@@ -565,12 +565,12 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditSubjects")]
-        [Route("subjects/staff/get/dataGrid/{subjectId:int}", Name = "ApiGetSubjectStaffDataGrid")]
-        public async Task<IHttpActionResult> GetSubjectStaff([FromUri] int subjectId, [FromBody] DataManagerRequest dm)
+        [Route("subjects/staff/get/dataGrid/{subjectId:int}", Name = "ApiGetAllSubjectStaffBySubjectDataGrid")]
+        public async Task<IHttpActionResult> GetAllSubjectStaffBySubject([FromUri] int subjectId, [FromBody] DataManagerRequest dm)
         {
             try
             {
-                var staff = await _service.GetSubjectStaff(subjectId);
+                var staff = await _service.GetSubjectStaffBySubject(subjectId);
 
                 var list = staff.Select(Mapper
                     .Map<CurriculumSubjectStaffMember, GridCurriculumSubjectStaffMemberDto>);
@@ -582,6 +582,74 @@ namespace MyPortal.Controllers.Api
             {
                 return HandleException(e);
             }
+        }
+
+        [HttpGet]
+        [RequiresPermission("EditSubjects")]
+        [Route("subjects/staff/get/byId/{subjectStaffId:int}", Name = "ApiGetSubjectStaffById")]
+        public async Task<CurriculumSubjectStaffMemberDto> GetSubjectStaffById([FromUri] int subjectStaffId)
+        {
+            try
+            {
+                var subjectStaff = await _service.GetSubjectStaffById(subjectStaffId);
+
+                return Mapper.Map<CurriculumSubjectStaffMember, CurriculumSubjectStaffMemberDto>(subjectStaff);
+            }
+            catch (Exception e)
+            {
+                throw GetException(e);
+            }
+        }
+
+        [HttpPost]
+        [RequiresPermission("EditSubjects")]
+        [Route("subjects/staff/create", Name = "ApiCreateSubjectStaff")]
+        public async Task<IHttpActionResult> CreateSubjectStaff([FromBody] CurriculumSubjectStaffMember subjectStaff)
+        {
+            try
+            {
+                await _service.CreateSubjectStaff(subjectStaff);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Subject staff member created");
+        }
+
+        [HttpPost]
+        [RequiresPermission("EditSubjects")]
+        [Route("subjects/staff/update", Name = "ApiUpdateSubjectStaff")]
+        public async Task<IHttpActionResult> UpdateSubjectStaff([FromBody] CurriculumSubjectStaffMember subjectStaff)
+        {
+            try
+            {
+                await _service.UpdateSubjectStaff(subjectStaff);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Subject staff member updated");
+        }
+
+        [HttpDelete]
+        [RequiresPermission("EditSubjects")]
+        [Route("subjects/staff/delete/{subjectStaffId:int}", Name = "ApiDeleteSubjectStaff")]
+        public async Task<IHttpActionResult> DeleteSubjectStaff([FromUri] int subjectStaffId)
+        {
+            try
+            {
+                await _service.DeleteSubjectStaff(subjectStaffId);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Subject staff deleted");
         }
 
         [HttpPost]

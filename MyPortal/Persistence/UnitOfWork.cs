@@ -198,6 +198,7 @@ namespace MyPortal.Persistence
         public ICurriculumStudyTopicRepository CurriculumStudyTopics { get; private set; }
         public ICurriculumSubjectRepository CurriculumSubjects { get; private set; }
         public ICurriculumSubjectStaffMemberRepository CurriculumSubjectStaffMembers { get; set; }
+        public ICurriculumSubjectStaffMemberRoleRepository CurriculumSubjectStaffMemberRoles { get; set; }
         public IDocumentRepository Documents { get; private set; }
         public IDocumentTypeRepository DocumentTypes { get; private set; }
         public IFinanceBasketItemRepository FinanceBasketItems { get; private set; }

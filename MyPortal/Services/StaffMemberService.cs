@@ -59,6 +59,13 @@ namespace MyPortal.Services
             return await UnitOfWork.StaffMembers.GetAll();
         }
 
+        public async Task<IDictionary<int, string>> GetAllStaffMembersLookup()
+        {
+            var staff = await GetAllStaffMembers();
+
+            return staff.ToDictionary(x => x.Id, x => x.GetFullName());
+        }
+
 
         public async Task<string> GetStaffDisplayNameFromUserId(string userId)
         {

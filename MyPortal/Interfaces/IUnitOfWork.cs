@@ -40,6 +40,7 @@ namespace MyPortal.Interfaces
         ICurriculumStudyTopicRepository CurriculumStudyTopics { get; }
         ICurriculumSubjectRepository CurriculumSubjects { get; }
         ICurriculumSubjectStaffMemberRepository CurriculumSubjectStaffMembers { get; set; }
+        ICurriculumSubjectStaffMemberRoleRepository CurriculumSubjectStaffMemberRoles { get; set; }
         IDocumentRepository Documents { get; }
         IDocumentTypeRepository DocumentTypes { get; }
         IFinanceBasketItemRepository FinanceBasketItems { get; }

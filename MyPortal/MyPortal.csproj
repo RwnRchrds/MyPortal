@@ -315,6 +315,8 @@
     <Compile Include="Dtos\CommunicationPhoneNumberTypeDto.cs" />
     <Compile Include="Dtos\CommunicationTypeDto.cs" />
     <Compile Include="Dtos\ContactDto.cs" />
+    <Compile Include="Dtos\CurriculumSubjectStaffMemberDto.cs" />
+    <Compile Include="Dtos\CurriculumSubjectStaffMemberRoleDto.cs" />
     <Compile Include="Dtos\DataGrid\GridCurriculumSubjectStaffMemberDto.cs" />
     <Compile Include="Dtos\RelationshipTypeDto.cs" />
     <Compile Include="Dtos\CurriculumAcademicYearDto.cs" />
@@ -429,6 +431,7 @@
     <Compile Include="Interfaces\ICommunicationTypeRepository.cs" />
     <Compile Include="Interfaces\IContactRepository.cs" />
     <Compile Include="Interfaces\ICurriculumSubjectStaffMemberRepository.cs" />
+    <Compile Include="Interfaces\ICurriculumSubjectStaffMemberRoleRepository.cs" />
     <Compile Include="Interfaces\IDeletable.cs" />
     <Compile Include="Interfaces\IGridDto.cs" />
     <Compile Include="Interfaces\IRelationshipTypeRepository.cs" />
@@ -600,6 +603,7 @@
     <Compile Include="Models\Misc\StudentAttendanceMarkSingular.cs" />
     <Compile Include="Persistence\UnitOfWork.cs" />
     <Compile Include="Repositories\CurriculumSubjectStaffMemberRepository.cs" />
+    <Compile Include="Repositories\CurriculumSubjectStaffMemberRoleRepository.cs" />
     <Compile Include="Services\AdminService.cs" />
     <Compile Include="Services\AssessmentService.cs" />
     <Compile Include="Services\AttendanceService.cs" />

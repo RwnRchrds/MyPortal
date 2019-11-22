@@ -12,28 +12,10 @@ namespace MyPortal.Dtos
     
     public partial class CurriculumSubjectDto
     {
-
         public int Id { get; set; }
-
-        
         public string Name { get; set; }
-
-        public int LeaderId { get; set; }
-
-        
         public string Code { get; set; }
 
         public bool Deleted { get; set; }
-
-        public virtual StaffMemberDto Leader { get; set; }
-
-        
-        
-
-        
-        
-
-        
-        
     }
 }

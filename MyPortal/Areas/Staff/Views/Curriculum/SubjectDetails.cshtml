@@ -30,20 +30,102 @@
             <div class="card-body">
 
                 <div class="mb-4">
-                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#newStaffModal"><i class="fas fa-plus"></i> Add Staff Member</button>
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#newSubjectStaffModal"><i class="fas fa-plus"></i> Add Staff Member</button>
                 </div>
 
-                @Html.EJS().Grid("Enrolments").DataSource(d =>
+                @Html.EJS().Grid("SubjectStaff").DataSource(d =>
                 {
-                    d.Url(Url.HttpRouteUrl("ApiGetSubjectStaffDataGrid", new { subjectId = Model.Subject.Id })).CrossDomain(false).Adaptor("UrlAdaptor");
+                    d.Url(Url.HttpRouteUrl("ApiGetAllSubjectStaffBySubjectDataGrid", new { subjectId = Model.Subject.Id })).CrossDomain(false).Adaptor("UrlAdaptor");
                 }).Columns(c =>
                 {
-                    c.Field("StaffName").HeaderText("Staff").Template("#enrolmentsStudentTemplate").Width("150").Add();
-                    c.HeaderText("Actions").Template("#staffActionsTemplate").Width("170").Add();
+                    c.Field("StaffMemberName").HeaderText("Staff").Template("#subjectStaffNameTemplate").Width("150").Add();
+                    c.Field("Role").HeaderText("Role").Template("#subjectStaffRoleTemplate").Width("100").Add();
+                    c.HeaderText("Actions").Template("#subjectStaffActionsTemplate").Width("170").Add();
                 }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string>() { "Search" }).Render()
             </div>
         </div>
     </div>
 
 </div>
+
+<div id="newSubjectStaffModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Subject Staff Member</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiCreateSubjectStaff", new { }), HttpMethod = "POST", OnSuccess = "newSubjectStaffSuccess", OnFailure = "newSubjectStaffFailure" }, new { id = "newSessionForm" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.Label("Staff Member")
+                        @Html.DropDownListFor(l => l.SubjectStaffMember.StaffMemberId, new SelectList(Model.StaffMembers, "Key", "Value"), "Select Staff", new { @class = "form-control form-control-sm", Name = "StaffMemberId" })
+                        @Html.ValidationMessageFor(l => l.SubjectStaffMember.StaffMemberId)
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Role")
+                        @Html.DropDownListFor(x => x.SubjectStaffMember.RoleId, new SelectList(Model.SubjectRoles, "Key", "Value"), "Select Role", new {@class = "form-control form-control-sm", Name = "RoleId"})
+                        @Html.ValidationMessageFor(x => x.SubjectStaffMember.RoleId)
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(x => x.Subject.Id, new { Name = "SubjectId" })
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="editSubjectStaffModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!--content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Subject Staff Member</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiUpdateSubjectStaff", new { }), HttpMethod = "POST", OnSuccess = "editSubjectStaffSuccess", OnFailure = "editSubjectStaffFailure" }, new { id = "editSubjectStaffForm" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.Label("Staff Member")
+                        @Html.DropDownListFor(l => l.SubjectStaffMember.StaffMemberId, new SelectList(Model.StaffMembers, "Key", "Value"), "Select Staff", new { @class = "form-control form-control-sm", Name = "StaffMemberId" })
+                        @Html.ValidationMessageFor(l => l.SubjectStaffMember.StaffMemberId)
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Role")
+                        @Html.DropDownListFor(x => x.SubjectStaffMember.RoleId, new SelectList(Model.SubjectRoles, "Key", "Value"), "Select Role", new { @class = "form-control form-control-sm", Name = "RoleId" })
+                        @Html.ValidationMessageFor(x => x.SubjectStaffMember.RoleId)
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(x => x.Subject.Id, new { Name = "SubjectId" })
+                        @Html.HiddenFor(x => x.SubjectStaffMember.Id, new {Name = "Id"})
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+            $('.modal').on('hidden.bs.modal',
+                function() {
+                    $(this).find('form').trigger('reset');
+                });
+        })
+    </script>
+}
 

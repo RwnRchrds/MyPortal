@@ -387,11 +387,25 @@ namespace MyPortal.Services
             return subjects;
         }
 
-        public async Task<IEnumerable<CurriculumSubjectStaffMember>> GetSubjectStaff(int subjectId)
+        public async Task<IEnumerable<CurriculumSubjectStaffMember>> GetSubjectStaffBySubject(int subjectId)
         {
             var staff = await UnitOfWork.CurriculumSubjectStaffMembers.GetBySubject(subjectId);
 
             return staff;
+        }
+
+        public async Task<CurriculumSubjectStaffMember> GetSubjectStaffById(int subjectStaffId)
+        {
+            var staff = await UnitOfWork.CurriculumSubjectStaffMembers.GetById(subjectStaffId);
+
+            return staff;
+        }
+
+        public async Task<IDictionary<int, string>> GetAllSubjectRolesLookup()
+        {
+            var roles = await UnitOfWork.CurriculumSubjectStaffMemberRoles.GetAll(x => x.Description);
+
+            return roles.ToDictionary(x => x.Id, x => x.Description);
         }
 
         public async Task<CurriculumClass> GetClassById(int classId)
@@ -699,6 +713,36 @@ namespace MyPortal.Services
             var academicYear = await UnitOfWork.CurriculumAcademicYears.GetCurrentOrSelected(user);
 
             return academicYear?.Id;
+        }
+
+        public async Task CreateSubjectStaff(CurriculumSubjectStaffMember subjectStaff)
+        {
+            if (!ValidationService.ModelIsValid(subjectStaff))
+            {
+                throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
+            }
+
+            UnitOfWork.CurriculumSubjectStaffMembers.Add(subjectStaff);
+
+            await UnitOfWork.Complete();
+        }
+
+        public async Task UpdateSubjectStaff(CurriculumSubjectStaffMember subjectStaff)
+        {
+            var subjectStaffInDb = await GetSubjectStaffById(subjectStaff.Id);
+
+            subjectStaffInDb.RoleId = subjectStaff.RoleId;
+
+            await UnitOfWork.Complete();
+        }
+
+        public async Task DeleteSubjectStaff(int subjectStaffId)
+        {
+            var subjectStaffInDb = await GetSubjectStaffById(subjectStaffId);
+
+            UnitOfWork.CurriculumSubjectStaffMembers.Remove(subjectStaffInDb);
+
+            await UnitOfWork.Complete();
         }
     }
 }

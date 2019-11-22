@@ -9,6 +9,8 @@ namespace MyPortal.Areas.Staff.ViewModels
     public class SubjectDetailsViewModel
     {
         public CurriculumSubject Subject { get; set; }
-        public IEnumerable<StaffMember> Staff { get; set; }
+        public IDictionary<int, string> StaffMembers { get; set; }
+        public IDictionary<int, string> SubjectRoles { get; set; }
+        public CurriculumSubjectStaffMember SubjectStaffMember { get; set; }
     }
 }

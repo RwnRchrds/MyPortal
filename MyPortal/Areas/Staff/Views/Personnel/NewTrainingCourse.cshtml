@@ -12,7 +12,7 @@
     
     <div class="col-xl-12 col-md-12 mb-4">
         
-        @using (Html.BeginForm("CreateCourse", "Home"))
+        @using (Html.BeginForm("CreateCourse"))
         {
             <div class="form-group">
                 @Html.Label("Course Code")
@@ -39,7 +39,7 @@
         $(document).ready(function() {
             $("#backButton").on("click",
                 function() {
-                    location.replace("@Url.Action("TrainingCourses", "Home")");
+                    location.replace("@Url.Action("TrainingCourses")");
                 });
         });
     </script>
