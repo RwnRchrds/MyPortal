@@ -27,8 +27,6 @@ namespace MyPortal.Models.Database
         [StringLength(256)]
         public string Name { get; set; }
 
-        public int LeaderId { get; set; }
-
         [Required]
         [StringLength(128)]
         public string Code { get; set; }

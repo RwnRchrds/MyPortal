@@ -56,17 +56,14 @@ namespace MyPortal.Services
                 throw new ServiceException(ExceptionType.BadRequest,"Invalid data");
             }
 
-            if (!await UnitOfWork.CurriculumClasses.Any(x => x.Id == enrolment.ClassId))
-            {
-                throw new ServiceException(ExceptionType.NotFound,"Class not found");
-            }
+            var @class = await GetClassById(enrolment.ClassId);
 
             if (!await UnitOfWork.Students.Any(x => x.Id == enrolment.StudentId))
             {
                 throw new ServiceException(ExceptionType.NotFound,"Student not found");
             }
 
-            if (!await UnitOfWork.CurriculumSessions.Any(x => x.ClassId == enrolment.ClassId))
+            if (!@class.Sessions.Any())
             {
                 throw new ServiceException(ExceptionType.NotFound,"Cannot add students to a class with no sessions");
             }
@@ -75,19 +72,22 @@ namespace MyPortal.Services
                 x.ClassId == enrolment.ClassId && x.StudentId == enrolment.StudentId))
             {
                 throw new ServiceException(ExceptionType.BadRequest,
-                    $"{enrolment.Student.GetDisplayName()} is already enrolled in {enrolment.Class.Name}");
+                    $"Student is already enrolled in {@class.Name}");
             }
 
-            if (await StudentCanEnrol(enrolment.StudentId, enrolment.ClassId, enrolment.Class.AcademicYearId))
+            if (await StudentCanEnrol(enrolment.StudentId, @class.Id, @class.AcademicYearId))
             {
                 UnitOfWork.CurriculumEnrolments.Add(enrolment);
+
                 if (commitImmediately)
                 {
                     await UnitOfWork.Complete();
                 }
+
+                return;
             }
 
-            throw new ServiceException(ExceptionType.BadRequest,"An unknown error occurred");
+            throw new ServiceException(ExceptionType.BadRequest,$"Student could not be enrolled in {@class.Name}");
         }
 
         public async Task CreateEnrolmentsForMultipleStudents(IEnumerable<Student> students,
@@ -387,6 +387,13 @@ namespace MyPortal.Services
             return subjects;
         }
 
+        public async Task<IEnumerable<CurriculumSubjectStaffMember>> GetSubjectStaff(int subjectId)
+        {
+            var staff = await UnitOfWork.CurriculumSubjectStaffMembers.GetBySubject(subjectId);
+
+            return staff;
+        }
+
         public async Task<CurriculumClass> GetClassById(int classId)
         {
             var currClass = await UnitOfWork.CurriculumClasses.GetById(classId);
@@ -646,7 +653,6 @@ namespace MyPortal.Services
             var subjectInDb = await GetSubjectById(subject.Id);
 
             subjectInDb.Name = subject.Name;
-            subjectInDb.LeaderId = subject.LeaderId;
             await UnitOfWork.Complete();
         }
 

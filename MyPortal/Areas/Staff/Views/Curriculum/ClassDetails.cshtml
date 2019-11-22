@@ -12,7 +12,7 @@
 
     <div class="col-xl-12 col-md-12 mb-4">
 
-        <button type="button" class="btn btn-primary btn-sm" id="backButton"><i class="fas fa-arrow-left"></i> Back</button>
+        <a class="btn btn-primary btn-sm" href="@Url.Action("Classes")"><i class="fas fa-arrow-left"></i> Back</a>
 
     </div>
 
@@ -366,8 +366,8 @@
                                     url: urlDeleteEnrolment.replace("9999", button.attr("data-enrolment-id")),
                                     method: "DELETE",
                                     success: function (a) {
-                                        $("#enrolments").DataTable().ajax.reload();
                                         toastr.success(a);
+                                        refreshTable("Enrolments");
                                     },
                                     error: function (e) {
                                         toastr.error(e.responseJSON);
@@ -445,7 +445,7 @@
 
     <script type="text/x-jsrender" id="sessionsActionsTemplate">
         <div>
-            <button type='button' class='btn btn-primary btn-sm mr-2 js-edit' data-session-id="${Id}">
+            <button type='button' class='btn btn-primary btn-sm mr-1 js-edit' data-session-id="${Id}">
                 <i class="far fa-edit"></i> Edit
             </button>
 

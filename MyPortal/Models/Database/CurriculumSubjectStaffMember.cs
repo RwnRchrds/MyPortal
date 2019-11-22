@@ -17,11 +17,10 @@ namespace MyPortal.Models.Database
 
         public int StaffMemberId { get; set; }
 
-        [Required]
-        [StringLength(256)]
-        public string Role { get; set; }
+        public int RoleId { get; set; }
 
         public virtual CurriculumSubject Subject { get; set; }
         public virtual StaffMember StaffMember { get; set; }
+        public virtual CurriculumSubjectStaffMemberRole Role { get; set; }
     }
 }

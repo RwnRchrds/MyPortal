@@ -49,7 +49,8 @@ namespace MyPortal.Models.Database
         public virtual DbSet<CurriculumSession> CurriculumSessions { get; set; }
         public virtual DbSet<CurriculumStudyTopic> CurriculumStudyTopics { get; set; }
         public virtual DbSet<CurriculumSubject> CurriculumSubjects { get; set; }
-        public virtual DbSet<CurriculumSubjectStaffMember> SubjectStaffMembers { get; set; }
+        public virtual DbSet<CurriculumSubjectStaffMember> CurriculumSubjectStaffMembers { get; set; }
+        public virtual DbSet<CurriculumSubjectStaffMemberRole> CurriculumSubjectStaffMemberRoles { get; set; }
         public virtual DbSet<Document> Documents { get; set; }
         public virtual DbSet<DocumentType> DocumentTypes { get; set; }
         public virtual DbSet<FinanceBasketItem> FinanceBasketItems { get; set; }
@@ -267,6 +268,12 @@ namespace MyPortal.Models.Database
                 .HasMany(e => e.GiftedTalentedStudents)
                 .WithRequired(e => e.Subject)
                 .HasForeignKey(e => e.SubjectId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<CurriculumSubjectStaffMemberRole>()
+                .HasMany(e => e.StaffMembers)
+                .WithRequired(e => e.Role)
+                .HasForeignKey(e => e.RoleId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Document>()

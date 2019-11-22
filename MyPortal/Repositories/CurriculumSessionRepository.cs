@@ -25,7 +25,7 @@ namespace MyPortal.Repositories
 
         public async Task<IEnumerable<CurriculumSession>> GetByClass(int classId)
         {
-            return await Context.CurriculumSessions.Where(x => x.ClassId == classId).ToListAsync();
+            return await Context.CurriculumSessions.Where(x => x.ClassId == classId).OrderBy(x => x.Period.Weekday).ThenBy(x => x.Period.StartTime).ToListAsync();
         }
 
         public async Task<IEnumerable<CurriculumSession>> GetByDayOfWeek(int academicYearId, int staffId, DayOfWeek dayOfWeek)

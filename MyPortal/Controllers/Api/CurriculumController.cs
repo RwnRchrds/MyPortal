@@ -565,6 +565,27 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [RequiresPermission("EditSubjects")]
+        [Route("subjects/staff/get/dataGrid/{subjectId:int}", Name = "ApiGetSubjectStaffDataGrid")]
+        public async Task<IHttpActionResult> GetSubjectStaff([FromUri] int subjectId, [FromBody] DataManagerRequest dm)
+        {
+            try
+            {
+                var staff = await _service.GetSubjectStaff(subjectId);
+
+                var list = staff.Select(Mapper
+                    .Map<CurriculumSubjectStaffMember, GridCurriculumSubjectStaffMemberDto>);
+
+                return PrepareDataGridObject(list, dm);
+
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
+
+        [HttpPost]
+        [RequiresPermission("EditSubjects")]
         [Route("subjects/get/dataGrid/all", Name = "ApiGetAllSubjectsDataGrid")]
         public async Task<IHttpActionResult> GetAllSubjectsDataGrid([FromBody] DataManagerRequest dm)
         {

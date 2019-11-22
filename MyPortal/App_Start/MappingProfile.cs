@@ -274,6 +274,12 @@ namespace MyPortal
             CreateMap<MedicalPersonDietaryRequirement, GridMedicalPersonDietaryRequirementDto>()
                 .ForMember(dest => dest.Description,
                     opts => opts.MapFrom(src => src.DietaryRequirement.Description));
+
+            CreateMap<CurriculumSubjectStaffMember, GridCurriculumSubjectStaffMemberDto>()
+                .ForMember(dest => dest.StaffMemberName,
+                    opts => opts.MapFrom(src => src.StaffMember.GetFullName()))
+                .ForMember(dest => dest.Role,
+                    opts => opts.MapFrom(src => src.Role.Description));
         }
     }
 }    

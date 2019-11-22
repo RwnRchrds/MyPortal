@@ -16,6 +16,7 @@ namespace MyPortal.Models.Database
 
         Inadequate = 4
     }
+
     /// <summary>
     /// An appraisal/observation carried out by line managers on members of staff.
     /// </summary>

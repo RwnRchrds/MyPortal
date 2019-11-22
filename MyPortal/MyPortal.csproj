@@ -245,6 +245,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Parents\ParentsAreaRegistration.cs" />
     <Compile Include="Areas\Staff\StaffAreaRegistration.cs" />
+    <Compile Include="Areas\Staff\ViewModels\SubjectDetailsViewModel.cs" />
     <Compile Include="Areas\Staff\ViewModels\UsersViewModel.cs" />
     <Compile Include="Areas\Students\Controllers\AssessmentController.cs" />
     <Compile Include="Areas\Students\Controllers\FinanceController.cs" />
@@ -314,6 +315,7 @@
     <Compile Include="Dtos\CommunicationPhoneNumberTypeDto.cs" />
     <Compile Include="Dtos\CommunicationTypeDto.cs" />
     <Compile Include="Dtos\ContactDto.cs" />
+    <Compile Include="Dtos\DataGrid\GridCurriculumSubjectStaffMemberDto.cs" />
     <Compile Include="Dtos\RelationshipTypeDto.cs" />
     <Compile Include="Dtos\CurriculumAcademicYearDto.cs" />
     <Compile Include="Dtos\CurriculumClassDto.cs" />
@@ -426,6 +428,7 @@
     <Compile Include="Interfaces\ICommunicationPhoneNumberTypeRepository.cs" />
     <Compile Include="Interfaces\ICommunicationTypeRepository.cs" />
     <Compile Include="Interfaces\IContactRepository.cs" />
+    <Compile Include="Interfaces\ICurriculumSubjectStaffMemberRepository.cs" />
     <Compile Include="Interfaces\IDeletable.cs" />
     <Compile Include="Interfaces\IGridDto.cs" />
     <Compile Include="Interfaces\IRelationshipTypeRepository.cs" />
@@ -535,6 +538,10 @@
     <Compile Include="Migrations\201911121840019_SenStatusOptional.Designer.cs">
       <DependentUpon>201911121840019_SenStatusOptional.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201911221002262_AddedSubjectRoles.cs" />
+    <Compile Include="Migrations\201911221002262_AddedSubjectRoles.Designer.cs">
+      <DependentUpon>201911221002262_AddedSubjectRoles.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Database\AssessmentAspect.cs" />
     <Compile Include="Models\Database\AssessmentAspectType.cs" />
@@ -548,6 +555,7 @@
     <Compile Include="Models\Database\BehaviourIncident.cs" />
     <Compile Include="Models\Database\Contact.cs" />
     <Compile Include="Models\Database\CurriculumSubjectStaffMember.cs" />
+    <Compile Include="Models\Database\CurriculumSubjectStaffMemberRole.cs" />
     <Compile Include="Models\Database\LocalAuthority.cs" />
     <Compile Include="Models\Database\RelationshipType.cs" />
     <Compile Include="Models\Database\MedicalDietaryRequirement.cs" />
@@ -591,6 +599,7 @@
     <Compile Include="Models\Misc\StudentAttendanceMarkCollection.cs" />
     <Compile Include="Models\Misc\StudentAttendanceMarkSingular.cs" />
     <Compile Include="Persistence\UnitOfWork.cs" />
+    <Compile Include="Repositories\CurriculumSubjectStaffMemberRepository.cs" />
     <Compile Include="Services\AdminService.cs" />
     <Compile Include="Services\AssessmentService.cs" />
     <Compile Include="Services\AttendanceService.cs" />
@@ -1031,6 +1040,7 @@
     <Content Include="Content\ej2\bootstrap4.scss" />
     <Content Include="Content\ej2\settings.json" />
     <Content Include="Areas\Staff\Views\Curriculum\ClassDetails.cshtml" />
+    <Content Include="Areas\Staff\Views\Curriculum\SubjectDetails.cshtml" />
     <None Include="Properties\PublishProfiles\IIS.pubxml" />
     <None Include="Properties\PublishProfiles\Software Development Directory.pubxml" />
     <Content Include="Scripts\bootstrap.bundle.js" />
@@ -1299,6 +1309,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201911121840019_SenStatusOptional.resx">
       <DependentUpon>201911121840019_SenStatusOptional.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911221002262_AddedSubjectRoles.resx">
+      <DependentUpon>201911221002262_AddedSubjectRoles.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

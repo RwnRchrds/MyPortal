@@ -47,6 +47,7 @@ namespace MyPortal.Persistence
             CurriculumSessions = new CurriculumSessionRepository(context);
             CurriculumStudyTopics = new CurriculumStudyTopicRepository(context);
             CurriculumSubjects = new CurriculumSubjectRepository(context);
+            CurriculumSubjectStaffMembers = new CurriculumSubjectStaffMemberRepository(context);
             Documents = new DocumentRepository(context);
             DocumentTypes = new DocumentTypeRepository(context);
             FinanceBasketItems = new FinanceBasketItemRepository(context);
@@ -196,6 +197,7 @@ namespace MyPortal.Persistence
         public ICurriculumSessionRepository CurriculumSessions { get; private set; }
         public ICurriculumStudyTopicRepository CurriculumStudyTopics { get; private set; }
         public ICurriculumSubjectRepository CurriculumSubjects { get; private set; }
+        public ICurriculumSubjectStaffMemberRepository CurriculumSubjectStaffMembers { get; set; }
         public IDocumentRepository Documents { get; private set; }
         public IDocumentTypeRepository DocumentTypes { get; private set; }
         public IFinanceBasketItemRepository FinanceBasketItems { get; private set; }

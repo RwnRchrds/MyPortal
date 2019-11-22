@@ -25,6 +25,23 @@ namespace MyPortal.Areas.Staff.Controllers
             }
         }
 
+        [RequiresPermission("EditSubjects")]
+        [Route("Subjects/{subjectId:int}")]
+        public async Task<ActionResult> SubjectDetails(int subjectId)
+        {
+            using (var staffService = new StaffMemberService())
+            using (var curriculumService = new CurriculumService())
+            {
+                var viewModel = new SubjectDetailsViewModel
+                {
+                    Subject = await curriculumService.GetSubjectById(subjectId),
+                    Staff = await staffService.GetAllStaffMembers()
+                };
+
+                return View(viewModel);
+            }
+        }
+
         
         [RequiresPermission("EditStudyTopics")]
         [Route("StudyTopics")]

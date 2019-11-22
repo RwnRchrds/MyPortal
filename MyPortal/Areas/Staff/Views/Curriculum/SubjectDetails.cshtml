@@ -1,0 +1,49 @@
+﻿@model MyPortal.Areas.Staff.ViewModels.SubjectDetailsViewModel
+@{
+    ViewBag.Title = "Subject Details";
+    ViewBag.DisplayTitle = "Subject Details";
+}
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">@Model.Subject.Name</h1>
+</div>
+
+<div class="row">
+
+    <div class="col-xl-12 col-md-12 mb-4">
+
+        <a class="btn btn-primary btn-sm" href="@Url.Action("Subjects")"><i class="fas fa-arrow-left"></i> Back</a>
+
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-xl-12 col-lg-12 mb-4">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-user"></i> Subject Staff</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+
+                <div class="mb-4">
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#newStaffModal"><i class="fas fa-plus"></i> Add Staff Member</button>
+                </div>
+
+                @Html.EJS().Grid("Enrolments").DataSource(d =>
+                {
+                    d.Url(Url.HttpRouteUrl("ApiGetSubjectStaffDataGrid", new { subjectId = Model.Subject.Id })).CrossDomain(false).Adaptor("UrlAdaptor");
+                }).Columns(c =>
+                {
+                    c.Field("StaffName").HeaderText("Staff").Template("#enrolmentsStudentTemplate").Width("150").Add();
+                    c.HeaderText("Actions").Template("#staffActionsTemplate").Width("170").Add();
+                }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string>() { "Search" }).Render()
+            </div>
+        </div>
+    </div>
+
+</div>
+
