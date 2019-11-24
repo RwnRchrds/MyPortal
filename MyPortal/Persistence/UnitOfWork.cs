@@ -48,6 +48,7 @@ namespace MyPortal.Persistence
             CurriculumStudyTopics = new CurriculumStudyTopicRepository(context);
             CurriculumSubjects = new CurriculumSubjectRepository(context);
             CurriculumSubjectStaffMembers = new CurriculumSubjectStaffMemberRepository(context);
+            CurriculumSubjectStaffMemberRoles = new CurriculumSubjectStaffMemberRoleRepository(context);
             Documents = new DocumentRepository(context);
             DocumentTypes = new DocumentTypeRepository(context);
             FinanceBasketItems = new FinanceBasketItemRepository(context);

@@ -118,11 +118,11 @@
 {
     <script>
 
-        var urlGetSubjectById = "@Url.HttpRouteUrl("ApiGetSubjectById", new {subjectId = 9999})";
-        var urlDeleteSubject = "@Url.HttpRouteUrl("ApiDeleteSubject", new {subjectId = 9999})";
+        const urlGetSubjectById = "@Url.HttpRouteUrl("ApiGetSubjectById", new {subjectId = 9999})";
+        const urlDeleteSubject = "@Url.HttpRouteUrl("ApiDeleteSubject", new {subjectId = 9999})";
 
         $(document).ready(function() {
-            
+
             $("#Subjects").on("click",
                 ".js-edit",
                 function() {
@@ -165,7 +165,7 @@
                             }
                         });
                 });
-            
+
         });
 
         function newSubjectSuccess(result) {
@@ -189,11 +189,17 @@
             $("#EditSubjectModal").modal('hide');
             toastr.error(result.responseJSON);
         }
+
+        function getSubjectDetailsUrl(subjectId) {
+            const url = "@Url.Action("SubjectDetails", new {subjectId = 9999})";
+
+            return url.replace("9999", subjectId);
+        }
     </script>
 
     <script type="text/x-jsrender" id="subjectsNameTemplate">
         <div>
-            ${Name}
+            <a href="${getSubjectDetailsUrl(Id)}">${Name}</a>
         </div>
     </script>
 

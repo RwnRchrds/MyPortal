@@ -26,28 +26,28 @@
                                 <div class="form-group">
                                     @Html.Label("Username")
                                     <div class="col-md-10">
-                                        @Html.TextBoxFor(m => m.Login.Username, new { @class = "form-control", Name = "Username" })
+                                        @Html.TextBoxFor(m => m.Login.Username, new { @class = "form-control form-control-sm", Name = "Login.Username" })
                                         @Html.ValidationMessageFor(m => m.Login.Username, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     @Html.Label("Password")
                                     <div class="col-md-10">
-                                        @Html.PasswordFor(m => m.Login.Password, new { @class = "form-control", Name = "Password" })
+                                        @Html.PasswordFor(m => m.Login.Password, new { @class = "form-control form-control-sm", Name = "Login.Password" })
                                         @Html.ValidationMessageFor(m => m.Login.Password, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-offset-2 col-md-10">
                                         <div class="checkbox">
-                                            @Html.CheckBoxFor(m => m.Login.RememberMe, new { Name = "RememberMe" })
+                                            @Html.CheckBoxFor(m => m.Login.RememberMe, new { Name = "Login.RememberMe" })
                                             @Html.Label("Remember Me")
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-offset-2 col-md-10">
-                                        <input type="submit" value="Login" class="btn btn-primary" />
+                                        <input type="submit" value="Login" class="btn btn-primary btn-sm" />
                                     </div>
                                 </div>
                             }
