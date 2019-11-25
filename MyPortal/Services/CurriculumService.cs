@@ -398,6 +398,11 @@ namespace MyPortal.Services
         {
             var staff = await UnitOfWork.CurriculumSubjectStaffMembers.GetById(subjectStaffId);
 
+            if (staff == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Subject staff member not found");
+            }
+
             return staff;
         }
 

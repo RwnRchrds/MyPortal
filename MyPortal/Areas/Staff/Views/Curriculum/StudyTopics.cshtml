@@ -11,16 +11,6 @@
 
 <div class="row">
     
-    <div class="col-xl-12 col-md-12 mb-4">
-
-        <button type="button" class="btn btn-primary mp-btn-top-auto" data-toggle="modal" data-target="#NewStudyTopicModal">New Study Topic</button>
-
-    </div>
-
-</div>
-
-<div class="row">
-    
     <div class="col-xl-12 col-lg-12">
         <div class="card shadow mb-4">
             <!-- Card Header - Dropdown -->
@@ -29,6 +19,11 @@
             </div>
             <!-- Card Body -->
             <div class="card-body">
+                
+                <div class="mb-4">
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#NewStudyTopicModal"><i class="fas fa-plus"></i> New Study Topic</button>
+                </div>
+
                 @Html.EJS().Grid("StudyTopics").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiGetAllStudyTopicsDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
                 {
                     c.Field("Name").HeaderText("Name").Template("#studyTopicsNameTemplate").Width("300").Add();
@@ -55,22 +50,22 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Name")
-                        @Html.TextBoxFor(x => x.StudyTopic.Name, new {@class = "form-control", Name = "Name"})
+                        @Html.TextBoxFor(x => x.StudyTopic.Name, new {@class = "form-control form-control-sm mw-100", Name = "Name"})
                         @Html.ValidationMessageFor(x => x.StudyTopic.Name)
                     </div>
                     <div class="form-group">
                         @Html.Label("Subject")
-                        @Html.DropDownListFor(x => x.StudyTopic.SubjectId, new SelectList(Model.Subjects, "Id", "Name"), "Select Subject", new {@class = "form-control", Name = "SubjectId"})
+                        @Html.DropDownListFor(x => x.StudyTopic.SubjectId, new SelectList(Model.Subjects, "Id", "Name"), "Select Subject", new {@class = "form-control form-control-sm", Name = "SubjectId"})
                         @Html.ValidationMessageFor(x => x.StudyTopic.SubjectId)
                     </div>
                     <div class="form-group">
                         @Html.Label("Year Group")
-                        @Html.DropDownListFor(x => x.StudyTopic.YearGroupId, new SelectList(Model.YearGroups, "Id", "Name"), "Select Year Group", new {@class = "form-control", Name = "YearGroupId"})
+                        @Html.DropDownListFor(x => x.StudyTopic.YearGroupId, new SelectList(Model.YearGroups, "Id", "Name"), "Select Year Group", new {@class = "form-control form-control-sm", Name = "YearGroupId"})
                         @Html.ValidationMessageFor(x => x.StudyTopic.YearGroupId)
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary btn-sm">Save</button>
                     </div>
                 </div>
             }
@@ -91,25 +86,25 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Name")
-                        @Html.TextBoxFor(x => x.StudyTopic.Name, new {@class = "form-control", Name = "Name", id = "editStudyTopicNameControl"})
+                        @Html.TextBoxFor(x => x.StudyTopic.Name, new {@class = "form-control form-control-sm mw-100", Name = "Name", id = "editStudyTopicNameControl"})
                         @Html.ValidationMessageFor(x => x.StudyTopic.Name)
                     </div>
                     <div class="form-group">
                         @Html.Label("Subject")
-                        @Html.DropDownListFor(x => x.StudyTopic.SubjectId, new SelectList(Model.Subjects, "Id", "Name"), "Select Subject", new {@class = "form-control", Name = "SubjectId", id = "editStudyTopicsubjectControl"})
+                        @Html.DropDownListFor(x => x.StudyTopic.SubjectId, new SelectList(Model.Subjects, "Id", "Name"), "Select Subject", new {@class = "form-control form-control-sm", Name = "SubjectId", id = "editStudyTopicsubjectControl"})
                         @Html.ValidationMessageFor(x => x.StudyTopic.SubjectId)
                     </div>
                     <div class="form-group">
                         @Html.Label("Year Group")
-                        @Html.DropDownListFor(x => x.StudyTopic.YearGroupId, new SelectList(Model.YearGroups, "Id", "Name"), "Select Year Group", new {@class = "form-control", Name = "YearGroupId", id = "editStudyTopicYearGroupControl"})
+                        @Html.DropDownListFor(x => x.StudyTopic.YearGroupId, new SelectList(Model.YearGroups, "Id", "Name"), "Select Year Group", new {@class = "form-control form-control-sm", Name = "YearGroupId", id = "editStudyTopicYearGroupControl"})
                         @Html.ValidationMessageFor(x => x.StudyTopic.YearGroupId)
                     </div>
                     <div class="form-group">
                         @Html.HiddenFor(x => x.StudyTopic.Id, new {Name = "Id", id = "editStudyTopicIdControl"})
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary btn-sm">Save</button>
                     </div>
                 </div>
             }
@@ -155,6 +150,7 @@
             $("#StudyTopics").on("click",
                 ".js-delete",
                 function() {
+                    var button = $(this);
                     bootbox.confirm("Are you sure you wish to delete this study topic?",
                         function(result) {
                             if (result) {
@@ -217,12 +213,12 @@
 
     <script type="text/x-jsrender" id="studyTopicsActionsTemplate">
                 <div>
-                    <button type='button' class='btn btn-xs btn-warning mp-btn-action js-edit' data-topic-id="${Id}">
-                        <i class="far fa-edit"></i>
+                    <button type='button' class='btn btn-sm btn-primary mr-1 js-edit' data-topic-id="${Id}">
+                        <i class="fas fa-edit"></i> Edit
                     </button>
                     
-                    <button type='button' class='btn btn-xs btn-danger mp-btn-action js-delete' data-topic-id="${Id}">
-                        <i class="far fa-trash-alt"></i>
+                    <button type='button' class='btn btn-sm btn-danger js-delete' data-topic-id="${Id}">
+                        <i class="fas fa-trash-alt"></i> Delete
                     </button>
                 </div>
             </script>
