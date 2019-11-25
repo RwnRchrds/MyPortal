@@ -20,7 +20,6 @@ namespace MyPortal
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            Directory.CreateDirectory(@"C:\MyPortal\Files\Results");
         }
     }
 }

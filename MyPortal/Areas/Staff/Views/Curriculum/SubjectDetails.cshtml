@@ -66,7 +66,7 @@
                     </div>
                     <div class="form-group">
                         @Html.Label("Role")
-                        @Html.DropDownListFor(x => x.SubjectStaffMember.RoleId, new SelectList(Model.SubjectRoles, "Key", "Value"), "Select Role", new {@class = "form-control form-control-sm", Name = "RoleId"})
+                        @Html.DropDownListFor(x => x.SubjectStaffMember.RoleId, new SelectList(Model.SubjectRoles, "Key", "Value"), "Select Role", new { @class = "form-control form-control-sm", Name = "RoleId" })
                         @Html.ValidationMessageFor(x => x.SubjectStaffMember.RoleId)
                     </div>
                     <div class="form-group">
@@ -95,17 +95,17 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Staff Member")
-                        @Html.DropDownListFor(l => l.SubjectStaffMember.StaffMemberId, new SelectList(Model.StaffMembers, "Key", "Value"), "Select Staff", new { @class = "form-control form-control-sm", Name = "StaffMemberId" })
+                        @Html.DropDownListFor(l => l.SubjectStaffMember.StaffMemberId, new SelectList(Model.StaffMembers, "Key", "Value"), "Select Staff", new { @class = "form-control form-control-sm", Name = "StaffMemberId", id="editStaffMemberIdControl" })
                         @Html.ValidationMessageFor(l => l.SubjectStaffMember.StaffMemberId)
                     </div>
                     <div class="form-group">
                         @Html.Label("Role")
-                        @Html.DropDownListFor(x => x.SubjectStaffMember.RoleId, new SelectList(Model.SubjectRoles, "Key", "Value"), "Select Role", new { @class = "form-control form-control-sm", Name = "RoleId" })
+                        @Html.DropDownListFor(x => x.SubjectStaffMember.RoleId, new SelectList(Model.SubjectRoles, "Key", "Value"), "Select Role", new { @class = "form-control form-control-sm", Name = "RoleId", id="editRoleIdControl" })
                         @Html.ValidationMessageFor(x => x.SubjectStaffMember.RoleId)
                     </div>
                     <div class="form-group">
                         @Html.HiddenFor(x => x.Subject.Id, new { Name = "SubjectId" })
-                        @Html.HiddenFor(x => x.SubjectStaffMember.Id, new {Name = "Id"})
+                        @Html.HiddenFor(x => x.SubjectStaffMember.Id, new { Name = "Id", id="editIdControl" })
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">Close</button>
@@ -120,12 +120,76 @@
 @section scripts
 {
     <script>
+
+        const urlGetSubjectStaffById = "@Url.HttpRouteUrl("ApiGetSubjectStaffById", new {subjectStaffId = 9999})";
+
         $(document).ready(function() {
             $('.modal').on('hidden.bs.modal',
                 function() {
                     $(this).find('form').trigger('reset');
                 });
-        })
+
+            $("#SubjectStaff").on("click",
+                ".js-edit",
+                function() {
+                    var button = $(this);
+                    var subjectId = button.attr("data-staff-id");
+                    $.ajax({
+                        url: urlGetSubjectStaffById.replace("9999", subjectId),
+                        method: "GET",
+                        success: function(result) {
+                            $("#editStaffMemberIdControl").val(result["staffMemberId"]);
+                            $("#editRoleIdControl").val(result["roleId"]);
+                            $("#editId").val(result["id"]);
+                        },
+                        error: function() {
+                            toastr.error("Failed to load subject staff data");
+                        }
+                    });
+                    $("#EditSubjectStaffModal").modal('toggle');
+                });
+        });
+
+        function newSubjectStaffSuccess(result) {
+            $("#newSubjectStaffModal").modal('hide');
+            refreshTable("SubjectStaff");
+            toastr.success(result);
+        }
+
+        function newSubjectStaffFailure(result) {
+            $("#newSubjectStaffModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+
+        function editSubjectStaffSuccess(result) {
+            $("#editSubjectStaffModal").modal('hide');
+            refreshTable("SubjectStaff");
+            toastr.success(result);
+        }
+
+        function editSubjectStaffFailure(result) {
+            $("#editSubjectStaffModal").modal('hide');
+            toastr.error(result.responseJSON);
+        }
+    </script>
+
+    <script id="subjectStaffNameTemplate" type="text/x-jsrender">
+        <div>
+            ${StaffMemberName}
+        </div>
+    </script>
+
+    <script id="subjectStaffRoleTemplate" type="text/x-jsrender">
+        <div>
+            ${Role}
+        </div>
+    </script>
+    
+    <script id="subjectStaffActionsTemplate" type="text/x-jsrender">
+        <div>
+            <button class="btn btn-primary btn-sm js-edit mr-1" type="button"><i class="fas fa-edit"></i> Edit</button>
+            <button class="btn btn-danger btn-sm js-delete" type="button"><i class="fas fa-trash-alt"></i> Delete</button>
+        </div>
     </script>
 }
 

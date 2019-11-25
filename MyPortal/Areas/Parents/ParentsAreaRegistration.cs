@@ -17,7 +17,8 @@ namespace MyPortal.Areas.Parents
             context.MapRoute(
                 "Parents_default",
                 "Parents/{controller}/{action}/{id}",
-                new { action = "Index", id = UrlParameter.Optional }
+                new { action = "Index", id = UrlParameter.Optional },
+                new[] {"MyPortal.Areas.Parents.Controllers"}
             );
         }
     }

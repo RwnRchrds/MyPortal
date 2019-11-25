@@ -39,6 +39,12 @@
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
+                    
+                    <div class="mb-4">
+                        <button type="button" class="btn btn-primary btn-sm"><i class="fas fa-receipt"></i> Codes</button>
+                        <button type="button" class="btn btn-primary btn-sm" disabled><i class="fas fa-info-circle"></i> Details</button>
+                    </div>
+
                     <table class="table table-bordered table-responsive text-sm" id="register">
                         <thead>
                         <tr>
@@ -59,7 +65,7 @@
                                 {
                                     if (attendanceMark.PeriodId == Model.Session.PeriodId)
                                     {
-                                        <td class="text-center p-0 align-middle register-current js-mark" data-student-id="@attendanceMark.StudentId" data-mark-id="@attendanceMark.Id" tabindex="0">@attendanceMark.Mark</td>
+                                        <td class="text-center p-0 align-middle register-current js-mark" data-student-id="@attendanceMark.StudentId" data-mark-id="@attendanceMark.Id" data-mins-late="@attendanceMark.MinutesLate" data-comments="@attendanceMark.Comments" tabindex="0">@attendanceMark.Mark</td>
                                     }
                                     else
                                     {
@@ -74,6 +80,29 @@
             </div>
         </div>
 
+    </div>
+
+    <div id="additionalInfoModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Additional Information</h4>
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
+                    <form id="minutesLateForm">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                @Html.Label("Minutes Late")
+                                @Html.TextBox("MinsLate", null, new {@class = "form-control form-control-sm"})
+                            </div>
+                            <div class="form-group">
+                                @Html.Label("Comments")
+                                @Html.TextArea("Comments", null, new {@class = "form-control form-control-sm"})
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 }
 
@@ -182,6 +211,8 @@
                     "WeekId": @Model.Week.Id,
                     "PeriodId": @Model.Session.PeriodId,
                     "Mark": data.text(),
+                    "MinutesLate": parseInt(data.attr("data-mins-late"), 10),
+                    "Comments": data.attr("data-comments"),
                     "Meaning": 0
                 });
             });

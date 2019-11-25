@@ -13,6 +13,10 @@ namespace MyPortal.Dtos.Lite
         public int PeriodId { get; set; }
         
         public string Mark { get; set; }
+
+        public string Comments { get; set; }
+
+        public int? MinutesLate { get; set; }
         
         public AttendanceMeaning Meaning { get; set; }
     }

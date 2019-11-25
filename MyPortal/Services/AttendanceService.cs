@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.Ajax.Utilities;
 using MyPortal.Dtos.Lite;
 using MyPortal.Exceptions;
 using MyPortal.Extensions;
@@ -81,6 +82,7 @@ namespace MyPortal.Services
             var mark = await UnitOfWork.AttendanceMarks.Get(studentId, attendanceWeekId, periodId) ?? new AttendanceMark
             {
                 Mark = "-",
+                MinutesLate = 0,
                 WeekId = attendanceWeekId,
                 PeriodId = periodId,
                 StudentId = studentId,
@@ -286,6 +288,8 @@ namespace MyPortal.Services
                     else
                     {
                         markInDb.Mark = mark.Mark;
+                        markInDb.MinutesLate = mark.MinutesLate ?? 0;
+                        markInDb.Comments = mark.Comments.IsNullOrWhiteSpace() ? null : mark.Comments;
                     }
                 }
 
@@ -295,6 +299,8 @@ namespace MyPortal.Services
                     var newMark = new AttendanceMark
                     {
                         Mark = mark.Mark,
+                        Comments = mark.Comments.IsNullOrWhiteSpace() ? null : mark.Comments,
+                        MinutesLate = mark.MinutesLate ?? 0,
                         PeriodId = mark.PeriodId,
                         WeekId = mark.WeekId,
                         StudentId = mark.StudentId

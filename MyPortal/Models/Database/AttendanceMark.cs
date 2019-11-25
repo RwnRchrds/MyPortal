@@ -24,6 +24,11 @@ namespace MyPortal.Models.Database
         [StringLength(1)]
         public string Mark { get; set; }
 
+        [StringLength(256)]
+        public string Comments { get; set; }
+
+        public int MinutesLate { get; set; }
+
         public virtual AttendancePeriod Period { get; set; }
 
         public virtual Student Student { get; set; }
