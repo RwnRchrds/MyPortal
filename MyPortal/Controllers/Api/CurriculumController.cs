@@ -160,6 +160,28 @@ namespace MyPortal.Controllers.Api
             }
         }
 
+        [HttpPost]
+        [RequiresPermission("ViewClasses")]
+        [Route("classes/get/dataGrid/bySubject/{subjectId:int}", Name = "ApiGetClassesBySubjectDataGrid")]
+        public async Task<IHttpActionResult> GetClassesBySubjectDataGrid([FromUri] int subjectId,
+            [FromBody] DataManagerRequest dm)
+        {
+            try
+            {
+                var academicYearId = await _service.GetCurrentOrSelectedAcademicYearId(User);
+
+                var classes = await _service.GetClassesBySubject(subjectId, academicYearId);
+
+                var list = classes.Select(Mapper.Map<CurriculumClass, GridCurriculumClassDto>);
+
+                return PrepareDataGridObject(list, dm);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
+
         [HttpGet]
         [RequiresPermission("ViewClasses")]
         [Route("classes/get/byId/{classId:int}", Name = "ApiGetClassById")]

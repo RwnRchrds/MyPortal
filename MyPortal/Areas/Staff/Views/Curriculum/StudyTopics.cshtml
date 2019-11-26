@@ -191,11 +191,17 @@
             $("#EditStudyTopicModal").modal('hide');
             toastr.error(result.responseJSON);
         }
+
+        function getStudyTopicDetailsUrl(studyTopicId) {
+            const url = "@Url.Action("StudyTopicDetails", new {studyTopicId = 9999})";
+
+            return url.replace("9999", studyTopicId);
+        }
     </script>
 
     <script type="text/x-jsrender" id="studyTopicsNameTemplate">
         <div>
-            ${Name}
+            <a href="${getStudyTopicDetailsUrl(Id)}">${Name}</a>
         </div>
     </script>
 

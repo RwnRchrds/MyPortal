@@ -64,6 +64,23 @@ namespace MyPortal.Areas.Staff.Controllers
             }
         }
 
+        [RequiresPermission("ViewStudyTopics")]
+        [Route("StudyTopics/{studyTopicId:int}")]
+        public async Task<ActionResult> StudyTopicDetails(int studyTopicId)
+        {
+            using (var curriculumService = new CurriculumService())
+            {
+                var studyTopic = await curriculumService.GetStudyTopicById(studyTopicId);
+
+                var viewModel = new StudyTopicDetailsViewModel
+                {
+                    StudyTopic = studyTopic
+                };
+
+                return View(viewModel);
+            }
+        }
+
         [HttpGet]
         [RequiresPermission("ViewLessonPlans")]
         [Route("LessonPlans")]

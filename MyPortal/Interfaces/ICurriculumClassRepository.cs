@@ -10,5 +10,7 @@ namespace MyPortal.Interfaces
     public interface ICurriculumClassRepository : IRepository<CurriculumClass>
     {
         Task<IEnumerable<CurriculumClass>> GetByAcademicYear(int academicYearId);
+
+        Task<IEnumerable<CurriculumClass>> GetBySubject(int subjectId, int academicYearId);
     }
 }

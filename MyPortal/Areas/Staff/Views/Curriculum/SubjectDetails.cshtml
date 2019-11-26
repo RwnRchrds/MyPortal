@@ -48,6 +48,30 @@
 
 </div>
 
+<div class="row">
+
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-chalkboard-teacher"></i> Classes</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                @Html.EJS().Grid("Classes").DataSource(d =>
+                {
+                    d.Url(Url.HttpRouteUrl("ApiGetClassesBySubjectDataGrid", new { subjectId = Model.Subject.Id })).CrossDomain(false).Adaptor("UrlAdaptor");
+                }).Columns(c =>
+                {
+                    c.Field("Name").HeaderText("Name").Template("#classesNameTemplate").Width("80").Add();
+                    c.Field("Teacher").HeaderText("Main Teacher").Template("#classesTeacherTemplate").Width("200").Add();
+                }).AllowPaging().PageSettings(p => p.PageSize(12)).SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string>() { "Search" }).Render()
+            </div>
+        </div>
+    </div>
+
+</div>
+
 <div id="newSubjectStaffModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <!--content-->
@@ -95,17 +119,17 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Staff Member")
-                        @Html.DropDownListFor(l => l.SubjectStaffMember.StaffMemberId, new SelectList(Model.StaffMembers, "Key", "Value"), "Select Staff", new { @class = "form-control form-control-sm", Name = "StaffMemberId", id="editStaffMemberIdControl" })
+                        @Html.DropDownListFor(l => l.SubjectStaffMember.StaffMemberId, new SelectList(Model.StaffMembers, "Key", "Value"), "Select Staff", new { @class = "form-control form-control-sm", Name = "StaffMemberId", id = "editStaffMemberIdControl" })
                         @Html.ValidationMessageFor(l => l.SubjectStaffMember.StaffMemberId)
                     </div>
                     <div class="form-group">
                         @Html.Label("Role")
-                        @Html.DropDownListFor(x => x.SubjectStaffMember.RoleId, new SelectList(Model.SubjectRoles, "Key", "Value"), "Select Role", new { @class = "form-control form-control-sm", Name = "RoleId", id="editRoleIdControl" })
+                        @Html.DropDownListFor(x => x.SubjectStaffMember.RoleId, new SelectList(Model.SubjectRoles, "Key", "Value"), "Select Role", new { @class = "form-control form-control-sm", Name = "RoleId", id = "editRoleIdControl" })
                         @Html.ValidationMessageFor(x => x.SubjectStaffMember.RoleId)
                     </div>
                     <div class="form-group">
                         @Html.HiddenFor(x => x.Subject.Id, new { Name = "SubjectId" })
-                        @Html.HiddenFor(x => x.SubjectStaffMember.Id, new { Name = "Id", id="editIdControl" })
+                        @Html.HiddenFor(x => x.SubjectStaffMember.Id, new { Name = "Id", id = "editIdControl" })
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">Close</button>
@@ -194,6 +218,11 @@
             $("#editSubjectStaffModal").modal('hide');
             toastr.error(result.responseJSON);
         }
+
+        function getClassDetailsUrl(classId) {
+            const url = "@Url.Action("ClassDetails", new {classId = 9999})";
+            return url.replace("9999", classId);
+        }
     </script>
 
     <script id="subjectStaffNameTemplate" type="text/x-jsrender">
@@ -212,6 +241,18 @@
         <div>
             <button class="btn btn-primary btn-sm js-edit mr-1" type="button" data-staff-id="${Id}"><i class="fas fa-edit"></i> Edit</button>
             <button class="btn btn-danger btn-sm js-delete" type="button" data-staff-id="${Id}"><i class="fas fa-trash-alt"></i> Delete</button>
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="classesNameTemplate">
+        <div>
+            <span id="NameText" class="student-name"><a href="${getClassDetailsUrl(Id)}">${Name}</a></span>
+        </div>
+    </script>
+
+    <script type="text/x-jsrender" id="classesTeacherTemplate">
+        <div>
+            ${Teacher}
         </div>
     </script>
 }

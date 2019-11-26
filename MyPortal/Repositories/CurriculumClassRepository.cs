@@ -20,5 +20,12 @@ namespace MyPortal.Repositories
         {
             return await Context.CurriculumClasses.Where(x => x.AcademicYearId == academicYearId).OrderBy(x => x.Name).ToListAsync();
         }
+
+        public async Task<IEnumerable<CurriculumClass>> GetBySubject(int subjectId, int academicYearId)
+        {
+            return await Context.CurriculumClasses
+                .Where(x => x.AcademicYearId == academicYearId && x.SubjectId == subjectId).OrderBy(x => x.Name)
+                .ToListAsync();
+        }
     }
 }

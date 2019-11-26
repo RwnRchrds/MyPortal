@@ -363,6 +363,13 @@ namespace MyPortal.Services
             return classes;
         }
 
+        public async Task<IEnumerable<CurriculumClass>> GetClassesBySubject(int subjectId, int academicYearId)
+        {
+            var classes = await UnitOfWork.CurriculumClasses.GetBySubject(subjectId, academicYearId);
+
+            return classes;
+        }
+
         public async Task<IEnumerable<CurriculumLessonPlan>> GetAllLessonPlans()
         {
             var lessonPlans = await UnitOfWork.CurriculumLessonPlans.GetAll(x => x.Title);

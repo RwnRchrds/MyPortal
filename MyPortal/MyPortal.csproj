@@ -237,6 +237,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Parents\ParentsAreaRegistration.cs" />
     <Compile Include="Areas\Staff\StaffAreaRegistration.cs" />
+    <Compile Include="Areas\Staff\ViewModels\StudyTopicDetailsViewModel.cs" />
     <Compile Include="Areas\Staff\ViewModels\SubjectDetailsViewModel.cs" />
     <Compile Include="Areas\Staff\ViewModels\UsersViewModel.cs" />
     <Compile Include="Areas\Students\Controllers\AssessmentController.cs" />
@@ -882,6 +883,7 @@
     <Content Include="Areas\Staff\Views\Curriculum\ClassDetails.cshtml" />
     <Content Include="Areas\Staff\Views\Curriculum\SubjectDetails.cshtml" />
     <Content Include="Connected Services\Application Insights\ConnectedService.json" />
+    <Content Include="Areas\Staff\Views\Curriculum\StudyTopicDetails.cshtml" />
     <None Include="Properties\PublishProfiles\IIS.pubxml" />
     <None Include="Properties\PublishProfiles\MyPortal-Demo - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\Software Development Directory.pubxml" />
