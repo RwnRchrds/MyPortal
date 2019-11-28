@@ -583,6 +583,7 @@
     <Compile Include="Models\Database\SenProvisionType.cs" />
     <Compile Include="Models\Database\SenReviewType.cs" />
     <Compile Include="Models\Database\SenStatus.cs" />
+    <Compile Include="Models\Database\StudentContact.cs" />
     <Compile Include="Models\Database\SystemBulletin.cs" />
     <Compile Include="Models\Database\SystemArea.cs" />
     <Compile Include="Models\Database\SystemReport.cs" />
