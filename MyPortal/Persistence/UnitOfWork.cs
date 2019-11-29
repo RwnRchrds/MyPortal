@@ -85,6 +85,7 @@ namespace MyPortal.Persistence
             SenReviewTypes = new SenReviewTypeRepository(context);
             SenStatus = new SenStatusRepository(context);
             StaffMembers = new StaffMemberRepository(context);
+            StudentContacts = new StudentContactRepository(context);
             Students = new StudentRepository(context);
             SystemAreas = new SystemAreaRepository(context);
             SystemBulletins = new SystemBulletinRepository(context);
@@ -125,6 +126,8 @@ namespace MyPortal.Persistence
             CurriculumSessions = new CurriculumSessionRepository(context);
             CurriculumStudyTopics = new CurriculumStudyTopicRepository(context);
             CurriculumSubjects = new CurriculumSubjectRepository(context);
+            CurriculumSubjectStaffMembers = new CurriculumSubjectStaffMemberRepository(context);
+            CurriculumSubjectStaffMemberRoles = new CurriculumSubjectStaffMemberRoleRepository(context);
             Documents =  new DocumentRepository(context);
             DocumentTypes = new DocumentTypeRepository(context);
             FinanceBasketItems = new FinanceBasketItemRepository(context);
@@ -161,6 +164,7 @@ namespace MyPortal.Persistence
             SenReviewTypes = new SenReviewTypeRepository(context);
             SenStatus = new SenStatusRepository(context);
             StaffMembers = new StaffMemberRepository(context);
+            StudentContacts = new StudentContactRepository(context);
             Students = new StudentRepository(context);
             SystemAreas = new SystemAreaRepository(context);
             SystemBulletins = new SystemBulletinRepository(context);
@@ -198,8 +202,8 @@ namespace MyPortal.Persistence
         public ICurriculumSessionRepository CurriculumSessions { get; private set; }
         public ICurriculumStudyTopicRepository CurriculumStudyTopics { get; private set; }
         public ICurriculumSubjectRepository CurriculumSubjects { get; private set; }
-        public ICurriculumSubjectStaffMemberRepository CurriculumSubjectStaffMembers { get; set; }
-        public ICurriculumSubjectStaffMemberRoleRepository CurriculumSubjectStaffMemberRoles { get; set; }
+        public ICurriculumSubjectStaffMemberRepository CurriculumSubjectStaffMembers { get; private set; }
+        public ICurriculumSubjectStaffMemberRoleRepository CurriculumSubjectStaffMemberRoles { get; private set; }
         public IDocumentRepository Documents { get; private set; }
         public IDocumentTypeRepository DocumentTypes { get; private set; }
         public IFinanceBasketItemRepository FinanceBasketItems { get; private set; }
@@ -237,6 +241,7 @@ namespace MyPortal.Persistence
         public ISenReviewTypeRepository SenReviewTypes { get; private set; }
         public ISenStatusRepository SenStatus { get; private set; }
         public IStaffMemberRepository StaffMembers { get; private set; }
+        public IStudentContactRepository StudentContacts { get; private set; }
         public IStudentRepository Students { get; private set; }
         public ISystemAreaRepository SystemAreas { get; private set; }
         public ISystemBulletinRepository SystemBulletins { get; private set; }

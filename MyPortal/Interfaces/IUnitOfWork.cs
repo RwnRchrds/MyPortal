@@ -39,8 +39,8 @@ namespace MyPortal.Interfaces
         ICurriculumSessionRepository CurriculumSessions { get; }
         ICurriculumStudyTopicRepository CurriculumStudyTopics { get; }
         ICurriculumSubjectRepository CurriculumSubjects { get; }
-        ICurriculumSubjectStaffMemberRepository CurriculumSubjectStaffMembers { get; set; }
-        ICurriculumSubjectStaffMemberRoleRepository CurriculumSubjectStaffMemberRoles { get; set; }
+        ICurriculumSubjectStaffMemberRepository CurriculumSubjectStaffMembers { get; }
+        ICurriculumSubjectStaffMemberRoleRepository CurriculumSubjectStaffMemberRoles { get; }
         IDocumentRepository Documents { get; }
         IDocumentTypeRepository DocumentTypes { get; }
         IFinanceBasketItemRepository FinanceBasketItems { get; }
@@ -77,6 +77,7 @@ namespace MyPortal.Interfaces
         ISenReviewTypeRepository SenReviewTypes { get; }
         ISenStatusRepository SenStatus { get; }
         IStaffMemberRepository StaffMembers { get; }
+        IStudentContactRepository StudentContacts { get; }
         IStudentRepository Students { get; }
         ISystemAreaRepository SystemAreas { get; }
         ISystemBulletinRepository SystemBulletins { get; }
