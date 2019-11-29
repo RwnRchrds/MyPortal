@@ -18,5 +18,8 @@ namespace MyPortal.Models.Database
         public bool ParentalResponsibility { get; set; }
         public bool PupilReport { get; set; }
         public bool CourtOrder { get; set; }
+
+        public virtual Student Student { get; set; }
+        public virtual Contact Contact { get; set; }
     }
 }

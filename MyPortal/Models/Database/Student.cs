@@ -30,6 +30,7 @@ namespace MyPortal.Models.Database
             SenProvisions = new HashSet<SenProvision>();
             ProfileLogs = new HashSet<ProfileLog>();
             GiftedTalentedSubjects = new HashSet<SenGiftedTalented>();
+            StudentContacts = new HashSet<StudentContact>();
         }
 
         public int Id { get; set; }
@@ -114,6 +115,9 @@ namespace MyPortal.Models.Database
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SenProvision> SenProvisions { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<StudentContact> StudentContacts { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProfileLog> ProfileLogs { get; set; }

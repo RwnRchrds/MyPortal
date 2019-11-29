@@ -88,6 +88,7 @@ namespace MyPortal.Models.Database
         public virtual DbSet<SenReviewType> SenReviewTypes { get; set; }
         public virtual DbSet<SenStatus> SenStatuses { get; set; }
         public virtual DbSet<StaffMember> StaffMembers { get; set; }
+        public virtual DbSet<StudentContact> StudentContacts { get; set; }
         public virtual DbSet<Student> Students { get; set; }
         public virtual DbSet<SystemArea> SystemAreas { get; set; }
         public virtual DbSet<SystemBulletin> SystemBulletins { get; set; }
@@ -190,6 +191,12 @@ namespace MyPortal.Models.Database
                 .HasMany(e => e.CommunicationLogs)
                 .WithRequired(e => e.Type)
                 .HasForeignKey(e => e.CommunicationTypeId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Contact>()
+                .HasMany(e => e.StudentContacts)
+                .WithRequired(e => e.Contact)
+                .HasForeignKey(e => e.ContactId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<CurriculumAcademicYear>()
@@ -618,6 +625,12 @@ namespace MyPortal.Models.Database
 
             modelBuilder.Entity<Student>()
                 .HasMany(e => e.Sales)
+                .WithRequired(e => e.Student)
+                .HasForeignKey(e => e.StudentId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Student>()
+                .HasMany(e => e.StudentContacts)
                 .WithRequired(e => e.Student)
                 .HasForeignKey(e => e.StudentId)
                 .WillCascadeOnDelete(false);

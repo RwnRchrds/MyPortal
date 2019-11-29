@@ -477,6 +477,7 @@
     <Compile Include="Interfaces\ISenStatusRepository.cs" />
     <Compile Include="Interfaces\IService.cs" />
     <Compile Include="Interfaces\IStaffMemberRepository.cs" />
+    <Compile Include="Interfaces\IStudentContactRepository.cs" />
     <Compile Include="Interfaces\IStudentRepository.cs" />
     <Compile Include="Interfaces\ISystemAreaRepository.cs" />
     <Compile Include="Interfaces\ISystemBulletinRepository.cs" />
@@ -543,6 +544,10 @@
     <Compile Include="Migrations\201911251023341_ExtendedAttendanceMarks.Designer.cs">
       <DependentUpon>201911251023341_ExtendedAttendanceMarks.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201911282123411_AddedStudentContacts.cs" />
+    <Compile Include="Migrations\201911282123411_AddedStudentContacts.Designer.cs">
+      <DependentUpon>201911282123411_AddedStudentContacts.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Database\AssessmentAspect.cs" />
     <Compile Include="Models\Database\AssessmentAspectType.cs" />
@@ -603,6 +608,7 @@
     <Compile Include="Persistence\UnitOfWork.cs" />
     <Compile Include="Repositories\CurriculumSubjectStaffMemberRepository.cs" />
     <Compile Include="Repositories\CurriculumSubjectStaffMemberRoleRepository.cs" />
+    <Compile Include="Repositories\StudentContactRepository.cs" />
     <Compile Include="Services\AdminService.cs" />
     <Compile Include="Services\AssessmentService.cs" />
     <Compile Include="Services\AttendanceService.cs" />
@@ -1084,6 +1090,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201911251023341_ExtendedAttendanceMarks.resx">
       <DependentUpon>201911251023341_ExtendedAttendanceMarks.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911282123411_AddedStudentContacts.resx">
+      <DependentUpon>201911282123411_AddedStudentContacts.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
