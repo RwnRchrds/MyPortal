@@ -61,8 +61,8 @@
 
                         <div class="col form-group">
 
-                            @Html.Label("Date of Birth")
-                            @Html.TextBoxFor(x => x.Student.Person.Dob, new { @class = "form-control form-control-sm", Name = "Person.Dob", id ="dobControl" })
+                            @Html.Label("Date of Birth", new {@class = "w-100"})
+                            @Html.EJS().DatePickerFor(x => x.Student.Person.Dob, new Dictionary<string, object>{{"class", "form-control form-control-sm"}, {"Name", "Person.Dob"}}).Format("dd-MMM-yyyy").Render()
 
                         </div>
 
@@ -177,20 +177,29 @@
                 </div>
 
                 <div class="card-body">
-
                     <h6>Telephones</h6>
+
+                    <div class="mb-4">
+                        <button type="button" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> New Number</button>
+                    </div>
+
                     @Html.EJS().Grid("Telephones").DataSource(d =>
-               {
-                   d.Url("").CrossDomain(false).Adaptor("UrlAdaptor");
-               }).Columns(c =>
-               {
-                   c.Field("Type").Width("150").Add();
-                   c.Field("Number").Width("200").Add();
-                   c.HeaderText("Actions").Width("170").Add();
-               }).AllowPaging().PageSettings(p => p.PageSize(5)).Render()
-                    <hr/>
+                    {
+                        d.Url(Url.HttpRouteUrl("ApiGetPhoneNumbersByPersonDataGrid", new { personId = Model.Student.Person.Id })).CrossDomain(false).Adaptor("UrlAdaptor");
+                    }).Columns(c =>
+                    {
+                        c.Field("Type").Width("150").Add();
+                        c.Field("Number").Width("200").Add();
+                        c.HeaderText("Actions").Template("#phoneNumbersActionsTemplate").Width("170").Add();
+                    }).AllowPaging().PageSettings(p => p.PageSize(5)).Render()
+                    <hr />
 
                     <h6>Email Addresses</h6>
+                    
+                    <div class="mb-4">
+                        <button type="button" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> New Email Address</button>
+                    </div>
+
                     @Html.EJS().Grid("EmailAddresses").DataSource(d =>
                     {
                         d.Url("").CrossDomain(false).Adaptor("UrlAdaptor");
@@ -250,6 +259,11 @@
                 <hr/>
 
                 <h6>Dietary Requirements</h6>
+                
+                <div class="mb-4">
+                    <button type="button" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> New Requirement</button>
+                </div>
+
                 @Html.EJS().Grid("DietaryRequirements").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiGetMedicalDietaryRequirementsByPersonDataGrid", new {personId = Model.Student.Person.Id})).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
                 {
                     c.Field("Description").HeaderText("Requirement").Width("200").Add();
@@ -259,6 +273,11 @@
                 <hr/>
 
                 <h6>Medical Conditions</h6>
+                
+                <div class="mb-4">
+                    <button type="button" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> New Condition</button>
+                </div>
+
                 @Html.EJS().Grid("MedicalConditions").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiGetMedicalConditionsByPersonDataGrid", new {personId = Model.Student.Person.Id})).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
                 {
                     c.Field("Condition").Width("200").Add();
@@ -385,5 +404,12 @@
                 }
             });
         }
+    </script>
+    
+    <script type="text/x-jsrender" id="phoneNumbersActionsTemplate">
+        <div>
+            <button class="btn btn-primary btn-sm js-edit mr-1" type="button" data-staff-id="${Id}"><i class="fas fa-edit"></i> Edit</button>
+            <button class="btn btn-danger btn-sm js-delete" type="button" data-staff-id="${Id}"><i class="fas fa-trash-alt"></i> Delete</button>
+        </div>
     </script>
 }

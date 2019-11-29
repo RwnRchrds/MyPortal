@@ -84,6 +84,13 @@ namespace MyPortal.Services
             return emailAddresses;
         }
 
+        public async Task<IEnumerable<CommunicationPhoneNumber>> GetPhoneNumbersByPerson(int personId)
+        {
+            var phoneNumbers = await UnitOfWork.CommunicationPhoneNumbers.GetByPerson(personId);
+
+            return phoneNumbers;
+        }
+
         public async Task CreateAddress(CommunicationAddress address)
         {
             if (!ValidationService.ModelIsValid(address))

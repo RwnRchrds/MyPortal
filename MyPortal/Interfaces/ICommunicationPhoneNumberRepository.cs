@@ -9,6 +9,6 @@ namespace MyPortal.Interfaces
 {
     public interface ICommunicationPhoneNumberRepository : IRepository<CommunicationPhoneNumber>
     {
-
+        Task<IEnumerable<CommunicationPhoneNumber>> GetByPerson(int personId);
     }
 }

@@ -310,6 +310,7 @@
     <Compile Include="Dtos\ContactDto.cs" />
     <Compile Include="Dtos\CurriculumSubjectStaffMemberDto.cs" />
     <Compile Include="Dtos\CurriculumSubjectStaffMemberRoleDto.cs" />
+    <Compile Include="Dtos\DataGrid\GridCommunicationPhoneNumberDto.cs" />
     <Compile Include="Dtos\DataGrid\GridCurriculumSubjectStaffMemberDto.cs" />
     <Compile Include="Dtos\RelationshipTypeDto.cs" />
     <Compile Include="Dtos\CurriculumAcademicYearDto.cs" />
@@ -1027,7 +1028,6 @@
     <Folder Include="Areas\Staff\Views\Communication\" />
     <Folder Include="Areas\Staff\Views\Contacts\" />
     <Folder Include="Areas\Staff\Views\Pastoral\" />
-    <Folder Include="Areas\Staff\Views\People\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

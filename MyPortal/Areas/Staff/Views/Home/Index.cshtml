@@ -1,6 +1,7 @@
 ﻿@using MyPortal.Extensions
 @using MyPortal.Services
 @using Syncfusion.EJ2.Grids
+@using Syncfusion.EJ2.Schedule
 @model MyPortal.Areas.Staff.ViewModels.StaffHomeViewModel
 @{
     ViewBag.Title = $"Home: {Model.CurrentUser.GetDisplayName()}";
@@ -63,11 +64,25 @@
             </div>
         </div>
     </div>
-    
-    
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-calendar-week"></i> Timeline</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                @Html.EJS().Schedule("timeLine").Height("250").Views(v => { v.Option(View.TimelineDay).Add(); }).Render()
+            </div>
+        </div>
+    </div>
+
     @if (User.HasPermission("ViewApprovedBulletins"))
     {
-        <div class="col-xl-9 col-lg-9">
+        <div class="col-md-6">
             <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -75,7 +90,7 @@
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
-                
+
                 </div>
             </div>
         </div>

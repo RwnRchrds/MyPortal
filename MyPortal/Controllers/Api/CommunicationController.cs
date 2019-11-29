@@ -5,10 +5,13 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using AutoMapper;
 using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
+using MyPortal.Dtos.DataGrid;
 using MyPortal.Models.Database;
 using MyPortal.Services;
+using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
 {
@@ -77,6 +80,24 @@ namespace MyPortal.Controllers.Api
             }
 
             return Ok("Email address deleted");
+        }
+
+        [HttpPost]
+        [Route("phoneNumbers/get/dataGrid/byPerson/{personId:int}", Name = "ApiGetPhoneNumbersByPersonDataGrid")]
+        public async Task<IHttpActionResult> GetPhoneNumbersByPerson([FromUri] int personId, [FromBody] DataManagerRequest dm)
+        {
+            try
+            {
+                var phoneNumbers = await _service.GetPhoneNumbersByPerson(personId);
+
+                var list = phoneNumbers.Select(Mapper.Map<CommunicationPhoneNumber, GridCommunicationPhoneNumberDto>);
+
+                return PrepareDataGridObject(list, dm);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
     }
 }

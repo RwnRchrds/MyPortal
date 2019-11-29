@@ -280,6 +280,10 @@ namespace MyPortal
                     opts => opts.MapFrom(src => src.StaffMember.GetFullName()))
                 .ForMember(dest => dest.Role,
                     opts => opts.MapFrom(src => src.Role.Description));
+
+            CreateMap<CommunicationPhoneNumber, GridCommunicationPhoneNumberDto>()
+                .ForMember(dest => dest.Type,
+                    opts => opts.MapFrom(src => src.Type.Description));
         }
     }
 }    
