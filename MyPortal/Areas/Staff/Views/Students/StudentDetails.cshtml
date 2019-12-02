@@ -179,37 +179,40 @@
                 <div class="card-body">
                     <h6>Telephones</h6>
 
-                    <div class="mb-4">
+                    <div class="my-4">
                         <button type="button" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> New Number</button>
                     </div>
-
-                    @Html.EJS().Grid("Telephones").DataSource(d =>
-                    {
-                        d.Url(Url.HttpRouteUrl("ApiGetPhoneNumbersByPersonDataGrid", new { personId = Model.Student.Person.Id })).CrossDomain(false).Adaptor("UrlAdaptor");
-                    }).Columns(c =>
-                    {
-                        c.Field("Type").Width("150").Add();
-                        c.Field("Number").Width("200").Add();
-                        c.HeaderText("Actions").Template("#phoneNumbersActionsTemplate").Width("170").Add();
-                    }).AllowPaging().PageSettings(p => p.PageSize(5)).Render()
-                    <hr />
-
-                    <h6>Email Addresses</h6>
-
+                    
                     <div class="mb-4">
-                        <button type="button" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> New Email Address</button>
+                        @Html.EJS().Grid("Telephones").DataSource(d =>
+                        {
+                            d.Url(Url.HttpRouteUrl("ApiGetPhoneNumbersByPersonDataGrid", new { personId = Model.Student.Person.Id })).CrossDomain(false).Adaptor("UrlAdaptor");
+                        }).Columns(c =>
+                        {
+                            c.Field("Type").Width("150").Add();
+                            c.Field("Number").Width("200").Add();
+                            c.HeaderText("Actions").Template("#phoneNumbersActionsTemplate").Width("170").Add();
+                        }).AllowPaging().PageSettings(p => p.PageSize(5)).Render()
                     </div>
+                    
+                    <div>
+                        <h6>Email Addresses</h6>
 
-                    @Html.EJS().Grid("EmailAddresses").DataSource(d =>
-                    {
-                        d.Url(Url.HttpRouteUrl("ApiGetEmailAddressesByPersonDataGrid", new { personId = Model.Student.Person.Id })).CrossDomain(false).Adaptor("UrlAdaptor");
-                    }).Columns(c =>
-                    {
-                        c.Field("Type").Width("150").Add();
-                        c.Field("Address").Width("200").Add();
-                        c.Field("Main").DisplayAsCheckBox(true).Width("100").Add();
-                        c.HeaderText("Actions").Template("#emailAddressesActionsTemplate").Width("170").Add();
-                    }).AllowPaging().PageSettings(p => p.PageSize(5)).Render()
+                        <div class="my-4">
+                            <button type="button" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> New Email Address</button>
+                        </div>
+
+                        @Html.EJS().Grid("EmailAddresses").DataSource(d =>
+                        {
+                            d.Url(Url.HttpRouteUrl("ApiGetEmailAddressesByPersonDataGrid", new { personId = Model.Student.Person.Id })).CrossDomain(false).Adaptor("UrlAdaptor");
+                        }).Columns(c =>
+                        {
+                            c.Field("Type").Width("80").Add();
+                            c.Field("Address").Width("200").Add();
+                            c.Field("Main").DisplayAsCheckBox(true).Width("50").Add();
+                            c.HeaderText("Actions").Template("#emailAddressesActionsTemplate").Width("170").Add();
+                        }).AllowPaging().PageSettings(p => p.PageSize(5)).Render()
+                    </div>
                 </div>
 
             </div>

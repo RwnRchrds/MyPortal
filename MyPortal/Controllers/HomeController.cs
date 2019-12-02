@@ -11,8 +11,7 @@ namespace MyPortal.Controllers
     {
         public async Task<ActionResult> Home()
         {
-            var userName = User.Identity.GetUserName();
-            if (Request.IsAuthenticated && userName != null)
+            if (Request.IsAuthenticated)
             {
                 switch (await User.GetUserTypeAsync())
                 {
