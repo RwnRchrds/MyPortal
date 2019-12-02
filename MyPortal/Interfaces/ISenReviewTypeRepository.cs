@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface ISenReviewTypeRepository : IReadOnlyRepository<SenReviewType>
+    public interface ISenReviewTypeRepository : IReadRepository<SenReviewType>
     {
 
     }

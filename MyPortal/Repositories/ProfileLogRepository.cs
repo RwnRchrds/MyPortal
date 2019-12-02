@@ -9,7 +9,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class ProfileLogRepository : Repository<ProfileLog>, IProfileLogRepository
+    public class ProfileLogRepository : ReadWriteRepository<ProfileLog>, IProfileLogRepository
     {
         public ProfileLogRepository(MyPortalDbContext context) : base(context)
         {

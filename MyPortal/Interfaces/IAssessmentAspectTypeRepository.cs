@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IAssessmentAspectTypeRepository : IReadOnlyRepository<AssessmentAspectType>
+    public interface IAssessmentAspectTypeRepository : IReadRepository<AssessmentAspectType>
     {
 
     }

@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface ICurriculumStudyTopicRepository : IRepository<CurriculumStudyTopic>
+    public interface ICurriculumStudyTopicRepository : IReadWriteRepository<CurriculumStudyTopic>
     {
         Task<IEnumerable<CurriculumStudyTopic>> GetBySubject(int subjectId);
     }

@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IFinanceSaleRepository : IRepository<FinanceSale>
+    public interface IFinanceSaleRepository : IReadWriteRepository<FinanceSale>
     {
         Task<IEnumerable<FinanceSale>> GetAllAsync(int academicYearId);
         Task<IEnumerable<FinanceSale>> GetByStudent(int studentId, int academicYearId);

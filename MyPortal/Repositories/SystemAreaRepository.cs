@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class SystemAreaRepository : ReadOnlyRepository<SystemArea>, ISystemAreaRepository
+    public class SystemAreaRepository : ReadRepository<SystemArea>, ISystemAreaRepository
     {
         public SystemAreaRepository(MyPortalDbContext context) : base(context)
         {

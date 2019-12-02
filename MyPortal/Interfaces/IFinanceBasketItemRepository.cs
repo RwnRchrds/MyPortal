@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IFinanceBasketItemRepository : IRepository<FinanceBasketItem>
+    public interface IFinanceBasketItemRepository : IReadWriteRepository<FinanceBasketItem>
     {
         Task<IEnumerable<FinanceBasketItem>> GetByStudent(int studentId);
 

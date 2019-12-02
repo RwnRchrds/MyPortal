@@ -9,7 +9,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class ProfileCommentRepository : Repository<ProfileComment>, IProfileCommentRepository
+    public class ProfileCommentRepository : ReadWriteRepository<ProfileComment>, IProfileCommentRepository
     {
         public ProfileCommentRepository(MyPortalDbContext context) : base(context)
         {

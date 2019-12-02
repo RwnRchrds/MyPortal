@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IAttendancePeriodRepository : IRepository<AttendancePeriod>
+    public interface IAttendancePeriodRepository : IReadWriteRepository<AttendancePeriod>
     {
         Task<IEnumerable<AttendancePeriod>> GetByDayOfWeek(DayOfWeek weekDay);
         Task<IEnumerable<AttendancePeriod>> GetByClass(int classId);

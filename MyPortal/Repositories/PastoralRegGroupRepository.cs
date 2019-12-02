@@ -10,7 +10,7 @@ using Syncfusion.EJ2.Linq;
 
 namespace MyPortal.Repositories
 {
-    public class PastoralRegGroupRepository : Repository<PastoralRegGroup>, IPastoralRegGroupRepository
+    public class PastoralRegGroupRepository : ReadWriteRepository<PastoralRegGroup>, IPastoralRegGroupRepository
     {
         public PastoralRegGroupRepository(MyPortalDbContext context) : base(context)
         {

@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IMedicalEventRepository : IRepository<MedicalEvent>
+    public interface IMedicalEventRepository : IReadWriteRepository<MedicalEvent>
     {
 
     }

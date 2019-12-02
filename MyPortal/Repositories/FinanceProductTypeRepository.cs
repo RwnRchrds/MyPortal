@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class FinanceProductTypeRepository : Repository<FinanceProductType>, IFinanceProductTypeRepository
+    public class FinanceProductTypeRepository : ReadWriteRepository<FinanceProductType>, IFinanceProductTypeRepository
     {
         public FinanceProductTypeRepository(MyPortalDbContext context) : base(context)
         {

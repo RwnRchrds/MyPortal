@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IMedicalPersonDietaryRequirementRepository : IRepository<MedicalPersonDietaryRequirement>
+    public interface IMedicalPersonDietaryRequirementRepository : IReadWriteRepository<MedicalPersonDietaryRequirement>
     {
         Task<IEnumerable<MedicalPersonDietaryRequirement>> GetByPerson(int personId);
     }

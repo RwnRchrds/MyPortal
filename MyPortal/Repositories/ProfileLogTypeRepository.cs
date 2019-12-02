@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class ProfileLogTypeRepository : ReadOnlyRepository<ProfileLogType>, IProfileLogTypeRepository
+    public class ProfileLogTypeRepository : ReadRepository<ProfileLogType>, IProfileLogTypeRepository
     {
         public ProfileLogTypeRepository(MyPortalDbContext context) : base(context)
         {

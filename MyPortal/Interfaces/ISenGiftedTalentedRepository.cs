@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface ISenGiftedTalentedRepository : IRepository<SenGiftedTalented>
+    public interface ISenGiftedTalentedRepository : IReadWriteRepository<SenGiftedTalented>
     {
 
     }

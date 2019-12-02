@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class SenReviewTypeRepository : ReadOnlyRepository<SenReviewType>, ISenReviewTypeRepository
+    public class SenReviewTypeRepository : ReadRepository<SenReviewType>, ISenReviewTypeRepository
     {
         public SenReviewTypeRepository(MyPortalDbContext context) : base(context)
         {

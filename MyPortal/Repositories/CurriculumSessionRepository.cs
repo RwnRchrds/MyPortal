@@ -11,7 +11,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class CurriculumSessionRepository : Repository<CurriculumSession>, ICurriculumSessionRepository
+    public class CurriculumSessionRepository : ReadWriteRepository<CurriculumSession>, ICurriculumSessionRepository
     {
         public CurriculumSessionRepository(MyPortalDbContext context) : base(context)
         {

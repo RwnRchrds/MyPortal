@@ -14,7 +14,7 @@ using MyPortal.Services;
 
 namespace MyPortal.Repositories
 {
-    public class CurriculumAcademicYearRepository : Repository<CurriculumAcademicYear>, ICurriculumAcademicYearRepository
+    public class CurriculumAcademicYearRepository : ReadWriteRepository<CurriculumAcademicYear>, ICurriculumAcademicYearRepository
     {
         public CurriculumAcademicYearRepository(MyPortalDbContext context) : base(context)
         {

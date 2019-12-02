@@ -12,7 +12,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class StudentRepository : Repository<Student>, IStudentRepository
+    public class StudentRepository : ReadWriteRepository<Student>, IStudentRepository
     {
         public StudentRepository(MyPortalDbContext context) : base(context)
         {

@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IPastoralRegGroupRepository : IRepository<PastoralRegGroup>
+    public interface IPastoralRegGroupRepository : IReadWriteRepository<PastoralRegGroup>
     {
         Task<IEnumerable<PastoralRegGroup>> GetByYearGroup(int yearGroupId);
     }

@@ -10,9 +10,9 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public abstract class Repository<TEntity> : ReadOnlyRepository<TEntity>, IRepository<TEntity> where TEntity : class
+    public abstract class ReadWriteRepository<TEntity> : ReadRepository<TEntity>, IReadWriteRepository<TEntity> where TEntity : class
     {
-        public Repository(MyPortalDbContext context) : base (context)
+        public ReadWriteRepository(MyPortalDbContext context) : base (context)
         {
 
         }

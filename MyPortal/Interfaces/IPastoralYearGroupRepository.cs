@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IPastoralYearGroupRepository : IRepository<PastoralYearGroup>
+    public interface IPastoralYearGroupRepository : IReadWriteRepository<PastoralYearGroup>
     {
 
     }

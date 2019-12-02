@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface ICurriculumLessonPlanTemplateRepository : IRepository<CurriculumLessonPlanTemplate>
+    public interface ICurriculumLessonPlanTemplateRepository : IReadWriteRepository<CurriculumLessonPlanTemplate>
     {
 
     }

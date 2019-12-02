@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IMedicalDietaryRequirementRepository : IReadOnlyRepository<MedicalDietaryRequirement>
+    public interface IMedicalDietaryRequirementRepository : IReadRepository<MedicalDietaryRequirement>
     {
 
     }

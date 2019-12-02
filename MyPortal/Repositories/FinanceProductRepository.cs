@@ -9,7 +9,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class FinanceProductRepository : Repository<FinanceProduct>, IFinanceProductRepository
+    public class FinanceProductRepository : ReadWriteRepository<FinanceProduct>, IFinanceProductRepository
     {
         public FinanceProductRepository(MyPortalDbContext context) : base(context)
         {

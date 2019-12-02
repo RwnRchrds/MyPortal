@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class SenGiftedTalentedRepository : Repository<SenGiftedTalented>, ISenGiftedTalentedRepository
+    public class SenGiftedTalentedRepository : ReadWriteRepository<SenGiftedTalented>, ISenGiftedTalentedRepository
     {
         public SenGiftedTalentedRepository(MyPortalDbContext context) : base(context)
         {

@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface ICommunicationPhoneNumberRepository : IRepository<CommunicationPhoneNumber>
+    public interface ICommunicationPhoneNumberRepository : IReadWriteRepository<CommunicationPhoneNumber>
     {
         Task<IEnumerable<CommunicationPhoneNumber>> GetByPerson(int personId);
     }

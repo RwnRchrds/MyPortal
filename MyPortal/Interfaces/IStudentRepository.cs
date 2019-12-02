@@ -8,7 +8,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IStudentRepository : IRepository<Student>
+    public interface IStudentRepository : IReadWriteRepository<Student>
     {
         Task<Student> GetByIdWithRelated(int studentId, params Expression<Func<Student, object>>[] includeProperties);
 

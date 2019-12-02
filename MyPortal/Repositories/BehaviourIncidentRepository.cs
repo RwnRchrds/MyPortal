@@ -9,7 +9,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class BehaviourIncidentRepository : Repository<BehaviourIncident>, IBehaviourIncidentRepository
+    public class BehaviourIncidentRepository : ReadWriteRepository<BehaviourIncident>, IBehaviourIncidentRepository
     {
         public BehaviourIncidentRepository(MyPortalDbContext context) : base(context)
         {

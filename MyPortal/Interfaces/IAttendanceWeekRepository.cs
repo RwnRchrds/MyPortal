@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IAttendanceWeekRepository : IRepository<AttendanceWeek>
+    public interface IAttendanceWeekRepository : IReadWriteRepository<AttendanceWeek>
     {
         Task<AttendanceWeek> GetByDate(int academicYearId, DateTime date);
     }

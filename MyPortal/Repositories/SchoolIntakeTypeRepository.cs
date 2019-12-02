@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class SchoolIntakeTypeRepository : ReadOnlyRepository<SchoolIntakeType>, ISchoolIntakeTypeRepository
+    public class SchoolIntakeTypeRepository : ReadRepository<SchoolIntakeType>, ISchoolIntakeTypeRepository
     {
         public SchoolIntakeTypeRepository(MyPortalDbContext context) : base(context)
         {

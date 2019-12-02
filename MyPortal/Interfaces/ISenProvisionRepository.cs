@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface ISenProvisionRepository : IRepository<SenProvision>
+    public interface ISenProvisionRepository : IReadWriteRepository<SenProvision>
     {
 
     }

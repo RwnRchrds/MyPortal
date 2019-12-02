@@ -9,7 +9,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class PersonDocumentRepository : Repository<PersonDocument>, IPersonDocumentRepository
+    public class PersonDocumentRepository : ReadWriteRepository<PersonDocument>, IPersonDocumentRepository
     {
         public PersonDocumentRepository(MyPortalDbContext context) : base(context)
         {

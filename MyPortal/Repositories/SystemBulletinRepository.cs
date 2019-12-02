@@ -9,7 +9,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class SystemBulletinRepository : Repository<SystemBulletin>, ISystemBulletinRepository
+    public class SystemBulletinRepository : ReadWriteRepository<SystemBulletin>, ISystemBulletinRepository
     {
         public SystemBulletinRepository(MyPortalDbContext context) : base(context)
         {

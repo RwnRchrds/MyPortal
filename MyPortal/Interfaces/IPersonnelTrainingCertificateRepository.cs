@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IPersonnelTrainingCertificateRepository : IRepository<PersonnelTrainingCertificate>
+    public interface IPersonnelTrainingCertificateRepository : IReadWriteRepository<PersonnelTrainingCertificate>
     {
         Task<PersonnelTrainingCertificate> Get(int staffId, int courseId);
 

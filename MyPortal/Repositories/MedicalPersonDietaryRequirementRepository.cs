@@ -9,7 +9,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class MedicalPersonDietaryRequirementRepository : Repository<MedicalPersonDietaryRequirement>, IMedicalPersonDietaryRequirementRepository
+    public class MedicalPersonDietaryRequirementRepository : ReadWriteRepository<MedicalPersonDietaryRequirement>, IMedicalPersonDietaryRequirementRepository
     {
         public MedicalPersonDietaryRequirementRepository(MyPortalDbContext context) : base(context)
         {

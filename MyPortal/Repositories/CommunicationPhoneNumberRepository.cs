@@ -9,7 +9,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class CommunicationPhoneNumberRepository : Repository<CommunicationPhoneNumber>, ICommunicationPhoneNumberRepository
+    public class CommunicationPhoneNumberRepository : ReadWriteRepository<CommunicationPhoneNumber>, ICommunicationPhoneNumberRepository
     {
         public CommunicationPhoneNumberRepository(MyPortalDbContext context) : base(context)
         {

@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class SenEventTypeRepository : ReadOnlyRepository<SenEventType>, ISenEventTypeRepository
+    public class SenEventTypeRepository : ReadRepository<SenEventType>, ISenEventTypeRepository
     {
         public SenEventTypeRepository(MyPortalDbContext context) : base(context)
         {

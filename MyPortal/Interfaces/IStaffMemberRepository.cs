@@ -8,7 +8,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IStaffMemberRepository : IRepository<StaffMember>
+    public interface IStaffMemberRepository : IReadWriteRepository<StaffMember>
     {
         Task<StaffMember> GetByUserId(string userId);
 

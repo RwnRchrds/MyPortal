@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class ContactRepository : Repository<Contact>, IContactRepository
+    public class ContactRepository : ReadWriteRepository<Contact>, IContactRepository
     {
         public ContactRepository(MyPortalDbContext context) : base(context)
         {

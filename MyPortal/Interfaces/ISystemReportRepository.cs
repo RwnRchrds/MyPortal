@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface ISystemReportRepository : IReadOnlyRepository<SystemReport>
+    public interface ISystemReportRepository : IReadRepository<SystemReport>
     {
 
     }

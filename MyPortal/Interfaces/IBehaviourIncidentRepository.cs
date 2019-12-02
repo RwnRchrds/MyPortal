@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IBehaviourIncidentRepository : IRepository<BehaviourIncident>
+    public interface IBehaviourIncidentRepository : IReadWriteRepository<BehaviourIncident>
     {
         Task<int> GetCountByStudent(int studentId, int academicYearId);
         Task<int> GetPointsByStudent(int studentId, int academicYearId);

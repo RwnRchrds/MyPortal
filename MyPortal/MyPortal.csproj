@@ -310,6 +310,7 @@
     <Compile Include="Dtos\ContactDto.cs" />
     <Compile Include="Dtos\CurriculumSubjectStaffMemberDto.cs" />
     <Compile Include="Dtos\CurriculumSubjectStaffMemberRoleDto.cs" />
+    <Compile Include="Dtos\DataGrid\GridCommunicationEmailAddressDto.cs" />
     <Compile Include="Dtos\DataGrid\GridCommunicationPhoneNumberDto.cs" />
     <Compile Include="Dtos\DataGrid\GridCurriculumSubjectStaffMemberDto.cs" />
     <Compile Include="Dtos\RelationshipTypeDto.cs" />
@@ -460,8 +461,8 @@
     <Compile Include="Interfaces\IProfileCommentRepository.cs" />
     <Compile Include="Interfaces\IProfileLogRepository.cs" />
     <Compile Include="Interfaces\IProfileLogTypeRepository.cs" />
-    <Compile Include="Interfaces\IReadOnlyRepository.cs" />
-    <Compile Include="Interfaces\IRepository.cs" />
+    <Compile Include="Interfaces\IReadRepository.cs" />
+    <Compile Include="Interfaces\IReadWriteRepository.cs" />
     <Compile Include="Interfaces\IAssessmentResultRepository.cs" />
     <Compile Include="Interfaces\ISchoolGovernanceTypeRepository.cs" />
     <Compile Include="Interfaces\ISchoolIntakeTypeRepository.cs" />
@@ -732,9 +733,9 @@
     <Compile Include="Repositories\ProfileCommentRepository.cs" />
     <Compile Include="Repositories\ProfileLogRepository.cs" />
     <Compile Include="Repositories\ProfileLogTypeRepository.cs" />
-    <Compile Include="Repositories\ReadOnlyRepository.cs" />
+    <Compile Include="Repositories\ReadRepository.cs" />
     <Compile Include="Repositories\RelationshipTypeRepository.cs" />
-    <Compile Include="Repositories\Repository.cs" />
+    <Compile Include="Repositories\ReadWriteRepository.cs" />
     <Compile Include="Repositories\SchoolGovernanceTypeRepository.cs" />
     <Compile Include="Repositories\SchoolIntakeTypeRepository.cs" />
     <Compile Include="Repositories\SchoolLocationRepository.cs" />

@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IAttendanceMarkRepository : IRepository<AttendanceMark>
+    public interface IAttendanceMarkRepository : IReadWriteRepository<AttendanceMark>
     {
         Task<AttendanceMark> Get(int studentId, int weekId, int periodId);
 

@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IAttendanceCodeRepository : IReadOnlyRepository<AttendanceCode>
+    public interface IAttendanceCodeRepository : IReadRepository<AttendanceCode>
     {
         Task<AttendanceCode> Get(string code);
         Task<IEnumerable<AttendanceCode>> GetUsable();

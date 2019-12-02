@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IBehaviourAchievementTypeRepository : IReadOnlyRepository<BehaviourAchievementType>
+    public interface IBehaviourAchievementTypeRepository : IReadRepository<BehaviourAchievementType>
     {
         Task<IEnumerable<BehaviourAchievementType>> GetRecorded(int academicYearId);
     }

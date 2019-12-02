@@ -284,6 +284,10 @@ namespace MyPortal
             CreateMap<CommunicationPhoneNumber, GridCommunicationPhoneNumberDto>()
                 .ForMember(dest => dest.Type,
                     opts => opts.MapFrom(src => src.Type.Description));
+
+            CreateMap<CommunicationEmailAddress, GridCommunicationEmailAddressDto>()
+                .ForMember(dest => dest.Type,
+                    opts => opts.MapFrom(src => src.Type.ToString()));
         }
     }
 }    

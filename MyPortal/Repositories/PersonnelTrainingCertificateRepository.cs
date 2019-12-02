@@ -9,7 +9,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class PersonnelTrainingCertificateRepository : Repository<PersonnelTrainingCertificate>, IPersonnelTrainingCertificateRepository
+    public class PersonnelTrainingCertificateRepository : ReadWriteRepository<PersonnelTrainingCertificate>, IPersonnelTrainingCertificateRepository
     {
         public PersonnelTrainingCertificateRepository(MyPortalDbContext context) : base(context)
         {

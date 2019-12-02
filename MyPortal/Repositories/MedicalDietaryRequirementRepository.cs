@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class MedicalDietaryRequirementRepository : ReadOnlyRepository<MedicalDietaryRequirement>, IMedicalDietaryRequirementRepository
+    public class MedicalDietaryRequirementRepository : ReadRepository<MedicalDietaryRequirement>, IMedicalDietaryRequirementRepository
     {
         public MedicalDietaryRequirementRepository(MyPortalDbContext context) : base(context)
         {

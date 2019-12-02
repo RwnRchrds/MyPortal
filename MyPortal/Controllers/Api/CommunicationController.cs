@@ -99,5 +99,25 @@ namespace MyPortal.Controllers.Api
                 return HandleException(e);
             }
         }
+
+        [HttpPost]
+        [Route("emailAddresses/get/dataGrid/byPerson/{personId:int}", Name = "ApiGetEmailAddressesByPersonDataGrid")]
+        public async Task<IHttpActionResult> GetEmailAddressesByPerson([FromUri] int personId,
+            [FromBody] DataManagerRequest dm)
+        {
+            try
+            {
+                var emailAddresses = await _service.GetEmailAddressesByPerson(personId);
+
+                var list = emailAddresses.Select(
+                    Mapper.Map<CommunicationEmailAddress, GridCommunicationEmailAddressDto>);
+
+                return PrepareDataGridObject(list, dm);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
     }
 }

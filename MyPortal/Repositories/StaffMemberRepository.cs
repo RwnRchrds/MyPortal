@@ -11,7 +11,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class StaffMemberRepository : Repository<StaffMember>, IStaffMemberRepository
+    public class StaffMemberRepository : ReadWriteRepository<StaffMember>, IStaffMemberRepository
     {
         public StaffMemberRepository(MyPortalDbContext context) : base(context)
         {

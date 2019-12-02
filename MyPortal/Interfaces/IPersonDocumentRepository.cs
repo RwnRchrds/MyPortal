@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IPersonDocumentRepository : IRepository<PersonDocument>
+    public interface IPersonDocumentRepository : IReadWriteRepository<PersonDocument>
     {
         Task<IEnumerable<PersonDocument>> GetByPerson(int personId);
     }

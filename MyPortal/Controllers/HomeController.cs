@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using MyPortal.Models;
 using MyPortal.Services;
 
@@ -10,7 +11,8 @@ namespace MyPortal.Controllers
     {
         public async Task<ActionResult> Home()
         {
-            if (Request.IsAuthenticated)
+            var userName = User.Identity.GetUserName();
+            if (Request.IsAuthenticated && userName != null)
             {
                 switch (await User.GetUserTypeAsync())
                 {
@@ -29,8 +31,7 @@ namespace MyPortal.Controllers
         [AllowAnonymous]
         public ActionResult Index()
         {
-            if (System.Web.HttpContext.Current.User != null &&
-                System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
+            if (User != null && User.Identity.IsAuthenticated)
                 return RedirectToAction("Home", "Home");
             return RedirectToAction("Login", "Account");
         }

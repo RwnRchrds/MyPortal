@@ -9,7 +9,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class MedicalPersonConditionRepository : Repository<MedicalPersonCondition>, IMedicalPersonConditionRepository
+    public class MedicalPersonConditionRepository : ReadWriteRepository<MedicalPersonCondition>, IMedicalPersonConditionRepository
     {
         public MedicalPersonConditionRepository(MyPortalDbContext context) : base(context)
         {

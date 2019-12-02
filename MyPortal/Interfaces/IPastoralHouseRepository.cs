@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IPastoralHouseRepository : IRepository<PastoralHouse>
+    public interface IPastoralHouseRepository : IReadWriteRepository<PastoralHouse>
     {
 
     }

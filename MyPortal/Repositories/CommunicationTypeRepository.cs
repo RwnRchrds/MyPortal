@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class CommunicationTypeRepository : ReadOnlyRepository<CommunicationType>, ICommunicationTypeRepository
+    public class CommunicationTypeRepository : ReadRepository<CommunicationType>, ICommunicationTypeRepository
     {
         public CommunicationTypeRepository(MyPortalDbContext context) : base(context)
         {

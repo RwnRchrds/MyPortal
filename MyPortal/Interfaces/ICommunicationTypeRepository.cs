@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface ICommunicationTypeRepository : IReadOnlyRepository<CommunicationType>
+    public interface ICommunicationTypeRepository : IReadRepository<CommunicationType>
     {
 
     }

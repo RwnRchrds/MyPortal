@@ -9,7 +9,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class AttendancePeriodRepository : Repository<AttendancePeriod>, IAttendancePeriodRepository
+    public class AttendancePeriodRepository : ReadWriteRepository<AttendancePeriod>, IAttendancePeriodRepository
     {
         public AttendancePeriodRepository(MyPortalDbContext context) : base(context)
         {

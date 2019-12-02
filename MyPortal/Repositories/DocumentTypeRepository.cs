@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class DocumentTypeRepository : ReadOnlyRepository<DocumentType>, IDocumentTypeRepository
+    public class DocumentTypeRepository : ReadRepository<DocumentType>, IDocumentTypeRepository
     {
         public DocumentTypeRepository(MyPortalDbContext context) : base(context)
         {

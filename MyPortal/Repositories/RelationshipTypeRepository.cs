@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class RelationshipTypeRepository : ReadOnlyRepository<RelationshipType>, IRelationshipTypeRepository
+    public class RelationshipTypeRepository : ReadRepository<RelationshipType>, IRelationshipTypeRepository
     {
         public RelationshipTypeRepository(MyPortalDbContext context) : base(context)
         {

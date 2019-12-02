@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IProfileCommentRepository : IRepository<ProfileComment>
+    public interface IProfileCommentRepository : IReadWriteRepository<ProfileComment>
     {
         Task<IEnumerable<ProfileComment>> GetByCommentBank(int commentBankId);
     }

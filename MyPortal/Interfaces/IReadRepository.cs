@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MyPortal.Interfaces
 {
-    public interface IReadOnlyRepository<TEntity> where TEntity : class
+    public interface IReadRepository<TEntity> where TEntity : class
     {
         Task<TEntity> GetById(int id);
 

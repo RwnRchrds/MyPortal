@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface ISystemSchoolRepository : IRepository<School>
+    public interface ISystemSchoolRepository : IReadWriteRepository<School>
     {
         Task<School> GetLocal();
     }

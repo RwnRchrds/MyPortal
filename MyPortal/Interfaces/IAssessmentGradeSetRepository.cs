@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IAssessmentGradeSetRepository : IRepository<AssessmentGradeSet>
+    public interface IAssessmentGradeSetRepository : IReadWriteRepository<AssessmentGradeSet>
     {
 
     }

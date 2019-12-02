@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class CommunicationLogRepository : Repository<CommunicationLog>, ICommunicationLogRepository
+    public class CommunicationLogRepository : ReadWriteRepository<CommunicationLog>, ICommunicationLogRepository
     {
         public CommunicationLogRepository(MyPortalDbContext context) : base(context)
         {

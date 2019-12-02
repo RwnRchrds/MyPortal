@@ -10,7 +10,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class AssessmentResultSetRepository : Repository<AssessmentResultSet>, IAssessmentResultSetRepository
+    public class AssessmentResultSetRepository : ReadWriteRepository<AssessmentResultSet>, IAssessmentResultSetRepository
     {
         public AssessmentResultSetRepository(MyPortalDbContext context) : base(context)
         {

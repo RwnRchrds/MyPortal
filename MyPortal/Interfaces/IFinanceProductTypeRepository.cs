@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IFinanceProductTypeRepository : IRepository<FinanceProductType>
+    public interface IFinanceProductTypeRepository : IReadWriteRepository<FinanceProductType>
     {
 
     }

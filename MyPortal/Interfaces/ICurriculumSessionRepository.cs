@@ -8,7 +8,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface ICurriculumSessionRepository : IRepository<CurriculumSession>
+    public interface ICurriculumSessionRepository : IReadWriteRepository<CurriculumSession>
     {
         Task<CurriculumSession> GetByIdWithRelated(int sessionId, params Expression<Func<CurriculumSession, object>>[] includeProperties);
 

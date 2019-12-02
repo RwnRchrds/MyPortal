@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IAssessmentResultRepository : IRepository<AssessmentResult>
+    public interface IAssessmentResultRepository : IReadWriteRepository<AssessmentResult>
     {
         Task<IEnumerable<AssessmentResult>> GetResultsByStudent(int studentId, int resultSetId);
     }

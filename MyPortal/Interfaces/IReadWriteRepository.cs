@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MyPortal.Interfaces
 {
-    public interface IRepository<TEntity> : IReadOnlyRepository<TEntity> where TEntity : class
+    public interface IReadWriteRepository<TEntity> : IReadRepository<TEntity> where TEntity : class
     {
         void Add(TEntity entity);
         void AddRange(IEnumerable<TEntity> entities);

@@ -11,11 +11,11 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public abstract class ReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity> where TEntity : class
+    public abstract class ReadRepository<TEntity> : IReadRepository<TEntity> where TEntity : class
     {
         protected readonly MyPortalDbContext Context;
 
-        protected ReadOnlyRepository(MyPortalDbContext context)
+        protected ReadRepository(MyPortalDbContext context)
         {
             Context = context;
         }

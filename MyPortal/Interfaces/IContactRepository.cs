@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IContactRepository : IRepository<Contact>
+    public interface IContactRepository : IReadWriteRepository<Contact>
     {
 
     }

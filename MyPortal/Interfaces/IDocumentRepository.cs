@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IDocumentRepository : IRepository<Document>
+    public interface IDocumentRepository : IReadWriteRepository<Document>
     {
         Task<IEnumerable<Document>> GetGeneral();
 

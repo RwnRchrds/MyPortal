@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IPersonnelObservationRepository : IRepository<PersonnelObservation>
+    public interface IPersonnelObservationRepository : IReadWriteRepository<PersonnelObservation>
     {
         Task<IEnumerable<PersonnelObservation>> GetByStaffMember(int staffId);
     }

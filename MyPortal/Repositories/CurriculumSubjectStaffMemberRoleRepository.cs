@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class CurriculumSubjectStaffMemberRoleRepository : ReadOnlyRepository<CurriculumSubjectStaffMemberRole>, ICurriculumSubjectStaffMemberRoleRepository
+    public class CurriculumSubjectStaffMemberRoleRepository : ReadRepository<CurriculumSubjectStaffMemberRole>, ICurriculumSubjectStaffMemberRoleRepository
     {
         public CurriculumSubjectStaffMemberRoleRepository(MyPortalDbContext context) : base(context)
         {

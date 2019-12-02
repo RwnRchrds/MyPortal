@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IFinanceProductRepository : IRepository<FinanceProduct>
+    public interface IFinanceProductRepository : IReadWriteRepository<FinanceProduct>
     {
         Task<IEnumerable<FinanceProduct>> GetAvailableByStudent(int studentId);
     }

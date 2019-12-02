@@ -11,7 +11,7 @@ using MyPortal.Services;
 
 namespace MyPortal.Repositories
 {
-    public class AttendanceWeekRepository : Repository<AttendanceWeek>, IAttendanceWeekRepository
+    public class AttendanceWeekRepository : ReadWriteRepository<AttendanceWeek>, IAttendanceWeekRepository
     {
         public AttendanceWeekRepository(MyPortalDbContext context) : base(context)
         {

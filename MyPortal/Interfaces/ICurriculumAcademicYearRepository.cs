@@ -8,7 +8,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface ICurriculumAcademicYearRepository : IRepository<CurriculumAcademicYear>
+    public interface ICurriculumAcademicYearRepository : IReadWriteRepository<CurriculumAcademicYear>
     {
         Task<CurriculumAcademicYear> GetCurrent();
 

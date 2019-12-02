@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class PastoralHouseRepository : Repository<PastoralHouse>, IPastoralHouseRepository
+    public class PastoralHouseRepository : ReadWriteRepository<PastoralHouse>, IPastoralHouseRepository
     {
         public PastoralHouseRepository(MyPortalDbContext context) : base(context)
         {

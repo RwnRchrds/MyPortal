@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface ICurriculumClassRepository : IRepository<CurriculumClass>
+    public interface ICurriculumClassRepository : IReadWriteRepository<CurriculumClass>
     {
         Task<IEnumerable<CurriculumClass>> GetByAcademicYear(int academicYearId);
 

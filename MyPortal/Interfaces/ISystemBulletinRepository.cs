@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface ISystemBulletinRepository : IRepository<SystemBulletin>
+    public interface ISystemBulletinRepository : IReadWriteRepository<SystemBulletin>
     {
         Task<IEnumerable<SystemBulletin>> GetApproved();
 

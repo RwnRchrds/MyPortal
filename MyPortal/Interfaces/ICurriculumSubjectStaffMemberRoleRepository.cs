@@ -6,7 +6,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface ICurriculumSubjectStaffMemberRoleRepository : IReadOnlyRepository<CurriculumSubjectStaffMemberRole>
+    public interface ICurriculumSubjectStaffMemberRoleRepository : IReadRepository<CurriculumSubjectStaffMemberRole>
     {
 
     }

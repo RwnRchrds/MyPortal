@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class MedicalEventRepository : Repository<MedicalEvent>, IMedicalEventRepository
+    public class MedicalEventRepository : ReadWriteRepository<MedicalEvent>, IMedicalEventRepository
     {
         public MedicalEventRepository(MyPortalDbContext context) : base(context)
         {

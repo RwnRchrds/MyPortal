@@ -10,7 +10,7 @@ using MyPortal.Persistence;
 
 namespace MyPortal.Repositories
 {
-    public class SystemSchoolRepository : Repository<School>, ISystemSchoolRepository
+    public class SystemSchoolRepository : ReadWriteRepository<School>, ISystemSchoolRepository
     {
         public SystemSchoolRepository(MyPortalDbContext context) : base(context)
         {

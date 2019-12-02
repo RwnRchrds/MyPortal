@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IBehaviourIncidentTypeRepository : IReadOnlyRepository<BehaviourIncidentType>
+    public interface IBehaviourIncidentTypeRepository : IReadRepository<BehaviourIncidentType>
     {
         Task<IEnumerable<BehaviourIncidentType>> GetRecorded(int academicYearId);
     }

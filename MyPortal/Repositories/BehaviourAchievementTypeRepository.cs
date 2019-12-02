@@ -9,7 +9,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class BehaviourAchievementTypeRepository : ReadOnlyRepository<BehaviourAchievementType>, IBehaviourAchievementTypeRepository
+    public class BehaviourAchievementTypeRepository : ReadRepository<BehaviourAchievementType>, IBehaviourAchievementTypeRepository
     {
         public BehaviourAchievementTypeRepository(MyPortalDbContext context) : base(context)
         {

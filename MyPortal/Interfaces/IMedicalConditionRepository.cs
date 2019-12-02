@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IMedicalConditionRepository : IReadOnlyRepository<MedicalCondition>
+    public interface IMedicalConditionRepository : IReadRepository<MedicalCondition>
     {
 
     }

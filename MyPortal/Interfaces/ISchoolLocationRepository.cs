@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface ISchoolLocationRepository : IReadOnlyRepository<SchoolLocation>
+    public interface ISchoolLocationRepository : IReadRepository<SchoolLocation>
     {
 
     }

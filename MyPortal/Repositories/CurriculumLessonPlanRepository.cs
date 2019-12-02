@@ -9,7 +9,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class CurriculumLessonPlanRepository : Repository<CurriculumLessonPlan>, ICurriculumLessonPlanRepository
+    public class CurriculumLessonPlanRepository : ReadWriteRepository<CurriculumLessonPlan>, ICurriculumLessonPlanRepository
     {
         public CurriculumLessonPlanRepository(MyPortalDbContext context) : base(context)
         {

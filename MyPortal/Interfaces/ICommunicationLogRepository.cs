@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface ICommunicationLogRepository : IRepository<CommunicationLog>
+    public interface ICommunicationLogRepository : IReadWriteRepository<CommunicationLog>
     {
 
     }

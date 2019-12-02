@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Interfaces
 {
-    public interface IProfileLogRepository : IRepository<ProfileLog>
+    public interface IProfileLogRepository : IReadWriteRepository<ProfileLog>
     {
         Task<IEnumerable<ProfileLog>> GetByStudent(int studentId, int academicYearId);
     }

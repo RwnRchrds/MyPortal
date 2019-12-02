@@ -7,7 +7,7 @@ using MyPortal.Models.Database;
 
 namespace MyPortal.Repositories
 {
-    public class AssessmentAspectTypeRepository : ReadOnlyRepository<AssessmentAspectType>, IAssessmentAspectTypeRepository
+    public class AssessmentAspectTypeRepository : ReadRepository<AssessmentAspectType>, IAssessmentAspectTypeRepository
     {
         public AssessmentAspectTypeRepository(MyPortalDbContext context) : base(context)
         {
