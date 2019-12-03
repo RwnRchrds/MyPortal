@@ -619,7 +619,6 @@
     <Compile Include="Services\DocumentService.cs" />
     <Compile Include="Services\FinanceService.cs" />
     <Compile Include="Services\IdentityService.cs" />
-    <Compile Include="Services\LookupService.cs" />
     <Compile Include="Services\MyPortalService.cs" />
     <Compile Include="Services\PastoralService.cs" />
     <Compile Include="Services\PeopleService.cs" />

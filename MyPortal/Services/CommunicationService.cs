@@ -3,6 +3,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls;
 using MyPortal.Exceptions;
 using MyPortal.Interfaces;
 using MyPortal.Models.Database;
@@ -64,6 +65,35 @@ namespace MyPortal.Services
             await UnitOfWork.Complete();
         }
 
+        public async Task CreatePhoneNumber(CommunicationPhoneNumber phoneNumber)
+        {
+            if (!ValidationService.ModelIsValid(phoneNumber))
+            {
+                throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
+            }
+
+            UnitOfWork.CommunicationPhoneNumbers.Add(phoneNumber);
+
+            await UnitOfWork.Complete();
+        }
+
+        public async Task UpdatePhoneNumber(CommunicationPhoneNumber phoneNumber)
+        {
+            var phoneNumberInDb = await GetPhoneNumberById(phoneNumber.Id);
+
+            phoneNumberInDb.TypeId = phoneNumber.TypeId;
+            phoneNumberInDb.Number = phoneNumber.Number;
+        }
+
+        public async Task DeletePhoneNumber(int phoneNumberId)
+        {
+            var phoneNumber = await GetPhoneNumberById(phoneNumberId);
+
+            UnitOfWork.CommunicationPhoneNumbers.Remove(phoneNumber);
+
+            await UnitOfWork.Complete();
+        }
+
         public async Task<CommunicationEmailAddress> GetEmailAddressById(int emailAddressId)
         {
             var emailInDb = await UnitOfWork.CommunicationEmailAddresses.GetById(emailAddressId);
@@ -84,6 +114,18 @@ namespace MyPortal.Services
             return emailAddresses;
         }
 
+        public async Task<CommunicationPhoneNumber> GetPhoneNumberById(int phoneNumberById)
+        {
+            var phoneNumber = await UnitOfWork.CommunicationPhoneNumbers.GetById(phoneNumberById);
+
+            if (phoneNumber == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Phone number not found");
+            }
+
+            return phoneNumber;
+        }
+
         public async Task<IEnumerable<CommunicationPhoneNumber>> GetPhoneNumbersByPerson(int personId)
         {
             var phoneNumbers = await UnitOfWork.CommunicationPhoneNumbers.GetByPerson(personId);
@@ -101,6 +143,22 @@ namespace MyPortal.Services
             UnitOfWork.CommunicationAddresses.Add(address);
 
             await UnitOfWork.Complete();
+        }
+
+        public async Task UpdateAddress(CommunicationAddress address)
+        {
+            var addressInDb = await GetAddressById(address.Id);
+
+            addressInDb.Apartment = address.Apartment;
+            addressInDb.Country = address.Country;
+            addressInDb.County = address.County;
+            addressInDb.District = address.District;
+            addressInDb.HouseName = address.HouseName;
+            addressInDb.HouseNumber = address.HouseName;
+            addressInDb.Postcode = address.Postcode;
+            addressInDb.Street = address.Street;
+            addressInDb.Town = address.Town;
+            addressInDb.Validated = address.Validated;
         }
 
         public async Task<CommunicationAddress> GetAddressById(int addressId)
@@ -162,6 +220,13 @@ namespace MyPortal.Services
             var addresses = await UnitOfWork.CommunicationAddresses.GetAddressesByPerson(personId);
 
             return addresses;
+        }
+
+        public async Task<IDictionary<int, string>> GetPhoneNumberTypesLookup()
+        {
+            var phoneNumberTypes = await UnitOfWork.CommunicationPhoneNumberTypes.GetAll();
+
+            return phoneNumberTypes.ToDictionary(x => x.Id, x => x.Description);
         }
 
     }

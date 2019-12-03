@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
@@ -67,7 +68,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [Route("emailAddresses/delete/{emailAddressId:int}", Name = "ApiDeleteEmailAddress")]
-        [RequiresPermission("EditContactInformation")]
+        [RequiresPermission("EditContactDetails")]
         public async Task<IHttpActionResult> DeleteEmailAddress([FromUri] int emailAddressId)
         {
             try
@@ -83,6 +84,24 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [Route("phoneNumbers/create", Name = "ApiCreatePhoneNumber")]
+        [RequiresPermission("EditContactDetails")]
+        public async Task<IHttpActionResult> CreatePhoneNumber(CommunicationPhoneNumber phoneNumber)
+        {
+            try
+            {
+                await _service.CreatePhoneNumber(phoneNumber);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Phone number created");
+        }
+
+        [HttpPost]
+        [RequiresPermission("ViewContactDetails")]
         [Route("phoneNumbers/get/dataGrid/byPerson/{personId:int}", Name = "ApiGetPhoneNumbersByPersonDataGrid")]
         public async Task<IHttpActionResult> GetPhoneNumbersByPerson([FromUri] int personId, [FromBody] DataManagerRequest dm)
         {
@@ -101,6 +120,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
+        [RequiresPermission("ViewContactDetails")]
         [Route("emailAddresses/get/dataGrid/byPerson/{personId:int}", Name = "ApiGetEmailAddressesByPersonDataGrid")]
         public async Task<IHttpActionResult> GetEmailAddressesByPerson([FromUri] int personId,
             [FromBody] DataManagerRequest dm)

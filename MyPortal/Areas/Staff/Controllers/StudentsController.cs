@@ -104,7 +104,9 @@ namespace MyPortal.Areas.Staff.Controllers
         [Route("{studentId:int}/Details", Name = "PeopleStudentExtendedDetails")]
         public async Task<ActionResult> StudentDetails(int studentId)
         {
+            using (var communicationService =  new CommunicationService())
             using (var pastoralService = new PastoralService())
+            using (var peopleService = new PeopleService())
             using (var studentService = new StudentService())
             {
                 var student = await studentService.GetStudentById(studentId);
@@ -115,12 +117,18 @@ namespace MyPortal.Areas.Staff.Controllers
 
                 var houses = await pastoralService.GetAllHousesLookup();
 
+                var phoneNumberTypes = await communicationService.GetPhoneNumberTypesLookup();
+
+                var genders = peopleService.GetGendersLookup();
+
                 var viewModel = new StudentDetailsViewModel
                 {
                     Student = student,
                     YearGroups = yearGroups,
                     RegGroups = regGroups,
-                    Houses = houses
+                    Houses = houses,
+                    PhoneNumberTypes = phoneNumberTypes,
+                    Genders = genders
                 };
 
                 return View(viewModel);

@@ -19,67 +19,65 @@
 
 <form id="studentDetails">
 
-    @Html.HiddenFor(x => x.Student.Id, new { Name = "Id" })
+@Html.HiddenFor(x => x.Student.Id, new { Name = "Id" })
 
-    <div class="row">
-        <div class="col-sm-6">
+<div class="row">
+    <div class="col-sm-6">
 
-            <div class="card shadow mb-4">
+        <div class="card shadow mb-4">
 
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Basic Details</h6>
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Basic Details</h6>
+            </div>
+
+            <div class="card-body">
+
+                <div class="form-row">
+
+                    <div class="col form-group">
+
+                        @Html.Label("First Name")
+                        @Html.TextBoxFor(x => x.Student.Person.FirstName, new { @class = "form-control form-control-sm", Name = "Person.FirstName" })
+
+                    </div>
+
+                    <div class="col form-group">
+
+                        @Html.Label("Middle Name")
+                        @Html.TextBoxFor(x => x.Student.Person.MiddleName, new { @class = "form-control form-control-sm", Name = "Person.MiddleName" })
+
+                    </div>
+
                 </div>
 
-                <div class="card-body">
+                <div class="form-row">
 
-                    <div class="form-row">
+                    <div class="col form-group">
 
-                        <div class="col form-group">
-
-                            @Html.Label("First Name")
-                            @Html.TextBoxFor(x => x.Student.Person.FirstName, new { @class = "form-control form-control-sm", Name = "Person.FirstName" })
-
-                        </div>
-
-                        <div class="col form-group">
-
-                            @Html.Label("Middle Name")
-                            @Html.TextBoxFor(x => x.Student.Person.MiddleName, new { @class = "form-control form-control-sm", Name = "Person.MiddleName" })
-
-                        </div>
+                        @Html.Label("Last Name")
+                        @Html.TextBoxFor(x => x.Student.Person.LastName, new { @class = "form-control form-control-sm", Name = "Person.LastName" })
 
                     </div>
 
-                    <div class="form-row">
+                    <div class="col form-group">
 
-                        <div class="col form-group">
-
-                            @Html.Label("Last Name")
-                            @Html.TextBoxFor(x => x.Student.Person.LastName, new { @class = "form-control form-control-sm", Name = "Person.LastName" })
-
-                        </div>
-
-                        <div class="col form-group">
-
-                            @Html.Label("Date of Birth", new { @class = "w-100" })
-                            @Html.EJS().DatePickerFor(x => x.Student.Person.Dob, new Dictionary<string, object> { { "class", "form-control form-control-sm" }, { "Name", "Person.Dob" } }).Format("dd-MMM-yyyy").Render()
-
-                        </div>
+                        @Html.Label("Date of Birth", new { @class = "w-100" })
+                        @Html.EJS().DatePickerFor(x => x.Student.Person.Dob, new Dictionary<string, object> { { "class", "form-control form-control-sm" }, { "Name", "Person.Dob" } }).Format("dd-MMM-yyyy").Render()
 
                     </div>
 
-                    <div class="form-row">
+                </div>
 
-                        <div class="col form-group">
+                <div class="form-row">
 
-                            @Html.Label("Gender")
-                            @Html.DropDownListFor(x => x.Student.Person.Gender, new SelectList(PeopleService.GetGenderLookup(), "Key", "Value"), new { @class = "form-control form-control-sm", Name = "Person.Gender" })
+                    <div class="col form-group">
 
-                        </div>
+                        @Html.Label("Gender")
+                        @Html.DropDownListFor(x => x.Student.Person.Gender, new SelectList(PeopleService.GetGenderLookup(), "Key", "Value"), new { @class = "form-control form-control-sm", Name = "Person.Gender" })
 
-                        <div class="col form-group">
+                    </div>
 
-                        </div>
+                    <div class="col form-group">
 
                     </div>
 
@@ -89,207 +87,207 @@
 
         </div>
 
-        <div class="col-sm-6">
+    </div>
 
-            <div class="card shadow mb-4">
+    <div class="col-sm-6">
 
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Registration</h6>
-                </div>
+        <div class="card shadow mb-4">
 
-                <div class="card-body">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Registration</h6>
+            </div>
 
-                    <div class="form-row">
-                        <div class="col form-group">
-                            @Html.Label("Year Group")
-                            @Html.DropDownListFor(x => x.Student.YearGroupId, new SelectList(Model.YearGroups, "Key", "Value"), "Select Year Group", new { @class = "form-control form-control-sm", Name = "YearGroupId" })
-                        </div>
+            <div class="card-body">
 
-                        <div class="col form-group">
-                            @Html.Label("Reg Group")
-                            @Html.DropDownListFor(x => x.Student.RegGroupId, new SelectList(Model.RegGroups, "Key", "Value"), "Select Reg Group", new { @class = "form-control form-control-sm", Name = "RegGroupId" })
-                        </div>
+                <div class="form-row">
+                    <div class="col form-group">
+                        @Html.Label("Year Group")
+                        @Html.DropDownListFor(x => x.Student.YearGroupId, new SelectList(Model.YearGroups, "Key", "Value"), "Select Year Group", new { @class = "form-control form-control-sm", Name = "YearGroupId" })
                     </div>
 
-                    <div class="form-row">
+                    <div class="col form-group">
+                        @Html.Label("Reg Group")
+                        @Html.DropDownListFor(x => x.Student.RegGroupId, new SelectList(Model.RegGroups, "Key", "Value"), "Select Reg Group", new { @class = "form-control form-control-sm", Name = "RegGroupId" })
+                    </div>
+                </div>
 
-                        <div class="col form-group">
-                            @Html.Label("House")
-                            @Html.DropDownListFor(x => x.Student.HouseId, new SelectList(Model.Houses, "Key", "Value"), "Select House", new { @class = "form-control form-control-sm", Name = "HouseId" })
-                        </div>
+                <div class="form-row">
 
-                        <div class="col form-group">
-                            @Html.Label("UPN")
-                            <div class="input-group input-group-sm">
-                                @Html.TextBoxFor(x => x.Student.Upn, new { @class = "form-control form-control-sm", Name = "Upn" })
-                                <div class="input-group-append">
-                                    <button class="input-group-text">
-                                        <i class="fas fa-cog"></i>
-                                    </button>
-                                </div>
+                    <div class="col form-group">
+                        @Html.Label("House")
+                        @Html.DropDownListFor(x => x.Student.HouseId, new SelectList(Model.Houses, "Key", "Value"), "Select House", new { @class = "form-control form-control-sm", Name = "HouseId" })
+                    </div>
+
+                    <div class="col form-group">
+                        @Html.Label("UPN")
+                        <div class="input-group input-group-sm">
+                            @Html.TextBoxFor(x => x.Student.Upn, new { @class = "form-control form-control-sm", Name = "Upn" })
+                            <div class="input-group-append">
+                                <button class="input-group-text">
+                                    <i class="fas fa-cog"></i>
+                                </button>
                             </div>
                         </div>
-
                     </div>
 
-                    <div class="form-row">
+                </div>
 
-                        <div class="col form-group">
+                <div class="form-row">
 
-                            @Html.Label("Admission Number")
-                            @Html.TextBoxFor(x => x.Student.AdmissionNumber, new { @class = "form-control form-control-sm", Name = "AdmissionNumber", disabled = "true" })
+                    <div class="col form-group">
 
-                        </div>
+                        @Html.Label("Admission Number")
+                        @Html.TextBoxFor(x => x.Student.AdmissionNumber, new { @class = "form-control form-control-sm", Name = "AdmissionNumber", disabled = "true" })
 
                     </div>
 
                 </div>
 
             </div>
+
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-sm-6">
+
+        <div class="card shadow mb-4">
+
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Addresses</h6>
+            </div>
+
+            <div class="card-body">
+
+
+            </div>
+
         </div>
 
     </div>
 
-    <div class="row">
-        <div class="col-sm-6">
+    <div class="col-sm-6">
 
-            <div class="card shadow mb-4">
+        <div class="card shadow mb-4">
 
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Addresses</h6>
-                </div>
-
-                <div class="card-body">
-
-
-                </div>
-
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Telephones and Email Addresses</h6>
             </div>
 
-        </div>
+            <div class="card-body">
+                <h6>Telephones</h6>
 
-        <div class="col-sm-6">
-
-            <div class="card shadow mb-4">
-
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Telephones and Email Addresses</h6>
+                <div class="my-4">
+                    <button type="button" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> New Number</button>
                 </div>
-
-                <div class="card-body">
-                    <h6>Telephones</h6>
+                    
+                <div class="mb-4">
+                    @Html.EJS().Grid("Telephones").DataSource(d =>
+                    {
+                        d.Url(Url.HttpRouteUrl("ApiGetPhoneNumbersByPersonDataGrid", new { personId = Model.Student.Person.Id })).CrossDomain(false).Adaptor("UrlAdaptor");
+                    }).Columns(c =>
+                    {
+                        c.Field("Type").Width("150").Add();
+                        c.Field("Number").Width("200").Add();
+                        c.HeaderText("Actions").Template("#phoneNumbersActionsTemplate").Width("170").Add();
+                    }).AllowPaging().PageSettings(p => p.PageSize(5)).Render()
+                </div>
+                    
+                <div>
+                    <h6>Email Addresses</h6>
 
                     <div class="my-4">
-                        <button type="button" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> New Number</button>
-                    </div>
-                    
-                    <div class="mb-4">
-                        @Html.EJS().Grid("Telephones").DataSource(d =>
-                        {
-                            d.Url(Url.HttpRouteUrl("ApiGetPhoneNumbersByPersonDataGrid", new { personId = Model.Student.Person.Id })).CrossDomain(false).Adaptor("UrlAdaptor");
-                        }).Columns(c =>
-                        {
-                            c.Field("Type").Width("150").Add();
-                            c.Field("Number").Width("200").Add();
-                            c.HeaderText("Actions").Template("#phoneNumbersActionsTemplate").Width("170").Add();
-                        }).AllowPaging().PageSettings(p => p.PageSize(5)).Render()
-                    </div>
-                    
-                    <div>
-                        <h6>Email Addresses</h6>
-
-                        <div class="my-4">
-                            <button type="button" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> New Email Address</button>
-                        </div>
-
-                        @Html.EJS().Grid("EmailAddresses").DataSource(d =>
-                        {
-                            d.Url(Url.HttpRouteUrl("ApiGetEmailAddressesByPersonDataGrid", new { personId = Model.Student.Person.Id })).CrossDomain(false).Adaptor("UrlAdaptor");
-                        }).Columns(c =>
-                        {
-                            c.Field("Type").Width("80").Add();
-                            c.Field("Address").Width("200").Add();
-                            c.Field("Main").DisplayAsCheckBox(true).Width("50").Add();
-                            c.HeaderText("Actions").Template("#emailAddressesActionsTemplate").Width("170").Add();
-                        }).AllowPaging().PageSettings(p => p.PageSize(5)).Render()
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-    </div>
-
-    <div class="row">
-
-        <div class="col-sm-6">
-
-            <div class="card shadow mb-4">
-
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Family/Home</h6>
-                </div>
-
-                <div class="card-body">
-
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-sm-6">
-
-            <div class="card shadow mb-4">
-
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Medical Details</h6>
-                </div>
-
-                <div class="card-body">
-
-                    <div class="form-row">
-
-                        <div class="col form-group">
-
-                            @Html.Label("NHS Number")
-                            @Html.TextBoxFor(x => x.Student.Person.NhsNumber, new { @class = "form-control form-control-sm", Name = "Person.NhsNumber" })
-
-                        </div>
-
+                        <button type="button" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> New Email Address</button>
                     </div>
 
-                    <hr />
-
-                    <h6>Dietary Requirements</h6>
-
-                    <div class="mb-4">
-                        <button type="button" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> New Requirement</button>
-                    </div>
-
-                    @Html.EJS().Grid("DietaryRequirements").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiGetMedicalDietaryRequirementsByPersonDataGrid", new { personId = Model.Student.Person.Id })).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+                    @Html.EJS().Grid("EmailAddresses").DataSource(d =>
                     {
-                        c.Field("Description").HeaderText("Requirement").Width("200").Add();
-                        c.HeaderText("Actions").Add();
+                        d.Url(Url.HttpRouteUrl("ApiGetEmailAddressesByPersonDataGrid", new { personId = Model.Student.Person.Id })).CrossDomain(false).Adaptor("UrlAdaptor");
+                    }).Columns(c =>
+                    {
+                        c.Field("Type").Width("80").Add();
+                        c.Field("Address").Width("200").Add();
+                        c.Field("Main").DisplayAsCheckBox(true).Width("50").Add();
+                        c.HeaderText("Actions").Template("#emailAddressesActionsTemplate").Width("170").Add();
                     }).AllowPaging().PageSettings(p => p.PageSize(5)).Render()
+                </div>
+            </div>
 
-                    <hr />
+        </div>
 
-                    <h6>Medical Conditions</h6>
+    </div>
+</div>
 
-                    <div class="mb-4">
-                        <button type="button" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> New Condition</button>
+<div class="row">
+
+    <div class="col-sm-6">
+
+        <div class="card shadow mb-4">
+
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Family/Home</h6>
+            </div>
+
+            <div class="card-body">
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-sm-6">
+
+        <div class="card shadow mb-4">
+
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Medical Details</h6>
+            </div>
+
+            <div class="card-body">
+
+                <div class="form-row">
+
+                    <div class="col form-group">
+
+                        @Html.Label("NHS Number")
+                        @Html.TextBoxFor(x => x.Student.Person.NhsNumber, new { @class = "form-control form-control-sm", Name = "Person.NhsNumber" })
+
                     </div>
 
-                    @Html.EJS().Grid("MedicalConditions").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiGetMedicalConditionsByPersonDataGrid", new { personId = Model.Student.Person.Id })).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
-                    {
-                        c.Field("Condition").Width("200").Add();
-                        c.Field("MedicationTaken").HeaderText("On Medication").Width("200").DisplayAsCheckBox(true).Add();
-                        c.HeaderText("Actions").Add();
-                    }).AllowPaging().PageSettings(p => p.PageSize(5)).Render()
-
                 </div>
+
+                <hr />
+
+                <h6>Dietary Requirements</h6>
+
+                <div class="mb-4">
+                    <button type="button" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> New Requirement</button>
+                </div>
+
+                @Html.EJS().Grid("DietaryRequirements").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiGetMedicalDietaryRequirementsByPersonDataGrid", new { personId = Model.Student.Person.Id })).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+                {
+                    c.Field("Description").HeaderText("Requirement").Width("200").Add();
+                    c.HeaderText("Actions").Add();
+                }).AllowPaging().PageSettings(p => p.PageSize(5)).Render()
+
+                <hr />
+
+                <h6>Medical Conditions</h6>
+
+                <div class="mb-4">
+                    <button type="button" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> New Condition</button>
+                </div>
+
+                @Html.EJS().Grid("MedicalConditions").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiGetMedicalConditionsByPersonDataGrid", new { personId = Model.Student.Person.Id })).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+                {
+                    c.Field("Condition").Width("200").Add();
+                    c.Field("MedicationTaken").HeaderText("On Medication").Width("200").DisplayAsCheckBox(true).Add();
+                    c.HeaderText("Actions").Add();
+                }).AllowPaging().PageSettings(p => p.PageSize(5)).Render()
 
             </div>
 
@@ -297,37 +295,20 @@
 
     </div>
 
-    <div class="row">
+</div>
 
-        <div class="col-sm-6">
+<div class="row">
 
-            <div class="card shadow mb-4">
+    <div class="col-sm-6">
 
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Ethnic/Cultural</h6>
-                </div>
+        <div class="card shadow mb-4">
 
-                <div class="card-body">
-
-
-                </div>
-
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Ethnic/Cultural</h6>
             </div>
 
-        </div>
+            <div class="card-body">
 
-        <div class="col-sm-6">
-
-            <div class="card shadow mb-4">
-
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Additional Information</h6>
-                </div>
-
-                <div class="card-body">
-
-
-                </div>
 
             </div>
 
@@ -335,45 +316,84 @@
 
     </div>
 
-    <div class="row">
+    <div class="col-sm-6">
 
-        <div class="col-sm-6">
+        <div class="card shadow mb-4">
 
-            <div class="card shadow mb-4">
-
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Welfare</h6>
-                </div>
-
-                <div class="card-body">
-
-
-                </div>
-
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Additional Information</h6>
             </div>
 
-        </div>
+            <div class="card-body">
 
-        <div class="col-sm-6">
-
-            <div class="card shadow mb-4">
-
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">School History</h6>
-                </div>
-
-                <div class="card-body">
-
-
-                </div>
 
             </div>
 
         </div>
 
     </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-sm-6">
+
+        <div class="card shadow mb-4">
+
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Welfare</h6>
+            </div>
+
+            <div class="card-body">
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-sm-6">
+
+        <div class="card shadow mb-4">
+
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">School History</h6>
+            </div>
+
+            <div class="card-body">
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
 </form>
+
+<div id="telephoneModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New Telephone Number</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiCreatePhoneNumber", new {}), HttpMethod = "POST", OnSuccess = "newPhoneNumberSuccess", OnFailure = "newPhoneNumberFailure"}, new {id = "newPhoneNumberForm"}))
+            {
+                <div class="modal-body">
+                <div class="form-group">
+                    @Html.Label("Type")
+                    @Html.DropDownList("TypeId", new SelectList(Model.PhoneNumberTypes, "Key", "Value"), "Select Type", new {@class = "form-control form-control-sm"})
+                </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
 
 @section scripts
 {

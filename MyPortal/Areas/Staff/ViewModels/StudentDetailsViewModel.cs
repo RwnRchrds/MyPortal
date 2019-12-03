@@ -12,5 +12,7 @@ namespace MyPortal.Areas.Staff.ViewModels
         public IDictionary<int, string> ResultSets { get; set; }
         public IDictionary<int, string> Subjects { get; set; }
         public IDictionary<string, string> Genders { get; set; }
+        public IDictionary<int, string> PhoneNumberTypes { get; set; }
+        public IDictionary<int, string> EmailAddressTypes { get; set; }
     }
 }

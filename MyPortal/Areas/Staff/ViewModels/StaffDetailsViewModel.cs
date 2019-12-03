@@ -8,12 +8,12 @@ namespace MyPortal.Areas.Staff.ViewModels
     {
         public StaffDetailsViewModel()
         {
-            var lookupService = new LookupService();
+            var peopleService = new PeopleService();
 
-            Titles = lookupService.GetTitles();
+            Titles = peopleService.GetTitles();
             ObservationOutcomes = new List<string>{"Outstanding","Good","Satisfactory","Inadequate"};
 
-            lookupService.Dispose();
+            peopleService.Dispose();
         }
 
         public StaffMember Staff { get; set; }

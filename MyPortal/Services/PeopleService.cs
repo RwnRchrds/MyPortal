@@ -92,22 +92,7 @@ namespace MyPortal.Services
             return dietaryRequirements;
         }
 
-        public static string GetGenderDisplayName(string genderCode)
-        {
-            switch (genderCode)
-            {
-                case "M":
-                    return "Male";
-                case "F":
-                    return "Female";
-                case "X":
-                    return "Other";
-                default:
-                    return "Unknown";
-            }
-        }
-
-        public static IDictionary<string, string> GetGenderLookup()
+        public IDictionary<string, string> GetGendersLookup()
         {
             return new Dictionary<string, string>
             {
@@ -115,6 +100,24 @@ namespace MyPortal.Services
                 { "F", "Female" },
                 { "X", "Other" },
                 { "U", "Unknown" }
+            };
+        }
+
+        public IEnumerable<string> GetTitles()
+        {
+            return new List<string>
+            {
+                "Mr",
+                "Mrs",
+                "Miss",
+                "Ms",
+                "Mx",
+                "Dr",
+                "Sir",
+                "Prof",
+                "Rev",
+                "Lady",
+                "Lord"
             };
         }
     }
