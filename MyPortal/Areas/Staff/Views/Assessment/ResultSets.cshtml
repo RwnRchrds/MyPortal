@@ -150,23 +150,23 @@
         function newResultSetSuccess(result) {
             $("#NewResultSetModal").modal('hide');
             refreshTable("ResultSets");
-            toastr.success(result);
+            toastr.success(result, "Success");
         }
 
         function newResultSetFailure(result) {
             $("#NewResultSetModal").modal('hide');
-            toastr.error(result.responseJSON);
+            toastr.error(result.responseJSON, "Error");
         }
 
         function editResultSetSuccess(result) {
             $("#EditResultSetModal").modal('hide');
             refreshTable("ResultSets");
-            toastr.success(result);
+            toastr.success(result, "Success");
         }
 
         function editResultSetFailure(result) {
             $("#EditResultSetModal").modal('hide');
-            toastr.error(result.responseJSON);
+            toastr.error(result.responseJSON, "Error");
         }
 
         function renderStatus(current) {

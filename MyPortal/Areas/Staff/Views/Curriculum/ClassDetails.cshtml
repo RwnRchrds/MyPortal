@@ -230,7 +230,7 @@
                             $("#editIdControl").val(result["id"]);
                         },
                         error: function() {
-                            toastr.error("Failed to load Session data");
+                            toastr.error("Failed to load Session data", "Error");
                         }
                     });
                     $("#editSessionModal").modal('toggle');
@@ -248,10 +248,10 @@
                                     method: "DELETE",
                                     success: function(a) {
                                         refreshTable("Sessions");
-                                        toastr.success(a);
+                                        toastr.success(a, "Success");
                                     },
                                     error: function(e) {
-                                        toastr.error(e.responseJSON);
+                                        toastr.error(e.responseJSON, "Error");
                                     }
                                 });
                             }
@@ -269,10 +269,10 @@
                                     method: "POST",
                                     success: function (a) {
                                         refreshTable("Sessions");
-                                        toastr.success(a);
+                                        toastr.success(a, "Success");
                                     },
                                     error: function (e) {
-                                        toastr.error(e.responseJSON);
+                                        toastr.error(e.responseJSON, "Error");
                                     }
                                 });
                             }
@@ -361,11 +361,11 @@
                                     url: urlDeleteEnrolment.replace("9999", button.attr("data-enrolment-id")),
                                     method: "DELETE",
                                     success: function (a) {
-                                        toastr.success(a);
+                                        toastr.success(a, "Success");
                                         refreshTable("Enrolments");
                                     },
                                     error: function (e) {
-                                        toastr.error(e.responseJSON);
+                                        toastr.error(e.responseJSON, "Error");
                                     }
                                 });
                             }
@@ -376,23 +376,23 @@
         function newEnrolIndSuccess(result) {
             $("#newEnrolIndModal").modal('hide');
             refreshTable("Enrolments");
-            toastr.success(result);
+            toastr.success(result, "Success");
         }
 
         function newEnrolIndFailure(result) {
             $("#newEnrolIndModal").modal('hide');
-            toastr.error(result.responseJSON);
+            toastr.error(result.responseJSON, "Error");
         }
 
         function newEnrolGroupSuccess(result) {
             $("#newEnrolGroupModal").modal('hide');
             refreshTable("Enrolments");
-            toastr.success(result);
+            toastr.success(result, "Success");
         }
 
         function newEnrolGroupFailure(result) {
             $("#newEnrolGroupModal").modal('hide');
-            toastr.error(result.responseJSON);
+            toastr.error(result.responseJSON, "Error");
         }
 
         function resetIndForm() {
@@ -411,23 +411,23 @@
         function newSessionSuccess(result) {
             $("#newSessionModal").modal('hide');
             refreshTable("Sessions");
-            toastr.success(result);
+            toastr.success(result, "Success");
         }
 
         function newSessionFailure(result) {
             $("#newClassModal").modal('hide');
-            toastr.error(result.responseJSON);
+            toastr.error(result.responseJSON, "Error");
         }
 
         function editSessionSuccess(result) {
             $("#editClassModal").modal('hide');
             refreshTable("Sessions");
-            toastr.success(result);
+            toastr.success(result, "Success");
         }
 
         function editSessionFailure(result) {
             $("#editClassModal").modal('hide');
-            toastr.error(result.responseJSON);
+            toastr.error(result.responseJSON, "Error");
         }
 
     </script>

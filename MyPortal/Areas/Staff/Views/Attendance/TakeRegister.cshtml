@@ -227,10 +227,10 @@
                                 data: JSON.stringify(attendanceMarks),
                                 contentType: "application/json; charset=utf-8",
                                 success: function(e) {
-                                    toastr.success(e);
+                                    toastr.success(e, "Success");
                                 },
                                 error: function(e) {
-                                    toastr.error(e.responeJSON);
+                                    toastr.error(e.responeJSON, "Error");
                                 }
                             });
                         }
@@ -242,10 +242,10 @@
                     data: JSON.stringify(attendanceMarks),
                     contentType: "application/json; charset=utf-8",
                     success: function(e) {
-                        toastr.success(e);
+                        toastr.success(e, "Success");
                     },
                     error: function(e) {
-                        toastr.error(e.responeJSON);
+                        toastr.error(e.responeJSON, "Error");
                     }
                 });
             }

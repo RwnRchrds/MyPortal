@@ -56,10 +56,10 @@
                         data: {roleId: "@Model.Role.Id", permissionId: permissionId},
                         success: function (result) {
                             refreshTable("Permissions");
-                            toastr.success(result);
+                            toastr.success(result, "Success");
                         },
                         error: function(result) {
-                            toastr.error(result.responseJSON);
+                            toastr.error(result.responseJSON, "Error");
                         }
                     });
                 });

@@ -338,10 +338,10 @@
                                     method: "POST",
                                     success: function(e) {
                                         location.reload();
-                                        toastr.success(e);
+                                        toastr.success(e, "Success");
                                     },
                                     error: function(e) {
-                                        toastr.error(e.responseJSON);
+                                        toastr.error(e.responseJSON, "Error");
                                     }
                                 });
                             }
@@ -359,10 +359,10 @@
                                     method: "DELETE",
                                     success: function(e) {
                                         location.replace("@Url.Action("Users", "Admin")");
-                                        toastr.success(e);
+                                        toastr.success(e, "Success");
                                     },
                                     error: function(e) {
-                                        toastr.error(e.responseJSON);
+                                        toastr.error(e.responseJSON, "Error");
                                     }
                                 });
                             }
@@ -380,11 +380,11 @@
                                     data: data,
                                     method: "POST",
                                     success: function(e) {
-                                        toastr.success(e);
+                                        toastr.success(e, "Success");
                                         location.reload();
                                     },
                                     error: function(e) {
-                                        toastr.error(e.responseJSON);
+                                        toastr.error(e.responseJSON, "Error");
                                     }
                                 });
                             }
@@ -517,7 +517,7 @@
                         },
                         error: function(result) {
                             $("#AttachPersonModal").modal('hide');
-                            toastr.error(result.responseJSON);
+                            toastr.error(result.responseJSON, "Error");
                         }
                     });
                 });

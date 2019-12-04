@@ -172,23 +172,23 @@
         function newRoleSuccess(result) {
             $("#NewRoleModal").modal('hide');
             refreshTable("Roles");
-            toastr.success(result);
+            toastr.success(result, "Success");
         }
 
         function newRoleFailure(result) {
             $("#NewRoleModal").modal('hide');
-            toastr.error(result.responseJSON);
+            toastr.error(result.responseJSON, "Error");
         }
 
         function editRoleSuccess(result) {
             $("#EditRoleModal").modal('hide');
             refreshTable("Roles");
-            toastr.success(result);
+            toastr.success(result, "Success");
         }
 
         function editRoleFailure(result) {
             $("#EditRoleModal").modal('hide');
-            toastr.error(result.responseJSON);
+            toastr.error(result.responseJSON, "Error");
         }
 
         function initTooltips() {

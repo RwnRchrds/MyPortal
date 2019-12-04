@@ -63,7 +63,7 @@
         }
 
         function newUserFailure(result) {
-            toastr.error(result.responseJSON);
+            toastr.error(result.responseJSON, "Error");
             $("#newUserForm").reset();
         }
     </script>

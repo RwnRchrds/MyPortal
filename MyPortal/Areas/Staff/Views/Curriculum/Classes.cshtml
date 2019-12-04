@@ -169,10 +169,10 @@
                                     method: "DELETE",
                                     success: function(a) {
                                         refreshTable("Classes");
-                                        toastr.success(a);
+                                        toastr.success(a, "Success");
                                     },
                                     error: function(e) {
-                                        toastr.error(e.responseJSON);
+                                        toastr.error(e.responseJSON, "Error");
                                     }
                                 });
                             }
@@ -183,23 +183,23 @@
         function newClassSuccess(result) {
             $("#newClassModal").modal('hide');
             refreshTable("Classes");
-            toastr.success(result);
+            toastr.success(result, "Success");
         }
 
         function newClassFailure(result) {
             $("#newClassModal").modal('hide');
-            toastr.error(result.responseJSON);
+            toastr.error(result.responseJSON, "Error");
         }
 
         function editClassSuccess(result) {
             $("#editClassModal").modal('hide');
             refreshTable("Classes");
-            toastr.success(result);
+            toastr.success(result, "Success");
         }
 
         function editClassFailure(result) {
             $("#editClassModal").modal('hide');
-            toastr.error(result.responseJSON);
+            toastr.error(result.responseJSON, "Error");
         }
 
         function getClassDetailsUrl(classId) {
