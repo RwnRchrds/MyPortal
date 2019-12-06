@@ -7,15 +7,15 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using MyPortal.Exceptions;
 using MyPortal.Models;
+using MyPortal.Models.Misc;
 using MyPortal.Persistence;
 
 namespace MyPortal.Services
 {
     public static class ValidationService
     {
-        public static List<string> ErrorMessages = new List<string>();
-
         public static bool HasPermission(this IPrincipal principal, string permissionName)
         {
             var identity = new IdentityContext();
@@ -124,18 +124,17 @@ namespace MyPortal.Services
             return false;
         }
 
-        public static bool ModelIsValid<T>(T model)
+        public static void ValidateModel<T>(T model)
         {
             var validationContext = new ValidationContext(model, null, null);
             var results = new List<ValidationResult>();
 
-            if (Validator.TryValidateObject(model, validationContext, results, true))
+            if (!Validator.TryValidateObject(model, validationContext, results, true))
             {
-                return true;
+                var errors = results.Select(x => x.ErrorMessage).ToList();
+                
+                throw new ServiceException(ExceptionType.BadRequest, errors.FirstOrDefault());
             }
-
-            ErrorMessages = results.Select(x => x.ErrorMessage).ToList();
-            return false;
         }
     }
 }

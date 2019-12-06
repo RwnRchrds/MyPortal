@@ -34,7 +34,7 @@ namespace MyPortal.Controllers.Api
         
         [HttpPost]
         [Route("emailAddresses/create", Name = "ApiCreateEmailAddress")]
-        [RequiresPermission("EditContactInformation")]
+        [RequiresPermission("EditContacts")]
         public async Task<IHttpActionResult> CreateEmailAddress([FromBody] CommunicationEmailAddress emailAddress)
         {
             try
@@ -51,7 +51,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("emailAddresses/update", Name = "ApiUpdateEmailAddress")]
-        [RequiresPermission("EditContactInformation")]
+        [RequiresPermission("EditContacts")]
         public async Task<IHttpActionResult> UpdateEmailAddress([FromBody] CommunicationEmailAddress emailAddress)
         {
             try
@@ -68,7 +68,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpDelete]
         [Route("emailAddresses/delete/{emailAddressId:int}", Name = "ApiDeleteEmailAddress")]
-        [RequiresPermission("EditContactDetails")]
+        [RequiresPermission("EditContacts")]
         public async Task<IHttpActionResult> DeleteEmailAddress([FromUri] int emailAddressId)
         {
             try
@@ -85,7 +85,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("phoneNumbers/create", Name = "ApiCreatePhoneNumber")]
-        [RequiresPermission("EditContactDetails")]
+        [RequiresPermission("EditContacts")]
         public async Task<IHttpActionResult> CreatePhoneNumber(CommunicationPhoneNumber phoneNumber)
         {
             try
@@ -101,7 +101,24 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [RequiresPermission("ViewContactDetails")]
+        [Route("phoneNumbers/update", Name = "ApiUpdatePhoneNumber")]
+        [RequiresPermission("EditContacts")]
+        public async Task<IHttpActionResult> UpdatePhoneNumber(CommunicationPhoneNumber phoneNumber)
+        {
+            try
+            {
+                await _service.UpdatePhoneNumber(phoneNumber);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+
+            return Ok("Phone number updated");
+        }
+
+        [HttpPost]
+        [RequiresPermission("ViewContacts")]
         [Route("phoneNumbers/get/dataGrid/byPerson/{personId:int}", Name = "ApiGetPhoneNumbersByPersonDataGrid")]
         public async Task<IHttpActionResult> GetPhoneNumbersByPerson([FromUri] int personId, [FromBody] DataManagerRequest dm)
         {
@@ -120,7 +137,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [RequiresPermission("ViewContactDetails")]
+        [RequiresPermission("ViewContacts")]
         [Route("emailAddresses/get/dataGrid/byPerson/{personId:int}", Name = "ApiGetEmailAddressesByPersonDataGrid")]
         public async Task<IHttpActionResult> GetEmailAddressesByPerson([FromUri] int personId,
             [FromBody] DataManagerRequest dm)

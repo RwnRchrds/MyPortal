@@ -25,10 +25,7 @@ namespace MyPortal.Services
 
         public async Task CreateRegGroup(PastoralRegGroup regGroup)
         {
-            if (!ValidationService.ModelIsValid(regGroup))
-            {
-                throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
-            }
+            ValidationService.ValidateModel(regGroup);
 
             UnitOfWork.PastoralRegGroups.Add(regGroup);
             await UnitOfWork.Complete();
@@ -36,10 +33,7 @@ namespace MyPortal.Services
 
         public async Task CreateYearGroup(PastoralYearGroup yearGroup)
         {
-            if (!ValidationService.ModelIsValid(yearGroup))
-            {
-                throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
-            }
+            ValidationService.ValidateModel(yearGroup);
 
             UnitOfWork.PastoralYearGroups.Add(yearGroup);
             await UnitOfWork.Complete();

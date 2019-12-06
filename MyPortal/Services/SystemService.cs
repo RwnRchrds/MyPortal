@@ -29,10 +29,7 @@ namespace MyPortal.Services
         {
             using (var staffService = new StaffMemberService(UnitOfWork))
             {
-                if (!ValidationService.ModelIsValid(bulletin))
-                {
-                    throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
-                }
+                ValidationService.ValidateModel(bulletin);
 
                 var author = await staffService.GetStaffMemberByUserId(userId);
 

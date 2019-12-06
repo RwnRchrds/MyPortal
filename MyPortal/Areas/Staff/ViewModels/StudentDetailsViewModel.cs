@@ -6,6 +6,8 @@ namespace MyPortal.Areas.Staff.ViewModels
     public class StudentDetailsViewModel
     {
         public Student Student { get; set; }
+        public CommunicationPhoneNumber PhoneNumber { get; set; }
+        public CommunicationEmailAddress EmailAddress { get; set; }
         public IDictionary<int, string> YearGroups { get; set; }
         public IDictionary<int, string> RegGroups { get; set; }
         public IDictionary<int, string> Houses { get; set; }

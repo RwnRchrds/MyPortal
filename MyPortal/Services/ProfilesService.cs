@@ -26,10 +26,7 @@ namespace MyPortal.Services
 
         public async Task CreateComment(ProfileComment comment)
         {
-            if (!ValidationService.ModelIsValid(comment))
-            {
-                throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
-            }
+            ValidationService.ValidateModel(comment);
 
             UnitOfWork.ProfileComments.Add(comment);
             await UnitOfWork.Complete();
@@ -37,10 +34,7 @@ namespace MyPortal.Services
 
         public async Task CreateCommentBank(ProfileCommentBank commentBank)
         {
-            if (ValidationService.ModelIsValid(commentBank) || string.IsNullOrWhiteSpace(commentBank.Name))
-            {
-                throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
-            }
+            ValidationService.ValidateModel(commentBank);
 
             UnitOfWork.ProfileCommentBanks.Add(commentBank);
             await UnitOfWork.Complete();
@@ -56,10 +50,7 @@ namespace MyPortal.Services
                 log.AuthorId = author.Id;
                 log.AcademicYearId = academicYearId;
 
-                if (!ValidationService.ModelIsValid(log))
-                {
-                    throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
-                }
+                ValidationService.ValidateModel(log);
 
                 UnitOfWork.ProfileLogs.Add(log);
                 await UnitOfWork.Complete();

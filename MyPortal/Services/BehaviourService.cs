@@ -27,10 +27,7 @@ namespace MyPortal.Services
         {
             achievement.Date = DateTime.Today;
 
-            if (!ValidationService.ModelIsValid(achievement))
-            {
-                throw new ServiceException(ExceptionType.BadRequest,"Invalid data");
-            }
+            ValidationService.ValidateModel(achievement);
 
             if (!await UnitOfWork.CurriculumAcademicYears.Any(x => x.Id == achievement.AcademicYearId))
             {
@@ -45,10 +42,7 @@ namespace MyPortal.Services
         {
             incident.Date = DateTime.Today;
 
-            if (!ValidationService.ModelIsValid(incident))
-            {
-                throw new ServiceException(ExceptionType.BadRequest,"Invalid data");
-            }
+            ValidationService.ValidateModel(incident);
 
             if (!await UnitOfWork.CurriculumAcademicYears.Any(x => x.Id == incident.AcademicYearId))
             {

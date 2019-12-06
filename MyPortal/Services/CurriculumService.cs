@@ -29,10 +29,7 @@ namespace MyPortal.Services
 
         public async Task CreateClass(CurriculumClass @class)
         {
-            if (!ValidationService.ModelIsValid(@class))
-            {
-                throw new ServiceException(ExceptionType.BadRequest,"Invalid data");
-            }
+            ValidationService.ValidateModel(@class);
 
             if (!await UnitOfWork.CurriculumAcademicYears.Any(x => x.Id == @class.AcademicYearId))
             {
@@ -51,10 +48,7 @@ namespace MyPortal.Services
 
         public async Task CreateEnrolment(CurriculumEnrolment enrolment,  bool commitImmediately = true)
         {
-            if (!ValidationService.ModelIsValid(enrolment))
-            {
-                throw new ServiceException(ExceptionType.BadRequest,"Invalid data");
-            }
+            ValidationService.ValidateModel(enrolment);
 
             var @class = await GetClassById(enrolment.ClassId);
 
@@ -132,10 +126,7 @@ namespace MyPortal.Services
 
         public async Task CreateLessonPlan(CurriculumLessonPlan lessonPlan, string userId)
         {
-            if (!ValidationService.ModelIsValid(lessonPlan))
-            {
-                throw new ServiceException(ExceptionType.BadRequest,"Invalid data");
-            }
+            ValidationService.ValidateModel(lessonPlan);
 
             var authorId = lessonPlan.AuthorId;
 
@@ -168,10 +159,7 @@ namespace MyPortal.Services
 
         public async Task CreateSession(CurriculumSession session)
         {
-            if (!ValidationService.ModelIsValid(session))
-            {
-                throw new ServiceException(ExceptionType.BadRequest,"Invalid data");
-            }
+            ValidationService.ValidateModel(session);
 
             if (!await UnitOfWork.CurriculumClasses.Any(x => x.Id == session.ClassId))
             {
@@ -226,10 +214,7 @@ namespace MyPortal.Services
 
         public async Task CreateStudyTopic(CurriculumStudyTopic studyTopic)
         {
-            if (!ValidationService.ModelIsValid(studyTopic))
-            {
-                throw new ServiceException(ExceptionType.BadRequest,"Invalid data");
-            }
+            ValidationService.ValidateModel(studyTopic);
 
             UnitOfWork.CurriculumStudyTopics.Add(studyTopic);
             await UnitOfWork.Complete();
@@ -237,10 +222,7 @@ namespace MyPortal.Services
 
         public async Task CreateSubject(CurriculumSubject subject)
         {
-            if (subject.Name.IsNullOrWhiteSpace() || !ValidationService.ModelIsValid(subject))
-            {
-                throw new ServiceException(ExceptionType.BadRequest,"Invalid data");
-            }
+            ValidationService.ValidateModel(subject);
 
             UnitOfWork.CurriculumSubjects.Add(subject);
             await UnitOfWork.Complete();
@@ -636,10 +618,7 @@ namespace MyPortal.Services
 
         public async Task UpdateSession(CurriculumSession session)
         {
-            if (!ValidationService.ModelIsValid(session))
-            {
-                throw new ServiceException(ExceptionType.BadRequest,"Invalid data");
-            }
+            ValidationService.ValidateModel(session);
 
             var sessionInDb = await GetSessionById(session.Id);
 
@@ -660,10 +639,7 @@ namespace MyPortal.Services
 
         public async Task UpdateStudyTopic(CurriculumStudyTopic studyTopic)
         {
-            if (!ValidationService.ModelIsValid(studyTopic))
-            {
-                throw new ServiceException(ExceptionType.BadRequest,"Invalid data");
-            }
+            ValidationService.ValidateModel(studyTopic);
 
             var studyTopicInDb = await GetStudyTopicById(studyTopic.Id);
 
@@ -729,10 +705,7 @@ namespace MyPortal.Services
 
         public async Task CreateSubjectStaff(CurriculumSubjectStaffMember subjectStaff)
         {
-            if (!ValidationService.ModelIsValid(subjectStaff))
-            {
-                throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
-            }
+            ValidationService.ValidateModel(subjectStaff);
 
             UnitOfWork.CurriculumSubjectStaffMembers.Add(subjectStaff);
 

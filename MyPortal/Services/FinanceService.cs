@@ -114,10 +114,7 @@ namespace MyPortal.Services
 
         public async Task CreateProduct(FinanceProduct product)
         {
-            if (!ValidationService.ModelIsValid(product))
-            {
-                throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
-            }
+            ValidationService.ValidateModel(product);
 
             UnitOfWork.FinanceProducts.Add(product);
             await UnitOfWork.Complete();

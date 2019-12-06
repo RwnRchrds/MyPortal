@@ -25,10 +25,7 @@ namespace MyPortal.Services
 
         public async Task CreateStaffMember(StaffMember staffMember)
         {
-            if (!ValidationService.ModelIsValid(staffMember))
-            {
-                throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
-            }
+            ValidationService.ValidateModel(staffMember);
 
             UnitOfWork.StaffMembers.Add(staffMember);
 

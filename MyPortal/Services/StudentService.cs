@@ -28,10 +28,7 @@ namespace MyPortal.Services
 
         public async Task CreateStudent(Student student)
         {
-            if (!ValidationService.ModelIsValid(student))
-            {
-                throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
-            }
+            ValidationService.ValidateModel(student);
 
             UnitOfWork.Students.Add(student);
 
@@ -131,10 +128,7 @@ namespace MyPortal.Services
 
         public async Task UpdateStudent(Student student)
         {
-            if (!ValidationService.ModelIsValid(student))
-            {
-                throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
-            }
+            ValidationService.ValidateModel(student);
 
             var studentInDb = await GetStudentById(student.Id);
 

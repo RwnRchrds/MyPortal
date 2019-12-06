@@ -27,10 +27,7 @@ namespace MyPortal.Services
         
         public async Task CreateCourse(PersonnelTrainingCourse course)
         {
-            if (!ValidationService.ModelIsValid(course))
-            {
-                throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
-            }
+            ValidationService.ValidateModel(course);
 
             UnitOfWork.PersonnelTrainingCourses.Add(course);
             await UnitOfWork.Complete();
@@ -55,13 +52,9 @@ namespace MyPortal.Services
             await UnitOfWork.Complete();
         }
 
-        public async Task CreateTrainingCertificate(PersonnelTrainingCertificate certificate,
-                            string userId)
+        public async Task CreateTrainingCertificate(PersonnelTrainingCertificate certificate)
         {
-            if (!ValidationService.ModelIsValid(certificate))
-            {
-                throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
-            }
+            ValidationService.ValidateModel(certificate);
 
             UnitOfWork.PersonnelTrainingCertificates.Add(certificate);
             await UnitOfWork.Complete();

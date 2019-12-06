@@ -22,10 +22,7 @@ namespace MyPortal.Services
 
         public async Task CreateResult(AssessmentResult result)
         {
-            if (!ValidationService.ModelIsValid(result))
-            {
-                throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
-            }
+            ValidationService.ValidateModel(result);
 
             UnitOfWork.AssessmentResults.Add(result);
             await UnitOfWork.Complete();
@@ -33,10 +30,7 @@ namespace MyPortal.Services
 
         public async Task CreateResultSet(AssessmentResultSet resultSet)
         {
-            if (!ValidationService.ModelIsValid(resultSet))
-            {
-                throw new ServiceException(ExceptionType.BadRequest,"Invalid data");
-            }
+            ValidationService.ValidateModel(resultSet);
 
             UnitOfWork.AssessmentResultSets.Add(resultSet);
             await UnitOfWork.Complete();

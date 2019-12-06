@@ -73,7 +73,7 @@
                     <div class="col form-group">
 
                         @Html.Label("Gender")
-                        @Html.DropDownListFor(x => x.Student.Person.Gender, new SelectList(PeopleService.GetGenderLookup(), "Key", "Value"), new { @class = "form-control form-control-sm", Name = "Person.Gender" })
+                        @Html.DropDownListFor(x => x.Student.Person.Gender, new SelectList(Model.Genders, "Key", "Value"), new { @class = "form-control form-control-sm", Name = "Person.Gender" })
 
                     </div>
 
@@ -180,11 +180,11 @@
                 <h6>Telephones</h6>
 
                 <div class="my-4">
-                    <button type="button" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> New Number</button>
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#newPhoneNumberModal"><i class="fas fa-plus"></i> New Phone Number</button>
                 </div>
                     
                 <div class="mb-4">
-                    @Html.EJS().Grid("Telephones").DataSource(d =>
+                    @Html.EJS().Grid("PhoneNumbers").DataSource(d =>
                     {
                         d.Url(Url.HttpRouteUrl("ApiGetPhoneNumbersByPersonDataGrid", new { personId = Model.Student.Person.Id })).CrossDomain(false).Adaptor("UrlAdaptor");
                     }).Columns(c =>
@@ -375,7 +375,7 @@
 
 </form>
 
-<div id="telephoneModal" class="modal fade" role="dialog">
+<div id="newPhoneNumberModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -385,10 +385,55 @@
             @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiCreatePhoneNumber", new {}), HttpMethod = "POST", OnSuccess = "newPhoneNumberSuccess", OnFailure = "newPhoneNumberFailure"}, new {id = "newPhoneNumberForm"}))
             {
                 <div class="modal-body">
-                <div class="form-group">
-                    @Html.Label("Type")
-                    @Html.DropDownList("TypeId", new SelectList(Model.PhoneNumberTypes, "Key", "Value"), "Select Type", new {@class = "form-control form-control-sm"})
+                    <div class="form-group">
+                        @Html.Label("Type")
+                        @Html.DropDownListFor(x => x.PhoneNumber.TypeId, new SelectList(Model.PhoneNumberTypes, "Key", "Value"), "Select Type", new {@class = "form-control form-control-sm", Name ="TypeId"})
+                        @Html.ValidationMessageFor(x => x.PhoneNumber.TypeId)
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Number")
+                        @Html.TextBoxFor(x => x.PhoneNumber.Number, null, new {@class = "form-control form-control-sm", Name = "Number"})
+                        @Html.ValidationMessageFor(x => x.PhoneNumber.Number)
+                    </div>
+                    @Html.HiddenFor(x => x.Student.Person.Id, new {Name = "PersonId"})
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                    </div>
                 </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="editTelephoneModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Telephone Number</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
+            </div>
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiUpdatePhoneNumber", new { }), HttpMethod = "POST", OnSuccess = "editPhoneNumberSuccess", OnFailure = "editPhoneNumberFailure" }, new { id = "editPhoneNumberForm" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.Label("Type")
+                        @Html.DropDownListFor(x => x.PhoneNumber.TypeId, new SelectList(Model.PhoneNumberTypes, "Key", "Value"), "Select Type", new { @class = "form-control form-control-sm", Name = "TypeId", id = "editPhoneTypeControl" })
+                        @Html.ValidationMessageFor(x => x.PhoneNumber.TypeId)
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Number")
+                        @Html.TextBoxFor(x => x.PhoneNumber.Number, null, new { @class = "form-control form-control-sm", Name = "Number", id = "editPhoneNumberControl" })
+                        @Html.ValidationMessageFor(x => x.PhoneNumber.Number)
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(x => x.Student.Person.Id, new {Name = "PersonId"})
+                        @Html.HiddenFor(x => x.PhoneNumber.Id, new {Name = "Id", id = "editPhoneIdControl"})
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                    </div>
                 </div>
             }
         </div>
@@ -427,6 +472,17 @@
                     toastr.error(data.responseJSON);
                 }
             });
+        }
+
+        function newPhoneNumberSuccess(result) {
+            $("#newPhoneNumberModal").modal('hide');
+            refreshTable("PhoneNumbers");
+            toastr.success(result, "Success");
+        }
+
+        function newPhoneNumberFailure(r) {
+            $("#newPhoneNumberModal").modal('hide');
+            toastr.error(r.responseJSON, "Error");
         }
     </script>
 

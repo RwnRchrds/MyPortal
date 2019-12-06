@@ -143,10 +143,7 @@ namespace MyPortal.Services
                 role.System = false;
                 role.Id = utilityService.GenerateId();
 
-                if (!ValidationService.ModelIsValid(role))
-                {
-                    throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
-                }
+               ValidationService.ValidateModel(role);
 
                 var result = await RoleManager.CreateAsync(role);
 

@@ -37,9 +37,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var userId = User.Identity.GetUserId();
-
-                await _service.CreateTrainingCertificate(certificate, userId);
+                await _service.CreateTrainingCertificate(certificate);
             }
             catch (Exception e)
             {

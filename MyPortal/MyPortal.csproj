@@ -606,6 +606,7 @@
     <Compile Include="Models\Misc\ProcessResponse.cs" />
     <Compile Include="Models\Misc\StudentAttendanceMarkCollection.cs" />
     <Compile Include="Models\Misc\StudentAttendanceMarkSingular.cs" />
+    <Compile Include="Models\Misc\ValidationResponse.cs" />
     <Compile Include="Persistence\UnitOfWork.cs" />
     <Compile Include="Repositories\CurriculumSubjectStaffMemberRepository.cs" />
     <Compile Include="Repositories\CurriculumSubjectStaffMemberRoleRepository.cs" />

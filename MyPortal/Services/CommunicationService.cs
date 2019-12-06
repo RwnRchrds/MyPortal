@@ -24,10 +24,7 @@ namespace MyPortal.Services
 
         public async Task CreateEmailAddress(CommunicationEmailAddress emailAddress)
         {
-            if (!ValidationService.ModelIsValid(emailAddress))
-            {
-                throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
-            }
+            ValidationService.ValidateModel(emailAddress);
 
             UnitOfWork.CommunicationEmailAddresses.Add(emailAddress);
 
@@ -67,10 +64,7 @@ namespace MyPortal.Services
 
         public async Task CreatePhoneNumber(CommunicationPhoneNumber phoneNumber)
         {
-            if (!ValidationService.ModelIsValid(phoneNumber))
-            {
-                throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
-            }
+            ValidationService.ValidateModel(phoneNumber);
 
             UnitOfWork.CommunicationPhoneNumbers.Add(phoneNumber);
 
@@ -135,10 +129,7 @@ namespace MyPortal.Services
 
         public async Task CreateAddress(CommunicationAddress address)
         {
-            if (!ValidationService.ModelIsValid(address))
-            {
-                throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
-            }
+            ValidationService.ValidateModel(address);
 
             UnitOfWork.CommunicationAddresses.Add(address);
 
@@ -187,10 +178,7 @@ namespace MyPortal.Services
 
         public async Task AddPersonToAddress(CommunicationAddressPerson addressPerson)
         {
-            if (!ValidationService.ModelIsValid(addressPerson))
-            {
-                throw new ServiceException(ExceptionType.BadRequest, "Invalid data");
-            }
+            ValidationService.ValidateModel(addressPerson);
 
             UnitOfWork.CommunicationAddressPersons.Add(addressPerson);
 
