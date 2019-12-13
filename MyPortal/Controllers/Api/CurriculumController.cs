@@ -10,10 +10,10 @@ using Microsoft.AspNet.Identity;
 using MyPortal.Dtos;
 using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
-using MyPortal.Dtos.DataGrid;
-using MyPortal.Models.Database;
-using MyPortal.Models.Misc;
-using MyPortal.Services;
+using MyPortal.BusinessLogic.Dtos;
+using MyPortal.BusinessLogic.Dtos.DataGrid;
+using MyPortal.BusinessLogic.Models;
+using MyPortal.BusinessLogic.Services;
 using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
@@ -111,7 +111,7 @@ namespace MyPortal.Controllers.Api
 
                 var sessions = await _service.GetSessionsByDate(teacherId, academicYearId, date);
 
-                var list = sessions.Select(Mapper.Map<CurriculumSession, GridCurriculumSessionDto>);
+                var list = sessions.Select(Mapper.Map<CurriculumSession, DataGridSessionDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -150,7 +150,7 @@ namespace MyPortal.Controllers.Api
 
                 var classes = await _service.GetAllClasses(academicYearId);
 
-                var list = classes.Select(Mapper.Map<CurriculumClass, GridCurriculumClassDto>);
+                var list = classes.Select(Mapper.Map<CurriculumClass, DataGridClassDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -172,7 +172,7 @@ namespace MyPortal.Controllers.Api
 
                 var classes = await _service.GetClassesBySubject(subjectId, academicYearId);
 
-                var list = classes.Select(Mapper.Map<CurriculumClass, GridCurriculumClassDto>);
+                var list = classes.Select(Mapper.Map<CurriculumClass, DataGridClassDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -280,7 +280,7 @@ namespace MyPortal.Controllers.Api
             {
                 var sessions = await _service.GetSessionsByClass(classId);
 
-                var list = sessions.Select(Mapper.Map<CurriculumSession, GridCurriculumSessionDto>);
+                var list = sessions.Select(Mapper.Map<CurriculumSession, DataGridSessionDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -402,7 +402,7 @@ namespace MyPortal.Controllers.Api
             {
                 var enrolments = await _service.GetEnrolmentsByClass(classId);
 
-                var list = enrolments.Select(Mapper.Map<CurriculumEnrolment, GridCurriculumEnrolmentDto>);
+                var list = enrolments.Select(Mapper.Map<CurriculumEnrolment, DataGridEnrolmentDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -439,7 +439,7 @@ namespace MyPortal.Controllers.Api
             {
                 var enrolments = await _service.GetEnrolmentsByStudent(studentId);
 
-                var list = enrolments.Select(Mapper.Map<CurriculumEnrolment, GridCurriculumEnrolmentDto>);
+                var list = enrolments.Select(Mapper.Map<CurriculumEnrolment, DataGridEnrolmentDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -595,7 +595,7 @@ namespace MyPortal.Controllers.Api
                 var staff = await _service.GetSubjectStaffBySubject(subjectId);
 
                 var list = staff.Select(Mapper
-                    .Map<CurriculumSubjectStaffMember, GridCurriculumSubjectStaffMemberDto>);
+                    .Map<CurriculumSubjectStaffMember, DataGridCurriculumSubjectStaffMemberDto>);
 
                 return PrepareDataGridObject(list, dm);
 
@@ -683,7 +683,7 @@ namespace MyPortal.Controllers.Api
             {
                 var subjects = await _service.GetAllSubjects();
 
-                var list = subjects.Select(Mapper.Map<CurriculumSubject, GridCurriculumSubjectDto>);
+                var list = subjects.Select(Mapper.Map<CurriculumSubject, DataGridSubjectDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -787,7 +787,7 @@ namespace MyPortal.Controllers.Api
             {
                 var studyTopics = await _service.GetAllStudyTopics();
 
-                var list = studyTopics.Select(Mapper.Map<CurriculumStudyTopic, GridCurriculumStudyTopicDto>);
+                var list = studyTopics.Select(Mapper.Map<CurriculumStudyTopic, DataGridStudyTopicDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -875,7 +875,7 @@ namespace MyPortal.Controllers.Api
             {
                 var lessonPlans = await _service.GetLessonPlansByStudyTopic(studyTopicId);
 
-                var list = lessonPlans.Select(Mapper.Map<CurriculumLessonPlan, GridCurriculumLessonPlanDto>);
+                var list = lessonPlans.Select(Mapper.Map<CurriculumLessonPlan, DataGridLessonPlanDto>);
 
                 return PrepareDataGridObject(list, dm);
             }

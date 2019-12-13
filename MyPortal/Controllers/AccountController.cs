@@ -6,11 +6,9 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using MyPortal.Interfaces;
+using MyPortal.BusinessLogic.Models.Identity;
+using MyPortal.BusinessLogic.Services;
 using MyPortal.Models;
-using MyPortal.Models.Database;
-using MyPortal.Persistence;
-using MyPortal.Services;
 
 namespace MyPortal.Controllers
 {
@@ -21,12 +19,10 @@ namespace MyPortal.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
         private readonly IdentityContext _identity;
-        private readonly IUnitOfWork _unitOfWork;
 
         public AccountController()
         {
             _identity = new IdentityContext();
-            _unitOfWork = new UnitOfWork(new MyPortalDbContext());
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
@@ -79,7 +75,7 @@ namespace MyPortal.Controllers
         [Route("Login", Name = "AccountLogin")]
         public async Task<ActionResult> Login(string returnUrl)
         {
-            using (var systemService = new SystemService(new UnitOfWork()))
+            using (var systemService = new SystemService())
             {
                 var localSchool = await systemService.GetLocalSchool();
 
@@ -147,7 +143,7 @@ namespace MyPortal.Controllers
 
         public async Task SetDefaultAcademicYear(string userName)
         {
-            using (var curriculumService = new CurriculumService(_unitOfWork))
+            using (var curriculumService = new CurriculumService())
             {
                 var user = _identity.Users.SingleOrDefault(x => x.UserName == userName);
 

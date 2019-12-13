@@ -10,11 +10,10 @@ using AutoMapper;
 using MyPortal.Dtos;
 using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
-using MyPortal.Dtos.DataGrid;
-using MyPortal.Interfaces;
-using MyPortal.Models.Database;
-using MyPortal.Models.Misc;
-using MyPortal.Services;
+using MyPortal.BusinessLogic.Dtos;
+using MyPortal.BusinessLogic.Dtos.DataGrid;
+using MyPortal.BusinessLogic.Models;
+using MyPortal.BusinessLogic.Services;
 using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
@@ -32,11 +31,6 @@ namespace MyPortal.Controllers.Api
         protected override void Dispose(bool disposing)
         {
             _service.Dispose();
-        }
-
-        public FinanceController(IUnitOfWork unitOfWork) : base (unitOfWork)
-        {
-            _service = new FinanceService(UnitOfWork);
         }
 
         [HttpPost]
@@ -201,7 +195,7 @@ namespace MyPortal.Controllers.Api
             {
                 var products = await _service.GetAllProducts();
 
-                var list = products.Select(Mapper.Map<FinanceProduct, GridFinanceProductDto>);
+                var list = products.Select(Mapper.Map<FinanceProduct, DataGridProductDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -314,7 +308,7 @@ namespace MyPortal.Controllers.Api
 
                     var sales = await _service.GetProcessedSales(academicYearId);
 
-                    var list = sales.Select(Mapper.Map<FinanceSale, GridFinanceSaleDto>);
+                    var list = sales.Select(Mapper.Map<FinanceSale, DataGridSaleDto>);
 
                     return PrepareDataGridObject(list, dm);
                 }
@@ -360,7 +354,7 @@ namespace MyPortal.Controllers.Api
 
                     var sales = await _service.GetAllSales(academicYearId);
 
-                    var list = sales.Select(Mapper.Map<FinanceSale, GridFinanceSaleDto>);
+                    var list = sales.Select(Mapper.Map<FinanceSale, DataGridSaleDto>);
 
                     return PrepareDataGridObject(list, dm);
                 }
@@ -428,7 +422,7 @@ namespace MyPortal.Controllers.Api
 
                     var sales = await _service.GetPendingSales(academicYearId);
 
-                    var list = sales.Select(Mapper.Map<FinanceSale, GridFinanceSaleDto>);
+                    var list = sales.Select(Mapper.Map<FinanceSale, DataGridSaleDto>);
 
                     return PrepareDataGridObject(list, dm);
                 }

@@ -3,6 +3,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
+using MyPortal.BusinessLogic.Models.Identity;
 using MyPortal.Models;
 using Owin;
 
