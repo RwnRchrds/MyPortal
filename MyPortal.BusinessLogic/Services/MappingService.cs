@@ -11,6 +11,7 @@ using MyPortal.BusinessLogic.Dtos.Identity;
 using MyPortal.BusinessLogic.Dtos.Lite;
 using MyPortal.BusinessLogic.Extensions;
 using MyPortal.BusinessLogic.Models;
+using MyPortal.BusinessLogic.Models.Data;
 using MyPortal.BusinessLogic.Models.Identity;
 using MyPortal.Data.Models;
 

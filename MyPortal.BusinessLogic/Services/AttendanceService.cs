@@ -6,6 +6,7 @@ using MyPortal.BusinessLogic.Dtos.Lite;
 using MyPortal.BusinessLogic.Exceptions;
 using MyPortal.BusinessLogic.Extensions;
 using MyPortal.BusinessLogic.Models;
+using MyPortal.BusinessLogic.Models.Data;
 using MyPortal.Data.Interfaces;
 using MyPortal.Data.Models;
 

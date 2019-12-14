@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MyPortal.BusinessLogic.Models
+namespace MyPortal.BusinessLogic.Models.Data
 {
     public class AttendanceSummary
     {

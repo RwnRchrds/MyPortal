@@ -13,6 +13,7 @@ using MyPortal.Attributes.HttpAuthorise;
 using MyPortal.BusinessLogic.Dtos;
 using MyPortal.BusinessLogic.Dtos.DataGrid;
 using MyPortal.BusinessLogic.Models;
+using MyPortal.BusinessLogic.Models.Data;
 using MyPortal.BusinessLogic.Services;
 using Syncfusion.EJ2.Base;
 

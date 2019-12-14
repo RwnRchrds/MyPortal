@@ -1,6 +1,6 @@
 ﻿using MyPortal.Data.Models;
 
-namespace MyPortal.BusinessLogic.Models
+namespace MyPortal.BusinessLogic.Models.Data
 {
     public class PersonDocumentUpload
     {

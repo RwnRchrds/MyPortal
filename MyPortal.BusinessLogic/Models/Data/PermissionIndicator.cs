@@ -1,6 +1,6 @@
 ﻿using MyPortal.BusinessLogic.Dtos.Identity;
 
-namespace MyPortal.BusinessLogic.Models
+namespace MyPortal.BusinessLogic.Models.Data
 {
     public class PermissionIndicator
     {

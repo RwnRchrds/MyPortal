@@ -14,6 +14,7 @@ using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
 using MyPortal.BusinessLogic.Dtos.Identity;
 using MyPortal.BusinessLogic.Models;
+using MyPortal.BusinessLogic.Models.Data;
 using MyPortal.Dtos.DataGrid;
 using MyPortal.Interfaces;
 using MyPortal.Services;

@@ -7,6 +7,7 @@ using AutoMapper;
 using MyPortal.BusinessLogic.Dtos.Identity;
 using MyPortal.BusinessLogic.Exceptions;
 using MyPortal.BusinessLogic.Models;
+using MyPortal.BusinessLogic.Models.Data;
 using MyPortal.BusinessLogic.Models.Identity;
 using MyPortal.Data.Interfaces;
 

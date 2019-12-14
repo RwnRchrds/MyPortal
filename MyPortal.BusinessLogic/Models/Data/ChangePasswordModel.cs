@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MyPortal.BusinessLogic.Models
+namespace MyPortal.BusinessLogic.Models.Data
 {
     public class ChangePasswordModel
     {
