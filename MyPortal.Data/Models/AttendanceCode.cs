@@ -3,16 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Data.Models
 {
-    public enum AttendanceMeaning
-    {
-        Present,
-        AuthorisedAbsence,
-        ApprovedEducationalActivity,
-        UnauthorisedAbsence,
-        AttendanceNotRequired,
-        NoMark
-    }
-
     /// <summary>
     /// [READ-ONLY] Codes available to use when taking the register.
     /// </summary>
@@ -30,8 +20,10 @@ namespace MyPortal.Data.Models
         [StringLength(128)]
         public string Description { get; set; }
 
-        public AttendanceMeaning Meaning { get; set; }
+        public int MeaningId { get; set; }
 
         public bool DoNotUse { get; set; }
+
+        public virtual AttendanceCodeMeaning CodeMeaning { get; set; }
     }
 }

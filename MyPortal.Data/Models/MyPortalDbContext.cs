@@ -25,6 +25,7 @@ namespace MyPortal.Data.Models
         public virtual DbSet<Result> Results { get; set; }
         public virtual DbSet<ResultSet> ResultSets { get; set; }
         public virtual DbSet<AttendanceCode> AttendanceCodes { get; set; }
+        public virtual DbSet<AttendanceCodeMeaning> AttendanceCodeMeanings { get; set; }
         public virtual DbSet<AttendanceMark> AttendanceMarks { get; set; }
         public virtual DbSet<Period> Periods { get; set; }
         public virtual DbSet<AttendanceWeek> AttendanceWeeks { get; set; }
@@ -35,6 +36,7 @@ namespace MyPortal.Data.Models
         public virtual DbSet<Address> Addresses { get; set; }
         public virtual DbSet<AddressPerson> AddressPersons { get; set; }
         public virtual DbSet<EmailAddress> EmailAddresses { get; set; }
+        public virtual DbSet<EmailAddressType> EmailAddressTypes { get; set; }
         public virtual DbSet<CommunicationLog> CommunicationLogs { get; set; }
         public virtual DbSet<PhoneNumber> PhoneNumbers { get; set; }
         public virtual DbSet<PhoneNumberType> PhoneNumberTypes { get; set; }
@@ -67,7 +69,9 @@ namespace MyPortal.Data.Models
         public virtual DbSet<YearGroup> YearGroups { get; set; }
         public virtual DbSet<PersonAttachment> PersonAttachments { get; set; }
         public virtual DbSet<Observation> Observations { get; set; }
+        public virtual DbSet<ObservationOutcome> ObservationOutcomes { get; set; }
         public virtual DbSet<TrainingCertificate> TrainingCertificates { get; set; }
+        public virtual DbSet<TrainingCertificateStatus> TrainingCertificateStatus { get; set; }
         public virtual DbSet<TrainingCourse> TrainingCourses { get; set; }
         public virtual DbSet<Person> People { get; set; }
         public virtual DbSet<CommentBank> CommentBanks { get; set; }
@@ -131,6 +135,12 @@ namespace MyPortal.Data.Models
                 .IsFixedLength()
                 .IsUnicode(false);
 
+            modelBuilder.Entity<AttendanceCodeMeaning>()
+                .HasMany(e => e.Codes)
+                .WithRequired(e => e.CodeMeaning)
+                .HasForeignKey(e => e.MeaningId)
+                .WillCascadeOnDelete(false);
+
             modelBuilder.Entity<AttendanceMark>()
                 .Property(e => e.Mark)
                 .IsFixedLength()
@@ -178,6 +188,12 @@ namespace MyPortal.Data.Models
                 .HasMany(e => e.People)
                 .WithRequired(e => e.Address)
                 .HasForeignKey(e => e.AddressId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<EmailAddressType>()
+                .HasMany(e => e.EmailAddresses)
+                .WithRequired(e => e.Type)
+                .HasForeignKey(e => e.TypeId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<PhoneNumberType>()
@@ -424,6 +440,18 @@ namespace MyPortal.Data.Models
                 .HasMany(e => e.PersonalDocuments)
                 .WithRequired(e => e.Person)
                 .HasForeignKey(e => e.PersonId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<ObservationOutcome>()
+                .HasMany(e => e.Observations)
+                .WithRequired(e => e.Outcome)
+                .HasForeignKey(e => e.OutcomeId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<TrainingCertificateStatus>()
+                .HasMany(e => e.Certificates)
+                .WithRequired(e => e.Status)
+                .HasForeignKey(e => e.StatusId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<TrainingCourse>()

@@ -9,9 +9,9 @@ using System.Web.Http;
 using AutoMapper;
 using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
-using MyPortal.Dtos.DataGrid;
-using MyPortal.Models.Database;
-using MyPortal.Services;
+using MyPortal.BusinessLogic.Dtos;
+using MyPortal.BusinessLogic.Dtos.DataGrid;
+using MyPortal.BusinessLogic.Services;
 using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
@@ -35,7 +35,7 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [Route("emailAddresses/create", Name = "ApiCreateEmailAddress")]
         [RequiresPermission("EditContacts")]
-        public async Task<IHttpActionResult> CreateEmailAddress([FromBody] CommunicationEmailAddress emailAddress)
+        public async Task<IHttpActionResult> CreateEmailAddress([FromBody] EmailAddressDto emailAddress)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [Route("emailAddresses/update", Name = "ApiUpdateEmailAddress")]
         [RequiresPermission("EditContacts")]
-        public async Task<IHttpActionResult> UpdateEmailAddress([FromBody] CommunicationEmailAddress emailAddress)
+        public async Task<IHttpActionResult> UpdateEmailAddress([FromBody] EmailAddressDto emailAddress)
         {
             try
             {
@@ -86,7 +86,7 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [Route("phoneNumbers/create", Name = "ApiCreatePhoneNumber")]
         [RequiresPermission("EditContacts")]
-        public async Task<IHttpActionResult> CreatePhoneNumber(CommunicationPhoneNumber phoneNumber)
+        public async Task<IHttpActionResult> CreatePhoneNumber(PhoneNumberDto phoneNumber)
         {
             try
             {
@@ -103,7 +103,7 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [Route("phoneNumbers/update", Name = "ApiUpdatePhoneNumber")]
         [RequiresPermission("EditContacts")]
-        public async Task<IHttpActionResult> UpdatePhoneNumber(CommunicationPhoneNumber phoneNumber)
+        public async Task<IHttpActionResult> UpdatePhoneNumber(PhoneNumberDto phoneNumber)
         {
             try
             {
@@ -126,7 +126,7 @@ namespace MyPortal.Controllers.Api
             {
                 var phoneNumbers = await _service.GetPhoneNumbersByPerson(personId);
 
-                var list = phoneNumbers.Select(Mapper.Map<CommunicationPhoneNumber, GridCommunicationPhoneNumberDto>);
+                var list = phoneNumbers.Select(_mapping.Map<DataGridPhoneNumberDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -147,7 +147,7 @@ namespace MyPortal.Controllers.Api
                 var emailAddresses = await _service.GetEmailAddressesByPerson(personId);
 
                 var list = emailAddresses.Select(
-                    Mapper.Map<CommunicationEmailAddress, GridCommunicationEmailAddressDto>);
+                    _mapping.Map<DataGridEmailAddressDto>);
 
                 return PrepareDataGridObject(list, dm);
             }

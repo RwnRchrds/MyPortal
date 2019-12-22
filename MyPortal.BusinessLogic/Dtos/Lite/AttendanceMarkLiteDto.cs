@@ -18,6 +18,6 @@ namespace MyPortal.BusinessLogic.Dtos.Lite
 
         public int? MinutesLate { get; set; }
         
-        public AttendanceMeaning Meaning { get; set; }
+        public AttendanceCodeMeaningDto Meaning { get; set; }
     }
 }

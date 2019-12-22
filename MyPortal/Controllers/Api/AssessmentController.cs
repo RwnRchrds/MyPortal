@@ -6,14 +6,10 @@ using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web.Http;
-using AutoMapper;
-using MyPortal.Dtos;
-using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
-using MyPortal.Dtos.DataGrid;
-using MyPortal.Models.Database;
-using MyPortal.Persistence;
-using MyPortal.Services;
+using MyPortal.BusinessLogic.Dtos;
+using MyPortal.BusinessLogic.Dtos.DataGrid;
+using MyPortal.BusinessLogic.Services;
 using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
@@ -36,7 +32,7 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditResults")]
         [Route("results/create", Name = "ApiCreateResult")]
-        public async Task<IHttpActionResult> CreateResult([FromBody] AssessmentResult result)
+        public async Task<IHttpActionResult> CreateResult([FromBody] ResultDto result)
         {
             try
             {
@@ -53,13 +49,11 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ViewResults")]
         [Route("results/get/byStudent/{studentId:int}/{resultSetId:int}", Name = "ApiGetResultsByStudent")]
-        public async Task<IEnumerable<AssessmentResultDto>> GetResultsByStudent([FromUri] int studentId, [FromUri] int resultSetId)
+        public async Task<IEnumerable<ResultDto>> GetResultsByStudent([FromUri] int studentId, [FromUri] int resultSetId)
         {
             try
             {
-                var results = await _service.GetResultsByStudent(studentId, resultSetId);
-
-                return results.Select(Mapper.Map<AssessmentResult, AssessmentResultDto>);
+                return await _service.GetResultsByStudent(studentId, resultSetId);
             }
             catch (Exception e)
             {
@@ -77,7 +71,7 @@ namespace MyPortal.Controllers.Api
             {
                 var results = await _service.GetResultsByStudent(studentId, resultSetId);
 
-                var list = results.Select(Mapper.Map<AssessmentResult, GridAssessmentResultDto>);
+                var list = results.Select(_mapping.Map<DataGridResultDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -90,7 +84,7 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditResultSets")]
         [Route("resultSets/create", Name = "ApiCreateResultSet")]
-        public async Task<IHttpActionResult> CreateResultSet([FromBody] AssessmentResultSet resultSet)
+        public async Task<IHttpActionResult> CreateResultSet([FromBody] ResultSetDto resultSet)
         {
             try
             {
@@ -124,13 +118,11 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ViewResultSets")]
         [Route("resultSets/get/byId/{resultSetId:int}", Name = "ApiGetResultSetById")]
-        public async Task<AssessmentResultSetDto> GetResultSetById([FromUri] int resultSetId)
+        public async Task<ResultSetDto> GetResultSetById([FromUri] int resultSetId)
         {
             try
             {
-                var resultSet = await _service.GetResultSetById(resultSetId);
-
-                return Mapper.Map<AssessmentResultSet, AssessmentResultSetDto>(resultSet);
+                return await _service.GetResultSetById(resultSetId);
             }
             catch (Exception e)
             {
@@ -141,13 +133,11 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ViewResultSets")]
         [Route("resultSets/get/all", Name = "ApiGetAllResultSets")]
-        public async Task<IEnumerable<AssessmentResultSetDto>> GetAllResultSets()
+        public async Task<IEnumerable<ResultSetDto>> GetAllResultSets()
         {
             try
             {
-                var resultSets = await _service.GetAllResultSets();
-
-                return resultSets.Select(Mapper.Map<AssessmentResultSet, AssessmentResultSetDto>);
+                return await _service.GetAllResultSets();
             }
             catch (Exception e)
             {
@@ -158,13 +148,11 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ViewResultSets")]
         [Route("resultSets/get/byStudent/{studentId:int}", Name = "ApiGetResultSetsByStudent")]
-        public async Task<IEnumerable<AssessmentResultSetDto>> GetResultSetsByStudent([FromUri] int studentId)
+        public async Task<IEnumerable<ResultSetDto>> GetResultSetsByStudent([FromUri] int studentId)
         {
             try
             {
-                var resultSets = await _service.GetResultSetsByStudent(studentId);
-
-                return resultSets.Select(Mapper.Map<AssessmentResultSet, AssessmentResultSetDto>);
+                return await _service.GetResultSetsByStudent(studentId);
             }
             catch (Exception e)
             {
@@ -179,10 +167,8 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var resultSets = await _service.GetAllResultSets();
+                var list = (await _service.GetAllResultSets()).Select(_mapping.Map<DataGridResultSetDto>);
 
-                var list = resultSets.Select(Mapper.Map<AssessmentResultSet, GridAssessmentResultSetDto>);
-                
                 return PrepareDataGridObject(list, dm);
             }
             catch (Exception e)
@@ -194,7 +180,7 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditResultSets")]
         [Route("resultSets/update", Name = "ApiUpdateResultSet")]
-        public async Task<IHttpActionResult> UpdateResultSet([FromBody] AssessmentResultSet resultSet)
+        public async Task<IHttpActionResult> UpdateResultSet([FromBody] ResultSetDto resultSet)
         {
             try
             {

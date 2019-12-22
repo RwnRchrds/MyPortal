@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using MyPortal.BusinessLogic.Dtos;
 using MyPortal.BusinessLogic.Exceptions;
 using MyPortal.BusinessLogic.Extensions;
 using MyPortal.BusinessLogic.Models;
@@ -25,51 +26,29 @@ namespace MyPortal.BusinessLogic.Services
 
         }
 
-        public async Task CreateClass(Class @class)
+        public async Task CreateClass(ClassDto @class)
         {
             ValidationService.ValidateModel(@class);
-
-            if (!await UnitOfWork.AcademicYears.Any(x => x.Id == @class.AcademicYearId))
-            {
-                throw new ServiceException(ExceptionType.NotFound,"Academic year not found");
-            }
 
             if (await UnitOfWork.Classes.Any(x => x.Name == @class.Name && x.AcademicYearId == @class.AcademicYearId))
             {
                 throw new ServiceException(ExceptionType.BadRequest, "Class already exists");
             }
 
-            UnitOfWork.Classes.Add(@class);
+            UnitOfWork.Classes.Add(Mapping.Map<Class>(@class));
 
             await UnitOfWork.Complete();
         }
 
-        public async Task CreateEnrolment(Enrolment enrolment,  bool commitImmediately = true)
+        public async Task CreateEnrolment(EnrolmentDto enrolment,  bool commitImmediately = true)
         {
             ValidationService.ValidateModel(enrolment);
 
             var @class = await GetClassById(enrolment.ClassId);
 
-            if (!await UnitOfWork.Students.Any(x => x.Id == enrolment.StudentId))
-            {
-                throw new ServiceException(ExceptionType.NotFound,"Student not found");
-            }
-
-            if (!@class.Sessions.Any())
-            {
-                throw new ServiceException(ExceptionType.NotFound,"Cannot add students to a class with no sessions");
-            }
-
-            if (await UnitOfWork.Enrolments.Any(x =>
-                x.ClassId == enrolment.ClassId && x.StudentId == enrolment.StudentId))
-            {
-                throw new ServiceException(ExceptionType.BadRequest,
-                    $"Student is already enrolled in {@class.Name}");
-            }
-
             if (await StudentCanEnrol(enrolment.StudentId, @class.Id, @class.AcademicYearId))
             {
-                UnitOfWork.Enrolments.Add(enrolment);
+                UnitOfWork.Enrolments.Add(Mapping.Map<Enrolment>(enrolment));
 
                 if (commitImmediately)
                 {
@@ -82,15 +61,15 @@ namespace MyPortal.BusinessLogic.Services
             throw new ServiceException(ExceptionType.BadRequest,$"Student could not be enrolled in {@class.Name}");
         }
 
-        public async Task CreateEnrolmentsForMultipleStudents(IEnumerable<Student> students,
+        public async Task CreateEnrolmentsForMultipleStudents(IEnumerable<int> studentIds,
             int classId)
         {
-            foreach (var student in students)
+            foreach (var studentId in studentIds)
             {
-                var studentEnrolment = new Enrolment
+                var studentEnrolment = new EnrolmentDto
                 {
                     ClassId = classId,
-                    StudentId = student.Id
+                    StudentId = studentId
                 };
 
                 await CreateEnrolment(studentEnrolment, false);
@@ -110,7 +89,7 @@ namespace MyPortal.BusinessLogic.Services
 
             foreach (var student in group.Students)
             {
-                var studentEnrolment = new Enrolment
+                var studentEnrolment = new EnrolmentDto
                 {
                     ClassId = enrolment.ClassId,
                     StudentId = student.Id
@@ -122,40 +101,15 @@ namespace MyPortal.BusinessLogic.Services
             await UnitOfWork.Complete();
         }
 
-        public async Task CreateLessonPlan(LessonPlan lessonPlan, string userId)
+        public async Task CreateLessonPlan(LessonPlanDto lessonPlan)
         {
             ValidationService.ValidateModel(lessonPlan);
 
-            var authorId = lessonPlan.AuthorId;
-
-            var author = new StaffMember();
-
-            if (authorId == 0)
-            {
-                author = await UnitOfWork.StaffMembers.GetByUserId(userId);
-                if (author == null)
-                {
-                    throw new ServiceException(ExceptionType.NotFound,"Staff member not found");
-                }
-            }
-
-            if (authorId != 0)
-            {
-                author = await UnitOfWork.StaffMembers.GetById(authorId);
-            }
-
-            if (author == null)
-            {
-                throw new ServiceException(ExceptionType.NotFound,"Staff member not found");
-            }
-
-            lessonPlan.AuthorId = author.Id;
-
-            UnitOfWork.LessonPlans.Add(lessonPlan);
+            UnitOfWork.LessonPlans.Add(Mapping.Map<LessonPlan>(lessonPlan));
             await UnitOfWork.Complete();
         }
 
-        public async Task CreateSession(Session session)
+        public async Task CreateSession(SessionDto session)
         {
             ValidationService.ValidateModel(session);
 
@@ -175,11 +129,11 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.BadRequest,"Class is already assigned to this period");
             }
 
-            UnitOfWork.Sessions.Add(session);
+            UnitOfWork.Sessions.Add(Mapping.Map<Session>(session));
             await UnitOfWork.Complete();
         }
 
-        public async Task CreateSessionForRegPeriods(Session session)
+        public async Task CreateSessionForRegPeriods(SessionDto session)
         {
             session.PeriodId = 0;
 
@@ -210,25 +164,30 @@ namespace MyPortal.BusinessLogic.Services
 
         }
 
-        public async Task CreateStudyTopic(StudyTopic studyTopic)
+        public async Task CreateStudyTopic(StudyTopicDto studyTopic)
         {
             ValidationService.ValidateModel(studyTopic);
 
-            UnitOfWork.StudyTopics.Add(studyTopic);
+            UnitOfWork.StudyTopics.Add(Mapping.Map<StudyTopic>(studyTopic));
             await UnitOfWork.Complete();
         }
 
-        public async Task CreateSubject(Subject subject)
+        public async Task CreateSubject(SubjectDto subject)
         {
             ValidationService.ValidateModel(subject);
 
-            UnitOfWork.Subjects.Add(subject);
+            UnitOfWork.Subjects.Add(Mapping.Map<Subject>(subject));
             await UnitOfWork.Complete();
         }
 
         public async Task DeleteClass(int classId)
         {
-            var currClass = await GetClassById(classId);
+            var currClass = await UnitOfWork.Classes.GetById(classId);
+
+            if (currClass == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Class not found");
+            }
 
             if (await ClassHasSessions(classId) || await ClassHasEnrolments(classId))
             {
@@ -252,14 +211,9 @@ namespace MyPortal.BusinessLogic.Services
             await UnitOfWork.Complete();
         }
 
-        public async Task DeleteLessonPlan(int lessonPlanId, string userId, bool canDeleteAll)
+        public async Task DeleteLessonPlan(int lessonPlanId)
         {
-            var plan = await GetLessonPlanById(lessonPlanId);
-
-            if (!canDeleteAll && plan.Author.Person.UserId != userId)
-            {
-                throw new ServiceException(ExceptionType.BadRequest,"Cannot delete someone else's lesson plan");
-            }
+            var plan = await UnitOfWork.LessonPlans.GetById(lessonPlanId);
 
             UnitOfWork.LessonPlans.Remove(plan);
             await UnitOfWork.Complete();
@@ -267,7 +221,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task DeleteSession(int sessionId)
         {
-            var sessionInDb = await GetSessionById(sessionId);
+            var sessionInDb = await UnitOfWork.Sessions.GetById(sessionId);
 
             if (sessionInDb == null)
             {
@@ -280,7 +234,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task DeleteStudyTopic(int studyTopicId)
         {
-            var studyTopic = await GetStudyTopicById(studyTopicId);
+            var studyTopic = await UnitOfWork.StudyTopics.GetById(studyTopicId);
 
             if (studyTopic == null)
             {
@@ -317,7 +271,7 @@ namespace MyPortal.BusinessLogic.Services
             await UnitOfWork.Complete();
         }
 
-        public async Task<AcademicYear> GetAcademicYearById(int academicYearId)
+        public async Task<AcademicYearDto> GetAcademicYearById(int academicYearId)
         {
             var academicYear = await UnitOfWork.AcademicYears.GetById(academicYearId);
 
@@ -326,62 +280,50 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound,"Academic year not found");
             }
 
-            return academicYear;
+            return Mapping.Map<AcademicYearDto>(academicYear);
         }
 
-        public async Task<IEnumerable<AcademicYear>> GetAcademicYears()
+        public async Task<IEnumerable<AcademicYearDto>> GetAcademicYears()
         {
-            var academicYears = await UnitOfWork.AcademicYears.GetAll(x => x.FirstDate);
-                
-            return academicYears;
+            return (await UnitOfWork.AcademicYears.GetAll(x => x.FirstDate)).Select(Mapping.Map<AcademicYearDto>);
         }
 
-        public async Task<IEnumerable<Class>> GetAllClasses(int academicYearId)
+        public async Task<IEnumerable<ClassDto>> GetAllClasses(int academicYearId)
         {
-            var classes = await UnitOfWork.Classes.GetByAcademicYear(academicYearId);
-
-            return classes;
+            return (await UnitOfWork.Classes.GetByAcademicYear(academicYearId)).Select(Mapping.Map<ClassDto>);
         }
 
-        public async Task<IEnumerable<Class>> GetClassesBySubject(int subjectId, int academicYearId)
+        public async Task<IEnumerable<ClassDto>> GetClassesBySubject(int subjectId, int academicYearId)
         {
-            var classes = await UnitOfWork.Classes.GetBySubject(subjectId, academicYearId);
-
-            return classes;
+            return (await UnitOfWork.Classes.GetBySubject(subjectId, academicYearId)).Select(Mapping.Map<ClassDto>);
         }
 
-        public async Task<IEnumerable<LessonPlan>> GetAllLessonPlans()
+        public async Task<IEnumerable<LessonPlanDto>> GetAllLessonPlans()
         {
-            var lessonPlans = await UnitOfWork.LessonPlans.GetAll(x => x.Title);
-
-            return lessonPlans;
+            return (await UnitOfWork.LessonPlans.GetAll(x => x.Title)).Select(Mapping.Map<LessonPlanDto>);
         }
 
-        public async Task<IEnumerable<StudyTopic>> GetAllStudyTopics()
+        public async Task<IEnumerable<StudyTopicDto>> GetAllStudyTopics()
         {
-            return await UnitOfWork.StudyTopics.GetAll(x => x.Name);
+            return (await UnitOfWork.StudyTopics.GetAll(x => x.Name)).Select(Mapping.Map<StudyTopicDto>);
         }
 
-        public async Task<IEnumerable<StudyTopic>> GetAllStudyTopicsBySubject(int subjectId)
+        public async Task<IEnumerable<StudyTopicDto>> GetAllStudyTopicsBySubject(int subjectId)
         {
-            return await UnitOfWork.StudyTopics.GetBySubject(subjectId);
+            return (await UnitOfWork.StudyTopics.GetBySubject(subjectId)).Select(Mapping.Map<StudyTopicDto>);
         }
 
-        public async Task<IEnumerable<Subject>> GetAllSubjects()
+        public async Task<IEnumerable<SubjectDto>> GetAllSubjects()
         {
-            var subjects = await UnitOfWork.Subjects.GetAll(x => x.Name);
-
-            return subjects;
+            return (await UnitOfWork.Subjects.GetAll(x => x.Name)).Select(Mapping.Map<SubjectDto>);
         }
 
-        public async Task<IEnumerable<SubjectStaffMember>> GetSubjectStaffBySubject(int subjectId)
+        public async Task<IEnumerable<SubjectStaffMemberDto>> GetSubjectStaffBySubject(int subjectId)
         {
-            var staff = await UnitOfWork.SubjectStaffMembers.GetBySubject(subjectId);
-
-            return staff;
+            return (await UnitOfWork.SubjectStaffMembers.GetBySubject(subjectId)).Select(Mapping.Map<SubjectStaffMemberDto>);
         }
 
-        public async Task<SubjectStaffMember> GetSubjectStaffById(int subjectStaffId)
+        public async Task<SubjectStaffMemberDto> GetSubjectStaffById(int subjectStaffId)
         {
             var staff = await UnitOfWork.SubjectStaffMembers.GetById(subjectStaffId);
 
@@ -390,17 +332,16 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Subject staff member not found");
             }
 
-            return staff;
+            return Mapping.Map<SubjectStaffMemberDto>(staff);
         }
 
         public async Task<IDictionary<int, string>> GetAllSubjectRolesLookup()
         {
-            var roles = await UnitOfWork.SubjectStaffMemberRoles.GetAll(x => x.Description);
-
-            return roles.ToDictionary(x => x.Id, x => x.Description);
+            return (await UnitOfWork.SubjectStaffMemberRoles.GetAll(x => x.Description)).ToDictionary(x => x.Id,
+                x => x.Description);
         }
 
-        public async Task<Class> GetClassById(int classId)
+        public async Task<ClassDto> GetClassById(int classId)
         {
             var currClass = await UnitOfWork.Classes.GetById(classId);
 
@@ -409,10 +350,10 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound,"Class not found");
             }
 
-            return currClass;
+            return Mapping.Map<ClassDto>(currClass);
         }
 
-        public async Task<Enrolment> GetEnrolmentById(int enrolmentId)
+        public async Task<EnrolmentDto> GetEnrolmentById(int enrolmentId)
         {
             var enrolment = await UnitOfWork.Enrolments.GetById(enrolmentId);
 
@@ -421,24 +362,20 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound,"Enrolment not found");
             }
 
-            return enrolment;
+            return Mapping.Map<EnrolmentDto>(enrolment);
         }
 
-        public async Task<IEnumerable<Enrolment>> GetEnrolmentsByClass(int classId)
+        public async Task<IEnumerable<EnrolmentDto>> GetEnrolmentsByClass(int classId)
         {
-            var list = await UnitOfWork.Enrolments.GetByClass(classId);
-
-            return list;
+            return (await UnitOfWork.Enrolments.GetByClass(classId)).Select(Mapping.Map<EnrolmentDto>);
         }
 
-        public async Task<IEnumerable<Enrolment>> GetEnrolmentsByStudent(int studentId)
+        public async Task<IEnumerable<EnrolmentDto>> GetEnrolmentsByStudent(int studentId)
         {
-            var list = await UnitOfWork.Enrolments.GetByStudent(studentId);
-
-            return list;
+            return (await UnitOfWork.Enrolments.GetByStudent(studentId)).Select(Mapping.Map<EnrolmentDto>);
         }
 
-        public async Task<LessonPlan> GetLessonPlanById(int lessonPlanId)
+        public async Task<LessonPlanDto> GetLessonPlanById(int lessonPlanId)
         {
             var lessonPlan = await UnitOfWork.LessonPlans.GetById(lessonPlanId);
 
@@ -447,15 +384,15 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound,"Lesson plan not found");
             }
 
-            return lessonPlan;
+            return Mapping.Map<LessonPlanDto>(lessonPlan);
         }
 
-        public async Task<IEnumerable<LessonPlan>> GetLessonPlansByStudyTopic(int studyTopicId)
+        public async Task<IEnumerable<LessonPlanDto>> GetLessonPlansByStudyTopic(int studyTopicId)
         {
-            return await UnitOfWork.LessonPlans.GetByStudyTopic(studyTopicId);
+            return (await UnitOfWork.LessonPlans.GetByStudyTopic(studyTopicId)).Select(Mapping.Map<LessonPlanDto>);
         }
 
-        public async Task<Session> GetSessionById(int sessionId)
+        public async Task<SessionDto> GetSessionById(int sessionId)
         {
             var session = await UnitOfWork.Sessions.GetById(sessionId);
 
@@ -464,10 +401,10 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound,"Session not found");
             }
 
-            return session;
+            return Mapping.Map<SessionDto>(session);
         }
 
-        public async Task<Session> GetSessionByIdWithRelated(int sessionId, params Expression<Func<Session, object>>[] includeProperties)
+        public async Task<SessionDto> GetSessionByIdWithRelated(int sessionId, params Expression<Func<Session, object>>[] includeProperties)
         {
             var session = await UnitOfWork.Sessions.GetByIdWithRelated(sessionId, includeProperties);
 
@@ -476,31 +413,17 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Session not found");
             }
 
-            return session;
+            return Mapping.Map<SessionDto>(session);
         }
 
-        public async Task<IEnumerable<Session>> GetSessionsByClass(int classId)
+        public async Task<IEnumerable<SessionDto>> GetSessionsByClass(int classId)
         {
-            var sessions = await UnitOfWork.Sessions.GetByClass(classId);
-
-            return sessions;
+            return (await UnitOfWork.Sessions.GetByClass(classId)).Select(Mapping.Map<SessionDto>);
         }
 
-        public async Task<IEnumerable<Session>> GetSessionsByDate(int staffId, int academicYearId, DateTime date)
+        public async Task<IEnumerable<SessionDto>> GetSessionsByDate(int staffId, int academicYearId, DateTime date)
         {
             var weekBeginning = date.StartOfWeek();
-
-            var academicYear = await GetAcademicYearById(academicYearId);
-
-            if (academicYear == null)
-            {
-                throw new ServiceException(ExceptionType.NotFound,"Academic year not found");
-            }
-
-            if (weekBeginning < academicYear.FirstDate || weekBeginning > academicYear.LastDate)
-            {
-                throw new ServiceException(ExceptionType.BadRequest,"Selected date is outside academic year");
-            }
 
             var currentWeek = await UnitOfWork.AttendanceWeeks.GetByWeekBeginning(academicYearId, weekBeginning);
 
@@ -512,15 +435,13 @@ namespace MyPortal.BusinessLogic.Services
             if (currentWeek.IsHoliday || currentWeek.IsNonTimetable)
             {
                 //throw new ProcessException(ExceptionType.BadRequest,"Selected date is during a school holiday");
-                return new List<Session>();
+                return new List<SessionDto>();
             }
 
-            var classList = await UnitOfWork.Sessions.GetByDayOfWeek(academicYearId, staffId, date.DayOfWeek);
-
-            return classList;
+            return (await UnitOfWork.Sessions.GetByDayOfWeek(academicYearId, staffId, date.DayOfWeek)).Select(Mapping.Map<SessionDto>);
         }
 
-        public async Task<StudyTopic> GetStudyTopicById(int studyTopicId)
+        public async Task<StudyTopicDto> GetStudyTopicById(int studyTopicId)
         {
             var studyTopic = await UnitOfWork.StudyTopics.GetById(studyTopicId);
 
@@ -529,10 +450,10 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound,"Study topic not found");
             }
 
-            return studyTopic;
+            return Mapping.Map<StudyTopicDto>(studyTopic);
         }
 
-        public async Task<Subject> GetSubjectById(int subjectId)
+        public async Task<SubjectDto> GetSubjectById(int subjectId)
         {
             var subject = await UnitOfWork.Subjects.GetById(subjectId);
 
@@ -541,7 +462,7 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound,"Subject not found");
             }
 
-            return subject;
+            return Mapping.Map<SubjectDto>(subject);
         }
 
         public async Task<bool> ClassHasEnrolments(int classId)
@@ -590,9 +511,14 @@ namespace MyPortal.BusinessLogic.Services
 
                 return true;
         }
-        public async Task UpdateClass(Class @class)
+        public async Task UpdateClass(ClassDto @class)
         {
-            var classInDb = await GetClassById(@class.Id);
+            var classInDb = await UnitOfWork.Classes.GetById(@class.Id);
+
+            if (classInDb == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Class not found.");
+            }
 
             classInDb.Name = @class.Name;
             classInDb.SubjectId = @class.SubjectId;
@@ -601,9 +527,14 @@ namespace MyPortal.BusinessLogic.Services
 
             await UnitOfWork.Complete();
         }
-        public async Task UpdateLessonPlan(LessonPlan lessonPlan)
+        public async Task UpdateLessonPlan(LessonPlanDto lessonPlan)
         {
-            var planInDb = await GetLessonPlanById(lessonPlan.Id);
+            var planInDb = await UnitOfWork.LessonPlans.GetById(lessonPlan.Id);
+
+            if (planInDb == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Lesson plan not found.");
+            }
 
             planInDb.Title = lessonPlan.Title;
             planInDb.PlanContent = lessonPlan.PlanContent;
@@ -614,11 +545,16 @@ namespace MyPortal.BusinessLogic.Services
             await UnitOfWork.Complete();
         }
 
-        public async Task UpdateSession(Session session)
+        public async Task UpdateSession(SessionDto session)
         {
             ValidationService.ValidateModel(session);
 
-            var sessionInDb = await GetSessionById(session.Id);
+            var sessionInDb = await UnitOfWork.Sessions.GetById(session.Id);
+
+            if (sessionInDb == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Session not found");
+            }
 
             if (await ClassHasEnrolments(session.ClassId))
             {
@@ -635,11 +571,16 @@ namespace MyPortal.BusinessLogic.Services
             await UnitOfWork.Complete();
         }
 
-        public async Task UpdateStudyTopic(StudyTopic studyTopic)
+        public async Task UpdateStudyTopic(StudyTopicDto studyTopic)
         {
             ValidationService.ValidateModel(studyTopic);
 
-            var studyTopicInDb = await GetStudyTopicById(studyTopic.Id);
+            var studyTopicInDb = await UnitOfWork.StudyTopics.GetById(studyTopic.Id);
+
+            if (studyTopicInDb == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Study topic not found.");
+            }
 
             studyTopicInDb.Name = studyTopic.Name;
             studyTopicInDb.SubjectId = studyTopic.SubjectId;
@@ -648,7 +589,7 @@ namespace MyPortal.BusinessLogic.Services
             await UnitOfWork.Complete();
         }
 
-        public async Task UpdateSubject(Subject subject)
+        public async Task UpdateSubject(SubjectDto subject)
         {
             var subjectInDb = await GetSubjectById(subject.Id);
 
@@ -682,18 +623,23 @@ namespace MyPortal.BusinessLogic.Services
             return academicYear?.Id;
         }
 
-        public async Task CreateSubjectStaff(SubjectStaffMember subjectStaff)
+        public async Task CreateSubjectStaff(SubjectStaffMemberDto subjectStaff)
         {
             ValidationService.ValidateModel(subjectStaff);
 
-            UnitOfWork.SubjectStaffMembers.Add(subjectStaff);
+            UnitOfWork.SubjectStaffMembers.Add(Mapping.Map<SubjectStaffMember>(subjectStaff));
 
             await UnitOfWork.Complete();
         }
 
-        public async Task UpdateSubjectStaff(SubjectStaffMember subjectStaff)
+        public async Task UpdateSubjectStaff(SubjectStaffMemberDto subjectStaff)
         {
-            var subjectStaffInDb = await GetSubjectStaffById(subjectStaff.Id);
+            var subjectStaffInDb = await UnitOfWork.SubjectStaffMembers.GetById(subjectStaff.Id);
+
+            if (subjectStaffInDb == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Subject staff member not found.");
+            }
 
             subjectStaffInDb.RoleId = subjectStaff.RoleId;
 
@@ -702,7 +648,12 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task DeleteSubjectStaff(int subjectStaffId)
         {
-            var subjectStaffInDb = await GetSubjectStaffById(subjectStaffId);
+            var subjectStaffInDb = await UnitOfWork.SubjectStaffMembers.GetById(subjectStaffId);
+
+            if (subjectStaffInDb == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Subject staff member not found.");
+            }
 
             UnitOfWork.SubjectStaffMembers.Remove(subjectStaffInDb);
 

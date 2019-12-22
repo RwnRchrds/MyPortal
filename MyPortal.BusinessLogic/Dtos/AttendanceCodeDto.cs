@@ -20,8 +20,15 @@ namespace MyPortal.BusinessLogic.Dtos
         [StringLength(128)]
         public string Description { get; set; }
 
-        public AttendanceMeaning Meaning { get; set; }
+        public int MeaningId { get; set; }
 
         public bool DoNotUse { get; set; }
+
+        public virtual AttendanceCodeMeaning CodeMeaning { get; set; }
+
+        public string GetCodeMeaning()
+        {
+            return CodeMeaning.Description;
+        }
     }
 }

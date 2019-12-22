@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MyPortal.BusinessLogic.Dtos;
 using MyPortal.BusinessLogic.Exceptions;
 using MyPortal.Data.Interfaces;
 using MyPortal.Data.Models;
@@ -20,42 +21,40 @@ namespace MyPortal.BusinessLogic.Services
 
         }
 
-        public async Task CreateComment(Comment comment)
+        public async Task CreateComment(CommentDto comment)
         {
             ValidationService.ValidateModel(comment);
 
-            UnitOfWork.Comments.Add(comment);
+            UnitOfWork.Comments.Add(Mapping.Map<Comment>(comment));
             await UnitOfWork.Complete();
         }
 
-        public async Task CreateCommentBank(CommentBank commentBank)
+        public async Task CreateCommentBank(CommentBankDto commentBank)
         {
             ValidationService.ValidateModel(commentBank);
 
-            UnitOfWork.CommentBanks.Add(commentBank);
+            UnitOfWork.CommentBanks.Add(Mapping.Map<CommentBank>(commentBank));
             await UnitOfWork.Complete();
         }
 
-        public async Task CreateLog(ProfileLogNote logNote, int academicYearId, string userId)
+        public async Task CreateLog(ProfileLogNoteDto logNote)
         {
-            using (var staffService = new StaffMemberService())
-            {
-                var author = await staffService.GetStaffMemberByUserId(userId);
+            logNote.Date = DateTime.Now;
 
-                logNote.Date = DateTime.Now;
-                logNote.AuthorId = author.Id;
-                logNote.AcademicYearId = academicYearId;
+            ValidationService.ValidateModel(logNote);
 
-                ValidationService.ValidateModel(logNote);
-
-                UnitOfWork.ProfileLogNotes.Add(logNote);
-                await UnitOfWork.Complete();
-            }
+            UnitOfWork.ProfileLogNotes.Add(Mapping.Map<ProfileLogNote>(logNote));
+            await UnitOfWork.Complete();
         }
 
         public async Task DeleteComment(int commentId)
         {
-            var comment = await GetCommentById(commentId);
+            var comment = await UnitOfWork.Comments.GetById(commentId);
+
+            if (comment == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Comment not found.");
+            }
 
             UnitOfWork.Comments.Remove(comment);
             await UnitOfWork.Complete();
@@ -65,37 +64,45 @@ namespace MyPortal.BusinessLogic.Services
         {
             var commentBank = await UnitOfWork.CommentBanks.GetById(commentBankId);
 
+            if (commentBank == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Comment bank not found.");
+            }
+
             UnitOfWork.CommentBanks.Remove(commentBank);
             await UnitOfWork.Complete();
         }
 
         public async Task DeleteLog(int logId)
         {
-            var logInDb = await GetLogById(logId);
+            var logInDb = await UnitOfWork.ProfileLogNotes.GetById(logId);
+
+            if (logInDb == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Log note not found.");
+            }
 
             UnitOfWork.ProfileLogNotes.Remove(logInDb); //Delete from database
 
             await UnitOfWork.Complete();
         }
 
-        public async Task<IEnumerable<CommentBank>> GetAllCommentBanks()
+        public async Task<IEnumerable<CommentBankDto>> GetAllCommentBanks()
         {
-            return await UnitOfWork.CommentBanks.GetAll();
+            return (await UnitOfWork.CommentBanks.GetAll()).Select(Mapping.Map<CommentBankDto>);
         }
 
         public async Task<IDictionary<int, string>> GetAllCommentBanksLookup()
         {
-            var commentBanks = await GetAllCommentBanks();
-
-            return commentBanks.ToDictionary(x => x.Id, x => x.Name);
+            return (await GetAllCommentBanks()).ToDictionary(x => x.Id, x => x.Name);
         }
 
-        public async Task<IEnumerable<Comment>> GetAllComments()
+        public async Task<IEnumerable<CommentDto>> GetAllComments()
         {
-            return await UnitOfWork.Comments.GetAll();
+            return (await UnitOfWork.Comments.GetAll()).Select(Mapping.Map<CommentDto>);
         }
 
-        public async Task<CommentBank> GetCommentBankById(int commentBankId)
+        public async Task<CommentBankDto> GetCommentBankById(int commentBankId)
         {
             var commentBankInDb = await UnitOfWork.CommentBanks.GetById(commentBankId);
 
@@ -104,10 +111,10 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Comment bank not found");
             }
 
-            return commentBankInDb;
+            return Mapping.Map<CommentBankDto>(commentBankInDb);
         }
 
-        public async Task<Comment> GetCommentById(int commentId)
+        public async Task<CommentDto> GetCommentById(int commentId)
         {
             var comment = await UnitOfWork.Comments.GetById(commentId);
 
@@ -116,17 +123,15 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Comment not found");
             }
 
-            return comment;
+            return Mapping.Map<CommentDto>(comment);
         }
 
-        public async Task<IEnumerable<Comment>> GetCommentsByBank(int commentBankId)
+        public async Task<IEnumerable<CommentDto>> GetCommentsByBank(int commentBankId)
         {
-            var comments = await UnitOfWork.Comments.GetByCommentBank(commentBankId);
-
-            return comments;
+            return (await UnitOfWork.Comments.GetByCommentBank(commentBankId)).Select(Mapping.Map<CommentDto>);
         }
 
-        public async Task<ProfileLogNote> GetLogById(int logId)
+        public async Task<ProfileLogNoteDto> GetLogById(int logId)
         {
             var log = await UnitOfWork.ProfileLogNotes.GetById(logId);
 
@@ -135,19 +140,18 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Log not found");
             }
 
-            return log;
+            return Mapping.Map<ProfileLogNoteDto>(log);
         }
 
-        public async Task<IEnumerable<ProfileLogNote>> GetLogsByStudent(int studentId, int academicYearId)
+        public async Task<IEnumerable<ProfileLogNoteDto>> GetLogsByStudent(int studentId, int academicYearId)
         {
-            var logs = await UnitOfWork.ProfileLogNotes.GetByStudent(studentId, academicYearId);
-
-            return logs;
+            return (await UnitOfWork.ProfileLogNotes.GetByStudent(studentId, academicYearId)).Select(
+                Mapping.Map<ProfileLogNoteDto>);
         }
 
-        public async Task UpdateComment(Comment comment)
+        public async Task UpdateComment(CommentDto comment)
         {
-            var commentInDb = await GetCommentById(comment.Id);
+            var commentInDb = await UnitOfWork.Comments.GetById(comment.Id);
 
             commentInDb.Value = comment.Value;
             commentInDb.CommentBankId = comment.CommentBankId;
@@ -155,18 +159,18 @@ namespace MyPortal.BusinessLogic.Services
             await UnitOfWork.Complete();
         }
 
-        public async Task UpdateCommentBank(CommentBank commentBank)
+        public async Task UpdateCommentBank(CommentBankDto commentBank)
         {
-            var commentBankInDb = await GetCommentBankById(commentBank.Id);
+            var commentBankInDb = await UnitOfWork.CommentBanks.GetById(commentBank.Id);
             
             commentBankInDb.Name = commentBank.Name;
 
             await UnitOfWork.Complete();
         }
 
-        public async Task UpdateLog(ProfileLogNote logNote)
+        public async Task UpdateLog(ProfileLogNoteDto logNote)
         {
-            var logInDb = await GetLogById(logNote.Id);
+            var logInDb = await UnitOfWork.ProfileLogNotes.GetById(logNote.Id);
 
             logInDb.TypeId = logNote.TypeId;
             logInDb.Message = logNote.Message;
@@ -174,18 +178,14 @@ namespace MyPortal.BusinessLogic.Services
             await UnitOfWork.Complete();
         }
 
-        public async Task<IEnumerable<ProfileLogNoteType>> GetAllLogTypes()
+        public async Task<IEnumerable<ProfileLogNoteTypeDto>> GetAllLogTypes()
         {
-            var logTypes = await UnitOfWork.ProfileLogNoteTypes.GetAll();
-
-            return logTypes;
+            return (await UnitOfWork.ProfileLogNoteTypes.GetAll()).Select(Mapping.Map<ProfileLogNoteTypeDto>);
         }
 
         public async Task<IDictionary<int, string>> GetAllLogTypesLookup()
         {
-            var logTypes = await GetAllLogTypes();
-
-            return logTypes.ToDictionary(x => x.Id, x => x.Name);
+            return (await GetAllLogTypes()).ToDictionary(x => x.Id, x => x.Name);
         }
     }
 }

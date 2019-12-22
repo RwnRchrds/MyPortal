@@ -8,11 +8,12 @@ namespace MyPortal.BusinessLogic.Services
     public abstract class MyPortalService : IDisposable
     {
         protected readonly IUnitOfWork UnitOfWork;
-        protected IMapper Mapper;
+        protected readonly MappingService Mapping;
 
         protected MyPortalService()
         {
             UnitOfWork = new UnitOfWork();
+            Mapping = new MappingService(MapperType.BusinessObjects);
         }
 
         protected MyPortalService(IUnitOfWork unitOfWork)

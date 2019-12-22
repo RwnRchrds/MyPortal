@@ -20,7 +20,6 @@ namespace MyPortal.BusinessLogic.Dtos
 
         public int RecordedById { get; set; }
 
-        [Column(TypeName = "date")]
         public DateTime Date { get; set; }
 
         public string Comments { get; set; }

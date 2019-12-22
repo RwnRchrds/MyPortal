@@ -14,15 +14,9 @@ namespace MyPortal.BusinessLogic.Models.Attributes
         {
             var academicYear = (AcademicYear) validationContext.ObjectInstance;
 
-            if (academicYear.LastDate > academicYear.FirstDate)
-            {
-                return ValidationResult.Success;
-            }
-
-            else
-            {
-                return new ValidationResult("Last date must be greater than first date.");
-            }
+            return academicYear.LastDate > academicYear.FirstDate
+                ? ValidationResult.Success
+                : new ValidationResult("Last date must be greater than first date.");
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Migrations.Builders;
 using System.Linq;
 using System.Threading.Tasks;
+using MyPortal.BusinessLogic.Dtos;
 using MyPortal.BusinessLogic.Exceptions;
 using MyPortal.Data.Interfaces;
 using MyPortal.Data.Models;
@@ -20,15 +22,15 @@ namespace MyPortal.BusinessLogic.Services
 
         }
         
-        public async Task CreateCourse(TrainingCourse course)
+        public async Task CreateCourse(TrainingCourseDto course)
         {
             ValidationService.ValidateModel(course);
 
-            UnitOfWork.TrainingCourses.Add(course);
+            UnitOfWork.TrainingCourses.Add(Mapping.Map<TrainingCourse>(course));
             await UnitOfWork.Complete();
         }
 
-        public async Task CreateObservation(Observation observation,
+        public async Task CreateObservation(ObservationDto observation,
             string userId)
         {
             observation.Date = DateTime.Now;
@@ -43,15 +45,15 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Observer not found");
             }
 
-            UnitOfWork.Observations.Add(observation);
+            UnitOfWork.Observations.Add(Mapping.Map<Observation>(observation));
             await UnitOfWork.Complete();
         }
 
-        public async Task CreateTrainingCertificate(TrainingCertificate certificate)
+        public async Task CreateTrainingCertificate(TrainingCertificateDto certificate)
         {
             ValidationService.ValidateModel(certificate);
 
-            UnitOfWork.TrainingCertificates.Add(certificate);
+            UnitOfWork.TrainingCertificates.Add(Mapping.Map<TrainingCertificate>(certificate));
             await UnitOfWork.Complete();
         }
 
@@ -61,7 +63,7 @@ namespace MyPortal.BusinessLogic.Services
 
             if (courseInDb.Certificates.Any())
             {
-                throw new ServiceException(ExceptionType.Forbidden, "Cannot delete a course with issued certificates");
+                throw new ServiceException(ExceptionType.Forbidden, "Cannot delete a course with issued certificates.");
             }
 
             UnitOfWork.TrainingCourses.Remove(courseInDb);
@@ -78,19 +80,18 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task DeleteTrainingCertificate(int staffId, int courseId)
         {
-            var certInDb =
-                await GetCertificate(staffId, courseId);
+            var certInDb = await UnitOfWork.TrainingCertificates.Get(staffId, courseId);
 
             UnitOfWork.TrainingCertificates.Remove(certInDb);
             await UnitOfWork.Complete();
         }
 
-        public async Task<IEnumerable<TrainingCourse>> GetAllTrainingCourses()
+        public async Task<IEnumerable<TrainingCourseDto>> GetAllTrainingCourses()
         {
-            return await UnitOfWork.TrainingCourses.GetAll();
+            return (await UnitOfWork.TrainingCourses.GetAll()).Select(Mapping.Map<TrainingCourseDto>);
         }
 
-        public async Task<TrainingCertificate> GetCertificate(int staffId, int courseId)
+        public async Task<TrainingCertificateDto> GetCertificate(int staffId, int courseId)
         {
             var certInDb = await UnitOfWork.TrainingCertificates.Get(staffId, courseId);
 
@@ -99,18 +100,16 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Certificate not found");
             }
 
-            return certInDb;
+            return Mapping.Map<TrainingCertificateDto>(certInDb);
         }
 
-        public async Task<IEnumerable<TrainingCertificate>> GetCertificatesByStaffMember(
+        public async Task<IEnumerable<TrainingCertificateDto>> GetCertificatesByStaffMember(
             int staffId)
         {
-            var certificates = await UnitOfWork.TrainingCertificates.GetByStaffMember(staffId);
-
-            return certificates;
+            return (await UnitOfWork.TrainingCertificates.GetByStaffMember(staffId)).Select(Mapping.Map<TrainingCertificateDto>);
         }
         
-        public async Task<TrainingCourse> GetCourseById(int courseId)
+        public async Task<TrainingCourseDto> GetCourseById(int courseId)
         {
             var courseInDb = await UnitOfWork.TrainingCourses.GetById(courseId);
 
@@ -119,10 +118,10 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Course not found");
             }
 
-            return courseInDb;
+            return Mapping.Map<TrainingCourseDto>(courseInDb);
         }
 
-        public async Task<Observation> GetObservationById(int observationId)
+        public async Task<ObservationDto> GetObservationById(int observationId)
         {
             var observation = await UnitOfWork.Observations.GetById(observationId);
 
@@ -131,27 +130,19 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Observation not found");
             }
 
-            return observation;
+            return Mapping.Map<ObservationDto>(observation);
         }
 
-        public async Task<IEnumerable<Observation>> GetObservationsByStaffMember(
+        public async Task<IEnumerable<ObservationDto>> GetObservationsByStaffMember(
             int staffMemberId)
         {
-            var observations = await UnitOfWork.Observations.GetByStaffMember(staffMemberId);
-
-            return observations;
+            return (await UnitOfWork.Observations.GetByStaffMember(staffMemberId)).Select(Mapping.Map<ObservationDto>);
         }
 
-        public async Task UpdateCertificate(TrainingCertificate certificate,
-                                                    string userId)
+        public async Task UpdateCertificate(TrainingCertificate certificate)
         {
             var certInDb =
-                await GetCertificate(certificate.StaffId, certificate.CourseId);
-
-            if (certInDb.Status == CertificateStatus.Completed)
-            {
-                throw new ServiceException(ExceptionType.Forbidden, "Cannot modify a completed certificate");
-            }
+                await UnitOfWork.TrainingCertificates.Get(certificate.StaffId, certificate.CourseId);
 
             certInDb.Status = certificate.Status;
 
@@ -160,7 +151,12 @@ namespace MyPortal.BusinessLogic.Services
         
         public async Task UpdateCourse(TrainingCourse course)
         {
-            var courseInDb = await GetCourseById(course.Id);
+            var courseInDb = await UnitOfWork.TrainingCourses.GetById(course.Id);
+
+            if (courseInDb == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Training course not found.");
+            }
 
             courseInDb.Code = course.Code;
             courseInDb.Description = course.Description;
@@ -170,7 +166,12 @@ namespace MyPortal.BusinessLogic.Services
         
         public async Task UpdateObservation(Observation observation)
         {
-            var observationInDb = await GetObservationById(observation.Id);
+            var observationInDb = await UnitOfWork.Observations.GetById(observation.Id);
+
+            if (observationInDb == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Observation not found");
+            }
 
             observationInDb.Outcome = observation.Outcome;
             observationInDb.ObserverId = observation.ObserverId;

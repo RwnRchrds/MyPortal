@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using MyPortal.BusinessLogic.Dtos;
 using MyPortal.BusinessLogic.Exceptions;
 using MyPortal.Data.Interfaces;
 using MyPortal.Data.Models;
@@ -19,7 +21,7 @@ namespace MyPortal.BusinessLogic.Services
 
         }
 
-        public async Task CreateDocument(Document document, string userId)
+        public async Task CreateDocument(DocumentDto document, string userId)
         {
             if (document.UploaderId == 0)
             {
@@ -43,23 +45,16 @@ namespace MyPortal.BusinessLogic.Services
 
             document.Date = DateTime.Now;
 
-            UnitOfWork.Documents.Add(document);
+            UnitOfWork.Documents.Add(Mapping.Map<Document>(document));
 
             await UnitOfWork.Complete();
         }
 
-        public async Task CreatePersonalDocument(PersonAttachment attachment, string userId)
+        public async Task CreatePersonalDocument(PersonAttachmentDto attachment)
         {
             if (!await UnitOfWork.People.Any(x => x.Id == attachment.PersonId))
             {
                 throw new ServiceException(ExceptionType.NotFound,"Person not found");
-            }
-
-            var uploader = await UnitOfWork.StaffMembers.GetByUserId(userId);
-
-            if (uploader == null)
-            {
-                throw new ServiceException(ExceptionType.NotFound,"Staff member not found");
             }
 
             attachment.Document.IsGeneral = false;
@@ -68,23 +63,21 @@ namespace MyPortal.BusinessLogic.Services
 
             attachment.Document.Date = DateTime.Now;
 
-            attachment.Document.UploaderId = uploader.Id;
-
             var documentObject = attachment.Document;
 
-            UnitOfWork.Documents.Add(documentObject);
-            UnitOfWork.PersonAttachments.Add(attachment);
+            UnitOfWork.Documents.Add(Mapping.Map<Document>(documentObject));
+            UnitOfWork.PersonAttachments.Add(Mapping.Map<PersonAttachment>(attachment));
 
             await UnitOfWork.Complete();
         }
 
         public async Task DeleteDocument(int documentId)
         {
-            var documentInDb = await GetDocumentById(documentId);
+            var documentInDb = await UnitOfWork.Documents.GetById(documentId);
 
             if (documentInDb == null)
             {
-                throw new ServiceException(ExceptionType.NotFound,"Document not found");
+                throw new ServiceException(ExceptionType.NotFound,"Document not found.");
             }
 
             UnitOfWork.Documents.Remove(documentInDb);
@@ -94,11 +87,11 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task DeletePersonalDocument(int documentId)
         {
-            var staffDocument = await GetPersonalDocumentById(documentId);
+            var staffDocument = await UnitOfWork.PersonAttachments.GetById(documentId);
 
             if (staffDocument == null)
             {
-                throw new ServiceException(ExceptionType.NotFound,"Document not found");
+                throw new ServiceException(ExceptionType.NotFound,"Attachment not found");
             }
 
             var attachedDocument = staffDocument.Document;
@@ -115,48 +108,46 @@ namespace MyPortal.BusinessLogic.Services
             await UnitOfWork.Complete();
         }
 
-        public async Task<IEnumerable<Document>> GetAllGeneralDocuments()
+        public async Task<IEnumerable<DocumentDto>> GetAllGeneralDocuments()
         {
-            return await UnitOfWork.Documents.GetGeneral();
+            return (await UnitOfWork.Documents.GetGeneral()).Select(Mapping.Map<DocumentDto>);
         }
 
-        public async Task<IEnumerable<Document>> GetApprovedGeneralDocuments()
+        public async Task<IEnumerable<DocumentDto>> GetApprovedGeneralDocuments()
         {
-            return await UnitOfWork.Documents.GetApproved();
+            return (await UnitOfWork.Documents.GetApproved()).Select(Mapping.Map<DocumentDto>);
         }
         
-        public async Task<Document> GetDocumentById(int documentId)
+        public async Task<DocumentDto> GetDocumentById(int documentId)
         {
             var document = await UnitOfWork.Documents.GetById(documentId);
 
             if (document == null)
             {
-                throw new ServiceException(ExceptionType.NotFound, "Document not found");
+                throw new ServiceException(ExceptionType.NotFound, "Document not found.");
             }
 
-            return document;
+            return Mapping.Map<DocumentDto>(document);
         }
         
-        public async Task<PersonAttachment> GetPersonalDocumentById(int documentId)
+        public async Task<PersonAttachmentDto> GetPersonAttachmentById(int documentId)
         {
             var document = await UnitOfWork.PersonAttachments.GetById(documentId);
 
             if (document == null)
             {
-                throw new ServiceException(ExceptionType.NotFound, "Document not found");
+                throw new ServiceException(ExceptionType.NotFound, "Document not found.");
             }
 
-            return document;
+            return Mapping.Map<PersonAttachmentDto>(document);
         }
 
-        public async Task<IEnumerable<PersonAttachment>> GetPersonalDocuments(int personId)
+        public async Task<IEnumerable<PersonAttachmentDto>> GetPersonAttachments(int personId)
         {
-            var documents = await UnitOfWork.PersonAttachments.GetByPerson(personId);
-
-            return documents;
+            return (await UnitOfWork.PersonAttachments.GetByPerson(personId)).Select(Mapping.Map<PersonAttachmentDto>);
         }
 
-        public async Task UpdateDocument(Document document)
+        public async Task UpdateDocument(DocumentDto document)
         {
             var documentInDb = await GetDocumentById(document.Id);
 
@@ -168,9 +159,9 @@ namespace MyPortal.BusinessLogic.Services
             await UnitOfWork.Complete();
         }
         
-        public async Task UpdatePersonalDocument(PersonAttachment attachment)
+        public async Task UpdatePersonAttachment(PersonAttachmentDto attachment)
         {
-            var documentInDb = await GetPersonalDocumentById(attachment.Id);
+            var documentInDb = await GetPersonAttachmentById(attachment.Id);
 
             documentInDb.Document.Description = attachment.Document.Description;
             documentInDb.Document.Url = attachment.Document.Url;

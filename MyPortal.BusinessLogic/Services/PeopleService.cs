@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using MyPortal.BusinessLogic.Dtos;
 using MyPortal.BusinessLogic.Exceptions;
 using MyPortal.BusinessLogic.Extensions;
 using MyPortal.Data.Interfaces;
@@ -20,7 +22,7 @@ namespace MyPortal.BusinessLogic.Services
 
         }
 
-        public async Task<Person> GetPersonById(int personId)
+        public async Task<PersonDto> GetPersonById(int personId)
         {
             var person = await UnitOfWork.People.GetById(personId);
 
@@ -29,10 +31,10 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Person not found");
             }
 
-            return person;
+            return Mapping.Map<PersonDto>(person);
         }
 
-        public async Task<Person> GetPersonByUserId(string userId)
+        public async Task<PersonDto> GetPersonByUserId(string userId)
         {
             var person = await UnitOfWork.People.GetByUserId(userId);
 
@@ -41,12 +43,17 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Person not found");
             }
 
-            return person;
+            return Mapping.Map<PersonDto>(person);
         }
 
         public async Task UpdatePerson(Person person, bool commitImmediately = true)
         {
-            var personInDb = await GetPersonById(person.Id);
+            var personInDb = await UnitOfWork.People.GetById(person.Id);
+
+            if (personInDb == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Person not found.");
+            }
 
             personInDb.Title = person.Title;
             personInDb.FirstName = person.FirstName;
@@ -68,24 +75,19 @@ namespace MyPortal.BusinessLogic.Services
             return await UnitOfWork.People.GetNumberOfBirthdaysThisWeek(weekBeginning);
         }
 
-        public async Task<IEnumerable<Person>> SearchForPerson(Person person)
+        public async Task<IEnumerable<PersonDto>> SearchForPerson(PersonDto person)
         {
-            return await UnitOfWork.People.Search(person);
+            return (await UnitOfWork.People.Search(Mapping.Map<Person>(person))).Select(Mapping.Map<PersonDto>);
         }
 
-        public async Task<IEnumerable<PersonCondition>> GetMedicalConditionsByPerson(int personId)
+        public async Task<IEnumerable<PersonConditionDto>> GetMedicalConditionsByPerson(int personId)
         {
-            var conditions = await UnitOfWork.PersonConditions.GetByPerson(personId);
-
-            return conditions;
+            return (await UnitOfWork.PersonConditions.GetByPerson(personId)).Select(Mapping.Map<PersonConditionDto>);
         }
 
-        public async Task<IEnumerable<PersonDietaryRequirement>> GetMedicalDietaryRequirementsByPerson(int personId)
+        public async Task<IEnumerable<PersonDietaryRequirementDto>> GetMedicalDietaryRequirementsByPerson(int personId)
         {
-            var dietaryRequirements =
-                await UnitOfWork.PersonDietaryRequirements.GetByPerson(personId);
-
-            return dietaryRequirements;
+            return (await UnitOfWork.PersonDietaryRequirements.GetByPerson(personId)).Select(Mapping.Map<PersonDietaryRequirementDto>);
         }
 
         public IDictionary<string, string> GetGendersLookup()

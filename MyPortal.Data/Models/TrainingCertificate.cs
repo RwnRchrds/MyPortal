@@ -3,13 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Data.Models
 {
-    public enum CertificateStatus
-    {
-        Completed = 1,
-        Pending = 2,
-        Failed = 3
-    }
-
     /// <summary>
     /// A certificate awarded to personnel who have completed a training course.
     /// </summary>
@@ -26,10 +19,12 @@ namespace MyPortal.Data.Models
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int StaffId { get; set; }
 
-        public CertificateStatus Status { get; set; }
+        public int StatusId { get; set; }
 
         public virtual StaffMember StaffMember { get; set; }
 
         public virtual TrainingCourse TrainingCourse { get; set; }
+
+        public virtual TrainingCertificateStatus Status { get; set; }
     }
 }

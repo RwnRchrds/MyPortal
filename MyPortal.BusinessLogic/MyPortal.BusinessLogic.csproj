@@ -89,6 +89,7 @@
     <Compile Include="Dtos\AspectDto.cs" />
     <Compile Include="Dtos\AspectTypeDto.cs" />
     <Compile Include="Dtos\AttendanceCodeDto.cs" />
+    <Compile Include="Dtos\AttendanceCodeMeaningDto.cs" />
     <Compile Include="Dtos\AttendanceMarkDto.cs" />
     <Compile Include="Dtos\AttendanceWeekDto.cs" />
     <Compile Include="Dtos\BasketItemDto.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="Dtos\DocumentDto.cs" />
     <Compile Include="Dtos\DocumentTypeDto.cs" />
     <Compile Include="Dtos\EmailAddressDto.cs" />
+    <Compile Include="Dtos\EmailAddressTypeDto.cs" />
     <Compile Include="Dtos\EnrolmentDto.cs" />
     <Compile Include="Dtos\GiftedTalentedDto.cs" />
     <Compile Include="Dtos\GovernanceTypeDto.cs" />
@@ -144,7 +146,55 @@
     <Compile Include="Dtos\Identity\PermissionDto.cs" />
     <Compile Include="Dtos\Identity\RolePermissionDto.cs" />
     <Compile Include="Dtos\IncidentDto.cs" />
+    <Compile Include="Dtos\IncidentTypeDto.cs" />
+    <Compile Include="Dtos\IntakeTypeDto.cs" />
+    <Compile Include="Dtos\LessonPlanDto.cs" />
+    <Compile Include="Dtos\LessonPlanTemplateDto.cs" />
     <Compile Include="Dtos\Lite\AttendanceMarkLiteDto.cs" />
+    <Compile Include="Dtos\LocalAuthorityDto.cs" />
+    <Compile Include="Dtos\LocationDto.cs" />
+    <Compile Include="Dtos\MedicalEventDto.cs" />
+    <Compile Include="Dtos\ObservationDto.cs" />
+    <Compile Include="Dtos\ObservationOutcomeDto.cs" />
+    <Compile Include="Dtos\PeriodDto.cs" />
+    <Compile Include="Dtos\PersonAttachmentDto.cs" />
+    <Compile Include="Dtos\PersonConditionDto.cs" />
+    <Compile Include="Dtos\PersonDietaryRequirementDto.cs" />
+    <Compile Include="Dtos\PersonDto.cs" />
+    <Compile Include="Dtos\PhaseDto.cs" />
+    <Compile Include="Dtos\PhoneNumberDto.cs" />
+    <Compile Include="Dtos\PhoneNumberTypeDto.cs" />
+    <Compile Include="Dtos\ProductDto.cs" />
+    <Compile Include="Dtos\ProductTypeDto.cs" />
+    <Compile Include="Dtos\ProfileLogNoteDto.cs" />
+    <Compile Include="Dtos\ProfileLogNoteTypeDto.cs" />
+    <Compile Include="Dtos\RegGroupDto.cs" />
+    <Compile Include="Dtos\RelationshipTypeDto.cs" />
+    <Compile Include="Dtos\ReportDto.cs" />
+    <Compile Include="Dtos\ResultDto.cs" />
+    <Compile Include="Dtos\ResultSetDto.cs" />
+    <Compile Include="Dtos\SaleDto.cs" />
+    <Compile Include="Dtos\SchoolDto.cs" />
+    <Compile Include="Dtos\SchoolTypeDto.cs" />
+    <Compile Include="Dtos\SenEventDto.cs" />
+    <Compile Include="Dtos\SenEventTypeDto.cs" />
+    <Compile Include="Dtos\SenProvisionDto.cs" />
+    <Compile Include="Dtos\SenProvisionTypeDto.cs" />
+    <Compile Include="Dtos\SenReviewTypeDto.cs" />
+    <Compile Include="Dtos\SenStatusDto.cs" />
+    <Compile Include="Dtos\SessionDto.cs" />
+    <Compile Include="Dtos\StaffMemberDto.cs" />
+    <Compile Include="Dtos\StudentContactDto.cs" />
+    <Compile Include="Dtos\StudentDto.cs" />
+    <Compile Include="Dtos\StudyTopicDto.cs" />
+    <Compile Include="Dtos\SubjectDto.cs" />
+    <Compile Include="Dtos\SubjectStaffMemberDto.cs" />
+    <Compile Include="Dtos\SubjectStaffMemberRoleDto.cs" />
+    <Compile Include="Dtos\SystemAreaDto.cs" />
+    <Compile Include="Dtos\TrainingCertificateDto.cs" />
+    <Compile Include="Dtos\TrainingCertificateStatusDto.cs" />
+    <Compile Include="Dtos\TrainingCourseDto.cs" />
+    <Compile Include="Dtos\YearGroupDto.cs" />
     <Compile Include="Exceptions\ServiceException.cs" />
     <Compile Include="Extensions\AttendanceExtensions.cs" />
     <Compile Include="Extensions\CurriculumExtensions.cs" />
@@ -152,6 +202,7 @@
     <Compile Include="Extensions\StaffMemberExtensions.cs" />
     <Compile Include="Extensions\StudentExtensions.cs" />
     <Compile Include="Models\Attributes\AcademicYearLastDate.cs" />
+    <Compile Include="Models\Attributes\PeriodEndTime.cs" />
     <Compile Include="Models\Attributes\Upn.cs" />
     <Compile Include="Models\Data\ApiResponse.cs" />
     <Compile Include="Models\Data\AttendanceSummary.cs" />
@@ -161,10 +212,6 @@
     <Compile Include="Models\Data\DataGridUpdate.cs" />
     <Compile Include="Models\Data\FinanceTransaction.cs" />
     <Compile Include="Models\Data\GroupEnrolment.cs" />
-    <Compile Include="Models\Identity\ApplicationRoleManager.cs" />
-    <Compile Include="Models\Identity\ApplicationSignInManager.cs" />
-    <Compile Include="Models\Identity\ApplicationUserManager.cs" />
-    <Compile Include="Models\Data\NewUserModel.cs" />
     <Compile Include="Models\Data\PermissionIndicator.cs" />
     <Compile Include="Models\Data\PersonDocumentUpload.cs" />
     <Compile Include="Models\Data\ProcessResponse.cs" />
@@ -176,7 +223,6 @@
     <Compile Include="Models\Data\UserRoleModel.cs" />
     <Compile Include="Models\Data\ValidationResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\AdminService.cs" />
     <Compile Include="Services\AssessmentService.cs" />
     <Compile Include="Services\AttendanceService.cs" />
     <Compile Include="Services\BehaviourService.cs" />
@@ -184,14 +230,6 @@
     <Compile Include="Services\CurriculumService.cs" />
     <Compile Include="Services\DocumentService.cs" />
     <Compile Include="Services\FinanceService.cs" />
-    <Compile Include="Services\IdentityService.cs" />
-    <Compile Include="Models\Identity\ApplicationRole.cs" />
-    <Compile Include="Models\Identity\ApplicationUser.cs" />
-    <Compile Include="Services\Identity\EmailService.cs" />
-    <Compile Include="Models\Identity\IdentityContext.cs" />
-    <Compile Include="Models\Identity\Permission.cs" />
-    <Compile Include="Models\Identity\RolePermission.cs" />
-    <Compile Include="Services\Identity\SmsService.cs" />
     <Compile Include="Services\MappingService.cs" />
     <Compile Include="Services\MyPortalService.cs" />
     <Compile Include="Services\PastoralService.cs" />
@@ -201,7 +239,6 @@
     <Compile Include="Services\StaffMemberService.cs" />
     <Compile Include="Services\StudentService.cs" />
     <Compile Include="Services\SystemService.cs" />
-    <Compile Include="Services\UserService.cs" />
     <Compile Include="Services\UtilityService.cs" />
     <Compile Include="Services\ValidationService.cs" />
   </ItemGroup>
@@ -215,7 +252,9 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Models\Identity\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

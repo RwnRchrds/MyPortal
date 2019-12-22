@@ -19,6 +19,7 @@ namespace MyPortal.Data.Persistence
             Results = new ResultRepository(_context);
             ResultSets = new ResultSetRepository(_context);
             AttendanceCodes = new AttendanceCodeRepository(_context);
+            AttendanceCodeMeanings = new AttendanceCodeMeaningRepository(_context);
             AttendanceMarks = new AttendanceMarkRepository(_context);
             Periods = new PeriodRepository(_context);
             AttendanceWeeks = new AttendanceWeekRepository(_context);
@@ -29,6 +30,7 @@ namespace MyPortal.Data.Persistence
             AddressPersons = new AddressPersonRepository(_context);
             Addresses = new AddressRepository(_context);
             EmailAddresses = new EmailAddressRepository(_context);
+            EmailAddressTypes = new EmailAddressTypeRepository(_context);
             CommunicationLogs = new CommunicationLogRepository(_context);
             PhoneNumbers = new PhoneNumberRepository(_context);
             PhoneNumberTypes = new PhoneNumberTypeRepository(_context);
@@ -61,7 +63,9 @@ namespace MyPortal.Data.Persistence
             YearGroups = new YearGroupRepository(_context);
             PersonAttachments = new PersonAttachmentRepository(_context);
             Observations = new ObservationRepository(_context);
+            ObservationOutcomes = new ObservationOutcomeRepository(_context);
             TrainingCertificates = new TrainingCertificateRepository(_context);
+            TrainingCertificateStatus = new TrainingCertificateStatusRepository(_context);
             TrainingCourses = new TrainingCourseRepository(_context);
             People = new PersonRepository(_context);
             CommentBanks = new CommentBankRepository(_context);
@@ -96,6 +100,7 @@ namespace MyPortal.Data.Persistence
         public IResultRepository Results { get; }
         public IResultSetRepository ResultSets { get; }
         public IAttendanceCodeRepository AttendanceCodes { get; }
+        public IAttendanceCodeMeaningRepository AttendanceCodeMeanings { get; }
         public IAttendanceMarkRepository AttendanceMarks { get; }
         public IPeriodRepository Periods { get; }
         public IAttendanceWeekRepository AttendanceWeeks { get; }
@@ -106,6 +111,7 @@ namespace MyPortal.Data.Persistence
         public IAddressPersonRepository AddressPersons { get; }
         public IAddressRepository Addresses { get; }
         public IEmailAddressRepository EmailAddresses { get; }
+        public IEmailAddressTypeRepository EmailAddressTypes { get; }
         public ICommunicationLogRepository CommunicationLogs { get; }
         public IPhoneNumberRepository PhoneNumbers { get; }
         public IPhoneNumberTypeRepository PhoneNumberTypes { get; }
@@ -138,7 +144,9 @@ namespace MyPortal.Data.Persistence
         public IYearGroupRepository YearGroups { get; }
         public IPersonAttachmentRepository PersonAttachments { get; }
         public IObservationRepository Observations { get; }
+        public IObservationOutcomeRepository ObservationOutcomes { get; }
         public ITrainingCertificateRepository TrainingCertificates { get; }
+        public ITrainingCertificateStatusRepository TrainingCertificateStatus { get; }
         public ITrainingCourseRepository TrainingCourses { get; }
         public IPersonRepository People { get; }
         public ICommentBankRepository CommentBanks { get; }

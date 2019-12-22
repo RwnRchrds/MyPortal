@@ -6,17 +6,15 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
-using Microsoft.Ajax.Utilities;
-using Microsoft.AspNet.Identity.EntityFramework;
 using MyPortal.Areas.Staff.ViewModels;
 using MyPortal.Models;
 using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
+using MyPortal.BusinessLogic.Dtos.DataGrid;
 using MyPortal.BusinessLogic.Dtos.Identity;
 using MyPortal.BusinessLogic.Models;
 using MyPortal.BusinessLogic.Models.Data;
-using MyPortal.Dtos.DataGrid;
-using MyPortal.Interfaces;
+using MyPortal.Models.Identity;
 using MyPortal.Services;
 using Syncfusion.EJ2.Base;
 
@@ -30,7 +28,7 @@ namespace MyPortal.Controllers.Api
 
         public AdminController()
         {
-            _service = new AdminService(UnitOfWork);
+
         }
 
         protected override void Dispose(bool disposing)
@@ -132,7 +130,7 @@ namespace MyPortal.Controllers.Api
             {
                 var users = await _service.GetAllUsers();
 
-                return users.Select(Mapper.Map<ApplicationUser, ApplicationUserDto>);
+                return users.Select(_mapping.Map<ApplicationUserDto>);
             }
             catch (Exception e)
             {
@@ -149,7 +147,7 @@ namespace MyPortal.Controllers.Api
             {
                 var users = await _service.GetAllUsers();
 
-                var list = users.Select(Mapper.Map<ApplicationUser, GridApplicationUserDto>);
+                var list = users.Select(_mapping.Map<DataGridApplicationUserDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -162,7 +160,7 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditUsers")]
         [Route("users/create", Name = "ApiCreateUser")]
-        public async Task<IHttpActionResult> CreateUser([FromBody] NewUserViewModel model)
+        public async Task<IHttpActionResult> CreateUser([FromBody] NewUserModel model)
         {
             try
             {
@@ -270,7 +268,7 @@ namespace MyPortal.Controllers.Api
             {
                 var role = await _service.GetRoleById(roleId);
 
-                return Mapper.Map<ApplicationRole, ApplicationRoleDto>(role);
+                return _mapping.Map<ApplicationRoleDto>(role);
             }
             catch (Exception e)
             {
@@ -287,7 +285,7 @@ namespace MyPortal.Controllers.Api
             {
                 var roles = await _service.GetUserDefinedRoles();
 
-                return roles.Select(Mapper.Map<ApplicationRole, ApplicationRoleDto>);
+                return roles.Select(_mapping.Map<ApplicationRoleDto>);
             }
             catch (Exception e)
             {
@@ -304,7 +302,7 @@ namespace MyPortal.Controllers.Api
             {
                 var roles = await _service.GetRolesByUser(userId);
 
-                return roles.Select(Mapper.Map<ApplicationRole, ApplicationRoleDto>);
+                return roles.Select(_mapping.Map<ApplicationRoleDto>);
             }
             catch (Exception e)
             {
@@ -322,7 +320,7 @@ namespace MyPortal.Controllers.Api
             {
                 var roles = await _service.GetRolesByUser(userId);
 
-                var list = roles.Select(Mapper.Map<ApplicationRole, ApplicationRoleDto>);
+                var list = roles.Select(_mapping.Map<ApplicationRoleDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -341,7 +339,7 @@ namespace MyPortal.Controllers.Api
             {
                 var roles = await _service.GetUserDefinedRoles();
 
-                var list = roles.Select(Mapper.Map<ApplicationRole, ApplicationRoleDto>);
+                var list = roles.Select(_mapping.Map<ApplicationRoleDto>);
 
                 return PrepareDataGridObject(list, dm);
             }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MyPortal.BusinessLogic.Dtos;
 using MyPortal.BusinessLogic.Exceptions;
 using MyPortal.Data.Interfaces;
 using MyPortal.Data.Models;
@@ -19,25 +20,30 @@ namespace MyPortal.BusinessLogic.Services
 
         }
 
-        public async Task CreateRegGroup(RegGroup regGroup)
+        public async Task CreateRegGroup(RegGroupDto regGroup)
         {
             ValidationService.ValidateModel(regGroup);
 
-            UnitOfWork.RegGroups.Add(regGroup);
+            UnitOfWork.RegGroups.Add(Mapping.Map<RegGroup>(regGroup));
             await UnitOfWork.Complete();
         }
 
-        public async Task CreateYearGroup(YearGroup yearGroup)
+        public async Task CreateYearGroup(YearGroupDto yearGroup)
         {
             ValidationService.ValidateModel(yearGroup);
 
-            UnitOfWork.YearGroups.Add(yearGroup);
+            UnitOfWork.YearGroups.Add(Mapping.Map<YearGroup>(yearGroup));
             await UnitOfWork.Complete();
         }
 
         public async Task DeleteRegGroup(int regGroupId)
         {
-            var regGroupInDb = await GetRegGroupById(regGroupId);
+            var regGroupInDb = await UnitOfWork.RegGroups.GetById(regGroupId);
+
+            if (regGroupInDb == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Reg group not found.");
+            }
 
             UnitOfWork.RegGroups.Remove(regGroupInDb);
             await UnitOfWork.Complete();
@@ -45,27 +51,28 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task DeleteYearGroup(int yearGroupId)
         {
-            var yearGroupInDb = await GetYearGroupById(yearGroupId);
+            var yearGroupInDb = await UnitOfWork.YearGroups.GetById(yearGroupId);
+
+            if (yearGroupInDb == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Year group not found");
+            }
 
             UnitOfWork.YearGroups.Remove(yearGroupInDb);
             await UnitOfWork.Complete();
         }
 
-        public async Task<IEnumerable<RegGroup>> GetAllRegGroups()
+        public async Task<IEnumerable<RegGroupDto>> GetAllRegGroups()
         {
-            var regGroups = await UnitOfWork.RegGroups.GetAll();
-
-            return regGroups;
+            return (await UnitOfWork.RegGroups.GetAll()).Select(Mapping.Map<RegGroupDto>);
         }
 
-        public async Task<IEnumerable<YearGroup>> GetAllYearGroups()
+        public async Task<IEnumerable<YearGroupDto>> GetAllYearGroups()
         {
-            var yearGroups = await UnitOfWork.YearGroups.GetAll();
-
-            return yearGroups;
+            return (await UnitOfWork.YearGroups.GetAll()).Select(Mapping.Map<YearGroupDto>);
         }
 
-        public async Task<YearGroup> GetYearGroupById(int yearGroupId)
+        public async Task<YearGroupDto> GetYearGroupById(int yearGroupId)
         {
             var yearGroup = await UnitOfWork.YearGroups.GetById(yearGroupId);
 
@@ -74,10 +81,10 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Year group not found");
             }
 
-            return yearGroup;
+            return Mapping.Map<YearGroupDto>(yearGroup);
         }
 
-        public async Task<RegGroup> GetRegGroupById(int regGroupId)
+        public async Task<RegGroupDto> GetRegGroupById(int regGroupId)
         {
             var regGroup = await UnitOfWork.RegGroups.GetById(regGroupId);
 
@@ -86,17 +93,15 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Reg group not found");
             }
 
-            return regGroup;
+            return Mapping.Map<RegGroupDto>(regGroup);
         }
 
-        public async Task<IEnumerable<RegGroup>> GetRegGroupsByYearGroup(int yearGroupId)
+        public async Task<IEnumerable<RegGroupDto>> GetRegGroupsByYearGroup(int yearGroupId)
         {
-            var yearGroups = await UnitOfWork.RegGroups.GetByYearGroup(yearGroupId);
-
-            return yearGroups;
+            return (await UnitOfWork.RegGroups.GetByYearGroup(yearGroupId)).Select(Mapping.Map<RegGroupDto>);
         }
 
-        public async Task UpdateRegGroup(RegGroup regGroup)
+        public async Task UpdateRegGroup(RegGroupDto regGroup)
         {
             var regGroupInDb = await GetRegGroupById(regGroup.Id);
 
@@ -113,6 +118,11 @@ namespace MyPortal.BusinessLogic.Services
         {
             var yearGroupInDb = await UnitOfWork.YearGroups.GetById(yearGroup.Id);
 
+            if (yearGroupInDb == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Year group not found.");
+            }
+
             yearGroupInDb.Name = yearGroup.Name;
             yearGroupInDb.HeadId = yearGroup.HeadId;
 
@@ -121,30 +131,22 @@ namespace MyPortal.BusinessLogic.Services
         
         public async Task<IDictionary<int, string>> GetAllYearGroupsLookup()
         {
-            var yearGroups = await GetAllYearGroups();
-
-            return yearGroups.ToDictionary(x => x.Id, x => x.Name);
+            return (await GetAllYearGroups()).ToDictionary(x => x.Id, x => x.Name);
         }
 
         public async Task<IDictionary<int, string>> GetAllRegGroupsLookup()
         {
-            var regGroups = await GetAllRegGroups();
-
-            return regGroups.ToDictionary(x => x.Id, x => x.Name);
+            return (await GetAllRegGroups()).ToDictionary(x => x.Id, x => x.Name);
         }
 
-        public async Task<IEnumerable<House>> GetAllHouses()
+        public async Task<IEnumerable<HouseDto>> GetAllHouses()
         {
-            var houses = await UnitOfWork.Houses.GetAll();
-
-            return houses;
+            return (await UnitOfWork.Houses.GetAll()).Select(Mapping.Map<HouseDto>);
         }
 
         public async Task<IDictionary<int, string>> GetAllHousesLookup()
         {
-            var houses = await GetAllHouses();
-
-            return houses.ToDictionary(x => x.Id, x => x.Name);
+            return (await GetAllHouses()).ToDictionary(x => x.Id, x => x.Name);
         }
     }
 }

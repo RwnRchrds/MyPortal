@@ -12,6 +12,7 @@ namespace MyPortal.Data.Interfaces
         IResultRepository Results { get; }
         IResultSetRepository ResultSets { get; }
         IAttendanceCodeRepository AttendanceCodes { get; }
+        IAttendanceCodeMeaningRepository AttendanceCodeMeanings { get; }
         IAttendanceMarkRepository AttendanceMarks { get; }
         IPeriodRepository Periods { get; }
         IAttendanceWeekRepository AttendanceWeeks { get; }
@@ -22,6 +23,7 @@ namespace MyPortal.Data.Interfaces
         IAddressPersonRepository AddressPersons { get; }
         IAddressRepository Addresses { get; }
         IEmailAddressRepository EmailAddresses { get; }
+        IEmailAddressTypeRepository EmailAddressTypes { get; }
         ICommunicationLogRepository CommunicationLogs { get; }
         IPhoneNumberRepository PhoneNumbers { get; }
         IPhoneNumberTypeRepository PhoneNumberTypes { get; }
@@ -54,7 +56,9 @@ namespace MyPortal.Data.Interfaces
         IYearGroupRepository YearGroups { get; }
         IPersonAttachmentRepository PersonAttachments { get; }
         IObservationRepository Observations { get; }
+        IObservationOutcomeRepository ObservationOutcomes { get; }
         ITrainingCertificateRepository TrainingCertificates { get; }
+        ITrainingCertificateStatusRepository TrainingCertificateStatus { get; }
         ITrainingCourseRepository TrainingCourses { get; }
         IPersonRepository People { get; }
         ICommentBankRepository CommentBanks { get; }

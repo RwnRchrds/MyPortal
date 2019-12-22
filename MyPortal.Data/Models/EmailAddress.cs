@@ -3,19 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Data.Models
 {
-    public enum EmailAddressType
-    {
-        Home,
-        Work,
-        Other
-    }
-
     [Table("EmailAddress", Schema = "communication")]
     public class EmailAddress
     {
         public int Id { get; set; }
 
-        public EmailAddressType Type { get; set; }
+        public int TypeId { get; set; }
 
         public int PersonId { get; set; }
 
@@ -29,5 +22,6 @@ namespace MyPortal.Data.Models
         public string Notes { get; set; }
 
         public virtual Person Person { get; set; }
+        public virtual EmailAddressType Type { get; set; }
     }
 }

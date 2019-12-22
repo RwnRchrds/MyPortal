@@ -6,12 +6,10 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
-using MyPortal.Models;
-using MyPortal.Models.Database;
-using MyPortal.Exceptions;
+using MyPortal.BusinessLogic.Exceptions;
+using MyPortal.BusinessLogic.Services;
 using MyPortal.Extensions;
-using MyPortal.Interfaces;
-using MyPortal.Persistence;
+using MyPortal.Models.Identity;
 using MyPortal.Services;
 using Syncfusion.EJ2.Base;
 
@@ -19,21 +17,11 @@ namespace MyPortal.Controllers.Api
 {
     public abstract class MyPortalApiController : ApiController
     {
-        protected readonly IUnitOfWork UnitOfWork;
-
-        protected MyPortalApiController(IUnitOfWork unitOfWork)
-        {
-            UnitOfWork = unitOfWork;
-        }
+        protected readonly MappingService _mapping;
 
         protected MyPortalApiController()
         {
-            UnitOfWork = new UnitOfWork();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            UnitOfWork.Dispose();
+            _mapping = new MappingService(MapperType.DataGridObjects);
         }
 
         protected IHttpActionResult HandleException(Exception ex)

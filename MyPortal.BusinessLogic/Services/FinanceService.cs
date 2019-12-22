@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting;
 using System.Threading.Tasks;
+using MyPortal.BusinessLogic.Dtos;
 using MyPortal.BusinessLogic.Exceptions;
 using MyPortal.BusinessLogic.Models;
 using MyPortal.BusinessLogic.Models.Data;
@@ -22,7 +24,7 @@ namespace MyPortal.BusinessLogic.Services
 
         }
 
-        public async Task<bool> AssessBalance(Sale sale)
+        public async Task<bool> AssessBalance(SaleDto sale)
         {
             using (var studentService = new StudentService())
             {
@@ -32,7 +34,7 @@ namespace MyPortal.BusinessLogic.Services
 
                 if (product == null)
                 {
-                    throw new ServiceException(ExceptionType.NotFound, "Product not found");
+                    throw new ServiceException(ExceptionType.NotFound, "Product not found.");
                 }
 
                 if (product.Type.IsMeal && student.FreeSchoolMeals)
@@ -46,77 +48,71 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task CheckoutBasketForStudent(int studentId, int academicYearId)
         {
-            using (var studentService = new StudentService(UnitOfWork))
+            var student = await UnitOfWork.Students.GetById(studentId);
+
+            var basket = student.FinanceBasketItems;
+
+            if (!basket.Any())
             {
-                var student = await studentService.GetStudentById(studentId);
-
-                var basket = student.FinanceBasketItems;
-
-                if (!basket.Any())
-                {
-                    throw new ServiceException(ExceptionType.BadRequest, "There are no items in your basket");
-                }
-
-                if (basket.Sum(x => x.Product.Price) > student.AccountBalance)
-                {
-                    throw new ServiceException(ExceptionType.Forbidden, "Insufficient funds");
-                }
-
-                //Process sales for each item
-                foreach (var item in basket)
-                {
-                    await CreateSale(new Sale
-                    {
-                        AcademicYearId = academicYearId,
-                        StudentId = studentId,
-                        ProductId = item.ProductId
-                    }, academicYearId, false);
-                }
-
-                UnitOfWork.BasketItems.RemoveRange(basket);
-
-                await UnitOfWork.Complete();   
+                throw new ServiceException(ExceptionType.BadRequest, "There are no items in your basket");
             }
-        }
 
-        public async Task CreateBasketItem(BasketItem basketItem)
-        {
-            using (var studentService = new StudentService(UnitOfWork))
+            if (basket.Sum(x => x.Product.Price) > student.AccountBalance)
             {
-                var student = await studentService.GetStudentById(basketItem.StudentId);
-
-                var product = await GetProductById(basketItem.ProductId);
-
-                if (product == null)
-                {
-                    throw new ServiceException(ExceptionType.NotFound, "Product not found");
-                }
-
-                if (!product.Visible)
-                {
-                    throw new ServiceException(ExceptionType.Forbidden, "Product not available");
-                }
-
-                if ((student.FinanceBasketItems.Any(x => x.ProductId == basketItem.ProductId) ||
-                     student.Sales.Any(x => x.ProductId == basketItem.ProductId)) && product.OnceOnly)
-                {
-                    throw new ServiceException(ExceptionType.Forbidden, "This product cannot be purchased more than once");
-                }
-
-                UnitOfWork.BasketItems.Add(basketItem);
-                await UnitOfWork.Complete();
+                throw new ServiceException(ExceptionType.Forbidden, "Insufficient funds");
             }
-        }
 
-        public async Task CreateProduct(Product product)
-        {
-            ValidationService.ValidateModel(product);
+            //Process sales for each item
+            foreach (var item in basket)
+            {
+                await CreateSale(new SaleDto
+                {
+                    AcademicYearId = academicYearId,
+                    StudentId = studentId,
+                    ProductId = item.ProductId
+                }, academicYearId, false);
+            }
 
-            UnitOfWork.Products.Add(product);
+            UnitOfWork.BasketItems.RemoveRange(basket);
+
             await UnitOfWork.Complete();
         }
 
-        public async Task CreateSale(Sale sale, int academicYearId, bool commitImmediately = true)
+        public async Task CreateBasketItem(BasketItemDto basketItem)
+        {
+            var student = await UnitOfWork.Students.GetById(basketItem.StudentId);
+
+            var product = await GetProductById(basketItem.ProductId);
+
+            if (product == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Product not found");
+            }
+
+            if (!product.Visible)
+            {
+                throw new ServiceException(ExceptionType.Forbidden, "Product not available");
+            }
+
+            if ((student.FinanceBasketItems.Any(x => x.ProductId == basketItem.ProductId) ||
+                 student.Sales.Any(x => x.ProductId == basketItem.ProductId)) && product.OnceOnly)
+            {
+                throw new ServiceException(ExceptionType.Forbidden, "This product cannot be purchased more than once");
+            }
+
+            UnitOfWork.BasketItems.Add(Mapping.Map<BasketItem>(basketItem));
+            await UnitOfWork.Complete();
+        }
+
+        public async Task CreateProduct(ProductDto product)
+        {
+            ValidationService.ValidateModel(product);
+
+            UnitOfWork.Products.Add(Mapping.Map<Product>(product));
+            await UnitOfWork.Complete();
+        }
+
+        public async Task CreateSale(SaleDto sale, int academicYearId, bool commitImmediately = true)
         {
             using (var studentService = new StudentService(UnitOfWork))
             {
@@ -141,7 +137,7 @@ namespace MyPortal.BusinessLogic.Services
                     sale.AmountPaid = 0.00m;
                     sale.AcademicYearId = academicYearId;
 
-                    UnitOfWork.Sales.Add(sale);
+                    UnitOfWork.Sales.Add(Mapping.Map<Sale>(sale));
 
                     if (commitImmediately)
                     {
@@ -156,7 +152,7 @@ namespace MyPortal.BusinessLogic.Services
                     sale.AmountPaid = product.Price;
                     sale.AcademicYearId = academicYearId;
 
-                    UnitOfWork.Sales.Add(sale);
+                    UnitOfWork.Sales.Add(Mapping.Map<Sale>(sale));
 
                     if (commitImmediately)
                     {
@@ -168,7 +164,12 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task DeleteBasketItem(int basketItemId)
         {
-            var itemInDb = await GetBasketItemById(basketItemId);
+            var itemInDb = await UnitOfWork.BasketItems.GetById(basketItemId);
+
+            if (itemInDb == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Item not found in basket.");
+            }
 
             UnitOfWork.BasketItems.Remove(itemInDb);
             await UnitOfWork.Complete();
@@ -176,7 +177,12 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task DeleteProduct(int productId)
         {
-            var productInDb = await GetProductById(productId);
+            var productInDb = await UnitOfWork.Products.GetById(productId);
+
+            if (productInDb == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Product not found");
+            }
 
             UnitOfWork.Products.Remove(productInDb); //Delete from database
 
@@ -185,7 +191,12 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task DeleteSale(int saleId)
         {
-            var saleInDb = await GetSaleById(saleId);
+            var saleInDb = await UnitOfWork.Sales.GetById(saleId);
+
+            if (saleInDb == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Sale not found");
+            }
 
             UnitOfWork.Sales.Remove(saleInDb); //Delete from database
 
@@ -194,37 +205,31 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IDictionary<int, string>> GetAllProductsLookup()
         {
-            var products = await GetAllProducts();
-
-            return products.ToDictionary(x => x.Id, x => x.Description);
+            return (await GetAllProducts()).ToDictionary(x => x.Id, x => x.Description);
         }
 
-        public async Task<IEnumerable<Product>> GetAllProducts()
+        public async Task<IEnumerable<ProductDto>> GetAllProducts()
         {
-            return await UnitOfWork.Products.GetAll();
+            return (await UnitOfWork.Products.GetAll()).Select(Mapping.Map<ProductDto>);
         }
 
-        public async Task<IEnumerable<Sale>> GetAllSales(int academicYearId)
+        public async Task<IEnumerable<SaleDto>> GetAllSales(int academicYearId)
         {
-            return await UnitOfWork.Sales.GetAllAsync(academicYearId);
+            return (await UnitOfWork.Sales.GetAllAsync(academicYearId)).Select(Mapping.Map<SaleDto>);
         }
 
-        public async Task<IEnumerable<Sale>> GetAllSalesByStudent(int studentId,
+        public async Task<IEnumerable<SaleDto>> GetAllSalesByStudent(int studentId,
             int academicYearId)
         {
-            var sales = await UnitOfWork.Sales.GetByStudent(studentId, academicYearId);
-            
-            return sales;
+            return (await UnitOfWork.Sales.GetByStudent(studentId, academicYearId)).Select(Mapping.Map<SaleDto>);
         }
 
-        public async Task<IEnumerable<Product>> GetAvailableProductsByStudent(int studentId)
+        public async Task<IEnumerable<ProductDto>> GetAvailableProductsByStudent(int studentId)
         {
-            var items = await UnitOfWork.Products.GetAvailableByStudent(studentId);
-
-            return items;
+            return (await UnitOfWork.Products.GetAvailableByStudent(studentId)).Select(Mapping.Map<ProductDto>);
         }
 
-        public async Task<BasketItem> GetBasketItemById(int basketItemId)
+        public async Task<BasketItemDto> GetBasketItemById(int basketItemId)
         {
             var item = await UnitOfWork.BasketItems.GetById(basketItemId);
 
@@ -233,34 +238,30 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Item not found");
             }
 
-            return item;
+            return Mapping.Map<BasketItemDto>(item);
         }
 
-        public async Task<IEnumerable<BasketItem>> GetBasketItemsByStudent(int studentId)
+        public async Task<IEnumerable<BasketItemDto>> GetBasketItemsByStudent(int studentId)
         {
-            var basketItems = await UnitOfWork.BasketItems.GetByStudent(studentId);
-
-            return basketItems;
+            return (await UnitOfWork.BasketItems.GetByStudent(studentId)).Select(Mapping.Map<BasketItemDto>);
         }
 
         public async Task<decimal> GetBasketTotalForStudent(int studentId)
         {
-            var total = await UnitOfWork.BasketItems.GetTotalForStudent(studentId);
-
-            return total;
+            return await UnitOfWork.BasketItems.GetTotalForStudent(studentId);
         }
 
-        public async Task<IEnumerable<Sale>> GetPendingSales(int academicYearId)
+        public async Task<IEnumerable<SaleDto>> GetPendingSales(int academicYearId)
         {
-            return await UnitOfWork.Sales.GetPending(academicYearId);
+            return (await UnitOfWork.Sales.GetPending(academicYearId)).Select(Mapping.Map<SaleDto>);
         }
 
-        public async Task<IEnumerable<Sale>> GetProcessedSales(int academicYearId)
+        public async Task<IEnumerable<SaleDto>> GetProcessedSales(int academicYearId)
         {
-            return await UnitOfWork.Sales.GetProcessed(academicYearId);
+            return (await UnitOfWork.Sales.GetProcessed(academicYearId)).Select(Mapping.Map<SaleDto>);
         }
 
-        public async Task<Product> GetProductById(int productId)
+        public async Task<ProductDto> GetProductById(int productId)
         {
             var product = await UnitOfWork.Products.GetById(productId);
 
@@ -269,7 +270,7 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Product not found");
             }
 
-            return product;
+            return Mapping.Map<ProductDto>(product);
         }
 
         public async Task<Sale> GetSaleById(int saleId)
@@ -291,16 +292,14 @@ namespace MyPortal.BusinessLogic.Services
             return productInDb.Price;
         }
 
-        public async Task<IEnumerable<ProductType>> GetAllProductTypes()
+        public async Task<IEnumerable<ProductTypeDto>> GetAllProductTypes()
         {
-            return await UnitOfWork.ProductTypes.GetAll();
+            return (await UnitOfWork.ProductTypes.GetAll()).Select(Mapping.Map<ProductTypeDto>);
         }
 
         public async Task<IDictionary<int, string>> GetAllProductTypesLookup()
         {
-            var productTypes = await GetAllProductTypes();
-
-            return productTypes.ToDictionary(x => x.Id, x => x.Description);
+            return (await GetAllProductTypes()).ToDictionary(x => x.Id, x => x.Description);
         }
 
         public async Task<decimal> GetStudentBalance(int studentId)
@@ -346,9 +345,14 @@ namespace MyPortal.BusinessLogic.Services
             await UnitOfWork.Complete();
         }
 
-        public async Task UpdateProduct(Product product)
+        public async Task UpdateProduct(ProductDto product)
         {
-            var productInDb = await GetProductById(product.Id);
+            var productInDb = await UnitOfWork.Products.GetById(product.Id);
+
+            if (productInDb == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Product not found");
+            }
 
             productInDb.OnceOnly = product.OnceOnly;
             productInDb.Price = product.Price;

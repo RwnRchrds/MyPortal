@@ -12,18 +12,29 @@ using MyPortal.BusinessLogic.Dtos.Lite;
 using MyPortal.BusinessLogic.Extensions;
 using MyPortal.BusinessLogic.Models;
 using MyPortal.BusinessLogic.Models.Data;
-using MyPortal.BusinessLogic.Models.Identity;
 using MyPortal.Data.Models;
 
 namespace MyPortal.BusinessLogic.Services
 {
+    public enum MapperType
+    {
+        BusinessObjects,
+        DataGridObjects
+    }
     public class MappingService
     {
         private readonly MapperConfiguration _configuration;
 
-        public MappingService()
+        public MappingService(MapperType mapperType)
         {
-            _configuration = GetConfiguration();
+            if (mapperType == MapperType.BusinessObjects)
+            {
+                _configuration = GetBusinessConfiguration();
+            }
+            else
+            {
+                _configuration = GetDataGridConfiguration();
+            }
         }
 
         public MappingService(MapperConfiguration configuration)
@@ -31,76 +42,97 @@ namespace MyPortal.BusinessLogic.Services
             _configuration = configuration;
         }
 
-        private MapperConfiguration GetConfiguration()
+        internal MapperConfiguration GetBusinessConfiguration()
         {
             var config = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<Student, StudentDto>().ReverseMap();
-
-                cfg.CreateMap<ProfileLogDto, ProfileLogNote>().ReverseMap();
-
-                cfg.CreateMap<YearGroup, PastoralYearGroupDto>().ReverseMap();
-
-                cfg.CreateMap<RegGroup, PastoralRegGroupDto>().ReverseMap();
-
-                cfg.CreateMap<StaffMember, StaffMemberDto>().ReverseMap();
-
-                cfg.CreateMap<TrainingCertificate, PersonnelTrainingCertificateDto>().ReverseMap();
-
-                cfg.CreateMap<TrainingCourse, PersonnelTrainingCourseDto>().ReverseMap();
-
-                cfg.CreateMap<ApplicationUser, ApplicationUserDto>().ReverseMap();
-
-                cfg.CreateMap<ApplicationRole, ApplicationRoleDto>().ReverseMap();
-
-                cfg.CreateMap<RegGroup, PastoralRegGroupDto>().ReverseMap();
-
-                cfg.CreateMap<Result, AssessmentResultDto>().ReverseMap();
-
-                cfg.CreateMap<ResultSet, AssessmentResultSetDto>().ReverseMap();
-
-                cfg.CreateMap<Subject, CurriculumSubjectDto>().ReverseMap();
-
-                cfg.CreateMap<ProfileLogNoteType, ProfileLogTypeDto>().ReverseMap();
-
-                cfg.CreateMap<Product, FinanceProductDto>().ReverseMap();
-
-                cfg.CreateMap<Sale, FinanceSaleDto>().ReverseMap();
-
-                cfg.CreateMap<BasketItem, FinanceBasketItemDto>().ReverseMap();
-
-                cfg.CreateMap<Document, DocumentDto>().ReverseMap();
-
-                cfg.CreateMap<GradeSet, AssessmentGradeSetDto>().ReverseMap();
-
-                cfg.CreateMap<Grade, AssessmentGradeDto>().ReverseMap();
-
-                cfg.CreateMap<CommentBank, ProfileCommentBankDto>().ReverseMap();
-
-                cfg.CreateMap<Comment, ProfileCommentDto>().ReverseMap();
-
-                cfg.CreateMap<StudyTopic, CurriculumStudyTopicDto>().ReverseMap();
-
-                cfg.CreateMap<Class, CurriculumClassDto>().ReverseMap();
-
-                cfg.CreateMap<Session, CurriculumSessionDto>().ReverseMap();
-
-                cfg.CreateMap<AttendanceWeek, AttendanceWeekDto>().ReverseMap();
-
+                cfg.CreateMap<AcademicYear, AcademicYearDto>().ReverseMap();
+                cfg.CreateMap<Achievement, AchievementDto>().ReverseMap();
+                cfg.CreateMap<AchievementType, AchievementTypeDto>().ReverseMap();
+                cfg.CreateMap<Address, AddressDto>().ReverseMap();
+                cfg.CreateMap<AddressPerson, AddressPersonDto>().ReverseMap();
+                cfg.CreateMap<Aspect, AspectDto>().ReverseMap();
+                cfg.CreateMap<AspectType, AspectTypeDto>().ReverseMap();
+                cfg.CreateMap<AttendanceCode, AttendanceCodeDto>().ReverseMap();
+                cfg.CreateMap<AttendanceCodeMeaning, AttendanceCodeMeaningDto>().ReverseMap();
                 cfg.CreateMap<AttendanceMark, AttendanceMarkDto>().ReverseMap();
+                cfg.CreateMap<AttendanceWeek, AttendanceWeekDto>().ReverseMap();
+                cfg.CreateMap<BasketItem, BasketItemDto>().ReverseMap();
+                cfg.CreateMap<Bulletin, BulletinDto>().ReverseMap();
+                cfg.CreateMap<Class, ClassDto>().ReverseMap();
+                cfg.CreateMap<Comment, CommentDto>().ReverseMap();
+                cfg.CreateMap<CommentBank, CommentBankDto>().ReverseMap();
+                cfg.CreateMap<CommunicationLog, CommunicationLogDto>().ReverseMap();
+                cfg.CreateMap<CommunicationType, CommunicationTypeDto>().ReverseMap();
+                cfg.CreateMap<Condition, ConditionDto>().ReverseMap();
+                cfg.CreateMap<Contact, ContactDto>().ReverseMap();
+                cfg.CreateMap<DietaryRequirement, DietaryRequirementDto>().ReverseMap();
+                cfg.CreateMap<Document, DocumentDto>().ReverseMap();
+                cfg.CreateMap<DocumentType, DocumentTypeDto>().ReverseMap();
+                cfg.CreateMap<EmailAddress, EmailAddressType>().ReverseMap();
+                cfg.CreateMap<Enrolment, EnrolmentDto>().ReverseMap();
+                cfg.CreateMap<GiftedTalented, GiftedTalentedDto>().ReverseMap();
+                cfg.CreateMap<GovernanceType, GovernanceTypeDto>().ReverseMap();
+                cfg.CreateMap<Grade, GradeDto>().ReverseMap();
+                cfg.CreateMap<GradeSet, GradeSetDto>().ReverseMap();
+                cfg.CreateMap<House, HouseDto>().ReverseMap();
+                cfg.CreateMap<Incident, IncidentDto>().ReverseMap();
+                cfg.CreateMap<IntakeType, IntakeTypeDto>().ReverseMap();
+                cfg.CreateMap<LessonPlan, LessonPlanDto>().ReverseMap();
+                cfg.CreateMap<LessonPlanTemplate, LessonPlanTemplateDto>().ReverseMap();
+                cfg.CreateMap<LocalAuthority, LocalAuthorityDto>().ReverseMap();
+                cfg.CreateMap<Location, LocationDto>().ReverseMap();
+                cfg.CreateMap<MedicalEvent, MedicalEventDto>().ReverseMap();
+                cfg.CreateMap<Observation, ObservationDto>().ReverseMap();
+                cfg.CreateMap<ObservationOutcome, ObservationOutcomeDto>().ReverseMap();
+                cfg.CreateMap<Period, PeriodDto>().ReverseMap();
+                cfg.CreateMap<Person, PersonDto>().ReverseMap();
+                cfg.CreateMap<PersonAttachment, PersonAttachmentDto>().ReverseMap();
+                cfg.CreateMap<PersonCondition, PersonConditionDto>().ReverseMap();
+                cfg.CreateMap<PersonDietaryRequirement, PersonDietaryRequirementDto>().ReverseMap();
+                cfg.CreateMap<Phase, PhaseDto>().ReverseMap();
+                cfg.CreateMap<PhoneNumber, PhoneNumberDto>().ReverseMap();
+                cfg.CreateMap<PhoneNumberType, PhoneNumberTypeDto>().ReverseMap();
+                cfg.CreateMap<Product, ProductDto>().ReverseMap();
+                cfg.CreateMap<ProductType, ProductTypeDto>().ReverseMap();
+                cfg.CreateMap<ProfileLogNote, ProfileLogNoteDto>().ReverseMap();
+                cfg.CreateMap<ProfileLogNoteType, ProfileLogNoteTypeDto>().ReverseMap();
+                cfg.CreateMap<RegGroup, RegGroupDto>().ReverseMap();
+                cfg.CreateMap<RelationshipType, RelationshipTypeDto>().ReverseMap();
+                cfg.CreateMap<Report, ReportDto>().ReverseMap();
+                cfg.CreateMap<Result, ResultDto>().ReverseMap();
+                cfg.CreateMap<ResultSet, ResultSetDto>().ReverseMap();
+                cfg.CreateMap<Sale, SaleDto>().ReverseMap();
+                cfg.CreateMap<School, SchoolDto>().ReverseMap();
+                cfg.CreateMap<SchoolType, SchoolTypeDto>().ReverseMap();
+                cfg.CreateMap<SenEvent, SenEventType>().ReverseMap();
+                cfg.CreateMap<SenEventType, SenEventTypeDto>().ReverseMap();
+                cfg.CreateMap<SenProvision, SenProvisionTypeDto>().ReverseMap();
+                cfg.CreateMap<SenProvisionType, SenProvisionTypeDto>().ReverseMap();
+                cfg.CreateMap<SenReviewType, SenReviewTypeDto>().ReverseMap();
+                cfg.CreateMap<SenStatus, SenStatusDto>().ReverseMap();
+                cfg.CreateMap<Session, SessionDto>().ReverseMap();
+                cfg.CreateMap<StaffMember, StaffMemberDto>().ReverseMap();
+                cfg.CreateMap<Student, StudentDto>().ReverseMap();
+                cfg.CreateMap<StudentContact, StudentContactDto>().ReverseMap();
+                cfg.CreateMap<StudyTopic, StudyTopicDto>().ReverseMap();
+                cfg.CreateMap<Subject, SubjectDto>().ReverseMap();
+                cfg.CreateMap<SubjectStaffMember, SubjectStaffMemberDto>().ReverseMap();
+                cfg.CreateMap<SubjectStaffMemberRole, SubjectStaffMemberRoleDto>().ReverseMap();
+                cfg.CreateMap<SystemArea, SystemAreaDto>().ReverseMap();
+                cfg.CreateMap<TrainingCertificate, TrainingCertificateDto>().ReverseMap();
+                cfg.CreateMap<TrainingCertificateStatus, TrainingCertificateStatusDto>().ReverseMap();
+                cfg.CreateMap<TrainingCourse, TrainingCourseDto>().ReverseMap();
+                cfg.CreateMap<YearGroup, YearGroupDto>().ReverseMap();
+            });
 
-                cfg.CreateMap<AttendanceMark, AttendanceMarkLiteDto>().ReverseMap();
+            return config;
+        }
 
-                cfg.CreateMap<ProductType, FinanceProductTypeDto>().ReverseMap();
-
-                cfg.CreateMap<StudyTopic, CurriculumStudyTopicDto>().ReverseMap();
-
-                cfg.CreateMap<LessonPlan, CurriculumLessonPlanDto>().ReverseMap();
-
-                cfg.CreateMap<Achievement, BehaviourAchievementDto>().ReverseMap();
-
-                cfg.CreateMap<Incident, BehaviourIncidentDto>().ReverseMap();
-
+        internal MapperConfiguration GetDataGridConfiguration()
+        {
+            var config = new MapperConfiguration(cfg =>
+            {
                 cfg.CreateMap<Student, DataGridStudentDto>()
                     .ForMember(dest => dest.DisplayName,
                         opts => opts.MapFrom(src => src.GetDisplayName()))
@@ -244,13 +276,11 @@ namespace MyPortal.BusinessLogic.Services
                     .ForMember(dest => dest.Marks,
                         opts => opts.MapFrom(src => new List<AttendanceMarkLiteDto> { src.Mark }));
 
-                cfg.CreateMap<ApplicationUser, DataGridApplicationUserDto>();
-
-                cfg.CreateMap<Result, DataGridResultDto>()
+                cfg.CreateMap<ResultDto, DataGridResultDto>()
                     .ForMember(dest => dest.ResultSet,
                         opts => opts.MapFrom(src => src.ResultSet.Name))
                     .ForMember(dest => dest.StudentName,
-                        opts => opts.MapFrom(src => src.Student.GetDisplayName()))
+                        opts => opts.MapFrom(src => src.Student.Person.GetDisplayName()))
                     .ForMember(dest => dest.Aspect,
                         opts => opts.MapFrom(src => src.Aspect.Description));
 
@@ -280,14 +310,14 @@ namespace MyPortal.BusinessLogic.Services
             return config;
         }
 
-        internal TDest Map<TDest>(object source)
+        public TDest Map<TDest>(object source)
         {
             var mapper = new Mapper(_configuration);
 
             return mapper.Map<TDest>(source);
         }
 
-        internal IEnumerable<TDest> MapMultiple<TDest>(IEnumerable<object> source)
+        public IEnumerable<TDest> MapMultiple<TDest>(IEnumerable<object> source)
         {
             var mapper = new Mapper(_configuration);
 

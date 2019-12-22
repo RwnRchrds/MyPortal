@@ -98,8 +98,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Data\" />
     <Folder Include="ServiceTests\" />
-    <Folder Include="TestData\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MyPortal.BusinessLogic\MyPortal.BusinessLogic.csproj">

@@ -1,0 +1,44 @@
+﻿<syncfusion:RibbonWindow
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:vm="clr-namespace:MyPortal.Desktop.ViewModels"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance vm:AppViewModel, IsDesignTimeCreatable=True}"
+    xmlns:syncfusion="http://schemas.syncfusion.com/wpf" x:Class="MyPortal.Desktop.MainWindow"
+    xmlns:syncfusionskin="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
+    syncfusionskin:SfSkinManager.VisualStyle="Office2016Colorful"
+    Title="MyPortal - Harrods Community School" MinWidth="600" MinHeight="1000"
+    >
+    <Grid>
+        <syncfusion:Ribbon x:Name="Ribbon" VerticalAlignment="Top">
+            <syncfusion:Ribbon.Resources>
+                <Style TargetType="{x:Type syncfusion:BackStageButton}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </Style>
+            </syncfusion:Ribbon.Resources>
+            <syncfusion:RibbonTab Caption="Home"/>
+            <syncfusion:RibbonTab Caption="Assessment"/>
+            <syncfusion:RibbonTab Caption="Attendance"/>
+            <syncfusion:RibbonTab Caption="Curriculum"/>
+            <syncfusion:RibbonTab Caption="Documents"/>
+            <syncfusion:RibbonTab Caption="Finance"/>
+            <syncfusion:RibbonTab Caption="People">
+                <syncfusion:RibbonBar Header="People">
+                    <syncfusion:RibbonButton SizeForm="Large" Label="Agents" LargeIcon="pack://application:,,,/MyPortal.Desktop;component/Resources/Icons/icons8-collaborator-male-100.png"/>
+                    <syncfusion:RibbonButton SizeForm="Large" Label="Contacts"/>
+                    <syncfusion:RibbonButton SizeForm="Large" Label="Staff Members"/>
+                    <syncfusion:RibbonButton SizeForm="Large" Label="Students" LargeIcon="pack://application:,,,/MyPortal.Desktop;component/Resources/Icons/icons8-account-100-2.png"/>
+                </syncfusion:RibbonBar>
+                <syncfusion:RibbonBar Header="Agencies">
+                    <syncfusion:RibbonButton SizeForm="Large" Label="Agencies"/>
+                </syncfusion:RibbonBar>
+            </syncfusion:RibbonTab>
+            <syncfusion:RibbonTab Caption="Personnel"/>
+            <syncfusion:RibbonTab Caption="Profiles"/>
+            <syncfusion:RibbonTab Caption="Reports"/>
+            <syncfusion:RibbonTab Caption="School"/>
+        </syncfusion:Ribbon>
+    </Grid>
+</syncfusion:RibbonWindow>

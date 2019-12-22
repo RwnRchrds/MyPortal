@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MyPortal.BusinessLogic.Dtos;
 using MyPortal.BusinessLogic.Exceptions;
 using MyPortal.BusinessLogic.Extensions;
 using MyPortal.Data.Interfaces;
@@ -20,27 +21,22 @@ namespace MyPortal.BusinessLogic.Services
 
         }
 
-        public async Task CreateStaffMember(StaffMember staffMember)
+        public async Task CreateStaffMember(StaffMemberDto staffMember)
         {
             ValidationService.ValidateModel(staffMember);
 
-            UnitOfWork.StaffMembers.Add(staffMember);
+            UnitOfWork.StaffMembers.Add(Mapping.Map<StaffMember>(staffMember));
 
             await UnitOfWork.Complete();
         }
 
-        public async Task DeleteStaffMember(int staffMemberId, string userId)
+        public async Task DeleteStaffMember(int staffMemberId)
         {
-            var staffInDb = await GetStaffMemberById(staffMemberId);
+            var staffInDb = await UnitOfWork.StaffMembers.GetById(staffMemberId);
 
             if (staffInDb == null)
             {
                 throw new ServiceException(ExceptionType.NotFound, "Staff member not found");
-            }
-
-            if (staffInDb.Person.UserId == userId)
-            {
-                throw new ServiceException(ExceptionType.Forbidden, "Cannot delete yourself");
             }
 
             UnitOfWork.StaffMembers.Remove(staffInDb);
@@ -48,29 +44,17 @@ namespace MyPortal.BusinessLogic.Services
             await UnitOfWork.Complete();
         }
 
-        public async Task<IEnumerable<StaffMember>> GetAllStaffMembers()
+        public async Task<IEnumerable<StaffMemberDto>> GetAllStaffMembers()
         {
-            return await UnitOfWork.StaffMembers.GetAll();
+            return (await UnitOfWork.StaffMembers.GetAll()).Select(Mapping.Map<StaffMemberDto>);
         }
 
         public async Task<IDictionary<int, string>> GetAllStaffMembersLookup()
         {
-            var staff = await GetAllStaffMembers();
-
-            return staff.ToDictionary(x => x.Id, x => x.GetFullName());
+            return (await GetAllStaffMembers()).ToDictionary(x => x.Id, x => x.Person.GetDisplayName());
         }
 
-
-        public async Task<string> GetStaffDisplayNameFromUserId(string userId)
-        {
-            var context = new MyPortalDbContext();
-
-            var staffMember = await GetStaffMemberByUserId(userId);
-
-            return staffMember.GetDisplayName();
-        }
-
-        public async Task<StaffMember> GetStaffMemberByUserId(string userId)
+        public async Task<StaffMemberDto> GetStaffMemberByUserId(string userId)
         {
             var staff = await UnitOfWork.StaffMembers.GetByUserId(userId);
 
@@ -79,27 +63,32 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Staff member not found");
             }
 
-            return staff;
+            return Mapping.Map<StaffMemberDto>(staff);
         }
 
-        public async Task<StaffMember> TryGetStaffMemberByUserId(string userId)
+        public async Task<StaffMemberDto> TryGetStaffMemberByUserId(string userId)
         {
             var staff = await UnitOfWork.StaffMembers.GetByUserId(userId);
 
-            return staff;
+            return Mapping.Map<StaffMemberDto>(staff);
         }
 
-        public async Task<StaffMember> GetStaffMemberById(int staffMemberId)
+        public async Task<StaffMemberDto> GetStaffMemberById(int staffMemberId)
         {
             var staff = await UnitOfWork.StaffMembers.GetById(staffMemberId);
 
-            return staff;
+            if (staff == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Staff member not found.");
+            }
+
+            return Mapping.Map<StaffMemberDto>(staff);
         }
 
 
-        public async Task UpdateStaffMember(StaffMember staffMember)
+        public async Task UpdateStaffMember(StaffMemberDto staffMember)
         {
-            var staffInDb = await GetStaffMemberById(staffMember.Id);
+            var staffInDb = await UnitOfWork.StaffMembers.GetById(staffMember.Id);
 
             if (staffInDb == null)
             {

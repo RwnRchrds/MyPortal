@@ -80,6 +80,9 @@
     <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="AutoMapper, Version=9.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.9.0.0\lib\net461\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -288,6 +291,15 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Identity\ApplicationRole.cs" />
+    <Compile Include="Models\Identity\ApplicationRoleManager.cs" />
+    <Compile Include="Models\Identity\ApplicationSignInManager.cs" />
+    <Compile Include="Models\Identity\ApplicationUser.cs" />
+    <Compile Include="Models\Identity\ApplicationUserManager.cs" />
+    <Compile Include="Models\Identity\IdentityContext.cs" />
+    <Compile Include="Models\Identity\NewUserModel.cs" />
+    <Compile Include="Models\Identity\Permission.cs" />
+    <Compile Include="Models\Identity\RolePermission.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -295,6 +307,12 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Services\AdminService.cs" />
+    <Compile Include="Services\IdentityService.cs" />
+    <Compile Include="Services\Identity\EmailService.cs" />
+    <Compile Include="Services\Identity\SmsService.cs" />
+    <Compile Include="Services\Identity\UserService.cs" />
+    <Compile Include="Services\PermissionsService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Areas\Staff\ViewModels\AccountsViewModel.cs" />
     <Compile Include="Areas\Staff\ViewModels\EnrolmentsViewModel.cs" />
@@ -572,7 +590,6 @@
     <Folder Include="Areas\Parents\Views\Shared\" />
     <Folder Include="Areas\Staff\Views\Admissions\" />
     <Folder Include="Areas\Staff\Views\Agents\" />
-    <Folder Include="Areas\Staff\Views\Behaviour\" />
     <Folder Include="Areas\Staff\Views\Communication\" />
     <Folder Include="Areas\Staff\Views\Contacts\" />
     <Folder Include="Areas\Staff\Views\Pastoral\" />

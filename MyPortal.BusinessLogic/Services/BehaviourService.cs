@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MyPortal.BusinessLogic.Dtos;
 using MyPortal.BusinessLogic.Exceptions;
 using MyPortal.BusinessLogic.Models;
 using MyPortal.BusinessLogic.Models.Data;
@@ -22,39 +23,34 @@ namespace MyPortal.BusinessLogic.Services
 
         }
 
-        public async Task CreateAchievement(Achievement achievement)
+        public async Task CreateAchievement(AchievementDto achievement)
         {
             achievement.Date = DateTime.Today;
 
             ValidationService.ValidateModel(achievement);
 
-            if (!await UnitOfWork.AcademicYears.Any(x => x.Id == achievement.AcademicYearId))
-            {
-                throw new ServiceException(ExceptionType.NotFound,"Academic year not found");
-            }
-
-            UnitOfWork.Achievements.Add(achievement);
+            UnitOfWork.Achievements.Add(Mapping.Map<Achievement>(achievement));
             await UnitOfWork.Complete();
         }
 
-        public async Task CreateBehaviourIncident(Incident incident)
+        public async Task CreateBehaviourIncident(IncidentDto incident)
         {
             incident.Date = DateTime.Today;
 
             ValidationService.ValidateModel(incident);
 
-            if (!await UnitOfWork.AcademicYears.Any(x => x.Id == incident.AcademicYearId))
-            {
-                throw new ServiceException(ExceptionType.NotFound,"Academic year not found");
-            }
-
-            UnitOfWork.Incidents.Add(incident);
+            UnitOfWork.Incidents.Add(Mapping.Map<Incident>(incident));
             await UnitOfWork.Complete();
         }
 
         public async Task DeleteAchievement(int achievementId)
         {
-            var achievement = await GetAchievementById(achievementId);
+            var achievement = await UnitOfWork.Achievements.GetById(achievementId);
+
+            if (achievement == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Achievement not found.");
+            }
 
             UnitOfWork.Achievements.Remove(achievement);
 
@@ -63,106 +59,71 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task DeleteBehaviourIncident(int incidentId)
         {
-            var incident = await GetBehaviourIncidentById(incidentId);
+            var incident = await UnitOfWork.Incidents.GetById(incidentId);
+
+            if (incident == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Incident not found.");
+            }
 
             UnitOfWork.Incidents.Remove(incident);
 
             await UnitOfWork.Complete();
         }
 
-        public async Task<Achievement> GetAchievementById(int achievementId)
+        public async Task<AchievementDto> GetAchievementById(int achievementId)
         {
             var achievement = await UnitOfWork.Achievements.GetById(achievementId);
 
             if (achievement == null)
             {
-                throw new ServiceException(ExceptionType.NotFound,"Achievement not found");
+                throw new ServiceException(ExceptionType.NotFound,"Achievement not found.");
             }
 
-            return achievement;
+            return Mapping.Map<AchievementDto>(achievement);
         }
 
         public async Task<int> GetAchievementCountByStudent(int studentId, int academicYearId)
         {
-            if (!await UnitOfWork.Students.Any(x => x.Id == studentId))
-            {
-                throw new ServiceException(ExceptionType.NotFound,"Student not found");
-            }
-
             var achievementCount =
                 await UnitOfWork.Achievements.GetCountByStudent(studentId, academicYearId);
-
-            if (achievementCount < 0)
-            {
-                throw new ServiceException(ExceptionType.BadRequest,"Cannot have negative achievement count");
-            }
 
             return achievementCount;
         }
 
         public async Task<int> GetAchievementPointsCountByStudent(int studentId, int academicYearId)
         {
-            if (!await UnitOfWork.Students.Any(x => x.Id == studentId))
-            {
-                throw new ServiceException(ExceptionType.NotFound,"Student not found");
-            }
-
             var points =
                 await UnitOfWork.Achievements.GetPointsByStudent(studentId, academicYearId);
-
-            if (points < 0)
-            {
-                throw new ServiceException(ExceptionType.BadRequest,"Cannot have negative points count");
-            }
 
             return points;
         }
 
-        public async Task<Incident> GetBehaviourIncidentById(int incidentId)
+        public async Task<IncidentDto> GetBehaviourIncidentById(int incidentId)
         {
             var incident = await UnitOfWork.Incidents.GetById(incidentId);
 
             if (incident == null)
             {
-                throw new ServiceException(ExceptionType.NotFound,"Incident not found");
+                throw new ServiceException(ExceptionType.NotFound,"Incident not found.");
             }
 
-            return incident;
+            return Mapping.Map<IncidentDto>(incident);
         }
 
         public async Task<int> GetBehaviourIncidentCountByStudent(int studentId, int academicYearId)
         {
-            if (! await UnitOfWork.Students.Any(x => x.Id == studentId))
-            {
-                throw new ServiceException(ExceptionType.NotFound,"Student not found");
-            }
-
             var negPoints =
                 await UnitOfWork.Incidents.GetCountByStudent(studentId, academicYearId);
-
-            if (negPoints < 0)
-            {
-                throw new ServiceException(ExceptionType.BadRequest,"Cannot have negative incident count");
-            }
 
             return negPoints;
         }
 
         public async Task<int> GetBehaviourPointsCountByStudent(int studentId, int academicYearId)
         {
-            if (!await UnitOfWork.Students.Any(x => x.Id == studentId))
-            {
-                throw new ServiceException(ExceptionType.NotFound,"Student not found");
-            }
-
             var points =
                 await UnitOfWork.Incidents.GetPointsByStudent(studentId,
                     academicYearId);
-
-            if (points < 0)
-            {
-                throw new ServiceException(ExceptionType.BadRequest,"Cannot have negative points count");
-            }
 
             return points;
         }
@@ -185,11 +146,6 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<int> GetTotalConductPointsByStudent(int studentId, int academicYearId)
         {
-            if (!await UnitOfWork.Students.Any(x => x.Id == studentId))
-            {
-                throw new ServiceException(ExceptionType.NotFound,"Student not found");
-            }
-
             var achievementPoints =
                 await GetAchievementPointsCountByStudent(studentId, academicYearId);
 
@@ -200,20 +156,20 @@ namespace MyPortal.BusinessLogic.Services
             return achievementPoints - behaviourPoints;
         }
 
-        public async Task<IEnumerable<Achievement>> GetAchievementsByStudent(int studentId, int academicYearId)
+        public async Task<IEnumerable<AchievementDto>> GetAchievementsByStudent(int studentId, int academicYearId)
         {
-            return await UnitOfWork.Achievements.GetByStudent(studentId, academicYearId);
+            return (await UnitOfWork.Achievements.GetByStudent(studentId, academicYearId)).Select(Mapping.Map<AchievementDto>);
         }
 
-        public async Task<IEnumerable<Incident>> GetBehaviourIncidentsByStudent(int studentId,
+        public async Task<IEnumerable<IncidentDto>> GetBehaviourIncidentsByStudent(int studentId,
             int academicYearId)
         {
-            return await UnitOfWork.Incidents.GetByStudent(studentId, academicYearId);
+            return (await UnitOfWork.Incidents.GetByStudent(studentId, academicYearId)).Select(Mapping.Map<IncidentDto>);
         }
         
-        public async Task UpdateAchievement(Achievement achievement)
+        public async Task UpdateAchievement(AchievementDto achievement)
         {
-            var achievementInDb = await GetAchievementById(achievement.Id);
+            var achievementInDb = await UnitOfWork.Achievements.GetById(achievement.Id);
 
             achievementInDb.LocationId = achievement.LocationId;
             achievementInDb.Comments = achievement.Comments;
@@ -224,9 +180,9 @@ namespace MyPortal.BusinessLogic.Services
             await UnitOfWork.Complete();
         }
 
-        public async Task UpdateBehaviourIncident(Incident incident)
+        public async Task UpdateBehaviourIncident(IncidentDto incident)
         {
-            var incidentInDb = await GetBehaviourIncidentById(incident.Id);
+            var incidentInDb = await UnitOfWork.Incidents.GetById(incident.Id);
 
             incidentInDb.LocationId = incident.LocationId;
             incidentInDb.Comments = incident.Comments;
@@ -237,18 +193,15 @@ namespace MyPortal.BusinessLogic.Services
             await UnitOfWork.Complete();
         }
 
-        public async Task<IEnumerable<AchievementType>> GetAchievementTypes()
+        public async Task<IEnumerable<AchievementTypeDto>> GetAchievementTypes()
         {
-            var achievementTypes = await UnitOfWork.AchievementTypes.GetAll(x => x.Description);
-
-            return achievementTypes;
+            return (await UnitOfWork.AchievementTypes.GetAll(x => x.Description)).Select(
+                Mapping.Map<AchievementTypeDto>);
         }
 
         public async Task<IEnumerable<IncidentType>> GetBehaviourIncidentTypes()
         {
-            var incidentTypes = await UnitOfWork.IncidentTypes.GetAll(x => x.Description);
-
-            return incidentTypes;
+            return (await UnitOfWork.IncidentTypes.GetAll(x => x.Description)).Select(Mapping.Map<IncidentType>);
         }
 
         public async Task<int> GetAchievementPointsToday()

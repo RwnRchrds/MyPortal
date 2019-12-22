@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MyPortal.BusinessLogic.Dtos;
 using MyPortal.BusinessLogic.Exceptions;
 using MyPortal.Data.Interfaces;
 using MyPortal.Data.Models;
@@ -19,82 +20,84 @@ namespace MyPortal.BusinessLogic.Services
 
         }
 
-        public async Task CreateResult(Result result)
+        public async Task CreateResult(ResultDto result)
         {
             ValidationService.ValidateModel(result);
 
-            UnitOfWork.Results.Add(result);
+            UnitOfWork.Results.Add(Mapping.Map<Result>(result));
             await UnitOfWork.Complete();
         }
 
-        public async Task CreateResultSet(ResultSet resultSet)
+        public async Task CreateResultSet(ResultSetDto resultSet)
         {
             ValidationService.ValidateModel(resultSet);
 
-            UnitOfWork.ResultSets.Add(resultSet);
+            UnitOfWork.ResultSets.Add(Mapping.Map<ResultSet>(resultSet));
             await UnitOfWork.Complete();
         }
 
         public async Task DeleteResultSet(int resultSetId)
         {
-            var resultSet = await GetResultSetById(resultSetId);
+            var resultSet = await UnitOfWork.ResultSets.GetById(resultSetId);
+
+            if (resultSet == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Result set not found.");
+            }
 
             UnitOfWork.ResultSets.Remove(resultSet);
             await UnitOfWork.Complete();
         }
 
-        public async Task<IEnumerable<ResultSet>> GetAllResultSets()
+        public async Task<IEnumerable<ResultSetDto>> GetAllResultSets()
         {
-            return await UnitOfWork.ResultSets.GetAll(x => x.Name);
+            return (await UnitOfWork.ResultSets.GetAll(x => x.Name)).Select(Mapping.Map<ResultSetDto>);
         }
 
-        public async Task<Result> GetResultById(int resultId)
+        public async Task<ResultDto> GetResultById(int resultId)
         {
-            var result = await UnitOfWork.Results.GetById(resultId);
-
-            return result;
+            return Mapping.Map<ResultDto>(await UnitOfWork.Results.GetById(resultId));
         }
 
-        public async Task<IEnumerable<Result>> GetResultsByStudent(int studentId, int resultSetId)
+        public async Task<IEnumerable<ResultDto>> GetResultsByStudent(int studentId, int resultSetId)
         {
-            var results = await UnitOfWork.Results.GetResultsByStudent(studentId, resultSetId);
-
-            return results;
+            return (await UnitOfWork.Results.GetResultsByStudent(studentId, resultSetId)).Select(Mapping.Map<ResultDto>);
         }
 
-        public async Task<ResultSet> GetResultSetById(int resultSetId)
+        public async Task<ResultSetDto> GetResultSetById(int resultSetId)
         {
             var resultSet = await UnitOfWork.ResultSets.GetById(resultSetId);
 
             if (resultSet == null)
             {
-                throw new ServiceException(ExceptionType.NotFound,"Result set not found");
+                throw new ServiceException(ExceptionType.NotFound,"Result set not found.");
             }
 
-            return resultSet;
+            return Mapping.Map<ResultSetDto>(resultSet);
         }
 
-        public async Task<IEnumerable<ResultSet>> GetResultSetsByStudent(int studentId)
+        public async Task<IEnumerable<ResultSetDto>> GetResultSetsByStudent(int studentId)
         {
-            var resultSets = await UnitOfWork.ResultSets.GetResultSetsByStudent(studentId);
-
-            return resultSets;
+            return (await UnitOfWork.ResultSets.GetResultSetsByStudent(studentId)).Select(Mapping.Map<ResultSetDto>);
         }
 
-        public async Task UpdateResultSet(ResultSet resultSet)
+        public async Task UpdateResultSet(ResultSetDto resultSet)
         {
-            var resultSetInDb = await GetResultSetById(resultSet.Id);
+            var resultSetInDb = await UnitOfWork.ResultSets.GetById(resultSet.Id);
+
+            if (resultSetInDb == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Result set not found.");
+            }
 
             resultSetInDb.Name = resultSet.Name;
 
             await UnitOfWork.Complete();
         }
 
-        public async Task<IDictionary<int, string>> GetAllResultSetsLookup(MyPortalDbContext context)
+        public async Task<IDictionary<int, string>> GetAllResultSetsLookup()
         {
-            var resultSets = await GetAllResultSets();
-
-            return resultSets.ToDictionary(x => x.Id, x => x.Name);
+            return (await UnitOfWork.ResultSets.GetAll()).ToDictionary(x => x.Id, x => x.Name);
         }
     }
 }

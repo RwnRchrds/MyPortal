@@ -5,11 +5,13 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
-using MyPortal.Dtos;
 using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
-using MyPortal.Dtos.Lite;
-using MyPortal.Models.Database;
+using MyPortal.BusinessLogic.Dtos;
+using MyPortal.BusinessLogic.Dtos.Lite;
+using MyPortal.BusinessLogic.Models.Data;
+using MyPortal.BusinessLogic.Services;
+
 using MyPortal.Services;
 using Syncfusion.EJ2.Base;
 
@@ -77,14 +79,11 @@ namespace MyPortal.Controllers.Api
 
             try
             {
-                using (var curriculumService = new CurriculumService(UnitOfWork))
-                {
-                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
-                    
-                    var summary = await _service.GetSummary(studentId, academicYearId);
+                var academicYearId = await User.GetSelectedOrCurrentAcademicYearId();
 
-                    return summary;
-                }
+                var summary = await _service.GetSummary(studentId, academicYearId);
+
+                return summary;
             }
             catch (Exception e)
             {
@@ -101,14 +100,11 @@ namespace MyPortal.Controllers.Api
             
             try
             {
-                using (var curriculumService = new CurriculumService(UnitOfWork))
-                {
-                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
+                var academicYearId = await User.GetSelectedOrCurrentAcademicYearId();
 
-                    var summary = await _service.GetSummary(studentId, academicYearId, true);
+                var summary = await _service.GetSummary(studentId, academicYearId, true);
 
-                    return summary;
-                }
+                return summary;
             }
             catch (Exception e)
             {
@@ -118,13 +114,11 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [Route("periods/get/all", Name = "ApiGetAllPeriods")]
-        public async Task<IEnumerable<AttendancePeriodDto>> GetAllPeriods()
+        public async Task<IEnumerable<PeriodDto>> GetAllPeriods()
         {
             try
             {
-                var periods = await _service.GetAllPeriods();
-
-                return periods.Select(Mapper.Map<AttendancePeriod, AttendancePeriodDto>);
+                return await _service.GetAllPeriods();
             }
             catch (Exception e)
             {
@@ -134,13 +128,11 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [Route("periods/get/byId/{periodId:int}", Name = "ApiGetPeriodById")]
-        public async Task<AttendancePeriodDto> GetPeriodById([FromUri] int periodId)
+        public async Task<PeriodDto> GetPeriodById([FromUri] int periodId)
         {
             try
             {
-                var period = await _service.GetPeriodById(periodId);
-
-                return Mapper.Map<AttendancePeriod, AttendancePeriodDto>(period);
+                return await _service.GetPeriodById(periodId);
             }
             catch (Exception e)
             {
@@ -171,14 +163,9 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var curriculumService = new CurriculumService(UnitOfWork))
-                {
-                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
+                var academicYearId = await User.GetSelectedOrCurrentAcademicYearId();
 
-                    var week = await _service.GetWeekByDate(academicYearId, date);
-
-                    return Mapper.Map<AttendanceWeek, AttendanceWeekDto>(week);
-                }
+                return await _service.GetWeekByDate(academicYearId, date);
             }
             catch (Exception e)
             {

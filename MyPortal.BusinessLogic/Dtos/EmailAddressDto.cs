@@ -12,7 +12,7 @@ namespace MyPortal.BusinessLogic.Dtos
     {
         public int Id { get; set; }
 
-        public EmailAddressType Type { get; set; }
+        public int TypeId { get; set; }
 
         public int PersonId { get; set; }
 
@@ -26,5 +26,11 @@ namespace MyPortal.BusinessLogic.Dtos
         public string Notes { get; set; }
 
         public virtual PersonDto Person { get; set; }
+        public virtual EmailAddressType Type { get; set; }
+
+        public string GetEmailAddressType()
+        {
+            return Type.Description;
+        }
     }
 }

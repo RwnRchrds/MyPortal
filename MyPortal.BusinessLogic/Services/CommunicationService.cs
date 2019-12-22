@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MyPortal.BusinessLogic.Dtos;
 using MyPortal.BusinessLogic.Exceptions;
 using MyPortal.Data.Interfaces;
 using MyPortal.Data.Models;
@@ -19,22 +20,22 @@ namespace MyPortal.BusinessLogic.Services
 
         }
 
-        public async Task CreateEmailAddress(EmailAddress emailAddress)
+        public async Task CreateEmailAddress(EmailAddressDto emailAddress)
         {
             ValidationService.ValidateModel(emailAddress);
 
-            UnitOfWork.EmailAddresses.Add(emailAddress);
+            UnitOfWork.EmailAddresses.Add(Mapping.Map<EmailAddress>(emailAddress));
 
             await UnitOfWork.Complete();
         }
 
-        public async Task UpdateEmailAddress(EmailAddress emailAddress)
+        public async Task UpdateEmailAddress(EmailAddressDto emailAddress)
         {
             var emailInDb = await UnitOfWork.EmailAddresses.GetById(emailAddress.Id);
 
             if (emailInDb == null)
             {
-                throw new ServiceException(ExceptionType.NotFound, "Email address not found");
+                throw new ServiceException(ExceptionType.NotFound, "Email address not found.");
             }
 
             emailInDb.Address = emailAddress.Address;
@@ -51,7 +52,7 @@ namespace MyPortal.BusinessLogic.Services
 
             if (emailInDb == null)
             {
-                throw new ServiceException(ExceptionType.NotFound, "Email address not found");
+                throw new ServiceException(ExceptionType.NotFound, "Email address not found.");
             }
 
             UnitOfWork.EmailAddresses.Remove(emailInDb);
@@ -59,18 +60,23 @@ namespace MyPortal.BusinessLogic.Services
             await UnitOfWork.Complete();
         }
 
-        public async Task CreatePhoneNumber(PhoneNumber phoneNumber)
+        public async Task CreatePhoneNumber(PhoneNumberDto phoneNumber)
         {
             ValidationService.ValidateModel(phoneNumber);
 
-            UnitOfWork.PhoneNumbers.Add(phoneNumber);
+            UnitOfWork.PhoneNumbers.Add(Mapping.Map<PhoneNumber>(phoneNumber));
 
             await UnitOfWork.Complete();
         }
 
-        public async Task UpdatePhoneNumber(PhoneNumber phoneNumber)
+        public async Task UpdatePhoneNumber(PhoneNumberDto phoneNumber)
         {
-            var phoneNumberInDb = await GetPhoneNumberById(phoneNumber.Id);
+            var phoneNumberInDb = await UnitOfWork.PhoneNumbers.GetById(phoneNumber.Id);
+
+            if (phoneNumberInDb == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Phone number not found.");
+            }
 
             phoneNumberInDb.TypeId = phoneNumber.TypeId;
             phoneNumberInDb.Number = phoneNumber.Number;
@@ -78,64 +84,69 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task DeletePhoneNumber(int phoneNumberId)
         {
-            var phoneNumber = await GetPhoneNumberById(phoneNumberId);
+            var phoneNumber = await UnitOfWork.PhoneNumbers.GetById(phoneNumberId);
+
+            if (phoneNumber == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Phone number not found.");
+            }
 
             UnitOfWork.PhoneNumbers.Remove(phoneNumber);
 
             await UnitOfWork.Complete();
         }
 
-        public async Task<EmailAddress> GetEmailAddressById(int emailAddressId)
+        public async Task<EmailAddressDto> GetEmailAddressById(int emailAddressId)
         {
             var emailInDb = await UnitOfWork.EmailAddresses.GetById(emailAddressId);
 
             if (emailInDb == null)
             {
-                throw new ServiceException(ExceptionType.NotFound, "Email address not found");
+                throw new ServiceException(ExceptionType.NotFound, "Email address not found.");
             }
 
-            return emailInDb;
+            return Mapping.Map<EmailAddressDto>(emailInDb);
         }
 
-        public async Task<IEnumerable<EmailAddress>> GetEmailAddressesByPerson(int personId)
+        public async Task<IEnumerable<EmailAddressDto>> GetEmailAddressesByPerson(int personId)
         {
-            var emailAddresses =
-                await UnitOfWork.EmailAddresses.GetByPerson(personId);
-
-            return emailAddresses;
+            return (await UnitOfWork.EmailAddresses.GetByPerson(personId)).Select(Mapping.Map<EmailAddressDto>);
         }
 
-        public async Task<PhoneNumber> GetPhoneNumberById(int phoneNumberById)
+        public async Task<PhoneNumberDto> GetPhoneNumberById(int phoneNumberById)
         {
             var phoneNumber = await UnitOfWork.PhoneNumbers.GetById(phoneNumberById);
 
             if (phoneNumber == null)
             {
-                throw new ServiceException(ExceptionType.NotFound, "Phone number not found");
+                throw new ServiceException(ExceptionType.NotFound, "Phone number not found.");
             }
 
-            return phoneNumber;
+            return Mapping.Map<PhoneNumberDto>(phoneNumber);
         }
 
-        public async Task<IEnumerable<PhoneNumber>> GetPhoneNumbersByPerson(int personId)
+        public async Task<IEnumerable<PhoneNumberDto>> GetPhoneNumbersByPerson(int personId)
         {
-            var phoneNumbers = await UnitOfWork.PhoneNumbers.GetByPerson(personId);
-
-            return phoneNumbers;
+            return (await UnitOfWork.PhoneNumbers.GetByPerson(personId)).Select(Mapping.Map<PhoneNumberDto>);
         }
 
-        public async Task CreateAddress(Address address)
+        public async Task CreateAddress(AddressDto address)
         {
             ValidationService.ValidateModel(address);
 
-            UnitOfWork.Addresses.Add(address);
+            UnitOfWork.Addresses.Add(Mapping.Map<Address>(address));
 
             await UnitOfWork.Complete();
         }
 
-        public async Task UpdateAddress(Address address)
+        public async Task UpdateAddress(AddressDto address)
         {
-            var addressInDb = await GetAddressById(address.Id);
+            var addressInDb = await UnitOfWork.Addresses.GetById(address.Id);
+
+            if (addressInDb == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Address not found.");
+            }
 
             addressInDb.Apartment = address.Apartment;
             addressInDb.Country = address.Country;
@@ -149,42 +160,47 @@ namespace MyPortal.BusinessLogic.Services
             addressInDb.Validated = address.Validated;
         }
 
-        public async Task<Address> GetAddressById(int addressId)
+        public async Task<AddressDto> GetAddressById(int addressId)
         {
             var address = await UnitOfWork.Addresses.GetById(addressId);
 
             if (address == null)
             {
-                throw new ServiceException(ExceptionType.NotFound, "Address not found");
+                throw new ServiceException(ExceptionType.NotFound, "Address not found.");
             }
 
-            return address;
+            return Mapping.Map<AddressDto>(address);
         }
 
-        public async Task<AddressPerson> GetAddressPersonById(int addressPersonId)
+        public async Task<AddressPersonDto> GetAddressPersonById(int addressPersonId)
         {
             var addressPerson = await UnitOfWork.AddressPersons.GetById(addressPersonId);
 
             if (addressPerson == null)
             {
-                throw new ServiceException(ExceptionType.NotFound, "Person not found at address");
+                throw new ServiceException(ExceptionType.NotFound, "Person not found at address.");
             }
 
-            return addressPerson;
+            return Mapping.Map<AddressPersonDto>(addressPerson);
         }
 
-        public async Task AddPersonToAddress(AddressPerson addressPerson)
+        public async Task AddPersonToAddress(AddressPersonDto addressPerson)
         {
             ValidationService.ValidateModel(addressPerson);
 
-            UnitOfWork.AddressPersons.Add(addressPerson);
+            UnitOfWork.AddressPersons.Add(Mapping.Map<AddressPerson>(addressPerson));
 
             await UnitOfWork.Complete();
         }
 
         public async Task RemovePersonFromAddress(int addressPersonId)
         {
-            var addressPerson = await GetAddressPersonById(addressPersonId);
+            var addressPerson = await UnitOfWork.AddressPersons.GetById(addressPersonId);
+
+            if (addressPerson == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Person not found at address.");
+            }
 
             UnitOfWork.AddressPersons.Remove(addressPerson);
 
@@ -193,25 +209,26 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task DeleteAddress(int addressId)
         {
-            var address = await GetAddressById(addressId);
+            var address = await UnitOfWork.Addresses.GetById(addressId);
+
+            if (address == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Address not found.");
+            }
 
             UnitOfWork.Addresses.Remove(address);
 
             await UnitOfWork.Complete();
         }
 
-        public async Task<IEnumerable<Address>> GetAddressesByPerson(int personId)
+        public async Task<IEnumerable<AddressDto>> GetAddressesByPerson(int personId)
         {
-            var addresses = await UnitOfWork.Addresses.GetAddressesByPerson(personId);
-
-            return addresses;
+            return (await UnitOfWork.Addresses.GetAddressesByPerson(personId)).Select(Mapping.Map<AddressDto>);
         }
 
         public async Task<IDictionary<int, string>> GetPhoneNumberTypesLookup()
         {
-            var phoneNumberTypes = await UnitOfWork.PhoneNumberTypes.GetAll();
-
-            return phoneNumberTypes.ToDictionary(x => x.Id, x => x.Description);
+            return (await UnitOfWork.PhoneNumberTypes.GetAll()).ToDictionary(x => x.Id, x => x.Description);
         }
 
     }

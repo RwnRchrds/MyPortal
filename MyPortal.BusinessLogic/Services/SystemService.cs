@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using MyPortal.BusinessLogic.Dtos;
 using MyPortal.BusinessLogic.Exceptions;
 using MyPortal.Data.Interfaces;
 using MyPortal.Data.Models;
@@ -19,7 +21,7 @@ namespace MyPortal.BusinessLogic.Services
 
         }
 
-        public async Task CreateBulletin(Bulletin bulletin, string userId, bool autoApprove = false)
+        public async Task CreateBulletin(BulletinDto bulletin, string userId, bool autoApprove = false)
         {
             using (var staffService = new StaffMemberService())
             {
@@ -36,7 +38,7 @@ namespace MyPortal.BusinessLogic.Services
                     bulletin.ExpireDate = bulletin.CreateDate.AddDays(7);
                 }
 
-                UnitOfWork.Bulletins.Add(bulletin);
+                UnitOfWork.Bulletins.Add(Mapping.Map<Bulletin>(bulletin));
 
                 await UnitOfWork.Complete();
             }
@@ -44,43 +46,40 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task DeleteBulletin(int bulletinId)
         {
-            var bulletinInDb = await GetBulletinById(bulletinId);
+            var bulletinInDb = await UnitOfWork.Bulletins.GetById(bulletinId);
+
+            if (bulletinInDb == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Bulletin not found.");
+            }
 
             UnitOfWork.Bulletins.Remove(bulletinInDb);
 
             await UnitOfWork.Complete();
         }
 
-        public async Task<IEnumerable<Bulletin>> GetAllBulletins()
+        public async Task<IEnumerable<BulletinDto>> GetAllBulletins()
         {
-            var bulletins = await UnitOfWork.Bulletins.GetAll();
-
-            return bulletins;
+            return (await UnitOfWork.Bulletins.GetAll()).Select(Mapping.Map<BulletinDto>);
         }
 
-        public async Task<IEnumerable<Bulletin>> GetApprovedBulletins()
+        public async Task<IEnumerable<BulletinDto>> GetApprovedBulletins()
         {
-            var bulletins = await UnitOfWork.Bulletins.GetApproved();
-
-            return bulletins;
+            return (await UnitOfWork.Bulletins.GetApproved()).Select(Mapping.Map<BulletinDto>);
         }
 
-        public async Task<IEnumerable<Bulletin>> GetApprovedStudentBulletins()
+        public async Task<IEnumerable<BulletinDto>> GetApprovedStudentBulletins()
         {
-            var bulletins = await UnitOfWork.Bulletins.GetStudent();
-
-            return bulletins;
+            return (await UnitOfWork.Bulletins.GetStudent()).Select(Mapping.Map<BulletinDto>);
         }
 
         
-        public async Task<IEnumerable<Bulletin>> GetOwnBulletins(int authorId)
+        public async Task<IEnumerable<BulletinDto>> GetOwnBulletins(int authorId)
         {
-            var bulletins = await UnitOfWork.Bulletins.GetOwn(authorId);
-
-            return bulletins;
+            return (await UnitOfWork.Bulletins.GetOwn(authorId)).Select(Mapping.Map<BulletinDto>);
         }
 
-        public async Task<Bulletin> GetBulletinById(int bulletinId)
+        public async Task<BulletinDto> GetBulletinById(int bulletinId)
         {
             var bulletin = await UnitOfWork.Bulletins.GetById(bulletinId);
 
@@ -89,12 +88,17 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Bulletin not found");
             }
 
-            return bulletin;
+            return Mapping.Map<BulletinDto>(bulletin);
         }
 
-        public async Task UpdateBulletin(Bulletin bulletin, bool approvable = false)
+        public async Task UpdateBulletin(BulletinDto bulletin, bool approvable = false)
         {
-            var bulletinInDb = await GetBulletinById(bulletin.Id);
+            var bulletinInDb = await UnitOfWork.Bulletins.GetById(bulletin.Id);
+
+            if (bulletinInDb == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Bulletin not found.");
+            }
 
             bulletinInDb.Title = bulletin.Title;
             bulletinInDb.Detail = bulletin.Detail;
@@ -105,18 +109,16 @@ namespace MyPortal.BusinessLogic.Services
             await UnitOfWork.Complete();
         }
 
-        public async Task<IEnumerable<Location>> GetLocations()
+        public async Task<IEnumerable<LocationDto>> GetLocations()
         {
-            var locations = await UnitOfWork.Locations.GetAll();
-
-            return locations;
+            return (await UnitOfWork.Locations.GetAll()).Select(Mapping.Map<LocationDto>);
         }
 
-        public async Task<School> GetLocalSchool()
+        public async Task<SchoolDto> GetLocalSchool()
         {
             var school = await UnitOfWork.Schools.GetLocal();
 
-            return school;
+            return Mapping.Map<SchoolDto>(school);
         }
     }
 }
