@@ -199,9 +199,9 @@ namespace MyPortal.BusinessLogic.Services
                 Mapping.Map<AchievementTypeDto>);
         }
 
-        public async Task<IEnumerable<IncidentType>> GetBehaviourIncidentTypes()
+        public async Task<IEnumerable<IncidentTypeDto>> GetBehaviourIncidentTypes()
         {
-            return (await UnitOfWork.IncidentTypes.GetAll(x => x.Description)).Select(Mapping.Map<IncidentType>);
+            return (await UnitOfWork.IncidentTypes.GetAll(x => x.Description)).Select(Mapping.Map<IncidentTypeDto>);
         }
 
         public async Task<int> GetAchievementPointsToday()

@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
-using MyPortal.Models.Database;
+using MyPortal.BusinessLogic.Dtos;
 
 namespace MyPortal.Areas.Staff.ViewModels
 {
     public class StaffHomeViewModel
     {
-        public StaffMember CurrentUser { get; set; }
-        public IEnumerable<CurriculumAcademicYear> CurriculumAcademicYears { get; set; }
+        public StaffMemberDto CurrentUser { get; set; }
+        public IEnumerable<AcademicYearDto> CurriculumAcademicYears { get; set; }
 
         public int? SelectedAcademicYearId { get; set; }
     }

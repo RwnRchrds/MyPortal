@@ -40,13 +40,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.CreateEmailAddress(emailAddress);
+
+                return Ok("Email address created");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Email address created");
         }
 
         [HttpPost]
@@ -57,13 +57,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdateEmailAddress(emailAddress);
+
+                return Ok("Email address updated");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Email address updated");
         }
 
         [HttpDelete]
@@ -74,13 +74,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteEmailAddress(emailAddressId);
+
+                return Ok("Email address deleted");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Email address deleted");
         }
 
         [HttpPost]
@@ -91,13 +91,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.CreatePhoneNumber(phoneNumber);
+
+                return Ok("Phone number created");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Phone number created");
         }
 
         [HttpPost]
@@ -108,13 +108,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdatePhoneNumber(phoneNumber);
+
+                return Ok("Phone number updated");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Phone number updated");
         }
 
         [HttpPost]

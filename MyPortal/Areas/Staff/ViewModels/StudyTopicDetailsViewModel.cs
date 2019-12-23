@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using MyPortal.Models.Database;
+﻿using MyPortal.BusinessLogic.Dtos;
 
 namespace MyPortal.Areas.Staff.ViewModels
 {
     public class StudyTopicDetailsViewModel
     {
-        public CurriculumStudyTopic StudyTopic { get; set; }
+        public StudyTopicDto StudyTopic { get; set; }
     }
 }

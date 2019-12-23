@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
-using MyPortal.Models.Database;
+using MyPortal.BusinessLogic.Dtos;
 
 namespace MyPortal.Areas.Students.ViewModels
 {
     public class StudentResultsViewModel
     {
-        public Student Student { get; set; }
-        public IEnumerable<AssessmentResultSet> ResultSets { get; set; }
-        public AssessmentResult Result { get; set; }
-        public IEnumerable<CurriculumSubject> Subjects { get; set; }
+        public StudentDto Student { get; set; }
+        public IEnumerable<ResultSetDto> ResultSets { get; set; }
+        public ResultDto Result { get; set; }
+        public IEnumerable<SubjectDto> Subjects { get; set; }
     }
 }

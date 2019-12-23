@@ -26,11 +26,6 @@ namespace MyPortal.Controllers.Api
     {
         private readonly AdminService _service;
 
-        public AdminController()
-        {
-
-        }
-
         protected override void Dispose(bool disposing)
         {
             _service.Dispose();
@@ -44,13 +39,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.AddUserToRole(roleModel);
+
+                return Ok("User added to role");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("User added to role");
         }
 
         [HttpPost]
@@ -61,13 +56,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.AttachPersonToUser(userProfile);
+
+                return Ok("Person attached");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Person attached");
         }
 
         [HttpPost]
@@ -78,13 +73,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.ChangePassword(data);
+
+                return Ok("Password changed");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Password changed");
         }
 
         [HttpDelete]
@@ -95,13 +90,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteUser(userId);
+                
+                return Ok("User deleted");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("User deleted");
         }
 
         [HttpPost]
@@ -112,13 +107,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DetachPerson(user);
+
+                return Ok("Person detached");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Person detached");
         }
 
         [HttpGet]
@@ -182,13 +177,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.ChangeUserType(user.Id, user.UserType);
+
+                return Ok("User type changed");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("User type changed");
         }
 
         [Route("users/removeFromRole", Name = "ApiRemoveUserFromRole")]
@@ -199,13 +194,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.RemoveFromRole(roleModel.UserId, roleModel.RoleName);
+
+                return Ok("User removed from role");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("User removed from role");
         }
 
         [RequiresPermission("EditRoles")]
@@ -216,13 +211,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.CreateRole(role);
+
+                return Ok("Role created");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Role created");
         }
 
         [RequiresPermission("EditRoles")]
@@ -233,13 +228,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdateRole(role);
+
+                return Ok("Role updated");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Role updated");
         }
 
         [RequiresPermission("EditRoles")]
@@ -250,13 +245,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteRole(roleId);
+
+                return Ok("Role deleted");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Role deleted");
         }
 
         [RequiresPermission("EditRoles")]
@@ -357,13 +352,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.ToggleRolePermission(rolePermission);
+
+                return Ok("Permissions updated");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Permissions updated");
         }
 
         [RequiresPermission("EditRoles")]

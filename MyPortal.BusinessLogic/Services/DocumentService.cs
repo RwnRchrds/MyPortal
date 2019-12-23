@@ -21,26 +21,8 @@ namespace MyPortal.BusinessLogic.Services
 
         }
 
-        public async Task CreateDocument(DocumentDto document, string userId)
+        public async Task CreateDocument(DocumentDto document)
         {
-            if (document.UploaderId == 0)
-            {
-                
-                var uploader = await UnitOfWork.StaffMembers.GetByUserId(userId);
-
-                if (uploader == null)
-                {
-                    throw new ServiceException(ExceptionType.NotFound,"Uploader not found");
-                }
-
-                document.UploaderId = uploader.Id;
-            }
-
-            else if (document.UploaderId != 0 && ! await UnitOfWork.StaffMembers.Any(x => x.Id == document.UploaderId))
-            {
-                throw new ServiceException(ExceptionType.NotFound,"Uploader not found");
-            }
-
             document.IsGeneral = true;
 
             document.Date = DateTime.Now;
@@ -50,7 +32,7 @@ namespace MyPortal.BusinessLogic.Services
             await UnitOfWork.Complete();
         }
 
-        public async Task CreatePersonalDocument(PersonAttachmentDto attachment)
+        public async Task CreatePersonAttachment(PersonAttachmentDto attachment)
         {
             if (!await UnitOfWork.People.Any(x => x.Id == attachment.PersonId))
             {
@@ -85,7 +67,7 @@ namespace MyPortal.BusinessLogic.Services
             await UnitOfWork.Complete();
         }
 
-        public async Task DeletePersonalDocument(int documentId)
+        public async Task DeletePersonAttachment(int documentId)
         {
             var staffDocument = await UnitOfWork.PersonAttachments.GetById(documentId);
 

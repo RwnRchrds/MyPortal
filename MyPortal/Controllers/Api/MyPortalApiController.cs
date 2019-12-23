@@ -81,21 +81,24 @@ namespace MyPortal.Controllers.Api
 
         protected async Task AuthenticateStudentRequest(int studentId)
         {
-            var userType = await User.GetUserTypeAsync();
-            if (userType == UserType.Student)
+            using (var studentService = new StudentService())
             {
-                var userId = User.Identity.GetUserId();
-                var studentUser = await UnitOfWork.Students.GetByUserId(userId);
-                var requestedStudent = await UnitOfWork.Students.GetById(studentId);
-
-                if (studentUser == null || requestedStudent == null)
+                var userType = await User.GetUserTypeAsync();
+                if (userType == UserType.Student)
                 {
-                    throw new HttpResponseException(HttpStatusCode.NotFound);
-                }
+                    var userId = User.Identity.GetUserId();
+                    var studentUser = await studentService.GetStudentByUserId(userId);
+                    var requestedStudent = await studentService.GetStudentById(studentId);
 
-                if (requestedStudent.Id != studentUser.Id)
-                {
-                    throw new HttpResponseException(HttpStatusCode.Forbidden);
+                    if (studentUser == null || requestedStudent == null)
+                    {
+                        throw new HttpResponseException(HttpStatusCode.NotFound);
+                    }
+
+                    if (requestedStudent.Id != studentUser.Id)
+                    {
+                        throw new HttpResponseException(HttpStatusCode.Forbidden);
+                    }
                 }
             }
         }

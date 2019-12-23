@@ -37,13 +37,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.CreateResult(result);
+
+                return Ok("Result created");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok( "Result created");
         }
 
         [HttpGet]
@@ -89,13 +89,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.CreateResultSet(resultSet);
+
+                return Ok("Result set created");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok( "Result set created");
         }
 
         [HttpDelete]
@@ -106,13 +106,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteResultSet(resultSetId);
+
+                return Ok("Result set deleted");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok( "Result set deleted");
         }
 
         [HttpGet]
@@ -185,13 +185,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdateResultSet(resultSet);
+
+                return Ok("Result set updated");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok( "Result set updated");
         }
     }
 }

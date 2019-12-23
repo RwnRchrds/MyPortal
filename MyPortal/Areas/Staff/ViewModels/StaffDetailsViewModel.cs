@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using MyPortal.Models.Database;
-using MyPortal.Services;
+using MyPortal.BusinessLogic.Dtos;
+using MyPortal.BusinessLogic.Services;
 
 namespace MyPortal.Areas.Staff.ViewModels
 {
@@ -11,19 +11,19 @@ namespace MyPortal.Areas.Staff.ViewModels
             var peopleService = new PeopleService();
 
             Titles = peopleService.GetTitles();
-            ObservationOutcomes = new List<string>{"Outstanding","Good","Satisfactory","Inadequate"};
+            ObservationOutcomes = new List<string> {"Outstanding", "Good", "Satisfactory", "Inadequate"};
 
             peopleService.Dispose();
         }
 
-        public StaffMember Staff { get; set; }
+        public StaffMemberDto Staff { get; set; }
         public int CurrentStaffId { get; set; }
-        public IEnumerable<PersonnelTrainingCertificate> TrainingCertificates { get; set; }
-        public PersonnelTrainingCertificate TrainingCertificate { get; set; }
-        public PersonnelObservation PersonnelObservation { get; set; }
+        public IEnumerable<TrainingCertificateDto> TrainingCertificates { get; set; }
+        public TrainingCertificateDto TrainingCertificate { get; set; }
+        public ObservationDto PersonnelObservation { get; set; }
         public IEnumerable<string> ObservationOutcomes { get; set; }
-        public IEnumerable<PersonnelTrainingCourse> TrainingCourses { get; set; }
+        public IEnumerable<TrainingCourseDto> TrainingCourses { get; set; }
         public IEnumerable<string> Titles { get; set; }
-        public PersonDocument Upload { get; set; }
+        public PersonAttachmentDto Upload { get; set; }
     }
 }

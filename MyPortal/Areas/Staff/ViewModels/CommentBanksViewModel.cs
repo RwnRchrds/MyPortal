@@ -1,9 +1,9 @@
-using MyPortal.Models.Database;
+using MyPortal.BusinessLogic.Dtos;
 
 namespace MyPortal.Areas.Staff.ViewModels
 {
     public class CommentBanksViewModel
     {
-        public ProfileCommentBank CommentBank { get; set; }    
+        public CommentBankDto CommentBank { get; set; }
     }
 }

@@ -4,12 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
-using MyPortal.Dtos;
-using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
-using MyPortal.Dtos.DataGrid;
-using MyPortal.Models.Database;
-using MyPortal.Services;
+using MyPortal.BusinessLogic.Dtos;
+using MyPortal.BusinessLogic.Dtos.DataGrid;
+using MyPortal.BusinessLogic.Services;
 using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
@@ -40,7 +38,7 @@ namespace MyPortal.Controllers.Api
             {
                 var student = await _service.GetStudentById(studentId);
 
-                return Mapper.Map<Student, StudentDto>(student);
+                return _mapping.Map<StudentDto>(student);
             }
             catch (Exception e)
             {
@@ -57,7 +55,7 @@ namespace MyPortal.Controllers.Api
             {
                 var students = await _service.GetAllStudents();
 
-                var list = students.Select(Mapper.Map<Student, GridStudentDto>);
+                var list = students.Select(_mapping.Map<DataGridStudentDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -74,9 +72,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var students = await _service.GetStudentsByRegGroup(regGroupId);
-
-                return students.Select(Mapper.Map<Student, StudentDto>);
+                return await _service.GetStudentsByRegGroup(regGroupId);
             }
             catch (Exception e)
             {
@@ -91,9 +87,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var students = await _service.GetStudentsByYearGroup(yearGroupId);
-
-                return students.Select(Mapper.Map<Student, StudentDto>);
+                return await _service.GetStudentsByYearGroup(yearGroupId);
             }
             catch (Exception e)
             {
@@ -104,18 +98,18 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditStudents")]
         [Route("update", Name = "ApiUpdateStudent")]
-        public async Task<IHttpActionResult> UpdateStudent([FromBody] Student student)
+        public async Task<IHttpActionResult> UpdateStudent([FromBody] StudentDto student)
         {
             try
             {
                 await _service.UpdateStudent(student);
+
+                return Ok("Student updated");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Student updated");
         }
     }
 }

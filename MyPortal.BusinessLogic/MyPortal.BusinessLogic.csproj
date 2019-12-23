@@ -114,7 +114,7 @@
     <Compile Include="Dtos\DataGrid\DataGridSessionDto.cs" />
     <Compile Include="Dtos\DataGrid\DataGridStudyTopicDto.cs" />
     <Compile Include="Dtos\DataGrid\DataGridSubjectDto.cs" />
-    <Compile Include="Dtos\DataGrid\DataGridCurriculumSubjectStaffMemberDto.cs" />
+    <Compile Include="Dtos\DataGrid\DataGridSubjectStaffMemberDto.cs" />
     <Compile Include="Dtos\DataGrid\DataGridDocumentDto.cs" />
     <Compile Include="Dtos\DataGrid\DataGridBasketItemDto.cs" />
     <Compile Include="Dtos\DataGrid\DataGridProductDto.cs" />
@@ -127,7 +127,7 @@
     <Compile Include="Dtos\DataGrid\DataGridTrainingCourseDto.cs" />
     <Compile Include="Dtos\DataGrid\DataGridCommentBankDto.cs" />
     <Compile Include="Dtos\DataGrid\DataGridCommentDto.cs" />
-    <Compile Include="Dtos\DataGrid\DataGridProfileLogDto.cs" />
+    <Compile Include="Dtos\DataGrid\DataGridProfileLogNoteDto.cs" />
     <Compile Include="Dtos\DataGrid\DataGridStaffMemberDto.cs" />
     <Compile Include="Dtos\DataGrid\DataGridStudentDto.cs" />
     <Compile Include="Dtos\DietaryRequirementDto.cs" />

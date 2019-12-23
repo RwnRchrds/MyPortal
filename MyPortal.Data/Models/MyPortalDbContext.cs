@@ -6,7 +6,7 @@ namespace MyPortal.Data.Models
     public class MyPortalDbContext : DbContext
     {
         public MyPortalDbContext()
-            : base("name=MyPortalDbContext")
+            : base("name=Azure")
         {
             IsDebug = false;
         }

@@ -6,6 +6,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using MyPortal.Models;
+using MyPortal.Models.Identity;
 
 namespace MyPortal.Controllers
 {

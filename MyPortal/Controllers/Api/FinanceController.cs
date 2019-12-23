@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Security.Principal;
 using System.Threading.Tasks;
-using System.Web.DynamicData;
 using System.Web.Http;
 using AutoMapper;
-using MyPortal.Dtos;
-using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
 using MyPortal.BusinessLogic.Dtos;
 using MyPortal.BusinessLogic.Dtos.DataGrid;
-using MyPortal.BusinessLogic.Models;
 using MyPortal.BusinessLogic.Models.Data;
 using MyPortal.BusinessLogic.Services;
+using MyPortal.Services;
 using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
@@ -37,30 +32,28 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("AccessStudentStore")]
         [Route("basketItems/create", Name = "ApiCreateBasketItem")]
-        public async Task<IHttpActionResult> CreateBasketItem([FromBody] FinanceBasketItem basketItem)
+        public async Task<IHttpActionResult> CreateBasketItem([FromBody] BasketItemDto basketItem)
         {
             try
             {
                 await _service.CreateBasketItem(basketItem);
+                
+                return Ok("Item added to basket");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Item added to basket");
         }
 
         [RequiresPermission("AccessStudentStore")]
         [HttpGet]
         [Route("basketItems/get/byStudent/{studentId:int}", Name = "ApiGetBasketItemsByStudent")]
-        public async Task<IEnumerable<FinanceBasketItemDto>> GetBasketItemsByStudent([FromUri] int studentId)
+        public async Task<IEnumerable<BasketItemDto>> GetBasketItemsByStudent([FromUri] int studentId)
         {
             try
             {
-                var basketItems = await _service.GetBasketItemsByStudent(studentId);
-
-                return basketItems.Select(Mapper.Map<FinanceBasketItem, FinanceBasketItemDto>);
+                return await _service.GetBasketItemsByStudent(studentId);
             }
             catch (Exception e)
             {
@@ -93,13 +86,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteBasketItem(basketItemId);
+
+                return Ok("Item removed from basket");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Item removed from basket");
         }
 
         [HttpDelete]
@@ -110,25 +103,25 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteProduct(productId);
+
+                return Ok("Product deleted");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Product deleted");
         }
 
         [HttpGet]
         [RequiresPermission("AccessStudentStore")]
         [Route("products/get/available/{studentId:int}", Name = "ApiGetAvailableProductsByStudent")]
-        public async Task<IEnumerable<FinanceProductDto>> GetAvailableProductsByStudent([FromUri] int studentId)
+        public async Task<IEnumerable<ProductDto>> GetAvailableProductsByStudent([FromUri] int studentId)
         {
             try
             {
                 var products = await _service.GetAvailableProductsByStudent(studentId);
 
-                return products.Select(Mapper.Map<FinanceProduct, FinanceProductDto>);
+                return products.Select(_mapping.Map<ProductDto>);
             }
             catch (Exception e)
             {
@@ -137,7 +130,7 @@ namespace MyPortal.Controllers.Api
         }
  
         [HttpGet]
-        [RequiresPermission("ViewProducts, AccessStudentStore")]
+        [RequiresPermission("ViewProducts")]
         [Route("products/price/{productId:int}", Name = "ApiGetProductPrice")]
         public async Task<decimal> GetProductPrice([FromUri] int productId)
         {
@@ -154,15 +147,13 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [RequiresPermission("ViewProducts, AccessStudentStore")]
+        [RequiresPermission("ViewProducts")]
         [Route("products/get/byId/{productId:int}", Name = "ApiGetProductById")]
-        public async Task<FinanceProductDto> GetProductById([FromUri] int productId)
+        public async Task<ProductDto> GetProductById([FromUri] int productId)
         {
             try
             {
-                var product = await _service.GetProductById(productId);
-
-                return Mapper.Map<FinanceProduct, FinanceProductDto>(product);
+                return await _service.GetProductById(productId);
             }
             catch (Exception e)
             {
@@ -173,13 +164,13 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ViewProducts")]
         [Route("products/get/all", Name = "ApiGetAllProducts")]
-        public async Task<IEnumerable<FinanceProductDto>> GetAllProducts()
+        public async Task<IEnumerable<ProductDto>> GetAllProducts()
         {
             try
             {
                 var products = await _service.GetAllProducts();
 
-                return products.Select(Mapper.Map<FinanceProduct, FinanceProductDto>);
+                return products.Select(_mapping.Map<ProductDto>);
             }
             catch (Exception e)
             {
@@ -196,7 +187,7 @@ namespace MyPortal.Controllers.Api
             {
                 var products = await _service.GetAllProducts();
 
-                var list = products.Select(Mapper.Map<FinanceProduct, DataGridProductDto>);
+                var list = products.Select(_mapping.Map<DataGridProductDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -209,41 +200,41 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditProducts")]
         [Route("products/create", Name = "ApiCreateProduct")]
-        public async Task<IHttpActionResult> CreateProduct([FromBody] FinanceProduct product)
+        public async Task<IHttpActionResult> CreateProduct([FromBody] ProductDto product)
         {
             try
             {
                 await _service.CreateProduct(product);
+
+                return Ok("Product created");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Product created");
         }
 
         [HttpPost]
         [RequiresPermission("EditProducts")]
         [Route("products/update", Name = "ApiUpdateProduct")]
-        public async Task<IHttpActionResult> UpdateProduct([FromBody] FinanceProduct product)
+        public async Task<IHttpActionResult> UpdateProduct([FromBody] ProductDto product)
         {
             try
             {
                 await _service.UpdateProduct(product);
+
+                return Ok("Product updated");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Product updated");
         }
 
         [HttpPost]
         [RequiresPermission("EditSales")]
         [Route("sales/queryBalance", Name = "ApiAssessBalance")]
-        public async Task<bool> AssessBalance([FromBody] FinanceSale sale)
+        public async Task<bool> AssessBalance([FromBody] SaleDto sale)
         {
             try
             {
@@ -265,30 +256,25 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteSale(saleId);
+
+                return Ok("Sale deleted");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Sale deleted");
         }
 
         [HttpGet]
         [RequiresPermission("ViewSales")]
         [Route("sales/get/processed", Name = "ApiGetProcessedSales")]
-        public async Task<IEnumerable<FinanceSaleDto>> GetProcessedSales()
+        public async Task<IEnumerable<SaleDto>> GetProcessedSales()
         {
             try
             {
-                using (var curriculumService = new CurriculumService(UnitOfWork))
-                {
-                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
+                var academicYearId = await User.GetSelectedOrCurrentAcademicYearId();
 
-                    var sales = await _service.GetProcessedSales(academicYearId);
-
-                    return sales.Select(Mapper.Map<FinanceSale, FinanceSaleDto>);
-                }
+                return await _service.GetProcessedSales(academicYearId);
             }
             catch (Exception e)
             {
@@ -303,16 +289,13 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var curriculumService = new CurriculumService(UnitOfWork))
-                {
-                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
+                var academicYearId = await User.GetSelectedOrCurrentAcademicYearId();
 
-                    var sales = await _service.GetProcessedSales(academicYearId);
+                var sales = await _service.GetProcessedSales(academicYearId);
 
-                    var list = sales.Select(Mapper.Map<FinanceSale, DataGridSaleDto>);
+                var list = sales.Select(_mapping.Map<DataGridSaleDto>);
 
-                    return PrepareDataGridObject(list, dm);
-                }
+                return PrepareDataGridObject(list, dm);
             }
             catch (Exception e)
             {
@@ -323,18 +306,13 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ViewSales")]
         [Route("sales/get/all", Name = "ApiGetAllSales")]
-        public async Task<IEnumerable<FinanceSaleDto>> GetAllSales()
+        public async Task<IEnumerable<SaleDto>> GetAllSales()
         {
             try
             {
-                using (var curriculumService = new CurriculumService(UnitOfWork))
-                {
-                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
+                var academicYearId = await User.GetSelectedOrCurrentAcademicYearId();
 
-                    var sales = await _service.GetAllSales(academicYearId);
-
-                    return sales.Select(Mapper.Map<FinanceSale, FinanceSaleDto>);
-                }
+                return await _service.GetAllSales(academicYearId);
             }
             catch (Exception e)
             {
@@ -349,16 +327,13 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var curriculumService = new CurriculumService(UnitOfWork))
-                {
-                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
+                var academicYearId = await User.GetSelectedOrCurrentAcademicYearId();
 
-                    var sales = await _service.GetAllSales(academicYearId);
+                var sales = await _service.GetAllSales(academicYearId);
 
-                    var list = sales.Select(Mapper.Map<FinanceSale, DataGridSaleDto>);
+                var list = sales.Select(_mapping.Map<DataGridSaleDto>);
 
-                    return PrepareDataGridObject(list, dm);
-                }
+                return PrepareDataGridObject(list, dm);
             }
             catch (Exception e)
             {
@@ -367,20 +342,15 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [RequiresPermission("ViewSales, AccessStudentPortal")]
+        [RequiresPermission("ViewSales")]
         [Route("sales/get/byStudent/{studentId:int}", Name = "ApiGetSalesByStudent")]
-        public async Task<IEnumerable<FinanceSaleDto>> GetSalesByStudent([FromUri] int studentId)
+        public async Task<IEnumerable<SaleDto>> GetSalesByStudent([FromUri] int studentId)
         {
             try
             {
-                using (var curriculumService = new CurriculumService(UnitOfWork))
-                {
-                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
+                var academicYearId = await User.GetSelectedOrCurrentAcademicYearId();
 
-                    var sales = await _service.GetAllSalesByStudent(studentId, academicYearId);
-
-                    return sales.Select(Mapper.Map<FinanceSale, FinanceSaleDto>);
-                }
+                return await _service.GetAllSalesByStudent(studentId, academicYearId);
             }
             catch (Exception e)
             {
@@ -391,18 +361,13 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [Route("sales/get/pending", Name = "ApiGetPendingSales")]
         [RequiresPermission("ViewSales")]
-        public async Task<IEnumerable<FinanceSaleDto>> GetPendingSales()
+        public async Task<IEnumerable<SaleDto>> GetPendingSales()
         {
             try
             {
-                using (var curriculumService = new CurriculumService(UnitOfWork))
-                {
-                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
+                var academicYearId = await User.GetSelectedOrCurrentAcademicYearId();
 
-                    var sales = await _service.GetPendingSales(academicYearId);
-
-                    return sales.Select(Mapper.Map<FinanceSale, FinanceSaleDto>);
-                }
+                return await _service.GetPendingSales(academicYearId);
             }
             catch (Exception e)
             {
@@ -417,16 +382,13 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                using (var curriculumService = new CurriculumService(UnitOfWork))
-                {
-                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
+                var academicYearId = await User.GetSelectedOrCurrentAcademicYearId();
 
-                    var sales = await _service.GetPendingSales(academicYearId);
+                var sales = await _service.GetPendingSales(academicYearId);
 
-                    var list = sales.Select(Mapper.Map<FinanceSale, DataGridSaleDto>);
+                var list = sales.Select(_mapping.Map<DataGridSaleDto>);
 
-                    return PrepareDataGridObject(list, dm);
-                }
+                return PrepareDataGridObject(list, dm);
             }
             catch (Exception e)
             {
@@ -442,35 +404,32 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.MarkSaleProcessed(saleId);
+                
+                return Ok("Sale marked as processed");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Sale marked as processed");
         }
  
         [HttpPost]
         [RequiresPermission("EditSales")]
         [Route("sales/create", Name = "ApiCreateSale")]
-        public async Task<IHttpActionResult> CreateSale([FromBody] FinanceSale sale)
+        public async Task<IHttpActionResult> CreateSale([FromBody] SaleDto sale)
         {
             try
             {
-                using (var curriculumService = new CurriculumService(UnitOfWork))
-                {
-                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
+                var academicYearId = await User.GetSelectedOrCurrentAcademicYearId();
 
-                    await _service.CreateSale(sale, academicYearId);
-                }
+                await _service.CreateSale(sale, academicYearId);
+
+                return Ok("Sale created");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Sale created");
         }
 
         [HttpPost]
@@ -482,19 +441,16 @@ namespace MyPortal.Controllers.Api
 
             try
             {
-                using (var curriculumService = new CurriculumService(UnitOfWork))
-                {
-                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
-                    
-                    await _service.CheckoutBasketForStudent(studentId, academicYearId);
-                }
+                var academicYearId = await User.GetSelectedOrCurrentAcademicYearId();
+
+                await _service.CheckoutBasketForStudent(studentId, academicYearId);
+
+                return Ok("Sale completed");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Sale completed");
         }
  
         [HttpPost]
@@ -505,13 +461,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.RefundSale(saleId);
+
+                return Ok("Sale refunded");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Sale refunded");
         }
 
         [HttpPost]
@@ -522,13 +478,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.ProcessManualTransaction(transaction);
+
+                return Ok("Account credited");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Account credited");
         }
 
         [HttpPost]
@@ -539,13 +495,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.ProcessManualTransaction(transaction, true);
+                
+                return Ok("Account debited");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Account debited");
         }
 
         [HttpGet]

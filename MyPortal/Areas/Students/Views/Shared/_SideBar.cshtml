@@ -30,10 +30,7 @@
             <div id="collapseStudent" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Student</h6>
-                    @if (User.HasPermission("AccessStudentPortal"))
-                    {
-                        @Html.ActionLink("Results", "Results", "Students", null, new { @class = "collapse-item" })
-                    }
+                    @Html.ActionLink("Results", "Results", "Students", null, new { @class = "collapse-item" })
                 </div>
             </div>
         </li>
@@ -46,11 +43,8 @@
             <div id="collapseStore" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Store</h6>
-                    @if (User.HasPermission("AccessStudentStore"))
-                    {
-                        @Html.ActionLink("Store", "Store", "Students", null, new {@class = "collapse-item"})
-                        @Html.ActionLink("Sales History", "SalesHistory", "Students", null, new {@class = "collapse-item"})
-                    }
+                    @Html.ActionLink("Store", "Store", "Students", null, new { @class = "collapse-item" })
+                    @Html.ActionLink("Sales History", "SalesHistory", "Students", null, new { @class = "collapse-item" })
                 </div>
             </div>
         </li>

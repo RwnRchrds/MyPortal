@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
-using MyPortal.Dtos;
-using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
-using MyPortal.Dtos.DataGrid;
-using MyPortal.Models.Database;
-using MyPortal.Services;
+using MyPortal.BusinessLogic.Dtos;
+using MyPortal.BusinessLogic.Dtos.DataGrid;
+using MyPortal.BusinessLogic.Services;
 using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
@@ -34,18 +33,18 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditStaff")]
         [Route("create", Name = "ApiCreateStaff")]
-        public async Task<IHttpActionResult> CreateStaff([FromBody] StaffMember staffMember)
+        public async Task<IHttpActionResult> CreateStaff([FromBody] StaffMemberDto staffMember)
         {
             try
             {
                 await _service.CreateStaffMember(staffMember);
+                
+                return Ok("Staff member created");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Staff member created");
         }
 
         [HttpDelete]
@@ -56,20 +55,28 @@ namespace MyPortal.Controllers.Api
             try
             {
                 var userId = User.Identity.GetUserId();
-                await _service.DeleteStaffMember(staffMemberId, userId);
+
+                var currentUser = await _service.GetStaffMemberByUserId(userId);
+
+                if (currentUser.Id == staffMemberId)
+                {
+                    return Content(HttpStatusCode.BadRequest, "Cannot delete current user.");
+                }
+
+                await _service.DeleteStaffMember(staffMemberId);
+
+                return Ok("Staff member deleted");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Staff member deleted");
         }
 
         [HttpPost]
         [RequiresPermission("EditStaff")]
         [Route("update", Name = "ApiUpdateStaffMember")]
-        public async Task<IHttpActionResult> UpdateStaffMember([FromBody] StaffMember staffMember)
+        public async Task<IHttpActionResult> UpdateStaffMember([FromBody] StaffMemberDto staffMember)
         {
             try
             {
@@ -90,9 +97,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var staff = await _service.GetAllStaffMembers();
-
-                return staff.Select(Mapper.Map<StaffMember, StaffMemberDto>);
+                return await _service.GetAllStaffMembers();
             }
             catch (Exception e)
             {
@@ -109,7 +114,7 @@ namespace MyPortal.Controllers.Api
             {
                 var staff = await _service.GetAllStaffMembers();
 
-                var list = staff.Select(Mapper.Map<StaffMember, GridStaffMemberDto>);
+                var list = staff.Select(_mapping.Map<DataGridStaffMemberDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -125,9 +130,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var staff = await _service.GetStaffMemberById(staffMemberId);
-
-                return Mapper.Map<StaffMember, StaffMemberDto>(staff);
+                return await _service.GetStaffMemberById(staffMemberId);
             }
             catch (Exception e)
             {

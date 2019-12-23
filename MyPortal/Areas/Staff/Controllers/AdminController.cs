@@ -2,10 +2,10 @@
 using System.Web.Mvc;
 using MyPortal.Areas.Staff.ViewModels;
 using MyPortal.Attributes.MvcAuthorise;
+using MyPortal.BusinessLogic.Dtos;
+using MyPortal.BusinessLogic.Services;
 using MyPortal.Controllers;
-using MyPortal.Extensions;
-using MyPortal.Models;
-using MyPortal.Models.Database;
+using MyPortal.Models.Identity;
 using MyPortal.Services;
 
 namespace MyPortal.Areas.Staff.Controllers
@@ -41,12 +41,12 @@ namespace MyPortal.Areas.Staff.Controllers
 
                 string attachedProfile = null;
 
-                Student studentProfile = await studentService.TryGetStudentByUserId(userId);
+                StudentDto studentProfile = await studentService.TryGetStudentByUserId(userId);
 
-                StaffMember staffProfile = await staffService.TryGetStaffMemberByUserId(userId);
+                StaffMemberDto staffProfile = await staffService.TryGetStaffMemberByUserId(userId);
 
                 if (studentProfile != null)
-                    attachedProfile = $"{studentProfile.GetDisplayName()}";
+                    attachedProfile = $"{studentProfile.Person.GetDisplayName()}";
 
                 else if (staffProfile != null)
                     attachedProfile = $"{staffProfile.GetDisplayName()}";

@@ -1,4 +1,4 @@
-﻿using MyPortal.Models.Misc;
+﻿using MyPortal.BusinessLogic.Models.Data;
 
 namespace MyPortal.Areas.Staff.ViewModels
 {

@@ -144,7 +144,7 @@
     </div>
 }
 
-@if (User.HasPermission("ViewPersonalDocuments"))
+@if (User.HasPermission("ViewPersonAttachments"))
 {
     <div class="row">
         <div class="col-xl-12 col-lg-12">
@@ -157,7 +157,7 @@
                 <div class="card-body">
                     @Html.EJS().Grid("Documents").DataSource(dataManager =>
                     {
-                        dataManager.Url(Url.HttpRouteUrl("ApiGetPersonalDocumentsByPersonDataGrid", new {personId = Model.CurrentUser.Person.Id})).CrossDomain(false).Adaptor("UrlAdaptor");
+                        dataManager.Url(Url.HttpRouteUrl("ApiGetPersonalAttachmentsByPersonDataGrid", new {personId = Model.CurrentUser.Person.Id})).CrossDomain(false).Adaptor("UrlAdaptor");
                     }).Columns(col =>
                     {
                         col.Field("Description").HeaderText("Description").Template("#documentsDescriptionTemplate").Width("300").Add();

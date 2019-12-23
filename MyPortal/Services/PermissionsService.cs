@@ -30,7 +30,7 @@ namespace MyPortal.Services
 
                 if (permission == null)
                 {
-                    throw new Exception($"Permission '{permissionName}' not found");
+                    throw new Exception($"Permission '{permissionName}' not found.");
                 }
 
                 var hasPermission = identity.RolePermissions.Any(x =>

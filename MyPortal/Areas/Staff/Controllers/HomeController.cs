@@ -3,8 +3,10 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using MyPortal.Areas.Staff.ViewModels;
 using MyPortal.Attributes.MvcAuthorise;
+using MyPortal.BusinessLogic.Services;
 using MyPortal.Controllers;
 using MyPortal.Models;
+using MyPortal.Models.Identity;
 using MyPortal.Services;
 
 namespace MyPortal.Areas.Staff.Controllers
@@ -25,7 +27,7 @@ namespace MyPortal.Areas.Staff.Controllers
 
                 var academicYears = await curriculumService.GetAcademicYears();
 
-                var selectedAcademicYearId = await curriculumService.TryGetCurrentOrSelectedAcademicYearId(User);
+                var selectedAcademicYearId = await User.GetSelectedOrCurrentAcademicYearId();
 
                 var viewModel = new StaffHomeViewModel
                 {

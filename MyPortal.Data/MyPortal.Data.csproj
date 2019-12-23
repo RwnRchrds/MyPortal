@@ -140,69 +140,9 @@
     <Compile Include="Interfaces\IReportRepository.cs" />
     <Compile Include="Interfaces\ISchoolRepository.cs" />
     <Compile Include="Interfaces\IUnitOfWork.cs" />
-    <Compile Include="Migrations\201910171655443_Initial.cs" />
-    <Compile Include="Migrations\201910171655443_Initial.Designer.cs">
-      <DependentUpon>201910171655443_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201910210943113_AddedAddresses.cs" />
-    <Compile Include="Migrations\201910210943113_AddedAddresses.Designer.cs">
-      <DependentUpon>201910210943113_AddedAddresses.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201910211005234_UpdateModel.cs" />
-    <Compile Include="Migrations\201910211005234_UpdateModel.Designer.cs">
-      <DependentUpon>201910211005234_UpdateModel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201910211007589_RemovedExplicitKeys.cs" />
-    <Compile Include="Migrations\201910211007589_RemovedExplicitKeys.Designer.cs">
-      <DependentUpon>201910211007589_RemovedExplicitKeys.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201910211410452_HeadOfHouseNotRequried.cs" />
-    <Compile Include="Migrations\201910211410452_HeadOfHouseNotRequried.Designer.cs">
-      <DependentUpon>201910211410452_HeadOfHouseNotRequried.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201910221612298_StructureUpdate.cs" />
-    <Compile Include="Migrations\201910221612298_StructureUpdate.Designer.cs">
-      <DependentUpon>201910221612298_StructureUpdate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201911060107386_UpdatedModel.cs" />
-    <Compile Include="Migrations\201911060107386_UpdatedModel.Designer.cs">
-      <DependentUpon>201911060107386_UpdatedModel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201911100045332_RemovedCurrentResultSets.cs" />
-    <Compile Include="Migrations\201911100045332_RemovedCurrentResultSets.Designer.cs">
-      <DependentUpon>201911100045332_RemovedCurrentResultSets.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201911100121053_ModifiedSystemClasses.cs" />
-    <Compile Include="Migrations\201911100121053_ModifiedSystemClasses.Designer.cs">
-      <DependentUpon>201911100121053_ModifiedSystemClasses.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201911111440419_AddedSubjectMultipleStaff.cs" />
-    <Compile Include="Migrations\201911111440419_AddedSubjectMultipleStaff.Designer.cs">
-      <DependentUpon>201911111440419_AddedSubjectMultipleStaff.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201911111551130_AddedLEAs.cs" />
-    <Compile Include="Migrations\201911111551130_AddedLEAs.Designer.cs">
-      <DependentUpon>201911111551130_AddedLEAs.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201911121639411_ChangeSenStatusTableName.cs" />
-    <Compile Include="Migrations\201911121639411_ChangeSenStatusTableName.Designer.cs">
-      <DependentUpon>201911121639411_ChangeSenStatusTableName.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201911121840019_SenStatusOptional.cs" />
-    <Compile Include="Migrations\201911121840019_SenStatusOptional.Designer.cs">
-      <DependentUpon>201911121840019_SenStatusOptional.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201911221002262_AddedSubjectRoles.cs" />
-    <Compile Include="Migrations\201911221002262_AddedSubjectRoles.Designer.cs">
-      <DependentUpon>201911221002262_AddedSubjectRoles.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201911251023341_ExtendedAttendanceMarks.cs" />
-    <Compile Include="Migrations\201911251023341_ExtendedAttendanceMarks.Designer.cs">
-      <DependentUpon>201911251023341_ExtendedAttendanceMarks.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201911282123411_AddedStudentContacts.cs" />
-    <Compile Include="Migrations\201911282123411_AddedStudentContacts.Designer.cs">
-      <DependentUpon>201911282123411_AddedStudentContacts.cs</DependentUpon>
+    <Compile Include="Migrations\201912231604158_InitialMigration.cs" />
+    <Compile Include="Migrations\201912231604158_InitialMigration.designer.cs">
+      <DependentUpon>201912231604158_InitialMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Aspect.cs" />
@@ -371,60 +311,14 @@
     <Compile Include="Repositories\SchoolRepository.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201910171655443_Initial.resx">
-      <DependentUpon>201910171655443_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201910210943113_AddedAddresses.resx">
-      <DependentUpon>201910210943113_AddedAddresses.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201910211005234_UpdateModel.resx">
-      <DependentUpon>201910211005234_UpdateModel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201910211007589_RemovedExplicitKeys.resx">
-      <DependentUpon>201910211007589_RemovedExplicitKeys.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201910211410452_HeadOfHouseNotRequried.resx">
-      <DependentUpon>201910211410452_HeadOfHouseNotRequried.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201910221612298_StructureUpdate.resx">
-      <DependentUpon>201910221612298_StructureUpdate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201911060107386_UpdatedModel.resx">
-      <DependentUpon>201911060107386_UpdatedModel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201911100045332_RemovedCurrentResultSets.resx">
-      <DependentUpon>201911100045332_RemovedCurrentResultSets.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201911100121053_ModifiedSystemClasses.resx">
-      <DependentUpon>201911100121053_ModifiedSystemClasses.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201911111440419_AddedSubjectMultipleStaff.resx">
-      <DependentUpon>201911111440419_AddedSubjectMultipleStaff.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201911111551130_AddedLEAs.resx">
-      <DependentUpon>201911111551130_AddedLEAs.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201911121639411_ChangeSenStatusTableName.resx">
-      <DependentUpon>201911121639411_ChangeSenStatusTableName.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201911121840019_SenStatusOptional.resx">
-      <DependentUpon>201911121840019_SenStatusOptional.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201911221002262_AddedSubjectRoles.resx">
-      <DependentUpon>201911221002262_AddedSubjectRoles.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201911251023341_ExtendedAttendanceMarks.resx">
-      <DependentUpon>201911251023341_ExtendedAttendanceMarks.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201911282123411_AddedStudentContacts.resx">
-      <DependentUpon>201911282123411_AddedStudentContacts.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201912231604158_InitialMigration.resx">
+      <DependentUpon>201912231604158_InitialMigration.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

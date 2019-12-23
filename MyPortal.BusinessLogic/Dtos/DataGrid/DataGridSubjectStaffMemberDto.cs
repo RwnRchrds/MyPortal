@@ -1,6 +1,6 @@
 ﻿namespace MyPortal.BusinessLogic.Dtos.DataGrid
 {
-    public class DataGridCurriculumSubjectStaffMemberDto
+    public class DataGridSubjectStaffMemberDto
     {
         public int Id { get; set; }
         public string StaffMemberName { get; set; } 

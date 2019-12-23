@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
-using MyPortal.Models.Database;
+using MyPortal.BusinessLogic.Dtos;
 
 namespace MyPortal.Areas.Staff.ViewModels
 {
     public class StudentDetailsViewModel
     {
-        public Student Student { get; set; }
-        public CommunicationPhoneNumber PhoneNumber { get; set; }
-        public CommunicationEmailAddress EmailAddress { get; set; }
+        public StudentDto Student { get; set; }
+        public PhoneNumberDto PhoneNumber { get; set; }
+        public EmailAddressDto EmailAddress { get; set; }
         public IDictionary<int, string> YearGroups { get; set; }
         public IDictionary<int, string> RegGroups { get; set; }
         public IDictionary<int, string> Houses { get; set; }

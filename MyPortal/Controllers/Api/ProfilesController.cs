@@ -5,11 +5,10 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
-using MyPortal.Dtos;
-using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
-using MyPortal.Dtos.DataGrid;
-using MyPortal.Models.Database;
+using MyPortal.BusinessLogic.Dtos;
+using MyPortal.BusinessLogic.Dtos.DataGrid;
+using MyPortal.BusinessLogic.Services;
 using MyPortal.Services;
 using Syncfusion.EJ2.Base;
 
@@ -33,54 +32,57 @@ namespace MyPortal.Controllers.Api
         
         [HttpPost]
         [RequiresPermission("EditProfileLogs")]
-        [Route("logs/create", Name = "ApiCreateProfileLog")]
-        public async Task<IHttpActionResult> CreateLog([FromBody] ProfileLog log)
+        [Route("logNotes/create", Name = "ApiCreateProfileLogNote")]
+        public async Task<IHttpActionResult> CreateLog([FromBody] ProfileLogNoteDto log)
         {
             try
             {
-                using (var curriculumService = new CurriculumService(UnitOfWork))
+                using (var staffMemberService = new StaffMemberService())
                 {
-                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
+                    var academicYearId = await User.GetSelectedOrCurrentAcademicYearId();
                     var userId = User.Identity.GetUserId();
 
-                    await _service.CreateLog(log, academicYearId, userId);
+                    var author = await staffMemberService.GetStaffMemberByUserId(userId);
+
+                    log.AcademicYearId = academicYearId;
+                    log.AuthorId = author.Id;
+
+                    await _service.CreateLogNote(log);
+
+                    return Ok("Log created");
                 }
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Log created");
         }
         
-        [Route("logs/delete/{logId:int}", Name = "ApiDeleteProfileLog")]
+        [Route("logNotes/delete/{logId:int}", Name = "ApiDeleteProfileLogNote")]
         [RequiresPermission("EditProfileLogs")]
         [HttpDelete]
         public async Task<IHttpActionResult> DeleteLog([FromUri] int logId)
         {
             try
             {
-                await _service.DeleteLog(logId);
+                await _service.DeleteLogNote(logId);
+                
+                return Ok("Log deleted");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Log deleted");
         }
 
         [HttpGet]
-        [Route("logs/get/byId/{logId:int}", Name = "ApiGetProfileLogById")]
+        [Route("logNotes/get/byId/{logId:int}", Name = "ApiGetProfileLogNoteById")]
         [RequiresPermission("ViewProfileLogs")]
-        public async Task<ProfileLogDto> GetLogById([FromUri] int logId)
+        public async Task<ProfileLogNoteDto> GetLogNoteById([FromUri] int logId)
         {
             try
             {
-                var log = await _service.GetLogById(logId);
-
-                return Mapper.Map<ProfileLog, ProfileLogDto>(log);
+                return await _service.GetLogNoteById(logId);
             }
             catch (Exception e)
             {
@@ -89,21 +91,16 @@ namespace MyPortal.Controllers.Api
         }
         
         [HttpGet]
-        [Route("logs/get/byStudent/{studentId:int}", Name = "ApiGetProfileLogsByStudent")]
+        [Route("logNotes/get/byStudent/{studentId:int}", Name = "ApiGetProfileLogNotesByStudent")]
         [RequiresPermission("ViewProfileLogs")]
-        public async Task<IEnumerable<ProfileLogDto>> GetLogsByStudent([FromUri] int studentId)
+        public async Task<IEnumerable<ProfileLogNoteDto>> GetLogsByStudent([FromUri] int studentId)
         {
             await AuthenticateStudentRequest(studentId);
             try
             {
-                using (var curriculumService = new CurriculumService(UnitOfWork))
-                {
-                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
+                var academicYearId = await User.GetSelectedOrCurrentAcademicYearId();
 
-                    var logs = await _service.GetLogsByStudent(studentId, academicYearId);
-
-                    return logs.Select(Mapper.Map<ProfileLog, ProfileLogDto>);
-                }
+                return await _service.GetLogNotesByStudent(studentId, academicYearId);
             }
             catch (Exception e)
             {
@@ -112,22 +109,19 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [Route("logs/get/byStudent/dataGrid/{studentId:int}", Name = "ApiGetProfileLogsByStudentDataGrid")]
-        [RequiresPermission("ViewProfileLogs, AccessStudentPortal")]
+        [Route("logNotes/get/byStudent/dataGrid/{studentId:int}", Name = "ApiGetProfileLogNotesByStudentDataGrid")]
+        [RequiresPermission("ViewProfileLogs")]
         public async Task<IHttpActionResult> GetLogsByStudentDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
         {
             try
             {
-                using (var curriculumService = new CurriculumService(UnitOfWork))
-                {
-                    var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
+                var academicYearId = await User.GetSelectedOrCurrentAcademicYearId();
 
-                    var logs = await _service.GetLogsByStudent(studentId, academicYearId);
+                var logs = await _service.GetLogNotesByStudent(studentId, academicYearId);
 
-                    var list = logs.Select(Mapper.Map<ProfileLog, GridProfileLogDto>);
+                var list = logs.Select(_mapping.Map<DataGridProfileLogNoteDto>);
 
-                    return PrepareDataGridObject(list, dm);
-                }
+                return PrepareDataGridObject(list, dm);
             }
             catch (Exception e)
             {
@@ -135,38 +129,38 @@ namespace MyPortal.Controllers.Api
             }
         }
 
-        [Route("logs/update", Name = "ApiUpdateProfileLog")]
+        [Route("logNotes/update", Name = "ApiUpdateProfileLogNote")]
         [RequiresPermission("EditProfileLogs")]
         [HttpPost]
-        public async Task<IHttpActionResult> UpdateLog([FromBody] ProfileLog log)
+        public async Task<IHttpActionResult> UpdateLog([FromBody] ProfileLogNoteDto log)
         {
             try
             {
-                await _service.UpdateLog(log);
+                await _service.UpdateLogNote(log);
+
+                return Ok("Log updated");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Log updated");
         }
 
         [HttpPost]
         [RequiresPermission("EditComments")]
         [Route("commentBanks/create", Name = "ApiCreateCommentBank")]
-        public async Task<IHttpActionResult> CreateCommentBank([FromBody] ProfileCommentBank commentBank)
+        public async Task<IHttpActionResult> CreateCommentBank([FromBody] CommentBankDto commentBank)
         {
             try
             {
                 await _service.CreateCommentBank(commentBank);
+
+                return Ok("Comment bank created");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Comment bank created");
         }
 
         [HttpDelete]
@@ -177,25 +171,23 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteCommentBank(commentBankId);
+
+                return Ok("Comment bank deleted");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Comment bank deleted");
         }
 
         [HttpGet]
         [RequiresPermission("ViewComments")]
         [Route("commentBanks/get/byId/{commentBankId:int}", Name = "ApiGetCommentBankById")]
-        public async Task<ProfileCommentBankDto> GetCommentBankById([FromUri] int commentBankId)
+        public async Task<CommentBankDto> GetCommentBankById([FromUri] int commentBankId)
         {
             try
             {
-                var commentBank = await _service.GetCommentBankById(commentBankId);
-
-                return Mapper.Map<ProfileCommentBank, ProfileCommentBankDto>(commentBank);
+                return await _service.GetCommentBankById(commentBankId);
             }
             catch (Exception e)
             {
@@ -206,13 +198,11 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ViewComments")]
         [Route("commentBanks/get/all", Name = "ApiGetAllCommentBanks")]
-        public async Task<IEnumerable<ProfileCommentBankDto>> GetAllCommentBanks()
+        public async Task<IEnumerable<CommentBankDto>> GetAllCommentBanks()
         {
             try
             {
-                var commentBanks = await _service.GetAllCommentBanks();
-
-                return commentBanks.Select(Mapper.Map<ProfileCommentBank, ProfileCommentBankDto>);
+                return await _service.GetAllCommentBanks();
             }
             catch (Exception e)
             {
@@ -229,7 +219,7 @@ namespace MyPortal.Controllers.Api
             {
                 var commentBanks = await _service.GetAllCommentBanks();
 
-                var list = commentBanks.Select(Mapper.Map<ProfileCommentBank, GridProfileCommentBankDto>);
+                var list = commentBanks.Select(_mapping.Map<DataGridCommentBankDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -242,35 +232,35 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditComments")]
         [Route("commentBanks/update", Name = "ApiUpdateCommentBank")]
-        public async Task<IHttpActionResult> UpdateCommentBank([FromBody] ProfileCommentBank commentBank)
+        public async Task<IHttpActionResult> UpdateCommentBank([FromBody] CommentBankDto commentBank)
         {
             try
             {
                 await _service.UpdateCommentBank(commentBank);
+
+                return Ok("Comment bank updated");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Comment bank updated");
         }
 
         [HttpPost]
         [RequiresPermission("EditComments")]
         [Route("comments/create", Name = "ApiCreateComment")]
-        public async Task<IHttpActionResult> CreateComment([FromBody] ProfileComment comment)
+        public async Task<IHttpActionResult> CreateComment([FromBody] CommentDto comment)
         {
             try
             {
                 await _service.CreateComment(comment);
+                
+                return Ok("Comment created");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Comment created");
         }
 
         [HttpDelete]
@@ -281,25 +271,23 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteComment(commentId);
+
+                return Ok("Comment deleted");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Comment deleted");
         }
 
         [HttpGet]
         [RequiresPermission("ViewComments")]
         [Route("comments/get/byId/{commentId:int}", Name = "ApiGetCommentById")]
-        public async Task<ProfileCommentDto> GetCommentById([FromUri] int commentId)
+        public async Task<CommentDto> GetCommentById([FromUri] int commentId)
         {
             try
             {
-                var comment = await _service.GetCommentById(commentId);
-
-                return Mapper.Map<ProfileComment, ProfileCommentDto>(comment);
+                return await _service.GetCommentById(commentId);
             }
             catch (Exception e)
             {
@@ -310,13 +298,11 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ViewComments")]
         [Route("comments/get/all", Name = "ApiGetAllComments")]
-        public async Task<IEnumerable<ProfileCommentDto>> GetAllComments()
+        public async Task<IEnumerable<CommentDto>> GetAllComments()
         {
             try
             {
-                var comments = await _service.GetAllComments();
-
-                return comments.Select(Mapper.Map<ProfileComment, ProfileCommentDto>);
+                return await _service.GetAllComments();
             }
             catch (Exception e)
             {
@@ -327,13 +313,11 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ViewComments")]
         [Route("comments/get/byBank/{commentBankId:int}", Name = "ApiGetCommentsByCommentBank")]
-        public async Task<IEnumerable<ProfileCommentDto>> GetCommentsByCommentBank([FromUri] int commentBankId)
+        public async Task<IEnumerable<CommentDto>> GetCommentsByCommentBank([FromUri] int commentBankId)
         {
             try
             {
-                var comments = await _service.GetCommentsByBank(commentBankId);
-
-                return comments.Select(Mapper.Map<ProfileComment, ProfileCommentDto>);
+                return await _service.GetCommentsByBank(commentBankId);
             }
             catch (Exception e)
             {
@@ -351,7 +335,7 @@ namespace MyPortal.Controllers.Api
             {
                 var comments = await _service.GetCommentsByBank(commentBankId);
 
-                var list = comments.Select(Mapper.Map<ProfileComment, GridProfileCommentDto>);
+                var list = comments.Select(_mapping.Map<DataGridCommentDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -364,18 +348,18 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditComments")]
         [Route("comments/update", Name = "ApiUpdateComment")]
-        public async Task<IHttpActionResult> UpdateComment([FromBody] ProfileComment comment)
+        public async Task<IHttpActionResult> UpdateComment([FromBody] CommentDto comment)
         {
             try
             {
                 await _service.UpdateComment(comment);
+                
+                return Ok("Comment updated");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Comment updated");
         }
     }
 }

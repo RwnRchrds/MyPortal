@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
-using MyPortal.Models.Database;
+using MyPortal.BusinessLogic.Dtos;
 
 namespace MyPortal.Areas.Staff.ViewModels
 {
     public class SessionsViewModel
     {
-        public CurriculumClass Class { get; set; }
-        public CurriculumSession Session { get; set; }
-        public CurriculumEnrolment Enrolment { get; set; }
-        public IEnumerable<AttendancePeriod> Periods { get; set; }  
+        public ClassDto Class { get; set; }
+        public SessionDto Session { get; set; }
+        public EnrolmentDto Enrolment { get; set; }
+        public IEnumerable<PeriodDto> Periods { get; set; }
     }
 }

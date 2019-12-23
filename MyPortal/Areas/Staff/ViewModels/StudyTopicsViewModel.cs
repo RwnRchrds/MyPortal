@@ -1,12 +1,12 @@
 using System.Collections.Generic;
-using MyPortal.Models.Database;
+using MyPortal.BusinessLogic.Dtos;
 
 namespace MyPortal.Areas.Staff.ViewModels
 {
     public class StudyTopicsViewModel
     {
-        public CurriculumStudyTopic StudyTopic { get; set; }
-        public IEnumerable<CurriculumSubject> Subjects { get; set; }
-        public IEnumerable<PastoralYearGroup> YearGroups { get; set; }    
+        public StudyTopicDto StudyTopic { get; set; }
+        public IEnumerable<SubjectDto> Subjects { get; set; }
+        public IEnumerable<YearGroupDto> YearGroups { get; set; }
     }
 }

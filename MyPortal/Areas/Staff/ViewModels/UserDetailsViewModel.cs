@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNet.Identity.EntityFramework;
-using MyPortal.Models;
-using MyPortal.Models.Misc;
+using MyPortal.BusinessLogic.Models.Data;
+using MyPortal.Models.Identity;
 
 namespace MyPortal.Areas.Staff.ViewModels
 {

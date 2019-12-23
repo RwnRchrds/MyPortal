@@ -114,7 +114,7 @@ namespace MyPortal.BusinessLogic.Services
         /// <summary>
         /// Update an existing year group.
         /// </summary>
-        public async Task UpdateYearGroup(YearGroup yearGroup)
+        public async Task UpdateYearGroup(YearGroupDto yearGroup)
         {
             var yearGroupInDb = await UnitOfWork.YearGroups.GetById(yearGroup.Id);
 

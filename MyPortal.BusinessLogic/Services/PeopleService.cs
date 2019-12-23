@@ -46,7 +46,7 @@ namespace MyPortal.BusinessLogic.Services
             return Mapping.Map<PersonDto>(person);
         }
 
-        public async Task UpdatePerson(Person person, bool commitImmediately = true)
+        public async Task UpdatePerson(PersonDto person, bool commitImmediately = true)
         {
             var personInDb = await UnitOfWork.People.GetById(person.Id);
 

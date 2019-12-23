@@ -1,12 +1,12 @@
 using System.Collections.Generic;
-using MyPortal.Models.Database;
+using MyPortal.BusinessLogic.Dtos;
 
 namespace MyPortal.Areas.Staff.ViewModels
 {
     public class ImportResultsViewModel
     {
-        public IEnumerable<AssessmentResultSet> ResultSets { get; set; }
-        public AssessmentResultSet ResultSet { get; set; }        
+        public IEnumerable<ResultSetDto> ResultSets { get; set; }
+        public ResultSetDto ResultSet { get; set; }
         public bool FileExists { get; set; }
         public int ResultsToImport { get; set; }
     }

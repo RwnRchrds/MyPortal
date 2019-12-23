@@ -221,27 +221,32 @@ namespace MyPortal.Services
 
         public async Task DetachPerson(ApplicationUser user)
         {
-            var userIsAttached = await UnitOfWork.Students.Any(x => x.Person.UserId == user.Id) ||
-                                 await UnitOfWork.StaffMembers.Any(x => x.Person.UserId == user.Id);
-
-            if (!userIsAttached)
+            using (var peopleService = new PeopleService())
+            using (var studentService = new StudentService())
+            using (var staffService = new StaffMemberService())
             {
-                throw new ServiceException(ExceptionType.BadRequest,"User is not attached");
+                var userIsAttached = (await peopleService.GetPersonByUserId(user.Id)) != null;
+
+                if (!userIsAttached)
+                {
+                    throw new ServiceException(ExceptionType.BadRequest, "User is not attached");
+                }
+
+                var personInDb = await peopleService.GetPersonByUserId(user.Id);
+                personInDb.UserId = null;
+
+                await peopleService.UpdatePerson(personInDb);
+
+                var roles = await UserManager.GetRolesAsync(user.Id);
+                var result = await UserManager.RemoveFromRolesAsync(user.Id, roles.ToArray());
+
+                if (result.Succeeded)
+                {
+                    return;
+                }
+
+                throw new ServiceException(ExceptionType.BadRequest, "An unknown error occurred");
             }
-
-            var personInDb = await UnitOfWork.People.GetByUserId(user.Id);
-            personInDb.UserId = null;
-            await UnitOfWork.Complete();
-
-            var roles = await UserManager.GetRolesAsync(user.Id);
-            var result = await UserManager.RemoveFromRolesAsync(user.Id, roles.ToArray());
-
-            if (result.Succeeded)
-            {
-                return;
-            }
-
-            throw new ServiceException(ExceptionType.BadRequest,"An unknown error occurred");
         }
         
         public async Task<IEnumerable<ApplicationRole>> GetUserDefinedRoles()
@@ -267,7 +272,7 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<PermissionIndicator>> GetPermissionsByRole(string roleId)
         {
-            var mappingService = new MappingService();
+            var mappingService = new MappingService(MapperType.DataGridObjects);
             var permissions = await Identity.Permissions.ToListAsync();
 
             var role = await RoleManager.FindByIdAsync(roleId);

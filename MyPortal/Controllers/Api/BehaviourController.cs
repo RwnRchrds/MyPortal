@@ -102,14 +102,14 @@ namespace MyPortal.Controllers.Api
                     achievement.AcademicYearId = academicYearId;
 
                     await _service.CreateAchievement(achievement);
+
+                    return Ok("Achievement created");
                 }
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok( "Achievement created");
         }
 
         [HttpPost]
@@ -120,13 +120,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdateAchievement(achievement);
+
+                return Ok("Achievement updated");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok( "Achievement updated");
         }
 
         [HttpDelete]
@@ -137,13 +137,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteAchievement(achievementId);
+
+                return Ok("Achievement deleted");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok( "Achievement deleted");
         }
 
         [HttpPost]
@@ -199,14 +199,14 @@ namespace MyPortal.Controllers.Api
                     incident.AcademicYearId = academicYearId;
 
                     await _service.CreateBehaviourIncident(incident);
+
+                    return Ok("Incident created");
                 }
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok( "Incident created");
         }
 
         [HttpPost]
@@ -217,13 +217,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdateBehaviourIncident(incident);
+
+                return Ok("Incident updated");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok( "Incident updated");
         }
 
         [HttpDelete]
@@ -234,13 +234,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteBehaviourIncident(incidentId);
+
+                return Ok("Incident deleted");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok( "Incident deleted");
         }
     }
 }

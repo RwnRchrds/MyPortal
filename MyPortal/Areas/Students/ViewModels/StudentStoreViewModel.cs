@@ -1,9 +1,9 @@
-﻿using MyPortal.Models.Database;
+﻿using MyPortal.BusinessLogic.Dtos;
 
 namespace MyPortal.Areas.Students.ViewModels
 {
     public class StudentStoreViewModel
     {
-        public Student Student { get; set; }
+        public StudentDto Student { get; set; }
     }
 }

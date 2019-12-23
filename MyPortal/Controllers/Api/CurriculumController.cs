@@ -5,9 +5,7 @@ using System.Net;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web.Http;
-using Auto_mapping;
 using Microsoft.AspNet.Identity;
-using MyPortal.Dtos;
 using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
 using MyPortal.BusinessLogic.Dtos;
@@ -205,13 +203,13 @@ namespace MyPortal.Controllers.Api
                 @class.AcademicYearId = academicYearId;
 
                 await _service.CreateClass(@class);
+
+                return Ok("Class created");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok( "Class created");
         }
 
         [HttpPost]
@@ -222,13 +220,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdateClass(@class);
+
+                return Ok("Class updated");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok( "Class updated");
         }
 
         [HttpDelete]
@@ -239,13 +237,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteClass(classId);
+
+                return Ok("Class deleted");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok( "Class deleted");
         }
 
         [HttpGet]
@@ -307,13 +305,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.CreateSession(session);
+
+                return Ok("Session created");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok( "Session created");
         }
 
         [HttpPost]
@@ -324,13 +322,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.CreateSessionForRegPeriods(session);
+
+                return Ok("Sessions created");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok( "Sessions created");
         }
 
         [HttpPost]
@@ -341,13 +339,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdateSession(session);
+
+                return Ok("Session updated");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok( "Session updated");
         }
 
         [HttpDelete]
@@ -358,13 +356,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteSession(sessionId);
+
+                return Ok("Session deleted");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok( "Session deleted");
         }
 
         [HttpGet]
@@ -392,7 +390,7 @@ namespace MyPortal.Controllers.Api
             {
                 var enrolments = await _service.GetEnrolmentsByClass(classId);
 
-                var list = enrolments.Select(_mapping.Map<CurriculumEnrolment, DataGridEnrolmentDto>);
+                var list = enrolments.Select(_mapping.Map<DataGridEnrolmentDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -405,13 +403,11 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ViewEnrolments")]
         [Route("enrolments/get/byStudent/{studentId:int}", Name = "ApiGetEnrolmentsByStudent")]
-        public async Task<IEnumerable<CurriculumEnrolmentDto>> GetEnrolmentsByStudent([FromUri] int studentId)
+        public async Task<IEnumerable<EnrolmentDto>> GetEnrolmentsByStudent([FromUri] int studentId)
         {
             try
             {
-                var enrolments = await _service.GetEnrolmentsByStudent(studentId);
-
-                return enrolments.Select(_mapping.Map<CurriculumEnrolment, CurriculumEnrolmentDto>);
+                return await _service.GetEnrolmentsByStudent(studentId);
             }
             catch (Exception e)
             {
@@ -429,7 +425,7 @@ namespace MyPortal.Controllers.Api
             {
                 var enrolments = await _service.GetEnrolmentsByStudent(studentId);
 
-                var list = enrolments.Select(_mapping.Map<CurriculumEnrolment, DataGridEnrolmentDto>);
+                var list = enrolments.Select(_mapping.Map<DataGridEnrolmentDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -442,13 +438,11 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ViewEnrolments")]
         [Route("enrolments/get/byId/{enrolmentId:int}", Name = "ApiGetEnrolment")]
-        public async Task<CurriculumEnrolmentDto> GetEnrolmentById([FromUri] int enrolmentId)
+        public async Task<EnrolmentDto> GetEnrolmentById([FromUri] int enrolmentId)
         {
             try
             {
-                var enrolment = await _service.GetEnrolmentById(enrolmentId);
-
-                return _mapping.Map<CurriculumEnrolment, CurriculumEnrolmentDto>(enrolment);
+                return await _service.GetEnrolmentById(enrolmentId);
             }
             catch (Exception e)
             {
@@ -459,18 +453,18 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditClasses")]
         [Route("enrolments/create", Name = "ApiCreateEnrolment")]
-        public async Task<IHttpActionResult> CreateEnrolment([FromBody] CurriculumEnrolment enrolment)
+        public async Task<IHttpActionResult> CreateEnrolment([FromBody] EnrolmentDto enrolment)
         {
             try
             {
                 await _service.CreateEnrolment(enrolment);
+
+                return Ok("Enrolment created");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok( "Enrolment created");
         }
 
         [HttpPost]
@@ -481,13 +475,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.CreateEnrolmentsForRegGroup(enrolment);
+
+                return Ok("Group enrolled");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok( "Group enrolled");
         }
 
         [HttpDelete]
@@ -498,30 +492,30 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteEnrolment(enrolmentId);
+
+                return Ok("Enrolment deleted");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok( "Enrolment deleted");
         }
 
         [HttpPost]
         [RequiresPermission("EditSubjects")]
         [Route("subjects/new", Name = "ApiCreateSubject")]
-        public async Task<IHttpActionResult> CreateSubject([FromBody] CurriculumSubject subject)
+        public async Task<IHttpActionResult> CreateSubject([FromBody] SubjectDto subject)
         {
             try
             {
                 await _service.CreateSubject(subject);
+
+                return Ok("Subject created");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok( "Subject created");
         }
 
         [HttpDelete]
@@ -532,25 +526,25 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteSubject(subjectId);
+
+                return Ok("Subject deleted");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok( "Subject deleted");
         }
 
         [HttpGet]
         [RequiresPermission("EditSubjects")]
         [Route("subjects/get/byId/{subjectId:int}", Name = "ApiGetSubjectById")]
-        public async Task<CurriculumSubjectDto> GetSubjectById([FromUri] int subjectId)
+        public async Task<SubjectDto> GetSubjectById([FromUri] int subjectId)
         {
             try
             {
                 var subject = await _service.GetSubjectById(subjectId);
 
-                return _mapping.Map<CurriculumSubject, CurriculumSubjectDto>(subject);
+                return _mapping.Map<SubjectDto>(subject);
             }
             catch (Exception e)
             {
@@ -561,13 +555,11 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("EditSubjects")]
         [Route("subjects/get/all", Name = "ApiGetAllSubjects")]
-        public async Task<IEnumerable<CurriculumSubjectDto>> GetAllSubjects()
+        public async Task<IEnumerable<SubjectDto>> GetAllSubjects()
         {
             try
             {
-                var subjects = await _service.GetAllSubjects();
-
-                return subjects.Select(_mapping.Map<CurriculumSubject, CurriculumSubjectDto>);
+                return await _service.GetAllSubjects();
             }
             catch (Exception e)
             {
@@ -584,8 +576,7 @@ namespace MyPortal.Controllers.Api
             {
                 var staff = await _service.GetSubjectStaffBySubject(subjectId);
 
-                var list = staff.Select(_mapping
-                    .Map<CurriculumSubjectStaffMember, DataGridCurriculumSubjectStaffMemberDto>);
+                var list = staff.Select(_mapping.Map<DataGridSubjectStaffMemberDto>);
 
                 return PrepareDataGridObject(list, dm);
 
@@ -599,13 +590,11 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("EditSubjects")]
         [Route("subjects/staff/get/byId/{subjectStaffId:int}", Name = "ApiGetSubjectStaffById")]
-        public async Task<CurriculumSubjectStaffMemberDto> GetSubjectStaffById([FromUri] int subjectStaffId)
+        public async Task<SubjectStaffMemberDto> GetSubjectStaffById([FromUri] int subjectStaffId)
         {
             try
             {
-                var subjectStaff = await _service.GetSubjectStaffById(subjectStaffId);
-
-                return _mapping.Map<CurriculumSubjectStaffMember, CurriculumSubjectStaffMemberDto>(subjectStaff);
+                return await _service.GetSubjectStaffById(subjectStaffId);
             }
             catch (Exception e)
             {
@@ -616,35 +605,35 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditSubjects")]
         [Route("subjects/staff/create", Name = "ApiCreateSubjectStaff")]
-        public async Task<IHttpActionResult> CreateSubjectStaff([FromBody] CurriculumSubjectStaffMember subjectStaff)
+        public async Task<IHttpActionResult> CreateSubjectStaff([FromBody] SubjectStaffMemberDto subjectStaff)
         {
             try
             {
                 await _service.CreateSubjectStaff(subjectStaff);
+
+                return Ok("Subject staff member created");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Subject staff member created");
         }
 
         [HttpPost]
         [RequiresPermission("EditSubjects")]
         [Route("subjects/staff/update", Name = "ApiUpdateSubjectStaff")]
-        public async Task<IHttpActionResult> UpdateSubjectStaff([FromBody] CurriculumSubjectStaffMember subjectStaff)
+        public async Task<IHttpActionResult> UpdateSubjectStaff([FromBody] SubjectStaffMemberDto subjectStaff)
         {
             try
             {
                 await _service.UpdateSubjectStaff(subjectStaff);
+
+                return Ok("Subject staff member updated");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Subject staff member updated");
         }
 
         [HttpDelete]
@@ -655,13 +644,13 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteSubjectStaff(subjectStaffId);
+
+                return Ok("Subject staff deleted");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Subject staff deleted");
         }
 
         [HttpPost]
@@ -673,7 +662,7 @@ namespace MyPortal.Controllers.Api
             {
                 var subjects = await _service.GetAllSubjects();
 
-                var list = subjects.Select(_mapping.Map<CurriculumSubject, DataGridSubjectDto>);
+                var list = subjects.Select(_mapping.Map<DataGridSubjectDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -686,35 +675,35 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditSubjects")]
         [Route("subjects/update", Name = "ApiUpdateSubject")]
-        public async Task<IHttpActionResult> UpdateSubject([FromBody] CurriculumSubject subject)
+        public async Task<IHttpActionResult> UpdateSubject([FromBody] SubjectDto subject)
         {
             try
             {
                 await _service.UpdateSubject(subject);
+
+                return Ok("Subject updated");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok( "Subject updated");
         }
 
         [HttpPost]
         [RequiresPermission("EditStudyTopics")]
         [Route("studyTopics/create", Name = "ApiCreateStudyTopic")]
-        public async Task<IHttpActionResult> CreateStudyTopic([FromBody] CurriculumStudyTopic studyTopic)
+        public async Task<IHttpActionResult> CreateStudyTopic([FromBody] StudyTopicDto studyTopic)
         {
             try
             {
                 await _service.UpdateStudyTopic(studyTopic);
+
+                return Ok("Study topic created");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok( "Study topic created");
         }
 
         [HttpDelete]
@@ -725,25 +714,23 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteStudyTopic(studyTopicId);
+
+                return Ok("Study topic deleted");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok( "Study topic deleted");
         }
 
         [HttpGet]
         [RequiresPermission("ViewStudyTopics")]
         [Route("studyTopics/get/byId/{studyTopicId:int}", Name = "ApiGetStudyTopicById")]
-        public async Task<CurriculumStudyTopicDto> GetStudyTopicById([FromUri] int studyTopicId)
+        public async Task<StudyTopicDto> GetStudyTopicById([FromUri] int studyTopicId)
         {
             try
             {
-                var studyTopic = await _service.GetStudyTopicById(studyTopicId);
-
-                return _mapping.Map<CurriculumStudyTopic, CurriculumStudyTopicDto>(studyTopic);
+                return await _service.GetStudyTopicById(studyTopicId);
             }
             catch (Exception e)
             {
@@ -754,13 +741,11 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ViewStudyTopics")]
         [Route("studyTopics/get/all", Name = "ApiGetAllStudyTopics")]
-        public async Task<IEnumerable<CurriculumStudyTopicDto>> GetAllStudyTopics()
+        public async Task<IEnumerable<StudyTopicDto>> GetAllStudyTopics()
         {
             try
             {
-                var studyTopics = await _service.GetAllStudyTopics();
-
-                return studyTopics.Select(_mapping.Map<CurriculumStudyTopic, CurriculumStudyTopicDto>);
+                return await _service.GetAllStudyTopics();
             }
             catch (Exception e)
             {
@@ -777,7 +762,7 @@ namespace MyPortal.Controllers.Api
             {
                 var studyTopics = await _service.GetAllStudyTopics();
 
-                var list = studyTopics.Select(_mapping.Map<CurriculumStudyTopic, DataGridStudyTopicDto>);
+                var list = studyTopics.Select(_mapping.Map<DataGridStudyTopicDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -790,30 +775,30 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditStudyTopics")]
         [Route("studyTopics/update", Name = "ApiUpdateStudyTopic")]
-        public async Task<IHttpActionResult> UpdateStudyTopic([FromBody] CurriculumStudyTopic studyTopic)
+        public async Task<IHttpActionResult> UpdateStudyTopic([FromBody] StudyTopicDto studyTopic)
         {
             try
             {
                 await _service.UpdateStudyTopic(studyTopic);
+
+                return Ok("Study topic updated");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok( "Study topic updated");
         }
 
         [HttpGet]
         [RequiresPermission("ViewLessonPlans")]
         [Route("lessonPlans/get/all", Name = "ApiGetAllLessonPlans")]
-        public async Task<IEnumerable<CurriculumLessonPlanDto>> GetAllLessonPlans()
+        public async Task<IEnumerable<LessonPlanDto>> GetAllLessonPlans()
         {
             try
             {
                 var lessonPlans = await _service.GetAllLessonPlans();
 
-                return lessonPlans.Select(_mapping.Map<CurriculumLessonPlan, CurriculumLessonPlanDto>);
+                return lessonPlans.Select(_mapping.Map<LessonPlanDto>);
             }
             catch (Exception e)
             {
@@ -824,13 +809,13 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ViewLessonPlans")]
         [Route("lessonPlans/get/byId/{lessonPlanId:int}", Name = "ApiGetLessonPlanById")]
-        public async Task<CurriculumLessonPlanDto> GetLessonPlanById([FromUri] int lessonPlanId)
+        public async Task<LessonPlanDto> GetLessonPlanById([FromUri] int lessonPlanId)
         {
             try
             {
                 var lessonPlan = await _service.GetLessonPlanById(lessonPlanId);
 
-                return _mapping.Map<CurriculumLessonPlan, CurriculumLessonPlanDto>(lessonPlan);
+                return _mapping.Map<LessonPlanDto>(lessonPlan);
             }
             catch (Exception e)
             {
@@ -841,13 +826,13 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ViewLessonPlans")]
         [Route("lessonPlans/get/byTopic/{studyTopicId:int}", Name = "ApiGetLessonPlansByTopic")]
-        public async Task<IEnumerable<CurriculumLessonPlanDto>> GetLessonPlansByStudyTopic([FromUri] int studyTopicId)
+        public async Task<IEnumerable<LessonPlanDto>> GetLessonPlansByStudyTopic([FromUri] int studyTopicId)
         {
             try
             {
                 var lessonPlans = await _service.GetLessonPlansByStudyTopic(studyTopicId);
 
-                return lessonPlans.Select(_mapping.Map<CurriculumLessonPlan, CurriculumLessonPlanDto>);
+                return lessonPlans.Select(_mapping.Map<LessonPlanDto>);
             }
             catch (Exception e)
             {
@@ -865,7 +850,7 @@ namespace MyPortal.Controllers.Api
             {
                 var lessonPlans = await _service.GetLessonPlansByStudyTopic(studyTopicId);
 
-                var list = lessonPlans.Select(_mapping.Map<CurriculumLessonPlan, DataGridLessonPlanDto>);
+                var list = lessonPlans.Select(_mapping.Map<DataGridLessonPlanDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -878,57 +863,61 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditLessonPlans")]
         [Route("lessonPlans/create", Name = "ApiCreateLessonPlan")]
-        public async Task<IHttpActionResult> CreateLessonPlan([FromBody] CurriculumLessonPlan plan)
+        public async Task<IHttpActionResult> CreateLessonPlan([FromBody] LessonPlanDto plan)
         {
             try
             {
-                var userId = User.Identity.GetUserId();
-                await _service.CreateLessonPlan(plan, userId);
+                using (var staffMemberService = new StaffMemberService())
+                {
+                    var userId = User.Identity.GetUserId();
+
+                    var author = await staffMemberService.GetStaffMemberByUserId(userId);
+
+                    plan.AuthorId = author.Id;
+
+                    await _service.CreateLessonPlan(plan);
+
+                    return Ok("Lesson plan created");
+                }
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok( "Lesson plan created");
         }
 
         [HttpPost]
         [RequiresPermission("EditLessonPlans")]
         [Route("lessonPlans/update", Name = "ApiUpdateLessonPlan")]
-        public async Task<IHttpActionResult> UpdateLessonPlan([FromBody] CurriculumLessonPlan plan)
+        public async Task<IHttpActionResult> UpdateLessonPlan([FromBody] LessonPlanDto plan)
         {
             try
             {
                 await _service.UpdateLessonPlan(plan);
+
+                return Ok("Lesson plan updated");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok( "Lesson plan updated");
         }
 
         [HttpDelete]
-        [RequiresPermission("EditLessonPlans")]
+        [RequiresPermission("DeleteLessonPlans")]
         [Route("lessonPlans/delete/{lessonPlanId:int}", Name = "ApiDeleteLessonPlan")]
         public async Task<IHttpActionResult> DeleteLessonPlan([FromUri] int lessonPlanId)
         {
             try
             {
-                var userId = User.Identity.GetUserId();
+                await _service.DeleteLessonPlan(lessonPlanId);
 
-                var canDeleteAll = User.HasPermission("DeleteAllLessonPlans");
-
-                await _service.DeleteLessonPlan(lessonPlanId, userId, canDeleteAll);
+                return Ok("Lesson plan deleted");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok( "Lesson plan deleted");
         }
     }
 }

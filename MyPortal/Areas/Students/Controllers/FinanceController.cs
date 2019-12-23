@@ -3,8 +3,10 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using MyPortal.Areas.Students.ViewModels;
 using MyPortal.Attributes.MvcAuthorise;
+using MyPortal.BusinessLogic.Services;
 using MyPortal.Controllers;
 using MyPortal.Models;
+using MyPortal.Models.Identity;
 using MyPortal.Services;
 
 namespace MyPortal.Areas.Students.Controllers

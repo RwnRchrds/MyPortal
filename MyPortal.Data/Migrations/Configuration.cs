@@ -1,4 +1,4 @@
-using MyPortal.Data.Models;
+﻿using MyPortal.Data.Models;
 
 namespace MyPortal.Data.Migrations
 {
@@ -7,7 +7,7 @@ namespace MyPortal.Data.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<MyPortalDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<MyPortal.Data.Models.MyPortalDbContext>
     {
         public Configuration()
         {
@@ -18,7 +18,7 @@ namespace MyPortal.Data.Migrations
         {
             //  This method will be called after migrating to the latest version.
 
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
+            //  You can use the DbSet<T>.AddOrUpdate() helper extension method
             //  to avoid creating duplicate seed data.
         }
     }

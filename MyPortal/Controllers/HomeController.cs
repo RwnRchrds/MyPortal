@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using MyPortal.Models;
+using MyPortal.Models.Identity;
 using MyPortal.Services;
 
 namespace MyPortal.Controllers

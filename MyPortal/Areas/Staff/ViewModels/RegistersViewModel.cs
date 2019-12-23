@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using MyPortal.Models.Database;
+using MyPortal.BusinessLogic.Dtos;
 
 namespace MyPortal.Areas.Staff.ViewModels
 {
     public class RegistersViewModel
     {
-        public StaffMember CurrentUser { get; set; }
-        public IEnumerable<StaffMember> StaffMembers { get; set; }
+        public StaffMemberDto CurrentUser { get; set; }
+        public IEnumerable<StaffMemberDto> StaffMembers { get; set; }
     }
 }

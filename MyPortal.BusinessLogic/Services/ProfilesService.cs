@@ -37,7 +37,7 @@ namespace MyPortal.BusinessLogic.Services
             await UnitOfWork.Complete();
         }
 
-        public async Task CreateLog(ProfileLogNoteDto logNote)
+        public async Task CreateLogNote(ProfileLogNoteDto logNote)
         {
             logNote.Date = DateTime.Now;
 
@@ -73,7 +73,7 @@ namespace MyPortal.BusinessLogic.Services
             await UnitOfWork.Complete();
         }
 
-        public async Task DeleteLog(int logId)
+        public async Task DeleteLogNote(int logId)
         {
             var logInDb = await UnitOfWork.ProfileLogNotes.GetById(logId);
 
@@ -131,7 +131,7 @@ namespace MyPortal.BusinessLogic.Services
             return (await UnitOfWork.Comments.GetByCommentBank(commentBankId)).Select(Mapping.Map<CommentDto>);
         }
 
-        public async Task<ProfileLogNoteDto> GetLogById(int logId)
+        public async Task<ProfileLogNoteDto> GetLogNoteById(int logId)
         {
             var log = await UnitOfWork.ProfileLogNotes.GetById(logId);
 
@@ -143,7 +143,7 @@ namespace MyPortal.BusinessLogic.Services
             return Mapping.Map<ProfileLogNoteDto>(log);
         }
 
-        public async Task<IEnumerable<ProfileLogNoteDto>> GetLogsByStudent(int studentId, int academicYearId)
+        public async Task<IEnumerable<ProfileLogNoteDto>> GetLogNotesByStudent(int studentId, int academicYearId)
         {
             return (await UnitOfWork.ProfileLogNotes.GetByStudent(studentId, academicYearId)).Select(
                 Mapping.Map<ProfileLogNoteDto>);
@@ -168,7 +168,7 @@ namespace MyPortal.BusinessLogic.Services
             await UnitOfWork.Complete();
         }
 
-        public async Task UpdateLog(ProfileLogNoteDto logNote)
+        public async Task UpdateLogNote(ProfileLogNoteDto logNote)
         {
             var logInDb = await UnitOfWork.ProfileLogNotes.GetById(logNote.Id);
 
@@ -178,14 +178,14 @@ namespace MyPortal.BusinessLogic.Services
             await UnitOfWork.Complete();
         }
 
-        public async Task<IEnumerable<ProfileLogNoteTypeDto>> GetAllLogTypes()
+        public async Task<IEnumerable<ProfileLogNoteTypeDto>> GetAllLogNoteTypes()
         {
             return (await UnitOfWork.ProfileLogNoteTypes.GetAll()).Select(Mapping.Map<ProfileLogNoteTypeDto>);
         }
 
         public async Task<IDictionary<int, string>> GetAllLogTypesLookup()
         {
-            return (await GetAllLogTypes()).ToDictionary(x => x.Id, x => x.Name);
+            return (await GetAllLogNoteTypes()).ToDictionary(x => x.Id, x => x.Name);
         }
     }
 }

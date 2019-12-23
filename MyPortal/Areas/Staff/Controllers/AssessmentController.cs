@@ -6,6 +6,7 @@ using MyPortal.Areas.Staff.ViewModels;
 using MyPortal.Attributes.MvcAuthorise;
 using MyPortal.Controllers;
 using MyPortal.Models;
+using MyPortal.Models.Identity;
 using MyPortal.Services;
 
 namespace MyPortal.Areas.Staff.Controllers

@@ -55,19 +55,20 @@ namespace MyPortal.Controllers.Api
         [Route("marks/saveRegister", Name = "ApiSaveRegisterMarks")]
         public async Task<IHttpActionResult> SaveRegisterMarks([FromBody] IEnumerable<AttendanceMarkLiteDto> attendanceMarks)
         {
-            if (attendanceMarks != null)
-            {
+            
                 try
                 {
-                    await _service.SaveRegisterMarks(attendanceMarks, true);       
+                    if (attendanceMarks != null)
+                    {
+                        await _service.SaveRegisterMarks(attendanceMarks, true);
+                    }
+
+                    return Ok("Register saved.");
                 }
                 catch (Exception e)
                 {
                     return HandleException(e);
                 }
-            }
-
-            return Ok("Register saved");
         }
         
         [HttpGet]

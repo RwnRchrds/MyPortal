@@ -1,9 +1,11 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Mvc;
 using MyPortal.Attributes.MvcAuthorise;
+using MyPortal.BusinessLogic.Dtos;
+using MyPortal.BusinessLogic.Services;
 using MyPortal.Controllers;
 using MyPortal.Models;
-using MyPortal.Models.Database;
+using MyPortal.Models.Identity;
 using MyPortal.Services;
 
 namespace MyPortal.Areas.Staff.Controllers
@@ -23,7 +25,7 @@ namespace MyPortal.Areas.Staff.Controllers
         [RequiresPermission("EditTrainingCourses")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateCourse(PersonnelTrainingCourse course)
+        public async Task<ActionResult> CreateCourse(TrainingCourseDto course)
         {
             if (!ModelState.IsValid)
             {

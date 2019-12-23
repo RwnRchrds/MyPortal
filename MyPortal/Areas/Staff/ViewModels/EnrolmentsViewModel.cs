@@ -1,10 +1,10 @@
-﻿using MyPortal.Models.Database;
+﻿using MyPortal.BusinessLogic.Dtos;
 
 namespace MyPortal.Areas.Staff.ViewModels
 {
     public class EnrolmentsViewModel
     {
-        public CurriculumClass Class { get; set; }
-        public CurriculumEnrolment Enrolment { get; set; }
+        public ClassDto Class { get; set; }
+        public EnrolmentDto Enrolment { get; set; }
     }
 }

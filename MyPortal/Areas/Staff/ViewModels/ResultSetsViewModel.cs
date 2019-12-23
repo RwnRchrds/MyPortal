@@ -1,9 +1,9 @@
-﻿using MyPortal.Models.Database;
+﻿using MyPortal.BusinessLogic.Dtos;
 
 namespace MyPortal.Areas.Staff.ViewModels
 {
     public class ResultSetsViewModel
     {
-        public AssessmentResultSet ResultSet { get; set; }
+        public ResultSetDto ResultSet { get; set; }
     }
 }

@@ -9,9 +9,8 @@ using System.Web.Http;
 using AutoMapper;
 using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
-using MyPortal.Dtos.DataGrid;
-using MyPortal.Models.Database;
-using MyPortal.Services;
+using MyPortal.BusinessLogic.Dtos.DataGrid;
+using MyPortal.BusinessLogic.Services;
 using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
@@ -42,7 +41,7 @@ namespace MyPortal.Controllers.Api
             {
                 var medicalConditions = await _service.GetMedicalConditionsByPerson(personId);
 
-                var list = medicalConditions.Select(Mapper.Map<MedicalPersonCondition, GridMedicalPersonConditionDto>);
+                var list = medicalConditions.Select(_mapping.Map<DataGridPersonConditionDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -64,8 +63,7 @@ namespace MyPortal.Controllers.Api
                 var dietaryRequirements =
                     await _service.GetMedicalDietaryRequirementsByPerson(personId);
 
-                var list = dietaryRequirements.Select(Mapper
-                    .Map<MedicalPersonDietaryRequirement, GridMedicalPersonDietaryRequirementDto>);
+                var list = dietaryRequirements.Select(_mapping.Map<DataGridPersonDietaryRequirementDto>);
 
                 return PrepareDataGridObject(list, dm);
             }

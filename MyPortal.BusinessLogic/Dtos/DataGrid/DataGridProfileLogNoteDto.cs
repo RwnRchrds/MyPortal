@@ -2,7 +2,7 @@
 
 namespace MyPortal.BusinessLogic.Dtos.DataGrid
 {
-    public class DataGridProfileLogDto
+    public class DataGridProfileLogNoteDto
     {
         public int Id { get; set; }
         public DateTime Date { get; set; }

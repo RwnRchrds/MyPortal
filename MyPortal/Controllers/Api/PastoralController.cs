@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
-using MyPortal.Dtos;
 using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
-using MyPortal.Models.Database;
+using MyPortal.BusinessLogic.Dtos;
+using MyPortal.BusinessLogic.Services;
 using MyPortal.Services;
 
 namespace MyPortal.Controllers.Api
@@ -30,18 +30,18 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditRegGroups")]
         [Route("regGroups/create", Name = "ApiCreateRegGroup")]
-        public async Task<IHttpActionResult> CreateRegGroup([FromBody] PastoralRegGroup regGroup)
+        public async Task<IHttpActionResult> CreateRegGroup([FromBody] RegGroupDto regGroup)
         {
             try
             {
                 await _service.CreateRegGroup(regGroup);
+
+                return Ok("Reg group created");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Reg group created");
         }
 
         [HttpDelete]
@@ -52,25 +52,23 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteRegGroup(regGroupId);
+
+                return Ok("Reg group deleted");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Reg group deleted");
         }
 
         [HttpGet]
         [RequiresPermission("ViewRegGroups")]
         [Route("regGroups/get/byId/{regGroupId:int}", Name = "ApiGetRegGroupById")]
-        public async Task<PastoralRegGroupDto> GetRegGroupById([FromUri] int regGroupId)
+        public async Task<RegGroupDto> GetRegGroupById([FromUri] int regGroupId)
         {
             try
             {
-                var regGroup = await _service.GetRegGroupById(regGroupId);
-
-                return Mapper.Map<PastoralRegGroup, PastoralRegGroupDto>(regGroup);
+                return await _service.GetRegGroupById(regGroupId);
             }
             catch (Exception e)
             {
@@ -81,13 +79,11 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ViewRegGroups")]
         [Route("regGroups/get/byYearGroup/{yearGroupId:int}", Name = "ApiGetRegGroupsByYearGroup")]
-        public async Task<IEnumerable<PastoralRegGroupDto>> GetRegGroupsByYearGroup([FromUri] int yearGroupId)
+        public async Task<IEnumerable<RegGroupDto>> GetRegGroupsByYearGroup([FromUri] int yearGroupId)
         {
             try
             {
-                var regGroups = await _service.GetRegGroupsByYearGroup(yearGroupId);
-
-                return regGroups.Select(Mapper.Map<PastoralRegGroup, PastoralRegGroupDto>);
+                return await _service.GetRegGroupsByYearGroup(yearGroupId);
             }
             catch (Exception e)
             {
@@ -98,13 +94,11 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [Route("regGroups/get/all", Name = "ApiGetAllRegGroups")]
         [RequiresPermission("ViewRegGroups")]
-        public async Task<IEnumerable<PastoralRegGroupDto>> GetAllRegGroups()
+        public async Task<IEnumerable<RegGroupDto>> GetAllRegGroups()
         {
             try
             {
-                var regGroups = await _service.GetAllRegGroups();
-
-                return regGroups.Select(Mapper.Map<PastoralRegGroup, PastoralRegGroupDto>);
+                return await _service.GetAllRegGroups();
             }
             catch (Exception e)
             {
@@ -115,35 +109,35 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditRegGroups")]
         [Route("regGroups/update", Name = "ApiUpdateRegGroup")]
-        public async Task<IHttpActionResult> UpdateRegGroup([FromBody] PastoralRegGroup regGroup)
+        public async Task<IHttpActionResult> UpdateRegGroup([FromBody] RegGroupDto regGroup)
         {
             try
             {
                 await _service.UpdateRegGroup(regGroup);
+
+                return Ok("Reg group updated");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Reg group updated");
         }
 
         [HttpPost]
         [RequiresPermission("EditYearGroups")]
         [Route("yearGroups/create", Name = "ApiCreateYearGroup")]
-        public async Task<IHttpActionResult> CreateYearGroup([FromBody] PastoralYearGroup yearGroup)
+        public async Task<IHttpActionResult> CreateYearGroup([FromBody] YearGroupDto yearGroup)
         {
             try
             {
                 await _service.CreateYearGroup(yearGroup);
+
+                return Ok("Year group created");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Year group created");
         }
 
         [HttpDelete]
@@ -154,25 +148,23 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteYearGroup(yearGroupId);
+
+                return Ok("Year group deleted");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Year group deleted");
         }
 
         [HttpGet]
         [RequiresPermission("ViewYearGroups")]
         [Route("yearGroups/get/all", Name = "ApiGetAllYearGroups")]
-        public async Task<IEnumerable<PastoralYearGroupDto>> GetAllYearGroups()
+        public async Task<IEnumerable<YearGroupDto>> GetAllYearGroups()
         {
             try
             {
-                var yearGroups = await _service.GetAllYearGroups();
-
-                return yearGroups.Select(Mapper.Map<PastoralYearGroup, PastoralYearGroupDto>);
+                return await _service.GetAllYearGroups();
             }
             catch (Exception e)
             {
@@ -183,18 +175,18 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditYearGroups")]
         [Route("yearGroups/update", Name = "ApiUpdateYearGroup")]
-        public async Task<IHttpActionResult> UpdateYearGroup([FromBody] PastoralYearGroup yearGroup)
+        public async Task<IHttpActionResult> UpdateYearGroup([FromBody] YearGroupDto yearGroup)
         {
             try
             {
                 await _service.UpdateYearGroup(yearGroup);
+
+                return Ok("Year group updated");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Year group updated");
         }
     }
 }

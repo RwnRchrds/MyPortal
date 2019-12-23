@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using MyPortal.Models;
+using MyPortal.Models.Identity;
 
 namespace MyPortal.Areas.Staff.ViewModels
 {

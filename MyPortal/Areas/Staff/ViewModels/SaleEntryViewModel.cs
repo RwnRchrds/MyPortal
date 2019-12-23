@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using MyPortal.Models.Database;
+using MyPortal.BusinessLogic.Dtos;
 
 namespace MyPortal.Areas.Staff.ViewModels
 {
     public class SaleEntryViewModel
     {
-        public IEnumerable<FinanceProduct> Products { get; set; }
-        public FinanceSale Sale { get; set; }
+        public IEnumerable<ProductDto> Products { get; set; }
+        public SaleDto Sale { get; set; }
     }
 }

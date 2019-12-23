@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using MyPortal.Models.Database;
+﻿using System.Collections.Generic;
+using MyPortal.BusinessLogic.Dtos;
 
 namespace MyPortal.Areas.Staff.ViewModels
 {
     public class SubjectDetailsViewModel
     {
-        public CurriculumSubject Subject { get; set; }
+        public SubjectDto Subject { get; set; }
         public IDictionary<int, string> StaffMembers { get; set; }
         public IDictionary<int, string> SubjectRoles { get; set; }
-        public CurriculumSubjectStaffMember SubjectStaffMember { get; set; }
+        public SubjectStaffMemberDto SubjectStaffMember { get; set; }
     }
 }

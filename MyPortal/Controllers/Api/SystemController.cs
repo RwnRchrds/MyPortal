@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
-using MyPortal.Dtos;
-using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
-using MyPortal.Models.Database;
+using MyPortal.BusinessLogic.Dtos;
+using MyPortal.BusinessLogic.Services;
 using MyPortal.Services;
 
 namespace MyPortal.Controllers.Api
@@ -32,7 +31,7 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditBulletins")]
         [Route("bulletins/create", Name = "ApiCreateBulletin")]
-        public async Task<IHttpActionResult> CreateBulletin([FromBody] SystemBulletin bulletin)
+        public async Task<IHttpActionResult> CreateBulletin([FromBody] BulletinDto bulletin)
         {
             try
             {
@@ -41,31 +40,31 @@ namespace MyPortal.Controllers.Api
                 var approvePermissions = await User.HasPermissionAsync("ApproveBulletins");
 
                 await _service.CreateBulletin(bulletin, userId, approvePermissions);
+
+                return Ok("Bulletin created");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Bulletin created");
         }
 
         [HttpPost]
         [RequiresPermission("EditBulletins")]
         [Route("bulletins/update", Name = "ApiUpdateBulletin")]
-        public async Task<IHttpActionResult> UpdateBulletin([FromBody] SystemBulletin bulletin)
+        public async Task<IHttpActionResult> UpdateBulletin([FromBody] BulletinDto bulletin)
         {
             try
             {
                 var approvePermissions = await User.HasPermissionAsync("ApproveBulletins");
                 await _service.UpdateBulletin(bulletin, approvePermissions);
+
+                return Ok("Bulletin updated");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Bulletin updated");
         }
 
         [HttpDelete]
@@ -88,13 +87,11 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ApproveBulletins")]
         [Route("bulletins/get/all", Name = "ApiGetAllBulletins")]
-        public async Task<IEnumerable<SystemBulletinDto>> GetAllBulletins()
+        public async Task<IEnumerable<BulletinDto>> GetAllBulletins()
         {
             try
             {
-                var bulletins = await _service.GetAllBulletins();
-
-                return bulletins.Select(Mapper.Map<SystemBulletin, SystemBulletinDto>);
+                return await _service.GetAllBulletins();
             }
             catch (Exception e)
             {
@@ -105,13 +102,11 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ViewApprovedBulletins")]
         [Route("bulletins/get/approved", Name = "ApiGetApprovedBulletins")]
-        public async Task<IEnumerable<SystemBulletinDto>> GetApprovedBulletins()
+        public async Task<IEnumerable<BulletinDto>> GetApprovedBulletins()
         {
             try
             {
-                var bulletins = await _service.GetApprovedBulletins();
-
-                return bulletins.Select(Mapper.Map<SystemBulletin, SystemBulletinDto>);
+                return await _service.GetApprovedBulletins();
             }
             catch (Exception e)
             {
@@ -122,19 +117,17 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ViewApprovedBulletins")]
         [Route("bulletins/get/own", Name = "ApiGetOwnBulletins")]
-        public async Task<IEnumerable<SystemBulletinDto>> GetOwnBulletins()
+        public async Task<IEnumerable<BulletinDto>> GetOwnBulletins()
         {
             try
             {
-                using (var staffService = new StaffMemberService(UnitOfWork))
+                using (var staffService = new StaffMemberService())
                 {
                     var userId = User.Identity.GetUserId();
 
                     var staff = await staffService.GetStaffMemberByUserId(userId);
                     
-                    var bulletins = await _service.GetOwnBulletins(staff.Id);
-
-                    return bulletins.Select(Mapper.Map<SystemBulletin, SystemBulletinDto>);
+                    return await _service.GetOwnBulletins(staff.Id);
                 }
             }
             catch (Exception e)
@@ -146,13 +139,11 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ViewStudentBulletins")]
         [Route("bulletins/get/student", Name = "ApiGetStudentBulletins")]
-        public async Task<IEnumerable<SystemBulletinDto>> GetStudentBulletins()
+        public async Task<IEnumerable<BulletinDto>> GetStudentBulletins()
         {
             try
             {
-                var bulletins = await _service.GetApprovedStudentBulletins();
-
-                return bulletins.Select(Mapper.Map<SystemBulletin, SystemBulletinDto>);
+                return await _service.GetApprovedStudentBulletins();
             }
             catch (Exception e)
             {

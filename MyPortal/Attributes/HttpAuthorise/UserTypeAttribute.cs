@@ -2,8 +2,7 @@ using MyPortal.Models;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using Microsoft.AspNet.Identity;
-using MyPortal.Models.Database;
-using MyPortal.Persistence;
+using MyPortal.Models.Identity;
 using MyPortal.Services;
 
 namespace MyPortal.Attributes.HttpAuthorise

@@ -4,9 +4,11 @@ using System.Web.Mvc;
 using MyPortal.Areas.Staff.ViewModels;
 using MyPortal.Areas.Students.ViewModels;
 using MyPortal.Attributes.MvcAuthorise;
+using MyPortal.BusinessLogic.Dtos;
+using MyPortal.BusinessLogic.Services;
 using MyPortal.Controllers;
 using MyPortal.Models;
-using MyPortal.Models.Database;
+using MyPortal.Models.Identity;
 using MyPortal.Services;
 
 namespace MyPortal.Areas.Staff.Controllers
@@ -37,7 +39,7 @@ namespace MyPortal.Areas.Staff.Controllers
 
         [HttpPost]
         [RequiresPermission("EditStudents")]
-        public async Task<ActionResult> SaveStudent(Student student)
+        public async Task<ActionResult> SaveStudent(StudentDto student)
         {
             using (var studentService = new StudentService())
             {
@@ -54,22 +56,16 @@ namespace MyPortal.Areas.Staff.Controllers
         {
             using (var behaviourService = new BehaviourService())
             using (var attendanceService = new AttendanceService())
-            using (var curriculumService =  new CurriculumService())
             using (var profilesService = new ProfilesService())
             using (var studentService = new StudentService())
             {
-                var student = await studentService.GetStudentByIdWithRelated(studentId, 
-                    x => x.Person,
-                    x => x.House.HeadOfHouse.Person,
-                    x => x.YearGroup.HeadOfYear.Person,
-                    x => x.RegGroup.Tutor.Person,
-                    x => x.SenStatus);
+                var student = await studentService.GetStudentById(studentId);
 
                 var logTypes = await profilesService.GetAllLogTypesLookup();
 
                 var commentBanks = await profilesService.GetAllCommentBanksLookup();
 
-                var academicYearId = await curriculumService.GetCurrentOrSelectedAcademicYearId(User);
+                var academicYearId = await User.GetSelectedOrCurrentAcademicYearId();
 
                 double? attendance = null;
 

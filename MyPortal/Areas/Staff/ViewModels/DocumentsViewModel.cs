@@ -1,9 +1,9 @@
-﻿using MyPortal.Models.Database;
+﻿using MyPortal.BusinessLogic.Dtos;
 
 namespace MyPortal.Areas.Staff.ViewModels
 {
     public class DocumentsViewModel
     {
-        public Document Document { get; set; }
+        public DocumentDto Document { get; set; }
     }
 }

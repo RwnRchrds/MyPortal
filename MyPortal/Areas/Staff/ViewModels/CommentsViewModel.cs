@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using MyPortal.Models.Database;
+using MyPortal.BusinessLogic.Dtos;
 
 namespace MyPortal.Areas.Staff.ViewModels
 {
     public class CommentsViewModel
     {
-        public IEnumerable<ProfileCommentBank> CommentBanks { get; set; }
-        public ProfileComment Comment { get; set; }
+        public IEnumerable<CommentBankDto> CommentBanks { get; set; }
+        public CommentDto Comment { get; set; }
     }
 }

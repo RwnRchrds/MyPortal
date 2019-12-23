@@ -5,9 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using MyPortal.Interfaces;
-using MyPortal.Models;
-using MyPortal.Models.Database;
+using MyPortal.Models.Identity;
 
 namespace MyPortal.Controllers
 {
@@ -22,16 +20,6 @@ namespace MyPortal.Controllers
         protected readonly RoleStore<ApplicationRole> _roleStore;
 
         public MyPortalIdentityController()
-        {
-            _identity = new IdentityContext();
-            _userStore = new UserStore<ApplicationUser, ApplicationRole, string, IdentityUserLogin, IdentityUserRole,
-                IdentityUserClaim>(_identity);
-            _userManager = new UserManager<ApplicationUser, string>(_userStore);
-            _roleStore = new RoleStore<ApplicationRole>(_identity);
-            _roleManager = new RoleManager<ApplicationRole, string>(_roleStore);
-        }
-
-        public MyPortalIdentityController(IUnitOfWork unitOfWork, IdentityContext identity) : base()
         {
             _identity = new IdentityContext();
             _userStore = new UserStore<ApplicationUser, ApplicationRole, string, IdentityUserLogin, IdentityUserRole,

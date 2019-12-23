@@ -5,11 +5,10 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
-using MyPortal.Dtos;
 using MyPortal.Attributes.HttpAuthorise;
-using MyPortal.Dtos.DataGrid;
-using MyPortal.Models.Database;
-using MyPortal.Services;
+using MyPortal.BusinessLogic.Dtos;
+using MyPortal.BusinessLogic.Dtos.DataGrid;
+using MyPortal.BusinessLogic.Services;
 using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
@@ -33,18 +32,18 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditTrainingCertificates")]
         [Route("certificates/create", Name = "ApiCreateTrainingCertificate")]
-        public async Task<IHttpActionResult> CreateTrainingCertificate([FromBody] PersonnelTrainingCertificate certificate)
+        public async Task<IHttpActionResult> CreateTrainingCertificate([FromBody] TrainingCertificateDto certificate)
         {
             try
             {
                 await _service.CreateTrainingCertificate(certificate);
+                
+                return Ok("Certificate created");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Certificate created");
         }
 
         [HttpDelete]
@@ -55,25 +54,23 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteTrainingCertificate(staffId, courseId);
+
+                return Ok("Certificate deleted");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Certificate deleted");
         }
         
         [HttpGet]
         [RequiresPermission("ViewTrainingCertificates")]
         [Route("certificates/get/{staffId:int}/{courseId:int}", Name = "ApiGetTrainingCertificate")]
-        public async Task<PersonnelTrainingCertificateDto> GetTrainingCertificate([FromUri] int staffId, [FromUri] int courseId)
+        public async Task<TrainingCertificateDto> GetTrainingCertificate([FromUri] int staffId, [FromUri] int courseId)
         {
             try
             {
-                var certificate = await _service.GetCertificate(staffId, courseId);
-
-                return Mapper.Map<PersonnelTrainingCertificate, PersonnelTrainingCertificateDto>(certificate);
+                return await _service.GetCertificate(staffId, courseId);
             }
             catch (Exception e)
             {
@@ -84,13 +81,11 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ViewTrainingCertificates")]
         [Route("certificates/get/byStaff/{staffId:int}", Name = "ApiGetTrainingCertificatesByStaffMember")]
-        public async Task<IEnumerable<PersonnelTrainingCertificateDto>> GetCertificatesByStaffMember([FromUri] int staffId)
+        public async Task<IEnumerable<TrainingCertificateDto>> GetCertificatesByStaffMember([FromUri] int staffId)
         {
             try
             {
-                var certificates = await _service.GetCertificatesByStaffMember(staffId);
-
-                return certificates.Select(Mapper.Map<PersonnelTrainingCertificate, PersonnelTrainingCertificateDto>);
+                return await _service.GetCertificatesByStaffMember(staffId);
             }
             catch (Exception e)
             {
@@ -107,7 +102,7 @@ namespace MyPortal.Controllers.Api
             {
                 var certificates = await _service.GetCertificatesByStaffMember(staffId);
 
-                var list = certificates.Select(Mapper.Map<PersonnelTrainingCertificate, GridPersonnelTrainingCertificateDto>);
+                var list = certificates.Select(_mapping.Map<DataGridTrainingCertificateDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -120,19 +115,19 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditTrainingCertificates")]
         [Route("certificates/update", Name = "ApiUpdateTrainingCertificate")]
-        public async Task<IHttpActionResult> UpdateCertificate([FromBody] PersonnelTrainingCertificate certificate)
+        public async Task<IHttpActionResult> UpdateCertificate([FromBody] TrainingCertificateDto certificate)
         {
             try
             {
                 var userId = User.Identity.GetUserId();
-                await _service.UpdateCertificate(certificate, userId);
+                await _service.UpdateCertificate(certificate);
+
+                return Ok("Certificate updated");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Certificate updated");
         }
 
         [HttpDelete]
@@ -155,13 +150,11 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [Route("courses/get/byId/{courseId:int}", Name = "ApiGetTrainingCourseById")]
         [RequiresPermission("ViewTrainingCourses")]
-        public async Task<PersonnelTrainingCourseDto> GetCourseById([FromUri] int courseId)
+        public async Task<TrainingCourseDto> GetCourseById([FromUri] int courseId)
         {
             try
             {
-                var course = await _service.GetCourseById(courseId);
-
-                return Mapper.Map<PersonnelTrainingCourse, PersonnelTrainingCourseDto>(course);
+                return await _service.GetCourseById(courseId);
             }
             catch (Exception e)
             {
@@ -172,13 +165,11 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [Route("courses/get/all", Name = "ApiGetAllTrainingCourses")]
         [RequiresPermission("ViewTrainingCourses")]
-        public async Task<IEnumerable<PersonnelTrainingCourseDto>> GetCourses()
+        public async Task<IEnumerable<TrainingCourseDto>> GetCourses()
         {
             try
             {
-                var courses = await _service.GetAllTrainingCourses();
-
-                return courses.Select(Mapper.Map<PersonnelTrainingCourse, PersonnelTrainingCourseDto>);
+                return await _service.GetAllTrainingCourses();
             }
             catch (Exception e)
             {
@@ -195,7 +186,7 @@ namespace MyPortal.Controllers.Api
             {
                 var courses = await _service.GetAllTrainingCourses();
 
-                var list = courses.Select(Mapper.Map<PersonnelTrainingCourse, GridPersonnelTrainingCourseDto>);
+                var list = courses.Select(_mapping.Map<DataGridTrainingCourseDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -208,48 +199,46 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [Route("courses/edit", Name = "ApiUpdateTrainingCourse")]
         [RequiresPermission("EditTrainingCourses")]
-        public async Task<IHttpActionResult> UpdateCourse([FromBody] PersonnelTrainingCourse course)
+        public async Task<IHttpActionResult> UpdateCourse([FromBody] TrainingCourseDto course)
         {
             try
             {
                 await _service.UpdateCourse(course);
+                
+                return Ok("Training course updated");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Course updated");
         }
 
         [HttpPost]
         [Route("observations/create", Name = "ApiCreateObservation")]
         [RequiresPermission("EditObservations")]
-        public async Task<IHttpActionResult> CreateObservation([FromBody] PersonnelObservation data)
+        public async Task<IHttpActionResult> CreateObservation([FromBody] ObservationDto data)
         {
             try
             {
                 var userId = User.Identity.GetUserId();
                 await _service.CreateObservation(data, userId);
+
+                return Ok("Observation created.");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Observation created");
         }
 
         [HttpGet]
         [RequiresPermission("ViewObservations")]
         [Route("observations/get/byId/{observationId:int}", Name = "ApiGetObservationById")]
-        public async Task<PersonnelObservationDto> GetObservation([FromUri] int observationId)
+        public async Task<ObservationDto> GetObservation([FromUri] int observationId)
         {
             try
             {
-                var observation = await _service.GetObservationById(observationId);
-
-                return Mapper.Map<PersonnelObservation, PersonnelObservationDto>(observation);
+                return await _service.GetObservationById(observationId);
             }
             catch (Exception e)
             {
@@ -260,13 +249,13 @@ namespace MyPortal.Controllers.Api
         [HttpGet]
         [RequiresPermission("ViewObservations")]
         [Route("observations/get/byStaff/{staffMemberId:int}", Name = "ApiGetObservationsByStaffMember")]
-        public async Task<IEnumerable<PersonnelObservationDto>> GetObservationsByStaffMember([FromUri] int staffMemberId)
+        public async Task<IEnumerable<ObservationDto>> GetObservationsByStaffMember([FromUri] int staffMemberId)
         {
             try
             {
                 var observations = await _service.GetObservationsByStaffMember(staffMemberId);
 
-                return observations.Select(Mapper.Map<PersonnelObservation, PersonnelObservationDto>);
+                return observations.Select(_mapping.Map<ObservationDto>);
             }
             catch (Exception e)
             {
@@ -284,7 +273,7 @@ namespace MyPortal.Controllers.Api
             {
                 var observations = await _service.GetObservationsByStaffMember(staffId);
 
-                var list = observations.Select(Mapper.Map<PersonnelObservation, GridPersonnelObservationDto>);
+                var list = observations.Select(_mapping.Map<DataGridObservationDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -302,30 +291,30 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteObservation(observationId);
+
+                return Ok("Observation deleted");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Observation deleted");
         }
 
         [HttpPost]
         [RequiresPermission("EditObservations")]
         [Route("observations/update", Name = "ApiUpdateObservation")]
-        public async Task<IHttpActionResult> UpdateObservation([FromBody] PersonnelObservation observation)
+        public async Task<IHttpActionResult> UpdateObservation([FromBody] ObservationDto observation)
         {
             try
             {
                 await _service.UpdateObservation(observation);
+
+                return Ok("Observation updated");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Observation updated");
         }
     }
 }

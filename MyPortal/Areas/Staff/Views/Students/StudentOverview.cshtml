@@ -302,19 +302,19 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Log Type")
-                        @Html.DropDownListFor(l => l.Log.TypeId, new SelectList(Model.LogTypes, "Key", "Value"), "Select Log Type", new {@class = "form-control", Name = "TypeId"})
-                        @Html.ValidationMessageFor(l => l.Log.TypeId)
+                        @Html.DropDownListFor(l => l.LogNote.TypeId, new SelectList(Model.LogTypes, "Key", "Value"), "Select Log Type", new {@class = "form-control", Name = "TypeId"})
+                        @Html.ValidationMessageFor(l => l.LogNote.TypeId)
                     </div>
                     <hr/>
                     <button type="button" class="btn btn-sm btn-primary" id="addComment"><i class="fa fa-plus-circle"></i> Add Comment</button>
                     <hr/>
                     <div class="form-group">
                         @Html.Label("Message")
-                        @Html.TextAreaFor(l => l.Log.Message, new {@class = "form-control mp-textarea-lg", Name = "Message", id = "newLogMessageControl"})
-                        @Html.ValidationMessageFor(l => l.Log.Message)
+                        @Html.TextAreaFor(l => l.LogNote.Message, new {@class = "form-control mp-textarea-lg", Name = "Message", id = "newLogMessageControl"})
+                        @Html.ValidationMessageFor(l => l.LogNote.Message)
                     </div>
                     <div class="form-group">
-                        @Html.HiddenFor(l => l.Log.StudentId, new {Value = Model.Student.Id, Name = "StudentId"})
+                        @Html.HiddenFor(l => l.LogNote.StudentId, new {Value = Model.Student.Id, Name = "StudentId"})
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -344,15 +344,15 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Log Type")
-                        @Html.DropDownListFor(l => l.Log.TypeId, new SelectList(Model.LogTypes, "Key", "Value"), "Select Log Type", new {@class = "form-control", id = "EditLogTypeControl", Name = "TypeId"})
+                        @Html.DropDownListFor(l => l.LogNote.TypeId, new SelectList(Model.LogTypes, "Key", "Value"), "Select Log Type", new {@class = "form-control", id = "EditLogTypeControl", Name = "TypeId"})
                     </div>
                     <div class="form-group">
                         @Html.Label("Message")
-                        @Html.TextAreaFor(l => l.Log.Message, new {@class = "form-control mp-textarea-lg", id = "EditLogMessageControl", Name = "Message"})
+                        @Html.TextAreaFor(l => l.LogNote.Message, new {@class = "form-control mp-textarea-lg", id = "EditLogMessageControl", Name = "Message"})
                     </div>
                     <div class="form-group">
-                        @Html.HiddenFor(l => l.Log.StudentId, new {Value = Model.Student.Id, Name = "StudentId"})
-                        @Html.HiddenFor(l => l.Log.Id, new {Name = "Id", id = "EditLogIdControl"})
+                        @Html.HiddenFor(l => l.LogNote.StudentId, new {Value = Model.Student.Id, Name = "StudentId"})
+                        @Html.HiddenFor(l => l.LogNote.Id, new {Name = "Id", id = "EditLogIdControl"})
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>

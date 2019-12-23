@@ -1,9 +1,9 @@
-﻿using MyPortal.Models.Database;
+﻿using MyPortal.BusinessLogic.Dtos;
 
 namespace MyPortal.Areas.Staff.ViewModels
 {
     public class TrainingCoursesViewModel
     {
-        public PersonnelTrainingCourse Course { get; set; }
+        public TrainingCourseDto Course { get; set; }
     }
 }

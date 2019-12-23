@@ -139,7 +139,7 @@ namespace MyPortal.BusinessLogic.Services
             return (await UnitOfWork.Observations.GetByStaffMember(staffMemberId)).Select(Mapping.Map<ObservationDto>);
         }
 
-        public async Task UpdateCertificate(TrainingCertificate certificate)
+        public async Task UpdateCertificate(TrainingCertificateDto certificate)
         {
             var certInDb =
                 await UnitOfWork.TrainingCertificates.Get(certificate.StaffId, certificate.CourseId);
@@ -149,7 +149,7 @@ namespace MyPortal.BusinessLogic.Services
             await UnitOfWork.Complete();
         }
         
-        public async Task UpdateCourse(TrainingCourse course)
+        public async Task UpdateCourse(TrainingCourseDto course)
         {
             var courseInDb = await UnitOfWork.TrainingCourses.GetById(course.Id);
 
@@ -164,13 +164,13 @@ namespace MyPortal.BusinessLogic.Services
             await UnitOfWork.Complete();
         }
         
-        public async Task UpdateObservation(Observation observation)
+        public async Task UpdateObservation(ObservationDto observation)
         {
             var observationInDb = await UnitOfWork.Observations.GetById(observation.Id);
 
             if (observationInDb == null)
             {
-                throw new ServiceException(ExceptionType.NotFound, "Observation not found");
+                throw new ServiceException(ExceptionType.NotFound, "Observation not found.");
             }
 
             observationInDb.Outcome = observation.Outcome;

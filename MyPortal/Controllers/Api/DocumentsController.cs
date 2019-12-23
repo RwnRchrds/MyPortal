@@ -6,13 +6,10 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
-using MyPortal.Dtos;
-using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
-using MyPortal.Dtos.DataGrid;
-using MyPortal.Interfaces;
-using MyPortal.Models.Database;
-using MyPortal.Services;
+using MyPortal.BusinessLogic.Dtos;
+using MyPortal.BusinessLogic.Dtos.DataGrid;
+using MyPortal.BusinessLogic.Services;
 using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
@@ -36,19 +33,27 @@ namespace MyPortal.Controllers.Api
         [HttpPost]
         [RequiresPermission("EditDocuments")]
         [Route("create", Name = "ApiCreateDocument")]
-        public async Task<IHttpActionResult> CreateDocument([FromBody] Document document)
+        public async Task<IHttpActionResult> CreateDocument([FromBody] DocumentDto document)
         {
             try
             {
-                var userId = User.Identity.GetUserId();
-                await _service.CreateDocument(document, userId);
+                using (var staffService = new StaffMemberService())
+                {
+                    var userId = User.Identity.GetUserId();
+
+                    var uploader = staffService.GetStaffMemberByUserId(userId);
+
+                    document.UploaderId = uploader.Id;
+                }
+
+                await _service.CreateDocument(document);
+
+                return Ok("Document created");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok( "Document created");
         }
         
         [HttpGet]
@@ -58,9 +63,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var documents = await _service.GetApprovedGeneralDocuments();
-
-                return documents.Select(Mapper.Map<Document, DocumentDto>);
+                return await _service.GetApprovedGeneralDocuments();
             }
             catch (Exception e)
             {
@@ -77,7 +80,7 @@ namespace MyPortal.Controllers.Api
             {
                 var documents = await _service.GetApprovedGeneralDocuments();
 
-                var list = documents.Select(Mapper.Map<Document, GridDocumentDto>);
+                var list = documents.Select(_mapping.Map<DataGridDocumentDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -94,9 +97,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var document = await _service.GetDocumentById(documentId);
-
-                return Mapper.Map<Document, DocumentDto>(document);
+                return await _service.GetDocumentById(documentId);
             }
             catch (Exception e)
             {
@@ -111,9 +112,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var documents = await _service.GetAllGeneralDocuments();
-
-                return documents.Select(Mapper.Map<Document, DocumentDto>);
+                return await _service.GetAllGeneralDocuments();
             }
             catch (Exception e)
             {
@@ -130,7 +129,7 @@ namespace MyPortal.Controllers.Api
             {
                 var documents = await _service.GetAllGeneralDocuments();
 
-                var list = documents.Select(Mapper.Map<Document, GridDocumentDto>);
+                var list = documents.Select(_mapping.Map<DataGridDocumentDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -141,15 +140,15 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [RequiresPermission("ViewPersonalDocuments")]
-        [Route("personal/get/dataGrid/{personId}", Name = "ApiGetPersonalDocumentsByPersonDataGrid")]
-        public async Task<IHttpActionResult> GetDocumentsByPersonDataGrid([FromBody] DataManagerRequest dm, [FromUri] int personId)
+        [RequiresPermission("ViewPersonAttachments")]
+        [Route("personal/get/dataGrid/{personId}", Name = "ApiGetAttachmentsByPersonDataGrid")]
+        public async Task<IHttpActionResult> GetAttachmentsByPersonDataGrid([FromBody] DataManagerRequest dm, [FromUri] int personId)
         {
             try
             {
-                var documents = await _service.GetPersonalDocuments(personId);
+                var documents = await _service.GetPersonAttachments(personId);
 
-                var list = documents.Select(Mapper.Map<PersonDocument, GridPersonDocumentDto>);
+                var list = documents.Select(_mapping.Map<DataGridPersonAttachmentDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -167,60 +166,58 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteDocument(documentId);
+
+                return Ok("Document deleted.");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Document deleted");
         }
 
         [HttpPost]
         [RequiresPermission("EditDocuments")]
         [Route("update", Name = "ApiUpdateDocument")]
-        public async Task<IHttpActionResult> UpdateDocument([FromBody] Document document)
+        public async Task<IHttpActionResult> UpdateDocument([FromBody] DocumentDto document)
         {
             try
             {
                 await _service.UpdateDocument(document);
+
+                return Ok("Document updated.");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Update document");
         }
 
         [HttpPost]
-        [RequiresPermission("EditPersonalDocuments")]
-        [Route("personal/create", Name = "ApiCreatePersonalDocument")]
-        public async Task<IHttpActionResult> CreatePersonalDocument([FromBody] PersonDocument document)
+        [RequiresPermission("EditPersonAttachments")]
+        [Route("personal/create", Name = "ApiCreatePersonAttachment")]
+        public async Task<IHttpActionResult> CreatePersonAttachment([FromBody] PersonAttachmentDto document)
         {
             try
             {
                 var userId = User.Identity.GetUserId();
-                await _service.CreatePersonalDocument(document, userId);
+                await _service.CreatePersonAttachment(document);
+
+                return Ok("Document created.");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Document created");
         }
 
         [HttpGet]
-        [RequiresPermission("ViewPersonalDocuments")]
-        [Route("personal/get/byId/{documentId:int}", Name = "ApiGetPersonalDocumentById")]
-        public async Task<PersonDocumentDto> GetPersonalDocumentById([FromUri] int documentId)
+        [RequiresPermission("ViewPersonAttachments")]
+        [Route("personal/get/byId/{documentId:int}", Name = "ApiGetPersonAttachmentById")]
+        public async Task<PersonAttachmentDto> GetPersonAttachmentById([FromUri] int documentId)
         {
             try
             {
-                var document = await _service.GetPersonalDocumentById(documentId);
-
-                return Mapper.Map<PersonDocument, PersonDocumentDto>(document);
+                return await _service.GetPersonAttachmentById(documentId);
             }
             catch (Exception e)
             {
@@ -229,15 +226,13 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [RequiresPermission("ViewPersonalDocuments")]
-        [Route("personal/get/{personId:int}", Name = "ApiGetPersonalDocumentsByPerson")]
-        public async Task<IEnumerable<PersonDocumentDto>> GetPersonalDocumentsByPerson([FromUri] int personId)
+        [RequiresPermission("ViewPersonAttachments")]
+        [Route("personal/get/{personId:int}", Name = "ApiGetAttachmentsByPerson")]
+        public async Task<IEnumerable<PersonAttachmentDto>> GetAttachmentsByPerson([FromUri] int personId)
         {
             try
             {
-                var documents = await _service.GetPersonalDocuments(personId);
-
-                return documents.Select(Mapper.Map<PersonDocument, PersonDocumentDto>);
+                return await _service.GetPersonAttachments(personId);
             }
             catch (Exception e)
             {
@@ -246,37 +241,37 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpDelete]
-        [RequiresPermission("EditPersonalDocuments")]
-        [Route("personal/delete/{documentId:int}", Name = "ApiDeletePersonalDocument")]
-        public async Task<IHttpActionResult> DeletePersonalDocument([FromUri] int documentId)
+        [RequiresPermission("EditPersonAttachments")]
+        [Route("personal/delete/{documentId:int}", Name = "ApiDeletePersonAttachment")]
+        public async Task<IHttpActionResult> DeletePersonAttachment([FromUri] int documentId)
         {
             try
             {
-                await _service.DeletePersonalDocument(documentId);
+                await _service.DeletePersonAttachment(documentId);
+
+                return Ok("Document deleted.");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Document deleted");
         }
 
         [HttpPost]
-        [RequiresPermission("EditPersonalDocuments")]
-        [Route("personal/update", Name = "ApiUpdatePersonalDocument")]
-        public async Task<IHttpActionResult> UpdatePersonalDocument([FromBody] PersonDocument document)
+        [RequiresPermission("EditPersonAttachments")]
+        [Route("personal/update", Name = "ApiUpdatePersonAttachment")]
+        public async Task<IHttpActionResult> UpdatePersonAttachment([FromBody] PersonAttachmentDto document)
         {
             try
             {
-                await _service.UpdatePersonalDocument(document);
+                await _service.UpdatePersonAttachment(document);
+
+                return Ok("Attachment updated.");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Document updated");
         }
     }
 }

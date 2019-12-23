@@ -6,6 +6,8 @@ using MyPortal.Areas.Students.ViewModels;
 using MyPortal.Controllers;
 using MyPortal.Models;
 using MyPortal.Attributes.MvcAuthorise;
+using MyPortal.BusinessLogic.Services;
+using MyPortal.Models.Identity;
 using MyPortal.Services;
 
 namespace MyPortal.Areas.Students.Controllers

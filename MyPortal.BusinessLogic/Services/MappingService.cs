@@ -143,7 +143,7 @@ namespace MyPortal.BusinessLogic.Services
                     .ForMember(dest => dest.YearGroupName,
                         opts => opts.MapFrom(src => src.YearGroup.Name));
 
-                cfg.CreateMap<ProfileLogNote, DataGridProfileLogDto>()
+                cfg.CreateMap<ProfileLogNote, DataGridProfileLogNoteDto>()
                     .ForMember(dest => dest.Id,
                         opts => opts.MapFrom(src => src.Id))
                     .ForMember(dest => dest.AuthorName,
@@ -292,7 +292,7 @@ namespace MyPortal.BusinessLogic.Services
                     .ForMember(dest => dest.Description,
                         opts => opts.MapFrom(src => src.DietaryRequirement.Description));
 
-                cfg.CreateMap<SubjectStaffMember, DataGridCurriculumSubjectStaffMemberDto>()
+                cfg.CreateMap<SubjectStaffMember, DataGridSubjectStaffMemberDto>()
                     .ForMember(dest => dest.StaffMemberName,
                         opts => opts.MapFrom(src => src.StaffMember.GetFullName()))
                     .ForMember(dest => dest.Role,

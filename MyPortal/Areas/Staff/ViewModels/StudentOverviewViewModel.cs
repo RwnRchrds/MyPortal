@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
-using MyPortal.Models.Database;
-using MyPortal.Models.Misc;
+using MyPortal.BusinessLogic.Dtos;
+using MyPortal.BusinessLogic.Models.Data;
 
 namespace MyPortal.Areas.Staff.ViewModels
 {
     public class StudentOverviewViewModel
     {
-        public Student Student { get; set; }
+        public StudentDto Student { get; set; }
         public IDictionary<int, string> LogTypes { get; set; }
-        public ProfileLog Log { get; set; }
+        public ProfileLogNoteDto LogNote { get; set; }
         public PersonDocumentUpload Upload { get; set; }
         public IDictionary<int, string> CommentBanks { get; set; }
         public bool HasAttendaceData { get; set; }

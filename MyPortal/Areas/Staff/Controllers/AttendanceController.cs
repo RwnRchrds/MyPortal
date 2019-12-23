@@ -5,9 +5,11 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using MyPortal.Areas.Staff.ViewModels;
 using MyPortal.Attributes.MvcAuthorise;
+using MyPortal.BusinessLogic.Dtos;
+using MyPortal.BusinessLogic.Services;
 using MyPortal.Controllers;
 using MyPortal.Models;
-using MyPortal.Models.Database;
+using MyPortal.Models.Identity;
 using MyPortal.Services;
 
 namespace MyPortal.Areas.Staff.Controllers
@@ -24,7 +26,7 @@ namespace MyPortal.Areas.Staff.Controllers
             using (var staffService = new StaffMemberService())
             {
                 var userId = User.Identity.GetUserId();
-                StaffMember currentUser = null;
+                StaffMemberDto currentUser = null;
 
                 if (userId != null)
                 {
@@ -53,13 +55,11 @@ namespace MyPortal.Areas.Staff.Controllers
                     return RedirectToAction("Registers");
                 }
 
-                var session = await curriculumService.GetSessionByIdWithRelated(sessionId,
-                    x => x.Class.Teacher.Person,
-                    x => x.Period);
+                var session = await curriculumService.GetSessionById(sessionId);
                 var sessionDate = await attendanceService.GetAttendancePeriodDate(weekId, session.PeriodId);
                 var attendanceMarks = await attendanceService.GetRegisterMarks(weekId, sessionId);
                 var periods = await attendanceService.GetPeriodsByDayOfWeek(sessionDate.DayOfWeek);
-                var codes = (List<AttendanceCode>) await attendanceService.GetAllAttendanceCodes();
+                var codes = (List<AttendanceCodeDto>) await attendanceService.GetAllAttendanceCodes();
 
                 var viewModel = new TakeRegisterViewModel
                 {

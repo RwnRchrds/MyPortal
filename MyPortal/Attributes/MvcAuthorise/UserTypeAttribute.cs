@@ -2,6 +2,7 @@ using System.Web;
 using System.Web.Mvc;
 using MyPortal.BusinessLogic.Services;
 using MyPortal.Models.Identity;
+using MyPortal.Services;
 
 namespace MyPortal.Attributes.MvcAuthorise
 {
