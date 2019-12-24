@@ -26,6 +26,11 @@ namespace MyPortal.Controllers.Api
     {
         private readonly AdminService _service;
 
+        public AdminController()
+        {
+            _service = new AdminService();
+        }
+
         protected override void Dispose(bool disposing)
         {
             _service.Dispose();

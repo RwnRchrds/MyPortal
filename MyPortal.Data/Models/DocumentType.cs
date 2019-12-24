@@ -7,7 +7,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// Type of document
     /// </summary>
-    [Table("Type", Schema = "document")]
+    [Table("DocumentType", Schema = "document")]
     public class DocumentType
     {
         public DocumentType()

@@ -144,6 +144,10 @@
     <Compile Include="Migrations\201912231604158_InitialMigration.designer.cs">
       <DependentUpon>201912231604158_InitialMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912240017557_ModifiedBaseModel.cs" />
+    <Compile Include="Migrations\201912240017557_ModifiedBaseModel.designer.cs">
+      <DependentUpon>201912240017557_ModifiedBaseModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Aspect.cs" />
     <Compile Include="Models\AspectType.cs" />
@@ -317,6 +321,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201912231604158_InitialMigration.resx">
       <DependentUpon>201912231604158_InitialMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912240017557_ModifiedBaseModel.resx">
+      <DependentUpon>201912240017557_ModifiedBaseModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

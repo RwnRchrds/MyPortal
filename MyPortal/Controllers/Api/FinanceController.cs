@@ -30,7 +30,6 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [RequiresPermission("AccessStudentStore")]
         [Route("basketItems/create", Name = "ApiCreateBasketItem")]
         public async Task<IHttpActionResult> CreateBasketItem([FromBody] BasketItemDto basketItem)
         {
@@ -46,7 +45,6 @@ namespace MyPortal.Controllers.Api
             }
         }
 
-        [RequiresPermission("AccessStudentStore")]
         [HttpGet]
         [Route("basketItems/get/byStudent/{studentId:int}", Name = "ApiGetBasketItemsByStudent")]
         public async Task<IEnumerable<BasketItemDto>> GetBasketItemsByStudent([FromUri] int studentId)
@@ -61,7 +59,6 @@ namespace MyPortal.Controllers.Api
             }
         }
 
-        [RequiresPermission("AccessStudentStore")]
         [HttpGet]
         [Route("basket/total/{studentId:int}", Name = "ApiGetBasketTotalForStudent")]
         public async Task<decimal> GetBasketTotalForStudent([FromUri] int studentId)
@@ -79,7 +76,6 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpDelete]
-        [RequiresPermission("AccessStudentStore")]
         [Route("basketItems/delete/{basketItemId:int}", Name = "ApiDeleteBasketItem")]
         public async Task<IHttpActionResult> RemoveFromBasket([FromUri] int basketItemId)
         {
@@ -113,7 +109,6 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpGet]
-        [RequiresPermission("AccessStudentStore")]
         [Route("products/get/available/{studentId:int}", Name = "ApiGetAvailableProductsByStudent")]
         public async Task<IEnumerable<ProductDto>> GetAvailableProductsByStudent([FromUri] int studentId)
         {
@@ -433,7 +428,6 @@ namespace MyPortal.Controllers.Api
         }
 
         [HttpPost]
-        [RequiresPermission("AccessStudentStore")]
         [Route("sales/checkoutBasket/{studentId:int}", Name = "ApiCheckoutBasket")]
         public async Task<IHttpActionResult> CheckoutBasket([FromBody] int studentId)
         {

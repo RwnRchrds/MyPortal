@@ -157,7 +157,7 @@
                 <div class="card-body">
                     @Html.EJS().Grid("Documents").DataSource(dataManager =>
                     {
-                        dataManager.Url(Url.HttpRouteUrl("ApiGetPersonalAttachmentsByPersonDataGrid", new {personId = Model.CurrentUser.Person.Id})).CrossDomain(false).Adaptor("UrlAdaptor");
+                        dataManager.Url(Url.HttpRouteUrl("ApiGetAttachmentsByPersonDataGrid", new {personId = Model.CurrentUser.Person.Id})).CrossDomain(false).Adaptor("UrlAdaptor");
                     }).Columns(col =>
                     {
                         col.Field("Description").HeaderText("Description").Template("#documentsDescriptionTemplate").Width("300").Add();

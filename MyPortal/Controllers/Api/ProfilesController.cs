@@ -31,7 +31,7 @@ namespace MyPortal.Controllers.Api
         }
         
         [HttpPost]
-        [RequiresPermission("EditProfileLogs")]
+        [RequiresPermission("EditProfileLogNotes")]
         [Route("logNotes/create", Name = "ApiCreateProfileLogNote")]
         public async Task<IHttpActionResult> CreateLog([FromBody] ProfileLogNoteDto log)
         {
@@ -59,7 +59,7 @@ namespace MyPortal.Controllers.Api
         }
         
         [Route("logNotes/delete/{logId:int}", Name = "ApiDeleteProfileLogNote")]
-        [RequiresPermission("EditProfileLogs")]
+        [RequiresPermission("EditProfileLogNotes")]
         [HttpDelete]
         public async Task<IHttpActionResult> DeleteLog([FromUri] int logId)
         {
@@ -77,7 +77,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpGet]
         [Route("logNotes/get/byId/{logId:int}", Name = "ApiGetProfileLogNoteById")]
-        [RequiresPermission("ViewProfileLogs")]
+        [RequiresPermission("ViewProfileLogNotes")]
         public async Task<ProfileLogNoteDto> GetLogNoteById([FromUri] int logId)
         {
             try
@@ -92,7 +92,7 @@ namespace MyPortal.Controllers.Api
         
         [HttpGet]
         [Route("logNotes/get/byStudent/{studentId:int}", Name = "ApiGetProfileLogNotesByStudent")]
-        [RequiresPermission("ViewProfileLogs")]
+        [RequiresPermission("ViewProfileLogNotes")]
         public async Task<IEnumerable<ProfileLogNoteDto>> GetLogsByStudent([FromUri] int studentId)
         {
             await AuthenticateStudentRequest(studentId);
@@ -110,7 +110,7 @@ namespace MyPortal.Controllers.Api
 
         [HttpPost]
         [Route("logNotes/get/byStudent/dataGrid/{studentId:int}", Name = "ApiGetProfileLogNotesByStudentDataGrid")]
-        [RequiresPermission("ViewProfileLogs")]
+        [RequiresPermission("ViewProfileLogNotes")]
         public async Task<IHttpActionResult> GetLogsByStudentDataGrid([FromBody] DataManagerRequest dm, [FromUri] int studentId)
         {
             try
@@ -130,7 +130,7 @@ namespace MyPortal.Controllers.Api
         }
 
         [Route("logNotes/update", Name = "ApiUpdateProfileLogNote")]
-        [RequiresPermission("EditProfileLogs")]
+        [RequiresPermission("EditProfileLogNotes")]
         [HttpPost]
         public async Task<IHttpActionResult> UpdateLog([FromBody] ProfileLogNoteDto log)
         {

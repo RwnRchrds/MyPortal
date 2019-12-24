@@ -8,8 +8,7 @@ namespace MyPortal.Models.Identity
     public class Permission
     {
         public int Id { get; set; }
-
-        [StringLength(50)] [Required] public string Area { get; set; }
+        public int AreaId { get; set; }
 
         [StringLength(50)] [Required] public string Name { get; set; }
 

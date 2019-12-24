@@ -15,8 +15,8 @@ namespace MyPortal
             //Register Syncfusion license
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MTA5NzE1QDMxMzcyZTMxMmUzMEpmWjBrYm9HNVRMYzEwTXZqUTFDS1I1MHc4TVRZQU5xK09JQmNwdDdmdjg9");
 
-            new MappingService(MapperType.BusinessObjects).ValidateConfiguration();
-            new MappingService(MapperType.DataGridObjects).ValidateConfiguration();
+            //new MappingService(MapperType.BusinessObjects).ValidateConfiguration();
+            //new MappingService(MapperType.DataGridObjects).ValidateConfiguration();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
