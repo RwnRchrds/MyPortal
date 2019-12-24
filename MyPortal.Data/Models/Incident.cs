@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Data.Models
@@ -9,6 +10,11 @@ namespace MyPortal.Data.Models
     [Table("Incident", Schema = "behaviour")]
     public class Incident
     {
+        public Incident()
+        {
+            Detentions = new HashSet<IncidentDetention>();
+        }
+
         public int Id { get; set; }
 
         public int AcademicYearId { get; set; }
@@ -41,5 +47,7 @@ namespace MyPortal.Data.Models
         public virtual StaffMember RecordedBy { get; set; }
 
         public virtual Student Student { get; set; }
+
+        public virtual ICollection<IncidentDetention> Detentions { get; set; }
     }
 }

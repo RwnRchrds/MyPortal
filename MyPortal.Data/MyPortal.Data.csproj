@@ -152,9 +152,13 @@
     <Compile Include="Models\Aspect.cs" />
     <Compile Include="Models\AspectType.cs" />
     <Compile Include="Models\AttendanceCodeMeaning.cs" />
+    <Compile Include="Models\Detention.cs" />
+    <Compile Include="Models\DetentionType.cs" />
+    <Compile Include="Models\DiaryEvent.cs" />
     <Compile Include="Models\EmailAddressType.cs" />
     <Compile Include="Models\Grade.cs" />
     <Compile Include="Models\GradeSet.cs" />
+    <Compile Include="Models\IncidentDetention.cs" />
     <Compile Include="Models\ObservationOutcome.cs" />
     <Compile Include="Models\Result.cs" />
     <Compile Include="Models\ResultSet.cs" />

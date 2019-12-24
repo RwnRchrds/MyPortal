@@ -44,7 +44,11 @@ namespace MyPortal.Data.Models
         public virtual DbSet<Contact> Contacts { get; set; }
         public virtual DbSet<AcademicYear> AcademicYears { get; set; }
         public virtual DbSet<Class> Classes { get; set; }
+        public virtual DbSet<DetentionType> DetentionTypes { get; set; }
+        public virtual DbSet<Detention> Detentions { get; set; }
+        public virtual DbSet<DiaryEvent> DiaryEvents { get; set; }
         public virtual DbSet<Enrolment> Enrolments { get; set; }
+        public virtual DbSet<IncidentDetention> IncidentDetentions { get; set; }
         public virtual DbSet<LessonPlan> LessonPlans { get; set; }
         public virtual DbSet<LessonPlanTemplate> LessonPlanTemplates { get; set; }
         public virtual DbSet<Session> Sessions { get; set; }
@@ -260,6 +264,30 @@ namespace MyPortal.Data.Models
                 .HasMany(e => e.Enrolments)
                 .WithRequired(e => e.Class)
                 .HasForeignKey(e => e.ClassId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Detention>()
+                .HasMany(e => e.Incidents)
+                .WithRequired(e => e.Detention)
+                .HasForeignKey(e => e.DetentionId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<DetentionType>()
+                .HasMany(e => e.Detentions)
+                .WithRequired(e => e.Type)
+                .HasForeignKey(e => e.DetentionTypeId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<DiaryEvent>()
+                .HasMany(e => e.Detentions)
+                .WithRequired(e => e.Event)
+                .HasForeignKey(e => e.EventId)
+                .WillCascadeOnDelete(true);
+
+            modelBuilder.Entity<Incident>()
+                .HasMany(e => e.Detentions)
+                .WithRequired(e => e.Incident)
+                .HasForeignKey(e => e.IncidentId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<StudyTopic>()
