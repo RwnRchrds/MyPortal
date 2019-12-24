@@ -66,6 +66,9 @@ namespace MyPortal.BusinessLogic.Services
                 cfg.CreateMap<CommunicationType, CommunicationTypeDto>().ReverseMap();
                 cfg.CreateMap<Condition, ConditionDto>().ReverseMap();
                 cfg.CreateMap<Contact, ContactDto>().ReverseMap();
+                cfg.CreateMap<Detention, DetentionDto>().ReverseMap();
+                cfg.CreateMap<DetentionType, DetentionTypeDto>().ReverseMap();
+                cfg.CreateMap<DiaryEvent, DiaryEventDto>().ReverseMap();
                 cfg.CreateMap<DietaryRequirement, DietaryRequirementDto>().ReverseMap();
                 cfg.CreateMap<Document, DocumentDto>().ReverseMap();
                 cfg.CreateMap<DocumentType, DocumentTypeDto>().ReverseMap();
@@ -77,6 +80,7 @@ namespace MyPortal.BusinessLogic.Services
                 cfg.CreateMap<GradeSet, GradeSetDto>().ReverseMap();
                 cfg.CreateMap<House, HouseDto>().ReverseMap();
                 cfg.CreateMap<Incident, IncidentDto>().ReverseMap();
+                cfg.CreateMap<IncidentDetention, IncidentDetentionDto>().ReverseMap();
                 cfg.CreateMap<IntakeType, IntakeTypeDto>().ReverseMap();
                 cfg.CreateMap<LessonPlan, LessonPlanDto>().ReverseMap();
                 cfg.CreateMap<LessonPlanTemplate, LessonPlanTemplateDto>().ReverseMap();

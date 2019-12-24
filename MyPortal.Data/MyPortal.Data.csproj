@@ -61,9 +61,13 @@
     <Compile Include="Interfaces\IAspectRepository.cs" />
     <Compile Include="Interfaces\IAspectTypeRepository.cs" />
     <Compile Include="Interfaces\IAttendanceCodeMeaningRepository.cs" />
+    <Compile Include="Interfaces\IDetentionRepository.cs" />
+    <Compile Include="Interfaces\IDetentionTypeRepository.cs" />
+    <Compile Include="Interfaces\IDiaryEventRepository.cs" />
     <Compile Include="Interfaces\IEmailAddressTypeRepository.cs" />
     <Compile Include="Interfaces\IGradeRepository.cs" />
     <Compile Include="Interfaces\IGradeSetRepository.cs" />
+    <Compile Include="Interfaces\IIncidentDetentionRepository.cs" />
     <Compile Include="Interfaces\IObservationOutcomeRepository.cs" />
     <Compile Include="Interfaces\IResultRepository.cs" />
     <Compile Include="Interfaces\IResultSetRepository.cs" />
@@ -239,9 +243,13 @@
     <Compile Include="Repositories\AspectRepository.cs" />
     <Compile Include="Repositories\AspectTypeRepository.cs" />
     <Compile Include="Repositories\AttendanceCodeMeaningRepository.cs" />
+    <Compile Include="Repositories\DetentionRepository.cs" />
+    <Compile Include="Repositories\DetentionTypeRepository.cs" />
+    <Compile Include="Repositories\DiaryEventRepository.cs" />
     <Compile Include="Repositories\EmailAddressTypeRepository.cs" />
     <Compile Include="Repositories\GradeRepository.cs" />
     <Compile Include="Repositories\GradeSetRepository.cs" />
+    <Compile Include="Repositories\IncidentDetentionRepository.cs" />
     <Compile Include="Repositories\ObservationOutcomeRepository.cs" />
     <Compile Include="Repositories\ResultRepository.cs" />
     <Compile Include="Repositories\ResultSetRepository.cs" />

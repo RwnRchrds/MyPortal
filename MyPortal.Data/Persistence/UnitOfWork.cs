@@ -91,6 +91,10 @@ namespace MyPortal.Data.Persistence
             Bulletins = new BulletinRepository(_context);
             Reports = new ReportRepository(_context);
             Schools = new SchoolRepository(_context);
+            Detentions = new DetentionRepository(_context);
+            DetentionTypes = new DetentionTypeRepository(_context);
+            DiaryEvents = new DiaryEventRepository(_context);
+            IncidentDetentions = new IncidentDetentionRepository(_context);
         }
 
         public IAspectRepository Aspects { get; }
@@ -172,6 +176,10 @@ namespace MyPortal.Data.Persistence
         public IBulletinRepository Bulletins { get; }
         public IReportRepository Reports { get; }
         public ISchoolRepository Schools { get; }
+        public IDetentionRepository Detentions { get; }
+        public IDetentionTypeRepository DetentionTypes { get; }
+        public IDiaryEventRepository DiaryEvents { get; }
+        public IIncidentDetentionRepository IncidentDetentions { get; }
 
         public async Task<int> Complete()
         {

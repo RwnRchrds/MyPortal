@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyPortal.Data.Models
+namespace MyPortal.BusinessLogic.Dtos
 {
-    [Table("DiaryEvent", Schema = "system")]
-    public class DiaryEvent
+    public class DiaryEventDto
     {
         public string Id { get; set; }
 
@@ -32,7 +30,5 @@ namespace MyPortal.Data.Models
         public bool IsPublic { get; set; }
 
         public bool IsStudentVisible { get; set; }
-
-        public virtual ICollection<Detention> Detentions { get; set; }
     }
 }

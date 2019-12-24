@@ -132,6 +132,7 @@
     <Compile Include="Dtos\DataGrid\DataGridStudentDto.cs" />
     <Compile Include="Dtos\DetentionDto.cs" />
     <Compile Include="Dtos\DetentionTypeDto.cs" />
+    <Compile Include="Dtos\DiaryEventDto.cs" />
     <Compile Include="Dtos\DietaryRequirementDto.cs" />
     <Compile Include="Dtos\DocumentDto.cs" />
     <Compile Include="Dtos\DocumentTypeDto.cs" />
@@ -147,6 +148,7 @@
     <Compile Include="Dtos\Identity\ApplicationUserDto.cs" />
     <Compile Include="Dtos\Identity\PermissionDto.cs" />
     <Compile Include="Dtos\Identity\RolePermissionDto.cs" />
+    <Compile Include="Dtos\IncidentDetentionDto.cs" />
     <Compile Include="Dtos\IncidentDto.cs" />
     <Compile Include="Dtos\IncidentTypeDto.cs" />
     <Compile Include="Dtos\IntakeTypeDto.cs" />

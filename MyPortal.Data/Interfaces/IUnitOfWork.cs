@@ -32,6 +32,10 @@ namespace MyPortal.Data.Interfaces
         IRelationshipTypeRepository RelationshipTypes { get; }
         IAcademicYearRepository AcademicYears { get; }
         IClassRepository Classes { get; }
+        IDetentionRepository Detentions { get; }
+        IDetentionTypeRepository DetentionTypes { get; }
+        IDiaryEventRepository DiaryEvents { get; }
+        IIncidentDetentionRepository IncidentDetentions { get; }
         IEnrolmentRepository Enrolments { get; }
         ILessonPlanRepository LessonPlans { get; }
         ILessonPlanTemplateRepository LessonPlanTemplates { get; }

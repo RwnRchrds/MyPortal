@@ -33,6 +33,44 @@ namespace MyPortal.BusinessLogic.Services
             await UnitOfWork.Complete();
         }
 
+        public async Task CreateDetention(DetentionDto detention)
+        {
+            ValidationService.ValidateModel(detention);
+
+            detention.Event.Subject = $"detention_{detention.DetentionTypeId}_{detention.Id}";
+
+            UnitOfWork.Detentions.Add(Mapping.Map<Detention>(detention));
+            await UnitOfWork.Complete();
+        }
+
+        public async Task UpdateDetention(DetentionDto detention)
+        {
+            var detentionInDb = await UnitOfWork.Detentions.GetById(detention.Id);
+
+            if (detentionInDb == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Detention not found.");
+            }
+
+            detentionInDb.DetentionTypeId = detention.DetentionTypeId;
+            detentionInDb.SupervisorId = detention.SupervisorId;
+            detentionInDb.Event.StartTime = detention.Event.StartTime;
+            detentionInDb.Event.EndTime = detention.Event.EndTime;
+        }
+
+        public async Task DeleteDetention(int detentionId)
+        {
+            var detentionInDb = await UnitOfWork.Detentions.GetById(detentionId);
+
+            if (detentionInDb == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Detention not found.");
+            }
+
+            UnitOfWork.DiaryEvents.Remove(detentionInDb.Event);
+            UnitOfWork.Detentions.Remove(detentionInDb);
+        }
+
         public async Task CreateBehaviourIncident(IncidentDto incident)
         {
             incident.Date = DateTime.Today;

@@ -22,6 +22,10 @@ namespace MyPortal.Data.Models
         [StringLength(256)]
         public string Description { get; set; }
 
+        public TimeSpan StartTime { get; set; }
+
+        public TimeSpan EndTime { get; set; }
+
         public virtual ICollection<Detention> Detentions { get; set; }
     }
 }
