@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using MyPortal.Attributes;
+using MyPortal.Attributes.Filters;
 using MyPortal.Attributes.HttpAuthorise;
 using MyPortal.BusinessLogic.Dtos;
 using MyPortal.BusinessLogic.Dtos.DataGrid;
@@ -18,6 +19,7 @@ namespace MyPortal.Controllers.Api
 {
     [Authorize]
     [RoutePrefix("api/communication")]
+    [ValidateModel]
     public class CommunicationController : MyPortalApiController
     {
         private readonly CommunicationService _service;

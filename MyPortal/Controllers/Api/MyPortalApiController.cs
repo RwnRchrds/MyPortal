@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
@@ -68,6 +69,7 @@ namespace MyPortal.Controllers.Api
             }
 
             return new HttpResponseException(statusCode);
+            //return Request.CreateErrorResponse(statusCode, ex);
         }
 
         protected IHttpActionResult PrepareDataGridObject<T>(IEnumerable<T> list, DataManagerRequest dm)

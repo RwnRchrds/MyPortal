@@ -247,6 +247,7 @@
     <Compile Include="Areas\Students\ViewModels\StudentResultsViewModel.cs" />
     <Compile Include="Areas\Students\ViewModels\StudentSalesHistoryViewModel.cs" />
     <Compile Include="Areas\Students\ViewModels\StudentStoreViewModel.cs" />
+    <Compile Include="Attributes\Filters\ValidateModel.cs" />
     <Compile Include="Attributes\HttpAuthorise\RequiresPermissionAttribute.cs" />
     <Compile Include="Attributes\HttpAuthorise\UserTypeAttribute.cs" />
     <Compile Include="Attributes\MvcAuthorise\RequiresPermissionAttribute.cs" />

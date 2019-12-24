@@ -6,6 +6,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web.Http;
+using MyPortal.Attributes.Filters;
 using MyPortal.Attributes.HttpAuthorise;
 using MyPortal.BusinessLogic.Dtos;
 using MyPortal.BusinessLogic.Dtos.DataGrid;
@@ -14,6 +15,8 @@ using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
 {
+    [ValidateModel]
+    [Authorize]
     [RoutePrefix("api/assessment")]
     public class AssessmentController : MyPortalApiController
     {

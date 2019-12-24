@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
 using MyPortal.Attributes;
+using MyPortal.Attributes.Filters;
 using MyPortal.Attributes.HttpAuthorise;
 using MyPortal.BusinessLogic.Dtos;
 using MyPortal.BusinessLogic.Dtos.DataGrid;
@@ -21,6 +22,7 @@ namespace MyPortal.Controllers.Api
 {
     [Authorize]
     [RoutePrefix("api/curriculum")]
+    [ValidateModel]
     public class CurriculumController : MyPortalApiController
     {
         private readonly CurriculumService _service;

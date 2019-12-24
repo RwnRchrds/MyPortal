@@ -9,6 +9,7 @@ using AutoMapper;
 using MyPortal.Areas.Staff.ViewModels;
 using MyPortal.Models;
 using MyPortal.Attributes;
+using MyPortal.Attributes.Filters;
 using MyPortal.Attributes.HttpAuthorise;
 using MyPortal.BusinessLogic.Dtos.DataGrid;
 using MyPortal.BusinessLogic.Dtos.Identity;
@@ -20,6 +21,7 @@ using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
 {
+    [ValidateModel]
     [RoutePrefix("api/admin")]
     [Authorize]
     public class AdminController : MyPortalApiController

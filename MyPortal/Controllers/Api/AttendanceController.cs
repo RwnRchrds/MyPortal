@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using MyPortal.Attributes;
+using MyPortal.Attributes.Filters;
 using MyPortal.Attributes.HttpAuthorise;
 using MyPortal.BusinessLogic.Dtos;
 using MyPortal.BusinessLogic.Dtos.Lite;
@@ -19,6 +20,7 @@ namespace MyPortal.Controllers.Api
 {
     [RoutePrefix("api/attendance")]
     [Authorize]
+    [ValidateModel]
     public class AttendanceController : MyPortalApiController
     {
         private readonly AttendanceService _service;
