@@ -130,6 +130,7 @@
     <Compile Include="Dtos\DataGrid\DataGridProfileLogNoteDto.cs" />
     <Compile Include="Dtos\DataGrid\DataGridStaffMemberDto.cs" />
     <Compile Include="Dtos\DataGrid\DataGridStudentDto.cs" />
+    <Compile Include="Dtos\DetentionAttendanceStatusDto.cs" />
     <Compile Include="Dtos\DetentionDto.cs" />
     <Compile Include="Dtos\DetentionTypeDto.cs" />
     <Compile Include="Dtos\DiaryEventDto.cs" />

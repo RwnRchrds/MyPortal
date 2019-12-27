@@ -71,6 +71,40 @@ namespace MyPortal.BusinessLogic.Services
             UnitOfWork.Detentions.Remove(detentionInDb);
         }
 
+        public async Task CreateIncidentDetention(IncidentDetention entry)
+        {
+            ValidationService.ValidateModel(entry);
+
+            UnitOfWork.IncidentDetentions.Add(entry);
+
+            await UnitOfWork.Complete();
+        }
+
+        public async Task DeleteIncidentDetention(int incidentDetentionId)
+        {
+            IncidentDetention detentionInDb = await UnitOfWork.IncidentDetentions.GetById(incidentDetentionId);
+
+            if (detentionInDb == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Incident not found in detention.");
+            }
+
+            UnitOfWork.IncidentDetentions.Remove(detentionInDb);
+
+            await UnitOfWork.Complete();
+        }
+
+        public async Task<IEnumerable<IncidentDetentionDto>> GetIncidentDetentionsNotAttended()
+        {
+            return (await UnitOfWork.IncidentDetentions.GetNotAttended()).Select(Mapping.Map<IncidentDetentionDto>);
+        }
+
+        public async Task<IEnumerable<IncidentDetentionDto>> GetIncidentDetentionsByStudent(int studentId)
+        {
+            return (await UnitOfWork.IncidentDetentions.GetByStudent(studentId)).Select(Mapping
+                .Map<IncidentDetentionDto>);
+        }
+
         public async Task CreateBehaviourIncident(IncidentDto incident)
         {
             incident.Date = DateTime.Today;

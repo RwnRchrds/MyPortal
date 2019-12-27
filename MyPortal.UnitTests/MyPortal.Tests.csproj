@@ -91,6 +91,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\TestContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -98,13 +99,18 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Data\" />
+    <Folder Include="Data\Persistence\" />
+    <Folder Include="Data\Repositories\" />
     <Folder Include="ServiceTests\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MyPortal.BusinessLogic\MyPortal.BusinessLogic.csproj">
       <Project>{6c2127c6-6ffe-464e-9986-f294360a5d3f}</Project>
       <Name>MyPortal.BusinessLogic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MyPortal.Data\MyPortal.Data.csproj">
+      <Project>{7e8b72b9-96aa-4ddb-b819-745fdc8caacd}</Project>
+      <Name>MyPortal.Data</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

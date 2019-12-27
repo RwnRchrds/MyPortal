@@ -10,15 +10,15 @@ namespace MyPortal.Desktop.ViewModels.People.Students
 {
     public class StudentViewModel : BaseViewModel, IAppWindow
     {
-        public string Header { get; }
-        public Task OnTabSelected()
+        public string Header { get; } = "Students";
+        public async Task OnTabSelected()
         {
-            throw new NotImplementedException();
+            
         }
 
-        public Task OnTabUnselected()
+        public async Task OnTabUnselected()
         {
-            throw new NotImplementedException();
+            
         }
 
         public bool ShowSaveIcon { get; }
@@ -26,17 +26,17 @@ namespace MyPortal.Desktop.ViewModels.People.Students
         public string SaveIconTooltip { get; }
         public bool BeforeTabClosed()
         {
-            throw new NotImplementedException();
+            return true;
         }
 
-        public Task OnTabClosed()
+        public async Task OnTabClosed()
         {
-            throw new NotImplementedException();
+            
         }
 
-        public Task OnTabOpened()
+        public async Task OnTabOpened()
         {
-            throw new NotImplementedException();
+            
         }
     }
 }

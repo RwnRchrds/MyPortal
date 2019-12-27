@@ -46,6 +46,7 @@ namespace MyPortal.Data.Models
         public virtual DbSet<Class> Classes { get; set; }
         public virtual DbSet<DetentionType> DetentionTypes { get; set; }
         public virtual DbSet<Detention> Detentions { get; set; }
+        public virtual DbSet<DetentionAttendanceStatus> DetentionAttendanceStatus { get; set; }
         public virtual DbSet<DiaryEvent> DiaryEvents { get; set; }
         public virtual DbSet<Enrolment> Enrolments { get; set; }
         public virtual DbSet<IncidentDetention> IncidentDetentions { get; set; }
@@ -276,6 +277,12 @@ namespace MyPortal.Data.Models
                 .HasMany(e => e.Detentions)
                 .WithRequired(e => e.Type)
                 .HasForeignKey(e => e.DetentionTypeId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<DetentionAttendanceStatus>()
+                .HasMany(e => e.Detentions)
+                .WithRequired(e => e.AttendanceStatus)
+                .HasForeignKey(e => e.AttendanceStatusId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<DiaryEvent>()

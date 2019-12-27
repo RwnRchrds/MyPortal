@@ -61,6 +61,7 @@
     <Compile Include="Interfaces\IAspectRepository.cs" />
     <Compile Include="Interfaces\IAspectTypeRepository.cs" />
     <Compile Include="Interfaces\IAttendanceCodeMeaningRepository.cs" />
+    <Compile Include="Interfaces\IDetentionAttendanceStatusRepository.cs" />
     <Compile Include="Interfaces\IDetentionRepository.cs" />
     <Compile Include="Interfaces\IDetentionTypeRepository.cs" />
     <Compile Include="Interfaces\IDiaryEventRepository.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="Models\AspectType.cs" />
     <Compile Include="Models\AttendanceCodeMeaning.cs" />
     <Compile Include="Models\Detention.cs" />
+    <Compile Include="Models\DetentionAttendanceStatus.cs" />
     <Compile Include="Models\DetentionType.cs" />
     <Compile Include="Models\DiaryEvent.cs" />
     <Compile Include="Models\EmailAddressType.cs" />
@@ -243,6 +245,7 @@
     <Compile Include="Repositories\AspectRepository.cs" />
     <Compile Include="Repositories\AspectTypeRepository.cs" />
     <Compile Include="Repositories\AttendanceCodeMeaningRepository.cs" />
+    <Compile Include="Repositories\DetentionAttendanceStatusRepository.cs" />
     <Compile Include="Repositories\DetentionRepository.cs" />
     <Compile Include="Repositories\DetentionTypeRepository.cs" />
     <Compile Include="Repositories\DiaryEventRepository.cs" />

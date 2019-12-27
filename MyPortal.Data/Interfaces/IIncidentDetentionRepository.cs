@@ -9,5 +9,8 @@ namespace MyPortal.Data.Interfaces
 {
     public interface IIncidentDetentionRepository : IReadWriteRepository<IncidentDetention>
     {
+        Task<IEnumerable<IncidentDetention>> GetNotAttended();
+
+        Task<IEnumerable<IncidentDetention>> GetByStudent(int studentId);
     }
 }

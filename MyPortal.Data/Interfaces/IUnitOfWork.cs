@@ -33,6 +33,7 @@ namespace MyPortal.Data.Interfaces
         IAcademicYearRepository AcademicYears { get; }
         IClassRepository Classes { get; }
         IDetentionRepository Detentions { get; }
+        IDetentionAttendanceStatusRepository DetentionAttendanceStatus { get; }
         IDetentionTypeRepository DetentionTypes { get; }
         IDiaryEventRepository DiaryEvents { get; }
         IIncidentDetentionRepository IncidentDetentions { get; }
