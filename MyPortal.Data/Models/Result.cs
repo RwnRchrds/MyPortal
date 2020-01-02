@@ -21,14 +21,14 @@ namespace MyPortal.Data.Models
         [Column(TypeName = "date")]
         public DateTime Date { get; set; }
 
-        [Required]
-        [StringLength(128)]
-        public string Grade { get; set; }
+        public int GradeId { get; set; }
 
         public virtual ResultSet ResultSet { get; set; }
 
         public virtual Aspect Aspect { get; set; }
 
         public virtual Student Student { get; set; }
+
+        public virtual Grade Grade { get; set; }
     }
 }

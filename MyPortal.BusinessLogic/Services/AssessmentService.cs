@@ -24,7 +24,7 @@ namespace MyPortal.BusinessLogic.Services
         {
             ValidationService.ValidateModel(result);
 
-            UnitOfWork.Results.Add(Mapping.Map<Result>(result));
+            UnitOfWork.Results.Add(Mapper.Map<Result>(result));
             await UnitOfWork.Complete();
         }
 
@@ -32,7 +32,7 @@ namespace MyPortal.BusinessLogic.Services
         {
             ValidationService.ValidateModel(resultSet);
 
-            UnitOfWork.ResultSets.Add(Mapping.Map<ResultSet>(resultSet));
+            UnitOfWork.ResultSets.Add(Mapper.Map<ResultSet>(resultSet));
             await UnitOfWork.Complete();
         }
 
@@ -51,17 +51,17 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<ResultSetDto>> GetAllResultSets()
         {
-            return (await UnitOfWork.ResultSets.GetAll(x => x.Name)).Select(Mapping.Map<ResultSetDto>);
+            return (await UnitOfWork.ResultSets.GetAll(x => x.Name)).Select(Mapper.Map<ResultSetDto>);
         }
 
         public async Task<ResultDto> GetResultById(int resultId)
         {
-            return Mapping.Map<ResultDto>(await UnitOfWork.Results.GetById(resultId));
+            return Mapper.Map<ResultDto>(await UnitOfWork.Results.GetById(resultId));
         }
 
         public async Task<IEnumerable<ResultDto>> GetResultsByStudent(int studentId, int resultSetId)
         {
-            return (await UnitOfWork.Results.GetResultsByStudent(studentId, resultSetId)).Select(Mapping.Map<ResultDto>);
+            return (await UnitOfWork.Results.GetResultsByStudent(studentId, resultSetId)).Select(Mapper.Map<ResultDto>);
         }
 
         public async Task<ResultSetDto> GetResultSetById(int resultSetId)
@@ -73,12 +73,12 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound,"Result set not found.");
             }
 
-            return Mapping.Map<ResultSetDto>(resultSet);
+            return Mapper.Map<ResultSetDto>(resultSet);
         }
 
         public async Task<IEnumerable<ResultSetDto>> GetResultSetsByStudent(int studentId)
         {
-            return (await UnitOfWork.ResultSets.GetResultSetsByStudent(studentId)).Select(Mapping.Map<ResultSetDto>);
+            return (await UnitOfWork.ResultSets.GetResultSetsByStudent(studentId)).Select(Mapper.Map<ResultSetDto>);
         }
 
         public async Task UpdateResultSet(ResultSetDto resultSet)

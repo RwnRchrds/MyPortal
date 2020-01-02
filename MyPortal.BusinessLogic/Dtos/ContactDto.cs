@@ -4,11 +4,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MyPortal.BusinessLogic.Interfaces;
 using MyPortal.Data.Models;
 
 namespace MyPortal.BusinessLogic.Dtos
 {
-    public class ContactDto
+    public class ContactDto : IPersonDto
     {
         public int Id { get; set; }
 

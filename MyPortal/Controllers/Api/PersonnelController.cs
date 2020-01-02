@@ -102,7 +102,7 @@ namespace MyPortal.Controllers.Api
             {
                 var certificates = await _service.GetCertificatesByStaffMember(staffId);
 
-                var list = certificates.Select(_mapping.Map<DataGridTrainingCertificateDto>);
+                var list = certificates.Select(_mapper.Map<DataGridTrainingCertificateDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -186,7 +186,7 @@ namespace MyPortal.Controllers.Api
             {
                 var courses = await _service.GetAllTrainingCourses();
 
-                var list = courses.Select(_mapping.Map<DataGridTrainingCourseDto>);
+                var list = courses.Select(_mapper.Map<DataGridTrainingCourseDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -255,7 +255,7 @@ namespace MyPortal.Controllers.Api
             {
                 var observations = await _service.GetObservationsByStaffMember(staffMemberId);
 
-                return observations.Select(_mapping.Map<ObservationDto>);
+                return observations.Select(_mapper.Map<ObservationDto>);
             }
             catch (Exception e)
             {
@@ -273,7 +273,7 @@ namespace MyPortal.Controllers.Api
             {
                 var observations = await _service.GetObservationsByStaffMember(staffId);
 
-                var list = observations.Select(_mapping.Map<DataGridObservationDto>);
+                var list = observations.Select(_mapper.Map<DataGridObservationDto>);
 
                 return PrepareDataGridObject(list, dm);
             }

@@ -25,7 +25,7 @@ namespace MyPortal.BusinessLogic.Services
         {
             ValidationService.ValidateModel(comment);
 
-            UnitOfWork.Comments.Add(Mapping.Map<Comment>(comment));
+            UnitOfWork.Comments.Add(Mapper.Map<Comment>(comment));
             await UnitOfWork.Complete();
         }
 
@@ -33,7 +33,7 @@ namespace MyPortal.BusinessLogic.Services
         {
             ValidationService.ValidateModel(commentBank);
 
-            UnitOfWork.CommentBanks.Add(Mapping.Map<CommentBank>(commentBank));
+            UnitOfWork.CommentBanks.Add(Mapper.Map<CommentBank>(commentBank));
             await UnitOfWork.Complete();
         }
 
@@ -43,7 +43,7 @@ namespace MyPortal.BusinessLogic.Services
 
             ValidationService.ValidateModel(logNote);
 
-            UnitOfWork.ProfileLogNotes.Add(Mapping.Map<ProfileLogNote>(logNote));
+            UnitOfWork.ProfileLogNotes.Add(Mapper.Map<ProfileLogNote>(logNote));
             await UnitOfWork.Complete();
         }
 
@@ -89,7 +89,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<CommentBankDto>> GetAllCommentBanks()
         {
-            return (await UnitOfWork.CommentBanks.GetAll()).Select(Mapping.Map<CommentBankDto>);
+            return (await UnitOfWork.CommentBanks.GetAll()).Select(Mapper.Map<CommentBankDto>);
         }
 
         public async Task<IDictionary<int, string>> GetAllCommentBanksLookup()
@@ -99,7 +99,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<CommentDto>> GetAllComments()
         {
-            return (await UnitOfWork.Comments.GetAll()).Select(Mapping.Map<CommentDto>);
+            return (await UnitOfWork.Comments.GetAll()).Select(Mapper.Map<CommentDto>);
         }
 
         public async Task<CommentBankDto> GetCommentBankById(int commentBankId)
@@ -111,7 +111,7 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Comment bank not found");
             }
 
-            return Mapping.Map<CommentBankDto>(commentBankInDb);
+            return Mapper.Map<CommentBankDto>(commentBankInDb);
         }
 
         public async Task<CommentDto> GetCommentById(int commentId)
@@ -123,12 +123,12 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Comment not found");
             }
 
-            return Mapping.Map<CommentDto>(comment);
+            return Mapper.Map<CommentDto>(comment);
         }
 
         public async Task<IEnumerable<CommentDto>> GetCommentsByBank(int commentBankId)
         {
-            return (await UnitOfWork.Comments.GetByCommentBank(commentBankId)).Select(Mapping.Map<CommentDto>);
+            return (await UnitOfWork.Comments.GetByCommentBank(commentBankId)).Select(Mapper.Map<CommentDto>);
         }
 
         public async Task<ProfileLogNoteDto> GetLogNoteById(int logId)
@@ -140,13 +140,13 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Log not found");
             }
 
-            return Mapping.Map<ProfileLogNoteDto>(log);
+            return Mapper.Map<ProfileLogNoteDto>(log);
         }
 
         public async Task<IEnumerable<ProfileLogNoteDto>> GetLogNotesByStudent(int studentId, int academicYearId)
         {
             return (await UnitOfWork.ProfileLogNotes.GetByStudent(studentId, academicYearId)).Select(
-                Mapping.Map<ProfileLogNoteDto>);
+                Mapper.Map<ProfileLogNoteDto>);
         }
 
         public async Task UpdateComment(CommentDto comment)
@@ -180,7 +180,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<ProfileLogNoteTypeDto>> GetAllLogNoteTypes()
         {
-            return (await UnitOfWork.ProfileLogNoteTypes.GetAll()).Select(Mapping.Map<ProfileLogNoteTypeDto>);
+            return (await UnitOfWork.ProfileLogNoteTypes.GetAll()).Select(Mapper.Map<ProfileLogNoteTypeDto>);
         }
 
         public async Task<IDictionary<int, string>> GetAllLogTypesLookup()

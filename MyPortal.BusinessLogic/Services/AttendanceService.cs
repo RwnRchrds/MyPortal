@@ -57,22 +57,22 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<PeriodDto>> GetAllPeriods()
         {
-            return (await UnitOfWork.Periods.GetAll(x => x.Weekday, x => x.StartTime)).Select(Mapping.Map<PeriodDto>);
+            return (await UnitOfWork.Periods.GetAll(x => x.Weekday, x => x.StartTime)).Select(Mapper.Map<PeriodDto>);
         }
 
         public async Task<IEnumerable<AttendanceCodeDto>> GetAllAttendanceCodes()
         {
-            return (await UnitOfWork.AttendanceCodes.GetAll(x => x.Code)).Select(Mapping.Map<AttendanceCodeDto>);
+            return (await UnitOfWork.AttendanceCodes.GetAll(x => x.Code)).Select(Mapper.Map<AttendanceCodeDto>);
         }
 
         public async Task<IEnumerable<AttendanceCodeDto>> GetUsableAttendanceCodes()
         {
-            return (await UnitOfWork.AttendanceCodes.GetUsable()).Select(Mapping.Map<AttendanceCodeDto>);
+            return (await UnitOfWork.AttendanceCodes.GetUsable()).Select(Mapper.Map<AttendanceCodeDto>);
         }
 
         public async Task<AttendanceMarkDto> GetAttendanceMark(int attendanceWeekId, int periodId, int studentId)
         {
-            var mark = Mapping.Map<AttendanceMarkDto>(await UnitOfWork.AttendanceMarks.Get(studentId, attendanceWeekId, periodId)) ?? new AttendanceMarkDto
+            var mark = Mapper.Map<AttendanceMarkDto>(await UnitOfWork.AttendanceMarks.Get(studentId, attendanceWeekId, periodId)) ?? new AttendanceMarkDto
             {
                 Mark = "-",
                 MinutesLate = 0,
@@ -93,7 +93,7 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Attendance week not found.");
             }
 
-            return Mapping.Map<AttendanceWeekDto>(week);
+            return Mapper.Map<AttendanceWeekDto>(week);
         }
 
         public async Task<AttendanceCodeDto> GetAttendanceCode(string mark)
@@ -105,14 +105,14 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Attendance code not found.");
             }
 
-            return Mapping.Map<AttendanceCodeDto>(codeInDb);
+            return Mapper.Map<AttendanceCodeDto>(codeInDb);
         }
 
         public async Task<AttendanceCodeMeaningDto> GetMeaning(string mark)
         {
             var codeInDb = await GetAttendanceCode(mark);
 
-            return Mapping.Map<AttendanceCodeMeaningDto>(codeInDb.CodeMeaning);
+            return Mapper.Map<AttendanceCodeMeaningDto>(codeInDb.CodeMeaning);
         }
 
         public async Task<PeriodDto> GetPeriodById(int periodId)
@@ -124,7 +124,7 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound,"Period not found.");
             }
 
-            return Mapping.Map<PeriodDto>(period);
+            return Mapper.Map<PeriodDto>(period);
         }
 
         public async Task<DateTime> GetAttendancePeriodDate(int weekId, int periodId)
@@ -138,7 +138,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<PeriodDto>> GetPeriodsByDayOfWeek(DayOfWeek dayOfWeek)
         {
-            return (await UnitOfWork.Periods.GetByDayOfWeek(dayOfWeek)).Select(Mapping.Map<PeriodDto>);
+            return (await UnitOfWork.Periods.GetByDayOfWeek(dayOfWeek)).Select(Mapper.Map<PeriodDto>);
         }
 
         public async Task<IEnumerable<StudentAttendanceMarkCollection>> GetRegisterMarks(int weekId,
@@ -244,12 +244,12 @@ namespace MyPortal.BusinessLogic.Services
                throw new ServiceException(ExceptionType.NotFound,"Attendance week not found.");
             }
 
-            return Mapping.Map<AttendanceWeekDto>(selectedWeek);
+            return Mapper.Map<AttendanceWeekDto>(selectedWeek);
         }
 
         public async Task<IEnumerable<AttendanceMarkLiteDto>> PrepareLiteMarkList(List<AttendanceMarkDto> marks, bool retrieveMeanings)
         {
-            var liteMarks = marks.Select(Mapping.Map<AttendanceMarkLiteDto>).ToList();
+            var liteMarks = marks.Select(Mapper.Map<AttendanceMarkLiteDto>).ToList();
 
             if (retrieveMeanings)
             {
@@ -311,7 +311,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<PeriodDto>> GetPeriodsByClass(int classId)
         {
-            return (await UnitOfWork.Periods.GetByClass(classId)).Select(Mapping.Map<PeriodDto>);
+            return (await UnitOfWork.Periods.GetByClass(classId)).Select(Mapper.Map<PeriodDto>);
         }
     }
 }

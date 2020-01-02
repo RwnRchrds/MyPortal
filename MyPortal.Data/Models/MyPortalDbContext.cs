@@ -513,6 +513,12 @@ namespace MyPortal.Data.Models
                 .HasForeignKey(e => e.GovernanceTypeId)
                 .WillCascadeOnDelete(false);
 
+            modelBuilder.Entity<Grade>()
+                .HasMany(e => e.Results)
+                .WithRequired(e => e.Grade)
+                .HasForeignKey(e => e.GradeId)
+                .WillCascadeOnDelete(false);
+
             modelBuilder.Entity<IntakeType>()
                 .HasMany(e => e.Schools)
                 .WithRequired(e => e.IntakeType)

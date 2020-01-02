@@ -9,7 +9,7 @@ namespace MyPortal.BusinessLogic.Dtos
 {
     public class DiaryEventDto
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [StringLength(256)]

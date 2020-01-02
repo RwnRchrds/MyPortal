@@ -24,7 +24,7 @@ namespace MyPortal.BusinessLogic.Services
         {
             ValidationService.ValidateModel(regGroup);
 
-            UnitOfWork.RegGroups.Add(Mapping.Map<RegGroup>(regGroup));
+            UnitOfWork.RegGroups.Add(Mapper.Map<RegGroup>(regGroup));
             await UnitOfWork.Complete();
         }
 
@@ -32,7 +32,7 @@ namespace MyPortal.BusinessLogic.Services
         {
             ValidationService.ValidateModel(yearGroup);
 
-            UnitOfWork.YearGroups.Add(Mapping.Map<YearGroup>(yearGroup));
+            UnitOfWork.YearGroups.Add(Mapper.Map<YearGroup>(yearGroup));
             await UnitOfWork.Complete();
         }
 
@@ -64,12 +64,12 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<RegGroupDto>> GetAllRegGroups()
         {
-            return (await UnitOfWork.RegGroups.GetAll()).Select(Mapping.Map<RegGroupDto>);
+            return (await UnitOfWork.RegGroups.GetAll()).Select(Mapper.Map<RegGroupDto>);
         }
 
         public async Task<IEnumerable<YearGroupDto>> GetAllYearGroups()
         {
-            return (await UnitOfWork.YearGroups.GetAll()).Select(Mapping.Map<YearGroupDto>);
+            return (await UnitOfWork.YearGroups.GetAll()).Select(Mapper.Map<YearGroupDto>);
         }
 
         public async Task<YearGroupDto> GetYearGroupById(int yearGroupId)
@@ -81,7 +81,7 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Year group not found");
             }
 
-            return Mapping.Map<YearGroupDto>(yearGroup);
+            return Mapper.Map<YearGroupDto>(yearGroup);
         }
 
         public async Task<RegGroupDto> GetRegGroupById(int regGroupId)
@@ -93,12 +93,12 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Reg group not found");
             }
 
-            return Mapping.Map<RegGroupDto>(regGroup);
+            return Mapper.Map<RegGroupDto>(regGroup);
         }
 
         public async Task<IEnumerable<RegGroupDto>> GetRegGroupsByYearGroup(int yearGroupId)
         {
-            return (await UnitOfWork.RegGroups.GetByYearGroup(yearGroupId)).Select(Mapping.Map<RegGroupDto>);
+            return (await UnitOfWork.RegGroups.GetByYearGroup(yearGroupId)).Select(Mapper.Map<RegGroupDto>);
         }
 
         public async Task UpdateRegGroup(RegGroupDto regGroup)
@@ -141,7 +141,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<HouseDto>> GetAllHouses()
         {
-            return (await UnitOfWork.Houses.GetAll()).Select(Mapping.Map<HouseDto>);
+            return (await UnitOfWork.Houses.GetAll()).Select(Mapper.Map<HouseDto>);
         }
 
         public async Task<IDictionary<int, string>> GetAllHousesLookup()

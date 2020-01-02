@@ -114,7 +114,7 @@ namespace MyPortal.Controllers.Api
             {
                 var staff = await _service.GetAllStaffMembers();
 
-                var list = staff.Select(_mapping.Map<DataGridStaffMemberDto>);
+                var list = staff.Select(_mapper.Map<DataGridStaffMemberDto>);
 
                 return PrepareDataGridObject(list, dm);
             }

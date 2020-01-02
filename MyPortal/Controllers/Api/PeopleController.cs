@@ -41,7 +41,7 @@ namespace MyPortal.Controllers.Api
             {
                 var medicalConditions = await _service.GetMedicalConditionsByPerson(personId);
 
-                var list = medicalConditions.Select(_mapping.Map<DataGridPersonConditionDto>);
+                var list = medicalConditions.Select(_mapper.Map<DataGridPersonConditionDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -63,7 +63,7 @@ namespace MyPortal.Controllers.Api
                 var dietaryRequirements =
                     await _service.GetMedicalDietaryRequirementsByPerson(personId);
 
-                var list = dietaryRequirements.Select(_mapping.Map<DataGridPersonDietaryRequirementDto>);
+                var list = dietaryRequirements.Select(_mapper.Map<DataGridPersonDietaryRequirementDto>);
 
                 return PrepareDataGridObject(list, dm);
             }

@@ -128,7 +128,7 @@ namespace MyPortal.Controllers.Api
             {
                 var phoneNumbers = await _service.GetPhoneNumbersByPerson(personId);
 
-                var list = phoneNumbers.Select(_mapping.Map<DataGridPhoneNumberDto>);
+                var list = phoneNumbers.Select(_mapper.Map<DataGridPhoneNumberDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -149,7 +149,7 @@ namespace MyPortal.Controllers.Api
                 var emailAddresses = await _service.GetEmailAddressesByPerson(personId);
 
                 var list = emailAddresses.Select(
-                    _mapping.Map<DataGridEmailAddressDto>);
+                    _mapper.Map<DataGridEmailAddressDto>);
 
                 return PrepareDataGridObject(list, dm);
             }

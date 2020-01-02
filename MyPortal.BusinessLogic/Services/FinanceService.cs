@@ -100,7 +100,7 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.Forbidden, "This product cannot be purchased more than once");
             }
 
-            UnitOfWork.BasketItems.Add(Mapping.Map<BasketItem>(basketItem));
+            UnitOfWork.BasketItems.Add(Mapper.Map<BasketItem>(basketItem));
             await UnitOfWork.Complete();
         }
 
@@ -108,7 +108,7 @@ namespace MyPortal.BusinessLogic.Services
         {
             ValidationService.ValidateModel(product);
 
-            UnitOfWork.Products.Add(Mapping.Map<Product>(product));
+            UnitOfWork.Products.Add(Mapper.Map<Product>(product));
             await UnitOfWork.Complete();
         }
 
@@ -137,7 +137,7 @@ namespace MyPortal.BusinessLogic.Services
                     sale.AmountPaid = 0.00m;
                     sale.AcademicYearId = academicYearId;
 
-                    UnitOfWork.Sales.Add(Mapping.Map<Sale>(sale));
+                    UnitOfWork.Sales.Add(Mapper.Map<Sale>(sale));
 
                     if (commitImmediately)
                     {
@@ -152,7 +152,7 @@ namespace MyPortal.BusinessLogic.Services
                     sale.AmountPaid = product.Price;
                     sale.AcademicYearId = academicYearId;
 
-                    UnitOfWork.Sales.Add(Mapping.Map<Sale>(sale));
+                    UnitOfWork.Sales.Add(Mapper.Map<Sale>(sale));
 
                     if (commitImmediately)
                     {
@@ -210,23 +210,23 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<ProductDto>> GetAllProducts()
         {
-            return (await UnitOfWork.Products.GetAll()).Select(Mapping.Map<ProductDto>);
+            return (await UnitOfWork.Products.GetAll()).Select(Mapper.Map<ProductDto>);
         }
 
         public async Task<IEnumerable<SaleDto>> GetAllSales(int academicYearId)
         {
-            return (await UnitOfWork.Sales.GetAllAsync(academicYearId)).Select(Mapping.Map<SaleDto>);
+            return (await UnitOfWork.Sales.GetAllAsync(academicYearId)).Select(Mapper.Map<SaleDto>);
         }
 
         public async Task<IEnumerable<SaleDto>> GetAllSalesByStudent(int studentId,
             int academicYearId)
         {
-            return (await UnitOfWork.Sales.GetByStudent(studentId, academicYearId)).Select(Mapping.Map<SaleDto>);
+            return (await UnitOfWork.Sales.GetByStudent(studentId, academicYearId)).Select(Mapper.Map<SaleDto>);
         }
 
         public async Task<IEnumerable<ProductDto>> GetAvailableProductsByStudent(int studentId)
         {
-            return (await UnitOfWork.Products.GetAvailableByStudent(studentId)).Select(Mapping.Map<ProductDto>);
+            return (await UnitOfWork.Products.GetAvailableByStudent(studentId)).Select(Mapper.Map<ProductDto>);
         }
 
         public async Task<BasketItemDto> GetBasketItemById(int basketItemId)
@@ -238,12 +238,12 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Item not found");
             }
 
-            return Mapping.Map<BasketItemDto>(item);
+            return Mapper.Map<BasketItemDto>(item);
         }
 
         public async Task<IEnumerable<BasketItemDto>> GetBasketItemsByStudent(int studentId)
         {
-            return (await UnitOfWork.BasketItems.GetByStudent(studentId)).Select(Mapping.Map<BasketItemDto>);
+            return (await UnitOfWork.BasketItems.GetByStudent(studentId)).Select(Mapper.Map<BasketItemDto>);
         }
 
         public async Task<decimal> GetBasketTotalForStudent(int studentId)
@@ -253,12 +253,12 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<SaleDto>> GetPendingSales(int academicYearId)
         {
-            return (await UnitOfWork.Sales.GetPending(academicYearId)).Select(Mapping.Map<SaleDto>);
+            return (await UnitOfWork.Sales.GetPending(academicYearId)).Select(Mapper.Map<SaleDto>);
         }
 
         public async Task<IEnumerable<SaleDto>> GetProcessedSales(int academicYearId)
         {
-            return (await UnitOfWork.Sales.GetProcessed(academicYearId)).Select(Mapping.Map<SaleDto>);
+            return (await UnitOfWork.Sales.GetProcessed(academicYearId)).Select(Mapper.Map<SaleDto>);
         }
 
         public async Task<ProductDto> GetProductById(int productId)
@@ -270,7 +270,7 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Product not found");
             }
 
-            return Mapping.Map<ProductDto>(product);
+            return Mapper.Map<ProductDto>(product);
         }
 
         public async Task<Sale> GetSaleById(int saleId)
@@ -294,7 +294,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<ProductTypeDto>> GetAllProductTypes()
         {
-            return (await UnitOfWork.ProductTypes.GetAll()).Select(Mapping.Map<ProductTypeDto>);
+            return (await UnitOfWork.ProductTypes.GetAll()).Select(Mapper.Map<ProductTypeDto>);
         }
 
         public async Task<IDictionary<int, string>> GetAllProductTypesLookup()

@@ -19,6 +19,7 @@ using Syncfusion.EJ2.Base;
 namespace MyPortal.Controllers.Api
 {
     [RoutePrefix("api/finance")]
+    [Authorize]
     [ValidateModel]
     public class FinanceController : MyPortalApiController
     {
@@ -121,7 +122,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var products = (await _service.GetAvailableProductsByStudent(studentId)).Select(_mapping.Map<ProductDto>);
+                var products = (await _service.GetAvailableProductsByStudent(studentId)).Select(_mapper.Map<ProductDto>);
 
                 return Ok(products);
             }
@@ -172,7 +173,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var products = (await _service.GetAllProducts()).Select(_mapping.Map<ProductDto>);
+                var products = (await _service.GetAllProducts()).Select(_mapper.Map<ProductDto>);
 
                 return Ok(products);
             }
@@ -191,7 +192,7 @@ namespace MyPortal.Controllers.Api
             {
                 var products = await _service.GetAllProducts();
 
-                var list = products.Select(_mapping.Map<DataGridProductDto>);
+                var list = products.Select(_mapper.Map<DataGridProductDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -299,7 +300,7 @@ namespace MyPortal.Controllers.Api
 
                 var sales = await _service.GetProcessedSales(academicYearId);
 
-                var list = sales.Select(_mapping.Map<DataGridSaleDto>);
+                var list = sales.Select(_mapper.Map<DataGridSaleDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -339,7 +340,7 @@ namespace MyPortal.Controllers.Api
 
                 var sales = await _service.GetAllSales(academicYearId);
 
-                var list = sales.Select(_mapping.Map<DataGridSaleDto>);
+                var list = sales.Select(_mapper.Map<DataGridSaleDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -398,7 +399,7 @@ namespace MyPortal.Controllers.Api
 
                 var sales = await _service.GetPendingSales(academicYearId);
 
-                var list = sales.Select(_mapping.Map<DataGridSaleDto>);
+                var list = sales.Select(_mapper.Map<DataGridSaleDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -425,6 +426,11 @@ namespace MyPortal.Controllers.Api
             }
         }
  
+        /// <summary>
+        /// Records a sale to a student in MyPortal.
+        /// </summary>
+        /// <param name="sale">The sale to add to the system.</param>
+        /// <returns>An ActionResult indicating success.</returns>
         [HttpPost]
         [RequiresPermission("EditSales")]
         [Route("sales/create", Name = "ApiCreateSale")]

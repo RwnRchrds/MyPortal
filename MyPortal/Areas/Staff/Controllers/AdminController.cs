@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using MyPortal.Areas.Staff.ViewModels;
 using MyPortal.Attributes.MvcAuthorise;
 using MyPortal.BusinessLogic.Dtos;
+using MyPortal.BusinessLogic.Interfaces;
 using MyPortal.BusinessLogic.Services;
 using MyPortal.Controllers;
 using MyPortal.Models.Identity;
@@ -39,24 +40,24 @@ namespace MyPortal.Areas.Staff.Controllers
 
                 var roles = await adminService.GetAllRoles();
 
-                string attachedProfile = null;
-
                 StudentDto studentProfile = await studentService.TryGetStudentByUserId(userId);
 
                 StaffMemberDto staffProfile = await staffService.TryGetStaffMemberByUserId(userId);
 
+                IPersonDto attachedProfile = null;
+
                 if (studentProfile != null)
-                    attachedProfile = $"{studentProfile.Person.GetDisplayName()}";
+                    attachedProfile = studentProfile;
 
                 else if (staffProfile != null)
-                    attachedProfile = $"{staffProfile.GetDisplayName()}";
+                    attachedProfile = staffProfile;
 
                 var viewModel = new UserDetailsViewModel
                 {
                     User = user,
                     UserRoles = userRoles,
                     Roles = roles,
-                    AttachedProfileName = attachedProfile
+                    AttachedProfile = attachedProfile
                 };
 
                 return View(viewModel);

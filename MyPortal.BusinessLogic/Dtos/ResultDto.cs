@@ -18,14 +18,14 @@ namespace MyPortal.BusinessLogic.Dtos
         public int AspectId { get; set; }
         public DateTime Date { get; set; }
 
-        [Required]
-        [StringLength(128)]
-        public string Grade { get; set; }
+        public int GradeId { get; set; }
 
         public virtual ResultSetDto ResultSet { get; set; }
 
         public virtual AspectDto Aspect { get; set; }
 
         public virtual StudentDto Student { get; set; }
+
+        public virtual GradeDto Grade { get; set; }
     }
 }

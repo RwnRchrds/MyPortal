@@ -272,14 +272,14 @@ namespace MyPortal.Services
 
         public async Task<IEnumerable<PermissionIndicator>> GetPermissionsByRole(string roleId)
         {
-            var mappingService = new MappingService(MapperType.DataGridObjects);
+            var mapper = MappingService.GetMapperBusinessConfiguration();
             var permissions = await Identity.Permissions.ToListAsync();
 
             var role = await RoleManager.FindByIdAsync(roleId);
 
             var permList = permissions.Select(permission => new PermissionIndicator
             {
-                Permission = mappingService.Map<PermissionDto>(permission),
+                Permission = mapper.Map<PermissionDto>(permission),
                 HasPermission = role.RolePermissions.Any(x => x.PermissionId == permission.Id)
             }).OrderBy(x => x.Permission.Area).ThenBy(x => x.Permission.Name).ToList();
 

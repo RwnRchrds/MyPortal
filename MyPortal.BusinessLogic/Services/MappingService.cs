@@ -21,28 +21,10 @@ namespace MyPortal.BusinessLogic.Services
         BusinessObjects,
         DataGridObjects
     }
-    public class MappingService
+
+    public static class MappingService
     {
-        private readonly MapperConfiguration _configuration;
-
-        public MappingService(MapperType mapperType)
-        {
-            if (mapperType == MapperType.BusinessObjects)
-            {
-                _configuration = GetBusinessConfiguration();
-            }
-            else
-            {
-                _configuration = GetDataGridConfiguration();
-            }
-        }
-
-        public MappingService(MapperConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-
-        internal MapperConfiguration GetBusinessConfiguration()
+        public static Mapper GetMapperBusinessConfiguration()
         {
             var config = new MapperConfiguration(cfg =>
             {
@@ -67,12 +49,14 @@ namespace MyPortal.BusinessLogic.Services
                 cfg.CreateMap<Condition, ConditionDto>().ReverseMap();
                 cfg.CreateMap<Contact, ContactDto>().ReverseMap();
                 cfg.CreateMap<Detention, DetentionDto>().ReverseMap();
+                cfg.CreateMap<DetentionAttendanceStatus, DetentionAttendanceStatusDto>().ReverseMap();
                 cfg.CreateMap<DetentionType, DetentionTypeDto>().ReverseMap();
                 cfg.CreateMap<DiaryEvent, DiaryEventDto>().ReverseMap();
                 cfg.CreateMap<DietaryRequirement, DietaryRequirementDto>().ReverseMap();
                 cfg.CreateMap<Document, DocumentDto>().ReverseMap();
                 cfg.CreateMap<DocumentType, DocumentTypeDto>().ReverseMap();
-                cfg.CreateMap<EmailAddress, EmailAddressType>().ReverseMap();
+                cfg.CreateMap<EmailAddress, EmailAddressDto>().ReverseMap();
+                cfg.CreateMap<EmailAddressType, EmailAddressTypeDto>().ReverseMap();
                 cfg.CreateMap<Enrolment, EnrolmentDto>().ReverseMap();
                 cfg.CreateMap<GiftedTalented, GiftedTalentedDto>().ReverseMap();
                 cfg.CreateMap<GovernanceType, GovernanceTypeDto>().ReverseMap();
@@ -80,6 +64,7 @@ namespace MyPortal.BusinessLogic.Services
                 cfg.CreateMap<GradeSet, GradeSetDto>().ReverseMap();
                 cfg.CreateMap<House, HouseDto>().ReverseMap();
                 cfg.CreateMap<Incident, IncidentDto>().ReverseMap();
+                cfg.CreateMap<IncidentType, IncidentTypeDto>().ReverseMap();
                 cfg.CreateMap<IncidentDetention, IncidentDetentionDto>().ReverseMap();
                 cfg.CreateMap<IntakeType, IntakeTypeDto>().ReverseMap();
                 cfg.CreateMap<LessonPlan, LessonPlanDto>().ReverseMap();
@@ -109,9 +94,9 @@ namespace MyPortal.BusinessLogic.Services
                 cfg.CreateMap<Sale, SaleDto>().ReverseMap();
                 cfg.CreateMap<School, SchoolDto>().ReverseMap();
                 cfg.CreateMap<SchoolType, SchoolTypeDto>().ReverseMap();
-                cfg.CreateMap<SenEvent, SenEventType>().ReverseMap();
+                cfg.CreateMap<SenEvent, SenEventDto>().ReverseMap();
                 cfg.CreateMap<SenEventType, SenEventTypeDto>().ReverseMap();
-                cfg.CreateMap<SenProvision, SenProvisionTypeDto>().ReverseMap();
+                cfg.CreateMap<SenProvision, SenProvisionDto>().ReverseMap();
                 cfg.CreateMap<SenProvisionType, SenProvisionTypeDto>().ReverseMap();
                 cfg.CreateMap<SenReviewType, SenReviewTypeDto>().ReverseMap();
                 cfg.CreateMap<SenStatus, SenStatusDto>().ReverseMap();
@@ -130,10 +115,10 @@ namespace MyPortal.BusinessLogic.Services
                 cfg.CreateMap<YearGroup, YearGroupDto>().ReverseMap();
             });
 
-            return config;
+            return new Mapper(config);
         }
 
-        internal MapperConfiguration GetDataGridConfiguration()
+        public static Mapper GetMapperDataGridConfiguration()
         {
             var config = new MapperConfiguration(cfg =>
             {
@@ -286,7 +271,9 @@ namespace MyPortal.BusinessLogic.Services
                     .ForMember(dest => dest.StudentName,
                         opts => opts.MapFrom(src => src.Student.Person.GetDisplayName()))
                     .ForMember(dest => dest.Aspect,
-                        opts => opts.MapFrom(src => src.Aspect.Description));
+                        opts => opts.MapFrom(src => src.Aspect.Description))
+                    .ForMember(dest => dest.Grade,
+                        opts => opts.MapFrom(src => src.Grade.Code));
 
                 cfg.CreateMap<PersonCondition, DataGridPersonConditionDto>()
                     .ForMember(dest => dest.Condition,
@@ -311,26 +298,7 @@ namespace MyPortal.BusinessLogic.Services
                         opts => opts.MapFrom(src => src.Type.ToString()));
             });
 
-            return config;
-        }
-
-        public TDest Map<TDest>(object source)
-        {
-            var mapper = new Mapper(_configuration);
-
-            return mapper.Map<TDest>(source);
-        }
-
-        public IEnumerable<TDest> MapMultiple<TDest>(IEnumerable<object> source)
-        {
-            var mapper = new Mapper(_configuration);
-
-            return source.Select(mapper.Map<TDest>).ToList();
-        }
-
-        public void ValidateConfiguration()
-        {
-            _configuration.AssertConfigurationIsValid();
+            return new Mapper(config);
         }
     }
 }

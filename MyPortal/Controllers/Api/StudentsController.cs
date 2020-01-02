@@ -38,7 +38,7 @@ namespace MyPortal.Controllers.Api
             {
                 var student = await _service.GetStudentById(studentId);
 
-                return _mapping.Map<StudentDto>(student);
+                return _mapper.Map<StudentDto>(student);
             }
             catch (Exception e)
             {
@@ -55,7 +55,7 @@ namespace MyPortal.Controllers.Api
             {
                 var students = await _service.GetAllStudents();
 
-                var list = students.Select(_mapping.Map<DataGridStudentDto>);
+                var list = students.Select(_mapper.Map<DataGridStudentDto>);
 
                 return PrepareDataGridObject(list, dm);
             }

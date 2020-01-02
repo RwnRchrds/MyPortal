@@ -132,7 +132,7 @@ namespace MyPortal.Controllers.Api
             {
                 var users = await _service.GetAllUsers();
 
-                return users.Select(_mapping.Map<ApplicationUserDto>);
+                return users.Select(_mapper.Map<ApplicationUserDto>);
             }
             catch (Exception e)
             {
@@ -149,7 +149,7 @@ namespace MyPortal.Controllers.Api
             {
                 var users = await _service.GetAllUsers();
 
-                var list = users.Select(_mapping.Map<DataGridApplicationUserDto>);
+                var list = users.Select(_mapper.Map<DataGridApplicationUserDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -270,7 +270,7 @@ namespace MyPortal.Controllers.Api
             {
                 var role = await _service.GetRoleById(roleId);
 
-                return _mapping.Map<ApplicationRoleDto>(role);
+                return _mapper.Map<ApplicationRoleDto>(role);
             }
             catch (Exception e)
             {
@@ -287,7 +287,7 @@ namespace MyPortal.Controllers.Api
             {
                 var roles = await _service.GetUserDefinedRoles();
 
-                return roles.Select(_mapping.Map<ApplicationRoleDto>);
+                return roles.Select(_mapper.Map<ApplicationRoleDto>);
             }
             catch (Exception e)
             {
@@ -304,7 +304,7 @@ namespace MyPortal.Controllers.Api
             {
                 var roles = await _service.GetRolesByUser(userId);
 
-                return roles.Select(_mapping.Map<ApplicationRoleDto>);
+                return roles.Select(_mapper.Map<ApplicationRoleDto>);
             }
             catch (Exception e)
             {
@@ -322,7 +322,7 @@ namespace MyPortal.Controllers.Api
             {
                 var roles = await _service.GetRolesByUser(userId);
 
-                var list = roles.Select(_mapping.Map<ApplicationRoleDto>);
+                var list = roles.Select(_mapper.Map<ApplicationRoleDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -341,7 +341,7 @@ namespace MyPortal.Controllers.Api
             {
                 var roles = await _service.GetUserDefinedRoles();
 
-                var list = roles.Select(_mapping.Map<ApplicationRoleDto>);
+                var list = roles.Select(_mapper.Map<ApplicationRoleDto>);
 
                 return PrepareDataGridObject(list, dm);
             }

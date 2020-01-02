@@ -25,7 +25,7 @@ namespace MyPortal.BusinessLogic.Services
         {
             ValidationService.ValidateModel(staffMember);
 
-            UnitOfWork.StaffMembers.Add(Mapping.Map<StaffMember>(staffMember));
+            UnitOfWork.StaffMembers.Add(Mapper.Map<StaffMember>(staffMember));
 
             await UnitOfWork.Complete();
         }
@@ -46,7 +46,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<StaffMemberDto>> GetAllStaffMembers()
         {
-            return (await UnitOfWork.StaffMembers.GetAll()).Select(Mapping.Map<StaffMemberDto>);
+            return (await UnitOfWork.StaffMembers.GetAll()).Select(Mapper.Map<StaffMemberDto>);
         }
 
         public async Task<IDictionary<int, string>> GetAllStaffMembersLookup()
@@ -63,14 +63,14 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Staff member not found");
             }
 
-            return Mapping.Map<StaffMemberDto>(staff);
+            return Mapper.Map<StaffMemberDto>(staff);
         }
 
         public async Task<StaffMemberDto> TryGetStaffMemberByUserId(string userId)
         {
             var staff = await UnitOfWork.StaffMembers.GetByUserId(userId);
 
-            return Mapping.Map<StaffMemberDto>(staff);
+            return Mapper.Map<StaffMemberDto>(staff);
         }
 
         public async Task<StaffMemberDto> GetStaffMemberById(int staffMemberId)
@@ -82,7 +82,7 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Staff member not found.");
             }
 
-            return Mapping.Map<StaffMemberDto>(staff);
+            return Mapper.Map<StaffMemberDto>(staff);
         }
 
 

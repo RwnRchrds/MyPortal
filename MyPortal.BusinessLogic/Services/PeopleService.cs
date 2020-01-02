@@ -31,7 +31,7 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Person not found");
             }
 
-            return Mapping.Map<PersonDto>(person);
+            return Mapper.Map<PersonDto>(person);
         }
 
         public async Task<PersonDto> GetPersonByUserId(string userId)
@@ -43,7 +43,7 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Person not found");
             }
 
-            return Mapping.Map<PersonDto>(person);
+            return Mapper.Map<PersonDto>(person);
         }
 
         public async Task UpdatePerson(PersonDto person, bool commitImmediately = true)
@@ -77,17 +77,17 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<PersonDto>> SearchForPerson(PersonDto person)
         {
-            return (await UnitOfWork.People.Search(Mapping.Map<Person>(person))).Select(Mapping.Map<PersonDto>);
+            return (await UnitOfWork.People.Search(Mapper.Map<Person>(person))).Select(Mapper.Map<PersonDto>);
         }
 
         public async Task<IEnumerable<PersonConditionDto>> GetMedicalConditionsByPerson(int personId)
         {
-            return (await UnitOfWork.PersonConditions.GetByPerson(personId)).Select(Mapping.Map<PersonConditionDto>);
+            return (await UnitOfWork.PersonConditions.GetByPerson(personId)).Select(Mapper.Map<PersonConditionDto>);
         }
 
         public async Task<IEnumerable<PersonDietaryRequirementDto>> GetMedicalDietaryRequirementsByPerson(int personId)
         {
-            return (await UnitOfWork.PersonDietaryRequirements.GetByPerson(personId)).Select(Mapping.Map<PersonDietaryRequirementDto>);
+            return (await UnitOfWork.PersonDietaryRequirements.GetByPerson(personId)).Select(Mapper.Map<PersonDietaryRequirementDto>);
         }
 
         public IDictionary<string, string> GetGendersLookup()

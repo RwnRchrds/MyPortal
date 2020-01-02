@@ -119,7 +119,7 @@ namespace MyPortal.Controllers.Api
 
                 var logs = await _service.GetLogNotesByStudent(studentId, academicYearId);
 
-                var list = logs.Select(_mapping.Map<DataGridProfileLogNoteDto>);
+                var list = logs.Select(_mapper.Map<DataGridProfileLogNoteDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -219,7 +219,7 @@ namespace MyPortal.Controllers.Api
             {
                 var commentBanks = await _service.GetAllCommentBanks();
 
-                var list = commentBanks.Select(_mapping.Map<DataGridCommentBankDto>);
+                var list = commentBanks.Select(_mapper.Map<DataGridCommentBankDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -335,7 +335,7 @@ namespace MyPortal.Controllers.Api
             {
                 var comments = await _service.GetCommentsByBank(commentBankId);
 
-                var list = comments.Select(_mapping.Map<DataGridCommentDto>);
+                var list = comments.Select(_mapper.Map<DataGridCommentDto>);
 
                 return PrepareDataGridObject(list, dm);
             }

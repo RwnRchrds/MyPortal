@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyPortal.Data", "MyPortal.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyPortal.BusinessLogic", "MyPortal.BusinessLogic\MyPortal.BusinessLogic.csproj", "{6C2127C6-6FFE-464E-9986-F294360A5D3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyPortal.Desktop", "MyPortal.Desktop\MyPortal.Desktop.csproj", "{C7E60830-8FE3-490F-BF69-639C9A5AF022}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,10 +34,6 @@ Global
 		{6C2127C6-6FFE-464E-9986-F294360A5D3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C2127C6-6FFE-464E-9986-F294360A5D3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C2127C6-6FFE-464E-9986-F294360A5D3F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C7E60830-8FE3-490F-BF69-639C9A5AF022}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C7E60830-8FE3-490F-BF69-639C9A5AF022}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C7E60830-8FE3-490F-BF69-639C9A5AF022}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C7E60830-8FE3-490F-BF69-639C9A5AF022}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
