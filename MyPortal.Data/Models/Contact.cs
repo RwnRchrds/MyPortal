@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Data.Interfaces;
 
 namespace MyPortal.Data.Models
 {
     [Table("Contact", Schema = "person")]
-    public class Contact
+    public class Contact : IPerson
     {
         public Contact()
         {

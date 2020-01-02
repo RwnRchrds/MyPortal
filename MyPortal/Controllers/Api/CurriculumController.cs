@@ -108,7 +108,7 @@ namespace MyPortal.Controllers.Api
 
                 var sessions = await _service.GetSessionsByDate(teacherId, academicYearId, date);
 
-                var list = sessions.Select(_mapping.Map<DataGridSessionDto>);
+                var list = sessions.Select(_mapper.Map<DataGridSessionDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -146,7 +146,7 @@ namespace MyPortal.Controllers.Api
 
                 var classes = await _service.GetAllClasses(academicYearId);
 
-                var list = classes.Select(_mapping.Map<DataGridClassDto>);
+                var list = classes.Select(_mapper.Map<DataGridClassDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -168,7 +168,7 @@ namespace MyPortal.Controllers.Api
 
                 var classes = await _service.GetClassesBySubject(subjectId, academicYearId);
 
-                var list = classes.Select(_mapping.Map<DataGridClassDto>);
+                var list = classes.Select(_mapper.Map<DataGridClassDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -272,7 +272,7 @@ namespace MyPortal.Controllers.Api
             {
                 var sessions = await _service.GetSessionsByClass(classId);
 
-                var list = sessions.Select(_mapping.Map<DataGridSessionDto>);
+                var list = sessions.Select(_mapper.Map<DataGridSessionDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -291,7 +291,7 @@ namespace MyPortal.Controllers.Api
             {
                 var session = await _service.GetSessionById(sessionId);
 
-                return _mapping.Map<SessionDto>(session);
+                return _mapper.Map<SessionDto>(session);
             }
             catch (Exception e)
             {
@@ -392,7 +392,7 @@ namespace MyPortal.Controllers.Api
             {
                 var enrolments = await _service.GetEnrolmentsByClass(classId);
 
-                var list = enrolments.Select(_mapping.Map<DataGridEnrolmentDto>);
+                var list = enrolments.Select(_mapper.Map<DataGridEnrolmentDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -427,7 +427,7 @@ namespace MyPortal.Controllers.Api
             {
                 var enrolments = await _service.GetEnrolmentsByStudent(studentId);
 
-                var list = enrolments.Select(_mapping.Map<DataGridEnrolmentDto>);
+                var list = enrolments.Select(_mapper.Map<DataGridEnrolmentDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -546,7 +546,7 @@ namespace MyPortal.Controllers.Api
             {
                 var subject = await _service.GetSubjectById(subjectId);
 
-                return _mapping.Map<SubjectDto>(subject);
+                return _mapper.Map<SubjectDto>(subject);
             }
             catch (Exception e)
             {
@@ -578,7 +578,7 @@ namespace MyPortal.Controllers.Api
             {
                 var staff = await _service.GetSubjectStaffBySubject(subjectId);
 
-                var list = staff.Select(_mapping.Map<DataGridSubjectStaffMemberDto>);
+                var list = staff.Select(_mapper.Map<DataGridSubjectStaffMemberDto>);
 
                 return PrepareDataGridObject(list, dm);
 
@@ -664,7 +664,7 @@ namespace MyPortal.Controllers.Api
             {
                 var subjects = await _service.GetAllSubjects();
 
-                var list = subjects.Select(_mapping.Map<DataGridSubjectDto>);
+                var list = subjects.Select(_mapper.Map<DataGridSubjectDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -764,7 +764,7 @@ namespace MyPortal.Controllers.Api
             {
                 var studyTopics = await _service.GetAllStudyTopics();
 
-                var list = studyTopics.Select(_mapping.Map<DataGridStudyTopicDto>);
+                var list = studyTopics.Select(_mapper.Map<DataGridStudyTopicDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -800,7 +800,7 @@ namespace MyPortal.Controllers.Api
             {
                 var lessonPlans = await _service.GetAllLessonPlans();
 
-                return lessonPlans.Select(_mapping.Map<LessonPlanDto>);
+                return lessonPlans.Select(_mapper.Map<LessonPlanDto>);
             }
             catch (Exception e)
             {
@@ -817,7 +817,7 @@ namespace MyPortal.Controllers.Api
             {
                 var lessonPlan = await _service.GetLessonPlanById(lessonPlanId);
 
-                return _mapping.Map<LessonPlanDto>(lessonPlan);
+                return _mapper.Map<LessonPlanDto>(lessonPlan);
             }
             catch (Exception e)
             {
@@ -834,7 +834,7 @@ namespace MyPortal.Controllers.Api
             {
                 var lessonPlans = await _service.GetLessonPlansByStudyTopic(studyTopicId);
 
-                return lessonPlans.Select(_mapping.Map<LessonPlanDto>);
+                return lessonPlans.Select(_mapper.Map<LessonPlanDto>);
             }
             catch (Exception e)
             {
@@ -852,7 +852,7 @@ namespace MyPortal.Controllers.Api
             {
                 var lessonPlans = await _service.GetLessonPlansByStudyTopic(studyTopicId);
 
-                var list = lessonPlans.Select(_mapping.Map<DataGridLessonPlanDto>);
+                var list = lessonPlans.Select(_mapper.Map<DataGridLessonPlanDto>);
 
                 return PrepareDataGridObject(list, dm);
             }

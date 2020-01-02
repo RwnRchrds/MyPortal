@@ -82,7 +82,7 @@ namespace MyPortal.Controllers.Api
             {
                 var documents = await _service.GetApprovedGeneralDocuments();
 
-                var list = documents.Select(_mapping.Map<DataGridDocumentDto>);
+                var list = documents.Select(_mapper.Map<DataGridDocumentDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -131,7 +131,7 @@ namespace MyPortal.Controllers.Api
             {
                 var documents = await _service.GetAllGeneralDocuments();
 
-                var list = documents.Select(_mapping.Map<DataGridDocumentDto>);
+                var list = documents.Select(_mapper.Map<DataGridDocumentDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -150,7 +150,7 @@ namespace MyPortal.Controllers.Api
             {
                 var documents = await _service.GetPersonAttachments(personId);
 
-                var list = documents.Select(_mapping.Map<DataGridPersonAttachmentDto>);
+                var list = documents.Select(_mapper.Map<DataGridPersonAttachmentDto>);
 
                 return PrepareDataGridObject(list, dm);
             }

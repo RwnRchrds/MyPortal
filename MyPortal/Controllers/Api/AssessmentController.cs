@@ -74,7 +74,7 @@ namespace MyPortal.Controllers.Api
             {
                 var results = await _service.GetResultsByStudent(studentId, resultSetId);
 
-                var list = results.Select(_mapping.Map<DataGridResultDto>);
+                var list = results.Select(_mapper.Map<DataGridResultDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -170,7 +170,7 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                var list = (await _service.GetAllResultSets()).Select(_mapping.Map<DataGridResultSetDto>);
+                var list = (await _service.GetAllResultSets()).Select(_mapper.Map<DataGridResultSetDto>);
 
                 return PrepareDataGridObject(list, dm);
             }

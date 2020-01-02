@@ -27,7 +27,7 @@ namespace MyPortal.BusinessLogic.Services
 
             document.Date = DateTime.Now;
 
-            UnitOfWork.Documents.Add(Mapping.Map<Document>(document));
+            UnitOfWork.Documents.Add(Mapper.Map<Document>(document));
 
             await UnitOfWork.Complete();
         }
@@ -47,8 +47,8 @@ namespace MyPortal.BusinessLogic.Services
 
             var documentObject = attachment.Document;
 
-            UnitOfWork.Documents.Add(Mapping.Map<Document>(documentObject));
-            UnitOfWork.PersonAttachments.Add(Mapping.Map<PersonAttachment>(attachment));
+            UnitOfWork.Documents.Add(Mapper.Map<Document>(documentObject));
+            UnitOfWork.PersonAttachments.Add(Mapper.Map<PersonAttachment>(attachment));
 
             await UnitOfWork.Complete();
         }
@@ -92,12 +92,12 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<DocumentDto>> GetAllGeneralDocuments()
         {
-            return (await UnitOfWork.Documents.GetGeneral()).Select(Mapping.Map<DocumentDto>);
+            return (await UnitOfWork.Documents.GetGeneral()).Select(Mapper.Map<DocumentDto>);
         }
 
         public async Task<IEnumerable<DocumentDto>> GetApprovedGeneralDocuments()
         {
-            return (await UnitOfWork.Documents.GetApproved()).Select(Mapping.Map<DocumentDto>);
+            return (await UnitOfWork.Documents.GetApproved()).Select(Mapper.Map<DocumentDto>);
         }
         
         public async Task<DocumentDto> GetDocumentById(int documentId)
@@ -109,7 +109,7 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Document not found.");
             }
 
-            return Mapping.Map<DocumentDto>(document);
+            return Mapper.Map<DocumentDto>(document);
         }
         
         public async Task<PersonAttachmentDto> GetPersonAttachmentById(int documentId)
@@ -121,12 +121,12 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Document not found.");
             }
 
-            return Mapping.Map<PersonAttachmentDto>(document);
+            return Mapper.Map<PersonAttachmentDto>(document);
         }
 
         public async Task<IEnumerable<PersonAttachmentDto>> GetPersonAttachments(int personId)
         {
-            return (await UnitOfWork.PersonAttachments.GetByPerson(personId)).Select(Mapping.Map<PersonAttachmentDto>);
+            return (await UnitOfWork.PersonAttachments.GetByPerson(personId)).Select(Mapper.Map<PersonAttachmentDto>);
         }
 
         public async Task UpdateDocument(DocumentDto document)

@@ -24,7 +24,7 @@ namespace MyPortal.BusinessLogic.Services
         {
             ValidationService.ValidateModel(emailAddress);
 
-            UnitOfWork.EmailAddresses.Add(Mapping.Map<EmailAddress>(emailAddress));
+            UnitOfWork.EmailAddresses.Add(Mapper.Map<EmailAddress>(emailAddress));
 
             await UnitOfWork.Complete();
         }
@@ -64,7 +64,7 @@ namespace MyPortal.BusinessLogic.Services
         {
             ValidationService.ValidateModel(phoneNumber);
 
-            UnitOfWork.PhoneNumbers.Add(Mapping.Map<PhoneNumber>(phoneNumber));
+            UnitOfWork.PhoneNumbers.Add(Mapper.Map<PhoneNumber>(phoneNumber));
 
             await UnitOfWork.Complete();
         }
@@ -105,12 +105,12 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Email address not found.");
             }
 
-            return Mapping.Map<EmailAddressDto>(emailInDb);
+            return Mapper.Map<EmailAddressDto>(emailInDb);
         }
 
         public async Task<IEnumerable<EmailAddressDto>> GetEmailAddressesByPerson(int personId)
         {
-            return (await UnitOfWork.EmailAddresses.GetByPerson(personId)).Select(Mapping.Map<EmailAddressDto>);
+            return (await UnitOfWork.EmailAddresses.GetByPerson(personId)).Select(Mapper.Map<EmailAddressDto>);
         }
 
         public async Task<PhoneNumberDto> GetPhoneNumberById(int phoneNumberById)
@@ -122,19 +122,19 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Phone number not found.");
             }
 
-            return Mapping.Map<PhoneNumberDto>(phoneNumber);
+            return Mapper.Map<PhoneNumberDto>(phoneNumber);
         }
 
         public async Task<IEnumerable<PhoneNumberDto>> GetPhoneNumbersByPerson(int personId)
         {
-            return (await UnitOfWork.PhoneNumbers.GetByPerson(personId)).Select(Mapping.Map<PhoneNumberDto>);
+            return (await UnitOfWork.PhoneNumbers.GetByPerson(personId)).Select(Mapper.Map<PhoneNumberDto>);
         }
 
         public async Task CreateAddress(AddressDto address)
         {
             ValidationService.ValidateModel(address);
 
-            UnitOfWork.Addresses.Add(Mapping.Map<Address>(address));
+            UnitOfWork.Addresses.Add(Mapper.Map<Address>(address));
 
             await UnitOfWork.Complete();
         }
@@ -169,7 +169,7 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Address not found.");
             }
 
-            return Mapping.Map<AddressDto>(address);
+            return Mapper.Map<AddressDto>(address);
         }
 
         public async Task<AddressPersonDto> GetAddressPersonById(int addressPersonId)
@@ -181,14 +181,14 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Person not found at address.");
             }
 
-            return Mapping.Map<AddressPersonDto>(addressPerson);
+            return Mapper.Map<AddressPersonDto>(addressPerson);
         }
 
         public async Task AddPersonToAddress(AddressPersonDto addressPerson)
         {
             ValidationService.ValidateModel(addressPerson);
 
-            UnitOfWork.AddressPersons.Add(Mapping.Map<AddressPerson>(addressPerson));
+            UnitOfWork.AddressPersons.Add(Mapper.Map<AddressPerson>(addressPerson));
 
             await UnitOfWork.Complete();
         }
@@ -223,7 +223,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<AddressDto>> GetAddressesByPerson(int personId)
         {
-            return (await UnitOfWork.Addresses.GetAddressesByPerson(personId)).Select(Mapping.Map<AddressDto>);
+            return (await UnitOfWork.Addresses.GetAddressesByPerson(personId)).Select(Mapper.Map<AddressDto>);
         }
 
         public async Task<IDictionary<int, string>> GetPhoneNumberTypesLookup()

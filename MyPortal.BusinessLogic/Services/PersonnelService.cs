@@ -26,7 +26,7 @@ namespace MyPortal.BusinessLogic.Services
         {
             ValidationService.ValidateModel(course);
 
-            UnitOfWork.TrainingCourses.Add(Mapping.Map<TrainingCourse>(course));
+            UnitOfWork.TrainingCourses.Add(Mapper.Map<TrainingCourse>(course));
             await UnitOfWork.Complete();
         }
 
@@ -45,7 +45,7 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Observer not found");
             }
 
-            UnitOfWork.Observations.Add(Mapping.Map<Observation>(observation));
+            UnitOfWork.Observations.Add(Mapper.Map<Observation>(observation));
             await UnitOfWork.Complete();
         }
 
@@ -53,7 +53,7 @@ namespace MyPortal.BusinessLogic.Services
         {
             ValidationService.ValidateModel(certificate);
 
-            UnitOfWork.TrainingCertificates.Add(Mapping.Map<TrainingCertificate>(certificate));
+            UnitOfWork.TrainingCertificates.Add(Mapper.Map<TrainingCertificate>(certificate));
             await UnitOfWork.Complete();
         }
 
@@ -88,7 +88,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<TrainingCourseDto>> GetAllTrainingCourses()
         {
-            return (await UnitOfWork.TrainingCourses.GetAll()).Select(Mapping.Map<TrainingCourseDto>);
+            return (await UnitOfWork.TrainingCourses.GetAll()).Select(Mapper.Map<TrainingCourseDto>);
         }
 
         public async Task<TrainingCertificateDto> GetCertificate(int staffId, int courseId)
@@ -100,13 +100,13 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Certificate not found");
             }
 
-            return Mapping.Map<TrainingCertificateDto>(certInDb);
+            return Mapper.Map<TrainingCertificateDto>(certInDb);
         }
 
         public async Task<IEnumerable<TrainingCertificateDto>> GetCertificatesByStaffMember(
             int staffId)
         {
-            return (await UnitOfWork.TrainingCertificates.GetByStaffMember(staffId)).Select(Mapping.Map<TrainingCertificateDto>);
+            return (await UnitOfWork.TrainingCertificates.GetByStaffMember(staffId)).Select(Mapper.Map<TrainingCertificateDto>);
         }
         
         public async Task<TrainingCourseDto> GetCourseById(int courseId)
@@ -118,7 +118,7 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Course not found");
             }
 
-            return Mapping.Map<TrainingCourseDto>(courseInDb);
+            return Mapper.Map<TrainingCourseDto>(courseInDb);
         }
 
         public async Task<ObservationDto> GetObservationById(int observationId)
@@ -130,13 +130,13 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Observation not found");
             }
 
-            return Mapping.Map<ObservationDto>(observation);
+            return Mapper.Map<ObservationDto>(observation);
         }
 
         public async Task<IEnumerable<ObservationDto>> GetObservationsByStaffMember(
             int staffMemberId)
         {
-            return (await UnitOfWork.Observations.GetByStaffMember(staffMemberId)).Select(Mapping.Map<ObservationDto>);
+            return (await UnitOfWork.Observations.GetByStaffMember(staffMemberId)).Select(Mapper.Map<ObservationDto>);
         }
 
         public async Task UpdateCertificate(TrainingCertificateDto certificate)

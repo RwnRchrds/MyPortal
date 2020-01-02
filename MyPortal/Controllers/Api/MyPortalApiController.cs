@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using AutoMapper;
 using Microsoft.AspNet.Identity;
 using MyPortal.BusinessLogic.Exceptions;
 using MyPortal.BusinessLogic.Services;
@@ -18,11 +19,11 @@ namespace MyPortal.Controllers.Api
 {
     public abstract class MyPortalApiController : ApiController
     {
-        protected readonly MappingService _mapping;
+        protected readonly Mapper _mapper;
 
         protected MyPortalApiController()
         {
-            _mapping = new MappingService(MapperType.DataGridObjects);
+            _mapper = MappingService.GetMapperDataGridConfiguration();
         }
 
         protected IHttpActionResult HandleException(Exception ex)

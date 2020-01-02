@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Data.Interfaces;
 
 namespace MyPortal.Data.Models
 {
@@ -9,7 +10,7 @@ namespace MyPortal.Data.Models
     /// A student in the system.
     /// </summary>
     [Table("Student", Schema = "person")]
-    public partial class Student
+    public partial class Student : IPerson
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Student()

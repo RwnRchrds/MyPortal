@@ -38,7 +38,7 @@ namespace MyPortal.BusinessLogic.Services
                     bulletin.ExpireDate = bulletin.CreateDate.AddDays(7);
                 }
 
-                UnitOfWork.Bulletins.Add(Mapping.Map<Bulletin>(bulletin));
+                UnitOfWork.Bulletins.Add(Mapper.Map<Bulletin>(bulletin));
 
                 await UnitOfWork.Complete();
             }
@@ -60,23 +60,23 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<BulletinDto>> GetAllBulletins()
         {
-            return (await UnitOfWork.Bulletins.GetAll()).Select(Mapping.Map<BulletinDto>);
+            return (await UnitOfWork.Bulletins.GetAll()).Select(Mapper.Map<BulletinDto>);
         }
 
         public async Task<IEnumerable<BulletinDto>> GetApprovedBulletins()
         {
-            return (await UnitOfWork.Bulletins.GetApproved()).Select(Mapping.Map<BulletinDto>);
+            return (await UnitOfWork.Bulletins.GetApproved()).Select(Mapper.Map<BulletinDto>);
         }
 
         public async Task<IEnumerable<BulletinDto>> GetApprovedStudentBulletins()
         {
-            return (await UnitOfWork.Bulletins.GetStudent()).Select(Mapping.Map<BulletinDto>);
+            return (await UnitOfWork.Bulletins.GetStudent()).Select(Mapper.Map<BulletinDto>);
         }
 
         
         public async Task<IEnumerable<BulletinDto>> GetOwnBulletins(int authorId)
         {
-            return (await UnitOfWork.Bulletins.GetOwn(authorId)).Select(Mapping.Map<BulletinDto>);
+            return (await UnitOfWork.Bulletins.GetOwn(authorId)).Select(Mapper.Map<BulletinDto>);
         }
 
         public async Task<BulletinDto> GetBulletinById(int bulletinId)
@@ -88,7 +88,7 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Bulletin not found");
             }
 
-            return Mapping.Map<BulletinDto>(bulletin);
+            return Mapper.Map<BulletinDto>(bulletin);
         }
 
         public async Task UpdateBulletin(BulletinDto bulletin, bool approvable = false)
@@ -111,14 +111,14 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<LocationDto>> GetLocations()
         {
-            return (await UnitOfWork.Locations.GetAll()).Select(Mapping.Map<LocationDto>);
+            return (await UnitOfWork.Locations.GetAll()).Select(Mapper.Map<LocationDto>);
         }
 
         public async Task<SchoolDto> GetLocalSchool()
         {
             var school = await UnitOfWork.Schools.GetLocal();
 
-            return Mapping.Map<SchoolDto>(school);
+            return Mapper.Map<SchoolDto>(school);
         }
     }
 }

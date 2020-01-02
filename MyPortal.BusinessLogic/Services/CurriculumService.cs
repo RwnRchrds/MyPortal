@@ -35,7 +35,7 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.BadRequest, "Class already exists");
             }
 
-            UnitOfWork.Classes.Add(Mapping.Map<Class>(@class));
+            UnitOfWork.Classes.Add(Mapper.Map<Class>(@class));
 
             await UnitOfWork.Complete();
         }
@@ -48,7 +48,7 @@ namespace MyPortal.BusinessLogic.Services
 
             if (await StudentCanEnrol(enrolment.StudentId, @class.Id, @class.AcademicYearId))
             {
-                UnitOfWork.Enrolments.Add(Mapping.Map<Enrolment>(enrolment));
+                UnitOfWork.Enrolments.Add(Mapper.Map<Enrolment>(enrolment));
 
                 if (commitImmediately)
                 {
@@ -105,7 +105,7 @@ namespace MyPortal.BusinessLogic.Services
         {
             ValidationService.ValidateModel(lessonPlan);
 
-            UnitOfWork.LessonPlans.Add(Mapping.Map<LessonPlan>(lessonPlan));
+            UnitOfWork.LessonPlans.Add(Mapper.Map<LessonPlan>(lessonPlan));
             await UnitOfWork.Complete();
         }
 
@@ -129,7 +129,7 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.BadRequest,"Class is already assigned to this period");
             }
 
-            UnitOfWork.Sessions.Add(Mapping.Map<Session>(session));
+            UnitOfWork.Sessions.Add(Mapper.Map<Session>(session));
             await UnitOfWork.Complete();
         }
 
@@ -168,7 +168,7 @@ namespace MyPortal.BusinessLogic.Services
         {
             ValidationService.ValidateModel(studyTopic);
 
-            UnitOfWork.StudyTopics.Add(Mapping.Map<StudyTopic>(studyTopic));
+            UnitOfWork.StudyTopics.Add(Mapper.Map<StudyTopic>(studyTopic));
             await UnitOfWork.Complete();
         }
 
@@ -176,7 +176,7 @@ namespace MyPortal.BusinessLogic.Services
         {
             ValidationService.ValidateModel(subject);
 
-            UnitOfWork.Subjects.Add(Mapping.Map<Subject>(subject));
+            UnitOfWork.Subjects.Add(Mapper.Map<Subject>(subject));
             await UnitOfWork.Complete();
         }
 
@@ -280,47 +280,47 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound,"Academic year not found");
             }
 
-            return Mapping.Map<AcademicYearDto>(academicYear);
+            return Mapper.Map<AcademicYearDto>(academicYear);
         }
 
         public async Task<IEnumerable<AcademicYearDto>> GetAcademicYears()
         {
-            return (await UnitOfWork.AcademicYears.GetAll(x => x.FirstDate)).Select(Mapping.Map<AcademicYearDto>);
+            return (await UnitOfWork.AcademicYears.GetAll(x => x.FirstDate)).Select(Mapper.Map<AcademicYearDto>);
         }
 
         public async Task<IEnumerable<ClassDto>> GetAllClasses(int academicYearId)
         {
-            return (await UnitOfWork.Classes.GetByAcademicYear(academicYearId)).Select(Mapping.Map<ClassDto>);
+            return (await UnitOfWork.Classes.GetByAcademicYear(academicYearId)).Select(Mapper.Map<ClassDto>);
         }
 
         public async Task<IEnumerable<ClassDto>> GetClassesBySubject(int subjectId, int academicYearId)
         {
-            return (await UnitOfWork.Classes.GetBySubject(subjectId, academicYearId)).Select(Mapping.Map<ClassDto>);
+            return (await UnitOfWork.Classes.GetBySubject(subjectId, academicYearId)).Select(Mapper.Map<ClassDto>);
         }
 
         public async Task<IEnumerable<LessonPlanDto>> GetAllLessonPlans()
         {
-            return (await UnitOfWork.LessonPlans.GetAll(x => x.Title)).Select(Mapping.Map<LessonPlanDto>);
+            return (await UnitOfWork.LessonPlans.GetAll(x => x.Title)).Select(Mapper.Map<LessonPlanDto>);
         }
 
         public async Task<IEnumerable<StudyTopicDto>> GetAllStudyTopics()
         {
-            return (await UnitOfWork.StudyTopics.GetAll(x => x.Name)).Select(Mapping.Map<StudyTopicDto>);
+            return (await UnitOfWork.StudyTopics.GetAll(x => x.Name)).Select(Mapper.Map<StudyTopicDto>);
         }
 
         public async Task<IEnumerable<StudyTopicDto>> GetAllStudyTopicsBySubject(int subjectId)
         {
-            return (await UnitOfWork.StudyTopics.GetBySubject(subjectId)).Select(Mapping.Map<StudyTopicDto>);
+            return (await UnitOfWork.StudyTopics.GetBySubject(subjectId)).Select(Mapper.Map<StudyTopicDto>);
         }
 
         public async Task<IEnumerable<SubjectDto>> GetAllSubjects()
         {
-            return (await UnitOfWork.Subjects.GetAll(x => x.Name)).Select(Mapping.Map<SubjectDto>);
+            return (await UnitOfWork.Subjects.GetAll(x => x.Name)).Select(Mapper.Map<SubjectDto>);
         }
 
         public async Task<IEnumerable<SubjectStaffMemberDto>> GetSubjectStaffBySubject(int subjectId)
         {
-            return (await UnitOfWork.SubjectStaffMembers.GetBySubject(subjectId)).Select(Mapping.Map<SubjectStaffMemberDto>);
+            return (await UnitOfWork.SubjectStaffMembers.GetBySubject(subjectId)).Select(Mapper.Map<SubjectStaffMemberDto>);
         }
 
         public async Task<SubjectStaffMemberDto> GetSubjectStaffById(int subjectStaffId)
@@ -332,7 +332,7 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Subject staff member not found");
             }
 
-            return Mapping.Map<SubjectStaffMemberDto>(staff);
+            return Mapper.Map<SubjectStaffMemberDto>(staff);
         }
 
         public async Task<IDictionary<int, string>> GetAllSubjectRolesLookup()
@@ -350,7 +350,7 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound,"Class not found");
             }
 
-            return Mapping.Map<ClassDto>(currClass);
+            return Mapper.Map<ClassDto>(currClass);
         }
 
         public async Task<EnrolmentDto> GetEnrolmentById(int enrolmentId)
@@ -362,17 +362,17 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound,"Enrolment not found");
             }
 
-            return Mapping.Map<EnrolmentDto>(enrolment);
+            return Mapper.Map<EnrolmentDto>(enrolment);
         }
 
         public async Task<IEnumerable<EnrolmentDto>> GetEnrolmentsByClass(int classId)
         {
-            return (await UnitOfWork.Enrolments.GetByClass(classId)).Select(Mapping.Map<EnrolmentDto>);
+            return (await UnitOfWork.Enrolments.GetByClass(classId)).Select(Mapper.Map<EnrolmentDto>);
         }
 
         public async Task<IEnumerable<EnrolmentDto>> GetEnrolmentsByStudent(int studentId)
         {
-            return (await UnitOfWork.Enrolments.GetByStudent(studentId)).Select(Mapping.Map<EnrolmentDto>);
+            return (await UnitOfWork.Enrolments.GetByStudent(studentId)).Select(Mapper.Map<EnrolmentDto>);
         }
 
         public async Task<LessonPlanDto> GetLessonPlanById(int lessonPlanId)
@@ -384,12 +384,12 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound,"Lesson plan not found");
             }
 
-            return Mapping.Map<LessonPlanDto>(lessonPlan);
+            return Mapper.Map<LessonPlanDto>(lessonPlan);
         }
 
         public async Task<IEnumerable<LessonPlanDto>> GetLessonPlansByStudyTopic(int studyTopicId)
         {
-            return (await UnitOfWork.LessonPlans.GetByStudyTopic(studyTopicId)).Select(Mapping.Map<LessonPlanDto>);
+            return (await UnitOfWork.LessonPlans.GetByStudyTopic(studyTopicId)).Select(Mapper.Map<LessonPlanDto>);
         }
 
         public async Task<SessionDto> GetSessionById(int sessionId)
@@ -401,7 +401,7 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound,"Session not found");
             }
 
-            return Mapping.Map<SessionDto>(session);
+            return Mapper.Map<SessionDto>(session);
         }
 
         public async Task<SessionDto> GetSessionByIdWithRelated(int sessionId, params Expression<Func<Session, object>>[] includeProperties)
@@ -413,12 +413,12 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Session not found");
             }
 
-            return Mapping.Map<SessionDto>(session);
+            return Mapper.Map<SessionDto>(session);
         }
 
         public async Task<IEnumerable<SessionDto>> GetSessionsByClass(int classId)
         {
-            return (await UnitOfWork.Sessions.GetByClass(classId)).Select(Mapping.Map<SessionDto>);
+            return (await UnitOfWork.Sessions.GetByClass(classId)).Select(Mapper.Map<SessionDto>);
         }
 
         public async Task<IEnumerable<SessionDto>> GetSessionsByDate(int staffId, int academicYearId, DateTime date)
@@ -438,7 +438,7 @@ namespace MyPortal.BusinessLogic.Services
                 return new List<SessionDto>();
             }
 
-            return (await UnitOfWork.Sessions.GetByDayOfWeek(academicYearId, staffId, date.DayOfWeek)).Select(Mapping.Map<SessionDto>);
+            return (await UnitOfWork.Sessions.GetByDayOfWeek(academicYearId, staffId, date.DayOfWeek)).Select(Mapper.Map<SessionDto>);
         }
 
         public async Task<StudyTopicDto> GetStudyTopicById(int studyTopicId)
@@ -450,7 +450,7 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound,"Study topic not found");
             }
 
-            return Mapping.Map<StudyTopicDto>(studyTopic);
+            return Mapper.Map<StudyTopicDto>(studyTopic);
         }
 
         public async Task<SubjectDto> GetSubjectById(int subjectId)
@@ -462,7 +462,7 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound,"Subject not found");
             }
 
-            return Mapping.Map<SubjectDto>(subject);
+            return Mapper.Map<SubjectDto>(subject);
         }
 
         public async Task<bool> ClassHasEnrolments(int classId)
@@ -627,7 +627,7 @@ namespace MyPortal.BusinessLogic.Services
         {
             ValidationService.ValidateModel(subjectStaff);
 
-            UnitOfWork.SubjectStaffMembers.Add(Mapping.Map<SubjectStaffMember>(subjectStaff));
+            UnitOfWork.SubjectStaffMembers.Add(Mapper.Map<SubjectStaffMember>(subjectStaff));
 
             await UnitOfWork.Complete();
         }

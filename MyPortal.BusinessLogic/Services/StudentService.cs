@@ -26,7 +26,7 @@ namespace MyPortal.BusinessLogic.Services
         {
             ValidationService.ValidateModel(student);
 
-            UnitOfWork.Students.Add(Mapping.Map<Student>(student));
+            UnitOfWork.Students.Add(Mapper.Map<Student>(student));
 
             await UnitOfWork.Complete();
         }
@@ -60,7 +60,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<StudentDto>> GetAllStudents()
         {
-            return (await UnitOfWork.Students.GetAll()).Select(Mapping.Map<StudentDto>);
+            return (await UnitOfWork.Students.GetAll()).Select(Mapper.Map<StudentDto>);
         }
 
         public async Task<StudentDto> GetStudentById(int studentId)
@@ -72,7 +72,7 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Student not found");
             }
 
-            return Mapping.Map<StudentDto>(student);
+            return Mapper.Map<StudentDto>(student);
         }
 
         //public async Task<StudentDto> GetStudentByIdWithRelated(int studentId, params Expression<Func<StudentDto, object>>[] includeProperties)
@@ -96,24 +96,24 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound, "Student not found");
             }
 
-            return Mapping.Map<StudentDto>(student);
+            return Mapper.Map<StudentDto>(student);
         }
 
         public async Task<StudentDto> TryGetStudentByUserId(string userId)
         {
             var student = await UnitOfWork.Students.GetByUserId(userId);
 
-            return Mapping.Map<StudentDto>(student);
+            return Mapper.Map<StudentDto>(student);
         }
 
         public async Task<IEnumerable<StudentDto>> GetStudentsByRegGroup(int regGroupId)
         {
-            return (await UnitOfWork.Students.GetByRegGroup(regGroupId)).Select(Mapping.Map<StudentDto>);
+            return (await UnitOfWork.Students.GetByRegGroup(regGroupId)).Select(Mapper.Map<StudentDto>);
         }
         
         public async Task<IEnumerable<StudentDto>> GetStudentsByYearGroup(int yearGroupId)
         {
-            return (await UnitOfWork.Students.GetByYearGroup(yearGroupId)).Select(Mapping.Map<StudentDto>);
+            return (await UnitOfWork.Students.GetByYearGroup(yearGroupId)).Select(Mapper.Map<StudentDto>);
         }
 
         public async Task UpdateStudent(StudentDto student)

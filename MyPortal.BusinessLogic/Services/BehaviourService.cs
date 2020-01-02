@@ -29,7 +29,7 @@ namespace MyPortal.BusinessLogic.Services
 
             ValidationService.ValidateModel(achievement);
 
-            UnitOfWork.Achievements.Add(Mapping.Map<Achievement>(achievement));
+            UnitOfWork.Achievements.Add(Mapper.Map<Achievement>(achievement));
             await UnitOfWork.Complete();
         }
 
@@ -39,7 +39,7 @@ namespace MyPortal.BusinessLogic.Services
 
             detention.Event.Subject = $"detention_{detention.DetentionTypeId}_{detention.Id}";
 
-            UnitOfWork.Detentions.Add(Mapping.Map<Detention>(detention));
+            UnitOfWork.Detentions.Add(Mapper.Map<Detention>(detention));
             await UnitOfWork.Complete();
         }
 
@@ -94,14 +94,35 @@ namespace MyPortal.BusinessLogic.Services
             await UnitOfWork.Complete();
         }
 
+        public async Task UpdateIncidentDetention(IncidentDetention entry)
+        {
+            var detentionInDb = await UnitOfWork.IncidentDetentions.GetById(entry.Id);
+
+            if (detentionInDb == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Incident not found in detention.");
+            }
+
+            detentionInDb.DetentionId = entry.DetentionId;
+            detentionInDb.AttendanceStatusId = entry.AttendanceStatusId;
+
+            await UnitOfWork.Complete();
+        }
+
+        public async Task<Dictionary<int, string>> GetDetentionAttendanceStatusLookup()
+        {
+            return (await UnitOfWork.DetentionAttendanceStatus.GetAll(x => !x.Attended)).ToDictionary(x => x.Id,
+                x => x.Description);
+        }
+
         public async Task<IEnumerable<IncidentDetentionDto>> GetIncidentDetentionsNotAttended()
         {
-            return (await UnitOfWork.IncidentDetentions.GetNotAttended()).Select(Mapping.Map<IncidentDetentionDto>);
+            return (await UnitOfWork.IncidentDetentions.GetNotAttended()).Select(Mapper.Map<IncidentDetentionDto>);
         }
 
         public async Task<IEnumerable<IncidentDetentionDto>> GetIncidentDetentionsByStudent(int studentId)
         {
-            return (await UnitOfWork.IncidentDetentions.GetByStudent(studentId)).Select(Mapping
+            return (await UnitOfWork.IncidentDetentions.GetByStudent(studentId)).Select(Mapper
                 .Map<IncidentDetentionDto>);
         }
 
@@ -111,7 +132,7 @@ namespace MyPortal.BusinessLogic.Services
 
             ValidationService.ValidateModel(incident);
 
-            UnitOfWork.Incidents.Add(Mapping.Map<Incident>(incident));
+            UnitOfWork.Incidents.Add(Mapper.Map<Incident>(incident));
             await UnitOfWork.Complete();
         }
 
@@ -152,7 +173,7 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound,"Achievement not found.");
             }
 
-            return Mapping.Map<AchievementDto>(achievement);
+            return Mapper.Map<AchievementDto>(achievement);
         }
 
         public async Task<int> GetAchievementCountByStudent(int studentId, int academicYearId)
@@ -180,7 +201,7 @@ namespace MyPortal.BusinessLogic.Services
                 throw new ServiceException(ExceptionType.NotFound,"Incident not found.");
             }
 
-            return Mapping.Map<IncidentDto>(incident);
+            return Mapper.Map<IncidentDto>(incident);
         }
 
         public async Task<int> GetBehaviourIncidentCountByStudent(int studentId, int academicYearId)
@@ -230,13 +251,13 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<AchievementDto>> GetAchievementsByStudent(int studentId, int academicYearId)
         {
-            return (await UnitOfWork.Achievements.GetByStudent(studentId, academicYearId)).Select(Mapping.Map<AchievementDto>);
+            return (await UnitOfWork.Achievements.GetByStudent(studentId, academicYearId)).Select(Mapper.Map<AchievementDto>);
         }
 
         public async Task<IEnumerable<IncidentDto>> GetBehaviourIncidentsByStudent(int studentId,
             int academicYearId)
         {
-            return (await UnitOfWork.Incidents.GetByStudent(studentId, academicYearId)).Select(Mapping.Map<IncidentDto>);
+            return (await UnitOfWork.Incidents.GetByStudent(studentId, academicYearId)).Select(Mapper.Map<IncidentDto>);
         }
         
         public async Task UpdateAchievement(AchievementDto achievement)
@@ -268,12 +289,12 @@ namespace MyPortal.BusinessLogic.Services
         public async Task<IEnumerable<AchievementTypeDto>> GetAchievementTypes()
         {
             return (await UnitOfWork.AchievementTypes.GetAll(x => x.Description)).Select(
-                Mapping.Map<AchievementTypeDto>);
+                Mapper.Map<AchievementTypeDto>);
         }
 
         public async Task<IEnumerable<IncidentTypeDto>> GetBehaviourIncidentTypes()
         {
-            return (await UnitOfWork.IncidentTypes.GetAll(x => x.Description)).Select(Mapping.Map<IncidentTypeDto>);
+            return (await UnitOfWork.IncidentTypes.GetAll(x => x.Description)).Select(Mapper.Map<IncidentTypeDto>);
         }
 
         public async Task<int> GetAchievementPointsToday()

@@ -70,6 +70,7 @@
     <Compile Include="Interfaces\IGradeSetRepository.cs" />
     <Compile Include="Interfaces\IIncidentDetentionRepository.cs" />
     <Compile Include="Interfaces\IObservationOutcomeRepository.cs" />
+    <Compile Include="Interfaces\IPerson.cs" />
     <Compile Include="Interfaces\IResultRepository.cs" />
     <Compile Include="Interfaces\IResultSetRepository.cs" />
     <Compile Include="Interfaces\IAttendanceCodeRepository.cs" />

@@ -59,7 +59,7 @@ namespace MyPortal.Controllers.Api
                 var academicYearId = await User.GetSelectedOrCurrentAcademicYearId();
                 var achievements = await _service.GetAchievementsByStudent(studentId, academicYearId);
 
-                var list = achievements.Select(_mapping.Map<DataGridAchievementDto>);
+                var list = achievements.Select(_mapper.Map<DataGridAchievementDto>);
 
                 return PrepareDataGridObject(list, dm);
             }
@@ -159,7 +159,7 @@ namespace MyPortal.Controllers.Api
 
                 var incidents = await _service.GetBehaviourIncidentsByStudent(studentId, academicYearId);
 
-                var list = incidents.Select(_mapping.Map<DataGridIncidentDto>);
+                var list = incidents.Select(_mapper.Map<DataGridIncidentDto>);
 
                 return PrepareDataGridObject(list, dm);
             }

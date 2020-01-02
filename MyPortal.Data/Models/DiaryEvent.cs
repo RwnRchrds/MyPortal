@@ -11,7 +11,7 @@ namespace MyPortal.Data.Models
     [Table("DiaryEvent", Schema = "system")]
     public class DiaryEvent
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [StringLength(256)]
