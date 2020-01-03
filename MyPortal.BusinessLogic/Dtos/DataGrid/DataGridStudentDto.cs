@@ -7,6 +7,7 @@
         public string RegGroupName { get; set; }
         public string YearGroupName { get; set; }
         public string HouseName { get; set; }
+        public string HouseColourCode { get; set; }
         public decimal AccountBalance { get; set; }
     }
 }

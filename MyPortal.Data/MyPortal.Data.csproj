@@ -154,6 +154,22 @@
     <Compile Include="Migrations\201912240017557_ModifiedBaseModel.designer.cs">
       <DependentUpon>201912240017557_ModifiedBaseModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001021909176_ModelIntegration.cs" />
+    <Compile Include="Migrations\202001021909176_ModelIntegration.designer.cs">
+      <DependentUpon>202001021909176_ModelIntegration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202001021959060_AddedColourCodeToObservationOutcome.cs" />
+    <Compile Include="Migrations\202001021959060_AddedColourCodeToObservationOutcome.designer.cs">
+      <DependentUpon>202001021959060_AddedColourCodeToObservationOutcome.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202001022039203_AddedMoreColourCodeColumns.cs" />
+    <Compile Include="Migrations\202001022039203_AddedMoreColourCodeColumns.designer.cs">
+      <DependentUpon>202001022039203_AddedMoreColourCodeColumns.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202001022107572_AddedHouseColourCode.cs" />
+    <Compile Include="Migrations\202001022107572_AddedHouseColourCode.designer.cs">
+      <DependentUpon>202001022107572_AddedHouseColourCode.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Aspect.cs" />
     <Compile Include="Models\AspectType.cs" />
@@ -340,6 +356,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912240017557_ModifiedBaseModel.resx">
       <DependentUpon>201912240017557_ModifiedBaseModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001021909176_ModelIntegration.resx">
+      <DependentUpon>202001021909176_ModelIntegration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001021959060_AddedColourCodeToObservationOutcome.resx">
+      <DependentUpon>202001021959060_AddedColourCodeToObservationOutcome.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001022039203_AddedMoreColourCodeColumns.resx">
+      <DependentUpon>202001022039203_AddedMoreColourCodeColumns.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001022107572_AddedHouseColourCode.resx">
+      <DependentUpon>202001022107572_AddedHouseColourCode.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

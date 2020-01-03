@@ -37,8 +37,8 @@
                         c.Field("DisplayName").HeaderText("Name").Template("#nameTemplate").Width("100").Add();
                         c.Field("YearGroupName").HeaderText("Year Group").Width("80").Add();
                         c.Field("RegGroupName").HeaderText("Reg Group").Width("80").Add();
-                        c.Field("HouseName").HeaderText("House").Width("100").Add();
-                    }).AllowPaging().SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string>() {"Search"}).PageSettings(p => p.PageSize(12)).Render()
+                        c.Field("HouseName").HeaderText("House").Template("#houseTemplate").Width("50").Add();
+                    }).AllowPaging().SearchSettings(s => { s.Operator("contains").IgnoreCase(true); }).Toolbar(new List<string>() {"Search"}).PageSettings(p => p.PageSize(12)).AllowSorting().Render()
                 </div>
             </div>
         </div>
@@ -64,6 +64,12 @@
         <div>
             <span id="Studtext" class="student-name"><a href="${getStudentOverviewUrl(Id)}">${DisplayName}</a></span>
         </div>        
+    </script>
+
+    <script type="text/x-jsrender" id="houseTemplate">
+        <div class="font-weight-bold">
+            <span><span class="dot mr-2" style="background-color: ${HouseColourCode}"></span><div class="inline-block m-auto">${HouseName}</div></span>
+        </div>
     </script>
 
 

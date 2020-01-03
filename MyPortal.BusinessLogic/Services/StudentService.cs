@@ -60,7 +60,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<StudentDto>> GetAllStudents()
         {
-            return (await UnitOfWork.Students.GetAll()).Select(Mapper.Map<StudentDto>);
+            return (await UnitOfWork.Students.GetAll()).Select(Mapper.Map<StudentDto>).ToList();
         }
 
         public async Task<StudentDto> GetStudentById(int studentId)
@@ -108,12 +108,12 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<StudentDto>> GetStudentsByRegGroup(int regGroupId)
         {
-            return (await UnitOfWork.Students.GetByRegGroup(regGroupId)).Select(Mapper.Map<StudentDto>);
+            return (await UnitOfWork.Students.GetByRegGroup(regGroupId)).Select(Mapper.Map<StudentDto>).ToList();
         }
         
         public async Task<IEnumerable<StudentDto>> GetStudentsByYearGroup(int yearGroupId)
         {
-            return (await UnitOfWork.Students.GetByYearGroup(yearGroupId)).Select(Mapper.Map<StudentDto>);
+            return (await UnitOfWork.Students.GetByYearGroup(yearGroupId)).Select(Mapper.Map<StudentDto>).ToList();
         }
 
         public async Task UpdateStudent(StudentDto student)

@@ -7,5 +7,6 @@
         public string CourseCode { get; set; }  
         public string CourseDescription { get; set; }
         public string Status { get; set; }
+        public string StatusColourCode { get; set; }
     }
 }

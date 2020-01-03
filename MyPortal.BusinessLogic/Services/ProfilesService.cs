@@ -89,7 +89,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<CommentBankDto>> GetAllCommentBanks()
         {
-            return (await UnitOfWork.CommentBanks.GetAll()).Select(Mapper.Map<CommentBankDto>);
+            return (await UnitOfWork.CommentBanks.GetAll()).Select(Mapper.Map<CommentBankDto>).ToList();
         }
 
         public async Task<IDictionary<int, string>> GetAllCommentBanksLookup()
@@ -99,7 +99,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<CommentDto>> GetAllComments()
         {
-            return (await UnitOfWork.Comments.GetAll()).Select(Mapper.Map<CommentDto>);
+            return (await UnitOfWork.Comments.GetAll()).Select(Mapper.Map<CommentDto>).ToList();
         }
 
         public async Task<CommentBankDto> GetCommentBankById(int commentBankId)
@@ -128,7 +128,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<CommentDto>> GetCommentsByBank(int commentBankId)
         {
-            return (await UnitOfWork.Comments.GetByCommentBank(commentBankId)).Select(Mapper.Map<CommentDto>);
+            return (await UnitOfWork.Comments.GetByCommentBank(commentBankId)).Select(Mapper.Map<CommentDto>).ToList();
         }
 
         public async Task<ProfileLogNoteDto> GetLogNoteById(int logId)
@@ -146,7 +146,7 @@ namespace MyPortal.BusinessLogic.Services
         public async Task<IEnumerable<ProfileLogNoteDto>> GetLogNotesByStudent(int studentId, int academicYearId)
         {
             return (await UnitOfWork.ProfileLogNotes.GetByStudent(studentId, academicYearId)).Select(
-                Mapper.Map<ProfileLogNoteDto>);
+                Mapper.Map<ProfileLogNoteDto>).ToList();
         }
 
         public async Task UpdateComment(CommentDto comment)
@@ -180,7 +180,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<ProfileLogNoteTypeDto>> GetAllLogNoteTypes()
         {
-            return (await UnitOfWork.ProfileLogNoteTypes.GetAll()).Select(Mapper.Map<ProfileLogNoteTypeDto>);
+            return (await UnitOfWork.ProfileLogNoteTypes.GetAll()).Select(Mapper.Map<ProfileLogNoteTypeDto>).ToList();
         }
 
         public async Task<IDictionary<int, string>> GetAllLogTypesLookup()

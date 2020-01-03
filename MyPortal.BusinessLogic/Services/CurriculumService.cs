@@ -285,42 +285,42 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<AcademicYearDto>> GetAcademicYears()
         {
-            return (await UnitOfWork.AcademicYears.GetAll(x => x.FirstDate)).Select(Mapper.Map<AcademicYearDto>);
+            return (await UnitOfWork.AcademicYears.GetAll(x => x.FirstDate)).Select(Mapper.Map<AcademicYearDto>).ToList();
         }
 
         public async Task<IEnumerable<ClassDto>> GetAllClasses(int academicYearId)
         {
-            return (await UnitOfWork.Classes.GetByAcademicYear(academicYearId)).Select(Mapper.Map<ClassDto>);
+            return (await UnitOfWork.Classes.GetByAcademicYear(academicYearId)).Select(Mapper.Map<ClassDto>).ToList();
         }
 
         public async Task<IEnumerable<ClassDto>> GetClassesBySubject(int subjectId, int academicYearId)
         {
-            return (await UnitOfWork.Classes.GetBySubject(subjectId, academicYearId)).Select(Mapper.Map<ClassDto>);
+            return (await UnitOfWork.Classes.GetBySubject(subjectId, academicYearId)).Select(Mapper.Map<ClassDto>).ToList();
         }
 
         public async Task<IEnumerable<LessonPlanDto>> GetAllLessonPlans()
         {
-            return (await UnitOfWork.LessonPlans.GetAll(x => x.Title)).Select(Mapper.Map<LessonPlanDto>);
+            return (await UnitOfWork.LessonPlans.GetAll(x => x.Title)).Select(Mapper.Map<LessonPlanDto>).ToList();
         }
 
         public async Task<IEnumerable<StudyTopicDto>> GetAllStudyTopics()
         {
-            return (await UnitOfWork.StudyTopics.GetAll(x => x.Name)).Select(Mapper.Map<StudyTopicDto>);
+            return (await UnitOfWork.StudyTopics.GetAll(x => x.Name)).Select(Mapper.Map<StudyTopicDto>).ToList();
         }
 
         public async Task<IEnumerable<StudyTopicDto>> GetAllStudyTopicsBySubject(int subjectId)
         {
-            return (await UnitOfWork.StudyTopics.GetBySubject(subjectId)).Select(Mapper.Map<StudyTopicDto>);
+            return (await UnitOfWork.StudyTopics.GetBySubject(subjectId)).Select(Mapper.Map<StudyTopicDto>).ToList();
         }
 
         public async Task<IEnumerable<SubjectDto>> GetAllSubjects()
         {
-            return (await UnitOfWork.Subjects.GetAll(x => x.Name)).Select(Mapper.Map<SubjectDto>);
+            return (await UnitOfWork.Subjects.GetAll(x => x.Name)).Select(Mapper.Map<SubjectDto>).ToList();
         }
 
         public async Task<IEnumerable<SubjectStaffMemberDto>> GetSubjectStaffBySubject(int subjectId)
         {
-            return (await UnitOfWork.SubjectStaffMembers.GetBySubject(subjectId)).Select(Mapper.Map<SubjectStaffMemberDto>);
+            return (await UnitOfWork.SubjectStaffMembers.GetBySubject(subjectId)).Select(Mapper.Map<SubjectStaffMemberDto>).ToList();
         }
 
         public async Task<SubjectStaffMemberDto> GetSubjectStaffById(int subjectStaffId)
@@ -367,12 +367,12 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<EnrolmentDto>> GetEnrolmentsByClass(int classId)
         {
-            return (await UnitOfWork.Enrolments.GetByClass(classId)).Select(Mapper.Map<EnrolmentDto>);
+            return (await UnitOfWork.Enrolments.GetByClass(classId)).Select(Mapper.Map<EnrolmentDto>).ToList();
         }
 
         public async Task<IEnumerable<EnrolmentDto>> GetEnrolmentsByStudent(int studentId)
         {
-            return (await UnitOfWork.Enrolments.GetByStudent(studentId)).Select(Mapper.Map<EnrolmentDto>);
+            return (await UnitOfWork.Enrolments.GetByStudent(studentId)).Select(Mapper.Map<EnrolmentDto>).ToList();
         }
 
         public async Task<LessonPlanDto> GetLessonPlanById(int lessonPlanId)
@@ -389,7 +389,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<LessonPlanDto>> GetLessonPlansByStudyTopic(int studyTopicId)
         {
-            return (await UnitOfWork.LessonPlans.GetByStudyTopic(studyTopicId)).Select(Mapper.Map<LessonPlanDto>);
+            return (await UnitOfWork.LessonPlans.GetByStudyTopic(studyTopicId)).Select(Mapper.Map<LessonPlanDto>).ToList();
         }
 
         public async Task<SessionDto> GetSessionById(int sessionId)
@@ -418,7 +418,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<SessionDto>> GetSessionsByClass(int classId)
         {
-            return (await UnitOfWork.Sessions.GetByClass(classId)).Select(Mapper.Map<SessionDto>);
+            return (await UnitOfWork.Sessions.GetByClass(classId)).Select(Mapper.Map<SessionDto>).ToList();
         }
 
         public async Task<IEnumerable<SessionDto>> GetSessionsByDate(int staffId, int academicYearId, DateTime date)
@@ -438,7 +438,7 @@ namespace MyPortal.BusinessLogic.Services
                 return new List<SessionDto>();
             }
 
-            return (await UnitOfWork.Sessions.GetByDayOfWeek(academicYearId, staffId, date.DayOfWeek)).Select(Mapper.Map<SessionDto>);
+            return (await UnitOfWork.Sessions.GetByDayOfWeek(academicYearId, staffId, date.DayOfWeek)).Select(Mapper.Map<SessionDto>).ToList();
         }
 
         public async Task<StudyTopicDto> GetStudyTopicById(int studyTopicId)

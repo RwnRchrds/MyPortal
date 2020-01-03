@@ -60,23 +60,23 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<BulletinDto>> GetAllBulletins()
         {
-            return (await UnitOfWork.Bulletins.GetAll()).Select(Mapper.Map<BulletinDto>);
+            return (await UnitOfWork.Bulletins.GetAll()).Select(Mapper.Map<BulletinDto>).ToList();
         }
 
         public async Task<IEnumerable<BulletinDto>> GetApprovedBulletins()
         {
-            return (await UnitOfWork.Bulletins.GetApproved()).Select(Mapper.Map<BulletinDto>);
+            return (await UnitOfWork.Bulletins.GetApproved()).Select(Mapper.Map<BulletinDto>).ToList();
         }
 
         public async Task<IEnumerable<BulletinDto>> GetApprovedStudentBulletins()
         {
-            return (await UnitOfWork.Bulletins.GetStudent()).Select(Mapper.Map<BulletinDto>);
+            return (await UnitOfWork.Bulletins.GetStudent()).Select(Mapper.Map<BulletinDto>).ToList();
         }
 
         
         public async Task<IEnumerable<BulletinDto>> GetOwnBulletins(int authorId)
         {
-            return (await UnitOfWork.Bulletins.GetOwn(authorId)).Select(Mapper.Map<BulletinDto>);
+            return (await UnitOfWork.Bulletins.GetOwn(authorId)).Select(Mapper.Map<BulletinDto>).ToList();
         }
 
         public async Task<BulletinDto> GetBulletinById(int bulletinId)
@@ -111,7 +111,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<LocationDto>> GetLocations()
         {
-            return (await UnitOfWork.Locations.GetAll()).Select(Mapper.Map<LocationDto>);
+            return (await UnitOfWork.Locations.GetAll()).Select(Mapper.Map<LocationDto>).ToList();
         }
 
         public async Task<SchoolDto> GetLocalSchool()

@@ -117,13 +117,13 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<IncidentDetentionDto>> GetIncidentDetentionsNotAttended()
         {
-            return (await UnitOfWork.IncidentDetentions.GetNotAttended()).Select(Mapper.Map<IncidentDetentionDto>);
+            return (await UnitOfWork.IncidentDetentions.GetNotAttended()).Select(Mapper.Map<IncidentDetentionDto>).ToList();
         }
 
         public async Task<IEnumerable<IncidentDetentionDto>> GetIncidentDetentionsByStudent(int studentId)
         {
             return (await UnitOfWork.IncidentDetentions.GetByStudent(studentId)).Select(Mapper
-                .Map<IncidentDetentionDto>);
+                .Map<IncidentDetentionDto>).ToList();
         }
 
         public async Task CreateBehaviourIncident(IncidentDto incident)
@@ -251,13 +251,13 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<AchievementDto>> GetAchievementsByStudent(int studentId, int academicYearId)
         {
-            return (await UnitOfWork.Achievements.GetByStudent(studentId, academicYearId)).Select(Mapper.Map<AchievementDto>);
+            return (await UnitOfWork.Achievements.GetByStudent(studentId, academicYearId)).Select(Mapper.Map<AchievementDto>).ToList();
         }
 
         public async Task<IEnumerable<IncidentDto>> GetBehaviourIncidentsByStudent(int studentId,
             int academicYearId)
         {
-            return (await UnitOfWork.Incidents.GetByStudent(studentId, academicYearId)).Select(Mapper.Map<IncidentDto>);
+            return (await UnitOfWork.Incidents.GetByStudent(studentId, academicYearId)).Select(Mapper.Map<IncidentDto>).ToList();
         }
         
         public async Task UpdateAchievement(AchievementDto achievement)
@@ -289,12 +289,12 @@ namespace MyPortal.BusinessLogic.Services
         public async Task<IEnumerable<AchievementTypeDto>> GetAchievementTypes()
         {
             return (await UnitOfWork.AchievementTypes.GetAll(x => x.Description)).Select(
-                Mapper.Map<AchievementTypeDto>);
+                Mapper.Map<AchievementTypeDto>).ToList();
         }
 
         public async Task<IEnumerable<IncidentTypeDto>> GetBehaviourIncidentTypes()
         {
-            return (await UnitOfWork.IncidentTypes.GetAll(x => x.Description)).Select(Mapper.Map<IncidentTypeDto>);
+            return (await UnitOfWork.IncidentTypes.GetAll(x => x.Description)).Select(Mapper.Map<IncidentTypeDto>).ToList();
         }
 
         public async Task<int> GetAchievementPointsToday()

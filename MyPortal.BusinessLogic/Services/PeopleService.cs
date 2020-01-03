@@ -77,17 +77,17 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<PersonDto>> SearchForPerson(PersonDto person)
         {
-            return (await UnitOfWork.People.Search(Mapper.Map<Person>(person))).Select(Mapper.Map<PersonDto>);
+            return (await UnitOfWork.People.Search(Mapper.Map<Person>(person))).Select(Mapper.Map<PersonDto>).ToList();
         }
 
         public async Task<IEnumerable<PersonConditionDto>> GetMedicalConditionsByPerson(int personId)
         {
-            return (await UnitOfWork.PersonConditions.GetByPerson(personId)).Select(Mapper.Map<PersonConditionDto>);
+            return (await UnitOfWork.PersonConditions.GetByPerson(personId)).Select(Mapper.Map<PersonConditionDto>).ToList();
         }
 
         public async Task<IEnumerable<PersonDietaryRequirementDto>> GetMedicalDietaryRequirementsByPerson(int personId)
         {
-            return (await UnitOfWork.PersonDietaryRequirements.GetByPerson(personId)).Select(Mapper.Map<PersonDietaryRequirementDto>);
+            return (await UnitOfWork.PersonDietaryRequirements.GetByPerson(personId)).Select(Mapper.Map<PersonDietaryRequirementDto>).ToList();
         }
 
         public IDictionary<string, string> GetGendersLookup()

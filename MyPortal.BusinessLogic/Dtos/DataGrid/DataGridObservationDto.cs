@@ -9,5 +9,7 @@ namespace MyPortal.BusinessLogic.Dtos.DataGrid
         public string ObserveeName { get; set; }
         public string ObserverName { get; set; }
         public string Outcome { get; set; }
+
+        public string OutcomeColourCode { get; set; }
     }
 }

@@ -88,7 +88,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<TrainingCourseDto>> GetAllTrainingCourses()
         {
-            return (await UnitOfWork.TrainingCourses.GetAll()).Select(Mapper.Map<TrainingCourseDto>);
+            return (await UnitOfWork.TrainingCourses.GetAll()).Select(Mapper.Map<TrainingCourseDto>).ToList();
         }
 
         public async Task<TrainingCertificateDto> GetCertificate(int staffId, int courseId)
@@ -106,7 +106,7 @@ namespace MyPortal.BusinessLogic.Services
         public async Task<IEnumerable<TrainingCertificateDto>> GetCertificatesByStaffMember(
             int staffId)
         {
-            return (await UnitOfWork.TrainingCertificates.GetByStaffMember(staffId)).Select(Mapper.Map<TrainingCertificateDto>);
+            return (await UnitOfWork.TrainingCertificates.GetByStaffMember(staffId)).Select(Mapper.Map<TrainingCertificateDto>).ToList();
         }
         
         public async Task<TrainingCourseDto> GetCourseById(int courseId)
@@ -136,7 +136,7 @@ namespace MyPortal.BusinessLogic.Services
         public async Task<IEnumerable<ObservationDto>> GetObservationsByStaffMember(
             int staffMemberId)
         {
-            return (await UnitOfWork.Observations.GetByStaffMember(staffMemberId)).Select(Mapper.Map<ObservationDto>);
+            return (await UnitOfWork.Observations.GetByStaffMember(staffMemberId)).Select(Mapper.Map<ObservationDto>).ToList();
         }
 
         public async Task UpdateCertificate(TrainingCertificateDto certificate)

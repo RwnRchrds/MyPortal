@@ -18,6 +18,9 @@ namespace MyPortal.BusinessLogic.Dtos
 
         public int? HeadId { get; set; }
 
-        public virtual StaffMember HeadOfHouse { get; set; }
+        [StringLength(128)]
+        public string ColourCode { get; set; }
+
+        public virtual StaffMemberDto HeadOfHouse { get; set; }
     }
 }

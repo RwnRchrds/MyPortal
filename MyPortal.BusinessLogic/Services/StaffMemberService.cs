@@ -46,7 +46,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<StaffMemberDto>> GetAllStaffMembers()
         {
-            return (await UnitOfWork.StaffMembers.GetAll()).Select(Mapper.Map<StaffMemberDto>);
+            return (await UnitOfWork.StaffMembers.GetAll()).Select(Mapper.Map<StaffMemberDto>).ToList();
         }
 
         public async Task<IDictionary<int, string>> GetAllStaffMembersLookup()

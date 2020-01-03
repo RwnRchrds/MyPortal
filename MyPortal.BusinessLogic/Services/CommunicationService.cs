@@ -110,7 +110,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<EmailAddressDto>> GetEmailAddressesByPerson(int personId)
         {
-            return (await UnitOfWork.EmailAddresses.GetByPerson(personId)).Select(Mapper.Map<EmailAddressDto>);
+            return (await UnitOfWork.EmailAddresses.GetByPerson(personId)).Select(Mapper.Map<EmailAddressDto>).ToList();
         }
 
         public async Task<PhoneNumberDto> GetPhoneNumberById(int phoneNumberById)
@@ -127,7 +127,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<PhoneNumberDto>> GetPhoneNumbersByPerson(int personId)
         {
-            return (await UnitOfWork.PhoneNumbers.GetByPerson(personId)).Select(Mapper.Map<PhoneNumberDto>);
+            return (await UnitOfWork.PhoneNumbers.GetByPerson(personId)).Select(Mapper.Map<PhoneNumberDto>).ToList();
         }
 
         public async Task CreateAddress(AddressDto address)
@@ -223,7 +223,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<AddressDto>> GetAddressesByPerson(int personId)
         {
-            return (await UnitOfWork.Addresses.GetAddressesByPerson(personId)).Select(Mapper.Map<AddressDto>);
+            return (await UnitOfWork.Addresses.GetAddressesByPerson(personId)).Select(Mapper.Map<AddressDto>).ToList();
         }
 
         public async Task<IDictionary<int, string>> GetPhoneNumberTypesLookup()

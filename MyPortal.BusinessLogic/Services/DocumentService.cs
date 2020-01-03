@@ -92,12 +92,12 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<DocumentDto>> GetAllGeneralDocuments()
         {
-            return (await UnitOfWork.Documents.GetGeneral()).Select(Mapper.Map<DocumentDto>);
+            return (await UnitOfWork.Documents.GetGeneral()).Select(Mapper.Map<DocumentDto>).ToList();
         }
 
         public async Task<IEnumerable<DocumentDto>> GetApprovedGeneralDocuments()
         {
-            return (await UnitOfWork.Documents.GetApproved()).Select(Mapper.Map<DocumentDto>);
+            return (await UnitOfWork.Documents.GetApproved()).Select(Mapper.Map<DocumentDto>).ToList();
         }
         
         public async Task<DocumentDto> GetDocumentById(int documentId)
@@ -126,7 +126,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<PersonAttachmentDto>> GetPersonAttachments(int personId)
         {
-            return (await UnitOfWork.PersonAttachments.GetByPerson(personId)).Select(Mapper.Map<PersonAttachmentDto>);
+            return (await UnitOfWork.PersonAttachments.GetByPerson(personId)).Select(Mapper.Map<PersonAttachmentDto>).ToList();
         }
 
         public async Task UpdateDocument(DocumentDto document)

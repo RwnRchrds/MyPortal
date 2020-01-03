@@ -22,6 +22,9 @@ namespace MyPortal.Data.Models
         [StringLength(256)]
         public string Description { get; set; }
 
+        [StringLength(128)]
+        public string ColourCode { get; set; }
+
         public virtual ICollection<Observation> Observations { get; set; }
     }
 }

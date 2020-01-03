@@ -51,7 +51,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<ResultSetDto>> GetAllResultSets()
         {
-            return (await UnitOfWork.ResultSets.GetAll(x => x.Name)).Select(Mapper.Map<ResultSetDto>);
+            return (await UnitOfWork.ResultSets.GetAll(x => x.Name)).Select(Mapper.Map<ResultSetDto>).ToList();
         }
 
         public async Task<ResultDto> GetResultById(int resultId)
@@ -61,7 +61,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<ResultDto>> GetResultsByStudent(int studentId, int resultSetId)
         {
-            return (await UnitOfWork.Results.GetResultsByStudent(studentId, resultSetId)).Select(Mapper.Map<ResultDto>);
+            return (await UnitOfWork.Results.GetResultsByStudent(studentId, resultSetId)).Select(Mapper.Map<ResultDto>).ToList();
         }
 
         public async Task<ResultSetDto> GetResultSetById(int resultSetId)
@@ -78,7 +78,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<ResultSetDto>> GetResultSetsByStudent(int studentId)
         {
-            return (await UnitOfWork.ResultSets.GetResultSetsByStudent(studentId)).Select(Mapper.Map<ResultSetDto>);
+            return (await UnitOfWork.ResultSets.GetResultSetsByStudent(studentId)).Select(Mapper.Map<ResultSetDto>).ToList();
         }
 
         public async Task UpdateResultSet(ResultSetDto resultSet)

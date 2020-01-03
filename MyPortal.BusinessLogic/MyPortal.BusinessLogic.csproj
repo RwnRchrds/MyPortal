@@ -204,8 +204,6 @@
     <Compile Include="Extensions\AttendanceExtensions.cs" />
     <Compile Include="Extensions\CurriculumExtensions.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
-    <Compile Include="Extensions\StaffMemberExtensions.cs" />
-    <Compile Include="Extensions\StudentExtensions.cs" />
     <Compile Include="Interfaces\IPersonDto.cs" />
     <Compile Include="Models\Attributes\AcademicYearLastDate.cs" />
     <Compile Include="Models\Attributes\PeriodEndTime.cs" />

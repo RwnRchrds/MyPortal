@@ -57,17 +57,17 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<PeriodDto>> GetAllPeriods()
         {
-            return (await UnitOfWork.Periods.GetAll(x => x.Weekday, x => x.StartTime)).Select(Mapper.Map<PeriodDto>);
+            return (await UnitOfWork.Periods.GetAll(x => x.Weekday, x => x.StartTime)).Select(Mapper.Map<PeriodDto>).ToList();
         }
 
         public async Task<IEnumerable<AttendanceCodeDto>> GetAllAttendanceCodes()
         {
-            return (await UnitOfWork.AttendanceCodes.GetAll(x => x.Code)).Select(Mapper.Map<AttendanceCodeDto>);
+            return (await UnitOfWork.AttendanceCodes.GetAll(x => x.Code)).Select(Mapper.Map<AttendanceCodeDto>).ToList();
         }
 
         public async Task<IEnumerable<AttendanceCodeDto>> GetUsableAttendanceCodes()
         {
-            return (await UnitOfWork.AttendanceCodes.GetUsable()).Select(Mapper.Map<AttendanceCodeDto>);
+            return (await UnitOfWork.AttendanceCodes.GetUsable()).Select(Mapper.Map<AttendanceCodeDto>).ToList();
         }
 
         public async Task<AttendanceMarkDto> GetAttendanceMark(int attendanceWeekId, int periodId, int studentId)
@@ -138,7 +138,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<PeriodDto>> GetPeriodsByDayOfWeek(DayOfWeek dayOfWeek)
         {
-            return (await UnitOfWork.Periods.GetByDayOfWeek(dayOfWeek)).Select(Mapper.Map<PeriodDto>);
+            return (await UnitOfWork.Periods.GetByDayOfWeek(dayOfWeek)).Select(Mapper.Map<PeriodDto>).ToList();
         }
 
         public async Task<IEnumerable<StudentAttendanceMarkCollection>> GetRegisterMarks(int weekId,
@@ -162,7 +162,7 @@ namespace MyPortal.BusinessLogic.Services
             foreach (var enrolment in session.Class.Enrolments)
             {
                 var markObject = new StudentAttendanceMarkCollection();
-                markObject.StudentName = enrolment.Student.GetDisplayName();
+                markObject.StudentName = $"{enrolment.Student.Person.LastName}, {enrolment.Student.Person.FirstName}";
                 var marks = new List<AttendanceMarkDto>();
 
                 var periodsInDay = await GetPeriodsByDayOfWeek(session.Period.Weekday);

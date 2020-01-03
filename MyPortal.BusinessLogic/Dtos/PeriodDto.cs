@@ -26,5 +26,10 @@ namespace MyPortal.BusinessLogic.Dtos
         public bool IsAm { get; set; }
 
         public bool IsPm { get; set; }
+
+        public string GetTimeDisplay()
+        {
+            return $"{StartTime.ToString(@"hh\:mm")} - {EndTime.ToString(@"hh\:mm")}";
+        }
     }
 }

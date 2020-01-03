@@ -103,7 +103,7 @@
                         col.Field("CourseCode").HeaderText("Code").Template("#trainingCodeTemplate").HideAtMedia("(min-width: 1200px)").Width("50").Add();
                         col.Field("CourseDescription").HeaderText("Description").Template("#trainingDescriptionTemplate").Width("100").Add();
                         col.Field("Status").HeaderText("Status").Template("#trainingStatusTemplate").Width("50").Add();
-                    }).AllowPaging().PageSettings(p => p.PageSize(5)).QueryCellInfo("trainingQuery").EnableHover(false).Render()
+                    }).AllowPaging().PageSettings(p => p.PageSize(5)).EnableHover(false).Render()
                 </div>
             </div>
         </div>
@@ -124,7 +124,7 @@
                         col.Field("Date").HeaderText("Date").Template("#observationsDateTemplate").Width("50").Add();
                         col.Field("ObserverName").HeaderText("Observed By").Template("#observationsObserverTemplate").HideAtMedia("(min-width: 1200px)").Width("100").Add();
                         col.Field("Outcome").HeaderText("Outcome").Template("#observationsOutcomeTemplate").Width("100").Add();
-                    }).AllowPaging().PageSettings(p => p.PageSize(5)).QueryCellInfo("observationQuery").EnableHover(false).Render()
+                    }).AllowPaging().PageSettings(p => p.PageSize(5)).EnableHover(false).Render()
                 </div>
             </div>
         </div>
@@ -187,7 +187,7 @@
 @section scripts
 {
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
 
         });
 
@@ -200,37 +200,6 @@
         function selectYearFailure(result) {
             $("#ChangeAcademicYearModal").modal('hide');
             toastr.error(result.responseJSON);
-        }
-
-        function observationQuery(args) {
-            if (args.column.field === "Outcome") {
-                if (args.cell.textContent === "Outstanding") {
-                    args.cell.classList.add("mp-observation-outstanding");
-                }
-                else if (args.cell.textContent === "Good") {
-                    args.cell.classList.add("mp-observation-good");
-                }
-                else if (args.cell.textContent === "Satisfactory") {
-                    args.cell.classList.add("mp-observation-satisfactory");
-                }
-                else if (args.cell.textContent === "Inadequate") {
-                    args.cell.classList.add("mp-observation-inadequate");
-                }
-            }
-        }
-
-        function trainingQuery(args) {
-            if (args.column.field === "Status") {
-                if (args.cell.textContent === "Completed") {
-                    args.cell.classList.add("mp-cert-completed");
-                }
-                else if (args.column.cell.textContent === "Pending") {
-                    args.cell.classList.add("mp-cert-pending");
-                }
-                else if (args.column.cell.textContent === "Failed") {
-                    args.cell.classList.add("mp-cert-failed");
-                }
-            }
         }
 
         function trainingDataBound(args) {
@@ -263,8 +232,8 @@
     </script>
 
     <script type="text/x-jsrender" id="observationsOutcomeTemplate">
-        <div class="text-center font-weight-bold">
-            ${Outcome}
+        <div class="font-weight-bold">
+            <span><span class="dot mr-2" style="background-color: ${OutcomeColourCode}"></span><div class="inline-block m-auto">${Outcome}</div></span>
         </div>
     </script>
 
@@ -281,8 +250,8 @@
     </script>
 
     <script type="text/x-jsrender" id="trainingStatusTemplate">
-        <div class="text-center font-weight-bold">
-            ${Status}
+        <div class="font-weight-bold">
+            <span><span class="dot mr-2" style="background-color: ${StatusColourCode}"></span><div class="inline-block m-auto">${Status}</div></span>    
         </div>
     </script>
 }

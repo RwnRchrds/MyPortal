@@ -122,17 +122,19 @@ namespace MyPortal.BusinessLogic.Services
         {
             var config = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<Student, DataGridStudentDto>()
+                cfg.CreateMap<StudentDto, DataGridStudentDto>()
                     .ForMember(dest => dest.DisplayName,
-                        opts => opts.MapFrom(src => src.GetDisplayName()))
+                        opts => opts.MapFrom(src => src.Person.GetDisplayName()))
                     .ForMember(dest => dest.HouseName,
                         opts => opts.MapFrom(src => src.House.Name))
+                    .ForMember(dest => dest.HouseColourCode,
+                        opts => opts.MapFrom(src => src.House.ColourCode))
                     .ForMember(dest => dest.RegGroupName,
                         opts => opts.MapFrom(src => src.RegGroup.Name))
                     .ForMember(dest => dest.YearGroupName,
                         opts => opts.MapFrom(src => src.YearGroup.Name));
 
-                cfg.CreateMap<ProfileLogNote, DataGridProfileLogNoteDto>()
+                cfg.CreateMap<ProfileLogNoteDto, DataGridProfileLogNoteDto>()
                     .ForMember(dest => dest.Id,
                         opts => opts.MapFrom(src => src.Id))
                     .ForMember(dest => dest.AuthorName,
@@ -141,14 +143,16 @@ namespace MyPortal.BusinessLogic.Services
                         opts => opts.MapFrom(src => src.Date))
                     .ForMember(dest => dest.LogTypeName,
                         opts => opts.MapFrom(src => src.ProfileLogNoteType.Name))
+                    .ForMember(dest => dest.LogTypeColourCode,
+                        opts => opts.MapFrom(src => src.ProfileLogNoteType.ColourCode))
                     .ForMember(dest => dest.Message,
                         opts => opts.MapFrom(src => src.Message));
 
-                cfg.CreateMap<Document, DataGridDocumentDto>()
+                cfg.CreateMap<DocumentDto, DataGridDocumentDto>()
                     .ForMember(dest => dest.DocumentId,
                         opts => opts.MapFrom(src => src.Id));
 
-                cfg.CreateMap<PersonAttachment, DataGridPersonAttachmentDto>()
+                cfg.CreateMap<PersonAttachmentDto, DataGridPersonAttachmentDto>()
                     .ForMember(dest => dest.Approved,
                         opts => opts.MapFrom(src => src.Document.Approved))
                     .ForMember(dest => dest.Date,
@@ -160,7 +164,7 @@ namespace MyPortal.BusinessLogic.Services
                     .ForMember(dest => dest.DocumentId,
                         opts => opts.MapFrom(src => src.Document.Id));
 
-                cfg.CreateMap<Achievement, DataGridAchievementDto>()
+                cfg.CreateMap<AchievementDto, DataGridAchievementDto>()
                     .ForMember(dest => dest.Location,
                         opts => opts.MapFrom(src => src.Location.Description))
                     .ForMember(dest => dest.TypeName,
@@ -168,7 +172,7 @@ namespace MyPortal.BusinessLogic.Services
                     .ForMember(dest => dest.RecordedBy,
                         opts => opts.MapFrom(src => src.RecordedBy.GetDisplayName()));
 
-                cfg.CreateMap<Incident, DataGridIncidentDto>()
+                cfg.CreateMap<IncidentDto, DataGridIncidentDto>()
                     .ForMember(dest => dest.Location,
                         opts => opts.MapFrom(src => src.Location.Description))
                     .ForMember(dest => dest.TypeName,
@@ -176,35 +180,39 @@ namespace MyPortal.BusinessLogic.Services
                     .ForMember(dest => dest.RecordedBy,
                         opts => opts.MapFrom(src => src.RecordedBy.GetDisplayName()));
 
-                cfg.CreateMap<Observation, DataGridObservationDto>()
+                cfg.CreateMap<ObservationDto, DataGridObservationDto>()
                     .ForMember(dest => dest.ObserveeName,
                         opts => opts.MapFrom(src => src.Observee.GetDisplayName()))
                     .ForMember(dest => dest.ObserverName,
                         opts => opts.MapFrom(src => src.Observer.GetDisplayName()))
                     .ForMember(dest => dest.Outcome,
-                        opts => opts.MapFrom(src => src.Outcome.ToString()));
+                        opts => opts.MapFrom(src => src.Outcome.Description))
+                    .ForMember(dest => dest.OutcomeColourCode,
+                        opts => opts.MapFrom(src => src.Outcome.ColourCode));
 
-                cfg.CreateMap<TrainingCertificate, DataGridTrainingCertificateDto>()
+                cfg.CreateMap<TrainingCertificateDto, DataGridTrainingCertificateDto>()
                     .ForMember(dest => dest.Status,
-                        opts => opts.MapFrom(src => src.Status.ToString()))
+                        opts => opts.MapFrom(src => src.Status.Description))
                     .ForMember(dest => dest.CourseCode,
                         opts => opts.MapFrom(src => src.TrainingCourse.Code))
                     .ForMember(dest => dest.CourseDescription,
-                        opts => opts.MapFrom(src => src.TrainingCourse.Description));
+                        opts => opts.MapFrom(src => src.TrainingCourse.Description))
+                    .ForMember(dest => dest.StatusColourCode,
+                        opts => opts.MapFrom(src => src.Status.ColourCode));
 
-                cfg.CreateMap<Product, DataGridProductDto>()
+                cfg.CreateMap<ProductDto, DataGridProductDto>()
                     .ForMember(dest => dest.TypeDescription,
                         opts => opts.MapFrom(src => src.Type.Description));
 
-                cfg.CreateMap<Sale, DataGridSaleDto>()
+                cfg.CreateMap<SaleDto, DataGridSaleDto>()
                     .ForMember(dest => dest.ProductDescription,
                         opts => opts.MapFrom(src => src.Product.Description))
                     .ForMember(dest => dest.StudentName,
-                        opts => opts.MapFrom(src => src.Student.GetDisplayName()));
+                        opts => opts.MapFrom(src => src.Student.Person.GetDisplayName()));
 
-                cfg.CreateMap<ResultSet, DataGridResultSetDto>();
+                cfg.CreateMap<ResultSetDto, DataGridResultSetDto>();
 
-                cfg.CreateMap<Session, DataGridSessionDto>()
+                cfg.CreateMap<SessionDto, DataGridSessionDto>()
                     .ForMember(dest => dest.ClassName,
                         opts => opts.MapFrom(src => src.Class.Name))
                     .ForMember(dest => dest.PeriodName,
@@ -214,48 +222,48 @@ namespace MyPortal.BusinessLogic.Services
                     .ForMember(dest => dest.Time,
                         opts => opts.MapFrom(src => src.Period.GetTimeDisplay()));
 
-                cfg.CreateMap<Class, DataGridClassDto>()
+                cfg.CreateMap<ClassDto, DataGridClassDto>()
                     .ForMember(dest => dest.Subject,
-                        opts => opts.MapFrom(src => src.GetSubjectName()))
+                        opts => opts.MapFrom(src => src.Subject.Name))
                     .ForMember(dest => dest.Teacher,
                         opts => opts.MapFrom(src => src.Teacher.GetDisplayName()));
 
-                cfg.CreateMap<Enrolment, DataGridEnrolmentDto>()
+                cfg.CreateMap<EnrolmentDto, DataGridEnrolmentDto>()
                     .ForMember(dest => dest.StudentName,
-                        opts => opts.MapFrom(src => src.Student.GetDisplayName()))
+                        opts => opts.MapFrom(src => src.Student.Person.GetDisplayName()))
                     .ForMember(dest => dest.ClassName,
                         opts => opts.MapFrom(src => src.Class.Name));
 
-                cfg.CreateMap<LessonPlan, DataGridLessonPlanDto>()
+                cfg.CreateMap<LessonPlanDto, DataGridLessonPlanDto>()
                     .ForMember(dest => dest.StudyTopic,
                         opts => opts.MapFrom(src => src.StudyTopic.Name))
                     .ForMember(dest => dest.Author,
                         opts => opts.MapFrom(src => src.Author.GetDisplayName()));
 
-                cfg.CreateMap<StudyTopic, DataGridStudyTopicDto>()
+                cfg.CreateMap<StudyTopicDto, DataGridStudyTopicDto>()
                     .ForMember(dest => dest.SubjectName,
                         opts => opts.MapFrom(src => src.Subject.Name))
                     .ForMember(dest => dest.YearGroup,
                         opts => opts.MapFrom(src => src.YearGroup.Name));
 
-                cfg.CreateMap<Subject, DataGridSubjectDto>();
+                cfg.CreateMap<SubjectDto, DataGridSubjectDto>();
 
-                cfg.CreateMap<StaffMember, DataGridStaffMemberDto>()
+                cfg.CreateMap<StaffMemberDto, DataGridStaffMemberDto>()
                     .ForMember(dest => dest.DisplayName,
-                        opts => opts.MapFrom(src => src.GetFullName()));
+                        opts => opts.MapFrom(src => src.Person.GetDisplayName()));
 
-                cfg.CreateMap<TrainingCourse, DataGridTrainingCourseDto>();
+                cfg.CreateMap<TrainingCourseDto, DataGridTrainingCourseDto>();
 
-                cfg.CreateMap<BasketItem, DataGridBasketItemDto>()
+                cfg.CreateMap<BasketItemDto, DataGridBasketItemDto>()
                     .ForMember(dest => dest.ProductDescription,
                         opts => opts.MapFrom(src => src.Product.Description))
                     .ForMember(dest => dest.StudentName,
-                        opts => opts.MapFrom(src => src.Student.GetDisplayName()));
-                cfg.CreateMap<Comment, DataGridCommentDto>()
+                        opts => opts.MapFrom(src => src.Student.Person.GetDisplayName()));
+                cfg.CreateMap<CommentDto, DataGridCommentDto>()
                     .ForMember(dest => dest.CommentBankName,
                         opts => opts.MapFrom(src => src.CommentBank.Name));
 
-                cfg.CreateMap<CommentBank, DataGridCommentBankDto>();
+                cfg.CreateMap<CommentBankDto, DataGridCommentBankDto>();
 
                 cfg.CreateMap<StudentAttendanceMarkCollection, StudentAttendanceMarkSingular>()
                     .ForMember(dest => dest.Mark,
@@ -275,25 +283,25 @@ namespace MyPortal.BusinessLogic.Services
                     .ForMember(dest => dest.Grade,
                         opts => opts.MapFrom(src => src.Grade.Code));
 
-                cfg.CreateMap<PersonCondition, DataGridPersonConditionDto>()
+                cfg.CreateMap<PersonConditionDto, DataGridPersonConditionDto>()
                     .ForMember(dest => dest.Condition,
                         opts => opts.MapFrom(src => src.Condition.Description));
 
-                cfg.CreateMap<PersonDietaryRequirement, DataGridPersonDietaryRequirementDto>()
+                cfg.CreateMap<PersonDietaryRequirementDto, DataGridPersonDietaryRequirementDto>()
                     .ForMember(dest => dest.Description,
                         opts => opts.MapFrom(src => src.DietaryRequirement.Description));
 
-                cfg.CreateMap<SubjectStaffMember, DataGridSubjectStaffMemberDto>()
+                cfg.CreateMap<SubjectStaffMemberDto, DataGridSubjectStaffMemberDto>()
                     .ForMember(dest => dest.StaffMemberName,
-                        opts => opts.MapFrom(src => src.StaffMember.GetFullName()))
+                        opts => opts.MapFrom(src => src.StaffMember.Person.GetDisplayName()))
                     .ForMember(dest => dest.Role,
                         opts => opts.MapFrom(src => src.Role.Description));
 
-                cfg.CreateMap<PhoneNumber, DataGridPhoneNumberDto>()
+                cfg.CreateMap<PhoneNumberDto, DataGridPhoneNumberDto>()
                     .ForMember(dest => dest.Type,
                         opts => opts.MapFrom(src => src.Type.Description));
 
-                cfg.CreateMap<EmailAddress, DataGridEmailAddressDto>()
+                cfg.CreateMap<EmailAddressDto, DataGridEmailAddressDto>()
                     .ForMember(dest => dest.Type,
                         opts => opts.MapFrom(src => src.Type.ToString()));
             });

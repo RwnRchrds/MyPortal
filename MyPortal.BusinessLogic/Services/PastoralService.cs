@@ -64,12 +64,12 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<RegGroupDto>> GetAllRegGroups()
         {
-            return (await UnitOfWork.RegGroups.GetAll()).Select(Mapper.Map<RegGroupDto>);
+            return (await UnitOfWork.RegGroups.GetAll()).Select(Mapper.Map<RegGroupDto>).ToList();
         }
 
         public async Task<IEnumerable<YearGroupDto>> GetAllYearGroups()
         {
-            return (await UnitOfWork.YearGroups.GetAll()).Select(Mapper.Map<YearGroupDto>);
+            return (await UnitOfWork.YearGroups.GetAll()).Select(Mapper.Map<YearGroupDto>).ToList();
         }
 
         public async Task<YearGroupDto> GetYearGroupById(int yearGroupId)
@@ -98,7 +98,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<RegGroupDto>> GetRegGroupsByYearGroup(int yearGroupId)
         {
-            return (await UnitOfWork.RegGroups.GetByYearGroup(yearGroupId)).Select(Mapper.Map<RegGroupDto>);
+            return (await UnitOfWork.RegGroups.GetByYearGroup(yearGroupId)).Select(Mapper.Map<RegGroupDto>).ToList();
         }
 
         public async Task UpdateRegGroup(RegGroupDto regGroup)
@@ -141,7 +141,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<HouseDto>> GetAllHouses()
         {
-            return (await UnitOfWork.Houses.GetAll()).Select(Mapper.Map<HouseDto>);
+            return (await UnitOfWork.Houses.GetAll()).Select(Mapper.Map<HouseDto>).ToList();
         }
 
         public async Task<IDictionary<int, string>> GetAllHousesLookup()

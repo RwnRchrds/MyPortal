@@ -4,74 +4,6 @@
     --font: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
-/*Log Table Background Colours*/
-.mp-log-academic-support {
-    background-color: #cef5ff;
-}
-
-.mp-log-behaviour {
-    background-color: #ffa3a3;
-}
-
-.mp-log-report {
-    background-color: #fffbbf;
-}
-
-.mp-log-praise {
-    background-color: #bfffc5;
-}
-
-.mp-log-sen {
-    background-color: #eed1ff;
-}
-
-.mp-log-student-feed {
-    background-color: #ffe4b7;
-}
-
-.mp-log-tutor-note {
-    background-color: #ffc1e4;
-}
-
-.mp-log-medical-event {
-    background-color: #c9ffee;
-}
-
-
-/*Certificate Table Background Colours*/
-
-.mp-cert-completed {
-    background-color: #bfffc5;
-}
-
-.mp-cert-pending {
-    background-color: #fffbbf;
-}
-
-.mp-cert-failed {
-    background-color: #ffa3a3;
-}
-
-
-/*Observation Table Background Colours*/
-
-.mp-observation-outstanding {
-    background-color: #cef5ff;
-}
-
-.mp-observation-good {
-    background-color: #bfffc5;
-}
-
-.mp-observation-satisfactory {
-    background-color: #fffbbf;
-}
-
-.mp-observation-inadequate {
-    background-color: #ffa3a3;
-}
-
-
 .mp-table {
     border-collapse: separate;
     border-spacing: 1px;
@@ -214,6 +146,13 @@
 
 .mw-50 {
     max-width: 50% !important;
+}
+
+.dot {
+    height: 1em;
+    width: 1em;
+    border-radius: 50%;
+    display: inline-block;
 }
 
 

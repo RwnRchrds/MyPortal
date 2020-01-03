@@ -14,5 +14,8 @@ namespace MyPortal.BusinessLogic.Dtos
         [Required]
         [StringLength(128)]
         public string Name { get; set; }
+
+        [StringLength(128)]
+        public string ColourCode { get; set; }
     }
 }

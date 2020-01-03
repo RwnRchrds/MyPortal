@@ -24,6 +24,9 @@ namespace MyPortal.Data.Models
 
         public int? HeadId { get; set; }
 
+        [StringLength(128)]
+        public string ColourCode { get; set; }
+
         public virtual StaffMember HeadOfHouse { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

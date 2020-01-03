@@ -210,23 +210,23 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<ProductDto>> GetAllProducts()
         {
-            return (await UnitOfWork.Products.GetAll()).Select(Mapper.Map<ProductDto>);
+            return (await UnitOfWork.Products.GetAll()).Select(Mapper.Map<ProductDto>).ToList();
         }
 
         public async Task<IEnumerable<SaleDto>> GetAllSales(int academicYearId)
         {
-            return (await UnitOfWork.Sales.GetAllAsync(academicYearId)).Select(Mapper.Map<SaleDto>);
+            return (await UnitOfWork.Sales.GetAllAsync(academicYearId)).Select(Mapper.Map<SaleDto>).ToList();
         }
 
         public async Task<IEnumerable<SaleDto>> GetAllSalesByStudent(int studentId,
             int academicYearId)
         {
-            return (await UnitOfWork.Sales.GetByStudent(studentId, academicYearId)).Select(Mapper.Map<SaleDto>);
+            return (await UnitOfWork.Sales.GetByStudent(studentId, academicYearId)).Select(Mapper.Map<SaleDto>).ToList();
         }
 
         public async Task<IEnumerable<ProductDto>> GetAvailableProductsByStudent(int studentId)
         {
-            return (await UnitOfWork.Products.GetAvailableByStudent(studentId)).Select(Mapper.Map<ProductDto>);
+            return (await UnitOfWork.Products.GetAvailableByStudent(studentId)).Select(Mapper.Map<ProductDto>).ToList();
         }
 
         public async Task<BasketItemDto> GetBasketItemById(int basketItemId)
@@ -243,7 +243,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<BasketItemDto>> GetBasketItemsByStudent(int studentId)
         {
-            return (await UnitOfWork.BasketItems.GetByStudent(studentId)).Select(Mapper.Map<BasketItemDto>);
+            return (await UnitOfWork.BasketItems.GetByStudent(studentId)).Select(Mapper.Map<BasketItemDto>).ToList();
         }
 
         public async Task<decimal> GetBasketTotalForStudent(int studentId)
@@ -253,12 +253,12 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<SaleDto>> GetPendingSales(int academicYearId)
         {
-            return (await UnitOfWork.Sales.GetPending(academicYearId)).Select(Mapper.Map<SaleDto>);
+            return (await UnitOfWork.Sales.GetPending(academicYearId)).Select(Mapper.Map<SaleDto>).ToList();
         }
 
         public async Task<IEnumerable<SaleDto>> GetProcessedSales(int academicYearId)
         {
-            return (await UnitOfWork.Sales.GetProcessed(academicYearId)).Select(Mapper.Map<SaleDto>);
+            return (await UnitOfWork.Sales.GetProcessed(academicYearId)).Select(Mapper.Map<SaleDto>).ToList();
         }
 
         public async Task<ProductDto> GetProductById(int productId)
@@ -294,7 +294,7 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<ProductTypeDto>> GetAllProductTypes()
         {
-            return (await UnitOfWork.ProductTypes.GetAll()).Select(Mapper.Map<ProductTypeDto>);
+            return (await UnitOfWork.ProductTypes.GetAll()).Select(Mapper.Map<ProductTypeDto>).ToList();
         }
 
         public async Task<IDictionary<int, string>> GetAllProductTypesLookup()
