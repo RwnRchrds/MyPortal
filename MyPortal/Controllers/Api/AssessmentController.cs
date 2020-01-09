@@ -180,7 +180,7 @@ namespace MyPortal.Controllers.Api
             }
         }
 
-        [HttpPost]
+        [HttpPut]
         [RequiresPermission("EditResultSets")]
         [Route("resultSets/update", Name = "ApiUpdateResultSet")]
         public async Task<IHttpActionResult> UpdateResultSet([FromBody] ResultSetDto resultSet)
