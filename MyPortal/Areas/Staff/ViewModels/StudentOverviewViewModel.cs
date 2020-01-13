@@ -9,9 +9,9 @@ namespace MyPortal.Areas.Staff.ViewModels
         public StudentDto Student { get; set; }
         public IDictionary<int, string> LogTypes { get; set; }
         public ProfileLogNoteDto LogNote { get; set; }
-        public PersonDocumentUpload Upload { get; set; }
+        public PersonAttachmentDto Attachment { get; set; } 
         public IDictionary<int, string> CommentBanks { get; set; }
-        public bool HasAttendaceData { get; set; }
+        public bool HasAttendanceData { get; set; }
         public double? Attendance { get; set; }
         public int? AchievementCount { get; set; }
         public int? BehaviourCount { get; set; }

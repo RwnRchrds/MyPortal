@@ -97,7 +97,7 @@
         </div>
     </div>
 
-    <div id="EditDocumentModal" class="modal fade" role="dialog">
+    <div id="EditAttachmentModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <!--content-->
             <div class="modal-content">
@@ -169,7 +169,7 @@
                             toastr.error("Failed to load document data");
                         }
                     });
-                    $("#EditDocumentModal").modal('toggle');
+                    $("#EditAttachmentModal").modal('toggle');
                 });
 
             $("#Documents").on("click",
@@ -207,13 +207,13 @@
         }
 
         function editDocumentSuccess(result) {
-            $("#EditDocumentModal").modal('hide');
+            $("#EditAttachmentModal").modal('hide');
             refreshTable("Documents");            
             toastr.success(result);
         }
 
         function editDocumentFailure(result) {
-            $("#EditDocumentModal").modal('hide');
+            $("#EditAttachmentModal").modal('hide');
             toastr.error(result.responseJSON);
         }
     </script>

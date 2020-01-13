@@ -372,7 +372,7 @@
 </div>
 
 
-<div id="EditDocumentModal" class="modal fade" role="dialog">
+<div id="EditAttachmentModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
         
         <div class="modal-content">
@@ -544,7 +544,7 @@
                             toastr.error("Failed to load certificate data");
                         }
                     });
-                    $("#EditDocumentModal").modal('toggle');
+                    $("#EditAttachmentModal").modal('toggle');
                 });
 
             $("#Observations").on("click",
@@ -678,13 +678,13 @@
         
         
         function editDocumentSuccess(result) {
-            $("#EditDocumentModal").modal('hide');
+            $("#EditAttachmentModal").modal('hide');
             toastr.success(result);
             refreshTable("Documents");
         }
 
         function editDocumentError(result) {
-            $("#EditDocumentModal").modal('hide');
+            $("#EditAttachmentModal").modal('hide');
             toastr.error(result.responseJSON);
         }
         

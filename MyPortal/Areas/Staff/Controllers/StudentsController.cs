@@ -87,7 +87,7 @@ namespace MyPortal.Areas.Staff.Controllers
                     LogTypes = logTypes,
                     BehaviourCount = behaviourCount,
                     AchievementCount = achievementCount,
-                    HasAttendaceData = attendance != null,
+                    HasAttendanceData = attendance != null,
                     CommentBanks = commentBanks,
                     Attendance = attendance,
                 };
