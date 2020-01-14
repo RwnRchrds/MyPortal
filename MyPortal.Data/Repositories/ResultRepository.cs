@@ -14,9 +14,19 @@ namespace MyPortal.Data.Repositories
             
         }
 
-        public async Task<IEnumerable<Result>> GetResultsByStudent(int studentId, int resultSetId)
+        public async Task<IEnumerable<Result>> GetByStudent(int studentId, int resultSetId)
         {
             return await Context.Results.Where(x => x.StudentId == studentId && x.ResultSetId == resultSetId).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Result>> GetByAspect(int aspectId)
+        {
+            return await Context.Results.Where(x => x.AspectId == aspectId).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Result>> GetByResultSet(int resultSetId)
+        {
+            return await Context.Results.Where(x => x.ResultSetId == resultSetId).ToListAsync();
         }
     }
 }

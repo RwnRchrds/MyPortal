@@ -20,7 +20,7 @@
             <div class="card-body">
                 @Html.EJS().Grid("Accounts").DataSource(d =>
                 {
-                    d.Url("/api/people/students/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor");
+                    d.Url(Url.HttpRouteUrl("ApiGetAllStudentsDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor");
                 }).Columns(c =>
                 {
                     c.Field("DisplayName").HeaderText("Student").Template("#accountsStudentTemplate").Width("200").Add();

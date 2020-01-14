@@ -61,7 +61,17 @@ namespace MyPortal.BusinessLogic.Services
 
         public async Task<IEnumerable<ResultDto>> GetResultsByStudent(int studentId, int resultSetId)
         {
-            return (await UnitOfWork.Results.GetResultsByStudent(studentId, resultSetId)).Select(Mapper.Map<ResultDto>).ToList();
+            return (await UnitOfWork.Results.GetByStudent(studentId, resultSetId)).Select(Mapper.Map<ResultDto>).ToList();
+        }
+
+        public async Task<IEnumerable<ResultDto>> GetResultsByAspect(int aspectId)
+        {
+            return (await UnitOfWork.Results.GetByAspect(aspectId)).Select(Mapper.Map<ResultDto>).ToList();
+        }
+
+        public async Task<IEnumerable<ResultDto>> GetResultsByResultSet(int resultSetId)
+        {
+            return (await UnitOfWork.Results.GetByResultSet(resultSetId)).Select(Mapper.Map<ResultDto>).ToList();
         }
 
         public async Task<ResultSetDto> GetResultSetById(int resultSetId)
