@@ -7,7 +7,7 @@
 }
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">@PeopleService.GetStudentDisplayName(Model.Student).ResponseObject</h1>
+    <h1 class="h3 mb-0 text-gray-800">@Model.Student.Person.GetDisplayName()</h1>
 </div>
 
 <div class="row">
@@ -31,7 +31,7 @@
 
                 @Html.EJS().Grid("achievements").DataSource(dataManager =>
                 {
-                    dataManager.Url(Url.HttpRouteUrl("ApiBehaviourGetAchievementsByStudentDataGrid", new {studentId = Model.Student.Id})).CrossDomain(false).Adaptor("UrlAdaptor");
+                    dataManager.Url(Url.HttpRouteUrl("ApiGetAchievementsByStudentDataGrid", new {studentId = Model.Student.Id})).CrossDomain(false).Adaptor("UrlAdaptor");
                 }).Columns(col =>
                 {
                     col.Field("Date").HeaderText("Date").Template("#achievementsDateTemplate").Add();
@@ -68,7 +68,7 @@
 
                 @Html.EJS().Grid("behaviour").DataSource(dataManager =>
                 {
-                    dataManager.Url(Url.HttpRouteUrl("ApiBehaviourGetBehaviourIncidentsByStudentDataGrid",  new {studentId = Model.Student.Id})).CrossDomain(false).Adaptor("UrlAdaptor");
+                    dataManager.Url(Url.HttpRouteUrl("ApiGetBehaviourIncidentsByStudentDataGrid",  new {studentId = Model.Student.Id})).CrossDomain(false).Adaptor("UrlAdaptor");
                 }).Columns(col =>
                 {
                     col.Field("Date").HeaderText("Date").Template("#incidentsDateTemplate").Add();
@@ -89,33 +89,33 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">New Achievement</h4>
+                <h5 class="modal-title">New Achievement</h5>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiBehaviourCreateAchievement", new {}), HttpMethod = "POST", OnSuccess = "newAchievementSuccess", OnFailure = "newAchievementFailure" }, new { id = "newAchievementForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiCreateAchievement", new {}), HttpMethod = "POST", OnSuccess = "newAchievementSuccess", OnFailure = "newAchievementFailure" }, new { id = "newAchievementForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Achievement Type")
-                        @Html.DropDownListFor(l => l.Achievement.AchievementTypeId, new SelectList(Model.AchievementTypes, "Id", "Description"), "Select Type", new { @class = "form-control", Name = "AchievementTypeId" })
+                        @Html.DropDownListFor(l => l.Achievement.AchievementTypeId, new SelectList(Model.AchievementTypes, "Id", "Description"), "Select Type", new { @class = "form-control form-control-sm", Name = "AchievementTypeId" })
                         @Html.ValidationMessageFor(l => l.Achievement.AchievementTypeId)
                     </div>
                     <div class="form-group">
                         @Html.Label("Points")
-                        @Html.TextBoxFor(x => x.Achievement.Points, new { @class = "form-control", Name = "Points", id = "newAchievementPointsControl", Value = "1" })
+                        @Html.TextBoxFor(x => x.Achievement.Points, new { @class = "form-control form-control-sm", Name = "Points", id = "newAchievementPointsControl", Value = "1" })
                         @Html.ValidationMessageFor(x => x.Achievement.Points)
                     </div>
                     <div class="form-group">
                         @Html.Label("Location")
-                        @Html.DropDownListFor(l => l.Achievement.LocationId, new SelectList(Model.Locations, "Id", "Description"), "Select Location", new { @class = "form-control", Name = "LocationId" })
+                        @Html.DropDownListFor(l => l.Achievement.LocationId, new SelectList(Model.Locations, "Id", "Description"), "Select Location", new { @class = "form-control form-control-sm", Name = "LocationId" })
                         @Html.ValidationMessageFor(l => l.Achievement.LocationId)
                     </div>
                     <div class="form-group">
                         @Html.Label("Comments")
-                        @Html.TextAreaFor(x => x.Achievement.Comments, new { @class = "form-control", Name = "Comments" })
+                        @Html.TextAreaFor(x => x.Achievement.Comments, new { @class = "form-control form-control-sm", Name = "Comments" })
                         @Html.ValidationMessageFor(x => x.Achievement.Comments)
                     </div>
-                    <div class="checkbox">
+                    <div>
                         <label style="font-weight: bold;">
                             @Html.CheckBoxFor(x => x.Achievement.Resolved, new { Name = "Resolved" }) Resolved
                         </label>
@@ -123,8 +123,8 @@
                         @Html.HiddenFor(x => x.Achievement.StudentId, new { Value = Model.Student.Id, Name = "StudentId" })
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-sm btn-primary">Save</button>
                     </div>
                 </div>
             }
@@ -137,30 +137,30 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Edit Achievement</h4>
+                <h5 class="modal-title">Edit Achievement</h5>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiBehaviourUpdateAchievement", new {}), HttpMethod = "POST", OnSuccess = "editAchievementSuccess", OnFailure = "editAchievementFailure" }, new { id = "editAchievementForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiUpdateAchievement", new {}), HttpMethod = "POST", OnSuccess = "editAchievementSuccess", OnFailure = "editAchievementFailure" }, new { id = "editAchievementForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Achievement Type")
-                        @Html.DropDownListFor(l => l.Achievement.AchievementTypeId, new SelectList(Model.AchievementTypes, "Id", "Description"), "Select Type", new { @class = "form-control", Name = "AchievementTypeId", id = "editAchievementTypeControl" })
+                        @Html.DropDownListFor(l => l.Achievement.AchievementTypeId, new SelectList(Model.AchievementTypes, "Id", "Description"), "Select Type", new { @class = "form-control form-control-sm", Name = "AchievementTypeId", id = "editAchievementTypeControl" })
                         @Html.ValidationMessageFor(l => l.Achievement.AchievementTypeId)
                     </div>
                     <div class="form-group">
                         @Html.Label("Points")
-                        @Html.TextBoxFor(x => x.Achievement.Points, new { @class = "form-control", Name = "Points", id = "editAchievementPointsControl" })
+                        @Html.TextBoxFor(x => x.Achievement.Points, new { @class = "form-control form-control-sm", Name = "Points", id = "editAchievementPointsControl" })
                         @Html.ValidationMessageFor(x => x.Achievement.Points)
                     </div>
                     <div class="form-group">
                         @Html.Label("Location")
-                        @Html.DropDownListFor(l => l.Achievement.LocationId, new SelectList(Model.Locations, "Id", "Description"), "Select Location", new { @class = "form-control", Name = "LocationId", id = "editAchievementLocationControl" })
+                        @Html.DropDownListFor(l => l.Achievement.LocationId, new SelectList(Model.Locations, "Id", "Description"), "Select Location", new { @class = "form-control form-control-sm", Name = "LocationId", id = "editAchievementLocationControl" })
                         @Html.ValidationMessageFor(l => l.Achievement.LocationId)
                     </div>
                     <div class="form-group">
                         @Html.Label("Comments")
-                        @Html.TextAreaFor(x => x.Achievement.Comments, new { @class = "form-control", Name = "Comments", id = "editAchievementCommentsControl" })
+                        @Html.TextAreaFor(x => x.Achievement.Comments, new { @class = "form-control form-control-sm", Name = "Comments", id = "editAchievementCommentsControl" })
                         @Html.ValidationMessageFor(x => x.Achievement.Comments)
                     </div>
                     <div class="checkbox">
@@ -171,8 +171,8 @@
                         @Html.HiddenFor(x => x.Achievement.Id, new { Name = "Id", id = "editAchievementIdControl" })
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-sm btn-primary">Save</button>
                     </div>
                 </div>
             }
@@ -185,30 +185,30 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">New Incident</h4>
+                <h5 class="modal-title">New Incident</h5>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiBehaviourCreateIncident", new {}), HttpMethod = "POST", OnSuccess = "newIncidentSuccess", OnFailure = "newIncidentFailure" }, new { id = "newIncidentForm" }))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiCreateIncident", new {}), HttpMethod = "POST", OnSuccess = "newIncidentSuccess", OnFailure = "newIncidentFailure" }, new { id = "newIncidentForm" }))
             {
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Behaviour Type")
-                        @Html.DropDownListFor(l => l.Incident.BehaviourTypeId, new SelectList(Model.BehaviourTypes, "Id", "Description"), "Select Type", new { @class = "form-control", Name = "BehaviourTypeId" })
+                        @Html.DropDownListFor(l => l.Incident.BehaviourTypeId, new SelectList(Model.BehaviourTypes, "Id", "Description"), "Select Type", new { @class = "form-control form-control-sm", Name = "BehaviourTypeId" })
                         @Html.ValidationMessageFor(l => l.Incident.BehaviourTypeId)
                     </div>
                     <div class="form-group">
                         @Html.Label("Points")
-                        @Html.TextBoxFor(x => x.Incident.Points, new { @class = "form-control", Name = "Points", id = "newAchievementPointsControl", Value = "1" })
+                        @Html.TextBoxFor(x => x.Incident.Points, new { @class = "form-control form-control-sm", Name = "Points", id = "newAchievementPointsControl", Value = "1" })
                         @Html.ValidationMessageFor(x => x.Incident.Points)
                     </div>
                     <div class="form-group">
                         @Html.Label("Location")
-                        @Html.DropDownListFor(l => l.Incident.LocationId, new SelectList(Model.Locations, "Id", "Description"), "Select Location", new { @class = "form-control", Name = "LocationId" })
+                        @Html.DropDownListFor(l => l.Incident.LocationId, new SelectList(Model.Locations, "Id", "Description"), "Select Location", new { @class = "form-control form-control-sm", Name = "LocationId" })
                         @Html.ValidationMessageFor(l => l.Incident.LocationId)
                     </div>
                     <div class="form-group">
                         @Html.Label("Comments")
-                        @Html.TextAreaFor(x => x.Incident.Comments, new { @class = "form-control", Name = "Comments" })
+                        @Html.TextAreaFor(x => x.Incident.Comments, new { @class = "form-control form-control-sm", Name = "Comments" })
                         @Html.ValidationMessageFor(x => x.Incident.Comments)
                     </div>
                     <div class="checkbox">
@@ -219,8 +219,8 @@
                         @Html.HiddenFor(x => x.Incident.StudentId, new { Value = Model.Student.Id, Name = "StudentId" })
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-sm btn-primary">Save</button>
                     </div>
                 </div>
             }
@@ -233,7 +233,7 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Edit Incident</h4>
+                <h5 class="modal-title">Edit Incident</h5>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
             @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiBehaviourUpdateIncident", new {}), HttpMethod = "POST", OnSuccess = "editIncidentSuccess", OnFailure = "editIncidentFailure" }, new { id = "editIncidentForm" }))
@@ -241,22 +241,22 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Achievement Type")
-                        @Html.DropDownListFor(l => l.Incident.BehaviourTypeId, new SelectList(Model.BehaviourTypes, "Id", "Description"), "Select Type", new { @class = "form-control", Name = "BehaviourTypeId", id = "editBehaviourTypeControl" })
+                        @Html.DropDownListFor(l => l.Incident.BehaviourTypeId, new SelectList(Model.BehaviourTypes, "Id", "Description"), "Select Type", new { @class = "form-control form-control-sm", Name = "BehaviourTypeId", id = "editBehaviourTypeControl" })
                         @Html.ValidationMessageFor(l => l.Incident.BehaviourTypeId)
                     </div>
                     <div class="form-group">
                         @Html.Label("Points")
-                        @Html.TextBoxFor(x => x.Incident.Points, new { @class = "form-control", Name = "Points", id = "editBehaviourPointsControl" })
+                        @Html.TextBoxFor(x => x.Incident.Points, new { @class = "form-control form-control-sm", Name = "Points", id = "editBehaviourPointsControl" })
                         @Html.ValidationMessageFor(x => x.Incident.Points)
                     </div>
                     <div class="form-group">
                         @Html.Label("Location")
-                        @Html.DropDownListFor(l => l.Incident.LocationId, new SelectList(Model.Locations, "Id", "Description"), "Select Location", new { @class = "form-control", Name = "LocationId", id = "editBehaviourLocationControl" })
+                        @Html.DropDownListFor(l => l.Incident.LocationId, new SelectList(Model.Locations, "Id", "Description"), "Select Location", new { @class = "form-control form-control-sm", Name = "LocationId", id = "editBehaviourLocationControl" })
                         @Html.ValidationMessageFor(l => l.Incident.LocationId)
                     </div>
                     <div class="form-group">
                         @Html.Label("Comments")
-                        @Html.TextAreaFor(x => x.Incident.Comments, new { @class = "form-control", Name = "Comments", id = "editBehaviourCommentsControl" })
+                        @Html.TextAreaFor(x => x.Incident.Comments, new { @class = "form-control form-control-sm", Name = "Comments", id = "editBehaviourCommentsControl" })
                         @Html.ValidationMessageFor(x => x.Incident.Comments)
                     </div>
                     <div class="checkbox">
@@ -267,8 +267,8 @@
                         @Html.HiddenFor(x => x.Incident.Id, new { Name = "Id", id = "editIncidentIdControl" })
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-sm btn-primary">Save</button>
                     </div>
                 </div>
             }
@@ -470,11 +470,11 @@
 
     <script type="text/x-jsrender" id="achievementsActionsTemplate">
         <div>
-            <button type="button" class="btn btn-xs btn-warning mp-btn-action js-edit" data-ba-id="${Id}">
-                <i class="far fa-edit"></i>
+            <button type="button" class="btn btn-link js-edit" data-ba-id="${Id}">
+                Edit
             </button>
-            <button type="button" class="btn btn-xs btn-danger mp-btn-action js-delete" data-ba-id="${Id}">
-                <i class="far fa-trash-alt"></i>
+            <button type="button" class="btn btn-link js-delete" data-ba-id="${Id}">
+                Delete
             </button>
         </div>
     </script>
@@ -517,11 +517,11 @@
 
     <script type="text/x-jsrender" id="incidentsActionsTemplate">
         <div>
-            <button type="button" class="btn btn-xs btn-warning mp-btn-action js-edit" data-bi-id="${Id}">
-                <i class="far fa-edit"></i>
+            <button type="button" class="btn btn-link js-edit" data-bi-id="${Id}">
+                Edit
             </button>
-            <button type="button" class="btn btn-xs btn-danger mp-btn-action js-delete" data-bi-id="${Id}">
-                <i class="far fa-trash-alt"></i>
+            <button type="button" class="btn btn-link js-delete" data-bi-id="${Id}">
+                Delete
             </button>
         </div>
     </script>

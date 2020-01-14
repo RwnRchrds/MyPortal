@@ -6,7 +6,7 @@ namespace MyPortal.Models.Identity
     public class IdentityContext : IdentityDbContext<ApplicationUser, ApplicationRole, string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim>
     {
         public IdentityContext()
-            : base("name=Live")
+            : base("name=LiveConnection")
         {
         }
 

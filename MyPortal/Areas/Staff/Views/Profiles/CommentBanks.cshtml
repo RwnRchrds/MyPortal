@@ -44,7 +44,7 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">New Comment Bank</h4>
+                <h5 class="modal-title">New Comment Bank</h5>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
             @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiProfilesCreateCommentBank", new {}), HttpMethod = "POST", OnSuccess = "newCommentBankSuccess", OnFailure = "newCommentBankFailure"}, new {id = "newCommentBankForm"}))
@@ -52,12 +52,12 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.LabelFor(x => x.CommentBank.Name)
-                        @Html.TextBoxFor(x => x.CommentBank.Name, new {@class = "form-control", Name = "Name"})
+                        @Html.TextBoxFor(x => x.CommentBank.Name, new {@class = "form-control form-control-sm", Name = "Name"})
                         @Html.ValidationMessageFor(x => x.CommentBank.Name)
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-sm btn-primary">Save</button>
                     </div>
                 </div>
             }
@@ -78,15 +78,15 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.LabelFor(x => x.CommentBank.Name)
-                        @Html.TextBoxFor(x => x.CommentBank.Name, new {@class = "form-control", Name = "Name", id = "editCommentBankNameControl"})
+                        @Html.TextBoxFor(x => x.CommentBank.Name, new {@class = "form-control form-control-sm", Name = "Name", id = "editCommentBankNameControl"})
                         @Html.ValidationMessageFor(x => x.CommentBank.Name)
                     </div>
                     <div class="form-group">
                         @Html.HiddenFor(x => x.CommentBank.Id, new {Name = "Id", id = "editCommentBankIdControl"})
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-sm btn-primary">Save</button>
                     </div>
                 </div>
             }
@@ -181,12 +181,12 @@
 
     <script type="text/x-jsrender" id="commentBankActionsTemplate">
         <div>
-            <button type='button' class='btn btn-xs btn-warning mp-btn-action js-edit' data-bank-id="${Id}">
-                <i class="far fa-edit"></i>
+            <button type='button' class='btn btn-link js-edit' data-bank-id="${Id}">
+                Edit
             </button>
 
-            <button type='button' class='btn btn-xs btn-danger mp-btn-action js-delete' data-bank-id="${Id}">
-                <i class="far fa-trash-alt"></i>
+            <button type='button' class='btn btn-link js-delete' data-bank-id="${Id}">
+                Delete
             </button>
         </div>
     </script>

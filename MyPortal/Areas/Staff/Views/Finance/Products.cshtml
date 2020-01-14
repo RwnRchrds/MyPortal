@@ -34,7 +34,7 @@
             <div class="card-body">
                 @Html.EJS().Grid("Products").DataSource(d =>
                 {
-                    d.Url(Url.HttpRouteUrl("ApiFinanceGetAllProductsDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor");
+                    d.Url(Url.HttpRouteUrl("ApiGetAllProductsDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor");
                 }).Columns(c =>
                 {
                     c.Field("Description").HeaderText("Description").Template("#productsDescriptionTemplate").Width("300").Add();
@@ -55,22 +55,22 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">New Product</h4>
+                    <h5 class="modal-title">New Product</h5>
                     <button type="button" class="close" data-dismiss="modal">
                         <span aria-hidden="false"></span>&times;
                     </button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiFinanceCreateProduct", new {}), HttpMethod = "POST", OnSuccess = "newProductSuccess", OnFailure = "newProductFailure" }, new { id = "newProductForm" }))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiCreateProduct", new {}), HttpMethod = "POST", OnSuccess = "newProductSuccess", OnFailure = "newProductFailure" }, new { id = "newProductForm" }))
                 {
                     <div class="modal-body">
                         <div class="form-group">
                             @Html.Label("Description")
-                            @Html.TextBoxFor(x => x.Product.Description, new { @class = "form-control", Name = "Description" })
+                            @Html.TextBoxFor(x => x.Product.Description, new { @class = "form-control form-control-sm", Name = "Description" })
                             @Html.ValidationMessageFor(x => x.Product.Description)
                         </div>
                         <div class="form-group">
                             @Html.Label("Type")
-                            @Html.DropDownListFor(l => l.Product.ProductTypeId, new SelectList(Model.ProductTypes, "Id", "Description"), "Select Type", new { @class = "form-control", Name = "ProductTypeId" })
+                            @Html.DropDownListFor(l => l.Product.ProductTypeId, new SelectList(Model.ProductTypes, "Id", "Description"), "Select Type", new { @class = "form-control form-control-sm", Name = "ProductTypeId" })
                             @Html.ValidationMessageFor(x => x.Product.ProductTypeId)
                         </div>
                         <div class="form-group">
@@ -79,23 +79,23 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text mp-bold" id="basic-addon">£</span>
                                 </div>
-                                @Html.TextBoxFor(x => x.Product.Price, new { @class = "form-control", Name = "Price" })
+                                @Html.TextBoxFor(x => x.Product.Price, new { @class = "form-control form-control-sm", Name = "Price" })
                             </div>
                             @Html.ValidationMessageFor(x => x.Product.Price)
                         </div>
-                        <div class="checkbox">
+                        <div>
                             <label style="font-weight: bold;">
                                 @Html.CheckBoxFor(x => x.Product.Visible, new { Name = "Visible" }) Available on Store
                             </label>
                         </div>
-                        <div class="checkbox">
+                        <div>
                             <label style="font-weight: bold;">
                                 @Html.CheckBoxFor(x => x.Product.OnceOnly, new { Name = "OnceOnly" }) One-Time Purchase
                             </label>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-sm btn-primary">Save</button>
                         </div>
                     </div>
                 }
@@ -111,18 +111,18 @@
                     <h4 class="modal-title">Edit Product</h4>
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiFinanceUpdateProduct", new {}), HttpMethod = "POST", OnSuccess = "editProductSuccess", OnFailure = "editProductFailure" }, new { id = "editProductForm" }))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiUpdateProduct", new {}), HttpMethod = "POST", OnSuccess = "editProductSuccess", OnFailure = "editProductFailure" }, new { id = "editProductForm" }))
                 {
                     <div class="modal-body">
                         <div class="form-group">
                             @Html.HiddenFor(x => x.Product.Id, new { Name = "Id", id = "editIdControl" })
                             @Html.Label("Description")
-                            @Html.TextBoxFor(x => x.Product.Description, new { @class = "form-control", Name = "Description", id = "editDescriptionControl" })
+                            @Html.TextBoxFor(x => x.Product.Description, new { @class = "form-control form-control-sm", Name = "Description", id = "editDescriptionControl" })
                             @Html.ValidationMessageFor(x => x.Product.Description)
                         </div>
                         <div class="form-group">
                             @Html.Label("Type")
-                            @Html.DropDownListFor(l => l.Product.ProductTypeId, new SelectList(Model.ProductTypes, "Id", "Description"), "Select Type", new { @class = "form-control", Name = "ProductTypeId", id = "editTypeControl" })
+                            @Html.DropDownListFor(l => l.Product.ProductTypeId, new SelectList(Model.ProductTypes, "Id", "Description"), "Select Type", new { @class = "form-control form-control-sm", Name = "ProductTypeId", id = "editTypeControl" })
                             @Html.ValidationMessageFor(x => x.Product.ProductTypeId)
                         </div>
                         <div class="form-group">
@@ -131,23 +131,23 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text mp-bold" id="basic-addon">£</span>
                                 </div>
-                                @Html.TextBoxFor(x => x.Product.Price, new { @class = "form-control", Name = "Price", id = "editPriceControl" })
+                                @Html.TextBoxFor(x => x.Product.Price, new { @class = "form-control form-control-sm", Name = "Price", id = "editPriceControl" })
                             </div>
                             @Html.ValidationMessageFor(x => x.Product.Price)
                         </div>
-                        <div class="checkbox">
+                        <div>
                             <label style="font-weight: bold;">
                                 @Html.CheckBoxFor(x => x.Product.Visible, new { Name = "Visible", id = "editVisibleControl" }) Available on Store
                             </label>
                         </div>
-                        <div class="checkbox">
+                        <div>
                             <label style="font-weight: bold;">
                                 @Html.CheckBoxFor(x => x.Product.OnceOnly, new { Name = "OnceOnly", id = "editOnceOnlyControl" }) One-Time Purchase
                             </label>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-sm btn-primary">Save</button>
                         </div>
                     </div>
                 }
@@ -272,12 +272,12 @@
 
     <script type="text/x-jsrender" id="productsActionsTemplate">
         <div>
-            <button type='button' class='btn btn-xs mp-btn-action btn-warning js-edit' data-product-id="${Id}">
-                <i class="far fa-edit"></i>
+            <button type='button' class='btn btn-link js-edit' data-product-id="${Id}">
+                Edit
             </button>
 
-            <button type='button' class='btn btn-xs mp-btn-action btn-danger js-delete' data-product-id="${Id}">
-                <i class="far fa-trash-alt"></i>
+            <button type='button' class='btn btn-link js-delete' data-product-id="${Id}">
+                Delete
             </button>
         </div>
     </script>

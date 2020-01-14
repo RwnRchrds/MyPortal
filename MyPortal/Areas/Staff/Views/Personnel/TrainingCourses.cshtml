@@ -32,7 +32,7 @@
             </div>
             <!-- Card Body -->
             <div class="card-body">
-                @Html.EJS().Grid("Courses").DataSource(d => { d.Url("/api/personnel/courses/get/dataGrid/all").CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+                @Html.EJS().Grid("Courses").DataSource(d => { d.Url("ApiGetAllTrainingCoursesDataGrid").CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
                 {
                     c.Field("Code").HeaderText("Code").Template("#coursesCodeTemplate").Width("150").Add();
                     c.Field("Description").HeaderText("Description").Template("#coursesDescriptionTemplate").Width("200").Add();
@@ -52,12 +52,12 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Edit Training Course</h4>
+                <h5 class="modal-title">Edit Training Course</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "/api/personnel/courses/update", HttpMethod = "POST", OnSuccess = "editCourseSuccess", OnFailure = "editCourseFailure"}, new {id = "EditCourseForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = "ApiUpdateTrainingCourse", HttpMethod = "POST", OnSuccess = "editCourseSuccess", OnFailure = "editCourseFailure"}, new {id = "EditCourseForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -154,12 +154,12 @@
 
     <script type="text/x-jsrender" id="coursesActionsTemplate">
             <div>
-                <button type='button' class='btn btn-xs btn-warning mp-btn-action js-edit' data-course-id="${Id}">
-                    <i class="far fa-edit"></i>
+                <button type='button' class='btn btn-link js-edit' data-course-id="${Id}">
+                    Edit
                 </button>
                 
-                <button type='button' class='btn btn-xs btn-danger mp-btn-action js-delete' data-course-id="${Id}">
-                    <i class="far fa-trash-alt"></i>
+                <button type='button' class='btn btn-link js-delete' data-course-id="${Id}">
+                    Delete
                 </button>
             </div>
         </script>

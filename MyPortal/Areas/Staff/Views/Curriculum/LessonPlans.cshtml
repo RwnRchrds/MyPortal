@@ -55,7 +55,7 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">New Lesson Plan</h4>
+                <h5 class="modal-title">New Lesson Plan</h5>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
             @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiCreateLessonPlan", new {}), HttpMethod = "POST", OnSuccess = "newLessonPlanSuccess", OnFailure = "newLessonPlanFailure"}, new {id = "newLessonPlanForm"}))
@@ -101,7 +101,7 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Edit Lesson Plan</h4>
+                <h5 class="modal-title">Edit Lesson Plan</h5>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
             @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiUpdateLessonPlan", new {}), HttpMethod = "POST", OnSuccess = "editLessonPlanSuccess", OnFailure = "editLessonPlanFailure"}, new {id = "editLessonPlanForm"}))
@@ -251,11 +251,17 @@
                 $("#NewLessonPlanModal").modal('toggle');
             }
         }
+
+        function getLessonPlanDetailsUrl(planId) {
+            var urlLessonPlanDetails = "@Url.Action("LessonPlanDetails", new {lessonPlanId = 9999})";
+
+            return urlLessonPlanDetails.replace("9999", planId);
+        }
     </script>
 
     <script type="text/x-jsrender" id="lessonPlansTitleTemplate">
         <div>
-            ${Title}
+            <a href="${getLessonPlanDetailsUrl(Id)}">${Title}</a>
         </div>
     </script>
 
@@ -273,16 +279,12 @@
 
     <script type="text/x-jsrender" id="lessonPlansActionsTemplate">
             <div>
-                <button type='button' class='btn btn-sm btn-primary mr-1 js-view' data-plan-id="${Id}">
-                    <i class="fas fa-glasses"></i> View
+                <button type='button' class='btn btn-link js-edit' data-plan-id="${Id}">
+                    Edit
                 </button>
                 
-                <button type='button' class='btn btn-sm btn-primary mr-1 js-edit' data-plan-id="${Id}">
-                    <i class="fas fa-edit"></i> Edit
-                </button>
-                
-                <button type='button' class='btn btn-sm btn-danger mr-1 js-delete' data-plan-id="${Id}">
-                    <i class="far fa-trash-alt"></i> Delete
+                <button type='button' class='btn btn-link js-delete' data-plan-id="${Id}">
+                    Delete
                 </button>
             </div>
         </script>

@@ -54,7 +54,7 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">New Subject</h4>
+                <h5 class="modal-title">New Subject</h5>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
             @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiCreateSubject", new {}), HttpMethod = "POST", OnSuccess = "newSubjectSuccess", OnFailure = "newSubjectFailure"}, new {id = "newResultSetForm"}))
@@ -85,7 +85,7 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Edit Subject</h4>
+                <h5 class="modal-title">Edit Subject</h5>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
             @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiUpdateSubject", new {}), HttpMethod = "POST", OnSuccess = "editSubjectSuccess", OnFailure = "editSubjectFailure"}, new {id = "editResultSetForm"}))
@@ -211,12 +211,12 @@
 
     <script type="text/x-jsrender" id="subjectsActionsTemplate">
             <div>
-                <button type='button' class='btn btn-sm btn-primary mr-1 js-edit' data-subject-id="${Id}">
-                    <i class="far fa-edit"></i> Edit
+                <button type='button' class='btn btn-link js-edit' data-subject-id="${Id}">
+                    Edit
                 </button>
                 
-                <button type='button' class='btn btn-sm btn-danger js-delete' data-subject-id="${Id}">
-                    <i class="far fa-trash-alt"></i> Delete
+                <button type='button' class='btn btn-link js-delete' data-subject-id="${Id}">
+                    Delete
                 </button>
             </div>
         </script>

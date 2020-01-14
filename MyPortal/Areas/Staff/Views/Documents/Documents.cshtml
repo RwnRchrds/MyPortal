@@ -36,12 +36,12 @@
                 {
                     if (User.HasPermission("EditDocuments"))
                     {
-                        d.Url(Url.HttpRouteUrl("ApiDocumentsGetAllDocumentsDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor");
+                        d.Url(Url.HttpRouteUrl("ApiGetAllDocumentsDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor");
                     }
 
                     else
                     {
-                        d.Url(Url.HttpRouteUrl("ApiDocumentsGetApprovedDocumentsDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor");
+                        d.Url(Url.HttpRouteUrl("ApiGetApprovedDocumentsDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor");
                     }
                 }).Columns(c =>
                 {
@@ -66,20 +66,20 @@
             <!--content-->
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">New Controlled Document</h4>
+                    <h5 class="modal-title">New Controlled Document</h5>
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiDocumentsCreateDocument", new {}), HttpMethod = "POST", OnSuccess = "newDocumentSuccess", OnFailure = "newDocumentFailure"}, new {id = "newDocumentForm"}))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiCreateDocument", new {}), HttpMethod = "POST", OnSuccess = "newDocumentSuccess", OnFailure = "newDocumentFailure"}, new {id = "newDocumentForm"}))
                 {
                     <div class="modal-body">
                         <div class="form-group">
                             @Html.Label("Description")
-                            @Html.TextBoxFor(x => x.Document.Description, new {@class = "form-control", Name = "Description"})
+                            @Html.TextBoxFor(x => x.Document.Description, new {@class = "form-control form-control-sm", Name = "Description"})
                             @Html.ValidationMessageFor(x => x.Document.Description)
                         </div>
                         <div class="form-group">
                             @Html.Label("URL")
-                            @Html.TextBoxFor(x => x.Document.Url, new {@class = "form-control", Name = "Url"})
+                            @Html.TextBoxFor(x => x.Document.Url, new {@class = "form-control form-control-sm", Name = "Url"})
                             @Html.ValidationMessageFor(x => x.Document.Url)
                         </div>
                         <div class="form-group">
@@ -88,8 +88,8 @@
                             @Html.ValidationMessageFor(x => x.Document.Approved)
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-sm btn-primary">Save</button>
                         </div>
                     </div>
                 }
@@ -102,20 +102,20 @@
             <!--content-->
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Edit Controlled Document</h4>
+                    <h5 class="modal-title">Edit Controlled Document</h5>
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiDocumentsUpdateDocument", new {}), HttpMethod = "POST", OnSuccess = "editDocumentSuccess", OnFailure = "editDocumentFailure"}, new {id = "editDocumentForm"}))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiUpdateDocument", new {}), HttpMethod = "POST", OnSuccess = "editDocumentSuccess", OnFailure = "editDocumentFailure"}, new {id = "editDocumentForm"}))
                 {
                     <div class="modal-body">
                         <div class="form-group">
                             @Html.Label("Description")
-                            @Html.TextBoxFor(x => x.Document.Description, new {@class = "form-control", Name = "Description", id = "EditDocumentDescriptionControl"})
+                            @Html.TextBoxFor(x => x.Document.Description, new {@class = "form-control form-control-sm", Name = "Description", id = "EditDocumentDescriptionControl"})
                             @Html.ValidationMessageFor(x => x.Document.Description)
                         </div>
                         <div class="form-group">
                             @Html.Label("URL")
-                            @Html.TextBoxFor(x => x.Document.Url, new {@class = "form-control", Name = "Url", id = "EditDocumentUrlControl"})
+                            @Html.TextBoxFor(x => x.Document.Url, new {@class = "form-control form-control-sm", Name = "Url", id = "EditDocumentUrlControl"})
                             @Html.ValidationMessageFor(x => x.Document.Url)
                         </div>
                         <div class="form-group">
@@ -127,8 +127,8 @@
                             @Html.HiddenFor(x => x.Document.Id, new {Name = "Id", id = "EditDocumentIdControl"})
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-sm btn-primary">Save</button>
                         </div>
                     </div>
                 }
@@ -238,12 +238,12 @@
 
     <script type="text/x-jsrender" id="documentsActionsTemplate">
                 <div>
-                    <button type='button' class='btn btn-xs btn-warning mp-btn-action js-edit' data-document-id="${DocumentId}">
-                        <i class="far fa-edit"></i>
+                    <button type='button' class='btn btn-link js-edit' data-document-id="${DocumentId}">
+                        Edit
                     </button>
                     
-                    <button type='button' class='btn btn-xs btn-danger mp-btn-action js-delete' data-document-id="${DocumentId}">
-                        <i class="far fa-trash-alt"></i>
+                    <button type='button' class='btn btn-link js-delete' data-document-id="${DocumentId}">
+                        Delete
                     </button>
                 </div>
             </script>

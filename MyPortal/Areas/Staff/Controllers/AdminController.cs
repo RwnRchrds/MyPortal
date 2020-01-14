@@ -80,7 +80,6 @@ namespace MyPortal.Areas.Staff.Controllers
         }
 
         [RequiresPermission("EditRoles")]
-        [Route("Roles/Permissions/{roleId}", Name = "AdminRolePermissions")]
         public async Task<ActionResult> RolePermissions(string roleId)
         {
             using (var adminService = new AdminService())

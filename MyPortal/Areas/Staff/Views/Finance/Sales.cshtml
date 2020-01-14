@@ -48,7 +48,7 @@
 
                 @Html.EJS().Grid("Sales").DataSource(d =>
                 {
-                    d.Url(Url.HttpRouteUrl("ApiFinanceGetPendingSalesDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor");
+                    d.Url(Url.HttpRouteUrl("ApiGetPendingSalesDataGrid", new {})).CrossDomain(false).Adaptor("UrlAdaptor");
                 }).Columns(c =>
                 {
                     c.Field("Date").HeaderText("Date").Template("#salesDateTemplate").Width("150").Add();
@@ -70,12 +70,12 @@
 {
     <script>
 
-        var urlGetAllSales = "@Url.HttpRouteUrl("ApiFinanceGetAllSalesDataGrid", new {})";
-        var urlGetPendingSales = "@Url.HttpRouteUrl("ApiFinanceGetPendingSalesDataGrid", new {})";
-        var urlGetProcessedSales = "@Url.HttpRouteUrl("ApiFinanceGetProcessedSalesDataGrid", new {})";
-        var urlDeleteSale = "@Url.HttpRouteUrl("ApiFinanceDeleteSale", new {saleId = 9999})";
-        var urlMarkSaleComplete = "@Url.HttpRouteUrl("ApiFinanceMarkSaleProcessed", new {saleId = 9999})";
-        var urlRefundSale = "@Url.HttpRouteUrl("ApiFinanceRefundSale", new {saleId = 9999})";
+        var urlGetAllSales = "@Url.HttpRouteUrl("ApiGetAllSalesDataGrid", new {})";
+        var urlGetPendingSales = "@Url.HttpRouteUrl("ApiGetPendingSalesDataGrid", new {})";
+        var urlGetProcessedSales = "@Url.HttpRouteUrl("ApiGetProcessedSalesDataGrid", new {})";
+        var urlDeleteSale = "@Url.HttpRouteUrl("ApiDeleteSale", new {saleId = 9999})";
+        var urlMarkSaleComplete = "@Url.HttpRouteUrl("ApiMarkSaleProcessed", new {saleId = 9999})";
+        var urlRefundSale = "@Url.HttpRouteUrl("ApiRefundSale", new {saleId = 9999})";
 
         $(document).ready(function() {
             $("#selectedStatus").on("change",

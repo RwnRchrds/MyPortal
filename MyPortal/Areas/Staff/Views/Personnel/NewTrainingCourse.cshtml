@@ -1,4 +1,4 @@
-﻿@model MyPortal.Models.Database.PersonnelTrainingCourse
+﻿@model MyPortal.BusinessLogic.Dtos.TrainingCourseDto
 @{
     ViewBag.Title = "New Course";
     ViewBag.DisplayTitle = "Courses - New";
@@ -16,17 +16,17 @@
         {
             <div class="form-group">
                 @Html.Label("Course Code")
-                @Html.TextBoxFor(c => c.Code, new {@class = "form-control"})
+                @Html.TextBoxFor(c => c.Code, new {@class = "form-control form-control-sm"})
                 @Html.ValidationMessageFor(c => c.Code)
             </div>
             <div class="form-group">
                 @Html.Label("Description")
-                @Html.TextBoxFor(c => c.Description, new {@class = "form-control"})
+                @Html.TextBoxFor(c => c.Description, new {@class = "form-control form-control-sm"})
                 @Html.ValidationMessageFor(c => c.Description)
             </div>
             @Html.AntiForgeryToken()
-            <button type="button" class="btn btn-primary" id="backButton">Back</button>
-            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-sm btn-primary" id="backButton">Back</button>
+            <button type="submit" class="btn btn-sm btn-primary">Save</button>
         }
 
     </div>

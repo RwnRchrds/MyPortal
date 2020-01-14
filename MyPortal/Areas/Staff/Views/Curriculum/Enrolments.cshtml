@@ -53,7 +53,7 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Enrol Student</h4>
+                <h5 class="modal-title">Enrol Student</h5>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
             @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiCreateEnrolment", new {}), HttpMethod = "POST", OnSuccess = "newEnrolIndSuccess", OnFailure = "newEnrolIndFailure" }, new { id = "newEnrolmentForm" }))
@@ -85,7 +85,7 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Enrol Group</h4>
+                <h5 class="modal-title">Enrol Group</h5>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
             @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiEnrolRegGroup", new {}), HttpMethod = "POST", OnSuccess = "newEnrolGroupSuccess", OnFailure = "newEnrolGroupFailure" }, new { id = "newEnrolmentForm" }))
@@ -263,7 +263,7 @@
     <script type="text/x-jsrender" id="enrolmentsActionsTemplate">
         <div>
             <button type='button' class='btn btn-sm btn-danger js-delete' data-enrolment-id="${Id}">
-                <i class="far fa-trash-alt"></i> Remove
+                Remove
             </button>
         </div>
     </script>

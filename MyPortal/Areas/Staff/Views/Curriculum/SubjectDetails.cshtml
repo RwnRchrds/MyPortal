@@ -77,7 +77,7 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Add Subject Staff Member</h4>
+                <h5 class="modal-title">Add Subject Staff Member</h5>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
             @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiCreateSubjectStaff", new { }), HttpMethod = "POST", OnSuccess = "newSubjectStaffSuccess", OnFailure = "newSubjectStaffFailure" }, new { id = "newSessionForm" }))
@@ -111,7 +111,7 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Edit Subject Staff Member</h4>
+                <h5 class="modal-title">Edit Subject Staff Member</h5>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
             @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiUpdateSubjectStaff", new { }), HttpMethod = "POST", OnSuccess = "editSubjectStaffSuccess", OnFailure = "editSubjectStaffFailure" }, new { id = "editSubjectStaffForm" }))
@@ -239,8 +239,8 @@
 
     <script id="subjectStaffActionsTemplate" type="text/x-jsrender">
         <div>
-            <button class="btn btn-primary btn-sm js-edit mr-1" type="button" data-staff-id="${Id}"><i class="fas fa-edit"></i> Edit</button>
-            <button class="btn btn-danger btn-sm js-delete" type="button" data-staff-id="${Id}"><i class="fas fa-trash-alt"></i> Delete</button>
+            <button class="btn btn-link js-edit" type="button" data-staff-id="${Id}">Edit</button>
+            <button class="btn btn-link js-delete" type="button" data-staff-id="${Id}">Delete</button>
         </div>
     </script>
 

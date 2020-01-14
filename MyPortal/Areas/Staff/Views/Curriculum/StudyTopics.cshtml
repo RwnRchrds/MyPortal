@@ -42,7 +42,7 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">New Study Topic</h4>
+                <h5 class="modal-title">New Study Topic</h5>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
             @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiCreateStudyTopic", new {}), HttpMethod = "POST", OnSuccess = "newStudyTopicsuccess", OnFailure = "newStudyTopicFailure"}, new {id = "newStudyTopicForm"}))
@@ -78,7 +78,7 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">New Study Topic</h4>
+                <h5 class="modal-title">New Study Topic</h5>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
             @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiUpdateStudyTopic", new {}), HttpMethod = "POST", OnSuccess = "editStudyTopicsuccess", OnFailure = "editStudyTopicFailure"}, new {id = "editStudyTopicForm"}))
@@ -219,12 +219,12 @@
 
     <script type="text/x-jsrender" id="studyTopicsActionsTemplate">
                 <div>
-                    <button type='button' class='btn btn-sm btn-primary mr-1 js-edit' data-topic-id="${Id}">
-                        <i class="fas fa-edit"></i> Edit
+                    <button type='button' class='btn btn-link js-edit' data-topic-id="${Id}">
+                        Edit
                     </button>
                     
-                    <button type='button' class='btn btn-sm btn-danger js-delete' data-topic-id="${Id}">
-                        <i class="fas fa-trash-alt"></i> Delete
+                    <button type='button' class='btn btn-link js-delete' data-topic-id="${Id}">
+                        Delete
                     </button>
                 </div>
             </script>

@@ -83,7 +83,7 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Add Period for Class</h4>
+                <h5 class="modal-title">Add Period for Class</h5>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
             @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiCreateSession", new { }), HttpMethod = "POST", OnSuccess = "newSessionSuccess", OnFailure = "newSessionFailure" }, new { id = "newSessionForm" }))
@@ -112,7 +112,7 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Edit Session</h4>
+                <h5 class="modal-title">Edit Session</h5>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
             @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiUpdateSession", new { }), HttpMethod = "POST", OnSuccess = "editSessionSuccess", OnFailure = "editSessionFailure" }, new { id = "editSessionForm" }))
@@ -142,7 +142,7 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Enrol Student</h4>
+                <h5 class="modal-title">Enrol Student</h5>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
             @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiCreateEnrolment", new { }), HttpMethod = "POST", OnSuccess = "newEnrolIndSuccess", OnFailure = "newEnrolIndFailure" }, new { id = "newEnrolmentForm" }))
@@ -174,7 +174,7 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Enrol Group</h4>
+                <h5 class="modal-title">Enrol Group</h5>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
             @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiEnrolRegGroup", new { }), HttpMethod = "POST", OnSuccess = "newEnrolGroupSuccess", OnFailure = "newEnrolGroupFailure" }, new { id = "newEnrolmentForm" }))
@@ -440,12 +440,12 @@
 
     <script type="text/x-jsrender" id="sessionsActionsTemplate">
         <div>
-            <button type='button' class='btn btn-primary btn-sm mr-1 js-edit' data-session-id="${Id}">
-                <i class="far fa-edit"></i> Edit
+            <button type='button' class='btn btn-link js-edit' data-session-id="${Id}">
+                Edit
             </button>
 
-            <button type='button' class='btn btn-danger btn-sm js-delete' data-session-id="${Id}">
-                <i class="far fa-trash-alt"></i> Delete
+            <button type='button' class='btn btn-link js-delete' data-session-id="${Id}">
+                Delete
             </button>
         </div>
     </script>
@@ -458,8 +458,8 @@
 
     <script type="text/x-jsrender" id="enrolmentsActionsTemplate">
         <div>
-            <button type='button' class='btn btn-sm btn-danger js-delete' data-enrolment-id="${Id}">
-                <i class="far fa-trash-alt"></i> Remove
+            <button type='button' class='btn btn-link js-delete' data-enrolment-id="${Id}">
+                Remove
             </button>
         </div>
     </script>

@@ -41,7 +41,7 @@
             <!--content-->
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">New Result Set</h4>
+                    <h5 class="modal-title">New Result Set</h5>
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
                 </div>
                 @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiCreateResultSet", new {}), HttpMethod = "POST", OnSuccess = "newResultSetSuccess", OnFailure = "newResultSetFailure" }, new { id = "newResultSetForm" }))
@@ -53,8 +53,8 @@
                             @Html.ValidationMessageFor(x => x.ResultSet.Name)
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-sm btn-primary">Save</button>
                         </div>
                     </div>
                 }
@@ -67,7 +67,7 @@
             <!--content-->
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Edit Result Set</h4>
+                    <h5 class="modal-title">Edit Result Set</h5>
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
                 </div>
                 @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiUpdateResultSet", new {}), HttpMethod = "POST", OnSuccess = "editResultSetSuccess", OnFailure = "editResultSetFailure" }, new { id = "editResultSetForm" }))
@@ -177,16 +177,12 @@
             }
         }
 
-        function renderActions(current, id) {
+        function renderActions(id) {
             const editButton =
-                `<button type='button' class='btn btn-sm btn-primary mr-1 js-edit' data-set-id="${id}">
-            <i class="fas fa-pencil-alt"></i> Edit
-</button>`;
+                `<button type='button' class='btn btn-link js-edit' data-set-id="${id}">Edit</button>`;
 
             const deleteButton =
-                `<button type='button' class='btn btn-sm btn-danger js-delete' data-set-id="${id}">
-            <i class="fas fa-trash-alt"></i> Delete
-</button>`;
+                `<button type='button' class='btn btn-link js-delete' data-set-id="${id}">Delete</button>`;
 
             return editButton + deleteButton;
         }
@@ -206,7 +202,7 @@
 
     <script type="text/x-jsrender" id="resultSetsActionsTemplate">
         <div>
-            ${renderActions(IsCurrent, Id)}
+            ${renderActions(Id)}
         </div>
     </script>
 

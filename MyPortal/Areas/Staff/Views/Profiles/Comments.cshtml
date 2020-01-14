@@ -59,7 +59,7 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">New Comment</h4>
+                <h5 class="modal-title">New Comment</h5>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
             @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiProfilesCreateComment", new { }), HttpMethod = "POST", OnSuccess = "newCommentSuccess", OnFailure = "newCommentFailure" }, new { id = "newCommentForm" }))
@@ -67,17 +67,17 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Comment Bank")
-                        @Html.DropDownListFor(l => l.Comment.CommentBankId, new SelectList(Model.CommentBanks, "Id", "Name"), "Select Comment Bank", new { @class = "form-control", Name = "CommentBankId", id = "newCommentBankControl" })
+                        @Html.DropDownListFor(l => l.Comment.CommentBankId, new SelectList(Model.CommentBanks, "Id", "Name"), "Select Comment Bank", new { @class = "form-control form-control-sm", Name = "CommentBankId", id = "newCommentBankControl" })
                         @Html.ValidationMessageFor(x => x.Comment.CommentBankId)
                     </div>
                     <div class="form-group">
                         @Html.Label("Value")
-                        @Html.TextAreaFor(x => x.Comment.Value, new { @class = "form-control", Name = "Value" })
+                        @Html.TextAreaFor(x => x.Comment.Value, new { @class = "form-control form-control-sm", Name = "Value" })
                         @Html.ValidationMessageFor(x => x.Comment.Value)
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-sm btn-primary">Save</button>
                     </div>
                 </div>
             }
@@ -90,7 +90,7 @@
         <!--content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Edit Comment</h4>
+                <h5 class="modal-title">Edit Comment</h5>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
             @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiProfilesUpdateComment", new { }), HttpMethod = "POST", OnSuccess = "editCommentSuccess", OnFailure = "editCommentFailure" }, new { id = "editCommentForm" }))
@@ -98,20 +98,20 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @Html.Label("Comment Bank")
-                        @Html.DropDownListFor(l => l.Comment.CommentBankId, new SelectList(Model.CommentBanks, "Id", "Name"), "Select Comment Bank", new { @class = "form-control", Name = "CommentBankId", id = "editCommentBankControl" })
+                        @Html.DropDownListFor(l => l.Comment.CommentBankId, new SelectList(Model.CommentBanks, "Id", "Name"), "Select Comment Bank", new { @class = "form-control form-control-sm", Name = "CommentBankId", id = "editCommentBankControl" })
                         @Html.ValidationMessageFor(x => x.Comment.CommentBankId)
                     </div>
                     <div class="form-group">
                         @Html.Label("Value")
-                        @Html.TextAreaFor(x => x.Comment.Value, new { @class = "form-control", Name = "Value", id = "editCommentValueControl" })
+                        @Html.TextAreaFor(x => x.Comment.Value, new { @class = "form-control form-control-sm", Name = "Value", id = "editCommentValueControl" })
                         @Html.ValidationMessageFor(x => x.Comment.Value)
                     </div>
                     <div class="form-group">
                         @Html.HiddenFor(x => x.Comment.Id, new { id = "editCommentIdControl", Name = "Id" })
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-sm btn-primary">Save</button>
                     </div>
                 </div>
             }
@@ -229,12 +229,12 @@
 
     <script type="text/x-jsrender" id="commentActionsTemplate">
         <div>
-            <button type='button' class='btn btn-xs btn-warning mp-btn-action js-edit' data-comment-id="${Id}">
-                <i class="fas fa-edit"></i>
+            <button type='button' class='btn btn-link js-edit' data-comment-id="${Id}">
+                Edit
             </button>
 
-            <button type='button' class='btn btn-xs btn-danger mp-btn-action js-delete' data-comment-id="${Id}">
-                <i class="far fa-trash-alt"></i>
+            <button type='button' class='btn btn-link js-delete' data-comment-id="${Id}">
+                Delete
             </button>
         </div>
     </script>
