@@ -1,10 +1,11 @@
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using MyPortal.BusinessLogic.Services;
 using MyPortal.Models.Identity;
 
-namespace MyPortal.BusinessLogic.Services
+namespace MyPortal.Services
 {
-    public abstract class IdentityService : MyPortalService
+    public abstract class IdentityService
     {
         protected readonly IdentityContext Identity;
         protected readonly UserManager<ApplicationUser, string> UserManager;
@@ -14,7 +15,7 @@ namespace MyPortal.BusinessLogic.Services
         protected readonly RoleManager<ApplicationRole, string> RoleManager;
         protected readonly RoleStore<ApplicationRole> RoleStore;
 
-        public IdentityService() : base()
+        public IdentityService()
         {
             Identity = new IdentityContext();
             UserStore = new UserStore<ApplicationUser, ApplicationRole, string, IdentityUserLogin, IdentityUserRole,

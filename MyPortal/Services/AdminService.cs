@@ -12,13 +12,7 @@ using MyPortal.Models.Identity;
 namespace MyPortal.Services
 {
     public class AdminService : IdentityService
-    { 
-
-        public AdminService() : base()
-        {
-
-        }
-        
+    {
         public async Task AddUserToRole(UserRoleModel roleModel)
         {
             var userInDb = await UserManager.FindByIdAsync(roleModel.UserId);

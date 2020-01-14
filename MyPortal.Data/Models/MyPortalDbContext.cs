@@ -746,6 +746,12 @@ namespace MyPortal.Data.Models
                 .WithRequired(e => e.SystemArea)
                 .HasForeignKey(e => e.AreaId)
                 .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<RelationshipType>()
+                .HasMany(e => e.StudentContacts)
+                .WithRequired(e => e.RelationshipType)
+                .HasForeignKey(e => e.RelationshipTypeId)
+                .WillCascadeOnDelete(false);
         }
     }
 }

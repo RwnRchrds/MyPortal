@@ -6,7 +6,7 @@ namespace MyPortal.Data.Models
     public class StudentContact
     {
         public int Id { get; set; }
-        public int ContactTypeId { get; set; }
+        public int RelationshipTypeId { get; set; }
         public int StudentId { get; set; }
         public int ContactId { get; set; }
 
@@ -15,6 +15,7 @@ namespace MyPortal.Data.Models
         public bool PupilReport { get; set; }
         public bool CourtOrder { get; set; }
 
+        public virtual RelationshipType RelationshipType { get; set; }
         public virtual Student Student { get; set; }
         public virtual Contact Contact { get; set; }
     }
