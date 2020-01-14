@@ -27,7 +27,6 @@ namespace MyPortal.BusinessLogic.Services
             ValidationService.ValidateModel(course);
 
             UnitOfWork.TrainingCourses.Add(Mapper.Map<TrainingCourse>(course));
-            await UnitOfWork.Complete();
         }
 
         public async Task CreateObservation(ObservationDto observation,
@@ -46,7 +45,8 @@ namespace MyPortal.BusinessLogic.Services
             }
 
             UnitOfWork.Observations.Add(Mapper.Map<Observation>(observation));
-            await UnitOfWork.Complete();
+
+            
         }
 
         public async Task CreateTrainingCertificate(TrainingCertificateDto certificate)
@@ -54,7 +54,7 @@ namespace MyPortal.BusinessLogic.Services
             ValidationService.ValidateModel(certificate);
 
             UnitOfWork.TrainingCertificates.Add(Mapper.Map<TrainingCertificate>(certificate));
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task DeleteCourse(int courseId)
@@ -67,7 +67,7 @@ namespace MyPortal.BusinessLogic.Services
             }
 
             UnitOfWork.TrainingCourses.Remove(courseInDb);
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task DeleteObservation(int observationId)
@@ -75,7 +75,7 @@ namespace MyPortal.BusinessLogic.Services
             var observation = await UnitOfWork.Observations.GetById(observationId);
 
             UnitOfWork.Observations.Remove(observation);
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task DeleteTrainingCertificate(int staffId, int courseId)
@@ -83,7 +83,7 @@ namespace MyPortal.BusinessLogic.Services
             var certInDb = await UnitOfWork.TrainingCertificates.Get(staffId, courseId);
 
             UnitOfWork.TrainingCertificates.Remove(certInDb);
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task<IEnumerable<TrainingCourseDto>> GetAllTrainingCourses()
@@ -146,7 +146,7 @@ namespace MyPortal.BusinessLogic.Services
 
             certInDb.Status = certificate.Status;
 
-            await UnitOfWork.Complete();
+            
         }
         
         public async Task UpdateCourse(TrainingCourseDto course)
@@ -161,7 +161,7 @@ namespace MyPortal.BusinessLogic.Services
             courseInDb.Code = course.Code;
             courseInDb.Description = course.Description;
 
-            await UnitOfWork.Complete();
+            
         }
         
         public async Task UpdateObservation(ObservationDto observation)
@@ -176,7 +176,7 @@ namespace MyPortal.BusinessLogic.Services
             observationInDb.Outcome = observation.Outcome;
             observationInDb.ObserverId = observation.ObserverId;
 
-            await UnitOfWork.Complete();
+            
         }
     }
 }

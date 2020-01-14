@@ -4,7 +4,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 
-namespace MyPortal.Models.Identity
+namespace MyPortal.BusinessLogic.Models.Identity
 {
     public class ApplicationSignInManager : SignInManager<ApplicationUser, string>
     {

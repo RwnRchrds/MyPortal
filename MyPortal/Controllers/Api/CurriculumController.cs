@@ -14,8 +14,7 @@ using MyPortal.BusinessLogic.Dtos.DataGrid;
 using MyPortal.BusinessLogic.Models;
 using MyPortal.BusinessLogic.Models.Data;
 using MyPortal.BusinessLogic.Services;
-using MyPortal.Services;
-using MyPortal.Services.Identity;
+using MyPortal.BusinessLogic.Services.Identity;
 using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
@@ -205,6 +204,7 @@ namespace MyPortal.Controllers.Api
                 @class.AcademicYearId = academicYearId;
 
                 await _service.CreateClass(@class);
+                await _service.SaveChanges();
 
                 return Ok("Class created");
             }
@@ -222,6 +222,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdateClass(@class);
+                await _service.SaveChanges();
 
                 return Ok("Class updated");
             }
@@ -239,6 +240,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteClass(classId);
+                await _service.SaveChanges();
 
                 return Ok("Class deleted");
             }
@@ -307,6 +309,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.CreateSession(session);
+                await _service.SaveChanges();
 
                 return Ok("Session created");
             }
@@ -324,6 +327,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.CreateSessionForRegPeriods(session);
+                await _service.SaveChanges();
 
                 return Ok("Sessions created");
             }
@@ -341,6 +345,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdateSession(session);
+                await _service.SaveChanges();
 
                 return Ok("Session updated");
             }
@@ -358,6 +363,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteSession(sessionId);
+                await _service.SaveChanges();
 
                 return Ok("Session deleted");
             }
@@ -460,6 +466,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.CreateEnrolment(enrolment);
+                await _service.SaveChanges();
 
                 return Ok("Enrolment created");
             }
@@ -477,6 +484,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.CreateEnrolmentsForRegGroup(enrolment);
+                await _service.SaveChanges();
 
                 return Ok("Group enrolled");
             }
@@ -494,6 +502,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteEnrolment(enrolmentId);
+                await _service.SaveChanges();
 
                 return Ok("Enrolment deleted");
             }
@@ -511,6 +520,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.CreateSubject(subject);
+                await _service.SaveChanges();
 
                 return Ok("Subject created");
             }
@@ -528,6 +538,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteSubject(subjectId);
+                await _service.SaveChanges();
 
                 return Ok("Subject deleted");
             }
@@ -612,6 +623,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.CreateSubjectStaff(subjectStaff);
+                await _service.SaveChanges();
 
                 return Ok("Subject staff member created");
             }
@@ -629,6 +641,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdateSubjectStaff(subjectStaff);
+                await _service.SaveChanges();
 
                 return Ok("Subject staff member updated");
             }
@@ -646,6 +659,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteSubjectStaff(subjectStaffId);
+                await _service.SaveChanges();
 
                 return Ok("Subject staff deleted");
             }
@@ -682,6 +696,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdateSubject(subject);
+                await _service.SaveChanges();
 
                 return Ok("Subject updated");
             }
@@ -699,6 +714,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdateStudyTopic(studyTopic);
+                await _service.SaveChanges();
 
                 return Ok("Study topic created");
             }
@@ -716,6 +732,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteStudyTopic(studyTopicId);
+                await _service.SaveChanges();
 
                 return Ok("Study topic deleted");
             }
@@ -782,6 +799,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdateStudyTopic(studyTopic);
+                await _service.SaveChanges();
 
                 return Ok("Study topic updated");
             }
@@ -878,6 +896,7 @@ namespace MyPortal.Controllers.Api
                     plan.AuthorId = author.Id;
 
                     await _service.CreateLessonPlan(plan);
+                    await _service.SaveChanges();
 
                     return Ok("Lesson plan created");
                 }
@@ -896,6 +915,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdateLessonPlan(plan);
+                await _service.SaveChanges();
 
                 return Ok("Lesson plan updated");
             }
@@ -913,6 +933,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteLessonPlan(lessonPlanId);
+                await _service.SaveChanges();
 
                 return Ok("Lesson plan deleted");
             }

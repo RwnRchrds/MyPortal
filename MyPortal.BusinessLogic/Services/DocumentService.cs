@@ -28,8 +28,6 @@ namespace MyPortal.BusinessLogic.Services
             document.Date = DateTime.Now;
 
             UnitOfWork.Documents.Add(Mapper.Map<Document>(document));
-
-            await UnitOfWork.Complete();
         }
 
         public async Task CreatePersonAttachment(PersonAttachmentDto attachment)
@@ -49,8 +47,6 @@ namespace MyPortal.BusinessLogic.Services
 
             UnitOfWork.Documents.Add(Mapper.Map<Document>(documentObject));
             UnitOfWork.PersonAttachments.Add(Mapper.Map<PersonAttachment>(attachment));
-
-            await UnitOfWork.Complete();
         }
 
         public async Task DeleteDocument(int documentId)
@@ -63,8 +59,6 @@ namespace MyPortal.BusinessLogic.Services
             }
 
             UnitOfWork.Documents.Remove(documentInDb);
-
-            await UnitOfWork.Complete();
         }
 
         public async Task DeletePersonAttachment(int documentId)
@@ -86,8 +80,6 @@ namespace MyPortal.BusinessLogic.Services
             UnitOfWork.PersonAttachments.Remove(staffDocument);
 
             UnitOfWork.Documents.Remove(attachedDocument);
-
-            await UnitOfWork.Complete();
         }
 
         public async Task<IEnumerable<DocumentDto>> GetAllGeneralDocuments()
@@ -137,8 +129,6 @@ namespace MyPortal.BusinessLogic.Services
             documentInDb.Url = document.Url;
             documentInDb.IsGeneral = true;
             documentInDb.Approved = document.Approved;
-
-            await UnitOfWork.Complete();
         }
         
         public async Task UpdatePersonAttachment(PersonAttachmentDto attachment)
@@ -149,8 +139,6 @@ namespace MyPortal.BusinessLogic.Services
             documentInDb.Document.Url = attachment.Document.Url;
             documentInDb.Document.IsGeneral = false;
             documentInDb.Document.Approved = true;
-
-            await UnitOfWork.Complete();
         }
     }
 }

@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
-using MyPortal.BusinessLogic.Services;
+﻿using System.Threading.Tasks;
 
-namespace MyPortal.Services.Identity
+namespace MyPortal.BusinessLogic.Services.Identity
 {
     public class UserService : IdentityService
     {

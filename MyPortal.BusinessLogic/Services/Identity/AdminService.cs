@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 using MyPortal.BusinessLogic.Dtos.Identity;
 using MyPortal.BusinessLogic.Exceptions;
 using MyPortal.BusinessLogic.Models.Data;
-using MyPortal.BusinessLogic.Services;
-using MyPortal.Models.Identity;
+using MyPortal.BusinessLogic.Models.Identity;
 
-namespace MyPortal.Services
+namespace MyPortal.BusinessLogic.Services.Identity
 {
     public class AdminService : IdentityService
     {

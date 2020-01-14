@@ -1,11 +1,11 @@
+using System;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using MyPortal.BusinessLogic.Services;
-using MyPortal.Models.Identity;
+using MyPortal.BusinessLogic.Models.Identity;
 
-namespace MyPortal.Services
+namespace MyPortal.BusinessLogic.Services.Identity
 {
-    public abstract class IdentityService
+    public abstract class IdentityService : IDisposable
     {
         protected readonly IdentityContext Identity;
         protected readonly UserManager<ApplicationUser, string> UserManager;
@@ -23,6 +23,16 @@ namespace MyPortal.Services
             UserManager = new UserManager<ApplicationUser, string>(UserStore);
             RoleStore = new RoleStore<ApplicationRole>(Identity);
             RoleManager = new RoleManager<ApplicationRole, string>(RoleStore);
+        }
+
+
+        public void Dispose()
+        {
+            Identity?.Dispose();
+            UserManager?.Dispose();
+            UserStore?.Dispose();
+            RoleManager?.Dispose();
+            RoleStore?.Dispose();
         }
     }
 }

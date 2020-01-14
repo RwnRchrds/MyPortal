@@ -25,8 +25,6 @@ namespace MyPortal.BusinessLogic.Services
             ValidationService.ValidateModel(emailAddress);
 
             UnitOfWork.EmailAddresses.Add(Mapper.Map<EmailAddress>(emailAddress));
-
-            await UnitOfWork.Complete();
         }
 
         public async Task UpdateEmailAddress(EmailAddressDto emailAddress)
@@ -42,8 +40,6 @@ namespace MyPortal.BusinessLogic.Services
             emailInDb.Main = emailAddress.Main;
             emailInDb.Primary = emailAddress.Primary;
             emailInDb.Notes = emailAddress.Notes;
-
-            await UnitOfWork.Complete();
         }
 
         public async Task DeleteEmailAddress(int emailAddressId)
@@ -56,8 +52,6 @@ namespace MyPortal.BusinessLogic.Services
             }
 
             UnitOfWork.EmailAddresses.Remove(emailInDb);
-
-            await UnitOfWork.Complete();
         }
 
         public async Task CreatePhoneNumber(PhoneNumberDto phoneNumber)
@@ -65,8 +59,6 @@ namespace MyPortal.BusinessLogic.Services
             ValidationService.ValidateModel(phoneNumber);
 
             UnitOfWork.PhoneNumbers.Add(Mapper.Map<PhoneNumber>(phoneNumber));
-
-            await UnitOfWork.Complete();
         }
 
         public async Task UpdatePhoneNumber(PhoneNumberDto phoneNumber)
@@ -92,8 +84,6 @@ namespace MyPortal.BusinessLogic.Services
             }
 
             UnitOfWork.PhoneNumbers.Remove(phoneNumber);
-
-            await UnitOfWork.Complete();
         }
 
         public async Task<EmailAddressDto> GetEmailAddressById(int emailAddressId)
@@ -135,8 +125,6 @@ namespace MyPortal.BusinessLogic.Services
             ValidationService.ValidateModel(address);
 
             UnitOfWork.Addresses.Add(Mapper.Map<Address>(address));
-
-            await UnitOfWork.Complete();
         }
 
         public async Task UpdateAddress(AddressDto address)
@@ -189,8 +177,6 @@ namespace MyPortal.BusinessLogic.Services
             ValidationService.ValidateModel(addressPerson);
 
             UnitOfWork.AddressPersons.Add(Mapper.Map<AddressPerson>(addressPerson));
-
-            await UnitOfWork.Complete();
         }
 
         public async Task RemovePersonFromAddress(int addressPersonId)
@@ -203,8 +189,6 @@ namespace MyPortal.BusinessLogic.Services
             }
 
             UnitOfWork.AddressPersons.Remove(addressPerson);
-
-            await UnitOfWork.Complete();
         }
 
         public async Task DeleteAddress(int addressId)
@@ -217,8 +201,6 @@ namespace MyPortal.BusinessLogic.Services
             }
 
             UnitOfWork.Addresses.Remove(address);
-
-            await UnitOfWork.Complete();
         }
 
         public async Task<IEnumerable<AddressDto>> GetAddressesByPerson(int personId)

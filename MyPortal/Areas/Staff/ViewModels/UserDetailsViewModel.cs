@@ -2,7 +2,7 @@
 using Microsoft.AspNet.Identity.EntityFramework;
 using MyPortal.BusinessLogic.Interfaces;
 using MyPortal.BusinessLogic.Models.Data;
-using MyPortal.Models.Identity;
+using MyPortal.BusinessLogic.Models.Identity;
 
 namespace MyPortal.Areas.Staff.ViewModels
 {

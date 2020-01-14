@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using System.Web;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using MyPortal.BusinessLogic.Services;
-using MyPortal.Models.Identity;
+using MyPortal.BusinessLogic.Models.Identity;
 
-namespace MyPortal.Services
+namespace MyPortal.BusinessLogic.Services.Identity
 {
     public static class PermissionsService
     {

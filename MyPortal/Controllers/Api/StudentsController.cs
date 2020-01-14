@@ -102,7 +102,8 @@ namespace MyPortal.Controllers.Api
         {
             try
             {
-                await _service.UpdateStudent(student);
+                await _service.UpdateStudent(student); 
+                await _service.SaveChanges();
 
                 return Ok("Student updated");
             }

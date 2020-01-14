@@ -1,8 +1,8 @@
 using System.Web;
 using System.Web.Mvc;
+using MyPortal.BusinessLogic.Models.Identity;
 using MyPortal.BusinessLogic.Services;
-using MyPortal.Models.Identity;
-using MyPortal.Services;
+using MyPortal.BusinessLogic.Services.Identity;
 
 namespace MyPortal.Attributes.MvcAuthorise
 {

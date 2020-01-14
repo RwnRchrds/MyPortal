@@ -12,8 +12,7 @@ using MyPortal.BusinessLogic.Dtos;
 using MyPortal.BusinessLogic.Dtos.Lite;
 using MyPortal.BusinessLogic.Models.Data;
 using MyPortal.BusinessLogic.Services;
-
-using MyPortal.Services;
+using MyPortal.BusinessLogic.Services.Identity;
 using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
@@ -63,6 +62,7 @@ namespace MyPortal.Controllers.Api
                     if (attendanceMarks != null)
                     {
                         await _service.SaveRegisterMarks(attendanceMarks, true);
+                        await _service.SaveChanges();
                     }
 
                     return Ok("Register saved.");
@@ -151,6 +151,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.CreateAttendanceWeeksForAcademicYear(academicYearId);
+                await _service.SaveChanges();
             }
             catch (Exception e)
             {

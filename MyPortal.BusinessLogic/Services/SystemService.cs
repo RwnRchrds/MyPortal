@@ -40,7 +40,7 @@ namespace MyPortal.BusinessLogic.Services
 
                 UnitOfWork.Bulletins.Add(Mapper.Map<Bulletin>(bulletin));
 
-                await UnitOfWork.Complete();
+                
             }
         }
 
@@ -55,7 +55,7 @@ namespace MyPortal.BusinessLogic.Services
 
             UnitOfWork.Bulletins.Remove(bulletinInDb);
 
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task<IEnumerable<BulletinDto>> GetAllBulletins()
@@ -106,7 +106,7 @@ namespace MyPortal.BusinessLogic.Services
             bulletinInDb.ShowStudents = bulletin.ShowStudents;
             bulletinInDb.Approved = approvable && bulletin.Approved;
 
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task<IEnumerable<LocationDto>> GetLocations()

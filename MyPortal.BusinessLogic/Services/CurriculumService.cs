@@ -36,11 +36,9 @@ namespace MyPortal.BusinessLogic.Services
             }
 
             UnitOfWork.Classes.Add(Mapper.Map<Class>(@class));
-
-            await UnitOfWork.Complete();
         }
 
-        public async Task CreateEnrolment(EnrolmentDto enrolment,  bool commitImmediately = true)
+        public async Task CreateEnrolment(EnrolmentDto enrolment)
         {
             ValidationService.ValidateModel(enrolment);
 
@@ -49,11 +47,6 @@ namespace MyPortal.BusinessLogic.Services
             if (await StudentCanEnrol(enrolment.StudentId, @class.Id, @class.AcademicYearId))
             {
                 UnitOfWork.Enrolments.Add(Mapper.Map<Enrolment>(enrolment));
-
-                if (commitImmediately)
-                {
-                    await UnitOfWork.Complete();
-                }
 
                 return;
             }
@@ -72,10 +65,8 @@ namespace MyPortal.BusinessLogic.Services
                     StudentId = studentId
                 };
 
-                await CreateEnrolment(studentEnrolment, false);
+                await CreateEnrolment(studentEnrolment);
             }
-
-            await UnitOfWork.Complete();
         }
 
         public async Task CreateEnrolmentsForRegGroup(GroupEnrolment enrolment)
@@ -95,10 +86,8 @@ namespace MyPortal.BusinessLogic.Services
                     StudentId = student.Id
                 };
 
-                await CreateEnrolment(studentEnrolment, false);
+                await CreateEnrolment(studentEnrolment);
             }
-
-            await UnitOfWork.Complete();
         }
 
         public async Task CreateLessonPlan(LessonPlanDto lessonPlan)
@@ -106,7 +95,6 @@ namespace MyPortal.BusinessLogic.Services
             ValidationService.ValidateModel(lessonPlan);
 
             UnitOfWork.LessonPlans.Add(Mapper.Map<LessonPlan>(lessonPlan));
-            await UnitOfWork.Complete();
         }
 
         public async Task CreateSession(SessionDto session)
@@ -130,7 +118,6 @@ namespace MyPortal.BusinessLogic.Services
             }
 
             UnitOfWork.Sessions.Add(Mapper.Map<Session>(session));
-            await UnitOfWork.Complete();
         }
 
         public async Task CreateSessionForRegPeriods(SessionDto session)
@@ -160,7 +147,7 @@ namespace MyPortal.BusinessLogic.Services
                 UnitOfWork.Sessions.Add(newSession);
             }
 
-            await UnitOfWork.Complete();
+            
 
         }
 
@@ -169,7 +156,7 @@ namespace MyPortal.BusinessLogic.Services
             ValidationService.ValidateModel(studyTopic);
 
             UnitOfWork.StudyTopics.Add(Mapper.Map<StudyTopic>(studyTopic));
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task CreateSubject(SubjectDto subject)
@@ -177,7 +164,7 @@ namespace MyPortal.BusinessLogic.Services
             ValidationService.ValidateModel(subject);
 
             UnitOfWork.Subjects.Add(Mapper.Map<Subject>(subject));
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task DeleteClass(int classId)
@@ -195,7 +182,7 @@ namespace MyPortal.BusinessLogic.Services
             }
 
             UnitOfWork.Classes.Remove(currClass);
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task DeleteEnrolment(int enrolmentId)
@@ -208,7 +195,7 @@ namespace MyPortal.BusinessLogic.Services
             }
 
             UnitOfWork.Enrolments.Remove(enrolment);
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task DeleteLessonPlan(int lessonPlanId)
@@ -216,7 +203,7 @@ namespace MyPortal.BusinessLogic.Services
             var plan = await UnitOfWork.LessonPlans.GetById(lessonPlanId);
 
             UnitOfWork.LessonPlans.Remove(plan);
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task DeleteSession(int sessionId)
@@ -229,7 +216,7 @@ namespace MyPortal.BusinessLogic.Services
             }
 
             UnitOfWork.Sessions.Remove(sessionInDb);
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task DeleteStudyTopic(int studyTopicId)
@@ -244,7 +231,7 @@ namespace MyPortal.BusinessLogic.Services
             if (!studyTopic.LessonPlans.Any())
             {
                 UnitOfWork.StudyTopics.Remove(studyTopic);
-                await UnitOfWork.Complete();
+                
             }
 
             throw new ServiceException(ExceptionType.BadRequest,"This study topic cannot be deleted");
@@ -268,7 +255,7 @@ namespace MyPortal.BusinessLogic.Services
 
             UnitOfWork.Subjects.Remove(subjectInDb);
 
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task<AcademicYearDto> GetAcademicYearById(int academicYearId)
@@ -525,7 +512,7 @@ namespace MyPortal.BusinessLogic.Services
             classInDb.TeacherId = @class.TeacherId;
             classInDb.YearGroupId = @class.YearGroupId;
 
-            await UnitOfWork.Complete();
+            
         }
         public async Task UpdateLessonPlan(LessonPlanDto lessonPlan)
         {
@@ -542,7 +529,7 @@ namespace MyPortal.BusinessLogic.Services
             planInDb.LearningObjectives = lessonPlan.LearningObjectives;
             planInDb.Homework = lessonPlan.Homework;
 
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task UpdateSession(SessionDto session)
@@ -568,7 +555,7 @@ namespace MyPortal.BusinessLogic.Services
             }
 
             sessionInDb.PeriodId = session.PeriodId;
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task UpdateStudyTopic(StudyTopicDto studyTopic)
@@ -586,7 +573,7 @@ namespace MyPortal.BusinessLogic.Services
             studyTopicInDb.SubjectId = studyTopic.SubjectId;
             studyTopicInDb.YearGroupId = studyTopic.YearGroupId;
 
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task UpdateSubject(SubjectDto subject)
@@ -594,7 +581,7 @@ namespace MyPortal.BusinessLogic.Services
             var subjectInDb = await GetSubjectById(subject.Id);
 
             subjectInDb.Name = subject.Name;
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task<bool> DateIsInAcademicYear(int academicYearId, DateTime date)
@@ -629,7 +616,7 @@ namespace MyPortal.BusinessLogic.Services
 
             UnitOfWork.SubjectStaffMembers.Add(Mapper.Map<SubjectStaffMember>(subjectStaff));
 
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task UpdateSubjectStaff(SubjectStaffMemberDto subjectStaff)
@@ -643,7 +630,7 @@ namespace MyPortal.BusinessLogic.Services
 
             subjectStaffInDb.RoleId = subjectStaff.RoleId;
 
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task DeleteSubjectStaff(int subjectStaffId)
@@ -657,7 +644,7 @@ namespace MyPortal.BusinessLogic.Services
 
             UnitOfWork.SubjectStaffMembers.Remove(subjectStaffInDb);
 
-            await UnitOfWork.Complete();
+            
         }
     }
 }

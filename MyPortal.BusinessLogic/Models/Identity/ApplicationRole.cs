@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNet.Identity.EntityFramework;
 
-namespace MyPortal.Models.Identity
+namespace MyPortal.BusinessLogic.Models.Identity
 {
     public class ApplicationRole : IdentityRole
     {

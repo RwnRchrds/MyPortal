@@ -27,7 +27,7 @@ namespace MyPortal.BusinessLogic.Services
 
             UnitOfWork.StaffMembers.Add(Mapper.Map<StaffMember>(staffMember));
 
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task DeleteStaffMember(int staffMemberId)
@@ -41,7 +41,7 @@ namespace MyPortal.BusinessLogic.Services
 
             UnitOfWork.StaffMembers.Remove(staffInDb);
 
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task<IEnumerable<StaffMemberDto>> GetAllStaffMembers()
@@ -100,7 +100,7 @@ namespace MyPortal.BusinessLogic.Services
             staffInDb.Person.Title = staffMember.Person.Title;
             staffInDb.Code = staffMember.Code;
 
-            await UnitOfWork.Complete();
+            
         }
     }
 }

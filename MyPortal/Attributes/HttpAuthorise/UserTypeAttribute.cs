@@ -1,9 +1,8 @@
-using MyPortal.Models;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using Microsoft.AspNet.Identity;
-using MyPortal.Models.Identity;
-using MyPortal.Services;
+using MyPortal.BusinessLogic.Models.Identity;
+using MyPortal.BusinessLogic.Services.Identity;
 
 namespace MyPortal.Attributes.HttpAuthorise
 {

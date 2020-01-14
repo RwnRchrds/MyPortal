@@ -13,7 +13,7 @@ using MyPortal.BusinessLogic.Dtos;
 using MyPortal.BusinessLogic.Dtos.DataGrid;
 using MyPortal.BusinessLogic.Models.Data;
 using MyPortal.BusinessLogic.Services;
-using MyPortal.Services;
+using MyPortal.BusinessLogic.Services.Identity;
 using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
@@ -42,6 +42,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.CreateBasketItem(basketItem);
+                await _service.SaveChanges();
                 
                 return Ok("Item added to basket");
             }
@@ -90,6 +91,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteBasketItem(basketItemId);
+                await _service.SaveChanges();
 
                 return Ok("Item removed from basket");
             }
@@ -107,6 +109,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteProduct(productId);
+                await _service.SaveChanges();
 
                 return Ok("Product deleted");
             }
@@ -210,6 +213,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.CreateProduct(product);
+                await _service.SaveChanges();
 
                 return Ok("Product created");
             }
@@ -227,6 +231,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdateProduct(product);
+                await _service.SaveChanges();
 
                 return Ok("Product updated");
             }
@@ -261,6 +266,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteSale(saleId);
+                await _service.SaveChanges();
 
                 return Ok("Sale deleted");
             }
@@ -417,6 +423,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.MarkSaleProcessed(saleId);
+                await _service.SaveChanges();
                 
                 return Ok("Sale marked as processed");
             }
@@ -441,6 +448,7 @@ namespace MyPortal.Controllers.Api
                 var academicYearId = await User.GetSelectedOrCurrentAcademicYearId();
 
                 await _service.CreateSale(sale, academicYearId);
+                await _service.SaveChanges();
 
                 return Ok("Sale created");
             }
@@ -461,6 +469,7 @@ namespace MyPortal.Controllers.Api
                 var academicYearId = await User.GetSelectedOrCurrentAcademicYearId();
 
                 await _service.CheckoutBasketForStudent(studentId, academicYearId);
+                await _service.SaveChanges();
 
                 return Ok("Sale completed");
             }
@@ -478,6 +487,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.RefundSale(saleId);
+                await _service.SaveChanges();
 
                 return Ok("Sale refunded");
             }
@@ -495,6 +505,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.ProcessManualTransaction(transaction);
+                await _service.SaveChanges();
 
                 return Ok("Account credited");
             }
@@ -512,6 +523,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.ProcessManualTransaction(transaction, true);
+                await _service.SaveChanges();
                 
                 return Ok("Account debited");
             }

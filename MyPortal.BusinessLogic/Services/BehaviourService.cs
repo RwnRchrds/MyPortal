@@ -30,7 +30,6 @@ namespace MyPortal.BusinessLogic.Services
             ValidationService.ValidateModel(achievement);
 
             UnitOfWork.Achievements.Add(Mapper.Map<Achievement>(achievement));
-            await UnitOfWork.Complete();
         }
 
         public async Task CreateDetention(DetentionDto detention)
@@ -40,7 +39,6 @@ namespace MyPortal.BusinessLogic.Services
             detention.Event.Subject = $"detention_{detention.DetentionTypeId}_{detention.Id}";
 
             UnitOfWork.Detentions.Add(Mapper.Map<Detention>(detention));
-            await UnitOfWork.Complete();
         }
 
         public async Task UpdateDetention(DetentionDto detention)
@@ -77,7 +75,7 @@ namespace MyPortal.BusinessLogic.Services
 
             UnitOfWork.IncidentDetentions.Add(entry);
 
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task DeleteIncidentDetention(int incidentDetentionId)
@@ -90,8 +88,6 @@ namespace MyPortal.BusinessLogic.Services
             }
 
             UnitOfWork.IncidentDetentions.Remove(detentionInDb);
-
-            await UnitOfWork.Complete();
         }
 
         public async Task UpdateIncidentDetention(IncidentDetention entry)
@@ -105,8 +101,6 @@ namespace MyPortal.BusinessLogic.Services
 
             detentionInDb.DetentionId = entry.DetentionId;
             detentionInDb.AttendanceStatusId = entry.AttendanceStatusId;
-
-            await UnitOfWork.Complete();
         }
 
         public async Task<Dictionary<int, string>> GetDetentionAttendanceStatusLookup()
@@ -133,7 +127,6 @@ namespace MyPortal.BusinessLogic.Services
             ValidationService.ValidateModel(incident);
 
             UnitOfWork.Incidents.Add(Mapper.Map<Incident>(incident));
-            await UnitOfWork.Complete();
         }
 
         public async Task DeleteAchievement(int achievementId)
@@ -146,8 +139,6 @@ namespace MyPortal.BusinessLogic.Services
             }
 
             UnitOfWork.Achievements.Remove(achievement);
-
-            await UnitOfWork.Complete();
         }
 
         public async Task DeleteBehaviourIncident(int incidentId)
@@ -160,8 +151,6 @@ namespace MyPortal.BusinessLogic.Services
             }
 
             UnitOfWork.Incidents.Remove(incident);
-
-            await UnitOfWork.Complete();
         }
 
         public async Task<AchievementDto> GetAchievementById(int achievementId)
@@ -269,8 +258,6 @@ namespace MyPortal.BusinessLogic.Services
             achievementInDb.Points = achievement.Points;
             achievementInDb.Resolved = achievement.Resolved;
             achievementInDb.AchievementTypeId = achievement.AchievementTypeId;
-
-            await UnitOfWork.Complete();
         }
 
         public async Task UpdateBehaviourIncident(IncidentDto incident)
@@ -282,8 +269,6 @@ namespace MyPortal.BusinessLogic.Services
             incidentInDb.Points = incident.Points;
             incidentInDb.Resolved = incident.Resolved;
             incidentInDb.BehaviourTypeId = incident.BehaviourTypeId;
-
-            await UnitOfWork.Complete();
         }
 
         public async Task<IEnumerable<AchievementTypeDto>> GetAchievementTypes()

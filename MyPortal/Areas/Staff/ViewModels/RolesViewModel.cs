@@ -1,4 +1,4 @@
-using MyPortal.Models.Identity;
+using MyPortal.BusinessLogic.Models.Identity;
 
 namespace MyPortal.Areas.Staff.ViewModels
 {

@@ -8,7 +8,7 @@ using Microsoft.AspNet.Identity;
 using MyPortal.Attributes.HttpAuthorise;
 using MyPortal.BusinessLogic.Dtos;
 using MyPortal.BusinessLogic.Services;
-using MyPortal.Services;
+using MyPortal.BusinessLogic.Services.Identity;
 
 namespace MyPortal.Controllers.Api
 {
@@ -40,6 +40,7 @@ namespace MyPortal.Controllers.Api
                 var approvePermissions = await User.HasPermissionAsync("ApproveBulletins");
 
                 await _service.CreateBulletin(bulletin, userId, approvePermissions);
+                await _service.SaveChanges();
 
                 return Ok("Bulletin created");
             }
@@ -58,6 +59,7 @@ namespace MyPortal.Controllers.Api
             {
                 var approvePermissions = await User.HasPermissionAsync("ApproveBulletins");
                 await _service.UpdateBulletin(bulletin, approvePermissions);
+                await _service.SaveChanges();
 
                 return Ok("Bulletin updated");
             }
@@ -75,13 +77,14 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteBulletin(bulletinId);
+                await _service.SaveChanges();
+
+                return Ok("Bulletin deleted");
             }
             catch (Exception e)
             {
                 return HandleException(e);
             }
-
-            return Ok("Bulletin deleted");
         }
 
         [HttpGet]

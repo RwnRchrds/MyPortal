@@ -25,7 +25,7 @@ namespace MyPortal.BusinessLogic.Services
             ValidationService.ValidateModel(regGroup);
 
             UnitOfWork.RegGroups.Add(Mapper.Map<RegGroup>(regGroup));
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task CreateYearGroup(YearGroupDto yearGroup)
@@ -33,7 +33,7 @@ namespace MyPortal.BusinessLogic.Services
             ValidationService.ValidateModel(yearGroup);
 
             UnitOfWork.YearGroups.Add(Mapper.Map<YearGroup>(yearGroup));
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task DeleteRegGroup(int regGroupId)
@@ -46,7 +46,7 @@ namespace MyPortal.BusinessLogic.Services
             }
 
             UnitOfWork.RegGroups.Remove(regGroupInDb);
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task DeleteYearGroup(int yearGroupId)
@@ -59,7 +59,7 @@ namespace MyPortal.BusinessLogic.Services
             }
 
             UnitOfWork.YearGroups.Remove(yearGroupInDb);
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task<IEnumerable<RegGroupDto>> GetAllRegGroups()
@@ -108,7 +108,7 @@ namespace MyPortal.BusinessLogic.Services
             regGroupInDb.Name = regGroup.Name;
             regGroupInDb.TutorId = regGroup.TutorId;
 
-            await UnitOfWork.Complete();
+            
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace MyPortal.BusinessLogic.Services
             yearGroupInDb.Name = yearGroup.Name;
             yearGroupInDb.HeadId = yearGroup.HeadId;
 
-            await UnitOfWork.Complete();
+            
         }
         
         public async Task<IDictionary<int, string>> GetAllYearGroupsLookup()

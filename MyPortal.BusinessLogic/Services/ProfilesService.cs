@@ -26,7 +26,7 @@ namespace MyPortal.BusinessLogic.Services
             ValidationService.ValidateModel(comment);
 
             UnitOfWork.Comments.Add(Mapper.Map<Comment>(comment));
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task CreateCommentBank(CommentBankDto commentBank)
@@ -34,7 +34,7 @@ namespace MyPortal.BusinessLogic.Services
             ValidationService.ValidateModel(commentBank);
 
             UnitOfWork.CommentBanks.Add(Mapper.Map<CommentBank>(commentBank));
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task CreateLogNote(ProfileLogNoteDto logNote)
@@ -44,7 +44,7 @@ namespace MyPortal.BusinessLogic.Services
             ValidationService.ValidateModel(logNote);
 
             UnitOfWork.ProfileLogNotes.Add(Mapper.Map<ProfileLogNote>(logNote));
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task DeleteComment(int commentId)
@@ -57,7 +57,7 @@ namespace MyPortal.BusinessLogic.Services
             }
 
             UnitOfWork.Comments.Remove(comment);
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task DeleteCommentBank(int commentBankId)
@@ -70,7 +70,7 @@ namespace MyPortal.BusinessLogic.Services
             }
 
             UnitOfWork.CommentBanks.Remove(commentBank);
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task DeleteLogNote(int logId)
@@ -84,7 +84,7 @@ namespace MyPortal.BusinessLogic.Services
 
             UnitOfWork.ProfileLogNotes.Remove(logInDb); //Delete from database
 
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task<IEnumerable<CommentBankDto>> GetAllCommentBanks()
@@ -100,6 +100,16 @@ namespace MyPortal.BusinessLogic.Services
         public async Task<IEnumerable<CommentDto>> GetAllComments()
         {
             return (await UnitOfWork.Comments.GetAll()).Select(Mapper.Map<CommentDto>).ToList();
+        }
+
+        public async Task<IEnumerable<ProfileLogNoteTypeDto>> GetAllLogNoteTypes()
+        {
+            return (await UnitOfWork.ProfileLogNoteTypes.GetAll()).Select(Mapper.Map<ProfileLogNoteTypeDto>).ToList();
+        }
+
+        public async Task<IDictionary<int, string>> GetAllLogTypesLookup()
+        {
+            return (await GetAllLogNoteTypes()).ToDictionary(x => x.Id, x => x.Name);
         }
 
         public async Task<CommentBankDto> GetCommentBankById(int commentBankId)
@@ -156,7 +166,7 @@ namespace MyPortal.BusinessLogic.Services
             commentInDb.Value = comment.Value;
             commentInDb.CommentBankId = comment.CommentBankId;
 
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task UpdateCommentBank(CommentBankDto commentBank)
@@ -165,7 +175,7 @@ namespace MyPortal.BusinessLogic.Services
             
             commentBankInDb.Name = commentBank.Name;
 
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task UpdateLogNote(ProfileLogNoteDto logNote)
@@ -175,17 +185,7 @@ namespace MyPortal.BusinessLogic.Services
             logInDb.TypeId = logNote.TypeId;
             logInDb.Message = logNote.Message;
 
-            await UnitOfWork.Complete();
-        }
-
-        public async Task<IEnumerable<ProfileLogNoteTypeDto>> GetAllLogNoteTypes()
-        {
-            return (await UnitOfWork.ProfileLogNoteTypes.GetAll()).Select(Mapper.Map<ProfileLogNoteTypeDto>).ToList();
-        }
-
-        public async Task<IDictionary<int, string>> GetAllLogTypesLookup()
-        {
-            return (await GetAllLogNoteTypes()).ToDictionary(x => x.Id, x => x.Name);
+            
         }
     }
 }

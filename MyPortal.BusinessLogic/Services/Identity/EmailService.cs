@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 
-namespace MyPortal.Services.Identity
+namespace MyPortal.BusinessLogic.Services.Identity
 {
     public class EmailService : IIdentityMessageService
     {

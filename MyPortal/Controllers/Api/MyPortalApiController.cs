@@ -9,10 +9,10 @@ using System.Web.Http;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
 using MyPortal.BusinessLogic.Exceptions;
+using MyPortal.BusinessLogic.Models.Identity;
 using MyPortal.BusinessLogic.Services;
+using MyPortal.BusinessLogic.Services.Identity;
 using MyPortal.Extensions;
-using MyPortal.Models.Identity;
-using MyPortal.Services;
 using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
@@ -42,6 +42,9 @@ namespace MyPortal.Controllers.Api
                         break;
                     case ExceptionType.Conflict:
                         statusCode = HttpStatusCode.Conflict;
+                        break;
+                    default:
+                        statusCode = HttpStatusCode.BadRequest;
                         break;
                 }
             }

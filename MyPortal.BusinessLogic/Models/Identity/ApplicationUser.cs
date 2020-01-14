@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
-namespace MyPortal.Models.Identity
+namespace MyPortal.BusinessLogic.Models.Identity
 {
     public enum UserType
     {

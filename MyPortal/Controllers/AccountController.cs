@@ -6,9 +6,9 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using MyPortal.BusinessLogic.Models.Identity;
 using MyPortal.BusinessLogic.Services;
-using MyPortal.Models;
-using MyPortal.Models.Identity;
+using MyPortal.ViewModels.Identity;
 
 namespace MyPortal.Controllers
 {
@@ -102,7 +102,7 @@ namespace MyPortal.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> LoginPost(LoginViewModel model, string returnUrl)
+        public async Task<ActionResult> LoginPost(LoginModel model, string returnUrl)
         {
             if (!ModelState.IsValid)
             {
@@ -110,11 +110,11 @@ namespace MyPortal.Controllers
             }
             
             var result =
-                await SignInManager.PasswordSignInAsync(model.Login.Username, model.Login.Password, model.Login.RememberMe, false);
+                await SignInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, false);
             switch (result)
             {
                 case SignInStatus.Success:
-                    var userName = model.Login.Username;
+                    var userName = model.Username;
                     await SetDefaultAcademicYear(userName);
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:

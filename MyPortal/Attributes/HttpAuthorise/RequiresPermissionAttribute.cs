@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Controllers;
-using MyPortal.Services;
+using MyPortal.BusinessLogic.Services.Identity;
 
 namespace MyPortal.Attributes.HttpAuthorise
 {

@@ -40,6 +40,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.CreateResult(result);
+                await _service.SaveChanges();
 
                 return Ok("Result created");
             }
@@ -92,6 +93,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.CreateResultSet(resultSet);
+                await _service.SaveChanges();
 
                 return Ok("Result set created");
             }
@@ -109,6 +111,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteResultSet(resultSetId);
+                await _service.SaveChanges();
 
                 return Ok("Result set deleted");
             }
@@ -188,6 +191,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdateResultSet(resultSet);
+                await _service.SaveChanges();
 
                 return Ok("Result set updated");
             }

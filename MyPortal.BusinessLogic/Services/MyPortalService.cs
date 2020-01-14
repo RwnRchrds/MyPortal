@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using AutoMapper;
 using MyPortal.Data.Interfaces;
 using MyPortal.Data.Persistence;
@@ -19,6 +20,11 @@ namespace MyPortal.BusinessLogic.Services
         protected MyPortalService(IUnitOfWork unitOfWork)
         {
             UnitOfWork = unitOfWork;
+        }
+
+        public async Task SaveChanges()
+        {
+            await UnitOfWork.Complete();
         }
 
         public void Dispose()

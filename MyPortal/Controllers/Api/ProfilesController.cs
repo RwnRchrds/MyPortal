@@ -9,7 +9,7 @@ using MyPortal.Attributes.HttpAuthorise;
 using MyPortal.BusinessLogic.Dtos;
 using MyPortal.BusinessLogic.Dtos.DataGrid;
 using MyPortal.BusinessLogic.Services;
-using MyPortal.Services;
+using MyPortal.BusinessLogic.Services.Identity;
 using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
@@ -48,6 +48,7 @@ namespace MyPortal.Controllers.Api
                     log.AuthorId = author.Id;
 
                     await _service.CreateLogNote(log);
+                    await _service.SaveChanges();
 
                     return Ok("Log created");
                 }
@@ -66,7 +67,8 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteLogNote(logId);
-                
+                await _service.SaveChanges();
+
                 return Ok("Log deleted");
             }
             catch (Exception e)
@@ -137,6 +139,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdateLogNote(log);
+                await _service.SaveChanges();
 
                 return Ok("Log updated");
             }
@@ -154,6 +157,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.CreateCommentBank(commentBank);
+                await _service.SaveChanges();
 
                 return Ok("Comment bank created");
             }
@@ -171,6 +175,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteCommentBank(commentBankId);
+                await _service.SaveChanges();
 
                 return Ok("Comment bank deleted");
             }
@@ -237,6 +242,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdateCommentBank(commentBank);
+                await _service.SaveChanges();
 
                 return Ok("Comment bank updated");
             }
@@ -254,7 +260,8 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.CreateComment(comment);
-                
+                await _service.SaveChanges();
+
                 return Ok("Comment created");
             }
             catch (Exception e)
@@ -271,6 +278,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteComment(commentId);
+                await _service.SaveChanges();
 
                 return Ok("Comment deleted");
             }
@@ -353,7 +361,8 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdateComment(comment);
-                
+                await _service.SaveChanges();
+
                 return Ok("Comment updated");
             }
             catch (Exception e)

@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MyPortal.Models.Identity
+namespace MyPortal.BusinessLogic.Models.Identity
 {
     [Table("AspNetPermissions")]
     public class Permission

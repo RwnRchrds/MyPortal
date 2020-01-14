@@ -49,6 +49,7 @@ namespace MyPortal.Controllers.Api
                 }
 
                 await _service.CreateDocument(document);
+                await _service.SaveChanges();
 
                 return Ok("Document created");
             }
@@ -168,6 +169,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteDocument(documentId);
+                await _service.SaveChanges();
 
                 return Ok("Document deleted.");
             }
@@ -185,6 +187,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdateDocument(document);
+                await _service.SaveChanges();
 
                 return Ok("Document updated.");
             }
@@ -203,6 +206,7 @@ namespace MyPortal.Controllers.Api
             {
                 var userId = User.Identity.GetUserId();
                 await _service.CreatePersonAttachment(document);
+                await _service.SaveChanges();
 
                 return Ok("Document created.");
             }
@@ -250,6 +254,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeletePersonAttachment(documentId);
+                await _service.SaveChanges();
 
                 return Ok("Document deleted.");
             }
@@ -267,6 +272,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdatePersonAttachment(document);
+                await _service.SaveChanges();
 
                 return Ok("Attachment updated.");
             }

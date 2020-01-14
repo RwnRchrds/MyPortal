@@ -11,7 +11,7 @@ using MyPortal.Attributes.HttpAuthorise;
 using MyPortal.BusinessLogic.Dtos;
 using MyPortal.BusinessLogic.Dtos.DataGrid;
 using MyPortal.BusinessLogic.Services;
-using MyPortal.Services;
+using MyPortal.BusinessLogic.Services.Identity;
 using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api
@@ -104,6 +104,7 @@ namespace MyPortal.Controllers.Api
                     achievement.AcademicYearId = academicYearId;
 
                     await _service.CreateAchievement(achievement);
+                    await _service.SaveChanges();
 
                     return Ok("Achievement created");
                 }
@@ -122,6 +123,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdateAchievement(achievement);
+                await _service.SaveChanges();
 
                 return Ok("Achievement updated");
             }
@@ -139,6 +141,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteAchievement(achievementId);
+                await _service.SaveChanges();
 
                 return Ok("Achievement deleted");
             }
@@ -201,6 +204,7 @@ namespace MyPortal.Controllers.Api
                     incident.AcademicYearId = academicYearId;
 
                     await _service.CreateBehaviourIncident(incident);
+                    await _service.SaveChanges();
 
                     return Ok("Incident created");
                 }
@@ -219,6 +223,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdateBehaviourIncident(incident);
+                await _service.SaveChanges();
 
                 return Ok("Incident updated");
             }
@@ -236,6 +241,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteBehaviourIncident(incidentId);
+                await _service.SaveChanges();
 
                 return Ok("Incident deleted");
             }

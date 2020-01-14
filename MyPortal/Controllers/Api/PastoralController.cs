@@ -8,7 +8,6 @@ using MyPortal.Attributes;
 using MyPortal.Attributes.HttpAuthorise;
 using MyPortal.BusinessLogic.Dtos;
 using MyPortal.BusinessLogic.Services;
-using MyPortal.Services;
 
 namespace MyPortal.Controllers.Api
 {
@@ -35,6 +34,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.CreateRegGroup(regGroup);
+                await _service.SaveChanges();
 
                 return Ok("Reg group created");
             }
@@ -52,6 +52,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteRegGroup(regGroupId);
+                await _service.SaveChanges();
 
                 return Ok("Reg group deleted");
             }
@@ -114,6 +115,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdateRegGroup(regGroup);
+                await _service.SaveChanges();
 
                 return Ok("Reg group updated");
             }
@@ -131,6 +133,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.CreateYearGroup(yearGroup);
+                await _service.SaveChanges();
 
                 return Ok("Year group created");
             }
@@ -148,6 +151,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteYearGroup(yearGroupId);
+                await _service.SaveChanges();
 
                 return Ok("Year group deleted");
             }
@@ -180,6 +184,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdateYearGroup(yearGroup);
+                await _service.SaveChanges();
 
                 return Ok("Year group updated");
             }

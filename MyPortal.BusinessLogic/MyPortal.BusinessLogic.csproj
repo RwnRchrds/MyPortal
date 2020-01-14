@@ -226,6 +226,15 @@
     <Compile Include="Models\Data\UserProfile.cs" />
     <Compile Include="Models\Data\UserRoleModel.cs" />
     <Compile Include="Models\Data\ValidationResponse.cs" />
+    <Compile Include="Models\Identity\ApplicationRole.cs" />
+    <Compile Include="Models\Identity\ApplicationRoleManager.cs" />
+    <Compile Include="Models\Identity\ApplicationSignInManager.cs" />
+    <Compile Include="Models\Identity\ApplicationUser.cs" />
+    <Compile Include="Models\Identity\ApplicationUserManager.cs" />
+    <Compile Include="Models\Identity\IdentityContext.cs" />
+    <Compile Include="Models\Identity\NewUserModel.cs" />
+    <Compile Include="Models\Identity\Permission.cs" />
+    <Compile Include="Models\Identity\RolePermission.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AssessmentService.cs" />
     <Compile Include="Services\AttendanceService.cs" />
@@ -234,6 +243,12 @@
     <Compile Include="Services\CurriculumService.cs" />
     <Compile Include="Services\DocumentService.cs" />
     <Compile Include="Services\FinanceService.cs" />
+    <Compile Include="Services\Identity\AdminService.cs" />
+    <Compile Include="Services\Identity\EmailService.cs" />
+    <Compile Include="Services\Identity\IdentityService.cs" />
+    <Compile Include="Services\Identity\PermissionsService.cs" />
+    <Compile Include="Services\Identity\SmsService.cs" />
+    <Compile Include="Services\Identity\UserService.cs" />
     <Compile Include="Services\MappingService.cs" />
     <Compile Include="Services\MyPortalService.cs" />
     <Compile Include="Services\PastoralService.cs" />
@@ -256,9 +271,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\Identity\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

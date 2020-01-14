@@ -295,29 +295,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\Identity\ApplicationRole.cs" />
-    <Compile Include="Models\Identity\ApplicationRoleManager.cs" />
-    <Compile Include="Models\Identity\ApplicationSignInManager.cs" />
-    <Compile Include="Models\Identity\ApplicationUser.cs" />
-    <Compile Include="Models\Identity\ApplicationUserManager.cs" />
-    <Compile Include="Models\Identity\IdentityContext.cs" />
-    <Compile Include="Models\Identity\NewUserModel.cs" />
-    <Compile Include="Models\Identity\Permission.cs" />
-    <Compile Include="Models\Identity\RolePermission.cs" />
-    <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="ViewModels\Identity\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Services\AdminService.cs" />
-    <Compile Include="Services\IdentityService.cs" />
-    <Compile Include="Services\Identity\EmailService.cs" />
-    <Compile Include="Services\Identity\SmsService.cs" />
-    <Compile Include="Services\Identity\UserService.cs" />
-    <Compile Include="Services\PermissionsService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Areas\Staff\ViewModels\AccountsViewModel.cs" />
     <Compile Include="Areas\Staff\ViewModels\EnrolmentsViewModel.cs" />
@@ -350,6 +334,15 @@
     <Compile Include="Areas\Staff\ViewModels\TakeRegisterViewModel.cs" />
     <Compile Include="Areas\Staff\ViewModels\TrainingCoursesViewModel.cs" />
     <Compile Include="Areas\Staff\ViewModels\UserDetailsViewModel.cs" />
+    <Compile Include="ViewModels\Identity\ExternalLoginConfirmationViewModel.cs" />
+    <Compile Include="ViewModels\Identity\ExternalLoginListViewModel.cs" />
+    <Compile Include="ViewModels\Identity\ForgotPasswordViewModel.cs" />
+    <Compile Include="ViewModels\Identity\ForgotViewModel.cs" />
+    <Compile Include="ViewModels\Identity\LoginViewModel.cs" />
+    <Compile Include="ViewModels\Identity\RegisterViewModel.cs" />
+    <Compile Include="ViewModels\Identity\ResetPasswordViewModel.cs" />
+    <Compile Include="ViewModels\Identity\SendCodeViewModel.cs" />
+    <Compile Include="ViewModels\Identity\VerifyCodeViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\all.css" />

@@ -4,7 +4,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 
-namespace MyPortal.Models
+namespace MyPortal.ViewModels.Identity
 {
     public class IndexViewModel
     {

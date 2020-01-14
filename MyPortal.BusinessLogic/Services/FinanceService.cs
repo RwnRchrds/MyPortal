@@ -70,12 +70,12 @@ namespace MyPortal.BusinessLogic.Services
                     AcademicYearId = academicYearId,
                     StudentId = studentId,
                     ProductId = item.ProductId
-                }, academicYearId, false);
+                }, academicYearId);
             }
 
             UnitOfWork.BasketItems.RemoveRange(basket);
 
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task CreateBasketItem(BasketItemDto basketItem)
@@ -101,7 +101,7 @@ namespace MyPortal.BusinessLogic.Services
             }
 
             UnitOfWork.BasketItems.Add(Mapper.Map<BasketItem>(basketItem));
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task CreateProduct(ProductDto product)
@@ -109,10 +109,10 @@ namespace MyPortal.BusinessLogic.Services
             ValidationService.ValidateModel(product);
 
             UnitOfWork.Products.Add(Mapper.Map<Product>(product));
-            await UnitOfWork.Complete();
+            
         }
 
-        public async Task CreateSale(SaleDto sale, int academicYearId, bool commitImmediately = true)
+        public async Task CreateSale(SaleDto sale, int academicYearId)
         {
             using (var studentService = new StudentService(UnitOfWork))
             {
@@ -138,11 +138,6 @@ namespace MyPortal.BusinessLogic.Services
                     sale.AcademicYearId = academicYearId;
 
                     UnitOfWork.Sales.Add(Mapper.Map<Sale>(sale));
-
-                    if (commitImmediately)
-                    {
-                        await UnitOfWork.Complete();
-                    }
                 }
 
                 else
@@ -153,11 +148,6 @@ namespace MyPortal.BusinessLogic.Services
                     sale.AcademicYearId = academicYearId;
 
                     UnitOfWork.Sales.Add(Mapper.Map<Sale>(sale));
-
-                    if (commitImmediately)
-                    {
-                        await UnitOfWork.Complete();
-                    }
                 }   
             }
         }
@@ -172,7 +162,7 @@ namespace MyPortal.BusinessLogic.Services
             }
 
             UnitOfWork.BasketItems.Remove(itemInDb);
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task DeleteProduct(int productId)
@@ -186,7 +176,7 @@ namespace MyPortal.BusinessLogic.Services
 
             UnitOfWork.Products.Remove(productInDb); //Delete from database
 
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task DeleteSale(int saleId)
@@ -200,7 +190,7 @@ namespace MyPortal.BusinessLogic.Services
 
             UnitOfWork.Sales.Remove(saleInDb); //Delete from database
 
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task<IDictionary<int, string>> GetAllProductsLookup()
@@ -330,7 +320,7 @@ namespace MyPortal.BusinessLogic.Services
 
                 studentInDb.AccountBalance += transaction.Amount;
 
-                await UnitOfWork.Complete();
+                
             }
         }
 
@@ -342,7 +332,7 @@ namespace MyPortal.BusinessLogic.Services
 
             saleInDb.Processed = true;
             saleInDb.Refunded = true;
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task UpdateProduct(ProductDto product)
@@ -359,7 +349,7 @@ namespace MyPortal.BusinessLogic.Services
             productInDb.Visible = product.Visible;
             productInDb.Description = product.Description;
 
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task MarkSaleProcessed(int saleId)
@@ -373,7 +363,7 @@ namespace MyPortal.BusinessLogic.Services
 
             saleInDb.Processed = true;
 
-            await UnitOfWork.Complete();
+            
         }
     }
 }

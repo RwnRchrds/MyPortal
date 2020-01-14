@@ -37,7 +37,8 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.CreateTrainingCertificate(certificate);
-                
+                await _service.SaveChanges();
+
                 return Ok("Certificate created");
             }
             catch (Exception e)
@@ -54,6 +55,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteTrainingCertificate(staffId, courseId);
+                await _service.SaveChanges();
 
                 return Ok("Certificate deleted");
             }
@@ -121,6 +123,7 @@ namespace MyPortal.Controllers.Api
             {
                 var userId = User.Identity.GetUserId();
                 await _service.UpdateCertificate(certificate);
+                await _service.SaveChanges();
 
                 return Ok("Certificate updated");
             }
@@ -138,6 +141,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteCourse(courseId);
+                await _service.SaveChanges();
             }
             catch (Exception e)
             {
@@ -204,7 +208,8 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdateCourse(course);
-                
+                await _service.SaveChanges();
+
                 return Ok("Training course updated");
             }
             catch (Exception e)
@@ -222,6 +227,7 @@ namespace MyPortal.Controllers.Api
             {
                 var userId = User.Identity.GetUserId();
                 await _service.CreateObservation(data, userId);
+                await _service.SaveChanges();
 
                 return Ok("Observation created.");
             }
@@ -291,6 +297,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteObservation(observationId);
+                await _service.SaveChanges();
 
                 return Ok("Observation deleted");
             }
@@ -308,6 +315,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdateObservation(observation);
+                await _service.SaveChanges();
 
                 return Ok("Observation updated");
             }

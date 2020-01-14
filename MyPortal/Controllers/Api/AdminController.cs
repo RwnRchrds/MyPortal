@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using MyPortal.Areas.Staff.ViewModels;
-using MyPortal.Models;
 using MyPortal.Attributes;
 using MyPortal.Attributes.Filters;
 using MyPortal.Attributes.HttpAuthorise;
@@ -15,8 +14,8 @@ using MyPortal.BusinessLogic.Dtos.DataGrid;
 using MyPortal.BusinessLogic.Dtos.Identity;
 using MyPortal.BusinessLogic.Models;
 using MyPortal.BusinessLogic.Models.Data;
-using MyPortal.Models.Identity;
-using MyPortal.Services;
+using MyPortal.BusinessLogic.Models.Identity;
+using MyPortal.BusinessLogic.Services.Identity;
 using Syncfusion.EJ2.Base;
 
 namespace MyPortal.Controllers.Api

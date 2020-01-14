@@ -42,6 +42,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.CreateEmailAddress(emailAddress);
+                await _service.SaveChanges();
 
                 return Ok("Email address created");
             }
@@ -59,6 +60,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdateEmailAddress(emailAddress);
+                await _service.SaveChanges();
 
                 return Ok("Email address updated");
             }
@@ -76,6 +78,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.DeleteEmailAddress(emailAddressId);
+                await _service.SaveChanges();
 
                 return Ok("Email address deleted");
             }
@@ -93,6 +96,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.CreatePhoneNumber(phoneNumber);
+                await _service.SaveChanges();
 
                 return Ok("Phone number created");
             }
@@ -110,6 +114,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdatePhoneNumber(phoneNumber);
+                await _service.SaveChanges();
 
                 return Ok("Phone number updated");
             }

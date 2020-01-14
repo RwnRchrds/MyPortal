@@ -50,8 +50,6 @@ namespace MyPortal.BusinessLogic.Services
 
                     pointer = weekBeginning.AddDays(7);
                 }
-
-                await UnitOfWork.Complete();
             }
         }
 
@@ -305,8 +303,6 @@ namespace MyPortal.BusinessLogic.Services
                     UnitOfWork.AttendanceMarks.Add(newMark);
                 }
             }
-
-            await UnitOfWork.Complete();
         }
 
         public async Task<IEnumerable<PeriodDto>> GetPeriodsByClass(int classId)

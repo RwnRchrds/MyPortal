@@ -38,7 +38,8 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.CreateStaffMember(staffMember);
-                
+                await _service.SaveChanges();
+
                 return Ok("Staff member created");
             }
             catch (Exception e)
@@ -64,6 +65,7 @@ namespace MyPortal.Controllers.Api
                 }
 
                 await _service.DeleteStaffMember(staffMemberId);
+                await _service.SaveChanges();
 
                 return Ok("Staff member deleted");
             }
@@ -81,6 +83,7 @@ namespace MyPortal.Controllers.Api
             try
             {
                 await _service.UpdateStaffMember(staffMember);
+                await _service.SaveChanges();
             }
             catch (Exception e)
             {

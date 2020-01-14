@@ -65,7 +65,7 @@ namespace MyPortal.BusinessLogic.Services
             personInDb.NhsNumber = person.NhsNumber;
             personInDb.Deceased = person.Deceased;
 
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task<int> GetNumberOfBirthdaysThisWeek()

@@ -28,7 +28,7 @@ namespace MyPortal.BusinessLogic.Services
 
             UnitOfWork.Students.Add(Mapper.Map<Student>(student));
 
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task DeleteStudent(int studentId)
@@ -55,7 +55,7 @@ namespace MyPortal.BusinessLogic.Services
 
             UnitOfWork.Students.Remove(studentInDb);
 
-            await UnitOfWork.Complete();
+            
         }
 
         public async Task<IEnumerable<StudentDto>> GetAllStudents()
@@ -142,7 +142,7 @@ namespace MyPortal.BusinessLogic.Services
             studentInDb.Person.NhsNumber = student.Person.NhsNumber;
             studentInDb.Person.Deceased = student.Person.Deceased;
 
-            await UnitOfWork.Complete();
+            
         }
     }
 }

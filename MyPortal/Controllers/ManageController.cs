@@ -5,8 +5,8 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using MyPortal.Models;
-using MyPortal.Models.Identity;
+using MyPortal.BusinessLogic.Models.Identity;
+using MyPortal.ViewModels.Identity;
 
 namespace MyPortal.Controllers
 {

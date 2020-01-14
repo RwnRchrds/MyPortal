@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
-using MyPortal.Models;
-using MyPortal.Models.Identity;
-using MyPortal.Services;
+using MyPortal.BusinessLogic.Models.Identity;
+using MyPortal.BusinessLogic.Services.Identity;
 
 namespace MyPortal.Controllers
 {
