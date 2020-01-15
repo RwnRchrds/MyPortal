@@ -223,6 +223,7 @@
     <Compile Include="Models\Data\ShoppingBasket.cs" />
     <Compile Include="Models\Data\StudentAttendanceMarkCollection.cs" />
     <Compile Include="Models\Data\StudentAttendanceMarkSingular.cs" />
+    <Compile Include="Models\Data\StudentGroup.cs" />
     <Compile Include="Models\Data\UserProfile.cs" />
     <Compile Include="Models\Data\UserRoleModel.cs" />
     <Compile Include="Models\Data\ValidationResponse.cs" />

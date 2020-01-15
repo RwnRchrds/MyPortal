@@ -113,6 +113,18 @@ namespace MyPortal.BusinessLogic.Services
                 cfg.CreateMap<TrainingCertificateStatus, TrainingCertificateStatusDto>().ReverseMap();
                 cfg.CreateMap<TrainingCourse, TrainingCourseDto>().ReverseMap();
                 cfg.CreateMap<YearGroup, YearGroupDto>().ReverseMap();
+
+                cfg.CreateMap<RegGroup, StudentGroup>()
+                    .BeforeMap((s, d) => d.StudentGroupType = StudentGroupType.RegGroup);
+
+                cfg.CreateMap<YearGroup, StudentGroup>()
+                    .BeforeMap((s, d) => d.StudentGroupType = StudentGroupType.YearGroup);
+
+                cfg.CreateMap<House, StudentGroup>()
+                    .BeforeMap((s, d) => d.StudentGroupType = StudentGroupType.House);
+
+                cfg.CreateMap<Class, StudentGroup>()
+                    .BeforeMap((s, d) => d.StudentGroupType = StudentGroupType.Class);
             });
 
             return new Mapper(config);

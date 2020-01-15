@@ -75,5 +75,23 @@ namespace MyPortal.Data.Repositories
             return await Context.Students.Include(x => x.Person).Where(x => x.YearGroupId == yearGroupId).Include(x => x.Person).OrderBy(x => x.Person.LastName)
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<Student>> GetByClass(int classId)
+        {
+            return await Context.Students.Include(x => x.Person).Where(c => c.Enrolments.Any(x => x.ClassId == classId))
+                .OrderBy(x => x.Person.LastName).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Student>> GetGiftedTalented()
+        {
+            return await Context.Students.Include(x => x.Person).Where(x => x.GiftedAndTalented)
+                .OrderBy(x => x.Person.LastName).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Student>> GetByHouse(int houseId)
+        {
+            return await Context.Students.Include(x => x.Person).Where(s => s.HouseId == houseId).Include(x => x.Person)
+                .OrderBy(x => x.Person.LastName).ToListAsync();
+        }
     }
 }

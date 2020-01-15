@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using MyPortal.BusinessLogic.Dtos;
 using MyPortal.BusinessLogic.Exceptions;
+using MyPortal.BusinessLogic.Models.Data;
 using MyPortal.Data.Interfaces;
 using MyPortal.Data.Models;
 
@@ -114,6 +115,41 @@ namespace MyPortal.BusinessLogic.Services
         public async Task<IEnumerable<StudentDto>> GetStudentsByYearGroup(int yearGroupId)
         {
             return (await UnitOfWork.Students.GetByYearGroup(yearGroupId)).Select(Mapper.Map<StudentDto>).ToList();
+        }
+
+        public async Task<IEnumerable<StudentGroup>> GetAllStudentGroups(int academicYearId)
+        {
+            var regGroups = (await UnitOfWork.RegGroups.GetAll()).Select(Mapper.Map<StudentGroup>).ToList();
+            var yearGroups = (await UnitOfWork.YearGroups.GetAll(x => x.Name)).Select(Mapper.Map<StudentGroup>).ToList();
+            var houses = (await UnitOfWork.Houses.GetAll(x => x.Name)).Select(Mapper.Map<StudentGroup>).ToList();
+            var classes = (await UnitOfWork.Classes.GetByAcademicYear(academicYearId)).OrderBy(x => x.Name)
+                .Select(Mapper.Map<StudentGroup>).ToList();
+
+            var other = new List<StudentGroup>
+            {
+                new StudentGroup {StudentGroupType = StudentGroupType.GiftedTalented, Id = 0, Name = "Gifted and Talented"}
+            };
+
+            var groups = regGroups.Union(yearGroups).Union(houses).Union(classes).Union(other);
+
+            return groups;
+        }
+
+        public async Task<IEnumerable<StudentDto>> GetStudentsByStudentGroup(StudentGroup group)
+        {
+            switch (group.StudentGroupType)
+            {
+                case StudentGroupType.Class:
+                    return (await UnitOfWork.Students.GetByClass(group.Id)).Select(Mapper.Map<StudentDto>);
+                    break;
+                case StudentGroupType.GiftedTalented:
+                    return (await UnitOfWork.Students.GetGiftedTalented()).Select(Mapper.Map<StudentDto>);
+                    break;
+                default:
+                case StudentGroupType.House:
+                    return (await UnitOfWork.Students.GetByHouse(group.Id)).Select(Mapper.Map<StudentDto>);
+                    break;
+            }
         }
 
         public async Task UpdateStudent(StudentDto student)
