@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using MyPortal.Areas.Staff.ViewModels;
+using MyPortal.Areas.Staff.ViewModels.Staff;
 using MyPortal.Attributes.MvcAuthorise;
 using MyPortal.BusinessLogic.Models.Identity;
 using MyPortal.BusinessLogic.Services;

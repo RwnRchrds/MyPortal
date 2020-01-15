@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using MyPortal.Areas.Staff.ViewModels;
+using MyPortal.Areas.Staff.ViewModels.Curriculum;
 using MyPortal.Attributes.MvcAuthorise;
 using MyPortal.BusinessLogic.Models.Identity;
 using MyPortal.BusinessLogic.Services;

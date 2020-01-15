@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Mvc;
 using MyPortal.Areas.Staff.ViewModels;
+using MyPortal.Areas.Staff.ViewModels.Admin;
 using MyPortal.Attributes.MvcAuthorise;
 using MyPortal.BusinessLogic.Dtos;
 using MyPortal.BusinessLogic.Interfaces;

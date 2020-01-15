@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using MyPortal.Areas.Staff.ViewModels;
+using MyPortal.Areas.Staff.ViewModels.Students;
 using MyPortal.Areas.Students.ViewModels;
 using MyPortal.Attributes.MvcAuthorise;
 using MyPortal.BusinessLogic.Dtos;
