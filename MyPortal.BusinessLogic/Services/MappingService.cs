@@ -116,15 +116,19 @@ namespace MyPortal.BusinessLogic.Services
                 cfg.CreateMap<YearGroup, YearGroupDto>().ReverseMap();
 
                 cfg.CreateMap<RegGroup, StudentGroup>()
+                    .ForMember(dest => dest.StudentGroupType, opts => opts.Ignore())
                     .BeforeMap((s, d) => d.StudentGroupType = StudentGroupType.RegGroup);
 
                 cfg.CreateMap<YearGroup, StudentGroup>()
+                    .ForMember(dest => dest.StudentGroupType, opts => opts.Ignore())
                     .BeforeMap((s, d) => d.StudentGroupType = StudentGroupType.YearGroup);
 
                 cfg.CreateMap<House, StudentGroup>()
+                    .ForMember(dest => dest.StudentGroupType, opts => opts.Ignore())
                     .BeforeMap((s, d) => d.StudentGroupType = StudentGroupType.House);
 
                 cfg.CreateMap<Class, StudentGroup>()
+                    .ForMember(dest => dest.StudentGroupType, opts => opts.Ignore())
                     .BeforeMap((s, d) => d.StudentGroupType = StudentGroupType.Class);
             });
 
