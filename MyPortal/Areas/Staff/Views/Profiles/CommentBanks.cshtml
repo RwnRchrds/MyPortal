@@ -28,7 +28,7 @@
             </div>
             <!-- Card Body -->
             <div class="card-body">
-                @Html.EJS().Grid("CommentBanks").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiProfilesGetAllCommentBanksDataGrid", new { })).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
+                @Html.EJS().Grid("CommentBanks").DataSource(d => { d.Url(Url.HttpRouteUrl("ApiGetAllCommentBanksDataGrid", new { })).CrossDomain(false).Adaptor("UrlAdaptor"); }).Columns(c =>
                 {
                     c.Field("Name").HeaderText("Name").Template("#commentBankNameTemplate").Width("300").Add();
                     c.HeaderText("Actions").Template("#commentBankActionsTemplate").Width("170").Add();
@@ -47,7 +47,7 @@
                 <h5 class="modal-title">New Comment Bank</h5>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiProfilesCreateCommentBank", new {}), HttpMethod = "POST", OnSuccess = "newCommentBankSuccess", OnFailure = "newCommentBankFailure"}, new {id = "newCommentBankForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiCreateCommentBank", new {}), HttpMethod = "POST", OnSuccess = "newCommentBankSuccess", OnFailure = "newCommentBankFailure"}, new {id = "newCommentBankForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -73,7 +73,7 @@
                 <h4 class="modal-title">Edit Comment Bank</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span>&times;</button>
             </div>
-            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiProfilesUpdateCommentBank", new {}), HttpMethod = "POST", OnSuccess = "editCommentBankSuccess", OnFailure = "editCommentBankFailure"}, new {id = "newResultSetForm"}))
+            @using (Ajax.BeginForm(null, null, new AjaxOptions {Url = Url.HttpRouteUrl("ApiUpdateCommentBank", new {}), HttpMethod = "POST", OnSuccess = "editCommentBankSuccess", OnFailure = "editCommentBankFailure"}, new {id = "newResultSetForm"}))
             {
                 <div class="modal-body">
                     <div class="form-group">
@@ -98,8 +98,8 @@
 {
     <script>
 
-        var urlGetCommentBankById = "@Url.HttpRouteUrl("ApiProfilesGetCommentBankById", new {commentBankId = 9999})";
-        var urlDeleteCommentBank = "@Url.HttpRouteUrl("ApiProfilesDeleteCommentBank", new {commentBankId = 9999})";
+        var urlGetCommentBankById = "@Url.HttpRouteUrl("ApiGetCommentBankById", new {commentBankId = 9999})";
+        var urlDeleteCommentBank = "@Url.HttpRouteUrl("ApiDeleteCommentBank", new {commentBankId = 9999})";
 
         $(document).ready(function() {
             $('.modal').on('hidden.bs.modal',

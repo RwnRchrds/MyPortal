@@ -45,7 +45,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiFinanceCreditStudent", new {}), HttpMethod = "POST", OnSuccess = "creditSuccess", OnFailure = "creditFailure" }, new { id = "CreditForm" }))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiCreditStudent", new {}), HttpMethod = "POST", OnSuccess = "creditSuccess", OnFailure = "creditFailure" }, new { id = "CreditForm" }))
                 {
                     <div class="modal-body">
                         <div class="form-group">
@@ -83,7 +83,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiFinanceDebitStudent", new {}), HttpMethod = "POST", OnSuccess = "debitSuccess", OnFailure = "debitFailure" }, new { id = "DebitForm" }))
+                @using (Ajax.BeginForm(null, null, new AjaxOptions { Url = Url.HttpRouteUrl("ApiDebitStudent", new {}), HttpMethod = "POST", OnSuccess = "debitSuccess", OnFailure = "debitFailure" }, new { id = "DebitForm" }))
                 {
                     <div class="modal-body">
                         <div class="form-group">

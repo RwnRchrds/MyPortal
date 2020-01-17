@@ -45,11 +45,11 @@
 {
     <script>
 
-        var urlGetAllYearGroups = "@Url.HttpRouteUrl("ApiPastoralGetAllYearGroups", new {})";
-        var urlGetStudentsByYearGroup = "@Url.HttpRouteUrl("ApiFinanceGetStudentsByYearGroup", new {yearGroupId=9999})";
-        var urlGetProductPrice = "@Url.HttpRouteUrl("ApiFinanceGetProductPrice", new {productId=9999})";
-        var urlCreateSale = "@Url.HttpRouteUrl("ApiFinanceCreateSale", new {})";
-        var urlQueryBalance = "@Url.HttpRouteUrl("ApiFinanceQueryBalance", new {})";
+        var urlGetAllYearGroups = "@Url.HttpRouteUrl("ApiGetAllYearGroups", new {})";
+        var urlGetStudentsByYearGroup = "@Url.HttpRouteUrl("ApiGetStudentsByYearGroup", new {yearGroupId=9999})";
+        var urlGetProductPrice = "@Url.HttpRouteUrl("ApiGetProductPrice", new {productId=9999})";
+        var urlCreateSale = "@Url.HttpRouteUrl("ApiCreateSale", new {})";
+        var urlQueryBalance = "@Url.HttpRouteUrl("ApiQueryBalance", new {})";
 
         $(document).ready(function() {
             //Gets Year Groups and Inserts Options into Dropdown

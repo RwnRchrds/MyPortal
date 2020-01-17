@@ -12,6 +12,7 @@ using MyPortal.BusinessLogic.Dtos.Lite;
 using MyPortal.BusinessLogic.Extensions;
 using MyPortal.BusinessLogic.Models;
 using MyPortal.BusinessLogic.Models.Data;
+using MyPortal.BusinessLogic.Models.Identity;
 using MyPortal.Data.Models;
 
 namespace MyPortal.BusinessLogic.Services
@@ -316,6 +317,9 @@ namespace MyPortal.BusinessLogic.Services
                 cfg.CreateMap<EmailAddressDto, DataGridEmailAddressDto>()
                     .ForMember(dest => dest.Type,
                         opts => opts.MapFrom(src => src.Type.ToString()));
+
+                cfg.CreateMap<ApplicationUser, DataGridApplicationUserDto>();
+                cfg.CreateMap<ApplicationRole, ApplicationRoleDto>();
             });
 
             return new Mapper(config);
