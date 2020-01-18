@@ -8,7 +8,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// Represents an academic year in the system.
     /// </summary>
-    [Table("AcademicYear", Schema = "curriculum")]
+    [Table("AcademicYear")]
     public partial class AcademicYear
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

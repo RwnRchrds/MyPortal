@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Data.Models
 {
-    [Table("SubjectStaffMemberRole", Schema = "curriculum")]
+    [Table("SubjectStaffMemberRole")]
     public class SubjectStaffMemberRole
     {
         public SubjectStaffMemberRole()

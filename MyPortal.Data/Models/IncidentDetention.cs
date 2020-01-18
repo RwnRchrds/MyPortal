@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MyPortal.Data.Models
 {
-    [Table("IncidentDetention", Schema = "behaviour")]
+    [Table("IncidentDetention")]
     public class IncidentDetention
     {
         public int Id { get; set; }

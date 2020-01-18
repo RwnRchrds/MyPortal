@@ -16,7 +16,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// Represents an individual person in the system.
     /// </summary>
-    [Table("Person", Schema = "person")]
+    [Table("Person")]
     public class Person
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

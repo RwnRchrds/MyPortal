@@ -17,7 +17,7 @@ namespace MyPortal.Data.Repositories
         public async Task<IEnumerable<PersonCondition>> GetByPerson(int personId)
         {
             return await Context.PersonConditions.Where(x => x.PersonId == personId)
-                .OrderBy(x => x.Condition.Description).ToListAsync();
+                .OrderBy(x => x.MedicalCondition.Description).ToListAsync();
         }
     }
 }

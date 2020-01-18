@@ -9,7 +9,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// A student in the system.
     /// </summary>
-    [Table("Student", Schema = "person")]
+    [Table("Student")]
     public partial class Student : IPerson
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

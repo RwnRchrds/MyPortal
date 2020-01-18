@@ -7,7 +7,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// A week in the calendar in which attendance marks are recorded. Attendance weeks make up an academic year.
     /// </summary>
-    [Table("Week", Schema = "attendance")]
+    [Table("AttendanceWeek")]
     public partial class AttendanceWeek
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

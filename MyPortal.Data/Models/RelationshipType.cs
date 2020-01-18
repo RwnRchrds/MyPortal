@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Data.Models
 {
-    [Table("RelationshipType", Schema = "person")]
+    [Table("RelationshipType")]
     public class RelationshipType
     {
         public RelationshipType()

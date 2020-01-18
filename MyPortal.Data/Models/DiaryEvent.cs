@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MyPortal.Data.Models
 {
-    [Table("DiaryEvent", Schema = "system")]
+    [Table("DiaryEvent")]
     public class DiaryEvent
     {
         public int Id { get; set; }

@@ -9,7 +9,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// A staff member in the system.
     /// </summary>
-    [Table("StaffMember", Schema = "person")]
+    [Table("StaffMember")]
     public class StaffMember : IPerson
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

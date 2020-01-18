@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MyPortal.Data.Models
 {
-    [Table("TrainingCertificateStatus", Schema = "personnel")]
+    [Table("TrainingCertificateStatus")]
     public class TrainingCertificateStatus
     {
         public TrainingCertificateStatus()

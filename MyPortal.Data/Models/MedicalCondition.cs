@@ -7,13 +7,13 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// A medical condition a person may have.
     /// </summary>
-    [Table("Condition", Schema = "medical")]
-    public class Condition
+    [Table("MedicalCondition")]
+    public class MedicalCondition
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Condition()
+        public MedicalCondition()
         {
-            PersonConditions = new HashSet<PersonCondition>();
+            PersonConditions = new HashSet<PersonCondition>();  
         }
 
         public int Id { get; set; }

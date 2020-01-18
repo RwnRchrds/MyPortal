@@ -7,7 +7,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// Category of achievement.
     /// </summary>
-    [Table("AchievementType", Schema = "behaviour")]
+    [Table("AchievementType")]
     public class AchievementType
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

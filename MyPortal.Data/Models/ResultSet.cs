@@ -7,7 +7,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// A set of results awarded to students. Result sets usually represent a time-frame eg 'Spring Term'.
     /// </summary>
-    [Table("ResultSet", Schema = "assessment")]
+    [Table("ResultSet")]
     public class ResultSet
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

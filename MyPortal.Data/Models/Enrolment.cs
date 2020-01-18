@@ -5,7 +5,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// Represents a student enrolled in a class.
     /// </summary>
-    [Table("Enrolment", Schema = "curriculum")]
+    [Table("Enrolment")]
     public partial class Enrolment
     {
         public int Id { get; set; }

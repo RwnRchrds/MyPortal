@@ -7,7 +7,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// Category of behaviour incident.
     /// </summary>
-    [Table("IncidentType", Schema = "behaviour")]
+    [Table("IncidentType")]
     public class IncidentType
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

@@ -7,7 +7,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// A record of a behaviour incident.
     /// </summary>
-    [Table("Incident", Schema = "behaviour")]
+    [Table("Incident")]
     public class Incident
     {
         public Incident()

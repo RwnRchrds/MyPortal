@@ -6,7 +6,7 @@ namespace MyPortal.Data.Models
 {
     // SYSTEM CLASS -- LOOKUP ONLY
 
-    [Table("AspectType", Schema = "assessment")]
+    [Table("AspectType")]
     public class AspectType
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

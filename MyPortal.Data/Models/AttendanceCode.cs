@@ -6,7 +6,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// [READ-ONLY] Codes available to use when taking the register.
     /// </summary>
-    [Table("Code", Schema = "attendance")]
+    [Table("AttendanceCode")]
     public partial class AttendanceCode
     {
         //THIS IS A SYSTEM CLASS AND SHOULD NOT HAVE FEATURES TO ADD, MODIFY OR DELETE DATABASE OBJECTS

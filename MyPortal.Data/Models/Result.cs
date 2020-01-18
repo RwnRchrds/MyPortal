@@ -7,7 +7,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// A result a student has achieved for a particular subject.
     /// </summary>
-    [Table("Result", Schema = "assessment")]
+    [Table("Result")]
     public class Result
     {
         public int Id { get; set; }

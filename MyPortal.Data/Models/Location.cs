@@ -7,7 +7,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// Location where an achievement/behaviour incident took place.
     /// </summary>
-    [Table("Location", Schema = "school")]
+    [Table("Location")]
     public class Location
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MyPortal.Data.Models
 {
-    [Table("ObservationOutcome", Schema = "personnel")]
+    [Table("ObservationOutcome")]
     public class ObservationOutcome
     {
         public ObservationOutcome()

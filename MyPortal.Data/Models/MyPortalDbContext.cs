@@ -64,7 +64,7 @@ namespace MyPortal.Data.Models
         public virtual DbSet<ProductType> ProductTypes { get; set; }
         public virtual DbSet<Sale> Sales { get; set; }
         public virtual DbSet<LocalAuthority> LocalAuthorities { get; set; }
-        public virtual DbSet<Condition> Conditions { get; set; }
+        public virtual DbSet<MedicalCondition> Conditions { get; set; }
         public virtual DbSet<DietaryRequirement> DietaryRequirements { get; set; }
         public virtual DbSet<MedicalEvent> MedicalEvents { get; set; }
         public virtual DbSet<PersonCondition> PersonConditions { get; set; }
@@ -377,9 +377,9 @@ namespace MyPortal.Data.Models
                 .HasForeignKey(e => e.LocalAuthorityId)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<Condition>()
+            modelBuilder.Entity<MedicalCondition>()
                 .HasMany(e => e.PersonConditions)
-                .WithRequired(e => e.Condition)
+                .WithRequired(e => e.MedicalCondition)
                 .HasForeignKey(e => e.ConditionId)
                 .WillCascadeOnDelete(false);
 

@@ -7,7 +7,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// A class in which students are enrolled.
     /// </summary>
-    [Table("Class", Schema = "curriculum")]
+    [Table("Class")]
     public partial class Class
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

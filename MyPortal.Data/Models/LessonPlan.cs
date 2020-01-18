@@ -6,7 +6,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// A lesson plan for a study topic.
     /// </summary>
-    [Table("LessonPlan", Schema = "curriculum")]
+    [Table("LessonPlan")]
     public partial class LessonPlan
     {
         public int Id { get; set; }

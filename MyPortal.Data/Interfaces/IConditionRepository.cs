@@ -2,7 +2,7 @@
 
 namespace MyPortal.Data.Interfaces
 {
-    public interface IConditionRepository : IReadRepository<Condition>
+    public interface IConditionRepository : IReadRepository<MedicalCondition>
     {
 
     }

@@ -7,7 +7,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// A record of a medical event/emergency.
     /// </summary>
-    [Table("Event", Schema = "medical")]
+    [Table("MedicalEvent")]
     public class MedicalEvent
     {
         public int Id { get; set; }

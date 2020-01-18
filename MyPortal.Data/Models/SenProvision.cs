@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Data.Models
 {
-    [Table("Provision", Schema = "sen")]
+    [Table("SenProvision")]
     public class SenProvision
     {
         public int Id { get; set; }

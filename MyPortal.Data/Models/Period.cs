@@ -8,7 +8,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// Timetable period definitions for each week.
     /// </summary>
-    [Table("Period", Schema = "attendance")]
+    [Table("AttendancePeriod")]
     public partial class Period
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

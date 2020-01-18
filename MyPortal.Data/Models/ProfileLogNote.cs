@@ -7,7 +7,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// A log note for a student.
     /// </summary>
-    [Table("LogNote", Schema = "profile")]
+    [Table("ProfileLogNote")]
     public partial class ProfileLogNote
     {
         public int Id { get; set; }

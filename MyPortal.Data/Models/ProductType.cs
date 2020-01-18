@@ -7,7 +7,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// Type of product in the system.
     /// </summary>
-    [Table("ProductType", Schema = "finance")]
+    [Table("ProductType")]
     public partial class ProductType
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",

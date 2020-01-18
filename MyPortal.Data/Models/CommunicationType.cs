@@ -7,7 +7,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// Type of communication.
     /// </summary>
-    [Table("CommunicationType", Schema = "communication")]
+    [Table("CommunicationType")]
     public class CommunicationType
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

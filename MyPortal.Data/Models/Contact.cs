@@ -5,7 +5,7 @@ using MyPortal.Data.Interfaces;
 
 namespace MyPortal.Data.Models
 {
-    [Table("Contact", Schema = "person")]
+    [Table("Contact")]
     public class Contact : IPerson
     {
         public Contact()

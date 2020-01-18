@@ -6,7 +6,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// An individual mark in the register.
     /// </summary>
-    [Table("Mark", Schema = "attendance")]
+    [Table("AttendanceMark")]
     public partial class AttendanceMark
     {
         public int Id { get; set; }

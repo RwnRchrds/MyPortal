@@ -5,7 +5,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// A document assigned to a person.
     /// </summary>
-    [Table("PersonAttachment", Schema = "document")]
+    [Table("PersonAttachment")]
     public class PersonAttachment
     {
         public int Id { get; set; }

@@ -7,7 +7,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// A year group in the system.
     /// </summary>
-    [Table("YearGroup", Schema = "pastoral")]
+    [Table("YearGroup")]
     public partial class YearGroup
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

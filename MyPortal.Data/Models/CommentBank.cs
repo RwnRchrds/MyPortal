@@ -7,7 +7,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// A set of comments that can be used to create log notes.
     /// </summary>
-    [Table("CommentBank", Schema = "profile")]
+    [Table("CommentBank")]
     public partial class CommentBank
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

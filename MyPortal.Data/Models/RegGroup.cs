@@ -7,7 +7,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// A registration/tutor group in the system.
     /// </summary>
-    [Table("RegGroup", Schema = "pastoral")]
+    [Table("RegGroup")]
     public partial class RegGroup
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

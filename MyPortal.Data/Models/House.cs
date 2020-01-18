@@ -7,7 +7,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// A school house.
     /// </summary>
-    [Table("House", Schema = "pastoral")]
+    [Table("House")]
     public class House
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

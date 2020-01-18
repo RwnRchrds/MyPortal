@@ -7,7 +7,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// A topic for study in the curriculum. A study topic contains lesson plans for delivery.
     /// </summary>
-    [Table("StudyTopic", Schema = "curriculum")]
+    [Table("StudyTopic")]
     public class StudyTopic
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

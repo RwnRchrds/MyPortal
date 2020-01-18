@@ -7,7 +7,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// Represents a sale created when an item is purchased.
     /// </summary>
-    [Table("Sale", Schema = "finance")]
+    [Table("Sale")]
     public partial class Sale
     {
         public int Id { get; set; }

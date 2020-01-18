@@ -47,7 +47,7 @@ namespace MyPortal.BusinessLogic.Services
                 cfg.CreateMap<CommentBank, CommentBankDto>().ReverseMap();
                 cfg.CreateMap<CommunicationLog, CommunicationLogDto>().ReverseMap();
                 cfg.CreateMap<CommunicationType, CommunicationTypeDto>().ReverseMap();
-                cfg.CreateMap<Condition, ConditionDto>().ReverseMap();
+                cfg.CreateMap<MedicalCondition, ConditionDto>().ReverseMap();
                 cfg.CreateMap<Contact, ContactDto>().ReverseMap();
                 cfg.CreateMap<Detention, DetentionDto>().ReverseMap();
                 cfg.CreateMap<DetentionAttendanceStatus, DetentionAttendanceStatusDto>().ReverseMap();

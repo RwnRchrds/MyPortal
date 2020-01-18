@@ -6,7 +6,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// Record of a student achievement.
     /// </summary>
-    [Table("Achievement", Schema = "behaviour")]
+    [Table("Achievement")]
     public class Achievement
     {
         public int Id { get; set; }

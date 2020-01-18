@@ -6,7 +6,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// A certificate awarded to personnel who have completed a training course.
     /// </summary>
-    [Table("TrainingCertificate", Schema = "personnel")]
+    [Table("TrainingCertificate")]
     public partial class TrainingCertificate
     {
         [Key]

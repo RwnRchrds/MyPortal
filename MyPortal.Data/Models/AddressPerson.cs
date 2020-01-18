@@ -2,7 +2,7 @@
 
 namespace MyPortal.Data.Models
 {
-    [Table("AddressPerson", Schema = "communication")]
+    [Table("AddressPerson")]
     public class AddressPerson
     {
         public int Id { get; set; }

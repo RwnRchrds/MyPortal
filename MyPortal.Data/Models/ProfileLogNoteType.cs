@@ -7,7 +7,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// [SYSTEM] A category of log notes for students.
     /// </summary>
-    [Table("LogNoteType", Schema = "profile")]
+    [Table("ProfileLogNoteType")]
     public partial class ProfileLogNoteType
     {
         //THIS IS A SYSTEM CLASS AND SHOULD NOT HAVE FEATURES TO ADD, MODIFY OR DELETE DATABASE OBJECTS

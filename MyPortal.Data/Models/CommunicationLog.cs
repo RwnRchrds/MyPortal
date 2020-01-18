@@ -6,7 +6,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// Record of communication made between the school and a contact.
     /// </summary>
-    [Table("Log", Schema = "communication")]
+    [Table("CommunicationLog")]
     public class CommunicationLog
     {
         public int Id { get; set; }

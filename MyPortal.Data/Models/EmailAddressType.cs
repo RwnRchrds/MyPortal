@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MyPortal.Data.Models
 {
-    [Table("EmailAddressType", Schema = "communication")]
+    [Table("EmailAddressType")]
     public class EmailAddressType
     {
         public EmailAddressType()

@@ -170,6 +170,10 @@
     <Compile Include="Migrations\202001022107572_AddedHouseColourCode.designer.cs">
       <DependentUpon>202001022107572_AddedHouseColourCode.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001182210019_NewModel.cs" />
+    <Compile Include="Migrations\202001182210019_NewModel.designer.cs">
+      <DependentUpon>202001182210019_NewModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Aspect.cs" />
     <Compile Include="Models\AspectType.cs" />
@@ -218,7 +222,7 @@
     <Compile Include="Models\ProductType.cs" />
     <Compile Include="Models\Sale.cs" />
     <Compile Include="Models\LocalAuthority.cs" />
-    <Compile Include="Models\Condition.cs" />
+    <Compile Include="Models\MedicalCondition.cs" />
     <Compile Include="Models\DietaryRequirement.cs" />
     <Compile Include="Models\MedicalEvent.cs" />
     <Compile Include="Models\PersonCondition.cs" />
@@ -368,6 +372,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001022107572_AddedHouseColourCode.resx">
       <DependentUpon>202001022107572_AddedHouseColourCode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001182210019_NewModel.resx">
+      <DependentUpon>202001182210019_NewModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

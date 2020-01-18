@@ -5,7 +5,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// A period in the week that a class takes place.
     /// </summary>
-    [Table("Session", Schema = "curriculum")]
+    [Table("Session")]
     public partial class Session
     {
         public int Id { get; set; }

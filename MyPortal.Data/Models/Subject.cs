@@ -7,7 +7,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// A subject/course in the curriculum.
     /// </summary>
-    [Table("Subject", Schema = "curriculum")]
+    [Table("Subject")]
     public partial class Subject
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

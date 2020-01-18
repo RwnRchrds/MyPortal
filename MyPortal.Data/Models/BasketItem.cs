@@ -5,7 +5,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// Represents a product in a student's basket.
     /// </summary>
-    [Table("BasketItem", Schema = "finance")]
+    [Table("BasketItem")]
     public partial class BasketItem
     {
         public int Id { get; set; }

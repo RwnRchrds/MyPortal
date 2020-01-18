@@ -7,7 +7,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// A training course available to staff.
     /// </summary>
-    [Table("TrainingCourse", Schema = "personnel")]
+    [Table("TrainingCourse")]
     public partial class TrainingCourse
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

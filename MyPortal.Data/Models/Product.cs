@@ -7,7 +7,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// A product available for purchase on the system.
     /// </summary>
-    [Table("Product", Schema = "finance")]
+    [Table("Product")]
     public partial class Product
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

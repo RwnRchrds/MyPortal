@@ -7,7 +7,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// A set of grades to use when adding results.
     /// </summary>
-    [Table("GradeSet", Schema = "assessment")]
+    [Table("GradeSet")]
     public class GradeSet
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

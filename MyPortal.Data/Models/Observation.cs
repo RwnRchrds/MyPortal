@@ -6,7 +6,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// An appraisal/observation carried out by line managers on members of staff.
     /// </summary>
-    [Table("Observation", Schema = "personnel")]
+    [Table("Observation")]
     public partial class Observation
     {
         public int Id { get; set; }

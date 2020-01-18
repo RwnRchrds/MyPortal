@@ -7,7 +7,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// Grade assigned to results.
     /// </summary>
-    [Table("Grade", Schema = "assessment")]
+    [Table("Grade")]
     public class Grade
     {
         public Grade()

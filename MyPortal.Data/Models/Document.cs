@@ -8,7 +8,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// Represents an online document in the system.
     /// </summary>
-    [Table("Document", Schema = "document")]
+    [Table("Document")]
     public partial class Document
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

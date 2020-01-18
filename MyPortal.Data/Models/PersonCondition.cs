@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Data.Models
 {
-    [Table("PersonCondition", Schema = "medical")]
+    [Table("PersonCondition")]
     public class PersonCondition
     {
         public int Id { get; set; }
@@ -18,6 +18,6 @@ namespace MyPortal.Data.Models
         public string Medication { get; set; }
 
         public virtual Person Person { get; set; }
-        public virtual Condition Condition { get; set; }
+        public virtual MedicalCondition MedicalCondition { get; set; }
     }
 }

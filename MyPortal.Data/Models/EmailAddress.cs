@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Data.Models
 {
-    [Table("EmailAddress", Schema = "communication")]
+    [Table("EmailAddress")]
     public class EmailAddress
     {
         public int Id { get; set; }

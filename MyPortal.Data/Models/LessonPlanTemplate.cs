@@ -6,7 +6,7 @@ namespace MyPortal.Data.Models
     /// <summary>
     /// [NOT CURRENTLY IN USE] A generic template for lesson plan creation.
     /// </summary>
-    [Table("LessonPlanTemplate", Schema = "curriculum")]
+    [Table("LessonPlanTemplate")]
     public partial class LessonPlanTemplate
     {
         public int Id { get; set; }
