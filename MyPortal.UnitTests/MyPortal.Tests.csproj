@@ -114,6 +114,10 @@
       <Project>{7e8b72b9-96aa-4ddb-b819-745fdc8caacd}</Project>
       <Name>MyPortal.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MyPortal\MyPortalWeb.csproj">
+      <Project>{db3e3382-e173-4c79-be4e-13230f34fdf6}</Project>
+      <Name>MyPortalWeb</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
