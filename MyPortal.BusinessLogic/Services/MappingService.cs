@@ -47,7 +47,7 @@ namespace MyPortal.BusinessLogic.Services
                 cfg.CreateMap<CommentBank, CommentBankDto>().ReverseMap();
                 cfg.CreateMap<CommunicationLog, CommunicationLogDto>().ReverseMap();
                 cfg.CreateMap<CommunicationType, CommunicationTypeDto>().ReverseMap();
-                cfg.CreateMap<MedicalCondition, ConditionDto>().ReverseMap();
+                cfg.CreateMap<MedicalCondition, MedicalConditionDto>().ReverseMap();
                 cfg.CreateMap<Contact, ContactDto>().ReverseMap();
                 cfg.CreateMap<Detention, DetentionDto>().ReverseMap();
                 cfg.CreateMap<DetentionAttendanceStatus, DetentionAttendanceStatusDto>().ReverseMap();
@@ -302,7 +302,7 @@ namespace MyPortal.BusinessLogic.Services
 
                 cfg.CreateMap<PersonConditionDto, DataGridPersonConditionDto>()
                     .ForMember(dest => dest.Condition,
-                        opts => opts.MapFrom(src => src.Condition.Description));
+                        opts => opts.MapFrom(src => src.MedicalCondition.Description));
 
                 cfg.CreateMap<PersonDietaryRequirementDto, DataGridPersonDietaryRequirementDto>()
                     .ForMember(dest => dest.Description,

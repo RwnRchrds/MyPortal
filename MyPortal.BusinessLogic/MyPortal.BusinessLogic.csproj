@@ -99,7 +99,7 @@
     <Compile Include="Dtos\CommentDto.cs" />
     <Compile Include="Dtos\CommunicationLogDto.cs" />
     <Compile Include="Dtos\CommunicationTypeDto.cs" />
-    <Compile Include="Dtos\ConditionDto.cs" />
+    <Compile Include="Dtos\MedicalConditionDto.cs" />
     <Compile Include="Dtos\ContactDto.cs" />
     <Compile Include="Dtos\DataGrid\DataGridApplicationUserDto.cs" />
     <Compile Include="Dtos\DataGrid\DataGridResultDto.cs" />

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MyPortal.BusinessLogic.Dtos
 {
-    public class ConditionDto
+    public class MedicalConditionDto
     {
         public int Id { get; set; }
 

@@ -21,6 +21,6 @@ namespace MyPortal.BusinessLogic.Dtos
         public string Medication { get; set; }
 
         public virtual PersonDto Person { get; set; }
-        public virtual ConditionDto Condition { get; set; }
+        public virtual MedicalConditionDto MedicalCondition { get; set; }
     }
 }
