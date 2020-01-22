@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyPortal.Data", "MyPortal.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyPortal.BusinessLogic", "MyPortal.BusinessLogic\MyPortal.BusinessLogic.csproj", "{6C2127C6-6FFE-464E-9986-F294360A5D3F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyPortal.Database", "MyPortal.Database\MyPortal.Database.csproj", "{166E1359-8F93-462C-A72D-61750A7E30F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyPortalCore", "MyPortalCore\MyPortalCore.csproj", "{31D132D9-621D-41B5-A8EC-E1D3C29DE9C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +38,14 @@ Global
 		{6C2127C6-6FFE-464E-9986-F294360A5D3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C2127C6-6FFE-464E-9986-F294360A5D3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C2127C6-6FFE-464E-9986-F294360A5D3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{166E1359-8F93-462C-A72D-61750A7E30F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{166E1359-8F93-462C-A72D-61750A7E30F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{166E1359-8F93-462C-A72D-61750A7E30F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{166E1359-8F93-462C-A72D-61750A7E30F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31D132D9-621D-41B5-A8EC-E1D3C29DE9C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31D132D9-621D-41B5-A8EC-E1D3C29DE9C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31D132D9-621D-41B5-A8EC-E1D3C29DE9C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31D132D9-621D-41B5-A8EC-E1D3C29DE9C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
