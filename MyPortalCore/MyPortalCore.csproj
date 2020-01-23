@@ -12,11 +12,14 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.0" />
   </ItemGroup>
 
 
   <ItemGroup>
     <ProjectReference Include="..\MyPortal.Database\MyPortal.Database.csproj" />
+    <ProjectReference Include="..\MyPortal.Logic\MyPortal.Logic.csproj" />
   </ItemGroup>
 
 </Project>

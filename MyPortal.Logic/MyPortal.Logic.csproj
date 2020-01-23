@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\Dtos\DataGrid\" />
+    <Folder Include="Helpers\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Syncfusion.EJ2.AspNet.Core" Version="17.4.0.44" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MyPortal.Database\MyPortal.Database.csproj" />
+  </ItemGroup>
+
+</Project>

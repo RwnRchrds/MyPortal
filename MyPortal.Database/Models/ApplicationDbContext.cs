@@ -96,7 +96,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<SystemArea> SystemAreas { get; set; }
         public virtual DbSet<Bulletin> Bulletins { get; set; }
         public virtual DbSet<Report> Reports { get; set; }
-        public virtual DbSet<School> SystemSchools { get; set; }
+        public virtual DbSet<School> Schools { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -11,9 +11,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyPortal.Data", "MyPortal.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyPortal.BusinessLogic", "MyPortal.BusinessLogic\MyPortal.BusinessLogic.csproj", "{6C2127C6-6FFE-464E-9986-F294360A5D3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyPortal.Database", "MyPortal.Database\MyPortal.Database.csproj", "{166E1359-8F93-462C-A72D-61750A7E30F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyPortal.Database", "MyPortal.Database\MyPortal.Database.csproj", "{166E1359-8F93-462C-A72D-61750A7E30F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyPortalCore", "MyPortalCore\MyPortalCore.csproj", "{31D132D9-621D-41B5-A8EC-E1D3C29DE9C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyPortalCore", "MyPortalCore\MyPortalCore.csproj", "{31D132D9-621D-41B5-A8EC-E1D3C29DE9C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyPortal.Logic", "MyPortal.Logic\MyPortal.Logic.csproj", "{CCE77F36-AC3F-4844-9B35-DE832479033B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,6 +48,10 @@ Global
 		{31D132D9-621D-41B5-A8EC-E1D3C29DE9C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31D132D9-621D-41B5-A8EC-E1D3C29DE9C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31D132D9-621D-41B5-A8EC-E1D3C29DE9C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCE77F36-AC3F-4844-9B35-DE832479033B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCE77F36-AC3F-4844-9B35-DE832479033B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCE77F36-AC3F-4844-9B35-DE832479033B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCE77F36-AC3F-4844-9B35-DE832479033B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
