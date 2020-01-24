@@ -28,11 +28,11 @@ namespace MyPortal.Database.Repositories
             return await Connection.QueryAsync<School>(sql);
         }
 
-        public async Task<IEnumerable<School>> GetById(int id)
+        public async Task<School> GetById(int id)
         {
             var sql = $"SELECT {AllColumns} FROM {TblName} WHERE [S].[Id] = @SchoolId";
 
-            return await Connection.QueryAsync<School>(sql, new {SchoolId = id});
+            return await Connection.QuerySingleOrDefaultAsync<School>(sql, new {SchoolId = id});
         }
 
         public void Create(School entity)

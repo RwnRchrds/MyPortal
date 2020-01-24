@@ -132,12 +132,12 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Student>> GetGiftedTalented()
         {
-            
+            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<Student>> GetByHouse(int houseId)
         {
-            
+            throw new NotImplementedException();
         }
     }
 }
