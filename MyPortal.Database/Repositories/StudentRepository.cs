@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
@@ -28,14 +29,22 @@ namespace MyPortal.Database.Repositories
         {
             var sql = $"SELECT {AllColumns},{PersonRepository.AllColumns} FROM {TblName} {JoinPeople}";
 
-            return await Connection.QueryAsync<Student>(sql);
+            return await Connection.QueryAsync<Student, Person, Student>(sql, (s, p) =>
+            {
+                s.Person = p;
+                return s;
+            });
         }
 
         public async Task<Student> GetById(int id)
         {
             var sql = $"SELECT {AllColumns},{PersonRepository.AllColumns} FROM {TblName} {JoinPeople} WHERE [S].[Id] = @StudentId";
 
-            return await Connection.QuerySingleOrDefaultAsync<Student>(sql, new {StudentId = id});
+            return (await Connection.QueryAsync<Student, Person, Student>(sql, (s, p) =>
+            {
+                s.Person = p;
+                return s;
+            }, new {StudentId = id})).Single();
         }
 
         public void Create(Student entity)
