@@ -22,6 +22,8 @@ namespace MyPortal.Database.Models
 
         public int Value { get; set; }
 
+        public bool System { get; set; }
+
         public virtual GradeSet GradeSet { get; set; }
 
         public virtual ICollection<Result> Results { get; set; }

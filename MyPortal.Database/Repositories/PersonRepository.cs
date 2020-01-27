@@ -13,7 +13,7 @@ namespace MyPortal.Database.Repositories
     {
         private const string TblName = "[dbo].[Person] AS [P]";
 
-        public const string AllColumns =
+        internal const string AllColumns =
             "[P].[Id],[P].[Title],[P].[FirstName],[P].[MiddleName],[P].[PhotoId],[P].[NhsNumber],[P].[LastName],[P].[Gender],[P].[Dob],[P].[Deceased],[P].[UserId],[P].[Deleted]";
 
         public PersonRepository(IDbConnection connection) : base(connection)

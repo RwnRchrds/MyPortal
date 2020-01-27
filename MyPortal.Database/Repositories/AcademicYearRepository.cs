@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
     {
         private const string TblName = "[dbo].[AcademicYear] AS [A]";
 
-        private const string AllColumns = "[A].[Id],[A].[Name],[A].[FirstDate],[A].[LastDate]";
+        internal const string AllColumns = "[A].[Id],[A].[Name],[A].[FirstDate],[A].[LastDate]";
 
         public AcademicYearRepository(IDbConnection connection) : base(connection)
         {

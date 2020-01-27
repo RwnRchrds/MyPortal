@@ -18,6 +18,10 @@ namespace MyPortal.Database.Models
         [StringLength(128)]
         public string Description { get; set; }
 
+        public bool Person { get; set; }
+        public bool General { get; set; }
+        public bool Sen { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Document> Documents { get; set; }
     }

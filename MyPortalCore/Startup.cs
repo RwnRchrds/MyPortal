@@ -14,6 +14,7 @@ using MyPortalCore.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MyPortal.Database.Constants;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
 
@@ -45,6 +46,13 @@ namespace MyPortalCore
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddMvc();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(Policy.UserType.Student, p => p.RequireClaim(ClaimType.UserType, UserType.Student));
+                options.AddPolicy(Policy.UserType.Staff, p => p.RequireClaim(ClaimType.UserType, UserType.Staff));
+                options.AddPolicy(Policy.UserType.Parent, p => p.RequireClaim(ClaimType.UserType, UserType.Parent));
+            });
 
             services.AddTransient<IDbConnection>(connection =>
                 new SqlConnection(Configuration.GetConnectionString("LiveConnection")));

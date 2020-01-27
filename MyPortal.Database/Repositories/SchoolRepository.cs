@@ -13,9 +13,11 @@ namespace MyPortal.Database.Repositories
     {
         private const string TblName = @"[dbo].[School] as [S]";
 
-        private const string AllColumns =
+        public const string AllColumns =
             @"[S].[Id],[S].[Name],[S].[LocalAuthorityId],[S].[EstablishmentNumber],[S].[Urn],[S].[Uprn],[S].[PhaseId],[S].[TypeId],[S].[GovernanceTypeId],[S].[IntakeTypeId],
 [S].[HeadTeacherId],[S].[TelephoneNo],[S].[FaxNo],[S].[EmailAddress],[S].[Website],[S].[Local]";
+
+        private const string JoinPhase = "LEFT JOIN [dbo].[Phase] AS [P] ON [P].[Id] = [S].[PhaseId]";
 
         public SchoolRepository(IDbConnection connection) : base(connection)
         {
