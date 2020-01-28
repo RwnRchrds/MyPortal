@@ -9,7 +9,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Repositories
 {
-    public class BaseRepository : IDisposable
+    public abstract class BaseRepository : IDisposable
     {
         protected readonly IDbConnection Connection;
         protected readonly ApplicationDbContext Context;

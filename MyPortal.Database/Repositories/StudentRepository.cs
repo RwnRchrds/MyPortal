@@ -12,14 +12,13 @@ namespace MyPortal.Database.Repositories
 {
     public class StudentRepository : BaseRepository, IStudentRepository
     {
-        private const string TblName = "[dbo].[Student] AS [S]";
+        private readonly string TblName = @"[dbo].[Student] AS [Student]";
+        internal static readonly string AllColumns =
+            @"[Student].[Id],[Student].[PersonId],[Student].[RegGroupId],[Student].[YearGroupId],[Student].[HouseId],[Student].[CandidateNumber],[Student].[AdmissionNumber],[Student].[DateStarting],[Student].[DateLeaving],[Student].[AccountBalance],[Student].[FreeSchoolMeals],[Student].[GiftedAndTalented],[Student].[SenStatusId],[Student].[PupilPremium],[Student].[Upn],[Student].[Uci],[Student].[Deleted]";
 
-        public const string AllColumns =
-            @"[S].[Id],[S].[PersonId],[S].[RegGroupId],[S].[YearGroupId],[S].[HouseId],[S].[CandidateNumber],[S].[AdmissionNumber],[S].[DateStarting],[S].[DateLeaving],[S].[AccountBalance],[S].[FreeSchoolMeals],[S].[GiftedAndTalented],[S].[SenStatusId],[S].[PupilPremium],[S].[Upn],[S].[Uci],[S].[Deleted]";
+        private readonly string JoinPeople = @"LEFT JOIN [dbo].[Person] AS [Person] ON [Person].[Id] = [Student].[PersonId]";
 
-        private const string JoinPeople = @"JOIN [dbo].[Person] AS [P] ON [P].[Id] = [S].[PersonId]";
-
-        private const string JoinEnrolments = @"LEFT JOIN [dbo].[Enrolment] AS [E] ON [E].[StudentId] = [S].[Id]";
+        private readonly string JoinEnrolments = @"LEFT JOIN [dbo].[Enrolment] AS [Enrolment] ON [Enrolment].[StudentId] = [Student].[Id]";
 
         public StudentRepository(IDbConnection connection) : base(connection)
         {
@@ -38,7 +37,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<Student> GetById(int id)
         {
-            var sql = $"SELECT {AllColumns},{PersonRepository.AllColumns} FROM {TblName} {JoinPeople} WHERE [S].[Id] = @StudentId";
+            var sql = $"SELECT {AllColumns},{PersonRepository.AllColumns} FROM {TblName} {JoinPeople} WHERE [Student].[Id] = @StudentId";
 
             return (await Connection.QueryAsync<Student, Person, Student>(sql, (s, p) =>
             {
@@ -98,35 +97,35 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Student>> GetOnRoll()
         {
-            var sql = $"SELECT {AllColumns},{PersonRepository.AllColumns} FROM {TblName} {JoinPeople} WHERE [S].[DateStarting] IS NOT NULL AND [S].[DateStarting] <= @DateToday";
+            var sql = $"SELECT {AllColumns},{PersonRepository.AllColumns} FROM {TblName} {JoinPeople} WHERE [Student].[DateStarting] IS NOT NULL AND [Student].[DateStarting] <= @DateToday";
                 
             return await Connection.QueryAsync<Student>(sql, new {DateToday = DateTime.Today});
         }
 
         public async Task<IEnumerable<Student>> GetLeavers()
         {
-            var sql = $"SELECT {AllColumns},{PersonRepository.AllColumns} FROM {TblName} {JoinPeople} WHERE [S].[DateStarting] IS NOT NULL AND [S].[DateLeaving] <= @DateToday";
+            var sql = $"SELECT {AllColumns},{PersonRepository.AllColumns} FROM {TblName} {JoinPeople} WHERE [Student].[DateStarting] IS NOT NULL AND [Student].[DateLeaving] <= @DateToday";
 
             return await Connection.QueryAsync<Student>(sql, new { DateToday = DateTime.Today });
         }
 
         public async Task<IEnumerable<Student>> GetFuture()
         {
-            var sql = $"SELECT {AllColumns},{PersonRepository.AllColumns} FROM {TblName} {JoinPeople} WHERE [S].[DateStarting] IS NOT NULL AND [S].[DateStarting] > @DateToday";
+            var sql = $"SELECT {AllColumns},{PersonRepository.AllColumns} FROM {TblName} {JoinPeople} WHERE [Student].[DateStarting] IS NOT NULL AND [Student].[DateStarting] > @DateToday";
 
             return await Connection.QueryAsync<Student>(sql, new { DateToday = DateTime.Today });
         }
 
         public async Task<IEnumerable<Student>> GetByRegGroup(int regGroupId)
         {
-            var sql = $"SELECT {AllColumns},{PersonRepository.AllColumns} FROM {TblName} {JoinPeople} WHERE [S].[RegGroupId] = @RegGroupId";
+            var sql = $"SELECT {AllColumns},{PersonRepository.AllColumns} FROM {TblName} {JoinPeople} WHERE [Student].[RegGroupId] = @RegGroupId";
 
             return await Connection.QueryAsync<Student>(sql, new { RegGroupId = regGroupId });
         }
 
         public async Task<IEnumerable<Student>> GetByYearGroup(int yearGroupId)
         {
-            var sql = $"SELECT {AllColumns},{PersonRepository.AllColumns} FROM {TblName} {JoinPeople} WHERE [S].[YearGroupId] = @YearGroupId";
+            var sql = $"SELECT {AllColumns},{PersonRepository.AllColumns} FROM {TblName} {JoinPeople} WHERE [Student].[YearGroupId] = @YearGroupId";
 
             return await Connection.QueryAsync<Student>(sql, new { YearGroupId = yearGroupId });
         }
@@ -134,7 +133,7 @@ namespace MyPortal.Database.Repositories
         public async Task<IEnumerable<Student>> GetByClass(int classId)
         {
             var sql =
-                $"SELECT {AllColumns},{PersonRepository.AllColumns} FROM {TblName} {JoinPeople} WHERE [S].[Id] IN (SELECT [E].[StudentId] FROM [dbo].[Enrolment] AS [E] WHERE [ClassId] = @ClassId)";
+                $"SELECT {AllColumns},{PersonRepository.AllColumns} FROM {TblName} {JoinPeople} WHERE [Student].[Id] IN (SELECT [Enrolment].[StudentId] FROM [dbo].[Enrolment] AS [Enrolment] WHERE [ClassId] = @ClassId)";
 
             return await Connection.QueryAsync<Student>(sql, new { ClassId = classId });
         }

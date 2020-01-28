@@ -11,10 +11,9 @@ namespace MyPortal.Database.Repositories
 {
     public class PersonRepository : BaseRepository, IPersonRepository
     {
-        private const string TblName = "[dbo].[Person] AS [P]";
-
-        internal const string AllColumns =
-            "[P].[Id],[P].[Title],[P].[FirstName],[P].[MiddleName],[P].[PhotoId],[P].[NhsNumber],[P].[LastName],[P].[Gender],[P].[Dob],[P].[Deceased],[P].[UserId],[P].[Deleted]";
+        private readonly string TblName = @"[dbo].[Person] AS [Person]";
+        internal static readonly string AllColumns =
+            @"[Person].[Id],[Person].[Title],[Person].[FirstName],[Person].[MiddleName],[Person].[PhotoId],[Person].[NhsNumber],[Person].[LastName],[Person].[Gender],[Person].[Dob],[Person].[Deceased],[Person].[UserId],[Person].[Deleted]";
 
         public PersonRepository(IDbConnection connection) : base(connection)
         {
@@ -29,7 +28,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<Person> GetById(int id)
         {
-            var sql = $"SELECT {AllColumns} FROM {TblName} WHERE [P].[Id] = @PersonId";
+            var sql = $"SELECT {AllColumns} FROM {TblName} WHERE [Person].[Id] = @PersonId";
 
             return await Connection.QuerySingleOrDefaultAsync<Person>(sql, new {PersonId = id});
         }
@@ -75,7 +74,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<Person> GetByUserId(string userId)
         {
-            var sql = $"SELECT {AllColumns} FROM {TblName} WHERE [P].[UserId] = @UserId";
+            var sql = $"SELECT {AllColumns} FROM {TblName} WHERE [Person].[UserId] = @UserId";
 
             return await Connection.QuerySingleOrDefaultAsync<Person>(sql, new {UserId = userId});
         }
@@ -88,7 +87,7 @@ namespace MyPortal.Database.Repositories
 
             if (!string.IsNullOrWhiteSpace(person.FirstName))
             {
-                sql = $"{sql} WHERE [P].[FirstName] LIKE @FirstName";
+                sql = $"{sql} WHERE [Person].[FirstName] LIKE @FirstName";
 
                 hasWhereClause = true;
             }
@@ -97,7 +96,7 @@ namespace MyPortal.Database.Repositories
             {
                 var appendCondition = hasWhereClause ? "AND" : "WHERE";
 
-                sql = $"{sql} {appendCondition} [P].[LastName] Like @LastName";
+                sql = $"{sql} {appendCondition} [Person].[LastName] Like @LastName";
 
                 hasWhereClause = true;
             }
@@ -106,7 +105,7 @@ namespace MyPortal.Database.Repositories
             {
                 var appendCondition = hasWhereClause ? "AND" : "WHERE";
 
-                sql = $"{sql} {appendCondition} [P].[Gender] = @Gender";
+                sql = $"{sql} {appendCondition} [Person].[Gender] = @Gender";
 
                 hasWhereClause = true;
             }
@@ -115,7 +114,7 @@ namespace MyPortal.Database.Repositories
             {
                 var appendCondition = hasWhereClause ? "AND" : "WHERE";
 
-                sql = $"{sql} {appendCondition} WHERE [P].[Dob] = @Dob";
+                sql = $"{sql} {appendCondition} WHERE [Person].[Dob] = @Dob";
             }
 
             return await Connection.QueryAsync<Person>(sql,
@@ -128,7 +127,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<int> GetNumberOfBirthdaysThisWeek(DateTime weekBeginning)
         {
-            var sql = $"SELECT COUNT([P].[Id]) FROM {TblName} WHERE [P].[Dob] >= @Monday AND [P].[Dob] <= @Sunday";
+            var sql = $"SELECT COUNT([Person].[Id]) FROM {TblName} WHERE [Person].[Dob] >= @Monday AND [Person].[Dob] <= @Sunday";
 
             return await Connection.QueryFirstOrDefaultAsync<int>(sql,
                 new {Monday = weekBeginning, Sunday = weekBeginning.AddDays(6)});

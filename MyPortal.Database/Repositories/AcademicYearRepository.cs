@@ -12,12 +12,12 @@ namespace MyPortal.Database.Repositories
 {
     public class AcademicYearRepository : BaseRepository, IAcademicYearRepository
     {
-        private const string TblName = "[dbo].[AcademicYear] AS [A]";
-
-        internal const string AllColumns = "[A].[Id],[A].[Name],[A].[FirstDate],[A].[LastDate]";
+        private readonly string TblName = @"[dbo].[AcademicYear] AS [AcademicYear]";
+        internal static readonly string AllColumns = @"[AcademicYear].[Id],[AcademicYear].[Name],[AcademicYear].[FirstDate],[AcademicYear].[LastDate]";
 
         public AcademicYearRepository(IDbConnection connection) : base(connection)
         {
+            
         }
 
         public Task<IEnumerable<AcademicYear>> GetAll()
@@ -29,7 +29,7 @@ namespace MyPortal.Database.Repositories
 
         public Task<AcademicYear> GetById(int id)
         {
-            var sql = $"SELECT {AllColumns} FROM {TblName} WHERE [A].[Id] = @AcademicYearId";
+            var sql = $"SELECT {AllColumns} FROM {TblName} WHERE [AcademicYear].[Id] = @AcademicYearId";
 
             return Connection.QuerySingleOrDefaultAsync<AcademicYear>(sql, new {AcademicYearId = id});
         }
@@ -63,12 +63,12 @@ namespace MyPortal.Database.Repositories
             Context.AcademicYears.Remove(academicYearInDb);
         }
 
-        public Task<AcademicYear> GetCurrent()
+        public async Task<AcademicYear> GetCurrent()
         {
             var sql =
-                $"SELECT {AllColumns} FROM {TblName} WHERE [A].[FirstDate] <= DateToday AND [A].[LastDate] >= DateToday";
+                $"SELECT {AllColumns} FROM {TblName} WHERE [AcademicYear].[FirstDate] <= DateToday AND [AcademicYear].[LastDate] >= DateToday";
 
-            return Connection.QueryFirstOrDefaultAsync<AcademicYear>(sql, new {DateToday = DateTime.Today});
+            return await Connection.QueryFirstOrDefaultAsync<AcademicYear>(sql, new {DateToday = DateTime.Today});
         }
     }
 }

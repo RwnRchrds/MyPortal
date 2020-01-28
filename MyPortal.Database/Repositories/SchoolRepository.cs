@@ -11,13 +11,12 @@ namespace MyPortal.Database.Repositories
 {
     public class SchoolRepository : BaseRepository, ISchoolRepository
     {
-        private const string TblName = @"[dbo].[School] as [S]";
+        private readonly string TblName = @"[dbo].[School] as [School]";
+        internal static readonly string AllColumns =
+            @"[School].[Id],[School].[Name],[School].[LocalAuthorityId],[School].[EstablishmentNumber],[School].[Urn],[School].[Uprn],[School].[PhaseId],[School].[TypeId],[School].[GovernanceTypeId],[School].[IntakeTypeId],
+[School].[HeadTeacherId],[School].[TelephoneNo],[School].[FaxNo],[School].[EmailAddress],[School].[Website],[School].[Local]";
 
-        public const string AllColumns =
-            @"[S].[Id],[S].[Name],[S].[LocalAuthorityId],[S].[EstablishmentNumber],[S].[Urn],[S].[Uprn],[S].[PhaseId],[S].[TypeId],[S].[GovernanceTypeId],[S].[IntakeTypeId],
-[S].[HeadTeacherId],[S].[TelephoneNo],[S].[FaxNo],[S].[EmailAddress],[S].[Website],[S].[Local]";
-
-        private const string JoinPhase = "LEFT JOIN [dbo].[Phase] AS [P] ON [P].[Id] = [S].[PhaseId]";
+        private readonly string JoinPhase = @"LEFT JOIN [dbo].[Phase] AS [Phase] ON [Phase].[Id] = [School].[PhaseId]";
 
         public SchoolRepository(IDbConnection connection) : base(connection)
         {
@@ -32,7 +31,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<School> GetById(int id)
         {
-            var sql = $"SELECT {AllColumns} FROM {TblName} WHERE [S].[Id] = @SchoolId";
+            var sql = $"SELECT {AllColumns} FROM {TblName} WHERE [School].[Id] = @SchoolId";
 
             return await Connection.QuerySingleOrDefaultAsync<School>(sql, new {SchoolId = id});
         }
@@ -81,14 +80,14 @@ namespace MyPortal.Database.Repositories
 
         public async Task<string> GetLocalSchoolName()
         {
-            var sql = $"SELECT [S].[Name] FROM {TblName} WHERE [S].[Local] = 1";
+            var sql = $"SELECT [School].[Name] FROM {TblName} WHERE [School].[Local] = 1";
 
             return await Connection.QuerySingleOrDefaultAsync<string>(sql);
         }
 
         public async Task<School> GetLocal()
         {
-            var sql = $"SELECT {AllColumns} FROM {TblName} WHERE [S].[Local] = 1";
+            var sql = $"SELECT {AllColumns} FROM {TblName} WHERE [School].[Local] = 1";
 
             return await Connection.QuerySingleOrDefaultAsync<School>(sql);
         }
