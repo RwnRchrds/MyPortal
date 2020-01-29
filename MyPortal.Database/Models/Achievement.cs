@@ -19,7 +19,7 @@ namespace MyPortal.Database.Models
         public int RecordedById { get; set; }
 
         [Column(TypeName = "date")]
-        public DateTime Date { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         public string Comments { get; set; }
 

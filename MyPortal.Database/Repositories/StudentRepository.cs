@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
+using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 
@@ -13,8 +14,8 @@ namespace MyPortal.Database.Repositories
     public class StudentRepository : BaseRepository, IStudentRepository
     {
         private readonly string TblName = @"[dbo].[Student] AS [Student]";
-        internal static readonly string AllColumns =
-            @"[Student].[Id],[Student].[PersonId],[Student].[RegGroupId],[Student].[YearGroupId],[Student].[HouseId],[Student].[CandidateNumber],[Student].[AdmissionNumber],[Student].[DateStarting],[Student].[DateLeaving],[Student].[AccountBalance],[Student].[FreeSchoolMeals],[Student].[GiftedAndTalented],[Student].[SenStatusId],[Student].[PupilPremium],[Student].[Upn],[Student].[Uci],[Student].[Deleted]";
+
+        internal static readonly string AllColumns = EntityHelper.GetAllColumns(typeof(Student), "Student");
 
         private readonly string JoinPeople = @"LEFT JOIN [dbo].[Person] AS [Person] ON [Person].[Id] = [Student].[PersonId]";
 

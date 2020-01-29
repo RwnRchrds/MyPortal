@@ -5,14 +5,15 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using MyPortal.Database.Models.Identity;
+using MyPortal.Logic.Constants;
 
 namespace MyPortal.Logic.Authorisation.Filters
 {
     public class PermissionsFilter : IAuthorizationFilter
     {
-        private readonly string[] _permissions;
+        private readonly Permission[] _permissions;
 
-        public PermissionsFilter(string[] permissions)
+        public PermissionsFilter(Permission[] permissions)
         {
             _permissions = permissions;
         }
@@ -22,7 +23,7 @@ namespace MyPortal.Logic.Authorisation.Filters
             foreach (var permission in _permissions)
             {
                 var hasClaim =
-                    context.HttpContext.User.Claims.Any(x => x.Type == ClaimType.Permissions && x.Value == permission);
+                    context.HttpContext.User.Claims.Any(x => x.Type == ClaimType.Permissions && x.Value == permission.ToString());
 
                 if (hasClaim)
                 {

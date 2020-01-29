@@ -11,12 +11,16 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using MyPortal.Database.Helpers;
+using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
 using MyPortal.Logic.Authorisation.Attributes;
+using Permission = MyPortal.Logic.Constants.Permission;
 
 namespace MyPortalCore.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
+    [RequiresPermission(Permission.EditResultSets)]
     public class LoginModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -69,6 +73,8 @@ namespace MyPortalCore.Areas.Identity.Pages.Account
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+            var properties = EntityHelper.GetAllColumns(typeof(Student), "Student");
 
             ReturnUrl = returnUrl;
         }

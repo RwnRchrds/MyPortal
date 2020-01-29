@@ -4,6 +4,7 @@ using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
+using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 
@@ -12,8 +13,8 @@ namespace MyPortal.Database.Repositories
     public class PersonRepository : BaseRepository, IPersonRepository
     {
         private readonly string TblName = @"[dbo].[Person] AS [Person]";
-        internal static readonly string AllColumns =
-            @"[Person].[Id],[Person].[Title],[Person].[FirstName],[Person].[MiddleName],[Person].[PhotoId],[Person].[NhsNumber],[Person].[LastName],[Person].[Gender],[Person].[Dob],[Person].[Deceased],[Person].[UserId],[Person].[Deleted]";
+
+        internal static readonly string AllColumns = EntityHelper.GetAllColumns(typeof(Person), "Person");
 
         public PersonRepository(IDbConnection connection) : base(connection)
         {

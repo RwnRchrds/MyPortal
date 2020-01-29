@@ -4,6 +4,7 @@ using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
+using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 
@@ -14,7 +15,7 @@ namespace MyPortal.Database.Repositories
         private readonly string TblName = @"[dbo].[AchievementType]";
 
         internal static readonly string AllColumns =
-            @"[AchievementType].[Id],[AchievementType].[Description],[AchievementType].[DefaultPoints],[AchievementType].[System]";
+            EntityHelper.GetAllColumns(typeof(AchievementType), "AchievementType");
 
         private readonly string JoinAchievement =
             @"LEFT JOIN [dbo].[Achievement] AS [Achievement] ON [Achievement].[AchievementTypeId] = [AchievementType].[Id]";

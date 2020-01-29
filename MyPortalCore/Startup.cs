@@ -14,9 +14,11 @@ using MyPortalCore.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MyPortal.Database.Constants;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
+using MyPortal.Logic.Constants;
+using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Services;
 
 namespace MyPortalCore
 {
@@ -56,6 +58,8 @@ namespace MyPortalCore
 
             services.AddTransient<IDbConnection>(connection =>
                 new SqlConnection(Configuration.GetConnectionString("LiveConnection")));
+
+            services.AddScoped<IStudentService, StudentService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

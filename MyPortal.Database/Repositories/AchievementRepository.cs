@@ -4,6 +4,7 @@ using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
+using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 
@@ -12,8 +13,8 @@ namespace MyPortal.Database.Repositories
     public class AchievementRepository : BaseRepository, IAchievementRepository
     {
         private readonly string TblName = @"[dbo].[Achievement] AS [Achievement]";
-        internal static readonly string AllColumns =
-            @"[Achievement].[Id],[Achievement].[AcademicYearId],[Achievement].[AchievementTypeId],[Achievement].[StudentId],[Achievement].[LocationId],[Achievement].[RecordedById],[Achievement].[Date],[Achievement].[Comments],[Achievement].[Points],[Achievement].[Resolved],[Achievement].[Deleted]";
+        
+        internal static readonly string AllColumns = EntityHelper.GetAllColumns(typeof(Achievement), "Achievement");
 
         private readonly string JoinAcademicYear =
             @"LEFT JOIN [dbo].[AcademicYear] AS [AcademicYear] ON [AcademicYear].[Id] = [Achievement].[AcademicYearId]";

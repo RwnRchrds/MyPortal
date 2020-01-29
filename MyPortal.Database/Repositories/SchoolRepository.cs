@@ -4,6 +4,7 @@ using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
+using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 
@@ -12,9 +13,8 @@ namespace MyPortal.Database.Repositories
     public class SchoolRepository : BaseRepository, ISchoolRepository
     {
         private readonly string TblName = @"[dbo].[School] as [School]";
-        internal static readonly string AllColumns =
-            @"[School].[Id],[School].[Name],[School].[LocalAuthorityId],[School].[EstablishmentNumber],[School].[Urn],[School].[Uprn],[School].[PhaseId],[School].[TypeId],[School].[GovernanceTypeId],[School].[IntakeTypeId],
-[School].[HeadTeacherId],[School].[TelephoneNo],[School].[FaxNo],[School].[EmailAddress],[School].[Website],[School].[Local]";
+
+        internal static readonly string AllColumns = EntityHelper.GetAllColumns(typeof(School), "School");
 
         private readonly string JoinPhase = @"LEFT JOIN [dbo].[Phase] AS [Phase] ON [Phase].[Id] = [School].[PhaseId]";
 

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
+using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 
@@ -13,7 +14,8 @@ namespace MyPortal.Database.Repositories
     public class AcademicYearRepository : BaseRepository, IAcademicYearRepository
     {
         private readonly string TblName = @"[dbo].[AcademicYear] AS [AcademicYear]";
-        internal static readonly string AllColumns = @"[AcademicYear].[Id],[AcademicYear].[Name],[AcademicYear].[FirstDate],[AcademicYear].[LastDate]";
+
+        internal static readonly string AllColumns = EntityHelper.GetAllColumns(typeof(AcademicYear), "AcademicYear");
 
         public AcademicYearRepository(IDbConnection connection) : base(connection)
         {
