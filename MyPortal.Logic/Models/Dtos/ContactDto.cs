@@ -2,7 +2,7 @@
 
 namespace MyPortal.Logic.Models.Dtos
 {
-    public class ContactDto : IPersonDto
+    public class ContactDto
     {
         public int Id { get; set; }
 

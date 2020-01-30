@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Logic.Models.Dtos
 {
-    public class StudentDto : IPersonDto
+    public class StudentDto
     {
         public int Id { get; set; }
 

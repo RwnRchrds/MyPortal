@@ -15,7 +15,6 @@ namespace MyPortal.Logic.Models.Dtos
 
         public TimeSpan StartTime { get; set; }
 
-        [PeriodEndTime]
         public TimeSpan EndTime { get; set; }
 
         public bool IsAm { get; set; }

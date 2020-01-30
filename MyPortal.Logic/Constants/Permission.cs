@@ -1,80 +1,73 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
+using MyPortal.Logic.Authorisation;
 
 namespace MyPortal.Logic.Constants
 {
-    public enum Permission
+    public static class Permission
     {
-        #region Admin
-        
-        [Display(GroupName = "Admin", Description = "Edit Users")]
-        EditUsers = 0x10,
+        public static class Admin
+        {
+            public static class Users
+            {
+                public const int Edit = 0x10;
+            }
 
-        [Display(GroupName = "Admin", Description = "Edit Roles")]
-        EditRoles = 0x11,
+            public static class Roles
+            {
+                public const int Edit = 0x11;
+            }
+        }
 
-        #endregion
+        public static class Assessment
+        {
+            public static class ResultSets
+            {
+                public const int Edit = 0x20;
+                public const int View = 0x21;
+            }
 
-        #region Assessment
+            public static class Results
+            {
+                public const int Edit = 0x22;
+                public const int View = 0x23;
+            }
+        }
 
-        [Display(GroupName = "Assessment", Description = "Edit Result Sets")]
-        EditResultSets = 0x20,
+        public static class Attendance
+        {
+            public static class Data
+            {
+                public const int Edit = 0x30;
+                public const int View = 0x31;
+            }
+        }
 
-        [Display(GroupName = "Assessment", Description = "View Result Sets")]
-        ViewResultSets = 0x21,
+        public static class Behaviour
+        {
+            public static class Data
+            {
+                public const int Edit = 0x40;
+                public const int View = 0x41;
+            }
+        }
 
-        [Display(GroupName = "Assessment", Description = "Edit Results")]
-        EditResults = 0x22,
+        public static class Curriculum
+        {
+            public static class AcademicYears
+            {
+                public const int Edit = 0x50;
+            }
 
-        #endregion
+            public static class LessonPlans
+            {
+                public const int Delete = 0x51;
+                public const int View = 0x52;
+            }
 
-        #region Attendance
-
-        #endregion
-
-        #region Behaviour
-
-        #endregion
-
-        #region Curriculum
-
-        #endregion
-
-        #region Documents
-
-        #endregion
-
-        #region Finance
-
-        #endregion
-
-        #region Pastoral
-
-        #endregion
-
-        #region People
-
-        #endregion
-
-        #region Personnel
-
-        #endregion
-
-        #region Profiles
-
-        #endregion
-
-        #region Staff
-
-        #endregion
-
-        #region Students
-
-        #endregion
-
-        #region System
-
-        #endregion
+            public static class Classes
+            {
+                public const int Edit = 0x53;
+            }
+        }
     }
 }

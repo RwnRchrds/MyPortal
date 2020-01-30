@@ -2,7 +2,7 @@
 {
     public static class ClaimType
     {
-        public const string Permissions = "perms";
-        public const string UserType = "usertype";
+        public const string Permissions = "perm";
+        public const string UserType = "area";
     }
 }

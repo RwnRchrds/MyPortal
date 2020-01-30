@@ -2,8 +2,8 @@
 {
     public class UserType
     {
-        public const string Staff = "usertype.staff";
-        public const string Student = "usertype.student";
-        public const string Parent = "usertype.parent";
+        public const string Staff = "staff";
+        public const string Student = "student";
+        public const string Parent = "parent";
     }
 }

@@ -11,7 +11,6 @@ namespace MyPortal.Logic.Models.Dtos
         [StringLength(128)]
         public string Name { get; set; }
         public DateTime FirstDate { get; set; }
-        [AcademicYearLastDate]
         public DateTime LastDate { get; set; }
     }
 }

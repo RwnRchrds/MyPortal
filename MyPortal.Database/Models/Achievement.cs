@@ -25,8 +25,6 @@ namespace MyPortal.Database.Models
 
         public int Points { get; set; }
 
-        public bool Resolved { get; set; }
-
         public bool Deleted { get; set; }
 
         public virtual AchievementType Type { get; set; }

@@ -4,14 +4,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyPortal.Logic.Models.Dtos
 {
-    public class StaffMemberDto : IPersonDto
+    public class StaffMemberDto
     {
         public int Id { get; set; }
 
         public int PersonId { get; set; }
 
         [Required]
-        [Index(IsUnique = true)]
         [StringLength(128)]
         public string Code { get; set; }
 

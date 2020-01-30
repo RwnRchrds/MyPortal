@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using AutoMapper;
 using MyPortal.Database.Models;
-using MyPortal.Logic.Models.Dtos.DataGrid;
 using MyPortal.Database.Models.Identity;
 using MyPortal.Logic.Models.Business;
 using MyPortal.Logic.Models.Dtos;
+using MyPortal.Logic.Models.Dtos.DataGrid;
 using MyPortal.Logic.Models.Lite;
 
-namespace MyPortal.Logic.Services
+namespace MyPortal.Logic.Helpers
 {
-    public class MappingService
+    public class Mapping
     {
         public static Mapper GetMapperBusinessConfiguration()
         {
@@ -39,7 +39,6 @@ namespace MyPortal.Logic.Services
                 cfg.CreateMap<MedicalCondition, MedicalConditionDto>().ReverseMap();
                 cfg.CreateMap<Contact, ContactDto>().ReverseMap();
                 cfg.CreateMap<Detention, DetentionDto>().ReverseMap();
-                cfg.CreateMap<DetentionAttendanceStatus, DetentionAttendanceStatusDto>().ReverseMap();
                 cfg.CreateMap<DetentionType, DetentionTypeDto>().ReverseMap();
                 cfg.CreateMap<DiaryEvent, DiaryEventDto>().ReverseMap();
                 cfg.CreateMap<DietaryRequirement, DietaryRequirementDto>().ReverseMap();

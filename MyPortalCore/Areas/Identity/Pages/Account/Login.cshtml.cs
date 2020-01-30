@@ -16,11 +16,12 @@ using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
 using MyPortal.Logic.Authorisation.Attributes;
 using Permission = MyPortal.Logic.Constants.Permission;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortalCore.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
-    [RequiresPermission(Permission.EditResultSets)]
+    [RequiresPermission(Permission.Admin.Users.Edit)]
     public class LoginModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;

@@ -41,8 +41,10 @@ namespace MyPortal.Database.Models
         public virtual DbSet<Class> Classes { get; set; }
         public virtual DbSet<DetentionType> DetentionTypes { get; set; }
         public virtual DbSet<Detention> Detentions { get; set; }
-        public virtual DbSet<DetentionAttendanceStatus> DetentionAttendanceStatus { get; set; }
         public virtual DbSet<DiaryEvent> DiaryEvents { get; set; }
+        public virtual DbSet<DiaryEventAttendee> DiaryEventAttendees { get; set; }
+        public virtual DbSet<DiaryEventInvitationResponse> DiaryEventInvitationResponses { get; set; }
+        public virtual DbSet<DiaryEventType> DiaryEventTypes { get; set; }
         public virtual DbSet<Enrolment> Enrolments { get; set; }
         public virtual DbSet<IncidentDetention> IncidentDetentions { get; set; }
         public virtual DbSet<LessonPlan> LessonPlans { get; set; }
@@ -97,6 +99,10 @@ namespace MyPortal.Database.Models
         public virtual DbSet<Bulletin> Bulletins { get; set; }
         public virtual DbSet<Report> Reports { get; set; }
         public virtual DbSet<School> Schools { get; set; }
+        public virtual DbSet<Task> Tasks { get; set; }
+        public virtual DbSet<Homework> Homework { get; set; }
+        public virtual DbSet<HomeworkAttachment> HomeworkAttachments { get; set; }
+        public virtual DbSet<HomeworkSubmission> HomeworkSubmissions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -262,16 +268,34 @@ namespace MyPortal.Database.Models
                 .HasForeignKey(e => e.DetentionTypeId)
                 .IsRequired();
 
-            modelBuilder.Entity<DetentionAttendanceStatus>()
-                .HasMany(e => e.Detentions)
-                .WithOne(e => e.AttendanceStatus)
-                .HasForeignKey(e => e.AttendanceStatusId)
+            modelBuilder.Entity<DiaryEvent>()
+                .HasOne(e => e.Detention)
+                .WithOne(e => e.Event)
+                .HasForeignKey<Detention>(e => e.EventId)
                 .IsRequired();
 
             modelBuilder.Entity<DiaryEvent>()
-                .HasMany(e => e.Detentions)
+                .HasMany(e => e.Attendees)
                 .WithOne(e => e.Event)
                 .HasForeignKey(e => e.EventId)
+                .IsRequired();
+
+            modelBuilder.Entity<DiaryEventType>()
+                .HasMany(e => e.DiaryEventTemplates)
+                .WithOne(e => e.DiaryEventType)
+                .HasForeignKey(e => e.EventTypeId)
+                .IsRequired();
+
+            modelBuilder.Entity<DiaryEventType>()
+                .HasMany(e => e.DiaryEvents)
+                .WithOne(e => e.EventType)
+                .HasForeignKey(e => e.EventTypeId)
+                .IsRequired();
+
+            modelBuilder.Entity<DiaryEventInvitationResponse>()
+                .HasMany(e => e.DiaryEventAttendees)
+                .WithOne(e => e.Response)
+                .HasForeignKey(e => e.ResponseId)
                 .IsRequired();
 
             modelBuilder.Entity<Incident>()
@@ -316,9 +340,15 @@ namespace MyPortal.Database.Models
                 .IsRequired();
 
             modelBuilder.Entity<Document>()
-                .HasMany(e => e.PersonDocuments)
+                .HasOne(e => e.PersonAttachment)
                 .WithOne(e => e.Document)
-                .HasForeignKey(e => e.DocumentId)
+                .HasForeignKey<PersonAttachment>(e => e.DocumentId)
+                .IsRequired();
+
+            modelBuilder.Entity<Document>()
+                .HasOne(e => e.HomeworkAttachment)
+                .WithOne(e => e.Document)
+                .HasForeignKey<HomeworkAttachment>(e => e.DocumentId)
                 .IsRequired();
 
             modelBuilder.Entity<DocumentType>()
@@ -427,7 +457,7 @@ namespace MyPortal.Database.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<Person>()
-                .HasMany(e => e.PersonalDocuments)
+                .HasMany(e => e.Attachments)
                 .WithOne(e => e.Person)
                 .HasForeignKey(e => e.PersonId)
                 .IsRequired();
@@ -720,6 +750,36 @@ namespace MyPortal.Database.Models
                 .HasOne(e => e.Person)
                 .WithOne(e => e.User)
                 .HasForeignKey<Person>(e => e.UserId);
+
+            modelBuilder.Entity<Person>()
+                .HasMany(e => e.DiaryEventInvitations)
+                .WithOne(e => e.Person)
+                .HasForeignKey(e => e.PersonId)
+                .IsRequired();
+
+            modelBuilder.Entity<Person>()
+                .HasMany(e => e.Tasks)
+                .WithOne(e => e.Person)
+                .HasForeignKey(e => e.AssignedToId)
+                .IsRequired();
+
+            modelBuilder.Entity<Homework>()
+                .HasMany(e => e.Attachments)
+                .WithOne(e => e.Homework)
+                .HasForeignKey(e => e.HomeworkId)
+                .IsRequired();
+
+            modelBuilder.Entity<Homework>()
+                .HasMany(e => e.Submissions)
+                .WithOne(e => e.Homework)
+                .HasForeignKey(e => e.HomeworkId)
+                .IsRequired();
+
+            modelBuilder.Entity<HomeworkSubmission>()
+                .HasOne(e => e.Task)
+                .WithOne(e => e.HomeworkSubmission)
+                .HasForeignKey<HomeworkSubmission>(e => e.TaskId)
+                .IsRequired();
 
             base.OnModelCreating(modelBuilder);
         }

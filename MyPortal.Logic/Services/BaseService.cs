@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using AutoMapper;
+using MyPortal.Logic.Helpers;
 
 namespace MyPortal.Logic.Services
 {
@@ -11,7 +12,7 @@ namespace MyPortal.Logic.Services
 
         public BaseService()
         {
-            _mapper = MappingService.GetMapperBusinessConfiguration();
+            _mapper = Mapping.GetMapperBusinessConfiguration();
         }
     }
 }

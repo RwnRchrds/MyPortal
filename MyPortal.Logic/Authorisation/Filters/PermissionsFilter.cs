@@ -11,9 +11,9 @@ namespace MyPortal.Logic.Authorisation.Filters
 {
     public class PermissionsFilter : IAuthorizationFilter
     {
-        private readonly Permission[] _permissions;
+        private readonly int[] _permissions;
 
-        public PermissionsFilter(Permission[] permissions)
+        public PermissionsFilter(int[] permissions)
         {
             _permissions = permissions;
         }

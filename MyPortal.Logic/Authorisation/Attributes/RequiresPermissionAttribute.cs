@@ -9,7 +9,7 @@ namespace MyPortal.Logic.Authorisation.Attributes
 {
     public class RequiresPermissionAttribute : TypeFilterAttribute
     {
-        public RequiresPermissionAttribute(params Permission[] permissions) : base(typeof(PermissionsFilter))
+        public RequiresPermissionAttribute(params int[] permissions) : base(typeof(PermissionsFilter))
         {
             Arguments = new object[] {permissions};
         }

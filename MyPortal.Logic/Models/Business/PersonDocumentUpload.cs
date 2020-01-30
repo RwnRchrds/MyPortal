@@ -1,4 +1,6 @@
-﻿namespace MyPortal.Logic.Models.Business
+﻿using MyPortal.Database.Models;
+
+namespace MyPortal.Logic.Models.Business
 {
     public class PersonDocumentUpload
     {

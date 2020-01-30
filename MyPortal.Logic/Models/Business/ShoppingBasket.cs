@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using MyPortal.Database.Models;
 
 namespace MyPortal.Logic.Models.Business
 {

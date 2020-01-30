@@ -1,4 +1,6 @@
-﻿namespace MyPortal.Logic.Models.Business
+﻿using MyPortal.Logic.Models.Exceptions;
+
+namespace MyPortal.Logic.Models.Business
 {
     public class ValidationResponse
     {

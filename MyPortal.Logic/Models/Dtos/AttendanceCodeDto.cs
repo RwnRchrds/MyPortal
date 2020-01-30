@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using MyPortal.Database.Models;
 
 namespace MyPortal.Logic.Models.Dtos
 {

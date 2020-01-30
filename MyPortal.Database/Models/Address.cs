@@ -15,10 +15,13 @@ namespace MyPortal.Database.Models
 
         public int Id { get; set; }
 
+        [StringLength(128)]
         public string HouseNumber { get; set; }
 
+        [StringLength(128)]
         public string HouseName { get; set; }
 
+        [StringLength(128)]
         public string Apartment { get; set; }
 
         [Required]

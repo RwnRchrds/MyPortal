@@ -21,11 +21,13 @@ namespace MyPortal.Database.Models
         public Person()
         {
             PhoneNumbers = new HashSet<PhoneNumber>();
-            PersonalDocuments = new HashSet<PersonAttachment>();
+            Attachments = new HashSet<PersonAttachment>();
             MedicalConditions = new HashSet<PersonCondition>();
             DietaryRequirements = new HashSet<PersonDietaryRequirement>();
             HeadteacherOf = new HashSet<School>();
             EmailAddresses = new HashSet<EmailAddress>();
+            Addresses = new HashSet<AddressPerson>();
+            DiaryEventInvitations = new HashSet<DiaryEventAttendee>();
         }
 
         public int Id { get; set; }
@@ -63,25 +65,25 @@ namespace MyPortal.Database.Models
 
         public bool Deleted { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PhoneNumber> PhoneNumbers { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PersonAttachment> PersonalDocuments { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PersonCondition> MedicalConditions { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PersonDietaryRequirement> DietaryRequirements { get; set; }
-
         public virtual Contact ContactDetails { get; set; }
 
         public virtual StaffMember StaffMemberDetails { get; set; }
 
         public virtual Student StudentDetails { get; set; }
 
-        public virtual ApplicationUser User { get; set; }   
+        public virtual ApplicationUser User { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PhoneNumber> PhoneNumbers { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PersonAttachment> Attachments { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PersonCondition> MedicalConditions { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PersonDietaryRequirement> DietaryRequirements { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<School> HeadteacherOf { get; set; }
@@ -91,5 +93,9 @@ namespace MyPortal.Database.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AddressPerson> Addresses { get; set; }
+
+        public virtual ICollection<DiaryEventAttendee> DiaryEventInvitations { get; set; }
+
+        public virtual ICollection<Task> Tasks { get; set; }
     }
 }

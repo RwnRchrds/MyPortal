@@ -10,5 +10,6 @@ namespace MyPortal.Database.Interfaces
         void Create(TEntity entity);
         Task Update(TEntity entity);
         Task Delete(TKey id);
+        Task SaveChanges();
     }
 }

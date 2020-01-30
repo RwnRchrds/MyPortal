@@ -5,9 +5,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Database.Models
 {
-    /// <summary>
-    /// A student in the system.
-    /// </summary>
     [Table("Student")]
     public partial class Student
     {
@@ -62,15 +59,22 @@ namespace MyPortal.Database.Models
 
         public bool PupilPremium { get; set; }
 
-        [StringLength(256)]
-        public string MisId { get; set; }
-
         [StringLength(13)]
         public string Upn { get; set; }
 
         public string Uci { get; set; }
 
         public bool Deleted { get; set; }
+
+        public virtual RegGroup RegGroup { get; set; }
+
+        public virtual YearGroup YearGroup { get; set; }
+
+        public virtual Person Person { get; set; }
+
+        public virtual SenStatus SenStatus { get; set; }
+
+        public virtual House House { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Result> Results { get; set; }
@@ -95,16 +99,6 @@ namespace MyPortal.Database.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MedicalEvent> MedicalEvents { get; set; }
-
-        public virtual RegGroup RegGroup { get; set; }
-
-        public virtual YearGroup YearGroup { get; set; }
-
-        public virtual Person Person { get; set; }
-
-        public virtual SenStatus SenStatus { get; set; }
-
-        public virtual House House { get; set; }    
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SenEvent> SenEvents { get; set; }
