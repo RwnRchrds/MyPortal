@@ -61,18 +61,18 @@ namespace MyPortalCore
             services.AddTransient<IDbConnection>(connection =>
                 new SqlConnection(Configuration.GetConnectionString("LiveConnection")));
 
-            services.AddScoped<IAcademicYearRepository, AcademicYearRepository>();
-            services.AddScoped<IAchievementRepository, AchievementRepository>();
-            services.AddScoped<IAchievementTypeRepository, AchievementTypeRepository>();
-            services.AddScoped<IDetentionRepository, DetentionRepository>();
-            services.AddScoped<IDiaryEventRepository, DiaryEventRepository>();
-            services.AddScoped<IPersonRepository, PersonRepository>();
-            services.AddScoped<ISchoolRepository, SchoolRepository>();
-            services.AddScoped<IStudentRepository, StudentRepository>();
+            services.AddTransient<IAcademicYearRepository, AcademicYearRepository>();
+            services.AddTransient<IAchievementRepository, AchievementRepository>();
+            services.AddTransient<IAchievementTypeRepository, AchievementTypeRepository>();
+            services.AddTransient<IDetentionRepository, DetentionRepository>();
+            services.AddTransient<IDiaryEventRepository, DiaryEventRepository>();
+            services.AddTransient<IPersonRepository, PersonRepository>();
+            services.AddTransient<ISchoolRepository, SchoolRepository>();
+            services.AddTransient<IStudentRepository, StudentRepository>();
 
-            services.AddScoped<IBehaviourService, BehaviourService>();
-            services.AddScoped<ISchoolService, SchoolService>();
-            services.AddScoped<IStudentService, StudentService>();
+            services.AddTransient<IBehaviourService, BehaviourService>();
+            services.AddTransient<ISchoolService, SchoolService>();
+            services.AddTransient<IStudentService, StudentService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
