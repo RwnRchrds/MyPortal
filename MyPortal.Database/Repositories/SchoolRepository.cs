@@ -67,15 +67,8 @@ namespace MyPortal.Database.Repositories
             schoolInDb.Website = entity.Website;
         }
 
-        public async Task Delete(int id)
+        public void Delete(School schoolInDb)
         {
-            var schoolInDb = await Context.Schools.FindAsync(id);
-
-            if (schoolInDb == null)
-            {
-                throw new Exception("School not found.");
-            }
-
             Context.Schools.Remove(schoolInDb);
         }
 

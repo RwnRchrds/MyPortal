@@ -57,15 +57,8 @@ namespace MyPortal.Database.Repositories
             achievementTypeInDb.DefaultPoints = entity.DefaultPoints;
         }
 
-        public async Task Delete(int id)
+        public void Delete(AchievementType achievementTypeInDb)
         {
-            var achievementTypeInDb = await Context.AchievementTypes.FindAsync(id);
-
-            if (achievementTypeInDb == null)
-            {
-                throw new Exception("Achievement type not found.");
-            }
-
             Context.AchievementTypes.Remove(achievementTypeInDb);
         }
 

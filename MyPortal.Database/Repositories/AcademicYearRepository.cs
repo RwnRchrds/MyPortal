@@ -30,11 +30,16 @@ namespace MyPortal.Database.Repositories
             return Connection.QueryAsync<AcademicYear>(sql);
         }
 
-        public Task<AcademicYear> GetById(int id)
+        public async Task<AcademicYear> GetById(int id)
         {
             var sql = $"SELECT {AllColumns} FROM {TblName} WHERE [AcademicYear].[Id] = @AcademicYearId";
 
-            return Connection.QuerySingleOrDefaultAsync<AcademicYear>(sql, new {AcademicYearId = id});
+            return await Connection.QuerySingleOrDefaultAsync<AcademicYear>(sql, new {AcademicYearId = id});
+        }
+
+        public async Task<AcademicYear> GetByIdWithTracking(int id)
+        {
+            return await Context.AcademicYears.FindAsync(id);   
         }
 
         public void Create(AcademicYear entity)
@@ -54,15 +59,8 @@ namespace MyPortal.Database.Repositories
             academicYearInDb.Name = entity.Name;
         }
 
-        public async Task Delete(int id)
+        public void Delete(AcademicYear academicYearInDb)
         {
-            var academicYearInDb = await Context.AcademicYears.FindAsync(id);
-
-            if (academicYearInDb == null)
-            {
-                throw new Exception("Academic year not found.");
-            }
-
             Context.AcademicYears.Remove(academicYearInDb);
         }
 

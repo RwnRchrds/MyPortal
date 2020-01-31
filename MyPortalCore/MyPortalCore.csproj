@@ -25,4 +25,9 @@
     <ProjectReference Include="..\MyPortal.Logic\MyPortal.Logic.csproj" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Folder Include="wwwroot\lib\keen\" />
+  </ItemGroup>
+
 </Project>

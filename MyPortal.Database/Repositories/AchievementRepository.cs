@@ -53,7 +53,7 @@ namespace MyPortal.Database.Repositories
             throw new NotImplementedException();
         }
 
-        public Task Delete(int id)
+        public void Delete(Achievement achievementInDb)
         {
             throw new NotImplementedException();
         }

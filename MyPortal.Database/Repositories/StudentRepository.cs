@@ -78,15 +78,8 @@ namespace MyPortal.Database.Repositories
             studentInDb.Deleted = entity.Deleted;
         }
 
-        public async Task Delete(int id)
+        public void Delete(Student studentInDb)
         {
-            var studentInDb = await Context.Students.FindAsync(id);
-
-            if (studentInDb == null)
-            {
-                throw new Exception("Student not found.");
-            }
-
             Context.Students.Remove(studentInDb);
         }
 

@@ -62,15 +62,8 @@ namespace MyPortal.Database.Repositories
             personInDb.Deleted = entity.Deleted;
         }
 
-        public async Task Delete(int id)
+        public void Delete(Person personInDb)
         {
-            var personInDb = await Context.People.FindAsync(id);
-
-            if (personInDb == null)
-            {
-                throw new Exception("Person not found.");
-            }
-
             Context.People.Remove(personInDb);
         }
 
