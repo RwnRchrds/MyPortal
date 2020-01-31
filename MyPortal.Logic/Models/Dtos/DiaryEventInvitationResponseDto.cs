@@ -1,15 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace MyPortal.Logic.Models.Dtos
 {
-    public class DetentionAttendanceStatusDto
+    public class DiaryEventInvitationResponseDto
     {
         public int Id { get; set; }
 
         [Required]
         [StringLength(256)]
         public string Description { get; set; }
-
-        public bool Attended { get; set; }
     }
 }

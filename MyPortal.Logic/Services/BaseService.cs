@@ -12,7 +12,7 @@ namespace MyPortal.Logic.Services
 
         public BaseService()
         {
-            _mapper = Mapping.GetMapperBusinessConfiguration();
+            _mapper = MappingHelper.GetMapperBusinessConfiguration();
         }
     }
 }

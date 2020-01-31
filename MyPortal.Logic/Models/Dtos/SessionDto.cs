@@ -1,4 +1,9 @@
-﻿namespace MyPortal.Logic.Models.Dtos
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using MyPortal.Database.Models;
+
+namespace MyPortal.Logic.Models.Dtos
 {
     public class SessionDto
     {

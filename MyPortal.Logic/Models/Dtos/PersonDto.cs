@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
+using MyPortal.Database.Models.Identity;
 
 namespace MyPortal.Logic.Models.Dtos
 {
@@ -37,6 +41,12 @@ namespace MyPortal.Logic.Models.Dtos
         public string UserId { get; set; }
 
         public bool Deleted { get; set; }
+
+        public virtual ContactDto ContactDetails { get; set; }
+
+        public virtual StaffMemberDto StaffMemberDetails { get; set; }
+
+        public virtual StudentDto StudentDetails { get; set; }
 
         public string GetDisplayName()
         {

@@ -1,4 +1,8 @@
-﻿namespace MyPortal.Logic.Models.Dtos
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace MyPortal.Logic.Models.Dtos
 {
     public class StudentContactDto
     {
@@ -12,7 +16,7 @@
         public bool PupilReport { get; set; }
         public bool CourtOrder { get; set; }
 
-        public virtual RelationshipTypeDto RelationshipType { get; set; }   
+        public virtual RelationshipTypeDto RelationshipType { get; set; }
         public virtual StudentDto Student { get; set; }
         public virtual ContactDto Contact { get; set; }
     }

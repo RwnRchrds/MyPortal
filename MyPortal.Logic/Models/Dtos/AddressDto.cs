@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace MyPortal.Logic.Models.Dtos
 {
@@ -6,10 +9,13 @@ namespace MyPortal.Logic.Models.Dtos
     {
         public int Id { get; set; }
 
+        [StringLength(128)]
         public string HouseNumber { get; set; }
 
+        [StringLength(128)]
         public string HouseName { get; set; }
 
+        [StringLength(128)]
         public string Apartment { get; set; }
 
         [Required]

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace MyPortal.Logic.Models.Dtos
 {
@@ -10,7 +12,6 @@ namespace MyPortal.Logic.Models.Dtos
         public int StudentId { get; set; }
 
         public int EventTypeId { get; set; }
-
         public DateTime Date { get; set; }
 
         [Required]

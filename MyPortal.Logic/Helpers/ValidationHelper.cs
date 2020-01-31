@@ -7,7 +7,7 @@ using MyPortal.Logic.Models.Exceptions;
 
 namespace MyPortal.Logic.Helpers
 {
-    public class Validation
+    public class ValidationHelper
     {
         public static bool ValidateUpn(string upn)
         {

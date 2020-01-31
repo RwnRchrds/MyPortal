@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace MyPortal.Logic.Models.Dtos
 {
@@ -12,7 +15,6 @@ namespace MyPortal.Logic.Models.Dtos
         [StringLength(256)]
         public string Description { get; set; }
 
-        [Range(0.00, double.MaxValue, ErrorMessage = "Price cannot be negative.")]
         public decimal Price { get; set; }
 
         public bool Visible { get; set; }

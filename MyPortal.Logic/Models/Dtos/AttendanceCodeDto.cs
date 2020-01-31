@@ -1,5 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-using MyPortal.Database.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace MyPortal.Logic.Models.Dtos
 {
@@ -18,12 +20,5 @@ namespace MyPortal.Logic.Models.Dtos
         public int MeaningId { get; set; }
 
         public bool DoNotUse { get; set; }
-
-        public virtual AttendanceCodeMeaning CodeMeaning { get; set; }
-
-        public string GetCodeMeaning()
-        {
-            return CodeMeaning.Description;
-        }
     }
 }

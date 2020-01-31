@@ -1,4 +1,8 @@
-﻿namespace MyPortal.Logic.Models.Dtos
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace MyPortal.Logic.Models.Dtos
 {
     public class EnrolmentDto
     {

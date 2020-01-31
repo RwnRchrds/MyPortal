@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace MyPortal.Logic.Models.Dtos
 {
@@ -21,10 +24,5 @@ namespace MyPortal.Logic.Models.Dtos
 
         public virtual PersonDto Person { get; set; }
         public virtual EmailAddressTypeDto Type { get; set; }
-
-        public string GetEmailAddressType()
-        {
-            return Type.Description;
-        }
     }
 }

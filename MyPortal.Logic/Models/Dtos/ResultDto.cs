@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace MyPortal.Logic.Models.Dtos
 {
@@ -11,6 +13,7 @@ namespace MyPortal.Logic.Models.Dtos
         public int StudentId { get; set; }
 
         public int AspectId { get; set; }
+
         public DateTime Date { get; set; }
 
         public int GradeId { get; set; }

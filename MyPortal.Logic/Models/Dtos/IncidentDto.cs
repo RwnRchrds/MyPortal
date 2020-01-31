@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace MyPortal.Logic.Models.Dtos
 {
@@ -16,7 +18,7 @@ namespace MyPortal.Logic.Models.Dtos
 
         public int RecordedById { get; set; }
 
-        public DateTime Date { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         public string Comments { get; set; }
 

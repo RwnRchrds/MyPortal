@@ -28,7 +28,7 @@ namespace MyPortal.Logic.Services
 
         public async Task CreateStudent(StudentDto student)
         {
-            Validation.ValidateModel(student);
+            ValidationHelper.ValidateModel(student);
 
             _repository.Create(_mapper.Map<Student>(student));
 

@@ -12,7 +12,7 @@ using MyPortal.Logic.Models.Lite;
 
 namespace MyPortal.Logic.Helpers
 {
-    public class Mapping
+    public class MappingHelper
     {
         public static Mapper GetMapperBusinessConfiguration()
         {
@@ -102,6 +102,14 @@ namespace MyPortal.Logic.Helpers
                 cfg.CreateMap<TrainingCertificateStatus, TrainingCertificateStatusDto>().ReverseMap();
                 cfg.CreateMap<TrainingCourse, TrainingCourseDto>().ReverseMap();
                 cfg.CreateMap<YearGroup, YearGroupDto>().ReverseMap();
+                cfg.CreateMap<DiaryEventAttendee, DiaryEventAttendeeDto>().ReverseMap();
+                cfg.CreateMap<DiaryEventInvitationResponse, DiaryEventInvitationResponseDto>().ReverseMap();
+                cfg.CreateMap<DiaryEventType, DiaryEventTypeDto>().ReverseMap();
+                cfg.CreateMap<Task, TaskDto>().ReverseMap();
+                cfg.CreateMap<DiaryEventTemplate, DiaryEventTemplateDto>().ReverseMap();
+                cfg.CreateMap<Homework, HomeworkDto>().ReverseMap();
+                cfg.CreateMap<HomeworkAttachment, HomeworkAttachmentDto>().ReverseMap();
+                cfg.CreateMap<HomeworkSubmission, HomeworkSubmissionDto>().ReverseMap();
             });
 
             return new Mapper(config);
@@ -144,12 +152,12 @@ namespace MyPortal.Logic.Helpers
                 cfg.CreateMap<PersonAttachmentDto, DataGridPersonAttachmentDto>()
                     .ForMember(dest => dest.Approved,
                         opts => opts.MapFrom(src => src.Document.Approved))
-                    .ForMember(dest => dest.Date,
-                        opts => opts.MapFrom(src => src.Document.Date))
+                    .ForMember(dest => dest.UploadedDate,
+                        opts => opts.MapFrom(src => src.Document.UploadedDate))
                     .ForMember(dest => dest.Description,
                         opts => opts.MapFrom(src => src.Document.Description))
-                    .ForMember(dest => dest.Url,
-                        opts => opts.MapFrom(src => src.Document.Url))
+                    .ForMember(dest => dest.DownloadUrl,
+                        opts => opts.MapFrom(src => src.Document.DownloadUrl))
                     .ForMember(dest => dest.DocumentId,
                         opts => opts.MapFrom(src => src.Document.Id));
 

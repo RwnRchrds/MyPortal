@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace MyPortal.Logic.Models.Dtos
 {
@@ -14,15 +16,10 @@ namespace MyPortal.Logic.Models.Dtos
 
         public int OutcomeId { get; set; }
 
-        public virtual ObservationOutcomeDto Outcome { get; set; }
-
         public virtual StaffMemberDto Observee { get; set; }
 
         public virtual StaffMemberDto Observer { get; set; }
 
-        public string GetOutcome()
-        {
-            return Outcome.Description;
-        }
+        public virtual ObservationOutcomeDto Outcome { get; set; }
     }
 }

@@ -25,9 +25,9 @@ namespace MyPortal.Database.Models
 
         public virtual StaffMember Tutor { get; set; }
 
+        public virtual YearGroup YearGroup { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Student> Students { get; set; }
-
-        public virtual YearGroup YearGroup { get; set; }
     }
 }

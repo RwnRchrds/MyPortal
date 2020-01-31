@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
+using MyPortal.Database.Models;
+using MyPortal.Logic.Attributes;
 
 namespace MyPortal.Logic.Models.Dtos
 {
@@ -22,10 +26,8 @@ namespace MyPortal.Logic.Models.Dtos
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int AdmissionNumber { get; set; }
 
-        [Column(TypeName = "date")]
         public DateTime? DateStarting { get; set; }
 
-        [Column(TypeName = "date")]
         public DateTime? DateLeaving { get; set; }
 
         public decimal AccountBalance { get; set; }
@@ -38,9 +40,7 @@ namespace MyPortal.Logic.Models.Dtos
 
         public bool PupilPremium { get; set; }
 
-        [StringLength(256)]
-        public string MisId { get; set; }
-
+        [Upn]
         [StringLength(13)]
         public string Upn { get; set; }
 

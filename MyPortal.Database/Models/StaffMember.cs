@@ -47,6 +47,8 @@ namespace MyPortal.Database.Models
 
         public bool Deleted { get; set; }
 
+        public virtual Person Person { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Achievement> BehaviourAchievements { get; set; }
 
@@ -76,8 +78,6 @@ namespace MyPortal.Database.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<YearGroup> PastoralYearGroups { get; set; }
-
-        public virtual Person Person { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProfileLogNote> ProfileLogs { get; set; }

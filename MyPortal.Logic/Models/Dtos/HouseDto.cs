@@ -1,4 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
+using MyPortal.Database.Models;
 
 namespace MyPortal.Logic.Models.Dtos
 {
@@ -15,6 +19,6 @@ namespace MyPortal.Logic.Models.Dtos
         [StringLength(128)]
         public string ColourCode { get; set; }
 
-        public virtual StaffMemberDto HeadOfHouse { get; set; }
+        public virtual StaffMember HeadOfHouse { get; set; }
     }
 }

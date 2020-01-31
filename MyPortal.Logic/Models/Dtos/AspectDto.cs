@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace MyPortal.Logic.Models.Dtos
 {
@@ -17,5 +20,7 @@ namespace MyPortal.Logic.Models.Dtos
         public virtual AspectTypeDto Type { get; set; }
 
         public virtual GradeSetDto GradeSet { get; set; }
+
+        public bool Active { get; set; }
     }
 }

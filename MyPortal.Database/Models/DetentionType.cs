@@ -19,8 +19,10 @@ namespace MyPortal.Database.Models
         [StringLength(256)]
         public string Description { get; set; }
 
+        [Column(TypeName = "time(2)")]
         public TimeSpan StartTime { get; set; }
 
+        [Column(TypeName = "time(2)")]
         public TimeSpan EndTime { get; set; }
 
         public virtual ICollection<Detention> Detentions { get; set; }

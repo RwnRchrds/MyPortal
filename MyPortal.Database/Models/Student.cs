@@ -39,7 +39,6 @@ namespace MyPortal.Database.Models
         [StringLength(128)]
         public string CandidateNumber { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int AdmissionNumber { get; set; }
 
         [Column(TypeName = "date")]

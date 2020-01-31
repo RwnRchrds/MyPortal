@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace MyPortal.Logic.Models.Dtos
 {
@@ -10,18 +12,21 @@ namespace MyPortal.Logic.Models.Dtos
         public int TypeId { get; set; }
 
         [Required]
+        [StringLength(128)]
+        public string Title { get; set; }
+
         [StringLength(256)]
         public string Description { get; set; }
 
         [Required]
         [Url]
-        public string Url { get; set; }
+        public string DownloadUrl { get; set; }
 
         public int UploaderId { get; set; }
 
-        public DateTime Date { get; set; }
+        public DateTime UploadedDate { get; set; }
 
-        public bool IsGeneral { get; set; }
+        public bool NonPublic { get; set; }
 
         public bool Approved { get; set; }
 
@@ -30,5 +35,9 @@ namespace MyPortal.Logic.Models.Dtos
         public virtual StaffMemberDto Uploader { get; set; }
 
         public virtual DocumentTypeDto Type { get; set; }
+
+        public virtual PersonAttachmentDto PersonAttachment { get; set; }
+
+        public virtual HomeworkAttachmentDto HomeworkAttachment { get; set; }
     }
 }

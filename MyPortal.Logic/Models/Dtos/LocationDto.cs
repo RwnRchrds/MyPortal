@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace MyPortal.Logic.Models.Dtos
 {
@@ -9,5 +12,7 @@ namespace MyPortal.Logic.Models.Dtos
         [Required]
         [StringLength(128)]
         public string Description { get; set; }
+
+        public bool System { get; set; }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace MyPortal.Logic.Models.Dtos
 {
@@ -7,12 +9,16 @@ namespace MyPortal.Logic.Models.Dtos
     {
         public int Id { get; set; }
 
+        public int EventTypeId { get; set; }
+
         [Required]
         [StringLength(256)]
         public string Subject { get; set; }
 
+        [StringLength(256)]
         public string Description { get; set; }
 
+        [StringLength(256)]
         public string Location { get; set; }
 
         public DateTime StartTime { get; set; }
@@ -26,5 +32,8 @@ namespace MyPortal.Logic.Models.Dtos
         public bool IsPublic { get; set; }
 
         public bool IsStudentVisible { get; set; }
+
+        public virtual DetentionDto Detention { get; set; }
+        public virtual DiaryEventTypeDto EventType { get; set; }
     }
 }

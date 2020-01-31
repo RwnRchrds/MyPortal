@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace MyPortal.Logic.Models.Dtos
 {
@@ -23,7 +25,7 @@ namespace MyPortal.Logic.Models.Dtos
 
         public string GetTimeDisplay()
         {
-            return $"{StartTime.ToString(@"hh\:mm")} - {EndTime.ToString(@"hh\:mm")}";
+            return $"{StartTime.ToString(@"hh\:mm")}";
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+using System.Text;
 
 namespace MyPortal.Logic.Models.Dtos
 {
@@ -15,7 +16,6 @@ namespace MyPortal.Logic.Models.Dtos
 
         public DateTime Date { get; set; }
 
-        [Range(0, double.MaxValue, ErrorMessage = "Amount paid cannot be negative.")]
         public decimal AmountPaid { get; set; }
 
         public bool Processed { get; set; }
