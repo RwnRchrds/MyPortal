@@ -7,11 +7,6 @@ namespace MyPortal.Database.Models
     [Table("Incident")]
     public class Incident
     {
-        public Incident()
-        {
-            Detentions = new HashSet<IncidentDetention>();
-        }
-
         public int Id { get; set; }
 
         public int AcademicYearId { get; set; }

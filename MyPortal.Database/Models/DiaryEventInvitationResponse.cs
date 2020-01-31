@@ -22,4 +22,11 @@ namespace MyPortal.Database.Models
 
         public virtual ICollection<DiaryEventAttendee> DiaryEventAttendees { get; set; }
     }
+
+    public static class DiaryEventInvitationResponseDictionary
+    {
+        public const int Accepted = 1;
+        public const int Tentative = 2;
+        public const int Declined = 3;
+    }
 }

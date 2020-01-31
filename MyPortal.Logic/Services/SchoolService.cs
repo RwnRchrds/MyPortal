@@ -31,21 +31,21 @@ namespace MyPortal.Logic.Services
         {
             var school = await _repository.GetLocal();
 
-            return _mapper.Map<SchoolDto>(school);
+            return _businessMapper.Map<SchoolDto>(school);
         }
 
         public async Task CreateSchool(SchoolDto school)
         {
             ValidationHelper.ValidateModel(school);
 
-            _repository.Create(_mapper.Map<School>(school));
+            _repository.Create(_businessMapper.Map<School>(school));
 
             await _repository.SaveChanges();
         }
 
         public async Task UpdateSchool(SchoolDto school)
         {
-            await _repository.Update(_mapper.Map<School>(school));
+            await _repository.Update(_businessMapper.Map<School>(school));
 
             await _repository.SaveChanges();
         }

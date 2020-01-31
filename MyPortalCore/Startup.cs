@@ -14,8 +14,10 @@ using MyPortalCore.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
+using MyPortal.Database.Repositories;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Services;
@@ -59,6 +61,17 @@ namespace MyPortalCore
             services.AddTransient<IDbConnection>(connection =>
                 new SqlConnection(Configuration.GetConnectionString("LiveConnection")));
 
+            services.AddScoped<IAcademicYearRepository, AcademicYearRepository>();
+            services.AddScoped<IAchievementRepository, AchievementRepository>();
+            services.AddScoped<IAchievementTypeRepository, AchievementTypeRepository>();
+            services.AddScoped<IDetentionRepository, DetentionRepository>();
+            services.AddScoped<IDiaryEventRepository, DiaryEventRepository>();
+            services.AddScoped<IPersonRepository, PersonRepository>();
+            services.AddScoped<ISchoolRepository, SchoolRepository>();
+            services.AddScoped<IStudentRepository, StudentRepository>();
+
+            services.AddScoped<IBehaviourService, BehaviourService>();
+            services.AddScoped<ISchoolService, SchoolService>();
             services.AddScoped<IStudentService, StudentService>();
         }
 
