@@ -20,7 +20,12 @@ namespace MyPortalCore.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            if (User.Identity.IsAuthenticated)
+            {
+                return View();
+            }
+
+            return RedirectToPage("/Account/Login");
         }
 
         public IActionResult Privacy()
