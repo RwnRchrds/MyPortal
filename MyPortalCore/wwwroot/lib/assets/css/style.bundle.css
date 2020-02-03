@@ -1,4 +1,4 @@
-@charset "UTF-8";
+﻿@charset "UTF-8";
 /*!
  * Bootstrap v4.4.1 (https://getbootstrap.com/)
  * Copyright 2011-2019 The Bootstrap Authors
@@ -36195,7 +36195,9 @@ body {
     justify-content: flex-begin; }
     .kt-aside--minimize .kt-aside__brand .kt-aside__brand-logo img {
       display: none; }
-  .kt-aside__brand .kt-aside__brand-tools {
+    .kt-aside--minimize .kt-aside__brand .kt-aside__brand-logo h1 {
+        display: none; }
+.kt-aside__brand .kt-aside__brand-tools {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
