@@ -21,7 +21,6 @@ using Task = System.Threading.Tasks.Task;
 namespace MyPortalCore.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
-    [RequiresPermission(Permission.Admin.Users.Edit)]
     public class LoginModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -50,8 +49,7 @@ namespace MyPortalCore.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
-            [EmailAddress]
-            public string Email { get; set; }
+            public string Username { get; set; }
 
             [Required]
             [DataType(DataType.Password)]
@@ -75,8 +73,6 @@ namespace MyPortalCore.Areas.Identity.Pages.Account
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
-            var properties = EntityHelper.GetAllColumns(typeof(Student), "Student");
-
             ReturnUrl = returnUrl;
         }
 
@@ -88,7 +84,7 @@ namespace MyPortalCore.Areas.Identity.Pages.Account
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(Input.Username, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");

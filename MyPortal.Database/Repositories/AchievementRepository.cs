@@ -43,6 +43,11 @@ namespace MyPortal.Database.Repositories
             throw new NotImplementedException();
         }
 
+        public Task<Achievement> GetByIdWithTracking(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Create(Achievement entity)
         {
             throw new NotImplementedException();

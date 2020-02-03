@@ -25,6 +25,11 @@ namespace MyPortal.Database.Repositories
             throw new NotImplementedException();
         }
 
+        public Task<Detention> GetByIdWithTracking(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Create(Detention entity)
         {
             throw new NotImplementedException();

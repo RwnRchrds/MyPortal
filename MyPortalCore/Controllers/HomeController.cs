@@ -25,7 +25,9 @@ namespace MyPortalCore.Controllers
                 return View();
             }
 
-            return RedirectToPage("/Account/Login");
+            //return RedirectToPage("/Account/Login");
+
+            return View();
         }
 
         public IActionResult Privacy()

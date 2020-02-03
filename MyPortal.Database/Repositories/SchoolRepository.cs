@@ -37,6 +37,11 @@ namespace MyPortal.Database.Repositories
             return await Connection.QuerySingleOrDefaultAsync<School>(sql, new {SchoolId = id});
         }
 
+        public Task<School> GetByIdWithTracking(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Create(School entity)
         {
             Context.Schools.Add(entity);

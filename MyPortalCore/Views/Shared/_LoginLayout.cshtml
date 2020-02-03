@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MyPortal | @ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700">
+
+    <link href="~/lib/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="~/lib/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="~/lib/assets/css/pages/login/login-v1.css" rel="stylesheet" type="text/css" />
+
+    <link href="~/lib/assets/css/skins/header/base/light.css" rel="stylesheet" type="text/css" />
+    <link href="~/lib/assets/css/skins/header/menu/light.css" rel="stylesheet" type="text/css" />
+    <link href="~/lib/assets/css/skins/brand/navy.css" rel="stylesheet" type="text/css" />
+    <link href="~/lib/assets/css/skins/aside/navy.css" rel="stylesheet" type="text/css" />
+    
+    <link href="~/css/site.css"/>
+</head>
+
+<body style="background-image: url(/lib/assets/media/misc/bg_1.jpg)" class="kt-login-v1--enabled kt-quick-panel--right kt-demo-panel--right kt-offcanvas-panel--right kt-header--fixed kt-header-mobile--fixed kt-subheader--enabled kt-subheader--transparent kt-aside--enabled kt-aside--fixed kt-page--loading">
+<div class="kt-grid kt-grid--ver kt-grid--root">
+    <div class="kt-grid__item  kt-grid__item--fluid kt-grid kt-grid--hor kt-login-v1" id="kt_login_v1">
+        @RenderBody()
+    </div>
+</div>
+
+<script>
+    var KTAppOptions = {
+        "colors": {
+            "state": {
+                "brand": "#5d78ff",
+                "metal": "#c4c5d6",
+                "light": "#ffffff",
+                "accent": "#00c5dc",
+                "primary": "#5867dd",
+                "success": "#34bfa3",
+                "info": "#36a3f7",
+                "warning": "#ffb822",
+                "danger": "#fd3995",
+                "focus": "#9816f4"
+            },
+            "base": {
+                "label": [
+                    "#c5cbe3",
+                    "#a1a8c3",
+                    "#3d4465",
+                    "#3e4466"
+                ],
+                "shape": [
+                    "#f0f3ff",
+                    "#d9dffa",
+                    "#afb4d4",
+                    "#646c9a"
+                ]
+            }
+        }
+    };
+</script>
+
+<script src="~/lib/assets/plugins/global/plugins.bundle.js" type="text/javascript"></script>
+<script src="~/lib/assets/js/scripts.bundle.js" type="text/javascript"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+@RenderSection("Scripts", false)
+</body>
+</html>

@@ -48,6 +48,11 @@ namespace MyPortal.Database.Repositories
             }, new {StudentId = id})).Single();
         }
 
+        public Task<Student> GetByIdWithTracking(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Create(Student entity)
         {
             Context.Students.Add(entity);

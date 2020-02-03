@@ -35,6 +35,11 @@ namespace MyPortal.Database.Repositories
             return await Connection.QuerySingleOrDefaultAsync<Person>(sql, new {PersonId = id});
         }
 
+        public Task<Person> GetByIdWithTracking(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Create(Person entity)
         {
             Context.People.Add(entity);

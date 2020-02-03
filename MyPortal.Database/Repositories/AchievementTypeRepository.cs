@@ -39,6 +39,11 @@ namespace MyPortal.Database.Repositories
             return await Connection.QuerySingleOrDefaultAsync<AchievementType>(sql, new {AchievementTypeId = id});
         }
 
+        public Task<AchievementType> GetByIdWithTracking(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Create(AchievementType entity)
         {
             Context.AchievementTypes.Add(entity);
