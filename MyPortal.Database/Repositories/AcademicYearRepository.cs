@@ -12,7 +12,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class AcademicYearRepository : BaseRepository, IAcademicYearRepository
+    public class AcademicYearRepository : BaseReadRepository, IAcademicYearRepository
     {
         private readonly string TblName = @"[dbo].[AcademicYear] AS [AcademicYear]";
 

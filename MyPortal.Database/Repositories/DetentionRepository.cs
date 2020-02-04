@@ -9,7 +9,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class DetentionRepository : BaseRepository, IDetentionRepository
+    public class DetentionRepository : BaseReadRepository, IDetentionRepository
     {
         public DetentionRepository(IDbConnection connection) : base(connection)
         {

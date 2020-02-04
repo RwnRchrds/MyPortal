@@ -9,7 +9,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class DiaryEventRepository : BaseRepository, IDiaryEventRepository
+    public class DiaryEventRepository : BaseReadRepository, IDiaryEventRepository
     {
         public DiaryEventRepository(IDbConnection connection) : base(connection)
         {

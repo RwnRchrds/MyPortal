@@ -11,7 +11,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class SchoolRepository : BaseRepository, ISchoolRepository
+    public class SchoolRepository : BaseReadRepository, ISchoolRepository
     {
         private readonly string TblName = @"[dbo].[School] as [School]";
 

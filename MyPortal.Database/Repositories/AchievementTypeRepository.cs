@@ -11,7 +11,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class AchievementTypeRepository : BaseRepository, IAchievementTypeRepository
+    public class AchievementTypeRepository : BaseReadRepository, IAchievementTypeRepository
     {
         private readonly string TblName = @"[dbo].[AchievementType]";
 

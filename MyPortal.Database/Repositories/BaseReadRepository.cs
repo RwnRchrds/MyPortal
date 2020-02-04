@@ -10,12 +10,12 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public abstract class BaseRepository : IDisposable
+    public abstract class BaseReadRepository<TEntity> : IDisposable where TEntity : class
     {
         protected readonly IDbConnection Connection;
         protected readonly ApplicationDbContext Context;
 
-        public BaseRepository(IDbConnection connection)
+        public BaseReadRepository(IDbConnection connection)
         {
             Connection = connection;
 
@@ -26,10 +26,7 @@ namespace MyPortal.Database.Repositories
             Context =  new ApplicationDbContext(optionsBuilder.Options);
         }
 
-        public async Task SaveChanges()
-        {
-            await Context.SaveChangesAsync();
-        }
+        protected abstract Task<IEnumerable<TEntity>> ExecuteQuery(string sql, object param = null);
 
         public void Dispose()
         {

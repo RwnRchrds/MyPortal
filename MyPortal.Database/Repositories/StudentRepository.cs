@@ -12,7 +12,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class StudentRepository : BaseRepository, IStudentRepository
+    public class StudentRepository : BaseReadWriteRepository<Student>, IStudentRepository
     {
         private readonly string TblName = @"[dbo].[Student] AS [Student]";
 
@@ -53,11 +53,6 @@ namespace MyPortal.Database.Repositories
             throw new NotImplementedException();
         }
 
-        public void Create(Student entity)
-        {
-            Context.Students.Add(entity);
-        }
-
         public async Task Update(Student entity)
         {
             var studentInDb = await Context.Students.FindAsync(entity.Id);
@@ -83,16 +78,11 @@ namespace MyPortal.Database.Repositories
             studentInDb.Deleted = entity.Deleted;
         }
 
-        public void Delete(Student studentInDb)
-        {
-            Context.Students.Remove(studentInDb);
-        }
-
         public async Task<Student> GetByUserId(string userId)
         {
             var sql = $"SELECT {AllColumns},{PersonRepository.AllColumns} FROM {TblName} {JoinPeople} WHERE [P].[UserId] = @UserId";
 
-            return await Connection.QuerySingleOrDefaultAsync<Student>(sql, new {UserId = userId});
+            return (await ExecuteQuery(sql, new {UserId = userId})).SingleOrDefault();
         }
 
         public async Task<IEnumerable<Student>> GetOnRoll()
@@ -144,6 +134,11 @@ namespace MyPortal.Database.Repositories
         }
 
         public async Task<IEnumerable<Student>> GetByHouse(int houseId)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override async Task<IEnumerable<Student>> ExecuteQuery(string sql, object param = null)
         {
             throw new NotImplementedException();
         }
