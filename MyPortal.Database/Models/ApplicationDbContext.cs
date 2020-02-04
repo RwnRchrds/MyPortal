@@ -13,6 +13,7 @@ namespace MyPortal.Database.Models
         {
         }
 
+        public virtual DbSet<ApplicationPermission> ApplicationPermissions { get; set; }
         public virtual DbSet<Aspect> Aspects { get; set; }
         public virtual DbSet<AspectType> AspectTypes { get; set; }
         public virtual DbSet<Grade> Grades { get; set; }
@@ -103,6 +104,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<Homework> Homework { get; set; }
         public virtual DbSet<HomeworkAttachment> HomeworkAttachments { get; set; }
         public virtual DbSet<HomeworkSubmission> HomeworkSubmissions { get; set; }
+        public virtual DbSet<SystemResource> SystemResources { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -110,205 +112,239 @@ namespace MyPortal.Database.Models
                 .HasMany(e => e.Results)
                 .WithOne(e => e.Aspect)
                 .HasForeignKey(e => e.AspectId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<AspectType>()
                 .HasMany(e => e.Aspects)
                 .WithOne(e => e.Type)
                 .HasForeignKey(e => e.TypeId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<GradeSet>()
                 .HasMany(e => e.Aspects)
                 .WithOne(e => e.GradeSet)
                 .HasForeignKey(e => e.GradeSetId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<GradeSet>()
                 .HasMany(e => e.Grades)
                 .WithOne(e => e.GradeSet)
                 .HasForeignKey(e => e.GradeSetId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<ResultSet>()
                 .HasMany(e => e.Results)
                 .WithOne(e => e.ResultSet)
                 .HasForeignKey(e => e.ResultSetId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<AttendanceCodeMeaning>()
                 .HasMany(e => e.Codes)
                 .WithOne(e => e.CodeMeaning)
                 .HasForeignKey(e => e.MeaningId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Period>()
                 .HasMany(e => e.AttendanceMarks)
                 .WithOne(e => e.Period)
                 .HasForeignKey(e => e.PeriodId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Period>()
                 .HasMany(e => e.Sessions)
                 .WithOne(e => e.Period)
                 .HasForeignKey(e => e.PeriodId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<AttendanceWeek>()
                 .HasMany(e => e.AttendanceMarks)
                 .WithOne(e => e.Week)
                 .HasForeignKey(e => e.WeekId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<AchievementType>()
                 .HasMany(e => e.Achievements)
                 .WithOne(e => e.Type)
                 .HasForeignKey(e => e.AchievementTypeId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<IncidentType>()
                 .HasMany(e => e.Incidents)
                 .WithOne(e => e.Type)
                 .HasForeignKey(e => e.BehaviourTypeId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Address>()
                 .HasMany(e => e.People)
                 .WithOne(e => e.Address)
                 .HasForeignKey(e => e.AddressId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<EmailAddressType>()
                 .HasMany(e => e.EmailAddresses)
                 .WithOne(e => e.Type)
                 .HasForeignKey(e => e.TypeId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<PhoneNumberType>()
                 .HasMany(e => e.PhoneNumbers)
                 .WithOne(e => e.Type)
                 .HasForeignKey(e => e.TypeId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<CommunicationType>()
                 .HasMany(e => e.CommunicationLogs)
                 .WithOne(e => e.Type)
                 .HasForeignKey(e => e.CommunicationTypeId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Contact>()
                 .HasMany(e => e.StudentContacts)
                 .WithOne(e => e.Contact)
                 .HasForeignKey(e => e.ContactId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Contact>()
                 .HasOne(e => e.Person)
                 .WithOne(e => e.ContactDetails)
                 .HasForeignKey<Contact>(e => e.PersonId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<AcademicYear>()
                 .HasMany(e => e.Achievements)
                 .WithOne(e => e.AcademicYear)
                 .HasForeignKey(e => e.AcademicYearId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<AcademicYear>()
                 .HasMany(e => e.AttendanceWeeks)
                 .WithOne(e => e.AcademicYear)
                 .HasForeignKey(e => e.AcademicYearId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<AcademicYear>()
                 .HasMany(e => e.Incidents)
                 .WithOne(e => e.AcademicYear)
                 .HasForeignKey(e => e.AcademicYearId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<AcademicYear>()
                 .HasMany(e => e.Classes)
                 .WithOne(e => e.AcademicYear)
                 .HasForeignKey(e => e.AcademicYearId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<AcademicYear>()
                 .HasMany(e => e.Sales)
                 .WithOne(e => e.AcademicYear)
                 .HasForeignKey(e => e.AcademicYearId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<AcademicYear>()
                 .HasMany(e => e.Logs)
                 .WithOne(e => e.AcademicYear)
                 .HasForeignKey(e => e.AcademicYearId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Class>()
                 .HasMany(e => e.Sessions)
                 .WithOne(e => e.Class)
                 .HasForeignKey(e => e.ClassId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Class>()
                 .HasMany(e => e.Enrolments)
                 .WithOne(e => e.Class)
                 .HasForeignKey(e => e.ClassId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Detention>()
                 .HasMany(e => e.Incidents)
                 .WithOne(e => e.Detention)
                 .HasForeignKey(e => e.DetentionId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<DetentionType>()
                 .HasMany(e => e.Detentions)
                 .WithOne(e => e.Type)
                 .HasForeignKey(e => e.DetentionTypeId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<DiaryEvent>()
                 .HasOne(e => e.Detention)
                 .WithOne(e => e.Event)
                 .HasForeignKey<Detention>(e => e.EventId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<DiaryEvent>()
                 .HasMany(e => e.Attendees)
                 .WithOne(e => e.Event)
                 .HasForeignKey(e => e.EventId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<DiaryEventType>()
                 .HasMany(e => e.DiaryEventTemplates)
                 .WithOne(e => e.DiaryEventType)
                 .HasForeignKey(e => e.EventTypeId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<DiaryEventType>()
                 .HasMany(e => e.DiaryEvents)
                 .WithOne(e => e.EventType)
                 .HasForeignKey(e => e.EventTypeId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<DiaryEventInvitationResponse>()
                 .HasMany(e => e.DiaryEventAttendees)
                 .WithOne(e => e.Response)
                 .HasForeignKey(e => e.ResponseId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Incident>()
                 .HasMany(e => e.Detentions)
                 .WithOne(e => e.Incident)
                 .HasForeignKey(e => e.IncidentId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<StudyTopic>()
                 .HasMany(e => e.LessonPlans)
                 .WithOne(e => e.StudyTopic)
                 .HasForeignKey(e => e.StudyTopicId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Subject>()
                 .HasMany(e => e.Classes)
@@ -319,79 +355,92 @@ namespace MyPortal.Database.Models
                 .HasMany(e => e.StaffMembers)
                 .WithOne(e => e.Subject)
                 .HasForeignKey(e => e.SubjectId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Subject>()
                 .HasMany(e => e.StudyTopics)
                 .WithOne(e => e.Subject)
                 .HasForeignKey(e => e.SubjectId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Subject>()
                 .HasMany(e => e.GiftedTalentedStudents)
                 .WithOne(e => e.Subject)
                 .HasForeignKey(e => e.SubjectId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<SubjectStaffMemberRole>()
                 .HasMany(e => e.StaffMembers)
                 .WithOne(e => e.Role)
                 .HasForeignKey(e => e.RoleId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Document>()
                 .HasOne(e => e.PersonAttachment)
                 .WithOne(e => e.Document)
                 .HasForeignKey<PersonAttachment>(e => e.DocumentId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Document>()
                 .HasOne(e => e.HomeworkAttachment)
                 .WithOne(e => e.Document)
                 .HasForeignKey<HomeworkAttachment>(e => e.DocumentId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<DocumentType>()
                 .HasMany(e => e.Documents)
                 .WithOne(e => e.Type)
                 .HasForeignKey(e => e.TypeId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Product>()
                 .HasMany(e => e.BasketItems)
                 .WithOne(e => e.Product)
                 .HasForeignKey(e => e.ProductId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Product>()
                 .HasMany(e => e.Sales)
                 .WithOne(e => e.Product)
                 .HasForeignKey(e => e.ProductId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<ProductType>()
                 .HasMany(x => x.Products)
                 .WithOne(x => x.Type)
                 .HasForeignKey(x => x.ProductTypeId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<LocalAuthority>()
                 .HasMany(e => e.Schools)
                 .WithOne(e => e.LocalAuthority)
                 .HasForeignKey(e => e.LocalAuthorityId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<MedicalCondition>()
                 .HasMany(e => e.PersonConditions)
                 .WithOne(e => e.MedicalCondition)
                 .HasForeignKey(e => e.ConditionId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<DietaryRequirement>()
                 .HasMany(e => e.PersonDietaryRequirements)
                 .WithOne(e => e.DietaryRequirement)
                 .HasForeignKey(e => e.DietaryRequirementId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<House>()
                 .HasMany(e => e.Students)
@@ -402,7 +451,8 @@ namespace MyPortal.Database.Models
                 .HasMany(e => e.Students)
                 .WithOne(e => e.RegGroup)
                 .HasForeignKey(e => e.RegGroupId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<YearGroup>()
                 .HasMany(e => e.Classes)
@@ -413,43 +463,50 @@ namespace MyPortal.Database.Models
                 .HasMany(e => e.StudyTopics)
                 .WithOne(e => e.YearGroup)
                 .HasForeignKey(e => e.YearGroupId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<YearGroup>()
                 .HasMany(e => e.RegGroups)
                 .WithOne(e => e.YearGroup)
                 .HasForeignKey(e => e.YearGroupId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<YearGroup>()
                 .HasMany(e => e.Students)
                 .WithOne(e => e.YearGroup)
                 .HasForeignKey(e => e.YearGroupId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Person>()
                 .HasMany(e => e.Addresses)
                 .WithOne(e => e.Person)
                 .HasForeignKey(e => e.AddressId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Person>()
                 .HasMany(e => e.EmailAddresses)
                 .WithOne(e => e.Person)
                 .HasForeignKey(e => e.PersonId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Person>()
                 .HasMany(e => e.MedicalConditions)
                 .WithOne(e => e.Person)
                 .HasForeignKey(e => e.PersonId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Person>()
                 .HasMany(e => e.PhoneNumbers)
                 .WithOne(e => e.Person)
                 .HasForeignKey(e => e.PersonId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Person>()
                 .Property(e => e.Gender)
@@ -460,91 +517,106 @@ namespace MyPortal.Database.Models
                 .HasMany(e => e.Attachments)
                 .WithOne(e => e.Person)
                 .HasForeignKey(e => e.PersonId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<ObservationOutcome>()
                 .HasMany(e => e.Observations)
                 .WithOne(e => e.Outcome)
                 .HasForeignKey(e => e.OutcomeId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<TrainingCertificateStatus>()
                 .HasMany(e => e.Certificates)
                 .WithOne(e => e.Status)
                 .HasForeignKey(e => e.StatusId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<TrainingCourse>()
                 .HasMany(e => e.Certificates)
                 .WithOne(e => e.TrainingCourse)
                 .HasForeignKey(e => e.CourseId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<CommentBank>()
                 .HasMany(e => e.Comments)
                 .WithOne(e => e.CommentBank)
                 .HasForeignKey(e => e.CommentBankId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<ProfileLogNoteType>()
                 .HasMany(e => e.Logs)
                 .WithOne(e => e.ProfileLogNoteType)
                 .HasForeignKey(e => e.TypeId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<GovernanceType>()
                 .HasMany(e => e.Schools)
                 .WithOne(e => e.GovernanceType)
                 .HasForeignKey(e => e.GovernanceTypeId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Grade>()
                 .HasMany(e => e.Results)
                 .WithOne(e => e.Grade)
                 .HasForeignKey(e => e.GradeId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<IntakeType>()
                 .HasMany(e => e.Schools)
                 .WithOne(e => e.IntakeType)
                 .HasForeignKey(e => e.IntakeTypeId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Location>()
                 .HasMany(e => e.BehaviourAchievements)
                 .WithOne(e => e.Location)
                 .HasForeignKey(e => e.LocationId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Location>()
                 .HasMany(e => e.BehaviourIncidents)
                 .WithOne(e => e.Location)
                 .HasForeignKey(e => e.LocationId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Phase>()
                 .HasMany(e => e.Schools)
                 .WithOne(e => e.Phase)
                 .HasForeignKey(e => e.PhaseId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<SchoolType>()
                 .HasMany(e => e.Schools)
                 .WithOne(e => e.Type)
                 .HasForeignKey(e => e.TypeId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<SenEventType>()
                 .HasMany(e => e.Events)
                 .WithOne(e => e.Type)
                 .HasForeignKey(e => e.EventTypeId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<SenProvisionType>()
                 .HasMany(e => e.SenProvisions)
                 .WithOne(e => e.Type)
                 .HasForeignKey(e => e.ProvisionTypeId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<SenStatus>()
                 .HasMany(x => x.Students)
@@ -560,175 +632,204 @@ namespace MyPortal.Database.Models
                 .HasMany(e => e.BehaviourAchievements)
                 .WithOne(e => e.RecordedBy)
                 .HasForeignKey(e => e.RecordedById)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.BehaviourIncidents)
                 .WithOne(e => e.RecordedBy)
                 .HasForeignKey(e => e.RecordedById)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.Bulletins)
                 .WithOne(e => e.Author)
                 .HasForeignKey(e => e.AuthorId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.CurriculumClasses)
                 .WithOne(e => e.Teacher)
                 .HasForeignKey(e => e.TeacherId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.CurriculumLessonPlans)
                 .WithOne(e => e.Author)
                 .HasForeignKey(e => e.AuthorId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.Documents)
                 .WithOne(e => e.Uploader)
                 .HasForeignKey(e => e.UploaderId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<StaffMember>()
                 .HasOne(e => e.Person)
                 .WithOne(e => e.StaffMemberDetails)
                 .HasForeignKey<StaffMember>(e => e.PersonId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.PastoralHouses)
                 .WithOne(e => e.HeadOfHouse)
                 .HasForeignKey(e => e.HeadId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.PastoralRegGroups)
                 .WithOne(e => e.Tutor)
                 .HasForeignKey(e => e.TutorId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.PastoralYearGroups)
                 .WithOne(e => e.HeadOfYear)
                 .HasForeignKey(e => e.HeadId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.PersonnelObservationsObserved)
                 .WithOne(e => e.Observer)
                 .HasForeignKey(e => e.ObserverId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.PersonnelObservations)
                 .WithOne(e => e.Observee)
                 .HasForeignKey(e => e.ObserveeId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.PersonnelTrainingCertificates)
                 .WithOne(e => e.StaffMember)
                 .HasForeignKey(e => e.StaffId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.ProfileLogs)
                 .WithOne(e => e.Author)
                 .HasForeignKey(e => e.AuthorId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.Subjects)
                 .WithOne(e => e.StaffMember)
                 .HasForeignKey(e => e.StaffMemberId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Student>()
                 .HasMany(e => e.Results)
                 .WithOne(e => e.Student)
                 .HasForeignKey(e => e.StudentId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Student>()
                 .HasMany(e => e.AttendanceMarks)
                 .WithOne(e => e.Student)
                 .HasForeignKey(e => e.StudentId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Student>()
                 .HasMany(e => e.Achievements)
                 .WithOne(e => e.Student)
                 .HasForeignKey(e => e.StudentId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Student>()
                 .HasMany(e => e.Incidents)
                 .WithOne(e => e.Student)
                 .HasForeignKey(e => e.StudentId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Student>()
                 .HasMany(e => e.Enrolments)
                 .WithOne(e => e.Student)
                 .HasForeignKey(e => e.StudentId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Student>()
                 .HasMany(e => e.FinanceBasketItems)
                 .WithOne(e => e.Student)
                 .HasForeignKey(e => e.StudentId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Student>()
                 .HasMany(e => e.Sales)
                 .WithOne(e => e.Student)
                 .HasForeignKey(e => e.StudentId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Student>()
                 .HasMany(e => e.StudentContacts)
                 .WithOne(e => e.Student)
                 .HasForeignKey(e => e.StudentId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Student>()
                 .HasMany(e => e.GiftedTalentedSubjects)
                 .WithOne(e => e.Student)
                 .HasForeignKey(e => e.StudentId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Student>()
                 .HasOne(e => e.Person)
                 .WithOne(e => e.StudentDetails)
                 .HasForeignKey<Student>(e => e.PersonId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Student>()
                 .HasMany(e => e.MedicalEvents)
                 .WithOne(e => e.Student)
                 .HasForeignKey(e => e.StudentId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Student>()
                 .HasMany(e => e.ProfileLogs)
                 .WithOne(e => e.Student)
                 .HasForeignKey(e => e.StudentId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Student>()
                 .HasMany(e => e.SenEvents)
                 .WithOne(e => e.Student)
                 .HasForeignKey(e => e.StudentId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Student>()
                 .HasMany(e => e.SenProvisions)
                 .WithOne(e => e.Student)
                 .HasForeignKey(e => e.StudentId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Student>()
                 .Property(e => e.Upn)
@@ -738,13 +839,22 @@ namespace MyPortal.Database.Models
                 .HasMany(e => e.Reports)
                 .WithOne(e => e.SystemArea)
                 .HasForeignKey(e => e.AreaId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<SystemArea>()
+                .HasMany(e => e.Resources)
+                .WithOne(e => e.Area)
+                .HasForeignKey(e => e.AreaId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<RelationshipType>()
                 .HasMany(e => e.StudentContacts)
                 .WithOne(e => e.RelationshipType)
                 .HasForeignKey(e => e.RelationshipTypeId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<ApplicationUser>()
                 .HasOne(e => e.Person)
@@ -755,31 +865,40 @@ namespace MyPortal.Database.Models
                 .HasMany(e => e.DiaryEventInvitations)
                 .WithOne(e => e.Person)
                 .HasForeignKey(e => e.PersonId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Person>()
                 .HasMany(e => e.Tasks)
                 .WithOne(e => e.Person)
                 .HasForeignKey(e => e.AssignedToId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Homework>()
                 .HasMany(e => e.Attachments)
                 .WithOne(e => e.Homework)
                 .HasForeignKey(e => e.HomeworkId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Homework>()
                 .HasMany(e => e.Submissions)
                 .WithOne(e => e.Homework)
                 .HasForeignKey(e => e.HomeworkId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<HomeworkSubmission>()
                 .HasOne(e => e.Task)
                 .WithOne(e => e.HomeworkSubmission)
                 .HasForeignKey<HomeworkSubmission>(e => e.TaskId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ApplicationPermission>()
+                .HasOne(e => e.Resource)
+                .WithMany(e => e.Permissions);
 
             base.OnModelCreating(modelBuilder);
         }

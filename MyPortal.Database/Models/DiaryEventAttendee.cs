@@ -8,6 +8,7 @@ namespace MyPortal.Database.Models
     [Table("DiaryEventAttendee")]
     public class DiaryEventAttendee
     {
+        public int Id { get; set; }
         public int EventId { get; set; }
         public int PersonId { get; set; }
         public int ResponseId { get; set; }

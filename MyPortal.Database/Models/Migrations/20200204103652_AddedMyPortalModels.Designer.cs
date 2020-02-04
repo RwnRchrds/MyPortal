@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyPortal.Database.Models;
 
 namespace MyPortalCore.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200204103652_AddedMyPortalModels")]
+    partial class AddedMyPortalModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1233,38 +1235,6 @@ namespace MyPortalCore.Data.Migrations
                     b.HasIndex("HeadId");
 
                     b.ToTable("House");
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.Identity.ApplicationPermission", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ClaimValue")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
-
-                    b.Property<string>("FullDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<int>("ResourceId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ShortDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ResourceId");
-
-                    b.ToTable("AspNetPermissions");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Identity.ApplicationRole", b =>
@@ -2709,32 +2679,6 @@ namespace MyPortalCore.Data.Migrations
                     b.ToTable("SystemArea");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.SystemResource", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AreaId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AreaId");
-
-                    b.ToTable("SystemResource");
-                });
-
             modelBuilder.Entity("MyPortal.Database.Models.Task", b =>
                 {
                     b.Property<int>("Id")
@@ -3261,15 +3205,6 @@ namespace MyPortalCore.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Identity.ApplicationPermission", b =>
-                {
-                    b.HasOne("MyPortal.Database.Models.SystemResource", "Resource")
-                        .WithMany("Permissions")
-                        .HasForeignKey("ResourceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("MyPortal.Database.Models.Incident", b =>
                 {
                     b.HasOne("MyPortal.Database.Models.AcademicYear", "AcademicYear")
@@ -3717,15 +3652,6 @@ namespace MyPortalCore.Data.Migrations
                     b.HasOne("MyPortal.Database.Models.Subject", "Subject")
                         .WithMany("StaffMembers")
                         .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.SystemResource", b =>
-                {
-                    b.HasOne("MyPortal.Database.Models.SystemArea", "Area")
-                        .WithMany("Resources")
-                        .HasForeignKey("AreaId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

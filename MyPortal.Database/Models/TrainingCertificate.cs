@@ -6,14 +6,10 @@ namespace MyPortal.Database.Models
     [Table("TrainingCertificate")]
     public partial class TrainingCertificate
     {
-        [Key]
-        [Column(Order = 0)]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int Id { get; set; }
+
         public int CourseId { get; set; }
 
-        [Key]
-        [Column(Order = 1)]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int StaffId { get; set; }
 
         public int StatusId { get; set; }

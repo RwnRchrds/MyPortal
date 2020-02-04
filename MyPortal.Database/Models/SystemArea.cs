@@ -11,6 +11,7 @@ namespace MyPortal.Database.Models
         public SystemArea()
         {
             Reports = new HashSet<Report>();
+            Resources = new HashSet<SystemResource>();
         }
 
         public int Id { get; set; }
@@ -21,5 +22,7 @@ namespace MyPortal.Database.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Report> Reports { get; set; }
+
+        public virtual ICollection<SystemResource> Resources { get; set; }
     }
 }

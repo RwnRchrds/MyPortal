@@ -8,5 +8,10 @@ namespace MyPortal.Database.Models.Identity
     public class ApplicationUser : IdentityUser
     {
         public virtual Person Person { get; set; }
+
+        public string GetDisplayName()
+        {
+            return Person != null ? Person.FirstName : UserName;
+        }
     }
 }
