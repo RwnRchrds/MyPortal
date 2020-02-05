@@ -11,7 +11,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class AchievementRepository : BaseReadRepository, IAchievementRepository
+    public class AchievementRepository : BaseReadWriteRepository<Achievement>, IAchievementRepository
     {
         private readonly string TblName = @"[dbo].[Achievement] AS [Achievement]";
         
@@ -38,27 +38,12 @@ namespace MyPortal.Database.Repositories
             return await Connection.QueryAsync<Achievement>(sql);
         }
 
-        public Task<Achievement> GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Achievement> GetByIdWithTracking(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Create(Achievement entity)
+        public async Task<Achievement> GetById(int id)
         {
             throw new NotImplementedException();
         }
 
         public Task Update(Achievement entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(Achievement achievementInDb)
         {
             throw new NotImplementedException();
         }
@@ -79,6 +64,11 @@ namespace MyPortal.Database.Repositories
         }
 
         public Task<int> GetPointsToday()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override async Task<IEnumerable<Achievement>> ExecuteQuery(string sql, object param = null)
         {
             throw new NotImplementedException();
         }

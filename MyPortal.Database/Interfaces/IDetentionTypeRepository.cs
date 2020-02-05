@@ -5,7 +5,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface IDetentionTypeRepository : IReadWriteRepository<DetentionType, int>
+    public interface IDetentionTypeRepository : IReadWriteRepository<DetentionType>
     {
     }
 }

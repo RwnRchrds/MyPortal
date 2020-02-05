@@ -11,7 +11,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class AchievementTypeRepository : BaseReadRepository, IAchievementTypeRepository
+    public class AchievementTypeRepository : BaseReadWriteRepository<AchievementType>, IAchievementTypeRepository
     {
         private readonly string TblName = @"[dbo].[AchievementType]";
 
@@ -39,16 +39,6 @@ namespace MyPortal.Database.Repositories
             return await Connection.QuerySingleOrDefaultAsync<AchievementType>(sql, new {AchievementTypeId = id});
         }
 
-        public Task<AchievementType> GetByIdWithTracking(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Create(AchievementType entity)
-        {
-            Context.AchievementTypes.Add(entity);
-        }
-
         public async Task Update(AchievementType entity)
         {
             var achievementTypeInDb = await Context.AchievementTypes.FindAsync(entity.Id);
@@ -62,17 +52,17 @@ namespace MyPortal.Database.Repositories
             achievementTypeInDb.DefaultPoints = entity.DefaultPoints;
         }
 
-        public void Delete(AchievementType achievementTypeInDb)
-        {
-            Context.AchievementTypes.Remove(achievementTypeInDb);
-        }
-
         public async Task<IEnumerable<AchievementType>> GetRecorded(int academicYearId)
         {
             var sql =
                 $"SELECT {AllColumns} FROM {TblName} {JoinAchievement} GROUP BY {AllColumns} HAVING COUNT ([Achievement].[Id]) > 0";
 
             return await Connection.QueryAsync<AchievementType>(sql);
+        }
+
+        protected override async Task<IEnumerable<AchievementType>> ExecuteQuery(string sql, object param = null)
+        {
+            throw new NotImplementedException();
         }
     }
 }

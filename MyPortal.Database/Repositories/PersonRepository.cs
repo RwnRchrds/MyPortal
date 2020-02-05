@@ -11,7 +11,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class PersonRepository : BaseReadRepository, IPersonRepository
+    public class PersonRepository : BaseReadWriteRepository<Person>, IPersonRepository
     {
         private readonly string TblName = @"[dbo].[Person] AS [Person]";
 
@@ -35,16 +35,6 @@ namespace MyPortal.Database.Repositories
             return await Connection.QuerySingleOrDefaultAsync<Person>(sql, new {PersonId = id});
         }
 
-        public Task<Person> GetByIdWithTracking(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Create(Person entity)
-        {
-            Context.People.Add(entity);
-        }
-
         public async Task Update(Person entity)
         {
             var personInDb = await Context.People.FindAsync(entity.Id);
@@ -65,11 +55,6 @@ namespace MyPortal.Database.Repositories
             personInDb.Deceased = entity.Deceased;
             personInDb.UserId = entity.UserId;
             personInDb.Deleted = entity.Deleted;
-        }
-
-        public void Delete(Person personInDb)
-        {
-            Context.People.Remove(personInDb);
         }
 
         public async Task<Person> GetByUserId(string userId)
@@ -131,6 +116,11 @@ namespace MyPortal.Database.Repositories
 
             return await Connection.QueryFirstOrDefaultAsync<int>(sql,
                 new {Monday = weekBeginning, Sunday = weekBeginning.AddDays(6)});
+        }
+
+        protected override async Task<IEnumerable<Person>> ExecuteQuery(string sql, object param = null)
+        {
+            throw new NotImplementedException();
         }
     }
 }

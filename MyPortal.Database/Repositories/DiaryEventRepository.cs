@@ -9,7 +9,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class DiaryEventRepository : BaseReadRepository, IDiaryEventRepository
+    public class DiaryEventRepository : BaseReadWriteRepository<DiaryEvent>, IDiaryEventRepository
     {
         public DiaryEventRepository(IDbConnection connection) : base(connection)
         {
@@ -25,22 +25,12 @@ namespace MyPortal.Database.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<DiaryEvent> GetByIdWithTracking(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Create(DiaryEvent entity)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task Update(DiaryEvent entity)
         {
             throw new NotImplementedException();
         }
 
-        public void Delete(DiaryEvent entity)
+        protected override async Task<IEnumerable<DiaryEvent>> ExecuteQuery(string sql, object param = null)
         {
             throw new NotImplementedException();
         }

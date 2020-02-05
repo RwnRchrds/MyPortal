@@ -5,7 +5,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface IEnrolmentRepository : IReadWriteRepository<Enrolment, int>
+    public interface IEnrolmentRepository : IReadWriteRepository<Enrolment>
     {
     }
 }

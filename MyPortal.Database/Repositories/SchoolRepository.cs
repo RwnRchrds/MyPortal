@@ -11,7 +11,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class SchoolRepository : BaseReadRepository, ISchoolRepository
+    public class SchoolRepository : BaseReadWriteRepository<School>, ISchoolRepository
     {
         private readonly string TblName = @"[dbo].[School] as [School]";
 
@@ -35,16 +35,6 @@ namespace MyPortal.Database.Repositories
             var sql = $"SELECT {AllColumns} FROM {TblName} WHERE [School].[Id] = @SchoolId";
 
             return await Connection.QuerySingleOrDefaultAsync<School>(sql, new {SchoolId = id});
-        }
-
-        public Task<School> GetByIdWithTracking(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Create(School entity)
-        {
-            Context.Schools.Add(entity);
         }
 
         public async Task Update(School entity)
@@ -72,11 +62,6 @@ namespace MyPortal.Database.Repositories
             schoolInDb.Website = entity.Website;
         }
 
-        public void Delete(School schoolInDb)
-        {
-            Context.Schools.Remove(schoolInDb);
-        }
-
         public async Task<string> GetLocalSchoolName()
         {
             var sql = $"SELECT [School].[Name] FROM {TblName} WHERE [School].[Local] = 1";
@@ -89,6 +74,11 @@ namespace MyPortal.Database.Repositories
             var sql = $"SELECT {AllColumns} FROM {TblName} WHERE [School].[Local] = 1";
 
             return await Connection.QuerySingleOrDefaultAsync<School>(sql);
+        }
+
+        protected override async Task<IEnumerable<School>> ExecuteQuery(string sql, object param = null)
+        {
+            throw new NotImplementedException();
         }
     }
 }

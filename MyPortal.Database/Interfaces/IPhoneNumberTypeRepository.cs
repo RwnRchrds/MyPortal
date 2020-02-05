@@ -5,7 +5,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface IPhoneNumberTypeRepository : IReadRepository<PhoneNumberType, int>
+    public interface IPhoneNumberTypeRepository : IReadRepository<PhoneNumberType>
     {
     }
 }

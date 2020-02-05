@@ -5,7 +5,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface ISenStatusRepository : IReadRepository<SenStatus, int>
+    public interface ISenStatusRepository : IReadRepository<SenStatus>
     {
     }
 }

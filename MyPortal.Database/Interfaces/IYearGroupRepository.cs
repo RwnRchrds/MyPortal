@@ -5,7 +5,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface IYearGroupRepository : IReadWriteRepository<YearGroup, int>
+    public interface IYearGroupRepository : IReadWriteRepository<YearGroup>
     {
     }
 }

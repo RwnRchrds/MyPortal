@@ -5,7 +5,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface IGovernanceTypeRepository : IReadRepository<GovernanceType, int>
+    public interface IGovernanceTypeRepository : IReadRepository<GovernanceType>
     {
     }
 }

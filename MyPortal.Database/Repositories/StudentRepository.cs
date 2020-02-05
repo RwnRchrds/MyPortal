@@ -48,11 +48,6 @@ namespace MyPortal.Database.Repositories
             }, new {StudentId = id})).Single();
         }
 
-        public Task<Student> GetByIdWithTracking(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task Update(Student entity)
         {
             var studentInDb = await Context.Students.FindAsync(entity.Id);

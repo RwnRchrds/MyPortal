@@ -5,7 +5,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface IAttendanceMarkRepository : IReadWriteRepository<AttendanceMark, int>
+    public interface IAttendanceMarkRepository : IReadWriteRepository<AttendanceMark>
     {
     }
 }

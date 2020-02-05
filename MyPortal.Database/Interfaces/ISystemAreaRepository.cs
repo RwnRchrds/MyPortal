@@ -5,7 +5,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface ISystemAreaRepository : IReadRepository<SystemArea, int>
+    public interface ISystemAreaRepository : IReadRepository<SystemArea>
     {
     }
 }

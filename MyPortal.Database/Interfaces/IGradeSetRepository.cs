@@ -5,7 +5,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface IGradeSetRepository : IReadWriteRepository<GradeSet, int>
+    public interface IGradeSetRepository : IReadWriteRepository<GradeSet>
     {
     }
 }

@@ -5,7 +5,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface IRelationshipTypeRepository : IReadWriteRepository<RelationshipType, int>
+    public interface IRelationshipTypeRepository : IReadWriteRepository<RelationshipType>
     {
     }
 }

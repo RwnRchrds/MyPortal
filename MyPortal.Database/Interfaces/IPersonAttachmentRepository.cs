@@ -5,7 +5,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface IPersonAttachmentRepository : IReadWriteRepository<PersonAttachment, int>
+    public interface IPersonAttachmentRepository : IReadWriteRepository<PersonAttachment>
     {
 
     }

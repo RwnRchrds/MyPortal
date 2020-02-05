@@ -5,7 +5,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface IBulletinRepository : IReadWriteRepository<Bulletin, int>
+    public interface IBulletinRepository : IReadWriteRepository<Bulletin>
     {
     }
 }

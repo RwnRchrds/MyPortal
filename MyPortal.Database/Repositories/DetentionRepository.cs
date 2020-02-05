@@ -9,7 +9,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class DetentionRepository : BaseReadRepository, IDetentionRepository
+    public class DetentionRepository : BaseReadWriteRepository<Detention>, IDetentionRepository
     {
         public DetentionRepository(IDbConnection connection) : base(connection)
         {
@@ -25,22 +25,12 @@ namespace MyPortal.Database.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<Detention> GetByIdWithTracking(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Create(Detention entity)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task Update(Detention entity)
         {
             throw new NotImplementedException();
         }
 
-        public void Delete(Detention entity)
+        protected override async Task<IEnumerable<Detention>> ExecuteQuery(string sql, object param = null)
         {
             throw new NotImplementedException();
         }

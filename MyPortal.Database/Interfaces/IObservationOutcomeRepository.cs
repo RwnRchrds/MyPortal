@@ -5,7 +5,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface IObservationOutcomeRepository : IReadRepository<ObservationOutcome, int>
+    public interface IObservationOutcomeRepository : IReadRepository<ObservationOutcome>
     {
     }
 }

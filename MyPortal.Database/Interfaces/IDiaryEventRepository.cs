@@ -5,7 +5,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface IDiaryEventRepository : IReadWriteRepository<DiaryEvent, int>
+    public interface IDiaryEventRepository : IReadWriteRepository<DiaryEvent>
     {
     }
 }

@@ -5,7 +5,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface IHomeworkSubmissionRepository : IReadWriteRepository<HomeworkSubmission, int>
+    public interface IHomeworkSubmissionRepository : IReadWriteRepository<HomeworkSubmission>
     {
     }
 }

@@ -6,7 +6,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface IStudentRepository : IReadWriteRepository<Student, int>
+    public interface IStudentRepository : IReadWriteRepository<Student>
     {
         Task<Student> GetByUserId(string userId);
         Task<IEnumerable<Student>> GetOnRoll();

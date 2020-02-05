@@ -5,7 +5,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface IIntakeTypeRepository : IReadRepository<IntakeType, int>
+    public interface IIntakeTypeRepository : IReadRepository<IntakeType>
     {
 
     }

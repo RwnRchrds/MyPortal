@@ -5,7 +5,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface IPhaseRepository : IReadRepository<Phase, int>
+    public interface IPhaseRepository : IReadRepository<Phase>
     {
     }
 }

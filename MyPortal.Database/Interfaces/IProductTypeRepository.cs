@@ -5,7 +5,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface IProductTypeRepository : IReadWriteRepository<ProductType, int>
+    public interface IProductTypeRepository : IReadWriteRepository<ProductType>
     {
     }
 }

@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface IReadWriteRepository<TEntity, TKey> : IReadRepository<TEntity, TKey> where TEntity : class
+    public interface IReadWriteRepository<TEntity> : IReadRepository<TEntity> where TEntity : class
     {
-        Task<TEntity> GetByIdWithTracking(TKey id);
+        Task<TEntity> GetByIdWithTracking(int id);
         void Create(TEntity entity);
         Task Update(TEntity entity);
         void Delete(TEntity entity);

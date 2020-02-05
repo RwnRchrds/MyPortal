@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface IDocumentTypeRepository : IReadRepository<IDocumentRepository, int>
+    public interface IDocumentTypeRepository : IReadRepository<IDocumentRepository>
     {
     }
 }

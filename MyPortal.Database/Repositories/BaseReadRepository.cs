@@ -13,24 +13,16 @@ namespace MyPortal.Database.Repositories
     public abstract class BaseReadRepository<TEntity> : IDisposable where TEntity : class
     {
         protected readonly IDbConnection Connection;
-        protected readonly ApplicationDbContext Context;
 
         public BaseReadRepository(IDbConnection connection)
         {
             Connection = connection;
-
-            var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-
-            optionsBuilder.UseSqlServer(connection.ConnectionString);
-
-            Context =  new ApplicationDbContext(optionsBuilder.Options);
         }
 
         protected abstract Task<IEnumerable<TEntity>> ExecuteQuery(string sql, object param = null);
 
         public void Dispose()
         {
-            Context.Dispose();
             Connection.Dispose();
         }
     }

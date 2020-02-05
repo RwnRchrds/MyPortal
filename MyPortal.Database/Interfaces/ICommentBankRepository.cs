@@ -5,7 +5,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface ICommentBankRepository : IReadWriteRepository<CommentBank, int>
+    public interface ICommentBankRepository : IReadWriteRepository<CommentBank>
     {
     }
 }

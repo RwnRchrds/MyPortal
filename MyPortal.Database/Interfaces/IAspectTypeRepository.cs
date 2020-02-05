@@ -5,7 +5,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface IAspectTypeRepository : IReadRepository<AspectType, int>
+    public interface IAspectTypeRepository : IReadRepository<AspectType>
     {
     }
 }

@@ -5,7 +5,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface IRegGroupRepository : IReadWriteRepository<RegGroup, int>
+    public interface IRegGroupRepository : IReadWriteRepository<RegGroup>
     {
     }
 }

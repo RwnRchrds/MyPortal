@@ -5,7 +5,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface IDietaryRequirementRepository : IReadRepository<DietaryRequirement, int>
+    public interface IDietaryRequirementRepository : IReadRepository<DietaryRequirement>
     {
     }
 }

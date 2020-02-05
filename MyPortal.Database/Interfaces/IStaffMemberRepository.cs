@@ -5,7 +5,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface IStaffMemberRepository : IReadWriteRepository<StaffMember, int>
+    public interface IStaffMemberRepository : IReadWriteRepository<StaffMember>
     {
     }
 }

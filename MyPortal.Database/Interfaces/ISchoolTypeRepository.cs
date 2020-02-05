@@ -5,7 +5,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface ISchoolTypeRepository : IReadRepository<SchoolType, int>
+    public interface ISchoolTypeRepository : IReadRepository<SchoolType>
     {
     }
 }

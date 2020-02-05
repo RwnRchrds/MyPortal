@@ -5,7 +5,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface ILocalAuthorityRepository : IReadWriteRepository<LocalAuthority, int>
+    public interface ILocalAuthorityRepository : IReadWriteRepository<LocalAuthority>
     {
     }
 }

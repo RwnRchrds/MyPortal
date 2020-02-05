@@ -5,7 +5,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface IMedicalConditionRepository : IReadWriteRepository<MedicalCondition, int>
+    public interface IMedicalConditionRepository : IReadWriteRepository<MedicalCondition>
     {
     }
 }
