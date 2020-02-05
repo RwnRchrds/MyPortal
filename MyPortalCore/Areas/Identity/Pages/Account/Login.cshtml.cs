@@ -15,6 +15,7 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
 using MyPortal.Logic.Authorisation.Attributes;
+using MyPortal.Logic.Interfaces;
 using Permission = MyPortal.Logic.Constants.Permission;
 using Task = System.Threading.Tasks.Task;
 
@@ -23,17 +24,17 @@ namespace MyPortalCore.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class LoginModel : PageModel
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly ISchoolService _schoolService;
 
         public LoginModel(SignInManager<ApplicationUser> signInManager, 
             ILogger<LoginModel> logger,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager, ISchoolService schoolService)
         {
-            _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _schoolService = schoolService;
         }
 
         [BindProperty]
@@ -42,6 +43,8 @@ namespace MyPortalCore.Areas.Identity.Pages.Account
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
         public string ReturnUrl { get; set; }
+
+        public string SchoolName { get; set; }
 
         [TempData]
         public string ErrorMessage { get; set; }
@@ -72,6 +75,8 @@ namespace MyPortalCore.Areas.Identity.Pages.Account
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+            SchoolName = await _schoolService.GetLocalSchoolName();
 
             ReturnUrl = returnUrl;
         }

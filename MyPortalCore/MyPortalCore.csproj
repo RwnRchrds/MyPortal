@@ -25,4 +25,12 @@
     <ProjectReference Include="..\MyPortal.Logic\MyPortal.Logic.csproj" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Folder Include="Areas\Identity\Controllers\" />
+    <Folder Include="Areas\Identity\Views\" />
+    <Folder Include="Areas\Staff\ViewModels\" />
+    <Folder Include="Areas\Staff\Models\" />
+  </ItemGroup>
+
 </Project>

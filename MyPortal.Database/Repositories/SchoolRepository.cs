@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
@@ -34,7 +35,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = $"SELECT {AllColumns} FROM {TblName} WHERE [School].[Id] = @SchoolId";
 
-            return await Connection.QuerySingleOrDefaultAsync<School>(sql, new {SchoolId = id});
+            return (await ExecuteQuery(sql, new {SchoolId = id})).SingleOrDefault();
         }
 
         public async Task Update(School entity)
@@ -73,12 +74,12 @@ namespace MyPortal.Database.Repositories
         {
             var sql = $"SELECT {AllColumns} FROM {TblName} WHERE [School].[Local] = 1";
 
-            return await Connection.QuerySingleOrDefaultAsync<School>(sql);
+            return (await ExecuteQuery(sql)).SingleOrDefault();
         }
 
         protected override async Task<IEnumerable<School>> ExecuteQuery(string sql, object param = null)
         {
-            throw new NotImplementedException();
+            return await Connection.QueryAsync<School>(sql, param);
         }
     }
 }

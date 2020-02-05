@@ -41,9 +41,9 @@ namespace MyPortalCore
 
 
             services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
-                {
-                    options.SignIn.RequireConfirmedAccount = true;
-                })
+                    {
+                        options.SignIn.RequireConfirmedAccount = false;
+                    })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -58,21 +58,13 @@ namespace MyPortalCore
                 options.AddPolicy(Policy.UserType.Parent, p => p.RequireClaim(ClaimType.UserType, UserType.Parent));
             });
 
+            // MyPortal Database Connection
             services.AddTransient<IDbConnection>(connection =>
                 new SqlConnection(Configuration.GetConnectionString("LiveConnection")));
 
-            //services.AddTransient<IAcademicYearRepository, AcademicYearRepository>();
-            //services.AddTransient<IAchievementRepository, AchievementRepository>();
-            //services.AddTransient<IAchievementTypeRepository, AchievementTypeRepository>();
-            //services.AddTransient<IDetentionRepository, DetentionRepository>();
-            //services.AddTransient<IDiaryEventRepository, DiaryEventRepository>();
-            //services.AddTransient<IPersonRepository, PersonRepository>();
-            //services.AddTransient<ISchoolRepository, SchoolRepository>();
-            //services.AddTransient<IStudentRepository, StudentRepository>();
+            services.AddTransient<ISchoolRepository, SchoolRepository>();
 
-            //services.AddTransient<IBehaviourService, BehaviourService>();
-            //services.AddTransient<ISchoolService, SchoolService>();
-            //services.AddTransient<IStudentService, StudentService>();
+            services.AddTransient<ISchoolService, SchoolService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -99,10 +91,14 @@ namespace MyPortalCore
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapRazorPages();
+                endpoints.MapAreaControllerRoute(
+                    "Staff",
+                    "Staff",
+                    "Staff/{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapRazorPages();
             });
         }
     }
