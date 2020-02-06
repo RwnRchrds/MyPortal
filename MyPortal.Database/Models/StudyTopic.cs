@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -13,11 +14,13 @@ namespace MyPortal.Database.Models
             LessonPlans = new HashSet<LessonPlan>();
         }
 
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
-        public int SubjectId { get; set; }
+        public Guid SubjectId { get; set; }
 
-        public int YearGroupId { get; set; }
+        public Guid YearGroupId { get; set; }
 
         [Required]
         [StringLength(256)]

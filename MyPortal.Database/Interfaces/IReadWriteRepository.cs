@@ -7,7 +7,7 @@ namespace MyPortal.Database.Interfaces
 {
     public interface IReadWriteRepository<TEntity> : IReadRepository<TEntity> where TEntity : class
     {
-        Task<TEntity> GetByIdWithTracking(int id);
+        Task<TEntity> GetByIdWithTracking(Guid id);
         void Create(TEntity entity);
         Task Update(TEntity entity);
         void Delete(TEntity entity);

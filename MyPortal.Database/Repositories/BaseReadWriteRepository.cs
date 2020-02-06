@@ -27,7 +27,7 @@ namespace MyPortal.Database.Repositories
             await Context.SaveChangesAsync();
         }
 
-        public async Task<TEntity> GetByIdWithTracking(int id)
+        public async Task<TEntity> GetByIdWithTracking(Guid id)
         {
             return await Context.Set<TEntity>().FindAsync(id);
         }

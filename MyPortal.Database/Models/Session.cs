@@ -1,3 +1,5 @@
+using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Database.Models
@@ -5,11 +7,13 @@ namespace MyPortal.Database.Models
     [Table("Session")]
     public partial class Session
     {
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
-        public int ClassId { get; set; }
+        public Guid ClassId { get; set; }
 
-        public int PeriodId { get; set; }
+        public Guid PeriodId { get; set; }
 
         public virtual Period Period { get; set; }
 

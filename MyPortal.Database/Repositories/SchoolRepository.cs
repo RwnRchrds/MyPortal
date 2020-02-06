@@ -31,7 +31,7 @@ namespace MyPortal.Database.Repositories
             return await Connection.QueryAsync<School>(sql);
         }
 
-        public async Task<School> GetById(int id)
+        public async Task<School> GetById(Guid id)
         {
             var sql = $"SELECT {AllColumns} FROM {TblName} WHERE [School].[Id] = @SchoolId";
 

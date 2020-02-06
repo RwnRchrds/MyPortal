@@ -19,7 +19,8 @@ namespace MyPortal.Database.Models
             Incidents = new HashSet<Incident>();
         }
 
-        public int Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
         [Required]
         [StringLength(128)]

@@ -9,8 +9,11 @@ namespace MyPortal.Database.Models.Identity
     [Table("AspNetPermissions")]
     public class ApplicationPermission
     {
-        public int Id { get; set; }
-        public int ResourceId { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+
+        public Guid ResourceId { get; set; }
 
         [Required]
         [StringLength(128)]

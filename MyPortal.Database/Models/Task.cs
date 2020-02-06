@@ -9,8 +9,10 @@ namespace MyPortal.Database.Models
     [Table("Task")]
     public class Task
     {
-        public int Id { get; set; }
-        public int AssignedToId { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+        public Guid AssignedToId { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? DueDate { get; set; }
 

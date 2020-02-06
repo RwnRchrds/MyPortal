@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace MyPortal.Database.Models.Identity
 {
-    public class ApplicationUser : IdentityUser
+    public class ApplicationUser : IdentityUser<Guid>
     {
         public virtual Person Person { get; set; }
 

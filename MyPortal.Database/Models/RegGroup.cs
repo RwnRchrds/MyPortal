@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -13,15 +14,17 @@ namespace MyPortal.Database.Models
             Students = new HashSet<Student>();
         }
 
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
         [Required]
         [StringLength(128)]
         public string Name { get; set; }
 
-        public int TutorId { get; set; }
+        public Guid TutorId { get; set; }
 
-        public int YearGroupId { get; set; }
+        public Guid YearGroupId { get; set; }
 
         public virtual StaffMember Tutor { get; set; }
 

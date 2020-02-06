@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Database.Models
@@ -6,9 +7,11 @@ namespace MyPortal.Database.Models
     [Table("Report")]
     public class Report
     {
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
-        public int AreaId { get; set; }
+        public Guid AreaId { get; set; }
 
         [Required]
         [StringLength(128)]

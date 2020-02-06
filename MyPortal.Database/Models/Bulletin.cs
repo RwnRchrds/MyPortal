@@ -7,9 +7,11 @@ namespace MyPortal.Database.Models
     [Table("Bulletin")]
     public class Bulletin
     {
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
-        public int AuthorId { get; set; }
+        public Guid AuthorId { get; set; }
 
         [Display(Name = "Created")]
         public DateTime CreateDate { get; set; }

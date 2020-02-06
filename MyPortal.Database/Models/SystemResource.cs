@@ -15,15 +15,21 @@ namespace MyPortal.Database.Models
             Permissions = new HashSet<ApplicationPermission>();
         }
 
-        public int Id { get; set; }
-        public int AreaId { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+
+        public Guid AreaId { get; set; }
 
         [Required]
         [StringLength(128)]
-        public string Code { get; set; }
+        public string TableName { get; set; }
 
+        [Required]
         [StringLength(256)]
         public string Name { get; set; }
+
+        public bool HasPermissions { get; set; }        
 
         public virtual SystemArea Area { get; set; }
         public virtual ICollection<ApplicationPermission> Permissions { get; set; }

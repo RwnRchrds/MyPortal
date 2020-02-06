@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -6,13 +7,15 @@ namespace MyPortal.Database.Models
     [Table("TrainingCertificate")]
     public partial class TrainingCertificate
     {
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
-        public int CourseId { get; set; }
+        public Guid CourseId { get; set; }
 
-        public int StaffId { get; set; }
+        public Guid StaffId { get; set; }
 
-        public int StatusId { get; set; }
+        public Guid StatusId { get; set; }
 
         public virtual StaffMember StaffMember { get; set; }
 

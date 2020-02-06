@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Database.Models
@@ -6,18 +7,20 @@ namespace MyPortal.Database.Models
     [Table("Result")]
     public class Result
     {
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
-        public int ResultSetId { get; set; }
+        public Guid ResultSetId { get; set; }
 
-        public int StudentId { get; set; }
+        public Guid StudentId { get; set; }
 
-        public int AspectId { get; set; }
+        public Guid AspectId { get; set; }
 
         [Column(TypeName = "date")]
         public DateTime Date { get; set; }
 
-        public int GradeId { get; set; }
+        public Guid GradeId { get; set; }
 
         public virtual ResultSet ResultSet { get; set; }
 

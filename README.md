@@ -1,6 +1,6 @@
 # MyPortal
 
-![Banner](https://drive.google.com/uc?export=view&id=1aYvNO374sGSm0YuuWK4UkVoIsoglP0lx)
+![Banner](http://drive.google.com/uc?export=view&id=1s_maLhp-w-1BIFOsxDI2S6Rxch75SlVA)
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/bd6f737bead2482f86dc5a787524cf26)](https://app.codacy.com/app/rrichards.63170/MyPortal?utm_source=github.com&utm_medium=referral&utm_content=RRichards63170/MyPortal&utm_campaign=Badge_Grade_Settings)
 

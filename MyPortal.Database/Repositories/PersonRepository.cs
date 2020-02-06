@@ -28,7 +28,7 @@ namespace MyPortal.Database.Repositories
             return await Connection.QueryAsync<Person>(sql);
         }
 
-        public async Task<Person> GetById(int id)
+        public async Task<Person> GetById(Guid id)
         {
             var sql = $"SELECT {AllColumns} FROM {TblName} WHERE [Person].[Id] = @PersonId";
 

@@ -15,7 +15,9 @@ namespace MyPortal.Database.Models
             Sessions = new HashSet<Session>();
         }
 
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
         public DayOfWeek Weekday { get; set; }
 

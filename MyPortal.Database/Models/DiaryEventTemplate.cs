@@ -9,8 +9,10 @@ namespace MyPortal.Database.Models
     [Table("DiaryEventTemplate")]
     public class DiaryEventTemplate
     {
-        public int Id { get; set; }
-        public int EventTypeId { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+        public Guid EventTypeId { get; set; }
 
         [Required]
         [StringLength(256)]

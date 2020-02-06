@@ -7,7 +7,7 @@ namespace MyPortal.Logic.Interfaces
 {
     public interface IBehaviourService
     {
-        Task AddIncidentToDetention(int incidentId, int detentionId);
-        Task RemoveIncidentFromDetention(int incidentId, int detentionId);
+        Task AddIncidentToDetention(Guid incidentId, Guid detentionId);
+        Task RemoveIncidentFromDetention(Guid incidentId, Guid detentionId);
     }
 }

@@ -1,15 +1,19 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Database.Models
 {
     [Table("AddressPerson")]
     public class AddressPerson
     {
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
-        public int AddressId { get; set; }
+        public Guid AddressId { get; set; }
 
-        public int PersonId { get; set; }
+        public Guid PersonId { get; set; }
 
         public virtual Address Address { get; set; }
         public virtual Person Person { get; set; }

@@ -7,11 +7,13 @@ namespace MyPortal.Database.Models
     [Table("SenProvision")]
     public class SenProvision
     {
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
-        public int StudentId { get; set; }
+        public Guid StudentId { get; set; }
 
-        public int ProvisionTypeId { get; set; }
+        public Guid ProvisionTypeId { get; set; }
 
         [Column(TypeName = "date")]
         public DateTime StartDate { get; set; }

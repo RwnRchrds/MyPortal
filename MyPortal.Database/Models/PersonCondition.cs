@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Database.Models
@@ -6,11 +7,13 @@ namespace MyPortal.Database.Models
     [Table("PersonCondition")]
     public class PersonCondition
     {
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
-        public int PersonId { get; set; }
+        public Guid PersonId { get; set; }
 
-        public int ConditionId { get; set; }
+        public Guid ConditionId { get; set; }
 
         public bool MedicationTaken { get; set; }
 

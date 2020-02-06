@@ -37,7 +37,7 @@ namespace MyPortal.Database.Repositories
             });
         }
 
-        public async Task<Student> GetById(int id)
+        public async Task<Student> GetById(Guid id)
         {
             var sql = $"SELECT {AllColumns},{PersonRepository.AllColumns} FROM {TblName} {JoinPeople} WHERE [Student].[Id] = @StudentId";
 

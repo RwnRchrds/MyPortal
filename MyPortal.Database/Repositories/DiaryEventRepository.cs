@@ -20,7 +20,7 @@ namespace MyPortal.Database.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<DiaryEvent> GetById(int id)
+        public Task<DiaryEvent> GetById(Guid id)
         {
             throw new NotImplementedException();
         }

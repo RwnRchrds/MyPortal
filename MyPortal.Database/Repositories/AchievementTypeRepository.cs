@@ -32,7 +32,7 @@ namespace MyPortal.Database.Repositories
             return await Connection.QueryAsync<AchievementType>(sql);
         }
 
-        public async Task<AchievementType> GetById(int id)
+        public async Task<AchievementType> GetById(Guid id)
         {
             var sql = $"SELECT {AllColumns} FROM {TblName} WHERE [AchievementType].[Id] = @AchievementTypeId";
 
@@ -52,7 +52,7 @@ namespace MyPortal.Database.Repositories
             achievementTypeInDb.DefaultPoints = entity.DefaultPoints;
         }
 
-        public async Task<IEnumerable<AchievementType>> GetRecorded(int academicYearId)
+        public async Task<IEnumerable<AchievementType>> GetRecorded(Guid academicYearId)
         {
             var sql =
                 $"SELECT {AllColumns} FROM {TblName} {JoinAchievement} GROUP BY {AllColumns} HAVING COUNT ([Achievement].[Id]) > 0";

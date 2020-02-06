@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -14,9 +15,11 @@ namespace MyPortal.Database.Models
             Sales = new HashSet<Sale>();
         }
 
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
-        public int ProductTypeId { get; set; }
+        public Guid ProductTypeId { get; set; }
 
         [Required]
         [StringLength(256)]

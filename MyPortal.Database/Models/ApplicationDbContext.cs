@@ -7,107 +7,389 @@ using MyPortal.Database.Models.Identity;
 
 namespace MyPortal.Database.Models
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
 
+        public virtual DbSet<AcademicYear> AcademicYears { get; set; }
+        public virtual DbSet<Achievement> Achievements { get; set; }
+        public virtual DbSet<AchievementType> AchievementTypes { get; set; }
+        public virtual DbSet<Address> Addresses { get; set; }
+        public virtual DbSet<AddressPerson> AddressPersons { get; set; }
         public virtual DbSet<ApplicationPermission> ApplicationPermissions { get; set; }
         public virtual DbSet<Aspect> Aspects { get; set; }
         public virtual DbSet<AspectType> AspectTypes { get; set; }
-        public virtual DbSet<Grade> Grades { get; set; }
-        public virtual DbSet<GradeSet> GradeSets { get; set; }
-        public virtual DbSet<Result> Results { get; set; }
-        public virtual DbSet<ResultSet> ResultSets { get; set; }
         public virtual DbSet<AttendanceCode> AttendanceCodes { get; set; }
         public virtual DbSet<AttendanceCodeMeaning> AttendanceCodeMeanings { get; set; }
         public virtual DbSet<AttendanceMark> AttendanceMarks { get; set; }
-        public virtual DbSet<Period> Periods { get; set; }
         public virtual DbSet<AttendanceWeek> AttendanceWeeks { get; set; }
-        public virtual DbSet<Achievement> Achievements { get; set; }
-        public virtual DbSet<AchievementType> AchievementTypes { get; set; }
-        public virtual DbSet<Incident> Incidents { get; set; }
-        public virtual DbSet<IncidentType> IncidentTypes { get; set; }
-        public virtual DbSet<Address> Addresses { get; set; }
-        public virtual DbSet<AddressPerson> AddressPersons { get; set; }
-        public virtual DbSet<EmailAddress> EmailAddresses { get; set; }
-        public virtual DbSet<EmailAddressType> EmailAddressTypes { get; set; }
+        public virtual DbSet<BasketItem> BasketItems { get; set; }
+        public virtual DbSet<Bulletin> Bulletins { get; set; }
+        public virtual DbSet<Class> Classes { get; set; }
+        public virtual DbSet<Comment> Comments { get; set; }
+        public virtual DbSet<CommentBank> CommentBanks { get; set; }
         public virtual DbSet<CommunicationLog> CommunicationLogs { get; set; }
-        public virtual DbSet<PhoneNumber> PhoneNumbers { get; set; }
-        public virtual DbSet<PhoneNumberType> PhoneNumberTypes { get; set; }
         public virtual DbSet<CommunicationType> CommunicationTypes { get; set; }
         public virtual DbSet<Contact> Contacts { get; set; }
-        public virtual DbSet<AcademicYear> AcademicYears { get; set; }
-        public virtual DbSet<Class> Classes { get; set; }
-        public virtual DbSet<DetentionType> DetentionTypes { get; set; }
         public virtual DbSet<Detention> Detentions { get; set; }
+        public virtual DbSet<DetentionType> DetentionTypes { get; set; }
         public virtual DbSet<DiaryEvent> DiaryEvents { get; set; }
         public virtual DbSet<DiaryEventAttendee> DiaryEventAttendees { get; set; }
         public virtual DbSet<DiaryEventInvitationResponse> DiaryEventInvitationResponses { get; set; }
         public virtual DbSet<DiaryEventType> DiaryEventTypes { get; set; }
-        public virtual DbSet<Enrolment> Enrolments { get; set; }
-        public virtual DbSet<IncidentDetention> IncidentDetentions { get; set; }
-        public virtual DbSet<LessonPlan> LessonPlans { get; set; }
-        public virtual DbSet<LessonPlanTemplate> LessonPlanTemplates { get; set; }
-        public virtual DbSet<Session> Sessions { get; set; }
-        public virtual DbSet<StudyTopic> StudyTopics { get; set; }
-        public virtual DbSet<Subject> Subjects { get; set; }
-        public virtual DbSet<SubjectStaffMember> SubjectStaffMembers { get; set; }
-        public virtual DbSet<SubjectStaffMemberRole> SubjectStaffMemberRoles { get; set; }
+        public virtual DbSet<DietaryRequirement> DietaryRequirements { get; set; }
         public virtual DbSet<Document> Documents { get; set; }
         public virtual DbSet<DocumentType> DocumentTypes { get; set; }
-        public virtual DbSet<BasketItem> BasketItems { get; set; }
-        public virtual DbSet<Product> Products { get; set; }
-        public virtual DbSet<ProductType> ProductTypes { get; set; }
-        public virtual DbSet<Sale> Sales { get; set; }
-        public virtual DbSet<LocalAuthority> LocalAuthorities { get; set; }
-        public virtual DbSet<MedicalCondition> Conditions { get; set; }
-        public virtual DbSet<DietaryRequirement> DietaryRequirements { get; set; }
-        public virtual DbSet<MedicalEvent> MedicalEvents { get; set; }
-        public virtual DbSet<PersonCondition> PersonConditions { get; set; }
-        public virtual DbSet<PersonDietaryRequirement> PersonDietaryRequirements { get; set; }
+        public virtual DbSet<EmailAddress> EmailAddresses { get; set; }
+        public virtual DbSet<EmailAddressType> EmailAddressTypes { get; set; }
+        public virtual DbSet<Enrolment> Enrolments { get; set; }
+        public virtual DbSet<GiftedTalented> GiftedTalented { get; set; }
+        public virtual DbSet<GovernanceType> GovernanceTypes { get; set; }
+        public virtual DbSet<Grade> Grades { get; set; }
+        public virtual DbSet<GradeSet> GradeSets { get; set; }
+        public virtual DbSet<Homework> Homework { get; set; }
+        public virtual DbSet<HomeworkAttachment> HomeworkAttachments { get; set; }
+        public virtual DbSet<HomeworkSubmission> HomeworkSubmissions { get; set; }
         public virtual DbSet<House> Houses { get; set; }
-        public virtual DbSet<RegGroup> RegGroups { get; set; }
-        public virtual DbSet<YearGroup> YearGroups { get; set; }
-        public virtual DbSet<PersonAttachment> PersonAttachments { get; set; }
+        public virtual DbSet<Incident> Incidents { get; set; }
+        public virtual DbSet<IncidentDetention> IncidentDetentions { get; set; }
+        public virtual DbSet<IncidentType> IncidentTypes { get; set; }
+        public virtual DbSet<IntakeType> IntakeTypes { get; set; }
+        public virtual DbSet<LessonPlan> LessonPlans { get; set; }
+        public virtual DbSet<LessonPlanTemplate> LessonPlanTemplates { get; set; }
+        public virtual DbSet<LocalAuthority> LocalAuthorities { get; set; }
+        public virtual DbSet<Location> Locations { get; set; }
+        public virtual DbSet<MedicalCondition> Conditions { get; set; }
+        public virtual DbSet<MedicalEvent> MedicalEvents { get; set; }
         public virtual DbSet<Observation> Observations { get; set; }
         public virtual DbSet<ObservationOutcome> ObservationOutcomes { get; set; }
-        public virtual DbSet<TrainingCertificate> TrainingCertificates { get; set; }
-        public virtual DbSet<TrainingCertificateStatus> TrainingCertificateStatus { get; set; }
-        public virtual DbSet<TrainingCourse> TrainingCourses { get; set; }
+        public virtual DbSet<Period> Periods { get; set; }
         public virtual DbSet<Person> People { get; set; }
-        public virtual DbSet<CommentBank> CommentBanks { get; set; }
-        public virtual DbSet<Comment> Comments { get; set; }
+        public virtual DbSet<PersonAttachment> PersonAttachments { get; set; }
+        public virtual DbSet<PersonCondition> PersonConditions { get; set; }
+        public virtual DbSet<PersonDietaryRequirement> PersonDietaryRequirements { get; set; }
+        public virtual DbSet<Phase> Phases { get; set; }
+        public virtual DbSet<PhoneNumber> PhoneNumbers { get; set; }
+        public virtual DbSet<PhoneNumberType> PhoneNumberTypes { get; set; }
+        public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<ProductType> ProductTypes { get; set; }
         public virtual DbSet<ProfileLogNote> ProfileLogNotes { get; set; }
         public virtual DbSet<ProfileLogNoteType> ProfileLogNoteTypes { get; set; }
+        public virtual DbSet<RegGroup> RegGroups { get; set; }
         public virtual DbSet<RelationshipType> RelationshipTypes { get; set; }
-        public virtual DbSet<GovernanceType> GovernanceTypes { get; set; }
-        public virtual DbSet<IntakeType> IntakeTypes { get; set; }
-        public virtual DbSet<Location> Locations { get; set; }
-        public virtual DbSet<Phase> Phases { get; set; }
+        public virtual DbSet<Report> Reports { get; set; }
+        public virtual DbSet<Result> Results { get; set; }
+        public virtual DbSet<ResultSet> ResultSets { get; set; }
+        public virtual DbSet<Sale> Sales { get; set; }
+        public virtual DbSet<School> Schools { get; set; }
         public virtual DbSet<SchoolType> SchoolTypes { get; set; }
         public virtual DbSet<SenEvent> SenEvents { get; set; }
-        public virtual DbSet<GiftedTalented> GiftedTalented { get; set; }
         public virtual DbSet<SenProvision> SenProvisions { get; set; }
         public virtual DbSet<SenProvisionType> SenProvisionTypes { get; set; }
         public virtual DbSet<SenReviewType> SenReviewTypes { get; set; }
         public virtual DbSet<SenStatus> SenStatuses { get; set; }
+        public virtual DbSet<Session> Sessions { get; set; }
         public virtual DbSet<StaffMember> StaffMembers { get; set; }
-        public virtual DbSet<StudentContact> StudentContacts { get; set; }
         public virtual DbSet<Student> Students { get; set; }
+        public virtual DbSet<StudentContact> StudentContacts { get; set; }
+        public virtual DbSet<StudyTopic> StudyTopics { get; set; }
+        public virtual DbSet<Subject> Subjects { get; set; }
+        public virtual DbSet<SubjectStaffMember> SubjectStaffMembers { get; set; }
+        public virtual DbSet<SubjectStaffMemberRole> SubjectStaffMemberRoles { get; set; }
         public virtual DbSet<SystemArea> SystemAreas { get; set; }
-        public virtual DbSet<Bulletin> Bulletins { get; set; }
-        public virtual DbSet<Report> Reports { get; set; }
-        public virtual DbSet<School> Schools { get; set; }
-        public virtual DbSet<Task> Tasks { get; set; }
-        public virtual DbSet<Homework> Homework { get; set; }
-        public virtual DbSet<HomeworkAttachment> HomeworkAttachments { get; set; }
-        public virtual DbSet<HomeworkSubmission> HomeworkSubmissions { get; set; }
         public virtual DbSet<SystemResource> SystemResources { get; set; }
+        public virtual DbSet<Task> Tasks { get; set; }
+        public virtual DbSet<TrainingCertificate> TrainingCertificates { get; set; }
+        public virtual DbSet<TrainingCertificateStatus> TrainingCertificateStatus { get; set; }
+        public virtual DbSet<TrainingCourse> TrainingCourses { get; set; }
+        public virtual DbSet<YearGroup> YearGroups { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<AcademicYear>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<Achievement>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<AchievementType>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<Address>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<AddressPerson>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<ApplicationPermission>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<Aspect>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<AspectType>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<AttendanceCode>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<AttendanceCodeMeaning>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<AttendanceMark>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<AttendanceWeek>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<BasketItem>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<Bulletin>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<Class>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<Comment>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<CommentBank>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<CommunicationLog>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<CommunicationType>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<Contact>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<Detention>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<DetentionType>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<DiaryEvent>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<DiaryEventAttendee>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<DiaryEventInvitationResponse>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<DiaryEventTemplate>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<DiaryEventType>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<DietaryRequirement>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<Document>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<DocumentType>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<EmailAddress>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<EmailAddressType>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<Enrolment>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<GiftedTalented>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<GovernanceType>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<Grade>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<GradeSet>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<Homework>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<HomeworkAttachment>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<HomeworkSubmission>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<House>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<Incident>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<IncidentDetention>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<IncidentType>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<IntakeType>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<LessonPlan>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<LessonPlanTemplate>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<LocalAuthority>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<Location>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<MedicalCondition>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<MedicalEvent>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<Observation>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<ObservationOutcome>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<Period>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<Person>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<PersonAttachment>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<PersonCondition>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<PersonDietaryRequirement>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<Phase>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<PhoneNumber>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<PhoneNumberType>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<Product>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<ProductType>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<ProfileLogNote>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<ProfileLogNoteType>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<RegGroup>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<RelationshipType>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<Report>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<Result>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<ResultSet>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<Sale>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<School>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<SchoolType>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<SenEvent>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<SenEventType>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<SenProvision>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<SenProvisionType>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<SenReviewType>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<SenStatus>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<Session>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<StaffMember>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<Student>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<StudentContact>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<StudyTopic>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<Subject>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<SubjectStaffMember>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<SubjectStaffMemberRole>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<SystemArea>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<SystemResource>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<Task>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<TrainingCertificate>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<TrainingCertificateStatus>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<TrainingCourse>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<YearGroup>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
             modelBuilder.Entity<Aspect>()
                 .HasMany(e => e.Results)
                 .WithOne(e => e.Aspect)
@@ -688,7 +970,6 @@ namespace MyPortal.Database.Models
                 .HasMany(e => e.PastoralRegGroups)
                 .WithOne(e => e.Tutor)
                 .HasForeignKey(e => e.TutorId)
-                .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<StaffMember>()

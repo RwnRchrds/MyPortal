@@ -26,15 +26,17 @@ namespace MyPortal.Database.Models
             StudentContacts = new HashSet<StudentContact>();
         }
 
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
-        public int PersonId { get; set; }
+        public Guid PersonId { get; set; }
 
-        public int RegGroupId { get; set; }
+        public Guid RegGroupId { get; set; }
 
-        public int YearGroupId { get; set; }
+        public Guid YearGroupId { get; set; }
 
-        public int? HouseId { get; set; }
+        public Guid? HouseId { get; set; }
 
         [StringLength(128)]
         public string CandidateNumber { get; set; }
@@ -54,7 +56,7 @@ namespace MyPortal.Database.Models
 
         public bool GiftedAndTalented { get; set; }
 
-        public int? SenStatusId { get; set; }
+        public Guid? SenStatusId { get; set; }
 
         public bool PupilPremium { get; set; }
 
