@@ -14,19 +14,14 @@ namespace MyPortal.Database.Models
             DiaryEventAttendees = new HashSet<DiaryEventAttendee>();
         }
 
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
         [Required]
         [StringLength(256)]
         public string Description { get; set; }
 
         public virtual ICollection<DiaryEventAttendee> DiaryEventAttendees { get; set; }
-    }
-
-    public static class DiaryEventInvitationResponseDictionary
-    {
-        public const int Accepted = 1;
-        public const int Tentative = 2;
-        public const int Declined = 3;
     }
 }

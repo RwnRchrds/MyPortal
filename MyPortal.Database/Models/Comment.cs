@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -6,9 +7,11 @@ namespace MyPortal.Database.Models
     [Table("Comment")]
     public partial class Comment
     {
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
-        public int CommentBankId { get; set; }
+        public Guid CommentBankId { get; set; }
 
         [Required]
         public string Value { get; set; }

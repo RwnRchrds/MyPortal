@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Database.Models
@@ -6,11 +7,13 @@ namespace MyPortal.Database.Models
     [Table("CommunicationLog")]
     public class CommunicationLog
     {
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
-        public int PersonId { get; set; }
+        public Guid PersonId { get; set; }
 
-        public int CommunicationTypeId { get; set; }
+        public Guid CommunicationTypeId { get; set; }
 
         public DateTime Date { get; set; }
 

@@ -15,7 +15,9 @@ namespace MyPortal.Database.Models
             DiaryEvents = new HashSet<DiaryEvent>();
         }
 
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
         [Required]
         [StringLength(256)]

@@ -8,6 +8,6 @@ namespace MyPortal.Database.Interfaces
     public interface IReadRepository<TEntity> where TEntity : class
     {
         Task<IEnumerable<TEntity>> GetAll();
-        Task<TEntity> GetById(int id);
+        Task<TEntity> GetById(Guid id);
     }
 }

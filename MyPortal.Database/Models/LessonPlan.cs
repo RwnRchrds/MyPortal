@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -6,11 +7,13 @@ namespace MyPortal.Database.Models
     [Table("LessonPlan")]
     public partial class LessonPlan
     {
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
-        public int StudyTopicId { get; set; }
+        public Guid StudyTopicId { get; set; }
 
-        public int AuthorId { get; set; }
+        public Guid AuthorId { get; set; }
 
         [Required]
         [StringLength(256)]

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Database.Models
@@ -11,10 +13,12 @@ namespace MyPortal.Database.Models
             Incidents = new HashSet<IncidentDetention>();
         }
 
-        public int Id { get; set; }
-        public int DetentionTypeId { get; set; }
-        public int EventId { get; set; }
-        public int? SupervisorId { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+        public Guid DetentionTypeId { get; set; }
+        public Guid EventId { get; set; }
+        public Guid? SupervisorId { get; set; }
 
         public virtual DetentionType Type { get; set; }
         public virtual DiaryEvent Event { get; set; }

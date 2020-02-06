@@ -1,15 +1,19 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Database.Models
 {
     [Table("PersonAttachment")]
     public class PersonAttachment
     {
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
-        public int PersonId { get; set; }
+        public Guid PersonId { get; set; }
 
-        public int DocumentId { get; set; }
+        public Guid DocumentId { get; set; }
 
         public virtual Document Document { get; set; }
 

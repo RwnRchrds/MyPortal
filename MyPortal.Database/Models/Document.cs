@@ -14,9 +14,11 @@ namespace MyPortal.Database.Models
             
         }
 
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
-        public int TypeId { get; set; }
+        public Guid TypeId { get; set; }
 
         [Required]
         [StringLength(128)]
@@ -29,7 +31,7 @@ namespace MyPortal.Database.Models
         [Url]
         public string DownloadUrl { get; set; } 
 
-        public int UploaderId { get; set; }
+        public Guid UploaderId { get; set; }
 
         [Column(TypeName = "date")]
         public DateTime UploadedDate { get; set; }

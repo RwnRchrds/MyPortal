@@ -1,14 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Database.Models
 {
     [Table("StudentContact")]
     public class StudentContact
     {
-        public int Id { get; set; }
-        public int RelationshipTypeId { get; set; }
-        public int StudentId { get; set; }
-        public int ContactId { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+        public Guid RelationshipTypeId { get; set; }
+        public Guid StudentId { get; set; }
+        public Guid ContactId { get; set; }
 
         public bool Correspondence { get; set; }
         public bool ParentalResponsibility { get; set; }

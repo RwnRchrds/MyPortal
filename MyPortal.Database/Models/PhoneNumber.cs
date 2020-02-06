@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Database.Models
@@ -6,9 +7,11 @@ namespace MyPortal.Database.Models
     [Table("PhoneNumber")]
     public class PhoneNumber
     {
-        public int Id { get; set; }
-        public int TypeId { get; set; }
-        public int PersonId { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+        public Guid TypeId { get; set; }
+        public Guid PersonId { get; set; }
 
         [Phone]
         [StringLength(128)]

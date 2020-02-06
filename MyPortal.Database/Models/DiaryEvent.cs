@@ -13,9 +13,11 @@ namespace MyPortal.Database.Models
             Attendees = new HashSet<DiaryEventAttendee>();
         }
 
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
-        public int EventTypeId { get; set; }
+        public Guid EventTypeId { get; set; }
 
         [Required]
         [StringLength(256)]

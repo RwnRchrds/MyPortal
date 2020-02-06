@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Database.Models
@@ -6,9 +7,11 @@ namespace MyPortal.Database.Models
     [Table("GiftedTalented")]
     public class GiftedTalented
     {
-        public int Id { get; set; }
-        public int StudentId { get; set; }
-        public int SubjectId { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+        public Guid StudentId { get; set; }
+        public Guid SubjectId { get; set; }
 
         [Required]
         public string Notes { get; set; }

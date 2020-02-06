@@ -7,11 +7,13 @@ namespace MyPortal.Database.Models
     [Table("MedicalEvent")]
     public class MedicalEvent
     {
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
-        public int StudentId { get; set; }
+        public Guid StudentId { get; set; }
 
-        public int RecordedById { get; set; }
+        public Guid RecordedById { get; set; }
 
         [Column(TypeName = "date")]
         public DateTime Date { get; set; }

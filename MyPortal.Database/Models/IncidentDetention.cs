@@ -1,13 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Database.Models
 {
     [Table("IncidentDetention")]
     public class IncidentDetention
     {
-        public int Id { get; set; }
-        public int IncidentId { get; set; }
-        public int DetentionId { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+        public Guid IncidentId { get; set; }
+        public Guid DetentionId { get; set; }
 
         public virtual Incident Incident { get; set; }
         public virtual Detention Detention { get; set; }

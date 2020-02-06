@@ -38,7 +38,7 @@ namespace MyPortal.Database.Repositories
             return await Connection.QueryAsync<Achievement>(sql);
         }
 
-        public async Task<Achievement> GetById(int id)
+        public async Task<Achievement> GetById(Guid id)
         {
             throw new NotImplementedException();
         }

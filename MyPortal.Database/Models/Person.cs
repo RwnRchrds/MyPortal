@@ -30,7 +30,9 @@ namespace MyPortal.Database.Models
             DiaryEventInvitations = new HashSet<DiaryEventAttendee>();
         }
 
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
         [StringLength(128)]
         public string Title { get; set; }
@@ -61,7 +63,7 @@ namespace MyPortal.Database.Models
         [Column(TypeName = "date")] 
         public DateTime? Deceased { get; set; }
 
-        public string UserId { get; set; }
+        public Guid? UserId { get; set; }
 
         public bool Deleted { get; set; }
 

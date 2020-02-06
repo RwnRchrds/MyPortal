@@ -1,3 +1,5 @@
+using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Database.Models
@@ -5,11 +7,13 @@ namespace MyPortal.Database.Models
     [Table("BasketItem")]
     public partial class BasketItem
     {
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
-        public int StudentId { get; set; }
+        public Guid StudentId { get; set; }
 
-        public int ProductId { get; set; }
+        public Guid ProductId { get; set; }
 
         public virtual Student Student { get; set; }
 

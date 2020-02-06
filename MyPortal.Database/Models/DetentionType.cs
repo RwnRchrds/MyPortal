@@ -13,7 +13,9 @@ namespace MyPortal.Database.Models
             Detentions = new HashSet<Detention>();
         }
 
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
         [Required]
         [StringLength(256)]

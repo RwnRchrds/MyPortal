@@ -1,50 +1,17 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace MyPortalCore.Data.Migrations
+namespace MyPortal.Database.Migrations
 {
-    public partial class AddedMyPortalModels : Migration
+    public partial class InitialModel : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<string>(
-                name: "Name",
-                table: "AspNetUserTokens",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(128)",
-                oldMaxLength: 128);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "LoginProvider",
-                table: "AspNetUserTokens",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(128)",
-                oldMaxLength: 128);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "ProviderKey",
-                table: "AspNetUserLogins",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(128)",
-                oldMaxLength: 128);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "LoginProvider",
-                table: "AspNetUserLogins",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(128)",
-                oldMaxLength: 128);
-
             migrationBuilder.CreateTable(
                 name: "AcademicYear",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Name = table.Column<string>(maxLength: 128, nullable: false),
                     FirstDate = table.Column<DateTime>(type: "date", nullable: false),
                     LastDate = table.Column<DateTime>(type: "date", nullable: false)
@@ -58,8 +25,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "AchievementType",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 256, nullable: false),
                     DefaultPoints = table.Column<int>(nullable: false),
                     System = table.Column<bool>(nullable: false)
@@ -73,8 +39,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "Address",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     HouseNumber = table.Column<string>(maxLength: 128, nullable: true),
                     HouseName = table.Column<string>(maxLength: 128, nullable: true),
                     Apartment = table.Column<string>(maxLength: 128, nullable: true),
@@ -95,8 +60,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "AspectType",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 256, nullable: false)
                 },
                 constraints: table =>
@@ -105,12 +69,49 @@ namespace MyPortalCore.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AspNetRoles",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Name = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRoles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    UserName = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
+                    Email = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(nullable: false),
+                    PasswordHash = table.Column<string>(nullable: true),
+                    SecurityStamp = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    PhoneNumber = table.Column<string>(nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
+                    LockoutEnabled = table.Column<bool>(nullable: false),
+                    AccessFailedCount = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AttendanceCodeMeaning",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Code = table.Column<string>(maxLength: 128, nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 256, nullable: false)
                 },
                 constraints: table =>
@@ -122,8 +123,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "AttendancePeriod",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Weekday = table.Column<int>(nullable: false),
                     Name = table.Column<string>(maxLength: 128, nullable: false),
                     StartTime = table.Column<TimeSpan>(type: "time(2)", nullable: false),
@@ -140,8 +140,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "CommentBank",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Name = table.Column<string>(maxLength: 128, nullable: false),
                     System = table.Column<bool>(nullable: false),
                     Active = table.Column<bool>(nullable: false)
@@ -155,8 +154,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "CommunicationType",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 128, nullable: false)
                 },
                 constraints: table =>
@@ -168,8 +166,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "DetentionType",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 256, nullable: false),
                     StartTime = table.Column<TimeSpan>(type: "time(2)", nullable: false),
                     EndTime = table.Column<TimeSpan>(type: "time(2)", nullable: false)
@@ -183,8 +180,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "DiaryEventInvitationResponse",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 256, nullable: false)
                 },
                 constraints: table =>
@@ -196,8 +192,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "DiaryEventType",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 256, nullable: false),
                     ColourCode = table.Column<string>(maxLength: 128, nullable: true)
                 },
@@ -210,8 +205,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "DietaryRequirement",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 128, nullable: false)
                 },
                 constraints: table =>
@@ -223,8 +217,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "DocumentType",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 128, nullable: false),
                     Person = table.Column<bool>(nullable: false),
                     General = table.Column<bool>(nullable: false),
@@ -239,8 +232,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "EmailAddressType",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 256, nullable: false)
                 },
                 constraints: table =>
@@ -252,8 +244,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "GovernanceType",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 128, nullable: false)
                 },
                 constraints: table =>
@@ -265,8 +256,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "GradeSet",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Name = table.Column<string>(maxLength: 256, nullable: false),
                     Active = table.Column<bool>(nullable: false),
                     System = table.Column<bool>(nullable: false)
@@ -280,8 +270,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "Homework",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Title = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true)
                 },
@@ -294,8 +283,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "IncidentType",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 256, nullable: false),
                     System = table.Column<bool>(nullable: false),
                     DefaultPoints = table.Column<int>(nullable: false)
@@ -309,8 +297,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "IntakeType",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 128, nullable: false)
                 },
                 constraints: table =>
@@ -322,8 +309,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "LessonPlanTemplate",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Name = table.Column<string>(maxLength: 256, nullable: false),
                     PlanTemplate = table.Column<string>(nullable: false)
                 },
@@ -336,8 +322,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "LocalAuthority",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     LeaCode = table.Column<int>(nullable: false),
                     Name = table.Column<string>(maxLength: 128, nullable: false),
                     Website = table.Column<string>(nullable: true)
@@ -351,8 +336,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "Location",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 128, nullable: false),
                     System = table.Column<bool>(nullable: false)
                 },
@@ -365,8 +349,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "MedicalCondition",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 128, nullable: false),
                     System = table.Column<bool>(nullable: false)
                 },
@@ -379,8 +362,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "ObservationOutcome",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 256, nullable: false),
                     ColourCode = table.Column<string>(maxLength: 128, nullable: true)
                 },
@@ -390,40 +372,10 @@ namespace MyPortalCore.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Person",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(maxLength: 128, nullable: true),
-                    FirstName = table.Column<string>(maxLength: 256, nullable: false),
-                    MiddleName = table.Column<string>(maxLength: 256, nullable: true),
-                    PhotoId = table.Column<int>(nullable: true),
-                    NhsNumber = table.Column<string>(maxLength: 256, nullable: true),
-                    LastName = table.Column<string>(maxLength: 256, nullable: false),
-                    Gender = table.Column<string>(unicode: false, fixedLength: true, maxLength: 1, nullable: false),
-                    Dob = table.Column<DateTime>(type: "date", nullable: true),
-                    Deceased = table.Column<DateTime>(type: "date", nullable: true),
-                    UserId = table.Column<string>(nullable: true),
-                    Deleted = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Person", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Person_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Phase",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 128, nullable: false)
                 },
                 constraints: table =>
@@ -435,8 +387,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "PhoneNumberType",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 128, nullable: false)
                 },
                 constraints: table =>
@@ -448,8 +399,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "ProductType",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 128, nullable: false),
                     IsMeal = table.Column<bool>(nullable: false),
                     System = table.Column<bool>(nullable: false)
@@ -463,8 +413,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "ProfileLogNoteType",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Name = table.Column<string>(maxLength: 128, nullable: false),
                     ColourCode = table.Column<string>(maxLength: 128, nullable: true)
                 },
@@ -477,8 +426,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "RelationshipType",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 128, nullable: false)
                 },
                 constraints: table =>
@@ -490,8 +438,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "ResultSet",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Name = table.Column<string>(maxLength: 256, nullable: false),
                     Active = table.Column<bool>(nullable: false)
                 },
@@ -504,8 +451,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "SchoolType",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 128, nullable: false)
                 },
                 constraints: table =>
@@ -517,8 +463,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "SenEventType",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 128, nullable: false)
                 },
                 constraints: table =>
@@ -530,8 +475,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "SenProvisionType",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 128, nullable: false)
                 },
                 constraints: table =>
@@ -543,8 +487,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "SenReviewType",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 128, nullable: false)
                 },
                 constraints: table =>
@@ -556,8 +499,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "SenStatus",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Code = table.Column<string>(unicode: false, fixedLength: true, maxLength: 1, nullable: false),
                     Description = table.Column<string>(maxLength: 128, nullable: false)
                 },
@@ -570,8 +512,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "Subject",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Name = table.Column<string>(maxLength: 256, nullable: false),
                     Code = table.Column<string>(maxLength: 128, nullable: false),
                     Deleted = table.Column<bool>(nullable: false)
@@ -585,8 +526,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "SubjectStaffMemberRole",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -598,8 +538,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "SystemArea",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 128, nullable: false)
                 },
                 constraints: table =>
@@ -611,8 +550,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "TrainingCertificateStatus",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 256, nullable: false),
                     ColourCode = table.Column<string>(maxLength: 128, nullable: true)
                 },
@@ -625,8 +563,7 @@ namespace MyPortalCore.Data.Migrations
                 name: "TrainingCourse",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Code = table.Column<string>(maxLength: 128, nullable: false),
                     Description = table.Column<string>(maxLength: 128, nullable: false)
                 },
@@ -639,9 +576,8 @@ namespace MyPortalCore.Data.Migrations
                 name: "AttendanceWeek",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AcademicYearId = table.Column<int>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    AcademicYearId = table.Column<Guid>(nullable: false),
                     Beginning = table.Column<DateTime>(type: "date", nullable: false),
                     IsHoliday = table.Column<bool>(nullable: false),
                     IsNonTimetable = table.Column<bool>(nullable: false)
@@ -658,14 +594,147 @@ namespace MyPortalCore.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AttendanceCode",
+                name: "AspNetRoleClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    RoleId = table.Column<Guid>(nullable: false),
+                    ClaimType = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<Guid>(nullable: false),
+                    ClaimType = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserClaims_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserLogins",
+                columns: table => new
+                {
+                    LoginProvider = table.Column<string>(nullable: false),
+                    ProviderKey = table.Column<string>(nullable: false),
+                    ProviderDisplayName = table.Column<string>(nullable: true),
+                    UserId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserLogins_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserRoles",
+                columns: table => new
+                {
+                    UserId = table.Column<Guid>(nullable: false),
+                    RoleId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserTokens",
+                columns: table => new
+                {
+                    UserId = table.Column<Guid>(nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    Value = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserTokens_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Person",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    Title = table.Column<string>(maxLength: 128, nullable: true),
+                    FirstName = table.Column<string>(maxLength: 256, nullable: false),
+                    MiddleName = table.Column<string>(maxLength: 256, nullable: true),
+                    PhotoId = table.Column<int>(nullable: true),
+                    NhsNumber = table.Column<string>(maxLength: 256, nullable: true),
+                    LastName = table.Column<string>(maxLength: 256, nullable: false),
+                    Gender = table.Column<string>(unicode: false, fixedLength: true, maxLength: 1, nullable: false),
+                    Dob = table.Column<DateTime>(type: "date", nullable: true),
+                    Deceased = table.Column<DateTime>(type: "date", nullable: true),
+                    UserId = table.Column<Guid>(nullable: true),
+                    Deleted = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Person", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Person_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AttendanceCode",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Code = table.Column<string>(maxLength: 1, nullable: false),
                     Description = table.Column<string>(maxLength: 128, nullable: false),
-                    MeaningId = table.Column<int>(nullable: false),
+                    MeaningId = table.Column<Guid>(nullable: false),
                     DoNotUse = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -683,9 +752,8 @@ namespace MyPortalCore.Data.Migrations
                 name: "Comment",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CommentBankId = table.Column<int>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    CommentBankId = table.Column<Guid>(nullable: false),
                     Value = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
@@ -703,10 +771,9 @@ namespace MyPortalCore.Data.Migrations
                 name: "CommunicationLog",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PersonId = table.Column<int>(nullable: false),
-                    CommunicationTypeId = table.Column<int>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    PersonId = table.Column<Guid>(nullable: false),
+                    CommunicationTypeId = table.Column<Guid>(nullable: false),
                     Date = table.Column<DateTime>(nullable: false),
                     Note = table.Column<string>(nullable: true)
                 },
@@ -725,9 +792,8 @@ namespace MyPortalCore.Data.Migrations
                 name: "DiaryEvent",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    EventTypeId = table.Column<int>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    EventTypeId = table.Column<Guid>(nullable: false),
                     Subject = table.Column<string>(maxLength: 256, nullable: false),
                     Description = table.Column<string>(maxLength: 256, nullable: true),
                     Location = table.Column<string>(maxLength: 256, nullable: true),
@@ -753,9 +819,8 @@ namespace MyPortalCore.Data.Migrations
                 name: "DiaryEventTemplate",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    EventTypeId = table.Column<int>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    EventTypeId = table.Column<Guid>(nullable: false),
                     Description = table.Column<string>(maxLength: 256, nullable: false),
                     Minutes = table.Column<int>(nullable: false),
                     Hours = table.Column<int>(nullable: false),
@@ -776,10 +841,9 @@ namespace MyPortalCore.Data.Migrations
                 name: "Aspect",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TypeId = table.Column<int>(nullable: false),
-                    GradeSetId = table.Column<int>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    TypeId = table.Column<Guid>(nullable: false),
+                    GradeSetId = table.Column<Guid>(nullable: false),
                     Description = table.Column<string>(maxLength: 256, nullable: false),
                     Active = table.Column<bool>(nullable: false)
                 },
@@ -804,9 +868,8 @@ namespace MyPortalCore.Data.Migrations
                 name: "Grade",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    GradeSetId = table.Column<int>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    GradeSetId = table.Column<Guid>(nullable: false),
                     Code = table.Column<string>(maxLength: 128, nullable: false),
                     Value = table.Column<int>(nullable: false),
                     System = table.Column<bool>(nullable: false)
@@ -823,13 +886,77 @@ namespace MyPortalCore.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Product",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    ProductTypeId = table.Column<Guid>(nullable: false),
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    Visible = table.Column<bool>(nullable: false),
+                    OnceOnly = table.Column<bool>(nullable: false),
+                    Deleted = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Product", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Product_ProductType_ProductTypeId",
+                        column: x => x.ProductTypeId,
+                        principalTable: "ProductType",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Report",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    AreaId = table.Column<Guid>(nullable: false),
+                    Name = table.Column<string>(maxLength: 128, nullable: false),
+                    Description = table.Column<string>(maxLength: 128, nullable: false),
+                    Restricted = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Report", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Report_SystemArea_AreaId",
+                        column: x => x.AreaId,
+                        principalTable: "SystemArea",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SystemResource",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    AreaId = table.Column<Guid>(nullable: false),
+                    TableName = table.Column<string>(maxLength: 128, nullable: false),
+                    Name = table.Column<string>(maxLength: 256, nullable: false),
+                    HasPermissions = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SystemResource", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SystemResource_SystemArea_AreaId",
+                        column: x => x.AreaId,
+                        principalTable: "SystemArea",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AddressPerson",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AddressId = table.Column<int>(nullable: false),
-                    PersonId = table.Column<int>(nullable: false)
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    AddressId = table.Column<Guid>(nullable: false),
+                    PersonId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -852,9 +979,8 @@ namespace MyPortalCore.Data.Migrations
                 name: "Contact",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PersonId = table.Column<int>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    PersonId = table.Column<Guid>(nullable: false),
                     ParentalBallot = table.Column<bool>(nullable: false),
                     PlaceOfWork = table.Column<string>(maxLength: 256, nullable: true),
                     JobTitle = table.Column<string>(maxLength: 256, nullable: true),
@@ -875,10 +1001,9 @@ namespace MyPortalCore.Data.Migrations
                 name: "EmailAddress",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TypeId = table.Column<int>(nullable: false),
-                    PersonId = table.Column<int>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    TypeId = table.Column<Guid>(nullable: false),
+                    PersonId = table.Column<Guid>(nullable: false),
                     Address = table.Column<string>(maxLength: 128, nullable: false),
                     Main = table.Column<bool>(nullable: false),
                     Primary = table.Column<bool>(nullable: false),
@@ -905,10 +1030,9 @@ namespace MyPortalCore.Data.Migrations
                 name: "PersonCondition",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PersonId = table.Column<int>(nullable: false),
-                    ConditionId = table.Column<int>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    PersonId = table.Column<Guid>(nullable: false),
+                    ConditionId = table.Column<Guid>(nullable: false),
                     MedicationTaken = table.Column<bool>(nullable: false),
                     Medication = table.Column<string>(maxLength: 256, nullable: true)
                 },
@@ -933,10 +1057,9 @@ namespace MyPortalCore.Data.Migrations
                 name: "PersonDietaryRequirement",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PersonId = table.Column<int>(nullable: false),
-                    DietaryRequirementId = table.Column<int>(nullable: false)
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    PersonId = table.Column<Guid>(nullable: false),
+                    DietaryRequirementId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -956,62 +1079,12 @@ namespace MyPortalCore.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "StaffMember",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PersonId = table.Column<int>(nullable: false),
-                    Code = table.Column<string>(maxLength: 128, nullable: false),
-                    NiNumber = table.Column<string>(maxLength: 128, nullable: true),
-                    PostNominal = table.Column<string>(maxLength: 128, nullable: true),
-                    TeachingStaff = table.Column<bool>(nullable: false),
-                    Deleted = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StaffMember", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_StaffMember_Person_PersonId",
-                        column: x => x.PersonId,
-                        principalTable: "Person",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Task",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AssignedToId = table.Column<int>(nullable: false),
-                    CreatedDate = table.Column<DateTime>(nullable: false),
-                    DueDate = table.Column<DateTime>(nullable: true),
-                    Title = table.Column<string>(maxLength: 128, nullable: false),
-                    Description = table.Column<string>(maxLength: 256, nullable: true),
-                    Personal = table.Column<bool>(nullable: false),
-                    Completed = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Task", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Task_Person_AssignedToId",
-                        column: x => x.AssignedToId,
-                        principalTable: "Person",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "PhoneNumber",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TypeId = table.Column<int>(nullable: false),
-                    PersonId = table.Column<int>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    TypeId = table.Column<Guid>(nullable: false),
+                    PersonId = table.Column<Guid>(nullable: false),
                     Number = table.Column<string>(maxLength: 128, nullable: true)
                 },
                 constraints: table =>
@@ -1032,45 +1105,20 @@ namespace MyPortalCore.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Product",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductTypeId = table.Column<int>(nullable: false),
-                    Description = table.Column<string>(maxLength: 256, nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
-                    Visible = table.Column<bool>(nullable: false),
-                    OnceOnly = table.Column<bool>(nullable: false),
-                    Deleted = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Product", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Product_ProductType_ProductTypeId",
-                        column: x => x.ProductTypeId,
-                        principalTable: "ProductType",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "School",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Name = table.Column<string>(maxLength: 256, nullable: false),
-                    LocalAuthorityId = table.Column<int>(nullable: false),
+                    LocalAuthorityId = table.Column<Guid>(nullable: false),
                     EstablishmentNumber = table.Column<int>(nullable: false),
                     Urn = table.Column<string>(maxLength: 128, nullable: false),
                     Uprn = table.Column<string>(maxLength: 128, nullable: false),
-                    PhaseId = table.Column<int>(nullable: false),
-                    TypeId = table.Column<int>(nullable: false),
-                    GovernanceTypeId = table.Column<int>(nullable: false),
-                    IntakeTypeId = table.Column<int>(nullable: false),
-                    HeadTeacherId = table.Column<int>(nullable: true),
+                    PhaseId = table.Column<Guid>(nullable: false),
+                    TypeId = table.Column<Guid>(nullable: false),
+                    GovernanceTypeId = table.Column<Guid>(nullable: false),
+                    IntakeTypeId = table.Column<Guid>(nullable: false),
+                    HeadTeacherId = table.Column<Guid>(nullable: true),
                     TelephoneNo = table.Column<string>(maxLength: 128, nullable: true),
                     FaxNo = table.Column<string>(maxLength: 128, nullable: true),
                     EmailAddress = table.Column<string>(maxLength: 128, nullable: true),
@@ -1119,23 +1167,48 @@ namespace MyPortalCore.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Report",
+                name: "StaffMember",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AreaId = table.Column<int>(nullable: false),
-                    Name = table.Column<string>(maxLength: 128, nullable: false),
-                    Description = table.Column<string>(maxLength: 128, nullable: false),
-                    Restricted = table.Column<bool>(nullable: false)
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    PersonId = table.Column<Guid>(nullable: false),
+                    Code = table.Column<string>(maxLength: 128, nullable: false),
+                    NiNumber = table.Column<string>(maxLength: 128, nullable: true),
+                    PostNominal = table.Column<string>(maxLength: 128, nullable: true),
+                    TeachingStaff = table.Column<bool>(nullable: false),
+                    Deleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Report", x => x.Id);
+                    table.PrimaryKey("PK_StaffMember", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Report_SystemArea_AreaId",
-                        column: x => x.AreaId,
-                        principalTable: "SystemArea",
+                        name: "FK_StaffMember_Person_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "Person",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Task",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    AssignedToId = table.Column<Guid>(nullable: false),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    DueDate = table.Column<DateTime>(nullable: true),
+                    Title = table.Column<string>(maxLength: 128, nullable: false),
+                    Description = table.Column<string>(maxLength: 256, nullable: true),
+                    Personal = table.Column<bool>(nullable: false),
+                    Completed = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Task", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Task_Person_AssignedToId",
+                        column: x => x.AssignedToId,
+                        principalTable: "Person",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -1144,11 +1217,10 @@ namespace MyPortalCore.Data.Migrations
                 name: "DiaryEventAttendee",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    EventId = table.Column<int>(nullable: false),
-                    PersonId = table.Column<int>(nullable: false),
-                    ResponseId = table.Column<int>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    EventId = table.Column<Guid>(nullable: false),
+                    PersonId = table.Column<Guid>(nullable: false),
+                    ResponseId = table.Column<Guid>(nullable: false),
                     Required = table.Column<bool>(nullable: false),
                     Attended = table.Column<bool>(nullable: false)
                 },
@@ -1176,12 +1248,32 @@ namespace MyPortalCore.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AspNetPermissions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    ResourceId = table.Column<Guid>(nullable: false),
+                    ShortDescription = table.Column<string>(maxLength: 128, nullable: false),
+                    FullDescription = table.Column<string>(maxLength: 256, nullable: false),
+                    ClaimValue = table.Column<string>(maxLength: 128, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetPermissions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetPermissions_SystemResource_ResourceId",
+                        column: x => x.ResourceId,
+                        principalTable: "SystemResource",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Bulletin",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AuthorId = table.Column<int>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    AuthorId = table.Column<Guid>(nullable: false),
                     CreateDate = table.Column<DateTime>(nullable: false),
                     ExpireDate = table.Column<DateTime>(nullable: true),
                     Title = table.Column<string>(maxLength: 128, nullable: false),
@@ -1204,11 +1296,10 @@ namespace MyPortalCore.Data.Migrations
                 name: "Detention",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    DetentionTypeId = table.Column<int>(nullable: false),
-                    EventId = table.Column<int>(nullable: false),
-                    SupervisorId = table.Column<int>(nullable: true)
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    DetentionTypeId = table.Column<Guid>(nullable: false),
+                    EventId = table.Column<Guid>(nullable: false),
+                    SupervisorId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1237,13 +1328,12 @@ namespace MyPortalCore.Data.Migrations
                 name: "Document",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TypeId = table.Column<int>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    TypeId = table.Column<Guid>(nullable: false),
                     Title = table.Column<string>(maxLength: 128, nullable: false),
                     Description = table.Column<string>(maxLength: 256, nullable: true),
                     DownloadUrl = table.Column<string>(nullable: false),
-                    UploaderId = table.Column<int>(nullable: false),
+                    UploaderId = table.Column<Guid>(nullable: false),
                     UploadedDate = table.Column<DateTime>(type: "date", nullable: false),
                     NonPublic = table.Column<bool>(nullable: false),
                     Approved = table.Column<bool>(nullable: false),
@@ -1270,10 +1360,9 @@ namespace MyPortalCore.Data.Migrations
                 name: "House",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Name = table.Column<string>(maxLength: 128, nullable: false),
-                    HeadId = table.Column<int>(nullable: false),
+                    HeadId = table.Column<Guid>(nullable: false),
                     ColourCode = table.Column<string>(maxLength: 128, nullable: true)
                 },
                 constraints: table =>
@@ -1291,12 +1380,11 @@ namespace MyPortalCore.Data.Migrations
                 name: "Observation",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Date = table.Column<DateTime>(type: "date", nullable: false),
-                    ObserveeId = table.Column<int>(nullable: false),
-                    ObserverId = table.Column<int>(nullable: false),
-                    OutcomeId = table.Column<int>(nullable: false)
+                    ObserveeId = table.Column<Guid>(nullable: false),
+                    ObserverId = table.Column<Guid>(nullable: false),
+                    OutcomeId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1325,11 +1413,10 @@ namespace MyPortalCore.Data.Migrations
                 name: "SubjectStaffMember",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SubjectId = table.Column<int>(nullable: false),
-                    StaffMemberId = table.Column<int>(nullable: false),
-                    RoleId = table.Column<int>(nullable: false)
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    SubjectId = table.Column<Guid>(nullable: false),
+                    StaffMemberId = table.Column<Guid>(nullable: false),
+                    RoleId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1358,11 +1445,10 @@ namespace MyPortalCore.Data.Migrations
                 name: "TrainingCertificate",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CourseId = table.Column<int>(nullable: false),
-                    StaffId = table.Column<int>(nullable: false),
-                    StatusId = table.Column<int>(nullable: false)
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    CourseId = table.Column<Guid>(nullable: false),
+                    StaffId = table.Column<Guid>(nullable: false),
+                    StatusId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1391,10 +1477,9 @@ namespace MyPortalCore.Data.Migrations
                 name: "YearGroup",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Name = table.Column<string>(maxLength: 256, nullable: false),
-                    HeadId = table.Column<int>(nullable: false),
+                    HeadId = table.Column<Guid>(nullable: false),
                     KeyStage = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -1412,10 +1497,9 @@ namespace MyPortalCore.Data.Migrations
                 name: "HomeworkSubmission",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    HomeworkId = table.Column<int>(nullable: false),
-                    TaskId = table.Column<int>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    HomeworkId = table.Column<Guid>(nullable: false),
+                    TaskId = table.Column<Guid>(nullable: false),
                     MaxPoints = table.Column<int>(nullable: false),
                     PointsAchieved = table.Column<int>(nullable: false),
                     Comments = table.Column<string>(nullable: true)
@@ -1441,10 +1525,9 @@ namespace MyPortalCore.Data.Migrations
                 name: "HomeworkAttachment",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    HomeworkId = table.Column<int>(nullable: false),
-                    DocumentId = table.Column<int>(nullable: false)
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    HomeworkId = table.Column<Guid>(nullable: false),
+                    DocumentId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1467,10 +1550,9 @@ namespace MyPortalCore.Data.Migrations
                 name: "PersonAttachment",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PersonId = table.Column<int>(nullable: false),
-                    DocumentId = table.Column<int>(nullable: false)
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    PersonId = table.Column<Guid>(nullable: false),
+                    DocumentId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1493,13 +1575,12 @@ namespace MyPortalCore.Data.Migrations
                 name: "Class",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AcademicYearId = table.Column<int>(nullable: false),
-                    SubjectId = table.Column<int>(nullable: true),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    AcademicYearId = table.Column<Guid>(nullable: false),
+                    SubjectId = table.Column<Guid>(nullable: true),
                     Name = table.Column<string>(maxLength: 128, nullable: false),
-                    TeacherId = table.Column<int>(nullable: false),
-                    YearGroupId = table.Column<int>(nullable: true)
+                    TeacherId = table.Column<Guid>(nullable: false),
+                    YearGroupId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1534,11 +1615,10 @@ namespace MyPortalCore.Data.Migrations
                 name: "RegGroup",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Name = table.Column<string>(maxLength: 128, nullable: false),
-                    TutorId = table.Column<int>(nullable: false),
-                    YearGroupId = table.Column<int>(nullable: false)
+                    TutorId = table.Column<Guid>(nullable: false),
+                    YearGroupId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1561,10 +1641,9 @@ namespace MyPortalCore.Data.Migrations
                 name: "StudyTopic",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SubjectId = table.Column<int>(nullable: false),
-                    YearGroupId = table.Column<int>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    SubjectId = table.Column<Guid>(nullable: false),
+                    YearGroupId = table.Column<Guid>(nullable: false),
                     Name = table.Column<string>(maxLength: 256, nullable: false)
                 },
                 constraints: table =>
@@ -1588,10 +1667,9 @@ namespace MyPortalCore.Data.Migrations
                 name: "Session",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ClassId = table.Column<int>(nullable: false),
-                    PeriodId = table.Column<int>(nullable: false)
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    ClassId = table.Column<Guid>(nullable: false),
+                    PeriodId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1614,12 +1692,11 @@ namespace MyPortalCore.Data.Migrations
                 name: "Student",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PersonId = table.Column<int>(nullable: false),
-                    RegGroupId = table.Column<int>(nullable: false),
-                    YearGroupId = table.Column<int>(nullable: false),
-                    HouseId = table.Column<int>(nullable: true),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    PersonId = table.Column<Guid>(nullable: false),
+                    RegGroupId = table.Column<Guid>(nullable: false),
+                    YearGroupId = table.Column<Guid>(nullable: false),
+                    HouseId = table.Column<Guid>(nullable: true),
                     CandidateNumber = table.Column<string>(maxLength: 128, nullable: true),
                     AdmissionNumber = table.Column<int>(nullable: false),
                     DateStarting = table.Column<DateTime>(type: "date", nullable: true),
@@ -1627,7 +1704,7 @@ namespace MyPortalCore.Data.Migrations
                     AccountBalance = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     FreeSchoolMeals = table.Column<bool>(nullable: false),
                     GiftedAndTalented = table.Column<bool>(nullable: false),
-                    SenStatusId = table.Column<int>(nullable: true),
+                    SenStatusId = table.Column<Guid>(nullable: true),
                     PupilPremium = table.Column<bool>(nullable: false),
                     Upn = table.Column<string>(unicode: false, maxLength: 13, nullable: true),
                     Uci = table.Column<string>(nullable: true),
@@ -1672,10 +1749,9 @@ namespace MyPortalCore.Data.Migrations
                 name: "LessonPlan",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    StudyTopicId = table.Column<int>(nullable: false),
-                    AuthorId = table.Column<int>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    StudyTopicId = table.Column<Guid>(nullable: false),
+                    AuthorId = table.Column<Guid>(nullable: false),
                     Title = table.Column<string>(maxLength: 256, nullable: false),
                     LearningObjectives = table.Column<string>(nullable: false),
                     PlanContent = table.Column<string>(nullable: false),
@@ -1702,13 +1778,12 @@ namespace MyPortalCore.Data.Migrations
                 name: "Achievement",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AcademicYearId = table.Column<int>(nullable: false),
-                    AchievementTypeId = table.Column<int>(nullable: false),
-                    StudentId = table.Column<int>(nullable: false),
-                    LocationId = table.Column<int>(nullable: false),
-                    RecordedById = table.Column<int>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    AcademicYearId = table.Column<Guid>(nullable: false),
+                    AchievementTypeId = table.Column<Guid>(nullable: false),
+                    StudentId = table.Column<Guid>(nullable: false),
+                    LocationId = table.Column<Guid>(nullable: false),
+                    RecordedById = table.Column<Guid>(nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "date", nullable: false),
                     Comments = table.Column<string>(nullable: true),
                     Points = table.Column<int>(nullable: false),
@@ -1753,11 +1828,10 @@ namespace MyPortalCore.Data.Migrations
                 name: "AttendanceMark",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    StudentId = table.Column<int>(nullable: false),
-                    WeekId = table.Column<int>(nullable: false),
-                    PeriodId = table.Column<int>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    StudentId = table.Column<Guid>(nullable: false),
+                    WeekId = table.Column<Guid>(nullable: false),
+                    PeriodId = table.Column<Guid>(nullable: false),
                     Mark = table.Column<string>(maxLength: 1, nullable: false),
                     Comments = table.Column<string>(maxLength: 256, nullable: true),
                     MinutesLate = table.Column<int>(nullable: false)
@@ -1789,10 +1863,9 @@ namespace MyPortalCore.Data.Migrations
                 name: "BasketItem",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    StudentId = table.Column<int>(nullable: false),
-                    ProductId = table.Column<int>(nullable: false)
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    StudentId = table.Column<Guid>(nullable: false),
+                    ProductId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1815,10 +1888,9 @@ namespace MyPortalCore.Data.Migrations
                 name: "Enrolment",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    StudentId = table.Column<int>(nullable: false),
-                    ClassId = table.Column<int>(nullable: false)
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    StudentId = table.Column<Guid>(nullable: false),
+                    ClassId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1841,10 +1913,9 @@ namespace MyPortalCore.Data.Migrations
                 name: "GiftedTalented",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    StudentId = table.Column<int>(nullable: false),
-                    SubjectId = table.Column<int>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    StudentId = table.Column<Guid>(nullable: false),
+                    SubjectId = table.Column<Guid>(nullable: false),
                     Notes = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
@@ -1868,13 +1939,12 @@ namespace MyPortalCore.Data.Migrations
                 name: "Incident",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AcademicYearId = table.Column<int>(nullable: false),
-                    BehaviourTypeId = table.Column<int>(nullable: false),
-                    StudentId = table.Column<int>(nullable: false),
-                    LocationId = table.Column<int>(nullable: false),
-                    RecordedById = table.Column<int>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    AcademicYearId = table.Column<Guid>(nullable: false),
+                    BehaviourTypeId = table.Column<Guid>(nullable: false),
+                    StudentId = table.Column<Guid>(nullable: false),
+                    LocationId = table.Column<Guid>(nullable: false),
+                    RecordedById = table.Column<Guid>(nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "date", nullable: false),
                     Comments = table.Column<string>(nullable: true),
                     Points = table.Column<int>(nullable: false),
@@ -1920,10 +1990,9 @@ namespace MyPortalCore.Data.Migrations
                 name: "MedicalEvent",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    StudentId = table.Column<int>(nullable: false),
-                    RecordedById = table.Column<int>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    StudentId = table.Column<Guid>(nullable: false),
+                    RecordedById = table.Column<Guid>(nullable: false),
                     Date = table.Column<DateTime>(type: "date", nullable: false),
                     Note = table.Column<string>(nullable: false)
                 },
@@ -1948,12 +2017,11 @@ namespace MyPortalCore.Data.Migrations
                 name: "ProfileLogNote",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TypeId = table.Column<int>(nullable: false),
-                    AuthorId = table.Column<int>(nullable: false),
-                    StudentId = table.Column<int>(nullable: false),
-                    AcademicYearId = table.Column<int>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    TypeId = table.Column<Guid>(nullable: false),
+                    AuthorId = table.Column<Guid>(nullable: false),
+                    StudentId = table.Column<Guid>(nullable: false),
+                    AcademicYearId = table.Column<Guid>(nullable: false),
                     Message = table.Column<string>(nullable: false),
                     Date = table.Column<DateTime>(nullable: false),
                     Deleted = table.Column<bool>(nullable: false)
@@ -1991,13 +2059,12 @@ namespace MyPortalCore.Data.Migrations
                 name: "Result",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ResultSetId = table.Column<int>(nullable: false),
-                    StudentId = table.Column<int>(nullable: false),
-                    AspectId = table.Column<int>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    ResultSetId = table.Column<Guid>(nullable: false),
+                    StudentId = table.Column<Guid>(nullable: false),
+                    AspectId = table.Column<Guid>(nullable: false),
                     Date = table.Column<DateTime>(type: "date", nullable: false),
-                    GradeId = table.Column<int>(nullable: false)
+                    GradeId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -2032,11 +2099,10 @@ namespace MyPortalCore.Data.Migrations
                 name: "Sale",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    StudentId = table.Column<int>(nullable: false),
-                    ProductId = table.Column<int>(nullable: false),
-                    AcademicYearId = table.Column<int>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    StudentId = table.Column<Guid>(nullable: false),
+                    ProductId = table.Column<Guid>(nullable: false),
+                    AcademicYearId = table.Column<Guid>(nullable: false),
                     Date = table.Column<DateTime>(nullable: false),
                     AmountPaid = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     Processed = table.Column<bool>(nullable: false),
@@ -2070,10 +2136,9 @@ namespace MyPortalCore.Data.Migrations
                 name: "SenEvent",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    StudentId = table.Column<int>(nullable: false),
-                    EventTypeId = table.Column<int>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    StudentId = table.Column<Guid>(nullable: false),
+                    EventTypeId = table.Column<Guid>(nullable: false),
                     Date = table.Column<DateTime>(type: "date", nullable: false),
                     Note = table.Column<string>(nullable: false)
                 },
@@ -2098,10 +2163,9 @@ namespace MyPortalCore.Data.Migrations
                 name: "SenProvision",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    StudentId = table.Column<int>(nullable: false),
-                    ProvisionTypeId = table.Column<int>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    StudentId = table.Column<Guid>(nullable: false),
+                    ProvisionTypeId = table.Column<Guid>(nullable: false),
                     StartDate = table.Column<DateTime>(type: "date", nullable: false),
                     EndDate = table.Column<DateTime>(type: "date", nullable: false),
                     Note = table.Column<string>(nullable: false)
@@ -2127,11 +2191,10 @@ namespace MyPortalCore.Data.Migrations
                 name: "StudentContact",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RelationshipTypeId = table.Column<int>(nullable: false),
-                    StudentId = table.Column<int>(nullable: false),
-                    ContactId = table.Column<int>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    RelationshipTypeId = table.Column<Guid>(nullable: false),
+                    StudentId = table.Column<Guid>(nullable: false),
+                    ContactId = table.Column<Guid>(nullable: false),
                     Correspondence = table.Column<bool>(nullable: false),
                     ParentalResponsibility = table.Column<bool>(nullable: false),
                     PupilReport = table.Column<bool>(nullable: false),
@@ -2164,10 +2227,9 @@ namespace MyPortalCore.Data.Migrations
                 name: "IncidentDetention",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IncidentId = table.Column<int>(nullable: false),
-                    DetentionId = table.Column<int>(nullable: false)
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    IncidentId = table.Column<Guid>(nullable: false),
+                    DetentionId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -2225,6 +2287,50 @@ namespace MyPortalCore.Data.Migrations
                 name: "IX_Aspect_TypeId",
                 table: "Aspect",
                 column: "TypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetPermissions_ResourceId",
+                table: "AspNetPermissions",
+                column: "ResourceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetRoleClaims_RoleId",
+                table: "AspNetRoleClaims",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "RoleNameIndex",
+                table: "AspNetRoles",
+                column: "NormalizedName",
+                unique: true,
+                filter: "[NormalizedName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserClaims_UserId",
+                table: "AspNetUserClaims",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserLogins_UserId",
+                table: "AspNetUserLogins",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserRoles_RoleId",
+                table: "AspNetUserRoles",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "EmailIndex",
+                table: "AspNetUsers",
+                column: "NormalizedEmail");
+
+            migrationBuilder.CreateIndex(
+                name: "UserNameIndex",
+                table: "AspNetUsers",
+                column: "NormalizedUserName",
+                unique: true,
+                filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AttendanceCode_MeaningId",
@@ -2741,6 +2847,11 @@ namespace MyPortalCore.Data.Migrations
                 column: "SubjectId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SystemResource_AreaId",
+                table: "SystemResource",
+                column: "AreaId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Task_AssignedToId",
                 table: "Task",
                 column: "AssignedToId");
@@ -2773,6 +2884,24 @@ namespace MyPortalCore.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "AddressPerson");
+
+            migrationBuilder.DropTable(
+                name: "AspNetPermissions");
+
+            migrationBuilder.DropTable(
+                name: "AspNetRoleClaims");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserClaims");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserLogins");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserRoles");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
                 name: "AttendanceCode");
@@ -2883,6 +3012,12 @@ namespace MyPortalCore.Data.Migrations
                 name: "Address");
 
             migrationBuilder.DropTable(
+                name: "SystemResource");
+
+            migrationBuilder.DropTable(
+                name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
                 name: "AttendanceCodeMeaning");
 
             migrationBuilder.DropTable(
@@ -2932,9 +3067,6 @@ namespace MyPortalCore.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProfileLogNoteType");
-
-            migrationBuilder.DropTable(
-                name: "SystemArea");
 
             migrationBuilder.DropTable(
                 name: "Aspect");
@@ -2991,6 +3123,9 @@ namespace MyPortalCore.Data.Migrations
                 name: "TrainingCertificateStatus");
 
             migrationBuilder.DropTable(
+                name: "SystemArea");
+
+            migrationBuilder.DropTable(
                 name: "DetentionType");
 
             migrationBuilder.DropTable(
@@ -3044,37 +3179,8 @@ namespace MyPortalCore.Data.Migrations
             migrationBuilder.DropTable(
                 name: "Person");
 
-            migrationBuilder.AlterColumn<string>(
-                name: "Name",
-                table: "AspNetUserTokens",
-                type: "nvarchar(128)",
-                maxLength: 128,
-                nullable: false,
-                oldClrType: typeof(string));
-
-            migrationBuilder.AlterColumn<string>(
-                name: "LoginProvider",
-                table: "AspNetUserTokens",
-                type: "nvarchar(128)",
-                maxLength: 128,
-                nullable: false,
-                oldClrType: typeof(string));
-
-            migrationBuilder.AlterColumn<string>(
-                name: "ProviderKey",
-                table: "AspNetUserLogins",
-                type: "nvarchar(128)",
-                maxLength: 128,
-                nullable: false,
-                oldClrType: typeof(string));
-
-            migrationBuilder.AlterColumn<string>(
-                name: "LoginProvider",
-                table: "AspNetUserLogins",
-                type: "nvarchar(128)",
-                maxLength: 128,
-                nullable: false,
-                oldClrType: typeof(string));
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

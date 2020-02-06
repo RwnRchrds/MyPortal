@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -6,13 +7,15 @@ namespace MyPortal.Database.Models
     [Table("AttendanceMark")]
     public partial class AttendanceMark
     {
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
-        public int StudentId { get; set; }
+        public Guid StudentId { get; set; }
 
-        public int WeekId { get; set; }
+        public Guid WeekId { get; set; }
 
-        public int PeriodId { get; set; }
+        public Guid PeriodId { get; set; }
 
         [Required]
         [StringLength(1)]

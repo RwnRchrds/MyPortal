@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Logic.Interfaces;
@@ -32,7 +33,7 @@ namespace MyPortal.Logic.Services
             _detentionTypeRepository = detentionTypeRepository;
         }
 
-        public async Task AddIncidentToDetention(int incidentId, int detentionId)
+        public async Task AddIncidentToDetention(Guid incidentId, Guid detentionId)
         {
             var incidentInDb = await _incidentRepository.GetByIdWithTracking(incidentId);
             var detentionInDb = await _detentionRepository.GetByIdWithTracking(detentionId);
@@ -49,15 +50,14 @@ namespace MyPortal.Logic.Services
             {
                 PersonId = incidentInDb.Student.PersonId,
                 Attended = false,
-                Required = true,
-                ResponseId = DiaryEventInvitationResponseDictionary.Accepted
+                Required = true
             });
 
             await _incidentRepository.SaveChanges();
             await _detentionRepository.SaveChanges();
         }
 
-        public async Task RemoveIncidentFromDetention(int incidentId, int detentionId)
+        public async Task RemoveIncidentFromDetention(Guid incidentId, Guid detentionId)
         {
             var incidentInDb = await _incidentRepository.GetByIdWithTracking(incidentId);
             var detentionInDb = await _detentionRepository.GetByIdWithTracking(detentionId);

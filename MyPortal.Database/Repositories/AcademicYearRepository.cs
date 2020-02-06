@@ -30,7 +30,7 @@ namespace MyPortal.Database.Repositories
             return Connection.QueryAsync<AcademicYear>(sql);
         }
 
-        public async Task<AcademicYear> GetById(int id)
+        public async Task<AcademicYear> GetById(Guid id)
         {
             var sql = $"SELECT {AllColumns} FROM {TblName} WHERE [AcademicYear].[Id] = @AcademicYearId";
 

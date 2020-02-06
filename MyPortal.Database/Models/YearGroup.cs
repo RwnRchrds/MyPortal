@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -16,13 +17,15 @@ namespace MyPortal.Database.Models
             RegGroups = new HashSet<RegGroup>();
         }
 
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
         [Required]
         [StringLength(256)]
         public string Name { get; set; }
 
-        public int HeadId { get; set; }
+        public Guid? HeadId { get; set; }
 
         public int KeyStage { get; set; }
 

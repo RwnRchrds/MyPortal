@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace MyPortal.Database.Models.Identity
 {
-    public class ApplicationRole : IdentityRole
+    public class ApplicationRole : IdentityRole<Guid>
     {
 
     }

@@ -7,13 +7,15 @@ namespace MyPortal.Database.Models
     [Table("Sale")]
     public partial class Sale
     {
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
-        public int StudentId { get; set; }
+        public Guid StudentId { get; set; }
 
-        public int ProductId { get; set; }
+        public Guid ProductId { get; set; }
 
-        public int AcademicYearId { get; set; }
+        public Guid AcademicYearId { get; set; }
 
         public DateTime Date { get; set; }
 

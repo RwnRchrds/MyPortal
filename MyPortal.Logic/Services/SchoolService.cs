@@ -50,7 +50,7 @@ namespace MyPortal.Logic.Services
             await _repository.SaveChanges();
         }
 
-        public async Task DeleteSchool(int id)
+        public async Task DeleteSchool(Guid id)
         {
             var schoolInDb = await _repository.GetById(id);
 

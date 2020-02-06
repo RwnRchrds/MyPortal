@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyPortal.Database.Models;
 
-namespace MyPortalCore.Data.Migrations
+namespace MyPortal.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200204113920_AddedResourceCode")]
-    partial class AddedResourceCode
+    [Migration("20200206163824_InitialModel")]
+    partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,7 +21,7 @@ namespace MyPortalCore.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -34,9 +34,8 @@ namespace MyPortalCore.Data.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -45,7 +44,7 @@ namespace MyPortalCore.Data.Migrations
                     b.ToTable("AspNetRoleClaims");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -58,9 +57,8 @@ namespace MyPortalCore.Data.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -69,7 +67,7 @@ namespace MyPortalCore.Data.Migrations
                     b.ToTable("AspNetUserClaims");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -80,9 +78,8 @@ namespace MyPortalCore.Data.Migrations
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -91,13 +88,13 @@ namespace MyPortalCore.Data.Migrations
                     b.ToTable("AspNetUserLogins");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -106,10 +103,10 @@ namespace MyPortalCore.Data.Migrations
                     b.ToTable("AspNetUserRoles");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -127,10 +124,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.AcademicYear", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<DateTime>("FirstDate")
                         .HasColumnType("date");
@@ -150,16 +147,16 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Achievement", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<int>("AcademicYearId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("AcademicYearId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("AchievementTypeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("AchievementTypeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Comments")
                         .HasColumnType("nvarchar(max)");
@@ -170,17 +167,17 @@ namespace MyPortalCore.Data.Migrations
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("LocationId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("LocationId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Points")
                         .HasColumnType("int");
 
-                    b.Property<int>("RecordedById")
-                        .HasColumnType("int");
+                    b.Property<Guid>("RecordedById")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -199,10 +196,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.AchievementType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<int>("DefaultPoints")
                         .HasColumnType("int");
@@ -222,10 +219,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Address", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Apartment")
                         .HasColumnType("nvarchar(128)")
@@ -278,16 +275,16 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.AddressPerson", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<int>("AddressId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("AddressId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("PersonId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PersonId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -298,10 +295,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Aspect", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
@@ -311,11 +308,11 @@ namespace MyPortalCore.Data.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<int>("GradeSetId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("GradeSetId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("TypeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("TypeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -328,10 +325,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.AspectType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -345,10 +342,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.AttendanceCode", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -363,8 +360,8 @@ namespace MyPortalCore.Data.Migrations
                     b.Property<bool>("DoNotUse")
                         .HasColumnType("bit");
 
-                    b.Property<int>("MeaningId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("MeaningId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -375,15 +372,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.AttendanceCodeMeaning", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -397,10 +389,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.AttendanceMark", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Comments")
                         .HasColumnType("nvarchar(256)")
@@ -414,14 +406,14 @@ namespace MyPortalCore.Data.Migrations
                     b.Property<int>("MinutesLate")
                         .HasColumnType("int");
 
-                    b.Property<int>("PeriodId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PeriodId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("WeekId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("WeekId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -436,13 +428,13 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.AttendanceWeek", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<int>("AcademicYearId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("AcademicYearId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Beginning")
                         .HasColumnType("date");
@@ -462,16 +454,16 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.BasketItem", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -484,16 +476,16 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Bulletin", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<bool>("Approved")
                         .HasColumnType("bit");
 
-                    b.Property<int>("AuthorId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
@@ -522,27 +514,27 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Class", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<int>("AcademicYearId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("AcademicYearId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
-                    b.Property<int?>("SubjectId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("SubjectId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("TeacherId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("TeacherId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("YearGroupId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("YearGroupId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -559,13 +551,13 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Comment", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<int>("CommentBankId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CommentBankId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Value")
                         .IsRequired()
@@ -580,10 +572,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.CommentBank", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
@@ -603,13 +595,13 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.CommunicationLog", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<int>("CommunicationTypeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CommunicationTypeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
@@ -617,8 +609,8 @@ namespace MyPortalCore.Data.Migrations
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PersonId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PersonId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -629,10 +621,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.CommunicationType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -646,10 +638,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Contact", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("JobTitle")
                         .HasColumnType("nvarchar(256)")
@@ -662,8 +654,8 @@ namespace MyPortalCore.Data.Migrations
                     b.Property<bool>("ParentalBallot")
                         .HasColumnType("bit");
 
-                    b.Property<int>("PersonId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PersonId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("PlaceOfWork")
                         .HasColumnType("nvarchar(256)")
@@ -679,19 +671,19 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Detention", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<int>("DetentionTypeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("DetentionTypeId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("EventId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("SupervisorId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("SupervisorId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -707,10 +699,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.DetentionType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -730,10 +722,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.DiaryEvent", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(256)")
@@ -742,8 +734,8 @@ namespace MyPortalCore.Data.Migrations
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("EventTypeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("EventTypeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsAllDay")
                         .HasColumnType("bit");
@@ -778,25 +770,25 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.DiaryEventAttendee", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<bool>("Attended")
                         .HasColumnType("bit");
 
-                    b.Property<int>("EventId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("PersonId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PersonId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Required")
                         .HasColumnType("bit");
 
-                    b.Property<int>("ResponseId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ResponseId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -811,10 +803,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.DiaryEventInvitationResponse", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -828,10 +820,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.DiaryEventTemplate", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<int>("Days")
                         .HasColumnType("int");
@@ -841,8 +833,8 @@ namespace MyPortalCore.Data.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<int>("EventTypeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("EventTypeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Hours")
                         .HasColumnType("int");
@@ -859,10 +851,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.DiaryEventType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("ColourCode")
                         .HasColumnType("nvarchar(128)")
@@ -880,10 +872,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.DietaryRequirement", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -897,10 +889,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Document", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<bool>("Approved")
                         .HasColumnType("bit");
@@ -924,14 +916,14 @@ namespace MyPortalCore.Data.Migrations
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
-                    b.Property<int>("TypeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("TypeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("UploadedDate")
                         .HasColumnType("date");
 
-                    b.Property<int>("UploaderId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UploaderId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -944,10 +936,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.DocumentType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -970,10 +962,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.EmailAddress", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -986,14 +978,14 @@ namespace MyPortalCore.Data.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PersonId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PersonId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Primary")
                         .HasColumnType("bit");
 
-                    b.Property<int>("TypeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("TypeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -1006,10 +998,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.EmailAddressType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -1023,16 +1015,16 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Enrolment", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<int>("ClassId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ClassId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -1045,20 +1037,20 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.GiftedTalented", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Notes")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("SubjectId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("SubjectId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -1071,10 +1063,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.GovernanceType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -1088,18 +1080,18 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Grade", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
-                    b.Property<int>("GradeSetId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("GradeSetId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("System")
                         .HasColumnType("bit");
@@ -1116,10 +1108,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.GradeSet", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
@@ -1139,10 +1131,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Homework", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -1157,16 +1149,16 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.HomeworkAttachment", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<int>("DocumentId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("DocumentId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("HomeworkId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("HomeworkId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -1180,16 +1172,16 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.HomeworkSubmission", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Comments")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("HomeworkId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("HomeworkId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("MaxPoints")
                         .HasColumnType("int");
@@ -1197,8 +1189,8 @@ namespace MyPortalCore.Data.Migrations
                     b.Property<int>("PointsAchieved")
                         .HasColumnType("int");
 
-                    b.Property<int>("TaskId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("TaskId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -1212,18 +1204,18 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.House", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("ColourCode")
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
-                    b.Property<int?>("HeadId")
+                    b.Property<Guid?>("HeadId")
                         .IsRequired()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -1239,10 +1231,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Identity.ApplicationPermission", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("ClaimValue")
                         .IsRequired()
@@ -1254,8 +1246,8 @@ namespace MyPortalCore.Data.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<int>("ResourceId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ResourceId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ShortDescription")
                         .IsRequired()
@@ -1271,8 +1263,9 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Identity.ApplicationRole", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -1298,8 +1291,9 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Identity.ApplicationUser", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -1363,16 +1357,16 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Incident", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<int>("AcademicYearId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("AcademicYearId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("BehaviourTypeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("BehaviourTypeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Comments")
                         .HasColumnType("nvarchar(max)");
@@ -1383,20 +1377,20 @@ namespace MyPortalCore.Data.Migrations
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("LocationId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("LocationId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Points")
                         .HasColumnType("int");
 
-                    b.Property<int>("RecordedById")
-                        .HasColumnType("int");
+                    b.Property<Guid>("RecordedById")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Resolved")
                         .HasColumnType("bit");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -1415,16 +1409,16 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.IncidentDetention", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<int>("DetentionId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("DetentionId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("IncidentId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("IncidentId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -1437,10 +1431,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.IncidentType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<int>("DefaultPoints")
                         .HasColumnType("int");
@@ -1460,10 +1454,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.IntakeType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -1477,13 +1471,13 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.LessonPlan", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<int>("AuthorId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Homework")
                         .IsRequired()
@@ -1497,8 +1491,8 @@ namespace MyPortalCore.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StudyTopicId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("StudyTopicId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -1516,10 +1510,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.LessonPlanTemplate", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -1537,10 +1531,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.LocalAuthority", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<int>("LeaCode")
                         .HasColumnType("int");
@@ -1560,10 +1554,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Location", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -1580,10 +1574,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.MedicalCondition", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -1600,10 +1594,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.MedicalEvent", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("date");
@@ -1612,11 +1606,11 @@ namespace MyPortalCore.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RecordedById")
-                        .HasColumnType("int");
+                    b.Property<Guid>("RecordedById")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -1629,22 +1623,22 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Observation", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("date");
 
-                    b.Property<int>("ObserveeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ObserveeId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("ObserverId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ObserverId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("OutcomeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("OutcomeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -1659,10 +1653,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.ObservationOutcome", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("ColourCode")
                         .HasColumnType("nvarchar(128)")
@@ -1680,10 +1674,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Period", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<TimeSpan>("EndTime")
                         .HasColumnType("time(2)");
@@ -1712,10 +1706,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Person", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<DateTime?>("Deceased")
                         .HasColumnType("date");
@@ -1758,8 +1752,8 @@ namespace MyPortalCore.Data.Migrations
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -1772,16 +1766,16 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.PersonAttachment", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<int>("DocumentId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("DocumentId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("PersonId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PersonId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -1795,13 +1789,13 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.PersonCondition", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<int>("ConditionId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ConditionId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Medication")
                         .HasColumnType("nvarchar(256)")
@@ -1810,8 +1804,8 @@ namespace MyPortalCore.Data.Migrations
                     b.Property<bool>("MedicationTaken")
                         .HasColumnType("bit");
 
-                    b.Property<int>("PersonId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PersonId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -1824,16 +1818,16 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.PersonDietaryRequirement", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<int>("DietaryRequirementId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("DietaryRequirementId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("PersonId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PersonId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -1846,10 +1840,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Phase", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -1863,20 +1857,20 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.PhoneNumber", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Number")
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
-                    b.Property<int>("PersonId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PersonId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("TypeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("TypeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -1889,10 +1883,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.PhoneNumberType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -1906,10 +1900,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Product", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
@@ -1925,8 +1919,8 @@ namespace MyPortalCore.Data.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(10,2)");
 
-                    b.Property<int>("ProductTypeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ProductTypeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Visible")
                         .HasColumnType("bit");
@@ -1940,10 +1934,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.ProductType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -1963,16 +1957,16 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.ProfileLogNote", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<int>("AcademicYearId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("AcademicYearId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("AuthorId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
@@ -1984,11 +1978,11 @@ namespace MyPortalCore.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("TypeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("TypeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -2005,10 +1999,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.ProfileLogNoteType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("ColourCode")
                         .HasColumnType("nvarchar(128)")
@@ -2026,21 +2020,21 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.RegGroup", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
-                    b.Property<int>("TutorId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("TutorId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("YearGroupId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("YearGroupId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -2053,10 +2047,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.RelationshipType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -2070,13 +2064,13 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Report", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<int>("AreaId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("AreaId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -2100,25 +2094,25 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Result", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<int>("AspectId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("AspectId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("date");
 
-                    b.Property<int>("GradeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("GradeId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("ResultSetId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ResultSetId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -2135,10 +2129,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.ResultSet", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
@@ -2155,13 +2149,13 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Sale", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<int>("AcademicYearId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("AcademicYearId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("AmountPaid")
                         .HasColumnType("decimal(10,2)");
@@ -2175,14 +2169,14 @@ namespace MyPortalCore.Data.Migrations
                     b.Property<bool>("Processed")
                         .HasColumnType("bit");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Refunded")
                         .HasColumnType("bit");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -2197,10 +2191,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.School", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("EmailAddress")
                         .HasColumnType("nvarchar(128)")
@@ -2213,36 +2207,36 @@ namespace MyPortalCore.Data.Migrations
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
-                    b.Property<int>("GovernanceTypeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("GovernanceTypeId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("HeadTeacherId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("HeadTeacherId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("IntakeTypeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("IntakeTypeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Local")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("LocalAuthorityId")
+                    b.Property<Guid?>("LocalAuthorityId")
                         .IsRequired()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<int>("PhaseId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PhaseId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TelephoneNo")
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
-                    b.Property<int>("TypeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("TypeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Uprn")
                         .IsRequired()
@@ -2277,10 +2271,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.SchoolType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -2294,23 +2288,23 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.SenEvent", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("date");
 
-                    b.Property<int>("EventTypeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("EventTypeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Note")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -2323,10 +2317,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.SenEventType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -2340,10 +2334,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.SenProvision", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("date");
@@ -2352,14 +2346,14 @@ namespace MyPortalCore.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProvisionTypeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ProvisionTypeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("date");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -2372,10 +2366,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.SenProvisionType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -2389,10 +2383,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.SenReviewType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -2406,10 +2400,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.SenStatus", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -2430,16 +2424,16 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Session", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<int>("ClassId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ClassId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("PeriodId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PeriodId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -2452,10 +2446,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.StaffMember", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -2469,8 +2463,8 @@ namespace MyPortalCore.Data.Migrations
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
-                    b.Property<int>("PersonId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PersonId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("PostNominal")
                         .HasColumnType("nvarchar(128)")
@@ -2489,10 +2483,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Student", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<decimal>("AccountBalance")
                         .HasColumnType("decimal(10,2)");
@@ -2519,20 +2513,20 @@ namespace MyPortalCore.Data.Migrations
                     b.Property<bool>("GiftedAndTalented")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("HouseId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("HouseId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("PersonId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PersonId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("PupilPremium")
                         .HasColumnType("bit");
 
-                    b.Property<int>("RegGroupId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("RegGroupId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("SenStatusId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("SenStatusId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Uci")
                         .HasColumnType("nvarchar(max)");
@@ -2542,8 +2536,8 @@ namespace MyPortalCore.Data.Migrations
                         .HasMaxLength(13)
                         .IsUnicode(false);
 
-                    b.Property<int>("YearGroupId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("YearGroupId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -2563,13 +2557,13 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.StudentContact", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<int>("ContactId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ContactId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Correspondence")
                         .HasColumnType("bit");
@@ -2583,11 +2577,11 @@ namespace MyPortalCore.Data.Migrations
                     b.Property<bool>("PupilReport")
                         .HasColumnType("bit");
 
-                    b.Property<int>("RelationshipTypeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("RelationshipTypeId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -2602,21 +2596,21 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.StudyTopic", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<int>("SubjectId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("SubjectId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("YearGroupId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("YearGroupId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -2629,10 +2623,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Subject", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -2654,19 +2648,19 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.SubjectStaffMember", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("StaffMemberId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("StaffMemberId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("SubjectId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("SubjectId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -2681,10 +2675,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.SubjectStaffMemberRole", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -2696,10 +2690,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.SystemArea", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -2713,22 +2707,26 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.SystemResource", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<int>("AreaId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("AreaId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Code")
+                    b.Property<bool>("HasPermissions")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("TableName")
                         .IsRequired()
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
@@ -2739,13 +2737,13 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Task", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<int>("AssignedToId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("AssignedToId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Completed")
                         .HasColumnType("bit");
@@ -2777,19 +2775,19 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.TrainingCertificate", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CourseId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("StaffId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("StaffId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("StatusId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("StatusId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -2804,10 +2802,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.TrainingCertificateStatus", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("ColourCode")
                         .HasColumnType("nvarchar(128)")
@@ -2825,10 +2823,10 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.TrainingCourse", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -2847,13 +2845,14 @@ namespace MyPortalCore.Data.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.YearGroup", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<int>("HeadId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("HeadId")
+                        .IsRequired()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("KeyStage")
                         .HasColumnType("int");
@@ -2870,7 +2869,7 @@ namespace MyPortalCore.Data.Migrations
                     b.ToTable("YearGroup");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("MyPortal.Database.Models.Identity.ApplicationRole", null)
                         .WithMany()
@@ -2879,7 +2878,7 @@ namespace MyPortalCore.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", null)
                         .WithMany()
@@ -2888,7 +2887,7 @@ namespace MyPortalCore.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", null)
                         .WithMany()
@@ -2897,7 +2896,7 @@ namespace MyPortalCore.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
                     b.HasOne("MyPortal.Database.Models.Identity.ApplicationRole", null)
                         .WithMany()
@@ -2912,7 +2911,7 @@ namespace MyPortalCore.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
                     b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", null)
                         .WithMany()

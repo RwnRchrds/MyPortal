@@ -8,6 +8,6 @@ namespace MyPortal.Database.Interfaces
 {
     public interface IAchievementTypeRepository : IReadWriteRepository<AchievementType>
     {
-        Task<IEnumerable<AchievementType>> GetRecorded(int academicYearId);
+        Task<IEnumerable<AchievementType>> GetRecorded(Guid academicYearId);
     }
 }

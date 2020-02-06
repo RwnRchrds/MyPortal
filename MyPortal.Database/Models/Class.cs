@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -14,19 +15,21 @@ namespace MyPortal.Database.Models
             Sessions = new HashSet<Session>();
         }
 
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
-        public int AcademicYearId { get; set; }
+        public Guid AcademicYearId { get; set; }
 
-        public int? SubjectId { get; set; }
+        public Guid? SubjectId { get; set; }
 
         [Required]
         [StringLength(128)]
         public string Name { get; set; }
 
-        public int TeacherId { get; set; }
+        public Guid TeacherId { get; set; }
 
-        public int? YearGroupId { get; set; }
+        public Guid? YearGroupId { get; set; }
 
         public virtual StaffMember Teacher { get; set; }
 
