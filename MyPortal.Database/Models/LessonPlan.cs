@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Database.Models.Identity;
 
 namespace MyPortal.Database.Models
 {
@@ -28,7 +29,7 @@ namespace MyPortal.Database.Models
         [Required]
         public string Homework { get; set; }
 
-        public virtual StaffMember Author { get; set; }
+        public virtual ApplicationUser Author { get; set; }
 
         public virtual StudyTopic StudyTopic { get; set; }
     }

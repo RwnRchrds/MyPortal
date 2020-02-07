@@ -16,7 +16,6 @@ using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
 using MyPortal.Logic.Authorisation.Attributes;
 using MyPortal.Logic.Interfaces;
-using Permission = MyPortal.Logic.Constants.Permission;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortalCore.Areas.Identity.Pages.Account
@@ -24,6 +23,7 @@ namespace MyPortalCore.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class LoginModel : PageModel
     {
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
         private readonly ISchoolService _schoolService;
@@ -35,6 +35,7 @@ namespace MyPortalCore.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _schoolService = schoolService;
+            _userManager = userManager;
         }
 
         [BindProperty]
@@ -69,14 +70,14 @@ namespace MyPortalCore.Areas.Identity.Pages.Account
                 ModelState.AddModelError(string.Empty, ErrorMessage);
             }
 
-            returnUrl = returnUrl ?? Url.Content("~/");
+            returnUrl ??= Url.Content("~/");
 
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
-            SchoolName = await _schoolService.GetLocalSchoolName();
+            //SchoolName = await _schoolService.GetLocalSchoolName();
 
             ReturnUrl = returnUrl;
         }

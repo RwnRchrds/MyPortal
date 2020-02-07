@@ -20,7 +20,10 @@ namespace MyPortal.Database.Models
         [Column(TypeName = "date")]
         public DateTime Date { get; set; }
 
-        public Guid GradeId { get; set; }
+        public Guid? GradeId { get; set; }
+
+        [Column(TypeName = "decimal(10,2)")]
+        public decimal? Mark { get; set; }  
 
         public virtual ResultSet ResultSet { get; set; }
 

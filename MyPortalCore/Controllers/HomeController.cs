@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using MyPortal.Logic.Constants;
+using MyPortal.Logic.Dictionaries;
 using MyPortalCore.Models;
 
 namespace MyPortalCore.Controllers
@@ -21,27 +21,21 @@ namespace MyPortalCore.Controllers
 
         public IActionResult Index()
         {
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity.IsAuthenticated && User.HasClaim(ClaimTypeDictionary.UserType, UserTypeDictionary.Staff))
             {
-                if (User.HasClaim(ClaimType.UserType, UserType.Staff))
-                {
-                    return RedirectToAction("Index", "Home", new { area = "Staff" });
-                }
+                return RedirectToAction("Index", "Home", new { area = "Staff" });
+            }
 
-                else if (User.HasClaim(ClaimType.UserType, UserType.Student))
-                {
+            else if (User.Identity.IsAuthenticated && User.HasClaim(ClaimTypeDictionary.UserType, UserTypeDictionary.Student))
+            {
+                // TODO: Enable Student Portal
+                // return RedirectToAction("Index", "Home", new { area = "Students" });
+            }
 
-                }
-
-                else if (User.HasClaim(ClaimType.UserType, UserType.Parent))
-                {
-                    
-                }
-
-                else
-                {
-                    
-                }
+            else if (User.Identity.IsAuthenticated && User.HasClaim(ClaimTypeDictionary.UserType, UserTypeDictionary.Parent))
+            {
+                // TODO: Enable Parent Portal
+                // return RedirectToAction("Index", "Home", new { area = "Parents" });
             }
 
             return Redirect("/Login");

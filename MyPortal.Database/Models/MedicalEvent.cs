@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Database.Models.Identity;
 
 namespace MyPortal.Database.Models
 {
@@ -21,7 +22,7 @@ namespace MyPortal.Database.Models
         [Required]
         public string Note { get; set; }
 
-        public virtual StaffMember RecordedBy { get; set; }
+        public virtual ApplicationUser RecordedBy { get; set; } 
 
         public virtual Student Student { get; set; }
     }

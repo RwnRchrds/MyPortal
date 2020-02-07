@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Database.Models.Identity;
 
 namespace MyPortal.Database.Models
 {
@@ -26,7 +27,7 @@ namespace MyPortal.Database.Models
 
         public bool Deleted { get; set; }
 
-        public virtual StaffMember Author { get; set; }
+        public virtual ApplicationUser Author { get; set; }
 
         public virtual Student Student { get; set; }
 

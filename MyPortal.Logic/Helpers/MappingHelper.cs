@@ -103,7 +103,7 @@ namespace MyPortal.Logic.Helpers
                 cfg.CreateMap<TrainingCourse, TrainingCourseDto>().ReverseMap();
                 cfg.CreateMap<YearGroup, YearGroupDto>().ReverseMap();
                 cfg.CreateMap<DiaryEventAttendee, DiaryEventAttendeeDto>().ReverseMap();
-                cfg.CreateMap<DiaryEventInvitationResponse, DiaryEventInvitationResponseDto>().ReverseMap();
+                cfg.CreateMap<DiaryEventAttendeeResponse, DiaryEventInvitationResponseDto>().ReverseMap();
                 cfg.CreateMap<DiaryEventType, DiaryEventTypeDto>().ReverseMap();
                 cfg.CreateMap<Task, TaskDto>().ReverseMap();
                 cfg.CreateMap<DiaryEventTemplate, DiaryEventTemplateDto>().ReverseMap();

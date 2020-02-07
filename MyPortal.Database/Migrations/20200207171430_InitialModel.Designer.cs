@@ -10,7 +10,7 @@ using MyPortal.Database.Models;
 namespace MyPortal.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200206163824_InitialModel")]
+    [Migration("20200207171430_InitialModel")]
     partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -787,7 +787,7 @@ namespace MyPortal.Database.Migrations
                     b.Property<bool>("Required")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("ResponseId")
+                    b.Property<Guid?>("ResponseId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -801,7 +801,7 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("DiaryEventAttendee");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.DiaryEventInvitationResponse", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.DiaryEventAttendeeResponse", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -815,7 +815,7 @@ namespace MyPortal.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DiaryEventInvitationResponse");
+                    b.ToTable("DiaryEventAttendeeResponse");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.DiaryEventTemplate", b =>
@@ -1271,6 +1271,11 @@ namespace MyPortal.Database.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
@@ -1307,6 +1312,9 @@ namespace MyPortal.Database.Migrations
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Enabled")
                         .HasColumnType("bit");
 
                     b.Property<bool>("LockoutEnabled")
@@ -2105,8 +2113,12 @@ namespace MyPortal.Database.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("date");
 
-                    b.Property<Guid>("GradeId")
+                    b.Property<Guid?>("GradeId")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal?>("Mark")
+                        .HasColumnType("decimal(10,2)");
 
                     b.Property<Guid>("ResultSetId")
                         .HasColumnType("uniqueidentifier");
@@ -2940,8 +2952,8 @@ namespace MyPortal.Database.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.StaffMember", "RecordedBy")
-                        .WithMany("BehaviourAchievements")
+                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", "RecordedBy")
+                        .WithMany("Achievements")
                         .HasForeignKey("RecordedById")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -3039,7 +3051,7 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Bulletin", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.StaffMember", "Author")
+                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", "Author")
                         .WithMany("Bulletins")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -3138,11 +3150,10 @@ namespace MyPortal.Database.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.DiaryEventInvitationResponse", "Response")
+                    b.HasOne("MyPortal.Database.Models.DiaryEventAttendeeResponse", "Response")
                         .WithMany("DiaryEventAttendees")
                         .HasForeignKey("ResponseId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.DiaryEventTemplate", b =>
@@ -3162,7 +3173,7 @@ namespace MyPortal.Database.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.StaffMember", "Uploader")
+                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", "Uploader")
                         .WithMany("Documents")
                         .HasForeignKey("UploaderId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -3291,8 +3302,8 @@ namespace MyPortal.Database.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.StaffMember", "RecordedBy")
-                        .WithMany("BehaviourIncidents")
+                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", "RecordedBy")
+                        .WithMany("Incidents")
                         .HasForeignKey("RecordedById")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -3321,8 +3332,8 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.LessonPlan", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.StaffMember", "Author")
-                        .WithMany("CurriculumLessonPlans")
+                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", "Author")
+                        .WithMany("LessonPlans")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -3336,7 +3347,7 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.MedicalEvent", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.StaffMember", "RecordedBy")
+                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", "RecordedBy")
                         .WithMany("MedicalEvents")
                         .HasForeignKey("RecordedById")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -3454,8 +3465,8 @@ namespace MyPortal.Database.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.StaffMember", "Author")
-                        .WithMany("ProfileLogs")
+                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", "Author")
+                        .WithMany("ProfileLogNotes")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();

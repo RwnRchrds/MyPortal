@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using MyPortal.Logic.Authorisation;
-
-namespace MyPortal.Logic.Constants
+﻿namespace MyPortal.Logic.Dictionaries
 {
-    public static class Permission
+    public static class PermissionDictionary
     {
         public static class Assessment
         {

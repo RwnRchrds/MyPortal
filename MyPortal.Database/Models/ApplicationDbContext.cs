@@ -37,7 +37,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<DetentionType> DetentionTypes { get; set; }
         public virtual DbSet<DiaryEvent> DiaryEvents { get; set; }
         public virtual DbSet<DiaryEventAttendee> DiaryEventAttendees { get; set; }
-        public virtual DbSet<DiaryEventInvitationResponse> DiaryEventInvitationResponses { get; set; }
+        public virtual DbSet<DiaryEventAttendeeResponse> DiaryEventInvitationResponses { get; set; }
         public virtual DbSet<DiaryEventType> DiaryEventTypes { get; set; }
         public virtual DbSet<DietaryRequirement> DietaryRequirements { get; set; }
         public virtual DbSet<Document> Documents { get; set; }
@@ -180,7 +180,7 @@ namespace MyPortal.Database.Models
             modelBuilder.Entity<DiaryEventAttendee>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
-            modelBuilder.Entity<DiaryEventInvitationResponse>()
+            modelBuilder.Entity<DiaryEventAttendeeResponse>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
             modelBuilder.Entity<DiaryEventTemplate>()
@@ -607,11 +607,10 @@ namespace MyPortal.Database.Models
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<DiaryEventInvitationResponse>()
+            modelBuilder.Entity<DiaryEventAttendeeResponse>()
                 .HasMany(e => e.DiaryEventAttendees)
                 .WithOne(e => e.Response)
                 .HasForeignKey(e => e.ResponseId)
-                .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Incident>()
@@ -910,21 +909,21 @@ namespace MyPortal.Database.Models
                 .IsFixedLength()
                 .IsUnicode(false);
 
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.BehaviourAchievements)
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany(e => e.Achievements)
                 .WithOne(e => e.RecordedBy)
                 .HasForeignKey(e => e.RecordedById)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.BehaviourIncidents)
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany(e => e.Incidents)
                 .WithOne(e => e.RecordedBy)
                 .HasForeignKey(e => e.RecordedById)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<StaffMember>()
+            modelBuilder.Entity<ApplicationUser>()
                 .HasMany(e => e.Bulletins)
                 .WithOne(e => e.Author)
                 .HasForeignKey(e => e.AuthorId)
@@ -938,14 +937,14 @@ namespace MyPortal.Database.Models
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.CurriculumLessonPlans)
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany(e => e.LessonPlans)
                 .WithOne(e => e.Author)
                 .HasForeignKey(e => e.AuthorId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<StaffMember>()
+            modelBuilder.Entity<ApplicationUser>()
                 .HasMany(e => e.Documents)
                 .WithOne(e => e.Uploader)
                 .HasForeignKey(e => e.UploaderId)
@@ -1000,8 +999,8 @@ namespace MyPortal.Database.Models
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.ProfileLogs)
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany(e => e.ProfileLogNotes)
                 .WithOne(e => e.Author)
                 .HasForeignKey(e => e.AuthorId)
                 .IsRequired()

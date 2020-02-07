@@ -17,7 +17,8 @@ using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
 using MyPortal.Database.Repositories;
-using MyPortal.Logic.Constants;
+using MyPortal.Logic.Authorisation;
+using MyPortal.Logic.Dictionaries;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Services;
 
@@ -44,6 +45,7 @@ namespace MyPortalCore
                         options.SignIn.RequireConfirmedAccount = false;
                     })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddSignInManager<ApplicationSignInManager>()
                 .AddDefaultTokenProviders();
 
             services.AddControllersWithViews();
@@ -52,9 +54,9 @@ namespace MyPortalCore
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy(Policy.UserType.Student, p => p.RequireClaim(ClaimType.UserType, UserType.Student));
-                options.AddPolicy(Policy.UserType.Staff, p => p.RequireClaim(ClaimType.UserType, UserType.Staff));
-                options.AddPolicy(Policy.UserType.Parent, p => p.RequireClaim(ClaimType.UserType, UserType.Parent));
+                options.AddPolicy(PolicyDictionary.UserType.Student, p => p.RequireClaim(ClaimTypeDictionary.UserType, UserTypeDictionary.Student));
+                options.AddPolicy(PolicyDictionary.UserType.Staff, p => p.RequireClaim(ClaimTypeDictionary.UserType, UserTypeDictionary.Staff));
+                options.AddPolicy(PolicyDictionary.UserType.Parent, p => p.RequireClaim(ClaimTypeDictionary.UserType, UserTypeDictionary.Parent));
             });
 
             // MyPortal Database Connection

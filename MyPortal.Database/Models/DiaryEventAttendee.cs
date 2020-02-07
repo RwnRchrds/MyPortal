@@ -14,12 +14,12 @@ namespace MyPortal.Database.Models
         public Guid Id { get; set; }
         public Guid EventId { get; set; }
         public Guid PersonId { get; set; }
-        public Guid ResponseId { get; set; }
+        public Guid? ResponseId { get; set; }
         public bool Required { get; set; }
         public bool Attended { get; set; }
 
         public virtual DiaryEvent Event { get; set; }
         public virtual Person Person { get; set; }
-        public virtual DiaryEventInvitationResponse Response { get; set; }
+        public virtual DiaryEventAttendeeResponse Response { get; set; }
     }
 }

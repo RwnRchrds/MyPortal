@@ -1,6 +1,6 @@
-﻿namespace MyPortal.Logic.Constants
+﻿namespace MyPortal.Logic.Dictionaries
 {
-    public static class ClaimType
+    public static class ClaimTypeDictionary
     {
         public const string Permissions = "perm";
         public const string UserType = "user";

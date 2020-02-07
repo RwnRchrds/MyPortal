@@ -6,10 +6,10 @@ using System.Text;
 
 namespace MyPortal.Database.Models
 {
-    [Table("DiaryEventInvitationResponse")]
-    public class DiaryEventInvitationResponse
+    [Table("DiaryEventAttendeeResponse")]
+    public class DiaryEventAttendeeResponse
     {
-        public DiaryEventInvitationResponse()
+        public DiaryEventAttendeeResponse()
         {
             DiaryEventAttendees = new HashSet<DiaryEventAttendee>();
         }

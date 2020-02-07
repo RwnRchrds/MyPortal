@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Database.Models.Identity;
 
 namespace MyPortal.Database.Models
 {
@@ -42,7 +43,7 @@ namespace MyPortal.Database.Models
 
         public bool Deleted { get; set; }
 
-        public virtual StaffMember Uploader { get; set; }
+        public virtual ApplicationUser Uploader { get; set; }
 
         public virtual DocumentType Type { get; set; }
 
