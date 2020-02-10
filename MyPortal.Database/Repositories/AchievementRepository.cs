@@ -53,14 +53,14 @@ namespace MyPortal.Database.Repositories
         {
             var sql = $"SELECT COUNT([Id]) FROM {TblName} WHERE [StudentId] = @StudentId AND [AcademicYearId] = @AcademicYearId";
 
-            return (await ExecuteIntQuery(sql, new {StudentId = studentId, AcademicYearId = academicYearId})).First();
+            return await ExecuteIntQuery(sql, new {StudentId = studentId, AcademicYearId = academicYearId});
         }
 
         public async Task<int> GetPointsByStudent(int studentId, int academicYearId)
         {
             var sql = $"SELECT SUM([Points]) FROM {TblName} WHERE [StudentId] = @StudentId AND [AcademicYearId] = @AcademicYearId";
 
-            return (await ExecuteIntQuery(sql, new {StudentId = studentId, AcademicYearId = academicYearId})).First();
+            return await ExecuteIntQuery(sql, new {StudentId = studentId, AcademicYearId = academicYearId});
         }
 
         public Task<IEnumerable<Achievement>> GetByStudent(int studentId, int academicYearId)
