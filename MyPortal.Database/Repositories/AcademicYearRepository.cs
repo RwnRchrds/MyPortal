@@ -14,27 +14,23 @@ namespace MyPortal.Database.Repositories
 {
     public class AcademicYearRepository : BaseReadWriteRepository<AcademicYear>, IAcademicYearRepository
     {
-        private readonly string TblName = @"[dbo].[AcademicYear] AS [AcademicYear]";
-
-        internal static readonly string AllColumns = EntityHelper.GetAllColumns(typeof(AcademicYear), "AcademicYear");
-
         public AcademicYearRepository(IDbConnection connection) : base(connection)
         {
             
         }
 
-        public Task<IEnumerable<AcademicYear>> GetAll()
+        public async Task<IEnumerable<AcademicYear>> GetAll()
         {
             var sql = $"SELECT {AllColumns} FROM {TblName}";
 
-            return Connection.QueryAsync<AcademicYear>(sql);
+            return await ExecuteQuery(sql);
         }
 
         public async Task<AcademicYear> GetById(Guid id)
         {
             var sql = $"SELECT {AllColumns} FROM {TblName} WHERE [AcademicYear].[Id] = @AcademicYearId";
 
-            return await Connection.QuerySingleOrDefaultAsync<AcademicYear>(sql, new {AcademicYearId = id});
+            return (await ExecuteQuery(sql, new {AcademicYearId = id})).First();
         }
 
         public async Task Update(AcademicYear entity)
@@ -54,12 +50,12 @@ namespace MyPortal.Database.Repositories
             var sql =
                 $"SELECT {AllColumns} FROM {TblName} WHERE [AcademicYear].[FirstDate] <= DateToday AND [AcademicYear].[LastDate] >= DateToday";
 
-            return await Connection.QueryFirstOrDefaultAsync<AcademicYear>(sql, new {DateToday = DateTime.Today});
+            return (await ExecuteQuery(sql, new {DateToday = DateTime.Today})).First();
         }
 
         protected override async Task<IEnumerable<AcademicYear>> ExecuteQuery(string sql, object param = null)
         {
-            throw new NotImplementedException();
+            return await Connection.QueryAsync<AcademicYear>(sql, param);
         }
     }
 }

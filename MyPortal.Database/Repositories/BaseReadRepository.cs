@@ -4,7 +4,9 @@ using System.Data;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
+using Dapper;
 using Microsoft.EntityFrameworkCore;
+using MyPortal.Database.Helpers;
 using MyPortal.Database.Models;
 using Task = System.Threading.Tasks.Task;
 
@@ -19,7 +21,21 @@ namespace MyPortal.Database.Repositories
             Connection = connection;
         }
 
+        protected readonly string TblName = EntityHelper.GetTblName(typeof(TEntity));
+
+        protected readonly string AllColumns = EntityHelper.GetAllColumns(typeof(TEntity), typeof(TEntity).Name);
+
         protected abstract Task<IEnumerable<TEntity>> ExecuteQuery(string sql, object param = null);
+
+        protected async Task<IEnumerable<int>> ExecuteIntQuery(string sql, object param = null)
+        {
+            return await Connection.QueryAsync<int>(sql, param);
+        }
+
+        protected async Task<IEnumerable<string>> ExecuteStringQuery(string sql, object param = null)
+        {
+            return await Connection.QueryAsync<string>(sql, param);
+        }
 
         public void Dispose()
         {

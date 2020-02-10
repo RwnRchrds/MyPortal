@@ -13,10 +13,7 @@ namespace MyPortal.Database.Repositories
 {
     public class AchievementTypeRepository : BaseReadWriteRepository<AchievementType>, IAchievementTypeRepository
     {
-        private readonly string TblName = @"[dbo].[AchievementType]";
 
-        internal static readonly string AllColumns =
-            EntityHelper.GetAllColumns(typeof(AchievementType), "AchievementType");
 
         private readonly string JoinAchievement =
             @"LEFT JOIN [dbo].[Achievement] AS [Achievement] ON [Achievement].[AchievementTypeId] = [AchievementType].[Id]";

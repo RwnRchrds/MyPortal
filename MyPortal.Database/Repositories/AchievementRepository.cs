@@ -1,30 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using MyPortal.Database.Models.Identity;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
     public class AchievementRepository : BaseReadWriteRepository<Achievement>, IAchievementRepository
     {
-        private readonly string TblName = @"[dbo].[Achievement] AS [Achievement]";
-        
-        internal static readonly string AllColumns = EntityHelper.GetAllColumns(typeof(Achievement), "Achievement");
+        private readonly string RelatedColumns = "";
 
-        private readonly string JoinAcademicYear =
-            @"LEFT JOIN [dbo].[AcademicYear] AS [AcademicYear] ON [AcademicYear].[Id] = [Achievement].[AcademicYearId]";
-
-        private readonly string JoinAchievementType =
-            @"LEFT JOIN [dbo].[AchievementType] AS [AchievementType] ON [AchievementType].[Id] = [Achievement].[AchievementTypeId]";
-
-        private readonly string JoinStudent =
-            @"LEFT JOIN [dbo].[Student] AS [Student] ON [Student].[Id] = [Achievement].[StudentId]";
+        private readonly string JoinRelated = "";
 
         public AchievementRepository(IDbConnection connection) : base(connection)
         {
@@ -33,29 +26,41 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Achievement>> GetAll()
         {
-            var sql = $"SELECT {AllColumns},{AcademicYearRepository.AllColumns},{AchievementTypeRepository.AllColumns},{StudentRepository.AllColumns} FROM {TblName} {JoinAcademicYear} {JoinAchievementType} {JoinStudent}";
+            var sql =
+                $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
 
-            return await Connection.QueryAsync<Achievement>(sql);
+            return await ExecuteQuery(sql);
         }
 
         public async Task<Achievement> GetById(Guid id)
         {
-            throw new NotImplementedException();
+            var sql = $"SELECT {AllColumns} FROM {TblName} WHERE [Achievement].[Id] = @AchievementId";
+
+            return (await ExecuteQuery(sql, new {AchievementId = id})).First();
         }
 
-        public Task Update(Achievement entity)
+        public async Task Update(Achievement entity)
         {
-            throw new NotImplementedException();
+            var achievementInDb = await Context.Achievements.FindAsync(entity.Id);
+
+            achievementInDb.AchievementTypeId = entity.AchievementTypeId;
+            achievementInDb.Points = entity.Points;
+            achievementInDb.LocationId = entity.LocationId;
+            achievementInDb.Comments = entity.Comments;
         }
 
-        public Task<int> GetCountByStudent(int studentId, int academicYearId)
+        public async Task<int> GetCountByStudent(int studentId, int academicYearId)
         {
-            throw new NotImplementedException();
+            var sql = $"SELECT COUNT([Id]) FROM {TblName} WHERE [StudentId] = @StudentId AND [AcademicYearId] = @AcademicYearId";
+
+            return (await ExecuteIntQuery(sql, new {StudentId = studentId, AcademicYearId = academicYearId})).First();
         }
 
-        public Task<int> GetPointsByStudent(int studentId, int academicYearId)
+        public async Task<int> GetPointsByStudent(int studentId, int academicYearId)
         {
-            throw new NotImplementedException();
+            var sql = $"SELECT SUM([Points]) FROM {TblName} WHERE [StudentId] = @StudentId AND [AcademicYearId] = @AcademicYearId";
+
+            return (await ExecuteIntQuery(sql, new {StudentId = studentId, AcademicYearId = academicYearId})).First();
         }
 
         public Task<IEnumerable<Achievement>> GetByStudent(int studentId, int academicYearId)
@@ -70,7 +75,19 @@ namespace MyPortal.Database.Repositories
 
         protected override async Task<IEnumerable<Achievement>> ExecuteQuery(string sql, object param = null)
         {
-            throw new NotImplementedException();
+            return await Connection
+                .QueryAsync<Achievement, AcademicYear, AchievementType, Student, Location, ApplicationUser, Achievement
+                >(sql, (
+                    (achievement, acadYear, type, student, location, recordedBy) =>
+                    {
+                        achievement.AcademicYear = acadYear;
+                        achievement.Type = type;
+                        achievement.Student = student;
+                        achievement.Location = location;
+                        achievement.RecordedBy = recordedBy;
+
+                        return achievement;
+                    }), param);
         }
     }
 }

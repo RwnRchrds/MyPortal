@@ -77,7 +77,7 @@ namespace MyPortalCore.Areas.Identity.Pages.Account
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
-            //SchoolName = await _schoolService.GetLocalSchoolName();
+            SchoolName = await _schoolService.GetLocalSchoolName();
 
             ReturnUrl = returnUrl;
         }
@@ -103,11 +103,12 @@ namespace MyPortalCore.Areas.Identity.Pages.Account
                 if (result.IsLockedOut)
                 {
                     _logger.LogWarning("User account locked out.");
-                    return RedirectToPage("./Lockout");
+                    ModelState.AddModelError(string.Empty, "Account is disabled. Please try again later.");
+                    return Page();
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "Username/Password incorrect.");
                     return Page();
                 }
             }

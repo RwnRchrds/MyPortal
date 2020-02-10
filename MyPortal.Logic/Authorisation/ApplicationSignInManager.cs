@@ -21,12 +21,14 @@ namespace MyPortal.Logic.Authorisation
         {
             var userInDb = await UserManager.FindByNameAsync(userName);
 
-            if (!userInDb.Enabled)
+            if (userInDb == null || userInDb.Enabled)
             {
-                return SignInResult.LockedOut;
+                return await base.PasswordSignInAsync(userName, password, isPersistent, lockoutOnFailure);
             }
+            
+            var signInResult = await base.PasswordSignInAsync(userName, password, isPersistent, lockoutOnFailure);
 
-            return await base.PasswordSignInAsync(userName, password, isPersistent, lockoutOnFailure);
+            return signInResult.Succeeded ? SignInResult.LockedOut : signInResult;
         }
     }
 }

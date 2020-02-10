@@ -13,10 +13,6 @@ namespace MyPortal.Database.Repositories
 {
     public class PersonRepository : BaseReadWriteRepository<Person>, IPersonRepository
     {
-        private readonly string TblName = @"[dbo].[Person] AS [Person]";
-
-        internal static readonly string AllColumns = EntityHelper.GetAllColumns(typeof(Person), "Person");
-
         public PersonRepository(IDbConnection connection) : base(connection)
         {
         }

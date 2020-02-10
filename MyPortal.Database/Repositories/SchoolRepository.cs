@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
@@ -14,11 +15,10 @@ namespace MyPortal.Database.Repositories
 {
     public class SchoolRepository : BaseReadWriteRepository<School>, ISchoolRepository
     {
-        private readonly string TblName = @"[dbo].[School] as [School]";
+        private readonly string RelatedColumns = $"{EntityHelper.GetAllColumns(typeof(Phase), "Phase")}";
 
-        internal static readonly string AllColumns = EntityHelper.GetAllColumns(typeof(School), "School");
-
-        private readonly string JoinPhase = @"LEFT JOIN [dbo].[Phase] AS [Phase] ON [Phase].[Id] = [School].[PhaseId]";
+        private readonly string JoinRelated =
+            $"{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Phase]", "[Phase].[Id]", "[School].[PhaseId]")}";
 
         public SchoolRepository(IDbConnection connection) : base(connection)
         {
@@ -72,14 +72,20 @@ namespace MyPortal.Database.Repositories
 
         public async Task<School> GetLocal()
         {
-            var sql = $"SELECT {AllColumns} FROM {TblName} WHERE [School].[Local] = 1";
+            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated} WHERE [School].[Local] = 1";
 
             return (await ExecuteQuery(sql)).SingleOrDefault();
         }
 
         protected override async Task<IEnumerable<School>> ExecuteQuery(string sql, object param = null)
         {
-            return await Connection.QueryAsync<School>(sql, param);
+            return await Connection.QueryAsync<School, Phase, School>(sql,
+                (school, phase) =>
+                {
+                    school.Phase = phase;
+
+                    return school;
+                }, param);
         }
     }
 }
