@@ -9,8 +9,7 @@ var KTDatatablesBasicBasic = function() {
 			responsive: true,
 
 			// DOM Layout settings
-			dom: `<'row'<'col-sm-12'tr>>
-			<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>`,
+			dom: "<'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
 
 			lengthMenu: [5, 10, 25, 50],
 
@@ -24,11 +23,11 @@ var KTDatatablesBasicBasic = function() {
 			order: [[1, 'desc']],
 
 			headerCallback: function(thead, data, start, end, display) {
-				thead.getElementsByTagName('th')[0].innerHTML = `
-                    <label class="kt-checkbox kt-checkbox--single kt-checkbox--solid">
-                        <input type="checkbox" value="" class="kt-group-checkable">
-                        <span></span>
-                    </label>`;
+				thead.getElementsByTagName('th')[0].innerHTML = '\
+                    <label class="kt-checkbox kt-checkbox--single kt-checkbox--solid">\
+                        <input type="checkbox" value="" class="kt-group-checkable">\
+                        <span></span>\
+                    </label>';
 			},
 
 			columnDefs: [
@@ -38,11 +37,11 @@ var KTDatatablesBasicBasic = function() {
 					className: 'dt-right',
 					orderable: false,
 					render: function(data, type, full, meta) {
-						return `
-                        <label class="kt-checkbox kt-checkbox--single kt-checkbox--solid">
-                            <input type="checkbox" value="" class="kt-checkable">
-                            <span></span>
-                        </label>`;
+						return '\
+                        <label class="kt-checkbox kt-checkbox--single kt-checkbox--solid">\
+                            <input type="checkbox" value="" class="kt-checkable">\
+                            <span></span>\
+                        </label>';
 					},
 				},
 				{
@@ -50,20 +49,20 @@ var KTDatatablesBasicBasic = function() {
 					title: 'Actions',
 					orderable: false,
 					render: function(data, type, full, meta) {
-						return `
-                        <span class="dropdown">
-                            <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown" aria-expanded="true">
-                              <i class="la la-ellipsis-h"></i>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href="#"><i class="la la-edit"></i> Edit Details</a>
-                                <a class="dropdown-item" href="#"><i class="la la-leaf"></i> Update Status</a>
-                                <a class="dropdown-item" href="#"><i class="la la-print"></i> Generate Report</a>
-                            </div>
-                        </span>
-                        <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="View">
-                          <i class="la la-edit"></i>
-                        </a>`;
+						return '\
+                        <span class="dropdown">\
+                            <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown" aria-expanded="true">\
+                              <i class="la la-ellipsis-h"></i>\
+                            </a>\
+                            <div class="dropdown-menu dropdown-menu-right">\
+                                <a class="dropdown-item" href="#"><i class="la la-edit"></i> Edit Details</a>\
+                                <a class="dropdown-item" href="#"><i class="la la-leaf"></i> Update Status</a>\
+                                <a class="dropdown-item" href="#"><i class="la la-print"></i> Generate Report</a>\
+                            </div>\
+                        </span>\
+                        <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="View">\
+                          <i class="la la-edit"></i>\
+                        </a>';
 					},
 				},
 				{

@@ -18,16 +18,16 @@ var KTDatatablesAdvancedColumnRendering = function() {
 
 						var output;
 						if (number > 8) {
-							output = `
-                                <div class="kt-user-card-v2">
-                                    <div class="kt-user-card-v2__pic">
-                                        <img src="https://keenthemes.com/keen/preview/assets/media/users/` + user_img + `" class="kt-img-rounded kt-marginless" alt="photo">
-                                    </div>
-                                    <div class="kt-user-card-v2__details">
-                                        <span class="kt-user-card-v2__name">` + full[2] + `</span>
-                                        <a href="#" class="kt-user-card-v2__email kt-link">` + full[3] + `</a>
-                                    </div>
-                                </div>`;
+							output = '\
+                                <div class="kt-user-card-v2">\
+                                    <div class="kt-user-card-v2__pic">\
+                                        <img src="https://keenthemes.com/keen/preview/assets/media/users/' + user_img + '" class="kt-img-rounded kt-marginless" alt="photo">\
+                                    </div>\
+                                    <div class="kt-user-card-v2__details">\
+                                        <span class="kt-user-card-v2__name">' + full[2] + '</span>\
+                                        <a href="#" class="kt-user-card-v2__email kt-link">' + full[3] + '</a>\
+                                    </div>\
+                                </div>';
 						}
 						else {
 							var stateNo = KTUtil.getRandomInt(0, 7);
@@ -42,16 +42,16 @@ var KTDatatablesAdvancedColumnRendering = function() {
 								'info'];
 							var state = states[stateNo];
 
-							output = `
-                                <div class="kt-user-card-v2">
-                                    <div class="kt-user-card-v2__pic">
-                                        <div class="kt-badge kt-badge--xl kt-badge--` + state + `"><span>` + full[2].substring(0, 1) + `</div>
-                                    </div>
-                                    <div class="kt-user-card-v2__details">
-                                        <span class="kt-user-card-v2__name">` + full[2] + `</span>
-                                        <a href="#" class="kt-user-card-v2__email kt-link">` + full[3] + `</a>
-                                    </div>
-                                </div>`;
+							output = '\
+                                <div class="kt-user-card-v2">\
+                                    <div class="kt-user-card-v2__pic">\
+                                        <div class="kt-badge kt-badge--xl kt-badge--' + state + '"><span>' + full[2].substring(0, 1) + '</div>\
+                                    </div>\
+                                    <div class="kt-user-card-v2__details">\
+                                        <span class="kt-user-card-v2__name">' + full[2] + '</span>\
+                                        <a href="#" class="kt-user-card-v2__email kt-link">' + full[3] + '</a>\
+                                    </div>\
+                                </div>';
 						}
 
 						return output;
@@ -68,20 +68,20 @@ var KTDatatablesAdvancedColumnRendering = function() {
 					title: 'Actions',
 					orderable: false,
 					render: function(data, type, full, meta) {
-						return `
-                        <span class="dropdown">
-                            <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown" aria-expanded="true">
-                              <i class="la la-ellipsis-h"></i>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href="#"><i class="la la-edit"></i> Edit Details</a>
-                                <a class="dropdown-item" href="#"><i class="la la-leaf"></i> Update Status</a>
-                                <a class="dropdown-item" href="#"><i class="la la-print"></i> Generate Report</a>
-                            </div>
-                        </span>
-                        <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="View">
-                          <i class="la la-edit"></i>
-                        </a>`;
+						return '\
+                        <span class="dropdown">\
+                            <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown" aria-expanded="true">\
+                              <i class="la la-ellipsis-h"></i>\
+                            </a>\
+                            <div class="dropdown-menu dropdown-menu-right">\
+                                <a class="dropdown-item" href="#"><i class="la la-edit"></i> Edit Details</a>\
+                                <a class="dropdown-item" href="#"><i class="la la-leaf"></i> Update Status</a>\
+                                <a class="dropdown-item" href="#"><i class="la la-print"></i> Generate Report</a>\
+                            </div>\
+                        </span>\
+                        <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="View">\
+                          <i class="la la-edit"></i>\
+                        </a>';
 					},
 				},
 				{

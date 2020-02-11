@@ -12,8 +12,8 @@ var KTDatatablesSearchOptionsColumnSearch = function() {
 			responsive: true,
 
 			// Pagination settings
-			dom: `<'row'<'col-sm-12'tr>>
-			<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>`,
+			dom: "<'row'<'col-sm-12'tr>>\
+			<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
 			// read more: https://datatables.net/examples/basic_init/dom.html
 
 			lengthMenu: [5, 10, 25, 50],
@@ -28,7 +28,7 @@ var KTDatatablesSearchOptionsColumnSearch = function() {
 			processing: true,
 			serverSide: true,
 			ajax: {
-				url: 'https://keenthemes.com/keen/tools/preview/inc/api/datatables/demos/server.php',
+				url: 'https://keenthemes.com/keen/tools/preview/api/datatables/demos/server.php',
 				type: 'POST',
 				data: {
 					// parameters for custom backend script demo
@@ -61,12 +61,12 @@ var KTDatatablesSearchOptionsColumnSearch = function() {
 						case 'Order ID':
 						case 'Ship City':
 						case 'Company Agent':
-							input = $(`<input type="text" class="form-control form-control-sm form-filter kt-input" data-col-index="` + column.index() + `"/>`);
+							input = $('<input type="text" class="form-control form-control-sm form-filter kt-input" data-col-index="' + column.index() + '"/>');
 							break;
 
 						case 'Country':
-							input = $(`<select class="form-control form-control-sm form-filter kt-input" title="Select" data-col-index="` + column.index() + `">
-										<option value="">Select</option></select>`);
+							input = $('<select class="form-control form-control-sm form-filter kt-input" title="Select" data-col-index="' + column.index() + '">\
+										<option value="">Select</option></select>');
 							column.data().unique().sort().each(function(d, j) {
 								$(input).append('<option value="' + d + '">' + d + '</option>');
 							});
@@ -82,8 +82,8 @@ var KTDatatablesSearchOptionsColumnSearch = function() {
 								6: {'title': 'Danger', 'class': ' kt-badge--danger'},
 								7: {'title': 'Warning', 'class': ' kt-badge--warning'},
 							};
-							input = $(`<select class="form-control form-control-sm form-filter kt-input" title="Select" data-col-index="` + column.index() + `">
-										<option value="">Select</option></select>`);
+							input = $('<select class="form-control form-control-sm form-filter kt-input" title="Select" data-col-index="' + column.index() + '">\
+										<option value="">Select</option></select>');
 							column.data().unique().sort().each(function(d, j) {
 								$(input).append('<option value="' + d + '">' + status[d].title + '</option>');
 							});
@@ -95,45 +95,45 @@ var KTDatatablesSearchOptionsColumnSearch = function() {
 								2: {'title': 'Retail', 'state': 'primary'},
 								3: {'title': 'Direct', 'state': 'accent'},
 							};
-							input = $(`<select class="form-control form-control-sm form-filter kt-input" title="Select" data-col-index="` + column.index() + `">
-										<option value="">Select</option></select>`);
+							input = $('<select class="form-control form-control-sm form-filter kt-input" title="Select" data-col-index="' + column.index() + '">\
+										<option value="">Select</option></select>');
 							column.data().unique().sort().each(function(d, j) {
 								$(input).append('<option value="' + d + '">' + status[d].title + '</option>');
 							});
 							break;
 
 						case 'Ship Date':
-							input = $(`
-							<div class="input-group date">
-								<input type="text" class="form-control form-control-sm kt-input" readonly placeholder="From" id="m_datepicker_1"
-								 data-col-index="` + column.index() + `"/>
-								<div class="input-group-append">
-									<span class="input-group-text"><i class="la la-calendar-o glyphicon-th"></i></span>
-								</div>
-							</div>
-							<div class="input-group date">
-								<input type="text" class="form-control form-control-sm kt-input" readonly placeholder="To" id="m_datepicker_2"
-								 data-col-index="` + column.index() + `"/>
-								<div class="input-group-append">
-									<span class="input-group-text"><i class="la la-calendar-o glyphicon-th"></i></span>
-								</div>
-							</div>`);
+							input = $('\
+							<div class="input-group date">\
+								<input type="text" class="form-control form-control-sm kt-input" readonly placeholder="From" id="m_datepicker_1"\
+								 data-col-index="' + column.index() + '"/>\
+								<div class="input-group-append">\
+									<span class="input-group-text"><i class="la la-calendar-o glyphicon-th"></i></span>\
+								</div>\
+							</div>\
+							<div class="input-group date">\
+								<input type="text" class="form-control form-control-sm kt-input" readonly placeholder="To" id="m_datepicker_2"\
+								 data-col-index="' + column.index() + '"/>\
+								<div class="input-group-append">\
+									<span class="input-group-text"><i class="la la-calendar-o glyphicon-th"></i></span>\
+								</div>\
+							</div>');
 							break;
 
 						case 'Actions':
-							var search = $(`<button class="btn btn-brand kt-btn btn-sm kt-btn--icon">
-							  <span>
-							    <i class="la la-search"></i>
-							    <span>Search</span>
-							  </span>
-							</button>`);
+							var search = $('<button class="btn btn-brand kt-btn btn-sm kt-btn--icon">\
+							  <span>\
+							    <i class="la la-search"></i>\
+							    <span>Search</span>\
+							  </span>\
+							</button>');
 
-							var reset = $(`<button class="btn btn-secondary kt-btn btn-sm kt-btn--icon">
-							  <span>
-							    <i class="la la-close"></i>
-							    <span>Reset</span>
-							  </span>
-							</button>`);
+							var reset = $('<button class="btn btn-secondary kt-btn btn-sm kt-btn--icon">\
+							  <span>\
+							    <i class="la la-close"></i>\
+							    <span>Reset</span>\
+							  </span>\
+							</button>');
 
 							$('<th>').append(search).append(reset).appendTo(rowFilter);
 
@@ -197,20 +197,20 @@ var KTDatatablesSearchOptionsColumnSearch = function() {
 					title: 'Actions',
 					orderable: false,
 					render: function(data, type, full, meta) {
-						return `
-                        <span class="dropdown">
-                            <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown" aria-expanded="true">
-                              <i class="la la-ellipsis-h"></i>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href="#"><i class="la la-edit"></i> Edit Details</a>
-                                <a class="dropdown-item" href="#"><i class="la la-leaf"></i> Update Status</a>
-                                <a class="dropdown-item" href="#"><i class="la la-print"></i> Generate Report</a>
-                            </div>
-                        </span>
-                        <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="View">
-                          <i class="la la-edit"></i>
-                        </a>`;
+						return '\
+                        <span class="dropdown">\
+                            <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown" aria-expanded="true">\
+                              <i class="la la-ellipsis-h"></i>\
+                            </a>\
+                            <div class="dropdown-menu dropdown-menu-right">\
+                                <a class="dropdown-item" href="#"><i class="la la-edit"></i> Edit Details</a>\
+                                <a class="dropdown-item" href="#"><i class="la la-leaf"></i> Update Status</a>\
+                                <a class="dropdown-item" href="#"><i class="la la-print"></i> Generate Report</a>\
+                            </div>\
+                        </span>\
+                        <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="View">\
+                          <i class="la la-edit"></i>\
+                        </a>';
 					},
 				},
 				{

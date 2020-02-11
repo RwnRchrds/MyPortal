@@ -10,7 +10,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 			searchDelay: 500,
 			processing: true,
 			serverSide: true,
-			ajax: 'https://keenthemes.com/keen/tools/preview/inc/api/datatables/demos/server.php',
+			ajax: 'https://keenthemes.com/keen/tools/preview/api/datatables/demos/server.php',
 			columns: [
 				{data: 'RecordID'},
 				{data: 'OrderID'},
@@ -22,7 +22,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 				{data: 'ShipDate'},
 				{data: 'Status'},
 				{data: 'Type'},
-				{data: 'Actions'},
+				{data: 'Actions', responsivePriority: -1},
 			],
 			columnDefs: [
 				{
@@ -30,20 +30,20 @@ var KTDatatablesDataSourceAjaxServer = function() {
 					title: 'Actions',
 					orderable: false,
 					render: function(data, type, full, meta) {
-						return `
-                        <span class="dropdown">
-                            <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown" aria-expanded="true">
-                              <i class="la la-ellipsis-h"></i>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href="#"><i class="la la-edit"></i> Edit Details</a>
-                                <a class="dropdown-item" href="#"><i class="la la-leaf"></i> Update Status</a>
-                                <a class="dropdown-item" href="#"><i class="la la-print"></i> Generate Report</a>
-                            </div>
-                        </span>
-                        <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="View">
-                          <i class="la la-edit"></i>
-                        </a>`;
+						return '\
+                        <span class="dropdown">\
+                            <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown" aria-expanded="true">\
+                              <i class="la la-ellipsis-h"></i>\
+                            </a>\
+                            <div class="dropdown-menu dropdown-menu-right">\
+                                <a class="dropdown-item" href="#"><i class="la la-edit"></i> Edit Details</a>\
+                                <a class="dropdown-item" href="#"><i class="la la-leaf"></i> Update Status</a>\
+                                <a class="dropdown-item" href="#"><i class="la la-print"></i> Generate Report</a>\
+                            </div>\
+                        </span>\
+                        <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="View">\
+                          <i class="la la-edit"></i>\
+                        </a>';
 					},
 				},
 				{

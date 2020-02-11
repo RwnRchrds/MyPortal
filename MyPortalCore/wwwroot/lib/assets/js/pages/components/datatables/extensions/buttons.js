@@ -7,9 +7,9 @@ var KTDatatablesExtensionButtons = function() {
 		var table = $('#kt_table_1').DataTable({
 			responsive: true,
 			// Pagination settings
-			dom: `<'row'<'col-sm-6 text-left'f><'col-sm-6 text-right'B>>
-			<'row'<'col-sm-12'tr>>
-			<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>`,
+			dom: "<'row'<'col-sm-6 text-left'f><'col-sm-6 text-right'B>>\
+			<'row'<'col-sm-12'tr>>\
+			<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
 
 			buttons: [
 				'print',
@@ -60,7 +60,7 @@ var KTDatatablesExtensionButtons = function() {
 	var initTable2 = function() {
 
 		// begin first table
-		var table = $('#m_table_2').DataTable({
+		var table = $('#kt_table_2').DataTable({
 			responsive: true,
 			
 			buttons: [
@@ -73,7 +73,7 @@ var KTDatatablesExtensionButtons = function() {
 			processing: true,
 			serverSide: true,
 			ajax: {
-				url: 'https://keenthemes.com/keen/tools/preview/inc/api/datatables/demos/server.php',
+				url: 'https://keenthemes.com/keen/tools/preview/api/datatables/demos/server.php',
 				type: 'POST',
 				data: {
 					// parameters for custom backend script demo
