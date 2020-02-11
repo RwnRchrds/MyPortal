@@ -17,6 +17,7 @@ using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
 using MyPortal.Logic.Authorisation.Attributes;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Dtos;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortalCore.Areas.Identity.Pages.Account
@@ -27,14 +28,16 @@ namespace MyPortalCore.Areas.Identity.Pages.Account
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
         private readonly ISchoolService _schoolService;
+        private readonly IPersonService _personService;
 
         public LoginModel(SignInManager<ApplicationUser> signInManager, 
             ILogger<LoginModel> logger,
-            UserManager<ApplicationUser> userManager, ISchoolService schoolService)
+            UserManager<ApplicationUser> userManager, ISchoolService schoolService, IPersonService personService)
         {
             _signInManager = signInManager;
             _logger = logger;
             _schoolService = schoolService;
+            _personService = personService;
         }
 
         [BindProperty]

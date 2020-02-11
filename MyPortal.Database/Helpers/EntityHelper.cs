@@ -11,8 +11,10 @@ namespace MyPortal.Database.Helpers
         internal static string GetAllColumns(Type t, string tblAlias = null)
         {
             if (t == null) return string.Empty;
-            PropertyInfo[] props = t.GetProperties().Where(x => !x.GetGetMethod().IsVirtual).ToArray();
-            string properties = "";
+
+            var props = GetProperties(t);
+
+            string columns = "";
 
             if (string.IsNullOrWhiteSpace(tblAlias))
             {
@@ -25,16 +27,37 @@ namespace MyPortal.Database.Helpers
             {
                 if (first)
                 {
-                    properties = $"[{tblAlias}].[{prp.Name}]";
+                    columns = $"[{tblAlias}].[{prp.Name}]";
                     first = false;
                 }
                 else
                 {
-                    properties = $"{properties},[{tblAlias}].[{prp.Name}]";
+                    columns = $"{columns},[{tblAlias}].[{prp.Name}]";
                 }
             }
 
-            return properties;
+            return columns;
+        }
+
+        internal static string GetUserColumns(string tblAlias = null)
+        {
+            if (string.IsNullOrWhiteSpace(tblAlias))
+            {
+                tblAlias = "AspNetUsers";
+            }
+
+            return
+                $@"
+[{tblAlias}].[Id],[{tblAlias}].[UserName],[{tblAlias}].[NormalizedUserName],[{tblAlias}].[Email],[{tblAlias}].[NormalizedEmail],
+[{tblAlias}].[EmailConfirmed],[{tblAlias}].[PhoneNumber],[{tblAlias}].[PhoneNumberConfirmed],[{tblAlias}].[TwoFactorEnabled],[{tblAlias}].[LockoutEnd],
+[{tblAlias}].[AccessFailedCount],[{tblAlias}].[Enabled]";
+        }
+
+        internal static IEnumerable<PropertyInfo> GetProperties(Type t)
+        {
+            var props = t.GetProperties().Where(x => !x.GetGetMethod().IsVirtual).ToList();
+
+            return props;
         }
 
         internal static string GetTblName(Type t, string tblAlias = null, string schema = "dbo")

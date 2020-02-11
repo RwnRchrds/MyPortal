@@ -1,34 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using MyPortal.Database.Models.Identity;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
     public class PersonRepository : BaseReadWriteRepository<Person>, IPersonRepository
     {
+        private readonly string RelatedColumns = $"{EntityHelper.GetUserColumns("User")}";
+
+        private readonly string JoinRelated = $@"
+{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[User].[Id]", "[Person].[UserId]", "User")}";
+
         public PersonRepository(IDbConnection connection) : base(connection)
         {
         }
 
         public async Task<IEnumerable<Person>> GetAll()
         {
-            var sql = $"SELECT {AllColumns} FROM {TblName}";
+            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
 
-            return await Connection.QueryAsync<Person>(sql);
+            return await ExecuteQuery(sql);
         }
 
         public async Task<Person> GetById(Guid id)
         {
-            var sql = $"SELECT {AllColumns} FROM {TblName} WHERE [Person].[Id] = @PersonId";
+            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated} WHERE [Person].[Id] = @PersonId";
 
-            return await Connection.QuerySingleOrDefaultAsync<Person>(sql, new {PersonId = id});
+            return (await ExecuteQuery(sql, new {PersonId = id})).Single();
         }
 
         public async Task Update(Person entity)
@@ -57,66 +64,55 @@ namespace MyPortal.Database.Repositories
         {
             var sql = $"SELECT {AllColumns} FROM {TblName} WHERE [Person].[UserId] = @UserId";
 
-            return await Connection.QuerySingleOrDefaultAsync<Person>(sql, new {UserId = userId});
+            return (await ExecuteQuery(sql, new {UserId = userId})).Single();
         }
 
         public async Task<IEnumerable<Person>> Search(Person person)
         {
-            var sql = $"SELECT {AllColumns} FROM {TblName}";
-
-            var hasWhereClause = false;
+            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
 
             if (!string.IsNullOrWhiteSpace(person.FirstName))
             {
-                sql = $"{sql} WHERE [Person].[FirstName] LIKE @FirstName";
-
-                hasWhereClause = true;
+                sql = $"{SqlHelper.Where(WhereType.Like, sql, "[Person].[FirstName]", "@FirstName")}";
             }
 
             if (!string.IsNullOrWhiteSpace(person.LastName))
             {
-                var appendCondition = hasWhereClause ? "AND" : "WHERE";
-
-                sql = $"{sql} {appendCondition} [Person].[LastName] Like @LastName";
-
-                hasWhereClause = true;
+                sql = $"{SqlHelper.Where(WhereType.Like, sql, "[Person].[LastName]", "@LastName")}";
             }
 
             if (!string.IsNullOrWhiteSpace(person.Gender))
             {
-                var appendCondition = hasWhereClause ? "AND" : "WHERE";
-
-                sql = $"{sql} {appendCondition} [Person].[Gender] = @Gender";
-
-                hasWhereClause = true;
+                sql = $"{SqlHelper.Where(WhereType.Equals, sql, "[Person].[Gender]", "@Gender")}";
             }
 
             if (person.Dob != null)
             {
-                var appendCondition = hasWhereClause ? "AND" : "WHERE";
-
-                sql = $"{sql} {appendCondition} WHERE [Person].[Dob] = @Dob";
+                sql = $"{SqlHelper.Where(WhereType.Equals, sql, "[Person].[Dob]", "@Dob")}";
             }
 
-            return await Connection.QueryAsync<Person>(sql,
-                new
-                {
-                    FirstName = $"%{person.FirstName}%", LastName = $"%{person.LastName}%", Gender = person.Gender,
-                    Dob = person.Dob
-                });
+            var param = new
+                {FirstName = $"{person.FirstName}%", LastName = $"{person.LastName}%", person.Gender, person.Dob};
+
+            return await ExecuteQuery(sql, param);
         }
 
         public async Task<int> GetNumberOfBirthdaysThisWeek(DateTime weekBeginning)
         {
             var sql = $"SELECT COUNT([Person].[Id]) FROM {TblName} WHERE [Person].[Dob] >= @Monday AND [Person].[Dob] <= @Sunday";
 
-            return await Connection.QueryFirstOrDefaultAsync<int>(sql,
+            return await ExecuteIntQuery(sql,
                 new {Monday = weekBeginning, Sunday = weekBeginning.AddDays(6)});
         }
 
         protected override async Task<IEnumerable<Person>> ExecuteQuery(string sql, object param = null)
         {
-            throw new NotImplementedException();
+            return await Connection.QueryAsync<Person, ApplicationUser, Person>(sql, (person, user) =>
+            {
+                person.User = user;
+
+                return person;
+            }, param);
         }
     }
 }

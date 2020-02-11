@@ -63,9 +63,12 @@ namespace MyPortalCore
             services.AddTransient<IDbConnection>(connection =>
                 new SqlConnection(Configuration.GetConnectionString("LiveConnection")));
 
+            services.AddTransient<IPersonRepository, PersonRepository>();
             services.AddTransient<ISchoolRepository, SchoolRepository>();
 
+            services.AddTransient<IPersonService, PersonService>();
             services.AddTransient<ISchoolService, SchoolService>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
