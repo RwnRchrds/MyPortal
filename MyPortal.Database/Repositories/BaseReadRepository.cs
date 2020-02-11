@@ -27,14 +27,14 @@ namespace MyPortal.Database.Repositories
 
         protected abstract Task<IEnumerable<TEntity>> ExecuteQuery(string sql, object param = null);
 
-        protected async Task<IEnumerable<int>> ExecuteIntQuery(string sql, object param = null)
+        protected async Task<int> ExecuteIntQuery(string sql, object param = null)
         {
-            return await Connection.QueryAsync<int>(sql, param);
+            return await Connection.QueryFirstAsync<int>(sql, param);
         }
 
-        protected async Task<IEnumerable<string>> ExecuteStringQuery(string sql, object param = null)
+        protected async Task<string> ExecuteStringQuery(string sql, object param = null)
         {
-            return await Connection.QueryAsync<string>(sql, param);
+            return await Connection.QueryFirstAsync<string>(sql, param);
         }
 
         public void Dispose()

@@ -67,14 +67,14 @@ namespace MyPortal.Database.Repositories
         {
             var sql = $"SELECT [School].[Name] FROM {TblName} WHERE [School].[Local] = 1";
 
-            return await Connection.QuerySingleOrDefaultAsync<string>(sql);
+            return await ExecuteStringQuery(sql);
         }
 
         public async Task<School> GetLocal()
         {
             var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated} WHERE [School].[Local] = 1";
 
-            return (await ExecuteQuery(sql)).SingleOrDefault();
+            return (await ExecuteQuery(sql)).First();
         }
 
         protected override async Task<IEnumerable<School>> ExecuteQuery(string sql, object param = null)

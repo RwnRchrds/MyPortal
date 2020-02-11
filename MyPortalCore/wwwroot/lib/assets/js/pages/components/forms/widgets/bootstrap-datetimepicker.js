@@ -112,7 +112,7 @@ var KTBootstrapDatetimepicker = function () {
             todayHighlight: true,
             autoclose: true,
             format: 'yyyy.mm.dd hh:ii',
-            language: moment.locale('fr')
+            language: moment.locale('en')
         });
     };
 

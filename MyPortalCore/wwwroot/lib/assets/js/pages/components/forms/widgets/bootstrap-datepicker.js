@@ -117,7 +117,7 @@ var KTBootstrapDatepicker = function () {
             todayHighlight: true,
             orientation: "bottom left",
             templates: arrows,
-            language: moment.locale('fr')
+            language: moment.locale('en')
         });
 
     };
