@@ -6,9 +6,9 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class DiaryEventAttendeeDto
     {
-        public int EventId { get; set; }
-        public int PersonId { get; set; }
-        public int ResponseId { get; set; }
+        public Guid EventId { get; set; }
+        public Guid PersonId { get; set; }
+        public Guid ResponseId { get; set; }
         public bool Required { get; set; }
         public bool Attended { get; set; }
 

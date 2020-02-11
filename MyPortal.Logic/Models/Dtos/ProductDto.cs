@@ -7,9 +7,9 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class ProductDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public int ProductTypeId { get; set; }
+        public Guid ProductTypeId { get; set; }
 
         [Required]
         [StringLength(256)]

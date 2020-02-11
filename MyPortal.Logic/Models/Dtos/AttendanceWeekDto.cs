@@ -6,9 +6,9 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class AttendanceWeekDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public int AcademicYearId { get; set; }
+        public Guid AcademicYearId { get; set; }
 
         public DateTime Beginning { get; set; }
 

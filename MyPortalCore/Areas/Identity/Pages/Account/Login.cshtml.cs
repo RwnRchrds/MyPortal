@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -23,7 +24,6 @@ namespace MyPortalCore.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class LoginModel : PageModel
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
         private readonly ISchoolService _schoolService;
@@ -35,7 +35,6 @@ namespace MyPortalCore.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _schoolService = schoolService;
-            _userManager = userManager;
         }
 
         [BindProperty]

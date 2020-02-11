@@ -7,9 +7,9 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class DocumentDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public int TypeId { get; set; }
+        public Guid TypeId { get; set; }
 
         [Required]
         [StringLength(128)]
@@ -22,7 +22,7 @@ namespace MyPortal.Logic.Models.Dtos
         [Url]
         public string DownloadUrl { get; set; }
 
-        public int UploaderId { get; set; }
+        public Guid UploaderId { get; set; }
 
         public DateTime UploadedDate { get; set; }
 

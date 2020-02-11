@@ -167,7 +167,7 @@ namespace MyPortal.Logic.Helpers
                     .ForMember(dest => dest.TypeName,
                         opts => opts.MapFrom(src => src.Type.Description))
                     .ForMember(dest => dest.RecordedBy,
-                        opts => opts.MapFrom(src => src.RecordedBy.GetDisplayName()));
+                        opts => opts.MapFrom(src => src.RecordedBy.GetDisplayName(true)));
 
                 cfg.CreateMap<IncidentDto, DataGridIncidentDto>()
                     .ForMember(dest => dest.Location,

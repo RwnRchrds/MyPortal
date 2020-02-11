@@ -6,17 +6,17 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class IncidentDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public int AcademicYearId { get; set; }
+        public Guid AcademicYearId { get; set; }
 
-        public int BehaviourTypeId { get; set; }
+        public Guid BehaviourTypeId { get; set; }
 
-        public int StudentId { get; set; }
+        public Guid StudentId { get; set; }
 
-        public int LocationId { get; set; }
+        public Guid LocationId { get; set; }
 
-        public int RecordedById { get; set; }
+        public Guid RecordedById { get; set; }
 
         public DateTime CreatedDate { get; set; }
 

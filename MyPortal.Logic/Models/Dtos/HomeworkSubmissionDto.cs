@@ -6,9 +6,9 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class HomeworkSubmissionDto
     {
-        public int Id { get; set; }
-        public int HomeworkId { get; set; }
-        public int TaskId { get; set; }
+        public Guid Id { get; set; }
+        public Guid HomeworkId { get; set; }
+        public Guid TaskId { get; set; }
         public int MaxPoints { get; set; }
         public int PointsAchieved { get; set; }
         public string Comments { get; set; }

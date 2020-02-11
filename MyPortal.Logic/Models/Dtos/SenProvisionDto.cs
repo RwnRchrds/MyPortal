@@ -7,11 +7,11 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class SenProvisionDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public int StudentId { get; set; }
+        public Guid StudentId { get; set; }
 
-        public int ProvisionTypeId { get; set; }
+        public Guid ProvisionTypeId { get; set; }
 
         public DateTime StartDate { get; set; }
 

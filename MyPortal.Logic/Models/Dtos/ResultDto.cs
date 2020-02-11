@@ -6,17 +6,19 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class ResultDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public int ResultSetId { get; set; }
+        public Guid ResultSetId { get; set; }
 
-        public int StudentId { get; set; }
+        public Guid StudentId { get; set; }
 
-        public int AspectId { get; set; }
+        public Guid AspectId { get; set; }
 
         public DateTime Date { get; set; }
 
-        public int GradeId { get; set; }
+        public Guid GradeId { get; set; }
+
+        public decimal Mark { get; set; }
 
         public virtual ResultSetDto ResultSet { get; set; }
 

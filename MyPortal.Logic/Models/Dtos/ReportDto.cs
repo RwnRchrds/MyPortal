@@ -7,9 +7,9 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class ReportDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public int AreaId { get; set; }
+        public Guid AreaId { get; set; }
 
         [Required]
         [StringLength(128)]

@@ -7,7 +7,7 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class AttendanceCodeDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         [StringLength(1)]
@@ -17,7 +17,7 @@ namespace MyPortal.Logic.Models.Dtos
         [StringLength(128)]
         public string Description { get; set; }
 
-        public int MeaningId { get; set; }
+        public Guid MeaningId { get; set; }
 
         public bool DoNotUse { get; set; }
     }

@@ -7,7 +7,7 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class LocalAuthorityDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public int LeaCode { get; set; }
 

@@ -7,11 +7,11 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class SessionDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public int ClassId { get; set; }
+        public Guid ClassId { get; set; }
 
-        public int PeriodId { get; set; }
+        public Guid PeriodId { get; set; }
 
         public virtual PeriodDto Period { get; set; }
 

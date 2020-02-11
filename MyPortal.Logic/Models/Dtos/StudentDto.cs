@@ -10,15 +10,15 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class StudentDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public int PersonId { get; set; }
+        public Guid PersonId { get; set; }
 
-        public int RegGroupId { get; set; }
+        public Guid RegGroupId { get; set; }
 
-        public int YearGroupId { get; set; }
+        public Guid YearGroupId { get; set; }
 
-        public int? HouseId { get; set; }
+        public Guid? HouseId { get; set; }
 
         [StringLength(128)]
         public string CandidateNumber { get; set; }

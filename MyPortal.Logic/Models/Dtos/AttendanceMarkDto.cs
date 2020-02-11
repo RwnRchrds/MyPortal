@@ -7,13 +7,13 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class AttendanceMarkDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public int StudentId { get; set; }
+        public Guid StudentId { get; set; }
 
-        public int WeekId { get; set; }
+        public Guid WeekId { get; set; }
 
-        public int PeriodId { get; set; }
+        public Guid PeriodId { get; set; }
 
         [Required]
         [StringLength(1)]

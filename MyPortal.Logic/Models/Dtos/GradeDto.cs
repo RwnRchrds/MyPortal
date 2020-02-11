@@ -7,9 +7,9 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class GradeDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public int GradeSetId { get; set; }
+        public Guid GradeSetId { get; set; }
 
         [Required]
         [StringLength(128)]

@@ -7,8 +7,8 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class DiaryEventTemplateDto
     {
-        public int Id { get; set; }
-        public int EventTypeId { get; set; }
+        public Guid Id { get; set; }
+        public Guid EventTypeId { get; set; }
 
         [Required]
         [StringLength(256)]

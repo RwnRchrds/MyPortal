@@ -8,7 +8,7 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class HouseDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         [StringLength(128)]

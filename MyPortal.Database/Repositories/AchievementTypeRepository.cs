@@ -13,10 +13,8 @@ namespace MyPortal.Database.Repositories
 {
     public class AchievementTypeRepository : BaseReadWriteRepository<AchievementType>, IAchievementTypeRepository
     {
-
-
-        private readonly string JoinAchievement =
-            @"LEFT JOIN [dbo].[Achievement] AS [Achievement] ON [Achievement].[AchievementTypeId] = [AchievementType].[Id]";
+        private readonly string JoinAchievement = SqlHelper.Join(JoinType.LeftJoin,
+            "[dbo].[Achievement]", "[Achievement].[AchievmentTypeId]", "[AchievementType].[Id]");
 
         public AchievementTypeRepository(IDbConnection connection) : base(connection)
         {

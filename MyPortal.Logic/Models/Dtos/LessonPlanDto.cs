@@ -7,11 +7,11 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class LessonPlanDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public int StudyTopicId { get; set; }
+        public Guid StudyTopicId { get; set; }
 
-        public int AuthorId { get; set; }
+        public Guid AuthorId { get; set; }
 
         [Required]
         [StringLength(256)]

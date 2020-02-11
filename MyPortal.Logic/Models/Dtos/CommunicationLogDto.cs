@@ -6,11 +6,11 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class CommunicationLogDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public int PersonId { get; set; }
+        public Guid PersonId { get; set; }
 
-        public int CommunicationTypeId { get; set; }
+        public Guid CommunicationTypeId { get; set; }
 
         public DateTime Date { get; set; }
 

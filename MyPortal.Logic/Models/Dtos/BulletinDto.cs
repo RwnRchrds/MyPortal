@@ -7,9 +7,9 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class BulletinDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public int AuthorId { get; set; }
+        public Guid AuthorId { get; set; }
         public DateTime CreateDate { get; set; }
 
         public DateTime? ExpireDate { get; set; }

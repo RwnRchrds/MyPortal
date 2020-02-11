@@ -1,23 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using MyPortal.Database.Models.Identity;
 using MyPortal.Logic.Attributes;
 
 namespace MyPortal.Logic.Models.Dtos
 {
     public class AchievementDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public int AcademicYearId { get; set; }
+        public Guid AcademicYearId { get; set; }
 
-        public int AchievementTypeId { get; set; }
+        public Guid AchievementTypeId { get; set; }
 
-        public int StudentId { get; set; }
+        public Guid StudentId { get; set; }
 
-        public int LocationId { get; set; }
+        public Guid LocationId { get; set; }
 
-        public int RecordedById { get; set; }
+        public Guid RecordedById { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
@@ -34,7 +35,7 @@ namespace MyPortal.Logic.Models.Dtos
 
         public virtual AcademicYearDto AcademicYear { get; set; }
 
-        public virtual StaffMemberDto RecordedBy { get; set; }
+        public virtual ApplicationUser RecordedBy { get; set; }
 
         public virtual StudentDto Student { get; set; }
     }

@@ -9,7 +9,7 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class PersonDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [StringLength(128)]
         public string Title { get; set; }

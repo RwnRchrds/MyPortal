@@ -7,19 +7,19 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class ClassDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public int AcademicYearId { get; set; }
+        public Guid AcademicYearId { get; set; }
 
-        public int? SubjectId { get; set; }
+        public Guid? SubjectId { get; set; }
 
         [Required]
         [StringLength(128)]
         public string Name { get; set; }
 
-        public int TeacherId { get; set; }
+        public Guid TeacherId { get; set; }
 
-        public int? YearGroupId { get; set; }
+        public Guid? YearGroupId { get; set; }
 
         public virtual StaffMemberDto Teacher { get; set; }
 

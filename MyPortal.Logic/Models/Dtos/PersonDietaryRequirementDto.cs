@@ -6,9 +6,9 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class PersonDietaryRequirementDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public int PersonId { get; set; }
+        public Guid PersonId { get; set; }
 
         public int DietaryRequirementId { get; set; }
 

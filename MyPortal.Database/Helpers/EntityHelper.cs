@@ -8,30 +8,38 @@ namespace MyPortal.Database.Helpers
 {
     internal static class EntityHelper
     {
-        internal static string GetAllColumns(Type t, string tblAlias)
+        internal static string GetAllColumns(Type t, string tblAlias = null)
         {
             if (t == null) return string.Empty;
             PropertyInfo[] props = t.GetProperties().Where(x => !x.GetGetMethod().IsVirtual).ToArray();
             string properties = "";
 
-            foreach (PropertyInfo prp in props)
+            if (string.IsNullOrWhiteSpace(tblAlias))
             {
-                if (properties != "")
+                tblAlias = t.Name;
+            }
+
+            var first = true;
+
+            foreach (var prp in props)
+            {
+                if (first)
                 {
-                    properties = $"{properties},[{tblAlias}].[{prp.Name}]";
+                    properties = $"[{tblAlias}].[{prp.Name}]";
+                    first = false;
                 }
                 else
                 {
-                    properties = $"[{tblAlias}].[{prp.Name}]";
+                    properties = $"{properties},[{tblAlias}].[{prp.Name}]";
                 }
             }
 
             return properties;
         }
 
-        internal static string GetTblName(Type t, string tblAlias = null)
+        internal static string GetTblName(Type t, string tblAlias = null, string schema = "dbo")
         {
-            return $"[dbo].[{t.Name}] AS [{(!string.IsNullOrWhiteSpace(tblAlias) ? tblAlias : t.Name)}]";
+            return $"[{schema}].[{t.Name}] AS [{(!string.IsNullOrWhiteSpace(tblAlias) ? tblAlias : t.Name)}]";
         }
     }
 }

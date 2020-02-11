@@ -7,11 +7,11 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class AspectDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public int TypeId { get; set; }
+        public Guid TypeId { get; set; }
 
-        public int GradeSetId { get; set; }
+        public Guid GradeSetId { get; set; }
 
         [Required]
         [StringLength(256)]

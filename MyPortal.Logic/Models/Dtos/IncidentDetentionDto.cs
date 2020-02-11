@@ -7,9 +7,9 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class IncidentDetentionDto
     {
-        public int Id { get; set; }
-        public int IncidentId { get; set; }
-        public int DetentionId { get; set; }
+        public Guid Id { get; set; }
+        public Guid IncidentId { get; set; }
+        public Guid DetentionId { get; set; }
 
         public virtual Incident Incident { get; set; }
         public virtual Detention Detention { get; set; }

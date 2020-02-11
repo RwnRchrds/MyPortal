@@ -7,11 +7,11 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class MedicalEventDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public int StudentId { get; set; }
+        public Guid StudentId { get; set; }
 
-        public int RecordedById { get; set; }
+        public Guid RecordedById { get; set; }
 
         public DateTime Date { get; set; }
 

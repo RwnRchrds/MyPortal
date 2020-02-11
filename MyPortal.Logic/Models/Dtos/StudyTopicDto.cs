@@ -8,11 +8,11 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class StudyTopicDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public int SubjectId { get; set; }
+        public Guid SubjectId { get; set; }
 
-        public int YearGroupId { get; set; }
+        public Guid YearGroupId { get; set; }
 
         [Required]
         [StringLength(256)]

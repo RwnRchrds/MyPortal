@@ -6,13 +6,13 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class SaleDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public int StudentId { get; set; }
+        public Guid StudentId { get; set; }
 
-        public int ProductId { get; set; }
+        public Guid ProductId { get; set; }
 
-        public int AcademicYearId { get; set; }
+        public Guid AcademicYearId { get; set; }
 
         public DateTime Date { get; set; }
 

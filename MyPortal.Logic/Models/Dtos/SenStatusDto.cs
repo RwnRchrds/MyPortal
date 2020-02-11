@@ -7,7 +7,7 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class SenStatusDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         [StringLength(1)]

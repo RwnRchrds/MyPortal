@@ -6,13 +6,13 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class SubjectStaffMemberDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public int SubjectId { get; set; }
+        public Guid SubjectId { get; set; }
 
-        public int StaffMemberId { get; set; }
+        public Guid StaffMemberId { get; set; }
 
-        public int RoleId { get; set; }
+        public Guid RoleId { get; set; }
 
         public virtual SubjectDto Subject { get; set; }
         public virtual StaffMemberDto StaffMember { get; set; }

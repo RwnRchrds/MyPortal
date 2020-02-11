@@ -7,11 +7,11 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class EmailAddressDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public int TypeId { get; set; }
+        public Guid TypeId { get; set; }
 
-        public int PersonId { get; set; }
+        public Guid PersonId { get; set; }
 
         [Required]
         [EmailAddress]

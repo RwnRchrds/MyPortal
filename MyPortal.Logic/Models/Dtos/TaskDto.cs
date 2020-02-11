@@ -8,8 +8,8 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class TaskDto
     {
-        public int Id { get; set; }
-        public int AssignedToId { get; set; }
+        public Guid Id { get; set; }
+        public Guid AssignedToId { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? DueDate { get; set; }
 

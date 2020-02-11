@@ -7,7 +7,7 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class PeriodDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public DayOfWeek Weekday { get; set; }
 

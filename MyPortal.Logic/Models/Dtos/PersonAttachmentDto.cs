@@ -6,11 +6,11 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class PersonAttachmentDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public int PersonId { get; set; }
+        public Guid PersonId { get; set; }
 
-        public int DocumentId { get; set; }
+        public Guid DocumentId { get; set; }
 
         public virtual DocumentDto Document { get; set; }
 

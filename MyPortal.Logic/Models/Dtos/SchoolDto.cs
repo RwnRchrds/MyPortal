@@ -7,13 +7,13 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class SchoolDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         [StringLength(256)]
         public string Name { get; set; }
 
-        public int? LocalAuthorityId { get; set; }
+        public Guid? LocalAuthorityId { get; set; }
 
         public int EstablishmentNumber { get; set; }
 
@@ -25,15 +25,15 @@ namespace MyPortal.Logic.Models.Dtos
         [StringLength(128)]
         public string Uprn { get; set; }
 
-        public int PhaseId { get; set; }
+        public Guid PhaseId { get; set; }
 
-        public int TypeId { get; set; }
+        public Guid TypeId { get; set; }
 
-        public int GovernanceTypeId { get; set; }
+        public Guid GovernanceTypeId { get; set; }
 
-        public int IntakeTypeId { get; set; }
+        public Guid IntakeTypeId { get; set; }
 
-        public int? HeadTeacherId { get; set; }
+        public Guid? HeadTeacherId { get; set; }
 
         [Phone]
         [StringLength(128)]

@@ -23,7 +23,7 @@ namespace MyPortal.Database.Repositories
 
         protected readonly string TblName = EntityHelper.GetTblName(typeof(TEntity));
 
-        protected readonly string AllColumns = EntityHelper.GetAllColumns(typeof(TEntity), typeof(TEntity).Name);
+        protected readonly string AllColumns = EntityHelper.GetAllColumns(typeof(TEntity));
 
         protected abstract Task<IEnumerable<TEntity>> ExecuteQuery(string sql, object param = null);
 

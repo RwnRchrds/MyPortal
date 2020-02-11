@@ -7,11 +7,11 @@ namespace MyPortal.Logic.Models.Dtos
 {
     public class PersonConditionDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public int PersonId { get; set; }
+        public Guid PersonId { get; set; }
 
-        public int ConditionId { get; set; }
+        public Guid ConditionId { get; set; }
 
         public bool MedicationTaken { get; set; }
 
