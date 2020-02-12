@@ -221,7 +221,9 @@ namespace MyPortal.Database.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 128, nullable: false),
-                    Person = table.Column<bool>(nullable: false),
+                    Staff = table.Column<bool>(nullable: false),
+                    Student = table.Column<bool>(nullable: false),
+                    Contact = table.Column<bool>(nullable: false),
                     General = table.Column<bool>(nullable: false),
                     Sen = table.Column<bool>(nullable: false)
                 },
@@ -901,7 +903,8 @@ namespace MyPortal.Database.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     TypeId = table.Column<Guid>(nullable: false),
-                    GradeSetId = table.Column<Guid>(nullable: false),
+                    GradeSetId = table.Column<Guid>(nullable: true),
+                    MaxMark = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
                     Description = table.Column<string>(maxLength: 256, nullable: false),
                     Active = table.Column<bool>(nullable: false)
                 },
@@ -1414,7 +1417,7 @@ namespace MyPortal.Database.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Name = table.Column<string>(maxLength: 128, nullable: false),
-                    HeadId = table.Column<Guid>(nullable: false),
+                    HeadId = table.Column<Guid>(nullable: true),
                     ColourCode = table.Column<string>(maxLength: 128, nullable: true)
                 },
                 constraints: table =>
@@ -1531,7 +1534,7 @@ namespace MyPortal.Database.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Name = table.Column<string>(maxLength: 256, nullable: false),
-                    HeadId = table.Column<Guid>(nullable: false),
+                    HeadId = table.Column<Guid>(nullable: true),
                     KeyStage = table.Column<int>(nullable: false)
                 },
                 constraints: table =>

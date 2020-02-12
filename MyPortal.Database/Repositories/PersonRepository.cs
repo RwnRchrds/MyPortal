@@ -33,7 +33,9 @@ namespace MyPortal.Database.Repositories
 
         public async Task<Person> GetById(Guid id)
         {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated} WHERE [Person].[Id] = @PersonId";
+            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
+
+            SqlHelper.Where(ref sql, "[Person].[Id] = @PersonId");
 
             return (await ExecuteQuery(sql, new {PersonId = id})).Single();
         }
@@ -62,7 +64,9 @@ namespace MyPortal.Database.Repositories
 
         public async Task<Person> GetByUserId(string userId)
         {
-            var sql = $"SELECT {AllColumns} FROM {TblName} WHERE [Person].[UserId] = @UserId";
+            var sql = $"SELECT {AllColumns} FROM {TblName}";
+
+            SqlHelper.Where(ref sql, "[Person].[UserId] = @UserId");
 
             return (await ExecuteQuery(sql, new {UserId = userId})).Single();
         }
@@ -73,33 +77,36 @@ namespace MyPortal.Database.Repositories
 
             if (!string.IsNullOrWhiteSpace(person.FirstName))
             {
-                sql = $"{SqlHelper.Where(WhereType.Like, sql, "[Person].[FirstName]", "@FirstName")}";
+                SqlHelper.Where(ref sql, "[Person].[FirstName] LIKE @FirstName");
             }
 
             if (!string.IsNullOrWhiteSpace(person.LastName))
             {
-                sql = $"{SqlHelper.Where(WhereType.Like, sql, "[Person].[LastName]", "@LastName")}";
+                SqlHelper.Where(ref sql, "[Person].[LastName] LIKE @LastName");
             }
 
             if (!string.IsNullOrWhiteSpace(person.Gender))
             {
-                sql = $"{SqlHelper.Where(WhereType.Equals, sql, "[Person].[Gender]", "@Gender")}";
+                SqlHelper.Where(ref sql, "[Person].[Gender] = @Gender");
             }
 
             if (person.Dob != null)
             {
-                sql = $"{SqlHelper.Where(WhereType.Equals, sql, "[Person].[Dob]", "@Dob")}";
+                SqlHelper.Where(ref sql, "[Person].[Dob] = @Dob");
             }
 
             var param = new
-                {FirstName = $"{person.FirstName}%", LastName = $"{person.LastName}%", person.Gender, person.Dob};
+                {FirstName = $"{SqlHelper.ParamStartsWith(person.FirstName)}", LastName = $"{SqlHelper.ParamStartsWith(person.LastName)}", person.Gender, person.Dob};
 
             return await ExecuteQuery(sql, param);
         }
 
         public async Task<int> GetNumberOfBirthdaysThisWeek(DateTime weekBeginning)
         {
-            var sql = $"SELECT COUNT([Person].[Id]) FROM {TblName} WHERE [Person].[Dob] >= @Monday AND [Person].[Dob] <= @Sunday";
+            var sql = $"SELECT COUNT([Person].[Id]) FROM {TblName}";
+
+            SqlHelper.Where(ref sql, "[Person].[Dob] >= @Monday");
+            SqlHelper.Where(ref sql, "[Person].[Dob] <= @Sunday");
 
             return await ExecuteIntQuery(sql,
                 new {Monday = weekBeginning, Sunday = weekBeginning.AddDays(6)});

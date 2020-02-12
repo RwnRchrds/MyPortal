@@ -48,7 +48,9 @@ namespace MyPortal.Database.Repositories
 
         public async Task<Achievement> GetById(Guid id)
         {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated} WHERE [Achievement].[Id] = @AchievementId";
+            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
+
+            SqlHelper.Where(ref sql, "[Achievement].[Id] = @AchievementId");
 
             return (await ExecuteQuery(sql, new {AchievementId = id})).Single();
         }
@@ -65,14 +67,20 @@ namespace MyPortal.Database.Repositories
 
         public async Task<int> GetCountByStudent(int studentId, int academicYearId)
         {
-            var sql = $"SELECT COUNT([Id]) FROM {TblName} WHERE [StudentId] = @StudentId AND [AcademicYearId] = @AcademicYearId";
+            var sql = $"SELECT COUNT([Id]) FROM {TblName}";
+
+            SqlHelper.Where(ref sql, "[Achievement].[StudentId] = @StudentId");
+            SqlHelper.Where(ref sql, "[Achievement].[AcademicYearId] = @AcademicYearId");
 
             return await ExecuteIntQuery(sql, new {StudentId = studentId, AcademicYearId = academicYearId});
         }
 
         public async Task<int> GetPointsByStudent(int studentId, int academicYearId)
         {
-            var sql = $"SELECT SUM([Points]) FROM {TblName} WHERE [StudentId] = @StudentId AND [AcademicYearId] = @AcademicYearId";
+            var sql = $"SELECT SUM([Points]) FROM {TblName}";
+
+            SqlHelper.Where(ref sql, "[Achievement].[StudentId] = @StudentId");
+            SqlHelper.Where(ref sql, "[Achievement].[AcademicYearId] = @AcademicYearId");
 
             return await ExecuteIntQuery(sql, new {StudentId = studentId, AcademicYearId = academicYearId});
         }
@@ -80,23 +88,29 @@ namespace MyPortal.Database.Repositories
         public async Task<IEnumerable<Achievement>> GetByStudent(int studentId, int academicYearId)
         {
             var sql =
-                $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated} WHERE [Achievement].[StudentId] = @StudentId AND [Achievement].[AcademicYearId] = @AcademicYearId";
+                $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
+
+            SqlHelper.Where(ref sql, "[Achievement].[StudentId] = @StudentId");
+            SqlHelper.Where(ref sql, "[Achievement].[AcademicYearId] = @AcademicYearId");
 
             return await ExecuteQuery(sql, new {StudentId = studentId, AcademicYearId = academicYearId});
         }
 
         public async Task<int> GetPointsToday()
         {
-            var sql = $"SELECT SUM([Points]) FROM {TblName} WHERE CreatedDate > @TodayStart AND CreatedDate < @TomorrowStart";
+            var sql = $"SELECT SUM([Points]) FROM {TblName}";
+
+            SqlHelper.Where(ref sql, "[Achievement].[StudentId] = @StudentId");
+            SqlHelper.Where(ref sql, "[Achievement].[AcademicYearId] = @AcademicYearId");
 
             return await ExecuteIntQuery(sql,
-                new {TodayStart = DateTime.Today, TomorrowStart = DateTime.Today.Date.AddDays(1)});
+                new {DateTime.Today, Tomorrow = DateTime.Today.Date.AddDays(1)});   
         }
 
         protected override async Task<IEnumerable<Achievement>> ExecuteQuery(string sql, object param = null)
         {
             return await Connection
-                .QueryAsync<Achievement>(sql,
+                .QueryAsync(sql,
                     new[]
                     {
                         typeof(Achievement), typeof(AchievementType), typeof(Student), typeof(Person), typeof(Location),

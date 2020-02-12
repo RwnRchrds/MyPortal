@@ -32,7 +32,9 @@ namespace MyPortal.Database.Repositories
 
         public async Task<Location> GetById(Guid id)
         {
-            var sql = $"SELECT {AllColumns} FROM {TblName} WHERE [Location].[Id] = @LocationId";
+            var sql = $"SELECT {AllColumns} FROM {TblName}";
+
+            SqlHelper.Where(ref sql, "[Location].[Id] = @LocationId");
 
             return (await ExecuteQuery(sql, new {LocationId = id})).Single();
         }

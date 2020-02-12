@@ -34,7 +34,9 @@ namespace MyPortal.Database.Repositories
         public async Task<DiaryEvent> GetById(Guid id)
         {
             var sql =
-                $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated} WHERE [DiaryEvent].[Id] = @EventId";
+                $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
+
+            SqlHelper.Where(ref sql, "[DiaryEvent].[Id] = @EventId");
 
             return (await ExecuteQuery(sql, new {EventId = id})).Single();
         }

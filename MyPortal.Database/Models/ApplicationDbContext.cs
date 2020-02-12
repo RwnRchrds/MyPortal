@@ -408,7 +408,6 @@ namespace MyPortal.Database.Models
                 .HasMany(e => e.Aspects)
                 .WithOne(e => e.GradeSet)
                 .HasForeignKey(e => e.GradeSetId)
-                .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<GradeSet>()
@@ -962,20 +961,19 @@ namespace MyPortal.Database.Models
                 .HasMany(e => e.PastoralHouses)
                 .WithOne(e => e.HeadOfHouse)
                 .HasForeignKey(e => e.HeadId)
-                .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.PastoralRegGroups)
                 .WithOne(e => e.Tutor)
                 .HasForeignKey(e => e.TutorId)
+                .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.PastoralYearGroups)
                 .WithOne(e => e.HeadOfYear)
                 .HasForeignKey(e => e.HeadId)
-                .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<StaffMember>()

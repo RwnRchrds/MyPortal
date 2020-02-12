@@ -47,7 +47,9 @@ namespace MyPortal.Database.Repositories
 
         public async Task<School> GetById(Guid id)
         {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated} WHERE [School].[Id] = @SchoolId";
+            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
+
+            SqlHelper.Where(ref sql, "[School].[Id] = @SchoolId");
 
             return (await ExecuteQuery(sql, new {SchoolId = id})).SingleOrDefault();
         }

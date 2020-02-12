@@ -306,8 +306,11 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<Guid>("GradeSetId")
+                    b.Property<Guid?>("GradeSetId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal?>("MaxMark")
+                        .HasColumnType("decimal(10,2)");
 
                     b.Property<Guid>("TypeId")
                         .HasColumnType("uniqueidentifier");
@@ -939,6 +942,9 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<bool>("Contact")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(128)")
@@ -947,10 +953,13 @@ namespace MyPortal.Database.Migrations
                     b.Property<bool>("General")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("Person")
+                    b.Property<bool>("Sen")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("Sen")
+                    b.Property<bool>("Staff")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Student")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -1212,7 +1221,6 @@ namespace MyPortal.Database.Migrations
                         .HasMaxLength(128);
 
                     b.Property<Guid?>("HeadId")
-                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
@@ -2861,7 +2869,6 @@ namespace MyPortal.Database.Migrations
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<Guid?>("HeadId")
-                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("KeyStage")
@@ -2983,8 +2990,7 @@ namespace MyPortal.Database.Migrations
                     b.HasOne("MyPortal.Database.Models.GradeSet", "GradeSet")
                         .WithMany("Aspects")
                         .HasForeignKey("GradeSetId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("MyPortal.Database.Models.AspectType", "Type")
                         .WithMany("Aspects")
@@ -3267,8 +3273,7 @@ namespace MyPortal.Database.Migrations
                     b.HasOne("MyPortal.Database.Models.StaffMember", "HeadOfHouse")
                         .WithMany("PastoralHouses")
                         .HasForeignKey("HeadId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Identity.ApplicationPermission", b =>
@@ -3775,8 +3780,7 @@ namespace MyPortal.Database.Migrations
                     b.HasOne("MyPortal.Database.Models.StaffMember", "HeadOfYear")
                         .WithMany("PastoralYearGroups")
                         .HasForeignKey("HeadId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618
         }

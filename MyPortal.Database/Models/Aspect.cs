@@ -20,7 +20,10 @@ namespace MyPortal.Database.Models
 
         public Guid TypeId { get; set; }
 
-        public Guid GradeSetId { get; set; }
+        public Guid? GradeSetId { get; set; }
+
+        [Column(TypeName = "decimal(10,2)")]
+        public decimal? MaxMark { get; set; }
 
         [Required]
         [StringLength(256)]

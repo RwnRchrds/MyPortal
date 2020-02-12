@@ -8,15 +8,32 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using MyPortal.Database.Models.Identity;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
     public class StudentRepository : BaseReadWriteRepository<Student>, IStudentRepository
     {
-        private readonly string RelatedColumns = "";
+        private readonly string RelatedColumns = $@"
+{EntityHelper.GetAllColumns(typeof(Person), "StudentPerson")},
+{EntityHelper.GetUserColumns("User")},
+{EntityHelper.GetAllColumns(typeof(RegGroup))},
+{EntityHelper.GetAllColumns(typeof(StaffMember), "Tutor")},
+{EntityHelper.GetAllColumns(typeof(Person), "TutorPerson")}
+{EntityHelper.GetAllColumns(typeof(YearGroup))},
+{EntityHelper.GetAllColumns(typeof(House))},
+{EntityHelper.GetAllColumns(typeof(SenStatus))}";
 
-        private readonly string JoinRelated = "";
+        private readonly string JoinRelated = $@"
+{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[Student].[PersonId]", "StudentPerson")}
+{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[User].[Id]", "[StudentPerson].[UserId]", "User")}
+{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[RegGroup]", "[RegGroup].[Id]", "[Student].[RegGroupId]")}
+{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[StaffMember].[Id]", "[RegGroup].[TutorId]", "Tutor")}
+{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[Tutor].[PersonId]", "TutorPerson")}
+{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[YearGroup]", "[YearGroup].[Id]", "[Student].[YearGroupId]")}
+{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[House]", "[House].[Id]", "[Student].[HouseId]")}
+{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[SenStatus]", "[SenStatus].[Id]", "[Student].[SenStatusId]")}";
 
         public StudentRepository(IDbConnection connection) : base(connection)
         {
@@ -35,7 +52,9 @@ namespace MyPortal.Database.Repositories
 
         public async Task<Student> GetById(Guid id)
         {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated} WHERE [Student].[Id] = @StudentId";
+            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
+
+            SqlHelper.Where(ref sql, "[Student].[Id] = @StudentId");
 
             return (await Connection.QueryAsync<Student, Person, Student>(sql, (s, p) =>
             {
@@ -78,60 +97,101 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Student>> GetOnRoll()
         {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated} WHERE [Student].[DateStarting] IS NOT NULL AND [Student].[DateStarting] <= @DateToday";
+            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
+
+            SqlHelper.Where(ref sql, "([Student].[DateLeaving] IS NULL OR [Student.DateLeaving] > @DateToday)");
+            SqlHelper.Where(ref sql, "[Student].[DateStarting] >= @DateToday");
                 
-            return await Connection.QueryAsync<Student>(sql, new {DateToday = DateTime.Today});
+            return await ExecuteQuery(sql, new {DateToday = DateTime.Today});
         }
 
         public async Task<IEnumerable<Student>> GetLeavers()
         {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated} WHERE [Student].[DateStarting] IS NOT NULL AND [Student].[DateLeaving] <= @DateToday";
+            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
 
-            return await Connection.QueryAsync<Student>(sql, new { DateToday = DateTime.Today });
+            SqlHelper.Where(ref sql, "[Student].[DateStarting] IS NOT NULL");
+            SqlHelper.Where(ref sql, "[Student].[DateLeaving] <= @DateToday");
+
+            return await ExecuteQuery(sql, new { DateToday = DateTime.Today });
         }
 
         public async Task<IEnumerable<Student>> GetFuture()
         {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated} WHERE [Student].[DateStarting] IS NOT NULL AND [Student].[DateStarting] > @DateToday";
+            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
 
-            return await Connection.QueryAsync<Student>(sql, new { DateToday = DateTime.Today });
+            SqlHelper.Where(ref sql, "[Student].[DateStarting] IS NOT NULL");
+            SqlHelper.Where(ref sql, "[Student].[DateStarting] > @DateToday");
+
+            return await ExecuteQuery(sql, new { DateToday = DateTime.Today });
         }
 
         public async Task<IEnumerable<Student>> GetByRegGroup(int regGroupId)
         {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated} WHERE [Student].[RegGroupId] = @RegGroupId";
+            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
 
-            return await Connection.QueryAsync<Student>(sql, new { RegGroupId = regGroupId });
+            SqlHelper.Where(ref sql, "[Student].[RegGroupId] = @RegGroupId");
+
+            return await ExecuteQuery(sql, new { RegGroupId = regGroupId });
         }
 
         public async Task<IEnumerable<Student>> GetByYearGroup(int yearGroupId)
         {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated} WHERE [Student].[YearGroupId] = @YearGroupId";
+            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
 
-            return await Connection.QueryAsync<Student>(sql, new { YearGroupId = yearGroupId });
+            SqlHelper.Where(ref sql, "[Student].[YearGroupId] = @YearGroupId");
+
+            return await ExecuteQuery(sql, new { YearGroupId = yearGroupId });
         }
 
         public async Task<IEnumerable<Student>> GetByClass(int classId)
         {
             var sql =
-                $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated} WHERE [Student].[Id] IN (SELECT [Enrolment].[StudentId] FROM [dbo].[Enrolment] AS [Enrolment] WHERE [ClassId] = @ClassId)";
+                $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated} {SqlHelper.Join(JoinType.InnerJoin, "[dbo].[Class]", "[Class].[Id]", "@ClassId")}";
 
-            return await Connection.QueryAsync<Student>(sql, new { ClassId = classId });
+            return await ExecuteQuery(sql, new { ClassId = classId });
         }
 
         public async Task<IEnumerable<Student>> GetGiftedTalented()
         {
-            throw new NotImplementedException();
+            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
+
+            SqlHelper.Where(ref sql, "[Student].[GiftedAndTalented] = 1");
+
+            return await ExecuteQuery(sql);
         }
 
         public async Task<IEnumerable<Student>> GetByHouse(int houseId)
         {
-            throw new NotImplementedException();
+            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
+
+            SqlHelper.Where(ref sql, "[Student].[HouseId] = @HouseId");
+
+            return await ExecuteQuery(sql, new {HouseId = houseId});
         }
 
         protected override async Task<IEnumerable<Student>> ExecuteQuery(string sql, object param = null)
         {
-            throw new NotImplementedException();
+            return await Connection.QueryAsync(sql,
+                new[]
+                {
+                    typeof(Student), typeof(Person), typeof(ApplicationUser), typeof(RegGroup), typeof(StaffMember),
+                    typeof(Person), typeof(YearGroup), typeof(House), typeof(SenStatus)
+                },
+                objects =>
+                {
+                    var student = (Student) objects[0];
+
+                    student.Person = (Person) objects[1];
+                    student.Person.User = (ApplicationUser) objects[2];
+                    student.RegGroup = (RegGroup) objects[3];
+                    student.RegGroup.Tutor = (StaffMember) objects[4];
+                    student.RegGroup.Tutor.Person = (Person) objects[5];
+                    student.YearGroup = (YearGroup) objects[6];
+                    student.House = (House) objects[7];
+                    student.SenStatus = (SenStatus) objects[8];
+
+                    return student;
+                }, param);
         }
     }
 }

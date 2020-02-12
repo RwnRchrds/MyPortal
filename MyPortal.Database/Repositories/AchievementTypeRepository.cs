@@ -29,7 +29,9 @@ namespace MyPortal.Database.Repositories
 
         public async Task<AchievementType> GetById(Guid id)
         {
-            var sql = $"SELECT {AllColumns} FROM {TblName} WHERE [AchievementType].[Id] = @AchievementTypeId";
+            var sql = $"SELECT {AllColumns} FROM {TblName}";
+
+            SqlHelper.Where(ref sql, "[AchievementType].[Id] = @AchievementTypeId");
 
             return await Connection.QuerySingleOrDefaultAsync<AchievementType>(sql, new {AchievementTypeId = id});
         }

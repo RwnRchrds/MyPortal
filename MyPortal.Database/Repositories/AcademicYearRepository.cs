@@ -28,7 +28,9 @@ namespace MyPortal.Database.Repositories
 
         public async Task<AcademicYear> GetById(Guid id)
         {
-            var sql = $"SELECT {AllColumns} FROM {TblName} WHERE [AcademicYear].[Id] = @AcademicYearId";
+            var sql = $"SELECT {AllColumns} FROM {TblName}";
+
+            SqlHelper.Where(ref sql, "[AcademicYear].[Id] = @AcademicYearId");
 
             return (await ExecuteQuery(sql, new {AcademicYearId = id})).First();
         }
@@ -47,8 +49,10 @@ namespace MyPortal.Database.Repositories
 
         public async Task<AcademicYear> GetCurrent()
         {
-            var sql =
-                $"SELECT {AllColumns} FROM {TblName} WHERE [AcademicYear].[FirstDate] <= DateToday AND [AcademicYear].[LastDate] >= DateToday";
+            var sql = $"SELECT {AllColumns} FROM {TblName}";
+
+            SqlHelper.Where(ref sql, "[AcademicYear].[FirstDate] <= @DateToday");
+            SqlHelper.Where(ref sql, "[AcademicYear].[LastDate] >= @DateToday");
 
             return (await ExecuteQuery(sql, new {DateToday = DateTime.Today})).First();
         }

@@ -40,7 +40,9 @@ namespace MyPortal.Database.Repositories
         public async Task<Detention> GetById(Guid id)
         {
             var sql =
-                $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated} WHERE [Detention].[Id] = @DetentionId";
+                $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
+
+            SqlHelper.Where(ref sql, "[Detention].[Id] = @DetentionId");
 
             return (await ExecuteQuery(sql, new {DetentionId = id})).Single();
         }
