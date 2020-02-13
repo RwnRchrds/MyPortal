@@ -905,6 +905,7 @@ namespace MyPortal.Database.Migrations
                     TypeId = table.Column<Guid>(nullable: false),
                     GradeSetId = table.Column<Guid>(nullable: true),
                     MaxMark = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
+                    Name = table.Column<string>(maxLength: 128, nullable: false),
                     Description = table.Column<string>(maxLength: 256, nullable: false),
                     Active = table.Column<bool>(nullable: false)
                 },

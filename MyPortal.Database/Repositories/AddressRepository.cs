@@ -39,14 +39,28 @@ namespace MyPortal.Database.Repositories
             return (await ExecuteQuery(sql, new {AddressId = id})).Single();
         }
 
-        public Task Update(Address entity)
+        public async Task Update(Address entity)
         {
-            throw new NotImplementedException();
+            var addressInDb = await Context.Addresses.FindAsync(entity.Id);
+
+            addressInDb.HouseName = entity.HouseNumber;
+            addressInDb.HouseName = entity.HouseName;
+            addressInDb.Apartment = entity.Apartment;
+            addressInDb.Street = entity.Street;
+            addressInDb.District = entity.District;
+            addressInDb.Town = entity.Town;
+            addressInDb.County = entity.County;
+            addressInDb.Postcode = entity.Postcode;
+            addressInDb.Country = entity.Country;
+            addressInDb.Validated = entity.Validated;
         }
 
-        public Task<IEnumerable<Address>> GetAddressesByPerson(int personId)
+        public async Task<IEnumerable<Address>> GetAddressesByPerson(int personId)
         {
-            throw new NotImplementedException();
+            var sql =
+                $"SELECT {AllColumns} FROM {TblName} {SqlHelper.Join(JoinType.InnerJoin, "[dbo].[AddressPerson]", "[AddressPerson].[PersonId]", "@PersonId")}";
+
+            return await ExecuteQuery(sql, new {PersonId = personId});
         }
     }
 }

@@ -13,11 +13,7 @@ namespace MyPortal.Database.Models
         public Guid Id { get; set; }
 
         public Guid AuthorId { get; set; }
-
-        [Display(Name = "Created")]
         public DateTime CreateDate { get; set; }
-
-        [Display(Name = "Expires")]
         public DateTime? ExpireDate { get; set; }
 
         [Required]

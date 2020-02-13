@@ -24,6 +24,10 @@ namespace MyPortal.Database.Models
 
         [Column(TypeName = "decimal(10,2)")]
         public decimal? MaxMark { get; set; }
+        
+        [Required]
+        [StringLength(128)]
+        public string Name { get; set; }
 
         [Required]
         [StringLength(256)]
