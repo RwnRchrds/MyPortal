@@ -100,7 +100,7 @@ namespace MyPortal.Database.Repositories
             var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
 
             SqlHelper.Where(ref sql, "([Student].[DateLeaving] IS NULL OR [Student.DateLeaving] > @DateToday)");
-            SqlHelper.Where(ref sql, "[Student].[DateStarting] >= @DateToday");
+            SqlHelper.Where(ref sql, "[Student].[DateStarting] <= @DateToday");
                 
             return await ExecuteQuery(sql, new {DateToday = DateTime.Today});
         }
@@ -118,8 +118,7 @@ namespace MyPortal.Database.Repositories
         public async Task<IEnumerable<Student>> GetFuture()
         {
             var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
-
-            SqlHelper.Where(ref sql, "[Student].[DateStarting] IS NOT NULL");
+            
             SqlHelper.Where(ref sql, "[Student].[DateStarting] > @DateToday");
 
             return await ExecuteQuery(sql, new { DateToday = DateTime.Today });

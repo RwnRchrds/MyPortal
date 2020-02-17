@@ -2,34 +2,31 @@
 using System.Linq;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using MyPortal.Logic.Dictionaries;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Business;
+using MyPortal.Logic.Models.Dtos;
 using MyPortal.Logic.Models.Exceptions;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class BehaviourService : BaseService, IBehaviourService
+    public class DetentionService : BaseService, IBehaviourService
     {
-        private readonly IAchievementRepository _achievementRepository;
-        private readonly IAchievementTypeRepository _achievementTypeRepository;
         private readonly IDetentionRepository _detentionRepository;
         private readonly IDetentionTypeRepository _detentionTypeRepository;
         private readonly IIncidentDetentionRepository _incidentDetentionRepository;
         private readonly IIncidentRepository _incidentRepository;
-        private readonly IIncidentTypeRepository _incidentTypeRepository;
 
-        public BehaviourService(IAchievementRepository achievementRepository,
+        public DetentionService(IAchievementRepository achievementRepository,
             IAchievementTypeRepository achievementTypeRepository,
             IIncidentDetentionRepository incidentDetentionRepository, IDetentionRepository detentionRepository,
             IIncidentRepository incidentRepository, IIncidentTypeRepository incidentTypeRepository,
             IDetentionTypeRepository detentionTypeRepository)
         {
-            _achievementRepository = achievementRepository;
-            _achievementTypeRepository = achievementTypeRepository;
             _incidentDetentionRepository = incidentDetentionRepository;
             _detentionRepository = detentionRepository;
             _incidentRepository = incidentRepository;
-            _incidentTypeRepository = incidentTypeRepository;
             _detentionTypeRepository = detentionTypeRepository;
         }
 
@@ -78,6 +75,39 @@ namespace MyPortal.Logic.Services
 
             await _detentionRepository.SaveChanges();
             await _incidentRepository.SaveChanges();
+        }
+
+        public async Task CreateDetention(DetentionScaffold scaffold)
+        {
+            var detentionType = await _detentionTypeRepository.GetById(scaffold.DetentionTypeId);
+
+            if (detentionType == null)
+            {
+                throw new ServiceException(ExceptionType.NotFound, "Detention type not found");
+            }
+            
+            var diaryEvent = new DiaryEvent
+            {
+                Subject = $"[Detention] ({detentionType.Description})",
+                IsBlock = false,
+                IsPublic = false,
+                IsAllDay = false,
+                IsStudentVisible = true,
+                StartTime = scaffold.StartTime,
+                EndTime = scaffold.EndTime,
+                EventTypeId = EventTypeDictionary.Detention
+            };
+            
+            var detention = new Detention
+            {
+                DetentionTypeId = detentionType.Id,
+                Event = diaryEvent,
+                SupervisorId = scaffold.SupervisorId
+            };
+            
+            _detentionRepository.Create(detention);
+
+            await _detentionRepository.SaveChanges();
         }
     }
 }
