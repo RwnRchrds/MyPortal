@@ -16,8 +16,9 @@ namespace MyPortal.Database.Repositories
 {
     public class SchoolRepository : BaseReadWriteRepository<School>, ISchoolRepository
     {
-        private readonly string RelatedColumns =
-            $@"
+        public SchoolRepository(IDbConnection connection) : base(connection)
+        {
+        RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(LocalAuthority))},
 {EntityHelper.GetAllColumns(typeof(Phase))},
 {EntityHelper.GetAllColumns(typeof(SchoolType))},
@@ -25,33 +26,13 @@ namespace MyPortal.Database.Repositories
 {EntityHelper.GetAllColumns(typeof(IntakeType))},
 {EntityHelper.GetAllColumns(typeof(Person))}";
 
-        private readonly string JoinRelated =
-            $@"
+        JoinRelated = $@"
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[LocalAuthority]", "[LocalAuthority].[Id]", "[School].[LocalAuthorityId]")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Phase]", "[Phase].[Id]", "[School].[PhaseId]")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[SchoolType]", "[SchoolType].[Id]", "[School].[TypeId]")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[GovernanceType]", "[GovernanceType].[Id]", "[School].[GovernanceTypeId]")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[IntakeType]", "[IntakeType].[Id]", "[School].[IntakeTypeId]")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[School].[HeadTeacherId]")}";
-
-        public SchoolRepository(IDbConnection connection) : base(connection)
-        {
-        }
-
-        public async Task<IEnumerable<School>> GetAll()
-        {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
-
-            return await Connection.QueryAsync<School>(sql);
-        }
-
-        public async Task<School> GetById(Guid id)
-        {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
-
-            SqlHelper.Where(ref sql, "[School].[Id] = @SchoolId");
-
-            return (await ExecuteQuery(sql, new {SchoolId = id})).SingleOrDefault();
         }
 
         public async Task Update(School entity)
@@ -81,14 +62,18 @@ namespace MyPortal.Database.Repositories
 
         public async Task<string> GetLocalSchoolName()
         {
-            var sql = $"SELECT [School].[Name] FROM {TblName} WHERE [School].[Local] = 1";
+            var sql = $"SELECT [School].[Name] FROM {TblName}";
+            
+            SqlHelper.Where(ref sql, "[School].[Local] = 1");
 
             return await ExecuteStringQuery(sql);
         }
 
         public async Task<School> GetLocal()
         {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated} WHERE [School].[Local] = 1";
+            var sql = SelectAllColumns();
+            
+            SqlHelper.Where(ref sql, "[School].[Local] = 1");
 
             return (await ExecuteQuery(sql)).First();
         }

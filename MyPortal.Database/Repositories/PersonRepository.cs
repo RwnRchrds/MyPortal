@@ -15,29 +15,12 @@ namespace MyPortal.Database.Repositories
 {
     public class PersonRepository : BaseReadWriteRepository<Person>, IPersonRepository
     {
-        private readonly string RelatedColumns = $"{EntityHelper.GetUserColumns("User")}";
-
-        private readonly string JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[User].[Id]", "[Person].[UserId]", "User")}";
-
         public PersonRepository(IDbConnection connection) : base(connection)
         {
-        }
+       RelatedColumns = $"{EntityHelper.GetUserColumns("User")}";
 
-        public async Task<IEnumerable<Person>> GetAll()
-        {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
-
-            return await ExecuteQuery(sql);
-        }
-
-        public async Task<Person> GetById(Guid id)
-        {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
-
-            SqlHelper.Where(ref sql, "[Person].[Id] = @PersonId");
-
-            return (await ExecuteQuery(sql, new {PersonId = id})).Single();
+        JoinRelated = $@"
+{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[User].[Id]", "[Person].[UserId]", "User")}";
         }
 
         public async Task Update(Person entity)
@@ -64,7 +47,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<Person> GetByUserId(string userId)
         {
-            var sql = $"SELECT {AllColumns} FROM {TblName}";
+            var sql = SelectAllColumns();
 
             SqlHelper.Where(ref sql, "[Person].[UserId] = @UserId");
 
@@ -73,7 +56,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Person>> Search(Person person)
         {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
+            var sql = SelectAllColumns();
 
             if (!string.IsNullOrWhiteSpace(person.FirstName))
             {

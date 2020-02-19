@@ -14,37 +14,19 @@ namespace MyPortal.Database.Repositories
 {
     public class DetentionRepository : BaseReadWriteRepository<Detention>, IDetentionRepository
     {
-        private readonly string RelatedColumns = $@"
+        public DetentionRepository(IDbConnection connection) : base(connection)
+        {
+        RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(DetentionType))},
 {EntityHelper.GetAllColumns(typeof(DiaryEvent))},
 {EntityHelper.GetAllColumns(typeof(StaffMember))},
 {EntityHelper.GetAllColumns(typeof(Person))}";
 
-        private readonly string JoinRelated = $@"
+        JoinRelated = $@"
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[DetentionType]", "[DetentionType].[Id]", "[Detention].[DetentionTypeId]")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[DiaryEvent]", "[DiaryEvent].[Id]", "[Detention].[EventId]")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[StaffMember].[Id]", "[Detention].[SupervisorId]")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[StaffMember].[PersonId]")}";
-
-        public DetentionRepository(IDbConnection connection) : base(connection)
-        {
-        }
-
-        public async Task<IEnumerable<Detention>> GetAll()
-        {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
-
-            return await ExecuteQuery(sql);
-        }
-
-        public async Task<Detention> GetById(Guid id)
-        {
-            var sql =
-                $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
-
-            SqlHelper.Where(ref sql, "[Detention].[Id] = @DetentionId");
-
-            return (await ExecuteQuery(sql, new {DetentionId = id})).Single();
         }
 
         public async Task Update(Detention entity)

@@ -15,7 +15,9 @@ namespace MyPortal.Database.Repositories
 {
     public class AchievementRepository : BaseReadWriteRepository<Achievement>, IAchievementRepository
     {
-        private readonly string RelatedColumns = $@"
+        public AchievementRepository(IDbConnection connection) : base(connection)
+        {
+            RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(AcademicYear))},
 {EntityHelper.GetAllColumns(typeof(AchievementType))},
 {EntityHelper.GetAllColumns(typeof(Student))},
@@ -24,7 +26,7 @@ namespace MyPortal.Database.Repositories
 {EntityHelper.GetAllColumns(typeof(ApplicationUser))},
 {EntityHelper.GetAllColumns(typeof(Person), "RecordedByPerson")}";
 
-        private readonly string JoinRelated = $@"
+            JoinRelated = $@"
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AcademicYear]", "[AcademicYear].[Id]", "[Achievement].[AcademicYearId]")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AchievementType]", "[AchievementType].[Id]", "[Achievement].[AchievementTypeId]")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[Achievement].[StudentId]")}
@@ -32,27 +34,6 @@ namespace MyPortal.Database.Repositories
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Location]", "[Location].[Id]", "[Achievement].[LocationId]")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[User].[Id]", "[Achievement].[RecordedById]", "User")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[RecordedByPerson].[UserId]", "[User].[Id]", "RecordedByPerson")}";
-
-        public AchievementRepository(IDbConnection connection) : base(connection)
-        {
-            
-        }
-
-        public async Task<IEnumerable<Achievement>> GetAll()
-        {
-            var sql =
-                $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
-
-            return await ExecuteQuery(sql);
-        }
-
-        public async Task<Achievement> GetById(Guid id)
-        {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
-
-            SqlHelper.Where(ref sql, "[Achievement].[Id] = @AchievementId");
-
-            return (await ExecuteQuery(sql, new {AchievementId = id})).Single();
         }
 
         public async Task Update(Achievement entity)

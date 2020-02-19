@@ -7,6 +7,7 @@ using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Dtos;
+using MyPortal.Logic.Models.Lite;
 
 namespace MyPortal.Logic.Services
 {
@@ -19,11 +20,11 @@ namespace MyPortal.Logic.Services
             _repository = repository;
         }
 
-        public async Task<IEnumerable<PersonDto>> Search(PersonDto person)
+        public async Task<IEnumerable<PersonLite>> Search(PersonLite person)
         {
             var people = await _repository.Search(_businessMapper.Map<Person>(person));
 
-            return people.Select(_businessMapper.Map<PersonDto>);
+            return people.Select(_businessMapper.Map<PersonLite>);
         }
     }
 }

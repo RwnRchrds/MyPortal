@@ -20,19 +20,5 @@ namespace MyPortal.Logic.Services
         {
             _repository = repository;
         }
-
-        public async Task<IEnumerable<StudentDto>> GetAll()
-        {
-            return (await _repository.GetAll()).Select(_businessMapper.Map<StudentDto>).ToList();
-        }
-
-        public async Task CreateStudent(StudentDto student)
-        {
-            ValidationHelper.ValidateModel(student);
-
-            _repository.Create(_businessMapper.Map<Student>(student));
-
-            await _repository.SaveChanges();
-        }
     }
 }

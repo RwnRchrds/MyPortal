@@ -13,20 +13,19 @@ namespace MyPortal.Database.Repositories
 {
     public class AttendanceMarkRepository : BaseReadWriteRepository<AttendanceMark>, IAttendanceMarkRepository
     {
-        private readonly string RelatedColumns = $@"
+        public AttendanceMarkRepository(IDbConnection connection) : base(connection)
+        {
+        RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(Student))},
 {EntityHelper.GetAllColumns(typeof(Person), "StudentPerson")}
 {EntityHelper.GetAllColumns(typeof(AttendanceWeek))},
 {EntityHelper.GetAllColumns(typeof(Period))}";
 
-        private readonly string JoinRelated = $@"
+        JoinRelated = $@"
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[AttendanceMark].[StudentId]")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[StudentPerson].[Id]", "[Student].[PersonId]", "StudentPerson")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AttendanceWeek]","[AttendanceWeek].[Id]", "[AttendanceMark].[WeekId]")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Period]", "[Period].[Id]", "[AttendanceMark].[PeriodId]")}";
-        
-        public AttendanceMarkRepository(IDbConnection connection) : base(connection)
-        {
         }
 
         protected override async Task<IEnumerable<AttendanceMark>> ExecuteQuery(string sql, object param = null)
@@ -42,22 +41,6 @@ namespace MyPortal.Database.Repositories
 
                     return mark;
                 }, param);
-        }
-
-        public async Task<IEnumerable<AttendanceMark>> GetAll()
-        {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
-
-            return await ExecuteQuery(sql);
-        }
-
-        public async Task<AttendanceMark> GetById(Guid id)
-        {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
-            
-            SqlHelper.Where(ref sql, "[AttendanceMark].[Id] = @MarkId");
-
-            return (await ExecuteQuery(sql, new {MarkId = id})).Single();
         }
 
         public async Task Update(AttendanceMark entity)

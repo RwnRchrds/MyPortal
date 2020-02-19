@@ -13,13 +13,12 @@ namespace MyPortal.Database.Repositories
 {
     public class CommentRepository : BaseReadWriteRepository<Comment>, ICommentRepository
     {
-        private readonly string RelatedColumns = $@"{EntityHelper.GetAllColumns(typeof(CommentBank))}";
-
-        private readonly string JoinRelated =
-            $@"{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[CommentBank]", "[CommentBank].[Id]", "[Comment].[CommentBankId]")}";
-        
         public CommentRepository(IDbConnection connection) : base(connection)
         {
+        RelatedColumns = $@"{EntityHelper.GetAllColumns(typeof(CommentBank))}";
+
+        JoinRelated =
+            $@"{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[CommentBank]", "[CommentBank].[Id]", "[Comment].[CommentBankId]")}";
         }
 
         protected override async Task<IEnumerable<Comment>> ExecuteQuery(string sql, object param = null)
@@ -30,22 +29,6 @@ namespace MyPortal.Database.Repositories
 
                     return comment;
                 });
-        }
-
-        public async Task<IEnumerable<Comment>> GetAll()
-        {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
-
-            return await ExecuteQuery(sql);
-        }
-
-        public async Task<Comment> GetById(Guid id)
-        {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
-            
-            SqlHelper.Where(ref sql, "[Comment].[Id] = @CommentId");
-
-            return (await ExecuteQuery(sql, new {CommentId = id})).Single();
         }
 
         public async Task Update(Comment entity)

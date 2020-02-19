@@ -1,4 +1,6 @@
-﻿namespace MyPortal.Logic.Models.Business
+﻿using System;
+
+namespace MyPortal.Logic.Models.Business
 {
     public enum StudentGroupType
     {
@@ -14,6 +16,6 @@
     {
         public StudentGroupType StudentGroupType { get; set; }
         public string Name { get; set; }
-        public int Id { get; set; }
+        public Guid Id { get; set; }
     }
 }

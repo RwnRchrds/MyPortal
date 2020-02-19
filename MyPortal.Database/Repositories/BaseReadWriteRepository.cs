@@ -13,7 +13,7 @@ namespace MyPortal.Database.Repositories
     {
         protected readonly ApplicationDbContext Context;
 
-        protected BaseReadWriteRepository(IDbConnection connection) : base(connection)
+        protected BaseReadWriteRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
         {
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
 

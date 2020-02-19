@@ -24,6 +24,7 @@ namespace MyPortal.Database.Models
             ProfileLogs = new HashSet<ProfileLogNote>();
             GiftedTalentedSubjects = new HashSet<GiftedTalented>();
             StudentContacts = new HashSet<StudentContact>();
+            HomeworkSubmissions = new HashSet<HomeworkSubmission>();
         }
 
         [Key]
@@ -115,5 +116,8 @@ namespace MyPortal.Database.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GiftedTalented> GiftedTalentedSubjects { get; set; }
+        
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<HomeworkSubmission> HomeworkSubmissions { get; set; }
     }
 }

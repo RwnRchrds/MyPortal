@@ -15,7 +15,9 @@ namespace MyPortal.Database.Repositories
 {
     public class StudentRepository : BaseReadWriteRepository<Student>, IStudentRepository
     {
-        private readonly string RelatedColumns = $@"
+        public StudentRepository(IDbConnection connection) : base(connection)
+        {
+        RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(Person), "StudentPerson")},
 {EntityHelper.GetUserColumns("User")},
 {EntityHelper.GetAllColumns(typeof(RegGroup))},
@@ -25,7 +27,7 @@ namespace MyPortal.Database.Repositories
 {EntityHelper.GetAllColumns(typeof(House))},
 {EntityHelper.GetAllColumns(typeof(SenStatus))}";
 
-        private readonly string JoinRelated = $@"
+        JoinRelated = $@"
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[Student].[PersonId]", "StudentPerson")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[User].[Id]", "[StudentPerson].[UserId]", "User")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[RegGroup]", "[RegGroup].[Id]", "[Student].[RegGroupId]")}
@@ -34,33 +36,6 @@ namespace MyPortal.Database.Repositories
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[YearGroup]", "[YearGroup].[Id]", "[Student].[YearGroupId]")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[House]", "[House].[Id]", "[Student].[HouseId]")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[SenStatus]", "[SenStatus].[Id]", "[Student].[SenStatusId]")}";
-
-        public StudentRepository(IDbConnection connection) : base(connection)
-        {
-        }
-
-        public async Task<IEnumerable<Student>> GetAll()
-        {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
-
-            return await Connection.QueryAsync<Student, Person, Student>(sql, (s, p) =>
-            {
-                s.Person = p;
-                return s;
-            });
-        }
-
-        public async Task<Student> GetById(Guid id)
-        {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
-
-            SqlHelper.Where(ref sql, "[Student].[Id] = @StudentId");
-
-            return (await Connection.QueryAsync<Student, Person, Student>(sql, (s, p) =>
-            {
-                s.Person = p;
-                return s;
-            }, new {StudentId = id})).Single();
         }
 
         public async Task Update(Student entity)
@@ -90,14 +65,16 @@ namespace MyPortal.Database.Repositories
 
         public async Task<Student> GetByUserId(string userId)
         {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated} WHERE [P].[UserId] = @UserId";
+            var sql = SelectAllColumns();
+            
+            SqlHelper.Where(ref sql, "[StudentPerson].[UserId] = @UserId");
 
             return (await ExecuteQuery(sql, new {UserId = userId})).SingleOrDefault();
         }
 
         public async Task<IEnumerable<Student>> GetOnRoll()
         {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
+            var sql = SelectAllColumns();
 
             SqlHelper.Where(ref sql, "([Student].[DateLeaving] IS NULL OR [Student.DateLeaving] > @DateToday)");
             SqlHelper.Where(ref sql, "[Student].[DateStarting] <= @DateToday");
@@ -107,7 +84,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Student>> GetLeavers()
         {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
+            var sql = SelectAllColumns();
 
             SqlHelper.Where(ref sql, "[Student].[DateStarting] IS NOT NULL");
             SqlHelper.Where(ref sql, "[Student].[DateLeaving] <= @DateToday");
@@ -117,7 +94,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Student>> GetFuture()
         {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
+            var sql = SelectAllColumns();
             
             SqlHelper.Where(ref sql, "[Student].[DateStarting] > @DateToday");
 
@@ -126,7 +103,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Student>> GetByRegGroup(int regGroupId)
         {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
+            var sql = SelectAllColumns();
 
             SqlHelper.Where(ref sql, "[Student].[RegGroupId] = @RegGroupId");
 
@@ -135,7 +112,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Student>> GetByYearGroup(int yearGroupId)
         {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
+            var sql = SelectAllColumns();
 
             SqlHelper.Where(ref sql, "[Student].[YearGroupId] = @YearGroupId");
 
@@ -145,14 +122,14 @@ namespace MyPortal.Database.Repositories
         public async Task<IEnumerable<Student>> GetByClass(int classId)
         {
             var sql =
-                $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated} {SqlHelper.Join(JoinType.InnerJoin, "[dbo].[Class]", "[Class].[Id]", "@ClassId")}";
+                $"{SelectAllColumns()} {SqlHelper.Join(JoinType.InnerJoin, "[dbo].[Class]", "[Class].[Id]", "@ClassId")}";
 
             return await ExecuteQuery(sql, new { ClassId = classId });
         }
 
         public async Task<IEnumerable<Student>> GetGiftedTalented()
         {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
+            var sql = SelectAllColumns();
 
             SqlHelper.Where(ref sql, "[Student].[GiftedAndTalented] = 1");
 
@@ -161,7 +138,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Student>> GetByHouse(int houseId)
         {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
+            var sql = SelectAllColumns();
 
             SqlHelper.Where(ref sql, "[Student].[HouseId] = @HouseId");
 

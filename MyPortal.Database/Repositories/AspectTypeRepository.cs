@@ -20,21 +20,5 @@ namespace MyPortal.Database.Repositories
         {
             return await Connection.QueryAsync<AspectType>(sql, param);
         }
-
-        public async Task<IEnumerable<AspectType>> GetAll()
-        {
-            var sql = $"SELECT {AllColumns} FROM {TblName}";
-
-            return await ExecuteQuery(sql);
-        }
-
-        public async Task<AspectType> GetById(Guid id)
-        {
-            var sql = $"SELECT {AllColumns} FROM {TblName}";
-
-            SqlHelper.Where(ref sql, "[AspectType].[Id] = @AspectTypeId");
-
-            return (await ExecuteQuery(sql, new {AspectTypeId = id})).Single();
-        }
     }
 }

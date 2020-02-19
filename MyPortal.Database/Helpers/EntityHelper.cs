@@ -53,7 +53,7 @@ namespace MyPortal.Database.Helpers
 [{tblAlias}].[AccessFailedCount],[{tblAlias}].[Enabled]";
         }
 
-        internal static IEnumerable<PropertyInfo> GetProperties(Type t)
+        private static IEnumerable<PropertyInfo> GetProperties(Type t)
         {
             var props = t.GetProperties().Where(x => !x.GetGetMethod().IsVirtual).ToList();
 

@@ -22,22 +22,6 @@ namespace MyPortal.Database.Repositories
             return await Connection.QueryAsync<CommentBank>(sql, param);
         }
 
-        public async Task<IEnumerable<CommentBank>> GetAll()
-        {
-            var sql = $"SELECT {AllColumns} FROM {TblName}";
-
-            return await ExecuteQuery(sql);
-        }
-
-        public async Task<CommentBank> GetById(Guid id)
-        {
-            var sql = $"SELECT {AllColumns} FROM {TblName}";
-            
-            SqlHelper.Where(ref sql, "[CommentBank].[Id] = @CommentBankId");
-
-            return (await ExecuteQuery(sql, new {CommentBankId = id})).Single();
-        }
-
         public async Task Update(CommentBank entity)
         {
             var commentBankInDb = await Context.CommentBanks.FindAsync(entity.Id);

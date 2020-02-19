@@ -20,21 +20,5 @@ namespace MyPortal.Database.Repositories
         {
             return await Connection.QueryAsync<AttendanceCodeMeaning>(sql, param);
         }
-
-        public async Task<IEnumerable<AttendanceCodeMeaning>> GetAll()
-        {
-            var sql = $"SELECT {AllColumns} FROM {TblName}";
-
-            return await ExecuteQuery(sql);
-        }
-
-        public async Task<AttendanceCodeMeaning> GetById(Guid id)
-        {
-            var sql = $"SELECT {AllColumns} FROM {TblName}";
-            
-            SqlHelper.Where(ref sql, "[AttendanceCodeMeaning].[Id] = @MeaningId");
-
-            return (await ExecuteQuery(sql, new {MeaningId = id})).Single();
-        }
     }
 }

@@ -39,6 +39,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<DiaryEventAttendee> DiaryEventAttendees { get; set; }
         public virtual DbSet<DiaryEventAttendeeResponse> DiaryEventInvitationResponses { get; set; }
         public virtual DbSet<DiaryEventType> DiaryEventTypes { get; set; }
+        public virtual DbSet<DiaryEventTemplate> DiaryEventTemplates { get; set; }
         public virtual DbSet<DietaryRequirement> DietaryRequirements { get; set; }
         public virtual DbSet<Document> Documents { get; set; }
         public virtual DbSet<DocumentType> DocumentTypes { get; set; }
@@ -1174,9 +1175,19 @@ namespace MyPortal.Database.Models
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<HomeworkSubmission>()
+                .HasOne(e => e.Student)
+                .WithMany(e => e.HomeworkSubmissions)
+                .HasForeignKey(e => e.StudentId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<ApplicationPermission>()
                 .HasOne(e => e.Resource)
-                .WithMany(e => e.Permissions);
+                .WithMany(e => e.Permissions)
+                .HasForeignKey(e => e.ResourceId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(modelBuilder);
         }

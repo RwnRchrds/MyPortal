@@ -18,22 +18,7 @@ namespace MyPortal.Database.Repositories
 
         public AchievementTypeRepository(IDbConnection connection) : base(connection)
         {
-        }
-
-        public async Task<IEnumerable<AchievementType>> GetAll()
-        {
-            var sql = $"SELECT {AllColumns} FROM {TblName}";
-
-            return await Connection.QueryAsync<AchievementType>(sql);
-        }
-
-        public async Task<AchievementType> GetById(Guid id)
-        {
-            var sql = $"SELECT {AllColumns} FROM {TblName}";
-
-            SqlHelper.Where(ref sql, "[AchievementType].[Id] = @AchievementTypeId");
-
-            return await Connection.QuerySingleOrDefaultAsync<AchievementType>(sql, new {AchievementTypeId = id});
+            
         }
 
         public async Task Update(AchievementType entity)

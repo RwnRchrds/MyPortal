@@ -19,22 +19,6 @@ namespace MyPortal.Database.Repositories
             
         }
 
-        public async Task<IEnumerable<AcademicYear>> GetAll()
-        {
-            var sql = $"SELECT {AllColumns} FROM {TblName}";
-
-            return await ExecuteQuery(sql);
-        }
-
-        public async Task<AcademicYear> GetById(Guid id)
-        {
-            var sql = $"SELECT {AllColumns} FROM {TblName}";
-
-            SqlHelper.Where(ref sql, "[AcademicYear].[Id] = @AcademicYearId");
-
-            return (await ExecuteQuery(sql, new {AcademicYearId = id})).First();
-        }
-
         public async Task Update(AcademicYear entity)
         {
             var academicYearInDb = await Context.AcademicYears.FindAsync(entity.Id);
@@ -49,7 +33,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<AcademicYear> GetCurrent()
         {
-            var sql = $"SELECT {AllColumns} FROM {TblName}";
+            var sql = SelectAllColumns();
 
             SqlHelper.Where(ref sql, "[AcademicYear].[FirstDate] <= @DateToday");
             SqlHelper.Where(ref sql, "[AcademicYear].[LastDate] >= @DateToday");

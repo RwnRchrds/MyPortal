@@ -13,18 +13,17 @@ namespace MyPortal.Database.Repositories
 {
     public class BasketItemRepository : BaseReadWriteRepository<BasketItem>, IBasketItemRepository
     {
-        private readonly string RelatedColumns = $@"
+        public BasketItemRepository(IDbConnection connection) : base(connection)
+        {
+        RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(Student))},
 {EntityHelper.GetAllColumns(typeof(Person), "StudentPerson")},
 {EntityHelper.GetAllColumns(typeof(Product))}";
 
-        private readonly string JoinRelaed = $@"
+        JoinRelated = $@"
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[BasketItem].[StudentId]")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[Student].[PersonId]", "StudentPerson")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Product]", "[Product].[Id]", "[BasketItem].[ProductId]")}";
-        
-        public BasketItemRepository(IDbConnection connection) : base(connection)
-        {
         }
 
         protected override async Task<IEnumerable<BasketItem>> ExecuteQuery(string sql, object param = null)
@@ -38,22 +37,6 @@ namespace MyPortal.Database.Repositories
 
                     return item;
                 }, param);
-        }
-
-        public async Task<IEnumerable<BasketItem>> GetAll()
-        {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelaed}";
-
-            return await ExecuteQuery(sql);
-        }
-
-        public async Task<BasketItem> GetById(Guid id)
-        {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelaed}";
-            
-            SqlHelper.Where(ref sql, "[BasketItem].[Id] = @BasketItemId");
-
-            return (await ExecuteQuery(sql, new {BasketItemId = id})).Single();
         }
 
         public async Task Update(BasketItem entity)

@@ -13,12 +13,14 @@ namespace MyPortal.Database.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
         public Guid HomeworkId { get; set; }
+        public Guid StudentId { get; set; }
         public Guid TaskId { get; set; }
         public int MaxPoints { get; set; }
         public int PointsAchieved { get; set; }
         public string Comments { get; set; }
 
         public virtual Homework Homework { get; set; }
+        public virtual Student Student { get; set; }
         public virtual Task Task { get; set; }
     }
 }

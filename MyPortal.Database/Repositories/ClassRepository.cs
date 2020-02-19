@@ -14,22 +14,21 @@ namespace MyPortal.Database.Repositories
 {
     public class ClassRepository : BaseReadWriteRepository<Class>, IClassRepository
     {
-        private readonly string RelatedColumns = $@"
+        public ClassRepository(IDbConnection connection) : base(connection)
+        {
+        RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(AcademicYear))},
 {EntityHelper.GetAllColumns(typeof(Subject))},
 {EntityHelper.GetAllColumns(typeof(StaffMember), "Teacher")},
 {EntityHelper.GetAllColumns(typeof(Person), "TeacherPerson")},
 {EntityHelper.GetAllColumns(typeof(YearGroup))}";
 
-        private readonly string JoinRelated = $@"
+        JoinRelated = $@"
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AcademicYear]", "[AcademicYear].[Id]", "[Class].[AcademicYearId]")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Subject]", "[Subject].[Id]", "[Class].[SubjectId]")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[Teacher].[Id]", "[Class].[TeacherId]", "Teacher")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[TeacherPerson].[Id]", "[Teacher].[PersonId]", "TeacherPerson")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[YearGroup]", "[YearGroup].[Id]", "[Class].[YearGroupId]")}";
-
-        public ClassRepository(IDbConnection connection) : base(connection)
-        {
         }
 
         protected override async Task<IEnumerable<Class>> ExecuteQuery(string sql, object param = null)
@@ -45,22 +44,6 @@ namespace MyPortal.Database.Repositories
 
                     return currClass;
                 }, param);
-        }
-
-        public async Task<IEnumerable<Class>> GetAll()
-        {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
-
-            return await ExecuteQuery(sql);
-        }
-
-        public async Task<Class> GetById(Guid id)
-        {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
-            
-            SqlHelper.Where(ref sql, "[Class].[Id] = @ClassId");
-
-            return (await ExecuteQuery(sql, new {ClassId = id})).Single();
         }
 
         public async Task Update(Class entity)

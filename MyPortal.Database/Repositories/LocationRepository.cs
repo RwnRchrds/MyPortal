@@ -23,22 +23,6 @@ namespace MyPortal.Database.Repositories
             return await Connection.QueryAsync<Location>(sql, param);
         }
 
-        public async Task<IEnumerable<Location>> GetAll()
-        {
-            var sql = $"SELECT {AllColumns} FROM {TblName}";
-
-            return await ExecuteQuery(sql);
-        }
-
-        public async Task<Location> GetById(Guid id)
-        {
-            var sql = $"SELECT {AllColumns} FROM {TblName}";
-
-            SqlHelper.Where(ref sql, "[Location].[Id] = @LocationId");
-
-            return (await ExecuteQuery(sql, new {LocationId = id})).Single();
-        }
-
         public async Task Update(Location entity)
         {
             var locationInDb = await Context.Locations.FindAsync(entity.Id);

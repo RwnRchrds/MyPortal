@@ -14,31 +14,13 @@ namespace MyPortal.Database.Repositories
 {
     public class DiaryEventRepository : BaseReadWriteRepository<DiaryEvent>, IDiaryEventRepository
     {
-        private readonly string RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(DiaryEventType))}";
-
-        private readonly string JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[DiaryEventType]", "[DiaryEventType].[Id]", "[DiaryEvent].[EventTypeId]")}";
-
         public DiaryEventRepository(IDbConnection connection) : base(connection)
         {
-        }
+        RelatedColumns = $@"
+{EntityHelper.GetAllColumns(typeof(DiaryEventType))}";
 
-        public async Task<IEnumerable<DiaryEvent>> GetAll()
-        {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
-
-            return await ExecuteQuery(sql);
-        }
-
-        public async Task<DiaryEvent> GetById(Guid id)
-        {
-            var sql =
-                $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
-
-            SqlHelper.Where(ref sql, "[DiaryEvent].[Id] = @EventId");
-
-            return (await ExecuteQuery(sql, new {EventId = id})).Single();
+        JoinRelated = $@"
+{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[DiaryEventType]", "[DiaryEventType].[Id]", "[DiaryEvent].[EventTypeId]")}";
         }
 
         public async Task Update(DiaryEvent entity)

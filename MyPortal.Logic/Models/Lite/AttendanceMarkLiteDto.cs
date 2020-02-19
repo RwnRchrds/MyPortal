@@ -17,7 +17,5 @@ namespace MyPortal.Logic.Models.Lite
         public string Comments { get; set; }
 
         public int? MinutesLate { get; set; }
-        
-        public AttendanceCodeMeaningDto Meaning { get; set; }
     }
 }

@@ -13,14 +13,13 @@ namespace MyPortal.Database.Repositories
 {
     public class AttendanceWeekRepository : BaseReadWriteRepository<AttendanceWeek>, IAttendanceWeekRepository
     {
-        private readonly string RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(AcademicYear))}";
-
-        private readonly string JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AcademicYear]", "[AcademicYear].[Id]", "[AttendanceWeek].[AcademicYearId]")}";
-        
         public AttendanceWeekRepository(IDbConnection connection) : base(connection)
         {
+        RelatedColumns = $@"
+{EntityHelper.GetAllColumns(typeof(AcademicYear))}";
+
+        JoinRelated = $@"
+{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AcademicYear]", "[AcademicYear].[Id]", "[AttendanceWeek].[AcademicYearId]")}";
         }
 
         protected override async Task<IEnumerable<AttendanceWeek>> ExecuteQuery(string sql, object param = null)
@@ -31,22 +30,6 @@ namespace MyPortal.Database.Repositories
 
                 return week;
             }, param);
-        }
-
-        public async Task<IEnumerable<AttendanceWeek>> GetAll()
-        {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
-
-            return await ExecuteQuery(sql);
-        }
-
-        public async Task<AttendanceWeek> GetById(Guid id)
-        {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
-            
-            SqlHelper.Where(ref sql, "[AttendanceWeek].[Id] = @AttendanceWeekId");
-
-            return (await ExecuteQuery(sql, new {AttendanceWeekId = id})).Single();
         }
 
         public async Task Update(AttendanceWeek entity)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,14 +17,28 @@ namespace MyPortal.Database.Repositories
     {
         protected readonly IDbConnection Connection;
 
-        public BaseReadRepository(IDbConnection connection)
+        public BaseReadRepository(IDbConnection connection, string tblAlias = null)
         {
             Connection = connection;
+
+            TblAlias = tblAlias ?? typeof(TEntity).Name;
+
+            TblName = EntityHelper.GetTblName(typeof(TEntity), TblAlias);
+
+            AllColumns = EntityHelper.GetAllColumns(typeof(TEntity), TblAlias);
         }
 
-        protected readonly string TblName = EntityHelper.GetTblName(typeof(TEntity));
+        protected string TblAlias = null;
+        
+        protected string TblName = null;
 
-        protected readonly string AllColumns = EntityHelper.GetAllColumns(typeof(TEntity));
+        protected string AllColumns = null;
+
+        protected string RelatedColumns = null;
+
+        protected string JoinRelated = null;
+        
+        protected bool HasRelated => RelatedColumns != null && JoinRelated != null;
 
         protected abstract Task<IEnumerable<TEntity>> ExecuteQuery(string sql, object param = null);
 
@@ -35,6 +50,29 @@ namespace MyPortal.Database.Repositories
         protected async Task<string> ExecuteStringQuery(string sql, object param = null)
         {
             return await Connection.QueryFirstAsync<string>(sql, param);
+        }
+
+        public string SelectAllColumns()
+        {
+            return HasRelated
+                ? $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}"
+                : $"SELECT {AllColumns} FROM {TblName}";
+        }
+
+        public async Task<IEnumerable<TEntity>> GetAll()
+        {
+            var sql = SelectAllColumns();
+
+            return await ExecuteQuery(sql);
+        }
+
+        public async Task<TEntity> GetById(Guid id)
+        {
+            var sql = SelectAllColumns();
+            
+            SqlHelper.Where(ref sql, $"[{TblAlias}].[Id] = @Id");
+
+            return (await ExecuteQuery(sql, new {Id = id})).Single();
         }
 
         public void Dispose()

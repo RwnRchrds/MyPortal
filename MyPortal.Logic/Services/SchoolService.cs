@@ -28,29 +28,6 @@ namespace MyPortal.Logic.Services
             return await _repository.GetLocalSchoolName();
         }
 
-        public async Task<SchoolDto> GetLocalSchool()
-        {
-            var school = await _repository.GetLocal();
-
-            return _businessMapper.Map<SchoolDto>(school);
-        }
-
-        public async Task CreateSchool(SchoolDto school)
-        {
-            ValidationHelper.ValidateModel(school);
-
-            _repository.Create(_businessMapper.Map<School>(school));
-
-            await _repository.SaveChanges();
-        }
-
-        public async Task UpdateSchool(SchoolDto school)
-        {
-            await _repository.Update(_businessMapper.Map<School>(school));
-
-            await _repository.SaveChanges();
-        }
-
         public async Task DeleteSchool(Guid id)
         {
             var schoolInDb = await _repository.GetById(id);
