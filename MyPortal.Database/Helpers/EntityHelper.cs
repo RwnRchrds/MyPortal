@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using MyPortal.Database.Models.Identity;
 
 namespace MyPortal.Database.Helpers
 {
@@ -60,9 +62,26 @@ namespace MyPortal.Database.Helpers
             return props;
         }
 
-        internal static string GetTblName(Type t, string tblAlias = null, string schema = "dbo")
+        internal static string GetTblName(Type t, string tblAlias = null, string schema = "dbo", bool includeAs = false)
         {
-            return $"[{schema}].[{t.Name}] AS [{(!string.IsNullOrWhiteSpace(tblAlias) ? tblAlias : t.Name)}]";
+            var entityTable = ((TableAttribute) t.GetCustomAttribute(typeof(TableAttribute))).Name ?? t.Name;
+            
+            if (t == typeof(ApplicationUser))
+            {
+                entityTable = "AspNetUsers";
+            }
+
+            if (t == typeof(ApplicationRole))
+            {
+                entityTable = "AspNetRoles";
+            }
+
+            if (includeAs)
+            {
+                return $"[{schema}].[{entityTable}] AS [{(!string.IsNullOrWhiteSpace(tblAlias) ? tblAlias : t.Name)}]";
+            }
+
+            return $"[{schema}].[{entityTable}]";
         }
     }
 }

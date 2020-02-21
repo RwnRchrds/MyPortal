@@ -23,7 +23,7 @@ namespace MyPortal.Database.Repositories
 
             TblAlias = tblAlias ?? typeof(TEntity).Name;
 
-            TblName = EntityHelper.GetTblName(typeof(TEntity), TblAlias);
+            TblName = EntityHelper.GetTblName(typeof(TEntity), TblAlias, "dbo", true);
 
             AllColumns = EntityHelper.GetAllColumns(typeof(TEntity), TblAlias);
         }
