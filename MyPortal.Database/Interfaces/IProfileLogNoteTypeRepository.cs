@@ -5,7 +5,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface IProfileLogNoteTypeRepository : IReadWriteRepository<ProfileLogNoteType>
+    public interface IProfileLogNoteTypeRepository : IReadRepository<ProfileLogNoteType>
     {
     }
 }
