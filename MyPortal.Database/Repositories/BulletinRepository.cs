@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class BulletinRepository : BaseReadWriteRepository<Bulletin>, IBulletinRepository
     {
-        public BulletinRepository(IDbConnection connection) : base(connection)
+        public BulletinRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
         RelatedColumns = $@"
 {EntityHelper.GetUserColumns("User")}";

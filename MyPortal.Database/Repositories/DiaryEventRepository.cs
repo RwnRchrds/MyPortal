@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class DiaryEventRepository : BaseReadWriteRepository<DiaryEvent>, IDiaryEventRepository
     {
-        public DiaryEventRepository(IDbConnection connection) : base(connection)
+        public DiaryEventRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
         RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(DiaryEventType))}";

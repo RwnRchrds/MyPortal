@@ -13,7 +13,7 @@ namespace MyPortal.Database.Repositories
 {
     public class BasketItemRepository : BaseReadWriteRepository<BasketItem>, IBasketItemRepository
     {
-        public BasketItemRepository(IDbConnection connection) : base(connection)
+        public BasketItemRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
         RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(Student))},

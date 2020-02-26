@@ -15,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class AchievementRepository : BaseReadWriteRepository<Achievement>, IAchievementRepository
     {
-        public AchievementRepository(IDbConnection connection) : base(connection)
+        public AchievementRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(AcademicYear))},

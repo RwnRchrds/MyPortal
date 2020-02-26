@@ -13,7 +13,7 @@ namespace MyPortal.Database.Repositories
 {
     public class CommentBankRepository : BaseReadWriteRepository<CommentBank>, ICommentBankRepository
     {
-        public CommentBankRepository(IDbConnection connection) : base(connection)
+        public CommentBankRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
         }
 

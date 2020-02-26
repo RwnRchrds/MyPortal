@@ -16,7 +16,7 @@ namespace MyPortal.Database.Repositories
 {
     public class SchoolRepository : BaseReadWriteRepository<School>, ISchoolRepository
     {
-        public SchoolRepository(IDbConnection connection) : base(connection)
+        public SchoolRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
         RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(LocalAuthority))},

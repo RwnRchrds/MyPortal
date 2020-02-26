@@ -13,7 +13,7 @@ namespace MyPortal.Database.Repositories
 {
     public class AspectRepository : BaseReadWriteRepository<Aspect>, IAspectRepository
     {
-        public AspectRepository(IDbConnection connection) : base(connection)
+        public AspectRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
         RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(AspectType))},

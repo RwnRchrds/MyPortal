@@ -44,12 +44,12 @@ namespace MyPortal.Database.Repositories
 
         protected async Task<int> ExecuteIntQuery(string sql, object param = null)
         {
-            return await Connection.QueryFirstAsync<int>(sql, param);
+            return await Connection.QuerySingleOrDefaultAsync<int>(sql, param);
         }
 
         protected async Task<string> ExecuteStringQuery(string sql, object param = null)
         {
-            return await Connection.QueryFirstAsync<string>(sql, param);
+            return await Connection.QuerySingleOrDefaultAsync<string>(sql, param);
         }
 
         public string SelectAllColumns()
@@ -72,7 +72,7 @@ namespace MyPortal.Database.Repositories
             
             SqlHelper.Where(ref sql, $"[{TblAlias}].[Id] = @Id");
 
-            return (await ExecuteQuery(sql, new {Id = id})).Single();
+            return (await ExecuteQuery(sql, new {Id = id})).SingleOrDefault();
         }
 
         public void Dispose()

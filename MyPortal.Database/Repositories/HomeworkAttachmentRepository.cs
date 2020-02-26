@@ -11,7 +11,7 @@ namespace MyPortal.Database.Repositories
 {
     public class HomeworkAttachmentRepository : BaseReadWriteRepository<HomeworkAttachment>, IHomeworkAttachmentRepository
     {
-        public HomeworkAttachmentRepository(IDbConnection connection) : base(connection)
+        public HomeworkAttachmentRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(Homework))},

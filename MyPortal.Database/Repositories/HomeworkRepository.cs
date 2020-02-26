@@ -10,7 +10,7 @@ namespace MyPortal.Database.Repositories
 {
     public class HomeworkRepository : BaseReadWriteRepository<Homework>, IHomeworkRepository
     {
-        public HomeworkRepository(IDbConnection connection) : base(connection)
+        public HomeworkRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
         }
 
@@ -25,7 +25,7 @@ namespace MyPortal.Database.Repositories
 
             homeworkInDb.Title = entity.Title;
             homeworkInDb.Description = entity.Description;
-            homeworkInDb.ElectronicSubmission = entity.ElectronicSubmission;
+            homeworkInDb.SubmitOnline = entity.SubmitOnline;
         }
     }
 }

@@ -11,7 +11,7 @@ namespace MyPortal.Database.Repositories
 {
     public class EnrolmentRepository : BaseReadWriteRepository<Enrolment>, IEnrolmentRepository
     {
-        public EnrolmentRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public EnrolmentRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(Student))},

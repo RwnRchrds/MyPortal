@@ -11,7 +11,7 @@ namespace MyPortal.Database.Repositories
 {
     public class PersonConditionRepository : BaseReadWriteRepository<PersonCondition>, IPersonConditionRepository
     {
-        public PersonConditionRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public PersonConditionRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(Person))},

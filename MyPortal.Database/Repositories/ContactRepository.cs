@@ -12,7 +12,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ContactRepository : BaseReadWriteRepository<Contact>, IContactRepository
     {
-        public ContactRepository(IDbConnection connection) : base(connection)
+        public ContactRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
        RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(Person))}";

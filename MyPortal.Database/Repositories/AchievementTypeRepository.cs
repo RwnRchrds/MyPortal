@@ -16,7 +16,7 @@ namespace MyPortal.Database.Repositories
         private readonly string JoinAchievement = SqlHelper.Join(JoinType.LeftJoin,
             "[dbo].[Achievement]", "[Achievement].[AchievmentTypeId]", "[AchievementType].[Id]");
 
-        public AchievementTypeRepository(IDbConnection connection) : base(connection)
+        public AchievementTypeRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             
         }

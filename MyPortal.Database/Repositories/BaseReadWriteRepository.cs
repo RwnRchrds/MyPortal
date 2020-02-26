@@ -13,13 +13,9 @@ namespace MyPortal.Database.Repositories
     {
         protected readonly ApplicationDbContext Context;
 
-        protected BaseReadWriteRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        protected BaseReadWriteRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, tblAlias)
         {
-            var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-
-            optionsBuilder.UseSqlServer(connection.ConnectionString);
-
-            Context = new ApplicationDbContext(optionsBuilder.Options);
+            Context = context;
         }
 
         public async Task SaveChanges()

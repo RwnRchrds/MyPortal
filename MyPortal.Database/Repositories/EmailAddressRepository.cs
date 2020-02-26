@@ -11,7 +11,7 @@ namespace MyPortal.Database.Repositories
 {
     public class EmailAddressRepository : BaseReadWriteRepository<EmailAddress>, IEmailAddressRepository
     {
-        public EmailAddressRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public EmailAddressRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(EmailAddressType))},

@@ -15,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class PersonRepository : BaseReadWriteRepository<Person>, IPersonRepository
     {
-        public PersonRepository(IDbConnection connection) : base(connection)
+        public PersonRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
        RelatedColumns = $"{EntityHelper.GetUserColumns("User")}";
 

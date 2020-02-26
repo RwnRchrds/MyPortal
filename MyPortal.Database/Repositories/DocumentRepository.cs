@@ -12,7 +12,7 @@ namespace MyPortal.Database.Repositories
 {
     public class DocumentRepository : BaseReadWriteRepository<Document>, IDocumentRepository
     {
-        public DocumentRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public DocumentRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(DocumentType))},

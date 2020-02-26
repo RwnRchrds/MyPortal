@@ -13,7 +13,7 @@ namespace MyPortal.Database.Repositories
 {
     public class AttendanceMarkRepository : BaseReadWriteRepository<AttendanceMark>, IAttendanceMarkRepository
     {
-        public AttendanceMarkRepository(IDbConnection connection) : base(connection)
+        public AttendanceMarkRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
         RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(Student))},

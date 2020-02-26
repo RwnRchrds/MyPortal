@@ -11,7 +11,7 @@ namespace MyPortal.Database.Repositories
 {
     public class RegGroupRepository : BaseReadWriteRepository<RegGroup>, IRegGroupRepository
     {
-        public RegGroupRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public RegGroupRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(StaffMember))},

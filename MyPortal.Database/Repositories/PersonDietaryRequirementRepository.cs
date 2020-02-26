@@ -11,7 +11,7 @@ namespace MyPortal.Database.Repositories
 {
     public class PersonDietaryRequirementRepository : BaseReadWriteRepository<PersonDietaryRequirement>, IPersonDietaryRequirementRepository
     {
-        public PersonDietaryRequirementRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public PersonDietaryRequirementRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(Person))},

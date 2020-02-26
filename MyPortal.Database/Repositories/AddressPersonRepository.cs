@@ -13,7 +13,7 @@ namespace MyPortal.Database.Repositories
 {
     public class AddressPersonRepository : BaseReadWriteRepository<AddressPerson>, IAddressPersonRepository
     {
-        public AddressPersonRepository(IDbConnection connection) : base(connection)
+        public AddressPersonRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(Person))},

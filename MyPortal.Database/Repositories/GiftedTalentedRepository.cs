@@ -11,7 +11,7 @@ namespace MyPortal.Database.Repositories
 {
     public class GiftedTalentedRepository : BaseReadWriteRepository<GiftedTalented>, IGiftedTalentedRepository
     {
-        public GiftedTalentedRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public GiftedTalentedRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(Student))},

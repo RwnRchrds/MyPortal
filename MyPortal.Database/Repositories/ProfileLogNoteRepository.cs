@@ -12,7 +12,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ProfileLogNoteRepository : BaseReadWriteRepository<ProfileLogNote>, IProfileLogNoteRepository
     {
-        public ProfileLogNoteRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public ProfileLogNoteRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(ProfileLogNoteType))},

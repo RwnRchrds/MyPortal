@@ -12,7 +12,7 @@ namespace MyPortal.Database.Repositories
 {
     public class IncidentRepository : BaseReadWriteRepository<Incident>, IIncidentRepository
     {
-        public IncidentRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public IncidentRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(AcademicYear))},

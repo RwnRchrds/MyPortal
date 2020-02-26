@@ -11,7 +11,7 @@ namespace MyPortal.Database.Repositories
 {
     public class PhoneNumberRepository : BaseReadWriteRepository<PhoneNumber>, IPhoneNumberRepository
     {
-        public PhoneNumberRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public PhoneNumberRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(PhoneNumberType))},

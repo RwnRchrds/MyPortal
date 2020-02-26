@@ -11,7 +11,7 @@ namespace MyPortal.Database.Repositories
 {
     public class HouseRepository : BaseReadWriteRepository<House>, IHouseRepository
     {
-        public HouseRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public HouseRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(StaffMember))}";

@@ -11,7 +11,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ProductRepository : BaseReadWriteRepository<Product>, IProductRepository
     {
-        public ProductRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public ProductRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"{EntityHelper.GetAllColumns(typeof(ProductType))}";
 

@@ -11,7 +11,7 @@ namespace MyPortal.Database.Repositories
 {
     public class IncidentDetentionRepository : BaseReadWriteRepository<IncidentDetention>, IIncidentDetentionRepository
     {
-        public IncidentDetentionRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public IncidentDetentionRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(Incident))},

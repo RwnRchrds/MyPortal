@@ -13,7 +13,7 @@ namespace MyPortal.Database.Repositories
 {
     public class CommentRepository : BaseReadWriteRepository<Comment>, ICommentRepository
     {
-        public CommentRepository(IDbConnection connection) : base(connection)
+        public CommentRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
         RelatedColumns = $@"{EntityHelper.GetAllColumns(typeof(CommentBank))}";
 

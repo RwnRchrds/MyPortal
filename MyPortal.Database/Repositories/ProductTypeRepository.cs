@@ -10,7 +10,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ProductTypeRepository : BaseReadWriteRepository<ProductType>, IProductTypeRepository
     {
-        public ProductTypeRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public ProductTypeRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
         }
 

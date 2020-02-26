@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ClassRepository : BaseReadWriteRepository<Class>, IClassRepository
     {
-        public ClassRepository(IDbConnection connection) : base(connection)
+        public ClassRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
         RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(AcademicYear))},

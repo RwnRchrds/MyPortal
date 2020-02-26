@@ -13,7 +13,7 @@ namespace MyPortal.Database.Repositories
 {
     public class CommunicationLogRepository : BaseReadWriteRepository<CommunicationLog>, ICommunicationLogRepository
     {
-        public CommunicationLogRepository(IDbConnection connection) : base(connection)
+        public CommunicationLogRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
         RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(CommunicationType))}";

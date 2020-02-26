@@ -12,7 +12,7 @@ namespace MyPortal.Database.Repositories
 {
     public class LessonPlanRepository : BaseReadWriteRepository<LessonPlan>, ILessonPlanRepository
     {
-        public LessonPlanRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public LessonPlanRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(StudyTopic))},

@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class AcademicYearRepository : BaseReadWriteRepository<AcademicYear>, IAcademicYearRepository
     {
-        public AcademicYearRepository(IDbConnection connection) : base(connection)
+        public AcademicYearRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             
         }

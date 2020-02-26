@@ -11,7 +11,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ObservationRepository : BaseReadWriteRepository<Observation>, IObservationRepository
     {
-        public ObservationRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public ObservationRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(StaffMember), "Observee")},

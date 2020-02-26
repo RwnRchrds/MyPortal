@@ -13,7 +13,7 @@ namespace MyPortal.Database.Repositories
 {
     public class AttendanceWeekRepository : BaseReadWriteRepository<AttendanceWeek>, IAttendanceWeekRepository
     {
-        public AttendanceWeekRepository(IDbConnection connection) : base(connection)
+        public AttendanceWeekRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
         RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(AcademicYear))}";

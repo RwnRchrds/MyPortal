@@ -12,7 +12,7 @@ namespace MyPortal.Database.Repositories
 {
     public class MedicalEventRepository : BaseReadWriteRepository<MedicalEvent>, IMedicalEventRepository
     {
-        public MedicalEventRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public MedicalEventRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(Student))},

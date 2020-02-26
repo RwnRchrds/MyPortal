@@ -89,6 +89,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<SenEvent> SenEvents { get; set; }
         public virtual DbSet<SenProvision> SenProvisions { get; set; }
         public virtual DbSet<SenProvisionType> SenProvisionTypes { get; set; }
+        public virtual DbSet<SenReview> SenReviews { get; set; }
         public virtual DbSet<SenReviewType> SenReviewTypes { get; set; }
         public virtual DbSet<SenStatus> SenStatuses { get; set; }
         public virtual DbSet<Session> Sessions { get; set; }
@@ -338,6 +339,9 @@ namespace MyPortal.Database.Models
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
             modelBuilder.Entity<SenProvisionType>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<SenReview>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
             modelBuilder.Entity<SenReviewType>()
@@ -896,6 +900,13 @@ namespace MyPortal.Database.Models
                 .HasMany(e => e.SenProvisions)
                 .WithOne(e => e.Type)
                 .HasForeignKey(e => e.ProvisionTypeId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<SenReviewType>()
+                .HasMany(e => e.Reviews)
+                .WithOne(e => e.ReviewType)
+                .HasForeignKey(e => e.ReviewTypeId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 

@@ -11,7 +11,7 @@ namespace MyPortal.Database.Repositories
 {
     public class PersonAttachmentRepository : BaseReadWriteRepository<PersonAttachment>, IPersonAttachmentRepository
     {
-        public PersonAttachmentRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public PersonAttachmentRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(Person))},

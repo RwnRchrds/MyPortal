@@ -10,7 +10,7 @@ namespace MyPortal.Database.Repositories
 {
     public class PeriodRepository : BaseReadWriteRepository<Period>, IPeriodRepository
     {
-        public PeriodRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public PeriodRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
         }
 
