@@ -21,6 +21,8 @@ namespace MyPortal.Database.Models
         public int Hours { get; set; }
         public int Days { get; set; }
 
+        public bool Active { get; set; }
+
         public virtual DiaryEventType DiaryEventType { get; set; }
     }
 }

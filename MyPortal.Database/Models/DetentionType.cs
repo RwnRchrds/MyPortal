@@ -27,6 +27,8 @@ namespace MyPortal.Database.Models
         [Column(TypeName = "time(2)")]
         public TimeSpan EndTime { get; set; }
 
+        public bool Active { get; set; }
+
         public virtual ICollection<Detention> Detentions { get; set; }
     }
 }
