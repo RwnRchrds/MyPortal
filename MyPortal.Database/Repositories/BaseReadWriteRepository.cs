@@ -25,7 +25,14 @@ namespace MyPortal.Database.Repositories
 
         public async Task<TEntity> GetByIdWithTracking(Guid id)
         {
-            return await Context.Set<TEntity>().FindAsync(id);
+            var entity = await Context.Set<TEntity>().FindAsync(id);
+
+            if (entity == null)
+            {
+                throw new Exception($"{typeof(TEntity).Name} with ID {id} not found.");
+            }
+
+            return entity;
         }
 
         public void Create(TEntity entity)

@@ -1,4 +1,4 @@
-﻿namespace MyPortal.Logic.Models.Business
+﻿namespace MyPortal.Logic.Models.Reporting
 {
     public class ChartDataNumeric
     {

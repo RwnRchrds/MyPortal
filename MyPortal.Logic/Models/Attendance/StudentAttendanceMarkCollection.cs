@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using MyPortal.Logic.Models.Lite;
 
-namespace MyPortal.Logic.Models.Business
+namespace MyPortal.Logic.Models.Attendance
 {
     public class StudentAttendanceMarkCollection
     {

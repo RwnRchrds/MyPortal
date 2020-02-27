@@ -38,6 +38,49 @@ namespace MyPortal.Database.Repositories
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[SenStatus]", "[SenStatus].[Id]", "[Student].[SenStatusId]")}";
         }
 
+        private static void ApplySearch(ref string sql, Student student)
+        {
+            if (!string.IsNullOrWhiteSpace(student.Person.FirstName))
+            {
+                SqlHelper.Where(ref sql, "[Person].[FirstName] LIKE @FirstName");
+            }
+
+            if (!string.IsNullOrWhiteSpace(student.Person.LastName))
+            {
+                SqlHelper.Where(ref sql, "[Person].[LastName] LIKE @LastName");
+            }
+
+            if (!string.IsNullOrWhiteSpace(student.Person.Gender))
+            {
+                SqlHelper.Where(ref sql, "[Person].[Gender] = @Gender");
+            }
+
+            if (student.Person.Dob != null)
+            {
+                SqlHelper.Where(ref sql, "[Person].[Dob] = @Dob");
+            }
+
+            if (student.RegGroupId != Guid.Empty)
+            {
+                SqlHelper.Where(ref sql, "[Student].[RegGroupId] = @RegGroupId");
+            }
+
+            if (student.YearGroupId != Guid.Empty)
+            {
+                SqlHelper.Where(ref sql, "[Student].[YearGroupId] = @YearGroupId");
+            }
+
+            if (student.HouseId != Guid.Empty)
+            {
+                SqlHelper.Where(ref sql, "[Student].[HouseId] = @HouseId");
+            }
+
+            if (student.SenStatusId != Guid.Empty)
+            {
+                SqlHelper.Where(ref sql, "[Student].[SenStatusId] = @SenStatusId");
+            }
+        }
+
         public async Task Update(Student entity)
         {
             var studentInDb = await Context.Students.FindAsync(entity.Id);
@@ -72,51 +115,70 @@ namespace MyPortal.Database.Repositories
             return (await ExecuteQuery(sql, new {UserId = userId})).SingleOrDefault();
         }
 
-        public async Task<IEnumerable<Student>> GetOnRoll()
+        public async Task<IEnumerable<Student>> GetAll(Student student)
+        {
+            var sql = SelectAllColumns();
+            
+            ApplySearch(ref sql, student);
+            
+            return await ExecuteQuery(sql,
+                new
+                {
+                    DateToday = DateTime.Today, FirstName = $"{SqlHelper.ParamStartsWith(student.Person.FirstName)}",
+                    LastName = $"{SqlHelper.ParamStartsWith(student.Person.LastName)}", student.Person.Gender,
+                    student.Person.Dob, student.RegGroupId, student.YearGroupId, student.HouseId, student.SenStatusId
+                });
+        }
+
+        public async Task<IEnumerable<Student>> GetOnRoll(Student student)
         {
             var sql = SelectAllColumns();
 
             SqlHelper.Where(ref sql, "([Student].[DateLeaving] IS NULL OR [Student.DateLeaving] > @DateToday)");
             SqlHelper.Where(ref sql, "[Student].[DateStarting] <= @DateToday");
-                
-            return await ExecuteQuery(sql, new {DateToday = DateTime.Today});
+            
+            ApplySearch(ref sql, student);
+
+            return await ExecuteQuery(sql,
+                new
+                {
+                    DateToday = DateTime.Today, FirstName = $"{SqlHelper.ParamStartsWith(student.Person.FirstName)}",
+                    LastName = $"{SqlHelper.ParamStartsWith(student.Person.LastName)}", student.Person.Gender,
+                    student.Person.Dob, student.RegGroupId, student.YearGroupId, student.HouseId, student.SenStatusId
+                });
         }
 
-        public async Task<IEnumerable<Student>> GetLeavers()
+        public async Task<IEnumerable<Student>> GetLeavers(Student student)
         {
             var sql = SelectAllColumns();
 
             SqlHelper.Where(ref sql, "[Student].[DateStarting] IS NOT NULL");
             SqlHelper.Where(ref sql, "[Student].[DateLeaving] <= @DateToday");
+            
+            ApplySearch(ref sql, student);
 
-            return await ExecuteQuery(sql, new { DateToday = DateTime.Today });
+            return await ExecuteQuery(sql, new
+            {
+                DateToday = DateTime.Today, FirstName = $"{SqlHelper.ParamStartsWith(student.Person.FirstName)}",
+                LastName = $"{SqlHelper.ParamStartsWith(student.Person.LastName)}", student.Person.Gender,
+                student.Person.Dob, student.RegGroupId, student.YearGroupId, student.HouseId, student.SenStatusId
+            });
         }
 
-        public async Task<IEnumerable<Student>> GetFuture()
+        public async Task<IEnumerable<Student>> GetFuture(Student student)
         {
             var sql = SelectAllColumns();
             
             SqlHelper.Where(ref sql, "[Student].[DateStarting] > @DateToday");
+            
+            ApplySearch(ref sql, student);
 
-            return await ExecuteQuery(sql, new { DateToday = DateTime.Today });
-        }
-
-        public async Task<IEnumerable<Student>> GetByRegGroup(int regGroupId)
-        {
-            var sql = SelectAllColumns();
-
-            SqlHelper.Where(ref sql, "[Student].[RegGroupId] = @RegGroupId");
-
-            return await ExecuteQuery(sql, new { RegGroupId = regGroupId });
-        }
-
-        public async Task<IEnumerable<Student>> GetByYearGroup(int yearGroupId)
-        {
-            var sql = SelectAllColumns();
-
-            SqlHelper.Where(ref sql, "[Student].[YearGroupId] = @YearGroupId");
-
-            return await ExecuteQuery(sql, new { YearGroupId = yearGroupId });
+            return await ExecuteQuery(sql, new
+            {
+                DateToday = DateTime.Today, FirstName = $"{SqlHelper.ParamStartsWith(student.Person.FirstName)}",
+                LastName = $"{SqlHelper.ParamStartsWith(student.Person.LastName)}", student.Person.Gender,
+                student.Person.Dob, student.RegGroupId, student.YearGroupId, student.HouseId, student.SenStatusId
+            });
         }
 
         public async Task<IEnumerable<Student>> GetByClass(int classId)
@@ -134,15 +196,6 @@ namespace MyPortal.Database.Repositories
             SqlHelper.Where(ref sql, "[Student].[GiftedAndTalented] = 1");
 
             return await ExecuteQuery(sql);
-        }
-
-        public async Task<IEnumerable<Student>> GetByHouse(int houseId)
-        {
-            var sql = SelectAllColumns();
-
-            SqlHelper.Where(ref sql, "[Student].[HouseId] = @HouseId");
-
-            return await ExecuteQuery(sql, new {HouseId = houseId});
         }
 
         protected override async Task<IEnumerable<Student>> ExecuteQuery(string sql, object param = null)

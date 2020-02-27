@@ -1,5 +1,4 @@
-﻿using MyPortal.Logic.Models.Dtos;
-
+﻿
 namespace MyPortal.Logic.Models.Lite
 {    
     public class AttendanceMarkLiteDto

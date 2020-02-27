@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
-namespace MyPortal.Logic.Models.Business
+namespace MyPortal.Logic.Models.Data
 {
     public class Lookup : Dictionary<Guid, string>
     {

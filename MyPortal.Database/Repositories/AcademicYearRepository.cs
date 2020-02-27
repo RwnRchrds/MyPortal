@@ -21,7 +21,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task Update(AcademicYear entity)
         {
-            var academicYearInDb = await Context.AcademicYears.FindAsync(entity.Id);
+            var academicYearInDb = await GetByIdWithTracking(entity.Id);
 
             if (academicYearInDb == null)
             {

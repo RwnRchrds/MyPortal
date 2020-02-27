@@ -38,7 +38,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task Update(AddressPerson entity)
         {
-            var apInDb = await Context.AddressPersons.FindAsync(entity.Id);
+            var apInDb = await GetByIdWithTracking(entity.Id);
 
             apInDb.AddressId = entity.AddressId;
             apInDb.PersonId = entity.PersonId;

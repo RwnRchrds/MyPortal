@@ -54,10 +54,8 @@ namespace MyPortal.Database.Repositories
             return (await ExecuteQuery(sql, new {UserId = userId})).Single();
         }
 
-        public async Task<IEnumerable<Person>> Search(Person person)
+        private static void ApplySearch(ref string sql, Person person)
         {
-            var sql = SelectAllColumns();
-
             if (!string.IsNullOrWhiteSpace(person.FirstName))
             {
                 SqlHelper.Where(ref sql, "[Person].[FirstName] LIKE @FirstName");
@@ -77,6 +75,13 @@ namespace MyPortal.Database.Repositories
             {
                 SqlHelper.Where(ref sql, "[Person].[Dob] = @Dob");
             }
+        }
+
+        public async Task<IEnumerable<Person>> Search(Person person)
+        {
+            var sql = SelectAllColumns();
+            
+            ApplySearch(ref sql, person);
 
             var param = new
                 {FirstName = $"{SqlHelper.ParamStartsWith(person.FirstName)}", LastName = $"{SqlHelper.ParamStartsWith(person.LastName)}", person.Gender, person.Dob};

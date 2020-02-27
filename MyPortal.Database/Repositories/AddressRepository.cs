@@ -25,7 +25,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task Update(Address entity)
         {
-            var addressInDb = await Context.Addresses.FindAsync(entity.Id);
+            var addressInDb = await GetByIdWithTracking(entity.Id);
 
             addressInDb.HouseName = entity.HouseNumber;
             addressInDb.HouseName = entity.HouseName;

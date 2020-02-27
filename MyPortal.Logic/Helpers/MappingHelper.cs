@@ -5,10 +5,8 @@ using System.Text;
 using AutoMapper;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
-using MyPortal.Logic.Models.Business;
-using MyPortal.Logic.Models.Dtos;
-using MyPortal.Logic.Models.Dtos.DataGrid;
 using MyPortal.Logic.Models.Lite;
+using MyPortal.Logic.Models.Student;
 
 namespace MyPortal.Logic.Helpers
 {

@@ -1,4 +1,4 @@
-﻿namespace MyPortal.Logic.Models.Dtos.DataGrid
+﻿namespace MyPortal.Logic.Models.DataGrid
 {
     public class DataGridPersonAttachmentDto : DataGridDocumentDto
     {

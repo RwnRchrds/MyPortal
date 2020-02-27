@@ -23,7 +23,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task Update(AchievementType entity)
         {
-            var achievementTypeInDb = await Context.AchievementTypes.FindAsync(entity.Id);
+            var achievementTypeInDb = await GetByIdWithTracking(entity.Id);
 
             if (achievementTypeInDb == null)
             {

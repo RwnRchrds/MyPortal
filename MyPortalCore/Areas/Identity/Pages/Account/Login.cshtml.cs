@@ -18,7 +18,6 @@ using MyPortal.Database.Models.Identity;
 using MyPortal.Logic.Authorisation.Attributes;
 using MyPortal.Logic.Dictionaries;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.Dtos;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortalCore.Areas.Identity.Pages.Account

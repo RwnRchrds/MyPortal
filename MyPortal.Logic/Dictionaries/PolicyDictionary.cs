@@ -1,8 +1,8 @@
 ﻿namespace MyPortal.Logic.Dictionaries
 {
-    public class PolicyDictionary
+    public static class PolicyDictionary
     {
-        public class UserType
+        public static class UserType
         {
             public const string Student = "policy.user.student";
             public const string Staff = "policy.user.staff";

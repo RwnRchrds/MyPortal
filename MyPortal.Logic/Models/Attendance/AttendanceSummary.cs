@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MyPortal.Logic.Models.Business
+namespace MyPortal.Logic.Models.Attendance
 {
     public class AttendanceSummary
     {

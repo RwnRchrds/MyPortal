@@ -38,7 +38,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task Update(Achievement entity)
         {
-            var achievementInDb = await Context.Achievements.FindAsync(entity.Id);
+            var achievementInDb = await GetByIdWithTracking(entity.Id);
 
             achievementInDb.AchievementTypeId = entity.AchievementTypeId;
             achievementInDb.Points = entity.Points;
