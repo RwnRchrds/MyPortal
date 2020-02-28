@@ -13,8 +13,8 @@ namespace MyPortal.Logic.Services
 
         public BaseService()
         {
-            _businessMapper = MappingHelper.GetMapperBusinessConfiguration();
-            _dataGridMapper = MappingHelper.GetMapperDataGridConfiguration();
+            _businessMapper = MappingHelper.GetBusinessConfig();
+            _dataGridMapper = MappingHelper.GetDataGridConfig();
         }
     }
 }

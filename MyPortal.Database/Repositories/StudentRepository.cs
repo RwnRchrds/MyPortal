@@ -22,18 +22,22 @@ namespace MyPortal.Database.Repositories
 {EntityHelper.GetUserColumns("User")},
 {EntityHelper.GetAllColumns(typeof(RegGroup))},
 {EntityHelper.GetAllColumns(typeof(StaffMember), "Tutor")},
-{EntityHelper.GetAllColumns(typeof(Person), "TutorPerson")}
+{EntityHelper.GetAllColumns(typeof(Person), "TutorPerson")},
 {EntityHelper.GetAllColumns(typeof(YearGroup))},
+{EntityHelper.GetAllColumns(typeof(StaffMember), "HeadOfYear")},
+{EntityHelper.GetAllColumns(typeof(Person), "HeadOfYearPerson")},
 {EntityHelper.GetAllColumns(typeof(House))},
 {EntityHelper.GetAllColumns(typeof(SenStatus))}";
 
         JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[Student].[PersonId]", "StudentPerson")}
+{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[StudentPerson].[Id]", "[Student].[PersonId]", "StudentPerson")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[User].[Id]", "[StudentPerson].[UserId]", "User")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[RegGroup]", "[RegGroup].[Id]", "[Student].[RegGroupId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[StaffMember].[Id]", "[RegGroup].[TutorId]", "Tutor")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[Tutor].[PersonId]", "TutorPerson")}
+{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[Tutor].[Id]", "[RegGroup].[TutorId]", "Tutor")}
+{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[TutorPerson].[Id]", "[Tutor].[PersonId]", "TutorPerson")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[YearGroup]", "[YearGroup].[Id]", "[Student].[YearGroupId]")}
+{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[HeadOfYear].[Id]", "[YearGroup].[HeadId]", "HeadOfYear")}
+{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[HeadOfYearPerson].[Id]", "[HeadOfYear].[PersonId]", "HeadOfYearPerson")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[House]", "[House].[Id]", "[Student].[HouseId]")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[SenStatus]", "[SenStatus].[Id]", "[Student].[SenStatusId]")}";
         }
@@ -42,22 +46,22 @@ namespace MyPortal.Database.Repositories
         {
             if (!string.IsNullOrWhiteSpace(student.Person.FirstName))
             {
-                SqlHelper.Where(ref sql, "[Person].[FirstName] LIKE @FirstName");
+                SqlHelper.Where(ref sql, "[StudentPerson].[FirstName] LIKE @FirstName");
             }
 
             if (!string.IsNullOrWhiteSpace(student.Person.LastName))
             {
-                SqlHelper.Where(ref sql, "[Person].[LastName] LIKE @LastName");
+                SqlHelper.Where(ref sql, "[StudentPerson].[LastName] LIKE @LastName");
             }
 
             if (!string.IsNullOrWhiteSpace(student.Person.Gender))
             {
-                SqlHelper.Where(ref sql, "[Person].[Gender] = @Gender");
+                SqlHelper.Where(ref sql, "[StudentPerson].[Gender] = @Gender");
             }
 
-            if (student.Person.Dob != null)
+            if (student.Person.Dob != null && student.Person.Dob != new DateTime())
             {
-                SqlHelper.Where(ref sql, "[Person].[Dob] = @Dob");
+                SqlHelper.Where(ref sql, "[StudentPerson].[Dob] = @Dob");
             }
 
             if (student.RegGroupId != Guid.Empty)
@@ -70,12 +74,12 @@ namespace MyPortal.Database.Repositories
                 SqlHelper.Where(ref sql, "[Student].[YearGroupId] = @YearGroupId");
             }
 
-            if (student.HouseId != Guid.Empty)
+            if (student.HouseId != null && student.HouseId != Guid.Empty)
             {
                 SqlHelper.Where(ref sql, "[Student].[HouseId] = @HouseId");
             }
 
-            if (student.SenStatusId != Guid.Empty)
+            if (student.SenStatusId != null && student.SenStatusId != Guid.Empty)
             {
                 SqlHelper.Where(ref sql, "[Student].[SenStatusId] = @SenStatusId");
             }
@@ -134,7 +138,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = SelectAllColumns();
 
-            SqlHelper.Where(ref sql, "([Student].[DateLeaving] IS NULL OR [Student.DateLeaving] > @DateToday)");
+            SqlHelper.Where(ref sql, "([Student].[DateLeaving] IS NULL OR [Student].[DateLeaving] > @DateToday)");
             SqlHelper.Where(ref sql, "[Student].[DateStarting] <= @DateToday");
             
             ApplySearch(ref sql, student);
@@ -204,7 +208,7 @@ namespace MyPortal.Database.Repositories
                 new[]
                 {
                     typeof(Student), typeof(Person), typeof(ApplicationUser), typeof(RegGroup), typeof(StaffMember),
-                    typeof(Person), typeof(YearGroup), typeof(House), typeof(SenStatus)
+                    typeof(Person), typeof(YearGroup), typeof(StaffMember), typeof(Person), typeof(House), typeof(SenStatus)
                 },
                 objects =>
                 {
@@ -216,8 +220,15 @@ namespace MyPortal.Database.Repositories
                     student.RegGroup.Tutor = (StaffMember) objects[4];
                     student.RegGroup.Tutor.Person = (Person) objects[5];
                     student.YearGroup = (YearGroup) objects[6];
-                    student.House = (House) objects[7];
-                    student.SenStatus = (SenStatus) objects[8];
+                    
+                    if (objects[7] != null)
+                    {
+                        student.YearGroup.HeadOfYear = (StaffMember) objects[7];
+                        student.YearGroup.HeadOfYear.Person = (Person) objects[8];
+                    }
+                    
+                    student.House = (House) objects[9];
+                    student.SenStatus = (SenStatus) objects[10];
 
                     return student;
                 }, param);

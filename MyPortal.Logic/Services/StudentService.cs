@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Repositories;
 using MyPortal.Logic.Dictionaries;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
+using MyPortal.Logic.Models.Details;
 using MyPortal.Logic.Models.Student;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class StudentService : BaseService
+    public class StudentService : BaseService, IStudentService
     {
         private IStudentRepository _repository;
 
@@ -19,8 +22,8 @@ namespace MyPortal.Logic.Services
         {
             return new Student
             {
-                RegGroupId = searchParams.RegGroupId,
-                YearGroupId = searchParams.YearGroupId,
+                RegGroupId = searchParams.RegGroupId ?? Guid.Empty,
+                YearGroupId = searchParams.YearGroupId ?? Guid.Empty,
                 HouseId = searchParams.HouseId,
                 SenStatusId = searchParams.SenStatusId,
                 
@@ -52,7 +55,7 @@ namespace MyPortal.Logic.Services
             return lookup;
         }
 
-        public async Task Get(Guid searchType, StudentSearchParams searchParams)
+        public async Task<IEnumerable<StudentDetails>> Get(Guid searchType, StudentSearchParams searchParams)
         {
             var searchObject = GenerateSearchObject(searchParams);
 
@@ -78,6 +81,8 @@ namespace MyPortal.Logic.Services
             {
                 throw new NotImplementedException();
             }
+
+            return students.Select(_businessMapper.Map<StudentDetails>).ToList();
         }
     }
 }

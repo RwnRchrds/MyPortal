@@ -28,16 +28,14 @@ namespace MyPortalCore.Areas.Identity.Pages.Account
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
         private readonly ISchoolService _schoolService;
-        private readonly IPersonService _personService;
 
         public LoginModel(SignInManager<ApplicationUser> signInManager, 
             ILogger<LoginModel> logger,
-            UserManager<ApplicationUser> userManager, ISchoolService schoolService, IPersonService personService)
+            ISchoolService schoolService)
         {
             _signInManager = signInManager;
             _logger = logger;
             _schoolService = schoolService;
-            _personService = personService;
         }
 
         [BindProperty]

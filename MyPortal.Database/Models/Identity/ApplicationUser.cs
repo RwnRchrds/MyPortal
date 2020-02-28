@@ -35,10 +35,5 @@ namespace MyPortal.Database.Models.Identity
         public virtual ICollection<LessonPlan> LessonPlans { get; set; }
 
         public virtual ICollection<Bulletin> Bulletins { get; set; }
-
-        public string GetDisplayName(bool salutationFormat)
-        {
-            return Person != null ? Person.GetDisplayName(salutationFormat) : UserName;
-        }
     }
 }

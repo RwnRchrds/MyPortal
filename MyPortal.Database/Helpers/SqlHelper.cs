@@ -34,9 +34,9 @@ namespace MyPortal.Database.Helpers
                     break;
             }
 
-            var alias = !string.IsNullOrWhiteSpace(tblAlias) ? tblAlias : tblName.Replace("[dbo].", "");
+            var alias = !string.IsNullOrWhiteSpace(tblAlias) ? $"[{tblAlias}]" : tblName.Replace("[dbo].", "");
 
-            return $"{join} {tblName} AS [{alias}] ON {leftColumn} = {rightColumn}";
+            return $"{join} {tblName} AS {alias} ON {leftColumn} = {rightColumn}";
         }
 
         internal static void Where(ref string sql, string condition)

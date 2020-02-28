@@ -8,6 +8,6 @@ namespace MyPortal.Logic.Models.Person
         public string MiddleName { get; set; }
         public string LastName { get; set; }
         public string Gender { get; set; }
-        public DateTime Dob { get; set; }
+        public DateTime? Dob { get; set; }
     }
 }

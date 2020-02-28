@@ -13,13 +13,13 @@ namespace MyPortal.Tests
         [Test]
         public void Mapping_BusinessConfigurationIsValid()
         {
-            Assert.DoesNotThrow(MappingHelper.GetMapperBusinessConfiguration().ConfigurationProvider.AssertConfigurationIsValid);
+            Assert.DoesNotThrow(MappingHelper.GetBusinessConfig().ConfigurationProvider.AssertConfigurationIsValid);
         }
 
         [Test]
         public void Mapping_DataGridConfigurationIsValid()
         {
-            Assert.DoesNotThrow(MappingHelper.GetMapperDataGridConfiguration().ConfigurationProvider.AssertConfigurationIsValid);
+            Assert.DoesNotThrow(MappingHelper.GetDataGridConfig().ConfigurationProvider.AssertConfigurationIsValid);
         }
     }
 }

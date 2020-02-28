@@ -99,10 +99,5 @@ namespace MyPortal.Database.Models
         public virtual ICollection<DiaryEventAttendee> DiaryEventInvitations { get; set; }
 
         public virtual ICollection<Task> Tasks { get; set; }
-
-        public string GetDisplayName(bool salutationFormat = false)
-        {
-            return salutationFormat ? $"{Title} {FirstName.Substring(0, 1)}, {LastName}" : $"{LastName}, {FirstName}";
-        }
     }
 }

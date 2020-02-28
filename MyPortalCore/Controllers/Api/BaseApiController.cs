@@ -48,14 +48,5 @@ namespace MyPortalCore.Controllers.Api
                 return BadRequest(ex.Message);
             }
         }
-
-        protected IActionResult PrepareDataGridObject<T>(IEnumerable<T> list, DataManagerRequest dm)
-        {
-            var result = list.PerformDataOperations(dm);
-
-            if (!dm.RequiresCounts) return new JsonResult(result);
-
-            return new JsonResult(new { result = result.Items, count = result.Count });
-        }
     }
 }
