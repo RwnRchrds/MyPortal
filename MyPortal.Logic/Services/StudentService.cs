@@ -55,34 +55,37 @@ namespace MyPortal.Logic.Services
             return lookup;
         }
 
-        public async Task<IEnumerable<StudentDetails>> Get(Guid searchType, StudentSearchParams searchParams)
+        public async Task<IEnumerable<StudentDetails>> Get(StudentSearchParams searchParams)
         {
             var searchObject = GenerateSearchObject(searchParams);
 
             IEnumerable<Student> students;
-
-            if (searchType == SearchTypeDictionary.Student.All)
-            {
-                students = await _repository.GetAll(searchObject);
-            }
-            else if (searchType == SearchTypeDictionary.Student.OnRoll)
+            
+            if (searchParams.SearchType == SearchTypeDictionary.Student.OnRoll)
             {
                 students = await _repository.GetOnRoll(searchObject);
             }
-            else if (searchType == SearchTypeDictionary.Student.Leavers)
+            else if (searchParams.SearchType == SearchTypeDictionary.Student.Leavers)
             {
                 students = await _repository.GetLeavers(searchObject);
             }
-            else if (searchType == SearchTypeDictionary.Student.Future)
+            else if (searchParams.SearchType == SearchTypeDictionary.Student.Future)
             {
                 students = await _repository.GetFuture(searchObject);
             }
             else
             {
-                throw new NotImplementedException();
+                students = await _repository.GetAll(searchObject);
             }
 
             return students.Select(_businessMapper.Map<StudentDetails>).ToList();
+        }
+
+        public async Task Create(StudentDetails student)
+        {
+            _repository.Create(_businessMapper.Map<Student>(student));
+
+            await _repository.SaveChanges();
         }
     }
 }

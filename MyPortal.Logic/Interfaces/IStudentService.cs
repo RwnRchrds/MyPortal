@@ -10,7 +10,7 @@ namespace MyPortal.Logic.Interfaces
 {
     public interface IStudentService
     {
-        Task<IEnumerable<StudentDetails>> Get(Guid searchType, StudentSearchParams searchParams);
+        Task<IEnumerable<StudentDetails>> Get(StudentSearchParams searchParams);
 
         Lookup GetSearchTypes();
     }

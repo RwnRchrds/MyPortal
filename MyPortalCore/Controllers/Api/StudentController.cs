@@ -26,12 +26,12 @@ namespace MyPortalCore.Controllers.Api
 
         [Authorize(Policy = PolicyDictionary.UserType.Staff)]
         [RequiresPermission(PermissionDictionary.Student.Details.View)]
-        [Route("Search/{searchType}")]
-        public async Task<IActionResult> Search([FromRoute]Guid searchType, [FromQuery]StudentSearchParams searchParams)
+        [Route("Search", Name = "ApiStudentSearch")]
+        public async Task<IActionResult> Search([FromQuery]StudentSearchParams searchParams)
         {
             try
             {
-                var students = await _service.Get(searchType, searchParams);
+                var students = await _service.Get(searchParams);
 
                 return Ok(students);
             }

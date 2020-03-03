@@ -5,6 +5,7 @@ namespace MyPortal.Logic.Models.Student
 {
     public class StudentSearchParams : PersonSearchParams
     {
+        public Guid? SearchType { get; set; }
         public Guid? RegGroupId { get; set; }
         public Guid? YearGroupId { get; set; }
         public Guid? HouseId { get; set; }

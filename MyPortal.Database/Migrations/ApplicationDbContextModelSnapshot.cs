@@ -199,6 +199,9 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
                     b.Property<int>("DefaultPoints")
                         .HasColumnType("int");
 
@@ -710,6 +713,9 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(256)")
@@ -831,6 +837,9 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
                     b.Property<int>("Days")
                         .HasColumnType("int");
 
@@ -946,6 +955,9 @@ namespace MyPortal.Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("Contact")
                         .HasColumnType("bit");
@@ -1151,6 +1163,9 @@ namespace MyPortal.Database.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("SubmitOnline")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
@@ -1201,12 +1216,17 @@ namespace MyPortal.Database.Migrations
                     b.Property<int>("PointsAchieved")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("TaskId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("HomeworkId");
+
+                    b.HasIndex("StudentId");
 
                     b.HasIndex("TaskId")
                         .IsUnique();
@@ -2404,6 +2424,39 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("SenProvisionType");
                 });
 
+            modelBuilder.Entity("MyPortal.Database.Models.SenReview", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("Outcome")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<Guid>("ReviewTypeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReviewTypeId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("SenReview");
+                });
+
             modelBuilder.Entity("MyPortal.Database.Models.SenReviewType", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2702,6 +2755,9 @@ namespace MyPortal.Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -3266,6 +3322,12 @@ namespace MyPortal.Database.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("MyPortal.Database.Models.Student", "Student")
+                        .WithMany("HomeworkSubmissions")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("MyPortal.Database.Models.Task", "Task")
                         .WithOne("HomeworkSubmission")
                         .HasForeignKey("MyPortal.Database.Models.HomeworkSubmission", "TaskId")
@@ -3286,7 +3348,7 @@ namespace MyPortal.Database.Migrations
                     b.HasOne("MyPortal.Database.Models.SystemResource", "Resource")
                         .WithMany("Permissions")
                         .HasForeignKey("ResourceId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -3628,6 +3690,21 @@ namespace MyPortal.Database.Migrations
                         .WithMany("SenProvisions")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.SenReview", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.SenReviewType", "ReviewType")
+                        .WithMany("Reviews")
+                        .HasForeignKey("ReviewTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
