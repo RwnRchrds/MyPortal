@@ -10,7 +10,7 @@ namespace MyPortal.Database.Interfaces
     {
         Task<Person> GetByUserId(string userId);
 
-        Task<IEnumerable<Person>> Search(Person person);
+        Task<IEnumerable<Person>> GetAll(Person person);
 
         Task<int> GetNumberOfBirthdaysThisWeek(DateTime weekBeginning);
     }

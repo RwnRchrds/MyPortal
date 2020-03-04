@@ -77,7 +77,7 @@ namespace MyPortal.Database.Repositories
             }
         }
 
-        public async Task<IEnumerable<Person>> Search(Person person)
+        public async Task<IEnumerable<Person>> GetAll(Person person)
         {
             var sql = SelectAllColumns();
             

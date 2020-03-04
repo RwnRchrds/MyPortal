@@ -47,10 +47,10 @@ namespace MyPortal.Logic.Services
         {
             var lookup = new Lookup();
             
-            lookup.Add(SearchTypeDictionary.Student.All, "All");
-            lookup.Add(SearchTypeDictionary.Student.OnRoll, "On Roll");
-            lookup.Add(SearchTypeDictionary.Student.Leavers, "Leavers");
-            lookup.Add(SearchTypeDictionary.Student.Future, "Future");
+            lookup.Add("All", Guid.Empty);
+            lookup.Add("On Roll", SearchTypeDictionary.Student.OnRoll);
+            lookup.Add("Leavers", SearchTypeDictionary.Student.Leavers);
+            lookup.Add("Future", SearchTypeDictionary.Student.Future);
 
             return lookup;
         }
@@ -84,6 +84,13 @@ namespace MyPortal.Logic.Services
         public async Task Create(StudentDetails student)
         {
             _repository.Create(_businessMapper.Map<Student>(student));
+
+            await _repository.SaveChanges();
+        }
+
+        public async Task Update(StudentDetails student)
+        {
+            await _repository.Update(_businessMapper.Map<Student>(student));
 
             await _repository.SaveChanges();
         }
