@@ -5,16 +5,16 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Logic.Dictionaries;
+using MyPortalCore.Areas.Staff.ViewModels.Home;
 
 namespace MyPortalCore.Areas.Staff.Controllers
 {
-    [Area("Staff")]
-    [Authorize(Policy = PolicyDictionary.UserType.Staff)]
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         public IActionResult Index()
         {
-            return View();
+            var viewModel = new HomepageViewModel();
+            return View(viewModel);
         }
     }
 }
