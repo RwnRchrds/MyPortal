@@ -161,6 +161,7 @@ namespace MyPortalCore
             services.AddTransient<IYearGroupRepository, YearGroupRepository>();
             
             // MyPortal business services
+            services.AddTransient<IPersonService, PersonService>();
             services.AddTransient<ISchoolService, SchoolService>();
             services.AddTransient<IStudentService, StudentService>();
         }

@@ -11,5 +11,6 @@ namespace MyPortal.Logic.Interfaces
     public interface IPersonService
     {
         Task<IEnumerable<PersonDetails>> Get(PersonSearchParams searchParams);
+        Dictionary<string, string> GetGenderOptions();
     }
 }

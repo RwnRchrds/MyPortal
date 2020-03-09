@@ -9,12 +9,10 @@ namespace MyPortal.Logic.Services
     public abstract class BaseService
     {
         protected readonly IMapper _businessMapper;
-        protected readonly IMapper _dataGridMapper;
 
         public BaseService()
         {
             _businessMapper = MappingHelper.GetBusinessConfig();
-            _dataGridMapper = MappingHelper.GetDataGridConfig();
         }
     }
 }

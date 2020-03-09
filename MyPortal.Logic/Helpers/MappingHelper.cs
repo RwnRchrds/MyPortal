@@ -5,6 +5,7 @@ using System.Text;
 using AutoMapper;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
+using MyPortal.Logic.Models.DataGrid;
 using MyPortal.Logic.Models.Details;
 using MyPortal.Logic.Models.Lite;
 using MyPortal.Logic.Models.Student;
@@ -33,7 +34,17 @@ namespace MyPortal.Logic.Helpers
         {
             var config = new MapperConfiguration(cfg =>
             {
-                
+                cfg.CreateMap<StudentDetails, DataGridStudent>()
+                    .ForMember(dest => dest.DisplayName,
+                        opts => opts.MapFrom(src => src.Person.GetDisplayName(false)))
+                    .ForMember(dest => dest.RegGroupName,
+                        opts => opts.MapFrom(src => src.RegGroup.Name))
+                    .ForMember(dest => dest.YearGroupName,
+                        opts => opts.MapFrom(src => src.YearGroup.Name))
+                    .ForMember(dest => dest.HouseName,
+                        opts => opts.MapFrom(src => src.House.Name))
+                    .ForMember(dest => dest.Gender,
+                        opts => opts.MapFrom(src => src.Person.Gender));
             });
 
             return new Mapper(config);

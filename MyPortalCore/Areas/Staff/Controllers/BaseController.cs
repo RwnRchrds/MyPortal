@@ -5,8 +5,8 @@ using MyPortal.Logic.Dictionaries;
 namespace MyPortalCore.Areas.Staff.Controllers
 {
     [Area("Staff")]
+    [Route("[area]/[controller]")]
     [Authorize(Policy = PolicyDictionary.UserType.Staff)]
-    //[Route("[controller]")]
     public class BaseController : Controller
     {
         

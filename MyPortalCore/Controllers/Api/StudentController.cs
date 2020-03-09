@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -8,6 +9,8 @@ using MyPortal.Database.Repositories;
 using MyPortal.Logic.Authorisation.Attributes;
 using MyPortal.Logic.Dictionaries;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.DataGrid;
+using MyPortal.Logic.Models.DataTables;
 using MyPortal.Logic.Models.Student;
 
 namespace MyPortalCore.Controllers.Api
@@ -33,7 +36,9 @@ namespace MyPortalCore.Controllers.Api
             {
                 var students = await _service.Get(searchParams);
 
-                return Ok(students);
+                var result = students.Select(_dTMapper.Map<DataGridStudent>);
+
+                return Ok(result);
             }
             catch (Exception e)
             {

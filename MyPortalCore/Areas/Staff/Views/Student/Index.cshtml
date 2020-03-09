@@ -1,4 +1,5 @@
-﻿@model MyPortalCore.Areas.Staff.ViewModels.Student.StudentSearchViewModel
+﻿@using MyPortal.Logic.Dictionaries
+@model MyPortalCore.Areas.Staff.ViewModels.Student.StudentSearchViewModel
 
 @{
     ViewBag.Title = "Student Search";
@@ -11,7 +12,7 @@
             <h3 class="kt-subheader__title"><i class="fas fa-user-graduate"></i> Students</h3>
             <span class="kt-subheader__separator kt-hidden"></span>
             <div class="kt-subheader__breadcrumbs">
-                <a href="#" class="kt-subheader__breadcrumbs-link">Students</a>
+                <a href="" class="kt-subheader__breadcrumbs-link">Students</a>
             </div>
         </div>
     </div>
@@ -19,60 +20,212 @@
 
 <!-- Main Container -->
 <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">							
-							<div class="kt-portlet kt-portlet--mobile">
-								<div class="kt-portlet__head kt-portlet__head--lg">
-									<div class="kt-portlet__head-label">
-										<h3 class="kt-portlet__head-title">
-											Search											
-										</h3>
-									</div>									
-								</div>
-								<div class="kt-portlet__body">
-									<!--begin: Search Form -->
-									<div class="kt-form kt-fork--label-right kt-margin-t-20 kt-margin-b-10">
-										<div class="row align-items-center">
-											<div class="col-xl-8 order-2 order-xl-1">
-                                                <div class="row align-items-center">
-                                                    <div class="col-md-3 kt-margin-b-20-tablet-and-mobile">
-                                                        <div class="kt-form__group kt-form__group--inline">
-                                                            <div class="kt-form__label">
-                                                                <label>Status:</label>
-                                                            </div>
-                                                            <div class="kt-form__control">
-                                                                <select class="form-control" id="kt_form_status" tabindex="-98">
-                                                                    <option value="@Guid.Empty">All</option>
-                                                                    <option value="1" selected>On Roll</option>
-                                                                    <option value="2">Leavers</option>
-                                                                    <option value="3">Future</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-2 kt-margin-b-20-tablet-and-mobile">
-                                                        <div class="kt-input">
-                                                            <input type="text" class="form-control" placeholder="First Name" id="firstNameSearch">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-2 kt-margin-b-20-tablet-and-mobile">
-                                                        <div class="kt-input">
-                                                            <input type="text" class="form-control" placeholder="Last Name" id="lastNameSearch">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-2 kt-margin-b-20-tablent-and-mobile">
-                                                        <button class="btn btn-primary"><i class="fas fa-search"></i> Search</button>
-                                                    </div>
-                                                </div>
-											</div>
-                                        </div>
-									</div>
+    <div class="kt-portlet kt-portlet--mobile">
+        <div class="kt-portlet__head kt-portlet__head--lg">
+            <div class="kt-portlet__head-label">
+                <h3 class="kt-portlet__head-title">
+                    Search											
+                </h3>
+            </div>
+            <div class="kt-portlet__head-toolbar">
+                <button class="btn btn-primary"><i class="fas fa-plus"></i> New Student</button>
+            </div>
+        </div>
+        <div class="kt-portlet__body">
+            <!--begin: Search Form -->
+            <div class="kt-form kt-form--label-right kt-margin-t-20">
+                <div class="row align-items-center">
+                    <div class="col-xl-8 order-2 order-xl-1">
+                        <div class="row align-items-center">
+                            <div class="col-md-2 kt-margin-b-20-tablet-and-mobile">
+                                <div class="kt-form__group kt-form__group--inline">
+                                    <div class="kt-form__label">
+                                        <label>Status:</label>
+                                    </div>
+                                    <div class="kt-form__control">
+                                        @Html.DropDownList("searchType", new SelectList(Model.SearchTypes, "Value", "Key", SearchTypeDictionary.Student.OnRoll), new { @class = "form-control", id = "statusSearch" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2 kt-margin-b-20-tablet-and-mobile">
+                                <div>
+                                    <input type="text" class="form-control" placeholder="First Name" id="firstNameSearch">
+                                </div>
+                            </div>
+                            <div class="col-md-2 kt-margin-b-20-tablet-and-mobile">
+                                <div>
+                                    <input type="text" class="form-control" placeholder="Last Name" id="lastNameSearch">
+                                </div>
+                            </div>
+                            <div class="col-md-2 kt-margin-b-20-tablet-and-mobile">
+                                <div class="kt-form__group kt-form__group--inline">
+                                    <div class="kt-form__label">
+                                        <label>Gender:</label>
+                                    </div>
+                                    <div class="kt-form__control">
+                                        @Html.DropDownList("gender", new SelectList(Model.GenderOptions, "Value", "Key"), "Any", new { @class = "form-control", id = "genderSearch" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2 kt-margin-b-20-tablet-and-mobile">
+                                <button class="btn btn-primary" id="searchButton"><i class="fas fa-search"></i> Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end: Search Form -->
+        </div>
+        
 
-									<!--end: Search Form -->
-								</div>
-								<div class="kt-portlet__body kt-portlet__body--fit">
+        <!--Table Template-->
+        <div class="kt-portlet__body d-none" id="searchResults">
+            <div class="row">
+                <div class="col-md-12">
+                    <table id="student_search" class="table table-striped font-weight-500">
+                        <thead>
+                        <tr>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Gender
+                            </th>
+                            <th>
+                                Reg Group
+                            </th>
+                            <th>
+                                Year Group
+                            </th>
+                            <th>
+                                House
+                            </th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-								</div>
-							</div>
-						</div>
+@section Scripts
+{
+    <script>
+
+        var urlSearchStudents = "@Url.RouteUrl("ApiStudentSearch")";
+        var urlStudentOverview =
+            "@Url.Action("StudentOverview", "Student", new {area = "Staff", studentId = Guid.Empty})";
+
+        $(document).ready(function() {
+            $("#searchButton").on("click",
+                function() {
+                    searchStudents();
+                });
+
+            $("#firstNameSearch").on("keyup",
+                function(e) {
+                    if (e.which == 13) {
+                        searchStudents();
+                    }
+                });
+
+            $("#lastNameSearch").on("keyup",
+                function(e) {
+                    if (e.which == 13) {
+                        searchStudents();
+                    }
+                });
+        });
+
+        function searchStudents() {
+
+            var searchType = $("#statusSearch").val();
+            var firstName = $("#firstNameSearch").val();
+            var lastName = $("#lastNameSearch").val();
+            var gender = $("#genderSearch").val();
+
+            var params = { searchType: searchType, firstName: firstName, lastName: lastName, gender: gender };
+
+            var queryStr = urlSearchStudents + "?" + $.param(params);
+
+            if ($("#student_search").hasClass("dataTable")) {
+                var table = $("#student_search").DataTable();
+
+                table.ajax.url(queryStr);
+
+                table.ajax.reload();
+            } else {
+                loadDataTable(queryStr);
+                $("#searchResults").removeClass("d-none");
+            }
+        }
+
+        function getOverviewUrl(studentId) {
+            return urlStudentOverview.replace("@Guid.Empty", studentId);
+        }
+
+        function renderGender(gender) {
+            if (gender === "M") {
+                return `<div class="kt-badge kt-badge--pill kt-badge--inline" style="background-color: #005ec9; color: white;">Male</div>`;
+            }
+            else if (gender === "F") {
+                return `<div class="kt-badge kt-badge--pill kt-badge--inline" style="background-color: #ba0098; color: white;">Female</div>`;
+            }
+            else if (gender === "X") {
+                return `<div class="kt-badge kt-badge--pill kt-badge--inline" style="background-color: #0abf00; color: white;">Other</div>`;
+            } else {
+                return `<div class="kt-badge kt-badge--pill kt-badge--inline" style="background-color: #5e5e5e; color: white;">Unknown</div>`;
+            }
+        }
+
+        function loadDataTable(url) {
+            $("#student_search").DataTable({
+                ajax:
+                {
+                    url: url,
+                    dataSrc: ""
+                },
+                "dom": "rtilp",
+                columns: [
+                    {
+                        data: "displayName",
+                        render: function(data, type, student) {
+                            var overviewUrl = getOverviewUrl(student.id);
+                            return `<a href="${overviewUrl}">${student.displayName}</a>`;
+                        }
+                    },
+                    {
+                        data: "gender",
+                        render: function(data, type, student) {
+                            return renderGender(student.gender);
+                        }
+                    },
+                    {
+                        data: "regGroupName"
+                    },
+                    {
+                        data: "yearGroupName"
+                    },
+                    {
+                        data: "houseName"
+                        //,render: function(data, type, student) {
+                        //    return `<div class="kt-badge kt-badge--pill kt-badge--inline" style="background-color: ${
+                        //        student.houseColourCode}; color: white;">${student.houseName}</div>`;
+                        //}
+                    }
+                ],
+                "language":
+                {
+                    "emptyTable": "No students"
+                },
+                "deferLoading": 0
+            });
+        }
+
+
+    </script>
+}
 
 
 

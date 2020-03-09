@@ -8,6 +8,7 @@ using MyPortal.Database.Repositories;
 using MyPortal.Logic.Dictionaries;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
+using MyPortal.Logic.Models.DataTables;
 using MyPortal.Logic.Models.Details;
 using MyPortal.Logic.Models.Student;
 using Task = System.Threading.Tasks.Task;

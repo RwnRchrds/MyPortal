@@ -6,7 +6,6 @@ using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Details;
-using MyPortal.Logic.Models.Lite;
 using MyPortal.Logic.Models.Person;
 
 namespace MyPortal.Logic.Services
@@ -31,6 +30,18 @@ namespace MyPortal.Logic.Services
         public PersonService(IPersonRepository repository)
         {
             _repository = repository;
+        }
+
+        public Dictionary<string, string> GetGenderOptions()
+        {
+            var genders = new Dictionary<string, string>();
+
+            genders.Add("Male", "M");
+            genders.Add("Female", "F");
+            genders.Add("Other", "X");
+            genders.Add("Unknown", "U");
+
+            return genders;
         }
 
 

@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Logic.Extensions;
+using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Models.Exceptions;
 using Syncfusion.EJ2.Base;
 
@@ -15,6 +17,13 @@ namespace MyPortalCore.Controllers.Api
     [ApiController]
     public abstract class BaseApiController : ControllerBase
     {
+        protected readonly IMapper _dTMapper;
+
+        public BaseApiController()
+        {
+            _dTMapper = MappingHelper.GetDataGridConfig();
+        }
+
         protected IActionResult HandleException(Exception ex)
         {
             var statusCode = HttpStatusCode.BadRequest;
