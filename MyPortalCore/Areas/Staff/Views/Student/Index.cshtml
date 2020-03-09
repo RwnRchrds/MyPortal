@@ -140,6 +140,7 @@
 
         function searchStudents() {
 
+            // Get params from form
             var searchType = $("#statusSearch").val();
             var firstName = $("#firstNameSearch").val();
             var lastName = $("#lastNameSearch").val();
@@ -179,6 +180,7 @@
             }
         }
 
+        //Execute ONCE -- Use searchStudents() to update AJAX URL
         function loadDataTable(url) {
             $("#student_search").DataTable({
                 ajax:
@@ -209,17 +211,12 @@
                     },
                     {
                         data: "houseName"
-                        //,render: function(data, type, student) {
-                        //    return `<div class="kt-badge kt-badge--pill kt-badge--inline" style="background-color: ${
-                        //        student.houseColourCode}; color: white;">${student.houseName}</div>`;
-                        //}
                     }
                 ],
                 "language":
                 {
                     "emptyTable": "No students"
-                },
-                "deferLoading": 0
+                }
             });
         }
 
