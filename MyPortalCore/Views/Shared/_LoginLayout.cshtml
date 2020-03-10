@@ -4,24 +4,37 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MyPortal | @ViewData["Title"]</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700">
+    <!--begin::Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700|Roboto:300,400,500,600,700">
 
-    <link href="~/lib/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
-    <link href="~/lib/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
-    <link href="~/lib/assets/css/pages/login/login-v1.css" rel="stylesheet" type="text/css" />
+    <!--end::Fonts -->
+    <!--begin::Page Custom Styles(used by this page) -->
+    <link href="~/lib/metronic/css/pages/login/login-1.css" rel="stylesheet" type="text/css" />
 
-    <link href="~/lib/assets/css/skins/header/base/light.css" rel="stylesheet" type="text/css" />
-    <link href="~/lib/assets/css/skins/header/menu/light.css" rel="stylesheet" type="text/css" />
-    <link href="~/lib/assets/css/skins/brand/navy.css" rel="stylesheet" type="text/css" />
-    <link href="~/lib/assets/css/skins/aside/navy.css" rel="stylesheet" type="text/css" />
-    
-    <link href="~/css/site.css"/>
+    <!--end::Page Custom Styles -->
+    <!--begin::Global Theme Styles(used by all pages) -->
+    <link href="~/lib/metronic/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="~/lib/metronic/css/style.bundle.css" rel="stylesheet" type="text/css" />
+
+    <!--end::Global Theme Styles -->
+    <!--begin::Layout Skins(used by all pages) -->
+    <link href="~/lib/metronic/css/skins/header/base/light.css" rel="stylesheet" type="text/css" />
+    <link href="~/lib/metronic/css/skins/header/menu/light.css" rel="stylesheet" type="text/css" />
+    <link href="~/lib/metronic/css/skins/brand/dark.css" rel="stylesheet" type="text/css" />
+    <link href="~/lib/metronic/css/skins/aside/dark.css" rel="stylesheet" type="text/css" />
+
+    <!--end::Layout Skins -->
+    <link rel="shortcut icon" href="~/lib/metronic/media/logos/favicon.ico" />
+
+    <link href="~/css/site.css" />
 </head>
 
-<body style="background-image: url(/lib/assets/media/misc/bg_1.jpg)" class="kt-login-v1--enabled kt-quick-panel--right kt-demo-panel--right kt-offcanvas-panel--right kt-header--fixed kt-header-mobile--fixed kt-subheader--enabled kt-subheader--transparent kt-aside--enabled kt-aside--fixed kt-page--loading">
+<body class="kt-quick-panel--right kt-demo-panel--right kt-offcanvas-panel--right kt-header--fixed kt-header-mobile--fixed kt-subheader--enabled kt-subheader--fixed kt-subheader--solid kt-aside--enabled kt-aside--fixed kt-page--loading">
 <div class="kt-grid kt-grid--ver kt-grid--root">
-    <div class="kt-grid__item  kt-grid__item--fluid kt-grid kt-grid--hor kt-login-v1" id="kt_login_v1">
-        @RenderBody()
+    <div class="kt-grid kt-grid--hor kt-grid--root  kt-login kt-login--v1" id="kt_login">
+        <div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--desktop kt-grid--ver-desktop kt-grid--hor-tablet-and-mobile">
+            @RenderBody()
+        </div>
     </div>
 </div>
 
@@ -58,8 +71,8 @@
     };
 </script>
 
-<script src="~/lib/assets/plugins/global/plugins.bundle.js" type="text/javascript"></script>
-<script src="~/lib/assets/js/scripts.bundle.js" type="text/javascript"></script>
+<script src="~/lib/metronic/plugins/global/plugins.bundle.js" type="text/javascript"></script>
+<script src="~/lib/metronic/js/scripts.bundle.js" type="text/javascript"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
 
 @RenderSection("Scripts", false)

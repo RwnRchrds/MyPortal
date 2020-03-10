@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -31,9 +32,13 @@ namespace MyPortalCore.Areas.Staff.Controllers
         }
 
         [Route("{studentId}")]
-        public IActionResult StudentOverview(Guid studentId)
+        public async Task<IActionResult> StudentOverview(Guid studentId)
         {
             var viewModel = new StudentOverviewViewModel();
+
+            var student = await _service.GetById(studentId);
+
+            viewModel.Student = student;
 
             return View(viewModel);
         }

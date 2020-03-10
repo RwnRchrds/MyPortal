@@ -13,6 +13,8 @@ namespace MyPortal.Logic.Interfaces
     {
         Task<IEnumerable<StudentDetails>> Get(StudentSearchParams searchParams);
 
+        Task<StudentDetails> GetById(Guid studentId);
+
         Lookup GetSearchTypes();
     }
 }

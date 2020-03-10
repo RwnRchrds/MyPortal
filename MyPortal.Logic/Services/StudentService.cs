@@ -44,6 +44,13 @@ namespace MyPortal.Logic.Services
             _repository = repository;
         }
 
+        public async Task<StudentDetails> GetById(Guid studentId)
+        {
+            var student = await _repository.GetById(studentId);
+
+            return _businessMapper.Map<StudentDetails>(student);
+        }
+
         public Lookup GetSearchTypes()
         {
             var lookup = new Lookup();
