@@ -1,4 +1,7 @@
-﻿using MyPortal.Database.Models.Identity;
+﻿using System.Linq;
+using System.Security.Claims;
+using MyPortal.Database.Models.Identity;
+using MyPortal.Logic.Dictionaries;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Models.Details;
 
@@ -6,20 +9,14 @@ namespace MyPortal.Logic.Extensions
 {
     public static class UserExtensions
     {
-        public static string GetDisplayName(this ApplicationUser user, bool salutationFormat)
+        public static string GetDisplayName(this ClaimsPrincipal user)
         {
-            var mapper = MappingHelper.GetBusinessConfig();
+            return user.FindFirst(ClaimTypeDictionary.DisplayName)?.Value ?? user.Identity.Name;
+        }
 
-            if (user.Person != null)
-            {
-                var personDetails = mapper.Map<PersonDetails>(user.Person);
-
-                return personDetails.GetDisplayName(salutationFormat);
-            }
-            else
-            {
-                return user.UserName;
-            }
+        public static bool HasPermission(this ClaimsPrincipal principal, params int[] permissions)
+        {
+            return permissions.Any(x => principal.HasClaim(ClaimTypeDictionary.Permissions, x.ToString()));
         }
     }
 }

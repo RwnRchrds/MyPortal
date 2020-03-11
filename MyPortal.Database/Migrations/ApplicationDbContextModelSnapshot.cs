@@ -531,6 +531,9 @@ namespace MyPortal.Database.Migrations
                     b.Property<Guid>("AcademicYearId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("BandId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(128)")
@@ -548,6 +551,8 @@ namespace MyPortal.Database.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AcademicYearId");
+
+                    b.HasIndex("BandId");
 
                     b.HasIndex("SubjectId");
 
@@ -676,6 +681,45 @@ namespace MyPortal.Database.Migrations
                         .IsUnique();
 
                     b.ToTable("Contact");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.CurriculumBand", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("AcademicYearId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CurriculumBand");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.CurriculumYearGroup", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<int>("KeyStage")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CurriculumYearGroup");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Detention", b =>
@@ -1044,7 +1088,7 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<Guid>("ClassId")
+                    b.Property<Guid>("BandId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("StudentId")
@@ -1052,7 +1096,7 @@ namespace MyPortal.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClassId");
+                    b.HasIndex("BandId");
 
                     b.HasIndex("StudentId");
 
@@ -2929,11 +2973,11 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<Guid?>("HeadId")
+                    b.Property<Guid>("CurriculumYearGroupId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("KeyStage")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("HeadId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -2941,6 +2985,8 @@ namespace MyPortal.Database.Migrations
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CurriculumYearGroupId");
 
                     b.HasIndex("HeadId");
 
@@ -3131,6 +3177,12 @@ namespace MyPortal.Database.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("MyPortal.Database.Models.CurriculumBand", "Band")
+                        .WithMany("Classes")
+                        .HasForeignKey("BandId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("MyPortal.Database.Models.Subject", "Subject")
                         .WithMany("Classes")
                         .HasForeignKey("SubjectId");
@@ -3262,9 +3314,9 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Enrolment", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Class", "Class")
+                    b.HasOne("MyPortal.Database.Models.CurriculumBand", "Band")
                         .WithMany("Enrolments")
-                        .HasForeignKey("ClassId")
+                        .HasForeignKey("BandId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -3859,6 +3911,12 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.YearGroup", b =>
                 {
+                    b.HasOne("MyPortal.Database.Models.CurriculumYearGroup", "CurriculumYearGroup")
+                        .WithMany("YearGroups")
+                        .HasForeignKey("CurriculumYearGroupId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("MyPortal.Database.Models.StaffMember", "HeadOfYear")
                         .WithMany("PastoralYearGroups")
                         .HasForeignKey("HeadId")

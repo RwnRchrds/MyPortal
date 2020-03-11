@@ -13,9 +13,9 @@ namespace MyPortal.Database.Models
 
         public Guid StudentId { get; set; }
 
-        public Guid ClassId { get; set; }
+        public Guid BandId { get; set; }
 
-        public virtual Class Class { get; set; }
+        public virtual CurriculumBand Band { get; set; }
 
         public virtual Student Student { get; set; }
     }

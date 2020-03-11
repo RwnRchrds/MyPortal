@@ -45,13 +45,13 @@ namespace MyPortal.Database.Repositories
             personInDb.Deleted = entity.Deleted;
         }
 
-        public async Task<Person> GetByUserId(string userId)
+        public async Task<Person> GetByUserId(Guid userId)
         {
             var sql = SelectAllColumns();
 
             SqlHelper.Where(ref sql, "[Person].[UserId] = @UserId");
 
-            return (await ExecuteQuery(sql, new {UserId = userId})).Single();
+            return (await ExecuteQuery(sql, new {UserId = userId})).FirstOrDefault();
         }
 
         private static void ApplySearch(ref string sql, Person person)

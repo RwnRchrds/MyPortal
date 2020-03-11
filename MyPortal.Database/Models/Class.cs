@@ -11,7 +11,6 @@ namespace MyPortal.Database.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Class()
         {
-            Enrolments = new HashSet<Enrolment>();
             Sessions = new HashSet<Session>();
         }
 
@@ -22,6 +21,8 @@ namespace MyPortal.Database.Models
         public Guid AcademicYearId { get; set; }
 
         public Guid? SubjectId { get; set; }
+
+        public Guid BandId { get; set; }
 
         [Required]
         [StringLength(128)]
@@ -39,8 +40,7 @@ namespace MyPortal.Database.Models
 
         public virtual YearGroup YearGroup { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Enrolment> Enrolments { get; set; }
+        public virtual CurriculumBand Band { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Session> Sessions { get; set; }

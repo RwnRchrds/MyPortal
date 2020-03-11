@@ -4,5 +4,6 @@
     {
         public const string Permissions = "perm";
         public const string UserType = "user";
+        public const string DisplayName = "disp";
     }
 }
