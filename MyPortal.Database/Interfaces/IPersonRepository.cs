@@ -8,7 +8,7 @@ namespace MyPortal.Database.Interfaces
 {
     public interface IPersonRepository : IReadWriteRepository<Person>
     {
-        Task<Person> GetByUserId(string userId);
+        Task<Person> GetByUserId(Guid userId);
 
         Task<IEnumerable<Person>> GetAll(Person person);
 

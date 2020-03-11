@@ -14,17 +14,24 @@ namespace MyPortal.Database.Repositories
         public YearGroupRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
         {
             RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(StaffMember))}";
+{EntityHelper.GetAllColumns(typeof(StaffMember))},
+{EntityHelper.GetAllColumns(typeof(Person))},
+{EntityHelper.GetAllColumns(typeof(CurriculumYearGroup))}";
 
             JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[StaffMember].[Id]", "[YearGroup].[HeadId]")}";
+{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[StaffMember].[Id]", "[YearGroup].[HeadId]")}
+{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[StaffMember].[PersonId]")}
+{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[CurriculumYearGroup]", "[CurriculumYearGroup].[Id]", "[YearGroup].[Id]")}";
         }
 
         protected override async Task<IEnumerable<YearGroup>> ExecuteQuery(string sql, object param = null)
         {
-            return await Connection.QueryAsync<YearGroup, StaffMember, YearGroup>(sql, (yearGroup, head) =>
+            return await Connection.QueryAsync<YearGroup, StaffMember, Person, CurriculumYearGroup, YearGroup>(sql, (yearGroup, head, person, curriculumGroup) =>
             {
                 yearGroup.HeadOfYear = head;
+                yearGroup.HeadOfYear.Person = person;
+
+                yearGroup.CurriculumYearGroup = curriculumGroup;
 
                 return yearGroup;
             }, param);
@@ -36,7 +43,7 @@ namespace MyPortal.Database.Repositories
 
             yearGroup.Name = entity.Name;
             yearGroup.HeadId = entity.HeadId;
-            yearGroup.KeyStage = entity.KeyStage;
+            yearGroup.CurriculumYearGroupId = entity.CurriculumYearGroupId;
         }
     }
 }

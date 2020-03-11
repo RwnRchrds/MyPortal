@@ -7,6 +7,7 @@ using MyPortal.Database.Models;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Details;
 using MyPortal.Logic.Models.Person;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
@@ -54,6 +55,13 @@ namespace MyPortal.Logic.Services
             people = await _repository.GetAll(searchObject);
 
             return people.Select(_businessMapper.Map<PersonDetails>).ToList();
+        }
+
+        public async Task<PersonDetails> GetByUserId(Guid userId)
+        {
+            var person = await _repository.GetByUserId(userId);
+
+            return _businessMapper.Map<PersonDetails>(person);
         }
     }
 }

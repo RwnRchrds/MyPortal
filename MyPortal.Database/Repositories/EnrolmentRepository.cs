@@ -15,20 +15,20 @@ namespace MyPortal.Database.Repositories
         {
             RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(Student))},
-{EntityHelper.GetAllColumns(typeof(Class))}";
+{EntityHelper.GetAllColumns(typeof(CurriculumBand))}";
 
             JoinRelated = $@"
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[Enrolment].[StudentId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Class]", "[Class].[Id]", "[Enrolment].[ClassId]")}";
+{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[CurriculumBand]", "[CurriculumBand].[Id]", "[Enrolment].[BandId]")}";
         }
 
         protected override async Task<IEnumerable<Enrolment>> ExecuteQuery(string sql, object param = null)
         {
-            return await Connection.QueryAsync<Enrolment, Student, Class, Enrolment>(sql,
-                (enrolment, student, currClass) =>
+            return await Connection.QueryAsync<Enrolment, Student, CurriculumBand, Enrolment>(sql,
+                (enrolment, student, band) =>
                 {
                     enrolment.Student = student;
-                    enrolment.Class = currClass;
+                    enrolment.Band = band;
 
                     return enrolment;
                 }, param);
@@ -38,7 +38,7 @@ namespace MyPortal.Database.Repositories
         {
             var enrolmentInDb = await Context.Enrolments.FindAsync(entity.Id);
 
-            enrolmentInDb.ClassId = entity.ClassId;
+            enrolmentInDb.BandId = entity.BandId;
         }
     }
 }

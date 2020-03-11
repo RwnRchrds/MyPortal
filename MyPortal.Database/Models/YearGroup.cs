@@ -27,8 +27,9 @@ namespace MyPortal.Database.Models
 
         public Guid? HeadId { get; set; }
 
-        public int KeyStage { get; set; }
+        public Guid CurriculumYearGroupId { get; set; }
 
+        public virtual CurriculumYearGroup CurriculumYearGroup { get; set; }
         public virtual StaffMember HeadOfYear { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

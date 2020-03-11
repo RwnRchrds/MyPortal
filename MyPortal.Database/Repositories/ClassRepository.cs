@@ -21,26 +21,29 @@ namespace MyPortal.Database.Repositories
 {EntityHelper.GetAllColumns(typeof(Subject))},
 {EntityHelper.GetAllColumns(typeof(StaffMember), "Teacher")},
 {EntityHelper.GetAllColumns(typeof(Person), "TeacherPerson")},
-{EntityHelper.GetAllColumns(typeof(YearGroup))}";
+{EntityHelper.GetAllColumns(typeof(YearGroup))},
+{EntityHelper.GetAllColumns(typeof(CurriculumBand))}";
 
         JoinRelated = $@"
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AcademicYear]", "[AcademicYear].[Id]", "[Class].[AcademicYearId]")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Subject]", "[Subject].[Id]", "[Class].[SubjectId]")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[Teacher].[Id]", "[Class].[TeacherId]", "Teacher")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[TeacherPerson].[Id]", "[Teacher].[PersonId]", "TeacherPerson")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[YearGroup]", "[YearGroup].[Id]", "[Class].[YearGroupId]")}";
+{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[YearGroup]", "[YearGroup].[Id]", "[Class].[YearGroupId]")}
+{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[CurriculumBand]", "[CurriculumBand].[Id]", "[Class].[BandId]")}";
         }
 
         protected override async Task<IEnumerable<Class>> ExecuteQuery(string sql, object param = null)
         {
-            return await Connection.QueryAsync<Class, AcademicYear, Subject, StaffMember, Person, YearGroup, Class>(sql,
-                (currClass, acadYear, subject, teacher, person, yearGroup) =>
+            return await Connection.QueryAsync<Class, AcademicYear, Subject, StaffMember, Person, YearGroup, CurriculumBand, Class>(sql,
+                (currClass, acadYear, subject, teacher, person, yearGroup, band) =>
                 {
                     currClass.AcademicYear = acadYear;
                     currClass.Subject = subject;
                     currClass.Teacher = teacher;
                     currClass.Teacher.Person = person;
                     currClass.YearGroup = yearGroup;
+                    currClass.Band = band;
 
                     return currClass;
                 }, param);
@@ -54,6 +57,7 @@ namespace MyPortal.Database.Repositories
             classInDb.Name = entity.Name;
             classInDb.TeacherId = entity.TeacherId;
             classInDb.YearGroupId = entity.YearGroupId;
+            classInDb.BandId = entity.BandId;
         }
     }
 }

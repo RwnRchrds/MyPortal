@@ -35,6 +35,7 @@ namespace MyPortalCore.Areas.Staff.Controllers
 
         [RequiresPermission(PermissionDictionary.Student.Details.View)]
         [Route("{studentId}")]
+        [RequiresPermission(PermissionDictionary.Student.Details.View)]
         public async Task<IActionResult> StudentOverview(Guid studentId)
         {
             var viewModel = new StudentOverviewViewModel();

@@ -54,6 +54,8 @@ namespace MyPortalCore
             services.AddRazorPages();
             services.AddMvc();
 
+            services.AddTransient<IUserClaimsPrincipalFactory<ApplicationUser>, ApplicationUserClaimsPrincipalFactory>();
+
             services.AddAuthorization(options =>
             {
                 options.AddPolicy(PolicyDictionary.UserType.Student, p => p.RequireClaim(ClaimTypeDictionary.UserType, UserTypeDictionary.Student));
