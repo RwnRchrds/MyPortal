@@ -13,11 +13,11 @@ namespace MyPortal.Database.Models.Identity
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        public Guid ResourceId { get; set; }
+        public Guid AreaId { get; set; }
 
         [Required]
         [StringLength(128)]
-        public string ShortDescription { get; set; }
+        public string ShortDescription { get; set; }        
 
         [Required]
         [StringLength(256)]
@@ -27,6 +27,6 @@ namespace MyPortal.Database.Models.Identity
         [StringLength(128)]
         public string ClaimValue { get; set; }
 
-        public virtual SystemResource Resource { get; set; }
+        public virtual SystemArea Area { get; set; }
     }
 }

@@ -101,7 +101,6 @@ namespace MyPortal.Database.Models
         public virtual DbSet<SubjectStaffMember> SubjectStaffMembers { get; set; }
         public virtual DbSet<SubjectStaffMemberRole> SubjectStaffMemberRoles { get; set; }
         public virtual DbSet<SystemArea> SystemAreas { get; set; }
-        public virtual DbSet<SystemResource> SystemResources { get; set; }
         public virtual DbSet<Task> Tasks { get; set; }
         public virtual DbSet<TrainingCertificate> TrainingCertificates { get; set; }
         public virtual DbSet<TrainingCertificateStatus> TrainingCertificateStatus { get; set; }
@@ -375,9 +374,6 @@ namespace MyPortal.Database.Models
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
             modelBuilder.Entity<SystemArea>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<SystemResource>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
             modelBuilder.Entity<Task>()
@@ -1133,9 +1129,9 @@ namespace MyPortal.Database.Models
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<SystemArea>()
-                .HasMany(e => e.Resources)
-                .WithOne(e => e.Area)
-                .HasForeignKey(e => e.AreaId)
+                .HasMany(e => e.SubAreas)
+                .WithOne(e => e.Parent)
+                .HasForeignKey(e => e.ParentId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 

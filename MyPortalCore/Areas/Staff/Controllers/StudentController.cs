@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using MyPortal.Logic.Authorisation.Attributes;
 using MyPortal.Logic.Dictionaries;
 using MyPortal.Logic.Interfaces;
 using MyPortalCore.Areas.Staff.ViewModels.Student;
@@ -22,6 +23,7 @@ namespace MyPortalCore.Areas.Staff.Controllers
             _personService = personService;
         }
 
+        [RequiresPermission(PermissionDictionary.Student.Details.View)]
         public IActionResult Index()
         {
             var viewModel = new StudentSearchViewModel();
@@ -31,6 +33,7 @@ namespace MyPortalCore.Areas.Staff.Controllers
             return View(viewModel);
         }
 
+        [RequiresPermission(PermissionDictionary.Student.Details.View)]
         [Route("{studentId}")]
         public async Task<IActionResult> StudentOverview(Guid studentId)
         {

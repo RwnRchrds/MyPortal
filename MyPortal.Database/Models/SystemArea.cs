@@ -12,7 +12,7 @@ namespace MyPortal.Database.Models
         public SystemArea()
         {
             Reports = new HashSet<Report>();
-            Resources = new HashSet<SystemResource>();
+            SubAreas = new HashSet<SystemArea>();
         }
 
         [Key]
@@ -23,9 +23,13 @@ namespace MyPortal.Database.Models
         [StringLength(128)]
         public string Description { get; set; }
 
+        public Guid? ParentId { get; set; }
+
+        public virtual SystemArea Parent { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Report> Reports { get; set; }
 
-        public virtual ICollection<SystemResource> Resources { get; set; }
+        public virtual ICollection<SystemArea> SubAreas { get; set; }
     }
 }
