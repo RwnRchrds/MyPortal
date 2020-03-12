@@ -12,23 +12,25 @@ namespace MyPortal.Logic.Authorisation
     public class ApplicationUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<ApplicationUser, ApplicationRole>
     {
         private readonly IPersonService _personService;
-        public ApplicationUserClaimsPrincipalFactory(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IOptions<IdentityOptions> options, IPersonService personService) : base(userManager, roleManager, options)
+        private readonly IApplicationRolePermissionService _rolePermissionService;
+        public ApplicationUserClaimsPrincipalFactory(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IOptions<IdentityOptions> options, IPersonService personService, IApplicationRolePermissionService rolePermissionService) : base(userManager, roleManager, options)
         {
             _personService = personService;
+            _rolePermissionService = rolePermissionService;
         }
 
         public override async Task<ClaimsPrincipal> CreateAsync(ApplicationUser user)
         {
             var principal = await base.CreateAsync(user);
 
+            var appClaims = await GenerateClaimsForUserAsync(user);
             
-
-            ((ClaimsIdentity) principal.Identity).AddClaim(new Claim(ClaimTypeDictionary.DisplayName, displayName));
+            ((ClaimsIdentity) principal.Identity).AddClaims(appClaims);
 
             return principal;
         }
 
-        private IEnumerable<Claim> GenerateClaimsForUser(ApplicationUser user)
+        private async Task<IEnumerable<Claim>> GenerateClaimsForUserAsync(ApplicationUser user)
         {
             var claims = new List<Claim>();
 
@@ -43,6 +45,23 @@ namespace MyPortal.Logic.Authorisation
             else if (person != null)
             {
                 displayName = $"{person.FirstName} {person.LastName}";
+            }
+            
+            claims.Add(new Claim(ClaimTypeDictionary.UserType, user.UserType));
+            claims.Add(new Claim(ClaimTypeDictionary.DisplayName, displayName));
+
+            var roleNames = await UserManager.GetRolesAsync(user);
+
+            foreach (var roleName in roleNames)
+            {
+                var roleId = (await RoleManager.FindByNameAsync(roleName)).Id;
+
+                var perms = await _rolePermissionService.GetPermissionClaimValues(roleId);
+
+                foreach (var perm in perms)
+                {
+                    claims.Add(new Claim(ClaimTypeDictionary.Permissions, perm));
+                }
             }
 
             return claims;

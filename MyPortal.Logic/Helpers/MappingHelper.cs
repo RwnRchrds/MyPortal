@@ -5,6 +5,7 @@ using System.Text;
 using AutoMapper;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
+using MyPortal.Logic.Models.Admin;
 using MyPortal.Logic.Models.DataGrid;
 using MyPortal.Logic.Models.Details;
 using MyPortal.Logic.Models.Lite;
@@ -25,6 +26,7 @@ namespace MyPortal.Logic.Helpers
                 cfg.CreateMap<StaffMember, StaffMemberDetails>().ReverseMap();
                 cfg.CreateMap<Student, StudentDetails>().ReverseMap();
                 cfg.CreateMap<YearGroup, YearGroupDetails>().ReverseMap();
+                cfg.CreateMap<ApplicationRole, RoleDetails>().ReverseMap();
             });
 
             return new Mapper(config);

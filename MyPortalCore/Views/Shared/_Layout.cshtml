@@ -1,46 +1,49 @@
 ﻿<!DOCTYPE html>
-<html lang=" en">
-
+<html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>MyPortal | @ViewBag.Title</title>
-    <meta name="description" content="MyPortal - Web Based MIS" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700|Roboto:300,400,500,600,700">
-
-    <link href="lib/metronic/plugins/custom/fullcalendar/fullcalendar.bundle.css" rel="stylesheet" type="text/css" />
-
-    <link href="lib/metronic/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
-    <link href="lib/metronic/css/style.bundle.css" rel="stylesheet" type="text/css" />
-
-    <link href="lib/metronic/css/skins/header/base/light.css" rel="stylesheet" type="text/css" />
-    <link href="lib/metronic/css/skins/header/menu/light.css" rel="stylesheet" type="text/css" />
-    <link href="lib/metronic/css/skins/brand/dark.css" rel="stylesheet" type="text/css" />
-    <link href="lib/metronic/css/skins/aside/dark.css" rel="stylesheet" type="text/css" />
-
-    <link rel="shortcut icon" href="lib/metronic/media/logos/favicon.ico" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MyPortalCore</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
 </head>
-
-<body class="kt-quick-panel--right kt-demo-panel--right kt-offcanvas-panel--right kt-header--fixed kt-header-mobile--fixed kt-subheader--enabled kt-subheader--fixed kt-subheader--solid kt-aside--enabled kt-aside--fixed kt-aside--minimize kt-page--loading">
-<!-- begin:: Header Mobile -->
-<div id="kt_header_mobile" class="kt-header-mobile  kt-header-mobile--fixed ">
-    <div class="kt-header-mobile__logo">
-        <a href="index.html">
-            <img alt="Logo" src="assets/media/logos/logo-light.png" />
-        </a>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MyPortalCore</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <partial name="_LoginPartial" />
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                           
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
     </div>
-    <div class="kt-header-mobile__toolbar">
-        <button class="kt-header-mobile__toggler kt-header-mobile__toggler--left" id="kt_aside_mobile_toggler"><span></span></button>
-        <button class="kt-header-mobile__toggler" id="kt_header_mobile_toggler"><span></span></button>
-        <button class="kt-header-mobile__topbar-toggler" id="kt_header_mobile_topbar_toggler"><i class="flaticon-more"></i></button>
-    </div>
-</div>
 
-<!-- end:: Header Mobile -->
-
-
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2020 - MyPortalCore - <a asp-area="" asp-controller="Home">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
 </body>
-
 </html>

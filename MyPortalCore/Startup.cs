@@ -74,6 +74,7 @@ namespace MyPortalCore
             services.AddTransient<IAddressPersonRepository, AddressPersonRepository>();
             services.AddTransient<IAddressRepository, AddressRepository>();
             services.AddTransient<IApplicationUserRepository, ApplicationUserRepository>();
+            services.AddTransient<IApplicationRolePermissionRepository, ApplicationRolePermissionRepository>();
             services.AddTransient<IAspectRepository, AspectRepository>();
             services.AddTransient<IAspectTypeRepository, AspectTypeRepository>();
             services.AddTransient<IAttendanceCodeMeaningRepository, AttendanceCodeMeaningRepository>();
@@ -165,6 +166,8 @@ namespace MyPortalCore
             services.AddTransient<IPersonService, PersonService>();
             services.AddTransient<ISchoolService, SchoolService>();
             services.AddTransient<IStudentService, StudentService>();
+            services.AddTransient<IApplicationRolePermissionService, ApplicationRolePermissionService>();
+            services.AddTransient<IApplicationRoleService, ApplicationRoleService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
