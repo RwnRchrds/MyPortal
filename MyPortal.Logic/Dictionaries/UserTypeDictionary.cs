@@ -2,8 +2,8 @@
 {
     public class UserTypeDictionary
     {
-        public const string Staff = "staff";
-        public const string Student = "stud";
-        public const string Parent = "prnt";
+        public const string Staff = "0";
+        public const string Student = "1";
+        public const string Parent = "2";
     }
 }

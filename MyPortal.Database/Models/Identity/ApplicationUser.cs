@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 
@@ -17,6 +18,9 @@ namespace MyPortal.Database.Models.Identity
             LessonPlans = new HashSet<LessonPlan>();
             Bulletins = new HashSet<Bulletin>();
         }
+
+        [StringLength(5)]
+        public string UserType { get; set; }
 
         public bool Enabled { get; set; }
 

@@ -12,6 +12,8 @@ namespace MyPortal.Database.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
+        [Required]
+        [StringLength(128)]
         public string Name { get; set; }
 
         public int KeyStage { get; set; }

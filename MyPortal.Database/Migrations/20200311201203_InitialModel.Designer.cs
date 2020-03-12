@@ -10,8 +10,8 @@ using MyPortal.Database.Models;
 namespace MyPortal.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200311110021_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20200311201203_InitialModel")]
+    partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -696,10 +696,13 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
 
                     b.HasKey("Id");
 
@@ -717,7 +720,9 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
 
                     b.HasKey("Id");
 
@@ -1313,6 +1318,9 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<Guid>("AreaId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("ClaimValue")
                         .IsRequired()
                         .HasColumnType("nvarchar(128)")
@@ -1323,9 +1331,6 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<Guid>("ResourceId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("ShortDescription")
                         .IsRequired()
                         .HasColumnType("nvarchar(128)")
@@ -1333,7 +1338,7 @@ namespace MyPortal.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ResourceId");
+                    b.HasIndex("AreaId");
 
                     b.ToTable("AspNetPermissions");
                 });
@@ -1369,6 +1374,28 @@ namespace MyPortal.Database.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Identity.ApplicationRolePermission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("PermissionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PermissionId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRolePermissions");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Identity.ApplicationUser", b =>
@@ -1426,6 +1453,10 @@ namespace MyPortal.Database.Migrations
                     b.Property<string>("UserName")
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
+
+                    b.Property<string>("UserType")
+                        .HasColumnType("nvarchar(5)")
+                        .HasMaxLength(5);
 
                     b.HasKey("Id");
 
@@ -2825,39 +2856,14 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
-                    b.HasKey("Id");
-
-                    b.ToTable("SystemArea");
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.SystemResource", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
-
-                    b.Property<Guid>("AreaId")
+                    b.Property<Guid?>("ParentId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("HasPermissions")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("TableName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
-
                     b.HasKey("Id");
 
-                    b.HasIndex("AreaId");
+                    b.HasIndex("ParentId");
 
-                    b.ToTable("SystemResource");
+                    b.ToTable("SystemArea");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Task", b =>
@@ -3399,9 +3405,24 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Identity.ApplicationPermission", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.SystemResource", "Resource")
+                    b.HasOne("MyPortal.Database.Models.SystemArea", "Area")
                         .WithMany("Permissions")
-                        .HasForeignKey("ResourceId")
+                        .HasForeignKey("AreaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Identity.ApplicationRolePermission", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationPermission", "Permission")
+                        .WithMany("RolePermissions")
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationRole", "Role")
+                        .WithMany("RolePermissions")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -3872,13 +3893,12 @@ namespace MyPortal.Database.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.SystemResource", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.SystemArea", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.SystemArea", "Area")
-                        .WithMany("Resources")
-                        .HasForeignKey("AreaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.HasOne("MyPortal.Database.Models.SystemArea", "Parent")
+                        .WithMany("SubAreas")
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Task", b =>

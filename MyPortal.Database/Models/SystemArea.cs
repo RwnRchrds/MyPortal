@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Database.Models.Identity;
 
 namespace MyPortal.Database.Models
 {
@@ -31,5 +32,7 @@ namespace MyPortal.Database.Models
         public virtual ICollection<Report> Reports { get; set; }
 
         public virtual ICollection<SystemArea> SubAreas { get; set; }
+
+        public virtual ICollection<ApplicationPermission> Permissions { get; set; }
     }
 }

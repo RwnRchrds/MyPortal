@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
@@ -20,11 +21,22 @@ namespace MyPortal.Logic.Authorisation
         {
             var principal = await base.CreateAsync(user);
 
+            
+
+            ((ClaimsIdentity) principal.Identity).AddClaim(new Claim(ClaimTypeDictionary.DisplayName, displayName));
+
+            return principal;
+        }
+
+        private IEnumerable<Claim> GenerateClaimsForUser(ApplicationUser user)
+        {
+            var claims = new List<Claim>();
+
             var person = await _personService.GetByUserId(user.Id);
 
             var displayName = user.UserName;
 
-            if (principal.HasClaim(ClaimTypeDictionary.UserType, UserTypeDictionary.Staff) && person != null)
+            if (user.UserType == UserTypeDictionary.Staff && person != null)
             {
                 displayName = $"{person.Title} {person.FirstName.Substring(0, 1)} {person.LastName}";
             }
@@ -33,9 +45,7 @@ namespace MyPortal.Logic.Authorisation
                 displayName = $"{person.FirstName} {person.LastName}";
             }
 
-            ((ClaimsIdentity) principal.Identity).AddClaim(new Claim(ClaimTypeDictionary.DisplayName, displayName));
-
-            return principal;
+            return claims;
         }
     }
 }

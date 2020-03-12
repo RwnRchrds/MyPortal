@@ -155,7 +155,6 @@ namespace MyPortalCore
             services.AddTransient<ISubjectStaffMemberRepository, SubjectStaffMemberRepository>();
             services.AddTransient<ISubjectStaffMemberRoleRepository, SubjectStaffMemberRoleRepository>();
             services.AddTransient<ISystemAreaRepository, SystemAreaRepository>();
-            services.AddTransient<ISystemResourceRepository, SystemResourceRepository>();
             services.AddTransient<ITaskRepository, TaskRepository>();
             services.AddTransient<ITrainingCertificateRepository, TrainingCertificateRepository>();
             services.AddTransient<ITrainingCertificateStatusRepository, TrainingCertificateStatusRepository>();

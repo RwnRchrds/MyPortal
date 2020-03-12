@@ -28,5 +28,7 @@ namespace MyPortal.Database.Models.Identity
         public string ClaimValue { get; set; }
 
         public virtual SystemArea Area { get; set; }
+
+        public virtual ICollection<ApplicationRolePermission> RolePermissions { get; set; }
     }
 }

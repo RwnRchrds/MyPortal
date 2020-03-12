@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MyPortal.Database.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class InitialModel : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -103,6 +103,7 @@ namespace MyPortal.Database.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
+                    UserType = table.Column<string>(maxLength: 5, nullable: true),
                     Enabled = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -171,8 +172,8 @@ namespace MyPortal.Database.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     AcademicYearId = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(maxLength: 128, nullable: false),
+                    Description = table.Column<string>(maxLength: 256, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -184,7 +185,7 @@ namespace MyPortal.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    Name = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(maxLength: 128, nullable: false),
                     KeyStage = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -575,11 +576,18 @@ namespace MyPortal.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    Description = table.Column<string>(maxLength: 128, nullable: false)
+                    Description = table.Column<string>(maxLength: 128, nullable: false),
+                    ParentId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SystemArea", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SystemArea_SystemArea_ParentId",
+                        column: x => x.ParentId,
+                        principalTable: "SystemArea",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1004,6 +1012,27 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AspNetPermissions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    AreaId = table.Column<Guid>(nullable: false),
+                    ShortDescription = table.Column<string>(maxLength: 128, nullable: false),
+                    FullDescription = table.Column<string>(maxLength: 256, nullable: false),
+                    ClaimValue = table.Column<string>(maxLength: 128, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetPermissions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetPermissions_SystemArea_AreaId",
+                        column: x => x.AreaId,
+                        principalTable: "SystemArea",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Report",
                 columns: table => new
                 {
@@ -1018,27 +1047,6 @@ namespace MyPortal.Database.Migrations
                     table.PrimaryKey("PK_Report", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Report_SystemArea_AreaId",
-                        column: x => x.AreaId,
-                        principalTable: "SystemArea",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "SystemResource",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    AreaId = table.Column<Guid>(nullable: false),
-                    TableName = table.Column<string>(maxLength: 128, nullable: false),
-                    Name = table.Column<string>(maxLength: 256, nullable: false),
-                    HasPermissions = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SystemResource", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_SystemResource_SystemArea_AreaId",
                         column: x => x.AreaId,
                         principalTable: "SystemArea",
                         principalColumn: "Id",
@@ -1393,22 +1401,26 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetPermissions",
+                name: "AspNetRolePermissions",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    ResourceId = table.Column<Guid>(nullable: false),
-                    ShortDescription = table.Column<string>(maxLength: 128, nullable: false),
-                    FullDescription = table.Column<string>(maxLength: 256, nullable: false),
-                    ClaimValue = table.Column<string>(maxLength: 128, nullable: false)
+                    RoleId = table.Column<Guid>(nullable: false),
+                    PermissionId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetPermissions", x => x.Id);
+                    table.PrimaryKey("PK_AspNetRolePermissions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetPermissions_SystemResource_ResourceId",
-                        column: x => x.ResourceId,
-                        principalTable: "SystemResource",
+                        name: "FK_AspNetRolePermissions_AspNetPermissions_PermissionId",
+                        column: x => x.PermissionId,
+                        principalTable: "AspNetPermissions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AspNetRolePermissions_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -2377,13 +2389,23 @@ namespace MyPortal.Database.Migrations
                 column: "TypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetPermissions_ResourceId",
+                name: "IX_AspNetPermissions_AreaId",
                 table: "AspNetPermissions",
-                column: "ResourceId");
+                column: "AreaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetRolePermissions_PermissionId",
+                table: "AspNetRolePermissions",
+                column: "PermissionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetRolePermissions_RoleId",
+                table: "AspNetRolePermissions",
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
@@ -2955,9 +2977,9 @@ namespace MyPortal.Database.Migrations
                 column: "SubjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SystemResource_AreaId",
-                table: "SystemResource",
-                column: "AreaId");
+                name: "IX_SystemArea_ParentId",
+                table: "SystemArea",
+                column: "ParentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Task_AssignedToId",
@@ -2999,10 +3021,10 @@ namespace MyPortal.Database.Migrations
                 name: "AddressPerson");
 
             migrationBuilder.DropTable(
-                name: "AspNetPermissions");
+                name: "AspNetRoleClaims");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoleClaims");
+                name: "AspNetRolePermissions");
 
             migrationBuilder.DropTable(
                 name: "AspNetUserClaims");
@@ -3125,7 +3147,7 @@ namespace MyPortal.Database.Migrations
                 name: "Address");
 
             migrationBuilder.DropTable(
-                name: "SystemResource");
+                name: "AspNetPermissions");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

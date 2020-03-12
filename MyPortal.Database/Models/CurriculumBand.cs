@@ -20,8 +20,11 @@ namespace MyPortal.Database.Models
 
         public Guid AcademicYearId { get; set; }
 
+        [Required]
+        [StringLength(128)]
         public string Name { get; set; }
 
+        [StringLength(256)]
         public string Description { get; set; }
 
         public virtual ICollection<Enrolment> Enrolments { get; set; }

@@ -19,6 +19,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<Address> Addresses { get; set; }
         public virtual DbSet<AddressPerson> AddressPersons { get; set; }
         public virtual DbSet<ApplicationPermission> ApplicationPermissions { get; set; }
+        public virtual DbSet<ApplicationRolePermission> RolePermissions { get; set; }
         public virtual DbSet<Aspect> Aspects { get; set; }
         public virtual DbSet<AspectType> AspectTypes { get; set; }
         public virtual DbSet<AttendanceCode> AttendanceCodes { get; set; }
@@ -127,6 +128,9 @@ namespace MyPortal.Database.Models
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
             modelBuilder.Entity<ApplicationPermission>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<ApplicationRolePermission>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
             modelBuilder.Entity<Aspect>()
@@ -1133,7 +1137,6 @@ namespace MyPortal.Database.Models
                 .HasMany(e => e.SubAreas)
                 .WithOne(e => e.Parent)
                 .HasForeignKey(e => e.ParentId)
-                .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<RelationshipType>()
@@ -1191,9 +1194,23 @@ namespace MyPortal.Database.Models
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<ApplicationPermission>()
-                .HasOne(e => e.Resource)
+                .HasOne(e => e.Area)
                 .WithMany(e => e.Permissions)
-                .HasForeignKey(e => e.ResourceId)
+                .HasForeignKey(e => e.AreaId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ApplicationPermission>()
+                .HasMany(e => e.RolePermissions)
+                .WithOne(e => e.Permission)
+                .HasForeignKey(e => e.PermissionId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ApplicationRole>()
+                .HasMany(e => e.RolePermissions)
+                .WithOne(e => e.Role)
+                .HasForeignKey(e => e.RoleId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
