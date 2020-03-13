@@ -52,7 +52,7 @@ namespace MyPortalCore
 
             services.AddControllersWithViews();
             services.AddRazorPages();
-            services.AddMvc();
+            services.AddMvc().AddRazorRuntimeCompilation();
 
             services.AddTransient<IUserClaimsPrincipalFactory<ApplicationUser>, ApplicationUserClaimsPrincipalFactory>();
 

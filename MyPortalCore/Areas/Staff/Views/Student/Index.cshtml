@@ -194,7 +194,8 @@
                         data: "displayName",
                         render: function(data, type, student) {
                             var overviewUrl = getOverviewUrl(student.id);
-                            return `<a href="${overviewUrl}">${student.displayName}</a>`;
+                            return `<div class="kt-user-card-v2"><div class="kt-user-card-v2__pic"><div class="kt-badge kt-badge--xl kt-badge--info"><i class="fas fa-fw fa-user-graduate"></i></div></div><div class="kt-user-card-v2__details"><a href="${
+                                overviewUrl}">${student.displayName}</a></div></div>`;
                         }
                     },
                     {

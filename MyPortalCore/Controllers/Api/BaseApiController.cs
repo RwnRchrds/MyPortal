@@ -13,8 +13,8 @@ using Syncfusion.EJ2.Base;
 
 namespace MyPortalCore.Controllers.Api
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public abstract class BaseApiController : ControllerBase
     {
         protected readonly IMapper _dTMapper;

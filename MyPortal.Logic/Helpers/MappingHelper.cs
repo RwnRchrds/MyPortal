@@ -36,6 +36,7 @@ namespace MyPortal.Logic.Helpers
         {
             var config = new MapperConfiguration(cfg =>
             {
+                cfg.CreateMap<RoleDetails, DataGridApplicationRole>();
                 cfg.CreateMap<StudentDetails, DataGridStudent>()
                     .ForMember(dest => dest.DisplayName,
                         opts => opts.MapFrom(src => src.Person.GetDisplayName(false)))
