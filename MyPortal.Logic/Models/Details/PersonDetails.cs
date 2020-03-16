@@ -43,7 +43,7 @@ namespace MyPortal.Logic.Models.Details
         
         public string GetDisplayName(bool salutationFormat = false)
         {
-            return salutationFormat ? $"{Title} {FirstName.Substring(0, 1)}, {LastName}" : $"{LastName}, {FirstName}";
+            return salutationFormat ? $"{Title} {FirstName.Substring(0, 1)} {LastName}" : $"{LastName}, {FirstName}";
         }
     }
 }

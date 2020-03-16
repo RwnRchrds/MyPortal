@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using MyPortal.Logic.Authorisation.Attributes;
 using MyPortal.Logic.Dictionaries;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.DataGrid;
 using MyPortalCore.Areas.Staff.ViewModels.Student;
 
 namespace MyPortalCore.Areas.Staff.Controllers
