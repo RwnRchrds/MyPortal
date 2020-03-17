@@ -15,6 +15,10 @@ namespace MyPortal.Database.Models
 
         public Guid PeriodId { get; set; }
 
+        public Guid TeacherId { get; set; }
+
+        public virtual StaffMember Teacher { get; set; }
+        
         public virtual Period Period { get; set; }
 
         public virtual Class Class { get; set; }

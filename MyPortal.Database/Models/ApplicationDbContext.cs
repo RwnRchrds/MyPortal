@@ -65,6 +65,8 @@ namespace MyPortal.Database.Models
         public virtual DbSet<LessonPlanTemplate> LessonPlanTemplates { get; set; }
         public virtual DbSet<LocalAuthority> LocalAuthorities { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
+        public virtual DbSet<Marksheet> Marksheets { get; set; }
+        public virtual DbSet<MarksheetColumn> MarksheetColumns { get; set; }
         public virtual DbSet<MedicalCondition> Conditions { get; set; }
         public virtual DbSet<MedicalEvent> MedicalEvents { get; set; }
         public virtual DbSet<Observation> Observations { get; set; }
@@ -266,6 +268,12 @@ namespace MyPortal.Database.Models
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
             modelBuilder.Entity<Location>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<Marksheet>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+            
+            modelBuilder.Entity<MarksheetColumn>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
             modelBuilder.Entity<MedicalCondition>()
@@ -876,6 +884,13 @@ namespace MyPortal.Database.Models
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Marksheet>()
+                .HasMany(e => e.Columns)
+                .WithOne(e => e.Marksheet)
+                .HasForeignKey(e => e.MarksheetId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<Phase>()
                 .HasMany(e => e.Schools)
                 .WithOne(e => e.Phase)
@@ -943,7 +958,7 @@ namespace MyPortal.Database.Models
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.CurriculumClasses)
+                .HasMany(e => e.Sessions)
                 .WithOne(e => e.Teacher)
                 .HasForeignKey(e => e.TeacherId)
                 .IsRequired()

@@ -10,7 +10,7 @@ using MyPortal.Database.Models;
 namespace MyPortal.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200311201203_InitialModel")]
+    [Migration("20200317154750_InitialModel")]
     partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -544,9 +544,6 @@ namespace MyPortal.Database.Migrations
                     b.Property<Guid?>("SubjectId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("TeacherId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid?>("YearGroupId")
                         .HasColumnType("uniqueidentifier");
 
@@ -557,8 +554,6 @@ namespace MyPortal.Database.Migrations
                     b.HasIndex("BandId");
 
                     b.HasIndex("SubjectId");
-
-                    b.HasIndex("TeacherId");
 
                     b.HasIndex("YearGroupId");
 
@@ -1688,6 +1683,48 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Location");
                 });
 
+            modelBuilder.Entity("MyPortal.Database.Models.Marksheet", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("ClassId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Marksheet");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.MarksheetColumn", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("AspectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("MarksheetId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ResultSetId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AspectId");
+
+                    b.HasIndex("MarksheetId");
+
+                    b.HasIndex("ResultSetId");
+
+                    b.ToTable("MarksheetColumn");
+                });
+
             modelBuilder.Entity("MyPortal.Database.Models.MedicalCondition", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2588,11 +2625,16 @@ namespace MyPortal.Database.Migrations
                     b.Property<Guid>("PeriodId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("TeacherId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ClassId");
 
                     b.HasIndex("PeriodId");
+
+                    b.HasIndex("TeacherId");
 
                     b.ToTable("Session");
                 });
@@ -3195,12 +3237,6 @@ namespace MyPortal.Database.Migrations
                         .WithMany("Classes")
                         .HasForeignKey("SubjectId");
 
-                    b.HasOne("MyPortal.Database.Models.StaffMember", "Teacher")
-                        .WithMany("CurriculumClasses")
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("MyPortal.Database.Models.YearGroup", "YearGroup")
                         .WithMany("Classes")
                         .HasForeignKey("YearGroupId");
@@ -3487,6 +3523,27 @@ namespace MyPortal.Database.Migrations
                         .WithMany("LessonPlans")
                         .HasForeignKey("StudyTopicId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.MarksheetColumn", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Aspect", "Aspect")
+                        .WithMany()
+                        .HasForeignKey("AspectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Marksheet", "Marksheet")
+                        .WithMany("Columns")
+                        .HasForeignKey("MarksheetId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.ResultSet", "ResultSet")
+                        .WithMany()
+                        .HasForeignKey("ResultSetId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -3794,6 +3851,12 @@ namespace MyPortal.Database.Migrations
                     b.HasOne("MyPortal.Database.Models.Period", "Period")
                         .WithMany("Sessions")
                         .HasForeignKey("PeriodId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.StaffMember", "Teacher")
+                        .WithMany("Sessions")
+                        .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

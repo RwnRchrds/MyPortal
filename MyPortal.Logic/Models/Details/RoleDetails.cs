@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MyPortal.Logic.Models.Admin
+namespace MyPortal.Logic.Models.Details
 {
     public class RoleDetails
     {

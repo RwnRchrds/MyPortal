@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
@@ -17,9 +19,9 @@ namespace MyPortal.Database.Repositories
             RelatedColumns = $@"
 {EntityHelper.GetAllColumns(typeof(ProfileLogNoteType))},
 {EntityHelper.GetUserColumns("User")},
-{EntityHelper.GetAllColumns(typeof(Person), "AuthorPerson")}
+{EntityHelper.GetAllColumns(typeof(Person), "AuthorPerson")},
 {EntityHelper.GetAllColumns(typeof(Student))},
-{EntityHelper.GetAllColumns(typeof(Person), "StudentPerson")}
+{EntityHelper.GetAllColumns(typeof(Person), "StudentPerson")},
 {EntityHelper.GetAllColumns(typeof(AcademicYear))}";
 
             JoinRelated = $@"
@@ -55,6 +57,15 @@ namespace MyPortal.Database.Repositories
 
             pln.TypeId = entity.TypeId;
             pln.Message = entity.Message;
+        }
+
+        public Task<IEnumerable<ProfileLogNote>> GetByStudent(Guid studentId)
+        {
+            var sql = SelectAllColumns();
+
+            SqlHelper.Where(ref sql, "[ProfileLogNote].[StudentId] = @StudentId");
+
+            return ExecuteQuery(sql, new {StudentId = studentId});
         }
     }
 }

@@ -382,6 +382,18 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Marksheet",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    ClassId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Marksheet", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MedicalCondition",
                 columns: table => new
                 {
@@ -1401,6 +1413,38 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MarksheetColumn",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    MarksheetId = table.Column<Guid>(nullable: false),
+                    AspectId = table.Column<Guid>(nullable: false),
+                    ResultSetId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MarksheetColumn", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MarksheetColumn_Aspect_AspectId",
+                        column: x => x.AspectId,
+                        principalTable: "Aspect",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MarksheetColumn_Marksheet_MarksheetId",
+                        column: x => x.MarksheetId,
+                        principalTable: "Marksheet",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_MarksheetColumn_ResultSet_ResultSetId",
+                        column: x => x.ResultSetId,
+                        principalTable: "ResultSet",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRolePermissions",
                 columns: table => new
                 {
@@ -1609,7 +1653,6 @@ namespace MyPortal.Database.Migrations
                     SubjectId = table.Column<Guid>(nullable: true),
                     BandId = table.Column<Guid>(nullable: false),
                     Name = table.Column<string>(maxLength: 128, nullable: false),
-                    TeacherId = table.Column<Guid>(nullable: false),
                     YearGroupId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
@@ -1631,12 +1674,6 @@ namespace MyPortal.Database.Migrations
                         name: "FK_Class_Subject_SubjectId",
                         column: x => x.SubjectId,
                         principalTable: "Subject",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Class_StaffMember_TeacherId",
-                        column: x => x.TeacherId,
-                        principalTable: "StaffMember",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -1705,7 +1742,8 @@ namespace MyPortal.Database.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     ClassId = table.Column<Guid>(nullable: false),
-                    PeriodId = table.Column<Guid>(nullable: false)
+                    PeriodId = table.Column<Guid>(nullable: false),
+                    TeacherId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1720,6 +1758,12 @@ namespace MyPortal.Database.Migrations
                         name: "FK_Session_AttendancePeriod_PeriodId",
                         column: x => x.PeriodId,
                         principalTable: "AttendancePeriod",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Session_StaffMember_TeacherId",
+                        column: x => x.TeacherId,
+                        principalTable: "StaffMember",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -2498,11 +2542,6 @@ namespace MyPortal.Database.Migrations
                 column: "SubjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Class_TeacherId",
-                table: "Class",
-                column: "TeacherId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Class_YearGroupId",
                 table: "Class",
                 column: "YearGroupId");
@@ -2685,6 +2724,21 @@ namespace MyPortal.Database.Migrations
                 name: "IX_LessonPlan_StudyTopicId",
                 table: "LessonPlan",
                 column: "StudyTopicId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MarksheetColumn_AspectId",
+                table: "MarksheetColumn",
+                column: "AspectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MarksheetColumn_MarksheetId",
+                table: "MarksheetColumn",
+                column: "MarksheetId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MarksheetColumn_ResultSetId",
+                table: "MarksheetColumn",
+                column: "ResultSetId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MedicalEvent_RecordedById",
@@ -2905,6 +2959,11 @@ namespace MyPortal.Database.Migrations
                 column: "PeriodId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Session_TeacherId",
+                table: "Session",
+                column: "TeacherId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_StaffMember_PersonId",
                 table: "StaffMember",
                 column: "PersonId",
@@ -3087,6 +3146,9 @@ namespace MyPortal.Database.Migrations
                 name: "LessonPlanTemplate");
 
             migrationBuilder.DropTable(
+                name: "MarksheetColumn");
+
+            migrationBuilder.DropTable(
                 name: "MedicalEvent");
 
             migrationBuilder.DropTable(
@@ -3184,6 +3246,9 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "StudyTopic");
+
+            migrationBuilder.DropTable(
+                name: "Marksheet");
 
             migrationBuilder.DropTable(
                 name: "ObservationOutcome");

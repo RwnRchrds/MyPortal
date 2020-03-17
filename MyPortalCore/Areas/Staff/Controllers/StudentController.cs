@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MyPortal.Logic.Authorisation.Attributes;
 using MyPortal.Logic.Dictionaries;
+using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.DataGrid;
 using MyPortalCore.Areas.Staff.ViewModels.Student;
@@ -17,11 +18,13 @@ namespace MyPortalCore.Areas.Staff.Controllers
     {
         private IStudentService _service;
         private IPersonService _personService;
+        private IProfileLogNoteService _logNoteService;
 
-        public StudentController(IStudentService service, IPersonService personService)
+        public StudentController(IStudentService service, IPersonService personService, IProfileLogNoteService logNoteService)
         {
             _service = service;
             _personService = personService;
+            _logNoteService = logNoteService;
         }
 
         [RequiresPermission(PermissionDictionary.Student.Details.View)]
@@ -39,11 +42,16 @@ namespace MyPortalCore.Areas.Staff.Controllers
         [RequiresPermission(PermissionDictionary.Student.Details.View)]
         public async Task<IActionResult> StudentOverview(Guid studentId)
         {
+            var mapper = MappingHelper.GetDataGridConfig();
+
             var viewModel = new StudentOverviewViewModel();
 
             var student = await _service.GetById(studentId);
 
+            var logNotes = await _logNoteService.GetByStudent(studentId);
+
             viewModel.Student = student;
+            viewModel.LogNotes = logNotes.Select(mapper.Map<DataGridProfileLogNote>);
 
             return View(viewModel);
         }

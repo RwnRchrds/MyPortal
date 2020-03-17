@@ -28,11 +28,7 @@ namespace MyPortal.Database.Models
         [StringLength(128)]
         public string Name { get; set; }
 
-        public Guid TeacherId { get; set; }
-
         public Guid? YearGroupId { get; set; }
-
-        public virtual StaffMember Teacher { get; set; }
 
         public virtual AcademicYear AcademicYear { get; set; }
 

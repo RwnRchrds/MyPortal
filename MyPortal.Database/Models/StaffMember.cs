@@ -12,7 +12,7 @@ namespace MyPortal.Database.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public StaffMember()
         {
-            CurriculumClasses = new HashSet<Class>();
+            Sessions = new HashSet<Session>();
             PastoralHouses = new HashSet<House>();
             PastoralRegGroups = new HashSet<RegGroup>();
             PastoralYearGroups = new HashSet<YearGroup>();
@@ -46,7 +46,7 @@ namespace MyPortal.Database.Models
         public virtual Person Person { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Class> CurriculumClasses { get; set; }
+        public virtual ICollection<Session> Sessions { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SubjectStaffMember> Subjects { get; set; }

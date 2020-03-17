@@ -19,14 +19,18 @@ namespace MyPortal.Logic.Helpers
         {
             var config = new MapperConfiguration(cfg =>
             {
+                cfg.CreateMap<AcademicYear, AcademicYearDetails>().ReverseMap();
+                cfg.CreateMap<ApplicationRole, RoleDetails>().ReverseMap();
+                cfg.CreateMap<ApplicationUser, UserDetails>().ReverseMap();
                 cfg.CreateMap<House, HouseDetails>().ReverseMap();
                 cfg.CreateMap<Person, PersonDetails>().ReverseMap();
+                cfg.CreateMap<ProfileLogNote, ProfileLogNoteDetails>().ReverseMap();
+                cfg.CreateMap<ProfileLogNoteType, ProfileLogNoteTypeDetails>().ReverseMap();
                 cfg.CreateMap<RegGroup, RegGroupDetails>().ReverseMap();
                 cfg.CreateMap<SenStatus, SenStatusDetails>().ReverseMap();
                 cfg.CreateMap<StaffMember, StaffMemberDetails>().ReverseMap();
                 cfg.CreateMap<Student, StudentDetails>().ReverseMap();
                 cfg.CreateMap<YearGroup, YearGroupDetails>().ReverseMap();
-                cfg.CreateMap<ApplicationRole, RoleDetails>().ReverseMap();
             });
 
             return new Mapper(config);
@@ -48,6 +52,15 @@ namespace MyPortal.Logic.Helpers
                         opts => opts.MapFrom(src => src.House.Name))
                     .ForMember(dest => dest.Gender,
                         opts => opts.MapFrom(src => src.Person.Gender));
+                cfg.CreateMap<ProfileLogNoteDetails, DataGridProfileLogNote>()
+                    .ForMember(dest => dest.AuthorName,
+                        opts => opts.MapFrom(src => src.Author.GetDisplayName(true)))
+                    .ForMember(dest => dest.LogTypeName,
+                        opts => opts.MapFrom(src => src.ProfileLogNoteType.Name))
+                    .ForMember(dest => dest.LogTypeColourCode,
+                        opts => opts.MapFrom(src => src.ProfileLogNoteType.ColourCode))
+                    .ForMember(dest => dest.LogTypeIcon,
+                        opts => opts.MapFrom(src => src.ProfileLogNoteType.GetIcon()));
             });
 
             return new Mapper(config);

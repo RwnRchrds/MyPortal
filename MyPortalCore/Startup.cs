@@ -163,11 +163,12 @@ namespace MyPortalCore
             services.AddTransient<IYearGroupRepository, YearGroupRepository>();
             
             // MyPortal business services
-            services.AddTransient<IPersonService, PersonService>();
-            services.AddTransient<ISchoolService, SchoolService>();
-            services.AddTransient<IStudentService, StudentService>();
             services.AddTransient<IApplicationRolePermissionService, ApplicationRolePermissionService>();
             services.AddTransient<IApplicationRoleService, ApplicationRoleService>();
+            services.AddTransient<IPersonService, PersonService>();
+            services.AddTransient<IProfileLogNoteService, ProfileLogNoteService>();
+            services.AddTransient<ISchoolService, SchoolService>();
+            services.AddTransient<IStudentService, StudentService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

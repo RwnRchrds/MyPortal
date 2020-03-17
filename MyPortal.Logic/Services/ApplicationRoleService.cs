@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Models.Identity;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Admin;
+using MyPortal.Logic.Models.Details;
 
 namespace MyPortal.Logic.Services
 {

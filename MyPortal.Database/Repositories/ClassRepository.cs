@@ -40,8 +40,6 @@ namespace MyPortal.Database.Repositories
                 {
                     currClass.AcademicYear = acadYear;
                     currClass.Subject = subject;
-                    currClass.Teacher = teacher;
-                    currClass.Teacher.Person = person;
                     currClass.YearGroup = yearGroup;
                     currClass.Band = band;
 
@@ -55,7 +53,6 @@ namespace MyPortal.Database.Repositories
 
             classInDb.SubjectId = entity.SubjectId;
             classInDb.Name = entity.Name;
-            classInDb.TeacherId = entity.TeacherId;
             classInDb.YearGroupId = entity.YearGroupId;
             classInDb.BandId = entity.BandId;
         }
