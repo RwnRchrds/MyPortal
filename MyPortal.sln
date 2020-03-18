@@ -3,23 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29123.88
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyPortalWeb", "MyPortal\MyPortalWeb.csproj", "{DB3E3382-E173-4C79-BE4E-13230F34FDF6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyPortal.Data", "MyPortal.Data\MyPortal.Data.csproj", "{7E8B72B9-96AA-4DDB-B819-745FDC8CAACD}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyPortal.BusinessLogic", "MyPortal.BusinessLogic\MyPortal.BusinessLogic.csproj", "{6C2127C6-6FFE-464E-9986-F294360A5D3F}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyPortal.Database", "MyPortal.Database\MyPortal.Database.csproj", "{166E1359-8F93-462C-A72D-61750A7E30F9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyPortalCore", "MyPortalCore\MyPortalCore.csproj", "{31D132D9-621D-41B5-A8EC-E1D3C29DE9C6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyPortal.Logic", "MyPortal.Logic\MyPortal.Logic.csproj", "{CCE77F36-AC3F-4844-9B35-DE832479033B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{39B1D5B1-83B7-47BE-9CDE-188B86CEB004}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mvc5", "Mvc5", "{24E8CC09-0E91-4AF7-8430-9C5E5DAAC4B1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyPortal.Tests", "MyPortal.Tests\MyPortal.Tests.csproj", "{3B96153E-9A51-433E-8150-B228DD497D02}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyPortal.Tests", "MyPortal.Tests\MyPortal.Tests.csproj", "{3B96153E-9A51-433E-8150-B228DD497D02}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,19 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DB3E3382-E173-4C79-BE4E-13230F34FDF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DB3E3382-E173-4C79-BE4E-13230F34FDF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DB3E3382-E173-4C79-BE4E-13230F34FDF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DB3E3382-E173-4C79-BE4E-13230F34FDF6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DB3E3382-E173-4C79-BE4E-13230F34FDF6}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{7E8B72B9-96AA-4DDB-B819-745FDC8CAACD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7E8B72B9-96AA-4DDB-B819-745FDC8CAACD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7E8B72B9-96AA-4DDB-B819-745FDC8CAACD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7E8B72B9-96AA-4DDB-B819-745FDC8CAACD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6C2127C6-6FFE-464E-9986-F294360A5D3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6C2127C6-6FFE-464E-9986-F294360A5D3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6C2127C6-6FFE-464E-9986-F294360A5D3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6C2127C6-6FFE-464E-9986-F294360A5D3F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{166E1359-8F93-462C-A72D-61750A7E30F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{166E1359-8F93-462C-A72D-61750A7E30F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{166E1359-8F93-462C-A72D-61750A7E30F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -59,15 +36,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{DB3E3382-E173-4C79-BE4E-13230F34FDF6} = {24E8CC09-0E91-4AF7-8430-9C5E5DAAC4B1}
-		{7E8B72B9-96AA-4DDB-B819-745FDC8CAACD} = {24E8CC09-0E91-4AF7-8430-9C5E5DAAC4B1}
-		{6C2127C6-6FFE-464E-9986-F294360A5D3F} = {24E8CC09-0E91-4AF7-8430-9C5E5DAAC4B1}
-		{166E1359-8F93-462C-A72D-61750A7E30F9} = {39B1D5B1-83B7-47BE-9CDE-188B86CEB004}
-		{31D132D9-621D-41B5-A8EC-E1D3C29DE9C6} = {39B1D5B1-83B7-47BE-9CDE-188B86CEB004}
-		{CCE77F36-AC3F-4844-9B35-DE832479033B} = {39B1D5B1-83B7-47BE-9CDE-188B86CEB004}
-		{3B96153E-9A51-433E-8150-B228DD497D02} = {39B1D5B1-83B7-47BE-9CDE-188B86CEB004}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8B9BDACE-D7DA-44DF-9A91-8C1E3B9D7196}
