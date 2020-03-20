@@ -44,14 +44,18 @@ namespace MyPortalCore.Areas.Staff.Controllers
         {
             var mapper = MappingHelper.GetDataGridConfig();
 
-            var viewModel = new StudentOverviewViewModel();
-
             var student = await _service.GetById(studentId);
 
-            var logNotes = await _logNoteService.GetByStudent(studentId);
+            var logNotes = (await _logNoteService.GetByStudent(studentId)).Select(mapper.Map<DataGridProfileLogNote>);
 
-            viewModel.Student = student;
-            viewModel.LogNotes = logNotes.Select(mapper.Map<DataGridProfileLogNote>);
+            var logNoteTypes = await _logNoteService.GetTypes();
+
+            var viewModel = new StudentOverviewViewModel
+            {
+                Student = student,
+                LogNoteTypes = logNoteTypes,
+                LogNotes = logNotes
+            };
 
             return View(viewModel);
         }

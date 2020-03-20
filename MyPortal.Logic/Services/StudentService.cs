@@ -53,14 +53,14 @@ namespace MyPortal.Logic.Services
 
         public Lookup GetSearchTypes()
         {
-            var lookup = new Lookup();
+            var searchTypes = new Dictionary<string, Guid>();
             
-            lookup.Add("All", Guid.Empty);
-            lookup.Add("On Roll", SearchTypeDictionary.Student.OnRoll);
-            lookup.Add("Leavers", SearchTypeDictionary.Student.Leavers);
-            lookup.Add("Future", SearchTypeDictionary.Student.Future);
+            searchTypes.Add("All", Guid.Empty);
+            searchTypes.Add("On Roll", SearchTypeDictionary.Student.OnRoll);
+            searchTypes.Add("Leavers", SearchTypeDictionary.Student.Leavers);
+            searchTypes.Add("Future", SearchTypeDictionary.Student.Future);
 
-            return lookup;
+            return new Lookup(searchTypes);
         }
 
         public async Task<IEnumerable<StudentDetails>> Get(StudentSearchParams searchParams)

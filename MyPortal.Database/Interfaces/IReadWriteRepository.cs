@@ -10,7 +10,7 @@ namespace MyPortal.Database.Interfaces
         Task<TEntity> GetByIdWithTracking(Guid id);
         void Create(TEntity entity);
         Task Update(TEntity entity);
-        void Delete(TEntity entity);
+        Task Delete(Guid id);
         Task SaveChanges();
     }
 }

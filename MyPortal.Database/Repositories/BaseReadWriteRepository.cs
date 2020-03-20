@@ -40,8 +40,10 @@ namespace MyPortal.Database.Repositories
             Context.Set<TEntity>().Add(entity);
         }
 
-        public void Delete(TEntity entity)
+        public async Task Delete(Guid id)
         {
+            var entity = await GetByIdWithTracking(id);
+
             Context.Set<TEntity>().Remove(entity);
         }
 

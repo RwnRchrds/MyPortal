@@ -1,4 +1,5 @@
-﻿@model MyPortalCore.Areas.Staff.ViewModels.Student.StudentOverviewViewModel
+﻿@using MyPortal.Logic.Dictionaries
+@model MyPortalCore.Areas.Staff.ViewModels.Student.StudentOverviewViewModel
 @{
     ViewBag.Title = "Student Overview";
     Layout = "~/Areas/Staff/Views/Shared/_Layout.cshtml";
@@ -110,347 +111,385 @@
 
 <!--Begin:: App Aside-->
 <div class="kt-grid__item kt-app__toggle kt-app__aside" id="kt_user_profile_aside">
-<!--begin:: Widgets/Applications/User/Profile1-->
-<div class="kt-portlet kt-portlet--height-fluid-">
-<div class="kt-portlet__head  kt-portlet__head--noborder">
-    <div class="kt-portlet__head-label">
-        <h3 class="kt-portlet__head-title">
-        </h3>
-    </div>
-    <div class="kt-portlet__head-toolbar">
-        <a href="#" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown">
-            <i class="flaticon-more-1"></i>
-        </a>
-        <div class="dropdown-menu dropdown-menu-right dropdown-menu-fit dropdown-menu-md">
-            <!--begin::Nav-->
-            <ul class="kt-nav">
-                <li class="kt-nav__head">
-                    Export Options
-                    <span data-toggle="kt-tooltip" data-placement="right" title="" data-original-title="Click to learn more...">
-                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon kt-svg-icon--brand kt-svg-icon--md1">
-                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                <rect x="0" y="0" width="24" height="24"></rect>
-                                <circle fill="#000000" opacity="0.3" cx="12" cy="12" r="10"></circle>
-                                <rect fill="#000000" x="11" y="10" width="2" height="7" rx="1"></rect>
-                                <rect fill="#000000" x="11" y="7" width="2" height="2" rx="1"></rect>
-                            </g>
-                        </svg>
-                    </span>
-                </li>
-                <li class="kt-nav__separator"></li>
-                <li class="kt-nav__item">
-                    <a href="#" class="kt-nav__link">
-                        <i class="kt-nav__link-icon flaticon2-drop"></i>
-                        <span class="kt-nav__link-text">Activity</span>
-                    </a>
-                </li>
-                <li class="kt-nav__item">
-                    <a href="#" class="kt-nav__link">
-                        <i class="kt-nav__link-icon flaticon2-calendar-8"></i>
-                        <span class="kt-nav__link-text">FAQ</span>
-                    </a>
-                </li>
-                <li class="kt-nav__item">
-                    <a href="#" class="kt-nav__link">
-                        <i class="kt-nav__link-icon flaticon2-telegram-logo"></i>
-                        <span class="kt-nav__link-text">Settings</span>
-                    </a>
-                </li>
-                <li class="kt-nav__item">
-                    <a href="#" class="kt-nav__link">
-                        <i class="kt-nav__link-icon flaticon2-new-email"></i>
-                        <span class="kt-nav__link-text">Support</span>
-                        <span class="kt-nav__link-badge">
-                            <span class="kt-badge kt-badge--success kt-badge--rounded">5</span>
-                        </span>
-                    </a>
-                </li>
-                <li class="kt-nav__separator"></li>
-                <li class="kt-nav__foot">
-                    <a class="btn btn-label-danger btn-bold btn-sm" href="#">Upgrade plan</a>
-                    <a class="btn btn-clean btn-bold btn-sm" href="#" data-toggle="kt-tooltip" data-placement="right" title="" data-original-title="Click to learn more...">Learn more</a>
-                </li>
-            </ul>
-            <!--end::Nav-->
-        </div>
-    </div>
-</div>
-<div class="kt-portlet__body kt-portlet__body--fit-y">
-    <!--begin::Widget -->
-    <div class="kt-widget kt-widget--user-profile-1">
-        <div class="kt-widget__head">
-            <div class="kt-widget__media">
-                <img src="~/lib/metronic/media/users/default.jpg" alt="image">
+    <!--begin:: Widgets/Applications/User/Profile1-->
+    <div class="kt-portlet kt-portlet--height-fluid-">
+        <div class="kt-portlet__head  kt-portlet__head--noborder">
+            <div class="kt-portlet__head-label">
+                <h3 class="kt-portlet__head-title">
+                </h3>
             </div>
-            <div class="kt-widget__content">
-                <div class="kt-widget__section">
-                    <a href="#" class="kt-widget__username">
-                        @Model.Student.Person.GetDisplayName()
-                    </a>
-                    <span class="kt-widget__subtitle">
-                        @Model.Student.House.Name
-                    </span>
+            <div class="kt-portlet__head-toolbar">
+                <a href="#" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown">
+                    <i class="flaticon-more-1"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right dropdown-menu-fit dropdown-menu-md">
+                    <!--begin::Nav-->
+                    <ul class="kt-nav">
+                        <li class="kt-nav__head">
+                            Export Options
+                            <span data-toggle="kt-tooltip" data-placement="right" title="" data-original-title="Click to learn more...">
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon kt-svg-icon--brand kt-svg-icon--md1">
+                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <rect x="0" y="0" width="24" height="24"></rect>
+                                        <circle fill="#000000" opacity="0.3" cx="12" cy="12" r="10"></circle>
+                                        <rect fill="#000000" x="11" y="10" width="2" height="7" rx="1"></rect>
+                                        <rect fill="#000000" x="11" y="7" width="2" height="2" rx="1"></rect>
+                                    </g>
+                                </svg>
+                            </span>
+                        </li>
+                        <li class="kt-nav__separator"></li>
+                        <li class="kt-nav__item">
+                            <a href="#" class="kt-nav__link">
+                                <i class="kt-nav__link-icon flaticon2-drop"></i>
+                                <span class="kt-nav__link-text">Activity</span>
+                            </a>
+                        </li>
+                        <li class="kt-nav__item">
+                            <a href="#" class="kt-nav__link">
+                                <i class="kt-nav__link-icon flaticon2-calendar-8"></i>
+                                <span class="kt-nav__link-text">FAQ</span>
+                            </a>
+                        </li>
+                        <li class="kt-nav__item">
+                            <a href="#" class="kt-nav__link">
+                                <i class="kt-nav__link-icon flaticon2-telegram-logo"></i>
+                                <span class="kt-nav__link-text">Settings</span>
+                            </a>
+                        </li>
+                        <li class="kt-nav__item">
+                            <a href="#" class="kt-nav__link">
+                                <i class="kt-nav__link-icon flaticon2-new-email"></i>
+                                <span class="kt-nav__link-text">Support</span>
+                                <span class="kt-nav__link-badge">
+                                    <span class="kt-badge kt-badge--success kt-badge--rounded">5</span>
+                                </span>
+                            </a>
+                        </li>
+                        <li class="kt-nav__separator"></li>
+                        <li class="kt-nav__foot">
+                            <a class="btn btn-label-danger btn-bold btn-sm" href="#">Upgrade plan</a>
+                            <a class="btn btn-clean btn-bold btn-sm" href="#" data-toggle="kt-tooltip" data-placement="right" title="" data-original-title="Click to learn more...">Learn more</a>
+                        </li>
+                    </ul>
+                    <!--end::Nav-->
                 </div>
             </div>
         </div>
-        <div class="kt-widget__body">
-            <div class="kt-widget__content">
-                <div class="kt-widget__info">
-                    <span class="kt-widget__label">Reg Group:</span>
-                    <span class="kt-widget__data">@Model.Student.RegGroup.Name</span>
+        <div class="kt-portlet__body kt-portlet__body--fit-y">
+            <!--begin::Widget -->
+            <div class="kt-widget kt-widget--user-profile-1">
+                <div class="kt-widget__head">
+                    <div class="kt-widget__media">
+                        <img src="~/lib/metronic/media/users/default.jpg" alt="image">
+                    </div>
+                    <div class="kt-widget__content">
+                        <div class="kt-widget__section">
+                            <a href="#" class="kt-widget__username">
+                                @Model.Student.Person.GetDisplayName()
+                            </a>
+                            <span class="kt-widget__subtitle">
+                                @Model.Student.House.Name
+                            </span>
+                        </div>
+                    </div>
                 </div>
-                <div class="kt-widget__info">
-                    <span class="kt-widget__label">Year Group:</span>
-                    <span class="kt-widget__data">@Model.Student.YearGroup.Name</span>
-                </div>
-                <div class="kt-widget__info">
-                    <span class="kt-widget__label">Reg Tutor:</span>
-                    <span class="kt-widget__data">@Model.Student.RegGroup.Tutor.Person.GetDisplayName(true)</span>
-                </div>
-                <div class="kt-widget__info">
-                    <span class="kt-widget__label">Head of Year:</span>
-                    <span class="kt-widget__data">@Model.Student.YearGroup.HeadOfYear?.Person.GetDisplayName(true)</span>
-                </div>
-                <div class="kt-widget__info">
-                    <span class="kt-widget__label">Head of House:</span>
-                    <span class="kt-widget__data">@Model.Student.House.HeadOfHouse?.Person.GetDisplayName(true)</span>
+                <div class="kt-widget__body">
+                    <div class="kt-widget__content">
+                        <div class="kt-widget__info">
+                            <span class="kt-widget__label">Reg Group:</span>
+                            <span class="kt-widget__data">@Model.Student.RegGroup.Name</span>
+                        </div>
+                        <div class="kt-widget__info">
+                            <span class="kt-widget__label">Year Group:</span>
+                            <span class="kt-widget__data">@Model.Student.YearGroup.Name</span>
+                        </div>
+                        <div class="kt-widget__info">
+                            <span class="kt-widget__label">Reg Tutor:</span>
+                            <span class="kt-widget__data">@Model.Student.RegGroup.Tutor.Person.GetDisplayName(true)</span>
+                        </div>
+                        <div class="kt-widget__info">
+                            <span class="kt-widget__label">Head of Year:</span>
+                            <span class="kt-widget__data">@Model.Student.YearGroup.HeadOfYear?.Person.GetDisplayName(true)</span>
+                        </div>
+                        <div class="kt-widget__info">
+                            <span class="kt-widget__label">Head of House:</span>
+                            <span class="kt-widget__data">@Model.Student.House.HeadOfHouse?.Person.GetDisplayName(true)</span>
+                        </div>
+                    </div>
+                    <div class="kt-widget__items">
+                        <a href="" class="kt-widget__item kt-widget__item--active">
+                            <span class="kt-widget__section">
+                                <span class="kt-widget__desc">
+                                    <i class="fas fa-fw fa-layer-group mr-3"></i>Student Overview
+                                </span>
+                            </span>
+                        </a>
+                        <a href="#" class="kt-widget__item" data-toggle="kt-tooltip" title="" data-placement="right" data-original-title="Coming soon...">
+                            <span class="kt-widget__section">
+                                <span class="kt-widget__desc">
+                                    <i class="fas fa-fw fa-user-graduate mr-3"></i>Student Details
+                                </span>
+                            </span>
+                        </a>
+                        <a href="#" class="kt-widget__item" data-toggle="kt-tooltip" title="" data-placement="right" data-original-title="Coming soon...">
+                            <span class="kt-widget__section">
+                                <span class="kt-widget__desc">
+                                    <i class="fas fa-fw fa-clipboard-check mr-3"></i>Assessment
+                                </span>
+
+                            </span>
+                        </a>
+                        <a href="#" class="kt-widget__item" data-toggle="kt-tooltip" title="" data-placement="right" data-original-title="Coming soon...">
+                            <span class="kt-widget__section">
+                                <span class="kt-widget__desc">
+                                    <i class="fas fa-fw fa-stopwatch mr-3"></i>Attendance
+                                </span>
+
+                            </span>
+                        </a>
+                        <a href="#" class="kt-widget__item" data-toggle="kt-tooltip" title="" data-placement="right" data-original-title="Coming soon...">
+                            <span class="kt-widget__section">
+                                <span class="kt-widget__desc">
+                                    <i class="fas fa-fw fa-medal mr-3"></i>Behaviour Management
+                                </span>
+
+                            </span>
+                        </a>
+                        <a href="#" class="kt-widget__item" data-toggle="kt-tooltip" title="" data-placement="right" data-original-title="Coming soon...">
+                            <span class="kt-widget__section">
+                                <span class="kt-widget__desc">
+                                    <i class="fas fa-fw fa-envelope mr-3"></i>Communication
+                                </span>
+                            </span>
+                        </a>
+                        <a href="#" class="kt-widget__item" data-toggle="kt-tooltip" title="" data-placement="right" data-original-title="Coming soon...">
+                            <span class="kt-widget__section">
+                                <span class="kt-widget__desc">
+                                    <i class="fas fa-fw fa-graduation-cap mr-3"></i>Curriculum Management
+                                </span>
+                            </span>
+                        </a>
+                        <a href="#" class="kt-widget__item" data-toggle="kt-tooltip" title="" data-placement="right" data-original-title="Coming soon...">
+                            <span class="kt-widget__section">
+                                <span class="kt-widget__desc">
+                                    <i class="fas fa-fw fa-file mr-3"></i>Documents
+                                </span>
+                            </span>
+                        </a>
+                        <a href="#" class="kt-widget__item" data-toggle="kt-tooltip" title="" data-placement="right" data-original-title="Coming soon...">
+                            <span class="kt-widget__section">
+                                <span href="#" class="kt-widget__desc">
+                                    <i class="fas fa-fw fa-exclamation-circle mr-3"></i>SEND
+                                </span>
+                            </span>
+                        </a>
+                    </div>
                 </div>
             </div>
-            <div class="kt-widget__items">
-                <a href="" class="kt-widget__item kt-widget__item--active">
-                    <span class="kt-widget__section">
-                        <span class="kt-widget__desc">
-                            <i class="fas fa-fw fa-layer-group mr-3"></i>Student Overview
-                        </span>
-                    </span>
-                </a>
-                <a href="#" class="kt-widget__item" data-toggle="kt-tooltip" title="" data-placement="right" data-original-title="Coming soon...">
-                    <span class="kt-widget__section">
-                        <span class="kt-widget__desc">
-                            <i class="fas fa-fw fa-user-graduate mr-3"></i>Student Details
-                        </span>
-                    </span>
-                </a>
-                <a href="#" class="kt-widget__item" data-toggle="kt-tooltip" title="" data-placement="right" data-original-title="Coming soon...">
-                    <span class="kt-widget__section">
-                        <span class="kt-widget__desc">
-                            <i class="fas fa-fw fa-clipboard-check mr-3"></i>Assessment
-                        </span>
-
-                    </span>
-                </a>
-                <a href="#" class="kt-widget__item" data-toggle="kt-tooltip" title="" data-placement="right" data-original-title="Coming soon...">
-                    <span class="kt-widget__section">
-                        <span class="kt-widget__desc">
-                            <i class="fas fa-fw fa-stopwatch mr-3"></i>Attendance
-                        </span>
-
-                    </span>
-                </a>
-                <a href="#" class="kt-widget__item" data-toggle="kt-tooltip" title="" data-placement="right" data-original-title="Coming soon...">
-                    <span class="kt-widget__section">
-                        <span class="kt-widget__desc">
-                            <i class="fas fa-fw fa-medal mr-3"></i>Behaviour Management
-                        </span>
-
-                    </span>
-                </a>
-                <a href="#" class="kt-widget__item" data-toggle="kt-tooltip" title="" data-placement="right" data-original-title="Coming soon...">
-                    <span class="kt-widget__section">
-                        <span class="kt-widget__desc">
-                            <i class="fas fa-fw fa-envelope mr-3"></i>Communication
-                        </span>
-                    </span>
-                </a>
-                <a href="#" class="kt-widget__item" data-toggle="kt-tooltip" title="" data-placement="right" data-original-title="Coming soon...">
-                    <span class="kt-widget__section">
-                        <span class="kt-widget__desc">
-                            <i class="fas fa-fw fa-graduation-cap mr-3"></i>Curriculum Management
-                        </span>
-                    </span>
-                </a>
-                <a href="#" class="kt-widget__item" data-toggle="kt-tooltip" title="" data-placement="right" data-original-title="Coming soon...">
-                    <span class="kt-widget__section">
-                        <span class="kt-widget__desc">
-                            <i class="fas fa-fw fa-file mr-3"></i>Documents
-                        </span>
-                    </span>
-                </a>
-                <a href="#" class="kt-widget__item" data-toggle="kt-tooltip" title="" data-placement="right" data-original-title="Coming soon...">
-                    <span class="kt-widget__section">
-                        <span href="#" class="kt-widget__desc">
-                            <i class="fas fa-fw fa-exclamation-circle mr-3"></i>SEND
-                        </span>
-                    </span>
-                </a>
-            </div>
+            <!--end::Widget -->
         </div>
     </div>
-    <!--end::Widget -->
-</div>
-</div>
-<!--end:: Widgets/Applications/User/Profile1-->
+    <!--end:: Widgets/Applications/User/Profile1-->
 </div>
 <!--End:: App Aside-->
 
 <!--Begin:: App Content-->
 <div class="kt-grid__item kt-grid__item--fluid kt-app__content">
-<div class="row">
-    <div class="col-xl-6">
-        <!--begin:: Widgets/Order Statistics-->
-        <div class="kt-portlet kt-portlet--height-fluid">
-            <div class="kt-portlet__head">
-                <div class="kt-portlet__head-label">
-                    <h3 class="kt-portlet__head-title">
-                        Quick Glance
-                    </h3>
+    <div class="row">
+        <div class="col-xl-6">
+            <!--begin:: Widgets/Order Statistics-->
+            <div class="kt-portlet kt-portlet--height-fluid">
+                <div class="kt-portlet__head">
+                    <div class="kt-portlet__head-label">
+                        <h3 class="kt-portlet__head-title">
+                            Quick Glance
+                        </h3>
+                    </div>
                 </div>
-            </div>
-            <div class="kt-portlet__body kt-portlet__body--fluid">
-                <div class="kt-widget12">
-                    <div class="kt-widget12__content">
-                        <div class="kt-widget12__item">
-                            <div class="kt-widget12__info">
-                                <span class="kt-widget12__desc">Achievement Points</span>
-                                <span class="kt-widget12__value">@Model.AchievementPoints</span>
-                            </div>
+                <div class="kt-portlet__body kt-portlet__body--fluid">
+                    <div class="kt-widget12">
+                        <div class="kt-widget12__content">
+                            <div class="kt-widget12__item">
+                                <div class="kt-widget12__info">
+                                    <span class="kt-widget12__desc">Achievement Points</span>
+                                    <span class="kt-widget12__value">@Model.AchievementPoints</span>
+                                </div>
 
-                            <div class="kt-widget12__info">
-                                <span class="kt-widget12__desc">Behaviour Points</span>
-                                <span class="kt-widget12__value">@Model.BehaviourPoints</span>
+                                <div class="kt-widget12__info">
+                                    <span class="kt-widget12__desc">Behaviour Points</span>
+                                    <span class="kt-widget12__value">@Model.BehaviourPoints</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="kt-widget12__item">
-                            <div class="kt-widget12__info">
-                                <span class="kt-widget12__desc">Attendance (Present + AEA)</span>
-                                <span class="kt-widget12__value">@Model.Attendance%</span>
+                            <div class="kt-widget12__item">
+                                <div class="kt-widget12__info">
+                                    <span class="kt-widget12__desc">Attendance (Present + AEA)</span>
+                                    <span class="kt-widget12__value">@Model.Attendance%</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <!--end:: Widgets/Order Statistics-->
         </div>
-        <!--end:: Widgets/Order Statistics-->
-    </div>
-    <div class="col-xl-6">
-        <!--begin:: Widgets/Tasks -->
-        <div class="kt-portlet kt-portlet--tabs kt-portlet--height-fluid">
-            <div class="kt-portlet__head">
-                <div class="kt-portlet__head-label">
-                    <h3 class="kt-portlet__head-title">
-                        Tasks
-                    </h3>
+        <div class="col-xl-6">
+            <!--begin:: Widgets/Tasks -->
+            <div class="kt-portlet kt-portlet--height-fluid">
+                <div class="kt-portlet__head">
+                    <div class="kt-portlet__head-label">
+                        <h3 class="kt-portlet__head-title">
+                            Tasks
+                        </h3>
+                    </div>
+                    <div class="kt-portlet__head-toolbar">
+                        <btn type="button" class="btn btn-brand btn-bold btn-sm">
+                            <i class="fas fa-plus mr-2"></i>New Task
+                        </btn>
+                    </div>
                 </div>
-            </div>
-            <div class="kt-portlet__body">
-                @if (false)
-                {
-
-                }
-                else
-                {
-                    <h6 class="font-weight-500">No Tasks</h6>
-                }
-            </div>
-        </div>
-        <!--end:: Widgets/Tasks -->
-    </div>
-</div>
-<div class="row">
-<div class="col-xl-6">
-    <!--begin:: Widgets/Last Updates-->
-    <div class="kt-portlet kt-portlet--height-fluid">
-        <div class="kt-portlet__head">
-            <div class="kt-portlet__head-label">
-                <h3 class="kt-portlet__head-title">
-                    Log Notes
-                </h3>
-            </div>
-        </div>
-        <div class="kt-portlet__body">
-            <div class="kt-notes">
-                <div class="kt-notes__items">
-                    @if (@Model.LogNotes != null && Model.LogNotes.Any())
+                <div class="kt-portlet__body">
+                    @if (false)
                     {
-                        @foreach (var logNote in @Model.LogNotes)
-                        {
-                            <div class="kt-notes__item">
-                                <div class="kt-notes__media">
-                                    <span class="kt-notes__icon">
-                                        <i class="fas @logNote.LogTypeIcon" style="color: @logNote.LogTypeColourCode;"></i>
-                                    </span>
-                                </div>
-                                <div class="kt-notes__content">
-                                    <div class="kt-notes__section">
-                                        <div class="kt-notes__info">
-                                            <span class="kt-notes__title">
-                                                @logNote.AuthorName
-                                            </span>
-                                            <span class="kt-notes__desc">
-                                                @logNote.Date.ToString("dd MMM yyyy")
-                                            </span>
-                                            <span class="kt-badge kt-badge--inline" style="background-color: @logNote.LogTypeColourCode; color: white;">@logNote.LogTypeName</span>
-                                        </div>
-                                        <div class="kt-notes__dropdown">
-                                            <a href="#" class="btn btn-sm btn-icon-md btn-icon" data-toggle="dropdown">
-                                                <i class="flaticon-more-1 kt-font-brand"></i>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-right">
-                                                <ul class="kt-nav">
-                                                    <li class="kt-nav__item">
-                                                        <btn class="kt-nav__link">
-                                                            <i class="kt-nav__link-icon fas fa-edit"></i>
-                                                            <span class="kt-nav__link-text">Edit</span>
-                                                        </btn>
-                                                    </li>
-                                                    <li class="kt-nav__item">
-                                                        <btn class="kt-nav__link">
-                                                            <i class="kt-nav__link-icon fas fa-trash"></i>
-                                                            <span class="kt-nav__link-text">Delete</span>
-                                                        </btn>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <span class="kt-notes__body">
-                                        @logNote.Message
-                                    </span>
-                                </div>
-                            </div>
-                        }
+
                     }
                     else
                     {
-                        <h6 class="font-weight-500">No Log Notes</h6>
+                        <h6 class="font-weight-500">No Tasks</h6>
                     }
                 </div>
             </div>
+            <!--end:: Widgets/Tasks -->
         </div>
     </div>
-    <!--end:: Widgets/Last Updates-->
-</div>
-<div class="col-xl-6">
-<!--begin:: Widgets/Notifications-->
-<div class="kt-portlet kt-portlet--height-fluid">
-    <div class="kt-portlet__head">
-        <div class="kt-portlet__head-label">
-            <h3 class="kt-portlet__head-title">
-                Blank Portlet
-            </h3>
+    <div class="row">
+        <div class="col-xl-6">
+            <!--begin:: Widgets/Last Updates-->
+            <div class="kt-portlet kt-portlet--height-fluid">
+                <div class="kt-portlet__head">
+                    <div class="kt-portlet__head-label">
+                        <h3 class="kt-portlet__head-title">
+                            Log Notes
+                        </h3>
+                    </div>
+                    <div class="kt-portlet__head-toolbar">
+                        <btn type="button" class="btn btn-brand btn-bold btn-sm" data-toggle="modal" data-target="#lognote_modal">
+                            <i class="fas fa-plus mr-2"></i>New Log Note
+                        </btn>
+                    </div>
+                </div>
+                <div class="kt-portlet__body">
+                    <div class="kt-notes">
+                        <div class="kt-notes__items">
+                            @if (@Model.LogNotes != null && Model.LogNotes.Any())
+                            {
+                                @foreach (var logNote in @Model.LogNotes)
+                                {
+                                    <div class="kt-notes__item">
+                                        <div class="kt-notes__media">
+                                            <span class="kt-notes__icon">
+                                                <i class="fas @logNote.LogTypeIcon" style="color: @logNote.LogTypeColourCode;"></i>
+                                            </span>
+                                        </div>
+                                        <div class="kt-notes__content">
+                                            <div class="kt-notes__section">
+                                                <div class="kt-notes__info">
+                                                    <span class="kt-notes__title">
+                                                        @logNote.AuthorName
+                                                    </span>
+                                                    <span class="kt-notes__desc">
+                                                        @logNote.Date.ToString("dd MMM yyyy")
+                                                    </span>
+                                                    <span class="kt-badge kt-badge--inline" style="background-color: @logNote.LogTypeColourCode; color: white;">@logNote.LogTypeName</span>
+                                                </div>
+                                                <div class="kt-notes__dropdown">
+                                                    <a href="#" class="btn btn-sm btn-icon-md btn-icon" data-toggle="dropdown">
+                                                        <i class="flaticon-more-1 kt-font-brand"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <ul class="kt-nav">
+                                                            <li class="kt-nav__item">
+                                                                <btn class="kt-nav__link">
+                                                                    <i class="kt-nav__link-icon fas fa-edit"></i>
+                                                                    <span class="kt-nav__link-text">Edit</span>
+                                                                </btn>
+                                                            </li>
+                                                            <li class="kt-nav__item">
+                                                                <btn class="kt-nav__link">
+                                                                    <i class="kt-nav__link-icon fas fa-trash"></i>
+                                                                    <span class="kt-nav__link-text">Delete</span>
+                                                                </btn>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <span class="kt-notes__body">
+                                                @logNote.Message
+                                            </span>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <h6 class="font-weight-500">No Log Notes</h6>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end:: Widgets/Last Updates-->
         </div>
-    </div>
-    <div class="kt-portlet__body">
+        <div class="col-xl-6">
+            <!--begin:: Widgets/Notifications-->
+            <div class="kt-portlet kt-portlet--height-fluid">
+                <div class="kt-portlet__head">
+                    <div class="kt-portlet__head-label">
+                        <h3 class="kt-portlet__head-title">
+                            Blank Portlet
+                        </h3>
+                    </div>
+                </div>
+                <div class="kt-portlet__body">
 
+                </div>
+            </div>
+            <!--end:: Widgets/Notifications-->
+        </div>
     </div>
-</div>
-<!--end:: Widgets/Notifications-->
-</div>
-</div>
 </div>
 <!--End:: App Content-->
 </div>
 <!--End::App-->
+
+<div class="modal fade" id="lognote_modal" tabindex="-1" role="dialog" aria-labelledby="lognote_modal_title" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="lognote_modal_title">Log Note</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="lognote_type">Log Note Type</label>
+                        @Html.DropDownList("LogNoteType", new SelectList(Model.LogNoteTypes.OrderBy(x => x.Key), "Value", "Key"), "Select Type", new { @class = "form-control", id = "lognote_type" })
+                    </div>
+                    <div class="form-group">
+                        <label for="lognote_message">Message</label>
+                        <textarea class="form-control" id="lognote_message" name="message" rows="10"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Send message</button>
+            </div>
+        </div>
+    </div>
+</div>
 </div>
 
 @section Scripts

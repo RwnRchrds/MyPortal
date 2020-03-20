@@ -43,7 +43,7 @@ namespace MyPortal.Logic.Services
 
             foreach (var perm in permsToRemove)
             {
-                _repository.Delete(perm);
+                await _repository.Delete(perm.Id);
             }
 
             await _repository.SaveChanges();

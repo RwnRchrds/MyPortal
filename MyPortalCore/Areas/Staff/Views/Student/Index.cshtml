@@ -28,7 +28,7 @@
                 </h3>
             </div>
             <div class="kt-portlet__head-toolbar">
-                <button class="btn btn-primary"><i class="fas fa-plus mr-2"></i> New Student</button>
+                <button class="btn btn-brand btn-sm"><i class="fas fa-plus mr-2"></i>New Student</button>
             </div>
         </div>
         <div class="kt-portlet__body">
@@ -43,18 +43,18 @@
                                         <label>Status:</label>
                                     </div>
                                     <div class="kt-form__control">
-                                        @Html.DropDownList("searchType", new SelectList(Model.SearchTypes, "Value", "Key", SearchTypeDictionary.Student.OnRoll), new { @class = "form-control", id = "statusSearch" })
+                                        @Html.DropDownList("searchType", new SelectList(Model.SearchTypes, "Value", "Key", SearchTypeDictionary.Student.OnRoll), new { @class = "form-control form-control-sm", id = "statusSearch" })
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-2 kt-margin-b-20-tablet-and-mobile">
                                 <div>
-                                    <input type="text" class="form-control" placeholder="First Name" id="firstNameSearch">
+                                    <input type="text" class="form-control form-control-sm" placeholder="First Name" id="firstNameSearch">
                                 </div>
                             </div>
                             <div class="col-md-2 kt-margin-b-20-tablet-and-mobile">
                                 <div>
-                                    <input type="text" class="form-control" placeholder="Last Name" id="lastNameSearch">
+                                    <input type="text" class="form-control form-control-sm" placeholder="Last Name" id="lastNameSearch">
                                 </div>
                             </div>
                             <div class="col-md-2 kt-margin-b-20-tablet-and-mobile">
@@ -63,12 +63,12 @@
                                         <label>Gender:</label>
                                     </div>
                                     <div class="kt-form__control">
-                                        @Html.DropDownList("gender", new SelectList(Model.GenderOptions, "Value", "Key"), "Any", new { @class = "form-control", id = "genderSearch" })
+                                        @Html.DropDownList("gender", new SelectList(Model.GenderOptions, "Value", "Key"), "Any", new { @class = "form-control form-control-sm", id = "genderSearch" })
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-2 kt-margin-b-20-tablet-and-mobile">
-                                <button class="btn btn-primary" id="searchButton"><i class="fas fa-search"></i> Search</button>
+                                <button class="btn btn-brand btn-sm" id="searchButton"><i class="fas fa-search"></i> Search</button>
                             </div>
                         </div>
                     </div>
