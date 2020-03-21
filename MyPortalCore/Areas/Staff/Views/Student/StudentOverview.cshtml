@@ -472,10 +472,10 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form>
+                <form asp-action="Create" asp-controller="ProfileLogNote" asp-area="" method="post" data-ajax="true">
                     <div class="form-group">
                         <label for="lognote_type">Log Note Type</label>
-                        @Html.DropDownList("LogNoteType", new SelectList(Model.LogNoteTypes.OrderBy(x => x.Key), "Value", "Key"), "Select Type", new { @class = "form-control", id = "lognote_type" })
+                        @Html.DropDownList("LogNoteType", new SelectList(Model.LogNoteTypes.OrderBy(x => x.Key), "Value", "Key"), "Select Type", new {@class = "form-control", id = "lognote_type"})
                     </div>
                     <div class="form-group">
                         <label for="lognote_message">Message</label>
@@ -485,7 +485,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Send message</button>
+                <button type="button" class="btn btn-primary">Save</button>
             </div>
         </div>
     </div>
