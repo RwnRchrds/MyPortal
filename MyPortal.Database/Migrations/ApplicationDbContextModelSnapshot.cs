@@ -1440,6 +1440,9 @@ namespace MyPortal.Database.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("SelectedAcademicYearId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -1460,6 +1463,8 @@ namespace MyPortal.Database.Migrations
                         .IsUnique()
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("SelectedAcademicYearId");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -3459,6 +3464,14 @@ namespace MyPortal.Database.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Identity.ApplicationUser", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.AcademicYear", "SelectedAcademicYear")
+                        .WithMany("Users")
+                        .HasForeignKey("SelectedAcademicYearId")
+                        .OnDelete(DeleteBehavior.SetNull);
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Incident", b =>
