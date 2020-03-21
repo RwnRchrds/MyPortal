@@ -571,6 +571,12 @@ namespace MyPortal.Database.Models
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<AcademicYear>()
+                .HasMany(e => e.Users)
+                .WithOne(e => e.SelectedAcademicYear)
+                .HasForeignKey(e => e.SelectedAcademicYearId)
+                .OnDelete(DeleteBehavior.SetNull);
+
             modelBuilder.Entity<Class>()
                 .HasMany(e => e.Sessions)
                 .WithOne(e => e.Class)

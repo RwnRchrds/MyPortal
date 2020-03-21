@@ -163,6 +163,7 @@ namespace MyPortalCore
             services.AddTransient<IYearGroupRepository, YearGroupRepository>();
             
             // MyPortal business services
+            services.AddTransient<IAcademicYearService, AcademicYearService>();
             services.AddTransient<IApplicationRolePermissionService, ApplicationRolePermissionService>();
             services.AddTransient<IApplicationRoleService, ApplicationRoleService>();
             services.AddTransient<IPersonService, PersonService>();

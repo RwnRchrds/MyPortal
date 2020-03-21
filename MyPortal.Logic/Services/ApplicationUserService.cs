@@ -56,5 +56,12 @@ namespace MyPortal.Logic.Services
 
             return user.Enabled;
         }
+
+        public async Task<Guid?> GetSelectedAcademicYearId(Guid userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            return user.SelectedAcademicYearId;
+        }
     }
 }

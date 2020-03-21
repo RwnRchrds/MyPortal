@@ -22,9 +22,13 @@ namespace MyPortal.Database.Models.Identity
         [StringLength(5)]
         public string UserType { get; set; }
 
+        public Guid? SelectedAcademicYearId { get; set; }
+
         public bool Enabled { get; set; }
 
         public virtual Person Person { get; set; }
+
+        public virtual AcademicYear SelectedAcademicYear { get; set; }
 
         public virtual ICollection<ProfileLogNote> ProfileLogNotes { get; set; }
 
