@@ -6,7 +6,6 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -36,17 +35,6 @@ namespace MyPortal.Database.Repositories
 
                     return lp;
                 }, param);
-        }
-
-        public async Task Update(LessonPlan entity)
-        {
-            var lp = await Context.LessonPlans.FindAsync(entity.Id);
-
-            lp.Title = entity.Title;
-            lp.LearningObjectives = entity.LearningObjectives;
-            lp.PlanContent = entity.PlanContent;
-            lp.StudyTopicId = entity.StudyTopicId;
-            lp.Homework = entity.Homework;
         }
     }
 }

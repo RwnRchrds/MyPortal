@@ -7,7 +7,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -33,18 +32,6 @@ namespace MyPortal.Database.Repositories
 
                 return aspect;
             }, param);
-        }
-
-        public async Task Update(Aspect entity)
-        {
-            var aspectInDb = await Context.Aspects.FindAsync(entity.Id);
-
-            aspectInDb.TypeId = entity.TypeId;
-            aspectInDb.GradeSetId = entity.GradeSetId;
-            aspectInDb.MaxMark = entity.MaxMark;
-            aspectInDb.Description = entity.Description;
-            aspectInDb.Name = entity.Name;
-            aspectInDb.Active = entity.Active;
         }
     }
 }

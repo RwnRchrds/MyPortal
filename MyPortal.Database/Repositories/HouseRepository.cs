@@ -5,7 +5,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -28,15 +27,6 @@ namespace MyPortal.Database.Repositories
 
                 return house;
             });
-        }
-
-        public async Task Update(House entity)
-        {
-            var house = await Context.Houses.FindAsync(entity.Id);
-
-            house.Name = entity.Name;
-            house.ColourCode = entity.ColourCode;
-            house.HeadId = entity.HeadId;
         }
     }
 }

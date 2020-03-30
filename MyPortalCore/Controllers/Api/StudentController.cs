@@ -21,7 +21,7 @@ namespace MyPortalCore.Controllers.Api
         private readonly IStudentService _service;
         private RoleManager<ApplicationRole> _roleManager;
 
-        public StudentController(IStudentService service, RoleManager<ApplicationRole> roleManager)
+        public StudentController(IStudentService service, RoleManager<ApplicationRole> roleManager, IApplicationUserService userService) : base(userService)
         {
             _roleManager = roleManager;
             _service = service;
@@ -32,18 +32,14 @@ namespace MyPortalCore.Controllers.Api
         [Route("Search", Name = "ApiStudentSearch")]
         public async Task<IActionResult> Search([FromQuery]StudentSearchParams searchParams)
         {
-            try
+            return await Process(async () =>
             {
                 var students = await _service.Get(searchParams);
 
                 var result = students.Select(_dTMapper.Map<DataGridStudent>);
 
                 return Ok(result);
-            }
-            catch (Exception e)
-            {
-                return HandleException(e);
-            }
+            });
         }
     }
 }

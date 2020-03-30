@@ -5,7 +5,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -32,15 +31,6 @@ namespace MyPortal.Database.Repositories
 
                     return topic;
                 }, param);
-        }
-
-        public async Task Update(StudyTopic entity)
-        {
-            var st = await Context.StudyTopics.FindAsync(entity.Id);
-
-            st.Name = entity.Name;
-            st.SubjectId = entity.SubjectId;
-            st.YearGroupId = entity.YearGroupId;
         }
     }
 }

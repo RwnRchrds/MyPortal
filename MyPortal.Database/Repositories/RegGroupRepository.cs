@@ -5,7 +5,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -31,15 +30,6 @@ namespace MyPortal.Database.Repositories
 
                 return reg;
             }, param);
-        }
-
-        public async Task Update(RegGroup entity)
-        {
-            var reg = await Context.RegGroups.FindAsync(entity.Id);
-
-            reg.Name = entity.Name;
-            reg.TutorId = entity.TutorId;
-            reg.YearGroupId = entity.YearGroupId;
         }
     }
 }

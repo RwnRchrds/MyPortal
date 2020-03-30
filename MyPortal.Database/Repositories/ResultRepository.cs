@@ -5,7 +5,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -41,14 +40,6 @@ namespace MyPortal.Database.Repositories
 
                     return result;
                 }, param);
-        }
-
-        public async Task Update(Result entity)
-        {
-            var result = await Context.Results.FindAsync(entity.Id);
-
-            result.GradeId = entity.GradeId;
-            result.Mark = entity.Mark;
         }
     }
 }

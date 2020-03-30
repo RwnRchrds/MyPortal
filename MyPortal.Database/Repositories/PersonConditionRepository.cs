@@ -5,7 +5,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -32,16 +31,6 @@ namespace MyPortal.Database.Repositories
 
                     return pcondition;
                 }, param);
-        }
-
-        public async Task Update(PersonCondition entity)
-        {
-            var pcondition = await Context.PersonConditions.FindAsync(entity.Id);
-
-            pcondition.PersonId = entity.PersonId;
-            pcondition.ConditionId = entity.ConditionId;
-            pcondition.MedicationTaken = entity.MedicationTaken;
-            pcondition.Medication = entity.Medication;
         }
     }
 }

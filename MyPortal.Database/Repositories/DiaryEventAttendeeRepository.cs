@@ -5,7 +5,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -36,14 +35,6 @@ namespace MyPortal.Database.Repositories
 
                         return attendee;
                     }, param);
-        }
-
-        public async Task Update(DiaryEventAttendee entity)
-        {
-            var attendeeInDb = await Context.DiaryEventAttendees.FindAsync(entity.Id);
-
-            attendeeInDb.ResponseId = entity.ResponseId;
-            attendeeInDb.Attended = entity.Attended;
         }
     }
 }

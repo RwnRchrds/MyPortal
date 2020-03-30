@@ -5,7 +5,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -18,14 +17,6 @@ namespace MyPortal.Database.Repositories
         protected override async Task<IEnumerable<CurriculumBand>> ExecuteQuery(string sql, object param = null)
         {
             return await Connection.QueryAsync<CurriculumBand>(sql, param);
-        }
-
-        public async Task Update(CurriculumBand entity)
-        {
-            var band = await Context.CurriculumBands.FindAsync(entity.Id);
-
-            band.Name = entity.Name;
-            band.Description = entity.Description;
         }
     }
 }

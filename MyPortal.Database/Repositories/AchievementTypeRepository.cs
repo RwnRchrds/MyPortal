@@ -7,7 +7,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -19,19 +18,6 @@ namespace MyPortal.Database.Repositories
         public AchievementTypeRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             
-        }
-
-        public async Task Update(AchievementType entity)
-        {
-            var achievementTypeInDb = await GetByIdWithTracking(entity.Id);
-
-            if (achievementTypeInDb == null)
-            {
-                throw new Exception("Achievement type not found.");
-            }
-
-            achievementTypeInDb.Description = entity.Description;
-            achievementTypeInDb.DefaultPoints = entity.DefaultPoints;
         }
 
         public async Task<IEnumerable<AchievementType>> GetRecorded(Guid academicYearId)

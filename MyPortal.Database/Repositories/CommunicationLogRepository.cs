@@ -7,7 +7,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -30,15 +29,6 @@ namespace MyPortal.Database.Repositories
 
                 return log;
             }, param);
-        }
-
-        public async Task Update(CommunicationLog entity)
-        {
-            var communicationLogInDb = await Context.CommunicationLogs.FindAsync(entity.Id);
-
-            communicationLogInDb.Date = entity.Date;
-            communicationLogInDb.CommunicationTypeId = entity.CommunicationTypeId;
-            communicationLogInDb.Note = entity.Note;
         }
     }
 }

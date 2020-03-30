@@ -1,19 +1,27 @@
 ﻿using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using MyPortal.Database.Interfaces;
+using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
 using MyPortal.Logic.Dictionaries;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Admin;
+using MyPortal.Logic.Models.Details;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class ApplicationUserService
+    public class ApplicationUserService : BaseService, IApplicationUserService
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IAcademicYearRepository _academicYearRepository;
 
-        public ApplicationUserService(UserManager<ApplicationUser> userManager)
+        public ApplicationUserService(UserManager<ApplicationUser> userManager, IAcademicYearRepository academicYearRepository)
         {
             _userManager = userManager;
+            _academicYearRepository = academicYearRepository;
         }
 
         public async Task CreateUser(CreateUser creator)
@@ -62,6 +70,29 @@ namespace MyPortal.Logic.Services
             var user = await _userManager.FindByIdAsync(userId.ToString());
 
             return user.SelectedAcademicYearId;
+        }
+
+        public async Task<AcademicYearDetails> GetSelectedAcademicYear(Guid userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            var selected = user.SelectedAcademicYearId;
+
+            if (selected != null)
+            {
+                var acadYear = await _academicYearRepository.GetById((Guid) selected);
+
+                return _businessMapper.Map<AcademicYearDetails>(acadYear);
+            }
+
+            return null;
+        }
+
+        public async Task<UserDetails> GetUserByPrincipal(ClaimsPrincipal principal)
+        {
+            var user = await _userManager.GetUserAsync(principal);
+
+            return _businessMapper.Map<UserDetails>(user);
         }
     }
 }

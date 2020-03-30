@@ -9,7 +9,6 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -21,28 +20,6 @@ namespace MyPortal.Database.Repositories
 
         JoinRelated = $@"
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[User].[Id]", "[Person].[UserId]", "User")}";
-        }
-
-        public async Task Update(Person entity)
-        {
-            var personInDb = await Context.People.FindAsync(entity.Id);
-
-            if (personInDb == null)
-            {
-                throw new Exception("Person not found.");
-            }
-
-            personInDb.Title = entity.Title;
-            personInDb.FirstName = entity.FirstName;
-            personInDb.MiddleName = entity.MiddleName;
-            personInDb.PhotoId = entity.PhotoId;
-            personInDb.NhsNumber = entity.NhsNumber;
-            personInDb.LastName = entity.LastName;
-            personInDb.Gender = entity.Gender;
-            personInDb.Dob = entity.Dob;
-            personInDb.Deceased = entity.Deceased;
-            personInDb.UserId = entity.UserId;
-            personInDb.Deleted = entity.Deleted;
         }
 
         public async Task<Person> GetByUserId(Guid userId)

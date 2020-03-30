@@ -102,16 +102,16 @@
 
             var params = { roleName: roleName };
 
-            var queryStr = urlSearchRoles + "?" + $.param(params);
+            var url = `${urlSearchRoles}?${$.param(params)}`;
 
             if ($("#role_search").hasClass("dataTable")) {
                 var table = $("#role_search").DataTable();
 
-                table.ajax.url(queryStr);
+                table.ajax.url(url);
 
                 table.ajax.reload();
             } else {
-                loadDataTable(queryStr);
+                loadDataTable(url);
                 $("#searchResults").removeClass("d-none");
             }
         }

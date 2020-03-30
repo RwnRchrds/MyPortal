@@ -8,6 +8,6 @@ namespace MyPortal.Database.Interfaces
 {
     public interface IProfileLogNoteRepository : IReadWriteRepository<ProfileLogNote>
     {
-        Task<IEnumerable<ProfileLogNote>> GetByStudent(Guid studentId);
+        Task<IEnumerable<ProfileLogNote>> GetByStudent(Guid studentId, Guid academicYearId);
     }
 }

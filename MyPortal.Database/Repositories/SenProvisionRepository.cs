@@ -5,7 +5,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -32,16 +31,6 @@ namespace MyPortal.Database.Repositories
 
                     return provision;
                 }, param);
-        }
-
-        public async Task Update(SenProvision entity)
-        {
-            var provision = await Context.SenProvisions.FindAsync(entity.Id);
-
-            provision.ProvisionTypeId = entity.ProvisionTypeId;
-            provision.StartDate = entity.StartDate;
-            provision.EndDate = entity.EndDate;
-            provision.Note = entity.Note;
         }
     }
 }

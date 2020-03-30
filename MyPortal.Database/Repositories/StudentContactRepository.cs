@@ -5,7 +5,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -42,18 +41,6 @@ namespace MyPortal.Database.Repositories
 
                         return sContact;
                     }, param);
-        }
-
-        public async Task Update(StudentContact entity)
-        {
-            var studentContact = await Context.StudentContacts.FindAsync(entity.Id);
-
-            studentContact.ContactId = entity.ContactId;
-            studentContact.RelationshipTypeId = entity.RelationshipTypeId;
-            studentContact.ParentalResponsibility = entity.ParentalResponsibility;
-            studentContact.CourtOrder = entity.CourtOrder;
-            studentContact.PupilReport = entity.PupilReport;
-            studentContact.Correspondence = entity.Correspondence;
         }
     }
 }

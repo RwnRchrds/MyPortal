@@ -5,7 +5,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -18,13 +17,6 @@ namespace MyPortal.Database.Repositories
         protected override async Task<IEnumerable<SubjectStaffMemberRole>> ExecuteQuery(string sql, object param = null)
         {
             return await Connection.QueryAsync<SubjectStaffMemberRole>(sql, param);
-        }
-
-        public async Task Update(SubjectStaffMemberRole entity)
-        {
-            var role = await Context.SubjectStaffMemberRoles.FindAsync(entity.Id);
-
-            role.Description = entity.Description;
         }
     }
 }

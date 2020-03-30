@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.VisualStudio.Web.CodeGeneration.DotNet;
 using MyPortal.Logic.Authorisation.Attributes;
 using MyPortal.Logic.Dictionaries;
 using MyPortal.Logic.Helpers;
@@ -20,7 +21,7 @@ namespace MyPortalCore.Areas.Staff.Controllers
         private IPersonService _personService;
         private IProfileLogNoteService _logNoteService;
 
-        public StudentController(IStudentService service, IPersonService personService, IProfileLogNoteService logNoteService)
+        public StudentController(IStudentService service, IPersonService personService, IProfileLogNoteService logNoteService, IApplicationUserService userService) : base(userService)
         {
             _service = service;
             _personService = personService;
@@ -42,20 +43,17 @@ namespace MyPortalCore.Areas.Staff.Controllers
         [RequiresPermission(PermissionDictionary.Student.Details.View)]
         public async Task<IActionResult> StudentOverview(Guid studentId)
         {
-            var mapper = MappingHelper.GetDataGridConfig();
+            var user = await _userService.GetUserByPrincipal(User);
 
-            var student = await _service.GetById(studentId);
-
-            var logNotes = (await _logNoteService.GetByStudent(studentId)).Select(mapper.Map<DataGridProfileLogNote>);
-
-            var logNoteTypes = await _logNoteService.GetTypes();
-
-            var viewModel = new StudentOverviewViewModel
+            if (user.SelectedAcademicYearId == null)
             {
-                Student = student,
-                LogNoteTypes = logNoteTypes,
-                LogNotes = logNotes
-            };
+                return BadRequest("No academic year has been selected.");
+            }
+
+            var viewModel = new StudentOverviewViewModel(_service, _personService, _logNoteService, studentId,
+                (Guid) user.SelectedAcademicYearId);
+
+            await viewModel.LoadData();
 
             return View(viewModel);
         }

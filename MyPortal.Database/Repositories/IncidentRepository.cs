@@ -6,7 +6,6 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -43,18 +42,6 @@ namespace MyPortal.Database.Repositories
 
                         return incident;
                     }, param);
-        }
-
-        public async Task Update(Incident entity)
-        {
-            var incident = await Context.Incidents.FindAsync(entity.Id);
-
-            incident.BehaviourTypeId = entity.BehaviourTypeId;
-            incident.LocationId = entity.LocationId;
-            incident.Comments = entity.Comments;
-            incident.Points = entity.Points;
-            incident.Resolved = entity.Resolved;
-            incident.Deleted = entity.Deleted;
         }
     }
 }

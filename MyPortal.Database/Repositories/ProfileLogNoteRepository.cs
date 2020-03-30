@@ -8,7 +8,6 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -51,21 +50,14 @@ namespace MyPortal.Database.Repositories
                     }, param);
         }
 
-        public async Task Update(ProfileLogNote entity)
-        {
-            var pln = await Context.ProfileLogNotes.FindAsync(entity.Id);
-
-            pln.TypeId = entity.TypeId;
-            pln.Message = entity.Message;
-        }
-
-        public Task<IEnumerable<ProfileLogNote>> GetByStudent(Guid studentId)
+        public Task<IEnumerable<ProfileLogNote>> GetByStudent(Guid studentId, Guid academicYearId)
         {
             var sql = SelectAllColumns();
 
             SqlHelper.Where(ref sql, "[ProfileLogNote].[StudentId] = @StudentId");
+            SqlHelper.Where(ref sql, "[ProfileLogNote].[AcademicYearId] = @AcademicYearId");
 
-            return ExecuteQuery(sql, new {StudentId = studentId});
+            return ExecuteQuery(sql, new {StudentId = studentId, AcademicYearId = academicYearId});
         }
     }
 }

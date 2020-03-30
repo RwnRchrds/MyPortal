@@ -8,7 +8,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -17,18 +16,6 @@ namespace MyPortal.Database.Repositories
         public AcademicYearRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             
-        }
-
-        public async Task Update(AcademicYear entity)
-        {
-            var academicYearInDb = await GetByIdWithTracking(entity.Id);
-
-            if (academicYearInDb == null)
-            {
-                throw new Exception("Academic year not found.");
-            }
-
-            academicYearInDb.Name = entity.Name;
         }
 
         public async Task<AcademicYear> GetCurrent()

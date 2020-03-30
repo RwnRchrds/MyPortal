@@ -7,7 +7,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -29,14 +28,6 @@ namespace MyPortal.Database.Repositories
 
                     return comment;
                 });
-        }
-
-        public async Task Update(Comment entity)
-        {
-            var commentInDb = await Context.Comments.FindAsync(entity.Id);
-
-            commentInDb.CommentBankId = entity.CommentBankId;
-            commentInDb.Value = entity.Value;
         }
     }
 }

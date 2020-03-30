@@ -9,7 +9,6 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -34,16 +33,6 @@ namespace MyPortal.Database.Repositories
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Location]", "[Location].[Id]", "[Achievement].[LocationId]")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[User].[Id]", "[Achievement].[RecordedById]", "User")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[RecordedByPerson].[UserId]", "[User].[Id]", "RecordedByPerson")}";
-        }
-
-        public async Task Update(Achievement entity)
-        {
-            var achievementInDb = await GetByIdWithTracking(entity.Id);
-
-            achievementInDb.AchievementTypeId = entity.AchievementTypeId;
-            achievementInDb.Points = entity.Points;
-            achievementInDb.LocationId = entity.LocationId;
-            achievementInDb.Comments = entity.Comments;
         }
 
         public async Task<int> GetCountByStudent(int studentId, int academicYearId)

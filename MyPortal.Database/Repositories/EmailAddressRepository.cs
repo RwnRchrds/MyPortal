@@ -5,7 +5,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -32,17 +31,6 @@ namespace MyPortal.Database.Repositories
 
                     return address;
                 });
-        }
-
-        public async Task Update(EmailAddress entity)
-        {
-            var emailAddressInDb = await Context.EmailAddresses.FindAsync(entity.Id);
-
-            emailAddressInDb.Address = entity.Address;
-            emailAddressInDb.Main = entity.Main;
-            emailAddressInDb.Primary = entity.Primary;
-            emailAddressInDb.TypeId = entity.TypeId;
-            emailAddressInDb.Notes = entity.Notes;
         }
     }
 }

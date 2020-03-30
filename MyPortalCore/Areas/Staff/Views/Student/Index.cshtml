@@ -148,16 +148,16 @@
 
             var params = { searchType: searchType, firstName: firstName, lastName: lastName, gender: gender };
 
-            var queryStr = urlSearchStudents + "?" + $.param(params);
+            var url = `${urlSearchStudents}?${$.param(params)}`;
 
             if ($("#student_search").hasClass("dataTable")) {
                 var table = $("#student_search").DataTable();
 
-                table.ajax.url(queryStr);
+                table.ajax.url(url);
 
                 table.ajax.reload();
             } else {
-                loadDataTable(queryStr);
+                loadDataTable(url);
                 $("#searchResults").removeClass("d-none");
             }
         }
@@ -169,11 +169,9 @@
         function renderGender(gender) {
             if (gender === "M") {
                 return `<div class="kt-badge kt-badge--pill kt-badge--inline" style="background-color: #005ec9; color: white;">Male</div>`;
-            }
-            else if (gender === "F") {
+            } else if (gender === "F") {
                 return `<div class="kt-badge kt-badge--pill kt-badge--inline" style="background-color: #ba0098; color: white;">Female</div>`;
-            }
-            else if (gender === "X") {
+            } else if (gender === "X") {
                 return `<div class="kt-badge kt-badge--pill kt-badge--inline" style="background-color: #0abf00; color: white;">Other</div>`;
             } else {
                 return `<div class="kt-badge kt-badge--pill kt-badge--inline" style="background-color: #5e5e5e; color: white;">Unknown</div>`;

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -17,13 +16,6 @@ namespace MyPortal.Database.Repositories
         protected override async Task<IEnumerable<MedicalCondition>> ExecuteQuery(string sql, object param = null)
         {
             return await Connection.QueryAsync<MedicalCondition>(sql, param);
-        }
-
-        public async Task Update(MedicalCondition entity)
-        {
-            var mc = await Context.Conditions.FindAsync(entity.Id);
-
-            mc.Description = entity.Description;
         }
     }
 }

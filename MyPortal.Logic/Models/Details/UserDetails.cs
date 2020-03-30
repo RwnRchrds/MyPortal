@@ -19,6 +19,7 @@ namespace MyPortal.Logic.Models.Details
         public bool PhoneNumberConfirmed { get; set; }
         public string Username { get; set; }
         public string UserType { get; set; }
+        public Guid? SelectedAcademicYearId { get; set; }   
 
         public virtual PersonDetails Person { get; set; }
 

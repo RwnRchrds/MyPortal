@@ -5,7 +5,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -35,15 +34,6 @@ namespace MyPortal.Database.Repositories
 
                 return yearGroup;
             }, param);
-        }
-
-        public async Task Update(YearGroup entity)
-        {
-            var yearGroup = await Context.YearGroups.FindAsync(entity.Id);
-
-            yearGroup.Name = entity.Name;
-            yearGroup.HeadId = entity.HeadId;
-            yearGroup.CurriculumYearGroupId = entity.CurriculumYearGroupId;
         }
     }
 }

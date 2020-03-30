@@ -5,7 +5,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -32,13 +31,6 @@ namespace MyPortal.Database.Repositories
 
                     return enrolment;
                 }, param);
-        }
-
-        public async Task Update(Enrolment entity)
-        {
-            var enrolmentInDb = await Context.Enrolments.FindAsync(entity.Id);
-
-            enrolmentInDb.BandId = entity.BandId;
         }
     }
 }

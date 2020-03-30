@@ -5,7 +5,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -27,16 +26,6 @@ namespace MyPortal.Database.Repositories
 
                     return template;
                 }, param);
-        }
-
-        public async Task Update(DiaryEventTemplate entity)
-        {
-            var templateInDb = await Context.DiaryEventTemplates.FindAsync(entity.Id);
-
-            templateInDb.Description = entity.Description;
-            templateInDb.Minutes = entity.Minutes;
-            templateInDb.Hours = entity.Hours;
-            templateInDb.Days = entity.Days;
         }
     }
 }

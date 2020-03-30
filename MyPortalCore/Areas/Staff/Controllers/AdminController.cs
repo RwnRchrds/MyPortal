@@ -11,7 +11,7 @@ namespace MyPortalCore.Areas.Staff.Controllers
     {
         private IApplicationRoleService _applicationRoleService;
 
-        public AdminController(IApplicationRoleService applicationRoleService)
+        public AdminController(IApplicationRoleService applicationRoleService, IApplicationUserService userService) : base(userService)
         {
             _applicationRoleService = applicationRoleService;
         }

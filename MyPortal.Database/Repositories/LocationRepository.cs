@@ -8,7 +8,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -21,13 +20,6 @@ namespace MyPortal.Database.Repositories
         protected override async Task<IEnumerable<Location>> ExecuteQuery(string sql, object param = null)
         {
             return await Connection.QueryAsync<Location>(sql, param);
-        }
-
-        public async Task Update(Location entity)
-        {
-            var locationInDb = await Context.Locations.FindAsync(entity.Id);
-
-            locationInDb.Description = entity.Description;
         }
     }
 }

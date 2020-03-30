@@ -9,7 +9,6 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -83,31 +82,6 @@ namespace MyPortal.Database.Repositories
             {
                 SqlHelper.Where(ref sql, "[Student].[SenStatusId] = @SenStatusId");
             }
-        }
-
-        public async Task Update(Student entity)
-        {
-            var studentInDb = await Context.Students.FindAsync(entity.Id);
-
-            if (studentInDb == null)
-            {
-                throw new Exception("Student not found.");
-            }
-
-            studentInDb.RegGroupId = entity.RegGroupId;
-            studentInDb.YearGroupId = entity.YearGroupId;
-            studentInDb.HouseId = entity.HouseId;
-            studentInDb.CandidateNumber = entity.CandidateNumber;
-            studentInDb.AdmissionNumber = entity.AdmissionNumber;
-            studentInDb.DateStarting = entity.DateStarting;
-            studentInDb.DateLeaving = entity.DateLeaving;
-            studentInDb.FreeSchoolMeals = entity.FreeSchoolMeals;
-            studentInDb.GiftedAndTalented = entity.GiftedAndTalented;
-            studentInDb.SenStatusId = entity.SenStatusId;
-            studentInDb.PupilPremium = entity.PupilPremium;
-            studentInDb.Upn = entity.Upn;
-            studentInDb.Uci = entity.Uci;
-            studentInDb.Deleted = entity.Deleted;
         }
 
         public async Task<Student> GetByUserId(string userId)

@@ -27,15 +27,5 @@ namespace MyPortal.Database.Repositories
                 return task;
             }, param);
         }
-
-        public async System.Threading.Tasks.Task Update(Task entity)
-        {
-            var task = await Context.Tasks.FindAsync(entity.Id);
-
-            task.DueDate = entity.DueDate;
-            task.Title = entity.Title;
-            task.Description = entity.Description;
-            task.Completed = entity.Completed;
-        }
     }
 }

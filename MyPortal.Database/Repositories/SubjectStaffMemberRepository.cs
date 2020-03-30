@@ -5,7 +5,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -40,14 +39,6 @@ namespace MyPortal.Database.Repositories
                         
                         return subjectStaff;
                     }, param);
-        }
-
-        public async Task Update(SubjectStaffMember entity)
-        {
-            var ssm = await GetByIdWithTracking(entity.Id);
-
-            ssm.StaffMemberId = entity.StaffMemberId;
-            ssm.RoleId = entity.RoleId;
         }
     }
 }

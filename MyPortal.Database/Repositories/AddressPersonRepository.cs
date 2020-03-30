@@ -7,7 +7,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -34,14 +33,6 @@ namespace MyPortal.Database.Repositories
 
                     return ap;
                 }, param);
-        }
-
-        public async Task Update(AddressPerson entity)
-        {
-            var apInDb = await GetByIdWithTracking(entity.Id);
-
-            apInDb.AddressId = entity.AddressId;
-            apInDb.PersonId = entity.PersonId;
         }
     }
 }

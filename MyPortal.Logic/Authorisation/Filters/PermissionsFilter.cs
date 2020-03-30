@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using MyPortal.Database.Models.Identity;
 using MyPortal.Logic.Dictionaries;
+using MyPortal.Logic.Extensions;
 
 namespace MyPortal.Logic.Authorisation.Filters
 {
@@ -20,15 +21,11 @@ namespace MyPortal.Logic.Authorisation.Filters
 
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            foreach (var permission in _permissions)
-            {
-                var hasClaim =
-                    context.HttpContext.User.Claims.Any(x => x.Type == ClaimTypeDictionary.Permissions && x.Value == permission.ToString());
+            var isAllowed = context.HttpContext.User.HasPermission(_permissions);
 
-                if (hasClaim)
-                {
-                    return;
-                }
+            if (isAllowed)
+            {
+                return;
             }
 
             context.Result = new ForbidResult();

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -17,14 +16,6 @@ namespace MyPortal.Database.Repositories
         protected override async Task<IEnumerable<ProductType>> ExecuteQuery(string sql, object param = null)
         {
             return await Connection.QueryAsync<ProductType>(sql, param);
-        }
-
-        public async Task Update(ProductType entity)
-        {
-            var productType = await Context.ProductTypes.FindAsync(entity.Id);
-
-            productType.Description = entity.Description;
-            productType.IsMeal = entity.IsMeal;
         }
     }
 }

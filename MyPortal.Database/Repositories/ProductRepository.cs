@@ -5,7 +5,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -27,18 +26,6 @@ namespace MyPortal.Database.Repositories
 
                 return product;
             }, param);
-        }
-
-        public async Task Update(Product entity)
-        {
-            var product = await Context.Products.FindAsync(entity.Id);
-
-            product.Description = entity.Description;
-            product.ProductTypeId = entity.ProductTypeId;
-            product.Price = entity.Price;
-            product.Visible = entity.Visible;
-            product.OnceOnly = entity.OnceOnly;
-            product.Deleted = entity.Deleted;
         }
     }
 }

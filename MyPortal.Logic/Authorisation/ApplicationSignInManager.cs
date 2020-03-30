@@ -22,22 +22,20 @@ namespace MyPortal.Logic.Authorisation
 
         public override async Task<SignInResult> PasswordSignInAsync(string userName, string password, bool isPersistent, bool lockoutOnFailure)
         {
-            var userInDb = await UserManager.FindByNameAsync(userName);
+            var user = await UserManager.FindByNameAsync(userName);
 
-            await UserManager.UpdateAsync(userInDb);
-
-            if (userInDb == null)
+            if (user == null)
             {
                 return await base.PasswordSignInAsync(userName, password, isPersistent, lockoutOnFailure);
             }
 
-            if (userInDb.Enabled)
+            if (user.Enabled)
             {
                 var result = await base.PasswordSignInAsync(userName, password, isPersistent, lockoutOnFailure);
 
                 if (result.Succeeded)
                 {
-                    await SetAcademicYear(userInDb);
+                    await SetAcademicYear(user);
                 }
 
                 return result;
@@ -53,6 +51,8 @@ namespace MyPortal.Logic.Authorisation
             var currentYear = await _service.GetCurrent();
 
             user.SelectedAcademicYearId = currentYear?.Id;
+
+            await UserManager.UpdateAsync(user);
         }
     }
 }

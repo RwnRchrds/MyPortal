@@ -5,7 +5,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -37,13 +36,6 @@ namespace MyPortal.Database.Repositories
 
                         return certificate;
                     }, param);
-        }
-
-        public async Task Update(TrainingCertificate entity)
-        {
-            var cert = await Context.TrainingCertificates.FindAsync(entity.Id);
-
-            cert.StatusId = entity.StatusId;
         }
     }
 }

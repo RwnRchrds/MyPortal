@@ -8,7 +8,6 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -31,17 +30,6 @@ namespace MyPortal.Database.Repositories
 
                 return bulletin;
             }, param);
-        }
-
-        public async Task Update(Bulletin entity)
-        {
-            var bulletinInDb = await Context.Bulletins.FindAsync(entity.Id);
-
-            bulletinInDb.Title = entity.Title;
-            bulletinInDb.Detail = entity.Detail;
-            bulletinInDb.ShowStudents = entity.ShowStudents;
-            bulletinInDb.Approved = entity.Approved;
-            bulletinInDb.ExpireDate = entity.ExpireDate;
         }
 
         public async Task<IEnumerable<Bulletin>> GetApproved()

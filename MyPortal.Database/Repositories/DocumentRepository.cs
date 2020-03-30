@@ -6,7 +6,6 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -33,16 +32,6 @@ namespace MyPortal.Database.Repositories
 
                     return document;
                 }, param);
-        }
-
-        public async Task Update(Document entity)
-        {
-            var documentInDb = await Context.Documents.FindAsync(entity.Id);
-
-            documentInDb.Title = entity.Title;
-            documentInDb.Description = entity.Description;
-            documentInDb.TypeId = entity.TypeId;
-            documentInDb.DownloadUrl = entity.DownloadUrl;
         }
     }
 }

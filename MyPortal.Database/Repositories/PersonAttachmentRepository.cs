@@ -5,7 +5,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -32,14 +31,6 @@ namespace MyPortal.Database.Repositories
 
                     return attachment;
                 }, param);
-        }
-
-        public async Task Update(PersonAttachment entity)
-        {
-            var attachment = await Context.PersonAttachments.FindAsync(entity.Id);
-
-            attachment.DocumentId = entity.DocumentId;
-            attachment.PersonId = entity.PersonId;
         }
     }
 }

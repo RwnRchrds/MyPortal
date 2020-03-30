@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -10,7 +9,6 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -33,31 +31,6 @@ namespace MyPortal.Database.Repositories
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[GovernanceType]", "[GovernanceType].[Id]", "[School].[GovernanceTypeId]")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[IntakeType]", "[IntakeType].[Id]", "[School].[IntakeTypeId]")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[School].[HeadTeacherId]")}";
-        }
-
-        public async Task Update(School entity)
-        {
-            var schoolInDb = await Context.Schools.FindAsync(entity.Id);
-
-            if (schoolInDb == null)
-            {
-                throw new Exception("School not found.");
-            }
-
-            schoolInDb.Name = entity.Name;
-            schoolInDb.LocalAuthorityId = entity.LocalAuthorityId;
-            schoolInDb.EstablishmentNumber = entity.EstablishmentNumber;
-            schoolInDb.Urn = entity.Urn;
-            schoolInDb.Uprn = entity.Uprn;
-            schoolInDb.PhaseId = entity.PhaseId;
-            schoolInDb.TypeId = entity.TypeId;
-            schoolInDb.GovernanceTypeId = entity.GovernanceTypeId;
-            schoolInDb.IntakeTypeId = entity.IntakeTypeId;
-            schoolInDb.HeadTeacherId = entity.HeadTeacherId;
-            schoolInDb.TelephoneNo = entity.TelephoneNo;
-            schoolInDb.FaxNo = entity.FaxNo;
-            schoolInDb.EmailAddress = entity.EmailAddress;
-            schoolInDb.Website = entity.Website;
         }
 
         public async Task<string> GetLocalSchoolName()

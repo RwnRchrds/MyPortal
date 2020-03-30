@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using MyPortal.Logic.Attributes;
 
 namespace MyPortal.Logic.Models.Details
 {
@@ -9,10 +10,12 @@ namespace MyPortal.Logic.Models.Details
     {
         public Guid Id { get; set; }
 
+        [NotEmpty]
         public Guid TypeId { get; set; }
 
         public Guid AuthorId { get; set; }
 
+        [NotEmpty]
         public Guid StudentId { get; set; }
 
         public Guid AcademicYearId { get; set; }

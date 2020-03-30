@@ -24,9 +24,16 @@ namespace MyPortal.Logic.Services
             _typeRepository = typeRepository;
         }
 
-        public async Task<IEnumerable<ProfileLogNoteDetails>> GetByStudent(Guid studentId)
+        public async Task<ProfileLogNoteDetails> GetById(Guid logNoteId)
         {
-            var logNotes = await _repository.GetByStudent(studentId);
+            var logNote = await _repository.GetById(logNoteId);
+
+            return _businessMapper.Map<ProfileLogNoteDetails>(logNote);
+        }
+
+        public async Task<IEnumerable<ProfileLogNoteDetails>> GetByStudent(Guid studentId, Guid academicYearId)
+        {
+            var logNotes = await _repository.GetByStudent(studentId, academicYearId);
 
             return logNotes.Select(_businessMapper.Map<ProfileLogNoteDetails>);
         }
@@ -48,7 +55,8 @@ namespace MyPortal.Logic.Services
                     Message = logNoteObject.Message,
                     StudentId = logNoteObject.StudentId,
                     Date = DateTime.Now,
-                    
+                    AuthorId = logNoteObject.AuthorId,
+                    AcademicYearId = logNoteObject.AcademicYearId
                 };
 
                 _repository.Create(logNote);
@@ -61,9 +69,10 @@ namespace MyPortal.Logic.Services
         {
             foreach (var logNoteObject in logNoteObjects)
             {
-                var logNote = _businessMapper.Map<ProfileLogNote>(logNoteObject);
+                var logNote = await _repository.GetByIdWithTracking(logNoteObject.Id);
 
-                await _repository.Update(logNote);
+                logNote.TypeId = logNoteObject.TypeId;
+                logNote.Message = logNoteObject.Message;
             }
 
             await _repository.SaveChanges();

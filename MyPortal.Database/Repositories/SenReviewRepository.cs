@@ -5,7 +5,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -35,15 +34,6 @@ namespace MyPortal.Database.Repositories
 
                     return review;
                 }, param);
-        }
-
-        public async Task Update(SenReview entity)
-        {
-            var review = await Context.SenReviews.FindAsync(entity.Id);
-
-            review.Date = entity.Date;
-            review.Description = entity.Description;
-            review.Outcome = entity.Outcome;
         }
     }
 }

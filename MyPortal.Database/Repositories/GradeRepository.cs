@@ -5,7 +5,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -28,15 +27,6 @@ namespace MyPortal.Database.Repositories
 
                 return grade;
             }, param);
-        }
-
-        public async Task Update(Grade entity)
-        {
-            var gradeInDb = await Context.Grades.FindAsync(entity.Id);
-
-            gradeInDb.Code = entity.Code;
-            gradeInDb.Value = entity.Value;
-            gradeInDb.GradeSetId = entity.GradeSetId;
         }
     }
 }

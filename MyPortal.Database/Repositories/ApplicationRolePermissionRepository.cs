@@ -7,7 +7,6 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -36,13 +35,6 @@ namespace MyPortal.Database.Repositories
 
                         return rp;
                     }, param);
-        }
-
-        public async Task Update(ApplicationRolePermission entity)
-        {
-            var rp = await Context.RolePermissions.FindAsync(entity.Id);
-
-            rp.PermissionId = entity.PermissionId;
         }
 
         public async Task<IEnumerable<ApplicationRolePermission>> GetPermissionsByRole(Guid roleId)

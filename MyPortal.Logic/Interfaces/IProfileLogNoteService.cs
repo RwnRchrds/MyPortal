@@ -9,7 +9,8 @@ namespace MyPortal.Logic.Interfaces
 {
     public interface IProfileLogNoteService
     {
-        Task<IEnumerable<ProfileLogNoteDetails>> GetByStudent(Guid studentId);
+        Task<ProfileLogNoteDetails> GetById(Guid logNoteId);
+        Task<IEnumerable<ProfileLogNoteDetails>> GetByStudent(Guid studentId, Guid academicYearId);
         Task<Lookup> GetTypes();
         Task Create(params ProfileLogNoteDetails[] logNoteObjects);
         Task Update(params ProfileLogNoteDetails[] logNoteObjects);

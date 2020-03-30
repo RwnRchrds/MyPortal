@@ -5,7 +5,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -60,13 +59,6 @@ namespace MyPortal.Database.Repositories
 
                     return incidentDetention;
                 }, param);
-        }
-
-        public async Task Update(IncidentDetention entity)
-        {
-            var iDet = await Context.IncidentDetentions.FindAsync(entity.Id);
-
-            iDet.DetentionId = entity.DetentionId;
         }
     }
 }

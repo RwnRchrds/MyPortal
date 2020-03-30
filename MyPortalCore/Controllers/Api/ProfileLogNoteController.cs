@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Logic.Authorisation.Attributes;
 using MyPortal.Logic.Dictionaries;
@@ -16,76 +17,88 @@ namespace MyPortalCore.Controllers.Api
     {
         private readonly IProfileLogNoteService _service;
 
-        public ProfileLogNoteController(IProfileLogNoteService service)
+        public ProfileLogNoteController(IProfileLogNoteService service, IApplicationUserService userService) : base(userService)
         {
             _service = service;
         }
 
         [HttpGet]
+        [Route("get")]
+        [RequiresPermission(PermissionDictionary.Profiles.LogNotes.View)]
+        public async Task<IActionResult> GetById([FromQuery] Guid logNoteId)
+        {
+            return await Process(async () =>
+            {
+                var logNote = await _service.GetById(logNoteId);
+
+                return Ok(logNote);
+            });
+        }
+
+        [HttpGet]
         [Route("student")]
         [RequiresPermission(PermissionDictionary.Profiles.LogNotes.View)]
-        public async Task<IActionResult> GetByStudent([FromQuery] Guid studentId)
+        public async Task<IActionResult> GetByStudent([FromQuery] Guid studentId, [FromQuery] Guid academicYearId)
         {
-            try
+            return await Process(async () =>
             {
-                var logNotes = await _service.GetByStudent(studentId);
+                var logNotes = await _service.GetByStudent(studentId, academicYearId);
 
                 var result = logNotes.Select(_dTMapper.Map<DataGridProfileLogNote>);
 
                 return Ok(result);
-            }
-            catch (Exception e)
-            {
-                return HandleException(e);
-            }
+            });
         }
 
         [HttpPost]
         [RequiresPermission(PermissionDictionary.Profiles.LogNotes.Edit)]
-        public async Task<IActionResult> Create([FromBody] ProfileLogNoteDetails logNote)
+        public async Task<IActionResult> Create([FromForm] ProfileLogNoteDetails logNote)
         {
-            try
+            return await Process(async () =>
             {
+                var author = await _userService.GetUserByPrincipal(User);
+
+                if (author.SelectedAcademicYearId == null)
+                {
+                    throw new Exception("No academic year is selected.");
+                }
+
+                logNote.AuthorId = author.Id;
+                logNote.AcademicYearId = (Guid) author.SelectedAcademicYearId;
+
                 await _service.Create(logNote);
 
-                return Ok();
-            }
-            catch (Exception e)
-            {
-                return HandleException(e);
-            }
+                return Ok("Log note created.");
+            });
         }
 
         [HttpPut]
         [RequiresPermission(PermissionDictionary.Profiles.LogNotes.Edit)]
-        public async Task<IActionResult> Update([FromBody] ProfileLogNoteDetails logNoteDetails)
+        public async Task<IActionResult> Update([FromForm] ProfileLogNoteDetails logNoteDetails)
         {
-            try
+            return await Process(async () =>
             {
+                if (logNoteDetails.Id == Guid.Empty)
+                {
+                    return BadRequest("Invalid Data.");
+                }
+
                 await _service.Update(logNoteDetails);
 
-                return Ok();
-            }
-            catch (Exception e)
-            {
-                return HandleException(e);
-            }
+                return Ok("Log note updated.");
+            });
         }
 
         [HttpDelete]
         [RequiresPermission(PermissionDictionary.Profiles.LogNotes.Edit)]
         public async Task<IActionResult> Delete([FromQuery] Guid logNoteId)
         {
-            try
+            return await Process(async () =>
             {
                 await _service.Delete(logNoteId);
 
-                return Ok();
-            }
-            catch (Exception e)
-            {
-                return HandleException(e);
-            }
+                return Ok("Log note deleted.");
+            });
         }
     }
 }

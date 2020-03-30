@@ -98,7 +98,8 @@ namespace MyPortal.Logic.Services
 
         public async Task Update(StudentDetails student)
         {
-            await _repository.Update(_businessMapper.Map<Student>(student));
+            var studentInDb = await _repository.GetByIdWithTracking(student.Id);
+
 
             await _repository.SaveChanges();
         }

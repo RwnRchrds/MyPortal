@@ -5,7 +5,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -28,11 +27,6 @@ namespace MyPortal.Database.Repositories
 
                 return staff;
             }, param);
-        }
-
-        public async Task Update(StaffMember entity)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

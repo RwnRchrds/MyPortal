@@ -7,7 +7,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -41,13 +40,6 @@ namespace MyPortal.Database.Repositories
 
                     return mark;
                 }, param);
-        }
-
-        public async Task Update(AttendanceMark entity)
-        {
-            var markInDb = await Context.AttendanceMarks.FindAsync(entity.Id);
-
-            markInDb.Mark = entity.Mark;
         }
     }
 }

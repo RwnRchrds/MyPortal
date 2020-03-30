@@ -5,7 +5,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -31,13 +30,6 @@ namespace MyPortal.Database.Repositories
 
                     return session;
                 }, param);
-        }
-
-        public async Task Update(Session entity)
-        {
-            var session = await Context.Sessions.FindAsync(entity.Id);
-
-            session.PeriodId = entity.PeriodId;
         }
     }
 }

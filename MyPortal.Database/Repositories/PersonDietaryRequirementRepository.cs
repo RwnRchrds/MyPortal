@@ -5,7 +5,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -33,14 +32,6 @@ namespace MyPortal.Database.Repositories
 
                         return pdr;
                     }, param);
-        }
-
-        public async Task Update(PersonDietaryRequirement entity)
-        {
-            var pdr = await Context.PersonDietaryRequirements.FindAsync(entity.Id);
-
-            pdr.PersonId = entity.PersonId;
-            pdr.DietaryRequirementId = entity.DietaryRequirementId;
         }
     }
 }

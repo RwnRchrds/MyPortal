@@ -8,7 +8,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -27,13 +26,6 @@ namespace MyPortal.Database.Repositories
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[DiaryEvent]", "[DiaryEvent].[Id]", "[Detention].[EventId]")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[StaffMember].[Id]", "[Detention].[SupervisorId]")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[StaffMember].[PersonId]")}";
-        }
-
-        public async Task Update(Detention entity)
-        {
-            var detentionInDb = await Context.Detentions.FindAsync(entity.Id);
-
-            detentionInDb.SupervisorId = entity.SupervisorId;
         }
 
         protected override async Task<IEnumerable<Detention>> ExecuteQuery(string sql, object param = null)

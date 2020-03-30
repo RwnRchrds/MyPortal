@@ -6,7 +6,6 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -33,14 +32,6 @@ namespace MyPortal.Database.Repositories
 
                     return medEvent;
                 }, param);
-        }
-
-        public async Task Update(MedicalEvent entity)
-        {
-            var medEvent = await Context.MedicalEvents.FindAsync(entity.Id);
-
-            medEvent.Date = entity.Date;
-            medEvent.Note = entity.Note;
         }
     }
 }

@@ -5,7 +5,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -32,14 +31,6 @@ namespace MyPortal.Database.Repositories
 
                     return gt;
                 }, param);
-        }
-
-        public async Task Update(GiftedTalented entity)
-        {
-            var giftedTalentedInDb = await Context.GiftedTalented.FindAsync(entity.Id);
-
-            giftedTalentedInDb.SubjectId = entity.SubjectId;
-            giftedTalentedInDb.Notes = entity.Notes;
         }
     }
 }

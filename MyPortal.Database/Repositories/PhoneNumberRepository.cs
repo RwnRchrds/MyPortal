@@ -5,7 +5,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -32,14 +31,6 @@ namespace MyPortal.Database.Repositories
 
                     return telNo;
                 });
-        }
-
-        public async Task Update(PhoneNumber entity)
-        {
-            var telNo = await Context.PhoneNumbers.FindAsync(entity.Id);
-
-            telNo.Number = entity.Number;
-            telNo.TypeId = entity.TypeId;
         }
     }
 }

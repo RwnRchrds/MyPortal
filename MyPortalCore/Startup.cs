@@ -166,6 +166,7 @@ namespace MyPortalCore
             services.AddTransient<IAcademicYearService, AcademicYearService>();
             services.AddTransient<IApplicationRolePermissionService, ApplicationRolePermissionService>();
             services.AddTransient<IApplicationRoleService, ApplicationRoleService>();
+            services.AddTransient<IApplicationUserService, ApplicationUserService>();
             services.AddTransient<IPersonService, PersonService>();
             services.AddTransient<IProfileLogNoteService, ProfileLogNoteService>();
             services.AddTransient<ISchoolService, SchoolService>();

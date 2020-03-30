@@ -17,11 +17,10 @@
         </div>
         <div class="kt-subheader__toolbar">
             <div class="kt-subheader__wrapper">
-                <a href="" class="btn btn-sm btn-elevate btn-brand btn-elevate" id="kt_dashboard_daterangepicker" data-toggle="kt-tooltip" title="" data-placement="left" data-original-title="Select Academic Year">
-                    <span class="kt-opacity-7" id="kt_dashboard_daterangepicker_title">Today:</span>&nbsp;
-                    <span class="kt-font-bold" id="kt_dashboard_daterangepicker_date">Feb 10</span>
-                    <i class="flaticon-calendar-with-a-clock-time-tools kt-padding-l-5 kt-padding-r-0"></i>
-                </a>
+                <button class="btn btn-sm btn-elevate btn-brand btn-elevate" id="kt_dashboard_daterangepicker" data-toggle="kt-tooltip" title="" data-placement="left" data-original-title="Select Academic Year">
+                    <span class="kt-opacity-7">Academic Year:</span>&nbsp;
+                    <span class="kt-font-bold">@Model.SelectedAcademicYear?.Name</span>
+                </button>
             </div>
         </div>
     </div>

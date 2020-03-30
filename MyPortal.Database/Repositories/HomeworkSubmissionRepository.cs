@@ -5,7 +5,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -39,15 +38,6 @@ namespace MyPortal.Database.Repositories
 
                         return submission;
                     });
-        }
-
-        public async Task Update(HomeworkSubmission entity)
-        {
-            var submissionInDb = await Context.HomeworkSubmissions.FindAsync(entity.Id);
-
-            submissionInDb.MaxPoints = entity.MaxPoints;
-            submissionInDb.PointsAchieved = entity.PointsAchieved;
-            submissionInDb.Comments = entity.Comments;
         }
     }
 }

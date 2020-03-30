@@ -17,7 +17,7 @@ namespace MyPortalCore.Controllers.Api
     {
         private readonly IApplicationRoleService _service;
 
-        public ApplicationRoleController(IApplicationRoleService service)
+        public ApplicationRoleController(IApplicationRoleService service, IApplicationUserService userService) : base(userService)
         {
             _service = service;
         }
@@ -27,18 +27,14 @@ namespace MyPortalCore.Controllers.Api
         [Route("Search", Name = "ApiApplicationRoleSearch")]
         public async Task<IActionResult> Search([FromQuery] string roleName)
         {
-            try
+            return await Process(async () =>
             {
                 var roles = await _service.Get(roleName);
 
                 var result = roles.Select(_dTMapper.Map<DataGridApplicationRole>);
 
                 return Ok(result);
-            }
-            catch (Exception e)
-            {
-                return HandleException(e);
-            }
+            });
         }
     }
 }

@@ -8,7 +8,6 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -45,16 +44,6 @@ namespace MyPortal.Database.Repositories
 
                     return currClass;
                 }, param);
-        }
-
-        public async Task Update(Class entity)
-        {
-            var classInDb = await Context.Classes.FindAsync(entity.Id);
-
-            classInDb.SubjectId = entity.SubjectId;
-            classInDb.Name = entity.Name;
-            classInDb.YearGroupId = entity.YearGroupId;
-            classInDb.BandId = entity.BandId;
         }
     }
 }

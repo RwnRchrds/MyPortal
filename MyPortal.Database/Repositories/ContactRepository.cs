@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -29,11 +27,6 @@ namespace MyPortal.Database.Repositories
 
                 return contact;
             }, param);
-        }
-
-        public async Task Update(Contact entity)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
+using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Exceptions;
 using Syncfusion.EJ2.Base;
 
@@ -18,13 +19,32 @@ namespace MyPortalCore.Controllers.Api
     public abstract class BaseApiController : ControllerBase
     {
         protected readonly IMapper _dTMapper;
+        protected readonly IApplicationUserService _userService;
 
-        public BaseApiController()
+        public BaseApiController(IApplicationUserService userService)
         {
             _dTMapper = MappingHelper.GetDataGridConfig();
+            _userService = userService;
         }
 
-        protected IActionResult HandleException(Exception ex)
+        protected async Task<IActionResult> Process(Func<Task<IActionResult>> method)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Invalid data.");
+            }
+
+            try
+            {   
+                return await method.Invoke();
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
+
+        private IActionResult HandleException(Exception ex)
         {
             var statusCode = HttpStatusCode.BadRequest;
 
