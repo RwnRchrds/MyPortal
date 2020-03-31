@@ -476,7 +476,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="lognote_type">Log Note Type</label>
-                        <select asp-for="LogNote.TypeId" asp-items="Model.LogNoteTypes" name="TypeId" class="form-control"></select>
+                        <select asp-for="LogNote.TypeId" asp-items="Model.LogNoteTypes" name="TypeId" class="form-control" id="lognote_type"></select>
                         @Html.ValidationMessageFor(x => x.LogNote.TypeId, null, new{data_valmsg_for="TypeId", @class="text-danger"})
                     </div>
                     <div class="form-group">
