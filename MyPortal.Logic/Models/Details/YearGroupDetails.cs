@@ -13,8 +13,6 @@ namespace MyPortal.Logic.Models.Details
 
         public Guid? HeadId { get; set; }
 
-        public int KeyStage { get; set; }
-
         public virtual StaffMemberDetails HeadOfYear { get; set; }
     }
 }
