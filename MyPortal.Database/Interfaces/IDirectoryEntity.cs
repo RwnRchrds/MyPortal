@@ -5,8 +5,10 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface IHomeworkAttachmentRepository : IReadWriteRepository<HomeworkAttachment>
+    public interface IDirectoryEntity
     {
+        Guid DirectoryId { get; set; }
 
+        Directory Directory { get; set; }
     }
 }

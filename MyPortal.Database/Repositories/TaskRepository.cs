@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using Dapper;
 using MyPortal.Database.Helpers;
@@ -26,6 +27,15 @@ namespace MyPortal.Database.Repositories
 
                 return task;
             }, param);
+        }
+
+        public async System.Threading.Tasks.Task<IEnumerable<Task>> GetByPerson(Guid personId)
+        {
+            var sql = SelectAllColumns();
+
+            SqlHelper.Where(ref sql, "[Task].[AssignedToId] = @PersonId");
+
+            return await ExecuteQuery(sql, new {PersonId = personId});
         }
     }
 }

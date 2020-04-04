@@ -6,9 +6,9 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Business;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.DataGrid;
-using MyPortal.Logic.Models.Details;
 
 namespace MyPortalCore.Areas.Staff.ViewModels.Student
 {
@@ -42,15 +42,15 @@ namespace MyPortalCore.Areas.Staff.ViewModels.Student
             LogNoteTypes =
                 (await _logNoteService.GetTypes()).Select(x => new SelectListItem(x.Key, x.Value.ToString()));
 
-            LogNote = new ProfileLogNoteDetails();
+            LogNote = new ProfileLogNoteModel();
         }
 
-        public StudentDetails Student { get; set; }
+        public StudentModel Student { get; set; }
         public IEnumerable<DataGridProfileLogNote> LogNotes { get; set; }
         public IEnumerable<SelectListItem> LogNoteTypes { get; set; }
         public decimal Attendance { get; set; }
         public int AchievementPoints { get; set; }
         public int BehaviourPoints { get; set; }
-        public ProfileLogNoteDetails LogNote { get; set; }  
+        public ProfileLogNoteModel LogNote { get; set; }  
     }   
 }

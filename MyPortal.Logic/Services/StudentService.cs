@@ -7,9 +7,9 @@ using MyPortal.Database.Models;
 using MyPortal.Database.Repositories;
 using MyPortal.Logic.Dictionaries;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Business;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.DataTables;
-using MyPortal.Logic.Models.Details;
 using MyPortal.Logic.Models.Student;
 using Task = System.Threading.Tasks.Task;
 
@@ -17,7 +17,7 @@ namespace MyPortal.Logic.Services
 {
     public class StudentService : BaseService, IStudentService
     {
-        private IStudentRepository _repository;
+        private IStudentRepository _studentRepository;
 
         private Student GenerateSearchObject(StudentSearchParams searchParams)
         {
@@ -39,16 +39,16 @@ namespace MyPortal.Logic.Services
             };
         }
 
-        public StudentService(IStudentRepository repository)
+        public StudentService(IStudentRepository studentRepository)
         {
-            _repository = repository;
+            _studentRepository = studentRepository;
         }
 
-        public async Task<StudentDetails> GetById(Guid studentId)
+        public async Task<StudentModel> GetById(Guid studentId)
         {
-            var student = await _repository.GetById(studentId);
+            var student = await _studentRepository.GetById(studentId);
 
-            return _businessMapper.Map<StudentDetails>(student);
+            return _businessMapper.Map<StudentModel>(student);
         }
 
         public Lookup GetSearchTypes()
@@ -63,7 +63,7 @@ namespace MyPortal.Logic.Services
             return new Lookup(searchTypes);
         }
 
-        public async Task<IEnumerable<StudentDetails>> Get(StudentSearchParams searchParams)
+        public async Task<IEnumerable<StudentModel>> Get(StudentSearchParams searchParams)
         {
             var searchObject = GenerateSearchObject(searchParams);
 
@@ -71,37 +71,37 @@ namespace MyPortal.Logic.Services
             
             if (searchParams.SearchType == SearchTypeDictionary.Student.OnRoll)
             {
-                students = await _repository.GetOnRoll(searchObject);
+                students = await _studentRepository.GetOnRoll(searchObject);
             }
             else if (searchParams.SearchType == SearchTypeDictionary.Student.Leavers)
             {
-                students = await _repository.GetLeavers(searchObject);
+                students = await _studentRepository.GetLeavers(searchObject);
             }
             else if (searchParams.SearchType == SearchTypeDictionary.Student.Future)
             {
-                students = await _repository.GetFuture(searchObject);
+                students = await _studentRepository.GetFuture(searchObject);
             }
             else
             {
-                students = await _repository.GetAll(searchObject);
+                students = await _studentRepository.GetAll(searchObject);
             }
 
-            return students.Select(_businessMapper.Map<StudentDetails>).ToList();
+            return students.Select(_businessMapper.Map<StudentModel>).ToList();
         }
 
-        public async Task Create(StudentDetails student)
+        public async Task Create(StudentModel student)
         {
-            _repository.Create(_businessMapper.Map<Student>(student));
+            _studentRepository.Create(_businessMapper.Map<Student>(student));
 
-            await _repository.SaveChanges();
+            await _studentRepository.SaveChanges();
         }
 
-        public async Task Update(StudentDetails student)
+        public async Task Update(StudentModel student)
         {
-            var studentInDb = await _repository.GetByIdWithTracking(student.Id);
+            var studentInDb = await _studentRepository.GetByIdWithTracking(student.Id);
 
 
-            await _repository.SaveChanges();
+            await _studentRepository.SaveChanges();
         }
     }
 }

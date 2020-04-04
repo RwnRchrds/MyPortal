@@ -6,16 +6,16 @@ namespace MyPortal.Logic.Services
 {
     public class SchoolService : BaseService, ISchoolService
     {
-        private readonly ISchoolRepository _repository;
+        private readonly ISchoolRepository _schoolRepository;
 
-        public SchoolService(ISchoolRepository repository)
+        public SchoolService(ISchoolRepository schoolRepository)
         {
-            _repository = repository;
+            _schoolRepository = schoolRepository;
         }
         
         public async Task<string> GetLocalSchoolName()
         {
-            return await _repository.GetLocalSchoolName();
+            return await _schoolRepository.GetLocalSchoolName();
         }
     }
 }

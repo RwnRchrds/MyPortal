@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Models.Identity;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Admin;
-using MyPortal.Logic.Models.Details;
+using MyPortal.Logic.Models.Business;
 
 namespace MyPortal.Logic.Services
 {
@@ -20,18 +20,18 @@ namespace MyPortal.Logic.Services
             _roleManager = roleManager;
         }
 
-        public async Task CreateRole(RoleDetails details)
+        public async Task CreateRole(RoleModel model)
         {
             var role = new ApplicationRole
             {
-                Id = details.Id,
-                Name = details.Name,
-                Description = details.Description
+                Id = model.Id,
+                Name = model.Name,
+                Description = model.Description
             };
             await _roleManager.CreateAsync(role);
         }
 
-        public async Task<IEnumerable<RoleDetails>> Get(string searchParam = null)
+        public async Task<IEnumerable<RoleModel>> Get(string searchParam = null)
         {
             var query = _roleManager.Roles;
 
@@ -42,7 +42,7 @@ namespace MyPortal.Logic.Services
 
             var roles = await query.ToListAsync();
 
-            return roles.Select(_businessMapper.Map<RoleDetails>);
+            return roles.Select(_businessMapper.Map<RoleModel>);
         }
     }
 }

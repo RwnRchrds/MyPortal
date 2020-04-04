@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Identity;
 
 namespace MyPortal.Database.Models
@@ -15,13 +16,12 @@ namespace MyPortal.Database.Models
     }
 
     [Table("Person")]
-    public class Person
+    public class Person : IDirectoryEntity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Person()
         {
             PhoneNumbers = new HashSet<PhoneNumber>();
-            Attachments = new HashSet<PersonAttachment>();
             MedicalConditions = new HashSet<PersonCondition>();
             DietaryRequirements = new HashSet<PersonDietaryRequirement>();
             HeadteacherOf = new HashSet<School>();
@@ -33,6 +33,8 @@ namespace MyPortal.Database.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
+
+        public Guid DirectoryId { get; set; }
 
         [StringLength(128)]
         public string Title { get; set; }
@@ -69,6 +71,8 @@ namespace MyPortal.Database.Models
 
         public virtual Contact ContactDetails { get; set; }
 
+        public virtual Directory Directory { get; set; }
+
         public virtual StaffMember StaffMemberDetails { get; set; }
 
         public virtual Student StudentDetails { get; set; }
@@ -77,9 +81,6 @@ namespace MyPortal.Database.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PhoneNumber> PhoneNumbers { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PersonAttachment> Attachments { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PersonCondition> MedicalConditions { get; set; }

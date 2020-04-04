@@ -10,7 +10,7 @@ using MyPortal.Database.Models;
 namespace MyPortal.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200320225734_InitialModel")]
+    [Migration("20200401190455_InitialModel")]
     partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -505,6 +505,9 @@ namespace MyPortal.Database.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("DirectoryId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime?>("ExpireDate")
                         .HasColumnType("datetime2");
 
@@ -519,6 +522,9 @@ namespace MyPortal.Database.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorId");
+
+                    b.HasIndex("DirectoryId")
+                        .IsUnique();
 
                     b.ToTable("Bulletin");
                 });
@@ -948,6 +954,28 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("DietaryRequirement");
                 });
 
+            modelBuilder.Entity("MyPortal.Database.Models.Directory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
+
+                    b.Property<Guid?>("ParentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
+
+                    b.ToTable("Directory");
+                });
+
             modelBuilder.Entity("MyPortal.Database.Models.Document", b =>
                 {
                     b.Property<Guid>("Id")
@@ -958,6 +986,10 @@ namespace MyPortal.Database.Migrations
                     b.Property<bool>("Approved")
                         .HasColumnType("bit");
 
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
 
@@ -965,7 +997,14 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<string>("DownloadUrl")
+                    b.Property<Guid>("DirectoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FileId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -987,6 +1026,8 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DirectoryId");
 
                     b.HasIndex("TypeId");
 
@@ -1209,6 +1250,9 @@ namespace MyPortal.Database.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("DirectoryId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("SubmitOnline")
                         .HasColumnType("bit");
 
@@ -1217,30 +1261,10 @@ namespace MyPortal.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Homework");
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.HomeworkAttachment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
-
-                    b.Property<Guid>("DocumentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("HomeworkId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DocumentId")
+                    b.HasIndex("DirectoryId")
                         .IsUnique();
 
-                    b.HasIndex("HomeworkId");
-
-                    b.ToTable("HomeworkAttachment");
+                    b.ToTable("Homework");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.HomeworkSubmission", b =>
@@ -1595,6 +1619,9 @@ namespace MyPortal.Database.Migrations
                     b.Property<Guid>("AuthorId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("DirectoryId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Homework")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -1618,6 +1645,9 @@ namespace MyPortal.Database.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorId");
+
+                    b.HasIndex("DirectoryId")
+                        .IsUnique();
 
                     b.HasIndex("StudyTopicId");
 
@@ -1875,6 +1905,9 @@ namespace MyPortal.Database.Migrations
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
 
+                    b.Property<Guid>("DirectoryId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime?>("Dob")
                         .HasColumnType("date");
 
@@ -1915,34 +1948,14 @@ namespace MyPortal.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DirectoryId")
+                        .IsUnique();
+
                     b.HasIndex("UserId")
                         .IsUnique()
                         .HasFilter("[UserId] IS NOT NULL");
 
                     b.ToTable("Person");
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.PersonAttachment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
-
-                    b.Property<Guid>("DocumentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("PersonId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DocumentId")
-                        .IsUnique();
-
-                    b.HasIndex("PersonId");
-
-                    b.ToTable("PersonAttachment");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.PersonCondition", b =>
@@ -3222,6 +3235,12 @@ namespace MyPortal.Database.Migrations
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Directory", "Directory")
+                        .WithOne("Bulletin")
+                        .HasForeignKey("MyPortal.Database.Models.Bulletin", "DirectoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Class", b =>
@@ -3331,8 +3350,22 @@ namespace MyPortal.Database.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("MyPortal.Database.Models.Directory", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Directory", "Parent")
+                        .WithMany("Subdirectories")
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("MyPortal.Database.Models.Document", b =>
                 {
+                    b.HasOne("MyPortal.Database.Models.Directory", "Directory")
+                        .WithMany("Documents")
+                        .HasForeignKey("DirectoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("MyPortal.Database.Models.DocumentType", "Type")
                         .WithMany("Documents")
                         .HasForeignKey("TypeId")
@@ -3400,17 +3433,11 @@ namespace MyPortal.Database.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.HomeworkAttachment", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.Homework", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Document", "Document")
-                        .WithOne("HomeworkAttachment")
-                        .HasForeignKey("MyPortal.Database.Models.HomeworkAttachment", "DocumentId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MyPortal.Database.Models.Homework", "Homework")
-                        .WithMany("Attachments")
-                        .HasForeignKey("HomeworkId")
+                    b.HasOne("MyPortal.Database.Models.Directory", "Directory")
+                        .WithOne("Homework")
+                        .HasForeignKey("MyPortal.Database.Models.Homework", "DirectoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -3532,6 +3559,12 @@ namespace MyPortal.Database.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("MyPortal.Database.Models.Directory", "Directory")
+                        .WithOne("LessonPlan")
+                        .HasForeignKey("MyPortal.Database.Models.LessonPlan", "DirectoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("MyPortal.Database.Models.StudyTopic", "StudyTopic")
                         .WithMany("LessonPlans")
                         .HasForeignKey("StudyTopicId")
@@ -3598,24 +3631,15 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Person", b =>
                 {
+                    b.HasOne("MyPortal.Database.Models.Directory", "Directory")
+                        .WithOne("Person")
+                        .HasForeignKey("MyPortal.Database.Models.Person", "DirectoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", "User")
                         .WithOne("Person")
                         .HasForeignKey("MyPortal.Database.Models.Person", "UserId");
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.PersonAttachment", b =>
-                {
-                    b.HasOne("MyPortal.Database.Models.Document", "Document")
-                        .WithOne("PersonAttachment")
-                        .HasForeignKey("MyPortal.Database.Models.PersonAttachment", "DocumentId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MyPortal.Database.Models.Person", "Person")
-                        .WithMany("Attachments")
-                        .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.PersonCondition", b =>

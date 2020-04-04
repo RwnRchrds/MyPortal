@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace MyPortal.Logic.Models.Details
+namespace MyPortal.Logic.Models.Business
 {
-    public class HouseDetails
+    public class HouseModel
     {
         public Guid Id { get; set; }
 
@@ -16,6 +16,6 @@ namespace MyPortal.Logic.Models.Details
         [StringLength(128)]
         public string ColourCode { get; set; }
 
-        public virtual StaffMemberDetails HeadOfHouse { get; set; }
+        public virtual StaffMemberModel HeadOfHouse { get; set; }
     }
 }

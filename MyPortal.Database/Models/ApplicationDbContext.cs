@@ -44,6 +44,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<DiaryEventType> DiaryEventTypes { get; set; }
         public virtual DbSet<DiaryEventTemplate> DiaryEventTemplates { get; set; }
         public virtual DbSet<DietaryRequirement> DietaryRequirements { get; set; }
+        public virtual DbSet<Directory> Directories { get; set; }
         public virtual DbSet<Document> Documents { get; set; }
         public virtual DbSet<DocumentType> DocumentTypes { get; set; }
         public virtual DbSet<EmailAddress> EmailAddresses { get; set; }
@@ -54,7 +55,6 @@ namespace MyPortal.Database.Models
         public virtual DbSet<Grade> Grades { get; set; }
         public virtual DbSet<GradeSet> GradeSets { get; set; }
         public virtual DbSet<Homework> Homework { get; set; }
-        public virtual DbSet<HomeworkAttachment> HomeworkAttachments { get; set; }
         public virtual DbSet<HomeworkSubmission> HomeworkSubmissions { get; set; }
         public virtual DbSet<House> Houses { get; set; }
         public virtual DbSet<Incident> Incidents { get; set; }
@@ -73,7 +73,6 @@ namespace MyPortal.Database.Models
         public virtual DbSet<ObservationOutcome> ObservationOutcomes { get; set; }
         public virtual DbSet<Period> Periods { get; set; }
         public virtual DbSet<Person> People { get; set; }
-        public virtual DbSet<PersonAttachment> PersonAttachments { get; set; }
         public virtual DbSet<PersonCondition> PersonConditions { get; set; }
         public virtual DbSet<PersonDietaryRequirement> PersonDietaryRequirements { get; set; }
         public virtual DbSet<Phase> Phases { get; set; }
@@ -207,6 +206,9 @@ namespace MyPortal.Database.Models
             modelBuilder.Entity<DietaryRequirement>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
+            modelBuilder.Entity<Directory>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
             modelBuilder.Entity<Document>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
@@ -235,9 +237,6 @@ namespace MyPortal.Database.Models
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
             modelBuilder.Entity<Homework>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<HomeworkAttachment>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
             modelBuilder.Entity<HomeworkSubmission>()
@@ -292,9 +291,6 @@ namespace MyPortal.Database.Models
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
             modelBuilder.Entity<Person>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<PersonAttachment>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
             modelBuilder.Entity<PersonCondition>()
@@ -679,17 +675,44 @@ namespace MyPortal.Database.Models
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Document>()
-                .HasOne(e => e.PersonAttachment)
-                .WithOne(e => e.Document)
-                .HasForeignKey<PersonAttachment>(e => e.DocumentId)
+            modelBuilder.Entity<Directory>()
+                .HasOne(e => e.Bulletin)
+                .WithOne(e => e.Directory)
+                .HasForeignKey<Bulletin>(e => e.DirectoryId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Document>()
-                .HasOne(e => e.HomeworkAttachment)
-                .WithOne(e => e.Document)
-                .HasForeignKey<HomeworkAttachment>(e => e.DocumentId)
+            modelBuilder.Entity<Directory>()
+                .HasOne(e => e.Person)
+                .WithOne(e => e.Directory)
+                .HasForeignKey<Person>(e => e.DirectoryId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Directory>()
+                .HasOne(e => e.Homework)
+                .WithOne(e => e.Directory)
+                .HasForeignKey<Homework>(e => e.DirectoryId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Directory>()
+                .HasOne(e => e.LessonPlan)
+                .WithOne(e => e.Directory)
+                .HasForeignKey<LessonPlan>(e => e.DirectoryId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Directory>()
+                .HasMany(e => e.Subdirectories)
+                .WithOne(e => e.Parent)
+                .HasForeignKey(e => e.ParentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Directory>()
+                .HasMany(e => e.Documents)
+                .WithOne(e => e.Directory)
+                .HasForeignKey(e => e.DirectoryId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
@@ -812,13 +835,6 @@ namespace MyPortal.Database.Models
                 .Property(e => e.Gender)
                 .IsFixedLength()
                 .IsUnicode(false);
-
-            modelBuilder.Entity<Person>()
-                .HasMany(e => e.Attachments)
-                .WithOne(e => e.Person)
-                .HasForeignKey(e => e.PersonId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<ObservationOutcome>()
                 .HasMany(e => e.Observations)
@@ -1183,13 +1199,6 @@ namespace MyPortal.Database.Models
                 .HasMany(e => e.Tasks)
                 .WithOne(e => e.Person)
                 .HasForeignKey(e => e.AssignedToId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Homework>()
-                .HasMany(e => e.Attachments)
-                .WithOne(e => e.Homework)
-                .HasForeignKey(e => e.HomeworkId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 

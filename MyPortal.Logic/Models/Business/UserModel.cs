@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using MyPortal.Database.Models.Identity;
 
-namespace MyPortal.Logic.Models.Details
+namespace MyPortal.Logic.Models.Business
 {
-    public class UserDetails
+    public class UserModel
     {
         public Guid Id { get; set; }
         public int AccessFailedCount { get; set; }
@@ -21,7 +18,7 @@ namespace MyPortal.Logic.Models.Details
         public string UserType { get; set; }
         public Guid? SelectedAcademicYearId { get; set; }   
 
-        public virtual PersonDetails Person { get; set; }
+        public virtual PersonModel Person { get; set; }
 
         public string GetDisplayName(bool salutationFormat = false)
         {

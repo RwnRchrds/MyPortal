@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace MyPortal.Logic.Models.Details
+namespace MyPortal.Logic.Models.Business
 {
-    public class StaffMemberDetails
+    public class StaffMemberModel
     {
         public Guid Id { get; set; }
 
@@ -25,6 +25,6 @@ namespace MyPortal.Logic.Models.Details
 
         public bool Deleted { get; set; }
 
-        public virtual PersonDetails Person { get; set; }
+        public virtual PersonModel Person { get; set; }
     }
 }

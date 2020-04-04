@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace MyPortal.Logic.Models.Details
+namespace MyPortal.Logic.Models.Business
 {
-    public class SenStatusDetails
+    public class SenStatusModel
     {
         public Guid Id { get; set; }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Dapper;
@@ -32,6 +33,15 @@ namespace MyPortal.Database.Repositories
 
                     return document;
                 }, param);
+        }
+
+        public async Task<IEnumerable<Document>> GetByDirectory(Guid directoryId)
+        {
+            var sql = SelectAllColumns();
+
+            SqlHelper.Where(ref sql, "[Document].[DirectoryId] = @DirectoryId");
+
+            return await ExecuteQuery(sql, new {DirectoryId = directoryId});
         }
     }
 }

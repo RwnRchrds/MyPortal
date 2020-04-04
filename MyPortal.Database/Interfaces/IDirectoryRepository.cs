@@ -6,8 +6,8 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface IDocumentRepository : IReadWriteRepository<Document>
+    public interface IDirectoryRepository : IReadWriteRepository<Directory>
     {
-        Task<IEnumerable<Document>> GetByDirectory(Guid directoryId);
+        Task<IEnumerable<Directory>> GetSubdirectories(Guid directoryId);
     }
 }

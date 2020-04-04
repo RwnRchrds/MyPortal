@@ -3,7 +3,6 @@ using System.Security.Claims;
 using MyPortal.Database.Models.Identity;
 using MyPortal.Logic.Dictionaries;
 using MyPortal.Logic.Helpers;
-using MyPortal.Logic.Models.Details;
 
 namespace MyPortal.Logic.Extensions
 {

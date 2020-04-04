@@ -7,8 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using MyPortal.Logic.Authorisation.Attributes;
 using MyPortal.Logic.Dictionaries;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Business;
 using MyPortal.Logic.Models.DataGrid;
-using MyPortal.Logic.Models.Details;
+using MyPortal.Logic.Models.Student.LogNote;
 
 namespace MyPortalCore.Controllers.Api
 {
@@ -52,10 +53,17 @@ namespace MyPortalCore.Controllers.Api
 
         [HttpPost]
         [RequiresPermission(PermissionDictionary.Profiles.LogNotes.Edit)]
-        public async Task<IActionResult> Create([FromForm] ProfileLogNoteDetails logNote)
+        public async Task<IActionResult> Create([FromForm] CreateLogNoteModel model)
         {
             return await Process(async () =>
             {
+                var logNote = new ProfileLogNoteModel
+                {
+                    StudentId = model.StudentId,
+                    TypeId = model.TypeId,
+                    Message = model.Message
+                };
+
                 var author = await _userService.GetUserByPrincipal(User);
 
                 if (author.SelectedAcademicYearId == null)
@@ -74,16 +82,19 @@ namespace MyPortalCore.Controllers.Api
 
         [HttpPut]
         [RequiresPermission(PermissionDictionary.Profiles.LogNotes.Edit)]
-        public async Task<IActionResult> Update([FromForm] ProfileLogNoteDetails logNoteDetails)
+        public async Task<IActionResult> Update([FromForm] UpdateLogNoteModel model)
         {
             return await Process(async () =>
             {
-                if (logNoteDetails.Id == Guid.Empty)
+                var logNote = new ProfileLogNoteModel
                 {
-                    return BadRequest("Invalid Data.");
-                }
+                    Id = model.Id,
+                    StudentId = model.StudentId,
+                    TypeId = model.TypeId,
+                    Message = model.Message
+                };
 
-                await _service.Update(logNoteDetails);
+                await _service.Update(logNote);
 
                 return Ok("Log note updated.");
             });

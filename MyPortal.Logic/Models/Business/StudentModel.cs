@@ -1,11 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using MyPortal.Database.Models;
 
-namespace MyPortal.Logic.Models.Details
+namespace MyPortal.Logic.Models.Business
 {
-    public class StudentDetails
+    public class StudentModel
     {
         public Guid Id { get; set; }
 
@@ -43,14 +41,14 @@ namespace MyPortal.Logic.Models.Details
 
         public bool Deleted { get; set; }
 
-        public virtual RegGroupDetails RegGroup { get; set; }
+        public virtual RegGroupModel RegGroup { get; set; }
 
-        public virtual YearGroupDetails YearGroup { get; set; }
+        public virtual YearGroupModel YearGroup { get; set; }
 
-        public virtual PersonDetails Person { get; set; }
+        public virtual PersonModel Person { get; set; }
 
-        public virtual SenStatusDetails SenStatus { get; set; }
+        public virtual SenStatusModel SenStatus { get; set; }
 
-        public virtual HouseDetails House { get; set; }
+        public virtual HouseModel House { get; set; }
     }
 }

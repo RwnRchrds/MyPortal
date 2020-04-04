@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace MyPortal.Logic.Models.Details
+namespace MyPortal.Logic.Models.Business
 {
-    public class RoleDetails
+    public class RoleModel
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

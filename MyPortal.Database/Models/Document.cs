@@ -21,6 +21,8 @@ namespace MyPortal.Database.Models
 
         public Guid TypeId { get; set; }
 
+        public Guid DirectoryId { get; set; }
+
         [Required]
         [StringLength(128)]
         public string Title { get; set; }
@@ -29,8 +31,13 @@ namespace MyPortal.Database.Models
         public string Description { get; set; }
 
         [Required]
-        [Url]
-        public string DownloadUrl { get; set; } 
+        public string FileId { get; set; } 
+
+        [Required]
+        public string FileName { get; set; }
+
+        [Required]
+        public string ContentType { get; set; }
 
         public Guid UploaderId { get; set; }
 
@@ -45,10 +52,8 @@ namespace MyPortal.Database.Models
 
         public virtual ApplicationUser Uploader { get; set; }
 
+        public virtual Directory Directory { get; set; }
+
         public virtual DocumentType Type { get; set; }
-
-        public virtual PersonAttachment PersonAttachment { get; set; }
-
-        public virtual HomeworkAttachment HomeworkAttachment { get; set; }
     }
 }

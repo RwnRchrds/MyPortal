@@ -4,7 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using MyPortal.Logic.Models.Admin;
-using MyPortal.Logic.Models.Details;
+using MyPortal.Logic.Models.Business;
 
 namespace MyPortal.Logic.Interfaces
 {
@@ -14,7 +14,7 @@ namespace MyPortal.Logic.Interfaces
         Task ResetPassword(PasswordReset model);
         Task<bool> EnableDisableUser(Guid userId);
         Task<Guid?> GetSelectedAcademicYearId(Guid userId);
-        Task<AcademicYearDetails> GetSelectedAcademicYear(Guid userId);
-        Task<UserDetails> GetUserByPrincipal(ClaimsPrincipal principal);
+        Task<AcademicYearModel> GetSelectedAcademicYear(Guid userId);
+        Task<UserModel> GetUserByPrincipal(ClaimsPrincipal principal);
     }
 }

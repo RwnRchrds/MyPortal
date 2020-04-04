@@ -1,9 +1,9 @@
-﻿using MyPortal.Logic.Models.Details;
+﻿using MyPortal.Logic.Models.Business;
 
 namespace MyPortalCore.Areas.Staff.ViewModels.Home
 {
     public class HomepageViewModel
     {
-        public AcademicYearDetails SelectedAcademicYear { get; set; }
+        public AcademicYearModel SelectedAcademicYear { get; set; }
     }
 }

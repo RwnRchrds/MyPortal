@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 using MyPortal.Logic.Attributes;
 
-namespace MyPortal.Logic.Models.Details
+namespace MyPortal.Logic.Models.Business
 {
-    public class ProfileLogNoteDetails
+    public class ProfileLogNoteModel
     {
         public Guid Id { get; set; }
 
@@ -27,12 +25,12 @@ namespace MyPortal.Logic.Models.Details
 
         public bool Deleted { get; set; }
 
-        public virtual UserDetails Author { get; set; }
+        public virtual UserModel Author { get; set; }
 
-        public virtual StudentDetails Student { get; set; }
+        public virtual StudentModel Student { get; set; }
 
-        public virtual AcademicYearDetails AcademicYear { get; set; }
+        public virtual AcademicYearModel AcademicYear { get; set; }
 
-        public virtual ProfileLogNoteTypeDetails ProfileLogNoteType { get; set; }
+        public virtual ProfileLogNoteTypeModel ProfileLogNoteType { get; set; }
     }
 }

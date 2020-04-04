@@ -6,8 +6,8 @@ using AutoMapper;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
 using MyPortal.Logic.Models.Admin;
+using MyPortal.Logic.Models.Business;
 using MyPortal.Logic.Models.DataGrid;
-using MyPortal.Logic.Models.Details;
 using MyPortal.Logic.Models.Lite;
 using MyPortal.Logic.Models.Student;
 
@@ -19,18 +19,21 @@ namespace MyPortal.Logic.Helpers
         {
             var config = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<AcademicYear, AcademicYearDetails>().ReverseMap();
-                cfg.CreateMap<ApplicationRole, RoleDetails>().ReverseMap();
-                cfg.CreateMap<ApplicationUser, UserDetails>().ReverseMap();
-                cfg.CreateMap<House, HouseDetails>().ReverseMap();
-                cfg.CreateMap<Person, PersonDetails>().ReverseMap();
-                cfg.CreateMap<ProfileLogNote, ProfileLogNoteDetails>().ReverseMap();
-                cfg.CreateMap<ProfileLogNoteType, ProfileLogNoteTypeDetails>().ReverseMap();
-                cfg.CreateMap<RegGroup, RegGroupDetails>().ReverseMap();
-                cfg.CreateMap<SenStatus, SenStatusDetails>().ReverseMap();
-                cfg.CreateMap<StaffMember, StaffMemberDetails>().ReverseMap();
-                cfg.CreateMap<Student, StudentDetails>().ReverseMap();
-                cfg.CreateMap<YearGroup, YearGroupDetails>().ReverseMap();
+                cfg.CreateMap<AcademicYear, AcademicYearModel>().ReverseMap();
+                cfg.CreateMap<ApplicationRole, RoleModel>().ReverseMap();
+                cfg.CreateMap<ApplicationUser, UserModel>().ReverseMap();
+                cfg.CreateMap<House, HouseModel>().ReverseMap();
+                cfg.CreateMap<Directory, DirectoryModel>().ReverseMap();
+                cfg.CreateMap<Document, DocumentModel>().ReverseMap();
+                cfg.CreateMap<DocumentType, DocumentTypeModel>().ReverseMap();
+                cfg.CreateMap<Person, PersonModel>().ReverseMap();
+                cfg.CreateMap<ProfileLogNote, ProfileLogNoteModel>().ReverseMap();
+                cfg.CreateMap<ProfileLogNoteType, ProfileLogNoteTypeModel>().ReverseMap();
+                cfg.CreateMap<RegGroup, RegGroupModel>().ReverseMap();
+                cfg.CreateMap<SenStatus, SenStatusModel>().ReverseMap();
+                cfg.CreateMap<StaffMember, StaffMemberModel>().ReverseMap();
+                cfg.CreateMap<Student, StudentModel>().ReverseMap();
+                cfg.CreateMap<YearGroup, YearGroupModel>().ReverseMap();
             });
 
             return new Mapper(config);
@@ -40,8 +43,8 @@ namespace MyPortal.Logic.Helpers
         {
             var config = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<RoleDetails, DataGridApplicationRole>();
-                cfg.CreateMap<StudentDetails, DataGridStudent>()
+                cfg.CreateMap<RoleModel, DataGridApplicationRole>();
+                cfg.CreateMap<StudentModel, DataGridStudent>()
                     .ForMember(dest => dest.DisplayName,
                         opts => opts.MapFrom(src => src.Person.GetDisplayName(false)))
                     .ForMember(dest => dest.RegGroupName,
@@ -52,7 +55,7 @@ namespace MyPortal.Logic.Helpers
                         opts => opts.MapFrom(src => src.House.Name))
                     .ForMember(dest => dest.Gender,
                         opts => opts.MapFrom(src => src.Person.Gender));
-                cfg.CreateMap<ProfileLogNoteDetails, DataGridProfileLogNote>()
+                cfg.CreateMap<ProfileLogNoteModel, DataGridProfileLogNote>()
                     .ForMember(dest => dest.AuthorName,
                         opts => opts.MapFrom(src => src.Author.GetDisplayName(true)))
                     .ForMember(dest => dest.LogTypeName,

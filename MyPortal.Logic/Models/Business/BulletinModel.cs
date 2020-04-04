@@ -1,16 +1,10 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using MyPortal.Database.Interfaces;
-using MyPortal.Database.Models.Identity;
 
-namespace MyPortal.Database.Models
+namespace MyPortal.Logic.Models.Business
 {
-    [Table("Bulletin")]
-    public class Bulletin : IDirectoryEntity
+    public class BulletinModel
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
         public Guid DirectoryId { get; set; }
@@ -27,10 +21,10 @@ namespace MyPortal.Database.Models
         public string Detail { get; set; }
 
         public bool ShowStudents { get; set; }
-        
+
         public bool Approved { get; set; }
 
-        public virtual ApplicationUser Author { get; set; }
-        public virtual Directory Directory { get; set; }
+        public virtual UserModel Author { get; set; }
+        public virtual DirectoryModel Directory { get; set; }
     }
 }

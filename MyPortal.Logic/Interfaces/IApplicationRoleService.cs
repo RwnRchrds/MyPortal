@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MyPortal.Logic.Models.Admin;
-using MyPortal.Logic.Models.Details;
+using MyPortal.Logic.Models.Business;
 
 namespace MyPortal.Logic.Interfaces
 {
     public interface IApplicationRoleService
     {
-        Task CreateRole(RoleDetails details);
-        Task<IEnumerable<RoleDetails>> Get(string searchParam = null);
+        Task CreateRole(RoleModel model);
+        Task<IEnumerable<RoleModel>> Get(string searchParam = null);
     }
 }

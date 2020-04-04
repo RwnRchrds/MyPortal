@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace MyPortal.Logic.Models.Details
+namespace MyPortal.Logic.Models.Business
 {
-    public class RegGroupDetails
+    public class RegGroupModel
     {
         public Guid Id { get; set; }
 
@@ -15,8 +15,8 @@ namespace MyPortal.Logic.Models.Details
 
         public Guid YearGroupId { get; set; }
 
-        public virtual StaffMemberDetails Tutor { get; set; }
+        public virtual StaffMemberModel Tutor { get; set; }
 
-        public virtual YearGroupDetails YearGroup { get; set; }
+        public virtual YearGroupModel YearGroup { get; set; }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace MyPortal.Logic.Models.Details
+namespace MyPortal.Logic.Models.Business
 {
-    public class YearGroupDetails
+    public class YearGroupModel
     {
         public Guid Id { get; set; }
 
@@ -13,6 +13,6 @@ namespace MyPortal.Logic.Models.Details
 
         public Guid? HeadId { get; set; }
 
-        public virtual StaffMemberDetails HeadOfYear { get; set; }
+        public virtual StaffMemberModel HeadOfYear { get; set; }
     }
 }

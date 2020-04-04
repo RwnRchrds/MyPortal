@@ -96,6 +96,7 @@ namespace MyPortalCore
             services.AddTransient<IDiaryEventTemplateRepository, DiaryEventTemplateRepository>();
             services.AddTransient<IDiaryEventTypeRepository, DiaryEventTypeRepository>();
             services.AddTransient<IDietaryRequirementRepository, DietaryRequirementRepository>();
+            services.AddTransient<IDirectoryRepository, DirectoryRepository>();
             services.AddTransient<IDocumentRepository, DocumentRepository>();
             services.AddTransient<IDocumentTypeRepository, DocumentTypeRepository>();
             services.AddTransient<IEmailAddressRepository, EmailAddressRepository>();
@@ -105,7 +106,6 @@ namespace MyPortalCore
             services.AddTransient<IGovernanceTypeRepository, GovernanceTypeRepository>();
             services.AddTransient<IGradeRepository, GradeRepository>();
             services.AddTransient<IGradeSetRepository, GradeSetRepository>();
-            services.AddTransient<IHomeworkAttachmentRepository, HomeworkAttachmentRepository>();
             services.AddTransient<IHomeworkRepository, HomeworkRepository>();
             services.AddTransient<IHomeworkSubmissionRepository, HomeworkSubmissionRepository>();
             services.AddTransient<IHouseRepository, HouseRepository>();
@@ -122,7 +122,6 @@ namespace MyPortalCore
             services.AddTransient<IObservationOutcomeRepository, ObservationOutcomeRepository>();
             services.AddTransient<IObservationRepository, ObservationRepository>();
             services.AddTransient<IPeriodRepository, PeriodRepository>();
-            services.AddTransient<IPersonAttachmentRepository, PersonAttachmentRepository>();
             services.AddTransient<IPersonConditionRepository, PersonConditionRepository>();
             services.AddTransient<IPersonDietaryRequirementRepository, PersonDietaryRequirementRepository>();
             services.AddTransient<IPersonRepository, PersonRepository>();
@@ -167,6 +166,8 @@ namespace MyPortalCore
             services.AddTransient<IApplicationRolePermissionService, ApplicationRolePermissionService>();
             services.AddTransient<IApplicationRoleService, ApplicationRoleService>();
             services.AddTransient<IApplicationUserService, ApplicationUserService>();
+            services.AddTransient<IDirectoryService, DirectoryService>();
+            services.AddTransient<IDocumentService, DocumentService>();
             services.AddTransient<IPersonService, PersonService>();
             services.AddTransient<IProfileLogNoteService, ProfileLogNoteService>();
             services.AddTransient<ISchoolService, SchoolService>();

@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 using MyPortal.Logic.Dictionaries;
 
-namespace MyPortal.Logic.Models.Details
+namespace MyPortal.Logic.Models.Business
 {
-    public class ProfileLogNoteTypeDetails
+    public class ProfileLogNoteTypeModel
     {
         public Guid Id { get; set; }
 

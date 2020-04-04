@@ -6,24 +6,24 @@ using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.Details;
+using MyPortal.Logic.Models.Business;
 
 namespace MyPortal.Logic.Services
 {
     public class AcademicYearService : BaseService, IAcademicYearService
     {
-        private readonly IAcademicYearRepository _repository;
+        private readonly IAcademicYearRepository _academicYearRepository;
 
-        public AcademicYearService(IAcademicYearRepository repository)
+        public AcademicYearService(IAcademicYearRepository academicYearRepository)
         {
-            _repository = repository;
+            _academicYearRepository = academicYearRepository;
         }
 
-        public async Task<AcademicYearDetails> GetCurrent()
+        public async Task<AcademicYearModel> GetCurrent()
         {
-            var acadYear = await _repository.GetCurrent();
+            var acadYear = await _academicYearRepository.GetCurrent();
 
-            return _businessMapper.Map<AcademicYearDetails>(acadYear);
+            return _businessMapper.Map<AcademicYearModel>(acadYear);
         }
     }
 }

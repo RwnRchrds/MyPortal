@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using MyPortal.Logic.Models.Business;
+using MyPortal.Logic.Models.Documents;
 
 namespace MyPortal.Logic.Interfaces
 {
-    public interface IAcademicYearService
+    public interface IDirectoryService
     {
-        Task<AcademicYearModel> GetCurrent();
+        Task<DirectoryChildren> GetChildren(Guid directoryId);
     }
 }

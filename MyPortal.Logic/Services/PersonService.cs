@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.Details;
+using MyPortal.Logic.Models.Business;
 using MyPortal.Logic.Models.Person;
 using Task = System.Threading.Tasks.Task;
 
@@ -13,7 +13,7 @@ namespace MyPortal.Logic.Services
 {
     public class PersonService : BaseService, IPersonService
     {
-        private readonly IPersonRepository _repository;
+        private readonly IPersonRepository _personRepository;
 
         private Person GenerateSearchObject(PersonSearchParams searchParams)
         {
@@ -28,9 +28,9 @@ namespace MyPortal.Logic.Services
             return person;
         }
 
-        public PersonService(IPersonRepository repository)
+        public PersonService(IPersonRepository personRepository)
         {
-            _repository = repository;
+            _personRepository = personRepository;
         }
 
         public Dictionary<string, string> GetGenderOptions()
@@ -46,22 +46,22 @@ namespace MyPortal.Logic.Services
         }
 
 
-        public async Task<IEnumerable<PersonDetails>> Get(PersonSearchParams searchParams)
+        public async Task<IEnumerable<PersonModel>> Get(PersonSearchParams searchParams)
         {
             var searchObject = GenerateSearchObject(searchParams);
 
             IEnumerable<Person> people;
 
-            people = await _repository.GetAll(searchObject);
+            people = await _personRepository.GetAll(searchObject);
 
-            return people.Select(_businessMapper.Map<PersonDetails>).ToList();
+            return people.Select(_businessMapper.Map<PersonModel>).ToList();
         }
 
-        public async Task<PersonDetails> GetByUserId(Guid userId)
+        public async Task<PersonModel> GetByUserId(Guid userId)
         {
-            var person = await _repository.GetByUserId(userId);
+            var person = await _personRepository.GetByUserId(userId);
 
-            return _businessMapper.Map<PersonDetails>(person);
+            return _businessMapper.Map<PersonModel>(person);
         }
     }
 }

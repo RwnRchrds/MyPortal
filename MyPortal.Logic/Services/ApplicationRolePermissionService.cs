@@ -11,16 +11,16 @@ namespace MyPortal.Logic.Services
 {
     public class ApplicationRolePermissionService : BaseService, IApplicationRolePermissionService
     {
-        private readonly IApplicationRolePermissionRepository _repository;
+        private readonly IApplicationRolePermissionRepository _rolePermissionRepository;
 
-        public ApplicationRolePermissionService(IApplicationRolePermissionRepository repository)
+        public ApplicationRolePermissionService(IApplicationRolePermissionRepository rolePermissionRepository)
         {
-            _repository = repository;
+            _rolePermissionRepository = rolePermissionRepository;
         }
         
         public async Task<IEnumerable<string>> GetPermissionClaimValues(Guid roleId)
         {
-            var claimValues = await _repository.GetClaimValuesByRole(roleId);
+            var claimValues = await _rolePermissionRepository.GetClaimValuesByRole(roleId);
 
             return claimValues;
         }
@@ -28,13 +28,13 @@ namespace MyPortal.Logic.Services
         public async Task SetPermissions(Guid roleId, IList<Guid> permIds)
         {
             // Add new permissions from list
-            var existingPermissions = (await _repository.GetPermissionsByRole(roleId)).ToList();
+            var existingPermissions = (await _rolePermissionRepository.GetPermissionsByRole(roleId)).ToList();
             
             foreach (var permId in permIds)
             {
                 if (existingPermissions.All(x => x.PermissionId != permId))
                 {
-                    _repository.Create(new ApplicationRolePermission{RoleId = roleId, PermissionId = permId});
+                    _rolePermissionRepository.Create(new ApplicationRolePermission{RoleId = roleId, PermissionId = permId});
                 }
             }
 
@@ -43,10 +43,10 @@ namespace MyPortal.Logic.Services
 
             foreach (var perm in permsToRemove)
             {
-                await _repository.Delete(perm.Id);
+                await _rolePermissionRepository.Delete(perm.Id);
             }
 
-            await _repository.SaveChanges();
+            await _rolePermissionRepository.SaveChanges();
         }
     }
 }

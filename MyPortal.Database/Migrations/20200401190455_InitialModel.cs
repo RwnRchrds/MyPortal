@@ -219,6 +219,25 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Directory",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    ParentId = table.Column<Guid>(nullable: true),
+                    Name = table.Column<string>(maxLength: 128, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Directory", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Directory_Directory_ParentId",
+                        column: x => x.ParentId,
+                        principalTable: "Directory",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DocumentType",
                 columns: table => new
                 {
@@ -272,20 +291,6 @@ namespace MyPortal.Database.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_GradeSet", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Homework",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    Title = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    SubmitOnline = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Homework", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -789,6 +794,27 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Homework",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    DirectoryId = table.Column<Guid>(nullable: false),
+                    Title = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    SubmitOnline = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Homework", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Homework_Directory_DirectoryId",
+                        column: x => x.DirectoryId,
+                        principalTable: "Directory",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Aspect",
                 columns: table => new
                 {
@@ -993,6 +1019,7 @@ namespace MyPortal.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    DirectoryId = table.Column<Guid>(nullable: false),
                     AuthorId = table.Column<Guid>(nullable: false),
                     CreateDate = table.Column<DateTime>(nullable: false),
                     ExpireDate = table.Column<DateTime>(nullable: true),
@@ -1010,6 +1037,12 @@ namespace MyPortal.Database.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Bulletin_Directory_DirectoryId",
+                        column: x => x.DirectoryId,
+                        principalTable: "Directory",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1018,9 +1051,12 @@ namespace MyPortal.Database.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     TypeId = table.Column<Guid>(nullable: false),
+                    DirectoryId = table.Column<Guid>(nullable: false),
                     Title = table.Column<string>(maxLength: 128, nullable: false),
                     Description = table.Column<string>(maxLength: 256, nullable: true),
-                    DownloadUrl = table.Column<string>(nullable: false),
+                    FileId = table.Column<string>(nullable: false),
+                    FileName = table.Column<string>(nullable: false),
+                    ContentType = table.Column<string>(nullable: false),
                     UploaderId = table.Column<Guid>(nullable: false),
                     UploadedDate = table.Column<DateTime>(type: "date", nullable: false),
                     NonPublic = table.Column<bool>(nullable: false),
@@ -1030,6 +1066,12 @@ namespace MyPortal.Database.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Document", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Document_Directory_DirectoryId",
+                        column: x => x.DirectoryId,
+                        principalTable: "Directory",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Document_DocumentType_TypeId",
                         column: x => x.TypeId,
@@ -1049,6 +1091,7 @@ namespace MyPortal.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    DirectoryId = table.Column<Guid>(nullable: false),
                     Title = table.Column<string>(maxLength: 128, nullable: true),
                     FirstName = table.Column<string>(maxLength: 256, nullable: false),
                     MiddleName = table.Column<string>(maxLength: 256, nullable: true),
@@ -1064,6 +1107,12 @@ namespace MyPortal.Database.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Person", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Person_Directory_DirectoryId",
+                        column: x => x.DirectoryId,
+                        principalTable: "Directory",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Person_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -1125,31 +1174,6 @@ namespace MyPortal.Database.Migrations
                         name: "FK_AspNetRolePermissions_AspNetRoles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "HomeworkAttachment",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    HomeworkId = table.Column<Guid>(nullable: false),
-                    DocumentId = table.Column<Guid>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_HomeworkAttachment", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_HomeworkAttachment_Document_DocumentId",
-                        column: x => x.DocumentId,
-                        principalTable: "Document",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_HomeworkAttachment_Homework_HomeworkId",
-                        column: x => x.HomeworkId,
-                        principalTable: "Homework",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -1260,31 +1284,6 @@ namespace MyPortal.Database.Migrations
                         name: "FK_EmailAddress_EmailAddressType_TypeId",
                         column: x => x.TypeId,
                         principalTable: "EmailAddressType",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PersonAttachment",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    PersonId = table.Column<Guid>(nullable: false),
-                    DocumentId = table.Column<Guid>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PersonAttachment", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_PersonAttachment_Document_DocumentId",
-                        column: x => x.DocumentId,
-                        principalTable: "Document",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_PersonAttachment_Person_PersonId",
-                        column: x => x.PersonId,
-                        principalTable: "Person",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -1839,6 +1838,7 @@ namespace MyPortal.Database.Migrations
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     StudyTopicId = table.Column<Guid>(nullable: false),
                     AuthorId = table.Column<Guid>(nullable: false),
+                    DirectoryId = table.Column<Guid>(nullable: false),
                     Title = table.Column<string>(maxLength: 256, nullable: false),
                     LearningObjectives = table.Column<string>(nullable: false),
                     PlanContent = table.Column<string>(nullable: false),
@@ -1851,6 +1851,12 @@ namespace MyPortal.Database.Migrations
                         name: "FK_LessonPlan_AspNetUsers_AuthorId",
                         column: x => x.AuthorId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_LessonPlan_Directory_DirectoryId",
+                        column: x => x.DirectoryId,
+                        principalTable: "Directory",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -2539,6 +2545,12 @@ namespace MyPortal.Database.Migrations
                 column: "AuthorId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Bulletin_DirectoryId",
+                table: "Bulletin",
+                column: "DirectoryId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Class_AcademicYearId",
                 table: "Class",
                 column: "AcademicYearId");
@@ -2616,6 +2628,16 @@ namespace MyPortal.Database.Migrations
                 column: "EventTypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Directory_ParentId",
+                table: "Directory",
+                column: "ParentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Document_DirectoryId",
+                table: "Document",
+                column: "DirectoryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Document_TypeId",
                 table: "Document",
                 column: "TypeId");
@@ -2661,15 +2683,10 @@ namespace MyPortal.Database.Migrations
                 column: "GradeSetId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_HomeworkAttachment_DocumentId",
-                table: "HomeworkAttachment",
-                column: "DocumentId",
+                name: "IX_Homework_DirectoryId",
+                table: "Homework",
+                column: "DirectoryId",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_HomeworkAttachment_HomeworkId",
-                table: "HomeworkAttachment",
-                column: "HomeworkId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_HomeworkSubmission_HomeworkId",
@@ -2733,6 +2750,12 @@ namespace MyPortal.Database.Migrations
                 column: "AuthorId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_LessonPlan_DirectoryId",
+                table: "LessonPlan",
+                column: "DirectoryId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_LessonPlan_StudyTopicId",
                 table: "LessonPlan",
                 column: "StudyTopicId");
@@ -2778,22 +2801,17 @@ namespace MyPortal.Database.Migrations
                 column: "OutcomeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Person_DirectoryId",
+                table: "Person",
+                column: "DirectoryId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Person_UserId",
                 table: "Person",
                 column: "UserId",
                 unique: true,
                 filter: "[UserId] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PersonAttachment_DocumentId",
-                table: "PersonAttachment",
-                column: "DocumentId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PersonAttachment_PersonId",
-                table: "PersonAttachment",
-                column: "PersonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PersonCondition_ConditionId",
@@ -3134,6 +3152,9 @@ namespace MyPortal.Database.Migrations
                 name: "DiaryEventTemplate");
 
             migrationBuilder.DropTable(
+                name: "Document");
+
+            migrationBuilder.DropTable(
                 name: "EmailAddress");
 
             migrationBuilder.DropTable(
@@ -3141,9 +3162,6 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "GiftedTalented");
-
-            migrationBuilder.DropTable(
-                name: "HomeworkAttachment");
 
             migrationBuilder.DropTable(
                 name: "HomeworkSubmission");
@@ -3165,9 +3183,6 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "Observation");
-
-            migrationBuilder.DropTable(
-                name: "PersonAttachment");
 
             migrationBuilder.DropTable(
                 name: "PersonCondition");
@@ -3242,6 +3257,9 @@ namespace MyPortal.Database.Migrations
                 name: "DiaryEventAttendeeResponse");
 
             migrationBuilder.DropTable(
+                name: "DocumentType");
+
+            migrationBuilder.DropTable(
                 name: "EmailAddressType");
 
             migrationBuilder.DropTable(
@@ -3264,9 +3282,6 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "ObservationOutcome");
-
-            migrationBuilder.DropTable(
-                name: "Document");
 
             migrationBuilder.DropTable(
                 name: "MedicalCondition");
@@ -3356,9 +3371,6 @@ namespace MyPortal.Database.Migrations
                 name: "Student");
 
             migrationBuilder.DropTable(
-                name: "DocumentType");
-
-            migrationBuilder.DropTable(
                 name: "AspectType");
 
             migrationBuilder.DropTable(
@@ -3396,6 +3408,9 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "Person");
+
+            migrationBuilder.DropTable(
+                name: "Directory");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

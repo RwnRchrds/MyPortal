@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace MyPortal.Logic.Models.Details
+namespace MyPortal.Logic.Models.Business
 {
-    public class AcademicYearDetails
+    public class SubjectModel
     {
         public Guid Id { get; set; }
 
         [Required]
-        [StringLength(128)]
+        [StringLength(256)]
         public string Name { get; set; }
 
-        public DateTime FirstDate { get; set; }
+        [Required]
+        [StringLength(128)]
+        public string Code { get; set; }
 
-        public DateTime LastDate { get; set; }
+        public bool Deleted { get; set; }
     }
 }
