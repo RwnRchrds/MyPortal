@@ -11,11 +11,17 @@ using Google.Apis.Drive.v3;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
 using Microsoft.AspNetCore.Http;
+using MyPortal.Database.Interfaces;
+using MyPortal.Database.Models;
+using MyPortal.Logic.Constants;
+using MyPortal.Logic.Helpers;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class GSuiteIntegrationService : BaseService
+    public class GoogleService : BaseService
     {
+        private readonly IGoogleTokenRepository _googleTokenRepository;
         protected async Task<BaseClientService.Initializer> GetInitializer(Guid userId)
         {
             var scopes = new[]
@@ -39,13 +45,40 @@ namespace MyPortal.Logic.Services
             dsAuthorizationBroker.RedirectUri = "http://localhost:5001/signin-google";
 
             credential = await dsAuthorizationBroker.AuthorizeAsync(flow.ClientSecrets, scopes,
-                "11richr1@vle.harrodsschool.co.uk", CancellationToken.None, new FileDataStore("MyPortal.GSuite"));
+                "user", CancellationToken.None, new FileDataStore("MyPortal.GSuite"));
 
             return new BaseClientService.Initializer
             {
                 ApplicationName = "MyPortal",
                 HttpClientInitializer = credential
             };
+        }
+
+        protected async Task SaveToken(Guid userId, string token)
+        {
+            var encryptedToken = Encryption.EncryptString(token, Salts.GoogleSalt, userId.ToString("N"));
+
+            var tokenInDb = await _googleTokenRepository.GetByUserIdWithTracking(userId);
+
+            if (tokenInDb == null)
+            {
+                var newToken = new GoogleToken
+                {
+                    UserId = userId,
+                    Token = encryptedToken,
+                    DateTime = DateTime.Now
+                };
+
+                _googleTokenRepository.Create(newToken);
+            }
+
+            else
+            {
+                tokenInDb.Token = encryptedToken;
+                tokenInDb.DateTime = DateTime.Now;
+            }
+
+            await _googleTokenRepository.SaveChanges();
         }
     }
 

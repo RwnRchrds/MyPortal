@@ -5,27 +5,27 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Logic.Authorisation.Attributes;
-using MyPortal.Logic.Dictionaries;
+using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Business;
 using MyPortal.Logic.Models.DataGrid;
-using MyPortal.Logic.Models.Student.LogNote;
+using MyPortal.Logic.Models.Student.LogNotes;
 
 namespace MyPortalCore.Controllers.Api
 {
     [Route("api/student/logNote")]
     public class ProfileLogNoteController : BaseApiController
     {
-        private readonly IProfileLogNoteService _service;
+        private readonly ILogNoteService _service;
 
-        public ProfileLogNoteController(IProfileLogNoteService service, IApplicationUserService userService) : base(userService)
+        public ProfileLogNoteController(ILogNoteService service, IApplicationUserService userService) : base(userService)
         {
             _service = service;
         }
 
         [HttpGet]
         [Route("get")]
-        [RequiresPermission(PermissionDictionary.Profiles.LogNotes.View)]
+        [RequiresPermission(Permissions.Student.LogNotes.View)]
         public async Task<IActionResult> GetById([FromQuery] Guid logNoteId)
         {
             return await Process(async () =>
@@ -38,7 +38,7 @@ namespace MyPortalCore.Controllers.Api
 
         [HttpGet]
         [Route("student")]
-        [RequiresPermission(PermissionDictionary.Profiles.LogNotes.View)]
+        [RequiresPermission(Permissions.Student.LogNotes.View)]
         public async Task<IActionResult> GetByStudent([FromQuery] Guid studentId, [FromQuery] Guid academicYearId)
         {
             return await Process(async () =>
@@ -52,12 +52,12 @@ namespace MyPortalCore.Controllers.Api
         }
 
         [HttpPost]
-        [RequiresPermission(PermissionDictionary.Profiles.LogNotes.Edit)]
+        [RequiresPermission(Permissions.Student.LogNotes.Edit)]
         public async Task<IActionResult> Create([FromForm] CreateLogNoteModel model)
         {
             return await Process(async () =>
             {
-                var logNote = new ProfileLogNoteModel
+                var logNote = new LogNoteModel
                 {
                     StudentId = model.StudentId,
                     TypeId = model.TypeId,
@@ -81,12 +81,12 @@ namespace MyPortalCore.Controllers.Api
         }
 
         [HttpPut]
-        [RequiresPermission(PermissionDictionary.Profiles.LogNotes.Edit)]
+        [RequiresPermission(Permissions.Student.LogNotes.Edit)]
         public async Task<IActionResult> Update([FromForm] UpdateLogNoteModel model)
         {
             return await Process(async () =>
             {
-                var logNote = new ProfileLogNoteModel
+                var logNote = new LogNoteModel
                 {
                     Id = model.Id,
                     StudentId = model.StudentId,
@@ -101,7 +101,7 @@ namespace MyPortalCore.Controllers.Api
         }
 
         [HttpDelete]
-        [RequiresPermission(PermissionDictionary.Profiles.LogNotes.Edit)]
+        [RequiresPermission(Permissions.Student.LogNotes.Edit)]
         public async Task<IActionResult> Delete([FromQuery] Guid logNoteId)
         {
             return await Process(async () =>

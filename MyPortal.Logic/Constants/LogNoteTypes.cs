@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Http;
 
-namespace MyPortal.Logic.Dictionaries
+namespace MyPortal.Logic.Constants
 {
-    public class ProfileLogNoteTypeDictionary
+    public class LogNoteTypes
     {
         public static Guid AcademicSupport = Guid.Parse("C6C718BE-8255-4D26-96C1-3B92815F358E");
         public static Guid Behaviour = Guid.Parse("C6C728BE-8255-4D26-96C1-3B92815F358E");

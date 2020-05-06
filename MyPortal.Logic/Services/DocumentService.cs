@@ -17,7 +17,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
-    public class DocumentService : GSuiteIntegrationService, IDocumentService
+    public class DocumentService : GoogleService, IDocumentService
     {
         private readonly IDocumentRepository _repository;
         private DriveService _driveService;

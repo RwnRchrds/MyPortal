@@ -4,7 +4,7 @@ using MyPortal.Logic.Attributes;
 
 namespace MyPortal.Logic.Models.Business
 {
-    public class ProfileLogNoteModel
+    public class LogNoteModel
     {
         public Guid Id { get; set; }
 
@@ -31,6 +31,6 @@ namespace MyPortal.Logic.Models.Business
 
         public virtual AcademicYearModel AcademicYear { get; set; }
 
-        public virtual ProfileLogNoteTypeModel ProfileLogNoteType { get; set; }
+        public virtual LogNoteTypeModel LogNoteType { get; set; }
     }
 }

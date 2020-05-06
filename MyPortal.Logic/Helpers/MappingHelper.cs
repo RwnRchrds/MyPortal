@@ -27,8 +27,8 @@ namespace MyPortal.Logic.Helpers
                 cfg.CreateMap<Document, DocumentModel>().ReverseMap();
                 cfg.CreateMap<DocumentType, DocumentTypeModel>().ReverseMap();
                 cfg.CreateMap<Person, PersonModel>().ReverseMap();
-                cfg.CreateMap<ProfileLogNote, ProfileLogNoteModel>().ReverseMap();
-                cfg.CreateMap<ProfileLogNoteType, ProfileLogNoteTypeModel>().ReverseMap();
+                cfg.CreateMap<LogNote, LogNoteModel>().ReverseMap();
+                cfg.CreateMap<LogNoteType, LogNoteTypeModel>().ReverseMap();
                 cfg.CreateMap<RegGroup, RegGroupModel>().ReverseMap();
                 cfg.CreateMap<SenStatus, SenStatusModel>().ReverseMap();
                 cfg.CreateMap<StaffMember, StaffMemberModel>().ReverseMap();
@@ -55,15 +55,15 @@ namespace MyPortal.Logic.Helpers
                         opts => opts.MapFrom(src => src.House.Name))
                     .ForMember(dest => dest.Gender,
                         opts => opts.MapFrom(src => src.Person.Gender));
-                cfg.CreateMap<ProfileLogNoteModel, DataGridProfileLogNote>()
+                cfg.CreateMap<LogNoteModel, DataGridProfileLogNote>()
                     .ForMember(dest => dest.AuthorName,
                         opts => opts.MapFrom(src => src.Author.GetDisplayName(true)))
                     .ForMember(dest => dest.LogTypeName,
-                        opts => opts.MapFrom(src => src.ProfileLogNoteType.Name))
+                        opts => opts.MapFrom(src => src.LogNoteType.Name))
                     .ForMember(dest => dest.LogTypeColourCode,
-                        opts => opts.MapFrom(src => src.ProfileLogNoteType.ColourCode))
+                        opts => opts.MapFrom(src => src.LogNoteType.ColourCode))
                     .ForMember(dest => dest.LogTypeIcon,
-                        opts => opts.MapFrom(src => src.ProfileLogNoteType.GetIcon()));
+                        opts => opts.MapFrom(src => src.LogNoteType.GetIcon()));
             });
 
             return new Mapper(config);

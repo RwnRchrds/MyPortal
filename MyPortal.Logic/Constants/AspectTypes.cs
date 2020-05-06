@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace MyPortal.Logic.Dictionaries
+namespace MyPortal.Logic.Constants
 {
-    public class AspectTypeDictionary
+    public class AspectTypes
     {
         public static Guid Grade = Guid.Parse("84F43913-ED25-4839-B130-62AC605DEBFA");
         public static Guid MarkInteger = Guid.Parse("84F43915-ED25-4839-B130-62AC605DEBFA");

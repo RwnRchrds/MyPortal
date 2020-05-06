@@ -4,8 +4,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using MyPortal.Database.Models.Identity;
-using MyPortal.Logic.Dictionaries;
+using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
+using ClaimTypes = MyPortal.Logic.Constants.ClaimTypes;
 
 namespace MyPortal.Logic.Authorisation
 {
@@ -38,7 +39,7 @@ namespace MyPortal.Logic.Authorisation
 
             var displayName = user.UserName;
 
-            if (user.UserType == UserTypeDictionary.Staff && person != null)
+            if (user.UserType == UserTypes.Staff && person != null)
             {
                 displayName = $"{person.Title} {person.FirstName.Substring(0, 1)} {person.LastName}";
             }
@@ -47,8 +48,8 @@ namespace MyPortal.Logic.Authorisation
                 displayName = $"{person.FirstName} {person.LastName}";
             }
             
-            claims.Add(new Claim(ClaimTypeDictionary.UserType, user.UserType));
-            claims.Add(new Claim(ClaimTypeDictionary.DisplayName, displayName));
+            claims.Add(new Claim(ClaimTypes.UserType, user.UserType));
+            claims.Add(new Claim(ClaimTypes.DisplayName, displayName));
 
             var roleNames = await UserManager.GetRolesAsync(user);
 
@@ -60,7 +61,7 @@ namespace MyPortal.Logic.Authorisation
 
                 foreach (var perm in perms)
                 {
-                    claims.Add(new Claim(ClaimTypeDictionary.Permissions, perm));
+                    claims.Add(new Claim(ClaimTypes.Permissions, perm));
                 }
             }
 

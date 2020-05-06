@@ -1,10 +1,10 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using MyPortal.Logic.Dictionaries;
+using MyPortal.Logic.Constants;
 
 namespace MyPortal.Logic.Models.Business
 {
-    public class ProfileLogNoteTypeModel
+    public class LogNoteTypeModel
     {
         public Guid Id { get; set; }
 
@@ -17,42 +17,42 @@ namespace MyPortal.Logic.Models.Business
 
         public string GetIcon()
         {
-            if (Id == ProfileLogNoteTypeDictionary.AcademicSupport)
+            if (Id == LogNoteTypes.AcademicSupport)
             {
                 return "fa-comments";
             }
 
-            if (Id == ProfileLogNoteTypeDictionary.Behaviour)
+            if (Id == LogNoteTypes.Behaviour)
             {
                 return "fa-exclamation-triangle";
             }
 
-            if (Id == ProfileLogNoteTypeDictionary.MedEvent)
+            if (Id == LogNoteTypes.MedEvent)
             {
                 return "fa-first-aid";
             }
 
-            if (Id == ProfileLogNoteTypeDictionary.Praise)
+            if (Id == LogNoteTypes.Praise)
             {
                 return "fa-smile";
             }
 
-            if (Id == ProfileLogNoteTypeDictionary.Report)
+            if (Id == LogNoteTypes.Report)
             {
                 return "fa-clipboard";
             }
 
-            if (Id == ProfileLogNoteTypeDictionary.SenNote)
+            if (Id == LogNoteTypes.SenNote)
             {
                 return "fa-hands-helping";
             }
 
-            if (Id == ProfileLogNoteTypeDictionary.StudentFeed)
+            if (Id == LogNoteTypes.StudentFeed)
             {
                 return "fa-user-graduate";
             }
 
-            if (Id == ProfileLogNoteTypeDictionary.TutorNote)
+            if (Id == LogNoteTypes.TutorNote)
             {
                 return "fa-user-tie";
             }

@@ -1,6 +1,6 @@
-﻿namespace MyPortal.Logic.Dictionaries
+﻿namespace MyPortal.Logic.Constants
 {
-    public static class PolicyDictionary
+    public static class Policies
     {
         public static class UserType
         {

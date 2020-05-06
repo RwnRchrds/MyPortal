@@ -1,6 +1,6 @@
-﻿namespace MyPortal.Logic.Dictionaries
+﻿namespace MyPortal.Logic.Constants
 {
-    public class UserTypeDictionary
+    public class UserTypes
     {
         public const string Staff = "0";
         public const string Student = "1";

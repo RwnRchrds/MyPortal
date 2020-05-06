@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace MyPortal.Logic.Dictionaries
+namespace MyPortal.Logic.Constants
 {
-    public static class AttendanceMeaningDictionary
+    public static class AttendanceMeanings
     {
         public static Guid Present = Guid.Parse("59036717-D349-46D3-B8A6-60FFA9263DB3");
         public static Guid ApprovedEdActivity = Guid.Parse("59036717-D349-46D3-B8A6-60FFA9263DB3");

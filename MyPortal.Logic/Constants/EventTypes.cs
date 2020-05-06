@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace MyPortal.Logic.Dictionaries
+namespace MyPortal.Logic.Constants
 {
-    public class EventTypeDictionary
+    public class EventTypes
     {
         public static Guid Detention = Guid.Parse("");
     }

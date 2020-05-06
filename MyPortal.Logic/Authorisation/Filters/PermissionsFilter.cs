@@ -5,7 +5,6 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using MyPortal.Database.Models.Identity;
-using MyPortal.Logic.Dictionaries;
 using MyPortal.Logic.Extensions;
 
 namespace MyPortal.Logic.Authorisation.Filters

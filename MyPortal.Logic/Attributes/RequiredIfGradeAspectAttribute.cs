@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using MyPortal.Database.Models;
-using MyPortal.Logic.Dictionaries;
+using MyPortal.Logic.Constants;
 
 namespace MyPortal.Logic.Attributes
 {
@@ -13,7 +13,7 @@ namespace MyPortal.Logic.Attributes
         {
             var aspect = (Aspect) validationContext.ObjectInstance;
 
-            if (aspect.TypeId == AspectTypeDictionary.Grade && aspect.GradeSetId == null)
+            if (aspect.TypeId == AspectTypes.Grade && aspect.GradeSetId == null)
             {
                 return new ValidationResult("Grade set is required.");
             }

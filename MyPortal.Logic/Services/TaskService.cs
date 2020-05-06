@@ -66,7 +66,7 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<TaskModel>> GetByPerson(Guid personId)
         {
-            var tasks = await _taskRepository.GetByPerson(personId);
+            var tasks = await _taskRepository.GetByAssignedTo(personId);
 
             return tasks.Select(_businessMapper.Map<TaskModel>);
         }

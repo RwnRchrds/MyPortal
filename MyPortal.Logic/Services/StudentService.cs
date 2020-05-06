@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Repositories;
-using MyPortal.Logic.Dictionaries;
+using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Business;
 using MyPortal.Logic.Models.Data;
@@ -56,9 +56,9 @@ namespace MyPortal.Logic.Services
             var searchTypes = new Dictionary<string, Guid>();
             
             searchTypes.Add("All", Guid.Empty);
-            searchTypes.Add("On Roll", SearchTypeDictionary.Student.OnRoll);
-            searchTypes.Add("Leavers", SearchTypeDictionary.Student.Leavers);
-            searchTypes.Add("Future", SearchTypeDictionary.Student.Future);
+            searchTypes.Add("On Roll", SearchTypes.Student.OnRoll);
+            searchTypes.Add("Leavers", SearchTypes.Student.Leavers);
+            searchTypes.Add("Future", SearchTypes.Student.Future);
 
             return new Lookup(searchTypes);
         }
@@ -69,15 +69,15 @@ namespace MyPortal.Logic.Services
 
             IEnumerable<Student> students;
             
-            if (searchParams.SearchType == SearchTypeDictionary.Student.OnRoll)
+            if (searchParams.SearchType == SearchTypes.Student.OnRoll)
             {
                 students = await _studentRepository.GetOnRoll(searchObject);
             }
-            else if (searchParams.SearchType == SearchTypeDictionary.Student.Leavers)
+            else if (searchParams.SearchType == SearchTypes.Student.Leavers)
             {
                 students = await _studentRepository.GetLeavers(searchObject);
             }
-            else if (searchParams.SearchType == SearchTypeDictionary.Student.Future)
+            else if (searchParams.SearchType == SearchTypes.Student.Future)
             {
                 students = await _studentRepository.GetFuture(searchObject);
             }

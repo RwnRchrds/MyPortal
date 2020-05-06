@@ -5,17 +5,21 @@ using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Identity;
 using MyPortal.Database.Repositories;
+using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Exceptions;
 
 namespace MyPortal.Logic.Services
 {
     public class ApplicationRolePermissionService : BaseService, IApplicationRolePermissionService
     {
         private readonly IApplicationRolePermissionRepository _rolePermissionRepository;
+        private readonly IApplicationPermissionRepository _permissionRepository;
 
-        public ApplicationRolePermissionService(IApplicationRolePermissionRepository rolePermissionRepository)
+        public ApplicationRolePermissionService(IApplicationRolePermissionRepository rolePermissionRepository, IApplicationPermissionRepository permissionRepository)
         {
             _rolePermissionRepository = rolePermissionRepository;
+            _permissionRepository = permissionRepository;
         }
         
         public async Task<IEnumerable<string>> GetPermissionClaimValues(Guid roleId)
@@ -28,7 +32,7 @@ namespace MyPortal.Logic.Services
         public async Task SetPermissions(Guid roleId, IList<Guid> permIds)
         {
             // Add new permissions from list
-            var existingPermissions = (await _rolePermissionRepository.GetPermissionsByRole(roleId)).ToList();
+            var existingPermissions = (await _rolePermissionRepository.GetByRole(roleId)).ToList();
             
             foreach (var permId in permIds)
             {
@@ -47,6 +51,21 @@ namespace MyPortal.Logic.Services
             }
 
             await _rolePermissionRepository.SaveChanges();
+        }
+
+        public async Task VerifyPermissions()
+        {
+            var perms = Permissions.GetAll();
+
+            foreach (var perm in perms)
+            {
+                var permInDb = await _permissionRepository.GetByClaimValue(perm);
+
+                if (permInDb == null)
+                {
+                    throw new ServiceException(ExceptionType.BadRequest, $"Permission {perm:X} not found in database");
+                }
+            }
         }
     }
 }
