@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Business;
-using MyPortal.Logic.Models.Documents;
+using MyPortal.Logic.Models.Requests.Documents;
 
 namespace MyPortal.Logic.Services
 {

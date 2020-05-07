@@ -7,7 +7,7 @@ namespace MyPortal.Database.Interfaces
 {
     public interface IApplicationRolePermissionRepository : IReadWriteRepository<ApplicationRolePermission>
     {
-        Task<IEnumerable<ApplicationRolePermission>> GetPermissionsByRole(Guid roleId);
+        Task<IEnumerable<ApplicationRolePermission>> GetByRole(Guid roleId);    
         Task<IEnumerable<string>> GetClaimValuesByRole(Guid roleId);
     }
 }

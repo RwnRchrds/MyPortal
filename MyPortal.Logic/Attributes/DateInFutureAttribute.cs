@@ -4,7 +4,7 @@ using System.Globalization;
 
 namespace MyPortal.Logic.Attributes
 {
-    public class FutureDateAttribute : ValidationAttribute
+    public class DateInFutureAttribute : ValidationAttribute
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {

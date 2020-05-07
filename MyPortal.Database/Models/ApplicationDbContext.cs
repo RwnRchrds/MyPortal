@@ -80,8 +80,8 @@ namespace MyPortal.Database.Models
         public virtual DbSet<PhoneNumberType> PhoneNumberTypes { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<ProductType> ProductTypes { get; set; }
-        public virtual DbSet<ProfileLogNote> ProfileLogNotes { get; set; }
-        public virtual DbSet<ProfileLogNoteType> ProfileLogNoteTypes { get; set; }
+        public virtual DbSet<LogNote> ProfileLogNotes { get; set; }
+        public virtual DbSet<LogNoteType> ProfileLogNoteTypes { get; set; }
         public virtual DbSet<RegGroup> RegGroups { get; set; }
         public virtual DbSet<RelationshipType> RelationshipTypes { get; set; }
         public virtual DbSet<Report> Reports { get; set; }
@@ -314,10 +314,10 @@ namespace MyPortal.Database.Models
             modelBuilder.Entity<ProductType>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
-            modelBuilder.Entity<ProfileLogNote>()
+            modelBuilder.Entity<LogNote>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
-            modelBuilder.Entity<ProfileLogNoteType>()
+            modelBuilder.Entity<LogNoteType>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
             modelBuilder.Entity<RegGroup>()
@@ -561,7 +561,7 @@ namespace MyPortal.Database.Models
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<AcademicYear>()
-                .HasMany(e => e.Logs)
+                .HasMany(e => e.LogNotes)
                 .WithOne(e => e.AcademicYear)
                 .HasForeignKey(e => e.AcademicYearId)
                 .IsRequired()
@@ -864,9 +864,9 @@ namespace MyPortal.Database.Models
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<ProfileLogNoteType>()
-                .HasMany(e => e.Logs)
-                .WithOne(e => e.ProfileLogNoteType)
+            modelBuilder.Entity<LogNoteType>()
+                .HasMany(e => e.LogNotes)
+                .WithOne(e => e.LogNoteType)
                 .HasForeignKey(e => e.TypeId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
@@ -998,6 +998,12 @@ namespace MyPortal.Database.Models
                 .WithOne(e => e.Uploader)
                 .HasForeignKey(e => e.UploaderId)
                 .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany(e => e.AssignedBy)
+                .WithOne(e => e.AssignedBy)
+                .HasForeignKey(e => e.AssignedById)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<StaffMember>()
@@ -1196,8 +1202,8 @@ namespace MyPortal.Database.Models
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Person>()
-                .HasMany(e => e.Tasks)
-                .WithOne(e => e.Person)
+                .HasMany(e => e.AssignedTo)
+                .WithOne(e => e.AssignedTo)
                 .HasForeignKey(e => e.AssignedToId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);

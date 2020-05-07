@@ -37,7 +37,7 @@ namespace MyPortal.Database.Repositories
                     }, param);
         }
 
-        public async Task<IEnumerable<ApplicationRolePermission>> GetPermissionsByRole(Guid roleId)
+        public async Task<IEnumerable<ApplicationRolePermission>> GetByRole(Guid roleId)
         {
             var sql = SelectAllColumns();
             

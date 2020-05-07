@@ -9,8 +9,8 @@ using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.Admin;
 using MyPortal.Logic.Models.Business;
+using MyPortal.Logic.Models.Requests.Admin;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services

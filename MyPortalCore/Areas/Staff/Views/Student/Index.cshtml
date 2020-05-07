@@ -1,4 +1,4 @@
-﻿@using MyPortal.Logic.Dictionaries
+﻿@using MyPortal.Logic.Constants
 @model MyPortalCore.Areas.Staff.ViewModels.Student.StudentSearchViewModel
 
 @{
@@ -43,7 +43,7 @@
                                         <label>Status:</label>
                                     </div>
                                     <div class="kt-form__control">
-                                        @Html.DropDownList("searchType", new SelectList(Model.SearchTypes, "Value", "Key", SearchTypeDictionary.Student.OnRoll), new { @class = "form-control form-control-sm", id = "statusSearch" })
+                                        @Html.DropDownList("searchType", new SelectList(Model.SearchTypes, "Value", "Key", SearchFilters.Students.OnRoll), new { @class = "form-control form-control-sm", id = "statusSearch" })
                                     </div>
                                 </div>
                             </div>

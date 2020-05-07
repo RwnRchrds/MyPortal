@@ -5,11 +5,8 @@ using System.Text;
 using AutoMapper;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
-using MyPortal.Logic.Models.Admin;
 using MyPortal.Logic.Models.Business;
-using MyPortal.Logic.Models.DataGrid;
-using MyPortal.Logic.Models.Lite;
-using MyPortal.Logic.Models.Student;
+using MyPortal.Logic.Models.Summary;
 
 namespace MyPortal.Logic.Helpers
 {
@@ -43,8 +40,8 @@ namespace MyPortal.Logic.Helpers
         {
             var config = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<RoleModel, DataGridApplicationRole>();
-                cfg.CreateMap<StudentModel, DataGridStudent>()
+                cfg.CreateMap<RoleModel, ApplicationRoleSummary>();
+                cfg.CreateMap<StudentModel, StudentSummary>()
                     .ForMember(dest => dest.DisplayName,
                         opts => opts.MapFrom(src => src.Person.GetDisplayName(false)))
                     .ForMember(dest => dest.RegGroupName,
@@ -55,7 +52,7 @@ namespace MyPortal.Logic.Helpers
                         opts => opts.MapFrom(src => src.House.Name))
                     .ForMember(dest => dest.Gender,
                         opts => opts.MapFrom(src => src.Person.Gender));
-                cfg.CreateMap<LogNoteModel, DataGridProfileLogNote>()
+                cfg.CreateMap<LogNoteModel, LogNoteSummary>()
                     .ForMember(dest => dest.AuthorName,
                         opts => opts.MapFrom(src => src.Author.GetDisplayName(true)))
                     .ForMember(dest => dest.LogTypeName,

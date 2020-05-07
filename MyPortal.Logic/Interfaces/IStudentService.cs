@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using MyPortal.Logic.Models.Business;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.DataTables;
-using MyPortal.Logic.Models.Student;
+using MyPortal.Logic.Models.Requests.Student;
 
 namespace MyPortal.Logic.Interfaces
 {
@@ -15,6 +15,6 @@ namespace MyPortal.Logic.Interfaces
 
         Task<StudentModel> GetById(Guid studentId);
 
-        Lookup GetSearchTypes();
+        Lookup GetSearchFilters();
     }
 }

@@ -18,7 +18,7 @@ using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
 using MyPortal.Database.Repositories;
 using MyPortal.Logic.Authorisation;
-using MyPortal.Logic.Dictionaries;
+using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Services;
 
@@ -58,9 +58,9 @@ namespace MyPortalCore
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy(PolicyDictionary.UserType.Student, p => p.RequireClaim(ClaimTypeDictionary.UserType, UserTypeDictionary.Student));
-                options.AddPolicy(PolicyDictionary.UserType.Staff, p => p.RequireClaim(ClaimTypeDictionary.UserType, UserTypeDictionary.Staff));
-                options.AddPolicy(PolicyDictionary.UserType.Parent, p => p.RequireClaim(ClaimTypeDictionary.UserType, UserTypeDictionary.Parent));
+                options.AddPolicy(Policies.UserType.Student, p => p.RequireClaim(ClaimTypes.UserType, UserTypes.Student));
+                options.AddPolicy(Policies.UserType.Staff, p => p.RequireClaim(ClaimTypes.UserType, UserTypes.Staff));
+                options.AddPolicy(Policies.UserType.Parent, p => p.RequireClaim(ClaimTypes.UserType, UserTypes.Parent));
             });
 
             // MyPortal database connection
@@ -74,6 +74,7 @@ namespace MyPortalCore
             services.AddTransient<IAddressPersonRepository, AddressPersonRepository>();
             services.AddTransient<IAddressRepository, AddressRepository>();
             services.AddTransient<IApplicationUserRepository, ApplicationUserRepository>();
+            services.AddTransient<IApplicationPermissionRepository, ApplicationPermissionRepository>();
             services.AddTransient<IApplicationRolePermissionRepository, ApplicationRolePermissionRepository>();
             services.AddTransient<IAspectRepository, AspectRepository>();
             services.AddTransient<IAspectTypeRepository, AspectTypeRepository>();
@@ -117,6 +118,8 @@ namespace MyPortalCore
             services.AddTransient<ILessonPlanTemplateRepository, LessonPlanTemplateRepository>();
             services.AddTransient<ILocalAuthorityRepository, LocalAuthorityRepository>();
             services.AddTransient<ILocationRepository, LocationRepository>();
+            services.AddTransient<ILogNoteRepository, LogNoteRepository>();
+            services.AddTransient<ILogNoteTypeRepository, LogNoteTypeRepository>();
             services.AddTransient<IMedicalConditionRepository, MedicalConditionRepository>();
             services.AddTransient<IMedicalEventRepository, MedicalEventRepository>();
             services.AddTransient<IObservationOutcomeRepository, ObservationOutcomeRepository>();
@@ -130,8 +133,6 @@ namespace MyPortalCore
             services.AddTransient<IPhoneNumberTypeRepository, PhoneNumberTypeRepository>();
             services.AddTransient<IProductRepository, ProductRepository>();
             services.AddTransient<IProductTypeRepository, ProductTypeRepository>();
-            services.AddTransient<IProfileLogNoteRepository, ProfileLogNoteRepository>();
-            services.AddTransient<IProfileLogNoteTypeRepository, ProfileLogNoteTypeRepository>();
             services.AddTransient<IRegGroupRepository, RegGroupRepository>();
             services.AddTransient<IRelationshipTypeRepository, RelationshipTypeRepository>();
             services.AddTransient<IReportRepository, ReportRepository>();
@@ -168,8 +169,9 @@ namespace MyPortalCore
             services.AddTransient<IApplicationUserService, ApplicationUserService>();
             services.AddTransient<IDirectoryService, DirectoryService>();
             services.AddTransient<IDocumentService, DocumentService>();
+            services.AddTransient<IGoogleService, GoogleService>();
+            services.AddTransient<ILogNoteService, LogNoteService>();
             services.AddTransient<IPersonService, PersonService>();
-            services.AddTransient<IProfileLogNoteService, ProfileLogNoteService>();
             services.AddTransient<ISchoolService, SchoolService>();
             services.AddTransient<IStudentService, StudentService>();
         }

@@ -7,10 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.VisualStudio.Web.CodeGeneration.DotNet;
 using MyPortal.Logic.Authorisation.Attributes;
-using MyPortal.Logic.Dictionaries;
+using MyPortal.Logic.Constants;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.DataGrid;
 using MyPortalCore.Areas.Staff.ViewModels.Student;
 
 namespace MyPortalCore.Areas.Staff.Controllers
@@ -19,28 +18,28 @@ namespace MyPortalCore.Areas.Staff.Controllers
     {
         private IStudentService _service;
         private IPersonService _personService;
-        private IProfileLogNoteService _logNoteService;
+        private ILogNoteService _logNoteService;
 
-        public StudentController(IStudentService service, IPersonService personService, IProfileLogNoteService logNoteService, IApplicationUserService userService) : base(userService)
+        public StudentController(IStudentService service, IPersonService personService, ILogNoteService logNoteService, IApplicationUserService userService) : base(userService)
         {
             _service = service;
             _personService = personService;
             _logNoteService = logNoteService;
         }
 
-        [RequiresPermission(PermissionDictionary.Student.Details.View)]
+        [RequiresPermission(Permissions.Student.Details.View)]
         public IActionResult Index()
         {
             var viewModel = new StudentSearchViewModel();
-            viewModel.SearchTypes = _service.GetSearchTypes();
+            viewModel.SearchTypes = _service.GetSearchFilters();
             viewModel.GenderOptions = _personService.GetGenderOptions();
 
             return View(viewModel);
         }
 
-        [RequiresPermission(PermissionDictionary.Student.Details.View)]
+        [RequiresPermission(Permissions.Student.Details.View)]
         [Route("{studentId}")]
-        [RequiresPermission(PermissionDictionary.Student.Details.View)]
+        [RequiresPermission(Permissions.Student.Details.View)]
         public async Task<IActionResult> StudentOverview(Guid studentId)
         {
             var user = await _userService.GetUserByPrincipal(User);

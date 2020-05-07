@@ -8,17 +8,17 @@ using MyPortal.Logic.Authorisation.Attributes;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Business;
-using MyPortal.Logic.Models.DataGrid;
-using MyPortal.Logic.Models.Student.LogNotes;
+using MyPortal.Logic.Models.Requests.Student.LogNotes;
+using MyPortal.Logic.Models.Summary;
 
 namespace MyPortalCore.Controllers.Api
 {
     [Route("api/student/logNote")]
-    public class ProfileLogNoteController : BaseApiController
+    public class LogNoteController : BaseApiController
     {
         private readonly ILogNoteService _service;
 
-        public ProfileLogNoteController(ILogNoteService service, IApplicationUserService userService) : base(userService)
+        public LogNoteController(ILogNoteService service, IApplicationUserService userService) : base(userService)
         {
             _service = service;
         }
@@ -45,7 +45,7 @@ namespace MyPortalCore.Controllers.Api
             {
                 var logNotes = await _service.GetByStudent(studentId, academicYearId);
 
-                var result = logNotes.Select(_dTMapper.Map<DataGridProfileLogNote>);
+                var result = logNotes.Select(_dTMapper.Map<LogNoteSummary>);
 
                 return Ok(result);
             });

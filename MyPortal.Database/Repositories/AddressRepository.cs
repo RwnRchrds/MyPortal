@@ -22,7 +22,7 @@ namespace MyPortal.Database.Repositories
             return await Connection.QueryAsync<Address>(sql, param);
         }
 
-        public async Task<IEnumerable<Address>> GetAddressesByPerson(int personId)
+        public async Task<IEnumerable<Address>> GetByPerson(int personId)
         {
             var sql =
                 $"SELECT {AllColumns} FROM {TblName} {SqlHelper.Join(JoinType.InnerJoin, "[dbo].[AddressPerson]", "[AddressPerson].[PersonId]", "@PersonId")}";

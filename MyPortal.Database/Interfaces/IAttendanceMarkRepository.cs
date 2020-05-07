@@ -7,5 +7,6 @@ namespace MyPortal.Database.Interfaces
 {
     public interface IAttendanceMarkRepository : IReadWriteRepository<AttendanceMark>
     {
+
     }
 }

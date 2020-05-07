@@ -1006,7 +1006,7 @@ namespace MyPortal.Database.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("NonPublic")
+                    b.Property<bool>("Public")
                         .HasColumnType("bit");
 
                     b.Property<string>("Title")
@@ -1168,6 +1168,21 @@ namespace MyPortal.Database.Migrations
                     b.HasIndex("SubjectId");
 
                     b.ToTable("GiftedTalented");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.GoogleToken", b =>
+                {
+                    b.Property<string>("Key")
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
+
+                    b.HasKey("Key");
+
+                    b.ToTable("GoogleToken");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.GovernanceType", b =>
@@ -1716,6 +1731,69 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Location");
                 });
 
+            modelBuilder.Entity("MyPortal.Database.Models.LogNote", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("AcademicYearId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TypeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AcademicYearId");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("StudentId");
+
+                    b.HasIndex("TypeId");
+
+                    b.ToTable("LogNote");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.LogNoteType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<string>("ColourCode")
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LogNoteType");
+                });
+
             modelBuilder.Entity("MyPortal.Database.Models.Marksheet", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2122,69 +2200,6 @@ namespace MyPortal.Database.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ProductType");
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.ProfileLogNote", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
-
-                    b.Property<Guid>("AcademicYearId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AuthorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("Deleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("StudentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("TypeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AcademicYearId");
-
-                    b.HasIndex("AuthorId");
-
-                    b.HasIndex("StudentId");
-
-                    b.HasIndex("TypeId");
-
-                    b.ToTable("ProfileLogNote");
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.ProfileLogNoteType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
-
-                    b.Property<string>("ColourCode")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ProfileLogNoteType");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.RegGroup", b =>
@@ -2931,6 +2946,9 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<Guid?>("AssignedById")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("AssignedToId")
                         .HasColumnType("uniqueidentifier");
 
@@ -2956,6 +2974,8 @@ namespace MyPortal.Database.Migrations
                         .HasMaxLength(128);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AssignedById");
 
                     b.HasIndex("AssignedToId");
 
@@ -3570,6 +3590,33 @@ namespace MyPortal.Database.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("MyPortal.Database.Models.LogNote", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.AcademicYear", "AcademicYear")
+                        .WithMany("LogNotes")
+                        .HasForeignKey("AcademicYearId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", "Author")
+                        .WithMany("ProfileLogNotes")
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Student", "Student")
+                        .WithMany("ProfileLogs")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.LogNoteType", "LogNoteType")
+                        .WithMany("LogNotes")
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("MyPortal.Database.Models.MarksheetColumn", b =>
                 {
                     b.HasOne("MyPortal.Database.Models.Aspect", "Aspect")
@@ -3690,33 +3737,6 @@ namespace MyPortal.Database.Migrations
                     b.HasOne("MyPortal.Database.Models.ProductType", "Type")
                         .WithMany("Products")
                         .HasForeignKey("ProductTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.ProfileLogNote", b =>
-                {
-                    b.HasOne("MyPortal.Database.Models.AcademicYear", "AcademicYear")
-                        .WithMany("Logs")
-                        .HasForeignKey("AcademicYearId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", "Author")
-                        .WithMany("ProfileLogNotes")
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MyPortal.Database.Models.Student", "Student")
-                        .WithMany("ProfileLogs")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MyPortal.Database.Models.ProfileLogNoteType", "ProfileLogNoteType")
-                        .WithMany("Logs")
-                        .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -4001,8 +4021,13 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Task", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Person", "Person")
-                        .WithMany("Tasks")
+                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", "AssignedBy")
+                        .WithMany("AssignedBy")
+                        .HasForeignKey("AssignedById")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MyPortal.Database.Models.Person", "AssignedTo")
+                        .WithMany("AssignedTo")
                         .HasForeignKey("AssignedToId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();

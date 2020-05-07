@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using MyPortal.Logic.Models.Documents;
+using MyPortal.Logic.Models.Business;
+using MyPortal.Logic.Models.Google;
+using MyPortal.Logic.Models.Requests.Documents;
+using File = Google.Apis.Drive.v3.Data.File;
 
 namespace MyPortal.Logic.Interfaces
 {
     public interface IDocumentService
     {
-        Task Create(Guid userId, params DocumentUpload[] documents);
-        Task<string> GetUrl(Guid userId, Guid documentId);
-        Task<Stream> Download(Guid userId, Guid documentId);
+        Task Create(params DocumentUpload[] uploads);
+        Task<File> GetFileById(Guid documentId);
+        Task<FileDownload> GetDownloadById(Guid documentId, bool downloadAsPdf = false);
+        Task<DocumentModel> GetDocumentById(Guid documentId);
     }
 }

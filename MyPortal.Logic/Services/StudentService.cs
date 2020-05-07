@@ -10,7 +10,7 @@ using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Business;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.DataTables;
-using MyPortal.Logic.Models.Student;
+using MyPortal.Logic.Models.Requests.Student;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
@@ -51,14 +51,14 @@ namespace MyPortal.Logic.Services
             return _businessMapper.Map<StudentModel>(student);
         }
 
-        public Lookup GetSearchTypes()
+        public Lookup GetSearchFilters()
         {
             var searchTypes = new Dictionary<string, Guid>();
             
             searchTypes.Add("All", Guid.Empty);
-            searchTypes.Add("On Roll", SearchTypes.Student.OnRoll);
-            searchTypes.Add("Leavers", SearchTypes.Student.Leavers);
-            searchTypes.Add("Future", SearchTypes.Student.Future);
+            searchTypes.Add("On Roll", SearchFilters.Students.OnRoll);
+            searchTypes.Add("Leavers", SearchFilters.Students.Leavers);
+            searchTypes.Add("Future", SearchFilters.Students.Future);
 
             return new Lookup(searchTypes);
         }
@@ -69,15 +69,15 @@ namespace MyPortal.Logic.Services
 
             IEnumerable<Student> students;
             
-            if (searchParams.SearchType == SearchTypes.Student.OnRoll)
+            if (searchParams.SearchType == SearchFilters.Students.OnRoll)
             {
                 students = await _studentRepository.GetOnRoll(searchObject);
             }
-            else if (searchParams.SearchType == SearchTypes.Student.Leavers)
+            else if (searchParams.SearchType == SearchFilters.Students.Leavers)
             {
                 students = await _studentRepository.GetLeavers(searchObject);
             }
-            else if (searchParams.SearchType == SearchTypes.Student.Future)
+            else if (searchParams.SearchType == SearchFilters.Students.Future)
             {
                 students = await _studentRepository.GetFuture(searchObject);
             }

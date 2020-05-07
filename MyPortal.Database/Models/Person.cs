@@ -28,6 +28,7 @@ namespace MyPortal.Database.Models
             EmailAddresses = new HashSet<EmailAddress>();
             Addresses = new HashSet<AddressPerson>();
             DiaryEventInvitations = new HashSet<DiaryEventAttendee>();
+            AssignedTo = new HashSet<Task>();
         }
 
         [Key]
@@ -99,6 +100,6 @@ namespace MyPortal.Database.Models
 
         public virtual ICollection<DiaryEventAttendee> DiaryEventInvitations { get; set; }
 
-        public virtual ICollection<Task> Tasks { get; set; }
+        public virtual ICollection<Task> AssignedTo { get; set; }
     }
 }

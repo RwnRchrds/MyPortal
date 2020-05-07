@@ -31,5 +31,14 @@ namespace MyPortal.Database.Repositories
                     return code;
                 }, param);
         }
+
+        public async Task<AttendanceCode> GetByCode(string code)
+        {
+            var sql = SelectAllColumns();
+
+            SqlHelper.Where(ref sql, "[AttendanceCode].[Code] = @Code");
+
+            return (await ExecuteQuery(sql, new {Code = code})).First();
+        }
     }
 }

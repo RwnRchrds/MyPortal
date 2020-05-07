@@ -22,7 +22,7 @@ namespace MyPortal.Database.Models
             MedicalEvents = new HashSet<MedicalEvent>();
             SenEvents = new HashSet<SenEvent>();
             SenProvisions = new HashSet<SenProvision>();
-            ProfileLogs = new HashSet<ProfileLogNote>();
+            ProfileLogs = new HashSet<LogNote>();
             GiftedTalentedSubjects = new HashSet<GiftedTalented>();
             StudentContacts = new HashSet<StudentContact>();
             HomeworkSubmissions = new HashSet<HomeworkSubmission>();
@@ -113,7 +113,7 @@ namespace MyPortal.Database.Models
         public virtual ICollection<StudentContact> StudentContacts { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProfileLogNote> ProfileLogs { get; set; }
+        public virtual ICollection<LogNote> ProfileLogs { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GiftedTalented> GiftedTalentedSubjects { get; set; }

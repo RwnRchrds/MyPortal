@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using MyPortal.Logic.Dictionaries;
+using MyPortal.Logic.Constants;
 using MyPortalCore.Models;
 
 namespace MyPortalCore.Controllers
@@ -21,18 +21,18 @@ namespace MyPortalCore.Controllers
 
         public IActionResult Index()
         {
-            if (User.Identity.IsAuthenticated && User.HasClaim(ClaimTypeDictionary.UserType, UserTypeDictionary.Staff))
+            if (User.Identity.IsAuthenticated && User.HasClaim(ClaimTypes.UserType, UserTypes.Staff))
             {
                 return RedirectToAction("Index", "Home", new { area = "Staff" });
             }
 
-            else if (User.Identity.IsAuthenticated && User.HasClaim(ClaimTypeDictionary.UserType, UserTypeDictionary.Student))
+            else if (User.Identity.IsAuthenticated && User.HasClaim(ClaimTypes.UserType, UserTypes.Student))
             {
                 // TODO: Enable Student Portal
                 // return RedirectToAction("Index", "Home", new { area = "Students" });
             }
 
-            else if (User.Identity.IsAuthenticated && User.HasClaim(ClaimTypeDictionary.UserType, UserTypeDictionary.Parent))
+            else if (User.Identity.IsAuthenticated && User.HasClaim(ClaimTypes.UserType, UserTypes.Parent))
             {
                 // TODO: Enable Parent Portal
                 // return RedirectToAction("Index", "Home", new { area = "Parents" });

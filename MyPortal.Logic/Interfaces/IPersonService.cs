@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using MyPortal.Logic.Models.Business;
-using MyPortal.Logic.Models.Lite;
-using MyPortal.Logic.Models.Person;
+using MyPortal.Logic.Models.Requests.Person;
 
 namespace MyPortal.Logic.Interfaces
 {

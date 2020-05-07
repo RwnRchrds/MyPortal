@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using MyPortal.Database.Models.Identity;
 
 namespace MyPortal.Database.Models
 {
@@ -13,6 +14,7 @@ namespace MyPortal.Database.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
         public Guid AssignedToId { get; set; }
+        public Guid? AssignedById { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? DueDate { get; set; }
 
@@ -26,6 +28,7 @@ namespace MyPortal.Database.Models
         public bool Personal { get; set; }
         public bool Completed { get; set; }
         public virtual HomeworkSubmission HomeworkSubmission { get; set; }
-        public virtual Person Person { get; set; }
+        public virtual Person AssignedTo { get; set; }
+        public virtual ApplicationUser AssignedBy { get; set; }
     }
 }

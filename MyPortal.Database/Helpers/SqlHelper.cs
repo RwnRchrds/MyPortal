@@ -14,7 +14,7 @@ namespace MyPortal.Database.Helpers
 
     internal static class SqlHelper
     {
-        internal static string Join(JoinType joinType, string tblName, string leftColumn, string rightColumn, string tblAlias = null)
+        internal static string Join(JoinType joinType, string tblName, string @on, string @equals, string tblAlias = null)
         {
             string join;
 
@@ -36,7 +36,7 @@ namespace MyPortal.Database.Helpers
 
             var alias = !string.IsNullOrWhiteSpace(tblAlias) ? $"[{tblAlias}]" : tblName.Replace("[dbo].", "");
 
-            return $"{join} {tblName} AS {alias} ON {leftColumn} = {rightColumn}";
+            return $"{join} {tblName} AS {alias} ON {@on} = {@equals}";
         }
 
         internal static void Where(ref string sql, string condition)

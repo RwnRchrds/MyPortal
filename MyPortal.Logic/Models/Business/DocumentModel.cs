@@ -28,7 +28,7 @@ namespace MyPortal.Logic.Models.Business
 
         public DateTime UploadedDate { get; set; }
 
-        public bool NonPublic { get; set; }
+        public bool Public { get; set; }
 
         public bool Approved { get; set; }
 

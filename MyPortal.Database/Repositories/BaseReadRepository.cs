@@ -52,7 +52,7 @@ namespace MyPortal.Database.Repositories
             return await Connection.QuerySingleOrDefaultAsync<string>(sql, param);
         }
 
-        public string SelectAllColumns()
+        protected string SelectAllColumns()
         {
             return HasRelated
                 ? $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}"

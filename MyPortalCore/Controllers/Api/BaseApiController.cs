@@ -72,10 +72,8 @@ namespace MyPortalCore.Controllers.Api
             {
                 return Forbid(ex.Message);
             }
-            else
-            {
-                return BadRequest(ex.Message);
-            }
+
+            return BadRequest(ex.Message);
         }
     }
 }

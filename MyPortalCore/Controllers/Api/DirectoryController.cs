@@ -14,10 +14,9 @@ namespace MyPortalCore.Controllers.Api
     {
         private readonly IDirectoryService _directoryService;
         private readonly IDocumentService _documentService;
-        public DirectoryController(IApplicationUserService userService, IDirectoryService directoryService, IDocumentService documentService) : base(userService)
+        public DirectoryController(IApplicationUserService userService, IDirectoryService directoryService) : base(userService)
         {
             _directoryService = directoryService;
-            _documentService = documentService;
         }
 
         [HttpGet]
@@ -29,19 +28,6 @@ namespace MyPortalCore.Controllers.Api
                 var children = await _directoryService.GetChildren(directoryId);
 
                 return Ok(children);
-            });
-        }
-
-        [HttpGet]
-        [Route("fileUrl")]
-        public async Task<IActionResult> GetDocumentUrl([FromQuery] Guid documentId)
-        {
-            return await Process(async () =>
-            {
-                var user = await _userService.GetUserByPrincipal(User);
-                var documentUrl = await _documentService.GetUrl(user.Id, documentId);
-
-                return Ok(documentUrl);
             });
         }
     }

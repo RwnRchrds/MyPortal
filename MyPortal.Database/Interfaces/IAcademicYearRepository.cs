@@ -9,5 +9,6 @@ namespace MyPortal.Database.Interfaces
     public interface IAcademicYearRepository : IReadWriteRepository<AcademicYear>
     {
         Task<AcademicYear> GetCurrent();
+        Task<IEnumerable<AcademicYear>> GetAllToDate();
     }
 }

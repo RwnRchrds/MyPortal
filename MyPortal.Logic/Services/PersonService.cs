@@ -6,7 +6,7 @@ using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Business;
-using MyPortal.Logic.Models.Person;
+using MyPortal.Logic.Models.Requests.Person;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services

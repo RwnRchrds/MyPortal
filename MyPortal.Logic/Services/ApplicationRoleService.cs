@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Models.Identity;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.Admin;
 using MyPortal.Logic.Models.Business;
 
 namespace MyPortal.Logic.Services

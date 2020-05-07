@@ -10,13 +10,14 @@ namespace MyPortal.Database.Models.Identity
     {
         public ApplicationUser()
         {
-            ProfileLogNotes = new HashSet<ProfileLogNote>();
+            ProfileLogNotes = new HashSet<LogNote>();
             Documents = new HashSet<Document>();
             MedicalEvents = new HashSet<MedicalEvent>();
             Incidents = new HashSet<Incident>();
             Achievements = new HashSet<Achievement>();
             LessonPlans = new HashSet<LessonPlan>();
             Bulletins = new HashSet<Bulletin>();
+            AssignedBy = new HashSet<Task>();
         }
 
         [StringLength(5)]
@@ -30,7 +31,7 @@ namespace MyPortal.Database.Models.Identity
 
         public virtual AcademicYear SelectedAcademicYear { get; set; }
 
-        public virtual ICollection<ProfileLogNote> ProfileLogNotes { get; set; }
+        public virtual ICollection<LogNote> ProfileLogNotes { get; set; }
 
         public virtual ICollection<Document> Documents { get; set; }
 
@@ -43,5 +44,7 @@ namespace MyPortal.Database.Models.Identity
         public virtual ICollection<LessonPlan> LessonPlans { get; set; }
 
         public virtual ICollection<Bulletin> Bulletins { get; set; }
+
+        public virtual ICollection<Task> AssignedBy { get; set; }
     }
 }

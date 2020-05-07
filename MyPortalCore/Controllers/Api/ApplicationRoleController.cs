@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Logic.Authorisation.Attributes;
-using MyPortal.Logic.Dictionaries;
+using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.DataGrid;
+using MyPortal.Logic.Models.Summary;
 
 namespace MyPortalCore.Controllers.Api
 { 
@@ -22,8 +22,8 @@ namespace MyPortalCore.Controllers.Api
             _service = service;
         }
 
-        [Authorize(Policy = PolicyDictionary.UserType.Staff)]
-        [RequiresPermission(PermissionDictionary.System.Roles.Edit)]
+        [Authorize(Policy = Policies.UserType.Staff)]
+        [RequiresPermission(Permissions.System.Roles.Edit)]
         [Route("Search", Name = "ApiApplicationRoleSearch")]
         public async Task<IActionResult> Search([FromQuery] string roleName)
         {
@@ -31,7 +31,7 @@ namespace MyPortalCore.Controllers.Api
             {
                 var roles = await _service.Get(roleName);
 
-                var result = roles.Select(_dTMapper.Map<DataGridApplicationRole>);
+                var result = roles.Select(_dTMapper.Map<ApplicationRoleSummary>);
 
                 return Ok(result);
             });

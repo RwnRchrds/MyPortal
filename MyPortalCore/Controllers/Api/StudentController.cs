@@ -5,40 +5,48 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Models.Identity;
-using MyPortal.Database.Repositories;
 using MyPortal.Logic.Authorisation.Attributes;
-using MyPortal.Logic.Dictionaries;
+using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.DataGrid;
-using MyPortal.Logic.Models.DataTables;
-using MyPortal.Logic.Models.Student;
+using MyPortal.Logic.Models.Requests.Student;
+using MyPortal.Logic.Models.Summary;
 
 namespace MyPortalCore.Controllers.Api
 {
     [Authorize]
     public class StudentController : BaseApiController
     {
-        private readonly IStudentService _service;
-        private RoleManager<ApplicationRole> _roleManager;
+        private readonly IStudentService _studentService;
 
-        public StudentController(IStudentService service, RoleManager<ApplicationRole> roleManager, IApplicationUserService userService) : base(userService)
+        public StudentController(IStudentService studentService, IApplicationUserService userService) : base(userService)
         {
-            _roleManager = roleManager;
-            _service = service;
+            _studentService = studentService;
         }
 
-        [Authorize(Policy = PolicyDictionary.UserType.Staff)]
-        [RequiresPermission(PermissionDictionary.Student.Details.View)]
+        [HttpGet]
+        [Authorize(Policy = Policies.UserType.Staff)]
         [Route("Search", Name = "ApiStudentSearch")]
-        public async Task<IActionResult> Search([FromQuery]StudentSearchParams searchParams)
+        [RequiresPermission(Permissions.Student.Details.View)]
+        public async Task<IActionResult> SearchStudents([FromQuery] StudentSearchParams searchParams)
         {
             return await Process(async () =>
             {
-                var students = await _service.Get(searchParams);
+                var students = await _studentService.Get(searchParams);
 
-                var result = students.Select(_dTMapper.Map<DataGridStudent>);
+                return Ok(students.Select(_dTMapper.Map<StudentSummary>));
+            });
+        }
 
-                return Ok(result);
+        [HttpGet]
+        [Route("GetById", Name = "ApiStudentGetById")]
+        [RequiresPermission(Permissions.Student.Details.View)]
+        public async Task<IActionResult> GetById([FromQuery] Guid studentId)
+        {
+            return await Process(async () =>
+            {
+                var student = await _studentService.GetById(studentId);
+
+                return Ok(student);
             });
         }
     }

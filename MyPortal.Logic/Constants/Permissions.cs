@@ -192,6 +192,11 @@
             }
         }
 
+        public static class Person
+        {
+            
+        }
+
         public static int[] GetAll()
         {
             return new[]
