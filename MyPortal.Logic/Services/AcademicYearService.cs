@@ -7,6 +7,7 @@ using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Business;
+using MyPortal.Logic.Models.Exceptions;
 
 namespace MyPortal.Logic.Services
 {
@@ -14,7 +15,7 @@ namespace MyPortal.Logic.Services
     {
         private readonly IAcademicYearRepository _academicYearRepository;
 
-        public AcademicYearService(IAcademicYearRepository academicYearRepository)
+        public AcademicYearService(IAcademicYearRepository academicYearRepository) : base("Academic year")
         {
             _academicYearRepository = academicYearRepository;
         }
@@ -23,7 +24,17 @@ namespace MyPortal.Logic.Services
         {
             var acadYear = await _academicYearRepository.GetCurrent();
 
+            if (acadYear == null)
+            {
+                NotFound("Current academic year not defined.");
+            }
+
             return _businessMapper.Map<AcademicYearModel>(acadYear);
+        }
+
+        public override void Dispose()
+        {
+            _academicYearRepository.Dispose();
         }
     }
 }

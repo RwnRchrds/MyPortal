@@ -9,6 +9,7 @@ using MyPortal.Database.Models;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Business;
 using MyPortal.Logic.Models.Data;
+using MyPortal.Logic.Models.Exceptions;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
@@ -18,7 +19,7 @@ namespace MyPortal.Logic.Services
         private readonly ILogNoteRepository _logNoteRepository;
         private readonly ILogNoteTypeRepository _logNoteTypeRepository;
 
-        public LogNoteService(ILogNoteRepository logNoteRepository, ILogNoteTypeRepository logNoteTypeRepository)
+        public LogNoteService(ILogNoteRepository logNoteRepository, ILogNoteTypeRepository logNoteTypeRepository) : base("Log note")
         {
             _logNoteRepository = logNoteRepository;
             _logNoteTypeRepository = logNoteTypeRepository;
@@ -27,6 +28,11 @@ namespace MyPortal.Logic.Services
         public async Task<LogNoteModel> GetById(Guid logNoteId)
         {
             var logNote = await _logNoteRepository.GetById(logNoteId);
+
+            if (logNote == null)
+            {
+                NotFound();
+            }
 
             return _businessMapper.Map<LogNoteModel>(logNote);
         }
@@ -71,6 +77,11 @@ namespace MyPortal.Logic.Services
             {
                 var logNote = await _logNoteRepository.GetByIdWithTracking(logNoteObject.Id);
 
+                if (logNote == null)
+                {
+                    NotFound();
+                }
+
                 logNote.TypeId = logNoteObject.TypeId;
                 logNote.Message = logNoteObject.Message;
             }
@@ -86,6 +97,12 @@ namespace MyPortal.Logic.Services
             }
 
             await _logNoteRepository.SaveChanges();
+        }
+
+        public override void Dispose()
+        {
+            _logNoteRepository.Dispose();
+            _logNoteTypeRepository.Dispose();
         }
     }
 }

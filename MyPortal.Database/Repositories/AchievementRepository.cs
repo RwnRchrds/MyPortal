@@ -57,8 +57,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Achievement>> GetByStudent(int studentId, int academicYearId)
         {
-            var sql =
-                $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
+            var sql = SelectAllColumns(true);
 
             SqlHelper.Where(ref sql, "[Achievement].[StudentId] = @StudentId");
             SqlHelper.Where(ref sql, "[Achievement].[AcademicYearId] = @AcademicYearId");

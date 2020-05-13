@@ -4,12 +4,11 @@ using System.Text;
 using System.Threading.Tasks;
 using MyPortal.Logic.Models.Business;
 using MyPortal.Logic.Models.Data;
-using MyPortal.Logic.Models.DataTables;
 using MyPortal.Logic.Models.Requests.Student;
 
 namespace MyPortal.Logic.Interfaces
 {
-    public interface IStudentService
+    public interface IStudentService : IService
     {
         Task<IEnumerable<StudentModel>> Get(StudentSearchParams searchParams);
 

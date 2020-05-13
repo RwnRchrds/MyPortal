@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.ListModels;
 
 namespace MyPortal.Logic.Models.Business
 {
@@ -19,5 +21,10 @@ namespace MyPortal.Logic.Models.Business
         public virtual HomeworkModel Homework { get; set; }
         public virtual PersonModel Person { get; set; }
         public virtual LessonPlanModel LessonPlan { get; set; }
+
+        public DirectoryChildListModel GetListModel()
+        {
+            return new DirectoryChildListModel(this);
+        }
     }
 }

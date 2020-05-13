@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace MyPortal.Logic.Interfaces
 {
-    public interface IApplicationRolePermissionService
+    public interface IApplicationRolePermissionService : IService
     {
         Task<IEnumerable<string>> GetPermissionClaimValues(Guid roleId);
     }

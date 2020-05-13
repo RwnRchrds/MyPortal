@@ -19,6 +19,7 @@ using MyPortal.Database.Models.Identity;
 using MyPortal.Database.Repositories;
 using MyPortal.Logic.Authorisation;
 using MyPortal.Logic.Constants;
+using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Services;
 
@@ -169,7 +170,7 @@ namespace MyPortalCore
             services.AddTransient<IApplicationUserService, ApplicationUserService>();
             services.AddTransient<IDirectoryService, DirectoryService>();
             services.AddTransient<IDocumentService, DocumentService>();
-            services.AddTransient<IGoogleService, GoogleService>();
+            services.AddTransient<IGoogleService, GoogleHelper>();
             services.AddTransient<ILogNoteService, LogNoteService>();
             services.AddTransient<IPersonService, PersonService>();
             services.AddTransient<ISchoolService, SchoolService>();

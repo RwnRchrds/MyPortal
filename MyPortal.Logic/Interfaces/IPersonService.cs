@@ -7,7 +7,7 @@ using MyPortal.Logic.Models.Requests.Person;
 
 namespace MyPortal.Logic.Interfaces
 {
-    public interface IPersonService
+    public interface IPersonService : IService
     {
         Task<IEnumerable<PersonModel>> Get(PersonSearchParams searchParams);
         Task<PersonModel> GetByUserId(Guid userId);

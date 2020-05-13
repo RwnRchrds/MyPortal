@@ -15,11 +15,11 @@ namespace MyPortalCore.Controllers.Api
     [Route("api/userManagement/role")]
     public class ApplicationRoleController : BaseApiController
     {
-        private readonly IApplicationRoleService _service;
+        private readonly IApplicationRoleService _applicationRoleService;
 
-        public ApplicationRoleController(IApplicationRoleService service, IApplicationUserService userService) : base(userService)
+        public ApplicationRoleController(IApplicationRoleService applicationRoleService, IApplicationUserService userService) : base(userService)
         {
-            _service = service;
+            _applicationRoleService = applicationRoleService;
         }
 
         [Authorize(Policy = Policies.UserType.Staff)]
@@ -29,12 +29,17 @@ namespace MyPortalCore.Controllers.Api
         {
             return await Process(async () =>
             {
-                var roles = await _service.Get(roleName);
+                var roles = await _applicationRoleService.Get(roleName);
 
-                var result = roles.Select(_dTMapper.Map<ApplicationRoleSummary>);
+                var result = roles.Select(_dTMapper.Map<ApplicationRoleListModel>);
 
                 return Ok(result);
             });
+        }
+
+        public override void Dispose()
+        {
+            _applicationRoleService.Dispose();
         }
     }
 }

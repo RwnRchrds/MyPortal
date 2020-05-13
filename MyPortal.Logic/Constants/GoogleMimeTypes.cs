@@ -51,5 +51,35 @@ namespace MyPortal.Logic.Constants
                     return "application/octet-stream";
             }
         }
+
+        public static string GetExtension(string mimeType, bool alternative)
+        {
+            if (alternative)
+            {
+                switch (mimeType)
+                {
+                    case GoogleDocs:
+                        return ".docx";
+                    case GoogleSheets:
+                        return ".xlsx";
+                    case GoogleSlides:
+                        return ".pptx";
+                    default:
+                        throw new ArgumentException($"Mimetype is not registered: {mimeType}");
+                }
+            }
+
+            switch (mimeType)
+            {
+                case GoogleDocs:
+                    return ".gdoc";
+                case GoogleSheets:
+                    return ".gsheet";
+                case GoogleSlides:
+                    return ".gslides";
+                default:
+                    throw new ArgumentException($"Mimetype is not registered: {mimeType}");
+            }
+        }
     }
 }

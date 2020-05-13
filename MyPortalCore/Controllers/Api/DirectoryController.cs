@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.ListModels;
 
 namespace MyPortalCore.Controllers.Api
 {
@@ -14,21 +15,34 @@ namespace MyPortalCore.Controllers.Api
     {
         private readonly IDirectoryService _directoryService;
         private readonly IDocumentService _documentService;
-        public DirectoryController(IApplicationUserService userService, IDirectoryService directoryService) : base(userService)
+
+        public DirectoryController(IApplicationUserService userService, IDirectoryService directoryService, IDocumentService documentService) : base(userService)
         {
             _directoryService = directoryService;
+            _documentService = documentService;
         }
 
         [HttpGet]
-        [Route("list")]
+        [Route("list", Name = "ApiDirectoryListChildren")]
         public async Task<IActionResult> GetChildren([FromQuery] Guid directoryId)
         {
             return await Process(async () =>
             {
                 var children = await _directoryService.GetChildren(directoryId);
 
-                return Ok(children);
+                var childList = new List<DirectoryChildListModel>();
+
+                childList.AddRange(children.Subdirectories.Select(x => x.GetListModel()));
+                childList.AddRange(children.Files.Select(x => x.GetListModel()));
+
+                return Ok(childList);
             });
+        }
+
+        public override void Dispose()
+        {
+            _directoryService.Dispose();
+            _documentService.Dispose();
         }
     }
 }

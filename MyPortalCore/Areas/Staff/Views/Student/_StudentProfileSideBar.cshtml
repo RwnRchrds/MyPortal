@@ -1,0 +1,183 @@
+﻿<!--Begin:: App Aside-->
+<div class="kt-grid__item kt-app__toggle kt-app__aside" id="kt_user_profile_aside">
+    <!--begin:: Widgets/Applications/User/Profile1-->
+    <div class="kt-portlet kt-portlet--height-fluid-">
+        <div class="kt-portlet__head  kt-portlet__head--noborder">
+            <div class="kt-portlet__head-label">
+                <h3 class="kt-portlet__head-title">
+                </h3>
+            </div>
+            <div class="kt-portlet__head-toolbar">
+                <a href="#" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown">
+                    <i class="flaticon-more-1"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right dropdown-menu-fit dropdown-menu-md">
+                    <!--begin::Nav-->
+                    <ul class="kt-nav">
+                        <li class="kt-nav__head">
+                            Export Options
+                            <span data-toggle="kt-tooltip" data-placement="right" title="" data-original-title="Click to learn more...">
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon kt-svg-icon--brand kt-svg-icon--md1">
+                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <rect x="0" y="0" width="24" height="24"></rect>
+                                        <circle fill="#000000" opacity="0.3" cx="12" cy="12" r="10"></circle>
+                                        <rect fill="#000000" x="11" y="10" width="2" height="7" rx="1"></rect>
+                                        <rect fill="#000000" x="11" y="7" width="2" height="2" rx="1"></rect>
+                                    </g>
+                                </svg>
+                            </span>
+                        </li>
+                        <li class="kt-nav__separator"></li>
+                        <li class="kt-nav__item">
+                            <a href="#" class="kt-nav__link">
+                                <i class="kt-nav__link-icon flaticon2-drop"></i>
+                                <span class="kt-nav__link-text">Activity</span>
+                            </a>
+                        </li>
+                        <li class="kt-nav__item">
+                            <a href="#" class="kt-nav__link">
+                                <i class="kt-nav__link-icon flaticon2-calendar-8"></i>
+                                <span class="kt-nav__link-text">FAQ</span>
+                            </a>
+                        </li>
+                        <li class="kt-nav__item">
+                            <a href="#" class="kt-nav__link">
+                                <i class="kt-nav__link-icon flaticon2-telegram-logo"></i>
+                                <span class="kt-nav__link-text">Settings</span>
+                            </a>
+                        </li>
+                        <li class="kt-nav__item">
+                            <a href="#" class="kt-nav__link">
+                                <i class="kt-nav__link-icon flaticon2-new-email"></i>
+                                <span class="kt-nav__link-text">Support</span>
+                                <span class="kt-nav__link-badge">
+                                    <span class="kt-badge kt-badge--success kt-badge--rounded">5</span>
+                                </span>
+                            </a>
+                        </li>
+                        <li class="kt-nav__separator"></li>
+                        <li class="kt-nav__foot">
+                            <a class="btn btn-label-danger btn-bold btn-sm" href="#">Upgrade plan</a>
+                            <a class="btn btn-clean btn-bold btn-sm" href="#" data-toggle="kt-tooltip" data-placement="right" title="" data-original-title="Click to learn more...">Learn more</a>
+                        </li>
+                    </ul>
+                    <!--end::Nav-->
+                </div>
+            </div>
+        </div>
+        <div class="kt-portlet__body kt-portlet__body--fit-y">
+            <!--begin::Widget -->
+            <div class="kt-widget kt-widget--user-profile-1">
+                <div class="kt-widget__head">
+                    <div class="kt-widget__media">
+                        <img src="~/lib/metronic/media/users/default.jpg" alt="image">
+                    </div>
+                    <div class="kt-widget__content">
+                        <div class="kt-widget__section">
+                            <a href="#" class="kt-widget__username">
+                                @Model.Student.Person.GetDisplayName()
+                            </a>
+                            <span class="kt-widget__subtitle">
+                                @Model.Student.House.Name
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="kt-widget__body">
+                    <div class="kt-widget__content">
+                        <div class="kt-widget__info">
+                            <span class="kt-widget__label">Reg Group:</span>
+                            <span class="kt-widget__data">@Model.Student.RegGroup.Name</span>
+                        </div>
+                        <div class="kt-widget__info">
+                            <span class="kt-widget__label">Year Group:</span>
+                            <span class="kt-widget__data">@Model.Student.YearGroup.Name</span>
+                        </div>
+                        <div class="kt-widget__info">
+                            <span class="kt-widget__label">Reg Tutor:</span>
+                            <span class="kt-widget__data">@Model.Student.RegGroup.Tutor.Person.GetDisplayName(true)</span>
+                        </div>
+                        <div class="kt-widget__info">
+                            <span class="kt-widget__label">Head of Year:</span>
+                            <span class="kt-widget__data">@Model.Student.YearGroup.HeadOfYear?.Person.GetDisplayName(true)</span>
+                        </div>
+                        <div class="kt-widget__info">
+                            <span class="kt-widget__label">Head of House:</span>
+                            <span class="kt-widget__data">@Model.Student.House.HeadOfHouse?.Person.GetDisplayName(true)</span>
+                        </div>
+                    </div>
+                    <div class="kt-widget__items">
+                        <a href="@Url.Action("StudentProfileOverview", "Student", new {area = "Staff", studentId = Model.Student.Id})" class="kt-widget__item" id="studentOverviewLink">
+                            <span class="kt-widget__section">
+                                <span class="kt-widget__desc">
+                                    <i class="fas fa-fw fa-layer-group mr-3"></i>Student Overview
+                                </span>
+                            </span>
+                        </a>
+                        <a href="#" class="kt-widget__item" data-toggle="kt-tooltip" title="" data-placement="right" data-original-title="Coming soon...">
+                            <span class="kt-widget__section">
+                                <span class="kt-widget__desc">
+                                    <i class="fas fa-fw fa-user-graduate mr-3"></i>Student Details
+                                </span>
+                            </span>
+                        </a>
+                        <a href="#" class="kt-widget__item" data-toggle="kt-tooltip" title="" data-placement="right" data-original-title="Coming soon...">
+                            <span class="kt-widget__section">
+                                <span class="kt-widget__desc">
+                                    <i class="fas fa-fw fa-clipboard-check mr-3"></i>Assessment
+                                </span>
+
+                            </span>
+                        </a>
+                        <a href="#" class="kt-widget__item" data-toggle="kt-tooltip" title="" data-placement="right" data-original-title="Coming soon...">
+                            <span class="kt-widget__section">
+                                <span class="kt-widget__desc">
+                                    <i class="fas fa-fw fa-stopwatch mr-3"></i>Attendance
+                                </span>
+
+                            </span>
+                        </a>
+                        <a href="#" class="kt-widget__item" data-toggle="kt-tooltip" title="" data-placement="right" data-original-title="Coming soon...">
+                            <span class="kt-widget__section">
+                                <span class="kt-widget__desc">
+                                    <i class="fas fa-fw fa-medal mr-3"></i>Behaviour Management
+                                </span>
+
+                            </span>
+                        </a>
+                        <a href="#" class="kt-widget__item" data-toggle="kt-tooltip" title="" data-placement="right" data-original-title="Coming soon...">
+                            <span class="kt-widget__section">
+                                <span class="kt-widget__desc">
+                                    <i class="fas fa-fw fa-envelope mr-3"></i>Communication
+                                </span>
+                            </span>
+                        </a>
+                        <a href="#" class="kt-widget__item" data-toggle="kt-tooltip" title="" data-placement="right" data-original-title="Coming soon...">
+                            <span class="kt-widget__section">
+                                <span class="kt-widget__desc">
+                                    <i class="fas fa-fw fa-graduation-cap mr-3"></i>Curriculum Management
+                                </span>
+                            </span>
+                        </a>
+                        <a href="@Url.Action("StudentProfileDocuments", "Student", new {area = "Staff", studentId = Model.Student.Id})" class="kt-widget__item" id="studentDocumentsLink">
+                            <span class="kt-widget__section">
+                                <span class="kt-widget__desc">
+                                    <i class="fas fa-fw fa-file mr-3"></i>Documents
+                                </span>
+                            </span>
+                        </a>
+                        <a href="#" class="kt-widget__item" data-toggle="kt-tooltip" title="" data-placement="right" data-original-title="Coming soon...">
+                            <span class="kt-widget__section">
+                                <span href="#" class="kt-widget__desc">
+                                    <i class="fas fa-fw fa-exclamation-circle mr-3"></i>SEND
+                                </span>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!--end::Widget -->
+        </div>
+    </div>
+</div>
+<!--End:: App Aside-->

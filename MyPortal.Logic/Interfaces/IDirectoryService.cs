@@ -6,7 +6,7 @@ using MyPortal.Logic.Models.Requests.Documents;
 
 namespace MyPortal.Logic.Interfaces
 {
-    public interface IDirectoryService
+    public interface IDirectoryService : IService
     {
         Task<DirectoryChildren> GetChildren(Guid directoryId);
     }

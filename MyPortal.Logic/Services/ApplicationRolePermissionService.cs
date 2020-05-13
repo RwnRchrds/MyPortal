@@ -16,7 +16,7 @@ namespace MyPortal.Logic.Services
         private readonly IApplicationRolePermissionRepository _rolePermissionRepository;
         private readonly IApplicationPermissionRepository _permissionRepository;
 
-        public ApplicationRolePermissionService(IApplicationRolePermissionRepository rolePermissionRepository, IApplicationPermissionRepository permissionRepository)
+        public ApplicationRolePermissionService(IApplicationRolePermissionRepository rolePermissionRepository, IApplicationPermissionRepository permissionRepository) : base("Role permission")
         {
             _rolePermissionRepository = rolePermissionRepository;
             _permissionRepository = permissionRepository;
@@ -63,9 +63,15 @@ namespace MyPortal.Logic.Services
 
                 if (permInDb == null)
                 {
-                    throw new ServiceException(ExceptionType.BadRequest, $"Permission {perm:X} not found in database");
+                    BadRequest($"Permission {perm:X} not found in database");
                 }
             }
+        }
+
+        public override void Dispose()
+        {
+            _rolePermissionRepository.Dispose();
+            _permissionRepository.Dispose();
         }
     }
 }

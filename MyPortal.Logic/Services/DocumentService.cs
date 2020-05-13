@@ -18,6 +18,7 @@ using MyPortal.Logic.Constants;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Business;
+using MyPortal.Logic.Models.Exceptions;
 using MyPortal.Logic.Models.Google;
 using MyPortal.Logic.Models.Requests.Documents;
 using File = Google.Apis.Drive.v3.Data.File;
@@ -28,12 +29,12 @@ namespace MyPortal.Logic.Services
     public class DocumentService : BaseService, IDocumentService
     {
         private IGoogleService _googleService;
-        private readonly IDocumentRepository _repository;
+        private readonly IDocumentRepository _documentRepository;
         private DriveService _driveService;
 
-        public DocumentService(IDocumentRepository repository, IGoogleService googleService)
+        public DocumentService(IDocumentRepository documentRepository, IGoogleService googleService) : base("Document")
         {
-            _repository = repository;
+            _documentRepository = documentRepository;
             _googleService = googleService;
 
             var init = _googleService.GetInitializer();
@@ -83,10 +84,10 @@ namespace MyPortal.Logic.Services
                 docToAdd.FileId = file.Id;
                 docToAdd.ContentType = mimeType;
 
-                _repository.Create(docToAdd);
+                _documentRepository.Create(docToAdd);
             }
 
-            await _repository.SaveChanges();
+            await _documentRepository.SaveChanges();
         }
 
         public async Task Create(params DocumentModel[] documents)
@@ -115,15 +116,20 @@ namespace MyPortal.Logic.Services
                     FileId = document.FileId
                 };
 
-                _repository.Create(docToAdd);
+                _documentRepository.Create(docToAdd);
             }
 
-            await _repository.SaveChanges();
+            await _documentRepository.SaveChanges();
         }
 
         public async Task<File> GetFileById(Guid documentId)
         {
-            var document = await _repository.GetById(documentId);
+            var document = await _documentRepository.GetById(documentId);
+
+            if (document == null)
+            {
+                NotFound();
+            }
 
             try
             {
@@ -142,16 +148,26 @@ namespace MyPortal.Logic.Services
 
         public async Task<DocumentModel> GetDocumentById(Guid documentId)
         {
-            var document = await _repository.GetById(documentId);
+            var document = await _documentRepository.GetById(documentId);
+
+            if (document == null)
+            {
+                NotFound();
+            }
 
             return _businessMapper.Map<DocumentModel>(document);
         }
 
         public async Task<FileDownload> GetDownloadById(Guid documentId, bool downloadAsPdf = false)
         {
-            var googleMimeTypes = GoogleMimeTypes.GetAll();
+            var document = await _documentRepository.GetById(documentId);
 
-            var document = await _repository.GetById(documentId);
+            if (document == null)
+            {
+                NotFound();
+            }
+
+            var googleMimeTypes = GoogleMimeTypes.GetAll();
 
             var request = _driveService.Files.Get(document.FileId);
 
@@ -198,6 +214,12 @@ namespace MyPortal.Logic.Services
             }
 
             return new FileDownload(fileStream, fileInfo.MimeType, fileName);
+        }
+
+        public override void Dispose()
+        {
+            _documentRepository.Dispose();
+            _driveService.Dispose();
         }
     }
 }

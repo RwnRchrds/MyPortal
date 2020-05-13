@@ -16,7 +16,7 @@ namespace MyPortal.Logic.Services
     {
         private readonly ITaskRepository _taskRepository;
 
-        public TaskService(ITaskRepository taskRepository)
+        public TaskService(ITaskRepository taskRepository) : base("Task")
         {
             _taskRepository = taskRepository;
         }
@@ -61,6 +61,11 @@ namespace MyPortal.Logic.Services
             {
                 var taskInDb = await _taskRepository.GetByIdWithTracking(task.Id);
 
+                if (taskInDb == null)
+                {
+                    NotFound();
+                }
+
                 taskInDb.Title = task.Title;
                 taskInDb.Description = task.Description;
                 taskInDb.DueDate = task.DueDate;
@@ -102,6 +107,11 @@ namespace MyPortal.Logic.Services
             }
 
             return tasks.Select(_businessMapper.Map<TaskModel>);
+        }
+
+        public override void Dispose()
+        {
+            _taskRepository.Dispose();
         }
     }
 }

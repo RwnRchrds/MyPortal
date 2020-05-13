@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MyPortal.Logic.Interfaces
 {
-    public interface IBehaviourService
+    public interface IBehaviourService : IService
     {
         Task AddIncidentToDetention(Guid incidentId, Guid detentionId);
         Task RemoveIncidentFromDetention(Guid incidentId, Guid detentionId);

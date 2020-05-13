@@ -1170,21 +1170,6 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("GiftedTalented");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.GoogleToken", b =>
-                {
-                    b.Property<string>("Key")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(500)")
-                        .HasMaxLength(500);
-
-                    b.HasKey("Key");
-
-                    b.ToTable("GoogleToken");
-                });
-
             modelBuilder.Entity("MyPortal.Database.Models.GovernanceType", b =>
                 {
                     b.Property<Guid>("Id")

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using MyPortal.Logic.Attributes;
+using MyPortal.Logic.Models.Summary;
 
 namespace MyPortal.Logic.Models.Business
 {
@@ -32,5 +33,10 @@ namespace MyPortal.Logic.Models.Business
         public virtual AcademicYearModel AcademicYear { get; set; }
 
         public virtual LogNoteTypeModel LogNoteType { get; set; }
+
+        public LogNoteListModel ToListModel()
+        {
+            return new LogNoteListModel(this);
+        }
     }
 }

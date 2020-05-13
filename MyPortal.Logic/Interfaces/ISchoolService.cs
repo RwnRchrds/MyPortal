@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MyPortal.Logic.Interfaces
 {
-    public interface ISchoolService
+    public interface ISchoolService : IService
     {
         Task<string> GetLocalSchoolName();
     }

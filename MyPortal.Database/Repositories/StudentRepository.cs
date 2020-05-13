@@ -93,69 +93,69 @@ namespace MyPortal.Database.Repositories
             return (await ExecuteQuery(sql, new {UserId = userId})).SingleOrDefault();
         }
 
-        public async Task<IEnumerable<Student>> GetAll(Student student)
+        public async Task<IEnumerable<Student>> GetAll(Student searchParams)
         {
             var sql = SelectAllColumns();
             
-            ApplySearch(ref sql, student);
+            ApplySearch(ref sql, searchParams);
             
             return await ExecuteQuery(sql,
                 new
                 {
-                    DateToday = DateTime.Today, FirstName = $"{SqlHelper.ParamStartsWith(student.Person.FirstName)}",
-                    LastName = $"{SqlHelper.ParamStartsWith(student.Person.LastName)}", student.Person.Gender,
-                    student.Person.Dob, student.RegGroupId, student.YearGroupId, student.HouseId, student.SenStatusId
+                    DateToday = DateTime.Today, FirstName = $"{SqlHelper.ParamStartsWith(searchParams.Person.FirstName)}",
+                    LastName = $"{SqlHelper.ParamStartsWith(searchParams.Person.LastName)}", searchParams.Person.Gender,
+                    searchParams.Person.Dob, searchParams.RegGroupId, searchParams.YearGroupId, searchParams.HouseId, searchParams.SenStatusId
                 });
         }
 
-        public async Task<IEnumerable<Student>> GetOnRoll(Student student)
+        public async Task<IEnumerable<Student>> GetOnRoll(Student searchParams)
         {
             var sql = SelectAllColumns();
 
             SqlHelper.Where(ref sql, "([Student].[DateLeaving] IS NULL OR [Student].[DateLeaving] > @DateToday)");
             SqlHelper.Where(ref sql, "[Student].[DateStarting] <= @DateToday");
             
-            ApplySearch(ref sql, student);
+            ApplySearch(ref sql, searchParams);
 
             return await ExecuteQuery(sql,
                 new
                 {
-                    DateToday = DateTime.Today, FirstName = $"{SqlHelper.ParamStartsWith(student.Person.FirstName)}",
-                    LastName = $"{SqlHelper.ParamStartsWith(student.Person.LastName)}", student.Person.Gender,
-                    student.Person.Dob, student.RegGroupId, student.YearGroupId, student.HouseId, student.SenStatusId
+                    DateToday = DateTime.Today, FirstName = $"{SqlHelper.ParamStartsWith(searchParams.Person.FirstName)}",
+                    LastName = $"{SqlHelper.ParamStartsWith(searchParams.Person.LastName)}", searchParams.Person.Gender,
+                    searchParams.Person.Dob, searchParams.RegGroupId, searchParams.YearGroupId, searchParams.HouseId, searchParams.SenStatusId
                 });
         }
 
-        public async Task<IEnumerable<Student>> GetLeavers(Student student)
+        public async Task<IEnumerable<Student>> GetLeavers(Student searchParams)
         {
             var sql = SelectAllColumns();
 
             SqlHelper.Where(ref sql, "[Student].[DateStarting] IS NOT NULL");
             SqlHelper.Where(ref sql, "[Student].[DateLeaving] <= @DateToday");
             
-            ApplySearch(ref sql, student);
+            ApplySearch(ref sql, searchParams);
 
             return await ExecuteQuery(sql, new
             {
-                DateToday = DateTime.Today, FirstName = $"{SqlHelper.ParamStartsWith(student.Person.FirstName)}",
-                LastName = $"{SqlHelper.ParamStartsWith(student.Person.LastName)}", student.Person.Gender,
-                student.Person.Dob, student.RegGroupId, student.YearGroupId, student.HouseId, student.SenStatusId
+                DateToday = DateTime.Today, FirstName = $"{SqlHelper.ParamStartsWith(searchParams.Person.FirstName)}",
+                LastName = $"{SqlHelper.ParamStartsWith(searchParams.Person.LastName)}", searchParams.Person.Gender,
+                searchParams.Person.Dob, searchParams.RegGroupId, searchParams.YearGroupId, searchParams.HouseId, searchParams.SenStatusId
             });
         }
 
-        public async Task<IEnumerable<Student>> GetFuture(Student student)
+        public async Task<IEnumerable<Student>> GetFuture(Student searchParams)
         {
             var sql = SelectAllColumns();
             
             SqlHelper.Where(ref sql, "[Student].[DateStarting] > @DateToday");
             
-            ApplySearch(ref sql, student);
+            ApplySearch(ref sql, searchParams);
 
             return await ExecuteQuery(sql, new
             {
-                DateToday = DateTime.Today, FirstName = $"{SqlHelper.ParamStartsWith(student.Person.FirstName)}",
-                LastName = $"{SqlHelper.ParamStartsWith(student.Person.LastName)}", student.Person.Gender,
-                student.Person.Dob, student.RegGroupId, student.YearGroupId, student.HouseId, student.SenStatusId
+                DateToday = DateTime.Today, FirstName = $"{SqlHelper.ParamStartsWith(searchParams.Person.FirstName)}",
+                LastName = $"{SqlHelper.ParamStartsWith(searchParams.Person.LastName)}", searchParams.Person.Gender,
+                searchParams.Person.Dob, searchParams.RegGroupId, searchParams.YearGroupId, searchParams.HouseId, searchParams.SenStatusId
             });
         }
 

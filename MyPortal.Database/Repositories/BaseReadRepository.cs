@@ -28,11 +28,11 @@ namespace MyPortal.Database.Repositories
             AllColumns = EntityHelper.GetAllColumns(typeof(TEntity), TblAlias);
         }
 
-        protected string TblAlias = null;
+        protected string TblAlias;
         
-        protected string TblName = null;
+        protected string TblName;
 
-        protected string AllColumns = null;
+        protected string AllColumns;
 
         protected string RelatedColumns = null;
 
@@ -52,23 +52,26 @@ namespace MyPortal.Database.Repositories
             return await Connection.QuerySingleOrDefaultAsync<string>(sql, param);
         }
 
-        protected string SelectAllColumns()
+        protected string SelectAllColumns(bool getRelated = true)
         {
-            return HasRelated
-                ? $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}"
-                : $"SELECT {AllColumns} FROM {TblName}";
+            if (getRelated && HasRelated)
+            {
+                return $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
+            }
+
+            return $"SELECT {AllColumns} FROM {TblName}";
         }
 
         public async Task<IEnumerable<TEntity>> GetAll()
         {
-            var sql = SelectAllColumns();
+            var sql = SelectAllColumns(true);
 
             return await ExecuteQuery(sql);
         }
 
         public async Task<TEntity> GetById(Guid id)
         {
-            var sql = SelectAllColumns();
+            var sql = SelectAllColumns(true);
             
             SqlHelper.Where(ref sql, $"[{TblAlias}].[Id] = @Id");
 

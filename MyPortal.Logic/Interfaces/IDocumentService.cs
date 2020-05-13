@@ -10,7 +10,7 @@ using File = Google.Apis.Drive.v3.Data.File;
 
 namespace MyPortal.Logic.Interfaces
 {
-    public interface IDocumentService
+    public interface IDocumentService : IService
     {
         Task Create(params DocumentUpload[] uploads);
         Task<File> GetFileById(Guid documentId);

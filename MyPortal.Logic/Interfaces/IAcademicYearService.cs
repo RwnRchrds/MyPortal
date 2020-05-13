@@ -6,7 +6,7 @@ using MyPortal.Logic.Models.Business;
 
 namespace MyPortal.Logic.Interfaces
 {
-    public interface IAcademicYearService
+    public interface IAcademicYearService : IService
     {
         Task<AcademicYearModel> GetCurrent();
     }

@@ -16,11 +16,11 @@ namespace MyPortalCore.Controllers.Api
     [Route("api/student/logNote")]
     public class LogNoteController : BaseApiController
     {
-        private readonly ILogNoteService _service;
+        private readonly ILogNoteService _logNoteService;
 
-        public LogNoteController(ILogNoteService service, IApplicationUserService userService) : base(userService)
+        public LogNoteController(ILogNoteService logNoteService, IApplicationUserService userService) : base(userService)
         {
-            _service = service;
+            _logNoteService = logNoteService;
         }
 
         [HttpGet]
@@ -30,7 +30,7 @@ namespace MyPortalCore.Controllers.Api
         {
             return await Process(async () =>
             {
-                var logNote = await _service.GetById(logNoteId);
+                var logNote = await _logNoteService.GetById(logNoteId);
 
                 return Ok(logNote);
             });
@@ -43,9 +43,9 @@ namespace MyPortalCore.Controllers.Api
         {
             return await Process(async () =>
             {
-                var logNotes = await _service.GetByStudent(studentId, academicYearId);
+                var logNotes = await _logNoteService.GetByStudent(studentId, academicYearId);
 
-                var result = logNotes.Select(_dTMapper.Map<LogNoteSummary>);
+                var result = logNotes.Select(_dTMapper.Map<LogNoteListModel>);
 
                 return Ok(result);
             });
@@ -74,7 +74,7 @@ namespace MyPortalCore.Controllers.Api
                 logNote.AuthorId = author.Id;
                 logNote.AcademicYearId = (Guid) author.SelectedAcademicYearId;
 
-                await _service.Create(logNote);
+                await _logNoteService.Create(logNote);
 
                 return Ok("Log note created.");
             });
@@ -94,7 +94,7 @@ namespace MyPortalCore.Controllers.Api
                     Message = model.Message
                 };
 
-                await _service.Update(logNote);
+                await _logNoteService.Update(logNote);
 
                 return Ok("Log note updated.");
             });
@@ -106,10 +106,15 @@ namespace MyPortalCore.Controllers.Api
         {
             return await Process(async () =>
             {
-                await _service.Delete(logNoteId);
+                await _logNoteService.Delete(logNoteId);
 
                 return Ok("Log note deleted.");
             });
+        }
+
+        public override void Dispose()
+        {
+            _logNoteService.Dispose();
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -6,17 +8,18 @@ using Microsoft.Extensions.Options;
 using MyPortal.Database.Models.Identity;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Exceptions;
 using ClaimTypes = MyPortal.Logic.Constants.ClaimTypes;
 
 namespace MyPortal.Logic.Authorisation
 {
     public class ApplicationUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<ApplicationUser, ApplicationRole>
     {
-        private readonly IPersonService _personService;
+        private readonly IApplicationUserService _userService;
         private readonly IApplicationRolePermissionService _rolePermissionService;
-        public ApplicationUserClaimsPrincipalFactory(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IOptions<IdentityOptions> options, IPersonService personService, IApplicationRolePermissionService rolePermissionService) : base(userManager, roleManager, options)
+        public ApplicationUserClaimsPrincipalFactory(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IOptions<IdentityOptions> options, IApplicationUserService userService, IApplicationRolePermissionService rolePermissionService) : base(userManager, roleManager, options)
         {
-            _personService = personService;
+            _userService = userService;
             _rolePermissionService = rolePermissionService;
         }
 
@@ -35,19 +38,8 @@ namespace MyPortal.Logic.Authorisation
         {
             var claims = new List<Claim>();
 
-            var person = await _personService.GetByUserId(user.Id);
+            var displayName = await _userService.GetDisplayName(user.Id);
 
-            var displayName = user.UserName;
-
-            if (user.UserType == UserTypes.Staff && person != null)
-            {
-                displayName = $"{person.Title} {person.FirstName.Substring(0, 1)} {person.LastName}";
-            }
-            else if (person != null)
-            {
-                displayName = $"{person.FirstName} {person.LastName}";
-            }
-            
             claims.Add(new Claim(ClaimTypes.UserType, user.UserType));
             claims.Add(new Claim(ClaimTypes.DisplayName, displayName));
 

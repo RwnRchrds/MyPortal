@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using MyPortal.Logic.Models.Summary;
 
 namespace MyPortal.Logic.Models.Business
 {
@@ -50,5 +51,10 @@ namespace MyPortal.Logic.Models.Business
         public virtual SenStatusModel SenStatus { get; set; }
 
         public virtual HouseModel House { get; set; }
+
+        public StudentListModel GetListModel()
+        {
+            return new StudentListModel(this);
+        }
     }
 }

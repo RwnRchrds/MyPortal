@@ -40,8 +40,8 @@ namespace MyPortal.Logic.Helpers
         {
             var config = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<RoleModel, ApplicationRoleSummary>();
-                cfg.CreateMap<StudentModel, StudentSummary>()
+                cfg.CreateMap<RoleModel, ApplicationRoleListModel>();
+                cfg.CreateMap<StudentModel, StudentListModel>()
                     .ForMember(dest => dest.DisplayName,
                         opts => opts.MapFrom(src => src.Person.GetDisplayName(false)))
                     .ForMember(dest => dest.RegGroupName,
@@ -52,7 +52,7 @@ namespace MyPortal.Logic.Helpers
                         opts => opts.MapFrom(src => src.House.Name))
                     .ForMember(dest => dest.Gender,
                         opts => opts.MapFrom(src => src.Person.Gender));
-                cfg.CreateMap<LogNoteModel, LogNoteSummary>()
+                cfg.CreateMap<LogNoteModel, LogNoteListModel>()
                     .ForMember(dest => dest.AuthorName,
                         opts => opts.MapFrom(src => src.Author.GetDisplayName(true)))
                     .ForMember(dest => dest.LogTypeName,

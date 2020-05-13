@@ -31,9 +31,9 @@ namespace MyPortalCore.Controllers.Api
         {
             return await Process(async () =>
             {
-                var students = await _studentService.Get(searchParams);
+                var students = (await _studentService.Get(searchParams)).Select(x => x.GetListModel());
 
-                return Ok(students.Select(_dTMapper.Map<StudentSummary>));
+                return Ok(students);
             });
         }
 
@@ -48,6 +48,11 @@ namespace MyPortalCore.Controllers.Api
 
                 return Ok(student);
             });
+        }
+
+        public override void Dispose()
+        {
+            _studentService.Dispose();
         }
     }
 }

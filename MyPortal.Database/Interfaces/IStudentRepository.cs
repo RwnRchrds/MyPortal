@@ -9,10 +9,10 @@ namespace MyPortal.Database.Interfaces
     public interface IStudentRepository : IReadWriteRepository<Student>
     {
         Task<Student> GetByUserId(string userId);
-        Task<IEnumerable<Student>> GetAll(Student student);
-        Task<IEnumerable<Student>> GetOnRoll(Student student);
-        Task<IEnumerable<Student>> GetLeavers(Student student);
-        Task<IEnumerable<Student>> GetFuture(Student student);
+        Task<IEnumerable<Student>> GetAll(Student searchParams);
+        Task<IEnumerable<Student>> GetOnRoll(Student searchParams);
+        Task<IEnumerable<Student>> GetLeavers(Student searchParams);
+        Task<IEnumerable<Student>> GetFuture(Student searchParams);
         Task<IEnumerable<Student>> GetByClass(int classId);
         Task<IEnumerable<Student>> GetGiftedTalented();
     }

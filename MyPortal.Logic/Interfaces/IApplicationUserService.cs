@@ -8,7 +8,7 @@ using MyPortal.Logic.Models.Requests.Admin;
 
 namespace MyPortal.Logic.Interfaces
 {
-    public interface IApplicationUserService
+    public interface IApplicationUserService : IService
     {
         Task CreateUser(CreateUser creator);
         Task ResetPassword(PasswordReset model);
@@ -16,5 +16,6 @@ namespace MyPortal.Logic.Interfaces
         Task<Guid?> GetSelectedAcademicYearId(Guid userId);
         Task<AcademicYearModel> GetSelectedAcademicYear(Guid userId);
         Task<UserModel> GetUserByPrincipal(ClaimsPrincipal principal);
+        Task<string> GetDisplayName(Guid userId);
     }
 }

@@ -9,7 +9,6 @@ using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Business;
 using MyPortal.Logic.Models.Data;
-using MyPortal.Logic.Models.DataTables;
 using MyPortal.Logic.Models.Requests.Student;
 using Task = System.Threading.Tasks.Task;
 
@@ -39,7 +38,7 @@ namespace MyPortal.Logic.Services
             };
         }
 
-        public StudentService(IStudentRepository studentRepository)
+        public StudentService(IStudentRepository studentRepository) : base("Student")
         {
             _studentRepository = studentRepository;
         }
@@ -102,6 +101,11 @@ namespace MyPortal.Logic.Services
 
 
             await _studentRepository.SaveChanges();
+        }
+
+        public override void Dispose()
+        {
+            _studentRepository.Dispose();
         }
     }
 }

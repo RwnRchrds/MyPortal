@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Business;
+using MyPortal.Logic.Models.Exceptions;
 using MyPortal.Logic.Models.Requests.Documents;
 
 namespace MyPortal.Logic.Services
@@ -15,7 +16,7 @@ namespace MyPortal.Logic.Services
         private readonly IDirectoryRepository _directoryRepository;
         private readonly IDocumentRepository _documentRepository;
 
-        public DirectoryService(IDirectoryRepository directoryRepository, IDocumentRepository documentRepository)
+        public DirectoryService(IDirectoryRepository directoryRepository, IDocumentRepository documentRepository) : base("Directory")
         {
             _directoryRepository = directoryRepository;
             _documentRepository = documentRepository;
@@ -23,6 +24,13 @@ namespace MyPortal.Logic.Services
 
         public async Task<DirectoryChildren> GetChildren(Guid directoryId)
         {
+            var directory = _directoryRepository.GetById(directoryId);
+
+            if (directory == null)
+            {
+                NotFound();
+            }
+
             var children = new DirectoryChildren();
 
             var subDirs = await _directoryRepository.GetSubdirectories(directoryId);
@@ -33,6 +41,12 @@ namespace MyPortal.Logic.Services
             children.Files = files.Select(_businessMapper.Map<DocumentModel>);
 
             return children;
+        }
+
+        public override void Dispose()
+        {
+            _directoryRepository.Dispose();
+            _documentRepository.Dispose();
         }
     }
 }

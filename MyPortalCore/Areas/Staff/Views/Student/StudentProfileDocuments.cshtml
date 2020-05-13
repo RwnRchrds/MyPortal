@@ -1,0 +1,74 @@
+﻿@model MyPortalCore.Areas.Staff.ViewModels.Student.StudentDocumentsViewModel
+@{
+    ViewBag.Title = "Documents";
+    Layout = "~/Areas/Staff/Views/Shared/_Layout.cshtml";
+}
+
+<!--Header-->
+<div class="kt-subheader   kt-grid__item" id="kt_subheader">
+    <div class="kt-container  kt-container--fluid ">
+        <div class="kt-subheader__main">
+            <h3 class="kt-subheader__title">
+                <i class="fas fa-file mr-2"></i>Documents
+            </h3>
+            <span class="kt-subheader__separator kt-subheader__separator--v"></span>
+            <div class="kt-subheader__group" id="kt_subheader_search">
+                <span class="kt-subheader__desc" id="kt_subheader_total">
+                    @Model.Student.Person.GetDisplayName()
+                </span>
+            </div>
+        </div>
+        <div class="kt-subheader__toolbar">
+
+        </div>
+    </div>
+</div>
+
+<!--Content-->
+<div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+    <!--Begin::App-->
+    <div class="kt-grid kt-grid--desktop kt-grid--ver kt-grid--ver-desktop kt-app">
+
+        <!--Begin:: App Aside Mobile Toggle-->
+        <button class="kt-app__aside-close" id="kt_user_profile_aside_close">
+            <i class="la la-close"></i>
+        </button>
+        <!--End:: App Aside Mobile Toggle-->
+
+        <partial name="_StudentProfileSideBar"/>
+
+        <!--Begin:: App Content-->
+        <div class="kt-grid__item kt-grid__item--fluid kt-app__content">
+            <div class="row">
+                <div class="col-xl-12">
+                    <!--begin:: Documents-->
+                    <div class="kt-portlet kt-portlet--height-fluid">
+                        <div class="kt-portlet__head">
+                            <div class="kt-portlet__head-label">
+                                <h3 class="kt-portlet__head-title">
+                                    Documents
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="kt-portlet__body">
+
+                        </div>
+                    </div>
+                    <!--end:: Documents-->
+                </div>
+            </div>
+        </div>
+        <!--End:: App Content-->
+    </div>
+    <!--End::App-->
+</div>
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function() {
+            $("#studentDocumentsLink").addClass("kt-widget__item--active");
+        });
+    </script>
+}
+

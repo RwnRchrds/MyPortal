@@ -16,7 +16,7 @@ namespace MyPortalCore.Controllers.Api
 {
     [ApiController]
     [Route("api/[controller]")]
-    public abstract class BaseApiController : ControllerBase
+    public abstract class BaseApiController : ControllerBase, IDisposable
     {
         protected readonly IMapper _dTMapper;
         protected readonly IApplicationUserService _userService;
@@ -75,5 +75,7 @@ namespace MyPortalCore.Controllers.Api
 
             return BadRequest(ex.Message);
         }
+
+        public abstract void Dispose();
     }
 }

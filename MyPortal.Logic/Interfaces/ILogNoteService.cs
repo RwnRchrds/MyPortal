@@ -7,7 +7,7 @@ using MyPortal.Logic.Models.Data;
 
 namespace MyPortal.Logic.Interfaces
 {
-    public interface ILogNoteService
+    public interface ILogNoteService : IService
     {
         Task<LogNoteModel> GetById(Guid logNoteId);
         Task<IEnumerable<LogNoteModel>> GetByStudent(Guid studentId, Guid academicYearId);

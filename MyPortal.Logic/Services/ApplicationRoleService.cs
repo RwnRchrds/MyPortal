@@ -14,7 +14,7 @@ namespace MyPortal.Logic.Services
     {
         private readonly RoleManager<ApplicationRole> _roleManager;
 
-        public ApplicationRoleService(RoleManager<ApplicationRole> roleManager)
+        public ApplicationRoleService(RoleManager<ApplicationRole> roleManager) : base("Role")
         {
             _roleManager = roleManager;
         }
@@ -42,6 +42,11 @@ namespace MyPortal.Logic.Services
             var roles = await query.ToListAsync();
 
             return roles.Select(_businessMapper.Map<RoleModel>);
+        }
+
+        public override void Dispose()
+        {
+            _roleManager.Dispose();
         }
     }
 }

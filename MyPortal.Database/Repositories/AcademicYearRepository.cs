@@ -20,7 +20,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<AcademicYear> GetCurrent()
         {
-            var sql = SelectAllColumns();
+            var sql = SelectAllColumns(true);
 
             SqlHelper.Where(ref sql, "[AcademicYear].[FirstDate] <= @DateToday");
             SqlHelper.Where(ref sql, "[AcademicYear].[LastDate] >= @DateToday");
@@ -30,7 +30,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<AcademicYear>> GetAllToDate()
         {
-            var sql = SelectAllColumns();
+            var sql = SelectAllColumns(true);
 
             SqlHelper.Where(ref sql, "[AcademicYear].[FirstDate] <= @DateToday");
 

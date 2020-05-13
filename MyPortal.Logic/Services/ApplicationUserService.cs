@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net.WebSockets;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -18,12 +19,14 @@ namespace MyPortal.Logic.Services
     public class ApplicationUserService : BaseService, IApplicationUserService
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IPersonRepository _personRepository;
         private readonly IAcademicYearRepository _academicYearRepository;
 
-        public ApplicationUserService(UserManager<ApplicationUser> userManager, IAcademicYearRepository academicYearRepository)
+        public ApplicationUserService(UserManager<ApplicationUser> userManager, IAcademicYearRepository academicYearRepository, IPersonRepository personRepository) : base("User")
         {
             _userManager = userManager;
             _academicYearRepository = academicYearRepository;
+            _personRepository = personRepository;
         }
 
         public async Task CreateUser(CreateUser creator)
@@ -95,6 +98,33 @@ namespace MyPortal.Logic.Services
             var user = await _userManager.GetUserAsync(principal);
 
             return _businessMapper.Map<UserModel>(user);
+        }
+
+        public async Task<string> GetDisplayName(Guid userId)
+        {
+            var personInDb = await _personRepository.GetByUserId(userId);
+
+            var person = _businessMapper.Map<PersonModel>(personInDb);
+
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            if (person == null)
+            {
+                return user.UserName;
+            }
+
+            if (user.UserType == UserTypes.Staff)
+            {
+                return person.GetDisplayName(true);
+            }
+
+            return person.GetDisplayName();
+        }
+
+        public override void Dispose()
+        {
+            _userManager.Dispose();
+            _academicYearRepository.Dispose();
         }
     }
 }

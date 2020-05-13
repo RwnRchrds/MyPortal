@@ -67,5 +67,10 @@ namespace MyPortalCore.Controllers.Api
 
             return Ok("Task updated.");
         }
+
+        public override void Dispose()
+        {
+            _taskService.Dispose();
+        }
     }
 }

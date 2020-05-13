@@ -34,18 +34,19 @@ namespace MyPortalCore.Controllers.Api
 
         [HttpGet]
         [Route("download")]
-        public async Task<IActionResult> DownloadFile([FromQuery] Guid documentId, [FromQuery] bool downloadAsPdf = false)
+        public async Task<IActionResult> DownloadFile([FromQuery] Guid documentId, [FromQuery] bool asPdf = false)
         {
             return await Process(async () =>
             {
-                var download = await _documentService.GetDownloadById(documentId, downloadAsPdf);
+                var download = await _documentService.GetDownloadById(documentId, asPdf);
 
                 return File(download.FileStream, download.ContentType, download.FileName);
             });
         }
 
-        [HttpPost]
-        [Route("create")]
-        public async Task<IActionResult> AddExistingFile([FromForm] )
+        public override void Dispose()
+        {
+            _documentService.Dispose();
+        }
     }
 }

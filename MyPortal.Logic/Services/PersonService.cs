@@ -28,7 +28,7 @@ namespace MyPortal.Logic.Services
             return person;
         }
 
-        public PersonService(IPersonRepository personRepository)
+        public PersonService(IPersonRepository personRepository) : base("Person")
         {
             _personRepository = personRepository;
         }
@@ -61,7 +61,17 @@ namespace MyPortal.Logic.Services
         {
             var person = await _personRepository.GetByUserId(userId);
 
+            if (person == null)
+            {
+                NotFound();
+            }
+
             return _businessMapper.Map<PersonModel>(person);
+        }
+
+        public override void Dispose()
+        {
+            _personRepository.Dispose();
         }
     }
 }

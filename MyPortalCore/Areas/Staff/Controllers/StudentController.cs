@@ -16,13 +16,13 @@ namespace MyPortalCore.Areas.Staff.Controllers
 {
     public class StudentController : BaseController
     {
-        private IStudentService _service;
+        private IStudentService _studentService;
         private IPersonService _personService;
         private ILogNoteService _logNoteService;
 
-        public StudentController(IStudentService service, IPersonService personService, ILogNoteService logNoteService, IApplicationUserService userService) : base(userService)
+        public StudentController(IStudentService studentService, IPersonService personService, ILogNoteService logNoteService, IApplicationUserService userService) : base(userService)
         {
-            _service = service;
+            _studentService = studentService;
             _personService = personService;
             _logNoteService = logNoteService;
         }
@@ -31,16 +31,16 @@ namespace MyPortalCore.Areas.Staff.Controllers
         public IActionResult Index()
         {
             var viewModel = new StudentSearchViewModel();
-            viewModel.SearchTypes = _service.GetSearchFilters();
+            viewModel.SearchTypes = _studentService.GetSearchFilters();
             viewModel.GenderOptions = _personService.GetGenderOptions();
 
             return View(viewModel);
         }
 
-        [RequiresPermission(Permissions.Student.Details.View)]
+
         [Route("{studentId}")]
         [RequiresPermission(Permissions.Student.Details.View)]
-        public async Task<IActionResult> StudentOverview(Guid studentId)
+        public async Task<IActionResult> StudentProfileOverview(Guid studentId)
         {
             var user = await _userService.GetUserByPrincipal(User);
 
@@ -49,10 +49,24 @@ namespace MyPortalCore.Areas.Staff.Controllers
                 return BadRequest("No academic year has been selected.");
             }
 
-            var viewModel = new StudentOverviewViewModel(_service, _personService, _logNoteService, studentId,
-                (Guid) user.SelectedAcademicYearId);
+            var viewModel = new StudentOverviewViewModel();
 
-            await viewModel.LoadData();
+            viewModel.Student = await _studentService.GetById(studentId);
+            viewModel.LogNotes =
+                (await _logNoteService.GetByStudent(studentId, user.SelectedAcademicYearId.Value)).Select(x =>
+                    x.ToListModel());
+            viewModel.LogNoteTypes = (await _logNoteService.GetTypes()).ToSelectList();
+
+            return View(viewModel);
+        }
+
+        [Route("{studentId}/Documents")]
+        [RequiresPermission(Permissions.Student.StudentDocuments.Edit)]
+        public async Task<IActionResult> StudentProfileDocuments(Guid studentId)
+        {
+            var viewModel = new StudentDocumentsViewModel();
+
+            viewModel.Student = await _studentService.GetById(studentId);
 
             return View(viewModel);
         }
