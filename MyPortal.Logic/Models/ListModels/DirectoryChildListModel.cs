@@ -14,6 +14,7 @@ namespace MyPortal.Logic.Models.ListModels
         public Guid? ParentId { get; set; }
         public bool IsDirectory { get; set; }
         public string Name { get; set; }
+        public string Type { get; set; }
         public string Icon { get; set; }
         public DateTime? CreatedDate { get; set; }
 
@@ -24,6 +25,7 @@ namespace MyPortal.Logic.Models.ListModels
             IsDirectory = true;
             Name = directory.Name;
             Icon = Icons.Files.Directory;
+            Type = "Directory";
         }
 
         public DirectoryChildListModel(DocumentModel document)
@@ -33,6 +35,7 @@ namespace MyPortal.Logic.Models.ListModels
             IsDirectory = false;
             Name = document.Title;
             CreatedDate = document.UploadedDate;
+            Type = document.Type.Description;
 
             if (document.ContentType == GoogleMimeTypes.GoogleDocs || MimeTypeHelper.GetExtension(document.ContentType).StartsWith(".doc"))
             {

@@ -8,7 +8,7 @@ using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Business;
 using MyPortal.Logic.Models.Data;
-using MyPortal.Logic.Models.Summary;
+using MyPortal.Logic.Models.ListModels;
 
 namespace MyPortalCore.Areas.Staff.ViewModels.Student
 {

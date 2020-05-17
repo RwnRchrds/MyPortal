@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyPortal.Logic.Authorisation.Attributes;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.Summary;
+using MyPortal.Logic.Models.ListModels;
 
 namespace MyPortalCore.Controllers.Api
 { 

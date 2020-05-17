@@ -25,6 +25,9 @@ namespace MyPortal.Database.Models
         [StringLength(128)]
         public string Name { get; set; }
 
+        public bool Private { get; set; }
+        public bool StaffOnly { get; set; } 
+
         public virtual Directory Parent { get; set; }
 
         public virtual ICollection<Directory> Subdirectories { get; set; }

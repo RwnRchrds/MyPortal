@@ -1,7 +1,7 @@
 ﻿using System;
 using MyPortal.Logic.Models.Business;
 
-namespace MyPortal.Logic.Models.Summary
+namespace MyPortal.Logic.Models.ListModels
 {
     public class StudentListModel
     {

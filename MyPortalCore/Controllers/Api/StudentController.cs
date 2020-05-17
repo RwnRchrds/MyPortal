@@ -9,7 +9,6 @@ using MyPortal.Logic.Authorisation.Attributes;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Requests.Student;
-using MyPortal.Logic.Models.Summary;
 
 namespace MyPortalCore.Controllers.Api
 {

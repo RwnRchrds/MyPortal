@@ -967,6 +967,12 @@ namespace MyPortal.Database.Migrations
                     b.Property<Guid?>("ParentId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("Private")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("StaffOnly")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ParentId");

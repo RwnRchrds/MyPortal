@@ -40,7 +40,7 @@
         <!--Begin:: App Content-->
         <div class="kt-grid__item kt-grid__item--fluid kt-app__content">
             <div class="row">
-                <div class="col-xl-12">
+                <div class="col-xl-8">
                     <!--begin:: Documents-->
                     <div class="kt-portlet kt-portlet--height-fluid">
                         <div class="kt-portlet__head">
@@ -49,9 +49,36 @@
                                     Documents
                                 </h3>
                             </div>
+                            <div class="kt-portlet__head-toolbar">
+                                <btn type="button" class="btn btn-brand btn-bold btn-sm" id="btnNewDocument">
+                                    <i class="fas fa-plus mr-2"></i>Add Document
+                                </btn>
+                            </div>
                         </div>
                         <div class="kt-portlet__body">
-
+                            <div>
+                                <button type="button" class="btn btn-sm btn-info" disabled><i class="fas fa-arrow-left mr-2"></i>Back</button>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-12">
+                                    <table id="tblDocuments" class="table table-striped font-weight-500" data-directory-id="@Model.Student.Person.DirectoryId">
+                                        <thead>
+                                        <tr>
+                                            <th>
+                                                Name
+                                            </th>
+                                            <th>
+                                                Type
+                                            </th>
+                                            <th>
+                                                Uploaded
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                         </div>
                     </div>
                     <!--end:: Documents-->
@@ -61,14 +88,39 @@
         <!--End:: App Content-->
     </div>
     <!--End::App-->
-</div>
 
 @section Scripts
 {
     <script>
+
+        var urlGetDirectoryInfo = "@Url.RouteUrl("ApiDirectoryGetChildren")";
+
         $(document).ready(function() {
             $("#studentDocumentsLink").addClass("kt-widget__item--active");
         });
+
+        function loadDirectory(directoryId) {
+            var table = $("#tblDocuments");
+
+            table.attr("data-directory-id", directoryId);
+
+            var params = new {directoryId: directoryId};
+
+            var url = `${urlGetDirectoryInfo}?${$.param(params)}`;
+
+            if (table.hasClass("dataTable")) {
+                var dt = table.DataTable();
+                
+                dt.ajax.url(url);
+
+                dt.ajax.reload();
+            }
+            else {
+                
+            }    
+        }
     </script>
+
+    <script src="~/lib/js/modals.js"></script>
 }
 

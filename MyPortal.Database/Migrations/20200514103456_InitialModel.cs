@@ -224,7 +224,9 @@ namespace MyPortal.Database.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     ParentId = table.Column<Guid>(nullable: true),
-                    Name = table.Column<string>(maxLength: 128, nullable: false)
+                    Name = table.Column<string>(maxLength: 128, nullable: false),
+                    Private = table.Column<bool>(nullable: false),
+                    StaffOnly = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {

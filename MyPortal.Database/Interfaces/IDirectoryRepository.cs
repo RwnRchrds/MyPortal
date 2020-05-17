@@ -8,6 +8,6 @@ namespace MyPortal.Database.Interfaces
 {
     public interface IDirectoryRepository : IReadWriteRepository<Directory>
     {
-        Task<IEnumerable<Directory>> GetSubdirectories(Guid directoryId);
+        Task<IEnumerable<Directory>> GetSubdirectories(Guid directoryId, bool includeStaffOnly);
     }
 }

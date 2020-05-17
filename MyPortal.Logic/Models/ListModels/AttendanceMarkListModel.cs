@@ -1,5 +1,5 @@
 ﻿
-namespace MyPortal.Logic.Models.Summary
+namespace MyPortal.Logic.Models.ListModels
 {    
     public class AttendanceMarkListModel
     {        

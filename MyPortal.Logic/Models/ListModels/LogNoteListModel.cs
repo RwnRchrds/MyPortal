@@ -1,7 +1,7 @@
 ﻿using System;
 using MyPortal.Logic.Models.Business;
 
-namespace MyPortal.Logic.Models.Summary
+namespace MyPortal.Logic.Models.ListModels
 {
     public class LogNoteListModel
     {
@@ -17,7 +17,7 @@ namespace MyPortal.Logic.Models.Summary
         {
             Id = model.Id;
             Date = model.Date;
-            AuthorName = model.Author.Person.GetDisplayName(true);
+            AuthorName = model.Author.GetDisplayName(true);
             LogTypeName = model.LogNoteType.Name;
             LogTypeIcon = model.LogNoteType.GetIcon();
             LogTypeColourCode = model.LogNoteType.ColourCode;

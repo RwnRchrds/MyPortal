@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using MyPortal.Logic.Models.Summary;
+using MyPortal.Logic.Models.ListModels;
 
 namespace MyPortal.Logic.Models.Requests.Attendance
 {

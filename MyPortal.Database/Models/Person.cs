@@ -16,7 +16,7 @@ namespace MyPortal.Database.Models
     }
 
     [Table("Person")]
-    public class Person : IDirectoryEntity
+    public class Person
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Person()

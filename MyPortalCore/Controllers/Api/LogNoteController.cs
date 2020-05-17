@@ -8,8 +8,8 @@ using MyPortal.Logic.Authorisation.Attributes;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Business;
+using MyPortal.Logic.Models.ListModels;
 using MyPortal.Logic.Models.Requests.Student.LogNotes;
-using MyPortal.Logic.Models.Summary;
 
 namespace MyPortalCore.Controllers.Api
 {

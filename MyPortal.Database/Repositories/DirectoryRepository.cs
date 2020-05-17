@@ -32,11 +32,16 @@ namespace MyPortal.Database.Repositories
                 }, param);
         }
 
-        public async Task<IEnumerable<Directory>> GetSubdirectories(Guid directoryId)
+        public async Task<IEnumerable<Directory>> GetSubdirectories(Guid directoryId, bool includeStaffOnly)
         {
             var sql = SelectAllColumns();
 
             SqlHelper.Where(ref sql, "[Parent].[Id] = @ParentId");
+
+            if (!includeStaffOnly)
+            {
+                SqlHelper.Where(ref sql, "[Directory].[StaffOnly] = 0");
+            }
 
             return await ExecuteQuery(sql, new {ParentId = directoryId});
         }

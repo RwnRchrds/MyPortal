@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using MyPortal.Logic.Models.Summary;
+using MyPortal.Logic.Models.ListModels;
 
 namespace MyPortal.Logic.Models.Business
 {
