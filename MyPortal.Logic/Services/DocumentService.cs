@@ -98,6 +98,8 @@ namespace MyPortal.Logic.Services
 
                 request.Fields = "id, name, description, mimeType";
 
+                request.SupportsAllDrives = true;
+
                 var documentInCloud = await request.ExecuteAsync();
 
                 var docToAdd = new Document
@@ -134,6 +136,8 @@ namespace MyPortal.Logic.Services
             try
             {
                 var request = _driveService.Files.Get(document.FileId);
+
+                request.SupportsAllDrives = true;
 
                 request.Fields = "id, name, webViewLink, mimeType, size, version, fileExtension, description, permissions";
 

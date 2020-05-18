@@ -13,6 +13,7 @@ namespace MyPortal.Logic.Interfaces
     public interface IDocumentService : IService
     {
         Task Create(params DocumentUpload[] uploads);
+        Task Create(params DocumentModel[] documents);
         Task<File> GetFileById(Guid documentId);
         Task<FileDownload> GetDownloadById(Guid documentId, bool downloadAsPdf = false);
         Task<DocumentModel> GetDocumentById(Guid documentId);

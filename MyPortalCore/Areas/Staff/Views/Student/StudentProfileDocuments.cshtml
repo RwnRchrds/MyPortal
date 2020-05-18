@@ -87,7 +87,7 @@
         </div>
         <!--End:: App Content-->
     </div>
-    <!--End::App-->
+<!--End::App-->
 
 @section Scripts
 {
@@ -95,8 +95,12 @@
 
         var urlGetDirectoryInfo = "@Url.RouteUrl("ApiDirectoryGetChildren")";
 
+        var rootDirectory = "@Model.Student.Person.DirectoryId";
+
         $(document).ready(function() {
             $("#studentDocumentsLink").addClass("kt-widget__item--active");
+
+            loadDirectory(rootDirectory);
         });
 
         function loadDirectory(directoryId) {
@@ -104,23 +108,59 @@
 
             table.attr("data-directory-id", directoryId);
 
-            var params = new {directoryId: directoryId};
+            var params = { directoryId: directoryId };
 
             var url = `${urlGetDirectoryInfo}?${$.param(params)}`;
 
             if (table.hasClass("dataTable")) {
                 var dt = table.DataTable();
-                
+
                 dt.ajax.url(url);
 
                 dt.ajax.reload();
+            } else {
+                loadDataTable(url);
             }
-            else {
-                
-            }    
+        }
+
+        function loadDataTable(url) {
+            $("#tblDocuments").DataTable({
+                ajax:
+                {
+                    url: url,
+                    dataSrc: "children"
+                },
+                "dom": "rtilp",
+                columns: [
+                    {
+                        data: "id",
+                        render: function(data, type, document) {
+                            return `<span><img src="${document.icon}" class="mr-2" height="30"/>${document.name}</span>`;
+                        }
+                    },
+                    {
+                        data: "type"
+                    },
+                    {
+                        data: "createdDate",
+                        render: function(data, type, document) {
+                            if (document.isDirectory) {
+                                return "";
+                            } else {
+                                return `${moment(document.createdDate).format("DD/MM/YYYY")}`;
+                            }
+                        }
+                    }
+                ],
+                "ordering": false,
+                "language":
+                {
+                    "emptyTable": "No documents"
+                }
+            });
         }
     </script>
 
-    <script src="~/lib/js/modals.js"></script>
+    <script src="~/js/modals.js"></script>
 }
 

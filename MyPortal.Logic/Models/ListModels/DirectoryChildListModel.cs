@@ -37,35 +37,35 @@ namespace MyPortal.Logic.Models.ListModels
             CreatedDate = document.UploadedDate;
             Type = document.Type.Description;
 
-            if (document.ContentType == GoogleMimeTypes.GoogleDocs || MimeTypeHelper.GetExtension(document.ContentType).StartsWith(".doc"))
+            if (document.ContentType == GoogleMimeTypes.GoogleDocs || MimeTypeHelper.IsWord(document.ContentType))
             {
                 Icon = Icons.Files.Doc;
             }
-            else if (document.ContentType == GoogleMimeTypes.GoogleSlides || MimeTypeHelper.GetExtension(document.ContentType).StartsWith(".ppt"))
+            else if (document.ContentType == GoogleMimeTypes.GoogleSlides || MimeTypeHelper.GetExtension(document.ContentType, false).StartsWith(".ppt"))
             {
                 Icon = Icons.Files.Ppt;
             }
-            else if (document.ContentType == GoogleMimeTypes.GoogleSheets || MimeTypeHelper.GetExtension(document.ContentType).StartsWith(".xls"))
+            else if (document.ContentType == GoogleMimeTypes.GoogleSheets || MimeTypeHelper.IsExcel(document.ContentType))
             {
                 Icon = Icons.Files.Xls;
             }
-            else if (MimeTypeHelper.GetExtension(document.ContentType).StartsWith(".jpg"))
+            else if (MimeTypeHelper.GetExtension(document.ContentType, false) == ".jpg")
             {
                 Icon = Icons.Files.Jpg;
             }
-            else if (MimeTypeHelper.GetExtension(document.ContentType).StartsWith(".mp3"))
+            else if (MimeTypeHelper.GetExtension(document.ContentType, false).StartsWith(".mp3"))
             {
                 Icon = Icons.Files.Mp3;
             }
-            else if (MimeTypeHelper.GetExtension(document.ContentType).StartsWith(".pdf"))
+            else if (MimeTypeHelper.GetExtension(document.ContentType, false).StartsWith(".pdf"))
             {
                 Icon = Icons.Files.Pdf;
             }
-            else if (MimeTypeHelper.GetExtension(document.ContentType).StartsWith(".png"))
+            else if (MimeTypeHelper.GetExtension(document.ContentType, false).StartsWith(".png"))
             {
                 Icon = Icons.Files.Png;
             }
-            else if (MimeTypeHelper.GetExtension(document.ContentType).StartsWith(".zip"))
+            else if (MimeTypeHelper.GetExtension(document.ContentType, false).StartsWith(".zip"))
             {
                 Icon = Icons.Files.Zip;
             }

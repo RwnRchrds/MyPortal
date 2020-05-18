@@ -100,6 +100,13 @@ namespace MyPortal.Logic.Services
             return _businessMapper.Map<UserModel>(user);
         }
 
+        public async Task<UserModel> GetUserById(Guid userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            return _businessMapper.Map<UserModel>(user);
+        }
+
         public async Task<string> GetDisplayName(Guid userId)
         {
             var personInDb = await _personRepository.GetByUserId(userId);

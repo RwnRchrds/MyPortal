@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Business;
 using MyPortal.Logic.Models.Google;
+using MyPortal.Logic.Models.Requests.Documents;
 
 namespace MyPortalCore.Controllers.Api
 {
@@ -29,6 +32,33 @@ namespace MyPortalCore.Controllers.Api
                 var document = await _documentService.GetDocumentById(documentId);
 
                 return Ok(document);
+            });
+        }
+
+        [HttpPost]
+        [Route("upload")]
+        public async Task<IActionResult> UploadExisting([FromForm] DocumentUploadModel model)
+        {
+            return await Process(async () =>
+            {
+                // var user = await _userService.GetUserByPrincipal(User);
+
+                var user = await _userService.GetUserById(Guid.Parse("8A530C77-E9B2-453F-06EE-08D7ABDAA758"));
+
+                var document = new DocumentModel
+                {
+                    Title = model.Title,
+                    Description = model.Description,
+                    DirectoryId = model.DirectoryId,
+                    Public = model.Public,
+                    UploaderId = user.Id,
+                    FileId = model.FileId,
+                    TypeId = model.TypeId
+                };
+
+                await _documentService.Create(document);
+
+                return Ok("Document uploaded.");
             });
         }
 

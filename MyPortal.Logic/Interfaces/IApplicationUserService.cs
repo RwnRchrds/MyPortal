@@ -17,5 +17,6 @@ namespace MyPortal.Logic.Interfaces
         Task<AcademicYearModel> GetSelectedAcademicYear(Guid userId);
         Task<UserModel> GetUserByPrincipal(ClaimsPrincipal principal);
         Task<string> GetDisplayName(Guid userId);
+        Task<UserModel> GetUserById(Guid userId);
     }
 }

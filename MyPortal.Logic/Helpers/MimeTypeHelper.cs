@@ -764,5 +764,42 @@ namespace MyPortal.Logic.Helpers
                 return string.Empty;
             }
         }
+
+        public static bool IsWord(string mimeType)
+        {
+            var wordTypes = new[]
+            {
+                "application/msword", "application/vnd.ms-word.document.macroEnabled.12",
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/msword",
+                "application/vnd.ms-word.template.macroEnabled.12",
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.template"
+            };
+
+            return wordTypes.Contains(mimeType);
+        }
+
+        public static bool IsExcel(string mimeType)
+        {
+            var excelTypes = new[]
+            {
+                "application/vnd.ms-excel", "application/vnd.ms-excel.sheet.binary.macroEnabled.12",
+                "application/vnd.ms-excel.sheet.macroEnabled.12",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.ms-excel",
+                "application/vnd.ms-excel.template.macroEnabled.12",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.template", "application/vnd.ms-excel"
+            };
+
+            return excelTypes.Contains(mimeType);
+        }
+
+        public static bool IsPowerPoint(string mimeType)
+        {
+            var pptTypes = new[]
+            {
+                ""
+            };
+
+            return pptTypes.Contains(mimeType);
+        }
     }
 }
