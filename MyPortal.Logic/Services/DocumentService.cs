@@ -107,7 +107,7 @@ namespace MyPortal.Logic.Services
                     TypeId = document.TypeId,
                     Title = document.Title,
                     Description = document.Description,
-                    UploadedDate = DateTime.Now,
+                    UploadedDate = DateTime.Today,
                     DirectoryId = document.DirectoryId,
                     UploaderId = document.UploaderId,
                     Public = document.Public,

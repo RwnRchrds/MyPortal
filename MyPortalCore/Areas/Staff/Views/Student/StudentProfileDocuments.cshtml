@@ -50,14 +50,17 @@
                                 </h3>
                             </div>
                             <div class="kt-portlet__head-toolbar">
-                                <btn type="button" class="btn btn-brand btn-bold btn-sm" id="btnNewDocument">
+                                <btn type="button" class="btn btn-brand btn-bold btn-sm mr-2" id="btnNewDocument">
                                     <i class="fas fa-plus mr-2"></i>Add Document
+                                </btn>
+                                <btn type="button" class="btn btn-brand btn-bold btn-sm" id="btnNewDirectory">
+                                    <i class="fas fa-plus mr-2"></i>Add Directory
                                 </btn>
                             </div>
                         </div>
                         <div class="kt-portlet__body">
                             <div>
-                                <button type="button" class="btn btn-sm btn-info" disabled><i class="fas fa-arrow-left mr-2"></i>Back</button>
+                                <button type="button" class="btn btn-sm btn-info" id="backButton" disabled><i class="fas fa-arrow-left mr-2"></i>Back</button>
                             </div>
                             <div class="row mt-2">
                                 <div class="col-md-12">
@@ -72,6 +75,9 @@
                                             </th>
                                             <th>
                                                 Uploaded
+                                            </th>
+                                            <th>
+                                                Actions
                                             </th>
                                         </tr>
                                         </thead>
@@ -101,6 +107,11 @@
             $("#studentDocumentsLink").addClass("kt-widget__item--active");
 
             loadDirectory(rootDirectory);
+
+            $("#backButton").on("click",
+                function() {
+                    loadDirectory($(this).attr("data-parent-id"));
+                });
         });
 
         function loadDirectory(directoryId) {
@@ -123,19 +134,37 @@
             }
         }
 
+        function setBackButton(directory) {
+            if (directory.parentId == null) {
+                $("#backButton").attr("disabled", true);
+                $("#backButton").removeAttr("data-parent-id");
+            } else {
+                $("#backButton").removeAttr("disabled");
+                $("#backButton").attr("data-parent-id", directory.parentId);
+            }
+        }
+
         function loadDataTable(url) {
             $("#tblDocuments").DataTable({
                 ajax:
                 {
                     url: url,
-                    dataSrc: "children"
+                    dataSrc: function(data) {
+                        setBackButton(data.directory);
+
+                        return data.children;
+                    }
                 },
                 "dom": "rtilp",
                 columns: [
                     {
                         data: "id",
                         render: function(data, type, document) {
-                            return `<span><img src="${document.icon}" class="mr-2" height="30"/>${document.name}</span>`;
+                            if (document.isDirectory) {
+                                return `<span><img src="${document.icon}" class="mr-2" height="30"/><a href="javascript:loadDirectory('${document.id}');">${document.name}</a></span>`;
+                            } else {
+                                return `<span><img src="${document.icon}" class="mr-2" height="30"/>${document.name}</span>`;
+                            }
                         }
                     },
                     {
@@ -148,6 +177,16 @@
                                 return "";
                             } else {
                                 return `${moment(document.createdDate).format("DD/MM/YYYY")}`;
+                            }
+                        }
+                    },
+                    {
+                        data: "id",
+                        render: function(data, type, document) {
+                            if (document.isDirectory) {
+                                return `<div class="dropdown dropdown-inline show"><a href="javascript:;" class="btn btn-sm btn-clean btn-icon mr-2" data-toggle="dropdown" aria-expanded="true"><span class="svg-icon svg-icon-md"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"></rect><path d="M5,8.6862915 L5,5 L8.6862915,5 L11.5857864,2.10050506 L14.4852814,5 L19,5 L19,9.51471863 L21.4852814,12 L19,14.4852814 L19,19 L14.4852814,19 L11.5857864,21.8994949 L8.6862915,19 L5,19 L5,15.3137085 L1.6862915,12 L5,8.6862915 Z M12,15 C13.6568542,15 15,13.6568542 15,12 C15,10.3431458 13.6568542,9 12,9 C10.3431458,9 9,10.3431458 9,12 C9,13.6568542 10.3431458,15 12,15 Z" fill="#000000"></path></g></svg></span></a></div>`;
+                            } else {
+                                return "";
                             }
                         }
                     }

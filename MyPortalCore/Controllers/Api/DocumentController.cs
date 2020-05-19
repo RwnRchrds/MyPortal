@@ -41,9 +41,7 @@ namespace MyPortalCore.Controllers.Api
         {
             return await Process(async () =>
             {
-                // var user = await _userService.GetUserByPrincipal(User);
-
-                var user = await _userService.GetUserById(Guid.Parse("8A530C77-E9B2-453F-06EE-08D7ABDAA758"));
+                var user = await _userService.GetUserByPrincipal(User);
 
                 var document = new DocumentModel
                 {
