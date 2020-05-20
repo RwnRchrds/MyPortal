@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyPortal.Logic.Authorisation.Attributes;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Business;
 using MyPortal.Logic.Models.ListModels;
 using MyPortal.Logic.Models.Requests.Documents;
 
@@ -53,6 +54,71 @@ namespace MyPortalCore.Controllers.Api
                 };
 
                 return Ok(response);
+            });
+        }
+
+        [HttpPost]
+        [Route("create", Name = "ApiDirectoryCreate")]
+        public async Task<IActionResult> Create([FromForm] CreateDirectoryModel model)
+        {
+            return await Process(async () =>
+            {
+                var directory = new DirectoryModel
+                {
+                    ParentId = model.ParentId,
+                    Name = model.Name,
+                    Private = model.Private,
+                    StaffOnly = model.StaffOnly
+                };
+
+                await _directoryService.Create(directory);
+
+                return Ok("Directory created.");
+            });
+        }
+
+        [HttpPut]
+        [Route("update", Name = "ApiDirectoryUpdate")]
+        public async Task<IActionResult> Update([FromForm] UpdateDirectoryModel model)
+        {
+            return await Process(async () =>
+            {
+                var directory = new DirectoryModel
+                {
+                    Id = model.Id,
+                    ParentId = model.ParentId,
+                    Name = model.Name,
+                    Private = model.Private,
+                    StaffOnly = model.StaffOnly
+                };
+
+                await _directoryService.Update(directory);
+
+                return Ok("Directory was successfully updated.");
+            });
+        }
+
+        [HttpDelete]
+        [Route("delete", Name = "ApiDirectoryDelete")]
+        public async Task<IActionResult> Delete([FromQuery] Guid directoryId)
+        {
+            return await Process(async () =>
+            {
+                await _directoryService.Delete(directoryId);
+
+                return Ok("The directory was successfully deleted.");
+            });
+        }
+
+        [HttpGet]
+        [Route("getById", Name = "ApiDirectoryGetById")]
+        public async Task<IActionResult> GetById([FromQuery] Guid directoryId)
+        {
+            return await Process(async () =>
+            {
+                var directory = await _directoryService.GetById(directoryId);
+
+                return Ok(directory);
             });
         }
 

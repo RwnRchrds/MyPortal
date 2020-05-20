@@ -48,6 +48,8 @@ namespace MyPortalCore.Controllers.Api
         {
             var statusCode = HttpStatusCode.BadRequest;
 
+            var message = ExceptionHelper.GetRootExceptionMessage(ex);
+
             if (ex is ServiceException e)
             {
                 switch (e.ExceptionType)
@@ -66,14 +68,14 @@ namespace MyPortalCore.Controllers.Api
 
             if (statusCode == HttpStatusCode.NotFound)
             {
-                return NotFound(ex.Message);
+                return NotFound(message);
             }
             if (statusCode == HttpStatusCode.Forbidden)
             {
-                return Forbid(ex.Message);
+                return Forbid(message);
             }
 
-            return BadRequest(ex.Message);
+            return BadRequest(message);
         }
 
         public abstract void Dispose();

@@ -31,7 +31,7 @@ namespace MyPortal.Logic.Services
 
             if (logNote == null)
             {
-                NotFound();
+                throw NotFound();
             }
 
             return _businessMapper.Map<LogNoteModel>(logNote);
@@ -79,7 +79,7 @@ namespace MyPortal.Logic.Services
 
                 if (logNote == null)
                 {
-                    NotFound();
+                    throw NotFound();
                 }
 
                 logNote.TypeId = logNoteObject.TypeId;

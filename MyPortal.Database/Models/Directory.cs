@@ -29,12 +29,12 @@ namespace MyPortal.Database.Models
         public bool StaffOnly { get; set; } 
 
         public virtual Directory Parent { get; set; }
-
-        public virtual ICollection<Directory> Subdirectories { get; set; }
-        public virtual ICollection<Document> Documents { get; set; }
         public virtual Bulletin Bulletin { get; set; }
         public virtual Homework Homework { get; set; }
         public virtual Person Person { get; set; }
         public virtual LessonPlan LessonPlan { get; set; }
+
+        public virtual ICollection<Directory> Subdirectories { get; set; }
+        public virtual ICollection<Document> Documents { get; set; }
     }
 }

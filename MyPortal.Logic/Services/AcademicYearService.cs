@@ -26,7 +26,7 @@ namespace MyPortal.Logic.Services
 
             if (acadYear == null)
             {
-                NotFound("Current academic year not defined.");
+                throw NotFound("Current academic year not defined.");
             }
 
             return _businessMapper.Map<AcademicYearModel>(acadYear);

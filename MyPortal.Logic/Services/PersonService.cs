@@ -63,7 +63,7 @@ namespace MyPortal.Logic.Services
 
             if (person == null)
             {
-                NotFound();
+                throw NotFound();
             }
 
             return _businessMapper.Map<PersonModel>(person);

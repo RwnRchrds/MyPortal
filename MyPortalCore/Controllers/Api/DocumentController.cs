@@ -37,7 +37,7 @@ namespace MyPortalCore.Controllers.Api
 
         [HttpPost]
         [Route("upload")]
-        public async Task<IActionResult> UploadExisting([FromForm] DocumentUploadModel model)
+        public async Task<IActionResult> UploadExisting([FromForm] CreateDocumentModel model)
         {
             return await Process(async () =>
             {

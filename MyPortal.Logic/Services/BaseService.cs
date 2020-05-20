@@ -1,10 +1,8 @@
 ﻿﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using AutoMapper;
 using MyPortal.Logic.Helpers;
- using MyPortal.Logic.Interfaces;
- using MyPortal.Logic.Models.Exceptions;
+using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Exceptions;
 
  namespace MyPortal.Logic.Services
 {
@@ -21,19 +19,28 @@ using MyPortal.Logic.Helpers;
 
         public abstract void Dispose();
 
-        public void NotFound(string message = null)
+        public ServiceException NotFound(string message = null)
         {
-            throw new ServiceException(ExceptionType.NotFound, message ?? $"{_objectName} not found.");
+            return new ServiceException(ExceptionType.NotFound, string.IsNullOrWhiteSpace(message) ? $"{_objectName} not found." : message);
         }
 
-        public void BadRequest(string message = null)
+        public ServiceException BadRequest(string message = null)
         {
-            throw new ServiceException(ExceptionType.BadRequest, message ?? "An error occurred.");
+            return new ServiceException(ExceptionType.BadRequest, string.IsNullOrWhiteSpace(message) ? "An error occurred." : message);
         }
 
-        public void Forbidden(string message = null)
+        public ServiceException BadRequest(Exception ex)
         {
-            throw new ServiceException(ExceptionType.Forbidden, message ?? "Access denied.");   
+            var exceptionMessage = ExceptionHelper.GetRootExceptionMessage(ex);
+
+            var exception = new ServiceException(ExceptionType.BadRequest, string.IsNullOrWhiteSpace(exceptionMessage) ? "An error occurred." : exceptionMessage);
+
+            return exception;
+        }
+
+        public ServiceException Forbidden(string message = null)
+        {
+            return new ServiceException(ExceptionType.Forbidden, string.IsNullOrWhiteSpace(message) ? "Access denied." : message);
         }
     }
 }

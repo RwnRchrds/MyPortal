@@ -5,11 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Google.Apis.Drive.v3.Data;
 using MyPortal.Database.Interfaces;
+using MyPortal.Database.Models;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Business;
 using MyPortal.Logic.Models.Exceptions;
 using MyPortal.Logic.Models.Requests.Documents;
+using Syncfusion.EJ2.FileManager.Base;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
@@ -30,10 +33,70 @@ namespace MyPortal.Logic.Services
 
             if (directory == null)
             {
-                NotFound();
+                throw NotFound();
             }
 
             return _businessMapper.Map<DirectoryModel>(directory);
+        }
+
+        public async Task Create(params DirectoryModel[] directories)
+        {
+            foreach (var directory in directories)
+            {
+                if (directory.ParentId == null)
+                {
+                    throw BadRequest("Parent directory not specified.");
+                }
+
+                var parentDirectory = await _directoryRepository.GetById(directory.ParentId.Value);
+
+                if (parentDirectory == null)
+                {
+                    throw NotFound("Parent directory not found.");
+                }
+
+                var dirToAdd = new Directory
+                {
+                    ParentId = directory.ParentId,
+                    Name = directory.Name,
+                    Private = parentDirectory.Private || directory.Private,
+                    StaffOnly = directory.StaffOnly
+                };
+                
+                _directoryRepository.Create(dirToAdd);
+            }
+
+            await _directoryRepository.SaveChanges();
+        }
+
+        public async Task Update(params DirectoryModel[] directories)
+        {
+            foreach (var directory in directories)
+            {
+                var dirInDb = await _directoryRepository.GetByIdWithTracking(directory.Id);
+
+                dirInDb.Name = directory.Name;
+                dirInDb.Private = directory.Private;
+                dirInDb.StaffOnly = directory.StaffOnly;
+
+                // Cannot move root directories or remove parent from child directories
+                if (dirInDb.ParentId != null && directory.ParentId != null)
+                {
+                    dirInDb.ParentId = directory.ParentId;
+                }
+            }
+
+            await _directoryRepository.SaveChanges();
+        }
+
+        public async Task Delete(params Guid[] directoryIds)
+        {
+            foreach (var directoryId in directoryIds)
+            {
+                await _directoryRepository.Delete(directoryId);
+            }
+
+            await _directoryRepository.SaveChanges();
         }
 
         public async Task<DirectoryChildren> GetChildren(Guid directoryId, bool includeStaffOnly)
@@ -42,7 +105,7 @@ namespace MyPortal.Logic.Services
 
             if (directory == null)
             {
-                NotFound();
+                throw NotFound();
             }
 
             var children = new DirectoryChildren();

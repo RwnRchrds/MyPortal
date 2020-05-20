@@ -11,5 +11,8 @@ namespace MyPortal.Logic.Interfaces
     {
         Task<DirectoryChildren> GetChildren(Guid directoryId, bool includeStaffOnly);
         Task<DirectoryModel> GetById(Guid directoryId);
+        Task Create(params DirectoryModel[] directories);
+        Task Update(params DirectoryModel[] directories);
+        Task Delete(params Guid[] directoryIds);
     }
 }

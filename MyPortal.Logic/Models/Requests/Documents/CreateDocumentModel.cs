@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MyPortal.Logic.Models.Requests.Documents
 {
-    public class DocumentUploadModel
+    public class CreateDocumentModel
     {
         public Guid TypeId { get; set; }
         public Guid DirectoryId { get; set; }

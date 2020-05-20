@@ -63,7 +63,7 @@ namespace MyPortal.Logic.Services
 
                 if (permInDb == null)
                 {
-                    BadRequest($"Permission {perm:X} not found in database");
+                    throw BadRequest($"Permission {perm:X} not found in database");
                 }
             }
         }

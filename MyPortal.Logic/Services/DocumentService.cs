@@ -30,65 +30,67 @@ namespace MyPortal.Logic.Services
     {
         private IGoogleService _googleService;
         private readonly IDocumentRepository _documentRepository;
+        private readonly IDirectoryService _directoryService;
         private DriveService _driveService;
 
-        public DocumentService(IDocumentRepository documentRepository, IGoogleService googleService) : base("Document")
+        public DocumentService(IDocumentRepository documentRepository, IGoogleService googleService, IDirectoryService directoryService) : base("Document")
         {
             _documentRepository = documentRepository;
             _googleService = googleService;
+            _directoryService = directoryService;
 
             var init = _googleService.GetInitializer();
 
             _driveService = new DriveService(init);
         }
 
-        public async Task Create(params DocumentUpload[] uploads)
-        {
-            foreach (var upload in uploads)
-            {
-                var docToAdd = new Document
-                {
-                    TypeId = upload.Details.TypeId,
-                    Title = upload.Details.Title,
-                    Description = upload.Details.Description,
-                    UploadedDate = DateTime.Now,
-                    DirectoryId = upload.Details.DirectoryId,
-                    UploaderId = upload.Details.UploaderId,
-                    Public = upload.Details.Public,
-                    Deleted = false,
-                    Approved = false
-                };
+        //public async Task Create(params DocumentUpload[] uploads)
+        //{
+        //    foreach (var upload in uploads)
+        //    {
+        //        var docToAdd = new Document
+        //        {
+        //            TypeId = upload.Details.TypeId,
+        //            Title = upload.Details.Title,
+        //            Description = upload.Details.Description,
+        //            UploadedDate = DateTime.Now,
+        //            DirectoryId = upload.Details.DirectoryId,
+        //            UploaderId = upload.Details.UploaderId,
+        //            Public = upload.Details.Public,
+        //            Deleted = false,
+        //            Approved = false
+        //        };
 
-                var metadata = new File
-                {
-                    Name = upload.Details.FileName,
-                    Description = upload.Details.Description
-                };
+        //        var metadata = new File
+        //        {
+        //            Name = upload.Details.FileName,
+        //            Description = upload.Details.Description
+        //        };
 
-                FilesResource.CreateMediaUpload request;
+        //        FilesResource.CreateMediaUpload request;
 
-                string mimeType;
+        //        string mimeType;
 
-                using (upload.FileStream)
-                {
-                    mimeType = MimeTypeHelper.GetMimeType(Path.GetExtension(upload.FileStream.Name));
+        //        using (upload.FileStream)
+        //        {
+        //            mimeType = MimeTypeHelper.GetMimeType(Path.GetExtension(upload.FileStream.Name));
 
-                    request = _driveService.Files.Create(metadata, upload.FileStream, mimeType);
-                    request.Fields = "id, mimeType";
+        //            request = _driveService.Files.Create(metadata, upload.FileStream, mimeType);
+        //            request.Fields = "id, mimeType";
 
-                    await request.UploadAsync();
-                }
+        //            await request.UploadAsync();
+        //        }
 
-                var file = request.ResponseBody;
+        //        var file = request.ResponseBody;
 
-                docToAdd.FileId = file.Id;
-                docToAdd.ContentType = mimeType;
+        //        docToAdd.FileId = file.Id;
+        //        docToAdd.ContentType = mimeType;
 
-                _documentRepository.Create(docToAdd);
-            }
+        //        _documentRepository.Create(docToAdd);
+        //    }
 
-            await _documentRepository.SaveChanges();
-        }
+        //    await _documentRepository.SaveChanges();
+        //}
 
         public async Task Create(params DocumentModel[] documents)
         {
@@ -100,25 +102,64 @@ namespace MyPortal.Logic.Services
 
                 request.SupportsAllDrives = true;
 
-                var documentInCloud = await request.ExecuteAsync();
+                var directory = await _directoryService.GetById(document.DirectoryId);
 
-                var docToAdd = new Document
+                if (directory == null)
                 {
-                    TypeId = document.TypeId,
-                    Title = document.Title,
-                    Description = document.Description,
-                    UploadedDate = DateTime.Today,
-                    DirectoryId = document.DirectoryId,
-                    UploaderId = document.UploaderId,
-                    Public = document.Public,
-                    Deleted = false,
-                    Approved = false,
-                    ContentType = documentInCloud.MimeType,
-                    FileName = documentInCloud.Name,
-                    FileId = document.FileId
-                };
+                    throw NotFound("Directory not found.");
+                }
 
-                _documentRepository.Create(docToAdd);
+                try
+                { 
+                    var documentInCloud = await request.ExecuteAsync();
+
+                    var docToAdd = new Document
+                    {
+                        TypeId = document.TypeId,
+                        Title = document.Title,
+                        Description = document.Description,
+                        UploadedDate = DateTime.Today,
+                        DirectoryId = document.DirectoryId,
+                        UploaderId = document.UploaderId,
+                        Public = !directory.Private || document.Public,
+                        Deleted = false,
+                        Approved = directory.Private || document.Approved,
+                        ContentType = documentInCloud.MimeType,
+                        FileName = documentInCloud.Name,
+                        FileId = document.FileId
+                    };
+
+                    _documentRepository.Create(docToAdd);
+                }
+                catch (Exception e)
+                {
+                    throw BadRequest(e);
+                }
+            }
+
+            await _documentRepository.SaveChanges();
+        }
+
+        public async Task Update(params DocumentModel[] documents)
+        {
+            foreach (var document in documents)
+            {
+                var documentInDb = await _documentRepository.GetByIdWithTracking(document.Id);
+
+                documentInDb.Title = document.Title;
+                documentInDb.Description = document.Description;
+                documentInDb.Approved = document.Approved;
+                documentInDb.TypeId = document.TypeId;
+            }
+
+            await _documentRepository.SaveChanges();
+        }
+
+        public async Task Delete(params Guid[] documentIds)
+        {
+            foreach (var documentId in documentIds)
+            {
+                await _documentRepository.Delete(documentId);
             }
 
             await _documentRepository.SaveChanges();
@@ -130,7 +171,7 @@ namespace MyPortal.Logic.Services
 
             if (document == null)
             {
-                NotFound();
+                throw NotFound();
             }
 
             try
@@ -145,8 +186,7 @@ namespace MyPortal.Logic.Services
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                throw BadRequest(e);
             }
         }
 
@@ -156,7 +196,7 @@ namespace MyPortal.Logic.Services
 
             if (document == null)
             {
-                NotFound();
+                throw NotFound();
             }
 
             return _businessMapper.Map<DocumentModel>(document);
@@ -168,7 +208,7 @@ namespace MyPortal.Logic.Services
 
             if (document == null)
             {
-                NotFound();
+                throw NotFound();
             }
 
             var googleMimeTypes = GoogleMimeTypes.GetAll();

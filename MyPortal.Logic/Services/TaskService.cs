@@ -63,7 +63,7 @@ namespace MyPortal.Logic.Services
 
                 if (taskInDb == null)
                 {
-                    NotFound();
+                    throw NotFound();
                 }
 
                 taskInDb.Title = task.Title;
