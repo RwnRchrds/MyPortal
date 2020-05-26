@@ -19,12 +19,14 @@ namespace MyPortalCore.Areas.Staff.Controllers
         private IStudentService _studentService;
         private IPersonService _personService;
         private ILogNoteService _logNoteService;
+        private IDocumentService _documentService;
 
-        public StudentController(IStudentService studentService, IPersonService personService, ILogNoteService logNoteService, IApplicationUserService userService) : base(userService)
+        public StudentController(IStudentService studentService, IPersonService personService, ILogNoteService logNoteService, IApplicationUserService userService, IDocumentService documentService) : base(userService)
         {
             _studentService = studentService;
             _personService = personService;
             _logNoteService = logNoteService;
+            _documentService = documentService;
         }
 
         [RequiresPermission(Permissions.Student.Details.View)]
@@ -67,6 +69,8 @@ namespace MyPortalCore.Areas.Staff.Controllers
             var viewModel = new StudentDocumentsViewModel();
 
             viewModel.Student = await _studentService.GetById(studentId);
+            viewModel.DocumentTypes =
+                (await _documentService.GetTypes(SearchFilters.DocumentTypes.Student)).ToSelectList();
 
             return View(viewModel);
         }

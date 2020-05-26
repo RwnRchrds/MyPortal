@@ -24,8 +24,8 @@ namespace MyPortalCore.Controllers.Api
         }
 
         [HttpGet]
-        [Route("getMetadata")]
-        public async Task<IActionResult> GetMetadata([FromQuery] Guid documentId)
+        [Route("getById", Name = "ApiDocumentGetById")]
+        public async Task<IActionResult> GetById([FromQuery] Guid documentId)
         {
             return await Process(async () =>
             {
@@ -36,8 +36,8 @@ namespace MyPortalCore.Controllers.Api
         }
 
         [HttpPost]
-        [Route("upload")]
-        public async Task<IActionResult> UploadExisting([FromForm] CreateDocumentModel model)
+        [Route("create", Name = "ApiDocumentCreate")]
+        public async Task<IActionResult> Create([FromForm] CreateDocumentModel model)
         {
             return await Process(async () =>
             {
@@ -56,12 +56,46 @@ namespace MyPortalCore.Controllers.Api
 
                 await _documentService.Create(document);
 
-                return Ok("Document uploaded.");
+                return Ok("Document created successfully.");
+            });
+        }
+
+        [HttpPut]
+        [Route("update", Name = "ApiDocumentUpdate")]
+        public async Task<IActionResult> Update([FromForm] UpdateDocumentModel model)
+        {
+            return await Process(async () =>
+            {
+                var document = new DocumentModel
+                {
+                    Id = model.Id,
+                    Title = model.Title,
+                    Description = model.Description,
+                    Approved = model.Approved,
+                    TypeId = model.TypeId,
+                    Public = model.Public
+                };
+
+                await _documentService.Update(document);
+
+                return Ok("Document updated successfully.");
+            });
+        }
+
+        [HttpDelete]
+        [Route("delete", Name = "ApiDocumentDelete")]
+        public async Task<IActionResult> Delete([FromQuery] Guid documentId)
+        {
+            return await Process(async () =>
+            {
+                await _documentService.Delete(documentId);
+
+                return Ok("Document deleted successfully.");
             });
         }
 
         [HttpGet]
-        [Route("download")]
+        [Route("download", Name = "ApiDocumentDownload")]
         public async Task<IActionResult> DownloadFile([FromQuery] Guid documentId, [FromQuery] bool asPdf = false)
         {
             return await Process(async () =>
@@ -69,6 +103,18 @@ namespace MyPortalCore.Controllers.Api
                 var download = await _documentService.GetDownloadById(documentId, asPdf);
 
                 return File(download.FileStream, download.ContentType, download.FileName);
+            });
+        }
+
+        [HttpGet]
+        [Route("getLink", Name = "ApiDocumentGetWebViewLink")]
+        public async Task<IActionResult> GetWebViewLink([FromQuery] Guid documentId)
+        {
+            return await Process(async () =>
+            {
+                var file = await _documentService.GetFileById(documentId);
+
+                return Ok(file.WebViewLink);
             });
         }
 

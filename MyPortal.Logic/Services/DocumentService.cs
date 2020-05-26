@@ -14,10 +14,12 @@ using Google.Apis.Services;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using MyPortal.Database.Models.Filters;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Business;
+using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Exceptions;
 using MyPortal.Logic.Models.Google;
 using MyPortal.Logic.Models.Requests.Documents;
@@ -30,14 +32,16 @@ namespace MyPortal.Logic.Services
     {
         private IGoogleService _googleService;
         private readonly IDocumentRepository _documentRepository;
+        private readonly IDocumentTypeRepository _documentTypeRepository;
         private readonly IDirectoryService _directoryService;
         private DriveService _driveService;
 
-        public DocumentService(IDocumentRepository documentRepository, IGoogleService googleService, IDirectoryService directoryService) : base("Document")
+        public DocumentService(IDocumentRepository documentRepository, IGoogleService googleService, IDirectoryService directoryService, IDocumentTypeRepository documentTypeRepository) : base("Document")
         {
             _documentRepository = documentRepository;
             _googleService = googleService;
             _directoryService = directoryService;
+            _documentTypeRepository = documentTypeRepository;
 
             var init = _googleService.GetInitializer();
 
@@ -153,6 +157,45 @@ namespace MyPortal.Logic.Services
             }
 
             await _documentRepository.SaveChanges();
+        }
+
+        public async Task<Lookup> GetTypes(Guid searchFilter)
+        {
+            var filter = new DocumentTypeFilter();
+
+            if (searchFilter == SearchFilters.DocumentTypes.Student)
+            {
+                filter.Active = true;   
+                filter.Student = true;
+            }
+            else if(searchFilter == SearchFilters.DocumentTypes.Staff)
+            {
+                filter.Active = true;
+                filter.Staff = true;
+            }
+            else if (searchFilter == SearchFilters.DocumentTypes.Contact)
+            {
+                filter.Active = true;
+                filter.Staff = true;
+            }
+            else if (searchFilter == SearchFilters.DocumentTypes.General)
+            {
+                filter.Active = true;
+                filter.General = true;
+            }
+            else if (searchFilter == SearchFilters.DocumentTypes.Sen)
+            {
+                filter.Active = true;
+                filter.Sen = true;
+            }
+            else if (searchFilter == SearchFilters.DocumentTypes.Active)
+            {
+                filter.Active = true;
+            }
+
+            var documentTypes = await _documentTypeRepository.Get(filter);
+
+            return new Lookup(documentTypes.ToDictionary(x => x.Description, x => x.Id));
         }
 
         public async Task Delete(params Guid[] documentIds)

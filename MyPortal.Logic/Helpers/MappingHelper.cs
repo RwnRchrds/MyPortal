@@ -19,17 +19,22 @@ namespace MyPortal.Logic.Helpers
                 cfg.CreateMap<AcademicYear, AcademicYearModel>().ReverseMap();
                 cfg.CreateMap<ApplicationRole, RoleModel>().ReverseMap();
                 cfg.CreateMap<ApplicationUser, UserModel>().ReverseMap();
-                cfg.CreateMap<House, HouseModel>().ReverseMap();
+                cfg.CreateMap<Bulletin, BulletinModel>().ReverseMap();
                 cfg.CreateMap<Directory, DirectoryModel>().ReverseMap();
                 cfg.CreateMap<Document, DocumentModel>().ReverseMap();
                 cfg.CreateMap<DocumentType, DocumentTypeModel>().ReverseMap();
-                cfg.CreateMap<Person, PersonModel>().ReverseMap();
+                cfg.CreateMap<Homework, HomeworkModel>().ReverseMap();
+                cfg.CreateMap<House, HouseModel>().ReverseMap();
+                cfg.CreateMap<LessonPlan, LessonPlanModel>().ReverseMap();
                 cfg.CreateMap<LogNote, LogNoteModel>().ReverseMap();
                 cfg.CreateMap<LogNoteType, LogNoteTypeModel>().ReverseMap();
+                cfg.CreateMap<Person, PersonModel>().ReverseMap();
                 cfg.CreateMap<RegGroup, RegGroupModel>().ReverseMap();
                 cfg.CreateMap<SenStatus, SenStatusModel>().ReverseMap();
                 cfg.CreateMap<StaffMember, StaffMemberModel>().ReverseMap();
                 cfg.CreateMap<Student, StudentModel>().ReverseMap();
+                cfg.CreateMap<StudyTopic, StudyTopicModel>().ReverseMap();
+                cfg.CreateMap<Subject, SubjectModel>().ReverseMap();
                 cfg.CreateMap<YearGroup, YearGroupModel>().ReverseMap();
             });
 

@@ -18,11 +18,11 @@ namespace MyPortal.Tests
             Assert.DoesNotThrow(MappingHelper.GetBusinessConfig().ConfigurationProvider.AssertConfigurationIsValid);
         }
 
-        [Test]
-        public void Mapping_DataGridConfigurationIsValid()
-        {
-            Assert.DoesNotThrow(MappingHelper.GetDataGridConfig().ConfigurationProvider.AssertConfigurationIsValid);
-        }
+        //[Test]
+        //public void Mapping_DataGridConfigurationIsValid()
+        //{
+        //    Assert.DoesNotThrow(MappingHelper.GetDataGridConfig().ConfigurationProvider.AssertConfigurationIsValid);
+        //}
 
         [Test]
         public void Encryption()
