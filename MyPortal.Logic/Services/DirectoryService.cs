@@ -75,7 +75,11 @@ namespace MyPortal.Logic.Services
             {
                 var dirInDb = await _directoryRepository.GetByIdWithTracking(directory.Id);
 
-                dirInDb.Name = directory.Name;
+                if (!string.IsNullOrWhiteSpace(directory.Name))
+                {
+                    dirInDb.Name = directory.Name;   
+                }
+                
                 dirInDb.Private = directory.Private;
                 dirInDb.StaffOnly = directory.StaffOnly;
 
@@ -124,14 +128,18 @@ namespace MyPortal.Logic.Services
         {
             var directory = await _directoryRepository.GetById(directoryId);
 
-            if (directory.Private && (user.UserType == UserTypes.Staff || user.Person?.DirectoryId == directory.Id))
+            if (directory.StaffOnly && user.UserType == UserTypes.Staff)
             {
                 return true;
             }
 
-            if (directory.StaffOnly && user.UserType == UserTypes.Staff)
+            if (directory.Private)
             {
-                return true;
+                if (user.UserType == UserTypes.Staff || user.Person?.DirectoryId == directory.Id ||
+                    directory.ParentId != null && await IsAuthorised(user, directory.ParentId.Value))
+                {
+                    return true;
+                }
             }
 
             return false;

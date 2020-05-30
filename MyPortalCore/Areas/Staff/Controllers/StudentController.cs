@@ -20,13 +20,17 @@ namespace MyPortalCore.Areas.Staff.Controllers
         private IPersonService _personService;
         private ILogNoteService _logNoteService;
         private IDocumentService _documentService;
+        private IAchievementService _achievementService;
+        private IAttendanceMarkService _attendanceMarkService;
 
-        public StudentController(IStudentService studentService, IPersonService personService, ILogNoteService logNoteService, IApplicationUserService userService, IDocumentService documentService) : base(userService)
+        public StudentController(IStudentService studentService, IPersonService personService, ILogNoteService logNoteService, IApplicationUserService userService, IDocumentService documentService, IAchievementService achievementService, IAttendanceMarkService attendanceMarkService) : base(userService)
         {
             _studentService = studentService;
             _personService = personService;
             _logNoteService = logNoteService;
             _documentService = documentService;
+            _achievementService = achievementService;
+            _attendanceMarkService = attendanceMarkService;
         }
 
         [RequiresPermission(Permissions.Student.Details.View)]
@@ -51,13 +55,23 @@ namespace MyPortalCore.Areas.Staff.Controllers
                 return BadRequest("No academic year has been selected.");
             }
 
+            var academicYearId = (Guid)user.SelectedAcademicYearId;
+
             var viewModel = new StudentOverviewViewModel();
 
             viewModel.Student = await _studentService.GetById(studentId);
             viewModel.LogNotes =
-                (await _logNoteService.GetByStudent(studentId, user.SelectedAcademicYearId.Value)).Select(x =>
+                (await _logNoteService.GetByStudent(studentId, academicYearId)).Select(x =>
                     x.ToListModel());
             viewModel.LogNoteTypes = (await _logNoteService.GetTypes()).ToSelectList();
+            viewModel.AchievementPoints = await _achievementService.GetPointsByStudent(studentId, academicYearId);
+
+            var attendanceSummary = await _attendanceMarkService.GetSummaryByStudent(studentId, academicYearId, true);
+
+            if (attendanceSummary.Valid)
+            {
+                viewModel.Attendance = attendanceSummary.GetPresentAndApproved();
+            }
 
             return View(viewModel);
         }

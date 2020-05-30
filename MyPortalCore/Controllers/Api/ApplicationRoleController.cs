@@ -31,7 +31,7 @@ namespace MyPortalCore.Controllers.Api
             {
                 var roles = await _applicationRoleService.Get(roleName);
 
-                var result = roles.Select(_dTMapper.Map<ApplicationRoleListModel>);
+                var result = roles;
 
                 return Ok(result);
             });

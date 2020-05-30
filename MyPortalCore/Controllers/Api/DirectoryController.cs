@@ -29,31 +29,36 @@ namespace MyPortalCore.Controllers.Api
 
         [HttpGet]
         [Route("list", Name = "ApiDirectoryGetChildren")]
-        [Authorize(Policy = Policies.UserType.Staff)]
         public async Task<IActionResult> GetChildren([FromQuery] Guid directoryId)
         {
             return await Process(async () =>
             {
+
                 var user = await _userService.GetUserByPrincipal(User);
 
-                var directory = await _directoryService.GetById(directoryId);
-
-                var userIsStaff = user.UserType == UserTypes.Staff;
-
-                var children = await _directoryService.GetChildren(directoryId, userIsStaff);
-
-                var childList = new List<DirectoryChildListModel>();
-
-                childList.AddRange(children.Subdirectories.Select(x => x.GetListModel()));
-                childList.AddRange(children.Files.Select(x => x.GetListModel()));
-
-                var response = new DirectoryChildListWrapper
+                if (await _directoryService.IsAuthorised(user, directoryId))
                 {
-                    Directory = directory,
-                    Children = childList
-                };
+                    var directory = await _directoryService.GetById(directoryId);
 
-                return Ok(response);
+                    var userIsStaff = user.UserType == UserTypes.Staff;
+
+                    var children = await _directoryService.GetChildren(directoryId, userIsStaff);
+
+                    var childList = new List<DirectoryChildListModel>();
+
+                    childList.AddRange(children.Subdirectories.Select(x => x.GetListModel()));
+                    childList.AddRange(children.Files.Select(x => x.GetListModel()));
+
+                    var response = new DirectoryChildListWrapper
+                    {
+                        Directory = directory,
+                        Children = childList
+                    };
+
+                    return Ok(response);
+                }
+
+                return Unauthorized("Access denied.");
             });
         }
 
@@ -63,17 +68,24 @@ namespace MyPortalCore.Controllers.Api
         {
             return await Process(async () =>
             {
-                var directory = new DirectoryModel
+                var user = await _userService.GetUserByPrincipal(User);
+
+                if (await _directoryService.IsAuthorised(user, model.ParentId))
                 {
-                    ParentId = model.ParentId,
-                    Name = model.Name,
-                    Private = model.Private,
-                    StaffOnly = model.StaffOnly
-                };
+                    var directory = new DirectoryModel
+                    {
+                        ParentId = model.ParentId,
+                        Name = model.Name,
+                        Private = model.Private,
+                        StaffOnly = model.StaffOnly
+                    };
 
-                await _directoryService.Create(directory);
+                    await _directoryService.Create(directory);
 
-                return Ok("Directory created.");
+                    return Ok("Directory created successfully.");
+                }
+
+                return Unauthorized("Access denied.");
             });
         }
 
@@ -83,18 +95,25 @@ namespace MyPortalCore.Controllers.Api
         {
             return await Process(async () =>
             {
-                var directory = new DirectoryModel
+                var user = await _userService.GetUserByPrincipal(User);
+
+                if (await _directoryService.IsAuthorised(user, model.Id))
                 {
-                    Id = model.Id,
-                    ParentId = model.ParentId,
-                    Name = model.Name,
-                    Private = model.Private,
-                    StaffOnly = model.StaffOnly
-                };
+                    var directory = new DirectoryModel
+                    {
+                        Id = model.Id,
+                        ParentId = model.ParentId,
+                        Name = model.Name,
+                        Private = model.Private,
+                        StaffOnly = model.StaffOnly
+                    };
 
-                await _directoryService.Update(directory);
+                    await _directoryService.Update(directory);
 
-                return Ok("Directory was successfully updated.");
+                    return Ok("Directory was successfully updated.");
+                }
+
+                return Unauthorized("Access denied.");
             });
         }
 
@@ -104,9 +123,16 @@ namespace MyPortalCore.Controllers.Api
         {
             return await Process(async () =>
             {
-                await _directoryService.Delete(directoryId);
+                var user = await _userService.GetUserByPrincipal(User);
 
-                return Ok("The directory was successfully deleted.");
+                if (await _directoryService.IsAuthorised(user, directoryId))
+                {
+                    await _directoryService.Delete(directoryId);
+
+                    return Ok("The directory was successfully deleted.");
+                }
+
+                return Unauthorized("Access denied.");
             });
         }
 
@@ -116,9 +142,16 @@ namespace MyPortalCore.Controllers.Api
         {
             return await Process(async () =>
             {
-                var directory = await _directoryService.GetById(directoryId);
+                var user = await _userService.GetUserByPrincipal(User);
 
-                return Ok(directory);
+                if (await _directoryService.IsAuthorised(user, directoryId))
+                {
+                    var directory = await _directoryService.GetById(directoryId);
+
+                    return Ok(directory);
+                }
+
+                return Unauthorized("Access denied.");
             });
         }
 

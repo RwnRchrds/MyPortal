@@ -47,6 +47,11 @@ namespace MyPortal.Logic.Services
         {
             var student = await _studentRepository.GetById(studentId);
 
+            if (student == null)
+            {
+                throw NotFound();
+            }
+
             return _businessMapper.Map<StudentModel>(student);
         }
 
@@ -98,7 +103,6 @@ namespace MyPortal.Logic.Services
         public async Task Update(StudentModel student)
         {
             var studentInDb = await _studentRepository.GetByIdWithTracking(student.Id);
-
 
             await _studentRepository.SaveChanges();
         }

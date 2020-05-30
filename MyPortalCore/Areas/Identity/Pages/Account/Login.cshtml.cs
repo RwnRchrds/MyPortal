@@ -102,7 +102,7 @@ namespace MyPortalCore.Areas.Identity.Pages.Account
                 if (result.IsLockedOut)
                 {
                     _logger.LogWarning("User account locked out.");
-                    ModelState.AddModelError(string.Empty, "Account is disabled. Please try again later.");
+                    ModelState.AddModelError(string.Empty, "Your account is currently disabled. Please try again later.");
                     return Page();
                 }
                 else

@@ -44,12 +44,24 @@ namespace MyPortal.Database.Repositories
 
         protected async Task<int> ExecuteIntQuery(string sql, object param = null)
         {
-            return await Connection.QuerySingleOrDefaultAsync<int>(sql, param);
+            var result = await Connection.QueryFirstOrDefaultAsync<int?>(sql, param);
+
+            if (result == null)
+            {
+                return 0;
+            }
+
+            return result.Value;
         }
 
         protected async Task<string> ExecuteStringQuery(string sql, object param = null)
         {
             return await Connection.QuerySingleOrDefaultAsync<string>(sql, param);
+        }
+
+        protected async Task<int> ExecuteNonQuery(string sql, object param = null)
+        {
+            return await Connection.ExecuteAsync(sql, param);
         }
 
         protected string SelectAllColumns(bool getRelated = true)

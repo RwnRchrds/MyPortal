@@ -51,6 +51,11 @@ namespace MyPortal.Database.Helpers
             return $"{param}%";
         }
 
+        internal static string ParamEndsWith(string param)
+        {
+            return $"%{param}";
+        }
+
         internal static string ParamContains(string param)
         {
             return $"%{param}%";

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net.WebSockets;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -44,10 +45,15 @@ namespace MyPortal.Logic.Services
                 Email = creator.Email,
                 PhoneNumber = creator.PhoneNumber,
                 UserType = creator.UserType,
-                Enabled = true
+                Enabled = true,
             };
-            
-            await _userManager.CreateAsync(user, creator.Password);
+
+            var result = await _userManager.CreateAsync(user, creator.Password);
+
+            if (!result.Succeeded)
+            {
+                throw BadRequest(result.Errors.FirstOrDefault()?.Description);
+            }
         }
 
         public async Task ResetPassword(PasswordReset model)

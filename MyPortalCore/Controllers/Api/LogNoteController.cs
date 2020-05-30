@@ -45,7 +45,7 @@ namespace MyPortalCore.Controllers.Api
             {
                 var logNotes = await _logNoteService.GetByStudent(studentId, academicYearId);
 
-                var result = logNotes.Select(_dTMapper.Map<LogNoteListModel>);
+                var result = logNotes;
 
                 return Ok(result);
             });
@@ -76,7 +76,7 @@ namespace MyPortalCore.Controllers.Api
 
                 await _logNoteService.Create(logNote);
 
-                return Ok("Log note created.");
+                return Ok("Log note created successfully.");
             });
         }
 
@@ -96,7 +96,7 @@ namespace MyPortalCore.Controllers.Api
 
                 await _logNoteService.Update(logNote);
 
-                return Ok("Log note updated.");
+                return Ok("Log note updated successfully.");
             });
         }
 
@@ -108,7 +108,7 @@ namespace MyPortalCore.Controllers.Api
             {
                 await _logNoteService.Delete(logNoteId);
 
-                return Ok("Log note deleted.");
+                return Ok("Log note deleted successfully.");
             });
         }
 

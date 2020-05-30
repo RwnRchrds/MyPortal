@@ -1,4 +1,5 @@
-﻿@model MyPortalCore.Areas.Staff.ViewModels.Student.StudentOverviewViewModel
+﻿@using Microsoft.CodeAnalysis.CSharp.Syntax
+@model MyPortalCore.Areas.Staff.ViewModels.Student.StudentOverviewViewModel
 @{
     ViewBag.Title = "Student Overview";
     Layout = "~/Areas/Staff/Views/Shared/_Layout.cshtml";
@@ -67,7 +68,14 @@
                             <div class="kt-widget12__item">
                                 <div class="kt-widget12__info">
                                     <span class="kt-widget12__desc">Attendance (Present + AEA)</span>
-                                    <span class="kt-widget12__value">@Model.Attendance%</span>
+                                    @if (Model.Attendance == null)
+                                    {
+                                        <span class="kt-widget12__value">N/A</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="kt-widget12__value">@Model.Attendance.Value.ToString("##.0")%</span>
+                                    }
                                 </div>
                             </div>
                         </div>

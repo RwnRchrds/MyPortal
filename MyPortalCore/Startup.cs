@@ -165,9 +165,11 @@ namespace MyPortalCore
             
             // MyPortal business services
             services.AddTransient<IAcademicYearService, AcademicYearService>();
+            services.AddTransient<IAchievementService, AchievementService>();
             services.AddTransient<IApplicationRolePermissionService, ApplicationRolePermissionService>();
             services.AddTransient<IApplicationRoleService, ApplicationRoleService>();
             services.AddTransient<IApplicationUserService, ApplicationUserService>();
+            services.AddTransient<IAttendanceMarkService, AttendanceMarkService>();
             services.AddTransient<IDirectoryService, DirectoryService>();
             services.AddTransient<IDocumentService, DocumentService>();
             services.AddTransient<IGoogleService, GoogleHelper>();

@@ -24,11 +24,14 @@ namespace MyPortal.Logic.Helpers
             };
         }
 
-        public BaseClientService.Initializer GetInitializer()
+        public BaseClientService.Initializer GetInitializer(string accountName = null)
         {
             var credPath = _config.GetValue<string>("Google:CredentialPath");
 
-            var account = _config.GetValue<string>("Google:AccountName");
+            if (string.IsNullOrWhiteSpace(accountName))
+            {
+                accountName = _config.GetValue<string>("Google:AccountName");
+            }
 
             var originCredential =
                 (ServiceAccountCredential)GoogleCredential.FromFile(credPath)
@@ -36,7 +39,7 @@ namespace MyPortal.Logic.Helpers
 
             var initializer = new ServiceAccountCredential.Initializer(originCredential.Id)
             {
-                User = account,
+                User = accountName,
                 Key = originCredential.Key,
                 Scopes = _scopes
             };

@@ -9,6 +9,6 @@ namespace MyPortal.Logic.Interfaces
 {
     public interface IGoogleService
     {
-        BaseClientService.Initializer GetInitializer();
+        BaseClientService.Initializer GetInitializer(string accountName = null);
     }
 }

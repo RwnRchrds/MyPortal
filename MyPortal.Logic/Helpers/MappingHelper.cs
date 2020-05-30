@@ -10,65 +10,57 @@ using MyPortal.Logic.Models.ListModels;
 
 namespace MyPortal.Logic.Helpers
 {
-    public class MappingHelper
+    public static class MappingHelper
     {
+        private static Dictionary<Type, Type> _entityMappings = new Dictionary<Type, Type>
+        {
+            {typeof(AcademicYear), typeof(AcademicYearModel)},
+            {typeof(ApplicationRole), typeof(RoleModel)},
+            {typeof(ApplicationUser), typeof(UserModel)},
+            {typeof(Bulletin), typeof(BulletinModel)},
+            {typeof(Directory), typeof(DirectoryModel)},
+            {typeof(Document), typeof(DocumentModel)},
+            {typeof(DocumentType), typeof(DocumentTypeModel)},
+            {typeof(Homework), typeof(HomeworkModel)},
+            {typeof(House), typeof(HouseModel)},
+            {typeof(LessonPlan), typeof(LessonPlanModel)},
+            {typeof(LogNote), typeof(LogNoteModel)},
+            {typeof(LogNoteType), typeof(LogNoteTypeModel)},
+            {typeof(Person), typeof(PersonModel)},
+            {typeof(RegGroup), typeof(RegGroupModel)},
+            {typeof(SenStatus), typeof(SenStatusModel)},
+            {typeof(StaffMember), typeof(StaffMemberModel)},
+            {typeof(Student), typeof(StudentModel)},
+            {typeof(StudyTopic), typeof(StudyTopicModel)},
+            {typeof(Subject), typeof(SubjectModel)},
+            {typeof(YearGroup), typeof(YearGroupModel)}
+        };
+
         public static IMapper GetBusinessConfig()
         {
             var config = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<AcademicYear, AcademicYearModel>().ReverseMap();
-                cfg.CreateMap<ApplicationRole, RoleModel>().ReverseMap();
-                cfg.CreateMap<ApplicationUser, UserModel>().ReverseMap();
-                cfg.CreateMap<Bulletin, BulletinModel>().ReverseMap();
-                cfg.CreateMap<Directory, DirectoryModel>().ReverseMap();
-                cfg.CreateMap<Document, DocumentModel>().ReverseMap();
-                cfg.CreateMap<DocumentType, DocumentTypeModel>().ReverseMap();
-                cfg.CreateMap<Homework, HomeworkModel>().ReverseMap();
-                cfg.CreateMap<House, HouseModel>().ReverseMap();
-                cfg.CreateMap<LessonPlan, LessonPlanModel>().ReverseMap();
-                cfg.CreateMap<LogNote, LogNoteModel>().ReverseMap();
-                cfg.CreateMap<LogNoteType, LogNoteTypeModel>().ReverseMap();
-                cfg.CreateMap<Person, PersonModel>().ReverseMap();
-                cfg.CreateMap<RegGroup, RegGroupModel>().ReverseMap();
-                cfg.CreateMap<SenStatus, SenStatusModel>().ReverseMap();
-                cfg.CreateMap<StaffMember, StaffMemberModel>().ReverseMap();
-                cfg.CreateMap<Student, StudentModel>().ReverseMap();
-                cfg.CreateMap<StudyTopic, StudyTopicModel>().ReverseMap();
-                cfg.CreateMap<Subject, SubjectModel>().ReverseMap();
-                cfg.CreateMap<YearGroup, YearGroupModel>().ReverseMap();
+                foreach (var entityMapping in _entityMappings)
+                {
+                    cfg.CreateMap(entityMapping.Key, entityMapping.Value).ReverseMap();
+                }
             });
 
             return new Mapper(config);
         }
 
-        public static IMapper GetDataGridConfig()
+        public static Type GetBusinessModelType(Type source)
         {
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<RoleModel, ApplicationRoleListModel>();
-                cfg.CreateMap<StudentModel, StudentListModel>()
-                    .ForMember(dest => dest.DisplayName,
-                        opts => opts.MapFrom(src => src.Person.GetDisplayName(false)))
-                    .ForMember(dest => dest.RegGroupName,
-                        opts => opts.MapFrom(src => src.RegGroup.Name))
-                    .ForMember(dest => dest.YearGroupName,
-                        opts => opts.MapFrom(src => src.YearGroup.Name))
-                    .ForMember(dest => dest.HouseName,
-                        opts => opts.MapFrom(src => src.House.Name))
-                    .ForMember(dest => dest.Gender,
-                        opts => opts.MapFrom(src => src.Person.Gender));
-                cfg.CreateMap<LogNoteModel, LogNoteListModel>()
-                    .ForMember(dest => dest.AuthorName,
-                        opts => opts.MapFrom(src => src.Author.GetDisplayName(true)))
-                    .ForMember(dest => dest.LogTypeName,
-                        opts => opts.MapFrom(src => src.LogNoteType.Name))
-                    .ForMember(dest => dest.LogTypeColourCode,
-                        opts => opts.MapFrom(src => src.LogNoteType.ColourCode))
-                    .ForMember(dest => dest.LogTypeIcon,
-                        opts => opts.MapFrom(src => src.LogNoteType.GetIcon()));
-            });
+            Type dest;
 
-            return new Mapper(config);
+            var result = _entityMappings.TryGetValue(source, out dest);
+
+            if (result)
+            {
+                return dest;
+            }
+
+            throw new Exception($"A mapping was not found for the source type {source.Name}.");
         }
     }
 }

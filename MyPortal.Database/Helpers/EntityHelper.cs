@@ -64,7 +64,7 @@ namespace MyPortal.Database.Helpers
 
         internal static string GetTblName(Type t, string tblAlias = null, string schema = "dbo", bool includeAs = false)
         {
-            var entityTable = ((TableAttribute) t.GetCustomAttribute(typeof(TableAttribute))).Name ?? t.Name;
+            var entityTable = ((TableAttribute) t.GetCustomAttribute(typeof(TableAttribute)))?.Name ?? t.Name;
             
             if (t == typeof(ApplicationUser))
             {

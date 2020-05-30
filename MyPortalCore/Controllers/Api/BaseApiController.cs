@@ -18,12 +18,10 @@ namespace MyPortalCore.Controllers.Api
     [Route("api/[controller]")]
     public abstract class BaseApiController : ControllerBase, IDisposable
     {
-        protected readonly IMapper _dTMapper;
         protected readonly IApplicationUserService _userService;
 
         public BaseApiController(IApplicationUserService userService)
         {
-            _dTMapper = MappingHelper.GetDataGridConfig();
             _userService = userService;
         }
 

@@ -1,11 +1,11 @@
 ﻿namespace MyPortal.Logic.Models.Requests.Reporting
 {
-    public class ChartDataNumeric
+    public class ChartDataCategoricPoint
     {
-        public double X { get; set; }
+        public string X { get; set; }
         public double Y { get; set; }
 
-        public ChartDataNumeric(double x, double y)
+        public ChartDataCategoricPoint(string x, double y)
         {
             X = x;
             Y = y;

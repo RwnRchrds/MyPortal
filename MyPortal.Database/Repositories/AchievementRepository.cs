@@ -35,7 +35,7 @@ namespace MyPortal.Database.Repositories
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[RecordedByPerson].[UserId]", "[User].[Id]", "RecordedByPerson")}";
         }
 
-        public async Task<int> GetCountByStudent(int studentId, int academicYearId)
+        public async Task<int> GetCountByStudent(Guid studentId, Guid academicYearId)
         {
             var sql = $"SELECT COUNT([Id]) FROM {TblName}";
 
@@ -45,7 +45,7 @@ namespace MyPortal.Database.Repositories
             return await ExecuteIntQuery(sql, new {StudentId = studentId, AcademicYearId = academicYearId});
         }
 
-        public async Task<int> GetPointsByStudent(int studentId, int academicYearId)
+        public async Task<int> GetPointsByStudent(Guid studentId, Guid academicYearId)
         {
             var sql = $"SELECT SUM([Points]) FROM {TblName}";
 
@@ -55,7 +55,7 @@ namespace MyPortal.Database.Repositories
             return await ExecuteIntQuery(sql, new {StudentId = studentId, AcademicYearId = academicYearId});
         }
 
-        public async Task<IEnumerable<Achievement>> GetByStudent(int studentId, int academicYearId)
+        public async Task<IEnumerable<Achievement>> GetByStudent(Guid studentId, Guid academicYearId)
         {
             var sql = SelectAllColumns(true);
 

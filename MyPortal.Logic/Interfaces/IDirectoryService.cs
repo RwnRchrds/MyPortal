@@ -14,5 +14,6 @@ namespace MyPortal.Logic.Interfaces
         Task Create(params DirectoryModel[] directories);
         Task Update(params DirectoryModel[] directories);
         Task Delete(params Guid[] directoryIds);
+        Task<bool> IsAuthorised(UserModel user, Guid directoryId);
     }
 }

@@ -17,7 +17,7 @@ namespace MyPortalCore.Areas.Staff.ViewModels.Student
         public StudentModel Student { get; set; }
         public IEnumerable<LogNoteListModel> LogNotes { get; set; }
         public IEnumerable<SelectListItem> LogNoteTypes { get; set; }
-        public decimal Attendance { get; set; }
+        public double? Attendance { get; set; }
         public int AchievementPoints { get; set; }
         public int BehaviourPoints { get; set; }
         public LogNoteModel LogNote { get; set; }  

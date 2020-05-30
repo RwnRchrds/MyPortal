@@ -19,17 +19,17 @@ using MyPortal.Logic.Models.Exceptions;
 
         public abstract void Dispose();
 
-        public ServiceException NotFound(string message = null)
+        protected ServiceException NotFound(string message = null)
         {
             return new ServiceException(ExceptionType.NotFound, string.IsNullOrWhiteSpace(message) ? $"{_objectName} not found." : message);
         }
 
-        public ServiceException BadRequest(string message = null)
+        protected ServiceException BadRequest(string message = null)
         {
             return new ServiceException(ExceptionType.BadRequest, string.IsNullOrWhiteSpace(message) ? "An error occurred." : message);
         }
 
-        public ServiceException BadRequest(Exception ex)
+        protected ServiceException BadRequest(Exception ex)
         {
             var exceptionMessage = ExceptionHelper.GetRootExceptionMessage(ex);
 
@@ -38,7 +38,7 @@ using MyPortal.Logic.Models.Exceptions;
             return exception;
         }
 
-        public ServiceException Forbidden(string message = null)
+        protected ServiceException Forbidden(string message = null)
         {
             return new ServiceException(ExceptionType.Forbidden, string.IsNullOrWhiteSpace(message) ? "Access denied." : message);
         }
