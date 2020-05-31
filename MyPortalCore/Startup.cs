@@ -38,7 +38,7 @@ namespace MyPortalCore
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("LiveConnection")));
+                    Configuration.GetConnectionString("MyPortal")));
 
 
             services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
@@ -66,7 +66,7 @@ namespace MyPortalCore
 
             // MyPortal database connection
             services.AddTransient<IDbConnection>(connection =>
-                new SqlConnection(Configuration.GetConnectionString("LiveConnection")));
+                new SqlConnection(Configuration.GetConnectionString("MyPortal")));
 
             // MyPortal entity repositories (used by business services)
             services.AddTransient<IAcademicYearRepository, AcademicYearRepository>();

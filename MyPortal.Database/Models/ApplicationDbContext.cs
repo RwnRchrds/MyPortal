@@ -15,6 +15,7 @@ namespace MyPortal.Database.Models
 
         public virtual DbSet<AcademicYear> AcademicYears { get; set; }
         public virtual DbSet<Achievement> Achievements { get; set; }
+        public virtual DbSet<AchievementOutcome> AchievementOutcomes { get; set; }
         public virtual DbSet<AchievementType> AchievementTypes { get; set; }
         public virtual DbSet<Address> Addresses { get; set; }
         public virtual DbSet<AddressPerson> AddressPersons { get; set; }
@@ -27,6 +28,8 @@ namespace MyPortal.Database.Models
         public virtual DbSet<AttendanceMark> AttendanceMarks { get; set; }
         public virtual DbSet<AttendanceWeek> AttendanceWeeks { get; set; }
         public virtual DbSet<BasketItem> BasketItems { get; set; }
+        public virtual DbSet<BehaviourOutcome> BehaviourOutcomes { get; set; }
+        public virtual DbSet<BehaviourStatus> BehaviourStatus { get; set; }
         public virtual DbSet<Bulletin> Bulletins { get; set; }
         public virtual DbSet<Class> Classes { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
@@ -41,8 +44,8 @@ namespace MyPortal.Database.Models
         public virtual DbSet<DiaryEvent> DiaryEvents { get; set; }
         public virtual DbSet<DiaryEventAttendee> DiaryEventAttendees { get; set; }
         public virtual DbSet<DiaryEventAttendeeResponse> DiaryEventInvitationResponses { get; set; }
-        public virtual DbSet<DiaryEventType> DiaryEventTypes { get; set; }
         public virtual DbSet<DiaryEventTemplate> DiaryEventTemplates { get; set; }
+        public virtual DbSet<DiaryEventType> DiaryEventTypes { get; set; }
         public virtual DbSet<DietaryRequirement> DietaryRequirements { get; set; }
         public virtual DbSet<Directory> Directories { get; set; }
         public virtual DbSet<Document> Documents { get; set; }
@@ -50,6 +53,8 @@ namespace MyPortal.Database.Models
         public virtual DbSet<EmailAddress> EmailAddresses { get; set; }
         public virtual DbSet<EmailAddressType> EmailAddressTypes { get; set; }
         public virtual DbSet<Enrolment> Enrolments { get; set; }
+        public virtual DbSet<ExclusionReason> ExclusionReasons { get; set; }
+        public virtual DbSet<ExclusionType> ExclusionTypes { get; set; }
         public virtual DbSet<GiftedTalented> GiftedTalented { get; set; }
         public virtual DbSet<GovernanceType> GovernanceTypes { get; set; }
         public virtual DbSet<Grade> Grades { get; set; }
@@ -65,7 +70,9 @@ namespace MyPortal.Database.Models
         public virtual DbSet<LessonPlanTemplate> LessonPlanTemplates { get; set; }
         public virtual DbSet<LocalAuthority> LocalAuthorities { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
-        public virtual DbSet<Marksheet> Marksheets { get; set; }
+        public virtual DbSet<LogNote> ProfileLogNotes { get; set; }
+        public virtual DbSet<LogNoteType> ProfileLogNoteTypes { get; set; }
+        public virtual DbSet<MarksheetTemplate> Marksheets { get; set; }
         public virtual DbSet<MarksheetColumn> MarksheetColumns { get; set; }
         public virtual DbSet<MedicalCondition> Conditions { get; set; }
         public virtual DbSet<MedicalEvent> MedicalEvents { get; set; }
@@ -80,8 +87,6 @@ namespace MyPortal.Database.Models
         public virtual DbSet<PhoneNumberType> PhoneNumberTypes { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<ProductType> ProductTypes { get; set; }
-        public virtual DbSet<LogNote> ProfileLogNotes { get; set; }
-        public virtual DbSet<LogNoteType> ProfileLogNoteTypes { get; set; }
         public virtual DbSet<RegGroup> RegGroups { get; set; }
         public virtual DbSet<RelationshipType> RelationshipTypes { get; set; }
         public virtual DbSet<Report> Reports { get; set; }
@@ -119,6 +124,9 @@ namespace MyPortal.Database.Models
             modelBuilder.Entity<Achievement>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
+            modelBuilder.Entity<AchievementOutcome>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
             modelBuilder.Entity<AchievementType>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
@@ -153,6 +161,12 @@ namespace MyPortal.Database.Models
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
             modelBuilder.Entity<BasketItem>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<BehaviourOutcome>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<BehaviourStatus>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
             modelBuilder.Entity<Bulletin>()
@@ -224,6 +238,12 @@ namespace MyPortal.Database.Models
             modelBuilder.Entity<Enrolment>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
+            modelBuilder.Entity<ExclusionReason>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<ExclusionType>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
             modelBuilder.Entity<GiftedTalented>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
@@ -269,7 +289,7 @@ namespace MyPortal.Database.Models
             modelBuilder.Entity<Location>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
-            modelBuilder.Entity<Marksheet>()
+            modelBuilder.Entity<MarksheetTemplate>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
             
             modelBuilder.Entity<MarksheetColumn>()
@@ -469,10 +489,31 @@ namespace MyPortal.Database.Models
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<AchievementOutcome>()
+                .HasMany(e => e.Achievements)
+                .WithOne(e => e.Outcome)
+                .HasForeignKey(e => e.OutcomeId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<AchievementType>()
                 .HasMany(e => e.Achievements)
                 .WithOne(e => e.Type)
                 .HasForeignKey(e => e.AchievementTypeId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<BehaviourOutcome>()
+                .HasMany(e => e.Incidents)
+                .WithOne(e => e.Outcome)
+                .HasForeignKey(e => e.OutcomeId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<BehaviourStatus>()
+                .HasMany(e => e.Incidents)
+                .WithOne(e => e.Status)
+                .HasForeignKey(e => e.StatusId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
@@ -882,7 +923,6 @@ namespace MyPortal.Database.Models
                 .HasMany(e => e.Results)
                 .WithOne(e => e.Grade)
                 .HasForeignKey(e => e.GradeId)
-                .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<IntakeType>()
@@ -906,10 +946,10 @@ namespace MyPortal.Database.Models
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Marksheet>()
+            modelBuilder.Entity<MarksheetTemplate>()
                 .HasMany(e => e.Columns)
-                .WithOne(e => e.Marksheet)
-                .HasForeignKey(e => e.MarksheetId)
+                .WithOne(e => e.Template)
+                .HasForeignKey(e => e.TemplateId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
@@ -1054,9 +1094,16 @@ namespace MyPortal.Database.Models
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<ApplicationUser>()
-                .HasMany(e => e.ProfileLogNotes)
-                .WithOne(e => e.Author)
-                .HasForeignKey(e => e.AuthorId)
+                .HasMany(e => e.LogNotesCreated)
+                .WithOne(e => e.CreatedBy)
+                .HasForeignKey(e => e.CreatedById)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany(e => e.LogNotesUpdated)
+                .WithOne(e => e.UpdatedBy)
+                .HasForeignKey(e => e.UpdatedById)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 

@@ -25,7 +25,7 @@ namespace MyPortal.Database.Repositories
 
             JoinRelated = $@"
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[LogNoteType]", "[LogNoteType].[Id]", "[LogNote].[TypeId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[User].[Id]", "[LogNote].[AuthorId]", "User")}
+{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[User].[Id]", "[LogNote].[CreatedById]", "User")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[AuthorPerson].[UserId]", "[User].[Id]", "AuthorPerson")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[LogNote].[StudentId]")}
 {SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[StudentPerson].[Id]", "[Student].[PersonId]", "StudentPerson")}
@@ -40,8 +40,8 @@ namespace MyPortal.Database.Repositories
                     (note, type, user, authorPerson, student, studentPerson, acadYear) =>
                     {
                         note.LogNoteType = type;
-                        note.Author = user;
-                        note.Author.Person = authorPerson;
+                        note.CreatedBy = user;
+                        note.CreatedBy.Person = authorPerson;
                         note.Student = student;
                         note.Student.Person = studentPerson;
                         note.AcademicYear = acadYear;

@@ -21,7 +21,9 @@ namespace MyPortal.Database.Models
 
         public Guid MeaningId { get; set; }
 
-        public bool DoNotUse { get; set; }
+        public bool Active { get; set; }
+
+        public bool Statutory { get; set; }
 
         public virtual AttendanceCodeMeaning CodeMeaning { get; set; }
     }

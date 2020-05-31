@@ -12,7 +12,9 @@ namespace MyPortal.Logic.Models.Business
         [NotEmpty]
         public Guid TypeId { get; set; }
 
-        public Guid AuthorId { get; set; }
+        public Guid CreatedById { get; set; }
+
+        public Guid UpdatedById { get; set; }
 
         [NotEmpty]
         public Guid StudentId { get; set; }
@@ -22,7 +24,9 @@ namespace MyPortal.Logic.Models.Business
         [Required]
         public string Message { get; set; }
 
-        public DateTime Date { get; set; }
+        public DateTime CreatedDate { get; set; }
+
+        public DateTime UpdatedDate { get; set; }
 
         public bool Deleted { get; set; }
 

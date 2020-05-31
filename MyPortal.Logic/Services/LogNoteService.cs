@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Forms;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Business;
 using MyPortal.Logic.Models.Data;
@@ -46,22 +47,26 @@ namespace MyPortal.Logic.Services
 
         public async Task<Lookup> GetTypes()
         {
-            var logNoteTypes = (await _logNoteTypeRepository.GetAll()).ToDictionary(x => x.Name, x => x.Id);
+            var logNoteTypes = await _logNoteTypeRepository.GetAll();
 
-            return new Lookup(logNoteTypes);
+            return logNoteTypes.ToLookup();
         }
 
         public async Task Create(params LogNoteModel[] logNoteObjects)
         {
             foreach (var logNoteObject in logNoteObjects)
             {
+                var createDate = DateTime.Now;
+
                 var logNote = new LogNote
                 {
                     TypeId = logNoteObject.TypeId,
                     Message = logNoteObject.Message,
                     StudentId = logNoteObject.StudentId,
-                    Date = DateTime.Now,
-                    AuthorId = logNoteObject.AuthorId,
+                    CreatedDate = createDate,
+                    UpdatedDate = createDate,
+                    CreatedById = logNoteObject.CreatedById,
+                    UpdatedById = logNoteObject.UpdatedById,
                     AcademicYearId = logNoteObject.AcademicYearId
                 };
 
@@ -75,6 +80,8 @@ namespace MyPortal.Logic.Services
         {
             foreach (var logNoteObject in logNoteObjects)
             {
+                var updateDate = DateTime.Now;
+
                 var logNote = await _logNoteRepository.GetByIdWithTracking(logNoteObject.Id);
 
                 if (logNote == null)
@@ -84,6 +91,8 @@ namespace MyPortal.Logic.Services
 
                 logNote.TypeId = logNoteObject.TypeId;
                 logNote.Message = logNoteObject.Message;
+                logNote.UpdatedDate = updateDate;
+                logNote.UpdatedById = logNoteObject.UpdatedById;
             }
 
             await _logNoteRepository.SaveChanges();

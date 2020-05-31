@@ -28,14 +28,16 @@ namespace MyPortal.Database.Models
 
         public Guid RecordedById { get; set; }
 
+        public Guid? OutcomeId { get; set; }
+
+        public Guid StatusId { get; set; }
+
         [Column(TypeName = "date")]
         public DateTime CreatedDate { get; set; }
 
         public string Comments { get; set; }
 
         public int Points { get; set; }
-
-        public bool Resolved { get; set; }
 
         public bool Deleted { get; set; }
 
@@ -48,6 +50,10 @@ namespace MyPortal.Database.Models
         public virtual ApplicationUser RecordedBy { get; set; } 
 
         public virtual Student Student { get; set; }
+
+        public virtual BehaviourOutcome Outcome { get; set; }
+
+        public virtual BehaviourStatus Status { get; set; }
 
         public virtual ICollection<IncidentDetention> Detentions { get; set; }
     }

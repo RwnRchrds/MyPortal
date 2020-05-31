@@ -22,14 +22,27 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AchievementOutcome",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false),
+                    System = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AchievementOutcome", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AchievementType",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 256, nullable: false),
-                    DefaultPoints = table.Column<int>(nullable: false),
                     Active = table.Column<bool>(nullable: false),
-                    System = table.Column<bool>(nullable: false)
+                    DefaultPoints = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -62,7 +75,8 @@ namespace MyPortal.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    Description = table.Column<string>(maxLength: 256, nullable: false)
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -114,12 +128,39 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "BehaviourOutcome",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false),
+                    System = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BehaviourOutcome", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BehaviourStatus",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false),
+                    Resolved = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BehaviourStatus", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CommentBank",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Name = table.Column<string>(maxLength: 128, nullable: false),
-                    System = table.Column<bool>(nullable: false),
                     Active = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -132,7 +173,8 @@ namespace MyPortal.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    Description = table.Column<string>(maxLength: 128, nullable: false)
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -172,9 +214,9 @@ namespace MyPortal.Database.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false),
                     StartTime = table.Column<TimeSpan>(type: "time(2)", nullable: false),
-                    EndTime = table.Column<TimeSpan>(type: "time(2)", nullable: false),
-                    Active = table.Column<bool>(nullable: false)
+                    EndTime = table.Column<TimeSpan>(type: "time(2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -199,6 +241,7 @@ namespace MyPortal.Database.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false),
                     ColourCode = table.Column<string>(maxLength: 128, nullable: true)
                 },
                 constraints: table =>
@@ -211,7 +254,8 @@ namespace MyPortal.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    Description = table.Column<string>(maxLength: 128, nullable: false)
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -244,13 +288,13 @@ namespace MyPortal.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    Description = table.Column<string>(maxLength: 128, nullable: false),
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false),
                     Staff = table.Column<bool>(nullable: false),
                     Student = table.Column<bool>(nullable: false),
                     Contact = table.Column<bool>(nullable: false),
                     General = table.Column<bool>(nullable: false),
-                    Sen = table.Column<bool>(nullable: false),
-                    Active = table.Column<bool>(nullable: false)
+                    Sen = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -262,7 +306,8 @@ namespace MyPortal.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    Description = table.Column<string>(maxLength: 256, nullable: false)
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -270,11 +315,38 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ExclusionReasons",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExclusionReasons", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ExclusionType",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExclusionType", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "GovernanceType",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    Description = table.Column<string>(maxLength: 128, nullable: false)
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -301,7 +373,7 @@ namespace MyPortal.Database.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 256, nullable: false),
-                    System = table.Column<bool>(nullable: false),
+                    Active = table.Column<bool>(nullable: false),
                     DefaultPoints = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -314,7 +386,8 @@ namespace MyPortal.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    Description = table.Column<string>(maxLength: 128, nullable: false)
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -366,7 +439,8 @@ namespace MyPortal.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    Name = table.Column<string>(maxLength: 128, nullable: false),
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false),
                     ColourCode = table.Column<string>(maxLength: 128, nullable: true)
                 },
                 constraints: table =>
@@ -375,7 +449,7 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Marksheet",
+                name: "MarksheetTemplate",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
@@ -383,7 +457,7 @@ namespace MyPortal.Database.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Marksheet", x => x.Id);
+                    table.PrimaryKey("PK_MarksheetTemplate", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -391,8 +465,8 @@ namespace MyPortal.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    Description = table.Column<string>(maxLength: 128, nullable: false),
-                    System = table.Column<bool>(nullable: false)
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -405,6 +479,7 @@ namespace MyPortal.Database.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false),
                     ColourCode = table.Column<string>(maxLength: 128, nullable: true)
                 },
                 constraints: table =>
@@ -417,7 +492,8 @@ namespace MyPortal.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    Description = table.Column<string>(maxLength: 128, nullable: false)
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -429,7 +505,8 @@ namespace MyPortal.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    Description = table.Column<string>(maxLength: 128, nullable: false)
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -441,9 +518,9 @@ namespace MyPortal.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    Description = table.Column<string>(maxLength: 128, nullable: false),
-                    IsMeal = table.Column<bool>(nullable: false),
-                    System = table.Column<bool>(nullable: false)
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false),
+                    IsMeal = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -455,7 +532,8 @@ namespace MyPortal.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    Description = table.Column<string>(maxLength: 128, nullable: false)
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -480,7 +558,8 @@ namespace MyPortal.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    Description = table.Column<string>(maxLength: 128, nullable: false)
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -492,7 +571,8 @@ namespace MyPortal.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    Description = table.Column<string>(maxLength: 128, nullable: false)
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -504,7 +584,8 @@ namespace MyPortal.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    Description = table.Column<string>(maxLength: 128, nullable: false)
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -516,7 +597,8 @@ namespace MyPortal.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    Description = table.Column<string>(maxLength: 128, nullable: false)
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -528,8 +610,9 @@ namespace MyPortal.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    Code = table.Column<string>(unicode: false, fixedLength: true, maxLength: 1, nullable: false),
-                    Description = table.Column<string>(maxLength: 128, nullable: false)
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false),
+                    Code = table.Column<string>(unicode: false, fixedLength: true, maxLength: 1, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -555,7 +638,7 @@ namespace MyPortal.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    Description = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
                     Active = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -588,6 +671,7 @@ namespace MyPortal.Database.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false),
                     ColourCode = table.Column<string>(maxLength: 128, nullable: true)
                 },
                 constraints: table =>
@@ -601,7 +685,7 @@ namespace MyPortal.Database.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Code = table.Column<string>(maxLength: 128, nullable: false),
-                    Description = table.Column<string>(maxLength: 128, nullable: false)
+                    Name = table.Column<string>(maxLength: 128, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -692,7 +776,8 @@ namespace MyPortal.Database.Migrations
                     Code = table.Column<string>(maxLength: 1, nullable: false),
                     Description = table.Column<string>(maxLength: 128, nullable: false),
                     MeaningId = table.Column<Guid>(nullable: false),
-                    DoNotUse = table.Column<bool>(nullable: false)
+                    Active = table.Column<bool>(nullable: false),
+                    Statutory = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1128,9 +1213,10 @@ namespace MyPortal.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    MarksheetId = table.Column<Guid>(nullable: false),
+                    TemplateId = table.Column<Guid>(nullable: false),
                     AspectId = table.Column<Guid>(nullable: false),
-                    ResultSetId = table.Column<Guid>(nullable: false)
+                    ResultSetId = table.Column<Guid>(nullable: false),
+                    ColumnOrder = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1142,17 +1228,17 @@ namespace MyPortal.Database.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MarksheetColumn_Marksheet_MarksheetId",
-                        column: x => x.MarksheetId,
-                        principalTable: "Marksheet",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
                         name: "FK_MarksheetColumn_ResultSet_ResultSetId",
                         column: x => x.ResultSetId,
                         principalTable: "ResultSet",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MarksheetColumn_MarksheetTemplate_TemplateId",
+                        column: x => x.TemplateId,
+                        principalTable: "MarksheetTemplate",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1886,6 +1972,7 @@ namespace MyPortal.Database.Migrations
                     StudentId = table.Column<Guid>(nullable: false),
                     LocationId = table.Column<Guid>(nullable: false),
                     RecordedById = table.Column<Guid>(nullable: false),
+                    OutcomeId = table.Column<Guid>(nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "date", nullable: false),
                     Comments = table.Column<string>(nullable: true),
                     Points = table.Column<int>(nullable: false),
@@ -1910,6 +1997,12 @@ namespace MyPortal.Database.Migrations
                         name: "FK_Achievement_Location_LocationId",
                         column: x => x.LocationId,
                         principalTable: "Location",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Achievement_AchievementOutcome_OutcomeId",
+                        column: x => x.OutcomeId,
+                        principalTable: "AchievementOutcome",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -2082,10 +2175,11 @@ namespace MyPortal.Database.Migrations
                     StudentId = table.Column<Guid>(nullable: false),
                     LocationId = table.Column<Guid>(nullable: false),
                     RecordedById = table.Column<Guid>(nullable: false),
+                    OutcomeId = table.Column<Guid>(nullable: false),
+                    StatusId = table.Column<Guid>(nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "date", nullable: false),
                     Comments = table.Column<string>(nullable: true),
                     Points = table.Column<int>(nullable: false),
-                    Resolved = table.Column<bool>(nullable: false),
                     Deleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -2110,9 +2204,21 @@ namespace MyPortal.Database.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
+                        name: "FK_Incident_BehaviourOutcome_OutcomeId",
+                        column: x => x.OutcomeId,
+                        principalTable: "BehaviourOutcome",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_Incident_AspNetUsers_RecordedById",
                         column: x => x.RecordedById,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Incident_BehaviourStatus_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "BehaviourStatus",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -2129,11 +2235,13 @@ namespace MyPortal.Database.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     TypeId = table.Column<Guid>(nullable: false),
-                    AuthorId = table.Column<Guid>(nullable: false),
+                    CreatedById = table.Column<Guid>(nullable: false),
+                    UpdatedById = table.Column<Guid>(nullable: false),
                     StudentId = table.Column<Guid>(nullable: false),
                     AcademicYearId = table.Column<Guid>(nullable: false),
                     Message = table.Column<string>(nullable: false),
-                    Date = table.Column<DateTime>(nullable: false),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    UpdatedDate = table.Column<DateTime>(nullable: false),
                     Deleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -2146,8 +2254,8 @@ namespace MyPortal.Database.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_LogNote_AspNetUsers_AuthorId",
-                        column: x => x.AuthorId,
+                        name: "FK_LogNote_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -2161,6 +2269,12 @@ namespace MyPortal.Database.Migrations
                         name: "FK_LogNote_LogNoteType_TypeId",
                         column: x => x.TypeId,
                         principalTable: "LogNoteType",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_LogNote_AspNetUsers_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -2201,8 +2315,9 @@ namespace MyPortal.Database.Migrations
                     StudentId = table.Column<Guid>(nullable: false),
                     AspectId = table.Column<Guid>(nullable: false),
                     Date = table.Column<DateTime>(type: "date", nullable: false),
-                    GradeId = table.Column<Guid>(nullable: false),
-                    Mark = table.Column<decimal>(type: "decimal(10,2)", nullable: true)
+                    GradeId = table.Column<Guid>(nullable: true),
+                    Mark = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
+                    Comments = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -2428,6 +2543,11 @@ namespace MyPortal.Database.Migrations
                 name: "IX_Achievement_LocationId",
                 table: "Achievement",
                 column: "LocationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Achievement_OutcomeId",
+                table: "Achievement",
+                column: "OutcomeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Achievement_RecordedById",
@@ -2734,9 +2854,19 @@ namespace MyPortal.Database.Migrations
                 column: "LocationId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Incident_OutcomeId",
+                table: "Incident",
+                column: "OutcomeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Incident_RecordedById",
                 table: "Incident",
                 column: "RecordedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Incident_StatusId",
+                table: "Incident",
+                column: "StatusId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Incident_StudentId",
@@ -2775,9 +2905,9 @@ namespace MyPortal.Database.Migrations
                 column: "AcademicYearId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LogNote_AuthorId",
+                name: "IX_LogNote_CreatedById",
                 table: "LogNote",
-                column: "AuthorId");
+                column: "CreatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LogNote_StudentId",
@@ -2790,19 +2920,24 @@ namespace MyPortal.Database.Migrations
                 column: "TypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_LogNote_UpdatedById",
+                table: "LogNote",
+                column: "UpdatedById");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MarksheetColumn_AspectId",
                 table: "MarksheetColumn",
                 column: "AspectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MarksheetColumn_MarksheetId",
-                table: "MarksheetColumn",
-                column: "MarksheetId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_MarksheetColumn_ResultSetId",
                 table: "MarksheetColumn",
                 column: "ResultSetId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MarksheetColumn_TemplateId",
+                table: "MarksheetColumn",
+                column: "TemplateId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MedicalEvent_RecordedById",
@@ -3175,6 +3310,12 @@ namespace MyPortal.Database.Migrations
                 name: "Enrolment");
 
             migrationBuilder.DropTable(
+                name: "ExclusionReasons");
+
+            migrationBuilder.DropTable(
+                name: "ExclusionType");
+
+            migrationBuilder.DropTable(
                 name: "GiftedTalented");
 
             migrationBuilder.DropTable(
@@ -3247,6 +3388,9 @@ namespace MyPortal.Database.Migrations
                 name: "AchievementType");
 
             migrationBuilder.DropTable(
+                name: "AchievementOutcome");
+
+            migrationBuilder.DropTable(
                 name: "Address");
 
             migrationBuilder.DropTable(
@@ -3295,7 +3439,7 @@ namespace MyPortal.Database.Migrations
                 name: "LogNoteType");
 
             migrationBuilder.DropTable(
-                name: "Marksheet");
+                name: "MarksheetTemplate");
 
             migrationBuilder.DropTable(
                 name: "ObservationOutcome");
@@ -3380,6 +3524,12 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "Location");
+
+            migrationBuilder.DropTable(
+                name: "BehaviourOutcome");
+
+            migrationBuilder.DropTable(
+                name: "BehaviourStatus");
 
             migrationBuilder.DropTable(
                 name: "Student");

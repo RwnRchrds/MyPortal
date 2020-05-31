@@ -14,7 +14,9 @@ namespace MyPortal.Database.Models
 
         public Guid TypeId { get; set; }
 
-        public Guid AuthorId { get; set; }
+        public Guid CreatedById { get; set; }
+
+        public Guid UpdatedById { get; set; }
 
         public Guid StudentId { get; set; }
 
@@ -23,14 +25,18 @@ namespace MyPortal.Database.Models
         [Required]
         public string Message { get; set; }
 
-        public DateTime Date { get; set; }
+        public DateTime CreatedDate { get; set; }
+
+        public DateTime UpdatedDate { get; set; }
 
         public bool Deleted { get; set; }
 
-        public virtual ApplicationUser Author { get; set; }
+        public virtual ApplicationUser CreatedBy { get; set; }
+
+        public virtual ApplicationUser UpdatedBy { get; set; }
 
         public virtual Student Student { get; set; }
-
+            
         public virtual AcademicYear AcademicYear { get; set; }
 
         public virtual LogNoteType LogNoteType { get; set; }

@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Database.BaseTypes;
 
 namespace MyPortal.Database.Models
 {
     [Table("ProductType")]
-    public partial class ProductType
+    public partial class ProductType : LookupItem
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
             "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -15,17 +16,7 @@ namespace MyPortal.Database.Models
             Products = new HashSet<Product>();
         }
 
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
-
-        [Required]
-        [StringLength(128)]
-        public string Description { get; set; }
-
         public bool IsMeal { get; set; }
-
-        public bool System { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Product> Products { get; set; }

@@ -6,8 +6,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyPortal.Database.Models
 {
-    [Table("Marksheet")]
-    public class Marksheet
+    [Table("MarksheetTemplate")]
+    public class MarksheetTemplate
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

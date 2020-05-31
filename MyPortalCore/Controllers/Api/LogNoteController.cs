@@ -71,7 +71,8 @@ namespace MyPortalCore.Controllers.Api
                     throw new Exception("No academic year is selected.");
                 }
 
-                logNote.AuthorId = author.Id;
+                logNote.CreatedById = author.Id;
+                logNote.UpdatedById = author.Id;
                 logNote.AcademicYearId = (Guid) author.SelectedAcademicYearId;
 
                 await _logNoteService.Create(logNote);
@@ -94,6 +95,9 @@ namespace MyPortalCore.Controllers.Api
                     Message = model.Message
                 };
 
+                var user = await _userService.GetUserByPrincipal(User);
+
+                logNote.UpdatedById = user.Id;
                 await _logNoteService.Update(logNote);
 
                 return Ok("Log note updated successfully.");

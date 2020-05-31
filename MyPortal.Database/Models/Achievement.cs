@@ -22,6 +22,8 @@ namespace MyPortal.Database.Models
 
         public Guid RecordedById { get; set; }
 
+        public Guid? OutcomeId { get; set; }
+
         [Column(TypeName = "date")]
         public DateTime CreatedDate { get; set; }
 
@@ -40,5 +42,7 @@ namespace MyPortal.Database.Models
         public virtual ApplicationUser RecordedBy { get; set; }
 
         public virtual Student Student { get; set; }
+
+        public virtual AchievementOutcome Outcome { get; set; }
     }
 }

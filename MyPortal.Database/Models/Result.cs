@@ -23,7 +23,9 @@ namespace MyPortal.Database.Models
         public Guid? GradeId { get; set; }
 
         [Column(TypeName = "decimal(10,2)")]
-        public decimal? Mark { get; set; }  
+        public decimal? Mark { get; set; }
+
+        public string Comments { get; set; }
 
         public virtual ResultSet ResultSet { get; set; }
 

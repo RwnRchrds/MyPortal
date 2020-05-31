@@ -10,7 +10,7 @@ using MyPortal.Database.Models;
 namespace MyPortal.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200514103456_InitialModel")]
+    [Migration("20200531205603_InitialModel")]
     partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -170,6 +170,10 @@ namespace MyPortal.Database.Migrations
                     b.Property<Guid>("LocationId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("OutcomeId")
+                        .IsRequired()
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("Points")
                         .HasColumnType("int");
 
@@ -187,11 +191,36 @@ namespace MyPortal.Database.Migrations
 
                     b.HasIndex("LocationId");
 
+                    b.HasIndex("OutcomeId");
+
                     b.HasIndex("RecordedById");
 
                     b.HasIndex("StudentId");
 
                     b.ToTable("Achievement");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.AchievementOutcome", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<bool>("System")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AchievementOutcome");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.AchievementType", b =>
@@ -211,9 +240,6 @@ namespace MyPortal.Database.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
-
-                    b.Property<bool>("System")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -341,6 +367,9 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(256)")
@@ -358,6 +387,9 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasColumnType("nvarchar(1)")
@@ -368,11 +400,11 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
-                    b.Property<bool>("DoNotUse")
-                        .HasColumnType("bit");
-
                     b.Property<Guid>("MeaningId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Statutory")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -483,6 +515,52 @@ namespace MyPortal.Database.Migrations
                     b.HasIndex("StudentId");
 
                     b.ToTable("BasketItem");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.BehaviourOutcome", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<bool>("System")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BehaviourOutcome");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.BehaviourStatus", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<bool>("Resolved")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BehaviourStatus");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Bulletin", b =>
@@ -602,9 +680,6 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
-                    b.Property<bool>("System")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
 
                     b.ToTable("CommentBank");
@@ -643,10 +718,13 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
@@ -923,6 +1001,9 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
                     b.Property<string>("ColourCode")
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
@@ -944,10 +1025,13 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
@@ -1057,8 +1141,8 @@ namespace MyPortal.Database.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<bool>("General")
                         .HasColumnType("bit");
@@ -1120,6 +1204,9 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(256)")
@@ -1150,6 +1237,46 @@ namespace MyPortal.Database.Migrations
                     b.HasIndex("StudentId");
 
                     b.ToTable("Enrolment");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.ExclusionReason", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ExclusionReasons");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.ExclusionType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ExclusionType");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.GiftedTalented", b =>
@@ -1185,10 +1312,13 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
@@ -1526,14 +1656,18 @@ namespace MyPortal.Database.Migrations
                     b.Property<Guid>("LocationId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("OutcomeId")
+                        .IsRequired()
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("Points")
                         .HasColumnType("int");
 
                     b.Property<Guid>("RecordedById")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Resolved")
-                        .HasColumnType("bit");
+                    b.Property<Guid>("StatusId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("StudentId")
                         .HasColumnType("uniqueidentifier");
@@ -1546,7 +1680,11 @@ namespace MyPortal.Database.Migrations
 
                     b.HasIndex("LocationId");
 
+                    b.HasIndex("OutcomeId");
+
                     b.HasIndex("RecordedById");
+
+                    b.HasIndex("StatusId");
 
                     b.HasIndex("StudentId");
 
@@ -1582,6 +1720,9 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
                     b.Property<int>("DefaultPoints")
                         .HasColumnType("int");
 
@@ -1589,9 +1730,6 @@ namespace MyPortal.Database.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
-
-                    b.Property<bool>("System")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -1605,10 +1743,13 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
@@ -1734,10 +1875,10 @@ namespace MyPortal.Database.Migrations
                     b.Property<Guid>("AcademicYearId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AuthorId")
+                    b.Property<Guid>("CreatedById")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("Deleted")
@@ -1753,15 +1894,23 @@ namespace MyPortal.Database.Migrations
                     b.Property<Guid>("TypeId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("UpdatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AcademicYearId");
 
-                    b.HasIndex("AuthorId");
+                    b.HasIndex("CreatedById");
 
                     b.HasIndex("StudentId");
 
                     b.HasIndex("TypeId");
+
+                    b.HasIndex("UpdatedById");
 
                     b.ToTable("LogNote");
                 });
@@ -1773,33 +1922,21 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
                     b.Property<string>("ColourCode")
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
                     b.ToTable("LogNoteType");
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.Marksheet", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
-
-                    b.Property<Guid>("ClassId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Marksheet");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.MarksheetColumn", b =>
@@ -1812,21 +1949,39 @@ namespace MyPortal.Database.Migrations
                     b.Property<Guid>("AspectId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("MarksheetId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("ColumnOrder")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("ResultSetId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TemplateId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AspectId");
 
-                    b.HasIndex("MarksheetId");
-
                     b.HasIndex("ResultSetId");
 
+                    b.HasIndex("TemplateId");
+
                     b.ToTable("MarksheetColumn");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.MarksheetTemplate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("ClassId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MarksheetTemplate");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.MedicalCondition", b =>
@@ -1836,13 +1991,13 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
-
-                    b.Property<bool>("System")
-                        .HasColumnType("bit");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
@@ -1914,6 +2069,9 @@ namespace MyPortal.Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
 
                     b.Property<string>("ColourCode")
                         .HasColumnType("nvarchar(128)")
@@ -2085,10 +2243,13 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
@@ -2128,10 +2289,13 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
@@ -2179,15 +2343,15 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
-
-                    b.Property<bool>("IsMeal")
+                    b.Property<bool>("Active")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("System")
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<bool>("IsMeal")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -2229,10 +2393,13 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
@@ -2279,11 +2446,13 @@ namespace MyPortal.Database.Migrations
                     b.Property<Guid>("AspectId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Comments")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("date");
 
                     b.Property<Guid?>("GradeId")
-                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal?>("Mark")
@@ -2457,10 +2626,13 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
@@ -2503,10 +2675,13 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
@@ -2552,10 +2727,13 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
@@ -2602,10 +2780,13 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
@@ -2619,6 +2800,9 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasColumnType("char(1)")
@@ -2628,8 +2812,8 @@ namespace MyPortal.Database.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
@@ -2903,7 +3087,9 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
@@ -3009,6 +3195,9 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
                     b.Property<string>("ColourCode")
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
@@ -3035,7 +3224,7 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
-                    b.Property<string>("Description")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
@@ -3140,6 +3329,12 @@ namespace MyPortal.Database.Migrations
                     b.HasOne("MyPortal.Database.Models.Location", "Location")
                         .WithMany("BehaviourAchievements")
                         .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.AchievementOutcome", "Outcome")
+                        .WithMany("Achievements")
+                        .HasForeignKey("OutcomeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -3534,9 +3729,21 @@ namespace MyPortal.Database.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("MyPortal.Database.Models.BehaviourOutcome", "Outcome")
+                        .WithMany("Incidents")
+                        .HasForeignKey("OutcomeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", "RecordedBy")
                         .WithMany("Incidents")
                         .HasForeignKey("RecordedById")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.BehaviourStatus", "Status")
+                        .WithMany("Incidents")
+                        .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -3591,9 +3798,9 @@ namespace MyPortal.Database.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", "Author")
-                        .WithMany("ProfileLogNotes")
-                        .HasForeignKey("AuthorId")
+                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", "CreatedBy")
+                        .WithMany("LogNotesCreated")
+                        .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -3608,6 +3815,12 @@ namespace MyPortal.Database.Migrations
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", "UpdatedBy")
+                        .WithMany("LogNotesUpdated")
+                        .HasForeignKey("UpdatedById")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.MarksheetColumn", b =>
@@ -3618,16 +3831,16 @@ namespace MyPortal.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Marksheet", "Marksheet")
-                        .WithMany("Columns")
-                        .HasForeignKey("MarksheetId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("MyPortal.Database.Models.ResultSet", "ResultSet")
                         .WithMany()
                         .HasForeignKey("ResultSetId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.MarksheetTemplate", "Template")
+                        .WithMany("Columns")
+                        .HasForeignKey("TemplateId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -3769,8 +3982,7 @@ namespace MyPortal.Database.Migrations
                     b.HasOne("MyPortal.Database.Models.Grade", "Grade")
                         .WithMany("Results")
                         .HasForeignKey("GradeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("MyPortal.Database.Models.ResultSet", "ResultSet")
                         .WithMany("Results")

@@ -149,7 +149,7 @@
                                                         @logNote.AuthorName
                                                     </span>
                                                     <span class="kt-notes__desc">
-                                                        @logNote.Date.ToString("dd MMM yyyy")
+                                                        @logNote.CreatedDate.ToString("dd MMM yyyy")
                                                     </span>
                                                     <span class="kt-badge kt-badge--inline" style="background-color: @logNote.LogTypeColourCode; color: white;">@logNote.LogTypeName</span>
                                                 </div>
@@ -176,7 +176,7 @@
                                                 </div>
                                             </div>
                                             <span class="kt-notes__body">
-                                                @logNote.Message
+                                                <pre>@logNote.Message</pre>
                                             </span>
                                         </div>
                                     </div>

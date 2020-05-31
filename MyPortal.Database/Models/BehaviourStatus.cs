@@ -1,15 +1,17 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
 using MyPortal.Database.BaseTypes;
 
 namespace MyPortal.Database.Models
 {
-    [Table("SenReviewType")]
-    public class SenReviewType : LookupItem
+    [Table("BehaviourStatus")]
+    public class BehaviourStatus : LookupItem
     {
-        public virtual ICollection<SenReview> Reviews { get; set; }
+        public bool Resolved { get; set; }
+
+        public virtual ICollection<Incident> Incidents { get; set; }
     }
 }
