@@ -22,8 +22,8 @@ namespace MyPortal.Database.Repositories
         {
             var sql = SelectAllColumns(true);
 
-            SqlHelper.Where(ref sql, "[AcademicYear].[FirstDate] <= @DateToday");
-            SqlHelper.Where(ref sql, "[AcademicYear].[LastDate] >= @DateToday");
+            sql = SqlHelper.Where(sql, "[AcademicYear].[FirstDate] <= @DateToday");
+            sql = SqlHelper.Where(sql, "[AcademicYear].[LastDate] >= @DateToday");
 
             return (await ExecuteQuery(sql, new {DateToday = DateTime.Today})).First();
         }
@@ -32,7 +32,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = SelectAllColumns(true);
 
-            SqlHelper.Where(ref sql, "[AcademicYear].[FirstDate] <= @DateToday");
+            sql = SqlHelper.Where(sql, "[AcademicYear].[FirstDate] <= @DateToday");
 
             return await ExecuteQuery(sql, new {DateToday = DateTime.Today});
         }

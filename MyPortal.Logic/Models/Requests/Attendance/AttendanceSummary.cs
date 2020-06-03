@@ -10,7 +10,6 @@ namespace MyPortal.Logic.Models.Requests.Attendance
 {
     public class AttendanceSummary
     {
-        public Guid StudentId { get; private set; }
         public double Present { get; private set; }
         public double Late { get; private set; }
         public double AuthorisedAbsence { get; private set; }
@@ -38,8 +37,6 @@ namespace MyPortal.Logic.Models.Requests.Attendance
         /// <param name="marks">Attendance marks to obtain statistics for.</param>
         public AttendanceSummary(List<AttendanceCodeModel> codes, List<AttendanceMarkModel> marks)
         {
-            StudentId = marks.First().StudentId;
-
             foreach (var mark in marks)
             {
                 var code = codes.FirstOrDefault(x => x.Code == mark.Mark);

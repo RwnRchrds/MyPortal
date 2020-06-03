@@ -39,11 +39,21 @@ namespace MyPortal.Database.Helpers
             return $"{join} {tblName} AS {alias} ON {@on} = {@equals}";
         }
 
-        internal static void Where(ref string sql, string condition)
+        internal static string Where(string sql, string condition)
         {
             var clause = sql.Contains(" WHERE ") ? "AND" : "WHERE";
 
-            sql = $@"{sql} {clause} {condition}";
+            return $@"{sql} {clause} {condition}";
+        }
+
+        internal static string BuildQuery(string sql, params Func<string>[] appends)
+        {
+            foreach (var append in appends)
+            {
+                sql = append.Invoke();
+            }
+
+            return sql;
         }
 
         internal static string ParamStartsWith(string param)

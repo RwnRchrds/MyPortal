@@ -30,7 +30,9 @@ namespace MyPortal.Logic.Models.Business
 
         public bool Deleted { get; set; }
 
-        public virtual UserModel Author { get; set; }
+        public virtual UserModel CreatedBy { get; set; }
+
+        public virtual UserModel UpdatedBy { get; set; }
 
         public virtual StudentModel Student { get; set; }
 

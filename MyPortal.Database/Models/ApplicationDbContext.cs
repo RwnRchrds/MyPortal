@@ -110,6 +110,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<SubjectStaffMember> SubjectStaffMembers { get; set; }
         public virtual DbSet<SubjectStaffMemberRole> SubjectStaffMemberRoles { get; set; }
         public virtual DbSet<SystemArea> SystemAreas { get; set; }
+        public virtual DbSet<SystemSetting> SystemSettings { get; set; }
         public virtual DbSet<Task> Tasks { get; set; }
         public virtual DbSet<TrainingCertificate> TrainingCertificates { get; set; }
         public virtual DbSet<TrainingCertificateStatus> TrainingCertificateStatus { get; set; }

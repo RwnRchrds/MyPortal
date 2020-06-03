@@ -17,8 +17,8 @@ namespace MyPortal.Logic.Models.ListModels
         {
             Id = model.Id;
             CreatedDate = model.CreatedDate;
-            AuthorName = model.Author.GetDisplayName(true);
-            LogTypeName = model.LogNoteType.Name;
+            AuthorName = model.CreatedBy.GetDisplayName(true);
+            LogTypeName = model.LogNoteType.Description;
             LogTypeIcon = model.LogNoteType.GetIcon();
             LogTypeColourCode = model.LogNoteType.ColourCode;
             Message = model.Message;

@@ -15,8 +15,16 @@ namespace MyPortal.Logic.Helpers
         private static Dictionary<Type, Type> _entityMappings = new Dictionary<Type, Type>
         {
             {typeof(AcademicYear), typeof(AcademicYearModel)},
+            {typeof(Achievement), typeof(AchievementModel)},
+            {typeof(AchievementType), typeof(AchievementTypeModel)},
+            {typeof(Aspect), typeof(AspectModel)},
+            {typeof(AspectType), typeof(AspectTypeModel)},
             {typeof(ApplicationRole), typeof(RoleModel)},
             {typeof(ApplicationUser), typeof(UserModel)},
+            {typeof(AttendanceCodeMeaning), typeof(AttendanceCodeMeaningModel)},
+            {typeof(AttendanceCode), typeof(AttendanceCodeModel)},
+            {typeof(AttendanceMark), typeof(AttendanceMarkModel)},
+            {typeof(AttendanceWeek), typeof(AttendanceWeekModel)},
             {typeof(Bulletin), typeof(BulletinModel)},
             {typeof(Directory), typeof(DirectoryModel)},
             {typeof(Document), typeof(DocumentModel)},
