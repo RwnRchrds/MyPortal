@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection;
+using System.Security.Principal;
 using System.Text;
 using MyPortal.Database.Models.Identity;
 
@@ -10,49 +11,50 @@ namespace MyPortal.Database.Helpers
 {
     internal static class EntityHelper
     {
-        internal static string GetAllColumns(Type t, string tblAlias = null)
+        internal static string[] GetPropertyNames(Type t, string alias = null)
         {
-            if (t == null) return string.Empty;
+            var tblName = string.IsNullOrWhiteSpace(alias) ? t.Name : alias;
 
-            var props = GetProperties(t);
+            var propNames = new List<string>();
 
-            string columns = "";
-
-            if (string.IsNullOrWhiteSpace(tblAlias))
+            if (t == typeof(ApplicationUser))
             {
-                tblAlias = t.Name;
+                propNames = GetUserProperties();
             }
-
-            var first = true;
-
-            foreach (var prp in props)
+            else
             {
-                if (first)
+                var props = GetProperties(t);
+
+                foreach (var prop in props)
                 {
-                    columns = $"[{tblAlias}].[{prp.Name}]";
-                    first = false;
-                }
-                else
-                {
-                    columns = $"{columns},[{tblAlias}].[{prp.Name}]";
+                    propNames.Add($"{tblName}.{prop.Name}");
                 }
             }
 
-            return columns;
+            return propNames.ToArray();
         }
 
-        internal static string GetUserColumns(string tblAlias = null)
+        private static List<string> GetUserProperties(string alias = null)
         {
-            if (string.IsNullOrWhiteSpace(tblAlias))
-            {
-                tblAlias = "AspNetUsers";
-            }
+            var tblName = string.IsNullOrWhiteSpace(alias) ? "AspNetUsers" : alias;
 
-            return
-                $@"
-[{tblAlias}].[Id],[{tblAlias}].[UserName],[{tblAlias}].[NormalizedUserName],[{tblAlias}].[Email],[{tblAlias}].[NormalizedEmail],
-[{tblAlias}].[EmailConfirmed],[{tblAlias}].[PhoneNumber],[{tblAlias}].[PhoneNumberConfirmed],[{tblAlias}].[TwoFactorEnabled],[{tblAlias}].[LockoutEnd],
-[{tblAlias}].[AccessFailedCount],[{tblAlias}].[Enabled]";
+            var propNames = new List<string>
+            {
+                $"{tblName}.Id",
+                $"{tblName}.UserName",
+                $"{tblName}.NormalizedUserName",
+                $"{tblName}.Email",
+                $"{tblName}.NormalizedEmail",
+                $"{tblName}.EmailConfirmed",
+                $"{tblName}.PhoneNumber",
+                $"{tblName}.PhoneNumberConfirmed",
+                $"{tblName}.TwoFactorEnabled",
+                $"{tblName}.LockoutEnd",
+                $"{tblName}.AccessFailedCount",
+                $"{tblName}.Enabled"
+            };
+
+            return propNames;
         }
 
         private static IEnumerable<PropertyInfo> GetProperties(Type t)
@@ -62,7 +64,7 @@ namespace MyPortal.Database.Helpers
             return props;
         }
 
-        internal static string GetTblName(Type t, string tblAlias = null, string schema = "dbo", bool includeAs = false)
+        internal static string GetTableName(Type t, string tblAlias = null, string schema = "dbo", bool includeAs = false)
         {
             var entityTable = ((TableAttribute) t.GetCustomAttribute(typeof(TableAttribute)))?.Name ?? t.Name;
             
@@ -78,10 +80,10 @@ namespace MyPortal.Database.Helpers
 
             if (includeAs)
             {
-                return $"[{schema}].[{entityTable}] AS [{(!string.IsNullOrWhiteSpace(tblAlias) ? tblAlias : t.Name)}]";
+                return $"{schema}.{entityTable} AS {tblAlias}";
             }
 
-            return $"[{schema}].[{entityTable}]";
+            return $"{schema}.{entityTable}";
         }
     }
 }

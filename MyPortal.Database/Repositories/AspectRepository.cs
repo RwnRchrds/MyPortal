@@ -7,6 +7,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -14,24 +15,38 @@ namespace MyPortal.Database.Repositories
     {
         public AspectRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-        RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(AspectType))},
-{EntityHelper.GetAllColumns(typeof(GradeSet))}";
 
-        JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AspectType]", "[AspectType].[Id]", "[Aspect].[TypeId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[GradeSet]", "[GradeSet].[Id]", "[Aspect].[GradeSetId]")}";
         }
 
-        protected override async Task<IEnumerable<Aspect>> ExecuteQuery(string sql, object param = null)
+        protected override Query SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<Aspect, AspectType, GradeSet, Aspect>(sql, (aspect, type, gradeSet) =>
+            query.SelectAll(typeof(AspectType));
+            query.SelectAll(typeof(GradeSet));
+
+            query = JoinRelated(query);
+
+            return query;
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.AspectType", "AspectType.Id", "Aspect.TypeId");
+            query.LeftJoin("dbo.GradeSet", "GradeSet.Id", "Aspect.GradeSetId");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<Aspect>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<Aspect, AspectType, GradeSet, Aspect>(sql.Sql, (aspect, type, gradeSet) =>
             {
                 aspect.Type = type;
                 aspect.GradeSet = gradeSet;
 
                 return aspect;
-            }, param);
+            }, sql.Bindings);
         }
     }
 }

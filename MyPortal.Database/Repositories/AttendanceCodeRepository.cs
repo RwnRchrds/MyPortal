@@ -7,6 +7,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -14,31 +15,45 @@ namespace MyPortal.Database.Repositories
     {
         public AttendanceCodeRepository(IDbConnection connection) : base(connection)
         {
-        RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(AttendanceCodeMeaning))}";
 
-        JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AttendanceCodeMeaning]", "[AttendanceCodeMeaning].[Id]", "[AttendanceCode].[MeaningId]")}";
         }
 
-        protected override async Task<IEnumerable<AttendanceCode>> ExecuteQuery(string sql, object param = null)
+        protected override Query SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<AttendanceCode, AttendanceCodeMeaning, AttendanceCode>(sql,
+            query.SelectAll(typeof(AttendanceCodeMeaning));
+
+            query = JoinRelated(query);
+
+            return query;
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.AttendanceCodeMeaning", "AttendanceCodeMeaning.Id", "AttendanceCode.MeaningId");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<AttendanceCode>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<AttendanceCode, AttendanceCodeMeaning, AttendanceCode>(sql.Sql,
                 (code, meaning) =>
                 {
                     code.CodeMeaning = meaning;
 
                     return code;
-                }, param);
+                }, sql.Bindings);
         }
 
         public async Task<AttendanceCode> GetByCode(string code)
         {
-            var sql = SelectAllColumns();
+            var query = SelectAllColumns();
 
-            SqlHelper.Where(ref sql, "[AttendanceCode].[Code] = @Code");
+            query.Where("AttendanceCode.Code", "=", code);
 
-            return (await ExecuteQuery(sql, new {Code = code})).First();
+            return (await ExecuteQuery(query)).FirstOrDefault();
         }
     }
 }

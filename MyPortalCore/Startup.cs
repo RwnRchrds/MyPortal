@@ -13,6 +13,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MyPortal.Database.Constants;
+using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
@@ -40,6 +42,7 @@ namespace MyPortalCore
                 options.UseSqlServer(
                     Configuration.GetConnectionString("MyPortal")));
 
+            ModelFactory.ConnectionString = Configuration.GetConnectionString("MyPortal");
 
             services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
                     {
@@ -62,6 +65,17 @@ namespace MyPortalCore
                 options.AddPolicy(Policies.UserType.Student, p => p.RequireClaim(ClaimTypes.UserType, UserTypes.Student));
                 options.AddPolicy(Policies.UserType.Staff, p => p.RequireClaim(ClaimTypes.UserType, UserTypes.Staff));
                 options.AddPolicy(Policies.UserType.Parent, p => p.RequireClaim(ClaimTypes.UserType, UserTypes.Parent));
+
+                // Get claim values for permission-based authorisation
+                using (var context = ModelFactory.CreateDbContext())
+                {
+                    var permissionsInDb = context.ApplicationPermissions.ToList();
+
+                    foreach (var perm in permissionsInDb)
+                    {
+                        Permissions.ClaimValues.Add(perm.Id, perm.ClaimValue);
+                    }
+                }
             });
 
             // MyPortal database connection
@@ -172,7 +186,7 @@ namespace MyPortalCore
             services.AddTransient<IAttendanceMarkService, AttendanceMarkService>();
             services.AddTransient<IDirectoryService, DirectoryService>();
             services.AddTransient<IDocumentService, DocumentService>();
-            services.AddTransient<IGoogleService, GoogleHelper>();
+            services.AddTransient<IGoogleHelper, GoogleHelper>();
             services.AddTransient<ILogNoteService, LogNoteService>();
             services.AddTransient<IPersonService, PersonService>();
             services.AddTransient<ISchoolService, SchoolService>();

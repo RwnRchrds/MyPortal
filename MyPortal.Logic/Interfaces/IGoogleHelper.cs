@@ -7,7 +7,7 @@ using Google.Apis.Services;
 
 namespace MyPortal.Logic.Interfaces
 {
-    public interface IGoogleService
+    public interface IGoogleHelper
     {
         BaseClientService.Initializer GetInitializer(string accountName = null);
     }

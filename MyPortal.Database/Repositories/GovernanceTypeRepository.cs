@@ -12,10 +12,5 @@ namespace MyPortal.Database.Repositories
         public GovernanceTypeRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
         {
         }
-
-        protected override async Task<IEnumerable<GovernanceType>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<GovernanceType>(sql, param);
-        }
     }
 }

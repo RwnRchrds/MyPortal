@@ -30,4 +30,9 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Authorisation\Attributes\" />
+    <Folder Include="Models\Requests\Behaviour\" />
+  </ItemGroup>
+
 </Project>

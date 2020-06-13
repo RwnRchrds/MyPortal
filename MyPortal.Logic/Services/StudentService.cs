@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Repositories;
+using MyPortal.Database.Search;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Business;
@@ -18,23 +20,19 @@ namespace MyPortal.Logic.Services
     {
         private IStudentRepository _studentRepository;
 
-        private Student GenerateSearchObject(StudentSearchParams searchParams)
+        private StudentSearch GenerateSearchObject(StudentSearchModel searchModel)
         {
-            return new Student
+            return new StudentSearch
             {
-                RegGroupId = searchParams.RegGroupId ?? Guid.Empty,
-                YearGroupId = searchParams.YearGroupId ?? Guid.Empty,
-                HouseId = searchParams.HouseId,
-                SenStatusId = searchParams.SenStatusId,
-                
-                Person = new Person
-                {
-                    FirstName = searchParams.FirstName,
-                    MiddleName = searchParams.MiddleName,
-                    LastName = searchParams.LastName,
-                    Gender = searchParams.Gender,
-                    Dob = searchParams.Dob
-                }
+                RegGroupId = searchModel.RegGroupId,
+                YearGroupId = searchModel.YearGroupId,
+                HouseId = searchModel.HouseId,
+                SenStatusId = searchModel.SenStatusId,
+
+                FirstName = searchModel.FirstName,
+                LastName = searchModel.LastName,
+                Gender = searchModel.Gender,
+                Dob = searchModel.Dob
             };
         }
 
@@ -46,6 +44,17 @@ namespace MyPortal.Logic.Services
         public async Task<StudentModel> GetById(Guid studentId)
         {
             var student = await _studentRepository.GetById(studentId);
+            if (student == null)
+            {
+                throw NotFound();
+            }
+
+            return _businessMapper.Map<StudentModel>(student);
+        }
+
+        public async Task<StudentModel> GetByUserId(Guid userId)
+        {
+            var student = await _studentRepository.GetByUserId(userId);
 
             if (student == null)
             {
@@ -67,21 +76,21 @@ namespace MyPortal.Logic.Services
             return new Lookup(searchTypes);
         }
 
-        public async Task<IEnumerable<StudentModel>> Get(StudentSearchParams searchParams)
+        public async Task<IEnumerable<StudentModel>> Get(StudentSearchModel searchModel)
         {
-            var searchObject = GenerateSearchObject(searchParams);
+            var searchObject = GenerateSearchObject(searchModel);
 
             IEnumerable<Student> students;
             
-            if (searchParams.SearchType == SearchFilters.Students.OnRoll)
+            if (searchModel.SearchType == SearchFilters.Students.OnRoll)
             {
                 students = await _studentRepository.GetOnRoll(searchObject);
             }
-            else if (searchParams.SearchType == SearchFilters.Students.Leavers)
+            else if (searchModel.SearchType == SearchFilters.Students.Leavers)
             {
                 students = await _studentRepository.GetLeavers(searchObject);
             }
-            else if (searchParams.SearchType == SearchFilters.Students.Future)
+            else if (searchModel.SearchType == SearchFilters.Students.Future)
             {
                 students = await _studentRepository.GetFuture(searchObject);
             }

@@ -16,20 +16,20 @@ namespace MyPortal.Database.Repositories
         public LogNoteRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(LogNoteType))},
-{EntityHelper.GetUserColumns("User")},
-{EntityHelper.GetAllColumns(typeof(Person), "AuthorPerson")},
-{EntityHelper.GetAllColumns(typeof(Student))},
-{EntityHelper.GetAllColumns(typeof(Person), "StudentPerson")},
-{EntityHelper.GetAllColumns(typeof(AcademicYear))}";
+{EntityHelper.GetPropertyNames(typeof(LogNoteType))},
+{EntityHelper.GetUserProperties("User")},
+{EntityHelper.GetPropertyNames(typeof(Person), "AuthorPerson")},
+{EntityHelper.GetPropertyNames(typeof(Student))},
+{EntityHelper.GetPropertyNames(typeof(Person), "StudentPerson")},
+{EntityHelper.GetPropertyNames(typeof(AcademicYear))}";
 
             JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[LogNoteType]", "[LogNoteType].[Id]", "[LogNote].[TypeId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[User].[Id]", "[LogNote].[CreatedById]", "User")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[AuthorPerson].[UserId]", "[User].[Id]", "AuthorPerson")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[LogNote].[StudentId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[StudentPerson].[Id]", "[Student].[PersonId]", "StudentPerson")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AcademicYear]", "[AcademicYear].[Id]", "[LogNote].[AcademicYearId]")}";
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[LogNoteType]", "[LogNoteType].[Id]", "[LogNote].[TypeId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[User].[Id]", "[LogNote].[CreatedById]", "User")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[AuthorPerson].[UserId]", "[User].[Id]", "AuthorPerson")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[LogNote].[StudentId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[StudentPerson].[Id]", "[Student].[PersonId]", "StudentPerson")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[AcademicYear]", "[AcademicYear].[Id]", "[LogNote].[AcademicYearId]")}";
         }
 
         protected override async Task<IEnumerable<LogNote>> ExecuteQuery(string sql, object param = null)
@@ -54,8 +54,8 @@ namespace MyPortal.Database.Repositories
         {
             var sql = SelectAllColumns();
 
-            SqlHelper.Where(ref sql, "[LogNote].[StudentId] = @StudentId");
-            SqlHelper.Where(ref sql, "[LogNote].[AcademicYearId] = @AcademicYearId");
+            QueryHelper.Where(ref sql, "[LogNote].[StudentId] = @StudentId");
+            QueryHelper.Where(ref sql, "[LogNote].[AcademicYearId] = @AcademicYearId");
 
             return ExecuteQuery(sql, new {StudentId = studentId, AcademicYearId = academicYearId});
         }

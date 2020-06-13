@@ -13,18 +13,18 @@ namespace MyPortal.Database.Repositories
         public ObservationRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(StaffMember), "Observee")},
-{EntityHelper.GetAllColumns(typeof(Person), "ObserveePerson")},
-{EntityHelper.GetAllColumns(typeof(StaffMember), "Observer")},
-{EntityHelper.GetAllColumns(typeof(Person), "ObserverPerson")},
-{EntityHelper.GetAllColumns(typeof(ObservationOutcome))}";
+{EntityHelper.GetPropertyNames(typeof(StaffMember), "Observee")},
+{EntityHelper.GetPropertyNames(typeof(Person), "ObserveePerson")},
+{EntityHelper.GetPropertyNames(typeof(StaffMember), "Observer")},
+{EntityHelper.GetPropertyNames(typeof(Person), "ObserverPerson")},
+{EntityHelper.GetPropertyNames(typeof(ObservationOutcome))}";
 
             JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[Observee].[Id]", "[Observation].[ObserveeId]", "Observee")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[ObserveePerson].[Id]", "[Observee].[PersonId]", "ObserveePerson")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[Observer].[Id]", "[Observation].[ObserverId]", "Observer")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[ObserverPerson].[Id]", "[Observer].[PersonId]", "ObserverPerson")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[ObservationOutcome]", "[ObservationOutcome].[Id]", "[Observation].[OutcomeId]")}";
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[Observee].[Id]", "[Observation].[ObserveeId]", "Observee")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[ObserveePerson].[Id]", "[Observee].[PersonId]", "ObserveePerson")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[Observer].[Id]", "[Observation].[ObserverId]", "Observer")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[ObserverPerson].[Id]", "[Observer].[PersonId]", "ObserverPerson")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[ObservationOutcome]", "[ObservationOutcome].[Id]", "[Observation].[OutcomeId]")}";
         }
 
         protected override async Task<IEnumerable<Observation>> ExecuteQuery(string sql, object param = null)

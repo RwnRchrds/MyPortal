@@ -8,6 +8,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -15,35 +16,49 @@ namespace MyPortal.Database.Repositories
     {
         public DirectoryRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
         {
-            RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(Directory), "Parent")}";
-
-            JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Directory]", "[Parent].[Id]", "[Directory].[ParentId]", "Parent")}";
+           
         }
 
-        protected override async Task<IEnumerable<Directory>> ExecuteQuery(string sql, object param = null)
+        protected override Query SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<Directory, Directory, Directory>(sql, (directory, parent) =>
+            query.SelectAll(typeof(Directory), "Parent");
+
+            query = JoinRelated(query);
+
+            return query;
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.Directory as Parent", "Parent.Id", "Directory.ParentId");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<Directory>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<Directory, Directory, Directory>(sql.Sql, (directory, parent) =>
                 {
                     directory.Parent = parent;
 
                     return directory;
-                }, param);
+                }, sql.Bindings);
         }
 
         public async Task<IEnumerable<Directory>> GetSubdirectories(Guid directoryId, bool includeStaffOnly)
         {
-            var sql = SelectAllColumns();
+            var query = SelectAllColumns();
 
-            SqlHelper.Where(ref sql, "[Parent].[Id] = @ParentId");
+            query.Where("Directory.ParentId", "=", directoryId);
 
             if (!includeStaffOnly)
             {
-                SqlHelper.Where(ref sql, "[Directory].[StaffOnly] = 0");
+                query.Where("Directory.StaffOnly", false);
             }
 
-            return await ExecuteQuery(sql, new {ParentId = directoryId});
+            return await ExecuteQuery(query);
         }
     }
 }

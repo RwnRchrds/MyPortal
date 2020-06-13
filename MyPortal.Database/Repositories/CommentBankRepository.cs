@@ -7,6 +7,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -14,11 +15,7 @@ namespace MyPortal.Database.Repositories
     {
         public CommentBankRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-        }
 
-        protected override async Task<IEnumerable<CommentBank>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<CommentBank>(sql, param);
         }
     }
 }

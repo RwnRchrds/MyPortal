@@ -20,11 +20,14 @@ namespace MyPortal.Database.Models
             PersonnelObservationsObserved = new HashSet<Observation>();
             PersonnelTrainingCertificates = new HashSet<TrainingCertificate>();
             Subjects = new HashSet<SubjectStaffMember>();
+            Subordinates = new HashSet<StaffMember>();
         }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
+
+        public Guid? LineManagerId { get; set; }
 
         public Guid PersonId { get; set; }
 
@@ -44,6 +47,8 @@ namespace MyPortal.Database.Models
         public bool Deleted { get; set; }
 
         public virtual Person Person { get; set; }
+
+        public virtual StaffMember LineManager { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Session> Sessions { get; set; }
@@ -71,5 +76,8 @@ namespace MyPortal.Database.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Detention> SupervisedDetentions { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<StaffMember> Subordinates { get; set; }
     }
 }

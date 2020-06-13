@@ -8,6 +8,7 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -15,26 +16,40 @@ namespace MyPortal.Database.Repositories
     {
         public ClassRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-        RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(AcademicYear))},
-{EntityHelper.GetAllColumns(typeof(Subject))},
-{EntityHelper.GetAllColumns(typeof(StaffMember), "Teacher")},
-{EntityHelper.GetAllColumns(typeof(Person), "TeacherPerson")},
-{EntityHelper.GetAllColumns(typeof(YearGroup))},
-{EntityHelper.GetAllColumns(typeof(CurriculumBand))}";
 
-        JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AcademicYear]", "[AcademicYear].[Id]", "[Class].[AcademicYearId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Subject]", "[Subject].[Id]", "[Class].[SubjectId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[Teacher].[Id]", "[Class].[TeacherId]", "Teacher")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[TeacherPerson].[Id]", "[Teacher].[PersonId]", "TeacherPerson")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[YearGroup]", "[YearGroup].[Id]", "[Class].[YearGroupId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[CurriculumBand]", "[CurriculumBand].[Id]", "[Class].[BandId]")}";
         }
 
-        protected override async Task<IEnumerable<Class>> ExecuteQuery(string sql, object param = null)
+        protected override Query SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<Class, AcademicYear, Subject, StaffMember, Person, YearGroup, CurriculumBand, Class>(sql,
+            query.SelectAll(typeof(AcademicYear));
+            query.SelectAll(typeof(Subject));
+            query.SelectAll(typeof(StaffMember), "Teacher");
+            query.SelectAll(typeof(Person), "TeacherPerson");
+            query.SelectAll(typeof(YearGroup));
+            query.SelectAll(typeof(CurriculumBand));
+
+            query = JoinRelated(query);
+
+            return query;
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.AcademicYear", "AcademicYear.Id", "Class.AcademicYearId");
+            query.LeftJoin("dbo.Subject", "Subject.Id", "Class.SubjectId");
+            query.LeftJoin("dbo.StaffMember as Teacher", "Teacher.Id", "Class.TeacherId");
+            query.LeftJoin("dbo.Person as TeacherPerson", "TeacherPerson.Id", "Teacher.PersonId");
+            query.LeftJoin("dbo.YearGroup", "YearGroup.Id", "Class.YearGroupId");
+            query.LeftJoin("dbo.CurriculumBand", "CurriculumBand.Id", "Class.BandId");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<Class>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<Class, AcademicYear, Subject, StaffMember, Person, YearGroup, CurriculumBand, Class>(sql.Sql,
                 (currClass, acadYear, subject, teacher, person, yearGroup, band) =>
                 {
                     currClass.AcademicYear = acadYear;
@@ -43,7 +58,7 @@ namespace MyPortal.Database.Repositories
                     currClass.Band = band;
 
                     return currClass;
-                }, param);
+                }, sql.Bindings);
         }
     }
 }

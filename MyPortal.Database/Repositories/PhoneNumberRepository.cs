@@ -13,12 +13,12 @@ namespace MyPortal.Database.Repositories
         public PhoneNumberRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(PhoneNumberType))},
-{EntityHelper.GetAllColumns(typeof(Person))}";
+{EntityHelper.GetPropertyNames(typeof(PhoneNumberType))},
+{EntityHelper.GetPropertyNames(typeof(Person))}";
 
             JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[PhoneNumberType]", "[PhoneNumberType].[Id]", "[PhoneNumber].[TypeId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[PhoneNumber].[PersonId]")}";
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[PhoneNumberType]", "[PhoneNumberType].[Id]", "[PhoneNumber].[TypeId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[PhoneNumber].[PersonId]")}";
         }
 
         protected override async Task<IEnumerable<PhoneNumber>> ExecuteQuery(string sql, object param = null)

@@ -12,10 +12,5 @@ namespace MyPortal.Database.Repositories
         public HomeworkRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
         }
-
-        protected override async Task<IEnumerable<Homework>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<Homework>(sql, param);
-        }
     }
 }

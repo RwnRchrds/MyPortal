@@ -7,6 +7,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -14,25 +15,39 @@ namespace MyPortal.Database.Repositories
     {
         public AddressPersonRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-            RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(Person))},
-{EntityHelper.GetAllColumns(typeof(Address))}";
-
-            JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[AddressPerson].[PersonId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Address]", "[Address].[Id]", "[AddressPerson].[AddressId]")}";
+           
         }
 
-        protected override async Task<IEnumerable<AddressPerson>> ExecuteQuery(string sql, object param = null)
+        protected override Query SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<AddressPerson, Address, Person, AddressPerson>(sql,
+            query.SelectAll(typeof(Person));
+            query.SelectAll(typeof(Address));
+
+            query = JoinRelated(query);
+
+            return query;
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.Person", "Person.Id", "AddressPerson.PersonId");
+            query.LeftJoin("dbo.Address", "Address.Id", "AddressPerson.AddressId");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<AddressPerson>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<AddressPerson, Address, Person, AddressPerson>(sql.Sql,
                 (ap, address, person) =>
                 {
                     ap.Address = address;
                     ap.Person = person;
 
                     return ap;
-                }, param);
+                }, sql.Bindings);
         }
     }
 }

@@ -13,14 +13,14 @@ namespace MyPortal.Database.Repositories
         public YearGroupRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
         {
             RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(StaffMember))},
-{EntityHelper.GetAllColumns(typeof(Person))},
-{EntityHelper.GetAllColumns(typeof(CurriculumYearGroup))}";
+{EntityHelper.GetPropertyNames(typeof(StaffMember))},
+{EntityHelper.GetPropertyNames(typeof(Person))},
+{EntityHelper.GetPropertyNames(typeof(CurriculumYearGroup))}";
 
             JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[StaffMember].[Id]", "[YearGroup].[HeadId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[StaffMember].[PersonId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[CurriculumYearGroup]", "[CurriculumYearGroup].[Id]", "[YearGroup].[Id]")}";
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[StaffMember].[Id]", "[YearGroup].[HeadId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[StaffMember].[PersonId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[CurriculumYearGroup]", "[CurriculumYearGroup].[Id]", "[YearGroup].[Id]")}";
         }
 
         protected override async Task<IEnumerable<YearGroup>> ExecuteQuery(string sql, object param = null)

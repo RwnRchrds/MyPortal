@@ -2,31 +2,51 @@
 using System.Data;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
-    public class DiaryEventAttendeeRepository : BaseReadWriteRepository<DiaryEventAttendee>, IDiaryEventAttendeeRepository
+    public class DiaryEventAttendeeRepository : BaseReadWriteRepository<DiaryEventAttendee>,
+        IDiaryEventAttendeeRepository
     {
-        public DiaryEventAttendeeRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context, "Attendee")
+        public DiaryEventAttendeeRepository(IDbConnection connection, ApplicationDbContext context) : base(connection,
+            context, "Attendee")
         {
-            RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(DiaryEvent), "Event")},
-{EntityHelper.GetAllColumns(typeof(Person))},
-{EntityHelper.GetAllColumns(typeof(DiaryEventAttendeeResponse), "Response")}";
 
-            JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[DiaryEvent]", "[Event].[Id]", "[Attendee].[EventId]", "Event")},
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[Attendee].[PersonId]")},
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[DiaryEventAttendeeResponse]", "[Response].[Id]", "[Attendee].[ResponseId]", "Response")}";
         }
 
-        protected override async Task<IEnumerable<DiaryEventAttendee>> ExecuteQuery(string sql, object param = null)
+        protected override Query SelectAllRelated(Query query)
         {
+            query.SelectAll(typeof(DiaryEvent), "Event");
+            query.SelectAll(typeof(Person));
+            query.SelectAll(typeof(DiaryEventAttendeeResponse), "Response");
+
+            query = JoinRelated(query);
+
+            return query;
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.DiaryEvent as Event", "Event.Id", "Attendee.EventId");
+            query.LeftJoin("dbo.Person", "Person.Id", "Attendee.PersonId");
+            query.LeftJoin("dbo.DiaryEventAttendeeResponse as Response", "Response.Id", "Attendee.ResponseId");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<DiaryEventAttendee>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
             return await Connection
-                .QueryAsync<DiaryEventAttendee, DiaryEvent, Person, DiaryEventAttendeeResponse, DiaryEventAttendee>(sql,
+                .QueryAsync<DiaryEventAttendee, DiaryEvent, Person, DiaryEventAttendeeResponse, DiaryEventAttendee>(
+                    sql.Sql,
                     (attendee, diaryEvent, person, response) =>
                     {
                         attendee.Event = diaryEvent;
@@ -34,7 +54,7 @@ namespace MyPortal.Database.Repositories
                         attendee.Response = response;
 
                         return attendee;
-                    }, param);
+                    }, sql.Bindings);
         }
     }
 }

@@ -13,10 +13,10 @@ namespace MyPortal.Database.Repositories
         public HouseRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(StaffMember))}";
+{EntityHelper.GetPropertyNames(typeof(StaffMember))}";
 
             JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[StaffMember].[Id]", "[House].[HeadId]")}";
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[StaffMember].[Id]", "[House].[HeadId]")}";
         }
 
         protected override async Task<IEnumerable<House>> ExecuteQuery(string sql, object param = null)

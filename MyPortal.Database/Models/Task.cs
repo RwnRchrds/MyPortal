@@ -13,10 +13,13 @@ namespace MyPortal.Database.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
+
+        public Guid TypeId { get; set; }
         public Guid AssignedToId { get; set; }
         public Guid? AssignedById { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? DueDate { get; set; }
+        public DateTime? CompletedDate { get; set; }
 
         [Required]
         [StringLength(128)]
@@ -30,5 +33,6 @@ namespace MyPortal.Database.Models
         public virtual HomeworkSubmission HomeworkSubmission { get; set; }
         public virtual Person AssignedTo { get; set; }
         public virtual ApplicationUser AssignedBy { get; set; }
+        public virtual TaskType Type { get; set; }
     }
 }

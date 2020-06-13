@@ -4,8 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MyPortal.Logic.Authorisation.Attributes;
+using MyPortal.Database.Constants;
 using MyPortal.Logic.Constants;
+using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Business;
 using MyPortal.Logic.Models.ListModels;
@@ -17,42 +18,54 @@ namespace MyPortalCore.Controllers.Api
     public class LogNoteController : BaseApiController
     {
         private readonly ILogNoteService _logNoteService;
+        private readonly IStudentService _studentService;
 
-        public LogNoteController(ILogNoteService logNoteService, IApplicationUserService userService) : base(userService)
+        public LogNoteController(ILogNoteService logNoteService, IStudentService studentService, IApplicationUserService userService) : base(userService)
         {
             _logNoteService = logNoteService;
+            _studentService = studentService;
         }
 
         [HttpGet]
+        [Authorize]
         [Route("get")]
-        [RequiresPermission(Permissions.Student.LogNotes.View)]
         public async Task<IActionResult> GetById([FromQuery] Guid logNoteId)
         {
             return await Process(async () =>
             {
                 var logNote = await _logNoteService.GetById(logNoteId);
 
-                return Ok(logNote);
+                if (await AuthenticateStudentResource(_studentService, logNote.StudentId))
+                {
+                    return Ok(logNote);
+                }
+
+                return Forbid();
             });
         }
 
         [HttpGet]
+        [Authorize]
         [Route("student")]
-        [RequiresPermission(Permissions.Student.LogNotes.View)]
         public async Task<IActionResult> GetByStudent([FromQuery] Guid studentId, [FromQuery] Guid academicYearId)
         {
             return await Process(async () =>
             {
-                var logNotes = await _logNoteService.GetByStudent(studentId, academicYearId);
+                if (await AuthenticateStudentResource(_studentService, studentId))
+                {
+                    var logNotes = await _logNoteService.GetByStudent(studentId, academicYearId);
 
-                var result = logNotes;
+                    var result = logNotes;
 
-                return Ok(result);
+                    return Ok(result);
+                }
+
+                return Forbid();
             });
         }
 
         [HttpPost]
-        [RequiresPermission(Permissions.Student.LogNotes.Edit)]
+        [Authorize(Policy = Policies.UserType.Staff)]
         public async Task<IActionResult> Create([FromForm] CreateLogNoteModel model)
         {
             return await Process(async () =>
@@ -82,7 +95,7 @@ namespace MyPortalCore.Controllers.Api
         }
 
         [HttpPut]
-        [RequiresPermission(Permissions.Student.LogNotes.Edit)]
+        [Authorize(Policy = Policies.UserType.Staff)]
         public async Task<IActionResult> Update([FromForm] UpdateLogNoteModel model)
         {
             return await Process(async () =>
@@ -105,7 +118,7 @@ namespace MyPortalCore.Controllers.Api
         }
 
         [HttpDelete]
-        [RequiresPermission(Permissions.Student.LogNotes.Edit)]
+        [Authorize(Policy = Policies.UserType.Staff)]
         public async Task<IActionResult> Delete([FromQuery] Guid logNoteId)
         {
             return await Process(async () =>

@@ -8,6 +8,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -20,26 +21,25 @@ namespace MyPortal.Database.Repositories
 
         public async Task<AcademicYear> GetCurrent()
         {
-            var sql = SelectAllColumns(true);
+            var sql = SelectAllColumns();
 
-            sql = SqlHelper.Where(sql, "[AcademicYear].[FirstDate] <= @DateToday");
-            sql = SqlHelper.Where(sql, "[AcademicYear].[LastDate] >= @DateToday");
+            var dateToday = DateTime.Today;
 
-            return (await ExecuteQuery(sql, new {DateToday = DateTime.Today})).First();
+            sql.Where("AcademicYear.FirstDate", "<=", dateToday);
+            sql.Where("AcademicYear.LastDate", ">=", dateToday);
+
+            return (await ExecuteQuery(sql)).First();
         }
 
         public async Task<IEnumerable<AcademicYear>> GetAllToDate()
         {
-            var sql = SelectAllColumns(true);
+            var sql = SelectAllColumns();
 
-            sql = SqlHelper.Where(sql, "[AcademicYear].[FirstDate] <= @DateToday");
+            var dateToday = DateTime.Today;
 
-            return await ExecuteQuery(sql, new {DateToday = DateTime.Today});
-        }
+            sql.Where("Academic.FirstDate", "<=", dateToday);
 
-        protected override async Task<IEnumerable<AcademicYear>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<AcademicYear>(sql, param);
+            return await ExecuteQuery(sql);
         }
     }
 }

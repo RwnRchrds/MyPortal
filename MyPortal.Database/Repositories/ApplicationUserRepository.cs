@@ -6,6 +6,7 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -13,21 +14,35 @@ namespace MyPortal.Database.Repositories
     {
         public ApplicationUserRepository(IDbConnection connection) : base(connection, "User")
         {
-            RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(Person))}";
 
-            JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[UserId]", "[User].[Id]")}";
         }
 
-        protected override async Task<IEnumerable<ApplicationUser>> ExecuteQuery(string sql, object param = null)
+        protected override Query SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<ApplicationUser, Person, ApplicationUser>(sql, (user, person) =>
+            query.SelectAll(typeof(Person));
+
+            query = JoinRelated(query);
+
+            return query;
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.Person", "Person.UserId", "User.Id");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<ApplicationUser>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<ApplicationUser, Person, ApplicationUser>(sql.Sql, (user, person) =>
             {
                 user.Person = person;
 
                 return user;
-            }, param);
+            }, sql.Bindings);
         }
     }
 }

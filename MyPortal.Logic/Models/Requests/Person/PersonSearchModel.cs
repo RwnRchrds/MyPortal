@@ -2,7 +2,7 @@
 
 namespace MyPortal.Logic.Models.Requests.Person
 {
-    public class PersonSearchParams
+    public class PersonSearchModel
     {
         public string FirstName { get; set; }
         public string MiddleName { get; set; }

@@ -12,9 +12,9 @@ namespace MyPortal.Database.Repositories
     {
         public ReportRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
         {
-            RelatedColumns = $@"{EntityHelper.GetAllColumns(typeof(SystemArea))}";
+            RelatedColumns = $@"{EntityHelper.GetPropertyNames(typeof(SystemArea))}";
 
-            JoinRelated = $@"{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[SystemArea]", "[SystemArea].[Id]", "[Report].[SystemAreaId]")}";
+            JoinRelated = $@"{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[SystemArea]", "[SystemArea].[Id]", "[Report].[SystemAreaId]")}";
         }
 
         protected override async Task<IEnumerable<Report>> ExecuteQuery(string sql, object param = null)

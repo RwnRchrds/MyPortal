@@ -8,6 +8,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -15,20 +16,34 @@ namespace MyPortal.Database.Repositories
     {
         public DiaryEventRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-        RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(DiaryEventType))}";
 
-        JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[DiaryEventType]", "[DiaryEventType].[Id]", "[DiaryEvent].[EventTypeId]")}";
         }
 
-        protected override async Task<IEnumerable<DiaryEvent>> ExecuteQuery(string sql, object param = null)
+        protected override Query SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<DiaryEvent, DiaryEventType, DiaryEvent>(sql, (diaryEvent, type) =>
+            query.SelectAll(typeof(DiaryEventType));
+
+            query = JoinRelated(query);
+
+            return query;
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.DiaryEventType", "DiaryEventType.Id", "DiaryEvent.EventTypeId");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<DiaryEvent>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<DiaryEvent, DiaryEventType, DiaryEvent>(sql.Sql, (diaryEvent, type) =>
             {
                 diaryEvent.EventType = type;
                 return diaryEvent;
-            }, param);
+            }, sql.Bindings);
         }
     }
 }

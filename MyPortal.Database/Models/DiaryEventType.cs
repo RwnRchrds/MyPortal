@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.Serialization;
 using System.Text;
 using MyPortal.Database.BaseTypes;
 
@@ -18,6 +19,9 @@ namespace MyPortal.Database.Models
 
         [StringLength(128)]
         public string ColourCode { get; set; }
+
+        [DataMember] 
+        public bool System { get; set; }
 
         public virtual  ICollection<DiaryEventTemplate> DiaryEventTemplates { get; set; }
         public virtual  ICollection<DiaryEvent> DiaryEvents { get; set; }

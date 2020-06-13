@@ -13,26 +13,26 @@ namespace MyPortal.Database.Repositories
         public IncidentDetentionRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(Incident))},
-{EntityHelper.GetAllColumns(typeof(IncidentType))},
-{EntityHelper.GetAllColumns(typeof(Student))},
-{EntityHelper.GetAllColumns(typeof(Person), "StudentPerson")},
-{EntityHelper.GetAllColumns(typeof(Location))},
-{EntityHelper.GetAllColumns(typeof(Detention))},
-{EntityHelper.GetAllColumns(typeof(DiaryEvent))},
-{EntityHelper.GetAllColumns(typeof(StaffMember))},
-{EntityHelper.GetAllColumns(typeof(Person), "SupervisorPerson")}";
+{EntityHelper.GetPropertyNames(typeof(Incident))},
+{EntityHelper.GetPropertyNames(typeof(IncidentType))},
+{EntityHelper.GetPropertyNames(typeof(Student))},
+{EntityHelper.GetPropertyNames(typeof(Person), "StudentPerson")},
+{EntityHelper.GetPropertyNames(typeof(Location))},
+{EntityHelper.GetPropertyNames(typeof(Detention))},
+{EntityHelper.GetPropertyNames(typeof(DiaryEvent))},
+{EntityHelper.GetPropertyNames(typeof(StaffMember))},
+{EntityHelper.GetPropertyNames(typeof(Person), "SupervisorPerson")}";
 
             JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Incident]", "[Incident].[Id]", "[IncidentDetention].[IncidentId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[IncidentType]", "[IncidentType].[Id]", "[Incident].[IncidentTypeId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[Incident].[StudentId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[StudentPerson].[Id]", "[Student].[PersonId]", "StudentPerson")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Location]", "[Location].[Id]", "[Incident].[LocationId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Detention]", "[Detention].[Id]", "[IncidentDetention].[DetentionId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[DiaryEvent]", "[DiaryEvent].[Id]", "[Detention].[EventId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[StaffMember].[Id]", "[Detention].[SupervisorId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[SupervisorPerson].[Id]", "[StaffMember].[PersonId]", "SupervisorPerson")}";
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Incident]", "[Incident].[Id]", "[IncidentDetention].[IncidentId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[IncidentType]", "[IncidentType].[Id]", "[Incident].[IncidentTypeId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[Incident].[StudentId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[StudentPerson].[Id]", "[Student].[PersonId]", "StudentPerson")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Location]", "[Location].[Id]", "[Incident].[LocationId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Detention]", "[Detention].[Id]", "[IncidentDetention].[DetentionId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[DiaryEvent]", "[DiaryEvent].[Id]", "[Detention].[EventId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[StaffMember].[Id]", "[Detention].[SupervisorId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[SupervisorPerson].[Id]", "[StaffMember].[PersonId]", "SupervisorPerson")}";
         }
 
         protected override async Task<IEnumerable<IncidentDetention>> ExecuteQuery(string sql, object param = null)

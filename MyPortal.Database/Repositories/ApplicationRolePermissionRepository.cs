@@ -7,6 +7,7 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -14,45 +15,62 @@ namespace MyPortal.Database.Repositories
     {
         public ApplicationRolePermissionRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
         {
-            RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(ApplicationRole), "Role")},
-{EntityHelper.GetAllColumns(typeof(ApplicationPermission), "Permission")}";
-
-            JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetRoles]", "[Role].[Id]", "[ApplicationRolePermission].[RoleId]", "Role")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetPermissions]", "[Permission].[Id]", "[ApplicationRolePermission].[PermissionId]", "Permission")}";
+           
         }
 
-        protected override async Task<IEnumerable<ApplicationRolePermission>> ExecuteQuery(string sql, object param = null)
+        protected override Query SelectAllRelated(Query query)
         {
+            query.SelectAll(typeof(ApplicationRole), "Role");
+            query.SelectAll(typeof(ApplicationPermission), "Permission");
+
+            return query;
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.AspNetRoles AS Role", "Role.Id", "AspNetRolePermissions.RoleId");
+            query.LeftJoin("dbo.AspNetPermissions AS Permission", "Permission.Id",
+                "AspNetRolePermissions.PermissionId");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<ApplicationRolePermission>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
             return await Connection
                 .QueryAsync<ApplicationRolePermission, ApplicationRole, ApplicationPermission, ApplicationRolePermission
-                >(sql,
+                >(sql.Sql,
                     (rp, role, perm) =>
                     {
                         rp.Role = role;
                         rp.Permission = perm;
 
                         return rp;
-                    }, param);
+                    }, sql.Bindings);
         }
 
         public async Task<IEnumerable<ApplicationRolePermission>> GetByRole(Guid roleId)
         {
-            var sql = SelectAllColumns();
+            var query = SelectAllColumns();
             
-            SqlHelper.Where(ref sql, "[ApplicationRolePermission].[RoleId] = @RoleId");
+            query.Where("AspNetRolePermissions.RoleId", "=", roleId);
 
-            return await ExecuteQuery(sql, new {RoleId = roleId});
+            return await ExecuteQuery(query);
         }
 
         public async Task<IEnumerable<string>> GetClaimValuesByRole(Guid roleId)
         {
-            var sql = $"SELECT [Permission].[ClaimValue] FROM {TblName} {JoinRelated}";
-            
-            SqlHelper.Where(ref sql, "[ApplicationRolePermission].[RoleId] = @RoleId");
+            var query = new Query(TblName).Select("Permission.ClaimValue");
 
-            return await Connection.QueryAsync<string>(sql, new {RoleId = roleId});
+            query = JoinRelated(query);
+            
+            query.Where("AspNetRolePermissions.RoleId", "=", roleId);
+
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<string>(sql.Sql, sql.Bindings);
         }
     }
 }

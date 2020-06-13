@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using MyPortal.Database.Constants;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Models.Data;
 

@@ -7,14 +7,12 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
     public class AchievementTypeRepository : BaseReadWriteRepository<AchievementType>, IAchievementTypeRepository
     {
-        private readonly string JoinAchievement = SqlHelper.Join(JoinType.LeftJoin,
-            "[dbo].[Achievement]", "[Achievement].[AchievmentTypeId]", "[AchievementType].[Id]");
-
         public AchievementTypeRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             
@@ -22,15 +20,15 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<AchievementType>> GetRecorded(Guid academicYearId)
         {
-            var sql =
-                $"SELECT {AllColumns} FROM {TblName} {JoinAchievement} GROUP BY {AllColumns} HAVING COUNT ([Achievement].[Id]) > 0";
+            var query = SelectAllColumns();
 
-            return await Connection.QueryAsync<AchievementType>(sql);
-        }
+            query.LeftJoin("dbo.Achievement", "Achievement.AchievementTypeId", "AchievementType.Id");
 
-        protected override async Task<IEnumerable<AchievementType>> ExecuteQuery(string sql, object param = null)
-        {
-            throw new NotImplementedException();
+            query.GroupBy(EntityHelper.GetPropertyNames(typeof(AchievementType)));
+
+            query.Having("COUNT([Achievement].[Id])", ">", 0);
+
+            return await ExecuteQuery(query);
         }
     }
 }

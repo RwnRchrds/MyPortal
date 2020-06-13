@@ -5,10 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
+using SqlKata;
+using SqlKata.Compilers;
 
 namespace MyPortal.Database.Repositories
 {
@@ -16,70 +19,88 @@ namespace MyPortal.Database.Repositories
     {
         public AchievementRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-            RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(AcademicYear))},
-{EntityHelper.GetAllColumns(typeof(AchievementType))},
-{EntityHelper.GetAllColumns(typeof(Student))},
-{EntityHelper.GetAllColumns(typeof(Person), "StudentPerson")}
-{EntityHelper.GetAllColumns(typeof(Location))},
-{EntityHelper.GetAllColumns(typeof(ApplicationUser))},
-{EntityHelper.GetAllColumns(typeof(Person), "RecordedByPerson")}";
+           
+        }
 
-            JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AcademicYear]", "[AcademicYear].[Id]", "[Achievement].[AcademicYearId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AchievementType]", "[AchievementType].[Id]", "[Achievement].[AchievementTypeId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[Achievement].[StudentId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[StudentPerson].[Id]", "[Student].[PersonId]", "StudentPerson")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Location]", "[Location].[Id]", "[Achievement].[LocationId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[User].[Id]", "[Achievement].[RecordedById]", "User")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[RecordedByPerson].[UserId]", "[User].[Id]", "RecordedByPerson")}";
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAll(typeof(AcademicYear));
+            query.SelectAll(typeof(AchievementType));
+            query.SelectAll(typeof(Student));
+            query.SelectAll(typeof(Person), "StudentPerson");
+            query.SelectAll(typeof(Location));
+            query.SelectAll(typeof(ApplicationUser));
+            query.SelectAll(typeof(Person), "RecordedByPerson");
+
+            JoinRelated(query);
+
+            return query;
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.AcademicYear", "AcademicYear.Id", "Achievement.AcademicYearId");
+            query.LeftJoin("dbo.AchievementType", "AchievementType.Id", "Achievement.AchievementTypeId");
+            query.LeftJoin("dbo.Student", "Student.Id", "Achievement.StudentId");
+            query.LeftJoin("dbo.Person AS StudentPerson", "StudentPerson.Id", "Student.PersonId");
+            query.LeftJoin("dbo.Location", "Location.Id", "Achievement.LocationId");
+            query.LeftJoin("dbo.AspNetUsers", "AspNetUsers.Id", "Achievement.RecordedById");
+            query.LeftJoin("dbo.Person", "Person.Id", "Person.UserId");
+
+            return query;
         }
 
         public async Task<int> GetCountByStudent(Guid studentId, Guid academicYearId)
         {
-            var sql = $"SELECT COUNT([Id]) FROM {TblName}";
+            var sql = new Query(TblName).SelectRaw("COUNT([Id])");
 
-            SqlHelper.Where(ref sql, "[Achievement].[StudentId] = @StudentId");
-            SqlHelper.Where(ref sql, "[Achievement].[AcademicYearId] = @AcademicYearId");
+            sql.Where("Achievement.StudentId", "=", studentId);
+            sql.Where("Achievement.AcademicYearId", "=", academicYearId);
 
-            return await ExecuteIntQuery(sql, new {StudentId = studentId, AcademicYearId = academicYearId});
+            return await ExecuteIntQuery(sql);
         }
 
         public async Task<int> GetPointsByStudent(Guid studentId, Guid academicYearId)
         {
-            var sql = $"SELECT SUM([Points]) FROM {TblName}";
+            var sql = new Query(TblName).SelectRaw("SUM([Points])");
 
-            SqlHelper.Where(ref sql, "[Achievement].[StudentId] = @StudentId");
-            SqlHelper.Where(ref sql, "[Achievement].[AcademicYearId] = @AcademicYearId");
+            sql.Where("Achievement.StudentId", "=", studentId);
+            sql.Where("Achievement.AcademicYearId", "=", academicYearId);
 
-            return await ExecuteIntQuery(sql, new {StudentId = studentId, AcademicYearId = academicYearId});
+            return await ExecuteIntQuery(sql);
         }
 
         public async Task<IEnumerable<Achievement>> GetByStudent(Guid studentId, Guid academicYearId)
         {
-            var sql = SelectAllColumns(true);
+            var sql = SelectAllColumns();
 
-            SqlHelper.Where(ref sql, "[Achievement].[StudentId] = @StudentId");
-            SqlHelper.Where(ref sql, "[Achievement].[AcademicYearId] = @AcademicYearId");
+            sql.Where("Achievement.StudentId" ,"=", studentId);
+            sql.Where("Achievement.AcademicYearId", "=", academicYearId);
 
-            return await ExecuteQuery(sql, new {StudentId = studentId, AcademicYearId = academicYearId});
+            return await ExecuteQuery(sql);
         }
 
         public async Task<int> GetPointsToday()
         {
-            var sql = $"SELECT SUM([Points]) FROM {TblName}";
+            var sql = new Query(TblName).SelectRaw("SUM([Points])");
 
-            SqlHelper.Where(ref sql, "[Achievement].[StudentId] = @StudentId");
-            SqlHelper.Where(ref sql, "[Achievement].[AcademicYearId] = @AcademicYearId");
+            var dateToday = DateTime.Today;
 
-            return await ExecuteIntQuery(sql,
-                new {DateTime.Today, Tomorrow = DateTime.Today.Date.AddDays(1)});   
+            sql.WhereDatePart("day", "Achievement.CreatedDate", "=", dateToday.Day);
+
+            sql.WhereDatePart("month", "Achievement.CreatedDate", "=", dateToday.Month);
+
+            sql.WhereDatePart("year", "Achievement.CreatedDate", "=", dateToday.Year);
+
+            return await ExecuteIntQuery(sql);
         }
 
-        protected override async Task<IEnumerable<Achievement>> ExecuteQuery(string sql, object param = null)
+        protected override async Task<IEnumerable<Achievement>> ExecuteQuery(Query query)
         {
+            var compiled = Compiler.Compile(query);
+
             return await Connection
-                .QueryAsync(sql,
+                .QueryAsync(compiled.Sql,
                     new[]
                     {
                         typeof(Achievement), typeof(AchievementType), typeof(Student), typeof(Person), typeof(Location),
@@ -96,7 +117,7 @@ namespace MyPortal.Database.Repositories
                         achievement.RecordedBy.Person = (Person) objects[6];
 
                         return achievement;
-                    }, param);
+                    }, compiled.Bindings);
         }
     }
 }

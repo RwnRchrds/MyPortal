@@ -1,8 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Security.Claims;
+using Google.Apis.Drive.v3.Data;
+using MyPortal.Database.Constants;
 using MyPortal.Database.Models.Identity;
 using MyPortal.Logic.Helpers;
-using ClaimTypes = MyPortal.Logic.Constants.ClaimTypes;
+using ClaimTypes = MyPortal.Database.Constants.ClaimTypes;
 
 namespace MyPortal.Logic.Extensions
 {
@@ -13,9 +16,28 @@ namespace MyPortal.Logic.Extensions
             return user.FindFirst(ClaimTypes.DisplayName)?.Value ?? user.Identity.Name;
         }
 
-        public static bool HasPermission(this ClaimsPrincipal principal, params int[] permissions)
+        public static bool HasPermission(this ClaimsPrincipal principal, params Guid[] permissions)
         {
-            return permissions.Any(x => principal.HasClaim(ClaimTypes.Permissions, x.ToString()));
+            if (permissions.Length == 0)
+            {
+                return true;
+            }
+
+            foreach (var permission in permissions)
+            {
+                if (Permissions.ClaimValues.TryGetValue(permission, out var claimValue) &&
+                    principal.HasClaim(ClaimTypes.Permission, claimValue))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public static bool IsType(this ClaimsPrincipal principal, string userType)
+        {
+            return principal.HasClaim(ClaimTypes.UserType, userType);
         }
     }
 }

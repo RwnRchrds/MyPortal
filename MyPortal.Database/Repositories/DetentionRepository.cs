@@ -8,6 +8,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -15,22 +16,36 @@ namespace MyPortal.Database.Repositories
     {
         public DetentionRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-        RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(DetentionType))},
-{EntityHelper.GetAllColumns(typeof(DiaryEvent))},
-{EntityHelper.GetAllColumns(typeof(StaffMember))},
-{EntityHelper.GetAllColumns(typeof(Person))}";
 
-        JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[DetentionType]", "[DetentionType].[Id]", "[Detention].[DetentionTypeId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[DiaryEvent]", "[DiaryEvent].[Id]", "[Detention].[EventId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[StaffMember].[Id]", "[Detention].[SupervisorId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[StaffMember].[PersonId]")}";
         }
 
-        protected override async Task<IEnumerable<Detention>> ExecuteQuery(string sql, object param = null)
+        protected override Query SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<Detention, DetentionType, DiaryEvent, StaffMember, Person, Detention>(sql,
+            query.SelectAll(typeof(DetentionType));
+            query.SelectAll(typeof(DiaryEvent));
+            query.SelectAll(typeof(StaffMember));
+            query.SelectAll(typeof(Person));
+
+            query = JoinRelated(query);
+
+            return query;
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.DetentionType", "DetentionType.Id", "Detention.DetentionTypeId");
+            query.LeftJoin("dbo.DiaryEvent", "DiaryEvent.Id", "Detention.EventId");
+            query.LeftJoin("dbo.StaffMember", "StaffMember.Id", "Detention.SupervisorId");
+            query.LeftJoin("dbo.Person", "Person.Id", "StaffMember.PersonId");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<Detention>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<Detention, DetentionType, DiaryEvent, StaffMember, Person, Detention>(sql.Sql,
                 (detention, type, diaryEvent, supervisor, person) =>
                 {
                     detention.Type = type;
@@ -40,7 +55,7 @@ namespace MyPortal.Database.Repositories
                     detention.Supervisor.Person = person;
 
                     return detention;
-                }, param);
+                }, sql.Bindings);
         }
     }
 }

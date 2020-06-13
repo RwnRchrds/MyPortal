@@ -13,16 +13,16 @@ namespace MyPortal.Database.Repositories
         public SaleRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(Student))},
-{EntityHelper.GetAllColumns(typeof(Person))}
-{EntityHelper.GetAllColumns(typeof(Product))},
-{EntityHelper.GetAllColumns(typeof(AcademicYear))}";
+{EntityHelper.GetPropertyNames(typeof(Student))},
+{EntityHelper.GetPropertyNames(typeof(Person))}
+{EntityHelper.GetPropertyNames(typeof(Product))},
+{EntityHelper.GetPropertyNames(typeof(AcademicYear))}";
 
             JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[Sale].[StudentId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[Student].[PersonId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Product]", "[Product].[Id]", "[Sale].[ProductId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AcademicYear]", "[AcademicYear].[Id]", "[Sale].[AcademicYearId]")}";
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[Sale].[StudentId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[Student].[PersonId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Product]", "[Product].[Id]", "[Sale].[ProductId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[AcademicYear]", "[AcademicYear].[Id]", "[Sale].[AcademicYearId]")}";
         }
 
         protected override async Task<IEnumerable<Sale>> ExecuteQuery(string sql, object param = null)

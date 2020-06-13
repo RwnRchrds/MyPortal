@@ -11,7 +11,7 @@ using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Business;
 using MyPortal.Logic.Models.Exceptions;
 using MyPortal.Logic.Models.Requests.Admin;
-using ClaimTypes = MyPortal.Logic.Constants.ClaimTypes;
+using ClaimTypes = MyPortal.Database.Constants.ClaimTypes;
 
 namespace MyPortal.Logic.Authorisation
 {
@@ -55,20 +55,9 @@ namespace MyPortal.Logic.Authorisation
 
                 foreach (var perm in perms)
                 {
-                    claims.Add(new Claim(ClaimTypes.Permissions, perm));
+                    claims.Add(new Claim(ClaimTypes.Permission, perm));
                 }
             }
-
-            //TEMP CODE
-
-            //await _userService.CreateUser(new CreateUser
-            //{
-            //    UserType = UserTypes.Staff,
-            //    Username = "L.Sprague",
-            //    Password = "***REMOVED***",
-            //    Email = "l.sprague@harrodsschool.co.uk",
-            //    PhoneNumber = "01252 695 914"
-            //});
 
             return claims;
         }

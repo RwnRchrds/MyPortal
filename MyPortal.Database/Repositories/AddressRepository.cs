@@ -8,6 +8,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -15,19 +16,7 @@ namespace MyPortal.Database.Repositories
     {
         public AddressRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-        }
 
-        protected override async Task<IEnumerable<Address>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<Address>(sql, param);
-        }
-
-        public async Task<IEnumerable<Address>> GetByPerson(int personId)
-        {
-            var sql =
-                $"SELECT {AllColumns} FROM {TblName} {SqlHelper.Join(JoinType.InnerJoin, "[dbo].[AddressPerson]", "[AddressPerson].[PersonId]", "@PersonId")}";
-
-            return await ExecuteQuery(sql, new {PersonId = personId});
         }
     }
 }

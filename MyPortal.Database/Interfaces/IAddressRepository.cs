@@ -8,6 +8,6 @@ namespace MyPortal.Database.Interfaces
 {
     public interface IAddressRepository : IReadWriteRepository<Address>
     {
-        Task<IEnumerable<Address>> GetByPerson(int personId);
+
     }
 }

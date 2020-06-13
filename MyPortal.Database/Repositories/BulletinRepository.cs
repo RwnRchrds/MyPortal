@@ -8,6 +8,7 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -15,49 +16,63 @@ namespace MyPortal.Database.Repositories
     {
         public BulletinRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-        RelatedColumns = $@"
-{EntityHelper.GetUserColumns("User")}";
-
-        JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[User].[Id]", "[Bulletin].[AuthorId]", "User")}";
+       
         }
 
-        protected override async Task<IEnumerable<Bulletin>> ExecuteQuery(string sql, object param = null)
+        protected override Query SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<Bulletin, ApplicationUser, Bulletin>(sql, (bulletin, author) =>
+            query.SelectAll(typeof(ApplicationUser), "User");
+
+            query = JoinRelated(query);
+
+            return query;
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.AspNetUsers as User", "User.Id", "Bulletin.AuthorId");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<Bulletin>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<Bulletin, ApplicationUser, Bulletin>(sql.Sql, (bulletin, author) =>
             {
                 bulletin.Author = author;
 
                 return bulletin;
-            }, param);
+            }, sql.Bindings);
         }
 
         public async Task<IEnumerable<Bulletin>> GetApproved()
         {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
-            
-            SqlHelper.Where(ref sql, "[Bulletin].[Approved] = 1");
+            var query = SelectAllColumns();
 
-            return await ExecuteQuery(sql);
+            query.Where("Bulletin.Approved", "=", true);
+
+            return await ExecuteQuery(query);
         }
 
         public async Task<IEnumerable<Bulletin>> GetStudent()
         {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
-            
-            SqlHelper.Where(ref sql, "[Bulletin].[Approved] = 1");
-            SqlHelper.Where(ref sql, "[Bulletin].[ShowStudents] = 1");
+            var query = SelectAllColumns();
 
-            return await ExecuteQuery(sql);
+            query.Where("Bulletin.Approved", "=", true);
+            query.Where("Bulletin.ShowStudents", "=", true);
+
+            return await ExecuteQuery(query);
         }
 
         public async Task<IEnumerable<Bulletin>> GetOwn(Guid authorId)
         {
-            var sql = $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
-            
-            SqlHelper.Where(ref sql, "[Bulletin].[AuthorId] = @AuthorId");
+            var query = SelectAllColumns();
 
-            return await ExecuteQuery(sql, new {AuthorId = authorId});
+            query.Where("Bulletin.AuthorId", "=", authorId);
+
+            return await ExecuteQuery(query);
         }
     }
 }

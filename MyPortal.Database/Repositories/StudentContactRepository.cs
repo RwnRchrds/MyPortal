@@ -13,18 +13,18 @@ namespace MyPortal.Database.Repositories
         public StudentContactRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
         {
             RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(RelationshipType))},
-{EntityHelper.GetAllColumns(typeof(Student))},
-{EntityHelper.GetAllColumns(typeof(Person), "StudentPerson")}
-{EntityHelper.GetAllColumns(typeof(Contact))},
-{EntityHelper.GetAllColumns(typeof(Person), "ContactPerson")}";
+{EntityHelper.GetPropertyNames(typeof(RelationshipType))},
+{EntityHelper.GetPropertyNames(typeof(Student))},
+{EntityHelper.GetPropertyNames(typeof(Person), "StudentPerson")}
+{EntityHelper.GetPropertyNames(typeof(Contact))},
+{EntityHelper.GetPropertyNames(typeof(Person), "ContactPerson")}";
 
             JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[RelationshipType]", "[RelationshipType].[Id]", "[StudentContact].[RelationshipTypeId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[StudentContact].[StudentId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[StudentPerson].[Id]", "[Student].[PersonId]", "StudentPerson")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Contact]", "[Contact].[Id]", "[StudentContact].[ContactId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[ContactPerson].[Id]", "[Contact].[PersonId]", "ContactPerson")}";
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[RelationshipType]", "[RelationshipType].[Id]", "[StudentContact].[RelationshipTypeId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[StudentContact].[StudentId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[StudentPerson].[Id]", "[Student].[PersonId]", "StudentPerson")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Contact]", "[Contact].[Id]", "[StudentContact].[ContactId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[ContactPerson].[Id]", "[Contact].[PersonId]", "ContactPerson")}";
         }
 
         protected override async Task<IEnumerable<StudentContact>> ExecuteQuery(string sql, object param = null)

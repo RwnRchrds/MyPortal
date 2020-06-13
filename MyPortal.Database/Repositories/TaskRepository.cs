@@ -14,12 +14,12 @@ namespace MyPortal.Database.Repositories
         public TaskRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
         {
             RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(Person), "AssignedTo")},
-{EntityHelper.GetUserColumns("AssignedBy")}";
+{EntityHelper.GetPropertyNames(typeof(Person), "AssignedTo")},
+{EntityHelper.GetUserProperties("AssignedBy")}";
 
             JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[AssignedTo].[Id]", "[Task].[AssignedToId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[AssignedBy].[Id]", "[Task].[AssignedById]")}";
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[AssignedTo].[Id]", "[Task].[AssignedToId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[AssignedBy].[Id]", "[Task].[AssignedById]")}";
         }
 
         protected override async System.Threading.Tasks.Task<IEnumerable<Task>> ExecuteQuery(string sql, object param = null)
@@ -37,7 +37,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = SelectAllColumns();
                 
-            SqlHelper.Where(ref sql, "[Task].[AssignedToId] = @PersonId");
+            QueryHelper.Where(ref sql, "[Task].[AssignedToId] = @PersonId");
 
             return await ExecuteQuery(sql, new {PersonId = personId});
         }
@@ -46,9 +46,9 @@ namespace MyPortal.Database.Repositories
         {
             var sql = SelectAllColumns();
                 
-            SqlHelper.Where(ref sql, "[Task].[AssignedToId] = @PersonId");
+            QueryHelper.Where(ref sql, "[Task].[AssignedToId] = @PersonId");
             
-            SqlHelper.Where(ref sql, "[Task].[Completed] = 0 OR [Task].[DueDate] > @DateToday");
+            QueryHelper.Where(ref sql, "[Task].[Completed] = 0 OR [Task].[DueDate] > @DateToday");
 
             return await ExecuteQuery(sql, new {PersonId = personId, DateToday = DateTime.Today});
         }
@@ -57,9 +57,9 @@ namespace MyPortal.Database.Repositories
         {
             var sql = SelectAllColumns();
                 
-            SqlHelper.Where(ref sql, "[Task].[AssignedToId] = @PersonId");
+            QueryHelper.Where(ref sql, "[Task].[AssignedToId] = @PersonId");
             
-            SqlHelper.Where(ref sql, "[Task].[Completed] = 1");
+            QueryHelper.Where(ref sql, "[Task].[Completed] = 1");
 
             return await ExecuteQuery(sql, new {PersonId = personId});
         }
@@ -68,11 +68,11 @@ namespace MyPortal.Database.Repositories
         {
             var sql = SelectAllColumns();
                 
-            SqlHelper.Where(ref sql, "[Task].[AssignedToId] = @PersonId");
+            QueryHelper.Where(ref sql, "[Task].[AssignedToId] = @PersonId");
             
-            SqlHelper.Where(ref sql, "[Task].[Completed] = 0");
+            QueryHelper.Where(ref sql, "[Task].[Completed] = 0");
             
-            SqlHelper.Where(ref sql, "[Task].[DueDate] <= @DateToday");
+            QueryHelper.Where(ref sql, "[Task].[DueDate] <= @DateToday");
 
             return await ExecuteQuery(sql, new {PersonId = personId, DateToday = DateTime.Today});
         }

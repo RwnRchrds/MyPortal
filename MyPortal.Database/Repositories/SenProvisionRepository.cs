@@ -13,12 +13,12 @@ namespace MyPortal.Database.Repositories
         public SenProvisionRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
         {
             RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(Student))},
-{EntityHelper.GetAllColumns(typeof(SenProvisionType))}";
+{EntityHelper.GetPropertyNames(typeof(Student))},
+{EntityHelper.GetPropertyNames(typeof(SenProvisionType))}";
 
             JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[SenProvision].[StudentId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[SenProvisionType]", "[SenProvisionType].[Id]", "[SenProvision].[ProvisionTypeId]")}";
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[SenProvision].[StudentId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[SenProvisionType]", "[SenProvisionType].[Id]", "[SenProvision].[ProvisionTypeId]")}";
         }
 
         protected override async Task<IEnumerable<SenProvision>> ExecuteQuery(string sql, object param = null)

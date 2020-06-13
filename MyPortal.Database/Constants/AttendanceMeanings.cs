@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace MyPortal.Logic.Constants
+namespace MyPortal.Database.Constants
 {
     public static class AttendanceMeanings
     {
@@ -25,12 +24,12 @@ namespace MyPortal.Logic.Constants
             {AttendanceNotRequired, PhysicalMeaning.OutWholeSession}
         };
 
-        public static Guid Present = Guid.Parse("59036717-D349-46D3-B8A6-60FFA9263DB3");
-        public static Guid ApprovedEdActivity = Guid.Parse("59036717-D349-46D3-B8A6-60FFA9263DB3");
-        public static Guid AuthorisedAbsence = Guid.Parse("59036718-D349-46D3-B8A6-60FFA9263DB3");
-        public static Guid UnauthorisedAbsence = Guid.Parse("59036720-D349-46D3-B8A6-60FFA9263DB3");
-        public static Guid Late = Guid.Parse("59036723-D349-46D3-B8A6-60FFA9263DB3");
-        public static Guid AttendanceNotRequired = Guid.Parse("59036721-D349-46D3-B8A6-60FFA9263DB3");
+        public static Guid Present { get; } = Guid.Parse("59036717-D349-46D3-B8A6-60FFA9263DB3");
+        public static Guid ApprovedEdActivity { get; } = Guid.Parse("59036717-D349-46D3-B8A6-60FFA9263DB3");
+        public static Guid AuthorisedAbsence { get; } = Guid.Parse("59036718-D349-46D3-B8A6-60FFA9263DB3");
+        public static Guid UnauthorisedAbsence { get; } = Guid.Parse("59036720-D349-46D3-B8A6-60FFA9263DB3");
+        public static Guid Late { get; } = Guid.Parse("59036723-D349-46D3-B8A6-60FFA9263DB3");
+        public static Guid AttendanceNotRequired { get; } = Guid.Parse("59036721-D349-46D3-B8A6-60FFA9263DB3");
 
         public static PhysicalMeaning GetPhysicalMeaning(Guid statsMeaningId)
         {

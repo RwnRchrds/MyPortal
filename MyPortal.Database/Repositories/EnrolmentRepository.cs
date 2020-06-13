@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -12,25 +14,39 @@ namespace MyPortal.Database.Repositories
     {
         public EnrolmentRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-            RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(Student))},
-{EntityHelper.GetAllColumns(typeof(CurriculumBand))}";
-
-            JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[Enrolment].[StudentId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[CurriculumBand]", "[CurriculumBand].[Id]", "[Enrolment].[BandId]")}";
+           
         }
 
-        protected override async Task<IEnumerable<Enrolment>> ExecuteQuery(string sql, object param = null)
+        protected override Query SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<Enrolment, Student, CurriculumBand, Enrolment>(sql,
+            query.SelectAll(typeof(Student));
+            query.SelectAll(typeof(CurriculumBand));
+
+            query = JoinRelated(query);
+
+            return query;
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.Student", "Student.Id", "Enrolment.StudentId");
+            query.LeftJoin("dbo.CurriculumBand", "CurriculumBand.Id", "Enrolment.BandId");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<Enrolment>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<Enrolment, Student, CurriculumBand, Enrolment>(sql.Sql,
                 (enrolment, student, band) =>
                 {
                     enrolment.Student = student;
                     enrolment.Band = band;
 
                     return enrolment;
-                }, param);
+                }, sql.Bindings);
         }
     }
 }

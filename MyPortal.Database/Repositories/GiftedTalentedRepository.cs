@@ -5,6 +5,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -12,25 +13,39 @@ namespace MyPortal.Database.Repositories
     {
         public GiftedTalentedRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-            RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(Student))},
-{EntityHelper.GetAllColumns(typeof(Subject))}";
 
-            JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[GiftedTalented].[StudentId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Subject]", "[Subject].[Id]", "[GiftedTalented].[SubjectId]")}";
         }
 
-        protected override async Task<IEnumerable<GiftedTalented>> ExecuteQuery(string sql, object param = null)
+        protected override Query SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<GiftedTalented, Student, Subject, GiftedTalented>(sql,
+            query.SelectAll(typeof(Student));
+            query.SelectAll(typeof(Subject));
+
+            query = JoinRelated(query);
+
+            return query;
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.Student", "Student.Id", "GiftedTalented.StudentId");
+            query.LeftJoin("dbo.Subject", "Subject.Id", "GiftedTalented.SubjectId");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<GiftedTalented>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<GiftedTalented, Student, Subject, GiftedTalented>(sql.Sql,
                 (gt, student, subject) =>
                 {
                     gt.Student = student;
                     gt.Subject = subject;
 
                     return gt;
-                }, param);
+                }, sql.Bindings);
         }
     }
 }

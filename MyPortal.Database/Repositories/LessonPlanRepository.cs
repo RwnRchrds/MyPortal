@@ -14,14 +14,14 @@ namespace MyPortal.Database.Repositories
         public LessonPlanRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(StudyTopic))},
-{EntityHelper.GetUserColumns("User")},
-{EntityHelper.GetAllColumns(typeof(Person))}";
+{EntityHelper.GetPropertyNames(typeof(StudyTopic))},
+{EntityHelper.GetUserProperties("User")},
+{EntityHelper.GetPropertyNames(typeof(Person))}";
 
             JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[StudyTopic]", "[StudyTopic].[Id]", "[LessonPlan].[StudyTopicId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[User].[Id]", "[LessonPlan].[AuthorId]", "User")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[UserId]", "[User].[Id]")}";
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[StudyTopic]", "[StudyTopic].[Id]", "[LessonPlan].[StudyTopicId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[User].[Id]", "[LessonPlan].[AuthorId]", "User")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[UserId]", "[User].[Id]")}";
         }
 
         protected override async Task<IEnumerable<LessonPlan>> ExecuteQuery(string sql, object param = null)

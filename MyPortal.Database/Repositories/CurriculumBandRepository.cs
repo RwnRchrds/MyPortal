@@ -13,10 +13,5 @@ namespace MyPortal.Database.Repositories
         public CurriculumBandRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
         {
         }
-
-        protected override async Task<IEnumerable<CurriculumBand>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<CurriculumBand>(sql, param);
-        }
     }
 }

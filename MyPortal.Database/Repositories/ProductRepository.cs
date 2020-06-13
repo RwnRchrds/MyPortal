@@ -12,10 +12,10 @@ namespace MyPortal.Database.Repositories
     {
         public ProductRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-            RelatedColumns = $@"{EntityHelper.GetAllColumns(typeof(ProductType))}";
+            RelatedColumns = $@"{EntityHelper.GetPropertyNames(typeof(ProductType))}";
 
             JoinRelated =
-                $@"{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[ProductType]", "[ProductType].[Id]", "[Product].[ProductTypeId]")}";
+                $@"{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[ProductType]", "[ProductType].[Id]", "[Product].[ProductTypeId]")}";
         }
 
         protected override async Task<IEnumerable<Product>> ExecuteQuery(string sql, object param = null)

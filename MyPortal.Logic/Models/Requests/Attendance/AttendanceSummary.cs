@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MyPortal.Database.Constants;
 using MyPortal.Database.Models;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Models.Business;
@@ -118,16 +119,16 @@ namespace MyPortal.Logic.Models.Requests.Attendance
             }
         }
 
-        public ChartDataCategoricPoint[] GetChartData()
+        public CategoricChartDataPoint[] GetChartData()
         {
-            var data = new List<ChartDataCategoricPoint>();
+            var data = new List<CategoricChartDataPoint>();
 
-            data.Add(new ChartDataCategoricPoint("Present", Present));
-            data.Add(new ChartDataCategoricPoint("Authorised Absence", AuthorisedAbsence));
-            data.Add(new ChartDataCategoricPoint("Unauthorised Absence", UnauthorisedAbsence));
-            data.Add(new ChartDataCategoricPoint("Approved Educational Activity", ApprovedEdActivity));
-            data.Add(new ChartDataCategoricPoint("Attendance Not Required", NotRequired));
-            data.Add(new ChartDataCategoricPoint("Late", Late));
+            data.Add(new CategoricChartDataPoint("Present", Present));
+            data.Add(new CategoricChartDataPoint("Authorised Absence", AuthorisedAbsence));
+            data.Add(new CategoricChartDataPoint("Unauthorised Absence", UnauthorisedAbsence));
+            data.Add(new CategoricChartDataPoint("Approved Educational Activity", ApprovedEdActivity));
+            data.Add(new CategoricChartDataPoint("Attendance Not Required", NotRequired));
+            data.Add(new CategoricChartDataPoint("Late", Late));
 
             return data.ToArray();
         }

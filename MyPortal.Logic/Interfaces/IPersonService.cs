@@ -9,7 +9,7 @@ namespace MyPortal.Logic.Interfaces
 {
     public interface IPersonService : IService
     {
-        Task<IEnumerable<PersonModel>> Get(PersonSearchParams searchParams);
+        Task<IEnumerable<PersonModel>> Get(PersonSearchModel searchModel);
         Task<PersonModel> GetByUserId(Guid userId);
         Dictionary<string, string> GetGenderOptions();
     }

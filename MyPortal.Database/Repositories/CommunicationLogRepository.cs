@@ -4,9 +4,11 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -14,21 +16,35 @@ namespace MyPortal.Database.Repositories
     {
         public CommunicationLogRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-        RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(CommunicationType))}";
-
-        JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[CommunicationType]", "[CommunicationType].[Id]", "[CommunicationLog].[CommunicationTypeId]")}";
+      
         }
 
-        protected override async Task<IEnumerable<CommunicationLog>> ExecuteQuery(string sql, object param = null)
+        protected override Query SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<CommunicationLog, CommunicationType, CommunicationLog>(sql, (log, type) =>
+            query.SelectAll(typeof(CommunicationType));
+
+            query = JoinRelated(query);
+
+            return query;
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.CommunicationType", "CommunicationType.Id", "CommnicationLog.CommunicationTypeId");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<CommunicationLog>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<CommunicationLog, CommunicationType, CommunicationLog>(sql.Sql, (log, type) =>
             {
                 log.Type = type;
 
                 return log;
-            }, param);
+            }, sql.Bindings);
         }
     }
 }

@@ -15,10 +15,5 @@ namespace MyPortal.Database.Repositories
         public CommunicationTypeRepository(IDbConnection connection) : base(connection)
         {
         }
-
-        protected override async Task<IEnumerable<CommunicationType>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<CommunicationType>(sql, param);
-        }
     }
 }

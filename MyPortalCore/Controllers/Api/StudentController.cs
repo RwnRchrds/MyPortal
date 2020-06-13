@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MyPortal.Database.Constants;
 using MyPortal.Database.Models.Identity;
 using MyPortal.Logic.Authorisation.Attributes;
 using MyPortal.Logic.Constants;
@@ -26,11 +27,11 @@ namespace MyPortalCore.Controllers.Api
         [Authorize(Policy = Policies.UserType.Staff)]
         [Route("Search", Name = "ApiStudentSearch")]
         [RequiresPermission(Permissions.Student.Details.View)]
-        public async Task<IActionResult> SearchStudents([FromQuery] StudentSearchParams searchParams)
+        public async Task<IActionResult> SearchStudents([FromQuery] StudentSearchModel searchModel)
         {
             return await Process(async () =>
             {
-                var students = (await _studentService.Get(searchParams)).Select(x => x.GetListModel());
+                var students = (await _studentService.Get(searchModel)).Select(x => x.GetListModel());
 
                 return Ok(students);
             });

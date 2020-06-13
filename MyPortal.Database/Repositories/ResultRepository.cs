@@ -13,18 +13,18 @@ namespace MyPortal.Database.Repositories
         public ResultRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(ResultSet))},
-{EntityHelper.GetAllColumns(typeof(Student))},
-{EntityHelper.GetAllColumns(typeof(Person))}
-{EntityHelper.GetAllColumns(typeof(Aspect))},
-{EntityHelper.GetAllColumns(typeof(Grade))}";
+{EntityHelper.GetPropertyNames(typeof(ResultSet))},
+{EntityHelper.GetPropertyNames(typeof(Student))},
+{EntityHelper.GetPropertyNames(typeof(Person))}
+{EntityHelper.GetPropertyNames(typeof(Aspect))},
+{EntityHelper.GetPropertyNames(typeof(Grade))}";
 
             JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[ResultSet]", "[ResultSet].[Id]", "[Result].[ResultSetId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[Result].[StudentId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[Student].[PersonId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Aspect]", "[Aspect].[Id]", "[Result].[AspectId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Grade]", "[Grade].[Id]", "[Result].[GradeId]")}";
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[ResultSet]", "[ResultSet].[Id]", "[Result].[ResultSetId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[Result].[StudentId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[Student].[PersonId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Aspect]", "[Aspect].[Id]", "[Result].[AspectId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Grade]", "[Grade].[Id]", "[Result].[GradeId]")}";
         }
 
         protected override async Task<IEnumerable<Result>> ExecuteQuery(string sql, object param = null)

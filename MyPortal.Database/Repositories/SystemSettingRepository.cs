@@ -28,7 +28,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = @"SELECT [Name],[Type],[Setting] FROM [dbo].[SystemSetting]";
 
-            SqlHelper.Where(ref sql, "[SystemSetting].[Name] = @Name");
+            QueryHelper.Where(ref sql, "[SystemSetting].[Name] = @Name");
 
             return (await _connection.QueryAsync<SystemSetting>(sql, new {Name = name})).FirstOrDefault();
         }

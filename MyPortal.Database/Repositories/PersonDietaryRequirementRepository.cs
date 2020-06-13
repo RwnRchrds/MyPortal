@@ -13,12 +13,12 @@ namespace MyPortal.Database.Repositories
         public PersonDietaryRequirementRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(Person))},
-{EntityHelper.GetAllColumns(typeof(DietaryRequirement))}";
+{EntityHelper.GetPropertyNames(typeof(Person))},
+{EntityHelper.GetPropertyNames(typeof(DietaryRequirement))}";
 
             JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[PersonDietaryRequirement].[PersonId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[DietaryRequirement]", "[DietaryRequirement].[Id]", "[PersonDietaryRequirement].[DietaryRequirementId]")}";
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[PersonDietaryRequirement].[PersonId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[DietaryRequirement]", "[DietaryRequirement].[Id]", "[PersonDietaryRequirement].[DietaryRequirementId]")}";
         }
 
         protected override async Task<IEnumerable<PersonDietaryRequirement>> ExecuteQuery(string sql, object param = null)

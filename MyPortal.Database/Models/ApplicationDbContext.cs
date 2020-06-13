@@ -112,6 +112,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<SystemArea> SystemAreas { get; set; }
         public virtual DbSet<SystemSetting> SystemSettings { get; set; }
         public virtual DbSet<Task> Tasks { get; set; }
+        public virtual DbSet<TaskType> TaskTypes { get; set; }
         public virtual DbSet<TrainingCertificate> TrainingCertificates { get; set; }
         public virtual DbSet<TrainingCertificateStatus> TrainingCertificateStatus { get; set; }
         public virtual DbSet<TrainingCourse> TrainingCourses { get; set; }
@@ -414,6 +415,9 @@ namespace MyPortal.Database.Models
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
             modelBuilder.Entity<Task>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<TaskType>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
             modelBuilder.Entity<TrainingCertificate>()
@@ -1115,6 +1119,13 @@ namespace MyPortal.Database.Models
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<StaffMember>()
+                .HasMany(e => e.Subordinates)
+                .WithOne(e => e.LineManager)
+                .HasForeignKey(e => e.LineManagerId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<Student>()
                 .HasMany(e => e.Results)
                 .WithOne(e => e.Student)
@@ -1316,6 +1327,13 @@ namespace MyPortal.Database.Models
                 .HasMany(e => e.YearGroups)
                 .WithOne(e => e.CurriculumYearGroup)
                 .HasForeignKey(e => e.CurriculumYearGroupId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<TaskType>()
+                .HasMany(e => e.Tasks)
+                .WithOne(e => e.Type)
+                .HasForeignKey(e => e.TypeId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 

@@ -12,10 +12,5 @@ namespace MyPortal.Database.Repositories
         public GradeSetRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
         }
-
-        protected override async Task<IEnumerable<GradeSet>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<GradeSet>(sql, param);
-        }
     }
 }

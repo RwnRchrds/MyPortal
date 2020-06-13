@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using MyPortal.Database.Models;
+using MyPortal.Database.Search;
 
 namespace MyPortal.Database.Interfaces
 {
     public interface IStudentRepository : IReadWriteRepository<Student>
     {
-        Task<Student> GetByUserId(string userId);
-        Task<IEnumerable<Student>> GetAll(Student searchParams);
-        Task<IEnumerable<Student>> GetOnRoll(Student searchParams);
-        Task<IEnumerable<Student>> GetLeavers(Student searchParams);
-        Task<IEnumerable<Student>> GetFuture(Student searchParams);
+        Task<Student> GetByUserId(Guid userId);
+        Task<IEnumerable<Student>> GetAll(StudentSearch searchParams);
+        Task<IEnumerable<Student>> GetOnRoll(StudentSearch searchParams);
+        Task<IEnumerable<Student>> GetLeavers(StudentSearch searchParams);
+        Task<IEnumerable<Student>> GetFuture(StudentSearch searchParams);
         Task<IEnumerable<Student>> GetByClass(int classId);
         Task<IEnumerable<Student>> GetGiftedTalented();
     }

@@ -17,27 +17,27 @@ namespace MyPortal.Database.Repositories
         public SchoolRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
         RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(LocalAuthority))},
-{EntityHelper.GetAllColumns(typeof(Phase))},
-{EntityHelper.GetAllColumns(typeof(SchoolType))},
-{EntityHelper.GetAllColumns(typeof(GovernanceType))},
-{EntityHelper.GetAllColumns(typeof(IntakeType))},
-{EntityHelper.GetAllColumns(typeof(Person))}";
+{EntityHelper.GetPropertyNames(typeof(LocalAuthority))},
+{EntityHelper.GetPropertyNames(typeof(Phase))},
+{EntityHelper.GetPropertyNames(typeof(SchoolType))},
+{EntityHelper.GetPropertyNames(typeof(GovernanceType))},
+{EntityHelper.GetPropertyNames(typeof(IntakeType))},
+{EntityHelper.GetPropertyNames(typeof(Person))}";
 
         JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[LocalAuthority]", "[LocalAuthority].[Id]", "[School].[LocalAuthorityId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Phase]", "[Phase].[Id]", "[School].[PhaseId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[SchoolType]", "[SchoolType].[Id]", "[School].[TypeId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[GovernanceType]", "[GovernanceType].[Id]", "[School].[GovernanceTypeId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[IntakeType]", "[IntakeType].[Id]", "[School].[IntakeTypeId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[School].[HeadTeacherId]")}";
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[LocalAuthority]", "[LocalAuthority].[Id]", "[School].[LocalAuthorityId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Phase]", "[Phase].[Id]", "[School].[PhaseId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[SchoolType]", "[SchoolType].[Id]", "[School].[TypeId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[GovernanceType]", "[GovernanceType].[Id]", "[School].[GovernanceTypeId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[IntakeType]", "[IntakeType].[Id]", "[School].[IntakeTypeId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[School].[HeadTeacherId]")}";
         }
 
         public async Task<string> GetLocalSchoolName()
         {
             var sql = $"SELECT [School].[Name] FROM {TblName}";
             
-            SqlHelper.Where(ref sql, "[School].[Local] = 1");
+            QueryHelper.Where(ref sql, "[School].[Local] = 1");
 
             return await ExecuteStringQuery(sql);
         }
@@ -46,7 +46,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = SelectAllColumns();
             
-            SqlHelper.Where(ref sql, "[School].[Local] = 1");
+            QueryHelper.Where(ref sql, "[School].[Local] = 1");
 
             return (await ExecuteQuery(sql)).First();
         }

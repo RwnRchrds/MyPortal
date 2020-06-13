@@ -9,7 +9,7 @@ using MyPortal.Logic.Interfaces;
 
 namespace MyPortal.Logic.Helpers
 {
-    public class GoogleHelper : IGoogleService
+    public class GoogleHelper : IGoogleHelper
     {
         private string[] _scopes;
         private IConfiguration _config;

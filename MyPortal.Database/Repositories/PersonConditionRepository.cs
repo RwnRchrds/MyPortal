@@ -13,12 +13,12 @@ namespace MyPortal.Database.Repositories
         public PersonConditionRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(Person))},
-{EntityHelper.GetAllColumns(typeof(MedicalCondition))}";
+{EntityHelper.GetPropertyNames(typeof(Person))},
+{EntityHelper.GetPropertyNames(typeof(MedicalCondition))}";
 
             JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[PersonAttachment].[PersonId]")},
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[MedicalCondition]", "[MedicalCondition].[Id]", "[PersonAttachment].[ConditionId]")}";
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[PersonAttachment].[PersonId]")},
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[MedicalCondition]", "[MedicalCondition].[Id]", "[PersonAttachment].[ConditionId]")}";
         }
 
         protected override async Task<IEnumerable<PersonCondition>> ExecuteQuery(string sql, object param = null)

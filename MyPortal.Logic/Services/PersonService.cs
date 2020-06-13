@@ -15,15 +15,15 @@ namespace MyPortal.Logic.Services
     {
         private readonly IPersonRepository _personRepository;
 
-        private Person GenerateSearchObject(PersonSearchParams searchParams)
+        private Person GenerateSearchObject(PersonSearchModel searchModel)
         {
             var person = new Person();
 
-            person.FirstName = searchParams.FirstName;
-            person.MiddleName = searchParams.MiddleName;
-            person.LastName = searchParams.LastName;
-            person.Gender = searchParams.Gender;
-            person.Dob = searchParams.Dob;
+            person.FirstName = searchModel.FirstName;
+            person.MiddleName = searchModel.MiddleName;
+            person.LastName = searchModel.LastName;
+            person.Gender = searchModel.Gender;
+            person.Dob = searchModel.Dob;
 
             return person;
         }
@@ -46,9 +46,9 @@ namespace MyPortal.Logic.Services
         }
 
 
-        public async Task<IEnumerable<PersonModel>> Get(PersonSearchParams searchParams)
+        public async Task<IEnumerable<PersonModel>> Get(PersonSearchModel searchModel)
         {
-            var searchObject = GenerateSearchObject(searchParams);
+            var searchObject = GenerateSearchObject(searchModel);
 
             IEnumerable<Person> people;
 

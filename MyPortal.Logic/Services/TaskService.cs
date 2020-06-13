@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
@@ -70,6 +71,11 @@ namespace MyPortal.Logic.Services
                 taskInDb.Description = task.Description;
                 taskInDb.DueDate = task.DueDate;
                 taskInDb.Completed = task.Completed;
+
+                if (taskInDb.Completed)
+                {
+                    taskInDb.CompletedDate = DateTime.Now;
+                }
             }
 
             await _taskRepository.SaveChanges();

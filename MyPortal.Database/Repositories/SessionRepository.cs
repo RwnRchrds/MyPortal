@@ -13,12 +13,12 @@ namespace MyPortal.Database.Repositories
         public SessionRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
         {
             RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(Class))},
-{EntityHelper.GetAllColumns(typeof(Period))}";
+{EntityHelper.GetPropertyNames(typeof(Class))},
+{EntityHelper.GetPropertyNames(typeof(Period))}";
 
             JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Class]", "[Class].[Id]", "[Session].[ClassId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Period]", "[Period].[Id]", "[Session].[PeriodId]")}";
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Class]", "[Class].[Id]", "[Session].[ClassId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Period]", "[Period].[Id]", "[Session].[PeriodId]")}";
         }
 
         protected override async Task<IEnumerable<Session>> ExecuteQuery(string sql, object param = null)

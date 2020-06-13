@@ -24,11 +24,11 @@ namespace MyPortal.Database.Repositories
         {
             var sql = SelectAllColumns();
 
-            SqlHelper.Join(JoinType.LeftJoin, "[dbo].[School]", "[School].[LocalAuthorityId]", "[LocalAuthority].[Id]");
+            QueryHelper.Join(JoinType.LeftJoin, "[dbo].[School]", "[School].[LocalAuthorityId]", "[LocalAuthority].[Id]");
 
-            SqlHelper.Where(ref sql, "[School].[Local] = 1");
+            QueryHelper.Where(ref sql, "[School].[Local] = 1");
 
-            SqlHelper.Where(ref sql, "[LocalAuthority].[Id] = [School].[LocalAuthorityId]");
+            QueryHelper.Where(ref sql, "[LocalAuthority].[Id] = [School].[LocalAuthorityId]");
 
             return (await ExecuteQuery(sql)).First();
         }

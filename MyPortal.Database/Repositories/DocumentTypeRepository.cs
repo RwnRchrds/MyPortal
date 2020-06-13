@@ -16,46 +16,41 @@ namespace MyPortal.Database.Repositories
         {
         }
 
-        protected override async Task<IEnumerable<DocumentType>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<DocumentType>(sql, param);
-        }
-
         public async Task<IEnumerable<DocumentType>> Get(DocumentTypeFilter filter)
         {
-            var sql = SelectAllColumns();
+            var query = SelectAllColumns();
 
             if (filter.Active)
             {
-                SqlHelper.Where(ref sql, "[DocumentType].[Active] = 1");
+                query.Where("DocumentType.Active", true);
             }
 
             if (filter.Staff)
             {
-                SqlHelper.Where(ref sql, "[DocumentType].[Staff] = 1");
+                query.Where("DocumentType.Staff", true);
             }
 
             if (filter.Student)
             {
-                SqlHelper.Where(ref sql, "[DocumentType].[Student] = 1");
+                query.Where("DocumentType.Student", true);
             }
 
             if (filter.Contact)
             {
-                SqlHelper.Where(ref sql, "[DocumentType].[Contact] = 1");
+                query.Where("DocumentType.Contact", true);
             }
 
             if (filter.General)
             {
-                SqlHelper.Where(ref sql, "[DocumentType].[General] = 1");
+                query.Where("DocumentType.General", true);
             }
 
             if (filter.Sen)
             {
-                SqlHelper.Where(ref sql, "[DocumentType].[Sen] = 1");
+                query.Where("DocumentType.Sen", true);
             }
 
-            return await ExecuteQuery(sql);
+            return await ExecuteQuery(query);
         }
     }
 }

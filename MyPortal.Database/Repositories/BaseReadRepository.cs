@@ -9,6 +9,8 @@ using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Models;
+using SqlKata;
+using SqlKata.Compilers;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
@@ -16,35 +18,45 @@ namespace MyPortal.Database.Repositories
     public abstract class BaseReadRepository<TEntity> : IDisposable where TEntity : class
     {
         protected readonly IDbConnection Connection;
+        protected readonly SqlServerCompiler Compiler;
 
         public BaseReadRepository(IDbConnection connection, string tblAlias = null)
         {
             Connection = connection;
 
-            TblAlias = tblAlias ?? typeof(TEntity).Name;
+            Compiler = new SqlServerCompiler();
 
-            TblName = EntityHelper.GetTblName(typeof(TEntity), TblAlias, "dbo", true);
+            TblAlias = string.IsNullOrWhiteSpace(tblAlias) ? typeof(TEntity).Name : tblAlias;
 
-            AllColumns = EntityHelper.GetAllColumns(typeof(TEntity), TblAlias);
+            TblName = EntityHelper.GetTableName(typeof(TEntity), tblAlias, "dbo", true);
         }
 
-        protected string TblAlias;
-        
         protected string TblName;
 
-        protected string AllColumns;
+        protected string TblAlias;
 
-        protected string RelatedColumns = null;
-
-        protected string JoinRelated = null;
-        
-        protected bool HasRelated => RelatedColumns != null && JoinRelated != null;
-
-        protected abstract Task<IEnumerable<TEntity>> ExecuteQuery(string sql, object param = null);
-
-        protected async Task<int> ExecuteIntQuery(string sql, object param = null)
+        protected virtual async Task<IEnumerable<TEntity>> ExecuteQuery(Query query)
         {
-            var result = await Connection.QueryFirstOrDefaultAsync<int?>(sql, param);
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<TEntity>(sql.Sql, sql.Bindings);
+        }
+
+        protected virtual Query JoinRelated(Query query)
+        {
+            return query;
+        }
+
+        protected virtual Query SelectAllRelated(Query query)
+        {
+            return JoinRelated(query);
+        }
+
+        protected async Task<int> ExecuteIntQuery(Query query)
+        {
+            var compiled = Compiler.Compile(query);
+
+            var result = await Connection.QueryFirstOrDefaultAsync<int?>(compiled.Sql, compiled.Bindings);
 
             if (result == null)
             {
@@ -54,40 +66,46 @@ namespace MyPortal.Database.Repositories
             return result.Value;
         }
 
-        protected async Task<string> ExecuteStringQuery(string sql, object param = null)
+        protected async Task<string> ExecuteStringQuery(Query query)
         {
-            return await Connection.QuerySingleOrDefaultAsync<string>(sql, param);
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QuerySingleOrDefaultAsync<string>(sql.Sql, sql.Bindings);
         }
 
-        protected async Task<int> ExecuteNonQuery(string sql, object param = null)
+        protected async Task<int> ExecuteNonQuery(Query query)
         {
-            return await Connection.ExecuteAsync(sql, param);
+            var compiled = Compiler.Compile(query);
+
+            return await Connection.ExecuteAsync(compiled.Sql, compiled.Bindings);
         }
 
-        protected string SelectAllColumns(bool getRelated = true)
+        protected Query SelectAllColumns(bool getRelated = true)
         {
-            if (getRelated && HasRelated)
+            var query = new Query(TblName).SelectAll(typeof(TEntity));
+
+            if (getRelated)
             {
-                return $"SELECT {AllColumns},{RelatedColumns} FROM {TblName} {JoinRelated}";
+                query = SelectAllRelated(query);
             }
 
-            return $"SELECT {AllColumns} FROM {TblName}";
+            return query;
         }
 
         public async Task<IEnumerable<TEntity>> GetAll()
         {
-            var sql = SelectAllColumns(true);
+            var sql = SelectAllColumns();
 
             return await ExecuteQuery(sql);
         }
 
         public async Task<TEntity> GetById(Guid id)
         {
-            var sql = SelectAllColumns(true);
-            
-            SqlHelper.Where(ref sql, $"[{TblAlias}].[Id] = @Id");
+            var sql = SelectAllColumns();
 
-            return (await ExecuteQuery(sql, new {Id = id})).SingleOrDefault();
+            sql.Where($"{TblAlias}.Id", "=", id);
+
+            return (await ExecuteQuery(sql)).SingleOrDefault();
         }
 
         public void Dispose()

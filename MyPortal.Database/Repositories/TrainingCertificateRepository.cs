@@ -13,14 +13,14 @@ namespace MyPortal.Database.Repositories
         public TrainingCertificateRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
         {
             RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(StaffMember))},
-{EntityHelper.GetAllColumns(typeof(TrainingCourse))},
-{EntityHelper.GetAllColumns(typeof(TrainingCertificateStatus))}";
+{EntityHelper.GetPropertyNames(typeof(StaffMember))},
+{EntityHelper.GetPropertyNames(typeof(TrainingCourse))},
+{EntityHelper.GetPropertyNames(typeof(TrainingCertificateStatus))}";
 
             JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[StaffMember].[Id]", "[TrainingCertificate].[StaffId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[TrainingCourse]", "[TrainingCourse].[Id]", "[TrainingCertificate].[CourseId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[TrainingCertificateStatus]", "[TrainingCertificateStatus].[Id]", "[TrainingCertificate].[StatusId]")}";
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[StaffMember].[Id]", "[TrainingCertificate].[StaffId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[TrainingCourse]", "[TrainingCourse].[Id]", "[TrainingCertificate].[CourseId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[TrainingCertificateStatus]", "[TrainingCertificateStatus].[Id]", "[TrainingCertificate].[StatusId]")}";
         }
 
         protected override async Task<IEnumerable<TrainingCertificate>> ExecuteQuery(string sql, object param = null)

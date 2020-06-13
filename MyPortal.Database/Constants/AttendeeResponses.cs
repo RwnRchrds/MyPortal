@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MyPortal.Logic.Constants
+namespace MyPortal.Database.Constants
 {
     public class AttendeeResponses
     {

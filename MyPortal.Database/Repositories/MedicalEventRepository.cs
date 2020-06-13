@@ -14,12 +14,12 @@ namespace MyPortal.Database.Repositories
         public MedicalEventRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(Student))},
-{EntityHelper.GetUserColumns("User")}";
+{EntityHelper.GetPropertyNames(typeof(Student))},
+{EntityHelper.GetUserProperties("User")}";
 
             JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[MedicalEvent].[StudentId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[User].[Id]", "[MedicalEvent].[RecordedById]", "User")}";
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[MedicalEvent].[StudentId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[User].[Id]", "[MedicalEvent].[RecordedById]", "User")}";
         }
 
         protected override async Task<IEnumerable<MedicalEvent>> ExecuteQuery(string sql, object param = null)

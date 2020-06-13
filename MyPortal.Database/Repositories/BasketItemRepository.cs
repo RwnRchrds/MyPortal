@@ -4,9 +4,11 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -14,20 +16,34 @@ namespace MyPortal.Database.Repositories
     {
         public BasketItemRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-        RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(Student))},
-{EntityHelper.GetAllColumns(typeof(Person), "StudentPerson")},
-{EntityHelper.GetAllColumns(typeof(Product))}";
 
-        JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[BasketItem].[StudentId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[Student].[PersonId]", "StudentPerson")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Product]", "[Product].[Id]", "[BasketItem].[ProductId]")}";
         }
 
-        protected override async Task<IEnumerable<BasketItem>> ExecuteQuery(string sql, object param = null)
+        protected override Query SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<BasketItem, Student, Person, Product, BasketItem>(sql,
+            query.SelectAll(typeof(Student));
+            query.SelectAll(typeof(Person), "StudentPerson");
+            query.SelectAll(typeof(Product));
+
+            query = JoinRelated(query);
+
+            return query;
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.Student", "Student.Id", "BasketItem.StudentId");
+            query.LeftJoin("dbo.Person as StudentPerson", "StudentPerson.Id", "Student.PersonId");
+            query.LeftJoin("dbo.Product", "Product.Id", "BasketItem.ProductId");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<BasketItem>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<BasketItem, Student, Person, Product, BasketItem>(sql.Sql,
                 (item, student, person, product) =>
                 {
                     item.Student = student;
@@ -35,7 +51,7 @@ namespace MyPortal.Database.Repositories
                     item.Product = product;
 
                     return item;
-                }, param);
+                }, sql.Bindings);
         }
     }
 }

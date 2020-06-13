@@ -10,9 +10,11 @@ namespace MyPortal.Logic.Interfaces
 {
     public interface IStudentService : IService
     {
-        Task<IEnumerable<StudentModel>> Get(StudentSearchParams searchParams);
+        Task<IEnumerable<StudentModel>> Get(StudentSearchModel searchModel);
 
         Task<StudentModel> GetById(Guid studentId);
+
+        Task<StudentModel> GetByUserId(Guid userId);
 
         Lookup GetSearchFilters();
     }

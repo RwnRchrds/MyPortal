@@ -12,10 +12,5 @@ namespace MyPortal.Database.Repositories
         public EmailAddressTypeRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
         {
         }
-
-        protected override async Task<IEnumerable<EmailAddressType>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<EmailAddressType>(sql, param);
-        }
     }
 }

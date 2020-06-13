@@ -7,6 +7,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -14,21 +15,35 @@ namespace MyPortal.Database.Repositories
     {
         public AttendanceWeekRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-        RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(AcademicYear))}";
-
-        JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AcademicYear]", "[AcademicYear].[Id]", "[AttendanceWeek].[AcademicYearId]")}";
+      
         }
 
-        protected override async Task<IEnumerable<AttendanceWeek>> ExecuteQuery(string sql, object param = null)
+        protected override Query SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<AttendanceWeek, AcademicYear, AttendanceWeek>(sql, (week, year) =>
+            query.SelectAll(typeof(AcademicYear));
+
+            query = JoinRelated(query);
+
+            return query;
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.AcademicYear", "AcademicYear.Id", "AttendanceWeek.AcademicYearId");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<AttendanceWeek>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<AttendanceWeek, AcademicYear, AttendanceWeek>(sql.Sql, (week, year) =>
             {
                 week.AcademicYear = year;
 
                 return week;
-            }, param);
+            }, sql.Bindings);
         }
     }
 }

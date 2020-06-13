@@ -14,18 +14,18 @@ namespace MyPortal.Database.Repositories
         public IncidentRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(AcademicYear))},
-{EntityHelper.GetAllColumns(typeof(IncidentType))},
-{EntityHelper.GetAllColumns(typeof(Student))},
-{EntityHelper.GetAllColumns(typeof(Location))},
-{EntityHelper.GetUserColumns("User")}";
+{EntityHelper.GetPropertyNames(typeof(AcademicYear))},
+{EntityHelper.GetPropertyNames(typeof(IncidentType))},
+{EntityHelper.GetPropertyNames(typeof(Student))},
+{EntityHelper.GetPropertyNames(typeof(Location))},
+{EntityHelper.GetUserProperties("User")}";
 
             JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AcademicYear]", "[AcademicYear].[Id]", "[Incident].[AcademicYearId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[IncidentType]", "[IncidentType].[Id]", "[Incident].[BehaviourTypeId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[Incident].[StudentId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Location]", "[Location].[Id]", "[Incident].[LocationId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[User].[Id]", "[Incident].[RecordedById]")}";
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[AcademicYear]", "[AcademicYear].[Id]", "[Incident].[AcademicYearId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[IncidentType]", "[IncidentType].[Id]", "[Incident].[BehaviourTypeId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[Incident].[StudentId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Location]", "[Location].[Id]", "[Incident].[LocationId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[User].[Id]", "[Incident].[RecordedById]")}";
         }
 
         protected override async Task<IEnumerable<Incident>> ExecuteQuery(string sql, object param = null)

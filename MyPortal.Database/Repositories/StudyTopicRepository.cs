@@ -13,12 +13,12 @@ namespace MyPortal.Database.Repositories
         public StudyTopicRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(Subject))},
-{EntityHelper.GetAllColumns(typeof(YearGroup))}";
+{EntityHelper.GetPropertyNames(typeof(Subject))},
+{EntityHelper.GetPropertyNames(typeof(YearGroup))}";
 
             JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Subject]", "[Subject].[Id]", "[StudyTopic].[SubjectId]")},
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[YearGroup]", "[YearGroup].[Id]", "[StudyTopic].[YearGroupId]")}";
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Subject]", "[Subject].[Id]", "[StudyTopic].[SubjectId]")},
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[YearGroup]", "[YearGroup].[Id]", "[StudyTopic].[YearGroupId]")}";
         }
 
         protected override async Task<IEnumerable<StudyTopic>> ExecuteQuery(string sql, object param = null)

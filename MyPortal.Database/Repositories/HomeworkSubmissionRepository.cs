@@ -13,16 +13,16 @@ namespace MyPortal.Database.Repositories
         public HomeworkSubmissionRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(Homework))},
-{EntityHelper.GetAllColumns(typeof(Student))},
-{EntityHelper.GetAllColumns(typeof(Person), "StudentPerson")}
-{EntityHelper.GetAllColumns(typeof(Models.Task))}";
+{EntityHelper.GetPropertyNames(typeof(Homework))},
+{EntityHelper.GetPropertyNames(typeof(Student))},
+{EntityHelper.GetPropertyNames(typeof(Person), "StudentPerson")}
+{EntityHelper.GetPropertyNames(typeof(Models.Task))}";
 
             JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Homework]", "[Homework].[Id]", "[HomeworkSubmission].[HomeworkId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[HomeworkSubmission].[StudentId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[StudentPerson].[Id]", "[Student].[PersonId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Task]", "[Task].[Id]", "[HomeworkSubmission].[TaskId]")}";
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Homework]", "[Homework].[Id]", "[HomeworkSubmission].[HomeworkId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[HomeworkSubmission].[StudentId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[StudentPerson].[Id]", "[Student].[PersonId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Task]", "[Task].[Id]", "[HomeworkSubmission].[TaskId]")}";
         }
 
         protected override async Task<IEnumerable<HomeworkSubmission>> ExecuteQuery(string sql, object param = null)

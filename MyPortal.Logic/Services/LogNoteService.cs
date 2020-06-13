@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Components.Forms;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Logic.Extensions;
+using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Business;
 using MyPortal.Logic.Models.Data;
@@ -54,26 +55,29 @@ namespace MyPortal.Logic.Services
 
         public async Task Create(params LogNoteModel[] logNoteObjects)
         {
-            foreach (var logNoteObject in logNoteObjects)
+            using (new ProcessTimer("Create Log Note"))
             {
-                var createDate = DateTime.Now;
-
-                var logNote = new LogNote
+                foreach (var logNoteObject in logNoteObjects)
                 {
-                    TypeId = logNoteObject.TypeId,
-                    Message = logNoteObject.Message,
-                    StudentId = logNoteObject.StudentId,
-                    CreatedDate = createDate,
-                    UpdatedDate = createDate,
-                    CreatedById = logNoteObject.CreatedById,
-                    UpdatedById = logNoteObject.UpdatedById,
-                    AcademicYearId = logNoteObject.AcademicYearId
-                };
+                    var createDate = DateTime.Now;
 
-                _logNoteRepository.Create(logNote);
+                    var logNote = new LogNote
+                    {
+                        TypeId = logNoteObject.TypeId,
+                        Message = logNoteObject.Message,
+                        StudentId = logNoteObject.StudentId,
+                        CreatedDate = createDate,
+                        UpdatedDate = createDate,
+                        CreatedById = logNoteObject.CreatedById,
+                        UpdatedById = logNoteObject.UpdatedById,
+                        AcademicYearId = logNoteObject.AcademicYearId
+                    };
+
+                    _logNoteRepository.Create(logNote);
+                }
+
+                await _logNoteRepository.SaveChanges();
             }
-
-            await _logNoteRepository.SaveChanges();
         }
 
         public async Task Update(params LogNoteModel[] logNoteObjects)

@@ -7,6 +7,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -14,11 +15,6 @@ namespace MyPortal.Database.Repositories
     {
         public AspectTypeRepository(IDbConnection connection) : base(connection)
         {
-        }
-
-        protected override async Task<IEnumerable<AspectType>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<AspectType>(sql, param);
         }
     }
 }

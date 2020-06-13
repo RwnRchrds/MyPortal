@@ -5,6 +5,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -12,25 +13,39 @@ namespace MyPortal.Database.Repositories
     {
         public EmailAddressRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-            RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(EmailAddressType))},
-{EntityHelper.GetAllColumns(typeof(Person))}";
-
-            JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[EmailAddressType]", "[EmailAddressType].[Id]", "[EmailAddress].[TypeId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[EmailAddress].[PersonId]")}";
+            
         }
 
-        protected override async Task<IEnumerable<EmailAddress>> ExecuteQuery(string sql, object param = null)
+        protected override Query SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<EmailAddress, EmailAddressType, Person, EmailAddress>(sql,
+            query.SelectAll(typeof(EmailAddressType));
+            query.SelectAll(typeof(Person));
+
+            query = JoinRelated(query);
+
+            return query;
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.EmailAddressType", "EmailAddressType.Id", "EmailAddress.TypeId");
+            query.LeftJoin("dbo.Person", "Person.Id", "EmailAddress.PersonId");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<EmailAddress>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<EmailAddress, EmailAddressType, Person, EmailAddress>(sql.Sql,
                 (address, type, person) =>
                 {
                     address.Type = type;
                     address.Person = person;
 
                     return address;
-                });
+                }, sql.Bindings);
         }
     }
 }

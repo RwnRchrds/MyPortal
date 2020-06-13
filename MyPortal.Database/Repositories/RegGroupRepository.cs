@@ -13,12 +13,12 @@ namespace MyPortal.Database.Repositories
         public RegGroupRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
             RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(StaffMember))},
-{EntityHelper.GetAllColumns(typeof(YearGroup))}";
+{EntityHelper.GetPropertyNames(typeof(StaffMember))},
+{EntityHelper.GetPropertyNames(typeof(YearGroup))}";
 
             JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[StaffMember].[Id]", "[RegGroup].[TutorId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[YearGroup]", "[YearGroup].[Id]", "[RegGroup].[YearGroupId]")}";
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[StaffMember].[Id]", "[RegGroup].[TutorId]")}
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[YearGroup]", "[YearGroup].[Id]", "[RegGroup].[YearGroupId]")}";
         }
 
         protected override async Task<IEnumerable<RegGroup>> ExecuteQuery(string sql, object param = null)

@@ -16,17 +16,17 @@ namespace MyPortal.Database.Repositories
     {
         public PersonRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-       RelatedColumns = $"{EntityHelper.GetUserColumns("User")}";
+       RelatedColumns = $"{EntityHelper.GetUserProperties("User")}";
 
         JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[User].[Id]", "[Person].[UserId]", "User")}";
+{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[User].[Id]", "[Person].[UserId]", "User")}";
         }
 
         public async Task<Person> GetByUserId(Guid userId)
         {
             var sql = SelectAllColumns();
 
-            SqlHelper.Where(ref sql, "[Person].[UserId] = @UserId");
+            QueryHelper.Where(ref sql, "[Person].[UserId] = @UserId");
 
             return (await ExecuteQuery(sql, new {UserId = userId})).FirstOrDefault();
         }
@@ -35,22 +35,22 @@ namespace MyPortal.Database.Repositories
         {
             if (!string.IsNullOrWhiteSpace(person.FirstName))
             {
-                SqlHelper.Where(ref sql, "[Person].[FirstName] LIKE @FirstName");
+                QueryHelper.Where(ref sql, "[Person].[FirstName] LIKE @FirstName");
             }
 
             if (!string.IsNullOrWhiteSpace(person.LastName))
             {
-                SqlHelper.Where(ref sql, "[Person].[LastName] LIKE @LastName");
+                QueryHelper.Where(ref sql, "[Person].[LastName] LIKE @LastName");
             }
 
             if (!string.IsNullOrWhiteSpace(person.Gender))
             {
-                SqlHelper.Where(ref sql, "[Person].[Gender] = @Gender");
+                QueryHelper.Where(ref sql, "[Person].[Gender] = @Gender");
             }
 
             if (person.Dob != null)
             {
-                SqlHelper.Where(ref sql, "[Person].[Dob] = @Dob");
+                QueryHelper.Where(ref sql, "[Person].[Dob] = @Dob");
             }
         }
 
@@ -61,7 +61,7 @@ namespace MyPortal.Database.Repositories
             ApplySearch(ref sql, person);
 
             var param = new
-                {FirstName = $"{SqlHelper.ParamStartsWith(person.FirstName)}", LastName = $"{SqlHelper.ParamStartsWith(person.LastName)}", person.Gender, person.Dob};
+                {FirstName = $"{QueryHelper.ParamStartsWith(person.FirstName)}", LastName = $"{QueryHelper.ParamStartsWith(person.LastName)}", person.Gender, person.Dob};
 
             return await ExecuteQuery(sql, param);
         }
@@ -70,8 +70,8 @@ namespace MyPortal.Database.Repositories
         {
             var sql = $"SELECT COUNT([Person].[Id]) FROM {TblName}";
 
-            SqlHelper.Where(ref sql, "[Person].[Dob] >= @Monday");
-            SqlHelper.Where(ref sql, "[Person].[Dob] <= @Sunday");
+            QueryHelper.Where(ref sql, "[Person].[Dob] >= @Monday");
+            QueryHelper.Where(ref sql, "[Person].[Dob] <= @Sunday");
 
             return await ExecuteIntQuery(sql,
                 new {Monday = weekBeginning, Sunday = weekBeginning.AddDays(6)});

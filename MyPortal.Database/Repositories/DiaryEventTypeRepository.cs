@@ -12,10 +12,5 @@ namespace MyPortal.Database.Repositories
         public DiaryEventTypeRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
         {
         }
-
-        protected override async Task<IEnumerable<DiaryEventType>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<DiaryEventType>(sql, param);
-        }
     }
 }

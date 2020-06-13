@@ -4,9 +4,11 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
@@ -15,23 +17,37 @@ namespace MyPortal.Database.Repositories
     {
         public AttendanceMarkRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-        RelatedColumns = $@"
-{EntityHelper.GetAllColumns(typeof(Student))},
-{EntityHelper.GetAllColumns(typeof(Person), "StudentPerson")},
-{EntityHelper.GetAllColumns(typeof(AttendanceWeek))},
-{EntityHelper.GetAllColumns(typeof(Period))}";
-
-        JoinRelated = $@"
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[AttendanceMark].[StudentId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[StudentPerson].[Id]", "[Student].[PersonId]", "StudentPerson")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AttendanceWeek]","[AttendanceWeek].[Id]", "[AttendanceMark].[WeekId]")}
-{SqlHelper.Join(JoinType.LeftJoin, "[dbo].[AttendancePeriod]", "[Period].[Id]", "[AttendanceMark].[PeriodId]", "Period")}";
+       
         }
 
-        protected override async Task<IEnumerable<AttendanceMark>> ExecuteQuery(string sql, object param = null)
+        protected override Query SelectAllRelated(Query query)
         {
+            query.SelectAll(typeof(Student));
+            query.SelectAll(typeof(Person), "StudentPerson");
+            query.SelectAll(typeof(AttendanceWeek));
+            query.SelectAll(typeof(Period));
+
+            query = JoinRelated(query);
+
+            return query;
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.Student", "Student.Id", "AttendanceMark.StudentId");
+            query.LeftJoin("dbo.Person AS StudentPerson", "StudentPerson.Id", "Student.PersonId");
+            query.LeftJoin("dbo.AttendanceWeek", "AttendanceWeek.Id", "AttendanceMark.WeekId");
+            query.LeftJoin("dbo.AttendancePeriod AS Period", "Period.Id", "AttendanceMark.PeriodId");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<AttendanceMark>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
             return await Connection.QueryAsync<AttendanceMark, Student, Person, AttendanceWeek, Period, AttendanceMark>(
-                sql,
+                sql.Sql,
                 (mark, student, person, week, period) =>
                 {
                     mark.Student = student;
@@ -40,42 +56,41 @@ namespace MyPortal.Database.Repositories
                     mark.Period = period;
 
                     return mark;
-                }, param);
+                }, sql.Bindings);
         }
 
         public async Task<IEnumerable<AttendanceMark>> GetByStudent(Guid studentId, Guid academicYearId)
         {
-            var sql = SelectAllColumns();
+            var query = SelectAllColumns();
 
-            SqlHelper.Where(ref sql, "[Student].[Id] = @StudentId");
+            query.Where("Student.Id", "=", studentId);
+            query.Where("AttendanceWeek.AcademicYearId", "=", academicYearId);
 
-            SqlHelper.Where(ref sql, "[AttendanceWeek].[AcademicYearId] = @AcademicYearId");
-
-            return await ExecuteQuery(sql, new {StudentId = studentId, AcademicYearId = academicYearId});
+            return await ExecuteQuery(query);
         }
 
         public async Task<AttendanceMark> Get(Guid studentId, Guid attendanceWeekId, Guid periodId)
         {
-            var sql = SelectAllColumns();
+            var query = SelectAllColumns();
 
-            SqlHelper.Where(ref sql, "[Student].[Id] = @StudentId");
+            query.Where("Student.Id", "=", studentId);
 
-            SqlHelper.Where(ref sql, "[AttendanceWeek].[Id] = @AttendanceWeekId");
+            query.Where("AttendanceWeek.Id", "=", attendanceWeekId);
 
-            SqlHelper.Where(ref sql, "[Period].[Id] = @PeriodId");
+            query.Where("Period.Id", "=", periodId);
 
-            return (await ExecuteQuery(sql,
-                    new {StudentId = studentId, AttendanceWeekId = attendanceWeekId, PeriodId = periodId}))
-                .SingleOrDefault();
+            return (await ExecuteQuery(query)).SingleOrDefault();
         }
 
         public async Task Update(AttendanceMark mark)
         {
-            var sql =
-                $"UPDATE [dbo].[AttendanceMark] SET [Mark] = @Mark, [MinutesLate] = @MinutesLate, [Comments] = @Comments WHERE [Id] = @Id";
+            var columns = new List<string> {"Mark", "MinutesLate", "Comments"};
 
-            await ExecuteNonQuery(sql,
-                new {Id = mark.Id, Mark = mark.Mark, MinutesLate = mark.MinutesLate, Comments = mark.Comments});
+            var values = new List<object> {mark.Mark, mark.MinutesLate, mark.Comments};
+
+            var query = new Query(TblName).Where("AttendanceMark.Id", "=", mark.Id).AsUpdate(columns, values);
+
+            await ExecuteNonQuery(query);
         }
     }
 }

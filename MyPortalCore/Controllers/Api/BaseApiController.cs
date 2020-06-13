@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MyPortal.Database.Constants;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
@@ -25,21 +26,47 @@ namespace MyPortalCore.Controllers.Api
             _userService = userService;
         }
 
-        protected async Task<IActionResult> Process(Func<Task<IActionResult>> method)
+        protected async Task<IActionResult> Process(Func<Task<IActionResult>> method, params Guid[] permissionsRequired)
         {
-            if (!ModelState.IsValid)
+            if (User.HasPermission(permissionsRequired))
             {
-                return BadRequest("Invalid data.");
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("Invalid data.");
+                }
+
+                try
+                {
+                    return await method.Invoke();
+                }
+                catch (Exception e)
+                {
+                    return HandleException(e);
+                }
             }
 
-            try
-            {   
-                return await method.Invoke();
-            }
-            catch (Exception e)
+            return Forbid();
+        }
+
+        protected async Task<bool> AuthenticateStudentResource(IStudentService studentService, Guid studentId)
+        {
+            if (User.IsType(UserTypes.Student))
             {
-                return HandleException(e);
+                var user = await _userService.GetUserByPrincipal(User);
+
+                var student = await studentService.GetByUserId(user.Id);
+
+                if (student.Id == studentId)
+                {
+                    return true;
+                }
             }
+            else if (User.IsType(UserTypes.Staff))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private IActionResult HandleException(Exception ex)
@@ -70,7 +97,7 @@ namespace MyPortalCore.Controllers.Api
             }
             if (statusCode == HttpStatusCode.Forbidden)
             {
-                return Forbid(message);
+                return Forbid();
             }
 
             return BadRequest(message);
