@@ -12,10 +12,5 @@ namespace MyPortal.Database.Repositories
         public SenProvisionTypeRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
         {
         }
-
-        protected override async Task<IEnumerable<SenProvisionType>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<SenProvisionType>(sql, param);
-        }
     }
 }

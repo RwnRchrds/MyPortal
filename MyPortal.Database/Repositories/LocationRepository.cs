@@ -16,10 +16,5 @@ namespace MyPortal.Database.Repositories
         public LocationRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
         }
-
-        protected override async Task<IEnumerable<Location>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<Location>(sql, param);
-        }
     }
 }

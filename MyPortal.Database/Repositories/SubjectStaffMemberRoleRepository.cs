@@ -13,10 +13,5 @@ namespace MyPortal.Database.Repositories
         public SubjectStaffMemberRoleRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
         {
         }
-
-        protected override async Task<IEnumerable<SubjectStaffMemberRole>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<SubjectStaffMemberRole>(sql, param);
-        }
     }
 }

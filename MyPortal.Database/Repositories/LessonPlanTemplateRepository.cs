@@ -12,10 +12,5 @@ namespace MyPortal.Database.Repositories
         public LessonPlanTemplateRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
         }
-
-        protected override async Task<IEnumerable<LessonPlanTemplate>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<LessonPlanTemplate>(sql, param);
-        }
     }
 }

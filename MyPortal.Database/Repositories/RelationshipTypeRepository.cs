@@ -12,10 +12,5 @@ namespace MyPortal.Database.Repositories
         public RelationshipTypeRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
         {
         }
-
-        protected override async Task<IEnumerable<RelationshipType>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<RelationshipType>(sql, param);
-        }
     }
 }

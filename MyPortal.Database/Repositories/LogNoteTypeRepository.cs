@@ -12,10 +12,5 @@ namespace MyPortal.Database.Repositories
         public LogNoteTypeRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
         {
         }
-
-        protected override async Task<IEnumerable<LogNoteType>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<LogNoteType>(sql, param);
-        }
     }
 }

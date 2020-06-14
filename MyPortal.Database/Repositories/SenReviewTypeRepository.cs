@@ -12,10 +12,5 @@ namespace MyPortal.Database.Repositories
         public SenReviewTypeRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
         {
         }
-
-        protected override async Task<IEnumerable<SenReviewType>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<SenReviewType>(sql, param);
-        }
     }
 }

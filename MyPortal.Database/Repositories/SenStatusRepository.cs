@@ -12,10 +12,5 @@ namespace MyPortal.Database.Repositories
         public SenStatusRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
         {
         }
-
-        protected override async Task<IEnumerable<SenStatus>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<SenStatus>(sql, param);
-        }
     }
 }

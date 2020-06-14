@@ -12,10 +12,5 @@ namespace MyPortal.Database.Repositories
         public SubjectRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
         {
         }
-
-        protected override async Task<IEnumerable<Subject>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<Subject>(sql, param);
-        }
     }
 }

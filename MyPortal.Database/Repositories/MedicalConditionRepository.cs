@@ -12,10 +12,5 @@ namespace MyPortal.Database.Repositories
         public MedicalConditionRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
         }
-
-        protected override async Task<IEnumerable<MedicalCondition>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<MedicalCondition>(sql, param);
-        }
     }
 }

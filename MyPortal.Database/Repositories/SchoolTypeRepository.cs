@@ -12,10 +12,5 @@ namespace MyPortal.Database.Repositories
         public SchoolTypeRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
         {
         }
-
-        protected override async Task<IEnumerable<SchoolType>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<SchoolType>(sql, param);
-        }
     }
 }

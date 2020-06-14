@@ -12,10 +12,5 @@ namespace MyPortal.Database.Repositories
         public PeriodRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
         }
-
-        protected override async Task<IEnumerable<Period>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<Period>(sql, param);
-        }
     }
 }

@@ -12,10 +12,5 @@ namespace MyPortal.Database.Repositories
         public ResultSetRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
         }
-
-        protected override async Task<IEnumerable<ResultSet>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<ResultSet>(sql, param);
-        }
     }
 }

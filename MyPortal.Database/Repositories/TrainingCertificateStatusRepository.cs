@@ -12,10 +12,5 @@ namespace MyPortal.Database.Repositories
         public TrainingCertificateStatusRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
         {
         }
-
-        protected override async Task<IEnumerable<TrainingCertificateStatus>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<TrainingCertificateStatus>(sql, param);
-        }
     }
 }

@@ -13,10 +13,5 @@ namespace MyPortal.Database.Repositories
         public TrainingCourseRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
         {
         }
-
-        protected override async Task<IEnumerable<TrainingCourse>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<TrainingCourse>(sql, param);
-        }
     }
 }

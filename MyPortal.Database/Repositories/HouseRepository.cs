@@ -5,6 +5,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -12,21 +13,37 @@ namespace MyPortal.Database.Repositories
     {
         public HouseRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-            RelatedColumns = $@"
-{EntityHelper.GetPropertyNames(typeof(StaffMember))}";
-
-            JoinRelated = $@"
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[StaffMember].[Id]", "[House].[HeadId]")}";
+           
         }
 
-        protected override async Task<IEnumerable<House>> ExecuteQuery(string sql, object param = null)
+        protected override Query SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<House, StaffMember, House>(sql, (house, head) =>
+            query.SelectAll(typeof(StaffMember));
+            query.SelectAll(typeof(Person));
+
+            query = JoinRelated(query);
+
+            return query;
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.StaffMember", "StaffMember.Id", "House.HeadId");
+            query.LeftJoin("dbo.Person", "Person.Id", "StaffMember.PersonId");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<House>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<House, StaffMember, House>(sql.Sql, (house, head) =>
             {
                 house.HeadOfHouse = head;
 
                 return house;
-            });
+            }, sql.Bindings);
         }
     }
 }

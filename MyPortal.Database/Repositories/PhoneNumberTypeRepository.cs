@@ -12,10 +12,5 @@ namespace MyPortal.Database.Repositories
         public PhoneNumberTypeRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
         {
         }
-
-        protected override async Task<IEnumerable<PhoneNumberType>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<PhoneNumberType>(sql, param);
-        }
     }
 }

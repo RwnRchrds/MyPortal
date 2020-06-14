@@ -5,6 +5,8 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
+using Task = MyPortal.Database.Models.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -12,23 +14,37 @@ namespace MyPortal.Database.Repositories
     {
         public HomeworkSubmissionRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-            RelatedColumns = $@"
-{EntityHelper.GetPropertyNames(typeof(Homework))},
-{EntityHelper.GetPropertyNames(typeof(Student))},
-{EntityHelper.GetPropertyNames(typeof(Person), "StudentPerson")}
-{EntityHelper.GetPropertyNames(typeof(Models.Task))}";
-
-            JoinRelated = $@"
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Homework]", "[Homework].[Id]", "[HomeworkSubmission].[HomeworkId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[HomeworkSubmission].[StudentId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[StudentPerson].[Id]", "[Student].[PersonId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Task]", "[Task].[Id]", "[HomeworkSubmission].[TaskId]")}";
+            
         }
 
-        protected override async Task<IEnumerable<HomeworkSubmission>> ExecuteQuery(string sql, object param = null)
+        protected override Query SelectAllRelated(Query query)
         {
+            query.SelectAll(typeof(Homework));
+            query.SelectAll(typeof(Student));
+            query.SelectAll(typeof(Person), "StudentPerson");
+            query.SelectAll(typeof(Task));
+
+            query = JoinRelated(query);
+
+            return query;
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.Homework", "Homework.Id", "HomeworkSubmission.HomeworkId");
+            query.LeftJoin("dbo.Student", "Student.Id", "HomeworkSubmission.StudentId");
+            query.LeftJoin("dbo.Person as StudentPerson", "StudentPerson.Id", "Student.PersonId");
+            query.LeftJoin("dbo.Task", "Task.Id", "HomeworkSubmission.TaskId");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<HomeworkSubmission>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
             return await Connection
-                .QueryAsync<HomeworkSubmission, Homework, Student, Person, Models.Task, HomeworkSubmission>(sql,
+                .QueryAsync<HomeworkSubmission, Homework, Student, Person, Models.Task, HomeworkSubmission>(sql.Sql,
                     (submission, homework, student, person, task) =>
                     {
                         submission.Homework = homework;
@@ -37,7 +53,7 @@ namespace MyPortal.Database.Repositories
                         submission.Task = task;
 
                         return submission;
-                    });
+                    }, sql.Bindings);
         }
     }
 }

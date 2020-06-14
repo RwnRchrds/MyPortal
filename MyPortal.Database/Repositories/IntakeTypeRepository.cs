@@ -12,10 +12,5 @@ namespace MyPortal.Database.Repositories
         public IntakeTypeRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
         {
         }
-
-        protected override async Task<IEnumerable<IntakeType>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<IntakeType>(sql, param);
-        }
     }
 }

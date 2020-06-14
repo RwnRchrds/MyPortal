@@ -12,10 +12,5 @@ namespace MyPortal.Database.Repositories
         public SystemAreaRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
         {
         }
-
-        protected override async Task<IEnumerable<SystemArea>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<SystemArea>(sql, param);
-        }
     }
 }

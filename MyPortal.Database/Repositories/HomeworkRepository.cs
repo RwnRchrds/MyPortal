@@ -2,8 +2,10 @@
 using System.Data;
 using System.Threading.Tasks;
 using Dapper;
+using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -11,6 +13,34 @@ namespace MyPortal.Database.Repositories
     {
         public HomeworkRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
+        }
+
+        protected override Query SelectAllRelated(Query query)
+        {
+            query.SelectAll(typeof(Directory));
+
+            query = JoinRelated(query);
+
+            return query;
+        }
+
+        protected override Query JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.Directory", "Directory.Id", "Homework.DirectoryId");
+
+            return query;
+        }
+
+        protected override async Task<IEnumerable<Homework>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<Homework, Directory, Homework>(sql.Sql, (homework, directory) =>
+            {
+                homework.Directory = directory;
+
+                return homework;
+            }, sql.Bindings);
         }
     }
 }

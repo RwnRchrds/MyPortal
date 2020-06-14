@@ -12,10 +12,5 @@ namespace MyPortal.Database.Repositories
         public PhaseRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
         {
         }
-
-        protected override async Task<IEnumerable<Phase>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<Phase>(sql, param);
-        }
     }
 }
