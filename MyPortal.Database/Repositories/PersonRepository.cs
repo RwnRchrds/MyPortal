@@ -18,7 +18,7 @@ namespace MyPortal.Database.Repositories
         {
        RelatedColumns = $"{EntityHelper.GetUserProperties("User")}";
 
-        JoinRelated = $@"
+        (query => JoinRelated(query)) = $@"
 {QueryHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[User].[Id]", "[Person].[UserId]", "User")}";
         }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.Serialization;
 using MyPortal.Database.BaseTypes;
 
 namespace MyPortal.Database.Models
@@ -15,6 +16,7 @@ namespace MyPortal.Database.Models
             Incidents = new HashSet<Incident>();
         }
 
+        [DataMember]
         public int DefaultPoints { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

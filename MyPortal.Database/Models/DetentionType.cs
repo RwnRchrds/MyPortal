@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.Serialization;
 using MyPortal.Database.BaseTypes;
 
 namespace MyPortal.Database.Models
@@ -14,9 +15,11 @@ namespace MyPortal.Database.Models
             Detentions = new HashSet<Detention>();
         }
 
+        [DataMember]
         [Column(TypeName = "time(2)")]
         public TimeSpan StartTime { get; set; }
 
+        [DataMember]
         [Column(TypeName = "time(2)")]
         public TimeSpan EndTime { get; set; }
 

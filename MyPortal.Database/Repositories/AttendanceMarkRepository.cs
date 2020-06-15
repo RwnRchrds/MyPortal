@@ -20,26 +20,22 @@ namespace MyPortal.Database.Repositories
        
         }
 
-        protected override Query SelectAllRelated(Query query)
+        protected override void SelectAllRelated(Query query)
         {
             query.SelectAll(typeof(Student));
             query.SelectAll(typeof(Person), "StudentPerson");
             query.SelectAll(typeof(AttendanceWeek));
             query.SelectAll(typeof(Period));
 
-            query = JoinRelated(query);
-
-            return query;
+            JoinRelated(query);
         }
 
-        protected override Query JoinRelated(Query query)
+        protected override void JoinRelated(Query query)
         {
             query.LeftJoin("dbo.Student", "Student.Id", "AttendanceMark.StudentId");
             query.LeftJoin("dbo.Person AS StudentPerson", "StudentPerson.Id", "Student.PersonId");
             query.LeftJoin("dbo.AttendanceWeek", "AttendanceWeek.Id", "AttendanceMark.WeekId");
             query.LeftJoin("dbo.AttendancePeriod AS Period", "Period.Id", "AttendanceMark.PeriodId");
-
-            return query;
         }
 
         protected override async Task<IEnumerable<AttendanceMark>> ExecuteQuery(Query query)

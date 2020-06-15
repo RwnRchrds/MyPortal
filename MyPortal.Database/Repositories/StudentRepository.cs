@@ -30,7 +30,7 @@ namespace MyPortal.Database.Repositories
 {EntityHelper.GetPropertyNames(typeof(House))},
 {EntityHelper.GetPropertyNames(typeof(SenStatus))}";
 
-        JoinRelated = $@"
+        (query => JoinRelated(query)) = $@"
 {QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[StudentPerson].[Id]", "[Student].[PersonId]", "StudentPerson")}
 {QueryHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[User].[Id]", "[StudentPerson].[UserId]", "User")}
 {QueryHelper.Join(JoinType.LeftJoin, "[dbo].[RegGroup]", "[RegGroup].[Id]", "[Student].[RegGroupId]")}

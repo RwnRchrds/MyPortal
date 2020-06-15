@@ -17,26 +17,22 @@ namespace MyPortal.Database.Repositories
             
         }
 
-        protected override Query SelectAllRelated(Query query)
+        protected override void SelectAllRelated(Query query)
         {
             query.SelectAll(typeof(Homework));
             query.SelectAll(typeof(Student));
             query.SelectAll(typeof(Person), "StudentPerson");
             query.SelectAll(typeof(Task));
 
-            query = JoinRelated(query);
-
-            return query;
+            JoinRelated(query);
         }
 
-        protected override Query JoinRelated(Query query)
+        protected override void JoinRelated(Query query)
         {
             query.LeftJoin("dbo.Homework", "Homework.Id", "HomeworkSubmission.HomeworkId");
             query.LeftJoin("dbo.Student", "Student.Id", "HomeworkSubmission.StudentId");
             query.LeftJoin("dbo.Person as StudentPerson", "StudentPerson.Id", "Student.PersonId");
             query.LeftJoin("dbo.Task", "Task.Id", "HomeworkSubmission.TaskId");
-
-            return query;
         }
 
         protected override async Task<IEnumerable<HomeworkSubmission>> ExecuteQuery(Query query)

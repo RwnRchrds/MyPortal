@@ -18,7 +18,7 @@ namespace MyPortal.Database.Repositories
 {EntityHelper.GetPropertyNames(typeof(Product))},
 {EntityHelper.GetPropertyNames(typeof(AcademicYear))}";
 
-            JoinRelated = $@"
+            (query => JoinRelated(query)) = $@"
 {QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[Sale].[StudentId]")}
 {QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[Student].[PersonId]")}
 {QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Product]", "[Product].[Id]", "[Sale].[ProductId]")}

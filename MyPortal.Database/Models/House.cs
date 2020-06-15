@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.Serialization;
 
 namespace MyPortal.Database.Models
 {
@@ -14,16 +15,20 @@ namespace MyPortal.Database.Models
             Students = new HashSet<Student>();
         }
 
+        [DataMember]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
+        [DataMember]
         [Required]
         [StringLength(128)]
         public string Name { get; set; }
 
+        [DataMember]
         public Guid? HeadId { get; set; }
 
+        [DataMember]
         [StringLength(128)]
         public string ColourCode { get; set; }
 

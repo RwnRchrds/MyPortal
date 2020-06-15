@@ -18,22 +18,18 @@ namespace MyPortal.Database.Repositories
            
         }
 
-        protected override Query SelectAllRelated(Query query)
+        protected override void SelectAllRelated(Query query)
         {
             query.SelectAll(typeof(Person));
             query.SelectAll(typeof(Address));
 
-            query = JoinRelated(query);
-
-            return query;
+            JoinRelated(query);
         }
 
-        protected override Query JoinRelated(Query query)
+        protected override void JoinRelated(Query query)
         {
             query.LeftJoin("dbo.Person", "Person.Id", "AddressPerson.PersonId");
             query.LeftJoin("dbo.Address", "Address.Id", "AddressPerson.AddressId");
-
-            return query;
         }
 
         protected override async Task<IEnumerable<AddressPerson>> ExecuteQuery(Query query)

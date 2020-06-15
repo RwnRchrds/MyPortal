@@ -19,7 +19,7 @@ namespace MyPortal.Database.Repositories
 
         }
 
-        protected override Query SelectAllRelated(Query query)
+        protected override void SelectAllRelated(Query query)
         {
             query.SelectAll(typeof(AcademicYear));
             query.SelectAll(typeof(Subject));
@@ -27,13 +27,11 @@ namespace MyPortal.Database.Repositories
             query.SelectAll(typeof(Person), "TeacherPerson");
             query.SelectAll(typeof(YearGroup));
             query.SelectAll(typeof(CurriculumBand));
-
-            query = JoinRelated(query);
-
-            return query;
+            
+            JoinRelated(query);
         }
 
-        protected override Query JoinRelated(Query query)
+        protected override void JoinRelated(Query query)
         {
             query.LeftJoin("dbo.AcademicYear", "AcademicYear.Id", "Class.AcademicYearId");
             query.LeftJoin("dbo.Subject", "Subject.Id", "Class.SubjectId");
@@ -41,8 +39,6 @@ namespace MyPortal.Database.Repositories
             query.LeftJoin("dbo.Person as TeacherPerson", "TeacherPerson.Id", "Teacher.PersonId");
             query.LeftJoin("dbo.YearGroup", "YearGroup.Id", "Class.YearGroupId");
             query.LeftJoin("dbo.CurriculumBand", "CurriculumBand.Id", "Class.BandId");
-
-            return query;
         }
 
         protected override async Task<IEnumerable<Class>> ExecuteQuery(Query query)

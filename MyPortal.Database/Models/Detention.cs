@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.Serialization;
 
 namespace MyPortal.Database.Models
 {
@@ -13,11 +14,18 @@ namespace MyPortal.Database.Models
             Incidents = new HashSet<IncidentDetention>();
         }
 
+        [DataMember]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
+
+        [DataMember]
         public Guid DetentionTypeId { get; set; }
+
+        [DataMember]
         public Guid EventId { get; set; }
+
+        [DataMember]
         public Guid? SupervisorId { get; set; }
 
         public virtual DetentionType Type { get; set; }

@@ -5,6 +5,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -12,32 +13,42 @@ namespace MyPortal.Database.Repositories
     {
         public IncidentDetentionRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-            RelatedColumns = $@"
-{EntityHelper.GetPropertyNames(typeof(Incident))},
-{EntityHelper.GetPropertyNames(typeof(IncidentType))},
-{EntityHelper.GetPropertyNames(typeof(Student))},
-{EntityHelper.GetPropertyNames(typeof(Person), "StudentPerson")},
-{EntityHelper.GetPropertyNames(typeof(Location))},
-{EntityHelper.GetPropertyNames(typeof(Detention))},
-{EntityHelper.GetPropertyNames(typeof(DiaryEvent))},
-{EntityHelper.GetPropertyNames(typeof(StaffMember))},
-{EntityHelper.GetPropertyNames(typeof(Person), "SupervisorPerson")}";
-
-            JoinRelated = $@"
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Incident]", "[Incident].[Id]", "[IncidentDetention].[IncidentId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[IncidentType]", "[IncidentType].[Id]", "[Incident].[IncidentTypeId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[Incident].[StudentId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[StudentPerson].[Id]", "[Student].[PersonId]", "StudentPerson")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Location]", "[Location].[Id]", "[Incident].[LocationId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Detention]", "[Detention].[Id]", "[IncidentDetention].[DetentionId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[DiaryEvent]", "[DiaryEvent].[Id]", "[Detention].[EventId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[StaffMember].[Id]", "[Detention].[SupervisorId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[SupervisorPerson].[Id]", "[StaffMember].[PersonId]", "SupervisorPerson")}";
+            
         }
 
-        protected override async Task<IEnumerable<IncidentDetention>> ExecuteQuery(string sql, object param = null)
+        protected override void SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync(sql,
+            query.SelectAll(typeof(Incident));
+            query.SelectAll(typeof(IncidentType));
+            query.SelectAll(typeof(Student));
+            query.SelectAll(typeof(Person), "StudentPerson");
+            query.SelectAll(typeof(Location));
+            query.SelectAll(typeof(Detention));
+            query.SelectAll(typeof(DiaryEvent));
+            query.SelectAll(typeof(StaffMember));
+            query.SelectAll(typeof(Person), "SupervisorPerson");
+            
+            JoinRelated(query);
+        }
+
+        protected override void JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.Incident", "Incident.Id", "IncidentDetention.IncidentId");
+            query.LeftJoin("dbo.IncidentType", "IncidentType.Id", "Incident.IncidentTypeId");
+            query.LeftJoin("dbo.Student", "Student.Id", "Incident.StudentId");
+            query.LeftJoin("dbo.Person as StudentPerson", "StudentPerson.Id", "Student.PersonId");
+            query.LeftJoin("dbo.Location", "Location.Id", "Incident.LocationId");
+            query.LeftJoin("dbo.Detention", "Detention.Id", "IncidentDetention.DetentionId");
+            query.LeftJoin("dbo.DiaryEvent", "DiaryEvent.Id", "Detention.EventId");
+            query.LeftJoin("dbo.StaffMember", "StaffMember.Id", "Detention.SupervisorId");
+            query.LeftJoin("dbo.Person as SupervisorPerson", "SupervisorPerson.Id", "StaffMember.PersonId");
+        }
+
+        protected override async Task<IEnumerable<IncidentDetention>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync(sql.Sql,
                 new[]
                 {
                     typeof(IncidentDetention), typeof(Incident), typeof(IncidentType), typeof(Student), typeof(Person),
@@ -58,7 +69,7 @@ namespace MyPortal.Database.Repositories
                     incidentDetention.Detention.Supervisor.Person = (Person) objects[9];
 
                     return incidentDetention;
-                }, param);
+                }, sql.Bindings);
         }
     }
 }

@@ -16,7 +16,7 @@ namespace MyPortal.Database.Repositories
 {EntityHelper.GetPropertyNames(typeof(PhoneNumberType))},
 {EntityHelper.GetPropertyNames(typeof(Person))}";
 
-            JoinRelated = $@"
+            (query => JoinRelated(query)) = $@"
 {QueryHelper.Join(JoinType.LeftJoin, "[dbo].[PhoneNumberType]", "[PhoneNumberType].[Id]", "[PhoneNumber].[TypeId]")}
 {QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[PhoneNumber].[PersonId]")}";
         }

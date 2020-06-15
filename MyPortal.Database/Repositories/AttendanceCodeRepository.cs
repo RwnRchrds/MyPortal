@@ -18,20 +18,16 @@ namespace MyPortal.Database.Repositories
 
         }
 
-        protected override Query SelectAllRelated(Query query)
+        protected override void SelectAllRelated(Query query)
         {
             query.SelectAll(typeof(AttendanceCodeMeaning));
 
-            query = JoinRelated(query);
-
-            return query;
+            JoinRelated(query);
         }
 
-        protected override Query JoinRelated(Query query)
+        protected override void JoinRelated(Query query)
         {
             query.LeftJoin("dbo.AttendanceCodeMeaning", "AttendanceCodeMeaning.Id", "AttendanceCode.MeaningId");
-
-            return query;
         }
 
         protected override async Task<IEnumerable<AttendanceCode>> ExecuteQuery(Query query)

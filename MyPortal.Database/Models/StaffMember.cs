@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.Serialization;
 
 namespace MyPortal.Database.Models
 {
@@ -23,27 +24,34 @@ namespace MyPortal.Database.Models
             Subordinates = new HashSet<StaffMember>();
         }
 
+        [DataMember]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
+        [DataMember]
         public Guid? LineManagerId { get; set; }
 
+        [DataMember]
         public Guid PersonId { get; set; }
 
+        [DataMember]
         [Required]
         [StringLength(128)]
         public string Code { get; set; }
 
+        [DataMember]
         [StringLength(128)]
         public string NiNumber { get; set; }
 
+        [DataMember]
         [StringLength(128)]
         public string PostNominal { get; set; }
 
-        [DefaultValue(false)]
+        [DataMember]
         public bool TeachingStaff { get; set; }
 
+        [DataMember]
         public bool Deleted { get; set; }
 
         public virtual Person Person { get; set; }

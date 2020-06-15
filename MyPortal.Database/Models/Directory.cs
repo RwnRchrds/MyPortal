@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace MyPortal.Database.Models
@@ -15,17 +16,23 @@ namespace MyPortal.Database.Models
             Documents = new HashSet<Document>();
         }
 
+        [DataMember]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public Guid Id { get; set; }
 
+        [DataMember]
         public Guid? ParentId { get; set; }
 
+        [DataMember]
         [Required]
         [StringLength(128)]
         public string Name { get; set; }
 
+        [DataMember]
         public bool Private { get; set; }
+
+        [DataMember]
         public bool StaffOnly { get; set; } 
 
         public virtual Directory Parent { get; set; }

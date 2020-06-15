@@ -19,20 +19,16 @@ namespace MyPortal.Database.Repositories
        
         }
 
-        protected override Query SelectAllRelated(Query query)
+        protected override void SelectAllRelated(Query query)
         {
             query.SelectAll(typeof(ApplicationUser), "User");
 
-            query = JoinRelated(query);
-
-            return query;
+            JoinRelated(query);
         }
 
-        protected override Query JoinRelated(Query query)
+        protected override void JoinRelated(Query query)
         {
             query.LeftJoin("dbo.AspNetUsers as User", "User.Id", "Bulletin.AuthorId");
-
-            return query;
         }
 
         protected override async Task<IEnumerable<Bulletin>> ExecuteQuery(Query query)

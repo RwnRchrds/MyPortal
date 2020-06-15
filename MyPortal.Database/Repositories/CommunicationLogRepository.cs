@@ -19,20 +19,16 @@ namespace MyPortal.Database.Repositories
       
         }
 
-        protected override Query SelectAllRelated(Query query)
+        protected override void SelectAllRelated(Query query)
         {
             query.SelectAll(typeof(CommunicationType));
-
-            query = JoinRelated(query);
-
-            return query;
+            
+            JoinRelated(query);
         }
 
-        protected override Query JoinRelated(Query query)
+        protected override void JoinRelated(Query query)
         {
             query.LeftJoin("dbo.CommunicationType", "CommunicationType.Id", "CommnicationLog.CommunicationTypeId");
-
-            return query;
         }
 
         protected override async Task<IEnumerable<CommunicationLog>> ExecuteQuery(Query query)

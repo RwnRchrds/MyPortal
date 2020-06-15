@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
+using System.Runtime.Serialization;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace MyPortal.Database.Models
@@ -17,14 +18,17 @@ namespace MyPortal.Database.Models
             BehaviourIncidents = new HashSet<Incident>();
         }
 
+        [DataMember]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
+        [DataMember]
         [Required]
         [StringLength(128)]
         public string Description { get; set; }
 
+        [DataMember]
         public bool System { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

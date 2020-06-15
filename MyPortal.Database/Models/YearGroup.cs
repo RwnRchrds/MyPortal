@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.Serialization;
 
 namespace MyPortal.Database.Models
 {
@@ -17,19 +18,24 @@ namespace MyPortal.Database.Models
             RegGroups = new HashSet<RegGroup>();
         }
 
+        [DataMember]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
+        [DataMember]
         [Required]
         [StringLength(256)]
         public string Name { get; set; }
 
+        [DataMember]
         public Guid? HeadId { get; set; }
 
+        [DataMember]
         public Guid CurriculumYearGroupId { get; set; }
 
         public virtual CurriculumYearGroup CurriculumYearGroup { get; set; }
+
         public virtual StaffMember HeadOfYear { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

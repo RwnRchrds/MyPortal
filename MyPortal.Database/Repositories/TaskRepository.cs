@@ -17,7 +17,7 @@ namespace MyPortal.Database.Repositories
 {EntityHelper.GetPropertyNames(typeof(Person), "AssignedTo")},
 {EntityHelper.GetUserProperties("AssignedBy")}";
 
-            JoinRelated = $@"
+            (query => JoinRelated(query)) = $@"
 {QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[AssignedTo].[Id]", "[Task].[AssignedToId]")}
 {QueryHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[AssignedBy].[Id]", "[Task].[AssignedById]")}";
         }

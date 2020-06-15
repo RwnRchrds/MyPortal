@@ -15,20 +15,16 @@ namespace MyPortal.Database.Repositories
         {
         }
 
-        protected override Query SelectAllRelated(Query query)
+        protected override void SelectAllRelated(Query query)
         {
             query.SelectAll(typeof(Directory));
 
-            query = JoinRelated(query);
-
-            return query;
+            JoinRelated(query);
         }
 
-        protected override Query JoinRelated(Query query)
+        protected override void JoinRelated(Query query)
         {
             query.LeftJoin("dbo.Directory", "Directory.Id", "Homework.DirectoryId");
-
-            return query;
         }
 
         protected override async Task<IEnumerable<Homework>> ExecuteQuery(Query query)

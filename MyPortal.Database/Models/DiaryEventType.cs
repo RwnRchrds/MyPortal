@@ -17,6 +17,7 @@ namespace MyPortal.Database.Models
             DiaryEvents = new HashSet<DiaryEvent>();
         }
 
+        [DataMember]
         [StringLength(128)]
         public string ColourCode { get; set; }
 

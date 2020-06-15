@@ -19,6 +19,7 @@ namespace MyPortal.Database.Models
         [DataMember] 
         public bool Personal { get; set; }
 
+        [DataMember]
         [Required]
         public string ColourCode { get; set; }
 

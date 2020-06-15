@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.Serialization;
 using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
     [Table("Student")]
-    public partial class Student
+    public class Student
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Student()
@@ -28,45 +29,62 @@ namespace MyPortal.Database.Models
             HomeworkSubmissions = new HashSet<HomeworkSubmission>();
         }
 
+        [DataMember]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
+        [DataMember]
         public Guid PersonId { get; set; }
 
+        [DataMember]
         public Guid RegGroupId { get; set; }
 
+        [DataMember]
         public Guid YearGroupId { get; set; }
 
+        [DataMember]
         public Guid? HouseId { get; set; }
 
+        [DataMember]
         [StringLength(128)]
         public string CandidateNumber { get; set; }
 
+        [DataMember]
         public int AdmissionNumber { get; set; }
 
+        [DataMember]
         [Column(TypeName = "date")]
         public DateTime? DateStarting { get; set; }
 
+        [DataMember]
         [Column(TypeName = "date")]
         public DateTime? DateLeaving { get; set; }
 
+        [DataMember]
         [Column(TypeName = "decimal(10,2)")]
         public decimal AccountBalance { get; set; }
 
+        [DataMember]
         public bool FreeSchoolMeals { get; set; }
 
+        [DataMember]
         public bool GiftedAndTalented { get; set; }
 
+        [DataMember]
         public Guid? SenStatusId { get; set; }
 
+        [DataMember]
         public bool PupilPremium { get; set; }
 
+        [DataMember]
         [StringLength(13)]
         public string Upn { get; set; }
 
+        [DataMember]
         public string Uci { get; set; }
 
+        [DataMember]
         public bool Deleted { get; set; }
 
         public virtual RegGroup RegGroup { get; set; }

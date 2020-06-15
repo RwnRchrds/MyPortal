@@ -18,22 +18,18 @@ namespace MyPortal.Database.Repositories
            
         }
 
-        protected override Query SelectAllRelated(Query query)
+        protected override void SelectAllRelated(Query query)
         {
             query.SelectAll(typeof(DocumentType));
-            query.SelectAll(typeof(ApplicationUser), "User");
-
-            query = JoinRelated(query);
-
-            return query;
+            query.SelectAll(typeof(ApplicationUser), "User"); 
+            
+            JoinRelated(query);
         }
 
-        protected override Query JoinRelated(Query query)
+        protected override void JoinRelated(Query query)
         {
             query.LeftJoin("dbo.DocumentType", "DocumentType.Id", "Document.TypeId");
             query.LeftJoin("dbo.AspNetUsers as User", "User.Id", "Document.UploaderId");
-
-            return query;
         }
 
         protected override async Task<IEnumerable<Document>> ExecuteQuery(Query query)

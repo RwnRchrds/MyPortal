@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.Serialization;
 using System.Text;
 using MyPortal.Database.BaseTypes;
 
@@ -15,7 +16,8 @@ namespace MyPortal.Database.Models
             Incidents = new HashSet<Incident>();
         }
 
-            public bool System { get; set; }
+        [DataMember]
+        public bool System { get; set; }
 
         public virtual ICollection<Incident> Incidents { get; set; }
     }

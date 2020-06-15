@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Security.Principal;
 using System.Text;
 using MyPortal.Database.Models.Identity;
@@ -59,7 +60,7 @@ namespace MyPortal.Database.Helpers
 
         private static IEnumerable<PropertyInfo> GetProperties(Type t)
         {
-            var props = t.GetProperties().Where(x => !x.GetGetMethod().IsVirtual).ToList();
+            var props = t.GetProperties().Where(p => Attribute.IsDefined(p, typeof(DataMemberAttribute))).ToList();
 
             return props;
         }

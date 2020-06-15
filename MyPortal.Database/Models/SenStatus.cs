@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.Serialization;
 using MyPortal.Database.BaseTypes;
 
 namespace MyPortal.Database.Models
@@ -16,6 +17,7 @@ namespace MyPortal.Database.Models
             Students = new HashSet<Student>();
         }
 
+        [DataMember]
         [Required]
         [StringLength(1)]
         public string Code { get; set; }

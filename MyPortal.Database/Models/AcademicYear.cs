@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.Serialization;
 using MyPortal.Database.Models.Identity;
 
 namespace MyPortal.Database.Models
@@ -20,16 +21,20 @@ namespace MyPortal.Database.Models
             Incidents = new HashSet<Incident>();
         }
 
+        [DataMember]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
+        [DataMember]
         [Required]
         [StringLength(128)]
         public string Name { get; set; }
 
+        [DataMember]
         [Column(TypeName = "date")]
         public DateTime FirstDate { get; set; }
 
+        [DataMember]
         [Column(TypeName = "date")]
         public DateTime LastDate { get; set; }
 

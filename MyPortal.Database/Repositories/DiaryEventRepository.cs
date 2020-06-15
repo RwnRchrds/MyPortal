@@ -19,20 +19,16 @@ namespace MyPortal.Database.Repositories
 
         }
 
-        protected override Query SelectAllRelated(Query query)
+        protected override void SelectAllRelated(Query query)
         {
             query.SelectAll(typeof(DiaryEventType));
 
-            query = JoinRelated(query);
-
-            return query;
+            JoinRelated(query);
         }
 
-        protected override Query JoinRelated(Query query)
+        protected override void JoinRelated(Query query)
         {
             query.LeftJoin("dbo.DiaryEventType", "DiaryEventType.Id", "DiaryEvent.EventTypeId");
-
-            return query;
         }
 
         protected override async Task<IEnumerable<DiaryEvent>> ExecuteQuery(Query query)

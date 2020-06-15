@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
         {
             RelatedColumns = $@"{EntityHelper.GetPropertyNames(typeof(SystemArea))}";
 
-            JoinRelated = $@"{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[SystemArea]", "[SystemArea].[Id]", "[Report].[SystemAreaId]")}";
+            (query => JoinRelated(query)) = $@"{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[SystemArea]", "[SystemArea].[Id]", "[Report].[SystemAreaId]")}";
         }
 
         protected override async Task<IEnumerable<Report>> ExecuteQuery(string sql, object param = null)

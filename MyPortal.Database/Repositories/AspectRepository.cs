@@ -18,22 +18,18 @@ namespace MyPortal.Database.Repositories
 
         }
 
-        protected override Query SelectAllRelated(Query query)
+        protected override void SelectAllRelated(Query query)
         {
             query.SelectAll(typeof(AspectType));
             query.SelectAll(typeof(GradeSet));
 
-            query = JoinRelated(query);
-
-            return query;
+            JoinRelated(query);
         }
 
-        protected override Query JoinRelated(Query query)
+        protected override void JoinRelated(Query query)
         {
             query.LeftJoin("dbo.AspectType", "AspectType.Id", "Aspect.TypeId");
             query.LeftJoin("dbo.GradeSet", "GradeSet.Id", "Aspect.GradeSetId");
-
-            return query;
         }
 
         protected override async Task<IEnumerable<Aspect>> ExecuteQuery(Query query)

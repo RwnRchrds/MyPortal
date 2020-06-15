@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.Serialization;
 
 namespace MyPortal.Database.Models
 {
@@ -14,17 +15,22 @@ namespace MyPortal.Database.Models
             AttendanceMarks = new HashSet<AttendanceMark>();
         }
 
+        [DataMember]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
+        [DataMember]
         public Guid AcademicYearId { get; set; }
 
+        [DataMember]
         [Column(TypeName = "date")]
         public DateTime Beginning { get; set; }
 
+        [DataMember]
         public bool IsHoliday { get; set; }
 
+        [DataMember]
         public bool IsNonTimetable { get; set; }
 
         public virtual AcademicYear AcademicYear { get; set; }

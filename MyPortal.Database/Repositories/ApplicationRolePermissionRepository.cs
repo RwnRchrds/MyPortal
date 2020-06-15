@@ -18,21 +18,19 @@ namespace MyPortal.Database.Repositories
            
         }
 
-        protected override Query SelectAllRelated(Query query)
+        protected override void SelectAllRelated(Query query)
         {
             query.SelectAll(typeof(ApplicationRole), "Role");
             query.SelectAll(typeof(ApplicationPermission), "Permission");
 
-            return query;
+            JoinRelated(query);
         }
 
-        protected override Query JoinRelated(Query query)
+        protected override void JoinRelated(Query query)
         {
             query.LeftJoin("dbo.AspNetRoles AS Role", "Role.Id", "AspNetRolePermissions.RoleId");
             query.LeftJoin("dbo.AspNetPermissions AS Permission", "Permission.Id",
                 "AspNetRolePermissions.PermissionId");
-
-            return query;
         }
 
         protected override async Task<IEnumerable<ApplicationRolePermission>> ExecuteQuery(Query query)
@@ -64,7 +62,7 @@ namespace MyPortal.Database.Repositories
         {
             var query = new Query(TblName).Select("Permission.ClaimValue");
 
-            query = JoinRelated(query);
+            JoinRelated(query);
             
             query.Where("AspNetRolePermissions.RoleId", "=", roleId);
 

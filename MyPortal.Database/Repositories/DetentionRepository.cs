@@ -19,26 +19,22 @@ namespace MyPortal.Database.Repositories
 
         }
 
-        protected override Query SelectAllRelated(Query query)
+        protected override void SelectAllRelated(Query query)
         {
             query.SelectAll(typeof(DetentionType));
             query.SelectAll(typeof(DiaryEvent));
             query.SelectAll(typeof(StaffMember));
             query.SelectAll(typeof(Person));
-
-            query = JoinRelated(query);
-
-            return query;
+            
+            JoinRelated(query);
         }
 
-        protected override Query JoinRelated(Query query)
+        protected override void JoinRelated(Query query)
         {
             query.LeftJoin("dbo.DetentionType", "DetentionType.Id", "Detention.DetentionTypeId");
             query.LeftJoin("dbo.DiaryEvent", "DiaryEvent.Id", "Detention.EventId");
             query.LeftJoin("dbo.StaffMember", "StaffMember.Id", "Detention.SupervisorId");
             query.LeftJoin("dbo.Person", "Person.Id", "StaffMember.PersonId");
-
-            return query;
         }
 
         protected override async Task<IEnumerable<Detention>> ExecuteQuery(Query query)

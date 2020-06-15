@@ -42,14 +42,14 @@ namespace MyPortal.Database.Repositories
             return await Connection.QueryAsync<TEntity>(sql.Sql, sql.Bindings);
         }
 
-        protected virtual Query JoinRelated(Query query)
+        protected virtual void JoinRelated(Query query)
         {
-            return query;
+            
         }
 
-        protected virtual Query SelectAllRelated(Query query)
+        protected virtual void SelectAllRelated(Query query)
         {
-            return JoinRelated(query);
+            JoinRelated(query);
         }
 
         protected async Task<int> ExecuteIntQuery(Query query)
@@ -86,7 +86,7 @@ namespace MyPortal.Database.Repositories
 
             if (getRelated)
             {
-                query = SelectAllRelated(query);
+                SelectAllRelated(query);
             }
 
             return query;

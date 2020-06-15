@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.Serialization;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Identity;
 
@@ -31,43 +32,56 @@ namespace MyPortal.Database.Models
             AssignedTo = new HashSet<Task>();
         }
 
+        [DataMember]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
+        [DataMember]
         public Guid DirectoryId { get; set; }
 
+        [DataMember]
         [StringLength(128)]
         public string Title { get; set; }
 
+        [DataMember]
         [Required]
         [StringLength(256)]
         public string FirstName { get; set; }
 
+        [DataMember]
         [StringLength(256)] 
         public string MiddleName { get; set; }
 
+        [DataMember]
         public int? PhotoId { get; set; }
 
+        [DataMember]
         [StringLength(256)]
         public string NhsNumber { get; set; }
 
+        [DataMember]
         [Required]
         [StringLength(256)]
         public string LastName { get; set; }
 
+        [DataMember]
         [Required]
         [StringLength(1)]
         public string Gender { get; set; }
 
+        [DataMember]
         [Column(TypeName = "date")]
         public DateTime? Dob { get; set; }
 
+        [DataMember]
         [Column(TypeName = "date")] 
         public DateTime? Deceased { get; set; }
 
+        [DataMember]
         public Guid? UserId { get; set; }
 
+        [DataMember]
         public bool Deleted { get; set; }
 
         public virtual Contact ContactDetails { get; set; }

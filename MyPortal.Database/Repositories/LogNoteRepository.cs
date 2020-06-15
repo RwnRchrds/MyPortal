@@ -23,7 +23,7 @@ namespace MyPortal.Database.Repositories
 {EntityHelper.GetPropertyNames(typeof(Person), "StudentPerson")},
 {EntityHelper.GetPropertyNames(typeof(AcademicYear))}";
 
-            JoinRelated = $@"
+            (query => JoinRelated(query)) = $@"
 {QueryHelper.Join(JoinType.LeftJoin, "[dbo].[LogNoteType]", "[LogNoteType].[Id]", "[LogNote].[TypeId]")}
 {QueryHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[User].[Id]", "[LogNote].[CreatedById]", "User")}
 {QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[AuthorPerson].[UserId]", "[User].[Id]", "AuthorPerson")}

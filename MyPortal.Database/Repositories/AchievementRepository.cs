@@ -22,7 +22,7 @@ namespace MyPortal.Database.Repositories
            
         }
 
-        protected override Query SelectAllRelated(Query query)
+        protected override void SelectAllRelated(Query query)
         {
             query.SelectAll(typeof(AcademicYear));
             query.SelectAll(typeof(AchievementType));
@@ -33,11 +33,9 @@ namespace MyPortal.Database.Repositories
             query.SelectAll(typeof(Person), "RecordedByPerson");
 
             JoinRelated(query);
-
-            return query;
         }
 
-        protected override Query JoinRelated(Query query)
+        protected override void JoinRelated(Query query)
         {
             query.LeftJoin("dbo.AcademicYear", "AcademicYear.Id", "Achievement.AcademicYearId");
             query.LeftJoin("dbo.AchievementType", "AchievementType.Id", "Achievement.AchievementTypeId");
@@ -46,8 +44,6 @@ namespace MyPortal.Database.Repositories
             query.LeftJoin("dbo.Location", "Location.Id", "Achievement.LocationId");
             query.LeftJoin("dbo.AspNetUsers", "AspNetUsers.Id", "Achievement.RecordedById");
             query.LeftJoin("dbo.Person", "Person.Id", "Person.UserId");
-
-            return query;
         }
 
         public async Task<int> GetCountByStudent(Guid studentId, Guid academicYearId)
