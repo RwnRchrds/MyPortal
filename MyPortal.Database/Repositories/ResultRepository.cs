@@ -5,6 +5,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -12,24 +13,34 @@ namespace MyPortal.Database.Repositories
     {
         public ResultRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-            RelatedColumns = $@"
-{EntityHelper.GetPropertyNames(typeof(ResultSet))},
-{EntityHelper.GetPropertyNames(typeof(Student))},
-{EntityHelper.GetPropertyNames(typeof(Person))}
-{EntityHelper.GetPropertyNames(typeof(Aspect))},
-{EntityHelper.GetPropertyNames(typeof(Grade))}";
-
-            (query => JoinRelated(query)) = $@"
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[ResultSet]", "[ResultSet].[Id]", "[Result].[ResultSetId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[Result].[StudentId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[Student].[PersonId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Aspect]", "[Aspect].[Id]", "[Result].[AspectId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Grade]", "[Grade].[Id]", "[Result].[GradeId]")}";
+            
         }
 
-        protected override async Task<IEnumerable<Result>> ExecuteQuery(string sql, object param = null)
+        protected override void SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<Result, ResultSet, Student, Person, Aspect, Grade, Result>(sql,
+            query.SelectAll(typeof(ResultSet));
+            query.SelectAll(typeof(Student));
+            query.SelectAll(typeof(Person));
+            query.SelectAll(typeof(Aspect));
+            query.SelectAll(typeof(Grade));
+
+            JoinRelated(query);
+        }
+
+        protected override void JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.ResultSet", "ResultSet.Id", "Result.ResultSetId");
+            query.LeftJoin("dbo.Student", "Student.Id", "Result.StudentId");
+            query.LeftJoin("dbo.Person", "Person.Id", "Student.PersonId");
+            query.LeftJoin("dbo.Aspect", "Aspect.Id", "Result.AspectId");
+            query.LeftJoin("dbo.Grade", "Grade.Id", "Result.GradeId");
+        }
+
+        protected override async Task<IEnumerable<Result>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<Result, ResultSet, Student, Person, Aspect, Grade, Result>(sql.Sql,
                 (result, set, student, person, aspect, grade) =>
                 {
                     result.ResultSet = set;
@@ -39,7 +50,7 @@ namespace MyPortal.Database.Repositories
                     result.Grade = grade;
 
                     return result;
-                }, param);
+                }, sql.Bindings);
         }
     }
 }

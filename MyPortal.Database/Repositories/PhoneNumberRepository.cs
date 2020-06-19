@@ -5,6 +5,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -12,25 +13,33 @@ namespace MyPortal.Database.Repositories
     {
         public PhoneNumberRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-            RelatedColumns = $@"
-{EntityHelper.GetPropertyNames(typeof(PhoneNumberType))},
-{EntityHelper.GetPropertyNames(typeof(Person))}";
-
-            (query => JoinRelated(query)) = $@"
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[PhoneNumberType]", "[PhoneNumberType].[Id]", "[PhoneNumber].[TypeId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[PhoneNumber].[PersonId]")}";
+           
         }
 
-        protected override async Task<IEnumerable<PhoneNumber>> ExecuteQuery(string sql, object param = null)
+        protected override void SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<PhoneNumber, PhoneNumberType, Person, PhoneNumber>(sql,
+            query.SelectAll(typeof(PhoneNumberType));
+            query.SelectAll(typeof(Person));
+        }
+
+        protected override void JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.PhoneNumberType", "PhoneNumberType.Id", "PhoneNumber.TypeId");
+            query.LeftJoin("dbo.Person", "Person.Id", "PhoneNumber.PersonId");
+        }
+
+        protected override async Task<IEnumerable<PhoneNumber>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<PhoneNumber, PhoneNumberType, Person, PhoneNumber>(sql.Sql,
                 (telNo, type, person) =>
                 {
                     telNo.Type = type;
                     telNo.Person = person;
 
                     return telNo;
-                });
+                }, sql.Bindings);
         }
     }
 }

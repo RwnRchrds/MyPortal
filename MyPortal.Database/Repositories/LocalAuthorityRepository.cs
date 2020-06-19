@@ -6,6 +6,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -15,22 +16,15 @@ namespace MyPortal.Database.Repositories
         {
         }
 
-        protected override async Task<IEnumerable<LocalAuthority>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<LocalAuthority>(sql, param);
-        }
-
         public async Task<LocalAuthority> GetCurrent()
         {
-            var sql = SelectAllColumns();
+            var query = SelectAllColumns();
 
-            QueryHelper.Join(JoinType.LeftJoin, "[dbo].[School]", "[School].[LocalAuthorityId]", "[LocalAuthority].[Id]");
+            query.LeftJoin("dbo.School", "School.LocalAuthorityId", "LocalAuthority.Id");
 
-            QueryHelper.Where(ref sql, "[School].[Local] = 1");
+            query.Where("School.Local", true);
 
-            QueryHelper.Where(ref sql, "[LocalAuthority].[Id] = [School].[LocalAuthorityId]");
-
-            return (await ExecuteQuery(sql)).First();
+            return (await ExecuteQuery(query)).First();
         }
     }
 }

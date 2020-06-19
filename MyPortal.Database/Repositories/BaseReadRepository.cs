@@ -28,7 +28,7 @@ namespace MyPortal.Database.Repositories
 
             TblAlias = string.IsNullOrWhiteSpace(tblAlias) ? typeof(TEntity).Name : tblAlias;
 
-            TblName = EntityHelper.GetTableName(typeof(TEntity), tblAlias, "dbo", true);
+            TblName = EntityHelper.GetTableName(typeof(TEntity), tblAlias);
         }
 
         protected string TblName;
@@ -101,11 +101,11 @@ namespace MyPortal.Database.Repositories
 
         public async Task<TEntity> GetById(Guid id)
         {
-            var sql = SelectAllColumns();
+            var query = SelectAllColumns();
 
-            sql.Where($"{TblAlias}.Id", "=", id);
+            query.Where($"{TblAlias}.Id", "=", id);
 
-            return (await ExecuteQuery(sql)).SingleOrDefault();
+            return (await ExecuteQuery(query)).SingleOrDefault();
         }
 
         public void Dispose()

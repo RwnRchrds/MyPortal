@@ -65,7 +65,7 @@ namespace MyPortal.Database.Helpers
             return props;
         }
 
-        internal static string GetTableName(Type t, string tblAlias = null, string schema = "dbo", bool includeAs = false)
+        internal static string GetTableName(Type t, string tblAlias = null, string schema = "dbo")
         {
             var entityTable = ((TableAttribute) t.GetCustomAttribute(typeof(TableAttribute)))?.Name ?? t.Name;
             
@@ -79,9 +79,9 @@ namespace MyPortal.Database.Helpers
                 entityTable = "AspNetRoles";
             }
 
-            if (includeAs)
+            if (!string.IsNullOrWhiteSpace(tblAlias))
             {
-                return $"{schema}.{entityTable} AS {tblAlias}";
+                return $"{schema}.{entityTable} as {tblAlias}";
             }
 
             return $"{schema}.{entityTable}";

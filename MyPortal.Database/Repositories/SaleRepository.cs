@@ -5,6 +5,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -12,22 +13,30 @@ namespace MyPortal.Database.Repositories
     {
         public SaleRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-            RelatedColumns = $@"
-{EntityHelper.GetPropertyNames(typeof(Student))},
-{EntityHelper.GetPropertyNames(typeof(Person))}
-{EntityHelper.GetPropertyNames(typeof(Product))},
-{EntityHelper.GetPropertyNames(typeof(AcademicYear))}";
-
-            (query => JoinRelated(query)) = $@"
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[Sale].[StudentId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[Student].[PersonId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Product]", "[Product].[Id]", "[Sale].[ProductId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[AcademicYear]", "[AcademicYear].[Id]", "[Sale].[AcademicYearId]")}";
+           
         }
 
-        protected override async Task<IEnumerable<Sale>> ExecuteQuery(string sql, object param = null)
+        protected override void SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<Sale, Student, Person, Product, AcademicYear, Sale>(sql,
+            query.SelectAll(typeof(Student));
+            query.SelectAll(typeof(Person));
+            query.SelectAll(typeof(Product));
+            query.SelectAll(typeof(AcademicYear));
+        }
+
+        protected override void JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.Student", "Student.Id", "Sale.StudentId");
+            query.LeftJoin("dbo.Person", "Person.Id", "Student.PersonId");
+            query.LeftJoin("dbo.Product", "Product.Id", "Sale.ProductId");
+            query.LeftJoin("dbo.AcademicYear", "AcademicYear.Id", "Sale.AcademicYearId");
+        }
+
+        protected override async Task<IEnumerable<Sale>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<Sale, Student, Person, Product, AcademicYear, Sale>(sql.Sql,
                 (sale, student, person, product, acadYear) =>
                 {
                     sale.Student = student;
@@ -36,7 +45,7 @@ namespace MyPortal.Database.Repositories
                     sale.AcademicYear = acadYear;
 
                     return sale;
-                }, param);
+                }, sql.Bindings);
         }
     }
 }

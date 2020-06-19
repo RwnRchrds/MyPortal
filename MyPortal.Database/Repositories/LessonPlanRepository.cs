@@ -6,6 +6,7 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -13,28 +14,38 @@ namespace MyPortal.Database.Repositories
     {
         public LessonPlanRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-            RelatedColumns = $@"
-{EntityHelper.GetPropertyNames(typeof(StudyTopic))},
-{EntityHelper.GetUserProperties("User")},
-{EntityHelper.GetPropertyNames(typeof(Person))}";
-
-            (query => JoinRelated(query)) = $@"
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[StudyTopic]", "[StudyTopic].[Id]", "[LessonPlan].[StudyTopicId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[User].[Id]", "[LessonPlan].[AuthorId]", "User")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[UserId]", "[User].[Id]")}";
+           
         }
 
-        protected override async Task<IEnumerable<LessonPlan>> ExecuteQuery(string sql, object param = null)
+        protected override void SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<LessonPlan, StudyTopic, ApplicationUser, Person, LessonPlan>(sql,
-                (lp, topic, author, person) =>
-                {
-                    lp.StudyTopic = topic;
-                    lp.Author = author;
-                    lp.Author.Person = person;
+            query.SelectAll(typeof(StudyTopic));
+            query.SelectAll(typeof(ApplicationUser));
+            query.SelectAll(typeof(Person));
 
-                    return lp;
-                }, param);
+            JoinRelated(query);
+        }
+
+        protected override void JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.StudyTopic", "StudyTopic.Id", "LessonPlan.StudyTopicId");
+            query.LeftJoin("dbo.AspNetUsers as User", "User.Id", "LessonPlan.AuthorId");
+            query.LeftJoin("dbo.Person", "Person.UserId", "User.Id");
+        }
+
+        protected override async Task<IEnumerable<LessonPlan>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<LessonPlan, StudyTopic, ApplicationUser, Person, LessonPlan>(sql.Sql,
+                (lessonPlan, topic, author, person) =>
+                {
+                    lessonPlan.StudyTopic = topic;
+                    lessonPlan.Author = author;
+                    lessonPlan.Author.Person = person;
+
+                    return lessonPlan;
+                }, sql.Bindings);
         }
     }
 }

@@ -5,6 +5,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -12,26 +13,37 @@ namespace MyPortal.Database.Repositories
     {
         public PersonDietaryRequirementRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-            RelatedColumns = $@"
-{EntityHelper.GetPropertyNames(typeof(Person))},
-{EntityHelper.GetPropertyNames(typeof(DietaryRequirement))}";
 
-            (query => JoinRelated(query)) = $@"
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[PersonDietaryRequirement].[PersonId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[DietaryRequirement]", "[DietaryRequirement].[Id]", "[PersonDietaryRequirement].[DietaryRequirementId]")}";
         }
 
-        protected override async Task<IEnumerable<PersonDietaryRequirement>> ExecuteQuery(string sql, object param = null)
+        protected override void SelectAllRelated(Query query)
         {
+            query.SelectAll(typeof(Person));
+            query.SelectAll(typeof(DietaryRequirement));
+
+            JoinRelated(query);
+        }
+
+        protected override void JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.Person", "Person.Id", "PersonDietaryRequirement.PersonId");
+            query.LeftJoin("dbo.DietaryRequirement", "DietaryRequirement.Id",
+                "PersonDietaryRequirement.DietaryRequirementId");
+        }
+
+        protected override async Task<IEnumerable<PersonDietaryRequirement>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
             return await Connection
-                .QueryAsync<PersonDietaryRequirement, Person, DietaryRequirement, PersonDietaryRequirement>(sql,
+                .QueryAsync<PersonDietaryRequirement, Person, DietaryRequirement, PersonDietaryRequirement>(sql.Sql,
                     (pdr, person, req) =>
                     {
                         pdr.Person = person;
                         pdr.DietaryRequirement = req;
 
                         return pdr;
-                    }, param);
+                    }, sql.Bindings);
         }
     }
 }

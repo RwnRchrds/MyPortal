@@ -5,6 +5,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -12,14 +13,31 @@ namespace MyPortal.Database.Repositories
     {
         public ReportRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
         {
-            RelatedColumns = $@"{EntityHelper.GetPropertyNames(typeof(SystemArea))}";
-
-            (query => JoinRelated(query)) = $@"{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[SystemArea]", "[SystemArea].[Id]", "[Report].[SystemAreaId]")}";
+            
         }
 
-        protected override async Task<IEnumerable<Report>> ExecuteQuery(string sql, object param = null)
+        protected override void SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<Report>(sql, param);
+            query.SelectAll(typeof(SystemArea));
+
+            JoinRelated(query);
+        }
+
+        protected override void JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.SystemArea", "SystemArea.Id", "Report.SystemAreaId");
+        }
+
+        protected override async Task<IEnumerable<Report>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<Report, SystemArea, Report>(sql.Sql, (report, area) =>
+            {
+                report.SystemArea = area;
+
+                return report;
+            }, sql.Bindings);
         }
     }
 }

@@ -6,6 +6,7 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -13,25 +14,33 @@ namespace MyPortal.Database.Repositories
     {
         public MedicalEventRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-            RelatedColumns = $@"
-{EntityHelper.GetPropertyNames(typeof(Student))},
-{EntityHelper.GetUserProperties("User")}";
-
-            (query => JoinRelated(query)) = $@"
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[MedicalEvent].[StudentId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[User].[Id]", "[MedicalEvent].[RecordedById]", "User")}";
+           
         }
 
-        protected override async Task<IEnumerable<MedicalEvent>> ExecuteQuery(string sql, object param = null)
+        protected override void SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<MedicalEvent, Student, ApplicationUser, MedicalEvent>(sql,
+            query.SelectAll(typeof(Student));
+            query.SelectAll(typeof(ApplicationUser), "User");
+        }
+
+        protected override void JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.Student", "Student.Id", "MedicalEvent.StudentId");
+            query.LeftJoin("dbo.AspNetUsers as User", "User.Id", "MedicalEvent.RecordedById");
+        }
+
+        protected override async Task<IEnumerable<MedicalEvent>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<MedicalEvent, Student, ApplicationUser, MedicalEvent>(sql.Sql,
                 (medEvent, student, recorder) =>
                 {
                     medEvent.Student = student;
                     medEvent.RecordedBy = recorder;
 
                     return medEvent;
-                }, param);
+                }, sql.Bindings);
         }
     }
 }

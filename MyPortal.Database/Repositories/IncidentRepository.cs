@@ -6,6 +6,7 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -13,25 +14,35 @@ namespace MyPortal.Database.Repositories
     {
         public IncidentRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-            RelatedColumns = $@"
-{EntityHelper.GetPropertyNames(typeof(AcademicYear))},
-{EntityHelper.GetPropertyNames(typeof(IncidentType))},
-{EntityHelper.GetPropertyNames(typeof(Student))},
-{EntityHelper.GetPropertyNames(typeof(Location))},
-{EntityHelper.GetUserProperties("User")}";
-
-            (query => JoinRelated(query)) = $@"
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[AcademicYear]", "[AcademicYear].[Id]", "[Incident].[AcademicYearId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[IncidentType]", "[IncidentType].[Id]", "[Incident].[BehaviourTypeId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[Incident].[StudentId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Location]", "[Location].[Id]", "[Incident].[LocationId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[User].[Id]", "[Incident].[RecordedById]")}";
+            
         }
 
-        protected override async Task<IEnumerable<Incident>> ExecuteQuery(string sql, object param = null)
+        protected override void SelectAllRelated(Query query)
         {
+            query.SelectAll(typeof(AcademicYear));
+            query.SelectAll(typeof(IncidentType));
+            query.SelectAll(typeof(Student));
+            query.SelectAll(typeof(Location));
+            query.SelectAll(typeof(ApplicationUser));
+
+            JoinRelated(query);
+        }
+
+        protected override void JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.AcademicYear", "AcademicYear.Id", "Incident.AcademicYearId");
+            query.LeftJoin("dbo.IncidentType", "IncidentType.Id", "Incident.BehaviourTypeId");
+            query.LeftJoin("dbo.Student", "Student.Id", "Incident.StudentId");
+            query.LeftJoin("dbo.Location", "Location.Id", "Incident.LocationId");
+            query.LeftJoin("dbo.AspNetUsers as User", "User.Id", "Incident.RecordedById");
+        }
+
+        protected override async Task<IEnumerable<Incident>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
             return await Connection
-                .QueryAsync<Incident, AcademicYear, IncidentType, Student, Location, ApplicationUser, Incident>(sql,
+                .QueryAsync<Incident, AcademicYear, IncidentType, Student, Location, ApplicationUser, Incident>(sql.Sql,
                     (incident, year, type, student, location, user) =>
                     {
                         incident.AcademicYear = year;
@@ -41,7 +52,7 @@ namespace MyPortal.Database.Repositories
                         incident.RecordedBy = user;
 
                         return incident;
-                    }, param);
+                    }, sql.Bindings);
         }
     }
 }

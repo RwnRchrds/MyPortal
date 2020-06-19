@@ -5,6 +5,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -12,25 +13,35 @@ namespace MyPortal.Database.Repositories
     {
         public PersonConditionRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-            RelatedColumns = $@"
-{EntityHelper.GetPropertyNames(typeof(Person))},
-{EntityHelper.GetPropertyNames(typeof(MedicalCondition))}";
-
-            (query => JoinRelated(query)) = $@"
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[PersonAttachment].[PersonId]")},
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[MedicalCondition]", "[MedicalCondition].[Id]", "[PersonAttachment].[ConditionId]")}";
+           
         }
 
-        protected override async Task<IEnumerable<PersonCondition>> ExecuteQuery(string sql, object param = null)
+        protected override void SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<PersonCondition, Person, MedicalCondition, PersonCondition>(sql,
+            query.SelectAll(typeof(Person));
+            query.SelectAll(typeof(MedicalCondition));
+
+            JoinRelated(query);
+        }
+
+        protected override void JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.Person", "Person.Id", "PersonCondition.PersonId");
+            query.LeftJoin("dbo.MedicalCondition", "MedicalCondition.Id", "PersonCondition.ConditionId");
+        }
+
+        protected override async Task<IEnumerable<PersonCondition>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<PersonCondition, Person, MedicalCondition, PersonCondition>(sql.Sql,
                 (pcondition, person, condition) =>
                 {
                     pcondition.Person = person;
                     pcondition.MedicalCondition = condition;
 
                     return pcondition;
-                }, param);
+                }, sql.Bindings);
         }
     }
 }

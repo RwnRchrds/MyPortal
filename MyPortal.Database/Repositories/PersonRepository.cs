@@ -9,6 +9,8 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
+using MyPortal.Database.Search;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -16,75 +18,72 @@ namespace MyPortal.Database.Repositories
     {
         public PersonRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-       RelatedColumns = $"{EntityHelper.GetUserProperties("User")}";
-
-        (query => JoinRelated(query)) = $@"
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[AspNetUsers]", "[User].[Id]", "[Person].[UserId]", "User")}";
+     
         }
 
         public async Task<Person> GetByUserId(Guid userId)
         {
-            var sql = SelectAllColumns();
+            var query = SelectAllColumns();
 
-            QueryHelper.Where(ref sql, "[Person].[UserId] = @UserId");
+            query.Where("Person.UserId", userId);
 
-            return (await ExecuteQuery(sql, new {UserId = userId})).FirstOrDefault();
+            return (await ExecuteQuery(query)).FirstOrDefault();
         }
 
-        private static void ApplySearch(ref string sql, Person person)
+        protected override void SelectAllRelated(Query query)
         {
-            if (!string.IsNullOrWhiteSpace(person.FirstName))
+            query.SelectAll(typeof(ApplicationUser), "User");
+
+            JoinRelated(query);
+        }
+
+        protected override void JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.AspNetUsers as User", "User.Id", "Person.UserId");
+        }
+
+        private static void ApplySearch(Query query, PersonSearch search)
+        {
+            if (!string.IsNullOrWhiteSpace(search.FirstName))
             {
-                QueryHelper.Where(ref sql, "[Person].[FirstName] LIKE @FirstName");
+                query.WhereStarts("Person.FirstName", search.FirstName);
             }
 
-            if (!string.IsNullOrWhiteSpace(person.LastName))
+            if (!string.IsNullOrWhiteSpace(search.LastName))
             {
-                QueryHelper.Where(ref sql, "[Person].[LastName] LIKE @LastName");
+                query.WhereStarts("Person.LastName", search.LastName);
             }
 
-            if (!string.IsNullOrWhiteSpace(person.Gender))
+            if (!string.IsNullOrWhiteSpace(search.Gender))
             {
-                QueryHelper.Where(ref sql, "[Person].[Gender] = @Gender");
+                query.Where("Person.Gender", search.Gender);
             }
 
-            if (person.Dob != null)
+            if (search.Dob != null)
             {
-                QueryHelper.Where(ref sql, "[Person].[Dob] = @Dob");
+                query.WhereDate("Person.Dob", search.Dob);
             }
         }
 
-        public async Task<IEnumerable<Person>> GetAll(Person person)
+        public async Task<IEnumerable<Person>> GetAll(PersonSearch searchParams)
         {
-            var sql = SelectAllColumns();
+            var query = SelectAllColumns();
             
-            ApplySearch(ref sql, person);
+            ApplySearch(query, searchParams);
 
-            var param = new
-                {FirstName = $"{QueryHelper.ParamStartsWith(person.FirstName)}", LastName = $"{QueryHelper.ParamStartsWith(person.LastName)}", person.Gender, person.Dob};
-
-            return await ExecuteQuery(sql, param);
+            return await ExecuteQuery(query);
         }
 
-        public async Task<int> GetNumberOfBirthdaysThisWeek(DateTime weekBeginning)
+        protected override async Task<IEnumerable<Person>> ExecuteQuery(Query query)
         {
-            var sql = $"SELECT COUNT([Person].[Id]) FROM {TblName}";
+            var sql = Compiler.Compile(query);
 
-            QueryHelper.Where(ref sql, "[Person].[Dob] >= @Monday");
-            QueryHelper.Where(ref sql, "[Person].[Dob] <= @Sunday");
-
-            return await ExecuteIntQuery(sql,
-                new {Monday = weekBeginning, Sunday = weekBeginning.AddDays(6)});
-        }
-
-        protected override async Task<IEnumerable<Person>> ExecuteQuery(string sql, object param = null)
-        {
-            return await Connection.QueryAsync<Person, ApplicationUser, Person>(sql, (person, user) =>
+            return await Connection.QueryAsync<Person, ApplicationUser, Person>(sql.Sql, (person, user) =>
             {
                 person.User = user;
 
                 return person;
-            }, param);
+            }, sql.Bindings);
         }
     }
 }

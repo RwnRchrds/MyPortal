@@ -5,6 +5,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -12,24 +13,34 @@ namespace MyPortal.Database.Repositories
     {
         public RegGroupRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-            RelatedColumns = $@"
-{EntityHelper.GetPropertyNames(typeof(StaffMember))},
-{EntityHelper.GetPropertyNames(typeof(YearGroup))}";
-
-            (query => JoinRelated(query)) = $@"
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[StaffMember].[Id]", "[RegGroup].[TutorId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[YearGroup]", "[YearGroup].[Id]", "[RegGroup].[YearGroupId]")}";
+            
         }
 
-        protected override async Task<IEnumerable<RegGroup>> ExecuteQuery(string sql, object param = null)
+        protected override void SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<RegGroup, StaffMember, YearGroup, RegGroup>(sql, (reg, tutor, year) =>
+            query.SelectAll(typeof(StaffMember));
+            query.SelectAll(typeof(YearGroup));
+
+            JoinRelated(query);
+        }
+
+        protected override void JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.StaffMember", "StaffMember.Id", "RegGroup.TutorId");
+            query.LeftJoin("dbo.YearGroup", "YearGroup.Id", "RegGroup.YearGroupId");
+        }
+
+        protected override async Task<IEnumerable<RegGroup>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<RegGroup, StaffMember, YearGroup, RegGroup>(sql.Sql, (reg, tutor, year) =>
             {
                 reg.Tutor = tutor;
                 reg.YearGroup = year;
 
                 return reg;
-            }, param);
+            }, sql.Bindings);
         }
     }
 }

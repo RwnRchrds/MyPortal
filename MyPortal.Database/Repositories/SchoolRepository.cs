@@ -9,6 +9,7 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -16,44 +17,54 @@ namespace MyPortal.Database.Repositories
     {
         public SchoolRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-        RelatedColumns = $@"
-{EntityHelper.GetPropertyNames(typeof(LocalAuthority))},
-{EntityHelper.GetPropertyNames(typeof(Phase))},
-{EntityHelper.GetPropertyNames(typeof(SchoolType))},
-{EntityHelper.GetPropertyNames(typeof(GovernanceType))},
-{EntityHelper.GetPropertyNames(typeof(IntakeType))},
-{EntityHelper.GetPropertyNames(typeof(Person))}";
 
-        (query => JoinRelated(query)) = $@"
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[LocalAuthority]", "[LocalAuthority].[Id]", "[School].[LocalAuthorityId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Phase]", "[Phase].[Id]", "[School].[PhaseId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[SchoolType]", "[SchoolType].[Id]", "[School].[TypeId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[GovernanceType]", "[GovernanceType].[Id]", "[School].[GovernanceTypeId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[IntakeType]", "[IntakeType].[Id]", "[School].[IntakeTypeId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[School].[HeadTeacherId]")}";
+        }
+
+        protected override void SelectAllRelated(Query query)
+        {
+            query.SelectAll(typeof(LocalAuthority));
+            query.SelectAll(typeof(Phase));
+            query.SelectAll(typeof(SchoolType));
+            query.SelectAll(typeof(GovernanceType));
+            query.SelectAll(typeof(IntakeType));
+            query.SelectAll(typeof(Person));
+
+            JoinRelated(query);
+        }
+
+        protected override void JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.LocalAuthority", "LocalAuthority.Id", "School.LocalAuthorityId");
+            query.LeftJoin("dbo.Phase", "Phase.Id", "School.PhaseId");
+            query.LeftJoin("dbo.SchoolType", "SchoolType.Id", "School.TypeId");
+            query.LeftJoin("dbo.GovernanceType", "GovernanceType.Id", "School.GovernanceTypeId");
+            query.LeftJoin("dbo.IntakeType", "IntakeType.Id", "School.IntakeTypeId");
+            query.LeftJoin("dbo.Person", "Person.Id", "School.HeadTeacherId");
         }
 
         public async Task<string> GetLocalSchoolName()
         {
-            var sql = $"SELECT [School].[Name] FROM {TblName}";
-            
-            QueryHelper.Where(ref sql, "[School].[Local] = 1");
+            var query = new Query(TblName).Select("School.Name");
 
-            return await ExecuteStringQuery(sql);
+            query.Where("School.Local", true);
+
+            return await ExecuteStringQuery(query);
         }
 
         public async Task<School> GetLocal()
         {
-            var sql = SelectAllColumns();
-            
-            QueryHelper.Where(ref sql, "[School].[Local] = 1");
+            var query = SelectAllColumns();
 
-            return (await ExecuteQuery(sql)).First();
+            query.Where("School.Local", true);
+
+            return (await ExecuteQuery(query)).First();
         }
 
-        protected override async Task<IEnumerable<School>> ExecuteQuery(string sql, object param = null)
+        protected override async Task<IEnumerable<School>> ExecuteQuery(Query query)
         {
-            return await Connection.QueryAsync<School, LocalAuthority, Phase, SchoolType, GovernanceType, IntakeType, Person, School>(sql,
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<School, LocalAuthority, Phase, SchoolType, GovernanceType, IntakeType, Person, School>(sql.Sql,
                 (school, lea, phase, type, gov, intake, head) =>
                 {
                     school.LocalAuthority = lea;
@@ -64,7 +75,7 @@ namespace MyPortal.Database.Repositories
                     school.HeadTeacher = head;
 
                     return school;
-                }, param);
+                }, sql.Bindings);
         }
     }
 }

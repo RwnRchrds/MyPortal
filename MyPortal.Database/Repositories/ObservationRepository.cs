@@ -2,9 +2,11 @@
 using System.Data;
 using System.Threading.Tasks;
 using Dapper;
+using MyPortal.Database.Constants;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -12,24 +14,34 @@ namespace MyPortal.Database.Repositories
     {
         public ObservationRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-            RelatedColumns = $@"
-{EntityHelper.GetPropertyNames(typeof(StaffMember), "Observee")},
-{EntityHelper.GetPropertyNames(typeof(Person), "ObserveePerson")},
-{EntityHelper.GetPropertyNames(typeof(StaffMember), "Observer")},
-{EntityHelper.GetPropertyNames(typeof(Person), "ObserverPerson")},
-{EntityHelper.GetPropertyNames(typeof(ObservationOutcome))}";
-
-            (query => JoinRelated(query)) = $@"
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[Observee].[Id]", "[Observation].[ObserveeId]", "Observee")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[ObserveePerson].[Id]", "[Observee].[PersonId]", "ObserveePerson")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[Observer].[Id]", "[Observation].[ObserverId]", "Observer")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[ObserverPerson].[Id]", "[Observer].[PersonId]", "ObserverPerson")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[ObservationOutcome]", "[ObservationOutcome].[Id]", "[Observation].[OutcomeId]")}";
+            
         }
 
-        protected override async Task<IEnumerable<Observation>> ExecuteQuery(string sql, object param = null)
+        protected override void SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<Observation, StaffMember, Person, StaffMember, Person, ObservationOutcome, Observation>(sql,
+            query.SelectAll(typeof(StaffMember), "Observee");
+            query.SelectAll(typeof(Person), "ObserveePerson");
+            query.SelectAll(typeof(StaffMember), "Observer");
+            query.SelectAll(typeof(Person), "ObserverPerson");
+            query.SelectAll(typeof(ObservationOutcome));
+
+            JoinRelated(query);
+        }
+
+        protected override void JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.StaffMember as Observee", "Observee.Id", "Observation.ObserveeId");
+            query.LeftJoin("dbo.Person as ObserveePerson", "ObserveePerson.Id", "Observee.PersonId");
+            query.LeftJoin("dbo.StaffMember as Observer", "Observer.Id", "Observation.ObserverId");
+            query.LeftJoin("dbo.Person as ObserverPerson", "ObserverPerson.Id", "Observer.PersonId");
+            query.LeftJoin("dbo.ObservationOutcome", "ObservationOutcome.Id", "Observation.OutcomeId");
+        }
+
+        protected override async Task<IEnumerable<Observation>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<Observation, StaffMember, Person, StaffMember, Person, ObservationOutcome, Observation>(sql.Sql,
                 (observation, observee, pObservee, observer, pObserver, outcome) =>
                 {
                     observation.Observee = observee;
@@ -41,7 +53,7 @@ namespace MyPortal.Database.Repositories
                     observation.Outcome = outcome;
 
                     return observation;
-                }, param);
+                }, sql.Bindings);
         }
     }
 }

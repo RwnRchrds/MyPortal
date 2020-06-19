@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using MyPortal.Database.Models;
+using MyPortal.Database.Search;
 
 namespace MyPortal.Database.Interfaces
 {
@@ -10,8 +11,6 @@ namespace MyPortal.Database.Interfaces
     {
         Task<Person> GetByUserId(Guid userId);
 
-        Task<IEnumerable<Person>> GetAll(Person person);
-
-        Task<int> GetNumberOfBirthdaysThisWeek(DateTime weekBeginning);
+        Task<IEnumerable<Person>> GetAll(PersonSearch searchParams);
     }
 }

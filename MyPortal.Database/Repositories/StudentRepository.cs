@@ -47,12 +47,12 @@ namespace MyPortal.Database.Repositories
         {
             if (!string.IsNullOrWhiteSpace(search.FirstName))
             {
-                query.WhereLike( "StudentPerson.FirstName", search.FirstName);
+                query.WhereStarts( "StudentPerson.FirstName", search.FirstName);
             }
 
             if (!string.IsNullOrWhiteSpace(search.LastName))
             {
-                query.WhereLike("StudentPerson.LastName", search.LastName);
+                query.WhereStarts("StudentPerson.LastName", search.LastName);
             }
 
             if (!string.IsNullOrWhiteSpace(search.Gender))
