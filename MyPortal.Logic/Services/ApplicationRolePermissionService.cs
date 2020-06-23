@@ -54,21 +54,6 @@ namespace MyPortal.Logic.Services
             await _rolePermissionRepository.SaveChanges();
         }
 
-        public async Task VerifyPermissions()
-        {
-            var perms = Permissions.GetAll();
-
-            foreach (var perm in perms)
-            {
-                var permInDb = await _permissionRepository.GetByClaimValue(perm);
-
-                if (permInDb == null)
-                {
-                    throw BadRequest($"Permission {perm:X} not found in database");
-                }
-            }
-        }
-
         public override void Dispose()
         {
             _rolePermissionRepository.Dispose();

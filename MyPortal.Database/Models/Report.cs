@@ -9,25 +9,25 @@ namespace MyPortal.Database.Models
     public class Report
     {
 
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid AreaId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         [Required]
         [StringLength(128)]
         public string Name { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         [Required]
         [StringLength(128)]
         public string Description { get; set; }
 
-        [DataMember]
+        [Column(Order = 4)]
         public bool Restricted { get; set; }
 
         public virtual SystemArea SystemArea { get; set; }

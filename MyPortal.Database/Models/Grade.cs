@@ -14,23 +14,23 @@ namespace MyPortal.Database.Models
             Results = new HashSet<Result>();
         }
 
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid GradeSetId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         [Required]
         [StringLength(128)]
         public string Code { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         public int Value { get; set; }
 
-        [DataMember]
+        [Column(Order = 4)]
         public bool System { get; set; }
 
         public virtual GradeSet GradeSet { get; set; }

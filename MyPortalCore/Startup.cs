@@ -71,9 +71,11 @@ namespace MyPortalCore
                 {
                     var permissionsInDb = context.ApplicationPermissions.ToList();
 
+                    Permissions.PopulateClaimValues();
+
                     foreach (var perm in permissionsInDb)
                     {
-                        Permissions.ClaimValues.Add(perm.Id, perm.ClaimValue);
+                        Permissions.ClaimValues[perm.Id] = perm.ClaimValue;
                     }
                 }
             });

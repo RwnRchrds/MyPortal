@@ -53,7 +53,7 @@ namespace MyPortal.Database.Repositories
                     observation.Outcome = outcome;
 
                     return observation;
-                }, sql.Bindings);
+                }, sql.NamedBindings);
         }
     }
 }

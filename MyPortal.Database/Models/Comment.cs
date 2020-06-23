@@ -8,15 +8,15 @@ namespace MyPortal.Database.Models
     [Table("Comment")]
     public class Comment
     {
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid CommentBankId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         [Required]
         public string Value { get; set; }
 

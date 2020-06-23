@@ -5,6 +5,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -12,25 +13,35 @@ namespace MyPortal.Database.Repositories
     {
         public SenEventRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
-            RelatedColumns = $@"
-{EntityHelper.GetPropertyNames(typeof(Student))},
-{EntityHelper.GetPropertyNames(typeof(SenEventType))}";
-
-            (query => JoinRelated(query)) = $@"
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[SenEvent].[StudentId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[SenEventType]", "[SenEventType].[Id]", "[SenEvent].[EventTypeId]")}";
+           
         }
 
-        protected override async Task<IEnumerable<SenEvent>> ExecuteQuery(string sql, object param = null)
+        protected override void SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<SenEvent, Student, SenEventType, SenEvent>(sql,
+            query.SelectAll(typeof(Student));
+            query.SelectAll(typeof(SenEventType));
+
+            JoinRelated(query);
+        }
+
+        protected override void JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.Student", "Student.Id", "SenEvent.StudentId");
+            query.LeftJoin("dbo.SenEventType", "SenEventType.Id", "SenEvent.EventTypeId");
+        }
+
+        protected override async Task<IEnumerable<SenEvent>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<SenEvent, Student, SenEventType, SenEvent>(sql.Sql,
                 (senEvent, student, type) =>
                 {
                     senEvent.Student = student;
                     senEvent.Type = type;
 
                     return senEvent;
-                }, param);
+                }, sql.NamedBindings);
         }
     }
 }

@@ -39,7 +39,7 @@ namespace MyPortal.Database.Repositories
                     telNo.Person = person;
 
                     return telNo;
-                }, sql.Bindings);
+                }, sql.NamedBindings);
         }
     }
 }

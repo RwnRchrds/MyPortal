@@ -18,22 +18,22 @@ namespace MyPortal.Database.Models
             StaffMembers = new HashSet<SubjectStaffMember>();
         }
 
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         [Required]
         [StringLength(256)]
         public string Name { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         [Required]
         [StringLength(128)]
         public string Code { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         public bool Deleted { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

@@ -15,7 +15,6 @@ using Microsoft.Extensions.Logging;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
-using MyPortal.Logic.Authorisation.Attributes;
 using MyPortal.Logic.Interfaces;
 using Task = System.Threading.Tasks.Task;
 

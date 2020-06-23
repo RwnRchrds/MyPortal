@@ -16,20 +16,20 @@ namespace MyPortal.Database.Models
             Aspects = new HashSet<Aspect>();
         }
 
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         [Required]
         [StringLength(256)]
         public string Name { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public bool Active { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         public bool System { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

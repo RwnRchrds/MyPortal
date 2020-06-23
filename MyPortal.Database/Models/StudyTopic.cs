@@ -15,18 +15,18 @@ namespace MyPortal.Database.Models
             LessonPlans = new HashSet<LessonPlan>();
         }
 
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid SubjectId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid YearGroupId { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         [Required]
         [StringLength(256)]
         public string Name { get; set; }

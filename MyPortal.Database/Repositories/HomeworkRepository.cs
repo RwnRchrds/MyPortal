@@ -36,7 +36,7 @@ namespace MyPortal.Database.Repositories
                 homework.Directory = directory;
 
                 return homework;
-            }, sql.Bindings);
+            }, sql.NamedBindings);
         }
     }
 }

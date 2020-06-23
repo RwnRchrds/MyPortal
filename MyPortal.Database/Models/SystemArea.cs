@@ -17,17 +17,17 @@ namespace MyPortal.Database.Models
             SubAreas = new HashSet<SystemArea>();
         }
 
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         [Required]
         [StringLength(128)]
         public string Description { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid? ParentId { get; set; }
 
         public virtual SystemArea Parent { get; set; }

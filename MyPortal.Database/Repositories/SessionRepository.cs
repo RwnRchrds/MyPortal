@@ -5,6 +5,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -12,24 +13,34 @@ namespace MyPortal.Database.Repositories
     {
         public SessionRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
         {
-            RelatedColumns = $@"
-{EntityHelper.GetPropertyNames(typeof(Class))},
-{EntityHelper.GetPropertyNames(typeof(Period))}";
-
-            (query => JoinRelated(query)) = $@"
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Class]", "[Class].[Id]", "[Session].[ClassId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Period]", "[Period].[Id]", "[Session].[PeriodId]")}";
+            
         }
 
-        protected override async Task<IEnumerable<Session>> ExecuteQuery(string sql, object param = null)
+        protected override void SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<Session, Class, Period, Session>(sql, (session, currClass, period) =>
+            query.SelectAll(typeof(Class));
+            query.SelectAll(typeof(Period));
+
+            JoinRelated(query);
+        }
+
+        protected override void JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.Class", "Class.Id", "Session.ClassId");
+            query.LeftJoin("dbo.Period", "Period.Id", "Session.PeriodId");
+        }
+
+        protected override async Task<IEnumerable<Session>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<Session, Class, Period, Session>(sql.Sql, (session, currClass, period) =>
                 {
                     session.Class = currClass;
                     session.Period = period;
 
                     return session;
-                }, param);
+                }, sql.NamedBindings);
         }
     }
 }

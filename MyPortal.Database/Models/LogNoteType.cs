@@ -7,8 +7,9 @@ using MyPortal.Database.BaseTypes;
 
 namespace MyPortal.Database.Models
 {
+    [DataContract]
     [Table("LogNoteType")]
-    public partial class LogNoteType : LookupItem
+    public class LogNoteType : LookupItem
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public LogNoteType()
@@ -16,7 +17,7 @@ namespace MyPortal.Database.Models
             LogNotes = new HashSet<LogNote>();
         }
         
-        [DataMember]
+        [Column(Order = 3)]
         [StringLength(128)] 
         public string ColourCode { get; set; }
 

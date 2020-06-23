@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.VisualStudio.Web.CodeGeneration.DotNet;
 using MyPortal.Database.Constants;
-using MyPortal.Logic.Authorisation.Attributes;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
@@ -15,7 +14,7 @@ using MyPortalCore.Areas.Staff.ViewModels.Student;
 
 namespace MyPortalCore.Areas.Staff.Controllers
 {
-    public class StudentController : BaseController
+    public class StudentController : StaffPortalController
     {
         private IStudentService _studentService;
         private IPersonService _personService;
@@ -34,19 +33,21 @@ namespace MyPortalCore.Areas.Staff.Controllers
             _attendanceMarkService = attendanceMarkService;
         }
 
-        [RequiresPermission(Permissions.Student.Details.View)]
-        public IActionResult Index()
+        
+        public async Task<IActionResult> Index()
         {
-            var viewModel = new StudentSearchViewModel();
-            viewModel.SearchTypes = _studentService.GetSearchFilters();
-            viewModel.GenderOptions = _personService.GetGenderOptions();
+            return await Process(async () =>
+            {
+                var viewModel = new StudentSearchViewModel();
+                viewModel.SearchTypes = _studentService.GetSearchFilters();
+                viewModel.GenderOptions = _personService.GetGenderOptions();
 
-            return View(viewModel);
+                return View(viewModel);
+            });
         }
 
 
         [Route("{studentId}")]
-        [RequiresPermission(Permissions.Student.Details.View)]
         public async Task<IActionResult> StudentProfileOverview(Guid studentId)
         {
             var user = await _userService.GetUserByPrincipal(User);
@@ -78,7 +79,6 @@ namespace MyPortalCore.Areas.Staff.Controllers
         }
 
         [Route("{studentId}/Documents")]
-        [RequiresPermission(Permissions.Student.StudentDocuments.Edit)]
         public async Task<IActionResult> StudentProfileDocuments(Guid studentId)
         {
             var viewModel = new StudentDocumentsViewModel();

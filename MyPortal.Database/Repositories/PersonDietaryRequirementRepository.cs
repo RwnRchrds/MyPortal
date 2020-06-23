@@ -43,7 +43,7 @@ namespace MyPortal.Database.Repositories
                         pdr.DietaryRequirement = req;
 
                         return pdr;
-                    }, sql.Bindings);
+                    }, sql.NamedBindings);
         }
     }
 }

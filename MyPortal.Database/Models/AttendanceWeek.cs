@@ -15,22 +15,21 @@ namespace MyPortal.Database.Models
             AttendanceMarks = new HashSet<AttendanceMark>();
         }
 
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid AcademicYearId { get; set; }
 
-        [DataMember]
-        [Column(TypeName = "date")]
+        [Column(Order = 2, TypeName = "date")]
         public DateTime Beginning { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         public bool IsHoliday { get; set; }
 
-        [DataMember]
+        [Column(Order = 4)]
         public bool IsNonTimetable { get; set; }
 
         public virtual AcademicYear AcademicYear { get; set; }

@@ -10,31 +10,35 @@ namespace MyPortal.Database.Models
     [Table("HomeworkSubmission")]
     public class HomeworkSubmission
     {
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid HomeworkId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid StudentId { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         public Guid TaskId { get; set; }
 
-        [DataMember]
+        [Column(Order = 4)] 
+        public Guid? DocumentId { get; set; }
+
+        [Column(Order = 5)]
         public int MaxPoints { get; set; }
 
-        [DataMember]
+        [Column(Order = 6)]
         public int PointsAchieved { get; set; }
 
-        [DataMember]
+        [Column(Order = 7)]
         public string Comments { get; set; }
 
         public virtual Homework Homework { get; set; }
         public virtual Student Student { get; set; }
         public virtual Task Task { get; set; }
+        public virtual Document SubmittedWork { get; set; }
     }
 }

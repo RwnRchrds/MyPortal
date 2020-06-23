@@ -46,7 +46,7 @@ namespace MyPortal.Database.Repositories
                         rp.Permission = perm;
 
                         return rp;
-                    }, sql.Bindings);
+                    }, sql.NamedBindings);
         }
 
         public async Task<IEnumerable<ApplicationRolePermission>> GetByRole(Guid roleId)
@@ -68,7 +68,7 @@ namespace MyPortal.Database.Repositories
 
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<string>(sql.Sql, sql.Bindings);
+            return await Connection.QueryAsync<string>(sql.Sql, sql.NamedBindings);
         }
     }
 }

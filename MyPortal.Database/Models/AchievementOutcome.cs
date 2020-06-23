@@ -16,7 +16,7 @@ namespace MyPortal.Database.Models
             Achievements = new HashSet<Achievement>();
         }
 
-        [DataMember]
+        [Column (Order = 3)]
         public bool System { get; set; }
 
         public virtual ICollection<Achievement> Achievements { get; set; }

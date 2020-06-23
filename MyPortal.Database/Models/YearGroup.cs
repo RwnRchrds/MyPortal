@@ -18,20 +18,20 @@ namespace MyPortal.Database.Models
             RegGroups = new HashSet<RegGroup>();
         }
 
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         [Required]
         [StringLength(256)]
         public string Name { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         public Guid? HeadId { get; set; }
 
-        [DataMember]
+        [Column(Order = 4)]
         public Guid CurriculumYearGroupId { get; set; }
 
         public virtual CurriculumYearGroup CurriculumYearGroup { get; set; }

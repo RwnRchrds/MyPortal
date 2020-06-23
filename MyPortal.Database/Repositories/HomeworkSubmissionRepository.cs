@@ -49,7 +49,7 @@ namespace MyPortal.Database.Repositories
                         submission.Task = task;
 
                         return submission;
-                    }, sql.Bindings);
+                    }, sql.NamedBindings);
         }
     }
 }

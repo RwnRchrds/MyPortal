@@ -8,25 +8,25 @@ namespace MyPortal.Database.Models
     [Table("SenReview")]
     public class SenReview
     {
-        [DataMember]
+        [Column(Order = 0)]
         [Key] 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid StudentId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid ReviewTypeId { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         public DateTime Date { get; set; }
 
-        [DataMember]
+        [Column(Order = 4)]
         [StringLength(256)]
         public string Description { get; set; }
 
-        [DataMember]
+        [Column(Order = 5)]
         [StringLength(256)]
         public string Outcome { get; set; }
 

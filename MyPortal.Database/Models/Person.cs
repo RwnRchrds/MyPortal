@@ -32,56 +32,54 @@ namespace MyPortal.Database.Models
             AssignedTo = new HashSet<Task>();
         }
 
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid DirectoryId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         [StringLength(128)]
         public string Title { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         [Required]
         [StringLength(256)]
         public string FirstName { get; set; }
 
-        [DataMember]
+        [Column(Order = 4)]
         [StringLength(256)] 
         public string MiddleName { get; set; }
 
-        [DataMember]
+        [Column(Order = 5)]
         public int? PhotoId { get; set; }
 
-        [DataMember]
+        [Column(Order = 6)]
         [StringLength(256)]
         public string NhsNumber { get; set; }
 
-        [DataMember]
+        [Column(Order = 7)]
         [Required]
         [StringLength(256)]
         public string LastName { get; set; }
 
-        [DataMember]
+        [Column(Order = 8)]
         [Required]
         [StringLength(1)]
         public string Gender { get; set; }
 
-        [DataMember]
-        [Column(TypeName = "date")]
+        [Column(Order = 9, TypeName = "date")]
         public DateTime? Dob { get; set; }
 
-        [DataMember]
-        [Column(TypeName = "date")] 
+        [Column(Order = 10, TypeName = "date")] 
         public DateTime? Deceased { get; set; }
 
-        [DataMember]
+        [Column(Order = 11)]
         public Guid? UserId { get; set; }
 
-        [DataMember]
+        [Column(Order = 12)]
         public bool Deleted { get; set; }
 
         public virtual Contact ContactDetails { get; set; }

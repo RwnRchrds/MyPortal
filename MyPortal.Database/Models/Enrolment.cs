@@ -8,15 +8,15 @@ namespace MyPortal.Database.Models
     [Table("Enrolment")]
     public class Enrolment
     {
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid StudentId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid BandId { get; set; }
 
         public virtual CurriculumBand Band { get; set; }

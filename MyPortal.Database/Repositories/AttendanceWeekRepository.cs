@@ -39,7 +39,7 @@ namespace MyPortal.Database.Repositories
                 week.AcademicYear = year;
 
                 return week;
-            }, sql.Bindings);
+            }, sql.NamedBindings);
         }
     }
 }

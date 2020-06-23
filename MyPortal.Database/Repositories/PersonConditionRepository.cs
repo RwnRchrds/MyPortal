@@ -41,7 +41,7 @@ namespace MyPortal.Database.Repositories
                     pcondition.MedicalCondition = condition;
 
                     return pcondition;
-                }, sql.Bindings);
+                }, sql.NamedBindings);
         }
     }
 }

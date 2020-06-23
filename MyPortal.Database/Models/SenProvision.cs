@@ -8,26 +8,24 @@ namespace MyPortal.Database.Models
     [Table("SenProvision")]
     public class SenProvision
     {
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid StudentId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid ProvisionTypeId { get; set; }
 
-        [DataMember]
-        [Column(TypeName = "date")]
+        [Column(Order = 3, TypeName = "date")]
         public DateTime StartDate { get; set; }
 
-        [DataMember]
-        [Column(TypeName = "date")]
+        [Column(Order = 4, TypeName = "date")]
         public DateTime EndDate { get; set; }
 
-        [DataMember]
+        [Column(Order = 5)]
         [Required]
         public string Note { get; set; }
 

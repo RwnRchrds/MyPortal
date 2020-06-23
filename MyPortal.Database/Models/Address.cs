@@ -15,53 +15,53 @@ namespace MyPortal.Database.Models
             People = new HashSet<AddressPerson>();
         }
 
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         [StringLength(128)]
         public string HouseNumber { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         [StringLength(128)]
         public string HouseName { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         [StringLength(128)]
         public string Apartment { get; set; }
 
-        [DataMember]
+        [Column(Order = 4)]
         [Required]
         [StringLength(256)]
         public string Street { get; set; }
 
-        [DataMember]
+        [Column(Order = 5)]
         [StringLength(256)]
         public string District { get; set; }
 
-        [DataMember]
+        [Column(Order = 6)]
         [Required]
         [StringLength(256)]
         public string Town { get; set; }
 
-        [DataMember]
+        [Column(Order = 7)]
         [Required]
         [StringLength(256)]
         public string County { get; set; }
 
-        [DataMember]
+        [Column(Order = 8)]
         [Required]
         [StringLength(128)]
         public string Postcode { get; set; }
 
-        [DataMember]
+        [Column(Order = 9)]
         [Required]
         [StringLength(128)]
         public string Country { get; set; }
 
-        [DataMember]
+        [Column(Order = 10)]
         public bool Validated { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

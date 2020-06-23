@@ -40,7 +40,7 @@ namespace MyPortal.Database.Repositories
                     directory.Parent = parent;
 
                     return directory;
-                }, sql.Bindings);
+                }, sql.NamedBindings);
         }
 
         public async Task<IEnumerable<Directory>> GetSubdirectories(Guid directoryId, bool includeStaffOnly)

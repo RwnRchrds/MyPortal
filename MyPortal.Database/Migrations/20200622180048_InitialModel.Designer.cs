@@ -10,7 +10,7 @@ using MyPortal.Database.Models;
 namespace MyPortal.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200602130805_InitialModel")]
+    [Migration("20200622180048_InitialModel")]
     partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -589,7 +589,7 @@ namespace MyPortal.Database.Migrations
                     b.Property<DateTime?>("ExpireDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("ShowStudents")
+                    b.Property<bool>("StaffOnly")
                         .HasColumnType("bit");
 
                     b.Property<string>("Title")
@@ -695,11 +695,17 @@ namespace MyPortal.Database.Migrations
                     b.Property<Guid>("CommunicationTypeId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("ContactId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Outgoing")
+                        .HasColumnType("bit");
 
                     b.Property<Guid>("PersonId")
                         .HasColumnType("uniqueidentifier");
@@ -1015,6 +1021,9 @@ namespace MyPortal.Database.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
+
+                    b.Property<bool>("System")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -2865,6 +2874,9 @@ namespace MyPortal.Database.Migrations
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
 
+                    b.Property<Guid?>("LineManagerId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("NiNumber")
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
@@ -2880,6 +2892,8 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("LineManagerId");
 
                     b.HasIndex("PersonId")
                         .IsUnique();
@@ -3153,6 +3167,9 @@ namespace MyPortal.Database.Migrations
                     b.Property<bool>("Completed")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime?>("CompletedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -3171,13 +3188,45 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
+                    b.Property<Guid>("TypeId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AssignedById");
 
                     b.HasIndex("AssignedToId");
 
+                    b.HasIndex("TypeId");
+
                     b.ToTable("Task");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.TaskType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ColourCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<bool>("Personal")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TaskType");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.TrainingCertificate", b =>
@@ -4142,6 +4191,11 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.StaffMember", b =>
                 {
+                    b.HasOne("MyPortal.Database.Models.StaffMember", "LineManager")
+                        .WithMany("Subordinates")
+                        .HasForeignKey("LineManagerId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("MyPortal.Database.Models.Person", "Person")
                         .WithOne("StaffMemberDetails")
                         .HasForeignKey("MyPortal.Database.Models.StaffMember", "PersonId")
@@ -4253,6 +4307,12 @@ namespace MyPortal.Database.Migrations
                     b.HasOne("MyPortal.Database.Models.Person", "AssignedTo")
                         .WithMany("AssignedTo")
                         .HasForeignKey("AssignedToId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.TaskType", "Type")
+                        .WithMany("Tasks")
+                        .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

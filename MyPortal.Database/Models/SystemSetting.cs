@@ -10,14 +10,14 @@ namespace MyPortal.Database.Models
     [Table("SystemSetting")]
     public class SystemSetting
     {
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         public string Name { get; set; }
         
-        [DataMember]
+        [Column(Order = 1)]
         public string Type { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public string Setting { get; set; }
     }
 }

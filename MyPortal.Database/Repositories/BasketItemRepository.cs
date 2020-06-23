@@ -47,7 +47,7 @@ namespace MyPortal.Database.Repositories
                     item.Product = product;
 
                     return item;
-                }, sql.Bindings);
+                }, sql.NamedBindings);
         }
     }
 }

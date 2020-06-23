@@ -9,37 +9,37 @@ namespace MyPortal.Database.Models
     [Table("LogNote")]
     public class LogNote
     {
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid TypeId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid CreatedById { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         public Guid UpdatedById { get; set; }
 
-        [DataMember]
+        [Column(Order = 4)]
         public Guid StudentId { get; set; }
 
-        [DataMember]
+        [Column(Order = 5)]
         public Guid AcademicYearId { get; set; }
 
-        [DataMember]
+        [Column(Order = 6)]
         [Required]
         public string Message { get; set; }
 
-        [DataMember]
+        [Column(Order = 7)]
         public DateTime CreatedDate { get; set; }
 
-        [DataMember]
+        [Column(Order = 8)]
         public DateTime UpdatedDate { get; set; }
 
-        [DataMember]
+        [Column(Order = 9)]
         public bool Deleted { get; set; }
 
         public virtual ApplicationUser CreatedBy { get; set; }

@@ -15,43 +15,42 @@ namespace MyPortal.Database.Models
             Detentions = new HashSet<IncidentDetention>();
         }
 
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid AcademicYearId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid BehaviourTypeId { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         public Guid StudentId { get; set; }
 
-        [DataMember]
+        [Column(Order = 4)]
         public Guid LocationId { get; set; }
 
-        [DataMember]
+        [Column(Order = 5)]
         public Guid RecordedById { get; set; }
 
-        [DataMember]
+        [Column(Order = 6)]
         public Guid? OutcomeId { get; set; }
 
-        [DataMember]
+        [Column(Order = 7)]
         public Guid StatusId { get; set; }
 
-        [DataMember]
-        [Column(TypeName = "date")]
+        [Column(Order = 8, TypeName = "date")]
         public DateTime CreatedDate { get; set; }
 
-        [DataMember]
+        [Column(Order = 9)]
         public string Comments { get; set; }
 
-        [DataMember]
+        [Column(Order = 10)]
         public int Points { get; set; }
 
-        [DataMember]
+        [Column(Order = 11)]
         public bool Deleted { get; set; }
 
         public virtual IncidentType Type { get; set; }

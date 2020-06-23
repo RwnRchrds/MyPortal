@@ -40,7 +40,7 @@ namespace MyPortal.Database.Repositories
                 log.Type = type;
 
                 return log;
-            }, sql.Bindings);
+            }, sql.NamedBindings);
         }
     }
 }

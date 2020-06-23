@@ -69,7 +69,7 @@ namespace MyPortal.Database.Repositories
                     incidentDetention.Detention.Supervisor.Person = (Person) objects[9];
 
                     return incidentDetention;
-                }, sql.Bindings);
+                }, sql.NamedBindings);
         }
     }
 }

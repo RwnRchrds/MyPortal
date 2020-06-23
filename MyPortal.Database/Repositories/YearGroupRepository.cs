@@ -5,6 +5,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -12,20 +13,28 @@ namespace MyPortal.Database.Repositories
     {
         public YearGroupRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
         {
-            RelatedColumns = $@"
-{EntityHelper.GetPropertyNames(typeof(StaffMember))},
-{EntityHelper.GetPropertyNames(typeof(Person))},
-{EntityHelper.GetPropertyNames(typeof(CurriculumYearGroup))}";
-
-            (query => JoinRelated(query)) = $@"
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[StaffMember]", "[StaffMember].[Id]", "[YearGroup].[HeadId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[StaffMember].[PersonId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[CurriculumYearGroup]", "[CurriculumYearGroup].[Id]", "[YearGroup].[Id]")}";
+            
         }
 
-        protected override async Task<IEnumerable<YearGroup>> ExecuteQuery(string sql, object param = null)
+        protected override void SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<YearGroup, StaffMember, Person, CurriculumYearGroup, YearGroup>(sql, (yearGroup, head, person, curriculumGroup) =>
+            query.SelectAll(typeof(StaffMember));
+            query.SelectAll(typeof(Person));
+            query.SelectAll(typeof(CurriculumYearGroup));
+        }
+
+        protected override void JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.StaffMember", "StaffMember.Id", "YearGroup.HeadId");
+            query.LeftJoin("dbo.Person", "Person.Id", "StaffMember.PersonId");
+            query.LeftJoin("dbo.CurriculumYearGroup", "CurriculumYearGroup.Id", "YearGroup.Id");
+        }
+
+        protected override async Task<IEnumerable<YearGroup>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<YearGroup, StaffMember, Person, CurriculumYearGroup, YearGroup>(sql.Sql, (yearGroup, head, person, curriculumGroup) =>
             {
                 yearGroup.HeadOfYear = head;
                 yearGroup.HeadOfYear.Person = person;
@@ -33,7 +42,7 @@ namespace MyPortal.Database.Repositories
                 yearGroup.CurriculumYearGroup = curriculumGroup;
 
                 return yearGroup;
-            }, param);
+            }, sql.NamedBindings);
         }
     }
 }

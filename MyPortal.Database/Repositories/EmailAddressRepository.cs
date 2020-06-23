@@ -41,7 +41,7 @@ namespace MyPortal.Database.Repositories
                     address.Person = person;
 
                     return address;
-                }, sql.Bindings);
+                }, sql.NamedBindings);
         }
     }
 }

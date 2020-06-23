@@ -50,7 +50,7 @@ namespace MyPortal.Database.Repositories
                         attendee.Response = response;
 
                         return attendee;
-                    }, sql.Bindings);
+                    }, sql.NamedBindings);
         }
     }
 }

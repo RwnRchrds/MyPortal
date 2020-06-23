@@ -40,7 +40,7 @@ namespace MyPortal.Database.Repositories
                 reg.YearGroup = year;
 
                 return reg;
-            }, sql.Bindings);
+            }, sql.NamedBindings);
         }
     }
 }

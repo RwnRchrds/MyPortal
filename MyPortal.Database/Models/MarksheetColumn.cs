@@ -8,21 +8,21 @@ namespace MyPortal.Database.Models
     [Table("MarksheetColumn")]
     public class MarksheetColumn
     {
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid TemplateId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid AspectId { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         public Guid ResultSetId { get; set; }
 
-        [DataMember]
+        [Column(Order = 4)]
         public int ColumnOrder { get; set; }
 
         public virtual MarksheetTemplate Template { get; set; }

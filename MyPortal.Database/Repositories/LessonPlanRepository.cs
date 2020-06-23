@@ -45,7 +45,7 @@ namespace MyPortal.Database.Repositories
                     lessonPlan.Author.Person = person;
 
                     return lessonPlan;
-                }, sql.Bindings);
+                }, sql.NamedBindings);
         }
     }
 }

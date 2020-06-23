@@ -15,7 +15,7 @@ namespace MyPortal.Database.Models
             Observations = new HashSet<Observation>();
         }
 
-        [DataMember]
+        [Column(Order = 3)]
         [StringLength(128)]
         public string ColourCode { get; set; }
 

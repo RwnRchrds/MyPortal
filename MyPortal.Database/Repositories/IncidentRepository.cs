@@ -52,7 +52,7 @@ namespace MyPortal.Database.Repositories
                         incident.RecordedBy = user;
 
                         return incident;
-                    }, sql.Bindings);
+                    }, sql.NamedBindings);
         }
     }
 }

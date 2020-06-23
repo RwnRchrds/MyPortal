@@ -5,6 +5,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -12,21 +13,31 @@ namespace MyPortal.Database.Repositories
     {
         public StaffMemberRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
         {
-            RelatedColumns = $@"
-{EntityHelper.GetPropertyNames(typeof(Person))}";
-
-            (query => JoinRelated(query)) = $@"
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[StaffMember].[PersonId]")}";
+           
         }
 
-        protected override async Task<IEnumerable<StaffMember>> ExecuteQuery(string sql, object param = null)
+        protected override void SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<StaffMember, Person, StaffMember>(sql, (staff, person) =>
+            query.SelectAll(typeof(Person));
+
+            JoinRelated(query);
+        }
+
+        protected override void JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.Person", "Person.Id", "StaffMember.PersonId");
+        }
+
+        protected override async Task<IEnumerable<StaffMember>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<StaffMember, Person, StaffMember>(sql.Sql, (staff, person) =>
             {
                 staff.Person = person;
 
                 return staff;
-            }, param);
+            }, sql.NamedBindings);
         }
     }
 }

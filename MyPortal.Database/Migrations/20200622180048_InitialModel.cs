@@ -243,7 +243,8 @@ namespace MyPortal.Database.Migrations
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 256, nullable: false),
                     Active = table.Column<bool>(nullable: false),
-                    ColourCode = table.Column<string>(maxLength: 128, nullable: true)
+                    ColourCode = table.Column<string>(maxLength: 128, nullable: true),
+                    System = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -680,6 +681,21 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TaskType",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false),
+                    Personal = table.Column<bool>(nullable: false),
+                    ColourCode = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TaskType", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TrainingCertificateStatus",
                 columns: table => new
                 {
@@ -829,9 +845,11 @@ namespace MyPortal.Database.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     PersonId = table.Column<Guid>(nullable: false),
+                    ContactId = table.Column<Guid>(nullable: false),
                     CommunicationTypeId = table.Column<Guid>(nullable: false),
                     Date = table.Column<DateTime>(nullable: false),
-                    Note = table.Column<string>(nullable: true)
+                    Note = table.Column<string>(nullable: true),
+                    Outgoing = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -920,12 +938,12 @@ namespace MyPortal.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false),
                     TypeId = table.Column<Guid>(nullable: false),
                     GradeSetId = table.Column<Guid>(nullable: true),
                     MaxMark = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
-                    Name = table.Column<string>(maxLength: 128, nullable: false),
-                    Description = table.Column<string>(maxLength: 256, nullable: false),
-                    Active = table.Column<bool>(nullable: false)
+                    Name = table.Column<string>(maxLength: 128, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1126,7 +1144,7 @@ namespace MyPortal.Database.Migrations
                     ExpireDate = table.Column<DateTime>(nullable: true),
                     Title = table.Column<string>(maxLength: 128, nullable: false),
                     Detail = table.Column<string>(nullable: false),
-                    ShowStudents = table.Column<bool>(nullable: false),
+                    StaffOnly = table.Column<bool>(nullable: false),
                     Approved = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -1535,6 +1553,7 @@ namespace MyPortal.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    LineManagerId = table.Column<Guid>(nullable: true),
                     PersonId = table.Column<Guid>(nullable: false),
                     Code = table.Column<string>(maxLength: 128, nullable: false),
                     NiNumber = table.Column<string>(maxLength: 128, nullable: true),
@@ -1545,6 +1564,12 @@ namespace MyPortal.Database.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_StaffMember", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StaffMember_StaffMember_LineManagerId",
+                        column: x => x.LineManagerId,
+                        principalTable: "StaffMember",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_StaffMember_Person_PersonId",
                         column: x => x.PersonId,
@@ -1558,10 +1583,12 @@ namespace MyPortal.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    TypeId = table.Column<Guid>(nullable: false),
                     AssignedToId = table.Column<Guid>(nullable: false),
                     AssignedById = table.Column<Guid>(nullable: true),
                     CreatedDate = table.Column<DateTime>(nullable: false),
                     DueDate = table.Column<DateTime>(nullable: true),
+                    CompletedDate = table.Column<DateTime>(nullable: true),
                     Title = table.Column<string>(maxLength: 128, nullable: false),
                     Description = table.Column<string>(maxLength: 256, nullable: true),
                     Personal = table.Column<bool>(nullable: false),
@@ -1580,6 +1607,12 @@ namespace MyPortal.Database.Migrations
                         name: "FK_Task_Person_AssignedToId",
                         column: x => x.AssignedToId,
                         principalTable: "Person",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Task_TaskType_TypeId",
+                        column: x => x.TypeId,
+                        principalTable: "TaskType",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -3152,6 +3185,11 @@ namespace MyPortal.Database.Migrations
                 column: "TeacherId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_StaffMember_LineManagerId",
+                table: "StaffMember",
+                column: "LineManagerId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_StaffMember_PersonId",
                 table: "StaffMember",
                 column: "PersonId",
@@ -3237,6 +3275,11 @@ namespace MyPortal.Database.Migrations
                 name: "IX_Task_AssignedToId",
                 table: "Task",
                 column: "AssignedToId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Task_TypeId",
+                table: "Task",
+                column: "TypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TrainingCertificate_CourseId",
@@ -3529,6 +3572,9 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "SystemArea");
+
+            migrationBuilder.DropTable(
+                name: "TaskType");
 
             migrationBuilder.DropTable(
                 name: "DetentionType");

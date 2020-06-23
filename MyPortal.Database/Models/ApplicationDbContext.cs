@@ -1123,7 +1123,6 @@ namespace MyPortal.Database.Models
                 .HasMany(e => e.Subordinates)
                 .WithOne(e => e.LineManager)
                 .HasForeignKey(e => e.LineManagerId)
-                .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Student>()

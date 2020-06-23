@@ -54,7 +54,7 @@ namespace MyPortal.Database.Repositories
                     currClass.Band = band;
 
                     return currClass;
-                }, sql.Bindings);
+                }, sql.NamedBindings);
         }
     }
 }

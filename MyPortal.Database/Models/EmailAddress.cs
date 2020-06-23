@@ -8,30 +8,30 @@ namespace MyPortal.Database.Models
     [Table("EmailAddress")]
     public class EmailAddress
     {
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid TypeId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid PersonId { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         [Required]
         [EmailAddress]
         [StringLength(128)]
         public string Address { get; set; }
 
-        [DataMember]
+        [Column(Order = 4)]
         public bool Main { get; set; }
 
-        [DataMember]
+        [Column(Order = 5)]
         public bool Primary { get; set; }
 
-        [DataMember]
+        [Column(Order = 6)]
         public string Notes { get; set; }
 
         public virtual Person Person { get; set; }

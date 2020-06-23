@@ -9,40 +9,39 @@ namespace MyPortal.Database.Models
     [Table("Achievement")]
     public class Achievement
     {
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid AcademicYearId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid AchievementTypeId { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         public Guid StudentId { get; set; }
 
-        [DataMember]
+        [Column(Order = 4)]
         public Guid LocationId { get; set; }
 
-        [DataMember]
+        [Column(Order = 5)]
         public Guid RecordedById { get; set; }
 
-        [DataMember]
+        [Column(Order = 6)]
         public Guid? OutcomeId { get; set; }
 
-        [DataMember]
-        [Column(TypeName = "date")]
+        [Column(Order = 7, TypeName = "date")]
         public DateTime CreatedDate { get; set; }
 
-        [DataMember]
+        [Column(Order = 8)]
         public string Comments { get; set; }
 
-        [DataMember]
+        [Column(Order = 9)]
         public int Points { get; set; }
 
-        [DataMember]
+        [Column(Order = 10)]
         public bool Deleted { get; set; }
 
         public virtual AchievementType Type { get; set; }

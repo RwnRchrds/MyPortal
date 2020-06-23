@@ -8,18 +8,18 @@ namespace MyPortal.Database.Models
     [Table("GiftedTalented")]
     public class GiftedTalented
     {
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid StudentId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid SubjectId { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         [Required]
         public string Notes { get; set; }
 

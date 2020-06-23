@@ -14,26 +14,26 @@ namespace MyPortal.Database.Models
             StudentContacts = new HashSet<StudentContact>();
         }
 
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid PersonId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public bool ParentalBallot { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         [StringLength(256)]
         public string PlaceOfWork { get; set; }
 
-        [DataMember]
+        [Column(Order = 4)]
         [StringLength(256)]
         public string JobTitle { get; set; }
 
-        [DataMember]
+        [Column(Order = 5)]
         [StringLength(128)]
         public string NiNumber { get; set; }
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using MyPortal.Database.Search;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Business;
 using MyPortal.Logic.Models.Requests.Person;
@@ -15,12 +16,12 @@ namespace MyPortal.Logic.Services
     {
         private readonly IPersonRepository _personRepository;
 
-        private Person GenerateSearchObject(PersonSearchModel searchModel)
+        private PersonSearch GenerateSearchObject(PersonSearchModel searchModel)
         {
-            var person = new Person();
+            var person = new PersonSearch();
 
             person.FirstName = searchModel.FirstName;
-            person.MiddleName = searchModel.MiddleName;
+            //person.MiddleName = searchModel.MiddleName;
             person.LastName = searchModel.LastName;
             person.Gender = searchModel.Gender;
             person.Dob = searchModel.Dob;

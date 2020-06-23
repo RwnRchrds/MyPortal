@@ -52,7 +52,7 @@ namespace MyPortal.Database.Repositories
                     mark.Period = period;
 
                     return mark;
-                }, sql.Bindings);
+                }, sql.NamedBindings);
         }
 
         public async Task<IEnumerable<AttendanceMark>> GetByStudent(Guid studentId, Guid academicYearId)

@@ -8,15 +8,15 @@ namespace MyPortal.Database.Models
     [Table("PersonDietaryRequirement")]
     public class PersonDietaryRequirement
     {
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid PersonId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid DietaryRequirementId { get; set; }
 
         public virtual DietaryRequirement DietaryRequirement { get; set; }

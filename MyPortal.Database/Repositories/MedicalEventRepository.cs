@@ -40,7 +40,7 @@ namespace MyPortal.Database.Repositories
                     medEvent.RecordedBy = recorder;
 
                     return medEvent;
-                }, sql.Bindings);
+                }, sql.NamedBindings);
         }
     }
 }

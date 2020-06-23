@@ -8,68 +8,68 @@ namespace MyPortal.Database.Models
     [Table("School")]
     public class School
     {
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         [Required]
         [StringLength(256)]
         public string Name { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid? LocalAuthorityId { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         public int EstablishmentNumber { get; set; }
 
-        [DataMember]
+        [Column(Order = 4)]
         [Required]
         [StringLength(128)]
         public string Urn { get; set; }
 
-        [DataMember]
+        [Column(Order = 5)]
         [Required]
         [StringLength(128)]
         public string Uprn { get; set; }
 
-        [DataMember]
+        [Column(Order = 6)]
         public Guid PhaseId { get; set; }
         
-        [DataMember]
+        [Column(Order = 7)]
         public Guid TypeId { get; set; }
 
-        [DataMember]
+        [Column(Order = 8)]
         public Guid GovernanceTypeId { get; set; }
 
-        [DataMember]
+        [Column(Order = 9)]
         public Guid IntakeTypeId { get; set; }
 
-        [DataMember]
+        [Column(Order = 10)]
         public Guid? HeadTeacherId { get; set; }
 
-        [DataMember]
+        [Column(Order = 11)]
         [Phone]
         [StringLength(128)]
         public string TelephoneNo { get; set; }
 
-        [DataMember]
+        [Column(Order = 13)]
         [Phone]
         [StringLength(128)]
         public string FaxNo { get; set; }
 
-        [DataMember]
+        [Column(Order = 14)]
         [EmailAddress]
         [StringLength(128)]
         public string EmailAddress { get; set; }
 
-        [DataMember]
+        [Column(Order = 15)]
         [Url]
         [StringLength(128)]
         public string Website { get; set; }
 
-        [DataMember]
+        [Column(Order = 16)]
         public bool Local { get; set; }
 
         public virtual Phase Phase { get; set; }

@@ -39,7 +39,7 @@ namespace MyPortal.Database.Repositories
             {
                 diaryEvent.EventType = type;
                 return diaryEvent;
-            }, sql.Bindings);
+            }, sql.NamedBindings);
         }
     }
 }

@@ -51,7 +51,7 @@ namespace MyPortal.Database.Repositories
                     detention.Supervisor.Person = person;
 
                     return detention;
-                }, sql.Bindings);
+                }, sql.NamedBindings);
         }
     }
 }

@@ -8,27 +8,27 @@ namespace MyPortal.Database.Models
     [Table("CommunicationLog")]
     public class CommunicationLog
     {
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid PersonId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid ContactId { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         public Guid CommunicationTypeId { get; set; }
 
-        [DataMember]
+        [Column(Order = 4)]
         public DateTime Date { get; set; }
 
-        [DataMember]
+        [Column(Order = 5)]
         public string Note { get; set; }
 
-        [DataMember] 
+        [Column(Order = 6)] 
         public bool Outgoing { get; set; }
 
         public virtual CommunicationType Type { get; set; }

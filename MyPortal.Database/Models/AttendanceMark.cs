@@ -8,30 +8,30 @@ namespace MyPortal.Database.Models
     [Table("AttendanceMark")]
     public class AttendanceMark
     {
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid StudentId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid WeekId { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         public Guid PeriodId { get; set; }
 
-        [DataMember]
+        [Column(Order = 4)]
         [Required]
         [StringLength(1)]
         public string Mark { get; set; }
 
-        [DataMember]
+        [Column(Order = 5)]
         [StringLength(256)]
         public string Comments { get; set; }
 
-        [DataMember]
+        [Column(Order = 6)]
         public int MinutesLate { get; set; }
 
         public virtual Period Period { get; set; }

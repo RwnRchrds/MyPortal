@@ -5,6 +5,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -12,25 +13,35 @@ namespace MyPortal.Database.Repositories
     {
         public SenProvisionRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
         {
-            RelatedColumns = $@"
-{EntityHelper.GetPropertyNames(typeof(Student))},
-{EntityHelper.GetPropertyNames(typeof(SenProvisionType))}";
-
-            (query => JoinRelated(query)) = $@"
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[SenProvision].[StudentId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[SenProvisionType]", "[SenProvisionType].[Id]", "[SenProvision].[ProvisionTypeId]")}";
+            
         }
 
-        protected override async Task<IEnumerable<SenProvision>> ExecuteQuery(string sql, object param = null)
+        protected override void SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<SenProvision, Student, SenProvisionType, SenProvision>(sql,
+            query.SelectAll(typeof(Student));
+            query.SelectAll(typeof(SenProvisionType));
+
+            JoinRelated(query);
+        }
+
+        protected override void JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.Student", "Student.Id", "SenProvision.StudentId");
+            query.LeftJoin("dbo.SenProvisionType", "SenProvisionType.Id", "SenProvision.ProvisionTypeId");
+        }
+
+        protected override async Task<IEnumerable<SenProvision>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<SenProvision, Student, SenProvisionType, SenProvision>(sql.Sql,
                 (provision, student, type) =>
                 {
                     provision.Student = student;
                     provision.Type = type;
 
                     return provision;
-                }, param);
+                }, sql.NamedBindings);
         }
     }
 }

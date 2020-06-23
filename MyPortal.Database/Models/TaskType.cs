@@ -16,10 +16,10 @@ namespace MyPortal.Database.Models
             Tasks = new HashSet<Task>();
         }
 
-        [DataMember] 
+        [Column(Order = 3)] 
         public bool Personal { get; set; }
 
-        [DataMember]
+        [Column(Order = 4)]
         [Required]
         public string ColourCode { get; set; }
 

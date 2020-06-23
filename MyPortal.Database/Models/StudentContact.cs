@@ -8,30 +8,30 @@ namespace MyPortal.Database.Models
     [Table("StudentContact")]
     public class StudentContact
     {
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid RelationshipTypeId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid StudentId { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         public Guid ContactId { get; set; }
 
-        [DataMember]
+        [Column(Order = 4)]
         public bool Correspondence { get; set; }
 
-        [DataMember]
+        [Column(Order = 5)]
         public bool ParentalResponsibility { get; set; }
 
-        [DataMember]
+        [Column(Order = 6)]
         public bool PupilReport { get; set; }
 
-        [DataMember]
+        [Column(Order = 7)]
         public bool CourtOrder { get; set; }
 
         public virtual RelationshipType RelationshipType { get; set; }

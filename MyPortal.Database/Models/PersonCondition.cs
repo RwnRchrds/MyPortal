@@ -8,21 +8,21 @@ namespace MyPortal.Database.Models
     [Table("PersonCondition")]
     public class PersonCondition
     {
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid PersonId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid ConditionId { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         public bool MedicationTaken { get; set; }
 
-        [DataMember]
+        [Column(Order = 4)]
         [StringLength(256)]
         public string Medication { get; set; }
 

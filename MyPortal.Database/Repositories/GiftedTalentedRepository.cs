@@ -41,7 +41,7 @@ namespace MyPortal.Database.Repositories
                     gt.Subject = subject;
 
                     return gt;
-                }, sql.Bindings);
+                }, sql.NamedBindings);
         }
     }
 }

@@ -8,18 +8,18 @@ namespace MyPortal.Database.Models
     [Table("Session")]
     public class Session
     {
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid ClassId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid PeriodId { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         public Guid TeacherId { get; set; }
 
         public virtual StaffMember Teacher { get; set; }

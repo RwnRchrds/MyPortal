@@ -1,14 +1,13 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Constants;
-using MyPortal.Logic.Authorisation.Attributes;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortalCore.Areas.Staff.ViewModels.Admin;
 
 namespace MyPortalCore.Areas.Staff.Controllers
 {
-    public class AdminController : BaseController
+    public class AdminController : StaffPortalController
     {
         private IApplicationRoleService _applicationRoleService;
 
@@ -18,7 +17,6 @@ namespace MyPortalCore.Areas.Staff.Controllers
         }
 
         [Route("Roles")]
-        [RequiresPermission(Permissions.System.Roles.Edit)]
         public IActionResult Roles()
         {
             var viewModel = new RolesViewModel();

@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
+using SqlKata.Compilers;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
@@ -26,11 +28,15 @@ namespace MyPortal.Database.Repositories
 
         public async Task<SystemSetting> Get(string name)
         {
-            var sql = @"SELECT [Name],[Type],[Setting] FROM [dbo].[SystemSetting]";
+            var query = new Query("dbo.SystemSetting");
 
-            QueryHelper.Where(ref sql, "[SystemSetting].[Name] = @Name");
+            query.Select("SystemSetting.Name, SystemSetting.Type, SystemSetting.Setting");
 
-            return (await _connection.QueryAsync<SystemSetting>(sql, new {Name = name})).FirstOrDefault();
+            query.Where("SystemSetting.Name", name);
+
+            var sql = new SqlServerCompiler().Compile(query);
+
+            return (await _connection.QueryAsync<SystemSetting>(sql.Sql, sql.NamedBindings)).FirstOrDefault();
         }
 
         public async Task<SystemSetting> GetWithTracking(string name)

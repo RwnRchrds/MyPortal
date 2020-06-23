@@ -9,22 +9,21 @@ namespace MyPortal.Database.Models
     [Table("MedicalEvent")]
     public class MedicalEvent
     {
-        [DataMember]
+        [Column(Order = 1)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid StudentId { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         public Guid RecordedById { get; set; }
 
-        [DataMember]
-        [Column(TypeName = "date")]
+        [Column(Order = 4, TypeName = "date")]
         public DateTime Date { get; set; }
 
-        [DataMember]
+        [Column(Order = 5)]
         [Required]
         public string Note { get; set; }
 

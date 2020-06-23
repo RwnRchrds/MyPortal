@@ -39,7 +39,7 @@ namespace MyPortal.Database.Repositories
                 house.HeadOfHouse = head;
 
                 return house;
-            }, sql.Bindings);
+            }, sql.NamedBindings);
         }
     }
 }

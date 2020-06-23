@@ -14,43 +14,43 @@ namespace MyPortal.Database.Models
             Attendees = new HashSet<DiaryEventAttendee>();
         }
 
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid EventTypeId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         [Required]
         [StringLength(256)]
         public string Subject { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         [StringLength(256)]
         public string Description { get; set; }
 
-        [DataMember]
+        [Column(Order = 4)]
         [StringLength(256)]
         public string Location { get; set; }
 
-        [DataMember]
+        [Column(Order = 5)]
         public DateTime StartTime { get; set; }
 
-        [DataMember]
+        [Column(Order = 6)]
         public DateTime EndTime { get; set; }
 
-        [DataMember]
+        [Column(Order = 7)]
         public bool IsAllDay { get; set; }
 
-        [DataMember]
+        [Column(Order = 8)]
         public bool IsBlock { get; set; }
 
-        [DataMember]
+        [Column(Order = 9)]
         public bool IsPublic { get; set; }
 
-        [DataMember]
+        [Column(Order = 10)]
         public bool IsStudentVisible { get; set; }
 
         public virtual Detention Detention { get; set; }

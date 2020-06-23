@@ -16,31 +16,29 @@ namespace MyPortal.Database.Models
             Sessions = new HashSet<Session>();
         }
 
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public DayOfWeek Weekday { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         [Required]
         [StringLength(128)]
         public string Name { get; set; }
 
-        [DataMember]
-        [Column(TypeName = "time(2)")]
+        [Column(Order = 3, TypeName = "time(2)")]
         public TimeSpan StartTime { get; set; }
         
-        [DataMember]
-        [Column(TypeName = "time(2)")]
+        [Column(Order = 4, TypeName = "time(2)")]
         public TimeSpan EndTime { get; set; }
 
-        [DataMember]
+        [Column(Order = 5)]
         public bool IsAm { get; set; }
 
-        [DataMember]
+        [Column(Order = 6)]
         public bool IsPm { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

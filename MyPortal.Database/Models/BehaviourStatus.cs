@@ -11,7 +11,7 @@ namespace MyPortal.Database.Models
     [Table("BehaviourStatus")]
     public class BehaviourStatus : LookupItem
     {
-        [DataMember]
+        [Column(Order = 3)]
         public bool Resolved { get; set; }
 
         public virtual ICollection<Incident> Incidents { get; set; }

@@ -39,7 +39,7 @@ namespace MyPortal.Database.Repositories
                     comment.CommentBank = bank;
 
                     return comment;
-                }, sql.Bindings);
+                }, sql.NamedBindings);
         }
     }
 }

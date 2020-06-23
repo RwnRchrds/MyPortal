@@ -37,7 +37,7 @@ namespace MyPortal.Database.Repositories
                 contact.Person = person;
 
                 return contact;
-            }, sql.Bindings);
+            }, sql.NamedBindings);
         }
     }
 }

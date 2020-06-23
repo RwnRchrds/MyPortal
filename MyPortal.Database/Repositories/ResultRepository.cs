@@ -50,7 +50,7 @@ namespace MyPortal.Database.Repositories
                     result.Grade = grade;
 
                     return result;
-                }, sql.Bindings);
+                }, sql.NamedBindings);
         }
     }
 }

@@ -8,15 +8,15 @@ namespace MyPortal.Database.Models
     [Table("IncidentDetention")]
     public class IncidentDetention
     {
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid IncidentId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid DetentionId { get; set; }
 
         public virtual Incident Incident { get; set; }

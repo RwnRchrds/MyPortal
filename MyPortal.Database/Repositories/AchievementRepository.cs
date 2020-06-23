@@ -53,7 +53,7 @@ namespace MyPortal.Database.Repositories
             sql.Where("Achievement.StudentId", "=", studentId);
             sql.Where("Achievement.AcademicYearId", "=", academicYearId);
 
-            return await ExecuteIntQuery(sql);
+            return await ExecuteQueryIntResult(sql) ?? 0;
         }
 
         public async Task<int> GetPointsByStudent(Guid studentId, Guid academicYearId)
@@ -63,7 +63,7 @@ namespace MyPortal.Database.Repositories
             sql.Where("Achievement.StudentId", "=", studentId);
             sql.Where("Achievement.AcademicYearId", "=", academicYearId);
 
-            return await ExecuteIntQuery(sql);
+            return await ExecuteQueryIntResult(sql) ?? 0;
         }
 
         public async Task<IEnumerable<Achievement>> GetByStudent(Guid studentId, Guid academicYearId)
@@ -88,15 +88,15 @@ namespace MyPortal.Database.Repositories
 
             sql.WhereDatePart("year", "Achievement.CreatedDate", "=", dateToday.Year);
 
-            return await ExecuteIntQuery(sql);
+            return await ExecuteQueryIntResult(sql) ?? 0;
         }
 
         protected override async Task<IEnumerable<Achievement>> ExecuteQuery(Query query)
         {
-            var compiled = Compiler.Compile(query);
+            var sql = Compiler.Compile(query);
 
             return await Connection
-                .QueryAsync(compiled.Sql,
+                .QueryAsync(sql.Sql,
                     new[]
                     {
                         typeof(Achievement), typeof(AchievementType), typeof(Student), typeof(Person), typeof(Location),
@@ -113,7 +113,7 @@ namespace MyPortal.Database.Repositories
                         achievement.RecordedBy.Person = (Person) objects[6];
 
                         return achievement;
-                    }, compiled.Bindings);
+                    }, sql.NamedBindings);
         }
     }
 }

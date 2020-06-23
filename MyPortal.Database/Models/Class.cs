@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 namespace MyPortal.Database.Models
 {
     [Table("Class")]
-    public partial class Class
+    public class Class
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Class()
@@ -15,26 +15,26 @@ namespace MyPortal.Database.Models
             Sessions = new HashSet<Session>();
         }
 
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid AcademicYearId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid? SubjectId { get; set; }
 
-        [DataMember]
+        [Column (Order = 3)]
         public Guid BandId { get; set; }
 
-        [DataMember]
+        [Column (Order = 4)]
         [Required]
         [StringLength(128)]
         public string Name { get; set; }
 
-        [DataMember]
+        [Column (Order = 5)]
         public Guid? YearGroupId { get; set; }
 
         public virtual AcademicYear AcademicYear { get; set; }

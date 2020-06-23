@@ -10,7 +10,7 @@ using MyPortalCore.Areas.Staff.ViewModels.Home;
 
 namespace MyPortalCore.Areas.Staff.Controllers
 {
-    public class HomeController : BaseController
+    public class HomeController : StaffPortalController
     {
         private readonly IApplicationUserService _userService;
 

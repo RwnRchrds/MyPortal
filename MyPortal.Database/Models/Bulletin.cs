@@ -10,36 +10,36 @@ namespace MyPortal.Database.Models
     [Table("Bulletin")]
     public class Bulletin : IDirectoryEntity
     {
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid DirectoryId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid AuthorId { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         public DateTime CreateDate { get; set; }
 
-        [DataMember]
+        [Column(Order = 4)]
         public DateTime? ExpireDate { get; set; }
 
-        [DataMember]
+        [Column(Order = 5)]
         [Required]
         [StringLength(128)]
         public string Title { get; set; }
 
-        [DataMember]
+        [Column(Order = 6)]
         [Required]
         public string Detail { get; set; }
             
-        [DataMember]
+        [Column(Order = 7)]
         public bool StaffOnly { get; set; }
 
-        [DataMember]
+        [Column(Order = 8)]
         public bool Approved { get; set; }
 
         public virtual ApplicationUser Author { get; set; }

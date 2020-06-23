@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Constants;
-using MyPortal.Logic.Authorisation.Attributes;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.ListModels;
@@ -24,7 +23,6 @@ namespace MyPortalCore.Controllers.Api
         }
 
         [Authorize(Policy = Policies.UserType.Staff)]
-        [RequiresPermission(Permissions.System.Roles.Edit)]
         [Route("Search", Name = "ApiApplicationRoleSearch")]
         public async Task<IActionResult> Search([FromQuery] string roleName)
         {

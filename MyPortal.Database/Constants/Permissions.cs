@@ -1,12 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace MyPortal.Database.Constants
 {
     public class Permissions
     {
-        public static Dictionary<Guid, string> ClaimValues;
+        public static Dictionary<Guid, string> ClaimValues = new Dictionary<Guid, string>();
+
+        public static void PopulateClaimValues()
+        {
+            if (!ClaimValues.Any())
+            {
+                var perms = GetAll();
+
+                foreach (var perm in perms)
+                {
+                    ClaimValues.Add(perm, string.Empty);
+                }
+            }
+        }
 
         public static Guid EditAcademicYears { get; } = Guid.Parse("F9F0F505-B47C-4C53-B897-D5964FBC6356");
         public static Guid EditAccounts { get; } = Guid.Parse("F9F0F645-B47C-4C53-B897-D5964FBC6356");
@@ -36,5 +50,39 @@ namespace MyPortal.Database.Constants
         public static Guid ViewLessonPlans { get; } = Guid.Parse("F9F0F555-B47C-4C53-B897-D5964FBC6356");
         public static Guid ViewResults { get; } = Guid.Parse("F9F0F425-B47C-4C53-B897-D5964FBC6356");
         public static Guid ViewResultSets { get; } = Guid.Parse("F9F0F445-B47C-4C53-B897-D5964FBC6356");
+
+        public static IEnumerable<Guid> GetAll()
+        {
+            return new List<Guid>
+            {
+                EditAcademicYears,
+                EditAccounts,
+                EditAllLessonPlans,
+                EditAttendanceData,
+                EditBulletins,
+                EditClasses,
+                EditCommentBanks,
+                EditObservations,
+                EditOwnLessonPlans,
+                EditPastoralStructure,
+                EditProducts,
+                EditResults,
+                EditResultSets,
+                EditRoles,
+                EditSales,
+                EditSchoolDocuments,
+                ManageStaff,
+                ManageStudents,
+                EditStudyTopics,
+                EditSubjects,
+                EditTrainingCertificates,
+                EditTrainingCourses,
+                ViewAttendanceData,
+                ViewClasses,
+                ViewLessonPlans,
+                ViewResults,
+                ViewResultSets
+            };
+        }
     }
 }

@@ -29,62 +29,59 @@ namespace MyPortal.Database.Models
             HomeworkSubmissions = new HashSet<HomeworkSubmission>();
         }
 
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid PersonId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid RegGroupId { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         public Guid YearGroupId { get; set; }
 
-        [DataMember]
+        [Column(Order = 4)]
         public Guid? HouseId { get; set; }
 
-        [DataMember]
+        [Column(Order = 5)]
         [StringLength(128)]
         public string CandidateNumber { get; set; }
 
-        [DataMember]
+        [Column(Order = 6)]
         public int AdmissionNumber { get; set; }
 
-        [DataMember]
-        [Column(TypeName = "date")]
+        [Column(Order = 7, TypeName = "date")]
         public DateTime? DateStarting { get; set; }
 
-        [DataMember]
-        [Column(TypeName = "date")]
+        [Column(Order = 8, TypeName = "date")]
         public DateTime? DateLeaving { get; set; }
 
-        [DataMember]
-        [Column(TypeName = "decimal(10,2)")]
+        [Column(Order = 9, TypeName = "decimal(10,2)")]
         public decimal AccountBalance { get; set; }
 
-        [DataMember]
+        [Column(Order = 10)]
         public bool FreeSchoolMeals { get; set; }
 
-        [DataMember]
+        [Column(Order = 11)]
         public bool GiftedAndTalented { get; set; }
 
-        [DataMember]
+        [Column(Order = 12)]
         public Guid? SenStatusId { get; set; }
 
-        [DataMember]
+        [Column(Order = 13)]
         public bool PupilPremium { get; set; }
 
-        [DataMember]
+        [Column(Order = 14)]
         [StringLength(13)]
         public string Upn { get; set; }
 
-        [DataMember]
+        [Column(Order = 15)]
         public string Uci { get; set; }
 
-        [DataMember]
+        [Column(Order = 16)]
         public bool Deleted { get; set; }
 
         public virtual RegGroup RegGroup { get; set; }

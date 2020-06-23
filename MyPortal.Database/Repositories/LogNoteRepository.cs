@@ -22,11 +22,13 @@ namespace MyPortal.Database.Repositories
         protected override void SelectAllRelated(Query query)
         {
             query.SelectAll(typeof(LogNoteType));
-            query.SelectAll(typeof(ApplicationUser));
+            query.SelectAll(typeof(ApplicationUser), "User");
             query.SelectAll(typeof(Person), "AuthorPerson");
             query.SelectAll(typeof(Student));
             query.SelectAll(typeof(Person), "StudentPerson");
             query.SelectAll(typeof(AcademicYear));
+
+            JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
@@ -56,7 +58,7 @@ namespace MyPortal.Database.Repositories
                         note.AcademicYear = acadYear;
 
                         return note;
-                    }, sql.Bindings);
+                    }, sql.NamedBindings);
         }
 
         public Task<IEnumerable<LogNote>> GetByStudent(Guid studentId, Guid academicYearId)

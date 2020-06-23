@@ -15,20 +15,20 @@ namespace MyPortal.Database.Models
             Students = new HashSet<Student>();
         }
 
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         [Required]
         [StringLength(128)]
         public string Name { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid? HeadId { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         [StringLength(128)]
         public string ColourCode { get; set; }
 

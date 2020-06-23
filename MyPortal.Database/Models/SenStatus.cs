@@ -17,7 +17,7 @@ namespace MyPortal.Database.Models
             Students = new HashSet<Student>();
         }
 
-        [DataMember]
+        [Column(Order = 3)]
         [Required]
         [StringLength(1)]
         public string Code { get; set; }

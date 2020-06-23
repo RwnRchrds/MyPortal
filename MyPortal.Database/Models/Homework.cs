@@ -16,21 +16,21 @@ namespace MyPortal.Database.Models
             Submissions = new HashSet<HomeworkSubmission>();
         }
 
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid DirectoryId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public string Title { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         public string Description { get; set; }
 
-        [DataMember]
+        [Column(Order = 4)]
         public bool SubmitOnline { get; set; }
 
         public virtual ICollection<HomeworkSubmission> Submissions { get; set; }

@@ -16,30 +16,29 @@ namespace MyPortal.Database.Models
             Sales = new HashSet<Sale>();
         }
 
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid ProductTypeId { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         [Required]
         [StringLength(256)]
         public string Description { get; set; }
 
-        [DataMember]
-        [Column(TypeName = "decimal(10,2)")]
+        [Column(Order = 4, TypeName = "decimal(10,2)")]
         public decimal Price { get; set; }
 
-        [DataMember]
+        [Column(Order = 5)]
         public bool Visible { get; set; }
 
-        [DataMember]
+        [Column(Order = 6)]
         public bool OnceOnly { get; set; }
 
-        [DataMember]
+        [Column(Order = 7)]
         public bool Deleted { get; set; }
 
         public virtual ProductType Type { get; set; }

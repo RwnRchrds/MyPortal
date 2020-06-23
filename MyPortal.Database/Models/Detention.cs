@@ -14,18 +14,18 @@ namespace MyPortal.Database.Models
             Incidents = new HashSet<IncidentDetention>();
         }
 
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid DetentionTypeId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid EventId { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         public Guid? SupervisorId { get; set; }
 
         public virtual DetentionType Type { get; set; }

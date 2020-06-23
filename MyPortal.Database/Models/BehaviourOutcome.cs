@@ -16,7 +16,7 @@ namespace MyPortal.Database.Models
             Incidents = new HashSet<Incident>();
         }
 
-        [DataMember]
+        [Column(Order = 3)]
         public bool System { get; set; }
 
         public virtual ICollection<Incident> Incidents { get; set; }

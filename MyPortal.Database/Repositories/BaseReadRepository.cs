@@ -39,7 +39,14 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<TEntity>(sql.Sql, sql.Bindings);
+            return await Connection.QueryAsync<TEntity>(sql.Sql, sql.NamedBindings);
+        }
+
+        protected async Task<TEntity> ExecuteQueryFirstOrDefault(Query query)
+        {
+            var result = await ExecuteQuery(query);
+
+            return result.FirstOrDefault();
         }
 
         protected virtual void JoinRelated(Query query)
@@ -52,25 +59,20 @@ namespace MyPortal.Database.Repositories
             JoinRelated(query);
         }
 
-        protected async Task<int> ExecuteIntQuery(Query query)
-        {
-            var compiled = Compiler.Compile(query);
-
-            var result = await Connection.QueryFirstOrDefaultAsync<int?>(compiled.Sql, compiled.Bindings);
-
-            if (result == null)
-            {
-                return 0;
-            }
-
-            return result.Value;
-        }
-
-        protected async Task<string> ExecuteStringQuery(Query query)
+        protected async Task<int?> ExecuteQueryIntResult(Query query)
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QuerySingleOrDefaultAsync<string>(sql.Sql, sql.Bindings);
+            var result = await Connection.QueryFirstOrDefaultAsync<int?>(sql.Sql, sql.NamedBindings);
+
+            return result;
+        }
+
+        protected async Task<string> ExecuteQueryStringResult(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QuerySingleOrDefaultAsync<string>(sql.Sql, sql.NamedBindings);
         }
 
         protected async Task<int> ExecuteNonQuery(Query query)

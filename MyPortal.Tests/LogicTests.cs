@@ -38,13 +38,5 @@ namespace MyPortal.Tests
 
             Assert.That(decryptedText == plaintext);
         }
-
-        [Test]
-        public void Permissions_UniqueClaimValues()
-        {
-            var perms = Permissions.GetAll();
-
-            Assert.That(perms.Distinct().Count() == perms.Length);
-        }
     }
 }

@@ -16,52 +16,51 @@ namespace MyPortal.Database.Models
             
         }
 
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid TypeId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid DirectoryId { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         [Required]
         [StringLength(128)]
         public string Title { get; set; }
 
-        [DataMember]
+        [Column(Order = 4)]
         [StringLength(256)]
         public string Description { get; set; }
 
-        [DataMember]
+        [Column(Order = 5)]
         [Required]
         public string FileId { get; set; }
 
-        [DataMember]
+        [Column(Order = 6)]
         [Required]
         public string FileName { get; set; }
 
-        [DataMember]
+        [Column(Order = 7)]
         [Required]
         public string ContentType { get; set; }
 
-        [DataMember]
+        [Column(Order = 8)]
         public Guid UploaderId { get; set; }
 
-        [DataMember]
-        [Column(TypeName = "date")]
+        [Column(Order = 9, TypeName = "date")]
         public DateTime UploadedDate { get; set; }
 
-        [DataMember]
+        [Column(Order = 10)]
         public bool Public { get; set; }
 
-        [DataMember]
+        [Column(Order = 11)]
         public bool Approved { get; set; }
 
-        [DataMember]
+        [Column(Order = 12)]
         public bool Deleted { get; set; }
 
         public virtual ApplicationUser Uploader { get; set; }

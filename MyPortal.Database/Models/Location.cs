@@ -18,17 +18,17 @@ namespace MyPortal.Database.Models
             BehaviourIncidents = new HashSet<Incident>();
         }
 
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         [Required]
         [StringLength(128)]
         public string Description { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public bool System { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

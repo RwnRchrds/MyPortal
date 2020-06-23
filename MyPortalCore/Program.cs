@@ -21,6 +21,14 @@ namespace MyPortalCore
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+
+                    var config = new ConfigurationBuilder().AddJsonFile("appsettings.json", false).Build();
+
+                    var portNumber = config.GetValue(typeof(int), "WebHost:Port");
+
+                    var http = config.GetValue<bool>("WebHost:UseHttps") ? "https" : "http";
+
+                    webBuilder.UseUrls($"{http}://localhost:{portNumber}");
                 });
     }
 }

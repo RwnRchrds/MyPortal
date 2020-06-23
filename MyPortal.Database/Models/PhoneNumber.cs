@@ -8,18 +8,18 @@ namespace MyPortal.Database.Models
     [Table("PhoneNumber")]
     public class PhoneNumber
     {
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid TypeId { get; set; }
         
-        [DataMember]
+        [Column(Order = 2)]
         public Guid PersonId { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         [Phone]
         [StringLength(128)]
         public string Number { get; set; }  

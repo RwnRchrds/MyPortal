@@ -10,24 +10,24 @@ namespace MyPortal.Database.Models
     [Table("DiaryEventAttendee")]
     public class DiaryEventAttendee
     {
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid EventId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid PersonId { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         public Guid? ResponseId { get; set; }
 
-        [DataMember]
+        [Column(Order = 4)]
         public bool Required { get; set; }
 
-        [DataMember]
+        [Column(Order = 5)]
         public bool Attended { get; set; }
 
         public virtual DiaryEvent Event { get; set; }

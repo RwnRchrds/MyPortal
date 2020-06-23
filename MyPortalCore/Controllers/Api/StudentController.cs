@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Models.Identity;
-using MyPortal.Logic.Authorisation.Attributes;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Requests.Student;
@@ -26,7 +25,6 @@ namespace MyPortalCore.Controllers.Api
         [HttpGet]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Route("Search", Name = "ApiStudentSearch")]
-        [RequiresPermission(Permissions.Student.Details.View)]
         public async Task<IActionResult> SearchStudents([FromQuery] StudentSearchModel searchModel)
         {
             return await Process(async () =>
@@ -39,7 +37,6 @@ namespace MyPortalCore.Controllers.Api
 
         [HttpGet]
         [Route("GetById", Name = "ApiStudentGetById")]
-        [RequiresPermission(Permissions.Student.Details.View)]
         public async Task<IActionResult> GetById([FromQuery] Guid studentId)
         {
             return await Process(async () =>

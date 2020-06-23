@@ -10,12 +10,12 @@ namespace MyPortal.Database.Models
     [Table("MarksheetTemplate")]
     public class MarksheetTemplate
     {
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid ClassId { get; set; }
 
         public virtual ICollection<MarksheetColumn> Columns { get; set; }

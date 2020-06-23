@@ -37,7 +37,7 @@ namespace MyPortal.Database.Repositories
                 grade.GradeSet = set;
 
                 return grade;
-            }, sql.Bindings);
+            }, sql.NamedBindings);
         }
     }
 }

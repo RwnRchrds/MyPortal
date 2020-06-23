@@ -8,18 +8,18 @@ namespace MyPortal.Database.Models
     [Table("TrainingCertificate")]
     public class TrainingCertificate
     {
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid CourseId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid StaffId { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         public Guid StatusId { get; set; }
 
         public virtual StaffMember StaffMember { get; set; }

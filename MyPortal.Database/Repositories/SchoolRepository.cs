@@ -48,7 +48,7 @@ namespace MyPortal.Database.Repositories
 
             query.Where("School.Local", true);
 
-            return await ExecuteStringQuery(query);
+            return await ExecuteQueryStringResult(query);
         }
 
         public async Task<School> GetLocal()
@@ -75,7 +75,7 @@ namespace MyPortal.Database.Repositories
                     school.HeadTeacher = head;
 
                     return school;
-                }, sql.Bindings);
+                }, sql.NamedBindings);
         }
     }
 }

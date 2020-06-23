@@ -43,7 +43,7 @@ namespace MyPortal.Database.Repositories
                     permission.Area = area;
 
                     return permission;
-                }, sql.Bindings);
+                }, sql.NamedBindings);
         }
 
         public async Task<ApplicationPermission> GetByClaimValue(int claimValue)

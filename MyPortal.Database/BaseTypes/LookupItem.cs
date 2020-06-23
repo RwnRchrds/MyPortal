@@ -10,16 +10,16 @@ namespace MyPortal.Database.BaseTypes
     public abstract class LookupItem
     {
         [Key]
-        [DataMember]
+        [Column(Order = 0)]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
         [Required]
-        [DataMember]
+        [Column(Order = 1)]
         [StringLength(256)]
         public string Description { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public bool Active { get; set; }
     }
 }

@@ -43,7 +43,7 @@ namespace MyPortal.Database.Repositories
                     document.Uploader = uploader;
 
                     return document;
-                }, sql.Bindings);
+                }, sql.NamedBindings);
         }
 
         public async Task<IEnumerable<Document>> GetByDirectory(Guid directoryId)

@@ -38,7 +38,7 @@ namespace MyPortal.Database.Repositories
                     template.DiaryEventType = eventType;
 
                     return template;
-                }, sql.Bindings);
+                }, sql.NamedBindings);
         }
     }
 }

@@ -24,34 +24,34 @@ namespace MyPortal.Database.Models
             Subordinates = new HashSet<StaffMember>();
         }
 
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid? LineManagerId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid PersonId { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         [Required]
         [StringLength(128)]
         public string Code { get; set; }
 
-        [DataMember]
+        [Column(Order = 4)]
         [StringLength(128)]
         public string NiNumber { get; set; }
 
-        [DataMember]
+        [Column(Order = 5)]
         [StringLength(128)]
         public string PostNominal { get; set; }
 
-        [DataMember]
+        [Column(Order = 6)]
         public bool TeachingStaff { get; set; }
 
-        [DataMember]
+        [Column(Order = 7)]
         public bool Deleted { get; set; }
 
         public virtual Person Person { get; set; }

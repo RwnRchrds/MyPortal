@@ -45,7 +45,7 @@ namespace MyPortal.Database.Repositories
                     sale.AcademicYear = acadYear;
 
                     return sale;
-                }, sql.Bindings);
+                }, sql.NamedBindings);
         }
     }
 }

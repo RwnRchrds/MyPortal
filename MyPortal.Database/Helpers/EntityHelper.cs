@@ -14,16 +14,15 @@ namespace MyPortal.Database.Helpers
     {
         internal static string[] GetPropertyNames(Type t, string alias = null)
         {
-            var tblName = string.IsNullOrWhiteSpace(alias) ? t.Name : alias;
-
             var propNames = new List<string>();
 
             if (t == typeof(ApplicationUser))
             {
-                propNames = GetUserProperties();
+                propNames = GetUserProperties(alias);
             }
             else
             {
+                var tblName = string.IsNullOrWhiteSpace(alias) ? t.Name : alias;
                 var props = GetProperties(t);
 
                 foreach (var prop in props)
@@ -60,7 +59,10 @@ namespace MyPortal.Database.Helpers
 
         private static IEnumerable<PropertyInfo> GetProperties(Type t)
         {
-            var props = t.GetProperties().Where(p => Attribute.IsDefined(p, typeof(DataMemberAttribute))).ToList();
+            var props = new List<PropertyInfo>();
+
+            props.AddRange(t.GetProperties().Where(p => Attribute.IsDefined(p, typeof(ColumnAttribute))).OrderBy(p =>
+                ((ColumnAttribute) Attribute.GetCustomAttribute(p, typeof(ColumnAttribute)))?.Order).ToList());
 
             return props;
         }

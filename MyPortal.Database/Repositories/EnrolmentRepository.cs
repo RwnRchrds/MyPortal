@@ -42,7 +42,7 @@ namespace MyPortal.Database.Repositories
                     enrolment.Band = band;
 
                     return enrolment;
-                }, sql.Bindings);
+                }, sql.NamedBindings);
         }
     }
 }

@@ -40,7 +40,7 @@ namespace MyPortal.Database.Repositories
                 bulletin.Author = author;
 
                 return bulletin;
-            }, sql.Bindings);
+            }, sql.NamedBindings);
         }
 
         public async Task<IEnumerable<Bulletin>> GetApproved()

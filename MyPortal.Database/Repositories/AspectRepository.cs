@@ -42,7 +42,7 @@ namespace MyPortal.Database.Repositories
                 aspect.GradeSet = gradeSet;
 
                 return aspect;
-            }, sql.Bindings);
+            }, sql.NamedBindings);
         }
     }
 }

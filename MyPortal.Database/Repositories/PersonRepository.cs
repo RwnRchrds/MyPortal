@@ -83,7 +83,7 @@ namespace MyPortal.Database.Repositories
                 person.User = user;
 
                 return person;
-            }, sql.Bindings);
+            }, sql.NamedBindings);
         }
     }
 }

@@ -8,15 +8,15 @@ namespace MyPortal.Database.Models
     [Table("AddressPerson")]
     public class AddressPerson
     {
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid AddressId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid PersonId { get; set; }
 
         public virtual Address Address { get; set; }

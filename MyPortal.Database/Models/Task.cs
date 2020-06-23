@@ -11,42 +11,42 @@ namespace MyPortal.Database.Models
     [Table("Task")]
     public class Task
     {
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public Guid TypeId { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid AssignedToId { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         public Guid? AssignedById { get; set; }
 
-        [DataMember]
+        [Column(Order = 4)]
         public DateTime CreatedDate { get; set; }
 
-        [DataMember]
+        [Column(Order = 5)]
         public DateTime? DueDate { get; set; }
 
-        [DataMember]
+        [Column(Order = 6)]
         public DateTime? CompletedDate { get; set; }
 
-        [DataMember]
+        [Column(Order = 7)]
         [Required]
         [StringLength(128)]
         public string Title { get; set; }
 
-        [DataMember]
+        [Column(Order = 8)]
         [StringLength(256)]
         public string Description { get; set; }
 
-        [DataMember]
+        [Column(Order = 9)]
         public bool Personal { get; set; }
 
-        [DataMember]
+        [Column(Order = 10)]
         public bool Completed { get; set; }
         public virtual HomeworkSubmission HomeworkSubmission { get; set; }
         public virtual Person AssignedTo { get; set; }

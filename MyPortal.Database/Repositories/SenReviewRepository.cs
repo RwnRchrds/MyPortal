@@ -5,6 +5,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
+using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
@@ -12,20 +13,30 @@ namespace MyPortal.Database.Repositories
     {
         public SenReviewRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
         {
-            RelatedColumns = $@"
-{EntityHelper.GetPropertyNames(typeof(Student))},
-{EntityHelper.GetPropertyNames(typeof(Person))},
-{EntityHelper.GetPropertyNames(typeof(SenReviewType))}";
-
-            (query => JoinRelated(query)) = $@"
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Student]", "[Student].[Id]", "[SenReview].[StudentId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[Person]", "[Person].[Id]", "[Student].[PersonId]")}
-{QueryHelper.Join(JoinType.LeftJoin, "[dbo].[SenReviewType]", "[SenReviewType].[Id]", "[SenReview].[ReviewTypeId]")}";
+            
         }
 
-        protected override async Task<IEnumerable<SenReview>> ExecuteQuery(string sql, object param = null)
+        protected override void SelectAllRelated(Query query)
         {
-            return await Connection.QueryAsync<SenReview, Student, Person, SenReviewType, SenReview>(sql,
+            query.SelectAll(typeof(Student));
+            query.SelectAll(typeof(Person));
+            query.SelectAll(typeof(SenReviewType));
+
+            JoinRelated(query);
+        }
+
+        protected override void JoinRelated(Query query)
+        {
+            query.LeftJoin("dbo.Student", "Student.Id", "SenReview.StudentId");
+            query.LeftJoin("dbo.Person", "Person.Id", "Student.PersonId");
+            query.LeftJoin("dbo.SenReviewType", "SenReviewType.Id", "SenReview.ReviewTypeId");
+        }
+
+        protected override async Task<IEnumerable<SenReview>> ExecuteQuery(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryAsync<SenReview, Student, Person, SenReviewType, SenReview>(sql.Sql,
                 (review, student, person, reviewType) =>
                 {
                     review.Student = student;
@@ -33,7 +44,7 @@ namespace MyPortal.Database.Repositories
                     review.ReviewType = reviewType;
 
                     return review;
-                }, param);
+                }, sql.NamedBindings);
         }
     }
 }

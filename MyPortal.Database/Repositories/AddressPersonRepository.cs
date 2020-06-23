@@ -43,7 +43,7 @@ namespace MyPortal.Database.Repositories
                     ap.Person = person;
 
                     return ap;
-                }, sql.Bindings);
+                }, sql.NamedBindings);
         }
     }
 }

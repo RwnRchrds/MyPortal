@@ -14,20 +14,20 @@ namespace MyPortal.Database.Models
             Schools = new HashSet<School>();
         }
 
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
+        [Column(Order = 1)]
         public int LeaCode { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         [Required]
         [StringLength(128)]
         public string Name { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         public string Website { get; set; }
 
         public virtual ICollection<School> Schools { get; set; }

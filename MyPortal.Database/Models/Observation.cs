@@ -8,22 +8,21 @@ namespace MyPortal.Database.Models
     [Table("Observation")]
     public class Observation
     {
-        [DataMember]
+        [Column(Order = 0)]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataMember]
-        [Column(TypeName = "date")]
+        [Column(Order = 1, TypeName = "date")]
         public DateTime Date { get; set; }
 
-        [DataMember]
+        [Column(Order = 2)]
         public Guid ObserveeId { get; set; }
 
-        [DataMember]
+        [Column(Order = 3)]
         public Guid ObserverId { get; set; }
 
-        [DataMember]
+        [Column(Order = 4)]
         public Guid OutcomeId { get; set; }
 
         public virtual StaffMember Observee { get; set; }

@@ -40,7 +40,7 @@ namespace MyPortal.Database.Repositories
                     code.CodeMeaning = meaning;
 
                     return code;
-                }, sql.Bindings);
+                }, sql.NamedBindings);
         }
 
         public async Task<AttendanceCode> GetByCode(string code)

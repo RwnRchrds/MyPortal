@@ -16,17 +16,16 @@ namespace MyPortal.Database.Models
             Results = new HashSet<Result>();
         }
 
-        [DataMember]
+        [Column(Order = 3)]
         public Guid TypeId { get; set; }
 
-        [DataMember]
+        [Column(Order = 4)]
         public Guid? GradeSetId { get; set; }
 
-        [DataMember]
-        [Column(TypeName = "decimal(10,2)")]
+        [Column(Order = 5, TypeName = "decimal(10,2)")]
         public decimal? MaxMark { get; set; }
 
-        [DataMember]
+        [Column(Order = 6)]
         [Required]
         [StringLength(128)]
         public string Name { get; set; }
