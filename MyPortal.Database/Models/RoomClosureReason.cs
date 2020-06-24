@@ -6,6 +6,7 @@ using MyPortal.Database.BaseTypes;
 
 namespace MyPortal.Database.Models
 {
+    [Table("RoomClosureReason")]
     public class RoomClosureReason : LookupItem
     {
         public RoomClosureReason()

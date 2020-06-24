@@ -1641,7 +1641,7 @@ namespace MyPortal.Database.Migrations
                         column: x => x.LineManagerId,
                         principalTable: "StaffMember",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_StaffMember_Person_PersonId",
                         column: x => x.PersonId,

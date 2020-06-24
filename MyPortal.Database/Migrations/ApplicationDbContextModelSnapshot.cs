@@ -4526,7 +4526,7 @@ namespace MyPortal.Database.Migrations
                     b.HasOne("MyPortal.Database.Models.StaffMember", "LineManager")
                         .WithMany("Subordinates")
                         .HasForeignKey("LineManagerId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("MyPortal.Database.Models.Person", "Person")
                         .WithOne("StaffMemberDetails")

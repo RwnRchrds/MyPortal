@@ -10,7 +10,7 @@ using MyPortal.Database.Models;
 namespace MyPortal.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200624091109_InitialModel")]
+    [Migration("20200624091512_InitialModel")]
     partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -4528,7 +4528,7 @@ namespace MyPortal.Database.Migrations
                     b.HasOne("MyPortal.Database.Models.StaffMember", "LineManager")
                         .WithMany("Subordinates")
                         .HasForeignKey("LineManagerId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("MyPortal.Database.Models.Person", "Person")
                         .WithOne("StaffMemberDetails")

@@ -6,6 +6,7 @@ using System.Text;
 
 namespace MyPortal.Database.Models
 {
+    [Table("RoomClosure")]
     public class RoomClosure
     {
         [Key]

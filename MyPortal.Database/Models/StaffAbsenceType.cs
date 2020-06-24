@@ -6,6 +6,7 @@ using MyPortal.Database.BaseTypes;
 
 namespace MyPortal.Database.Models
 {
+    [Table("StaffAbsenceType")]
     public class StaffAbsenceType : LookupItem
     {
         public StaffAbsenceType()

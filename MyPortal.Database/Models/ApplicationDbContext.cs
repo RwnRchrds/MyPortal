@@ -1174,7 +1174,7 @@ namespace MyPortal.Database.Models
                 .HasMany(e => e.Subordinates)
                 .WithOne(e => e.LineManager)
                 .HasForeignKey(e => e.LineManagerId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.Absences)

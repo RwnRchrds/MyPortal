@@ -6,6 +6,7 @@ using System.Text;
 
 namespace MyPortal.Database.Models
 {
+    [Table("Cover")]
     public class Cover
     {
         [Key]
