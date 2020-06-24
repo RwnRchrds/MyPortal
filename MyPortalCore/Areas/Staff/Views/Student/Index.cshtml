@@ -6,112 +6,240 @@
     ViewBag.Title = "Student Search";
 }
 
-<!-- Header -->
-<div class="kt-subheader   kt-grid__item" id="kt_subheader">
-    <div class="kt-container  kt-container--fluid ">
-        <div class="kt-subheader__main">
-            <h3 class="kt-subheader__title"><i class="fas fa-user-graduate mr-2"></i>Students</h3>
-            <span class="kt-subheader__separator kt-hidden"></span>
-            <div class="kt-subheader__breadcrumbs">
-                <a href="" class="kt-subheader__breadcrumbs-link">Students</a>
-            </div>
+    <link href="~/lib/metronic/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
+
+<!--begin::Subheader-->
+<div class="subheader py-2 py-lg-4 subheader-solid" id="kt_subheader">
+    <div class="container-fluid d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
+        <!--begin::Info-->
+        <div class="d-flex align-items-center flex-wrap mr-2">
+            <!--begin::Page Title-->
+            <h5 class="text-dark font-weight-bold mt-2 mb-2 mr-5"><i class="fas fa-user-graduate mr-2"></i>Students</h5>
+            <!--end::Page Title-->
+
         </div>
+        <!--end::Info-->
+
     </div>
 </div>
+<!--end::Subheader-->
 
-<!-- Main Container -->
-<div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">							
-    <div class="kt-portlet kt-portlet--mobile">
-        <div class="kt-portlet__head kt-portlet__head--lg">
-            <div class="kt-portlet__head-label">
-                <h3 class="kt-portlet__head-title">
-                    Search											
-                </h3>
-            </div>
-            <div class="kt-portlet__head-toolbar">
-                <button class="btn btn-brand btn-sm"><i class="fas fa-plus mr-2"></i>New Student</button>
-            </div>
-        </div>
-        <div class="kt-portlet__body">
-            <!--begin: Search Form -->
-            <div class="kt-form kt-form--label-right kt-margin-t-20">
-                <div class="row align-items-center">
-                    <div class="col-xl-8 order-2 order-xl-1">
-                        <div class="row align-items-center">
-                            <div class="col-md-2 kt-margin-b-20-tablet-and-mobile">
-                                <div class="kt-form__group kt-form__group--inline">
-                                    <div class="kt-form__label">
-                                        <label>Status:</label>
-                                    </div>
-                                    <div class="kt-form__control">
-                                        @Html.DropDownList("searchType", new SelectList(Model.SearchTypes, "Value", "Key", SearchFilters.Students.OnRoll), new { @class = "form-control form-control-sm", id = "statusSearch" })
+<!--begin::Entry-->
+
+<div class="d-flex flex-column-fluid">
+    <!--begin::Container-->
+    <div class=" container ">
+        <!--begin::Teachers-->
+        <div class="d-flex flex-row">
+            <!--begin::Content-->
+            <div class="flex-row-fluid ml-lg-12">
+                <!--begin::Card-->
+                <div class="card card-custom">
+                    <!--begin::Header-->
+                    <div class="card-header flex-wrap border-0 pt-6 pb-0">
+                        <h3 class="card-title align-items-start flex-column">
+                            <span class="card-label font-weight-bolder text-dark">Browse Students</span>
+                        </h3>
+                        <div class="card-toolbar">
+                            <div class="dropdown dropdown-inline" data-toggle="tooltip" title="" data-placement="left" data-original-title="Quick actions">
+                                <!--begin::Trigger Modal-->
+                                <a href="#" class="btn btn-light-primary font-weight-bolder font-size-sm" aria-haspopup="true" aria-expanded="false" data-toggle="modal" data-target="#exampleModalCustomScrollable">
+                                    New Student
+                                </a>
+                                <!--end::Trigger Modal-->
+                                <!--begin::Modal Content-->
+                                <div class="modal fade" id="exampleModalCustomScrollable" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Add New Student</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <i aria-hidden="true" class="ki ki-close"></i>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div data-scroll="true" data-height="600" class="scroll ps" style="height: 600px; overflow: hidden;">
+                                                    <form class="form pt-9">
+                                                        <div class="form-group row">
+                                                            <label class="col-xl-3 col-lg-3 text-right col-form-label">Name</label>
+                                                            <div class="col-lg-9 col-xl-6">
+                                                                <input class="form-control form-control-lg form-control-solid" type="text" value="Nick">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label class="col-xl-3 col-lg-3 text-right col-form-label">Nickname</label>
+                                                            <div class="col-lg-9 col-xl-6">
+                                                                <input class="form-control form-control-lg form-control-solid" type="text" value="Bold">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label class="col-xl-3 col-lg-3 text-right col-form-label">Organization</label>
+                                                            <div class="col-lg-9 col-xl-6">
+                                                                <input class="form-control form-control-lg form-control-solid" type="text" value="Loop Inc.">
+                                                                <span class="form-text text-muted">If you want your invoices addressed to a company. Leave blank to use your full name.</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="separator separator-dashed my-10"></div>
+                                                        <!--begin::Heading-->
+                                                        <div class="row">
+                                                            <div class="col-lg-9 col-xl-6 offset-xl-3">
+                                                                <h3 class="font-size-h6 mb-5">Contact Info:</h3>
+                                                            </div>
+                                                        </div>
+                                                        <!--end::Heading-->
+                                                        <div class="form-group row">
+                                                            <label class="col-xl-3 col-lg-3 text-right col-form-label">Phone</label>
+                                                            <div class="col-lg-9 col-xl-6">
+                                                                <div class="input-group input-group-lg input-group-solid">
+                                                                    <div class="input-group-prepend"><span class="input-group-text"><i class="la la-phone"></i></span></div>
+                                                                    <input type="text" class="form-control form-control-lg form-control-solid" value="+35278953712" placeholder="Phone">
+                                                                </div>
+                                                                <span class="form-text text-muted">We'll never share your email with anyone else.</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label class="col-xl-3 col-lg-3 text-right col-form-label">Email Address</label>
+                                                            <div class="col-lg-9 col-xl-6">
+                                                                <div class="input-group input-group-lg input-group-solid">
+                                                                    <div class="input-group-prepend"><span class="input-group-text"><i class="la la-at"></i></span></div>
+                                                                    <input type="text" class="form-control form-control-lg form-control-solid" value="nick.bold@loop.com" placeholder="Email">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label class="col-xl-3 col-lg-3 text-right col-form-label">Site</label>
+                                                            <div class="col-lg-9 col-xl-6">
+                                                                <div class="input-group input-group-lg input-group-solid">
+                                                                    <input type="text" class="form-control form-control-lg form-control-solid" placeholder="Username" value="loop">
+                                                                    <div class="input-group-append"><span class="input-group-text">.com</span></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="separator separator-dashed my-10"></div>
+                                                        <!--begin::Heading-->
+                                                        <div class="row">
+                                                            <div class="col-lg-9 col-xl-6 offset-xl-3">
+                                                                <h3 class="font-size-h6 mb-5">Contact Info:</h3>
+                                                            </div>
+                                                        </div>
+                                                        <!--end::Heading-->
+                                                        <div class="form-group row">
+                                                            <label class="col-xl-3 col-lg-3 text-right col-form-label">Email Notification</label>
+                                                            <div class="col-lg-9 col-xl-6">
+                                                                <span class="switch">
+                                                                    <label>
+                                                                        <input type="checkbox" checked="checked" name="email_notification_1">
+                                                                        <span></span>
+                                                                    </label>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label class="col-xl-3 col-lg-3 text-right col-form-label">Send Copy</label>
+                                                            <div class="col-lg-9 col-xl-6">
+                                                                <span class="switch">
+                                                                    <label>
+                                                                        <input type="checkbox" name="email_notification_2">
+                                                                        <span></span>
+                                                                    </label>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                    <div class="ps__rail-x" style="left: 0px; bottom: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 0px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div></div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Cancel</button>
+                                                <button type="button" class="btn btn-primary font-weight-bold">Submit</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-2 kt-margin-b-20-tablet-and-mobile">
-                                <div class="kt-form__group kt-form__group--inline">
-                                    <div class="kt-form__label">
-                                        <label>Gender:</label>
-                                    </div>
-                                    <div class="kt-form__control">
-                                        @Html.DropDownList("gender", new SelectList(Model.GenderOptions, "Value", "Key"), "Any", new { @class = "form-control form-control-sm", id = "genderSearch" })
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-2 kt-margin-b-20-tablet-and-mobile">
-                                <div>
-                                    <input type="text" class="form-control form-control-sm" placeholder="First Name" id="firstNameSearch">
-                                </div>
-                            </div>
-                            <div class="col-md-2 kt-margin-b-20-tablet-and-mobile">
-                                <div>
-                                    <input type="text" class="form-control form-control-sm" placeholder="Last Name" id="lastNameSearch">
-                                </div>
-                            </div>
-                            <div class="col-md-2 kt-margin-b-20-tablet-and-mobile">
-                                <button class="btn btn-brand btn-sm" id="searchButton"><i class="fas fa-search"></i> Search</button>
+                                <!--end::Modal Content-->
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <!--end: Search Form -->
-        </div>
-        
+                    <!--end::Header-->
+                    <!--begin::Body-->
+                    <div class="card-body">
+                        <!--begin: Search Form-->
+                        <!--begin::Search Form-->
+                        <div class="mb-10">
+                            <div class="row align-items-center">
+                                <div class="col-lg-9 col-xl-8">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-3 my-2 my-md-0">
+                                            <input type="text" class="form-control form-control-solid" placeholder="First Name" id="firstNameSearch">
+                                        </div>
+                                        <div class="col-md-3 my-2 my-md-0">
+                                            <input type="text" class="form-control form-control-solid" placeholder="Last Name" id="lastNameSearch">
+                                        </div>
 
-        <!--Table Template-->
-        <div class="kt-portlet__body d-none" id="searchResults">
-            <div class="row">
-                <div class="col-md-12">
-                    <table id="student_search" class="table table-striped font-weight-500">
-                        <thead>
-                        <tr>
-                            <th>
-                                Name
-                            </th>
-                            <th>
-                                Gender
-                            </th>
-                            <th>
-                                Reg Group
-                            </th>
-                            <th>
-                                Year Group
-                            </th>
-                            <th>
-                                House
-                            </th>
-                        </tr>
-                        </thead>
-                    </table>
+                                        <div class="col-md-3 my-2 my-md-0">
+                                            @Html.DropDownList("searchType", new SelectList(Model.SearchTypes, "Value", "Key", SearchFilters.Students.OnRoll), new { @class = "form-control form-control-solid", id = "statusSearch" })
+                                        </div>
+                                        <div class="col-md-3 my-2 my-md-0">
+                                            @Html.DropDownList("gender", new SelectList(Model.GenderOptions, "Value", "Key"), "Any", new { @class = "form-control form-control-solid", id = "genderSearch" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-xl-4 mt-5 mt-lg-0">
+                                    <btn id="searchButton" class="btn btn-light-primary px-6 font-weight-bold">
+                                        <i class="fas fa-search mr-1"></i>Search
+                                    </btn>
+                                </div>
+                            </div>
+                        </div>
+                        <!--end::Search Form-->
+                        <!--end: Search Form-->
+                        <!--begin: Datatable-->
+                        <div class="kt-portlet__body d-none" id="searchResults">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table id="student_search" class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>
+                                                Name
+                                            </th>
+                                            <th>
+                                                Gender
+                                            </th>
+                                            <th>
+                                                Reg Group
+                                            </th>
+                                            <th>
+                                                Year Group
+                                            </th>
+                                            <th>
+                                                House
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!--end: Datatable-->
+                    </div>
+                    <!--end::Body-->
                 </div>
+                <!--end::Card-->
             </div>
+            <!--end::Content-->
         </div>
+        <!--end::Teachers-->
     </div>
+    <!--end::Container-->
 </div>
+
+<!--end::Entry-->
 
 @section Scripts
 {
+    <script src="~/lib/metronic/plugins/custom/datatables/datatables.bundle.js"></script>
+
     <script>
 
         var urlSearchStudents = "@Url.RouteUrl("ApiStudentSearch")";
@@ -169,19 +297,21 @@
 
         function renderGender(gender) {
             if (gender === "M") {
-                return `<div class="kt-badge kt-badge--pill kt-badge--inline" style="background-color: #005ec9; color: white;">Male</div>`;
+                return `<div class="label label-lg font-weight-bold label-light-primary label-inline">Male</div>`;
             } else if (gender === "F") {
-                return `<div class="kt-badge kt-badge--pill kt-badge--inline" style="background-color: #ba0098; color: white;">Female</div>`;
+                return `<div class="label label-lg font-weight-bold label-light-danger label-inline">Female</div>`;
             } else if (gender === "X") {
-                return `<div class="kt-badge kt-badge--pill kt-badge--inline" style="background-color: #0abf00; color: white;">Other</div>`;
+                return `<div class="label label-lg font-weight-bold label-light-warning label-inline">Other</div>`;
             } else {
-                return `<div class="kt-badge kt-badge--pill kt-badge--inline" style="background-color: #5e5e5e; color: white;">Unknown</div>`;
+                return `<div class="label label-lg font-weight-bold label-light-secondary label-inline">Unknown</div>`;
             }
         }
 
         //Execute ONCE -- Use searchStudents() to update AJAX URL
         function loadDataTable(url) {
             $("#student_search").DataTable({
+                responsive: true,
+                paging: true,
                 ajax:
                 {
                     url: url,
@@ -193,8 +323,8 @@
                         data: "displayName",
                         render: function(data, type, student) {
                             var overviewUrl = getOverviewUrl(student.id);
-                            return `<div class="kt-user-card-v2"><div class="kt-user-card-v2__pic"><div class="kt-badge kt-badge--xl kt-badge--info"><i class="fas fa-fw fa-user-graduate"></i></div></div><div class="kt-user-card-v2__details"><a href="${
-                                overviewUrl}">${student.displayName}</a></div></div>`;
+                            return `<div class="d-flex align-items-center"><div class="symbol symbol-50 symbol-light-primary"><div class="symbol-label font-size-h5"><i class="fas fa-fw fa-user-graduate text-primary"></i></div></div><div class="ml-3"><div class="text-dark-75 font-weight-bold line-height-sm d-block"><a href="${
+                                overviewUrl}">${student.displayName}</a></div></div></div>`;
                         }
                     },
                     {

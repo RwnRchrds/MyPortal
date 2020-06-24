@@ -1,0 +1,38 @@
+[
+  {
+    "outputFileName": "wwwroot/css/site.min.css",
+    "inputFiles": [
+      "wwwroot/css/site.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/site.min.js",
+    "inputFiles": [
+      "wwwroot/js/site.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+  {
+    "outputFileName": "wwwroot/css/bundle.css",
+    "inputFiles": [
+      "wwwroot/lib/metronic/plugins/custom/fullcalendar/fullcalendar.bundle.css",
+      "wwwroot/lib/metronic/plugins/global/plugins.bundle.css",
+      "wwwroot/lib/metronic/plugins/custom/prismjs/prismjs.bundle.css",
+      "wwwroot/lib/metronic/css/style.bundle.css",
+      "wwwroot/lib/metronic/css/themes/layout/header/base/light.css",
+      "wwwroot/lib/metronic/css/themes/layout/header/menu/light.css",
+      "wwwroot/lib/metronic/css/themes/layout/brand/dark.css",
+      "wwwroot/lib/metronic/css/themes/layout/aside/dark.css",
+      "wwwroot/lib/font-awesome/css/all.css",
+      "wwwroot/lib/font-awesome/css/brands.css",
+      "wwwroot/lib/font-awesome/css/duotone.css",
+      "wwwroot/lib/font-awesome/css/fontawesome.css",
+      "wwwroot/lib/font-awesome/css/light.css",
+      "wwwroot/lib/font-awesome/css/regular.css",
+      "wwwroot/lib/font-awesome/css/solid.css"
+    ]
+  }
+]
