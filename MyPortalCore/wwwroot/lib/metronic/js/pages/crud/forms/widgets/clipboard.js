@@ -2,7 +2,7 @@
 // Class definition
 
 var KTClipboardDemo = function () {
-    
+
     // Private functions
     var demos = function () {
         // basic example
@@ -15,11 +15,11 @@ var KTClipboardDemo = function () {
     return {
         // public functions
         init: function() {
-            demos(); 
+            demos();
         }
     };
 }();
 
-jQuery(document).ready(function() {    
+jQuery(document).ready(function() {
     KTClipboardDemo.init();
 });

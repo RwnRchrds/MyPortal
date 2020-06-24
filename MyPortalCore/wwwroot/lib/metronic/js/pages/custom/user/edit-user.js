@@ -4,19 +4,19 @@
 var KTUserEdit = function () {
 	// Base elements
 	var avatar;
-	 
+
 	var initUserForm = function() {
-		avatar = new KTAvatar('kt_user_edit_avatar');
-	}	
+		avatar = new KTImageInput('kt_user_edit_avatar');
+	}
 
 	return {
 		// public functions
 		init: function() {
-			initUserForm(); 
+			initUserForm();
 		}
 	};
 }();
 
-jQuery(document).ready(function() {	
+jQuery(document).ready(function() {
 	KTUserEdit.init();
 });

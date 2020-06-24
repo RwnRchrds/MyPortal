@@ -1,8 +1,8 @@
 "use strict";
 var KTDatatablesAdvancedFooterCalllback = function() {
 
-	var initTable1 = function() {
-		var table = $('#kt_table_1');
+	var init = function() {
+		var table = $('#kt_datatable');
 
 		// begin first table
 		table.DataTable({
@@ -41,9 +41,11 @@ var KTDatatablesAdvancedFooterCalllback = function() {
 
 		//main function to initiate the module
 		init: function() {
-			initTable1();
-		}
+			init();
+		},
+
 	};
+
 }();
 
 jQuery(document).ready(function() {

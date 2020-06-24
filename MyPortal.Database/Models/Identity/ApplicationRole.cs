@@ -12,6 +12,8 @@ namespace MyPortal.Database.Models.Identity
         [StringLength(128)]
         public string Description { get; set; }
 
+        public bool System { get; set; }
+
         public virtual ICollection<ApplicationRolePermission> RolePermissions { get; set; }
     }
 }

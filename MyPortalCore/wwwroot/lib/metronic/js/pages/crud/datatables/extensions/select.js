@@ -3,7 +3,7 @@ var KTDatatablesExtensionsKeytable = function() {
 
 	var initTable1 = function() {
 		// begin first table
-		var table = $('#kt_table_1').DataTable({
+		var table = $('#kt_datatable_1').DataTable({
 			responsive: true,
 			select: true,
 			columnDefs: [
@@ -13,40 +13,48 @@ var KTDatatablesExtensionsKeytable = function() {
 					orderable: false,
 					render: function(data, type, full, meta) {
 						return '\
-                        <span class="dropdown">\
-                            <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown" aria-expanded="true">\
-                              <i class="la la-ellipsis-h"></i>\
-                            </a>\
-                            <div class="dropdown-menu dropdown-menu-right">\
-                                <a class="dropdown-item" href="#"><i class="la la-edit"></i> Edit Details</a>\
-                                <a class="dropdown-item" href="#"><i class="la la-leaf"></i> Update Status</a>\
-                                <a class="dropdown-item" href="#"><i class="la la-print"></i> Generate Report</a>\
-                            </div>\
-                        </span>\
-                        <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="View">\
-                          <i class="la la-edit"></i>\
-                        </a>';
+							<div class="dropdown dropdown-inline">\
+								<a href="javascript:;" class="btn btn-sm btn-clean btn-icon" data-toggle="dropdown">\
+	                                <i class="la la-cog"></i>\
+	                            </a>\
+							  	<div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">\
+									<ul class="nav nav-hoverable flex-column">\
+							    		<li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon la la-edit"></i><span class="nav-text">Edit Details</span></a></li>\
+							    		<li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon la la-leaf"></i><span class="nav-text">Update Status</span></a></li>\
+							    		<li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon la la-print"></i><span class="nav-text">Print</span></a></li>\
+									</ul>\
+							  	</div>\
+							</div>\
+							<a href="javascript:;" class="btn btn-sm btn-clean btn-icon" title="Edit details">\
+								<i class="la la-edit"></i>\
+							</a>\
+							<a href="javascript:;" class="btn btn-sm btn-clean btn-icon" title="Delete">\
+								<i class="la la-trash"></i>\
+							</a>\
+						';
 					},
 				},
 				{
+					width: '75px',
 					targets: 8,
 					render: function(data, type, full, meta) {
 						var status = {
-							1: {'title': 'Pending', 'class': 'kt-badge--brand'},
-							2: {'title': 'Delivered', 'class': ' kt-badge--danger'},
-							3: {'title': 'Canceled', 'class': ' kt-badge--primary'},
-							4: {'title': 'Success', 'class': ' kt-badge--success'},
-							5: {'title': 'Info', 'class': ' kt-badge--info'},
-							6: {'title': 'Danger', 'class': ' kt-badge--danger'},
-							7: {'title': 'Warning', 'class': ' kt-badge--warning'},
+							1: {'title': 'Pending', 'class': 'label-light-primary'},
+							2: {'title': 'Delivered', 'class': ' label-light-danger'},
+							3: {'title': 'Canceled', 'class': ' label-light-primary'},
+							4: {'title': 'Success', 'class': ' label-light-success'},
+							5: {'title': 'Info', 'class': ' label-light-info'},
+							6: {'title': 'Danger', 'class': ' label-light-danger'},
+							7: {'title': 'Warning', 'class': ' label-light-warning'},
 						};
 						if (typeof status[data] === 'undefined') {
 							return data;
 						}
-						return '<span class="kt-badge ' + status[data].class + ' kt-badge--inline kt-badge--pill">' + status[data].title + '</span>';
+						return '<span class="label label-lg font-weight-bold' + status[data].class + ' label-inline">' + status[data].title + '</span>';
 					},
 				},
 				{
+					width: '75px',
 					targets: 9,
 					render: function(data, type, full, meta) {
 						var status = {
@@ -57,8 +65,8 @@ var KTDatatablesExtensionsKeytable = function() {
 						if (typeof status[data] === 'undefined') {
 							return data;
 						}
-						return '<span class="kt-badge kt-badge--' + status[data].state + ' kt-badge--dot"></span>&nbsp;' +
-							'<span class="kt-font-bold kt-font-' + status[data].state + '">' + status[data].title + '</span>';
+						return '<span class="label label-' + status[data].state + ' label-dot mr-2"></span>' +
+							'<span class="font-weight-bold text-' + status[data].state + '">' + status[data].title + '</span>';
 					},
 				},
 			],
@@ -68,29 +76,29 @@ var KTDatatablesExtensionsKeytable = function() {
 
 	var initTable2 = function() {
 		// begin first table
-		var table = $('#kt_table_2').DataTable({
+		var table = $('#kt_datatable_2').DataTable({
 			responsive: true,
 			select: {
 				style: 'multi',
-				selector: 'td:first-child .kt-checkable',
+				selector: 'td:first-child .checkable',
 			},
 			headerCallback: function(thead, data, start, end, display) {
-				thead.getElementsByTagName('th')[0].innerHTML = '\
-                    <label class="kt-checkbox kt-checkbox--single kt-checkbox--solid kt-checkbox--brand">\
-                        <input type="checkbox" value="" class="kt-group-checkable">\
-                        <span></span>\
-                    </label>';
+				thead.getElementsByTagName('th')[0].innerHTML = `
+                    <label class="checkbox checkbox-single checkbox-solid checkbox-primary mb-0">
+                        <input type="checkbox" value="" class="group-checkable"/>
+                        <span></span>
+                    </label>`;
 			},
 			columnDefs: [
 				{
 					targets: 0,
 					orderable: false,
 					render: function(data, type, full, meta) {
-						return '\
-                        <label class="kt-checkbox kt-checkbox--single kt-checkbox--solid kt-checkbox--brand">\
-                            <input type="checkbox" value="" class="kt-checkable">\
-                            <span></span>\
-                        </label>';
+						return `
+                        <label class="checkbox checkbox-single checkbox-primary mb-0">
+                            <input type="checkbox" value="" class="checkable"/>
+                            <span></span>
+                        </label>`;
 					},
 				},
 				{
@@ -99,40 +107,48 @@ var KTDatatablesExtensionsKeytable = function() {
 					orderable: false,
 					render: function(data, type, full, meta) {
 						return '\
-                        <span class="dropdown">\
-                            <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown" aria-expanded="true">\
-                              <i class="la la-ellipsis-h"></i>\
-                            </a>\
-                            <div class="dropdown-menu dropdown-menu-right">\
-                                <a class="dropdown-item" href="#"><i class="la la-edit"></i> Edit Details</a>\
-                                <a class="dropdown-item" href="#"><i class="la la-leaf"></i> Update Status</a>\
-                                <a class="dropdown-item" href="#"><i class="la la-print"></i> Generate Report</a>\
-                            </div>\
-                        </span>\
-                        <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="View">\
-                          <i class="la la-edit"></i>\
-                        </a>';
+							<div class="dropdown dropdown-inline">\
+								<a href="javascript:;" class="btn btn-sm btn-clean btn-icon" data-toggle="dropdown">\
+	                                <i class="la la-cog"></i>\
+	                            </a>\
+							  	<div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">\
+									<ul class="nav nav-hoverable flex-column">\
+							    		<li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon la la-edit"></i><span class="nav-text">Edit Details</span></a></li>\
+							    		<li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon la la-leaf"></i><span class="nav-text">Update Status</span></a></li>\
+							    		<li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon la la-print"></i><span class="nav-text">Print</span></a></li>\
+									</ul>\
+							  	</div>\
+							</div>\
+							<a href="javascript:;" class="btn btn-sm btn-clean btn-icon" title="Edit details">\
+								<i class="la la-edit"></i>\
+							</a>\
+							<a href="javascript:;" class="btn btn-sm btn-clean btn-icon" title="Delete">\
+								<i class="la la-trash"></i>\
+							</a>\
+						';
 					},
 				},
 				{
+					width: '75px',
 					targets: 8,
 					render: function(data, type, full, meta) {
 						var status = {
-							1: {'title': 'Pending', 'class': 'kt-badge--brand'},
-							2: {'title': 'Delivered', 'class': ' kt-badge--danger'},
-							3: {'title': 'Canceled', 'class': ' kt-badge--primary'},
-							4: {'title': 'Success', 'class': ' kt-badge--success'},
-							5: {'title': 'Info', 'class': ' kt-badge--info'},
-							6: {'title': 'Danger', 'class': ' kt-badge--danger'},
-							7: {'title': 'Warning', 'class': ' kt-badge--warning'},
+							1: {'title': 'Pending', 'class': 'label-light-primary'},
+							2: {'title': 'Delivered', 'class': ' label-light-danger'},
+							3: {'title': 'Canceled', 'class': ' label-light-primary'},
+							4: {'title': 'Success', 'class': ' label-light-success'},
+							5: {'title': 'Info', 'class': ' label-light-info'},
+							6: {'title': 'Danger', 'class': ' label-light-danger'},
+							7: {'title': 'Warning', 'class': ' label-light-warning'},
 						};
 						if (typeof status[data] === 'undefined') {
 							return data;
 						}
-						return '<span class="kt-badge ' + status[data].class + ' kt-badge--inline kt-badge--pill">' + status[data].title + '</span>';
+						return '<span class="label label-lg font-weight-bold' + status[data].class + ' label-inline">' + status[data].title + '</span>';
 					},
 				},
 				{
+					width: '75px',
 					targets: 9,
 					render: function(data, type, full, meta) {
 						var status = {
@@ -143,15 +159,15 @@ var KTDatatablesExtensionsKeytable = function() {
 						if (typeof status[data] === 'undefined') {
 							return data;
 						}
-						return '<span class="kt-badge kt-badge--' + status[data].state + ' kt-badge--dot"></span>&nbsp;' +
-							'<span class="kt-font-bold kt-font-' + status[data].state + '">' + status[data].title + '</span>';
+						return '<span class="label label-' + status[data].state + ' label-dot mr-2"></span>' +
+							'<span class="font-weight-bold text-' + status[data].state + '">' + status[data].title + '</span>';
 					},
 				},
 			],
 		});
 
-		table.on('change', '.kt-group-checkable', function() {
-			var set = $(this).closest('table').find('td:first-child .kt-checkable');
+		table.on('change', '.group-checkable', function() {
+			var set = $(this).closest('table').find('td:first-child .checkable');
 			var checked = $(this).is(':checked');
 
 			$(set).each(function() {
@@ -173,8 +189,10 @@ var KTDatatablesExtensionsKeytable = function() {
 		init: function() {
 			initTable1();
 			initTable2();
-		}
+		},
+
 	};
+
 }();
 
 jQuery(document).ready(function() {

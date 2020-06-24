@@ -1,7 +1,7 @@
 // Class definition
 
 var KTBootstrapMultipleSelectsplitter = function () {
-    
+
     // Private functions
     var demos = function () {
         // minimum setup
@@ -11,7 +11,7 @@ var KTBootstrapMultipleSelectsplitter = function () {
     return {
         // public functions
         init: function() {
-            demos(); 
+            demos();
         }
     };
 }();

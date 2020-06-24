@@ -1,20 +1,24 @@
 // Class definition
 
-var KTFormWidgets = function () {
+var KTFormWidgetsValidation = function () {
     // Private functions
     var validator;
 
-    var initWidgets = function() {
-        // datepicker
+    var _initWidgets = function() {
+        // Initialize Plugins
+        // Datepicker
         $('#kt_datepicker').datepicker({
             todayHighlight: true,
             templates: {
-                leftArrow: '<i class="la la-angle-left"></i>',
-                rightArrow: '<i class="la la-angle-right"></i>'
+                leftArrow: '<i class=\"la la-angle-left\"></i>',
+                rightArrow: '<i class=\"la la-angle-right\"></i>'
             }
+        }).on('changeDate', function(e) {
+            // Revalidate field
+            validator.revalidateField('date');
         });
 
-        // datetimepicker
+        // Datetimepicker
         $('#kt_datetimepicker').datetimepicker({
             pickerPosition: 'bottom-left',
             todayHighlight: true,
@@ -23,125 +27,173 @@ var KTFormWidgets = function () {
         });
 
         $('#kt_datetimepicker').change(function() {
-            validator.element($(this));
+            // Revalidate field
+            validator.revalidateField('datetime');
         });
 
-        // timepicker
+        // Timepicker
         $('#kt_timepicker').timepicker({
             minuteStep: 1,
             showSeconds: true,
             showMeridian: true
         });
 
-        // daterangepicker
+        $('#kt_timepicker').change(function() {
+            // Revalidate field
+            validator.revalidateField('time');
+        });
+
+        // Daterangepicker
         $('#kt_daterangepicker').daterangepicker({
             buttonClasses: ' btn',
             applyClass: 'btn-primary',
-            cancelClass: 'btn-secondary'
+            cancelClass: 'btn-light-primary'
         }, function(start, end, label) {
             var input = $('#kt_daterangepicker').find('.form-control');
-            
             input.val( start.format('YYYY/MM/DD') + ' / ' + end.format('YYYY/MM/DD'));
-            validator.element(input); // validate element
+
+            // Revalidate field
+            validator.revalidateField('daterangepicker');
         });
 
-        // bootstrap switch
+        // Bootstrap Switch
         $('[data-switch=true]').bootstrapSwitch();
         $('[data-switch=true]').on('switchChange.bootstrapSwitch', function() {
-            validator.element($(this)); // validate element
+            // Revalidate field
+            validator.revalidateField('switch');
         });
 
-        // bootstrap select
+        // Bootstrap Select
         $('#kt_bootstrap_select').selectpicker();
         $('#kt_bootstrap_select').on('changed.bs.select', function() {
-            validator.element($(this)); // validate element
+            // Revalidate field
+            validator.revalidateField('select');
         });
 
-        // select2
+        // Select2
         $('#kt_select2').select2({
             placeholder: "Select a state",
         });
-        $('#kt_select2').on('select2:change', function(){
-            validator.element($(this)); // validate element
+
+        $('#kt_select2').on('change', function(){
+            // Revalidate field
+            validator.revalidateField('select2');
         });
 
-        // typeahead
+        // Typeahead
         var countries = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.whitespace,
             queryTokenizer: Bloodhound.tokenizers.whitespace,
-            prefetch: 'https://keenthemes.com/metronic/tools/preview/api/typeahead/countries.json'
+            prefetch: HOST_URL + '/api/?file=typeahead/countries.json'
         });
 
         $('#kt_typeahead').typeahead(null, {
             name: 'countries',
             source: countries
         });
+
         $('#kt_typeahead').bind('typeahead:select', function(ev, suggestion) {
-            validator.element($('#kt_typeahead')); // validate element
+            // Revalidate field
+            validator.revalidateField('typeahead');
         });
     }
-    
-    var initValidation = function () {
-        validator = $( "#kt_form_1" ).validate({
-            // define validation rules
-            rules: {
-                date: {
-                    required: true,
-                    date: true 
-                },
-                daterange: {
-                    required: true
-                },
-                datetime: {
-                    required: true
-                },
-                time: {
-                    required: true
+
+    var _initValidation = function () {
+        // Validation Rules
+        validator = FormValidation.formValidation(
+            document.getElementById('kt_form'),
+            {
+                fields: {
+                    date: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Date is required'
+                            }
+                        }
+                    },
+                    daterangepicker: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Daterange is required'
+                            }
+                        }
+                    },
+                    datetime: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Datetime is required'
+                            }
+                        }
+                    },
+                    time: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Time is required'
+                            }
+                        }
+                    },
+                    select: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Select is required'
+                            }
+                        }
+                    },
+                    select2: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Select2 is required'
+                            }
+                        }
+                    },
+                    typeahead: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Typeahead is required'
+                            }
+                        }
+                    },
+                    switch: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Typeahead is required'
+                            }
+                        }
+                    },
+                    markdown: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Typeahead is required'
+                            }
+                        }
+                    },
                 },
 
-                select: {
-                    required: true,
-                    minlength: 2,
-                    maxlength: 4
-                },
-                select2: {
-                    required: true
-                },
-                typeahead: {
-                    required: true
-                },
-
-                switch: {
-                    required: true
-                },
-
-                markdown: {
-                    required: true
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+					// Validate fields when clicking the Submit button
+					submitButton: new FormValidation.plugins.SubmitButton(),
+            		// Submit the form when all fields are valid
+            		defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
+                    // Bootstrap Framework Integration
+                    bootstrap: new FormValidation.plugins.Bootstrap({
+                        eleInvalidClass: '',
+                        eleValidClass: '',
+                    })
                 }
-            },
-            
-            //display error alert on form submit  
-            invalidHandler: function(event, validator) {             
-                var alert = $('#kt_form_1_msg');
-                alert.removeClass('kt--hide').show();
-                KTUtil.scrollTo('kt_form_1_msg', -200);
-            },
-
-            submitHandler: function (form) {
-                //form[0].submit(); // submit the form
             }
-        });       
+        );
     }
 
     return {
         // public functions
         init: function() {
-            initWidgets(); 
-            initValidation();
+            _initWidgets();
+            _initValidation();
         }
     };
 }();
 
-jQuery(document).ready(function() {    
-    KTFormWidgets.init();
+jQuery(document).ready(function() {
+    KTFormWidgetsValidation.init();
 });

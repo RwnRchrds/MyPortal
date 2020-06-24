@@ -105,16 +105,7 @@ var KTBootstrapDatetimepicker = function () {
             forceParse: 0,
             pickerPosition: 'bottom-left'
         });
-
-        // locale
-        // import bootstrap-datetime-picker/js/locales/bootstrap-datetimepicker.XX.js
-        $('#kt_datetimepicker_8').datetimepicker({
-            todayHighlight: true,
-            autoclose: true,
-            format: 'yyyy.mm.dd hh:ii',
-            language: 'fr'
-        });
-    };
+    }
 
     return {
         // public functions

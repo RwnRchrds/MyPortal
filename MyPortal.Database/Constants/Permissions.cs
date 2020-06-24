@@ -28,7 +28,7 @@ namespace MyPortal.Database.Constants
         public static Guid EditAttendanceData { get; } = Guid.Parse("F9F0F455-B47C-4C53-B897-D5964FBC6356");
         public static Guid EditBulletins { get; } = Guid.Parse("F9F0F855-B47C-4C53-B897-D5964FBC6356");
         public static Guid EditClasses { get; } = Guid.Parse("F9F0F515-B47C-4C53-B897-D5964FBC6356");
-        public static Guid EditCommentBanks { get; } = Guid.Parse("5190AC88-5C14-4A6B-AEF2-C0E796A0B2B7");
+        public static Guid EditCommentBanks { get; } = Guid.Parse("F9F0F855-B47C-4C53-B897-D5964FBC6358");
         public static Guid EditObservations { get; } = Guid.Parse("F9F0F755-B47C-4C53-B897-D5964FBC6356");
         public static Guid EditOwnLessonPlans { get; } = Guid.Parse("F9F0F545-B47C-4C53-B897-D5964FBC6356");
         public static Guid EditPastoralStructure { get; } = Guid.Parse("F9F0F695-B47C-4C53-B897-D5964FBC6356");

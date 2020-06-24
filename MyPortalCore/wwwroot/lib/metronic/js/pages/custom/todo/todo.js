@@ -2,13 +2,15 @@
 
 // Class definition
 var KTAppTodo = function() {
-    var asideEl;
-    var listEl;
-    var viewEl;
+    // Private properties
+    var _asideEl;
+    var _listEl;
+    var _viewEl;
+    var _replyEl;
+    var _asideOffcanvas;
 
-    var asideOffcanvas;
-
-    var initEditor = function(editor) {
+    // Private methods
+    var _initEditor = function(form, editor) {
         // init editor
         var options = {
             modules: {
@@ -18,10 +20,31 @@ var KTAppTodo = function() {
             theme: 'snow'
         };
 
+        if (!KTUtil.getById(editor)) {
+            return;
+        }
+
+        // Init editor
         var editor = new Quill('#' + editor, options);
+
+        // Customize editor
+        var toolbar = KTUtil.find(form, '.ql-toolbar');
+        var editor = KTUtil.find(form, '.ql-editor');
+
+        if (toolbar) {
+            KTUtil.addClass(toolbar, 'px-5 border-top-0 border-left-0 border-right-0');
+        }
+
+        if (editor) {
+            KTUtil.addClass(editor, 'px-8');
+        }
     }
 
-    var initAttachments = function(elemId) {
+    var _initAttachments = function(elemId) {
+        if (!KTUtil.getById(elemId)) {
+            return;
+        }
+
         var id = "#" + elemId;
         var previewNode = $(id + " .dropzone-item");
         previewNode.id = "";
@@ -61,43 +84,38 @@ var KTAppTodo = function() {
         });
     }
 
+    // Public methods
     return {
-        // public functions
+        // Public functions
         init: function() {
-            asideEl = KTUtil.getByID('kt_todo_aside');
-            listEl = KTUtil.getByID('kt_todo_list');
-            viewEl = KTUtil.getByID('kt_todo_view');
+            // Init variables
+            _asideEl = KTUtil.getById('kt_todo_aside');
+            _listEl = KTUtil.getById('kt_todo_list');
+            _viewEl = KTUtil.getById('kt_todo_view');
+            _replyEl = KTUtil.getById('kt_todo_reply');
 
-            // init
+            // Init handlers
             KTAppTodo.initAside();
             KTAppTodo.initList();
-            KTAppTodo.initCommentForm();
             KTAppTodo.initView();
+            KTAppTodo.initReply();
         },
 
         initAside: function() {
             // Mobile offcanvas for mobile mode
-            asideOffcanvas = new KTOffcanvas(asideEl, {
+            _asideOffcanvas = new KTOffcanvas(_asideEl, {
                 overlay: true,
-                baseClass: 'kt-todo__aside',
-                closeBy: 'kt_todo_aside_close',
+                baseClass: 'offcanvas-mobile',
+                //closeBy: 'kt_todo_aside_close',
                 toggleBy: 'kt_subheader_mobile_toggle'
             });
-        },
 
-        initList: function() {
-            // View message
-            KTUtil.on(listEl, '.kt-todo__item', 'click', function(e) {
-                var actionsEl = KTUtil.find(this, '.kt-todo__actions');
-
-                // skip actions click
-                if (e.target === actionsEl || (actionsEl && actionsEl.contains(e.target) === true)) {
-                    return false;
-                }
-
-                if (KTUtil.isInResponsiveRange('tablet-and-mobile') === false) {
-                    return; // mobile mode
-                }
+            // View list
+            KTUtil.on(_asideEl, '.list-item[data-action="list"]', 'click', function(e) {
+                var type = KTUtil.attr(this, 'data-type');
+                var listItemsEl = KTUtil.find(_listEl, '.kt-inbox__items');
+                var navItemEl = this.closest('.kt-nav__item');
+                var navItemActiveEl = KTUtil.find(_asideEl, '.kt-nav__item.kt-nav__item--active');
 
                 // demo loading
                 var loading = new KTDialog({
@@ -110,67 +128,105 @@ var KTAppTodo = function() {
                 setTimeout(function() {
                     loading.hide();
 
-                    KTUtil.css(listEl, 'display', 'none');
-                    KTUtil.css(viewEl, 'display', 'flex');
-                }, 700);
+                    KTUtil.css(_listEl, 'display', 'flex'); // show list
+                    KTUtil.css(_viewEl, 'display', 'none'); // hide view
+
+                    KTUtil.addClass(navItemEl, 'kt-nav__item--active');
+                    KTUtil.removeClass(navItemActiveEl, 'kt-nav__item--active');
+
+                    KTUtil.attr(listItemsEl, 'data-type', type);
+                }, 600);
             });
+        },
 
+        initList: function() {
             // Group selection
-            KTUtil.on(listEl, '.kt-todo__toolbar .kt-todo__check .kt-checkbox input', 'click', function() {
-                var items = KTUtil.findAll(listEl, '.kt-todo__items .kt-todo__item');
+            KTUtil.on(_listEl, '[data-inbox="group-select"] input', 'click', function() {
+                var messages = KTUtil.findAll(_listEl, '[data-inbox="message"]');
 
-                for (var i = 0, j = items.length; i < j; i++) {
-                    var item = items[i];
-                    var checkbox = KTUtil.find(item, '.kt-todo__actions .kt-checkbox input');
+                for (var i = 0, j = messages.length; i < j; i++) {
+                    var message = messages[i];
+                    var checkbox = KTUtil.find(message, '.checkbox input');
                     checkbox.checked = this.checked;
 
                     if (this.checked) {
-                        KTUtil.addClass(item, 'kt-todo__item--selected');
+                        KTUtil.addClass(message, 'active');
                     } else {
-                        KTUtil.removeClass(item, 'kt-todo__item--selected');
+                        KTUtil.removeClass(message, 'active');
                     }
                 }
             });
 
             // Individual selection
-            KTUtil.on(listEl, '.kt-todo__item .kt-checkbox input', 'click', function() {
-                var item = this.closest('.kt-todo__item');
+            KTUtil.on(_listEl, '[data-inbox="message"] [data-inbox="actions"] .checkbox input', 'click', function() {
+                var item = this.closest('[data-inbox="message"]');
 
                 if (item && this.checked) {
-                    KTUtil.addClass(item, 'kt-todo__item--selected');
+                    KTUtil.addClass(item, 'active');
                 } else {
-                    KTUtil.removeClass(item, 'kt-todo__item--selected');
+                    KTUtil.removeClass(item, 'active');
                 }
             });
         },
 
         initView: function() {
             // Back to listing
-            KTUtil.on(viewEl, '.kt-todo__toolbar .kt-todo__icon.kt-todo__icon--back', 'click', function() {
+            KTUtil.on(_viewEl, '[data-inbox="back"]', 'click', function() {
                 // demo loading
                 var loading = new KTDialog({
                     'type': 'loader',
                     'placement': 'top center',
                     'message': 'Loading ...'
                 });
+
                 loading.show();
 
                 setTimeout(function() {
                     loading.hide();
 
-                    KTUtil.css(listEl, 'display', 'flex');
-                    KTUtil.css(viewEl, 'display', 'none');
+                    KTUtil.addClass(_listEl, 'd-block');
+                    KTUtil.removeClass(_listEl, 'd-none');
+
+                    KTUtil.addClass(_viewEl, 'd-none');
+                    KTUtil.removeClass(_viewEl, 'd-block');
                 }, 700);
+            });
+
+            // Expand/Collapse reply
+            KTUtil.on(_viewEl, '[data-inbox="message"]', 'click', function(e) {
+                var message = this.closest('[data-inbox="message"]');
+
+                var dropdownToggleEl = KTUtil.find(this, '[data-toggle="dropdown"]');
+                var toolbarEl = KTUtil.find(this, '[data-inbox="toolbar"]');
+
+                // skip dropdown toggle click
+                if (e.target === dropdownToggleEl || (dropdownToggleEl && dropdownToggleEl.contains(e.target) === true)) {
+                    return false;
+                }
+
+                // skip group actions click
+                if (e.target === toolbarEl || (toolbarEl && toolbarEl.contains(e.target) === true)) {
+                    return false;
+                }
+
+                if (KTUtil.hasClass(message, 'toggle-on')) {
+                    KTUtil.addClass(message, 'toggle-off');
+                    KTUtil.removeClass(message, 'toggle-on');
+                } else {
+                    KTUtil.removeClass(message, 'toggle-off');
+                    KTUtil.addClass(message, 'toggle-on');
+                }
             });
         },
 
-        initCommentForm: function() {
-            initEditor('kt_todo_post_editor');
-            initAttachments('kt_todo_post_attachments');
+        initReply: function() {
+            _initEditor(_replyEl, 'kt_todo_reply_editor');
+            _initAttachments('kt_todo_reply_attachments');
         }
     };
 }();
 
-KTUtil.ready(function() {
+// Class Initialization
+jQuery(document).ready(function() {
     KTAppTodo.init();
 });

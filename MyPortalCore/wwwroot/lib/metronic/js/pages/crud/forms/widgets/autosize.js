@@ -1,7 +1,7 @@
 // Class definition
 
 var KTAutosize = function () {
-    
+
     // Private functions
     var demos = function () {
         // basic demo
@@ -17,7 +17,7 @@ var KTAutosize = function () {
     return {
         // public functions
         init: function() {
-            demos(); 
+            demos();
         }
     };
 }();

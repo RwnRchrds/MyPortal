@@ -1,6 +1,6 @@
 // Class definition
 
-var KTBootstrapTouchspin = function () {
+var KTRecaptcha = function () {
     
     // Private functions
     var demos = function () {
@@ -17,5 +17,5 @@ var KTBootstrapTouchspin = function () {
 }();
 
 jQuery(document).ready(function() {
-    KTBootstrapTouchspin.init();
+    KTRecaptcha.init();
 });

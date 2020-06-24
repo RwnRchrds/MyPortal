@@ -800,7 +800,7 @@ namespace MyPortal.Database.Migrations
 
                     b.HasIndex("WeekId");
 
-                    b.ToTable("CoverArrangements");
+                    b.ToTable("Cover");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.CurriculumBand", b =>
@@ -1552,6 +1552,9 @@ namespace MyPortal.Database.Migrations
 
                     b.HasIndex("AreaId");
 
+                    b.HasIndex("ClaimValue")
+                        .IsUnique();
+
                     b.ToTable("AspNetPermissions");
                 });
 
@@ -1577,6 +1580,9 @@ namespace MyPortal.Database.Migrations
                     b.Property<string>("NormalizedName")
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
+
+                    b.Property<bool>("System")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -2601,7 +2607,7 @@ namespace MyPortal.Database.Migrations
 
                     b.HasIndex("LocationId");
 
-                    b.ToTable("Rooms");
+                    b.ToTable("Room");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.RoomClosure", b =>
@@ -2633,7 +2639,7 @@ namespace MyPortal.Database.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("RoomClosures");
+                    b.ToTable("RoomClosure");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.RoomClosureReason", b =>
@@ -2659,7 +2665,7 @@ namespace MyPortal.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RoomClosureReasons");
+                    b.ToTable("RoomClosureReason");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Sale", b =>
@@ -3056,7 +3062,7 @@ namespace MyPortal.Database.Migrations
 
                     b.HasIndex("StaffMemberId");
 
-                    b.ToTable("StaffAbsences");
+                    b.ToTable("StaffAbsence");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.StaffAbsenceType", b =>
@@ -3082,7 +3088,7 @@ namespace MyPortal.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("StaffAbsenceTypes");
+                    b.ToTable("StaffAbsenceType");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.StaffIllnessType", b =>
@@ -3105,7 +3111,7 @@ namespace MyPortal.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("StaffIllnessTypes");
+                    b.ToTable("StaffIllnessType");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.StaffMember", b =>

@@ -109,18 +109,7 @@ var KTBootstrapDatepicker = function () {
             todayHighlight: true,
             templates: arrows
         });
-
-        // locale
-        // import bootstrap-datepicker/js/locales/bootstrap-datepicker.XX.js
-        $('#kt_datepicker_7').datepicker({
-            rtl: KTUtil.isRTL(),
-            todayHighlight: true,
-            orientation: "bottom left",
-            templates: arrows,
-            language: 'fr'
-        });
-
-    };
+    }
 
     return {
         // public functions

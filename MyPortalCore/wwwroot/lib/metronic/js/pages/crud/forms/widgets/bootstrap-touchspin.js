@@ -46,8 +46,8 @@ var KTKBootstrapTouchspin = function() {
             buttondown_class: 'btn btn-secondary',
             buttonup_class: 'btn btn-secondary',
             verticalbuttons: true,
-            verticalup: '<i class="la la-plus"></i>',
-            verticaldown: '<i class="la la-minus"></i>'
+            verticalup: '<i class="ki ki-plus"></i>',
+            verticaldown: '<i class="ki ki-minus"></i>'
         });
 
         // vertical buttons with custom icons:
@@ -55,8 +55,8 @@ var KTKBootstrapTouchspin = function() {
             buttondown_class: 'btn btn-secondary',
             buttonup_class: 'btn btn-secondary',
             verticalbuttons: true,
-            verticalup: '<i class="la la-angle-up"></i>',
-            verticaldown: '<i class="la la-angle-down"></i>'
+            verticalup: '<i class="ki ki-arrow-up"></i>',
+            verticaldown: '<i class="ki ki-arrow-down"></i>'
         });
     }
 
@@ -90,8 +90,8 @@ var KTKBootstrapTouchspin = function() {
             buttondown_class: 'btn btn-secondary',
             buttonup_class: 'btn btn-secondary',
             verticalbuttons: true,
-            verticalupclass: 'la la-plus',
-            verticaldownclass: 'la la-minus'
+            verticalupclass: 'ki ki-plus',
+            verticaldownclass: 'ki ki-minus'
         });
     }
 

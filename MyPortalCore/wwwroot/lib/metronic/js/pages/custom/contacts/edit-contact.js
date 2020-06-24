@@ -4,19 +4,19 @@
 var KTContactsEdit = function () {
 	// Base elements
 	var avatar;
-	 
+
 	var initAvatar = function() {
-		avatar = new KTAvatar('kt_contacts_edit_avatar');
-	}	
+		avatar = new KTImageInput('kt_contacts_edit_avatar');
+	}
 
 	return {
 		// public functions
 		init: function() {
-			initAvatar(); 
+			initAvatar();
 		}
 	};
 }();
 
-jQuery(document).ready(function() {	
+jQuery(document).ready(function() {
 	KTContactsEdit.init();
 });

@@ -1,127 +1,220 @@
 "use strict";
 
-// Class definition
-var KTUserAdd = function () {
-	// Base elements
-	var wizardEl;
-	var formEl;
-	var validator;
-	var wizard;
-	var avatar;
+// Class Definition
+var KTAddUser = function () {
+	// Private Variables
+	var _wizardEl;
+	var _formEl;
+	var _wizard;
+	var _avatar;
+	var _validations = [];
 
-	// Private functions
-	var initWizard = function () {
+	// Private Functions
+	var _initWizard = function () {
 		// Initialize form wizard
-		wizard = new KTWizard('kt_user_add_user', {
+		_wizard = new KTWizard(_wizardEl, {
 			startStep: 1, // initial active step number
 			clickableSteps: true  // allow step clicking
 		});
 
 		// Validation before going to next page
-		wizard.on('beforeNext', function(wizardObj) {
-			if (validator.form() !== true) {
-				wizardObj.stop();  // don't go to the next step
-			}
-		})
+		_wizard.on('beforeNext', function (wizard) {
+			// Don't go to the next step yet
+			_wizard.stop();
 
-		// Change event
-		wizard.on('change', function(wizard) {
+			// Validate form
+			var validator = _validations[wizard.getStep() - 1]; // get validator for currnt step
+			validator.validate().then(function (status) {
+		        if (status == 'Valid') {
+					_wizard.goNext();
+					KTUtil.scrollTop();
+				} else {
+					Swal.fire({
+		                text: "Sorry, looks like there are some errors detected, please try again.",
+		                icon: "error",
+		                buttonsStyling: false,
+		                confirmButtonText: "Ok, got it!",
+						customClass: {
+							confirmButton: "btn font-weight-bold btn-light"
+						}
+		            }).then(function() {
+						KTUtil.scrollTop();
+					});
+				}
+		    });
+		});
+
+		// Change Event
+		_wizard.on('change', function (wizard) {
 			KTUtil.scrollTop();
 		});
 	}
 
-	var initValidation = function() {
-		validator = formEl.validate({
-			// Validate only visible fields
-			ignore: ":hidden",
+	var _initValidations = function () {
+		// Init form validation rules. For more info check the FormValidation plugin's official documentation:https://formvalidation.io/
 
-			// Validation rules
-			rules: {
-				// Step 1
-				profile_avatar: {
-					//required: true
-				},
-				profile_first_name: {
-					required: true
-				},
-				profile_last_name: {
-					required: true
-				},
-				profile_phone: {
-					required: true
-				},
-				profile_email: {
-					required: true,
-					email: true
-				}
-			},
-
-			// Display error
-			invalidHandler: function(event, validator) {
-				KTUtil.scrollTop();
-
-				swal.fire({
-					"title": "",
-					"text": "There are some errors in your submission. Please correct them.",
-					"type": "error",
-					"buttonStyling": false,
-					"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
-				});
-			},
-
-			// Submit valid form
-			submitHandler: function (form) {
-
-			}
-		});
-	}
-
-	var initSubmit = function() {
-		var btn = formEl.find('[data-ktwizard-type="action-submit"]');
-
-		btn.on('click', function(e) {
-			e.preventDefault();
-
-			if (validator.form()) {
-				// See: src\js\framework\base\app.js
-				KTApp.progress(btn);
-				//KTApp.block(formEl);
-
-				// See: http://malsup.com/jquery/form/#ajaxSubmit
-				formEl.ajaxSubmit({
-					success: function() {
-						KTApp.unprogress(btn);
-						//KTApp.unblock(formEl);
-
-						swal.fire({
-							"title": "",
-							"text": "The application has been successfully submitted!",
-							"type": "success",
-							"confirmButtonClass": "btn btn-secondary"
-						});
+		// Validation Rules For Step 1
+		_validations.push(FormValidation.formValidation(
+			_formEl,
+			{
+				fields: {
+					firstname: {
+						validators: {
+							notEmpty: {
+								message: 'First Name is required'
+							}
+						}
+					},
+					lastname: {
+						validators: {
+							notEmpty: {
+								message: 'Last Name is required'
+							}
+						}
+					},
+					companyname: {
+						validators: {
+							notEmpty: {
+								message: 'Company Name is required'
+							}
+						}
+					},
+					phone: {
+						validators: {
+							notEmpty: {
+								message: 'Phone is required'
+							},
+							phone: {
+								country: 'US',
+								message: 'The value is not a valid US phone number. (e.g 5554443333)'
+							}
+						}
+					},
+					email: {
+						validators: {
+							notEmpty: {
+								message: 'Email is required'
+							},
+							emailAddress: {
+								message: 'The value is not a valid email address'
+							}
+						}
+					},
+					companywebsite: {
+						validators: {
+							notEmpty: {
+								message: 'Website URL is required'
+							}
+						}
 					}
-				});
+				},
+				plugins: {
+					trigger: new FormValidation.plugins.Trigger(),
+					bootstrap: new FormValidation.plugins.Bootstrap()
+				}
 			}
-		});
+		));
+
+		_validations.push(FormValidation.formValidation(
+			_formEl,
+			{
+				fields: {
+					// Step 2
+					communication: {
+						validators: {
+							choice: {
+								min: 1,
+								message: 'Please select at least 1 option'
+							}
+						}
+					},
+					language: {
+						validators: {
+							notEmpty: {
+								message: 'Please select a language'
+							}
+						}
+					},
+					timezone: {
+						validators: {
+							notEmpty: {
+								message: 'Please select a timezone'
+							}
+						}
+					}
+				},
+				plugins: {
+					trigger: new FormValidation.plugins.Trigger(),
+					bootstrap: new FormValidation.plugins.Bootstrap()
+				}
+			}
+		));
+
+		_validations.push(FormValidation.formValidation(
+			_formEl,
+			{
+				fields: {
+					address1: {
+						validators: {
+							notEmpty: {
+								message: 'Address is required'
+							}
+						}
+					},
+					postcode: {
+						validators: {
+							notEmpty: {
+								message: 'Postcode is required'
+							}
+						}
+					},
+					city: {
+						validators: {
+							notEmpty: {
+								message: 'City is required'
+							}
+						}
+					},
+					state: {
+						validators: {
+							notEmpty: {
+								message: 'state is required'
+							}
+						}
+					},
+					country: {
+						validators: {
+							notEmpty: {
+								message: 'Country is required'
+							}
+						}
+					},
+				},
+				plugins: {
+					trigger: new FormValidation.plugins.Trigger(),
+					bootstrap: new FormValidation.plugins.Bootstrap()
+				}
+			}
+		));
 	}
 
-	var initUserForm = function() {
-		avatar = new KTAvatar('kt_user_add_avatar');
+	var _initAvatar = function () {
+		_avatar = new KTImageInput('kt_user_add_avatar');
 	}
 
 	return {
 		// public functions
-		init: function() {
-			formEl = $('#kt_user_add_form');
+		init: function () {
+			_wizardEl = KTUtil.getById('kt_wizard');
+			_formEl = KTUtil.getById('kt_form');
 
-			initWizard();
-			initValidation();
-			initSubmit();
-			initUserForm();
+			_initWizard();
+			_initValidations();
+			_initAvatar();
 		}
 	};
 }();
 
-jQuery(document).ready(function() {
-	KTUserAdd.init();
+jQuery(document).ready(function () {
+	KTAddUser.init();
 });

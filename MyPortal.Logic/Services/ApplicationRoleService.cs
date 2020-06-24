@@ -23,16 +23,37 @@ namespace MyPortal.Logic.Services
         {
             var role = new ApplicationRole
             {
-                Id = model.Id,
+                Id = Guid.NewGuid(),
                 Name = model.Name,
-                Description = model.Description
+                Description = model.Description,
+                System = false
             };
             await _roleManager.CreateAsync(role);
         }
 
-        public async Task<IEnumerable<RoleModel>> Get(string searchParam = null)
+        public async Task UpdateRole(RoleModel model)
         {
-            var query = _roleManager.Roles;
+            var role = new ApplicationRole
+            {
+                Id = model.Id,
+                Name = model.Name,
+                Description = model.Description,
+                System = false
+            };
+
+            await _roleManager.UpdateAsync(role);
+        }
+
+        public async Task DeleteRole(Guid roleId)
+        {
+            var role = await _roleManager.FindByIdAsync(roleId.ToString());
+
+            await _roleManager.DeleteAsync(role);
+        }
+
+        public async Task<IEnumerable<RoleModel>> Get(string searchParam = null, bool includeSystemRoles = false)
+        {
+            var query = _roleManager.Roles.Where(x => x.System == includeSystemRoles);
 
             if (!string.IsNullOrWhiteSpace(searchParam))
             {

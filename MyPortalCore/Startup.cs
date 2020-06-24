@@ -77,6 +77,12 @@ namespace MyPortalCore
                     {
                         Permissions.ClaimValues[perm.Id] = perm.ClaimValue;
                     }
+
+                    if (Permissions.ClaimValues.Any(x => x.Value == string.Empty))
+                    {
+                        throw new Exception(
+                            "Some permissions have not been mapped correctly. Please contact your MyPortal support team.");
+                    }
                 }
             });
 

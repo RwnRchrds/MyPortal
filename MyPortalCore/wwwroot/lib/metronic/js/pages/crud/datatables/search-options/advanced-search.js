@@ -7,11 +7,11 @@ var KTDatatablesSearchOptionsAdvancedSearch = function() {
 
 	var initTable1 = function() {
 		// begin first table
-		var table = $('#kt_table_1').DataTable({
+		var table = $('#kt_datatable').DataTable({
 			responsive: true,
 			// Pagination settings
-			dom: "<'row'<'col-sm-12'tr>>\
-			<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
+			dom: `<'row'<'col-sm-12'tr>>
+			<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>`,
 			// read more: https://datatables.net/examples/basic_init/dom.html
 
 			lengthMenu: [5, 10, 25, 50],
@@ -26,7 +26,7 @@ var KTDatatablesSearchOptionsAdvancedSearch = function() {
 			processing: true,
 			serverSide: true,
 			ajax: {
-				url: 'https://keenthemes.com/metronic/tools/preview/api/datatables/demos/server.php',
+				url: HOST_URL + '/api//datatables/demos/server.php',
 				type: 'POST',
 				data: {
 					// parameters for custom backend script demo
@@ -54,22 +54,22 @@ var KTDatatablesSearchOptionsAdvancedSearch = function() {
 					switch (column.title()) {
 						case 'Country':
 							column.data().unique().sort().each(function(d, j) {
-								$('.kt-input[data-col-index="2"]').append('<option value="' + d + '">' + d + '</option>');
+								$('.datatable-input[data-col-index="2"]').append('<option value="' + d + '">' + d + '</option>');
 							});
 							break;
 
 						case 'Status':
 							var status = {
-								1: {'title': 'Pending', 'class': 'kt-badge--brand'},
-								2: {'title': 'Delivered', 'class': ' kt-badge--danger'},
-								3: {'title': 'Canceled', 'class': ' kt-badge--primary'},
-								4: {'title': 'Success', 'class': ' kt-badge--success'},
-								5: {'title': 'Info', 'class': ' kt-badge--info'},
-								6: {'title': 'Danger', 'class': ' kt-badge--danger'},
-								7: {'title': 'Warning', 'class': ' kt-badge--warning'},
+								1: {'title': 'Pending', 'class': 'label-light-primary'},
+								2: {'title': 'Delivered', 'class': ' label-light-danger'},
+								3: {'title': 'Canceled', 'class': ' label-light-primary'},
+								4: {'title': 'Success', 'class': ' label-light-success'},
+								5: {'title': 'Info', 'class': ' label-light-info'},
+								6: {'title': 'Danger', 'class': ' label-light-danger'},
+								7: {'title': 'Warning', 'class': ' label-light-warning'},
 							};
 							column.data().unique().sort().each(function(d, j) {
-								$('.kt-input[data-col-index="6"]').append('<option value="' + d + '">' + status[d].title + '</option>');
+								$('.datatable-input[data-col-index="6"]').append('<option value="' + d + '">' + status[d].title + '</option>');
 							});
 							break;
 
@@ -80,7 +80,7 @@ var KTDatatablesSearchOptionsAdvancedSearch = function() {
 								3: {'title': 'Direct', 'state': 'success'},
 							};
 							column.data().unique().sort().each(function(d, j) {
-								$('.kt-input[data-col-index="7"]').append('<option value="' + d + '">' + status[d].title + '</option>');
+								$('.datatable-input[data-col-index="7"]').append('<option value="' + d + '">' + status[d].title + '</option>');
 							});
 							break;
 					}
@@ -94,37 +94,43 @@ var KTDatatablesSearchOptionsAdvancedSearch = function() {
 					orderable: false,
 					render: function(data, type, full, meta) {
 						return '\
-                        <span class="dropdown">\
-                            <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown" aria-expanded="true">\
-                              <i class="la la-ellipsis-h"></i>\
-                            </a>\
-                            <div class="dropdown-menu dropdown-menu-right">\
-                                <a class="dropdown-item" href="#"><i class="la la-edit"></i> Edit Details</a>\
-                                <a class="dropdown-item" href="#"><i class="la la-leaf"></i> Update Status</a>\
-                                <a class="dropdown-item" href="#"><i class="la la-print"></i> Generate Report</a>\
-                            </div>\
-                        </span>\
-                        <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="View">\
-                          <i class="la la-edit"></i>\
-                        </a>';
+							<div class="dropdown dropdown-inline">\
+								<a href="javascript:;" class="btn btn-sm btn-clean btn-icon" data-toggle="dropdown">\
+	                                <i class="la la-cog"></i>\
+	                            </a>\
+							  	<div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">\
+									<ul class="nav nav-hoverable flex-column">\
+							    		<li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon la la-edit"></i><span class="nav-text">Edit Details</span></a></li>\
+							    		<li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon la la-leaf"></i><span class="nav-text">Update Status</span></a></li>\
+							    		<li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon la la-print"></i><span class="nav-text">Print</span></a></li>\
+									</ul>\
+							  	</div>\
+							</div>\
+							<a href="javascript:;" class="btn btn-sm btn-clean btn-icon" title="Edit details">\
+								<i class="la la-edit"></i>\
+							</a>\
+							<a href="javascript:;" class="btn btn-sm btn-clean btn-icon" title="Delete">\
+								<i class="la la-trash"></i>\
+							</a>\
+						';
 					},
 				},
 				{
 					targets: 6,
 					render: function(data, type, full, meta) {
 						var status = {
-							1: {'title': 'Pending', 'class': 'kt-badge--brand'},
-							2: {'title': 'Delivered', 'class': ' kt-badge--danger'},
-							3: {'title': 'Canceled', 'class': ' kt-badge--primary'},
-							4: {'title': 'Success', 'class': ' kt-badge--success'},
-							5: {'title': 'Info', 'class': ' kt-badge--info'},
-							6: {'title': 'Danger', 'class': ' kt-badge--danger'},
-							7: {'title': 'Warning', 'class': ' kt-badge--warning'},
+							1: {'title': 'Pending', 'class': 'label-light-primary'},
+							2: {'title': 'Delivered', 'class': ' label-light-danger'},
+							3: {'title': 'Canceled', 'class': ' label-light-primary'},
+							4: {'title': 'Success', 'class': ' label-light-success'},
+							5: {'title': 'Info', 'class': ' label-light-info'},
+							6: {'title': 'Danger', 'class': ' label-light-danger'},
+							7: {'title': 'Warning', 'class': ' label-light-warning'},
 						};
 						if (typeof status[data] === 'undefined') {
 							return data;
 						}
-						return '<span class="kt-badge ' + status[data].class + ' kt-badge--inline kt-badge--pill">' + status[data].title + '</span>';
+						return '<span class="label label-lg font-weight-bold' + status[data].class + ' label-inline">' + status[data].title + '</span>';
 					},
 				},
 				{
@@ -138,8 +144,8 @@ var KTDatatablesSearchOptionsAdvancedSearch = function() {
 						if (typeof status[data] === 'undefined') {
 							return data;
 						}
-						return '<span class="kt-badge kt-badge--' + status[data].state + ' kt-badge--dot"></span>&nbsp;' +
-							'<span class="kt-font-bold kt-font-' + status[data].state + '">' + status[data].title + '</span>';
+						return '<span class="label label-' + status[data].state + ' label-dot mr-2"></span>' +
+							'<span class="font-weight-bold text-' + status[data].state + '">' + status[data].title + '</span>';
 					},
 				},
 			],
@@ -158,7 +164,7 @@ var KTDatatablesSearchOptionsAdvancedSearch = function() {
 		$('#kt_search').on('click', function(e) {
 			e.preventDefault();
 			var params = {};
-			$('.kt-input').each(function() {
+			$('.datatable-input').each(function() {
 				var i = $(this).data('col-index');
 				if (params[i]) {
 					params[i] += '|' + $(this).val();
@@ -176,7 +182,7 @@ var KTDatatablesSearchOptionsAdvancedSearch = function() {
 
 		$('#kt_reset').on('click', function(e) {
 			e.preventDefault();
-			$('.kt-input').each(function() {
+			$('.datatable-input').each(function() {
 				$(this).val('');
 				table.column($(this).data('col-index')).search('', false, false);
 			});
@@ -198,8 +204,10 @@ var KTDatatablesSearchOptionsAdvancedSearch = function() {
 		//main function to initiate the module
 		init: function() {
 			initTable1();
-		}
+		},
+
 	};
+
 }();
 
 jQuery(document).ready(function() {

@@ -148,6 +148,10 @@ namespace MyPortal.Database.Models
             modelBuilder.Entity<ApplicationPermission>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
+            modelBuilder.Entity<ApplicationPermission>()
+                .HasIndex(e => e.ClaimValue)
+                .IsUnique();
+
             modelBuilder.Entity<ApplicationRolePermission>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 

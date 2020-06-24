@@ -72,7 +72,7 @@ var KTTypeahead = function() {
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             // url points to a json file that contains an array of country names, see
             // https://github.com/twitter/typeahead.js/blob/gh-pages/data/countries.json
-            prefetch: 'https://keenthemes.com/metronic/tools/preview/api/typeahead/countries.json'
+            prefetch: HOST_URL + '/api/?file=typeahead/countries.json'
         });
 
         // passing in `null` for the `options` arguments will result in the default
@@ -87,7 +87,7 @@ var KTTypeahead = function() {
         var bestPictures = new Bloodhound({
           datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
           queryTokenizer: Bloodhound.tokenizers.whitespace,
-          prefetch: 'https://keenthemes.com/metronic/tools/preview/api/typeahead/movies.json'
+          prefetch: HOST_URL + '/api/?file=typeahead/movies.json'
         });
 
         $('#kt_typeahead_4').typeahead(null, {
@@ -109,13 +109,13 @@ var KTTypeahead = function() {
         var nbaTeams = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('team'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
-            prefetch: 'https://keenthemes.com/metronic/tools/preview/api/typeahead/nba.json'
+            prefetch: HOST_URL + '/api/?file=typeahead/nba.json'
         });
 
         var nhlTeams = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('team'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
-            prefetch: 'https://keenthemes.com/metronic/tools/preview/api/typeahead/nhl.json'
+            prefetch: HOST_URL + '/api/?file=typeahead/nhl.json'
         });
 
         $('#kt_typeahead_5').typeahead({
