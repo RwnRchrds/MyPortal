@@ -37,6 +37,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<CommunicationLog> CommunicationLogs { get; set; }
         public virtual DbSet<CommunicationType> CommunicationTypes { get; set; }
         public virtual DbSet<Contact> Contacts { get; set; }
+        public virtual DbSet<Cover> CoverArrangements { get; set; }
         public virtual DbSet<CurriculumBand> CurriculumBands { get; set; }
         public virtual DbSet<CurriculumYearGroup> CurriculumYearGroups { get; set; }
         public virtual DbSet<Detention> Detentions { get; set; }
@@ -92,6 +93,9 @@ namespace MyPortal.Database.Models
         public virtual DbSet<Report> Reports { get; set; }
         public virtual DbSet<Result> Results { get; set; }
         public virtual DbSet<ResultSet> ResultSets { get; set; }
+        public virtual DbSet<Room> Rooms { get; set; }
+        public virtual DbSet<RoomClosure> RoomClosures { get; set; }
+        public virtual DbSet<RoomClosureReason> RoomClosureReasons { get; set; }
         public virtual DbSet<Sale> Sales { get; set; }
         public virtual DbSet<School> Schools { get; set; }
         public virtual DbSet<SchoolType> SchoolTypes { get; set; }
@@ -103,6 +107,9 @@ namespace MyPortal.Database.Models
         public virtual DbSet<SenStatus> SenStatuses { get; set; }
         public virtual DbSet<Session> Sessions { get; set; }
         public virtual DbSet<StaffMember> StaffMembers { get; set; }
+        public virtual DbSet<StaffAbsence> StaffAbsences { get; set; }
+        public virtual DbSet<StaffAbsenceType> StaffAbsenceTypes { get; set; }
+        public virtual DbSet<StaffIllnessType> StaffIllnessTypes { get; set; }
         public virtual DbSet<Student> Students { get; set; }
         public virtual DbSet<StudentContact> StudentContacts { get; set; }
         public virtual DbSet<StudyTopic> StudyTopics { get; set; }
@@ -190,6 +197,9 @@ namespace MyPortal.Database.Models
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
             modelBuilder.Entity<Contact>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<Cover>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
             modelBuilder.Entity<CurriculumBand>()
@@ -336,6 +346,15 @@ namespace MyPortal.Database.Models
             modelBuilder.Entity<ProductType>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
+            modelBuilder.Entity<Room>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<RoomClosure>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<RoomClosureReason>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
             modelBuilder.Entity<LogNote>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
@@ -391,6 +410,15 @@ namespace MyPortal.Database.Models
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
             modelBuilder.Entity<StaffMember>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<StaffAbsence>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<StaffAbsenceType>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<StaffIllnessType>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
             modelBuilder.Entity<Student>()
@@ -882,6 +910,38 @@ namespace MyPortal.Database.Models
                 .IsFixedLength()
                 .IsUnicode(false);
 
+            modelBuilder.Entity<Room>()
+                .HasMany(e => e.CoverArrangements)
+                .WithOne(e => e.Room)
+                .HasForeignKey(e => e.RoomId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Room>()
+                .HasMany(e => e.Sessions)
+                .WithOne(e => e.Room)
+                .HasForeignKey(e => e.RoomId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Room>()
+                .HasMany(e => e.DiaryEvents)
+                .WithOne(e => e.Room)
+                .HasForeignKey(e => e.RoomId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Room>()
+                .HasMany(e => e.Closures)
+                .WithOne(e => e.Room)
+                .HasForeignKey(e => e.RoomId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<RoomClosureReason>()
+                .HasMany(e => e.Closures)
+                .WithOne(e => e.Reason)
+                .HasForeignKey(e => e.ReasonId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<ObservationOutcome>()
                 .HasMany(e => e.Observations)
                 .WithOne(e => e.Outcome)
@@ -949,6 +1009,12 @@ namespace MyPortal.Database.Models
                 .WithOne(e => e.Location)
                 .HasForeignKey(e => e.LocationId)
                 .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Location>()
+                .HasMany(e => e.Rooms)
+                .WithOne(e => e.Location)
+                .HasForeignKey(e => e.LocationId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<MarksheetTemplate>()
@@ -1098,6 +1164,38 @@ namespace MyPortal.Database.Models
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<StaffMember>()
+                .HasMany(e => e.CoverArrangements)
+                .WithOne(e => e.Teacher)
+                .HasForeignKey(e => e.TeacherId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<StaffMember>()
+                .HasMany(e => e.Subordinates)
+                .WithOne(e => e.LineManager)
+                .HasForeignKey(e => e.LineManagerId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<StaffMember>()
+                .HasMany(e => e.Absences)
+                .WithOne(e => e.StaffMember)
+                .HasForeignKey(e => e.StaffMemberId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<StaffAbsenceType>()
+                .HasMany(e => e.Absences)
+                .WithOne(e => e.AbsenceType)
+                .HasForeignKey(e => e.AbsenceTypeId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<StaffIllnessType>()
+                .HasMany(e => e.Absences)
+                .WithOne(e => e.IllnessType)
+                .HasForeignKey(e => e.IllnessTypeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<ApplicationUser>()
                 .HasMany(e => e.LogNotesCreated)
                 .WithOne(e => e.CreatedBy)
@@ -1117,12 +1215,6 @@ namespace MyPortal.Database.Models
                 .WithOne(e => e.StaffMember)
                 .HasForeignKey(e => e.StaffMemberId)
                 .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<StaffMember>()
-                .HasMany(e => e.Subordinates)
-                .WithOne(e => e.LineManager)
-                .HasForeignKey(e => e.LineManagerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Student>()
@@ -1285,6 +1377,12 @@ namespace MyPortal.Database.Models
                 .WithMany(e => e.HomeworkSubmissions)
                 .HasForeignKey(e => e.StudentId)
                 .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<HomeworkSubmission>()
+                .HasOne(e => e.SubmittedWork)
+                .WithOne(e => e.HomeworkSubmission)
+                .HasForeignKey<HomeworkSubmission>(e => e.DocumentId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<ApplicationPermission>()

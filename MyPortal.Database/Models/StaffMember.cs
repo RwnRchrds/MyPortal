@@ -22,6 +22,7 @@ namespace MyPortal.Database.Models
             PersonnelTrainingCertificates = new HashSet<TrainingCertificate>();
             Subjects = new HashSet<SubjectStaffMember>();
             Subordinates = new HashSet<StaffMember>();
+            CoverArrangements = new HashSet<Cover>();
         }
 
         [Column(Order = 0)]
@@ -87,5 +88,11 @@ namespace MyPortal.Database.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<StaffMember> Subordinates { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Cover> CoverArrangements { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<StaffAbsence> Absences { get; set; }
     }
 }

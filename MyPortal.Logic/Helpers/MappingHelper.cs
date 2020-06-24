@@ -57,7 +57,7 @@ namespace MyPortal.Logic.Helpers
             return new Mapper(config);
         }
 
-        public static Type GetBusinessModelType(Type source)
+        public static Type MapToBusiness(Type source)
         {
             Type dest;
 

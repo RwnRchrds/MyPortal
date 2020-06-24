@@ -19,7 +19,7 @@ namespace MyPortal.Logic.Models.ListModels
             CreatedDate = model.CreatedDate;
             AuthorName = model.CreatedBy.GetDisplayName(true);
             LogTypeName = model.LogNoteType.Description;
-            LogTypeIcon = model.LogNoteType.GetIcon();
+            LogTypeIcon = model.LogNoteType.IconClass;
             LogTypeColourCode = model.LogNoteType.ColourCode;
             Message = model.Message;
         }

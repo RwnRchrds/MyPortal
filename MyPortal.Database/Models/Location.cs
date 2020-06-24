@@ -16,6 +16,7 @@ namespace MyPortal.Database.Models
         {
             BehaviourAchievements = new HashSet<Achievement>();
             BehaviourIncidents = new HashSet<Incident>();
+            Rooms = new HashSet<Room>();
         }
 
         [Column(Order = 0)]
@@ -36,5 +37,8 @@ namespace MyPortal.Database.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Incident> BehaviourIncidents { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Room> Rooms { get; set; }
     }
 }

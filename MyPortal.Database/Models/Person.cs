@@ -54,32 +54,43 @@ namespace MyPortal.Database.Models
         public string MiddleName { get; set; }
 
         [Column(Order = 5)]
-        public int? PhotoId { get; set; }
-
-        [Column(Order = 6)]
-        [StringLength(256)]
-        public string NhsNumber { get; set; }
-
-        [Column(Order = 7)]
         [Required]
         [StringLength(256)]
         public string LastName { get; set; }
 
+        [Column(Order = 6)]
+        [StringLength(256)]
+        public string LegalFirstName { get; set; }
+
+        [Column(Order = 7)]
+        [StringLength(256)]
+        public string LegalLastName { get; set; }
+
         [Column(Order = 8)]
+        public int? PhotoId { get; set; }
+
+        [Column(Order = 9)]
+        [StringLength(10)]
+        public string NhsNumber { get; set; }
+
+        [Column(Order = 10)]
+        public DateTime UpdatedDate { get; set; }
+
+        [Column(Order = 11)]
         [Required]
         [StringLength(1)]
         public string Gender { get; set; }
 
-        [Column(Order = 9, TypeName = "date")]
+        [Column(Order = 12, TypeName = "date")]
         public DateTime? Dob { get; set; }
 
-        [Column(Order = 10, TypeName = "date")] 
+        [Column(Order = 13, TypeName = "date")] 
         public DateTime? Deceased { get; set; }
 
-        [Column(Order = 11)]
+        [Column(Order = 14)]
         public Guid? UserId { get; set; }
 
-        [Column(Order = 12)]
+        [Column(Order = 15)]
         public bool Deleted { get; set; }
 
         public virtual Contact ContactDetails { get; set; }
