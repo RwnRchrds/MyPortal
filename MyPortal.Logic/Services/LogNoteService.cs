@@ -36,14 +36,14 @@ namespace MyPortal.Logic.Services
                 throw NotFound();
             }
 
-            return _businessMapper.Map<LogNoteModel>(logNote);
+            return BusinessMapper.Map<LogNoteModel>(logNote);
         }
 
         public async Task<IEnumerable<LogNoteModel>> GetByStudent(Guid studentId, Guid academicYearId)
         {
             var logNotes = await _logNoteRepository.GetByStudent(studentId, academicYearId);
 
-            return logNotes.Select(_businessMapper.Map<LogNoteModel>);
+            return logNotes.Select(BusinessMapper.Map<LogNoteModel>);
         }
 
         public async Task<Lookup> GetTypes()

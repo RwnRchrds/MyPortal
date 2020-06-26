@@ -37,7 +37,7 @@ namespace MyPortal.Logic.Services
                 throw NotFound();
             }
 
-            return _businessMapper.Map<DirectoryModel>(directory);
+            return BusinessMapper.Map<DirectoryModel>(directory);
         }
 
         public async Task Create(params DirectoryModel[] directories)
@@ -119,8 +119,8 @@ namespace MyPortal.Logic.Services
 
             var files = await _documentRepository.GetByDirectory(directoryId);
 
-            children.Subdirectories = subDirs.Select(_businessMapper.Map<DirectoryModel>);
-            children.Files = files.Select(_businessMapper.Map<DocumentModel>);
+            children.Subdirectories = subDirs.Select(BusinessMapper.Map<DirectoryModel>);
+            children.Files = files.Select(BusinessMapper.Map<DocumentModel>);
 
             return children;
         }

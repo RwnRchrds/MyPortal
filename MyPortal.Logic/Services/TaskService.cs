@@ -112,7 +112,7 @@ namespace MyPortal.Logic.Services
                 tasks = await _taskRepository.GetByAssignedTo(personId);
             }
 
-            return tasks.Select(_businessMapper.Map<TaskModel>);
+            return tasks.Select(BusinessMapper.Map<TaskModel>);
         }
 
         public override void Dispose()

@@ -6,8 +6,6 @@
     ViewBag.Title = "Student Search";
 }
 
-    <link href="~/lib/metronic/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
-
 <!--begin::Subheader-->
 <div class="subheader py-2 py-lg-4 subheader-solid" id="kt_subheader">
     <div class="container-fluid d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
@@ -197,7 +195,7 @@
                         <div class="kt-portlet__body d-none" id="searchResults">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <table id="student_search" class="table table-striped">
+                                    <table id="student_search" class="table">
                                         <thead>
                                         <tr>
                                             <th>
@@ -238,8 +236,6 @@
 
 @section Scripts
 {
-    <script src="~/lib/metronic/plugins/custom/datatables/datatables.bundle.js"></script>
-
     <script>
 
         var urlSearchStudents = "@Url.RouteUrl("ApiStudentSearch")";

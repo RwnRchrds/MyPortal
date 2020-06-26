@@ -7,9 +7,11 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Constants;
+using MyPortal.Database.Models.Identity;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Business;
 using MyPortal.Logic.Models.Exceptions;
 using Syncfusion.EJ2.Base;
 
@@ -20,6 +22,7 @@ namespace MyPortalCore.Controllers.Api
     public abstract class BaseApiController : ControllerBase, IDisposable
     {
         protected readonly IApplicationUserService _userService;
+        protected readonly UserModel _user;
 
         public BaseApiController(IApplicationUserService userService)
         {

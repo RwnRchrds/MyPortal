@@ -29,7 +29,7 @@ namespace MyPortal.Logic.Services
                 throw NotFound("Current academic year not defined.");
             }
 
-            return _businessMapper.Map<AcademicYearModel>(acadYear);
+            return BusinessMapper.Map<AcademicYearModel>(acadYear);
         }
 
         public override void Dispose()

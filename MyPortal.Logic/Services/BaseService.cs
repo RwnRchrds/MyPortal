@@ -8,20 +8,21 @@ using MyPortal.Logic.Models.Exceptions;
 {
     public abstract class BaseService : IService
     {
-        protected readonly IMapper _businessMapper;
-        protected readonly string _objectName;
+        protected readonly IMapper BusinessMapper;
+        protected readonly string ObjectName;
+        protected Guid UserId;
 
         public BaseService(string objectName)
         {
-            _businessMapper = MappingHelper.GetBusinessConfig();
-            _objectName = objectName;
+            BusinessMapper = MappingHelper.GetBusinessConfig();
+            ObjectName = objectName;
         }
 
         public abstract void Dispose();
 
         protected ServiceException NotFound(string message = null)
         {
-            return new ServiceException(ExceptionType.NotFound, string.IsNullOrWhiteSpace(message) ? $"{_objectName} not found." : message);
+            return new ServiceException(ExceptionType.NotFound, string.IsNullOrWhiteSpace(message) ? $"{ObjectName} not found." : message);
         }
 
         protected ServiceException BadRequest(string message = null)

@@ -94,7 +94,7 @@ namespace MyPortal.Logic.Services
             {
                 var acadYear = await _academicYearRepository.GetById((Guid) selected);
 
-                return _businessMapper.Map<AcademicYearModel>(acadYear);
+                return BusinessMapper.Map<AcademicYearModel>(acadYear);
             }
 
             return null;
@@ -104,21 +104,21 @@ namespace MyPortal.Logic.Services
         {
             var user = await _userManager.GetUserAsync(principal);
 
-            return _businessMapper.Map<UserModel>(user);
+            return BusinessMapper.Map<UserModel>(user);
         }
 
         public async Task<UserModel> GetUserById(Guid userId)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
 
-            return _businessMapper.Map<UserModel>(user);
+            return BusinessMapper.Map<UserModel>(user);
         }
 
         public async Task<string> GetDisplayName(Guid userId)
         {
             var personInDb = await _personRepository.GetByUserId(userId);
 
-            var person = _businessMapper.Map<PersonModel>(personInDb);
+            var person = BusinessMapper.Map<PersonModel>(personInDb);
 
             var user = await _userManager.FindByIdAsync(userId.ToString());
 

@@ -55,7 +55,7 @@ namespace MyPortal.Logic.Services
 
             people = await _personRepository.GetAll(searchObject);
 
-            return people.Select(_businessMapper.Map<PersonModel>).ToList();
+            return people.Select(BusinessMapper.Map<PersonModel>).ToList();
         }
 
         public async Task<PersonModel> GetByUserId(Guid userId)
@@ -67,7 +67,7 @@ namespace MyPortal.Logic.Services
                 throw NotFound();
             }
 
-            return _businessMapper.Map<PersonModel>(person);
+            return BusinessMapper.Map<PersonModel>(person);
         }
 
         public override void Dispose()

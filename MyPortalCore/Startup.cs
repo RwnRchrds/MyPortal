@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -38,36 +40,43 @@ namespace MyPortalCore
 
         public void ConfigureServices(IServiceCollection services)
         {
+            DataConnectionFactory.ConnectionString = Configuration.GetConnectionString("MyPortal");
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("MyPortal")));
 
-            ModelFactory.ConnectionString = Configuration.GetConnectionString("MyPortal");
-
             services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
-                    {
-                        options.SignIn.RequireConfirmedAccount = false;
-                    })
+                {
+                    options.SignIn.RequireConfirmedAccount = false;
+                })
                 .AddUserManager<UserManager<ApplicationUser>>()
                 .AddRoleManager<RoleManager<ApplicationRole>>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddSignInManager<ApplicationSignInManager>()
                 .AddDefaultTokenProviders();
 
-            services.AddControllersWithViews();
-            services.AddRazorPages();
-            services.AddMvc().AddRazorRuntimeCompilation();
+            services.Configure<CookieAuthenticationOptions>(options =>
+            {
+                options.AccessDeniedPath = "/AccessDenied";
+            });
 
-            services.AddTransient<IUserClaimsPrincipalFactory<ApplicationUser>, ApplicationUserClaimsPrincipalFactory>();
+            services.AddControllersWithViews();
+            services.AddMvc().AddRazorRuntimeCompilation();
+            services.AddRazorPages();
+
+            services
+                .AddTransient<IUserClaimsPrincipalFactory<ApplicationUser>, ApplicationUserClaimsPrincipalFactory>();
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy(Policies.UserType.Student, p => p.RequireClaim(ClaimTypes.UserType, UserTypes.Student));
+                options.AddPolicy(Policies.UserType.Student,
+                    p => p.RequireClaim(ClaimTypes.UserType, UserTypes.Student));
                 options.AddPolicy(Policies.UserType.Staff, p => p.RequireClaim(ClaimTypes.UserType, UserTypes.Staff));
                 options.AddPolicy(Policies.UserType.Parent, p => p.RequireClaim(ClaimTypes.UserType, UserTypes.Parent));
 
                 // Get claim values for permission-based authorisation
-                using (var context = ModelFactory.CreateDbContext())
+                using (var context = DataConnectionFactory.CreateContext())
                 {
                     var permissionsInDb = context.ApplicationPermissions.ToList();
 
@@ -184,7 +193,7 @@ namespace MyPortalCore
             services.AddTransient<ITrainingCertificateStatusRepository, TrainingCertificateStatusRepository>();
             services.AddTransient<ITrainingCourseRepository, TrainingCourseRepository>();
             services.AddTransient<IYearGroupRepository, YearGroupRepository>();
-            
+
             // MyPortal business services
             services.AddTransient<IAcademicYearService, AcademicYearService>();
             services.AddTransient<IAchievementService, AchievementService>();
@@ -215,6 +224,7 @@ namespace MyPortalCore
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -230,6 +240,14 @@ namespace MyPortalCore
                     "Staff",
                     "Staff",
                     "Staff/{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapAreaControllerRoute(
+                    "Students",
+                    "Students",
+                    "Students/{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapAreaControllerRoute(
+                    "Parents",
+                    "Parents",
+                    "Parents/{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

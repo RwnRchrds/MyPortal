@@ -26,7 +26,7 @@ namespace MyPortal.Logic.Services
                 throw NotFound();
             }
 
-            return _businessMapper.Map<PeriodModel>(period);
+            return BusinessMapper.Map<PeriodModel>(period);
         }
 
         public override void Dispose()

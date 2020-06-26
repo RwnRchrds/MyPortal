@@ -243,7 +243,7 @@ namespace MyPortal.Logic.Services
                 throw NotFound();
             }
 
-            return _businessMapper.Map<DocumentModel>(document);
+            return BusinessMapper.Map<DocumentModel>(document);
         }
 
         public async Task<FileDownload> GetDownloadById(Guid documentId, bool downloadAsPdf = false)

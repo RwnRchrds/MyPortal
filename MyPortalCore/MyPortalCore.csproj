@@ -41,6 +41,7 @@
     <Folder Include="Areas\Identity\Controllers\" />
     <Folder Include="Areas\Identity\Views\" />
     <Folder Include="wwwroot\lib\metronic\media\icons\documents\" />
+    <Folder Include="wwwroot\lib\myportal\" />
   </ItemGroup>
 
 </Project>

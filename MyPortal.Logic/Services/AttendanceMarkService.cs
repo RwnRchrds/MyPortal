@@ -59,7 +59,7 @@ namespace MyPortal.Logic.Services
                 return NoMark(studentId, attendanceWeekId, periodId);
             }
 
-            return _businessMapper.Map<AttendanceMarkModel>(attendanceMark);
+            return BusinessMapper.Map<AttendanceMarkModel>(attendanceMark);
         }
 
         public async Task Save(params AttendanceMarkListModel[] marks)
@@ -130,11 +130,11 @@ namespace MyPortal.Logic.Services
 
         public async Task<AttendanceSummary> GetSummaryByStudent(Guid studentId, Guid academicYearId, bool asPercentage)
         {
-            var codes = (await _attendanceCodeRepository.GetAll()).Select(_businessMapper.Map<AttendanceCodeModel>)
+            var codes = (await _attendanceCodeRepository.GetAll()).Select(BusinessMapper.Map<AttendanceCodeModel>)
                 .ToList();
 
             var marks =
-                (await _attendanceMarkRepository.GetByStudent(studentId, academicYearId)).Select(_businessMapper
+                (await _attendanceMarkRepository.GetByStudent(studentId, academicYearId)).Select(BusinessMapper
                     .Map<AttendanceMarkModel>).ToList();
 
             var summary = new AttendanceSummary(codes, marks);

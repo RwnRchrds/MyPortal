@@ -62,7 +62,7 @@ namespace MyPortal.Logic.Services
 
             var roles = await query.ToListAsync();
 
-            return roles.Select(_businessMapper.Map<RoleModel>);
+            return roles.Select(BusinessMapper.Map<RoleModel>);
         }
 
         public override void Dispose()

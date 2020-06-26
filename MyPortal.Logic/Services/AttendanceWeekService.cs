@@ -26,7 +26,7 @@ namespace MyPortal.Logic.Services
                 throw NotFound();
             }
 
-            return _businessMapper.Map<AttendanceWeekModel>(attendanceWeek);
+            return BusinessMapper.Map<AttendanceWeekModel>(attendanceWeek);
         }
 
         public override void Dispose()

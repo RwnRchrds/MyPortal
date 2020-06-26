@@ -49,7 +49,7 @@ namespace MyPortal.Logic.Services
                 throw NotFound();
             }
 
-            return _businessMapper.Map<StudentModel>(student);
+            return BusinessMapper.Map<StudentModel>(student);
         }
 
         public async Task<StudentModel> GetByUserId(Guid userId)
@@ -61,7 +61,7 @@ namespace MyPortal.Logic.Services
                 throw NotFound();
             }
 
-            return _businessMapper.Map<StudentModel>(student);
+            return BusinessMapper.Map<StudentModel>(student);
         }
 
         public Lookup GetSearchFilters()
@@ -99,12 +99,12 @@ namespace MyPortal.Logic.Services
                 students = await _studentRepository.GetAll(searchObject);
             }
 
-            return students.Select(_businessMapper.Map<StudentModel>).ToList();
+            return students.Select(BusinessMapper.Map<StudentModel>).ToList();
         }
 
         public async Task Create(StudentModel student)
         {
-            _studentRepository.Create(_businessMapper.Map<Student>(student));
+            _studentRepository.Create(BusinessMapper.Map<Student>(student));
 
             await _studentRepository.SaveChanges();
         }
