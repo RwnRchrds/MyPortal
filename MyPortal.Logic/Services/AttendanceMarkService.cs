@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
+using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;

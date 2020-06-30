@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
+using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Logic.Interfaces;
 
 namespace MyPortal.Logic.Services

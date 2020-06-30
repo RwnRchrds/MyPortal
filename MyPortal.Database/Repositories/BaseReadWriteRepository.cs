@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using MyPortal.Database.Constants;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using Task = System.Threading.Tasks.Task;
 
@@ -42,9 +45,19 @@ namespace MyPortal.Database.Repositories
 
         public async Task Delete(Guid id)
         {
-            var entity = await GetByIdWithTracking(id);
+            if (typeof(TEntity).GetInterfaces().Contains(typeof(ISoftDelete)))
+            {
+                var entity = (await GetByIdWithTracking(id)) as ISoftDelete;
 
-            Context.Set<TEntity>().Remove(entity);
+                entity.Deleted = true;
+            }
+
+            else
+            {
+                var entity = await GetByIdWithTracking(id);
+
+                Context.Set<TEntity>().Remove(entity);
+            }
         }
 
         public new void Dispose()

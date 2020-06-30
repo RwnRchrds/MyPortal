@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Helpers;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using SqlKata;
 using SqlKata.Compilers;
@@ -82,9 +83,14 @@ namespace MyPortal.Database.Repositories
             return await Connection.ExecuteAsync(compiled.Sql, compiled.Bindings);
         }
 
-        protected Query SelectAllColumns(bool getRelated = true)
+        protected Query SelectAllColumns(bool includeDeleted = false, bool getRelated = true)
         {
             var query = new Query(TblName).SelectAll(typeof(TEntity));
+
+            if (!includeDeleted && typeof(TEntity).GetInterfaces().Contains(typeof(ISoftDelete)))
+            {
+                query.Where($"{TblAlias}.Deleted", false);
+            }
 
             if (getRelated)
             {

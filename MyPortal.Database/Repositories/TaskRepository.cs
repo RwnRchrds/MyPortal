@@ -4,6 +4,7 @@ using System.Data;
 using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
+using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
 using SqlKata;

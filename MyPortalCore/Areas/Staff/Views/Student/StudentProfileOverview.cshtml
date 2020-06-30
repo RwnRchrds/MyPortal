@@ -195,7 +195,7 @@
             <span class="card-label font-weight-bolder text-dark">Log Notes</span>
         </h3>
         <div class="card-toolbar">
-            <button class="btn btn-primary font-weight-bolder" id="new_lognote_button">
+            <button class="btn btn-light-primary font-weight-bolder" id="new_lognote_button">
                 <span class="svg-icon svg-icon-md">
                     <i class="fas fa-plus"></i>
                 </span>New Log Note
@@ -384,7 +384,7 @@
             Swal.fire({
                 title: 'Are you sure?',
                 text: "Are you sure you want to delete this log note? This cannot be undone.",
-                type: "warning",
+                icon: "warning",
                 showCancelButton: true,
                 confirmButtonText: "Yes"
             }).then((result) => {
