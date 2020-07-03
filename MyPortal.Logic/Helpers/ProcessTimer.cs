@@ -13,14 +13,13 @@ namespace MyPortal.Logic.Helpers
         {
             _name = name;
             _start = DateTime.Now;
-            Console.WriteLine($"Process {_name} started.");
+            Console.WriteLine($"Process '{_name}' started.");
         }
-
 
         public void Dispose()
         {
             var end = DateTime.Now;
-            Console.WriteLine($"Process {_name} ended. Time Taken: {(end - _start).TotalMilliseconds}ms");
+            Console.WriteLine($"Process '{_name}' ended. Time taken: {(end - _start).TotalMilliseconds}ms");
         }
     }
 }

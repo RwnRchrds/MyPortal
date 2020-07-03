@@ -32,5 +32,16 @@ namespace MyPortalCore.Areas.Staff.Controllers
 
             return View(viewModel);
         }
+
+        [Route("Setup")]
+        public async Task<IActionResult> Setup([FromServices] ISystemSettingService settingService)
+        {
+            if (true)
+            {
+                return View();
+            }
+
+            return await Index();
+        }
     }
 }

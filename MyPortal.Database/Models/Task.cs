@@ -44,9 +44,6 @@ namespace MyPortal.Database.Models
         public string Description { get; set; }
 
         [Column(Order = 9)]
-        public bool Personal { get; set; }
-
-        [Column(Order = 10)]
         public bool Completed { get; set; }
         public virtual HomeworkSubmission HomeworkSubmission { get; set; }
         public virtual Person AssignedTo { get; set; }

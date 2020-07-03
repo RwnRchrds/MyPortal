@@ -7,32 +7,29 @@ using System.Threading.Tasks;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
+using MyPortal.Database.Search;
 using MyPortal.Logic.Constants;
+using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Business;
 using MyPortal.Logic.Models.Data;
+using MyPortal.Logic.Models.Requests.Person.Tasks;
 
 namespace MyPortal.Logic.Services
 {
     public class TaskService : BaseService, ITaskService
     {
         private readonly ITaskRepository _taskRepository;
+        private readonly ITaskTypeRepository _taskTypeRepository;
+        private readonly IPersonRepository _personRepository;
+        private readonly IStaffMemberService _staffMemberService;
 
-        public TaskService(ITaskRepository taskRepository) : base("Task")
+        public TaskService(ITaskRepository taskRepository, ITaskTypeRepository taskTypeRepository, IPersonRepository personRepository, IStaffMemberService staffMemberService) : base("Task")
         {
             _taskRepository = taskRepository;
-        }
-        
-        public Lookup GetSearchFilters()
-        {
-            var searchTypes = new Dictionary<string, Guid>();
-            
-            searchTypes.Add("All", Guid.Empty);
-            searchTypes.Add("Active", SearchFilters.Tasks.Active);
-            searchTypes.Add("Overdue", SearchFilters.Tasks.Overdue);
-            searchTypes.Add("Completed", SearchFilters.Tasks.Completed);
-
-            return new Lookup(searchTypes);
+            _taskTypeRepository = taskTypeRepository;
+            _personRepository = personRepository;
+            _staffMemberService = staffMemberService;
         }
 
         public async Task Create(params TaskModel[] tasks)
@@ -47,7 +44,7 @@ namespace MyPortal.Logic.Services
                     AssignedById = task.AssignedById,
                     CreatedDate = DateTime.Now,
                     DueDate = task.DueDate,
-                    Personal = task.Personal,
+                    TypeId = task.TypeId,
                     Completed = false
                 };
 
@@ -57,7 +54,55 @@ namespace MyPortal.Logic.Services
             await _taskRepository.SaveChanges();
         }
 
-        public async Task Update(params TaskModel[] tasks)
+        public async Task<Lookup> GetTypes(bool personal, bool activeOnly)
+        {
+            var taskTypes = (await _taskTypeRepository.GetAll()).AsQueryable();
+
+            if (activeOnly)
+            {
+                taskTypes = taskTypes.Where(x => x.Active);
+            }
+
+            return taskTypes.Where(t => t.Personal == personal && !t.Reserved).ToLookup();
+        }
+
+        public async Task<bool> IsTaskOwner(Guid taskId, Guid userId)
+        {
+            var task = await _taskRepository.GetById(taskId);
+
+            if (task == null)
+            {
+                throw NotFound();
+            }
+
+            var person = await _personRepository.GetByUserId(userId);
+
+            if (person != null && task.AssignedToId == person.Id)
+            {
+                return true;
+            }
+
+            if (task.AssignedById == userId)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public async Task<TaskModel> GetById(Guid taskId)
+        {
+            var task = await _taskRepository.GetById(taskId);
+
+            if (task == null)
+            {
+                throw NotFound();
+            }
+
+            return BusinessMapper.Map<TaskModel>(task);
+        }
+
+        public async Task Update(params UpdateTaskModel[] tasks)
         {
             foreach (var task in tasks)
             {
@@ -71,11 +116,16 @@ namespace MyPortal.Logic.Services
                 taskInDb.Title = task.Title;
                 taskInDb.Description = task.Description;
                 taskInDb.DueDate = task.DueDate;
-                taskInDb.Completed = task.Completed;
+                taskInDb.TypeId = task.TypeId;
 
-                if (taskInDb.Completed)
+                if (task.Completed != null)
                 {
-                    taskInDb.CompletedDate = DateTime.Now;
+                    taskInDb.Completed = task.Completed.Value;
+
+                    if (task.Completed.Value)
+                    {
+                        taskInDb.CompletedDate = DateTime.Now;
+                    }
                 }
             }
 
@@ -86,32 +136,23 @@ namespace MyPortal.Logic.Services
         {
             foreach (var taskId in taskIds)
             {
+                var taskInDb = await _taskRepository.GetById(taskId);
+
+                if (taskInDb.Type.Id == TaskTypes.Homework)
+                {
+                    throw BadRequest(
+                        "To delete homework tasks, delete the homework submission.");
+                }
+
                 await _taskRepository.Delete(taskId);
             }
 
             await _taskRepository.SaveChanges();
         }
 
-        public async Task<IEnumerable<TaskModel>> GetByPerson(Guid personId, Guid filter)
+        public async Task<IEnumerable<TaskModel>> GetByPerson(Guid personId, TaskSearchOptions searchOptions = null)
         {
-            IEnumerable<Database.Models.Task> tasks;
-
-            if (filter == SearchFilters.Tasks.Active)
-            {
-                tasks = await _taskRepository.GetActiveByAssignedTo(personId);
-            }
-            else if (filter == SearchFilters.Tasks.Completed)
-            {
-                tasks = await _taskRepository.GetCompletedByAssignedTo(personId);
-            }
-            else if (filter == SearchFilters.Tasks.Overdue)
-            {
-                tasks = await _taskRepository.GetOverdueByAssignedTo(personId);
-            }
-            else
-            {
-                tasks = await _taskRepository.GetByAssignedTo(personId);
-            }
+            var tasks = await _taskRepository.GetByAssignedTo(personId, searchOptions);
 
             return tasks.Select(BusinessMapper.Map<TaskModel>);
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
@@ -17,9 +18,9 @@ namespace MyPortal.Logic.Services
     {
         private readonly IPersonRepository _personRepository;
 
-        private PersonSearch GenerateSearchObject(PersonSearchModel searchModel)
+        private PersonSearchOptions GenerateSearchObject(PersonSearchOptions searchModel)
         {
-            var person = new PersonSearch();
+            var person = new PersonSearchOptions();
 
             person.FirstName = searchModel.FirstName;
             //person.MiddleName = searchModel.MiddleName;
@@ -35,6 +36,13 @@ namespace MyPortal.Logic.Services
             _personRepository = personRepository;
         }
 
+        public async Task<PersonModel> GetById(Guid personId)
+        {
+            var person = await _personRepository.GetById(personId);
+
+            return BusinessMapper.Map<PersonModel>(person);
+        }
+
         public Dictionary<string, string> GetGenderOptions()
         {
             var genders = new Dictionary<string, string>();
@@ -47,8 +55,7 @@ namespace MyPortal.Logic.Services
             return genders;
         }
 
-
-        public async Task<IEnumerable<PersonModel>> Get(PersonSearchModel searchModel)
+        public async Task<IEnumerable<PersonModel>> Get(PersonSearchOptions searchModel)
         {
             var searchObject = GenerateSearchObject(searchModel);
 
@@ -57,6 +64,13 @@ namespace MyPortal.Logic.Services
             people = await _personRepository.GetAll(searchObject);
 
             return people.Select(BusinessMapper.Map<PersonModel>).ToList();
+        }
+
+        public async Task<PersonTypeIndicator> GetPersonTypes(Guid personId)
+        {
+            var types = await _personRepository.GetPersonTypeIndicatorById(personId);
+
+            return types;
         }
 
         public async Task<PersonModel> GetByUserId(Guid userId)

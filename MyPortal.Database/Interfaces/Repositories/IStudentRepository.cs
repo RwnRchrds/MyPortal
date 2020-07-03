@@ -9,10 +9,8 @@ namespace MyPortal.Database.Interfaces.Repositories
     public interface IStudentRepository : IReadWriteRepository<Student>
     {
         Task<Student> GetByUserId(Guid userId);
-        Task<IEnumerable<Student>> GetAll(StudentSearch searchParams);
-        Task<IEnumerable<Student>> GetOnRoll(StudentSearch searchParams);
-        Task<IEnumerable<Student>> GetLeavers(StudentSearch searchParams);
-        Task<IEnumerable<Student>> GetFuture(StudentSearch searchParams);
+        Task<Student> GetByPersonId(Guid personId);
+        Task<IEnumerable<Student>> GetAll(StudentSearchOptions searchParams);
         Task<IEnumerable<Student>> GetByClass(int classId);
         Task<IEnumerable<Student>> GetGiftedTalented();
     }

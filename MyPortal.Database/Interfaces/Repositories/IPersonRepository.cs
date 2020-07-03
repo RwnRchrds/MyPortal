@@ -11,7 +11,7 @@ namespace MyPortal.Database.Interfaces.Repositories
     {
         Task<Person> GetByUserId(Guid userId);
 
-        Task<IEnumerable<Person>> GetAll(PersonSearch searchParams);
+        Task<IEnumerable<Person>> GetAll(PersonSearchOptions searchParams);
 
         Task<PersonTypeIndicator> GetPersonTypeIndicatorById(Guid personId);
     }

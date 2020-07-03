@@ -480,17 +480,39 @@ namespace MyPortal.Database.Migrations
                     b.Property<DateTime>("Beginning")
                         .HasColumnType("date");
 
-                    b.Property<bool>("IsHoliday")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsNonTimetable")
                         .HasColumnType("bit");
+
+                    b.Property<Guid>("WeekPatternId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AcademicYearId");
 
+                    b.HasIndex("WeekPatternId");
+
                     b.ToTable("AttendanceWeek");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.AttendanceWeekPattern", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AttendanceWeekPattern");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.BasketItem", b =>
@@ -1059,6 +1081,9 @@ namespace MyPortal.Database.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
+
+                    b.Property<bool>("Reserved")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("System")
                         .HasColumnType("bit");
@@ -2162,27 +2187,32 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<bool>("AmReg")
+                        .HasColumnType("bit");
+
                     b.Property<TimeSpan>("EndTime")
                         .HasColumnType("time(2)");
-
-                    b.Property<bool>("IsAm")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPm")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
+                    b.Property<bool>("PmReg")
+                        .HasColumnType("bit");
+
                     b.Property<TimeSpan>("StartTime")
                         .HasColumnType("time(2)");
+
+                    b.Property<Guid>("WeekPatternId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Weekday")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("WeekPatternId");
 
                     b.ToTable("AttendancePeriod");
                 });
@@ -3435,9 +3465,6 @@ namespace MyPortal.Database.Migrations
                     b.Property<DateTime?>("DueDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("Personal")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(128)")
@@ -3477,6 +3504,12 @@ namespace MyPortal.Database.Migrations
                         .HasMaxLength(256);
 
                     b.Property<bool>("Personal")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Reserved")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("System")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -3738,6 +3771,12 @@ namespace MyPortal.Database.Migrations
                     b.HasOne("MyPortal.Database.Models.AcademicYear", "AcademicYear")
                         .WithMany("AttendanceWeeks")
                         .HasForeignKey("AcademicYearId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.AttendanceWeekPattern", "WeekPattern")
+                        .WithMany("AttendanceWeeks")
+                        .HasForeignKey("WeekPatternId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -4234,6 +4273,15 @@ namespace MyPortal.Database.Migrations
                     b.HasOne("MyPortal.Database.Models.ObservationOutcome", "Outcome")
                         .WithMany("Observations")
                         .HasForeignKey("OutcomeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Period", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.AttendanceWeekPattern", "WeekPattern")
+                        .WithMany("Periods")
+                        .HasForeignKey("WeekPatternId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

@@ -45,7 +45,7 @@ namespace MyPortal.Database.Repositories
             query.LeftJoin("dbo.AspNetUsers as User", "User.Id", "Person.UserId");
         }
 
-        private static void ApplySearch(Query query, PersonSearch search)
+        private static void ApplySearch(Query query, PersonSearchOptions search)
         {
             if (!string.IsNullOrWhiteSpace(search.FirstName))
             {
@@ -72,7 +72,7 @@ namespace MyPortal.Database.Repositories
         {
             var indicator = new PersonTypeIndicator();
 
-            var userQuery = new Query("dbo.Person").WhereNotNull("Person.UserId").Where("Person.Id", personId).AsCount();
+            var userQuery = new Query("dbo.Person").Where(q => q.WhereNotNull("Person.UserId").Where("Person.Id", personId)).AsCount();
             var studentQuery = new Query("dbo.Student").Where("Student.PersonId", personId).AsCount();
             var employeeQuery = new Query("dbo.StaffMember").Where("StaffMember.PersonId", personId).AsCount();
             var contactQuery = new Query("dbo.Contact").Where("Contact.PersonId", personId).AsCount();
@@ -97,7 +97,7 @@ namespace MyPortal.Database.Repositories
             return indicator;
         }
 
-        public async Task<IEnumerable<Person>> GetAll(PersonSearch searchParams)
+        public async Task<IEnumerable<Person>> GetAll(PersonSearchOptions searchParams)
         {
             var query = SelectAllColumns();
             

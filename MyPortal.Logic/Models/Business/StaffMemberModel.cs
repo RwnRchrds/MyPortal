@@ -8,6 +8,8 @@ namespace MyPortal.Logic.Models.Business
     {
         public Guid Id { get; set; }
 
+        public Guid? LineManagerId { get; set; }
+
         public Guid PersonId { get; set; }
 
         [Required]
@@ -20,11 +22,12 @@ namespace MyPortal.Logic.Models.Business
         [StringLength(128)]
         public string PostNominal { get; set; }
 
-        [DefaultValue(false)]
         public bool TeachingStaff { get; set; }
 
         public bool Deleted { get; set; }
 
         public virtual PersonModel Person { get; set; }
+
+        public virtual StaffMemberModel LineManager { get; set; }
     }
 }

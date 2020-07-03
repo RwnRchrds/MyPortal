@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Constants;
+using MyPortal.Database.Exceptions;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models;
 using Task = System.Threading.Tasks.Task;
@@ -45,18 +46,18 @@ namespace MyPortal.Database.Repositories
 
         public async Task Delete(Guid id)
         {
-            if (typeof(TEntity).GetInterfaces().Contains(typeof(ISoftDelete)))
+            var entity = await GetByIdWithTracking(id);
+
+            switch (entity)
             {
-                var entity = (await GetByIdWithTracking(id)) as ISoftDelete;
-
-                entity.Deleted = true;
-            }
-
-            else
-            {
-                var entity = await GetByIdWithTracking(id);
-
-                Context.Set<TEntity>().Remove(entity);
+                case ISystemEntity systemObject when systemObject.System:
+                    throw new SystemEntityException("You cannot delete a system entity.");
+                case ISoftDelete softDeleteObject:
+                    softDeleteObject.Deleted = true;
+                    break;
+                default:
+                    Context.Set<TEntity>().Remove(entity);
+                    break;
             }
         }
 

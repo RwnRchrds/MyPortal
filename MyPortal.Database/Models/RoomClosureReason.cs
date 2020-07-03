@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using MyPortal.Database.BaseTypes;
+using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
     [Table("RoomClosureReason")]
-    public class RoomClosureReason : LookupItem
+    public class RoomClosureReason : LookupItem, ISystemEntity
     {
         public RoomClosureReason()
         {

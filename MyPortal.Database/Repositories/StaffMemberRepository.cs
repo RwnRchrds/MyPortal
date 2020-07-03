@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
@@ -39,6 +41,24 @@ namespace MyPortal.Database.Repositories
 
                 return staff;
             }, sql.NamedBindings);
+        }
+
+        public async Task<StaffMember> GetByPersonId(Guid personId)
+        {
+            var query = SelectAllColumns();
+
+            query.Where("Person.Id", personId);
+
+            return (await ExecuteQuery(query)).FirstOrDefault();
+        }
+
+        public async Task<StaffMember> GetByUserId(Guid userId)
+        {
+            var query = SelectAllColumns();
+
+            query.Where("Person.UserId", userId);
+
+            return (await ExecuteQuery(query)).FirstOrDefault();
         }
     }
 }

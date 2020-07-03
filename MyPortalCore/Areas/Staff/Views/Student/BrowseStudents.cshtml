@@ -39,11 +39,11 @@
                             <span class="card-label font-weight-bolder text-dark">Browse Students</span>
                         </h3>
                         <div class="card-toolbar">
-                            <div class="dropdown dropdown-inline" data-toggle="tooltip" title="" data-placement="left" data-original-title="Quick actions">
+                            <div class="dropdown dropdown-inline">
                                 <!--begin::Trigger Modal-->
-                                <a href="#" class="btn btn-light-primary font-weight-bolder font-size-sm" aria-haspopup="true" aria-expanded="false" data-toggle="modal" data-target="#exampleModalCustomScrollable">
-                                    New Student
-                                </a>
+                                <button class="btn btn-light-primary font-weight-bolder font-size-sm" aria-haspopup="true" aria-expanded="false" data-toggle="modal" data-target="#exampleModalCustomScrollable">
+                                    <i class="fas fa-plus mr-1"></i>New Student
+                                </button>
                                 <!--end::Trigger Modal-->
                                 <!--begin::Modal Content-->
                                 <div class="modal fade" id="exampleModalCustomScrollable" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
@@ -175,7 +175,7 @@
                                         </div>
 
                                         <div class="col-md-3 my-2 my-md-0">
-                                            @Html.DropDownList("searchType", new SelectList(Model.SearchTypes, "Value", "Key", SearchFilters.Students.OnRoll), new { @class = "form-control form-control-solid", id = "statusSearch" })
+                                            @Html.DropDownList("status", Model.SearchTypes, new { @class = "form-control form-control-solid", id = "statusSearch" })
                                         </div>
                                         <div class="col-md-3 my-2 my-md-0">
                                             @Html.DropDownList("gender", new SelectList(Model.GenderOptions, "Value", "Key"), "Any", new { @class = "form-control form-control-solid", id = "genderSearch" })
@@ -266,12 +266,12 @@
         function searchStudents() {
 
             // Get params from form
-            var searchType = $("#statusSearch").val();
+            var status = $("#statusSearch").val();
             var firstName = $("#firstNameSearch").val();
             var lastName = $("#lastNameSearch").val();
             var gender = $("#genderSearch").val();
 
-            var params = { searchType: searchType, firstName: firstName, lastName: lastName, gender: gender };
+            var params = { status: status, firstName: firstName, lastName: lastName, gender: gender };
 
             var url = `${urlSearchStudents}?${$.param(params)}`;
 

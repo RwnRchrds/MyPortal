@@ -7,6 +7,7 @@ using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
+using MyPortal.Database.Search;
 using SqlKata;
 
 namespace MyPortal.Database.Repositories
@@ -22,6 +23,8 @@ namespace MyPortal.Database.Repositories
         {
             query.SelectAll(typeof(Person), "AssignedTo");
             query.SelectAll(typeof(ApplicationUser), "AssignedBy");
+            query.SelectAll(typeof(Person), "AssignedByPerson");
+            query.SelectAll(typeof(TaskType), "Type");
 
             JoinRelated(query);
         }
@@ -30,61 +33,55 @@ namespace MyPortal.Database.Repositories
         {
             query.LeftJoin("dbo.Person as AssignedTo", "AssignedTo.Id", "Task.AssignedToId");
             query.LeftJoin("dbo.AspNetUsers as AssignedBy", "AssignedBy.Id", "Task.AssignedById");
+            query.LeftJoin("dbo.Person as AssignedByPerson", "AssignedByPerson.UserId", "AssignedBy.Id");
+            query.LeftJoin("dbo.TaskType as Type", "Type.Id", "Task.TypeId");
         }
 
         protected override async System.Threading.Tasks.Task<IEnumerable<Task>> ExecuteQuery(Query query)
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<Task, Person, ApplicationUser, Task>(sql.Sql, (task, assignedTo, assignedBy) =>
+            return await Connection.QueryAsync<Task, Person, ApplicationUser, Person, TaskType, Task>(sql.Sql, (task, assignedTo, assignedBy, abp, type) =>
             {
                 task.AssignedTo = assignedTo;
                 task.AssignedBy = assignedBy;
+                task.AssignedBy.Person = abp;
+                task.Type = type;
 
                 return task;
             }, sql.NamedBindings);
         }
 
-        public async System.Threading.Tasks.Task<IEnumerable<Task>> GetByAssignedTo(Guid personId)
+        public async System.Threading.Tasks.Task<IEnumerable<Task>> GetByAssignedTo(Guid personId, TaskSearchOptions searchOptions = null)
         {
             var query = SelectAllColumns();
 
             query.Where("Task.AssignedToId", personId);
+
+            if (searchOptions != null)
+            {
+                ApplySearch(query, searchOptions);
+            }
 
             return await ExecuteQuery(query);
         }
 
-        public async System.Threading.Tasks.Task<IEnumerable<Task>> GetActiveByAssignedTo(Guid personId)
+        private void ApplySearch(Query query, TaskSearchOptions searchOptions)
         {
-            var query = SelectAllColumns();
+            if (searchOptions.Status == TaskStatus.Overdue)
+            {
+                query.WhereDate("Task.DueDate", "<", DateTime.Today);
+            }
 
-            query.Where("Task.AssignedToId", personId);
+            else if (searchOptions.Status == TaskStatus.Active)
+            {
+                query.Where(q => q.Where("Task.Completed", false).OrWhereDate("Task.DueDate", ">=", DateTime.Today));
+            }
 
-            query.Where("Task.Completed", false).OrWhereDate("Task.DueDate", ">", DateTime.Today);
-
-            return await ExecuteQuery(query);
-        }
-
-        public async System.Threading.Tasks.Task<IEnumerable<Task>> GetCompletedByAssignedTo(Guid personId)
-        {
-            var query = SelectAllColumns();
-
-            query.Where("Task.AssignedToId", personId);
-
-            query.Where("Task.Completed", true);
-
-            return await ExecuteQuery(query);
-        }
-
-        public async System.Threading.Tasks.Task<IEnumerable<Task>> GetOverdueByAssignedTo(Guid personId)
-        {
-            var query = SelectAllColumns();
-
-            query.Where("Task.AssignedToId", personId);
-            query.Where("Task.Completed", false);
-            query.Where("Task.DueDate", DateTime.Today);
-
-            return await ExecuteQuery(query);
+            else if (searchOptions.Status == TaskStatus.Completed)
+            {
+                query.Where("Task.Completed", true);
+            }
         }
     }
 }

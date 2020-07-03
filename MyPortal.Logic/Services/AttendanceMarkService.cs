@@ -23,15 +23,22 @@ namespace MyPortal.Logic.Services
         private readonly IAttendanceWeekService _attendanceWeekService;
         private readonly IPeriodService _periodService;
 
-        public AttendanceMarkService(IAttendanceMarkRepository attendanceMarkRepository, IAttendanceCodeRepository attendanceCodeRepository) : base("Attendance Mark")
+        public AttendanceMarkService(IAttendanceMarkRepository attendanceMarkRepository, IAttendanceCodeRepository attendanceCodeRepository, IStudentService studentService, IAttendanceWeekService attendanceWeekService, IPeriodService periodService) : base("Attendance Mark")
         {
             _attendanceMarkRepository = attendanceMarkRepository;
             _attendanceCodeRepository = attendanceCodeRepository;
+            _studentService = studentService;
+            _attendanceWeekService = attendanceWeekService;
+            _periodService = periodService;
         }
 
         public override void Dispose()
         {
-            
+            _attendanceMarkRepository.Dispose();
+            _attendanceCodeRepository.Dispose();
+            _studentService.Dispose();
+            _attendanceWeekService.Dispose();
+            _periodService.Dispose();
         }
 
         private AttendanceMarkModel NoMark(Guid studentId, Guid attendanceWeekId, Guid periodId)

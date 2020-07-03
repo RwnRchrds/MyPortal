@@ -6,7 +6,7 @@ namespace MyPortalCore.Areas.Staff.ViewModels.Student
 {
     public class StudentSearchViewModel
     {
-        public Lookup SearchTypes { get; set; }
+        public SelectList SearchTypes { get; set; }
         public Dictionary<string, string> GenderOptions { get; set; }
         public Lookup RegGroups { get; set; }
         public Lookup YearGroups { get; set; }

@@ -8,14 +8,14 @@ namespace MyPortal.Logic.Attributes
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var date = (DateTime) value;
+            var date = (DateTime?) value;
 
-            if (date > DateTime.Today)
+            if (date != null && date < DateTime.Today)
             {
-                return ValidationResult.Success;
+                return new ValidationResult("Date cannot be in the past.");
             }
-            
-            return new ValidationResult("Date must be in the future.");
+
+            return ValidationResult.Success;
         }
     }
 }

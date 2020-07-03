@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using MyPortal.Database.Search;
 using MyPortal.Logic.Models.Business;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Requests.Student;
@@ -10,12 +12,14 @@ namespace MyPortal.Logic.Interfaces
 {
     public interface IStudentService : IService
     {
-        Task<IEnumerable<StudentModel>> Get(StudentSearchModel searchModel);
+        Task<IEnumerable<StudentModel>> Get(StudentSearchOptions searchModel);
 
         Task<StudentModel> GetById(Guid studentId);
 
-        Task<StudentModel> GetByUserId(Guid userId);
+        Task<StudentModel> GetByUserId(Guid userId, bool throwIfNotFound = true);
 
-        Lookup GetSearchFilters();
+        Task<StudentModel> GetByPersonId(Guid personId, bool throwIfNotFound = true);
+
+        SelectList GetStudentStatusOptions(StudentStatus defaultStatus = StudentStatus.OnRoll);
     }
 }

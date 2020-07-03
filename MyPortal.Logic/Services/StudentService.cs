@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
@@ -21,22 +22,6 @@ namespace MyPortal.Logic.Services
     {
         private IStudentRepository _studentRepository;
 
-        private StudentSearch GenerateSearchObject(StudentSearchModel searchModel)
-        {
-            return new StudentSearch
-            {
-                RegGroupId = searchModel.RegGroupId,
-                YearGroupId = searchModel.YearGroupId,
-                HouseId = searchModel.HouseId,
-                SenStatusId = searchModel.SenStatusId,
-
-                FirstName = searchModel.FirstName,
-                LastName = searchModel.LastName,
-                Gender = searchModel.Gender,
-                Dob = searchModel.Dob
-            };
-        }
-
         public StudentService(IStudentRepository studentRepository) : base("Student")
         {
             _studentRepository = studentRepository;
@@ -53,11 +38,11 @@ namespace MyPortal.Logic.Services
             return BusinessMapper.Map<StudentModel>(student);
         }
 
-        public async Task<StudentModel> GetByUserId(Guid userId)
+        public async Task<StudentModel> GetByUserId(Guid userId, bool throwNotFound = true)
         {
             var student = await _studentRepository.GetByUserId(userId);
 
-            if (student == null)
+            if (student == null && throwNotFound)
             {
                 throw NotFound();
             }
@@ -65,40 +50,33 @@ namespace MyPortal.Logic.Services
             return BusinessMapper.Map<StudentModel>(student);
         }
 
-        public Lookup GetSearchFilters()
+        public async Task<StudentModel> GetByPersonId(Guid personId, bool throwIfNotFound = true)
         {
-            var searchTypes = new Dictionary<string, Guid>();
-            
-            searchTypes.Add("All", Guid.Empty);
-            searchTypes.Add("On Roll", SearchFilters.Students.OnRoll);
-            searchTypes.Add("Leavers", SearchFilters.Students.Leavers);
-            searchTypes.Add("Future", SearchFilters.Students.Future);
+            var student = await _studentRepository.GetByPersonId(personId);
 
-            return new Lookup(searchTypes);
+            if (student == null && throwIfNotFound)
+            {
+                throw NotFound();
+            }
+
+            return BusinessMapper.Map<StudentModel>(student);
         }
 
-        public async Task<IEnumerable<StudentModel>> Get(StudentSearchModel searchModel)
+        public SelectList GetStudentStatusOptions(StudentStatus defaultStatus = StudentStatus.OnRoll)
         {
-            var searchObject = GenerateSearchObject(searchModel);
+            var searchTypes = new Dictionary<string, int>();
 
-            IEnumerable<Student> students;
-            
-            if (searchModel.SearchType == SearchFilters.Students.OnRoll)
-            {
-                students = await _studentRepository.GetOnRoll(searchObject);
-            }
-            else if (searchModel.SearchType == SearchFilters.Students.Leavers)
-            {
-                students = await _studentRepository.GetLeavers(searchObject);
-            }
-            else if (searchModel.SearchType == SearchFilters.Students.Future)
-            {
-                students = await _studentRepository.GetFuture(searchObject);
-            }
-            else
-            {
-                students = await _studentRepository.GetAll(searchObject);
-            }
+            searchTypes.Add("Any", (int)StudentStatus.Any);
+            searchTypes.Add("On Roll", (int)StudentStatus.OnRoll);
+            searchTypes.Add("Leavers", (int)StudentStatus.Leavers);
+            searchTypes.Add("Future", (int)StudentStatus.Future);
+
+            return new SelectList(searchTypes, "Value", "Key", (int)defaultStatus);
+        }
+
+        public async Task<IEnumerable<StudentModel>> Get(StudentSearchOptions searchOptions)
+        {
+            var students = await _studentRepository.GetAll(searchOptions);
 
             return students.Select(BusinessMapper.Map<StudentModel>).ToList();
         }

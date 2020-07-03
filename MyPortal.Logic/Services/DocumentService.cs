@@ -161,40 +161,8 @@ namespace MyPortal.Logic.Services
             await _documentRepository.SaveChanges();
         }
 
-        public async Task<Lookup> GetTypes(Guid searchFilter)
+        public async Task<Lookup> GetTypes(DocumentTypeFilter filter)
         {
-            var filter = new DocumentTypeFilter();
-
-            if (searchFilter == SearchFilters.DocumentTypes.Student)
-            {
-                filter.Active = true;   
-                filter.Student = true;
-            }
-            else if(searchFilter == SearchFilters.DocumentTypes.Staff)
-            {
-                filter.Active = true;
-                filter.Staff = true;
-            }
-            else if (searchFilter == SearchFilters.DocumentTypes.Contact)
-            {
-                filter.Active = true;
-                filter.Staff = true;
-            }
-            else if (searchFilter == SearchFilters.DocumentTypes.General)
-            {
-                filter.Active = true;
-                filter.General = true;
-            }
-            else if (searchFilter == SearchFilters.DocumentTypes.Sen)
-            {
-                filter.Active = true;
-                filter.Sen = true;
-            }
-            else if (searchFilter == SearchFilters.DocumentTypes.Active)
-            {
-                filter.Active = true;
-            }
-
             var documentTypes = await _documentTypeRepository.Get(filter);
 
             return new Lookup(documentTypes.ToDictionary(x => x.Description, x => x.Id));
@@ -308,6 +276,8 @@ namespace MyPortal.Logic.Services
         public override void Dispose()
         {
             _documentRepository.Dispose();
+            _documentTypeRepository.Dispose();
+            _directoryService.Dispose();
             _driveService.Dispose();
         }
     }

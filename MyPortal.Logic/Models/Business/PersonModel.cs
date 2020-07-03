@@ -20,28 +20,44 @@ namespace MyPortal.Logic.Models.Business
         [StringLength(256)]
         public string MiddleName { get; set; }
 
-        public int? PhotoId { get; set; }
-
-        [StringLength(256)]
-        public string NhsNumber { get; set; }
-
         [Required]
         [StringLength(256)]
         public string LastName { get; set; }
+
+        [StringLength(256)]
+        public string LegalFirstName { get; set; }
+
+        [StringLength(256)]
+        public string LegalLastName { get; set; }
+
+        public int? PhotoId { get; set; }
+
+        [StringLength(10)]
+        public string NhsNumber { get; set; }
+
+        public DateTime UpdatedDate { get; set; }
 
         [Required]
         [StringLength(1)]
         public string Gender { get; set; }
 
-        [Column(TypeName = "date")]
         public DateTime? Dob { get; set; }
 
-        [Column(TypeName = "date")]
         public DateTime? Deceased { get; set; }
 
         public Guid? UserId { get; set; }
 
         public bool Deleted { get; set; }
+
+        public virtual ContactModel ContactDetails { get; set; }
+
+        public virtual DirectoryModel Directory { get; set; }
+
+        public virtual StaffMemberModel StaffMemberDetails { get; set; }
+
+        public virtual StudentModel StudentDetails { get; set; }
+
+        public virtual UserModel User { get; set; }
 
         public string GetDisplayName(bool salutationFormat = false)
         {

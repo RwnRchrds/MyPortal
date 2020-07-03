@@ -27,6 +27,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<AttendanceCodeMeaning> AttendanceCodeMeanings { get; set; }
         public virtual DbSet<AttendanceMark> AttendanceMarks { get; set; }
         public virtual DbSet<AttendanceWeek> AttendanceWeeks { get; set; }
+        public virtual DbSet<AttendanceWeekPattern> AttendanceWeekPatterns { get; set; }
         public virtual DbSet<BasketItem> BasketItems { get; set; }
         public virtual DbSet<BehaviourOutcome> BehaviourOutcomes { get; set; }
         public virtual DbSet<BehaviourStatus> BehaviourStatus { get; set; }
@@ -171,6 +172,9 @@ namespace MyPortal.Database.Models
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
             modelBuilder.Entity<AttendanceWeek>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<AttendanceWeekPattern>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
             modelBuilder.Entity<BasketItem>()
@@ -523,6 +527,20 @@ namespace MyPortal.Database.Models
                 .HasMany(e => e.AttendanceMarks)
                 .WithOne(e => e.Week)
                 .HasForeignKey(e => e.WeekId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<AttendanceWeekPattern>()
+                .HasMany(e => e.Periods)
+                .WithOne(e => e.WeekPattern)
+                .HasForeignKey(e => e.WeekPatternId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<AttendanceWeekPattern>()
+                .HasMany(e => e.AttendanceWeeks)
+                .WithOne(e => e.WeekPattern)
+                .HasForeignKey(e => e.WeekPatternId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 

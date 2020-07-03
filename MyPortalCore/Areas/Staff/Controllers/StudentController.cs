@@ -7,10 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.VisualStudio.Web.CodeGeneration.DotNet;
 using MyPortal.Database.Constants;
+using MyPortal.Database.Models.Filters;
+using MyPortal.Database.Search;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortalCore.Areas.Staff.ViewModels.Student;
+using TaskStatus = MyPortal.Database.Search.TaskStatus;
 
 namespace MyPortalCore.Areas.Staff.Controllers
 {
@@ -22,8 +25,9 @@ namespace MyPortalCore.Areas.Staff.Controllers
         private IDocumentService _documentService;
         private IAchievementService _achievementService;
         private IAttendanceMarkService _attendanceMarkService;
+        private ITaskService _taskService;
 
-        public StudentController(IStudentService studentService, IPersonService personService, ILogNoteService logNoteService, IApplicationUserService userService, IDocumentService documentService, IAchievementService achievementService, IAttendanceMarkService attendanceMarkService) : base(userService)
+        public StudentController(IStudentService studentService, IPersonService personService, ILogNoteService logNoteService, IApplicationUserService userService, IDocumentService documentService, IAchievementService achievementService, IAttendanceMarkService attendanceMarkService, ITaskService taskService) : base(userService)
         {
             _studentService = studentService;
             _personService = personService;
@@ -31,6 +35,7 @@ namespace MyPortalCore.Areas.Staff.Controllers
             _documentService = documentService;
             _achievementService = achievementService;
             _attendanceMarkService = attendanceMarkService;
+            _taskService = taskService;
         }
 
         
@@ -39,13 +44,14 @@ namespace MyPortalCore.Areas.Staff.Controllers
             return await Process(async () =>
             {
                 var viewModel = new StudentSearchViewModel();
-                viewModel.SearchTypes = _studentService.GetSearchFilters();
+                viewModel.SearchTypes = _studentService.GetStudentStatusOptions();
                 viewModel.GenderOptions = _personService.GetGenderOptions();
 
-                return View(viewModel);
+                return View("BrowseStudents", viewModel);
             });
         }
 
+        #region Student Profile
 
         [Route("{studentId}")]
         public async Task<IActionResult> StudentProfileOverview(Guid studentId)
@@ -65,7 +71,11 @@ namespace MyPortalCore.Areas.Staff.Controllers
             viewModel.LogNotes =
                 (await _logNoteService.GetByStudent(studentId, academicYearId)).Select(x =>
                     x.ToListModel());
+            viewModel.Tasks =
+                (await _taskService.GetByPerson(viewModel.Student.PersonId)).OrderBy(x => x.DueDate).Select(x =>
+                    x.ToListModel());
             viewModel.LogNoteTypes = (await _logNoteService.GetTypes()).ToSelectList();
+            viewModel.TaskTypes = (await _taskService.GetTypes(false, true)).ToSelectList();
             viewModel.AchievementPoints = await _achievementService.GetPointsByStudent(studentId, academicYearId);
 
             var attendanceSummary = await _attendanceMarkService.GetSummaryByStudent(studentId, academicYearId, true);
@@ -75,7 +85,7 @@ namespace MyPortalCore.Areas.Staff.Controllers
                 viewModel.Attendance = attendanceSummary.GetPresentAndApproved();
             }
 
-            return View(viewModel);
+            return View("StudentProfile/StudentOverview", viewModel);
         }
 
         [Route("{studentId}/Documents")]
@@ -83,11 +93,18 @@ namespace MyPortalCore.Areas.Staff.Controllers
         {
             var viewModel = new StudentDocumentsViewModel();
 
+            var docTypeFilter = new DocumentTypeFilter();
+
+            docTypeFilter.Active = true;
+            docTypeFilter.Student = true;
+
             viewModel.Student = await _studentService.GetById(studentId);
             viewModel.DocumentTypes =
-                (await _documentService.GetTypes(SearchFilters.DocumentTypes.Student)).ToSelectList();
+                (await _documentService.GetTypes(docTypeFilter)).ToSelectList();
 
-            return View(viewModel);
+            return View("StudentProfile/Documents", viewModel);
         }
+
+        #endregion
     }
 }

@@ -32,7 +32,7 @@ namespace MyPortal.Logic.Services
 
         public override void Dispose()
         {
-            
+            _periodRepository.Dispose();
         }
     }
 }

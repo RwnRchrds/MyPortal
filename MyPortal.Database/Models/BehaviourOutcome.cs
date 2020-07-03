@@ -5,11 +5,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using System.Text;
 using MyPortal.Database.BaseTypes;
+using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
     [Table("BehaviourOutcome")]
-    public class BehaviourOutcome : LookupItem
+    public class BehaviourOutcome : LookupItem, ISystemEntity
     {
         public BehaviourOutcome()
         {

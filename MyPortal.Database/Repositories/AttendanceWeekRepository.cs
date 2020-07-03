@@ -22,6 +22,7 @@ namespace MyPortal.Database.Repositories
         protected override void SelectAllRelated(Query query)
         {
             query.SelectAll(typeof(AcademicYear));
+            query.SelectAll(typeof(AttendanceWeekPattern), "WeekPattern");
 
             JoinRelated(query);
         }
@@ -29,6 +30,8 @@ namespace MyPortal.Database.Repositories
         protected override void JoinRelated(Query query)
         {
             query.LeftJoin("dbo.AcademicYear", "AcademicYear.Id", "AttendanceWeek.AcademicYearId");
+            query.LeftJoin("dbo.AttendanceWeekPattern as WeekPattern", "WeekPattern.Id",
+                "AttendanceWeek.WeekPatternId");
         }
 
         protected override async Task<IEnumerable<AttendanceWeek>> ExecuteQuery(Query query)

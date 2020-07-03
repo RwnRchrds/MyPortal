@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -6,8 +7,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Models.Identity;
+using MyPortal.Database.Search;
 using MyPortal.Logic.Constants;
+using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.ListModels;
 using MyPortal.Logic.Models.Requests.Student;
 
 namespace MyPortalCore.Controllers.Api
@@ -25,11 +29,16 @@ namespace MyPortalCore.Controllers.Api
         [HttpGet]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Route("Search", Name = "ApiStudentSearch")]
-        public async Task<IActionResult> SearchStudents([FromQuery] StudentSearchModel searchModel)
+        public async Task<IActionResult> SearchStudents([FromQuery] StudentSearchOptions searchModel)
         {
             return await Process(async () =>
             {
-                var students = (await _studentService.Get(searchModel)).Select(x => x.GetListModel());
+                IEnumerable<StudentListModel> students;
+
+                using (new ProcessTimer("Fetch students"))
+                {
+                    students = (await _studentService.Get(searchModel)).Select(x => x.GetListModel());
+                }
 
                 return Ok(students);
             });

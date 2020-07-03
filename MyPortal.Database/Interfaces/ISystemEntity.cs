@@ -4,8 +4,8 @@ using System.Text;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface IAudit
+    public interface ISystemEntity
     {
-
+        public bool System { get; set; }
     }
 }

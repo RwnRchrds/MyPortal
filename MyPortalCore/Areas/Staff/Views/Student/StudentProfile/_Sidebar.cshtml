@@ -102,9 +102,9 @@
             </div>
             <!--end::Contact-->
             <!--begin::Nav-->
-            <div class="navi navi-bold navi-hover navi-link-rounded">
+            <div class="navi navi-bold navi-hover navi-active navi-link-rounded">
                 <div class="navi-item mb-2">
-                    <a href="@Url.Action("StudentProfileOverview", "Student", new {area = "Staff", studentId = Model.Student.Id})" class="navi-link py-4">
+                    <a href="@Url.Action("StudentProfileOverview", "Student", new {area = "Staff", studentId = Model.Student.Id})" class="navi-link py-4" id="link_overview">
                         <span class="navi-icon mr-2">
                             <span class="svg-icon">
                                 <i class="fad fa-fw fa-layer-group"></i>
@@ -174,7 +174,7 @@
                     </a>
                 </div>
                 <div class="navi-item mb-2">
-                    <a href="#" class="navi-link py-4" data-toggle="tooltip" title="Coming soon..." data-placement="right">
+                    <a href="@Url.Action("StudentProfileDocuments", "Student", new {area = "Staff", studentId = Model.Student.Id})" class="navi-link py-4" id="link_documents">
                         <span class="navi-icon mr-2">
                             <span class="svg-icon">
                                 <i class="fad fa-fw fa-file"></i>

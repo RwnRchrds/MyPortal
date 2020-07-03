@@ -130,9 +130,9 @@ namespace MyPortal.Logic.Services
         {
             var directory = await _directoryRepository.GetById(directoryId);
 
-            if (directory.StaffOnly && user.UserType == UserTypes.Staff)
+            if (directory.StaffOnly)
             {
-                return true;
+                return user.UserType == UserTypes.Staff;
             }
 
             if (directory.Private)
@@ -142,9 +142,11 @@ namespace MyPortal.Logic.Services
                 {
                     return true;
                 }
+
+                return false;
             }
 
-            return false;
+            return true;
         }
 
         public override void Dispose()

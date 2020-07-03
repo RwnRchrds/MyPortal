@@ -52,8 +52,24 @@ namespace MyPortal.Database.Repositories
             query.LeftJoin("dbo.SenStatus", "SenStatus.Id", "Student.SenStatusId");
         }
 
-        private static void ApplySearch(Query query, StudentSearch search)
+        private static void ApplySearch(Query query, StudentSearchOptions search)
         {
+            if (search.Status == StudentStatus.OnRoll)
+            {
+                query.Where(q =>
+                    q.WhereNull("Student.DateLeaving").OrWhereDate("Student.DateLeaving", ">", DateTime.Today));
+            }
+
+            else if (search.Status == StudentStatus.Leavers)
+            {
+                query.WhereDate("Student.DateLeaving", "<=", DateTime.Today);
+            }
+
+            else if (search.Status == StudentStatus.Future)
+            {
+                query.WhereDate("Student.DateStarting", ">", DateTime.Today);
+            }
+
             if (!string.IsNullOrWhiteSpace(search.FirstName))
             {
                 query.WhereStarts( "StudentPerson.FirstName", search.FirstName);
@@ -104,46 +120,21 @@ namespace MyPortal.Database.Repositories
             return (await ExecuteQuery(query)).SingleOrDefault();
         }
 
-        public async Task<IEnumerable<Student>> GetAll(StudentSearch searchParams)
+        public async Task<Student> GetByPersonId(Guid personId)
+        {
+            var query = SelectAllColumns();
+
+            query.Where("Student.PersonId", personId);
+
+            return (await ExecuteQuery(query)).FirstOrDefault();
+        }
+
+        public async Task<IEnumerable<Student>> GetAll(StudentSearchOptions searchParams)
         {
             var query = SelectAllColumns();
             
             ApplySearch(query, searchParams);
             
-            return await ExecuteQuery(query);
-        }
-
-        public async Task<IEnumerable<Student>> GetOnRoll(StudentSearch searchParams)
-        {
-            var query = SelectAllColumns();
-
-            query.Where(q =>
-                q.WhereNull("Student.DateLeaving").OrWhereDate("Student.DateLeaving", ">", DateTime.Today));
-
-            ApplySearch(query, searchParams);
-
-            return await ExecuteQuery(query);
-        }
-
-        public async Task<IEnumerable<Student>> GetLeavers(StudentSearch searchParams)
-        {
-            var query = SelectAllColumns();
-
-            query.WhereDate("Student.DateLeaving", "<=", DateTime.Today);
-
-            ApplySearch(query, searchParams);
-
-            return await ExecuteQuery(query);
-        }
-
-        public async Task<IEnumerable<Student>> GetFuture(StudentSearch searchParams)
-        {
-            var query = SelectAllColumns();
-
-            query.WhereDate("Student.DateStarting", ">", DateTime.Today);
-
-            ApplySearch(query, searchParams);
-
             return await ExecuteQuery(query);
         }
 

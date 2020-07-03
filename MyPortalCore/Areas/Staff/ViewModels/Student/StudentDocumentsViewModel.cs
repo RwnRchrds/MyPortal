@@ -11,8 +11,8 @@ namespace MyPortalCore.Areas.Staff.ViewModels.Student
     public class StudentDocumentsViewModel
     {
         public StudentModel Student { get; set; }
-        public UpdateDocumentModel Document { get; set; }
-        public UpdateDirectoryModel Directory { get; set; }
+        public CreateDocumentModel Document { get; set; }
+        public CreateDirectoryModel Directory { get; set; }
         public IEnumerable<SelectListItem> DocumentTypes { get; set; }
     }
 }
