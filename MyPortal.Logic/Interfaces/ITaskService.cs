@@ -4,8 +4,8 @@ using System.Text;
 using System.Threading.Tasks;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Search;
-using MyPortal.Logic.Models.Business;
 using MyPortal.Logic.Models.Data;
+using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Person.Tasks;
 
 namespace MyPortal.Logic.Interfaces
@@ -20,7 +20,7 @@ namespace MyPortal.Logic.Interfaces
 
         Task<bool> IsTaskOwner(Guid taskId, Guid userId);
 
-        Task<Lookup> GetTypes(bool personal, bool activeOnly);
+        Task<Lookup> GetTypes(bool personalOnly, bool activeOnly = true);
 
         Task<TaskModel> GetById(Guid taskId);
 

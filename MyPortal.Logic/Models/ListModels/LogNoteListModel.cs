@@ -1,5 +1,5 @@
 ﻿using System;
-using MyPortal.Logic.Models.Business;
+using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Models.ListModels
 {

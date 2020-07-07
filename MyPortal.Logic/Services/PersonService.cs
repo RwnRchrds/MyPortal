@@ -8,7 +8,7 @@ using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Search;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.Business;
+using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Person;
 using Task = System.Threading.Tasks.Task;
 
@@ -73,11 +73,11 @@ namespace MyPortal.Logic.Services
             return types;
         }
 
-        public async Task<PersonModel> GetByUserId(Guid userId)
+        public async Task<PersonModel> GetByUserId(Guid userId, bool throwIfNotFound = true)
         {
             var person = await _personRepository.GetByUserId(userId);
 
-            if (person == null)
+            if (person == null && throwIfNotFound)
             {
                 throw NotFound();
             }

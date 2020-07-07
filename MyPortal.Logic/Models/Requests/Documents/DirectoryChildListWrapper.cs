@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using MyPortal.Logic.Models.Business;
+using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.ListModels;
 
 namespace MyPortal.Logic.Models.Requests.Documents

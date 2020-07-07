@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using MyPortal.Logic.Models.Business;
+using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Models.Requests.Documents
 {

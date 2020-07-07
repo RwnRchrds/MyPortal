@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using MyPortal.Logic.Models.Business;
+using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Documents;
 
 namespace MyPortalCore.Areas.Staff.ViewModels.Student

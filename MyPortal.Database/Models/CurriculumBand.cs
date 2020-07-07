@@ -12,7 +12,7 @@ namespace MyPortal.Database.Models
         public CurriculumBand()
         {
             Enrolments = new HashSet<Enrolment>();
-            Classes = new HashSet<Class>();
+            AssignedBlocks = new HashSet<CurriculumBandBlock>();
         }
 
         [Column(Order = 0)]
@@ -24,15 +24,19 @@ namespace MyPortal.Database.Models
         public Guid AcademicYearId { get; set; }
 
         [Column(Order = 2)]
-        [Required]
-        [StringLength(128)]
-        public string Name { get; set; }
+        public Guid CurriculumYearGroupId { get; set; }
 
         [Column(Order = 3)]
+        [Required]
+        [StringLength(10)]
+        public string Code { get; set; }
+
+        [Column(Order = 4)]
         [StringLength(256)]
         public string Description { get; set; }
 
+        public virtual CurriculumYearGroup CurriculumYearGroup { get; set; }
         public virtual ICollection<Enrolment> Enrolments { get; set; }
-        public virtual ICollection<Class> Classes { get; set; }
+        public virtual ICollection<CurriculumBandBlock> AssignedBlocks { get; set; }
     }
 }

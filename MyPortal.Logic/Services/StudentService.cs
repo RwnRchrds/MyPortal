@@ -11,8 +11,8 @@ using MyPortal.Database.Repositories;
 using MyPortal.Database.Search;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.Business;
 using MyPortal.Logic.Models.Data;
+using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Student;
 using Task = System.Threading.Tasks.Task;
 
@@ -60,6 +60,27 @@ namespace MyPortal.Logic.Services
             }
 
             return BusinessMapper.Map<StudentModel>(student);
+        }
+
+        public async Task<IEnumerable<StudentModel>> GetByCurriculumGroup(Guid groupId)
+        {
+            var students = await _studentRepository.GetByCurriculumGroup(groupId);
+
+            return students.Select(BusinessMapper.Map<StudentModel>).ToList();
+        }
+
+        public async Task<IEnumerable<StudentModel>> GetByRegGroup(Guid regGroupId)
+        {
+            var students = await _studentRepository.GetByRegGroup(regGroupId);
+
+            return students.Select(BusinessMapper.Map<StudentModel>);
+        }
+
+        public async Task<IEnumerable<StudentModel>> GetByYearGroup(Guid yearGroupId)
+        {
+            var students = await _studentRepository.GetByYearGroup(yearGroupId);
+
+            return students.Select(BusinessMapper.Map<StudentModel>);
         }
 
         public SelectList GetStudentStatusOptions(StudentStatus defaultStatus = StudentStatus.OnRoll)

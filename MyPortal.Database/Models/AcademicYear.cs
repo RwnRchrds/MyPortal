@@ -13,7 +13,7 @@ namespace MyPortal.Database.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public AcademicYear()
         {
-            AttendanceWeeks = new HashSet<AttendanceWeek>();
+            AttendanceWeekPatterns = new HashSet<AttendanceWeekPattern>();
             Classes = new HashSet<Class>();
             LogNotes= new HashSet<LogNote>();
             Sales = new HashSet<Sale>();
@@ -37,7 +37,7 @@ namespace MyPortal.Database.Models
         public DateTime LastDate { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AttendanceWeek> AttendanceWeeks { get; set; }
+        public virtual ICollection<AttendanceWeekPattern> AttendanceWeekPatterns { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Class> Classes { get; set; }

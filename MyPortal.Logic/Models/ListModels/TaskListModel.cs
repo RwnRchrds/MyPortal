@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Scaffolding;
-using MyPortal.Logic.Models.Business;
+using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Models.ListModels
 {
@@ -18,7 +18,7 @@ namespace MyPortal.Logic.Models.ListModels
         public bool Completed { get; set; }
         public bool CanEdit { get; set; }
 
-        public TaskListModel(TaskModel model)
+        public TaskListModel(TaskModel model, bool editPersonalOnly)
         {
             Id = model.Id;
             DueDate = model.DueDate;
@@ -27,7 +27,11 @@ namespace MyPortal.Logic.Models.ListModels
             TaskTypeColourCode = model.Type?.ColourCode;
             Title = model.Title;
             Completed = model.Completed;
-            CanEdit = !model.Type?.Reserved ?? false;
+
+            if (model.Type != null)
+            {
+                CanEdit = !model.Type.Reserved && (!editPersonalOnly || model.Type.Personal);
+            }
         }
 
         public bool Overdue

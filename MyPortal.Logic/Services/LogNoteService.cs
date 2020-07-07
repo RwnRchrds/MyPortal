@@ -10,8 +10,8 @@ using MyPortal.Database.Models;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.Business;
 using MyPortal.Logic.Models.Data;
+using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Exceptions;
 using Task = System.Threading.Tasks.Task;
 

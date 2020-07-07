@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using MyPortal.Logic.Models.Exceptions;
@@ -38,6 +39,40 @@ namespace MyPortal.Logic.Helpers
             var alphaIndex = check % 23;
 
             return chars[0] == alpha[alphaIndex];
+        }
+
+        public static bool ValidateNhsNumber(string nhsNumber)
+        {
+            nhsNumber = nhsNumber.Replace(" ", "");
+
+            if (nhsNumber.Length != 10)
+            {
+                return false;
+            }
+            
+            if (int.TryParse(nhsNumber[9].ToString(), out var checkDigit))
+            {
+                var result = 0;
+                for (int i = 0; i < 9; i++)
+                {
+                    if (int.TryParse(nhsNumber[i].ToString(), out var digitValue))
+                    {
+                        result += digitValue * (10 - i);
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                
+                var validationResult = 11 - result % 11;
+
+                if (validationResult == 10) return false;
+
+                return validationResult == 11 ? checkDigit == 0 : checkDigit == validationResult;
+            }
+
+            return false;
         }
 
         public static void ValidateModel<T>(T model)

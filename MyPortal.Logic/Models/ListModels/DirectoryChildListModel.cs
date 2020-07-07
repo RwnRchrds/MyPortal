@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Helpers;
-using MyPortal.Logic.Models.Business;
+using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Models.ListModels
 {

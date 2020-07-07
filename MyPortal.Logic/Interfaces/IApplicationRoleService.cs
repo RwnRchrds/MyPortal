@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using MyPortal.Logic.Models.Business;
+using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Interfaces
 {

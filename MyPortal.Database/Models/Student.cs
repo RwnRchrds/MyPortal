@@ -27,6 +27,7 @@ namespace MyPortal.Database.Models
             GiftedTalentedSubjects = new HashSet<GiftedTalented>();
             StudentContacts = new HashSet<StudentContact>();
             HomeworkSubmissions = new HashSet<HomeworkSubmission>();
+            GroupMemberships = new HashSet<CurriculumGroupMembership>();
         }
 
         [Column(Order = 0)]
@@ -96,6 +97,9 @@ namespace MyPortal.Database.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Result> Results { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CurriculumGroupMembership> GroupMemberships { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AttendanceMark> AttendanceMarks { get; set; }

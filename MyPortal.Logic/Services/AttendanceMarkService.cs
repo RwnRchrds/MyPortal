@@ -8,7 +8,7 @@ using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.Business;
+using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.ListModels;
 using MyPortal.Logic.Models.Requests.Attendance;
 using Task = System.Threading.Tasks.Task;

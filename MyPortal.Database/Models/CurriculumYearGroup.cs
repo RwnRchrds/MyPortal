@@ -22,6 +22,7 @@ namespace MyPortal.Database.Models
         [Column(Order = 2)]
         public int KeyStage { get; set; }
 
+        public virtual ICollection<CurriculumBand> Bands { get; set; }
         public virtual ICollection<YearGroup> YearGroups { get; set; }
     }
 }

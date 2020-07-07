@@ -120,6 +120,35 @@ namespace MyPortal.Database.Repositories
             return (await ExecuteQuery(query)).SingleOrDefault();
         }
 
+        public async Task<IEnumerable<Student>> GetByCurriculumGroup(Guid groupId)
+        {
+            var query = SelectAllColumns();
+
+            query.LeftJoin("dbo.CurriculumGroupMembership as Membership", "Membership.StudentId", "Student.Id");
+
+            query.Where("Membership.GroupId", groupId);
+
+            return await ExecuteQuery(query);
+        }
+
+        public async Task<IEnumerable<Student>> GetByRegGroup(Guid regGroupId)
+        {
+            var query = SelectAllColumns();
+
+            query.Where("RegGroup.Id", regGroupId);
+
+            return await ExecuteQuery(query);
+        }
+
+        public async Task<IEnumerable<Student>> GetByYearGroup(Guid yearGroupId)
+        {
+            var query = SelectAllColumns();
+
+            query.Where("YearGroup.Id", yearGroupId);
+
+            return await ExecuteQuery(query);
+        }
+
         public async Task<Student> GetByPersonId(Guid personId)
         {
             var query = SelectAllColumns();

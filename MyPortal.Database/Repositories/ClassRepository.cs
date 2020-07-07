@@ -22,37 +22,31 @@ namespace MyPortal.Database.Repositories
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(AcademicYear));
             query.SelectAll(typeof(Subject));
             query.SelectAll(typeof(StaffMember), "Teacher");
             query.SelectAll(typeof(Person), "TeacherPerson");
-            query.SelectAll(typeof(YearGroup));
-            query.SelectAll(typeof(CurriculumBand));
+            query.SelectAll(typeof(CurriculumGroup));
             
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.AcademicYear", "AcademicYear.Id", "Class.AcademicYearId");
             query.LeftJoin("dbo.Subject", "Subject.Id", "Class.SubjectId");
             query.LeftJoin("dbo.StaffMember as Teacher", "Teacher.Id", "Class.TeacherId");
             query.LeftJoin("dbo.Person as TeacherPerson", "TeacherPerson.Id", "Teacher.PersonId");
-            query.LeftJoin("dbo.YearGroup", "YearGroup.Id", "Class.YearGroupId");
-            query.LeftJoin("dbo.CurriculumBand", "CurriculumBand.Id", "Class.BandId");
+            query.LeftJoin("dbo.CurriculumGroup", "CurriculumGroup.Id", "Class.GroupId");
         }
 
         protected override async Task<IEnumerable<Class>> ExecuteQuery(Query query)
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<Class, AcademicYear, Subject, StaffMember, Person, YearGroup, CurriculumBand, Class>(sql.Sql,
-                (currClass, acadYear, subject, teacher, person, yearGroup, band) =>
+            return await Connection.QueryAsync<Class, Subject, StaffMember, Person, CurriculumGroup, Class>(sql.Sql,
+                (currClass, subject, teacher, person, group) =>
                 {
-                    currClass.AcademicYear = acadYear;
                     currClass.Subject = subject;
-                    currClass.YearGroup = yearGroup;
-                    currClass.Band = band;
+                    currClass.Group = group;
 
                     return currClass;
                 }, sql.NamedBindings);

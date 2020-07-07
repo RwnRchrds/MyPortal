@@ -40,6 +40,10 @@ namespace MyPortal.Database.Models
         public virtual DbSet<Contact> Contacts { get; set; }
         public virtual DbSet<Cover> CoverArrangements { get; set; }
         public virtual DbSet<CurriculumBand> CurriculumBands { get; set; }
+        public virtual DbSet<CurriculumBandBlock> CurriculumBandBlocks { get; set; }
+        public virtual DbSet<CurriculumBlock> CurriculumBlocks { get; set; }
+        public virtual DbSet<CurriculumGroup> CurriculumGroups { get; set; }
+        public virtual DbSet<CurriculumGroupMembership> CurriculumGroupMemberships { get; set; }
         public virtual DbSet<CurriculumYearGroup> CurriculumYearGroups { get; set; }
         public virtual DbSet<Detention> Detentions { get; set; }
         public virtual DbSet<DetentionType> DetentionTypes { get; set; }
@@ -211,6 +215,18 @@ namespace MyPortal.Database.Models
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
             modelBuilder.Entity<CurriculumBand>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+            
+            modelBuilder.Entity<CurriculumBandBlock>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+            
+            modelBuilder.Entity<CurriculumBlock>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+            
+            modelBuilder.Entity<CurriculumGroup>()
+                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+            
+            modelBuilder.Entity<CurriculumGroupMembership>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
             modelBuilder.Entity<CurriculumYearGroup>()
@@ -629,7 +645,7 @@ namespace MyPortal.Database.Models
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<AcademicYear>()
-                .HasMany(e => e.AttendanceWeeks)
+                .HasMany(e => e.AttendanceWeekPatterns)
                 .WithOne(e => e.AcademicYear)
                 .HasForeignKey(e => e.AcademicYearId)
                 .IsRequired()
@@ -637,13 +653,6 @@ namespace MyPortal.Database.Models
 
             modelBuilder.Entity<AcademicYear>()
                 .HasMany(e => e.Incidents)
-                .WithOne(e => e.AcademicYear)
-                .HasForeignKey(e => e.AcademicYearId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<AcademicYear>()
-                .HasMany(e => e.Classes)
                 .WithOne(e => e.AcademicYear)
                 .HasForeignKey(e => e.AcademicYearId)
                 .IsRequired()
@@ -872,11 +881,6 @@ namespace MyPortal.Database.Models
                 .HasForeignKey(e => e.RegGroupId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<YearGroup>()
-                .HasMany(e => e.Classes)
-                .WithOne(e => e.YearGroup)
-                .HasForeignKey(e => e.YearGroupId);
 
             modelBuilder.Entity<YearGroup>()
                 .HasMany(e => e.StudyTopics)
@@ -1338,6 +1342,13 @@ namespace MyPortal.Database.Models
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Student>()
+                .HasMany(e => e.GroupMemberships)
+                .WithOne(e => e.Student)
+                .HasForeignKey(e => e.StudentId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Student>()
                 .Property(e => e.Upn)
                 .IsUnicode(false);
 
@@ -1436,14 +1447,49 @@ namespace MyPortal.Database.Models
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<CurriculumBand>()
-                .HasMany(e => e.Classes)
+                .HasMany(e => e.AssignedBlocks)
                 .WithOne(e => e.Band)
                 .HasForeignKey(e => e.BandId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<CurriculumBlock>()
+                .HasMany(e => e.BandAssignments)
+                .WithOne(e => e.Block)
+                .HasForeignKey(e => e.BlockId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<CurriculumBlock>()
+                .HasMany(e => e.Groups)
+                .WithOne(e => e.Block)
+                .HasForeignKey(e => e.BlockId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<CurriculumGroup>()
+                .HasMany(e => e.Memberships)
+                .WithOne(e => e.CurriculumGroup)
+                .HasForeignKey(e => e.GroupId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<CurriculumGroup>()
+                .HasMany(e => e.Classes)
+                .WithOne(e => e.Group)
+                .HasForeignKey(e => e.GroupId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<CurriculumYearGroup>()
                 .HasMany(e => e.YearGroups)
+                .WithOne(e => e.CurriculumYearGroup)
+                .HasForeignKey(e => e.CurriculumYearGroupId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<CurriculumYearGroup>()
+                .HasMany(e => e.Bands)
                 .WithOne(e => e.CurriculumYearGroup)
                 .HasForeignKey(e => e.CurriculumYearGroupId)
                 .IsRequired()

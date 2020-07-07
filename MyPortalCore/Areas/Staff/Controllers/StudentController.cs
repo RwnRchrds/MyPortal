@@ -69,13 +69,13 @@ namespace MyPortalCore.Areas.Staff.Controllers
 
             viewModel.Student = await _studentService.GetById(studentId);
             viewModel.LogNotes =
-                (await _logNoteService.GetByStudent(studentId, academicYearId)).Select(x =>
+                (await _logNoteService.GetByStudent(studentId, academicYearId)).OrderByDescending(x => x.CreatedDate).Select(x =>
                     x.ToListModel());
             viewModel.Tasks =
                 (await _taskService.GetByPerson(viewModel.Student.PersonId)).OrderBy(x => x.DueDate).Select(x =>
-                    x.ToListModel());
+                    x.ToListModel(false));
             viewModel.LogNoteTypes = (await _logNoteService.GetTypes()).ToSelectList();
-            viewModel.TaskTypes = (await _taskService.GetTypes(false, true)).ToSelectList();
+            viewModel.TaskTypes = (await _taskService.GetTypes(false)).ToSelectList("Select Task Type");
             viewModel.AchievementPoints = await _achievementService.GetPointsByStudent(studentId, academicYearId);
 
             var attendanceSummary = await _attendanceMarkService.GetSummaryByStudent(studentId, academicYearId, true);

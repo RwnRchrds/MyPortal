@@ -26,6 +26,7 @@ namespace MyPortal.Database.Repositories
             query.SelectAll(typeof(Student));
             query.SelectAll(typeof(Person), "StudentPerson");
             query.SelectAll(typeof(AttendanceWeek));
+            query.SelectAll(typeof(AttendanceWeekPattern));
             query.SelectAll(typeof(Period));
 
             JoinRelated(query);
@@ -36,6 +37,7 @@ namespace MyPortal.Database.Repositories
             query.LeftJoin("dbo.Student", "Student.Id", "AttendanceMark.StudentId");
             query.LeftJoin("dbo.Person AS StudentPerson", "StudentPerson.Id", "Student.PersonId");
             query.LeftJoin("dbo.AttendanceWeek", "AttendanceWeek.Id", "AttendanceMark.WeekId");
+            query.LeftJoin("dbo.AttendanceWeekPattern", "AttendanceWeekPattern.Id", "AttendanceWeek.WeekPatternId");
             query.LeftJoin("dbo.AttendancePeriod AS Period", "Period.Id", "AttendanceMark.PeriodId");
         }
 
@@ -43,13 +45,14 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<AttendanceMark, Student, Person, AttendanceWeek, Period, AttendanceMark>(
+            return await Connection.QueryAsync<AttendanceMark, Student, Person, AttendanceWeek, AttendanceWeekPattern, Period, AttendanceMark>(
                 sql.Sql,
-                (mark, student, person, week, period) =>
+                (mark, student, person, week, pattern, period) =>
                 {
                     mark.Student = student;
                     mark.Student.Person = person;
                     mark.Week = week;
+                    mark.Week.WeekPattern = pattern;
                     mark.Period = period;
 
                     return mark;
@@ -61,7 +64,7 @@ namespace MyPortal.Database.Repositories
             var query = SelectAllColumns();
 
             query.Where("Student.Id", "=", studentId);
-            query.Where("AttendanceWeek.AcademicYearId", "=", academicYearId);
+            query.Where("AttendanceWeekPattern.AcademicYearId", "=", academicYearId);
 
             return await ExecuteQuery(query);
         }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.Business;
+using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Google;
 using MyPortal.Logic.Models.Requests.Documents;
 

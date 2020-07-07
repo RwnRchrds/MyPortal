@@ -21,7 +21,6 @@ namespace MyPortal.Database.Repositories
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(AcademicYear));
             query.SelectAll(typeof(AttendanceWeekPattern), "WeekPattern");
 
             JoinRelated(query);
@@ -29,7 +28,6 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.AcademicYear", "AcademicYear.Id", "AttendanceWeek.AcademicYearId");
             query.LeftJoin("dbo.AttendanceWeekPattern as WeekPattern", "WeekPattern.Id",
                 "AttendanceWeek.WeekPatternId");
         }
@@ -38,9 +36,9 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<AttendanceWeek, AcademicYear, AttendanceWeek>(sql.Sql, (week, year) =>
+            return await Connection.QueryAsync<AttendanceWeek, AttendanceWeekPattern, AttendanceWeek>(sql.Sql, (week, pattern) =>
             {
-                week.AcademicYear = year;
+                week.WeekPattern = pattern;
 
                 return week;
             }, sql.NamedBindings);

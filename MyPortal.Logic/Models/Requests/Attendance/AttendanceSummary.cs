@@ -4,7 +4,7 @@ using System.Linq;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Models;
 using MyPortal.Logic.Constants;
-using MyPortal.Logic.Models.Business;
+using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Reporting;
 
 namespace MyPortal.Logic.Models.Requests.Attendance

@@ -10,7 +10,7 @@ using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.Business;
+using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Exceptions;
 using MyPortal.Logic.Models.Requests.Documents;
 using Syncfusion.EJ2.FileManager.Base;

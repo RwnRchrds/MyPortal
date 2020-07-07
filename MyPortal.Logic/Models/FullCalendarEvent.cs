@@ -1,13 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Models
 {
     public class FullCalendarEvent
     {
+        public FullCalendarEvent(DiaryEventModel eventModel)
+        {
+            Id = eventModel.Id.ToString("N");
+            AllDay = eventModel.IsAllDay;
+            Start = eventModel.StartTime;
+            End = eventModel.EndTime;
+            Title = eventModel.Subject;
+            Display = FullCalendarDisplayModes.Auto;
+            Color = eventModel.EventType.ColourCode;
+            Editable = false;
+        }
+        
         public string Id { get; set; }
-        public string GroupId { get; set; }
         public bool AllDay { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
@@ -16,7 +28,6 @@ namespace MyPortal.Logic.Models
         public string[] ClassNames { get; set; }
         public bool Editable { get; set; }
         public string Display { get; set; }
-        public bool Overlap { get; set; }
         public string Color { get; set; }
         public object ExtendedProps { get; set; }
     }

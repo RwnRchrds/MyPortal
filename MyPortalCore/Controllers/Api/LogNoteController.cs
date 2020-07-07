@@ -8,7 +8,7 @@ using MyPortal.Database.Constants;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.Business;
+using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.ListModels;
 using MyPortal.Logic.Models.Requests.Student.LogNotes;
 

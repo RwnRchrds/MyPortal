@@ -11,9 +11,10 @@ using MyPortal.Database.Search;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.Business;
 using MyPortal.Logic.Models.Data;
+using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Person.Tasks;
+using TaskStatus = MyPortal.Database.Search.TaskStatus;
 
 namespace MyPortal.Logic.Services
 {
@@ -54,7 +55,7 @@ namespace MyPortal.Logic.Services
             await _taskRepository.SaveChanges();
         }
 
-        public async Task<Lookup> GetTypes(bool personal, bool activeOnly)
+        public async Task<Lookup> GetTypes(bool personalOnly, bool activeOnly = true)
         {
             var taskTypes = (await _taskTypeRepository.GetAll()).AsQueryable();
 
@@ -63,7 +64,12 @@ namespace MyPortal.Logic.Services
                 taskTypes = taskTypes.Where(x => x.Active);
             }
 
-            return taskTypes.Where(t => t.Personal == personal && !t.Reserved).ToLookup();
+            if (personalOnly)
+            {
+                taskTypes = taskTypes.Where(x => x.Personal);
+            }
+
+            return taskTypes.Where(t => !t.Reserved).ToLookup();
         }
 
         public async Task<bool> IsTaskOwner(Guid taskId, Guid userId)
@@ -152,6 +158,11 @@ namespace MyPortal.Logic.Services
 
         public async Task<IEnumerable<TaskModel>> GetByPerson(Guid personId, TaskSearchOptions searchOptions = null)
         {
+            if (searchOptions == null)
+            {
+                searchOptions = new TaskSearchOptions {Status = TaskStatus.Active};
+            }
+
             var tasks = await _taskRepository.GetByAssignedTo(personId, searchOptions);
 
             return tasks.Select(BusinessMapper.Map<TaskModel>);

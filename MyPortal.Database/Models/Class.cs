@@ -21,29 +21,19 @@ namespace MyPortal.Database.Models
         public Guid Id { get; set; }
 
         [Column(Order = 1)]
-        public Guid AcademicYearId { get; set; }
-
-        [Column(Order = 2)]
         public Guid? SubjectId { get; set; }
 
+        [Column (Order = 2)]
+        public Guid GroupId { get; set; }
+
         [Column (Order = 3)]
-        public Guid BandId { get; set; }
-
-        [Column (Order = 4)]
         [Required]
-        [StringLength(128)]
-        public string Name { get; set; }
-
-        [Column (Order = 5)]
-        public Guid? YearGroupId { get; set; }
-
-        public virtual AcademicYear AcademicYear { get; set; }
-
+        [StringLength(10)]
+        public string Code { get; set; }
+        
         public virtual Subject Subject { get; set; }
 
-        public virtual YearGroup YearGroup { get; set; }
-
-        public virtual CurriculumBand Band { get; set; }
+        public virtual CurriculumGroup Group { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Session> Sessions { get; set; }

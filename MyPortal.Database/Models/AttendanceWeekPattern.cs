@@ -19,6 +19,9 @@ namespace MyPortal.Database.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 0)]
         public Guid Id { get; set; }
+        
+        [Column(Order = 1)]
+        public Guid AcademicYearId { get; set; }
 
         [Column(Order = 1)] 
         public int Order { get; set; }
@@ -27,7 +30,8 @@ namespace MyPortal.Database.Models
         [Required]
         [StringLength(128)]
         public string Description { get; set; }
-
+        
+        public virtual AcademicYear AcademicYear { get; set; }
         public virtual ICollection<AttendanceWeek> AttendanceWeeks { get; set; }
         public virtual ICollection<Period> Periods { get; set; }
     }

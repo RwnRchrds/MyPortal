@@ -20,9 +20,6 @@ namespace MyPortal.Database.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [Column(Order = 1)]
-        public Guid AcademicYearId { get; set; }
-
         [Column(Order = 2)]
         public Guid WeekPatternId { get; set; }
 
@@ -31,8 +28,6 @@ namespace MyPortal.Database.Models
 
         [Column(Order = 4)]
         public bool IsNonTimetable { get; set; }
-
-        public virtual AcademicYear AcademicYear { get; set; }
 
         public virtual AttendanceWeekPattern WeekPattern { get; set; }
         

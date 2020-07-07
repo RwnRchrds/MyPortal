@@ -4,8 +4,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MyPortal.Database.Search;
-using MyPortal.Logic.Models.Business;
 using MyPortal.Logic.Models.Data;
+using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Student;
 
 namespace MyPortal.Logic.Interfaces
@@ -19,6 +19,12 @@ namespace MyPortal.Logic.Interfaces
         Task<StudentModel> GetByUserId(Guid userId, bool throwIfNotFound = true);
 
         Task<StudentModel> GetByPersonId(Guid personId, bool throwIfNotFound = true);
+
+        Task<IEnumerable<StudentModel>> GetByCurriculumGroup(Guid groupId);
+
+        Task<IEnumerable<StudentModel>> GetByRegGroup(Guid regGroupId);
+
+        Task<IEnumerable<StudentModel>> GetByYearGroup(Guid yearGroupId);
 
         SelectList GetStudentStatusOptions(StudentStatus defaultStatus = StudentStatus.OnRoll);
     }

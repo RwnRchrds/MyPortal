@@ -7,7 +7,7 @@ using MyPortal.Database.Models;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.Business;
+using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Person.Tasks;
 using Task = MyPortal.Database.Models.Task;
 
@@ -180,6 +180,11 @@ namespace MyPortalCore.Controllers.Api
 
                 if (userStaffMember != null && taskStaffMember != null)
                 {
+                    if (taskStaffMember.Id == userStaffMember.Id)
+                    {
+                        return true;
+                    }
+
                     return await _staffMemberService.IsLineManager(taskStaffMember.Id, userStaffMember.Id);
                 }
             }

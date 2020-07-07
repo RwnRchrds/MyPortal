@@ -80,84 +80,6 @@
 <div class="row">
     <div class="col-lg-6">
         <!--begin::List Widget 10-->
-        <div class="card card-custom card-stretch gutter-b">
-            <!--begin::Header-->
-            <div class="card-header border-0">
-                <h3 class="card-title font-weight-bolder text-dark">Timetable</h3>
-                <div class="card-toolbar">
-                    <div class="dropdown dropdown-inline">
-                        <a href="#" class="btn btn-clean btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="ki ki-bold-more-ver"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-md dropdown-menu-right">
-                            <!--begin::Naviigation-->
-                            <ul class="navi">
-                                <li class="navi-header font-weight-bold py-5">
-                                    <span class="font-size-lg">Add New:</span>
-                                    <i class="flaticon2-information icon-md text-muted" data-toggle="tooltip" data-placement="right" title="Click to learn more..."></i>
-                                </li>
-                                <li class="navi-separator mb-3 opacity-70"></li>
-                                <li class="navi-item">
-                                    <a href="#" class="navi-link">
-                                        <span class="navi-icon">
-                                            <i class="flaticon2-shopping-cart-1"></i>
-                                        </span>
-                                        <span class="navi-text">Order</span>
-                                    </a>
-                                </li>
-                                <li class="navi-item">
-                                    <a href="#" class="navi-link">
-                                        <span class="navi-icon">
-                                            <i class="navi-icon flaticon2-calendar-8"></i>
-                                        </span>
-                                        <span class="navi-text">Members</span>
-                                        <span class="navi-label">
-                                            <span class="label label-light-danger label-rounded font-weight-bold">3</span>
-                                        </span>
-                                    </a>
-                                </li>
-                                <li class="navi-item">
-                                    <a href="#" class="navi-link">
-                                        <span class="navi-icon">
-                                            <i class="navi-icon flaticon2-telegram-logo"></i>
-                                        </span>
-                                        <span class="navi-text">Project</span>
-                                    </a>
-                                </li>
-                                <li class="navi-item">
-                                    <a href="#" class="navi-link">
-                                        <span class="navi-icon">
-                                            <i class="navi-icon flaticon2-new-email"></i>
-                                        </span>
-                                        <span class="navi-text">Record</span>
-                                        <span class="navi-label">
-                                            <span class="label label-light-success label-rounded font-weight-bold">5</span>
-                                        </span>
-                                    </a>
-                                </li>
-                                <li class="navi-separator mt-3 opacity-70"></li>
-                                <li class="navi-footer pt-5 pb-4">
-                                    <a class="btn btn-light-primary font-weight-bolder btn-sm" href="#">More options</a>
-                                    <a class="btn btn-clean font-weight-bold btn-sm d-none" href="#" data-toggle="tooltip" data-placement="right" title="Click to learn more...">Learn more</a>
-                                </li>
-                            </ul>
-                            <!--end::Naviigation-->
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--end::Header-->
-            <!--begin::Body-->
-            <div class="card-body pt-0">
-                <div id="timetable"></div>
-            </div>
-            <!--end: Card Body-->
-        </div>
-        <!--end: Card-->
-        <!--end: List Widget 10-->
-    </div>
-    <div class="col-lg-6">
-        <!--begin::List Widget 10-->
         <div class="card card-custom card-stretch gutter-b" id="task_card">
             <!--begin::Header-->
             <div class="card-header border-0">
@@ -178,81 +100,81 @@
                     <!--begin::Item-->
                     @foreach (var task in Model.Tasks)
                     {
-                <div class="d-flex align-items-center mb-10">
-                    <!--begin::Bullet-->
-                    <span class="bullet bullet-bar align-self-stretch" style="background-color: @task.TaskTypeColourCode"></span>
-                    <!--end::Bullet-->
-                    <!--begin::Checkbox-->
-                    <label class="checkbox checkbox-lg @(task.Overdue ? "checkbox-light-danger" : "") checkbox-inline flex-shrink-0 m-0 mx-4">
-                        <input type="checkbox" name="select" onclick="return false;" @if (task.Completed) { <text> checked="checked" </text> }>
-                        <span></span>
-                    </label>
-                    <!--end::Checkbox-->
-                    <!--begin::Text-->
-                    <div class="d-flex flex-column flex-grow-1">
-                        <div class="mb-1">
-                            <a href="#" class="text-dark-75 text-hover-primary font-weight-bold font-size-lg mb-1">@task.Title</a>
-                        </div>
-                        @if (!string.IsNullOrWhiteSpace(task.AssignedByName))
-                        {
-                            <div class="mb-1">
-                                <span class="text-muted font-weight-bold">@($"{task.AssignedByName}")</span>
+                        <div class="d-flex align-items-center mb-10">
+                            <!--begin::Bullet-->
+                            <span class="bullet bullet-bar align-self-stretch" style="background-color: @task.TaskTypeColourCode"></span>
+                            <!--end::Bullet-->
+                            <!--begin::Checkbox-->
+                            <label class="checkbox checkbox-lg @(task.Overdue ? "checkbox-light-danger" : "") checkbox-inline flex-shrink-0 m-0 mx-4">
+                                <input type="checkbox" name="select" onclick="return false;" @if (task.Completed) { <text> checked="checked" </text> }>
+                                <span></span>
+                            </label>
+                            <!--end::Checkbox-->
+                            <!--begin::Text-->
+                            <div class="d-flex flex-column flex-grow-1">
+                                <div class="mb-1">
+                                    <a href="#" class="text-dark-75 text-hover-primary font-weight-bold font-size-lg mb-1">@task.Title</a>
+                                </div>
+                                @if (!string.IsNullOrWhiteSpace(task.AssignedByName))
+                                {
+                                    <div class="mb-1">
+                                        <span class="text-muted font-weight-bold">@($"{task.AssignedByName}")</span>
+                                    </div>
+                                }
+                                @if (task.DueDate != null)
+                                {
+                                    <div class="mb-1">
+                                        <span class="text-muted font-weight-bold">@($"{task.DueDate.Value.ToString("d")}")</span>
+                                    </div>
+                                }
+                                <div class="mt-1">
+                                    <span class="label label-pill label-inline mx-2" style="background-color: @task.TaskTypeColourCode; color: white;">@task.TaskTypeName</span>
+                                    @if (task.Overdue)
+                                    {
+                                        <span class="label label-danger label-pill label-inline">Overdue</span>
+                                    }
+                                </div>
                             </div>
-                        }
-                        @if (task.DueDate != null)
-                        {
-                            <div class="mb-1">
-                                <span class="text-muted font-weight-bold">@($"{task.DueDate.Value.ToString("d")}")</span>
-                            </div>
-                        }
-                        <div class="mt-1">
-                            <span class="label label-pill label-inline mx-2" style="background-color: @task.TaskTypeColourCode; color: white;">@task.TaskTypeName</span>
-                            @if (task.Overdue)
+                            <!--end::Text-->
+                            @if (task.CanEdit)
                             {
-                                <span class="label label-danger label-pill label-inline">Overdue</span>
+                                <div class="dropdown ml-2">
+                                    <a href="#" class="btn btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="ki ki-more-hor font-size-lg text-primary"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-md dropdown-menu-right" style="">
+                                        <!--begin::Navigation-->
+                                        <ul class="navi navi-hover py-5">
+                                            <li class="navi-item">
+                                                <a href="javascript:toggleTaskCompleted('@task.Id')" class="navi-link">
+                                                    <span class="navi-icon"><i class="fas fa-fw fa-check-circle"></i></span>
+                                                    <span class="navi-text">Toggle Completed</span>
+                                                </a>
+                                            </li>
+                                            <li class="navi-item">
+                                                <a href="javascript:openTaskForm(true, '@task.Id')" class="navi-link">
+                                                    <span class="navi-icon"><i class="fas fa-fw fa-edit"></i></span>
+                                                    <span class="navi-text">Edit</span>
+                                                </a>
+                                            </li>
+                                            <li class="navi-item">
+                                                <a href="javascript:deleteTask('@task.Id')" class="navi-link">
+                                                    <span class="navi-icon"><i class="fas fa-fw fa-trash-alt"></i></span>
+                                                    <span class="navi-text">Delete</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <!--end::Navigation-->
+                                    </div>
+                                </div>
                             }
                         </div>
-                    </div>
-                    <!--end::Text-->
-                    @if (task.CanEdit)
-                    {
-                        <div class="dropdown ml-2">
-                            <a href="#" class="btn btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="ki ki-more-hor font-size-lg text-primary"></i>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-md dropdown-menu-right" style="">
-                                <!--begin::Navigation-->
-                                <ul class="navi navi-hover py-5">
-                                    <li class="navi-item">
-                                        <a href="javascript:toggleTaskCompleted('@task.Id')" class="navi-link">
-                                            <span class="navi-icon"><i class="fas fa-fw fa-check-circle"></i></span>
-                                            <span class="navi-text">Toggle Completed</span>
-                                        </a>
-                                    </li>
-                                    <li class="navi-item">
-                                        <a href="javascript:openTaskForm(true, '@task.Id')" class="navi-link">
-                                            <span class="navi-icon"><i class="fas fa-fw fa-edit"></i></span>
-                                            <span class="navi-text">Edit</span>
-                                        </a>
-                                    </li>
-                                    <li class="navi-item">
-                                        <a href="javascript:deleteTask('@task.Id')" class="navi-link">
-                                            <span class="navi-icon"><i class="fas fa-fw fa-trash-alt"></i></span>
-                                            <span class="navi-text">Delete</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                                <!--end::Navigation-->
-                            </div>
-                        </div>
-                    }
-                </div>
                     }
                     <!--end:Item-->
                 }
                 else
                 {
-                    <p class="text-muted font-weight-bold px-3">No tasks</p>
+                    <p class="text-muted font-weight-bold px-3">No active tasks</p>
                 }
             </div>
             <!--end: Card Body-->
@@ -262,6 +184,28 @@
     </div>
 </div>
 <!--end::Row-->
+<div class="row">
+    <div class="col-lg-12">
+            <!--begin::List Widget 10-->
+            <div class="card card-custom card-stretch gutter-b">
+                <!--begin::Header-->
+                <div class="card-header border-0">
+                    <h3 class="card-title font-weight-bolder text-dark">Timetable</h3>
+                    <div class="card-toolbar">
+                        
+                    </div>
+                </div>
+                <!--end::Header-->
+                <!--begin::Body-->
+                <div class="card-body pt-0">
+                    <div id="timetable"></div>
+                </div>
+                <!--end: Card Body-->
+            </div>
+            <!--end: Card-->
+            <!--end: List Widget 10-->
+        </div>
+</div>
 <!--begin::Advance Table: Widget 7-->
 <div class="card card-custom gutter-bs">
     <!--begin::Header-->
@@ -390,22 +334,22 @@
             <form id="task_form">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="lognote_type">Task Type</label>
+                        <label for="task_type">Task Type</label>
                         <select asp-for="Task.TypeId" asp-items="Model.TaskTypes" name="TypeId" class="form-control" id="task_type"></select>
                         @Html.ValidationMessageFor(x => x.Task.TypeId, null, new { data_valmsg_for = "TypeId", @class = "text-danger" })
                     </div>
                     <div class="form-group">
-                        <label for="lognote_message">Title</label>
+                        <label for="task_title">Title</label>
                         <input type="text" asp-for="Task.Title" class="form-control" id="task_title" name="Title" />
                         @Html.ValidationMessageFor(x => x.Task.Title, null, new { data_valmsg_for = "Title", @class = "text-danger" })
                     </div>
                     <div class="form-group">
-                        <label for="lognote_message">Description</label>
+                        <label for="task_description">Description</label>
                         <textarea asp-for="Task.Description" class="form-control" id="task_description" name="Description" rows="7"></textarea>
                         @Html.ValidationMessageFor(x => x.Task.Description, null, new { data_valmsg_for = "Description", @class = "text-danger" })
                     </div>
                     <div class="form-group">
-                        <label for="lognote_message">Due Date</label>
+                        <label for="task_duedate">Due Date</label>
                         <input type="datetime-local" asp-for="Task.DueDate" class="form-control" id="task_duedate" name="DueDate" />
                         @Html.ValidationMessageFor(x => x.Task.Title, null, new { data_valmsg_for = "DueDate", @class = "text-danger" })
                     </div>
@@ -463,7 +407,6 @@
                     submitLogNoteForm();
                 });
 
-
             $("#task_save").on("click",
                 function() {
                     submitTaskForm();
@@ -471,8 +414,8 @@
 
             $("#lognote_form").validate().settings.errorClass = "is-invalid";
             $("#task_form").validate().settings.errorClass = "is-invalid";
-
-            var calendarEl = document.getElementById('timetable');
+            
+            Timetable.init();
         });
 
         function openLogNoteForm(editMode, logNoteId) {
@@ -689,6 +632,71 @@
                 icon: "error"
             });
         }
+        
+        var Timetable = function() {
+        
+            return {
+                //main function to initiate the module
+                init: function() {
+                    var todayDate = moment().startOf('day');
+                    var YM = todayDate.format('YYYY-MM');
+                    var YESTERDAY = todayDate.clone().subtract(1, 'day').format('YYYY-MM-DD');
+                    var TODAY = todayDate.format('YYYY-MM-DD');
+                    var TOMORROW = todayDate.clone().add(1, 'day').format('YYYY-MM-DD');
+        
+                    var calendarEl = document.getElementById('timetable');
+                    var calendar = new FullCalendar.Calendar(calendarEl, {
+                        plugins: [ 'bootstrap', 'interaction', 'dayGrid', 'timeGrid', 'list' ],
+                        themeSystem: 'bootstrap',
+        
+                        isRTL: KTUtil.isRTL(),
+                        
+                        locale: 'en-gb',
+                        
+                        firstDay: 1,
+        
+                        header: {
+                            left: 'prev,next today',
+                            center: 'title',
+                            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                        },                
+        
+                        nowIndicator: true,                       
+        
+                        views: {
+                            dayGridMonth: { buttonText: 'month' },
+                            timeGridWeek: { buttonText: 'week' },
+                            timeGridDay: { buttonText: 'day' }
+                        },
+        
+                        defaultView: 'timeGridWeek',
+                        defaultDate: TODAY,
+        
+                        editable: false,
+                        eventLimit: true, // allow "more" link when too many events
+                        navLinks: true,            
+        
+                        eventRender: function(info) {
+                            var element = $(info.el);
+        
+                            if (info.event.extendedProps && info.event.extendedProps.description) {
+                                if (element.hasClass('fc-day-grid-event')) {
+                                    element.data('content', info.event.extendedProps.description);
+                                    element.data('placement', 'top');
+                                    KTApp.initPopover(element);
+                                } else if (element.hasClass('fc-time-grid-event')) {
+                                    element.find('.fc-title').append('<div class="fc-description">' + info.event.extendedProps.description + '</div>');
+                                } else if (element.find('.fc-list-item-title').lenght !== 0) {
+                                    element.find('.fc-list-item-title').append('<div class="fc-description">' + info.event.extendedProps.description + '</div>');
+                                }
+                            }
+                        }
+                    });
+        
+                    calendar.render();
+                }
+            };
+        }();
     </script>
 
     <script src="~/js/modals.js"></script>
