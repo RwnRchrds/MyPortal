@@ -28,9 +28,9 @@ namespace MyPortal.Logic.Models.Entity
         [Required]
         public string ContentType { get; set; }
 
-        public Guid UploaderId { get; set; }
+        public Guid CreatedById { get; set; }
 
-        public DateTime UploadedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         public bool Public { get; set; }
 
@@ -38,7 +38,7 @@ namespace MyPortal.Logic.Models.Entity
 
         public bool Deleted { get; set; }
 
-        public virtual UserModel Uploader { get; set; }
+        public virtual UserModel CreatedBy { get; set; }
 
         public virtual DirectoryModel Directory { get; set; }
 

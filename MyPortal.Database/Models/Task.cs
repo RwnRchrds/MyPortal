@@ -4,12 +4,13 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using System.Text;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Identity;
 
 namespace MyPortal.Database.Models
 {
     [Table("Task")]
-    public class Task
+    public class Task : IEntity
     {
         [Column(Order = 0)]
         [Key]

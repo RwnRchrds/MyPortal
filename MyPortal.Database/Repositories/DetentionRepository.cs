@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using SqlKata;
@@ -53,6 +50,39 @@ namespace MyPortal.Database.Repositories
 
                     return detention;
                 }, sql.NamedBindings);
+        }
+
+        public async Task<IEnumerable<Detention>> GetByStudent(Guid studentId, Tuple<DateTime, DateTime> dateRange)
+        {
+            var query = SelectAllColumns();
+
+            query.LeftJoin("dbo.IncidentDetention", "IncidentDetention.DetentionId", "Detention.Id");
+            query.LeftJoin("dbo.Incident", "Incident.Id", "IncidentDetention.IncidentId");
+
+            query.Where("Incident.StudentId", studentId);
+
+            if (dateRange != null)
+            {
+                query.Where(q =>
+                    q.WhereDate("DiaryEvent.StartTime", ">=", dateRange.Item1)
+                        .WhereDate("DiaryEvent.EndTime", "<=", dateRange.Item2));
+            }
+
+            return await ExecuteQuery(query);
+        }
+
+        public async Task<IEnumerable<Detention>> GetByStudent(Guid studentId, Guid academicYearId)
+        {
+            var query = SelectAllColumns();
+
+            query.LeftJoin("dbo.IncidentDetention", "IncidentDetention.DetentionId", "Detention.Id");
+            query.LeftJoin("dbo.Incident", "Incident.Id", "IncidentDetention.IncidentId");
+
+            query.Where("Incident.StudentId", studentId);
+
+            query.Where("Incident.AcademicYearId", academicYearId);
+
+            return await ExecuteQuery(query);
         }
     }
 }

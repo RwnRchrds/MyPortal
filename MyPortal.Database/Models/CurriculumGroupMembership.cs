@@ -1,11 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
     [Table("CurriculumGroupMembership")]
-    public class CurriculumGroupMembership
+    public class CurriculumGroupMembership : IEntity
     {
         [Key]
         [Column(Order = 0)]

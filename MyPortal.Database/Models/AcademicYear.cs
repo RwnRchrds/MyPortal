@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Identity;
 
 namespace MyPortal.Database.Models
 {
     [Table("AcademicYear")]
-    public partial class AcademicYear
+    public class AcademicYear : IEntity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public AcademicYear()

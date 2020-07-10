@@ -2,11 +2,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
     [Table("PersonCondition")]
-    public class PersonCondition
+    public class PersonCondition : IEntity
     {
         [Column(Order = 0)]
         [Key]

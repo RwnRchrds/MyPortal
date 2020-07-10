@@ -42,5 +42,24 @@ namespace MyPortal.Database.Repositories
                 return diaryEvent;
             }, sql.NamedBindings);
         }
+
+        public async Task<IEnumerable<DiaryEvent>> GetByDate(DateTime date)
+        {
+            var query = SelectAllColumns();
+
+            query.WhereDatePart("day", "DiaryEvent.StartTime", date.Day);
+
+            return await ExecuteQuery(query);
+        }
+
+        public async Task<IEnumerable<DiaryEvent>> GetByDateRange(DateTime start, DateTime end)
+        {
+            var query = SelectAllColumns();
+
+            query.WhereDate("DiaryEvent.StartTime", ">=", start);
+            query.WhereDate("DiaryEvent.EndTime", "<=", end);
+
+            return await ExecuteQuery(query);
+        }
     }
 }

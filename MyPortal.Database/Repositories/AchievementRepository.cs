@@ -27,6 +27,7 @@ namespace MyPortal.Database.Repositories
         {
             query.SelectAll(typeof(AcademicYear));
             query.SelectAll(typeof(AchievementType));
+            query.SelectAll(typeof(AchievementOutcome));
             query.SelectAll(typeof(Student));
             query.SelectAll(typeof(Person), "StudentPerson");
             query.SelectAll(typeof(Location));
@@ -40,6 +41,7 @@ namespace MyPortal.Database.Repositories
         {
             query.LeftJoin("dbo.AcademicYear", "AcademicYear.Id", "Achievement.AcademicYearId");
             query.LeftJoin("dbo.AchievementType", "AchievementType.Id", "Achievement.AchievementTypeId");
+            query.LeftJoin("dbo.AchievementOutcome", "AchievementOutcome.Id", "Achievement.OutcomeId");
             query.LeftJoin("dbo.Student", "Student.Id", "Achievement.StudentId");
             query.LeftJoin("dbo.Person AS StudentPerson", "StudentPerson.Id", "Student.PersonId");
             query.LeftJoin("dbo.Location", "Location.Id", "Achievement.LocationId");
@@ -49,7 +51,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<int> GetCountByStudent(Guid studentId, Guid academicYearId)
         {
-            var sql = new Query(TblName).SelectRaw("COUNT([Id])");
+            var sql = new Query(TblName).AsCount();
 
             sql.Where("Achievement.StudentId", "=", studentId);
             sql.Where("Achievement.AcademicYearId", "=", academicYearId);
@@ -59,7 +61,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<int> GetPointsByStudent(Guid studentId, Guid academicYearId)
         {
-            var sql = new Query(TblName).SelectRaw("SUM([Points])");
+            var sql = new Query(TblName).AsSum("Achievement.Points");
 
             sql.Where("Achievement.StudentId", "=", studentId);
             sql.Where("Achievement.AcademicYearId", "=", academicYearId);
@@ -79,7 +81,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<int> GetPointsToday()
         {
-            var sql = new Query(TblName).SelectRaw("SUM([Points])");
+            var sql = new Query(TblName).AsSum("Achievement.Points");
 
             var dateToday = DateTime.Today;
 
@@ -100,18 +102,19 @@ namespace MyPortal.Database.Repositories
                 .QueryAsync(sql.Sql,
                     new[]
                     {
-                        typeof(Achievement), typeof(AchievementType), typeof(Student), typeof(Person), typeof(Location),
+                        typeof(Achievement), typeof(AchievementType), typeof(AchievementOutcome), typeof(Student), typeof(Person), typeof(Location),
                         typeof(ApplicationUser), typeof(Person)
                     }, (objects) =>
                     {
                         var achievement = (Achievement) objects[0];
 
                         achievement.Type = (AchievementType) objects[1];
-                        achievement.Student = (Student) objects[2];
-                        achievement.Student.Person = (Person) objects[3];
-                        achievement.Location = (Location) objects[4];
-                        achievement.RecordedBy = (ApplicationUser) objects[5];
-                        achievement.RecordedBy.Person = (Person) objects[6];
+                        achievement.Outcome = (AchievementOutcome) objects[2];
+                        achievement.Student = (Student) objects[3];
+                        achievement.Student.Person = (Person) objects[4];
+                        achievement.Location = (Location) objects[5];
+                        achievement.RecordedBy = (ApplicationUser) objects[6];
+                        achievement.RecordedBy.Person = (Person) objects[7];
 
                         return achievement;
                     }, sql.NamedBindings);

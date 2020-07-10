@@ -8,12 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Exceptions;
 using MyPortal.Database.Interfaces;
+using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public abstract class BaseReadWriteRepository<TEntity> : BaseReadRepository<TEntity> where TEntity : class
+    public abstract class BaseReadWriteRepository<TEntity> : BaseReadRepository<TEntity>, IReadWriteRepository<TEntity> where TEntity : class, IEntity
     {
         protected readonly ApplicationDbContext Context;
 
@@ -41,7 +42,7 @@ namespace MyPortal.Database.Repositories
 
         public void Create(TEntity entity)
         {
-            Context.Set<TEntity>().Add(entity);
+            var result = Context.Set<TEntity>().Add(entity);
         }
 
         public async Task Delete(Guid id)
@@ -51,8 +52,8 @@ namespace MyPortal.Database.Repositories
             switch (entity)
             {
                 case ISystemEntity systemObject when systemObject.System:
-                    throw new SystemEntityException("You cannot delete a system entity.");
-                case ISoftDelete softDeleteObject:
+                    throw new SystemEntityException("System entity cannot be deleted.");
+                case ISoftDeleteEntity softDeleteObject:
                     softDeleteObject.Deleted = true;
                     break;
                 default:

@@ -13,7 +13,6 @@ using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Exceptions;
-using Syncfusion.EJ2.Base;
 
 namespace MyPortalCore.Controllers.Api
 {

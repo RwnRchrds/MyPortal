@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
     [Table("LocalAuthority")]
-    public class LocalAuthority
+    public class LocalAuthority : IEntity
     {
         public LocalAuthority()
         {

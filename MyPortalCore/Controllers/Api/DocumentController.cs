@@ -49,7 +49,7 @@ namespace MyPortalCore.Controllers.Api
                     Description = model.Description,
                     DirectoryId = model.DirectoryId,
                     Public = model.Public,
-                    UploaderId = user.Id,
+                    CreatedById = user.Id,
                     FileId = model.FileId,
                     TypeId = model.TypeId
                 };

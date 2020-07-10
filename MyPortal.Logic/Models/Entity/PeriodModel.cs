@@ -1,11 +1,14 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using MyPortal.Database.Models;
 
 namespace MyPortal.Logic.Models.Entity
 {
     public class PeriodModel
     {
         public Guid Id { get; set; }
+
+        public Guid WeekPatternId { get; set; }
 
         public DayOfWeek Weekday { get; set; }
 
@@ -17,8 +20,10 @@ namespace MyPortal.Logic.Models.Entity
 
         public TimeSpan EndTime { get; set; }
 
-        public bool IsAm { get; set; }
+        public bool AmReg { get; set; }
 
-        public bool IsPm { get; set; }
+        public bool PmReg { get; set; }
+
+        public virtual AttendanceWeekPattern WeekPattern { get; set; }
     }
 }

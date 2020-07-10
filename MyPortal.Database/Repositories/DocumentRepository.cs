@@ -41,7 +41,7 @@ namespace MyPortal.Database.Repositories
                 (document, type, uploader) =>
                 {
                     document.Type = type;
-                    document.Uploader = uploader;
+                    document.CreatedBy = uploader;
 
                     return document;
                 }, sql.NamedBindings);

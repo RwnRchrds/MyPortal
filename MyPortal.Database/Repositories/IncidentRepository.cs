@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Helpers;
-using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
@@ -23,8 +23,12 @@ namespace MyPortal.Database.Repositories
             query.SelectAll(typeof(AcademicYear));
             query.SelectAll(typeof(IncidentType));
             query.SelectAll(typeof(Student));
+            query.SelectAll(typeof(Person), "StudentPerson");
+            query.SelectAll(typeof(BehaviourOutcome));
+            query.SelectAll(typeof(BehaviourStatus));
             query.SelectAll(typeof(Location));
             query.SelectAll(typeof(ApplicationUser));
+            query.SelectAll(typeof(Person), "RecordedByPerson");
 
             JoinRelated(query);
         }
@@ -34,8 +38,12 @@ namespace MyPortal.Database.Repositories
             query.LeftJoin("dbo.AcademicYear", "AcademicYear.Id", "Incident.AcademicYearId");
             query.LeftJoin("dbo.IncidentType", "IncidentType.Id", "Incident.BehaviourTypeId");
             query.LeftJoin("dbo.Student", "Student.Id", "Incident.StudentId");
+            query.LeftJoin("dbo.Person as StudentPerson", "StudentPerson.Id", "Student.PersonId");
+            query.LeftJoin("dbo.BehaviourOutcome", "BehaviourOutcome.Id", "Incident.OutcomeId");
+            query.LeftJoin("dbo.BehaviourStatus", "BehaviourStatus.Id", "Incident.StatusId");
             query.LeftJoin("dbo.Location", "Location.Id", "Incident.LocationId");
             query.LeftJoin("dbo.AspNetUsers as User", "User.Id", "Incident.RecordedById");
+            query.LeftJoin("dbo.Person as RecordedByPerson", "RecordedByPerson.UserId", "User.Id");
         }
 
         protected override async Task<IEnumerable<Incident>> ExecuteQuery(Query query)
@@ -43,17 +51,59 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             return await Connection
-                .QueryAsync<Incident, AcademicYear, IncidentType, Student, Location, ApplicationUser, Incident>(sql.Sql,
-                    (incident, year, type, student, location, user) =>
+                .QueryAsync(sql.Sql,
+                    new[]
                     {
-                        incident.AcademicYear = year;
-                        incident.Type = type;
-                        incident.Student = student;
-                        incident.Location = location;
-                        incident.RecordedBy = user;
+                        typeof(Incident), typeof(AcademicYear), typeof(IncidentType), typeof(Student), typeof(Person),
+                        typeof(BehaviourOutcome), typeof(BehaviourStatus), typeof(Location), typeof(ApplicationUser),
+                        typeof(Person)
+                    },
+                    objects =>
+                    {
+                        var incident = (Incident) objects[0];
+
+                        incident.AcademicYear = (AcademicYear) objects[1];
+                        incident.Type = (IncidentType) objects[2];
+                        incident.Student = (Student) objects[3];
+                        incident.Student.Person = (Person) objects[4];
+                        incident.Outcome = (BehaviourOutcome) objects[5];
+                        incident.Status = (BehaviourStatus) objects[6];
+                        incident.Location = (Location) objects[7];
+                        incident.RecordedBy = (ApplicationUser) objects[8];
+                        incident.RecordedBy.Person = (Person) objects[9];
 
                         return incident;
                     }, sql.NamedBindings);
+        }
+
+        public async Task<IEnumerable<Incident>> GetByStudent(Guid studentId, Guid academicYearId)
+        {
+            var query = SelectAllColumns();
+
+            query.Where("Student.Id", studentId);
+            query.Where("AcademicYear.Id", academicYearId);
+
+            return await ExecuteQuery(query);
+        }
+
+        public async Task<int> GetCountByStudent(Guid studentId, Guid academicYearId)
+        {
+            var query = new Query(TblName).AsCount();
+
+            query.Where("Student.Id", studentId);
+            query.Where("AcademicYear.Id", academicYearId);
+
+            return await ExecuteQueryIntResult(query) ?? 0;
+        }
+
+        public async Task<int> GetPointsByStudent(Guid studentId, Guid academicYearId)
+        {
+            var query = new Query(TblName).AsSum("Incident.Points");
+
+            query.Where("Student.Id", studentId);
+            query.Where("AcademicYear.Id", academicYearId);
+
+            return await ExecuteQueryIntResult(query) ?? 0;
         }
     }
 }

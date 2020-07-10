@@ -9,6 +9,7 @@ using Dapper;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
+using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using SqlKata;
 using SqlKata.Compilers;
@@ -16,7 +17,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public abstract class BaseReadRepository<TEntity> : IDisposable where TEntity : class
+    public abstract class BaseReadRepository<TEntity> : IReadRepository<TEntity> where TEntity : class, IEntity
     {
         protected readonly IDbConnection Connection;
         protected readonly SqlServerCompiler Compiler;
@@ -87,7 +88,7 @@ namespace MyPortal.Database.Repositories
         {
             var query = new Query(TblName).SelectAll(typeof(TEntity));
 
-            if (!includeDeleted && typeof(TEntity).GetInterfaces().Contains(typeof(ISoftDelete)))
+            if (!includeDeleted && typeof(TEntity).GetInterfaces().Contains(typeof(ISoftDeleteEntity)))
             {
                 query.Where($"{TblAlias}.Deleted", false);
             }

@@ -11,6 +11,8 @@
     <Content Remove="Areas\Staff\Models\**" />
     <EmbeddedResource Remove="Areas\Staff\Models\**" />
     <None Remove="Areas\Staff\Models\**" />
+    <Content Remove="wwwroot\lib\metronic\plugins\custom\fullcalendar\en-gb.js" />
+    <Content Remove="wwwroot\lib\metronic\js\pages\features\calendar\en-gb.js" />
   </ItemGroup>
 
 

@@ -50,54 +50,6 @@ namespace MyPortal.Logic.Services
             _driveService = new DriveService(init);
         }
 
-        //public async Task Create(params DocumentUpload[] uploads)
-        //{
-        //    foreach (var upload in uploads)
-        //    {
-        //        var docToAdd = new Document
-        //        {
-        //            TypeId = upload.Details.TypeId,
-        //            Title = upload.Details.Title,
-        //            Description = upload.Details.Description,
-        //            UploadedDate = DateTime.Now,
-        //            DirectoryId = upload.Details.DirectoryId,
-        //            UploaderId = upload.Details.UploaderId,
-        //            Public = upload.Details.Public,
-        //            Deleted = false,
-        //            Approved = false
-        //        };
-
-        //        var metadata = new File
-        //        {
-        //            Name = upload.Details.FileName,
-        //            Description = upload.Details.Description
-        //        };
-
-        //        FilesResource.CreateMediaUpload request;
-
-        //        string mimeType;
-
-        //        using (upload.FileStream)
-        //        {
-        //            mimeType = MimeTypeHelper.GetMimeType(Path.GetExtension(upload.FileStream.Name));
-
-        //            request = _driveService.Files.Create(metadata, upload.FileStream, mimeType);
-        //            request.Fields = "id, mimeType";
-
-        //            await request.UploadAsync();
-        //        }
-
-        //        var file = request.ResponseBody;
-
-        //        docToAdd.FileId = file.Id;
-        //        docToAdd.ContentType = mimeType;
-
-        //        _documentRepository.Create(docToAdd);
-        //    }
-
-        //    await _documentRepository.SaveChanges();
-        //}
-
         public async Task Create(params DocumentModel[] documents)
         {
             foreach (var document in documents)
@@ -124,9 +76,9 @@ namespace MyPortal.Logic.Services
                         TypeId = document.TypeId,
                         Title = document.Title,
                         Description = document.Description,
-                        UploadedDate = DateTime.Today,
+                        CreatedDate = DateTime.Today,
                         DirectoryId = document.DirectoryId,
-                        UploaderId = document.UploaderId,
+                        CreatedById = document.CreatedById,
                         Public = !directory.Private || document.Public,
                         Deleted = false,
                         Approved = directory.Private || document.Approved,

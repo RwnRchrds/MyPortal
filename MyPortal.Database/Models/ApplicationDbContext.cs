@@ -40,7 +40,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<Contact> Contacts { get; set; }
         public virtual DbSet<Cover> CoverArrangements { get; set; }
         public virtual DbSet<CurriculumBand> CurriculumBands { get; set; }
-        public virtual DbSet<CurriculumBandBlock> CurriculumBandBlocks { get; set; }
+        public virtual DbSet<CurriculumBandBlockAssignment> CurriculumBandBlocks { get; set; }
         public virtual DbSet<CurriculumBlock> CurriculumBlocks { get; set; }
         public virtual DbSet<CurriculumGroup> CurriculumGroups { get; set; }
         public virtual DbSet<CurriculumGroupMembership> CurriculumGroupMemberships { get; set; }
@@ -216,8 +216,12 @@ namespace MyPortal.Database.Models
 
             modelBuilder.Entity<CurriculumBand>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+            modelBuilder.Entity<CurriculumBand>()
+                .HasIndex(e => new {e.AcademicYearId, e.Code})
+                .IsUnique();
             
-            modelBuilder.Entity<CurriculumBandBlock>()
+            modelBuilder.Entity<CurriculumBandBlockAssignment>()
                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
             
             modelBuilder.Entity<CurriculumBlock>()
@@ -1132,8 +1136,8 @@ namespace MyPortal.Database.Models
 
             modelBuilder.Entity<ApplicationUser>()
                 .HasMany(e => e.Documents)
-                .WithOne(e => e.Uploader)
-                .HasForeignKey(e => e.UploaderId)
+                .WithOne(e => e.CreatedBy)
+                .HasForeignKey(e => e.CreatedById)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 

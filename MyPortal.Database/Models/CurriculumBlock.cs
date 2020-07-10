@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
     [Table("CurriculumBlock")]
-    public class CurriculumBlock
+    public class CurriculumBlock : IEntity
     {
         public CurriculumBlock()
         {
             Groups = new HashSet<CurriculumGroup>();
-            BandAssignments = new HashSet<CurriculumBandBlock>();
+            BandAssignments = new HashSet<CurriculumBandBlockAssignment>();
         }
         
         [Key]
@@ -28,6 +29,6 @@ namespace MyPortal.Database.Models
         public string Description { get; set; }
 
         public virtual ICollection<CurriculumGroup> Groups { get; set; }
-        public virtual ICollection<CurriculumBandBlock> BandAssignments { get; set; }
+        public virtual ICollection<CurriculumBandBlockAssignment> BandAssignments { get; set; }
     }
 }

@@ -5,7 +5,7 @@ using MyPortal.Database.Models.Identity;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface IUpdateAudit
+    public interface IUpdateAuditEntity : IEntity
     {
         Guid UpdatedById { get; set; }
         DateTime UpdatedDate { get; set; }

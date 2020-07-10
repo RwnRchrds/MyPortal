@@ -13,7 +13,6 @@ using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Exceptions;
 using MyPortal.Logic.Models.Requests.Documents;
-using Syncfusion.EJ2.FileManager.Base;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services

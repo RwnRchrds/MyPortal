@@ -34,7 +34,7 @@ namespace MyPortal.Logic.Models.ListModels
             ParentId = document.DirectoryId;
             IsDirectory = false;
             Name = document.Title;
-            CreatedDate = document.UploadedDate;
+            CreatedDate = document.CreatedDate;
             Type = document.Type.Description;
 
             if (document.ContentType == GoogleMimeTypes.GoogleDocs || MimeTypeHelper.IsWord(document.ContentType))

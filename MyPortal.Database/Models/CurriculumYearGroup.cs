@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
     [Table("CurriculumYearGroup")]
-    public class CurriculumYearGroup
+    public class CurriculumYearGroup : IEntity
     {
         [Column(Order = 0)]
         [Key]

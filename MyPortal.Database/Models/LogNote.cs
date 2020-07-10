@@ -8,7 +8,7 @@ using MyPortal.Database.Models.Identity;
 namespace MyPortal.Database.Models
 {
     [Table("LogNote")]
-    public class LogNote : ISoftDelete, ICreationAudit, IUpdateAudit
+    public class LogNote : ISoftDeleteEntity, IAuditEntity
     {
         [Column(Order = 0)]
         [Key]

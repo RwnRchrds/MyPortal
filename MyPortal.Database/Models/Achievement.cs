@@ -2,12 +2,13 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Identity;
 
 namespace MyPortal.Database.Models
 {
     [Table("Achievement")]
-    public class Achievement
+    public class Achievement : IEntity
     {
         [Column(Order = 0)]
         [Key]

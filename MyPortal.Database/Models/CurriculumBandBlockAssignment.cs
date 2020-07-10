@@ -1,11 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
-    [Table("CurriculumBandBlock")]
-    public class CurriculumBandBlock
+    [Table("CurriculumBandBlockAssignment")]
+    public class CurriculumBandBlockAssignment : IEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

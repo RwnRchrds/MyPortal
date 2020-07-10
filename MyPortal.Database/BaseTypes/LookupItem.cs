@@ -4,10 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using System.Text;
+using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.BaseTypes
 {
-    public abstract class LookupItem
+    public abstract class LookupItem : IEntity
     {
         [Key]
         [Column(Order = 0)]

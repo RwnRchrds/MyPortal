@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
+using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
 
@@ -28,6 +29,18 @@ namespace MyPortal.Logic.Services
             }
 
             return BusinessMapper.Map<AttendanceWeekModel>(attendanceWeek);
+        }
+
+        public async Task<AttendanceWeekModel> GetByDate(DateTime date, bool throwIfNotFound = true)
+        {
+            var week = await _attendanceWeekRepository.GetByDate(date);
+
+            if (week == null && throwIfNotFound)
+            {
+                throw NotFound();
+            }
+
+            return BusinessMapper.Map<AttendanceWeekModel>(week);
         }
 
         public override void Dispose()

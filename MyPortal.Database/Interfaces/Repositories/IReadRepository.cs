@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IReadRepository<TEntity> : IDisposable where TEntity : class
+    public interface IReadRepository<TEntity> : IDisposable where TEntity : class, IEntity
     {
         Task<IEnumerable<TEntity>> GetAll();
         Task<TEntity> GetById(Guid id);

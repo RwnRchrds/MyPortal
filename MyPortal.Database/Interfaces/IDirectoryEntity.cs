@@ -3,7 +3,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface IDirectoryEntity
+    public interface IDirectoryEntity : IEntity
     {
         Guid DirectoryId { get; set; }
 

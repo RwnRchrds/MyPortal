@@ -167,11 +167,6 @@ namespace MyPortal.Database.Repositories
             return await ExecuteQuery(query);
         }
 
-        public async Task<IEnumerable<Student>> GetByClass(int classId)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<IEnumerable<Student>> GetGiftedTalented()
         {
             var query = SelectAllColumns();
