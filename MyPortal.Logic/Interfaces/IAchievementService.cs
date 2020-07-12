@@ -8,6 +8,8 @@ namespace MyPortal.Logic.Interfaces
 {
     public interface IAchievementService : IService
     {
+        Task<IEnumerable<AchievementModel>> GetByStudent(Guid studentId, Guid academicYearId);
+        Task<AchievementModel> GetById(Guid achievementId);
         Task<int> GetPointsByStudent(Guid studentId, Guid academicYearId);
         Task<int> GetCountByStudent(Guid studentId, Guid academicYearId);
         Task Create(params AchievementModel[] achievements);

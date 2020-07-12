@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
@@ -85,20 +86,20 @@ namespace MyPortal.Logic.Services
             return user.SelectedAcademicYearId;
         }
 
-        public async Task<AcademicYearModel> GetSelectedAcademicYear(Guid userId)
+        public async Task<AcademicYearModel> GetSelectedAcademicYear(Guid userId, bool throwIfNotFound = true)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
 
             var selected = user.SelectedAcademicYearId;
 
-            if (selected != null)
+            if (selected == null && throwIfNotFound)
             {
-                var acadYear = await _academicYearRepository.GetById((Guid) selected);
-
-                return BusinessMapper.Map<AcademicYearModel>(acadYear);
+                throw NotFound("No academic year has been selected.");
             }
 
-            return null;
+            var acadYear = await _academicYearRepository.GetById(selected.Value);
+
+            return BusinessMapper.Map<AcademicYearModel>(acadYear);
         }
 
         public async Task<UserModel> GetUserByPrincipal(ClaimsPrincipal principal)

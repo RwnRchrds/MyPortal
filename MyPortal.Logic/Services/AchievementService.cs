@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
@@ -23,6 +24,20 @@ namespace MyPortal.Logic.Services
         public override void Dispose()
         {
             _achievementRepository.Dispose();
+        }
+
+        public async Task<IEnumerable<AchievementModel>> GetByStudent(Guid studentId, Guid academicYearId)
+        {
+            var achievements = await _achievementRepository.GetByStudent(studentId, academicYearId);
+
+            return achievements.Select(BusinessMapper.Map<AchievementModel>).ToList();
+        }
+
+        public async Task<AchievementModel> GetById(Guid achievementId)
+        {
+            var achievement = await _achievementRepository.GetById(achievementId);
+
+            return BusinessMapper.Map<AchievementModel>(achievement);
         }
 
         public async Task<int> GetPointsByStudent(Guid studentId, Guid academicYearId)

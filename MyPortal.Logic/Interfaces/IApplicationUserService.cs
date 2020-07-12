@@ -14,7 +14,7 @@ namespace MyPortal.Logic.Interfaces
         Task ResetPassword(PasswordReset model);
         Task<bool> EnableDisableUser(Guid userId);
         Task<Guid?> GetSelectedAcademicYearId(Guid userId);
-        Task<AcademicYearModel> GetSelectedAcademicYear(Guid userId);
+        Task<AcademicYearModel> GetSelectedAcademicYear(Guid userId, bool throwIfNotFound = true);
         Task<UserModel> GetUserByPrincipal(ClaimsPrincipal principal);
         Task<string> GetDisplayName(Guid userId);
         Task<UserModel> GetUserById(Guid userId);
