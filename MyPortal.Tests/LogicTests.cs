@@ -7,6 +7,7 @@ using MyPortal.Database.Constants;
 using MyPortal.Database.Models;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Helpers;
+using MyPortal.Logic.Models.Entity;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 
@@ -52,52 +53,53 @@ namespace MyPortal.Tests
         }
 
         [Test]
-        [Ignore("This test is only used during development.")]
         public void EntityModel_MissingProperties()
         {
             var mappingValid = true;
-            
-            foreach (var type in MappingHelper.MappingDictionary)
-            {
-                var entityProperties = type.Key.GetProperties().Where(x =>
-                    x.PropertyType == typeof(string) || !typeof(IEnumerable).IsAssignableFrom(x.PropertyType)).ToList();
-                
-                var modelProperties = type.Value.GetProperties().ToList();
 
-                foreach (var entityProperty in entityProperties)
+            foreach (var type in from type in MappingHelper.MappingDictionary
+                let entityProperties = type.Key.GetProperties().Where(x =>
+                    x.PropertyType == typeof(string) || !typeof(IEnumerable).IsAssignableFrom(x.PropertyType)).ToList()
+                let modelProperties = type.Value.GetProperties().ToList()
+                let exceptions = new List<(Type type, string propertyName)>
                 {
-                    if (modelProperties.All(m => !String.Equals(m.Name, entityProperty.Name, StringComparison.CurrentCultureIgnoreCase)))
-                    {
-                        mappingValid = false;
-                    }
+                    (typeof(UserModel), "PasswordHash"),
+                    (typeof(UserModel), "SecurityStamp"),
+                    (typeof(UserModel), "TwoFactorEnabled"),
+                    (typeof(UserModel), "LockoutEnd")
                 }
+                from entityProperty in entityProperties.Where(entityProperty =>
+                    !exceptions.Contains((type.Value, entityProperty.Name)) && modelProperties.All(m =>
+                        !String.Equals(m.Name, entityProperty.Name, StringComparison.CurrentCultureIgnoreCase)))
+                select type)
+            {
+                mappingValid = false;
             }
-            
+
             Assert.IsTrue(mappingValid);
         }
 
         [Test]
-        [Ignore("This test is only used during development.")]
         public void EntityModel_SurplusProperties()
         {
             var mappingValid = true;
-            
-            foreach (var type in MappingHelper.MappingDictionary)
-            {
-                var entityProperties = type.Key.GetProperties().Where(x =>
-                    x.PropertyType == typeof(string) || !typeof(IEnumerable).IsAssignableFrom(x.PropertyType)).ToList();
-                
-                var modelProperties = type.Value.GetProperties().ToList();
 
-                foreach (var modelProperty in modelProperties)
+            foreach (var type in from type in MappingHelper.MappingDictionary
+                let entityProperties = type.Key.GetProperties().Where(x =>
+                    x.PropertyType == typeof(string) || !typeof(IEnumerable).IsAssignableFrom(x.PropertyType)).ToList()
+                let modelProperties = type.Value.GetProperties().ToList()
+                let exceptions = new List<(Type type, string propertyName)>
                 {
-                    if (entityProperties.All(e => !String.Equals(e.Name, modelProperty.Name, StringComparison.CurrentCultureIgnoreCase)))
-                    {
-                        mappingValid = false;
-                    }    
+                    (typeof(TaskModel), "Overdue")
                 }
+                from modelProperty in modelProperties.Where(modelProperty =>
+                    !exceptions.Contains((type.Value, modelProperty.Name)) && entityProperties.All(e =>
+                        !String.Equals(e.Name, modelProperty.Name, StringComparison.CurrentCultureIgnoreCase)))
+                select type)
+            {
+                mappingValid = false;
             }
-            
+
             Assert.IsTrue(mappingValid);
         }
     }
