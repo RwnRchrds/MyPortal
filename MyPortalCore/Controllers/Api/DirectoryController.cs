@@ -28,10 +28,10 @@ namespace MyPortalCore.Controllers.Api
         }
 
         [HttpGet]
-        [Route("list", Name = "ApiDirectoryGetChildren")]
+        [Route("getChildren", Name = "ApiDirectoryGetChildren")]
         public async Task<IActionResult> GetChildren([FromQuery] Guid directoryId)
         {
-            return await Process(async () =>
+            return await ProcessAsync(async () =>
             {
 
                 var user = await _userService.GetUserByPrincipal(User);
@@ -66,7 +66,7 @@ namespace MyPortalCore.Controllers.Api
         [Route("create", Name = "ApiDirectoryCreate")]
         public async Task<IActionResult> Create([FromForm] CreateDirectoryModel model)
         {
-            return await Process(async () =>
+            return await ProcessAsync(async () =>
             {
                 var user = await _userService.GetUserByPrincipal(User);
 
@@ -93,7 +93,7 @@ namespace MyPortalCore.Controllers.Api
         [Route("update", Name = "ApiDirectoryUpdate")]
         public async Task<IActionResult> Update([FromForm] UpdateDirectoryModel model)
         {
-            return await Process(async () =>
+            return await ProcessAsync(async () =>
             {
                 var user = await _userService.GetUserByPrincipal(User);
 
@@ -121,7 +121,7 @@ namespace MyPortalCore.Controllers.Api
         [Route("delete", Name = "ApiDirectoryDelete")]
         public async Task<IActionResult> Delete([FromQuery] Guid directoryId)
         {
-            return await Process(async () =>
+            return await ProcessAsync(async () =>
             {
                 var user = await _userService.GetUserByPrincipal(User);
 
@@ -140,7 +140,7 @@ namespace MyPortalCore.Controllers.Api
         [Route("getById", Name = "ApiDirectoryGetById")]
         public async Task<IActionResult> GetById([FromQuery] Guid directoryId)
         {
-            return await Process(async () =>
+            return await ProcessAsync(async () =>
             {
                 var user = await _userService.GetUserByPrincipal(User);
 

@@ -27,7 +27,7 @@ namespace MyPortalCore.Controllers.Api
         [Route("getById", Name = "ApiDocumentGetById")]
         public async Task<IActionResult> GetById([FromQuery] Guid documentId)
         {
-            return await Process(async () =>
+            return await ProcessAsync(async () =>
             {
                 var document = await _documentService.GetDocumentById(documentId);
 
@@ -39,7 +39,7 @@ namespace MyPortalCore.Controllers.Api
         [Route("create", Name = "ApiDocumentCreate")]
         public async Task<IActionResult> Create([FromForm] CreateDocumentModel model)
         {
-            return await Process(async () =>
+            return await ProcessAsync(async () =>
             {
                 var user = await _userService.GetUserByPrincipal(User);
 
@@ -64,7 +64,7 @@ namespace MyPortalCore.Controllers.Api
         [Route("update", Name = "ApiDocumentUpdate")]
         public async Task<IActionResult> Update([FromForm] UpdateDocumentModel model)
         {
-            return await Process(async () =>
+            return await ProcessAsync(async () =>
             {
                 var document = new DocumentModel
                 {
@@ -86,7 +86,7 @@ namespace MyPortalCore.Controllers.Api
         [Route("delete", Name = "ApiDocumentDelete")]
         public async Task<IActionResult> Delete([FromQuery] Guid documentId)
         {
-            return await Process(async () =>
+            return await ProcessAsync(async () =>
             {
                 await _documentService.Delete(documentId);
 
@@ -98,7 +98,7 @@ namespace MyPortalCore.Controllers.Api
         [Route("download", Name = "ApiDocumentDownload")]
         public async Task<IActionResult> DownloadFile([FromQuery] Guid documentId, [FromQuery] bool asPdf = false)
         {
-            return await Process(async () =>
+            return await ProcessAsync(async () =>
             {
                 var download = await _documentService.GetDownloadById(documentId, asPdf);
 
@@ -110,7 +110,7 @@ namespace MyPortalCore.Controllers.Api
         [Route("getLink", Name = "ApiDocumentGetWebViewLink")]
         public async Task<IActionResult> GetWebViewLink([FromQuery] Guid documentId)
         {
-            return await Process(async () =>
+            return await ProcessAsync(async () =>
             {
                 var file = await _documentService.GetFileById(documentId);
 

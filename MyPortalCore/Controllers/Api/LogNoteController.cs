@@ -31,7 +31,7 @@ namespace MyPortalCore.Controllers.Api
         [Route("get")]
         public async Task<IActionResult> GetById([FromQuery] Guid logNoteId)
         {
-            return await Process(async () =>
+            return await ProcessAsync(async () =>
             {
                 var logNote = await _logNoteService.GetById(logNoteId);
 
@@ -46,10 +46,10 @@ namespace MyPortalCore.Controllers.Api
 
         [HttpGet]
         [Authorize]
-        [Route("student")]
+        [Route("getByStudent")]
         public async Task<IActionResult> GetByStudent([FromQuery] Guid studentId, [FromQuery] Guid academicYearId)
         {
-            return await Process(async () =>
+            return await ProcessAsync(async () =>
             {
                 if (await AuthenticateStudentResource(_studentService, studentId))
                 {
@@ -68,7 +68,7 @@ namespace MyPortalCore.Controllers.Api
         [Authorize(Policy = Policies.UserType.Staff)]
         public async Task<IActionResult> Create([FromForm] CreateLogNoteModel model)
         {
-            return await Process(async () =>
+            return await ProcessAsync(async () =>
             {
                 var logNote = new LogNoteModel
                 {
@@ -86,7 +86,7 @@ namespace MyPortalCore.Controllers.Api
 
                 logNote.CreatedById = author.Id;
                 logNote.UpdatedById = author.Id;
-                logNote.AcademicYearId = (Guid) author.SelectedAcademicYearId;
+                logNote.AcademicYearId = author.SelectedAcademicYearId.Value;
 
                 await _logNoteService.Create(logNote);
 
@@ -98,7 +98,7 @@ namespace MyPortalCore.Controllers.Api
         [Authorize(Policy = Policies.UserType.Staff)]
         public async Task<IActionResult> Update([FromForm] UpdateLogNoteModel model)
         {
-            return await Process(async () =>
+            return await ProcessAsync(async () =>
             {
                 var logNote = new LogNoteModel
                 {
@@ -121,7 +121,7 @@ namespace MyPortalCore.Controllers.Api
         [Authorize(Policy = Policies.UserType.Staff)]
         public async Task<IActionResult> Delete([FromQuery] Guid logNoteId)
         {
-            return await Process(async () =>
+            return await ProcessAsync(async () =>
             {
                 await _logNoteService.Delete(logNoteId);
 

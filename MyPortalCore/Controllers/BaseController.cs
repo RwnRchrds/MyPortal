@@ -18,7 +18,7 @@ namespace MyPortalCore.Controllers
             _userService = userService;
         }
 
-        protected async Task<IActionResult> Process(Func<Task<IActionResult>> method, params Guid[] permissionsRequired)
+        protected async Task<IActionResult> ProcessAsync(Func<Task<IActionResult>> method, params Guid[] permissionsRequired)
         {
             if (User.HasPermission(permissionsRequired))
             {
@@ -28,6 +28,21 @@ namespace MyPortalCore.Controllers
                 }
 
                 return await method.Invoke();
+            }
+
+            return Forbid();
+        }
+
+        protected IActionResult Process(Func<IActionResult> method, params Guid[] permissionsRequired)
+        {
+            if (User.HasPermission(permissionsRequired))
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("Invalid data.");
+                }
+
+                return method.Invoke();
             }
 
             return Forbid();

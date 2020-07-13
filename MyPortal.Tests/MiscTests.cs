@@ -14,7 +14,7 @@ using NUnit.Framework.Internal;
 namespace MyPortal.Tests
 {
     [TestFixture]
-    public class LogicTests
+    public class MiscTests
     {
         [Test]
         public void Mapping_BusinessConfigurationIsValid()
@@ -90,7 +90,7 @@ namespace MyPortal.Tests
                 let modelProperties = type.Value.GetProperties().ToList()
                 let exceptions = new List<(Type type, string propertyName)>
                 {
-                    (typeof(TaskModel), "Overdue")
+                     (typeof(TaskModel), "Overdue")
                 }
                 from modelProperty in modelProperties.Where(modelProperty =>
                     !exceptions.Contains((type.Value, modelProperty.Name)) && entityProperties.All(e =>

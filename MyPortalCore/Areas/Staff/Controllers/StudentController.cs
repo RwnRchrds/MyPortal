@@ -41,7 +41,7 @@ namespace MyPortalCore.Areas.Staff.Controllers
         
         public async Task<IActionResult> Index()
         {
-            return await Process(async () =>
+            return await ProcessAsync(async () =>
             {
                 var viewModel = new StudentSearchViewModel();
                 viewModel.SearchTypes = _studentService.GetStudentStatusOptions();

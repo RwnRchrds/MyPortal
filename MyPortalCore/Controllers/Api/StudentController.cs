@@ -31,7 +31,7 @@ namespace MyPortalCore.Controllers.Api
         [Route("Search", Name = "ApiStudentSearch")]
         public async Task<IActionResult> SearchStudents([FromQuery] StudentSearchOptions searchModel)
         {
-            return await Process(async () =>
+            return await ProcessAsync(async () =>
             {
                 IEnumerable<StudentListModel> students;
 
@@ -48,7 +48,7 @@ namespace MyPortalCore.Controllers.Api
         [Route("GetById", Name = "ApiStudentGetById")]
         public async Task<IActionResult> GetById([FromQuery] Guid studentId)
         {
-            return await Process(async () =>
+            return await ProcessAsync(async () =>
             {
                 var student = await _studentService.GetById(studentId);
 

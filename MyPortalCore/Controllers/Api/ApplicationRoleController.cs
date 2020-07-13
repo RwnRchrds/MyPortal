@@ -26,7 +26,7 @@ namespace MyPortalCore.Controllers.Api
         [Route("Search", Name = "ApiApplicationRoleSearch")]
         public async Task<IActionResult> Search([FromQuery] string roleName)
         {
-            return await Process(async () =>
+            return await ProcessAsync(async () =>
             {
                 var roles = await _applicationRoleService.Get(roleName);
 

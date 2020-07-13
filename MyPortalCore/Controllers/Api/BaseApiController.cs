@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Constants;
@@ -17,6 +19,7 @@ using MyPortal.Logic.Models.Exceptions;
 namespace MyPortalCore.Controllers.Api
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public abstract class BaseApiController : ControllerBase, IDisposable
     {
@@ -28,7 +31,19 @@ namespace MyPortalCore.Controllers.Api
             _userService = userService;
         }
 
-        protected async Task<IActionResult> Process(Func<Task<IActionResult>> method, params Guid[] permissionsRequired)
+        protected async Task<Guid> GetSelectedAcademicYearId()
+        {
+            var user = await _userService.GetUserByPrincipal(User);
+
+            if (user.SelectedAcademicYearId == null)
+            {
+                throw new Exception("Academic year has not been selected.");
+            }
+
+            return user.SelectedAcademicYearId.Value;
+        }
+
+        protected async Task<IActionResult> ProcessAsync(Func<Task<IActionResult>> method, params Guid[] permissionsRequired)
         {
             if (User.HasPermission(permissionsRequired))
             {

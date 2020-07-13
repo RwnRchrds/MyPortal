@@ -33,7 +33,7 @@ namespace MyPortalCore.Controllers.Api
         [Route("get")]
         public async Task<IActionResult> GetById([FromQuery] Guid taskId)
         {
-            return await Process(async () =>
+            return await ProcessAsync(async () =>
             {
                 var user = await _userService.GetUserByPrincipal(User);
 
@@ -51,7 +51,7 @@ namespace MyPortalCore.Controllers.Api
         [HttpPost]
         public async Task<IActionResult> Create([FromForm] CreateTaskModel model)
         {
-            return await Process(async () =>
+            return await ProcessAsync(async () =>
             {
                 if (TaskTypes.IsReserved(model.TypeId))
                 {
@@ -88,7 +88,7 @@ namespace MyPortalCore.Controllers.Api
         [HttpPut]
         public async Task<IActionResult> Update([FromForm] UpdateTaskModel model)
         {
-            return await Process(async () =>
+            return await ProcessAsync(async () =>
             {
                 var user = await _userService.GetUserByPrincipal(User);
 
@@ -109,7 +109,7 @@ namespace MyPortalCore.Controllers.Api
         [Route("Toggle")]
         public async Task<IActionResult> ToggleCompleted([FromQuery] Guid taskId)
         {
-            return await Process(async () =>
+            return await ProcessAsync(async () =>
             {
                 var user = await _userService.GetUserByPrincipal(User);
                 var task = await _taskService.GetById(taskId);
@@ -139,7 +139,7 @@ namespace MyPortalCore.Controllers.Api
         [HttpDelete]
         public async Task<IActionResult> Delete([FromQuery] Guid taskId)
         {
-            return await Process(async () =>
+            return await ProcessAsync(async () =>
             {
                 var user = await _userService.GetUserByPrincipal(User);
 
