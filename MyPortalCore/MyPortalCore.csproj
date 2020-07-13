@@ -13,6 +13,10 @@
     <None Remove="Areas\Staff\Models\**" />
     <Content Remove="wwwroot\lib\metronic\plugins\custom\fullcalendar\en-gb.js" />
     <Content Remove="wwwroot\lib\metronic\js\pages\features\calendar\en-gb.js" />
+    <Content Update="Areas\Staff\Views\Student\StudentProfile\BehaviourManagement.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
 

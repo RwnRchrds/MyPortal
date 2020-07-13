@@ -24,10 +24,11 @@ namespace MyPortalCore.Areas.Staff.Controllers
         private ILogNoteService _logNoteService;
         private IDocumentService _documentService;
         private IAchievementService _achievementService;
+        private IIncidentService _incidentService;
         private IAttendanceMarkService _attendanceMarkService;
         private ITaskService _taskService;
 
-        public StudentController(IStudentService studentService, IPersonService personService, ILogNoteService logNoteService, IApplicationUserService userService, IDocumentService documentService, IAchievementService achievementService, IAttendanceMarkService attendanceMarkService, ITaskService taskService) : base(userService)
+        public StudentController(IStudentService studentService, IPersonService personService, ILogNoteService logNoteService, IApplicationUserService userService, IDocumentService documentService, IAchievementService achievementService, IIncidentService incidentService, IAttendanceMarkService attendanceMarkService, ITaskService taskService) : base(userService)
         {
             _studentService = studentService;
             _personService = personService;
@@ -103,6 +104,21 @@ namespace MyPortalCore.Areas.Staff.Controllers
                 (await _documentService.GetTypes(docTypeFilter)).ToSelectList();
 
             return View("StudentProfile/Documents", viewModel);
+        }
+
+        [Route("{studentId}/Behaviour")]
+        public async Task<IActionResult> StudentBehaviour(Guid studentId)
+        {
+            var viewModel = new StudentBehaviourManagementViewModel();
+
+            viewModel.Student = await _studentService.GetById(studentId);
+            viewModel.AchievementTypes = (await _achievementService.GetTypes()).ToSelectList();
+            viewModel.AchievementOutcomes = (await _achievementService.GetOutcomes()).ToSelectList();
+            viewModel.IncidentOutcomes = (await _incidentService.GetOutcomes()).ToSelectList();
+            viewModel.IncidentTypes = (await _incidentService.GetTypes()).ToSelectList();
+            viewModel.IncidentStatus = (await _incidentService.GetStatus()).ToSelectList();
+
+            return View("StudentProfile/BehaviourManagement", viewModel);
         }
 
         #endregion

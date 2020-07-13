@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Interfaces
@@ -14,5 +15,8 @@ namespace MyPortal.Logic.Interfaces
         Task Create(params IncidentModel[] incidents);
         Task Update(params IncidentModel[] incidents);
         Task Delete(params Guid[] incidentIds);
+        Task<Lookup> GetTypes();
+        Task<Lookup> GetOutcomes();
+        Task<Lookup> GetStatus();
     }
 }

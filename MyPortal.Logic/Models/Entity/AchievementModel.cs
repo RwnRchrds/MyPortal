@@ -1,5 +1,6 @@
 ﻿using System;
 using MyPortal.Database.Models;
+using MyPortal.Logic.Attributes;
 
 namespace MyPortal.Logic.Models.Entity
 {
@@ -7,16 +8,22 @@ namespace MyPortal.Logic.Models.Entity
     {
         public Guid Id { get; set; }
 
+        [NotEmpty]
         public Guid AcademicYearId { get; set; }
 
+        [NotEmpty]
         public Guid AchievementTypeId { get; set; }
 
+        [NotEmpty]
         public Guid StudentId { get; set; }
 
+        [NotEmpty]
         public Guid LocationId { get; set; }
 
+        
         public Guid RecordedById { get; set; }
 
+        [NotEmpty]
         public Guid OutcomeId { get; set; }
 
         public DateTime CreatedDate { get; set; }

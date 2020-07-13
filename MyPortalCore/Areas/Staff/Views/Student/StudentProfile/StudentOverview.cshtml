@@ -1,7 +1,7 @@
 ﻿@using Microsoft.CodeAnalysis.CSharp.Syntax
 @model MyPortalCore.Areas.Staff.ViewModels.Student.StudentOverviewViewModel
 @{
-    ViewBag.Title = "Student Overview";
+    ViewBag.Title = $"Student Overview - {Model.Student.Person.GetDisplayName()}";
     Layout = "~/Areas/Staff/Views/Shared/_Layout.cshtml";
 }
 

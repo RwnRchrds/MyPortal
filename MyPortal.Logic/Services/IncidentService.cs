@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
+using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
 using Task = System.Threading.Tasks.Task;
 
@@ -13,6 +15,9 @@ namespace MyPortal.Logic.Services
     public class IncidentService : BaseService, IIncidentService
     {
         private readonly IIncidentRepository _incidentRepository;
+        private readonly IBehaviourOutcomeRepository _outcomeRepository;
+        private readonly IBehaviourStatusRepository _statusRepository;
+        private readonly IIncidentTypeRepository _incidentTypeRepository;
 
         public IncidentService(IIncidentRepository incidentRepository) : base("Incident")
         {
@@ -101,6 +106,27 @@ namespace MyPortal.Logic.Services
             }
 
             await _incidentRepository.SaveChanges();
+        }
+
+        public async Task<Lookup> GetTypes()
+        {
+            var types = await _incidentTypeRepository.GetAll();
+
+            return types.ToLookup();
+        }
+
+        public async Task<Lookup> GetOutcomes()
+        {
+            var outcomes = await _outcomeRepository.GetAll();
+
+            return outcomes.ToLookup();
+        }
+
+        public async Task<Lookup> GetStatus()
+        {
+            var status = await _statusRepository.GetAll();
+
+            return status.ToLookup();
         }
     }
 }

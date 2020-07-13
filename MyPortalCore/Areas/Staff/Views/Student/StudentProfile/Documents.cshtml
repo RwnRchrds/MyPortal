@@ -1,6 +1,6 @@
 ﻿@model MyPortalCore.Areas.Staff.ViewModels.Student.StudentDocumentsViewModel
 @{
-    ViewBag.Title = "Documents";
+    ViewBag.Title = $"Documents - {Model.Student.Person.GetDisplayName()}";
     Layout = "~/Areas/Staff/Views/Shared/_Layout.cshtml";
 }
 

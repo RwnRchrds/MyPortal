@@ -1,0 +1,137 @@
+﻿@model MyPortalCore.Areas.Staff.ViewModels.Student.StudentBehaviourManagementViewModel
+
+@{
+    ViewBag.Title = $"Behaviour Management - {Model.Student.Person.GetDisplayName()}";
+    Layout = "~/Areas/Staff/Views/Shared/_Layout.cshtml";
+}
+
+<!--begin::Subheader-->
+<div class="subheader py-2 py-lg-4 subheader-solid" id="kt_subheader">
+    <div class="container-fluid d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
+        <!--begin::Info-->
+        <div class="d-flex align-items-center flex-wrap mr-2">
+            <!--begin::Page Title-->
+            <h5 class="text-dark font-weight-bold mt-2 mb-2 mr-5"><i class="fas fa-star mr-2"></i>Behaviour Management</h5>
+            <!--end::Page Title-->
+
+        </div>
+        <!--end::Info-->
+
+    </div>
+</div>
+<!--end::Subheader-->
+
+<div class="d-flex flex-column-fluid">
+    <div class="container">
+        <div class="d-flex flex-row">
+            <partial name="~/Areas/Staff/Views/Student/StudentProfile/_Sidebar.cshtml"/>
+
+            <!--begin::Content-->
+            <div class="flex-row-fluid ml-lg-8">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card card-custom gutter-b">
+                            <!--begin::Header-->
+                            <div class="card-header border-0 pt-5">
+                                <h3 class="card-title align-items-start flex-column">
+                                    <span class="card-label font-weight-bolder text-dark">Achievements</span>
+                                </h3>
+                                <div class="card-toolbar">
+                                    <button class="btn btn-light-primary font-weight-bolder" id="btnNewAchievement">
+                                        <span class="svg-icon svg-icon-md">
+                                            <i class="fas fa-plus"></i>
+                                        </span>Add Achievement
+                                    </button>
+                                </div>
+                            </div>
+                            <!--end::Header-->
+                            <!--begin::Body-->
+                            <div class="card-body px-0">
+                                <div class="container">
+                                    <div class="row mt-2">
+                                        <div class="col-md-12">
+                                            <table id="tblAchievements" class="table" data-student-id="@Model.Student.Id">
+                                                <thead>
+                                                <tr>
+                                                    <th>
+                                                        Date
+                                                    </th>
+                                                    <th>
+                                                        Type
+                                                    </th>
+                                                    <th>
+                                                        Points
+                                                    </th>
+                                                    <th>
+                                                        Comments
+                                                    </th>
+                                                    <th>
+                                                        Actions
+                                                    </th>
+                                                </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--end::Body-->
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card card-custom gutter-b">
+                            <!--begin::Header-->
+                            <div class="card-header border-0 pt-5">
+                                <h3 class="card-title align-items-start flex-column">
+                                    <span class="card-label font-weight-bolder text-dark">Behaviour</span>
+                                </h3>
+                                <div class="card-toolbar">
+                                    <button class="btn btn-light-primary font-weight-bolder" id="btnNewIncident">
+                                        <span class="svg-icon svg-icon-md">
+                                            <i class="fas fa-plus"></i>
+                                        </span>Add Incident
+                                    </button>
+                                </div>
+                            </div>
+                            <!--end::Header-->
+                            <!--begin::Body-->
+                            <div class="card-body px-0">
+                                <div class="container">
+                                    <div class="row mt-2">
+                                        <div class="col-md-12">
+                                            <table id="tblIncidents" class="table" data-directory-id="@Model.Student.Person.DirectoryId">
+                                                <thead>
+                                                <tr>
+                                                    <th>
+                                                        Date
+                                                    </th>
+                                                    <th>
+                                                        Type
+                                                    </th>
+                                                    <th>
+                                                        Points
+                                                    </th>
+                                                    <th>
+                                                        Comments
+                                                    </th>
+                                                    <th>
+                                                        Actions
+                                                    </th>
+                                                </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--end::Body-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end::Content-->
+        </div>
+    </div>
+</div>

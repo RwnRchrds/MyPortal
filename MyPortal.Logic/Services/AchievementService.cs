@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
+using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
 using Task = System.Threading.Tasks.Task;
 
@@ -15,10 +17,16 @@ namespace MyPortal.Logic.Services
     public class AchievementService : BaseService, IAchievementService
     {
         private readonly IAchievementRepository _achievementRepository;
-        
-        public AchievementService(IAchievementRepository achievementRepository) : base("Achievement")
+        private readonly IAchievementTypeRepository _achievementTypeRepository;
+        private readonly IAchievementOutcomeRepository _achievementOutcomeRepository;
+
+        public AchievementService(IAchievementRepository achievementRepository,
+            IAchievementTypeRepository achievementTypeRepository,
+            IAchievementOutcomeRepository achievementOutcomeRepository) : base("Achievement")
         {
             _achievementRepository = achievementRepository;
+            _achievementTypeRepository = achievementTypeRepository;
+            _achievementOutcomeRepository = achievementOutcomeRepository;
         }
 
         public override void Dispose()
@@ -106,6 +114,20 @@ namespace MyPortal.Logic.Services
             }
 
             await _achievementRepository.SaveChanges();
+        }
+
+        public async Task<Lookup> GetTypes()
+        {
+            var types = await _achievementTypeRepository.GetAll();
+
+            return types.ToLookup();
+        }
+
+        public async Task<Lookup> GetOutcomes()
+        {
+            var outcomes = await _achievementOutcomeRepository.GetAll();
+
+            return outcomes.ToLookup();
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Interfaces
@@ -15,5 +16,7 @@ namespace MyPortal.Logic.Interfaces
         Task Create(params AchievementModel[] achievements);
         Task Update(params AchievementModel[] achievements);
         Task Delete(params Guid[] achievementIds);
+        Task<Lookup> GetTypes();
+        Task<Lookup> GetOutcomes();
     }
 }
