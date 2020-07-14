@@ -31,11 +31,11 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.StaffMember as Observee", "Observee.Id", "Observation.ObserveeId");
-            query.LeftJoin("dbo.Person as ObserveePerson", "ObserveePerson.Id", "Observee.PersonId");
-            query.LeftJoin("dbo.StaffMember as Observer", "Observer.Id", "Observation.ObserverId");
-            query.LeftJoin("dbo.Person as ObserverPerson", "ObserverPerson.Id", "Observer.PersonId");
-            query.LeftJoin("dbo.ObservationOutcome", "ObservationOutcome.Id", "Observation.OutcomeId");
+            query.LeftJoin("StaffMember as Observee", "Observee.Id", "Observation.ObserveeId");
+            query.LeftJoin("Person as ObserveePerson", "ObserveePerson.Id", "Observee.PersonId");
+            query.LeftJoin("StaffMember as Observer", "Observer.Id", "Observation.ObserverId");
+            query.LeftJoin("Person as ObserverPerson", "ObserverPerson.Id", "Observer.PersonId");
+            query.LeftJoin("ObservationOutcome", "ObservationOutcome.Id", "Observation.OutcomeId");
         }
 
         protected override async Task<IEnumerable<Observation>> ExecuteQuery(Query query)

@@ -26,7 +26,7 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.ProductType", "ProductType.Id", "Product.ProductTypeId");
+            query.LeftJoin("ProductType", "ProductType.Id", "Product.ProductTypeId");
         }
 
         protected override async Task<IEnumerable<Product>> ExecuteQuery(Query query)

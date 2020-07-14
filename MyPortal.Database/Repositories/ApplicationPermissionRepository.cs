@@ -31,7 +31,7 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.SystemArea", "SystemArea.Id", "AspNetPermissions.AreaId");
+            query.LeftJoin("SystemArea", "SystemArea.Id", "AspNetPermissions.AreaId");
         }
 
         protected override async Task<IEnumerable<ApplicationPermission>> ExecuteQuery(Query query)

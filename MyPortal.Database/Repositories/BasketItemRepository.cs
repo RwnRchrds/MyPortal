@@ -31,9 +31,9 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.Student", "Student.Id", "BasketItem.StudentId");
-            query.LeftJoin("dbo.Person as StudentPerson", "StudentPerson.Id", "Student.PersonId");
-            query.LeftJoin("dbo.Product", "Product.Id", "BasketItem.ProductId");
+            query.LeftJoin("Student", "Student.Id", "BasketItem.StudentId");
+            query.LeftJoin("Person as StudentPerson", "StudentPerson.Id", "Student.PersonId");
+            query.LeftJoin("Product", "Product.Id", "BasketItem.ProductId");
         }
 
         protected override async Task<IEnumerable<BasketItem>> ExecuteQuery(Query query)

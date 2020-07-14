@@ -28,8 +28,8 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.Student", "Student.Id", "Enrolment.StudentId");
-            query.LeftJoin("dbo.CurriculumBand", "CurriculumBand.Id", "Enrolment.BandId");
+            query.LeftJoin("Student", "Student.Id", "Enrolment.StudentId");
+            query.LeftJoin("CurriculumBand", "CurriculumBand.Id", "Enrolment.BandId");
         }
 
         protected override async Task<IEnumerable<Enrolment>> ExecuteQuery(Query query)

@@ -27,8 +27,8 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.EmailAddressType", "EmailAddressType.Id", "EmailAddress.TypeId");
-            query.LeftJoin("dbo.Person", "Person.Id", "EmailAddress.PersonId");
+            query.LeftJoin("EmailAddressType", "EmailAddressType.Id", "EmailAddress.TypeId");
+            query.LeftJoin("Person", "Person.Id", "EmailAddress.PersonId");
         }
 
         protected override async Task<IEnumerable<EmailAddress>> ExecuteQuery(Query query)

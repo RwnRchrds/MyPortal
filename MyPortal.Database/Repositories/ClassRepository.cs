@@ -32,10 +32,10 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.Subject", "Subject.Id", "Class.SubjectId");
-            query.LeftJoin("dbo.StaffMember as Teacher", "Teacher.Id", "Class.TeacherId");
-            query.LeftJoin("dbo.Person as TeacherPerson", "TeacherPerson.Id", "Teacher.PersonId");
-            query.LeftJoin("dbo.CurriculumGroup", "CurriculumGroup.Id", "Class.GroupId");
+            query.LeftJoin("Subject", "Subject.Id", "Class.SubjectId");
+            query.LeftJoin("StaffMember as Teacher", "Teacher.Id", "Class.TeacherId");
+            query.LeftJoin("Person as TeacherPerson", "TeacherPerson.Id", "Teacher.PersonId");
+            query.LeftJoin("CurriculumGroup", "CurriculumGroup.Id", "Class.GroupId");
         }
 
         protected override async Task<IEnumerable<Class>> ExecuteQuery(Query query)

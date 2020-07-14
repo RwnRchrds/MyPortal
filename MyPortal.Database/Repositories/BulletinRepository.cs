@@ -29,7 +29,7 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.AspNetUsers as User", "User.Id", "Bulletin.AuthorId");
+            query.LeftJoin("AspNetUsers as User", "User.Id", "Bulletin.AuthorId");
         }
 
         protected override async Task<IEnumerable<Bulletin>> ExecuteQuery(Query query)

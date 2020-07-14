@@ -28,7 +28,7 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.CommentBank", "CommentBank.Id", "Comment.CommentBankId");
+            query.LeftJoin("CommentBank", "CommentBank.Id", "Comment.CommentBankId");
         }
 
         protected override async Task<IEnumerable<Comment>> ExecuteQuery(Query query)

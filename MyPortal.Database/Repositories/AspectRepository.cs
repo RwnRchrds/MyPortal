@@ -29,8 +29,8 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.AspectType", "AspectType.Id", "Aspect.TypeId");
-            query.LeftJoin("dbo.GradeSet", "GradeSet.Id", "Aspect.GradeSetId");
+            query.LeftJoin("AspectType", "AspectType.Id", "Aspect.TypeId");
+            query.LeftJoin("GradeSet", "GradeSet.Id", "Aspect.GradeSetId");
         }
 
         protected override async Task<IEnumerable<Aspect>> ExecuteQuery(Query query)

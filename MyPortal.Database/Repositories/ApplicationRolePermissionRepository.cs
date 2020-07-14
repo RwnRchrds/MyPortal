@@ -29,8 +29,8 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.AspNetRoles AS Role", "Role.Id", "AspNetRolePermissions.RoleId");
-            query.LeftJoin("dbo.AspNetPermissions AS Permission", "Permission.Id",
+            query.LeftJoin("AspNetRoles AS Role", "Role.Id", "AspNetRolePermissions.RoleId");
+            query.LeftJoin("AspNetPermissions AS Permission", "Permission.Id",
                 "AspNetRolePermissions.PermissionId");
         }
 

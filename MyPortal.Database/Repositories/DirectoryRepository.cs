@@ -29,7 +29,7 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.Directory as Parent", "Parent.Id", "Directory.ParentId");
+            query.LeftJoin("Directory as Parent", "Parent.Id", "Directory.ParentId");
         }
 
         protected override async Task<IEnumerable<Directory>> ExecuteQuery(Query query)

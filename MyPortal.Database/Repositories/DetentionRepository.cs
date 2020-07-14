@@ -29,10 +29,10 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.DetentionType", "DetentionType.Id", "Detention.DetentionTypeId");
-            query.LeftJoin("dbo.DiaryEvent", "DiaryEvent.Id", "Detention.EventId");
-            query.LeftJoin("dbo.StaffMember", "StaffMember.Id", "Detention.SupervisorId");
-            query.LeftJoin("dbo.Person", "Person.Id", "StaffMember.PersonId");
+            query.LeftJoin("DetentionType", "DetentionType.Id", "Detention.DetentionTypeId");
+            query.LeftJoin("DiaryEvent", "DiaryEvent.Id", "Detention.EventId");
+            query.LeftJoin("StaffMember", "StaffMember.Id", "Detention.SupervisorId");
+            query.LeftJoin("Person", "Person.Id", "StaffMember.PersonId");
         }
 
         protected override async Task<IEnumerable<Detention>> ExecuteQuery(Query query)
@@ -56,8 +56,8 @@ namespace MyPortal.Database.Repositories
         {
             var query = SelectAllColumns();
 
-            query.LeftJoin("dbo.IncidentDetention", "IncidentDetention.DetentionId", "Detention.Id");
-            query.LeftJoin("dbo.Incident", "Incident.Id", "IncidentDetention.IncidentId");
+            query.LeftJoin("IncidentDetention", "IncidentDetention.DetentionId", "Detention.Id");
+            query.LeftJoin("Incident", "Incident.Id", "IncidentDetention.IncidentId");
 
             query.Where("Incident.StudentId", studentId);
 
@@ -75,8 +75,8 @@ namespace MyPortal.Database.Repositories
         {
             var query = SelectAllColumns();
 
-            query.LeftJoin("dbo.IncidentDetention", "IncidentDetention.DetentionId", "Detention.Id");
-            query.LeftJoin("dbo.Incident", "Incident.Id", "IncidentDetention.IncidentId");
+            query.LeftJoin("IncidentDetention", "IncidentDetention.DetentionId", "Detention.Id");
+            query.LeftJoin("Incident", "Incident.Id", "IncidentDetention.IncidentId");
 
             query.Where("Incident.StudentId", studentId);
 

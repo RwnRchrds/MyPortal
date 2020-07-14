@@ -27,8 +27,8 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.Class", "Class.Id", "Session.ClassId");
-            query.LeftJoin("dbo.Period", "Period.Id", "Session.PeriodId");
+            query.LeftJoin("Class", "Class.Id", "Session.ClassId");
+            query.LeftJoin("Period", "Period.Id", "Session.PeriodId");
         }
 
         protected override async Task<IEnumerable<Session>> ExecuteQuery(Query query)

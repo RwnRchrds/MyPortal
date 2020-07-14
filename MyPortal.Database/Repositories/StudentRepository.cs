@@ -40,16 +40,16 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.Person as StudentPerson", "StudentPerson.Id", "Student.PersonId");
-            query.LeftJoin("dbo.AspNetUsers as User", "User.Id", "StudentPerson.UserId");
-            query.LeftJoin("dbo.RegGroup", "RegGroup.Id", "Student.RegGroupId");
-            query.LeftJoin("dbo.StaffMember as Tutor", "Tutor.Id", "RegGroup.TutorId");
-            query.LeftJoin("dbo.Person as TutorPerson", "TutorPerson.Id", "Tutor.PersonId");
-            query.LeftJoin("dbo.YearGroup", "YearGroup.Id", "Student.YearGroupId");
-            query.LeftJoin("dbo.StaffMember as HeadOfYear", "HeadOfYear.Id", "YearGroup.HeadId");
-            query.LeftJoin("dbo.Person as HeadOfYearPerson", "HeadOfYearPerson.Id", "HeadOfYear.PersonId");
-            query.LeftJoin("dbo.House", "House.Id", "Student.HouseId");
-            query.LeftJoin("dbo.SenStatus", "SenStatus.Id", "Student.SenStatusId");
+            query.LeftJoin("Person as StudentPerson", "StudentPerson.Id", "Student.PersonId");
+            query.LeftJoin("AspNetUsers as User", "User.Id", "StudentPerson.UserId");
+            query.LeftJoin("RegGroup", "RegGroup.Id", "Student.RegGroupId");
+            query.LeftJoin("StaffMember as Tutor", "Tutor.Id", "RegGroup.TutorId");
+            query.LeftJoin("Person as TutorPerson", "TutorPerson.Id", "Tutor.PersonId");
+            query.LeftJoin("YearGroup", "YearGroup.Id", "Student.YearGroupId");
+            query.LeftJoin("StaffMember as HeadOfYear", "HeadOfYear.Id", "YearGroup.HeadId");
+            query.LeftJoin("Person as HeadOfYearPerson", "HeadOfYearPerson.Id", "HeadOfYear.PersonId");
+            query.LeftJoin("House", "House.Id", "Student.HouseId");
+            query.LeftJoin("SenStatus", "SenStatus.Id", "Student.SenStatusId");
         }
 
         private static void ApplySearch(Query query, StudentSearchOptions search)
@@ -124,7 +124,7 @@ namespace MyPortal.Database.Repositories
         {
             var query = SelectAllColumns();
 
-            query.LeftJoin("dbo.CurriculumGroupMembership as Membership", "Membership.StudentId", "Student.Id");
+            query.LeftJoin("CurriculumGroupMembership as Membership", "Membership.StudentId", "Student.Id");
 
             query.Where("Membership.GroupId", groupId);
 

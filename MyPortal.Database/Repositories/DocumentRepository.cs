@@ -29,8 +29,8 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.DocumentType", "DocumentType.Id", "Document.TypeId");
-            query.LeftJoin("dbo.AspNetUsers as User", "User.Id", "Document.CreatedById");
+            query.LeftJoin("DocumentType", "DocumentType.Id", "Document.TypeId");
+            query.LeftJoin("AspNetUsers as User", "User.Id", "Document.CreatedById");
         }
 
         protected override async Task<IEnumerable<Document>> ExecuteQuery(Query query)

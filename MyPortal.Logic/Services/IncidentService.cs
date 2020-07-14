@@ -19,9 +19,12 @@ namespace MyPortal.Logic.Services
         private readonly IBehaviourStatusRepository _statusRepository;
         private readonly IIncidentTypeRepository _incidentTypeRepository;
 
-        public IncidentService(IIncidentRepository incidentRepository) : base("Incident")
+        public IncidentService(IIncidentRepository incidentRepository, IBehaviourOutcomeRepository outcomeRepository, IBehaviourStatusRepository statusRepository, IIncidentTypeRepository incidentTypeRepository) : base("Incident")
         {
             _incidentRepository = incidentRepository;
+            _outcomeRepository = outcomeRepository;
+            _statusRepository = statusRepository;
+            _incidentTypeRepository = incidentTypeRepository;
         }
 
         public override void Dispose()

@@ -1,6 +1,7 @@
 ﻿using System;
 using MyPortal.Database.Models;
 using MyPortal.Logic.Attributes;
+using MyPortal.Logic.Models.ListModels;
 
 namespace MyPortal.Logic.Models.Entity
 {
@@ -45,5 +46,10 @@ namespace MyPortal.Logic.Models.Entity
         public virtual UserModel RecordedBy { get; set; }
 
         public virtual StudentModel Student { get; set; }
+
+        public AchievementListModel ToListModel()
+        {
+            return new AchievementListModel(this);
+        }
     }
 }

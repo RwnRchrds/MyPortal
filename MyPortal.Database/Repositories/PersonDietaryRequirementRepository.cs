@@ -27,8 +27,8 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.Person", "Person.Id", "PersonDietaryRequirement.PersonId");
-            query.LeftJoin("dbo.DietaryRequirement", "DietaryRequirement.Id",
+            query.LeftJoin("Person", "Person.Id", "PersonDietaryRequirement.PersonId");
+            query.LeftJoin("DietaryRequirement", "DietaryRequirement.Id",
                 "PersonDietaryRequirement.DietaryRequirementId");
         }
 

@@ -67,7 +67,7 @@ namespace MyPortal.Database.Helpers
             return props;
         }
 
-        internal static string GetTableName(Type t, string tblAlias = null, string schema = "dbo")
+        internal static string GetTableName(Type t, string tblAlias = null, bool includeSchema = false, string schema = "dbo")
         {
             var entityTable = ((TableAttribute) t.GetCustomAttribute(typeof(TableAttribute)))?.Name ?? t.Name;
             
@@ -83,10 +83,21 @@ namespace MyPortal.Database.Helpers
 
             if (!string.IsNullOrWhiteSpace(tblAlias))
             {
-                return $"{schema}.{entityTable} as {tblAlias}";
+                if (includeSchema)
+                {
+                    return $"{schema}.{entityTable} as {tblAlias}";   
+                }
+                
+                return $"{entityTable} as {tblAlias}";
             }
 
-            return $"{schema}.{entityTable}";
+
+            if (includeSchema)
+            {
+                return $"{schema}.{entityTable}";   
+            }
+            
+            return $"{entityTable}";
         }
     }
 }

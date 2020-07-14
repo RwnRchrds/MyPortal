@@ -32,9 +32,9 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.DiaryEvent as Event", "Event.Id", "Attendee.EventId");
-            query.LeftJoin("dbo.Person", "Person.Id", "Attendee.PersonId");
-            query.LeftJoin("dbo.DiaryEventAttendeeResponse as Response", "Response.Id", "Attendee.ResponseId");
+            query.LeftJoin("DiaryEvent as Event", "Event.Id", "Attendee.EventId");
+            query.LeftJoin("Person", "Person.Id", "Attendee.PersonId");
+            query.LeftJoin("DiaryEventAttendeeResponse as Response", "Response.Id", "Attendee.ResponseId");
         }
 
         protected override async Task<IEnumerable<DiaryEventAttendee>> ExecuteQuery(Query query)

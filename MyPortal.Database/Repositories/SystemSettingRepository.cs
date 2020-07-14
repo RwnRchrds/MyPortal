@@ -29,7 +29,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<SystemSetting> Get(string name)
         {
-            var query = new Query("dbo.SystemSetting");
+            var query = new Query("SystemSetting");
 
             query.Select("SystemSetting.Name, SystemSetting.Type, SystemSetting.Setting");
 

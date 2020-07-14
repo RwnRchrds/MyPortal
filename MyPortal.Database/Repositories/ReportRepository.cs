@@ -26,7 +26,7 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.SystemArea", "SystemArea.Id", "Report.SystemAreaId");
+            query.LeftJoin("SystemArea", "SystemArea.Id", "Report.SystemAreaId");
         }
 
         protected override async Task<IEnumerable<Report>> ExecuteQuery(Query query)

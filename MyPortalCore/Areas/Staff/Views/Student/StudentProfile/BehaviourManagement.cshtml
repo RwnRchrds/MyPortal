@@ -135,3 +135,113 @@
         </div>
     </div>
 </div>
+
+
+
+@section Scripts
+{
+    <script>
+    var urlGetAchievements = "@Url.Action("GetByStudent", "Achievement", new {studentId = Model.Student.Id})";
+    
+    $(document).ready(function () {
+        loadAchievements();
+    });
+    
+    function loadAchievements() {
+                $("#tblAchievements").DataTable({
+                    ajax:
+                    {
+                        url: urlGetAchievements,
+                        dataSrc: ""
+                    },
+                    "dom": "rtilp",
+                    columns: [
+                        {
+                            data: "createdDate",                           
+                        },
+                        {
+                            data: "typeName"
+                        },
+                        {
+                            data: "points"                         
+                        },
+                        {
+                            data: "comments"
+                        },
+                        {
+                            data: "id",
+                            render: function(data, type, child) {
+                                if (child.isDirectory) {
+                                    return `<div class="dropdown ml-2" data-toggle="tooltip" title="" data-placement="left" data-original-title="Quick actions">
+                                                <a href="#" class="btn btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                    <i class="ki ki-more-hor font-size-lg text-primary"></i>
+                                                </a>
+                                                <div class="dropdown-menu dropdown-menu-md dropdown-menu-right" style="position: absolute; transform: translate3d(-217px, 33px, 0px); top: 0px; left: 0px; will-change: transform;" x-placement="bottom-end">
+                                                    <!--begin::Navigation-->
+                                                    <ul class="navi navi-hover py-5">
+                                                        <li class="navi-item">
+                                                            <a href="javascript:editDirectory('${child.id}')" class="navi-link">
+                                                                <span class="navi-icon"><i class="fas fa-fw fa-edit"></i></span>
+                                                                <span class="navi-text">Edit</span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="navi-item">
+                                                            <a href="javascript:deleteDirectory('${child.id}')" class="navi-link">
+                                                                <span class="navi-icon"><i class="fas fa-fw fa-trash-alt"></i></span>
+                                                                <span class="navi-text">Delete</span>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                    <!--end::Navigation-->
+                                                </div>
+                                            </div>`;
+                                } else {
+                                    return `<div class="dropdown ml-2" data-toggle="tooltip" title="" data-placement="left" data-original-title="Quick actions">
+                                                <a href="#" class="btn btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                    <i class="ki ki-more-hor font-size-lg text-primary"></i>
+                                                </a>
+                                                <div class="dropdown-menu dropdown-menu-md dropdown-menu-right" style="position: absolute; transform: translate3d(-217px, 33px, 0px); top: 0px; left: 0px; will-change: transform;" x-placement="bottom-end">
+                                                    <!--begin::Navigation-->
+                                                    <ul class="navi navi-hover py-5">
+                                                        <li class="navi-item">
+                                                            <a href="javascript:webViewDocument('${child.id}')" class="navi-link">
+                                                                <span class="navi-icon"><i class="fab fa-fw fa-google-drive"></i></span>
+                                                                <span class="navi-text">Open in Google Drive</span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="navi-item">
+                                                            <a href="javascript:downloadDocument('${child.id}')" class="navi-link">
+                                                                <span class="navi-icon"><i class="fas fa-fw fa-download"></i></span>
+                                                                <span class="navi-text">Download</span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="navi-item">
+                                                            <a href="javascript:editDocument('${child.id}')" class="navi-link">
+                                                                <span class="navi-icon"><i class="fas fa-fw fa-edit"></i></span>
+                                                                <span class="navi-text">Edit</span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="navi-item">
+                                                            <a href="javascript:deleteDocument('${child.id}')" class="navi-link">
+                                                                <span class="navi-icon"><i class="fas fa-fw fa-trash-alt"></i></span>
+                                                                <span class="navi-text">Delete</span>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                    <!--end::Navigation-->
+                                                </div>
+                                            </div>`;
+                                }
+                            }
+                        }
+                    ],
+                    "ordering": false,
+                    "language":
+                    {
+                        "emptyTable": "No achievements"
+                    },
+                    "responsive": true
+                });
+                }
+    </script>
+}

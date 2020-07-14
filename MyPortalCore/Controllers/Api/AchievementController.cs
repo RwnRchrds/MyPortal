@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -51,7 +52,7 @@ namespace MyPortalCore.Controllers.Api
 
                     var achievements = await _achievementService.GetByStudent(studentId, academicYearId);
 
-                    return Ok(achievements);
+                    return Ok(achievements.Select(x => x.ToListModel()));
                 }
 
                 return Forbid();

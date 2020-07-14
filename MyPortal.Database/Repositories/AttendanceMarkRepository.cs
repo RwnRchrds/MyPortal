@@ -34,11 +34,11 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.Student", "Student.Id", "AttendanceMark.StudentId");
-            query.LeftJoin("dbo.Person AS StudentPerson", "StudentPerson.Id", "Student.PersonId");
-            query.LeftJoin("dbo.AttendanceWeek", "AttendanceWeek.Id", "AttendanceMark.WeekId");
-            query.LeftJoin("dbo.AttendanceWeekPattern", "AttendanceWeekPattern.Id", "AttendanceWeek.WeekPatternId");
-            query.LeftJoin("dbo.AttendancePeriod AS Period", "Period.Id", "AttendanceMark.PeriodId");
+            query.LeftJoin("Student", "Student.Id", "AttendanceMark.StudentId");
+            query.LeftJoin("Person AS StudentPerson", "StudentPerson.Id", "Student.PersonId");
+            query.LeftJoin("AttendanceWeek", "AttendanceWeek.Id", "AttendanceMark.WeekId");
+            query.LeftJoin("AttendanceWeekPattern", "AttendanceWeekPattern.Id", "AttendanceWeek.WeekPatternId");
+            query.LeftJoin("AttendancePeriod AS Period", "Period.Id", "AttendanceMark.PeriodId");
         }
 
         protected override async Task<IEnumerable<AttendanceMark>> ExecuteQuery(Query query)

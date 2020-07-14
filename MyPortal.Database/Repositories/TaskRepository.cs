@@ -31,10 +31,10 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.Person as AssignedTo", "AssignedTo.Id", "Task.AssignedToId");
-            query.LeftJoin("dbo.AspNetUsers as AssignedBy", "AssignedBy.Id", "Task.AssignedById");
-            query.LeftJoin("dbo.Person as AssignedByPerson", "AssignedByPerson.UserId", "AssignedBy.Id");
-            query.LeftJoin("dbo.TaskType as Type", "Type.Id", "Task.TypeId");
+            query.LeftJoin("Person as AssignedTo", "AssignedTo.Id", "Task.AssignedToId");
+            query.LeftJoin("AspNetUsers as AssignedBy", "AssignedBy.Id", "Task.AssignedById");
+            query.LeftJoin("Person as AssignedByPerson", "AssignedByPerson.UserId", "AssignedBy.Id");
+            query.LeftJoin("TaskType as Type", "Type.Id", "Task.TypeId");
         }
 
         protected override async System.Threading.Tasks.Task<IEnumerable<Task>> ExecuteQuery(Query query)

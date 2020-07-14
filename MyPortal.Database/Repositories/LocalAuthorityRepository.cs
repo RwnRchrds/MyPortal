@@ -21,7 +21,7 @@ namespace MyPortal.Database.Repositories
         {
             var query = SelectAllColumns();
 
-            query.LeftJoin("dbo.School", "School.LocalAuthorityId", "LocalAuthority.Id");
+            query.LeftJoin("School", "School.LocalAuthorityId", "LocalAuthority.Id");
 
             query.Where("School.Local", true);
 

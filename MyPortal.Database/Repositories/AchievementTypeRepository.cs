@@ -23,7 +23,7 @@ namespace MyPortal.Database.Repositories
         {
             var query = SelectAllColumns();
 
-            query.LeftJoin("dbo.Achievement", "Achievement.AchievementTypeId", "AchievementType.Id");
+            query.LeftJoin("Achievement", "Achievement.AchievementTypeId", "AchievementType.Id");
 
             query.GroupBy(EntityHelper.GetPropertyNames(typeof(AchievementType)));
 

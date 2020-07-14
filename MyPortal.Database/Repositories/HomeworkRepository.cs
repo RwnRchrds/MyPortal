@@ -25,7 +25,7 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.Directory", "Directory.Id", "Homework.DirectoryId");
+            query.LeftJoin("Directory", "Directory.Id", "Homework.DirectoryId");
         }
 
         protected override async Task<IEnumerable<Homework>> ExecuteQuery(Query query)

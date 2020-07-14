@@ -31,7 +31,7 @@ namespace MyPortal.Database.Repositories
             query.SelectAll(typeof(Student));
             query.SelectAll(typeof(Person), "StudentPerson");
             query.SelectAll(typeof(Location));
-            query.SelectAll(typeof(ApplicationUser));
+            query.SelectAll(typeof(ApplicationUser), "RecordedBy");
             query.SelectAll(typeof(Person), "RecordedByPerson");
 
             JoinRelated(query);
@@ -39,14 +39,14 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.AcademicYear", "AcademicYear.Id", "Achievement.AcademicYearId");
-            query.LeftJoin("dbo.AchievementType", "AchievementType.Id", "Achievement.AchievementTypeId");
-            query.LeftJoin("dbo.AchievementOutcome", "AchievementOutcome.Id", "Achievement.OutcomeId");
-            query.LeftJoin("dbo.Student", "Student.Id", "Achievement.StudentId");
-            query.LeftJoin("dbo.Person AS StudentPerson", "StudentPerson.Id", "Student.PersonId");
-            query.LeftJoin("dbo.Location", "Location.Id", "Achievement.LocationId");
-            query.LeftJoin("dbo.AspNetUsers", "AspNetUsers.Id", "Achievement.RecordedById");
-            query.LeftJoin("dbo.Person", "Person.Id", "Person.UserId");
+            query.LeftJoin("AcademicYear", "AcademicYear.Id", "Achievement.AcademicYearId");
+            query.LeftJoin("AchievementType", "AchievementType.Id", "Achievement.AchievementTypeId");
+            query.LeftJoin("AchievementOutcome", "AchievementOutcome.Id", "Achievement.OutcomeId");
+            query.LeftJoin("Student", "Student.Id", "Achievement.StudentId");
+            query.LeftJoin("Person AS StudentPerson", "StudentPerson.Id", "Student.PersonId");
+            query.LeftJoin("Location", "Location.Id", "Achievement.LocationId");
+            query.LeftJoin("AspNetUsers as RecordedBy", "RecordedBy.Id", "Achievement.RecordedById");
+            query.LeftJoin("Person as RecordedByPerson", "RecordedByPerson.UserId", "RecordedBy.Id");
         }
 
         public async Task<int> GetCountByStudent(Guid studentId, Guid academicYearId)

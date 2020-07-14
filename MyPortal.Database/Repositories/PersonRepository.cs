@@ -42,7 +42,7 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.AspNetUsers as User", "User.Id", "Person.UserId");
+            query.LeftJoin("AspNetUsers as User", "User.Id", "Person.UserId");
         }
 
         private static void ApplySearch(Query query, PersonSearchOptions search)
@@ -72,10 +72,10 @@ namespace MyPortal.Database.Repositories
         {
             var indicator = new PersonTypeIndicator();
 
-            var userQuery = new Query("dbo.Person").Where(q => q.WhereNotNull("Person.UserId").Where("Person.Id", personId)).AsCount();
-            var studentQuery = new Query("dbo.Student").Where("Student.PersonId", personId).AsCount();
-            var employeeQuery = new Query("dbo.StaffMember").Where("StaffMember.PersonId", personId).AsCount();
-            var contactQuery = new Query("dbo.Contact").Where("Contact.PersonId", personId).AsCount();
+            var userQuery = new Query("Person").Where(q => q.WhereNotNull("Person.UserId").Where("Person.Id", personId)).AsCount();
+            var studentQuery = new Query("Student").Where("Student.PersonId", personId).AsCount();
+            var employeeQuery = new Query("StaffMember").Where("StaffMember.PersonId", personId).AsCount();
+            var contactQuery = new Query("Contact").Where("Contact.PersonId", personId).AsCount();
 
             // TODO: Agent and applicant queries when available
 

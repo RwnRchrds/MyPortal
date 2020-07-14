@@ -22,7 +22,7 @@ namespace MyPortal.Database.Repositories
         {
             var query = SelectAllColumns();
 
-            query.LeftJoin("dbo.CurriculumBandBlock as BandBlock", "BandBlock.BlockId", "Block.Id");
+            query.LeftJoin("CurriculumBandBlock as BandBlock", "BandBlock.BlockId", "Block.Id");
 
             query.Where("BandBlock.BandId", bandId);
 
@@ -35,8 +35,8 @@ namespace MyPortal.Database.Repositories
 
             query.Select("Band.AcademicYearId");
 
-            query.LeftJoin("dbo.CurriculumBandBlockAssignment as Assignment", "Assignment.BlockId", "Block.Id");
-            query.LeftJoin("dbo.CurriculumBand as Band", "Band.Id", "Assignment.BandId");
+            query.LeftJoin("CurriculumBandBlockAssignment as Assignment", "Assignment.BlockId", "Block.Id");
+            query.LeftJoin("CurriculumBand as Band", "Band.Id", "Assignment.BandId");
 
             query.Where("Block.Id", blockId);
 
@@ -49,8 +49,8 @@ namespace MyPortal.Database.Repositories
         {
             var query = SelectAllColumns();
 
-            query.LeftJoin("dbo.CurriculumBandBlockAssignment as Assignment", "Assignment.BlockId", "Block.Id");
-            query.LeftJoin("dbo.CurriculumBand as Band", "Band.Id", "Assignment.BandId");
+            query.LeftJoin("CurriculumBandBlockAssignment as Assignment", "Assignment.BlockId", "Block.Id");
+            query.LeftJoin("CurriculumBand as Band", "Band.Id", "Assignment.BandId");
 
             query.Where("Band.AcademicYearId", academicYearId);
             query.Where("Block.Code", code);

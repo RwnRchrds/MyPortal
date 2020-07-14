@@ -10,6 +10,11 @@ namespace MyPortal.Database.BaseTypes
 {
     public abstract class LookupItem : IEntity
     {
+        public LookupItem()
+        {
+            Active = true;
+        }
+        
         [Key]
         [Column(Order = 0)]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

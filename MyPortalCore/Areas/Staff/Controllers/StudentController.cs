@@ -35,6 +35,7 @@ namespace MyPortalCore.Areas.Staff.Controllers
             _logNoteService = logNoteService;
             _documentService = documentService;
             _achievementService = achievementService;
+            _incidentService = incidentService;
             _attendanceMarkService = attendanceMarkService;
             _taskService = taskService;
         }

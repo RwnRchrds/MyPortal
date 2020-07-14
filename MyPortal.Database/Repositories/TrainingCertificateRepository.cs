@@ -28,9 +28,9 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.StaffMember", "StaffMember.Id", "TrainingCertificate.StaffId");
-            query.LeftJoin("dbo.TrainingCourse", "TrainingCourse.Id", "TrainingCertificate.CourseId");
-            query.LeftJoin("dbo.TrainingCertificateStatus", "TrainingCertificateStatus.Id",
+            query.LeftJoin("StaffMember", "StaffMember.Id", "TrainingCertificate.StaffId");
+            query.LeftJoin("TrainingCourse", "TrainingCourse.Id", "TrainingCertificate.CourseId");
+            query.LeftJoin("TrainingCertificateStatus", "TrainingCertificateStatus.Id",
                 "TrainingCertificate.StatusId");
         }
 

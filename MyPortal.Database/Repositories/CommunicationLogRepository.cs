@@ -29,7 +29,7 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.CommunicationType", "CommunicationType.Id", "CommnicationLog.CommunicationTypeId");
+            query.LeftJoin("CommunicationType", "CommunicationType.Id", "CommnicationLog.CommunicationTypeId");
         }
 
         protected override async Task<IEnumerable<CommunicationLog>> ExecuteQuery(Query query)

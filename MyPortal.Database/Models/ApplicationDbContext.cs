@@ -11,7 +11,10 @@ namespace MyPortal.Database.Models
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
+            
         }
+
+        public bool TestData { get; set; }
 
         public virtual DbSet<AcademicYear> AcademicYears { get; set; }
         public virtual DbSet<Achievement> Achievements { get; set; }
@@ -129,364 +132,367 @@ namespace MyPortal.Database.Models
         public virtual DbSet<TrainingCertificateStatus> TrainingCertificateStatus { get; set; }
         public virtual DbSet<TrainingCourse> TrainingCourses { get; set; }
         public virtual DbSet<YearGroup> YearGroups { get; set; }
-
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<AcademicYear>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<Achievement>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<AchievementOutcome>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<AchievementType>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<Address>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<AddressPerson>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<ApplicationPermission>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<ApplicationPermission>()
-                .HasIndex(e => e.ClaimValue)
-                .IsUnique();
-
-            modelBuilder.Entity<ApplicationRolePermission>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<Aspect>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<AspectType>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<AttendanceCode>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<AttendanceCodeMeaning>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<AttendanceMark>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<AttendanceWeek>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<AttendanceWeekPattern>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<BasketItem>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<BehaviourOutcome>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<BehaviourStatus>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<Bulletin>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<Class>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<Comment>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<CommentBank>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<CommunicationLog>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<CommunicationType>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<Contact>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<Cover>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<CurriculumBand>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<CurriculumBand>()
-                .HasIndex(e => new {e.AcademicYearId, e.Code})
-                .IsUnique();
-            
-            modelBuilder.Entity<CurriculumBandBlockAssignment>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-            
-            modelBuilder.Entity<CurriculumBlock>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-            
-            modelBuilder.Entity<CurriculumGroup>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-            
-            modelBuilder.Entity<CurriculumGroupMembership>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<CurriculumYearGroup>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<Detention>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<DetentionType>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<DiaryEvent>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<DiaryEventAttendee>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<DiaryEventAttendeeResponse>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<DiaryEventTemplate>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<DiaryEventType>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<DietaryRequirement>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<Directory>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<Document>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<DocumentType>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<EmailAddress>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<EmailAddressType>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<Enrolment>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<ExclusionReason>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<ExclusionType>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<GiftedTalented>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<GovernanceType>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<Grade>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<GradeSet>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<Homework>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<HomeworkSubmission>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<House>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<Incident>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<IncidentDetention>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<IncidentType>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<IntakeType>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<LessonPlan>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<LessonPlanTemplate>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<LocalAuthority>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<Location>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<MarksheetTemplate>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-            
-            modelBuilder.Entity<MarksheetColumn>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<MedicalCondition>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<MedicalEvent>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<Observation>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<ObservationOutcome>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<Period>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<Person>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<PersonCondition>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<PersonDietaryRequirement>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<Phase>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<PhoneNumber>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<PhoneNumberType>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<Product>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<ProductType>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<Room>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<RoomClosure>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<RoomClosureReason>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<LogNote>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<LogNoteType>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<RegGroup>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<RelationshipType>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<Report>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<Result>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<ResultSet>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<Sale>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<School>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<SchoolType>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<SenEvent>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<SenEventType>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<SenProvision>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<SenProvisionType>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<SenReview>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<SenReviewType>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<SenStatus>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<Session>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<StaffMember>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<StaffAbsence>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<StaffAbsenceType>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<StaffIllnessType>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<Student>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<StudentContact>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<StudyTopic>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<Subject>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<SubjectStaffMember>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<SubjectStaffMemberRole>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<SystemArea>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<Task>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<TaskType>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<TrainingCertificate>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<TrainingCertificateStatus>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<TrainingCourse>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-
-            modelBuilder.Entity<YearGroup>()
-                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+            if (!TestData)
+            {
+                modelBuilder.Entity<AcademicYear>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<Achievement>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<AchievementOutcome>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<AchievementType>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<Address>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<AddressPerson>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<ApplicationPermission>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<ApplicationPermission>()
+                                .HasIndex(e => e.ClaimValue)
+                                .IsUnique();
+                
+                            modelBuilder.Entity<ApplicationRolePermission>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<Aspect>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<AspectType>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<AttendanceCode>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<AttendanceCodeMeaning>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<AttendanceMark>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<AttendanceWeek>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<AttendanceWeekPattern>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<BasketItem>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<BehaviourOutcome>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<BehaviourStatus>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<Bulletin>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<Class>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<Comment>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<CommentBank>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<CommunicationLog>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<CommunicationType>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<Contact>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<Cover>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<CurriculumBand>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<CurriculumBand>()
+                                .HasIndex(e => new {e.AcademicYearId, e.Code})
+                                .IsUnique();
+                            
+                            modelBuilder.Entity<CurriculumBandBlockAssignment>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                            
+                            modelBuilder.Entity<CurriculumBlock>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                            
+                            modelBuilder.Entity<CurriculumGroup>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                            
+                            modelBuilder.Entity<CurriculumGroupMembership>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<CurriculumYearGroup>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<Detention>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<DetentionType>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<DiaryEvent>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<DiaryEventAttendee>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<DiaryEventAttendeeResponse>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<DiaryEventTemplate>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<DiaryEventType>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<DietaryRequirement>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<Directory>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<Document>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<DocumentType>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<EmailAddress>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<EmailAddressType>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<Enrolment>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<ExclusionReason>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<ExclusionType>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<GiftedTalented>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<GovernanceType>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<Grade>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<GradeSet>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<Homework>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<HomeworkSubmission>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<House>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<Incident>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<IncidentDetention>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<IncidentType>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<IntakeType>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<LessonPlan>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<LessonPlanTemplate>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<LocalAuthority>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<Location>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<MarksheetTemplate>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                            
+                            modelBuilder.Entity<MarksheetColumn>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<MedicalCondition>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<MedicalEvent>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<Observation>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<ObservationOutcome>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<Period>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<Person>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<PersonCondition>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<PersonDietaryRequirement>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<Phase>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<PhoneNumber>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<PhoneNumberType>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<Product>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<ProductType>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<Room>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<RoomClosure>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<RoomClosureReason>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<LogNote>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<LogNoteType>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<RegGroup>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<RelationshipType>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<Report>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<Result>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<ResultSet>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<Sale>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<School>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<SchoolType>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<SenEvent>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<SenEventType>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<SenProvision>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<SenProvisionType>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<SenReview>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<SenReviewType>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<SenStatus>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<Session>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<StaffMember>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<StaffAbsence>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<StaffAbsenceType>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<StaffIllnessType>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<Student>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<StudentContact>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<StudyTopic>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<Subject>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<SubjectStaffMember>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<SubjectStaffMemberRole>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<SystemArea>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<Task>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<TaskType>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<TrainingCertificate>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<TrainingCertificateStatus>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<TrainingCourse>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                
+                            modelBuilder.Entity<YearGroup>()
+                                .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+            }
 
             modelBuilder.Entity<Aspect>()
                 .HasMany(e => e.Results)

@@ -26,7 +26,7 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.DiaryEventType as EventType", "EventType.Id", "DiaryEventTemplate.EventTypeId");
+            query.LeftJoin("DiaryEventType as EventType", "EventType.Id", "DiaryEventTemplate.EventTypeId");
         }
 
         protected override async Task<IEnumerable<DiaryEventTemplate>> ExecuteQuery(Query query)

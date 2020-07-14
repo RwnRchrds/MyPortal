@@ -103,6 +103,7 @@ namespace MyPortalCore
             // MyPortal entity repositories (used by business services)
             services.AddScoped<IAcademicYearRepository, AcademicYearRepository>();
             services.AddScoped<IAchievementRepository, AchievementRepository>();
+            services.AddScoped<IAchievementOutcomeRepository, AchievementOutcomeRepository>();
             services.AddScoped<IAchievementTypeRepository, AchievementTypeRepository>();
             services.AddScoped<IAddressPersonRepository, AddressPersonRepository>();
             services.AddScoped<IAddressRepository, AddressRepository>();
@@ -116,6 +117,8 @@ namespace MyPortalCore
             services.AddScoped<IAttendanceMarkRepository, AttendanceMarkRepository>();
             services.AddScoped<IAttendanceWeekRepository, AttendanceWeekRepository>();
             services.AddScoped<IBasketItemRepository, BasketItemRepository>();
+            services.AddScoped<IBehaviourOutcomeRepository, BehaviourOutcomeRepository>();
+            services.AddScoped<IBehaviourStatusRepository, BehaviourStatusRepository>();
             services.AddScoped<IBulletinRepository, BulletinRepository>();
             services.AddScoped<IClassRepository, ClassRepository>();
             services.AddScoped<ICommentBankRepository, CommentBankRepository>();
@@ -210,6 +213,7 @@ namespace MyPortalCore
             services.AddScoped<IAttendanceWeekService, AttendanceWeekService>();
             services.AddScoped<IDirectoryService, DirectoryService>();
             services.AddScoped<IDocumentService, DocumentService>();
+            services.AddScoped<IIncidentService, IncidentService>();
             services.AddScoped<ILogNoteService, LogNoteService>();
             services.AddScoped<IPeriodService, PeriodService>();
             services.AddScoped<IPersonService, PersonService>();

@@ -35,12 +35,12 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.LocalAuthority", "LocalAuthority.Id", "School.LocalAuthorityId");
-            query.LeftJoin("dbo.Phase", "Phase.Id", "School.PhaseId");
-            query.LeftJoin("dbo.SchoolType", "SchoolType.Id", "School.TypeId");
-            query.LeftJoin("dbo.GovernanceType", "GovernanceType.Id", "School.GovernanceTypeId");
-            query.LeftJoin("dbo.IntakeType", "IntakeType.Id", "School.IntakeTypeId");
-            query.LeftJoin("dbo.Person", "Person.Id", "School.HeadTeacherId");
+            query.LeftJoin("LocalAuthority", "LocalAuthority.Id", "School.LocalAuthorityId");
+            query.LeftJoin("Phase", "Phase.Id", "School.PhaseId");
+            query.LeftJoin("SchoolType", "SchoolType.Id", "School.TypeId");
+            query.LeftJoin("GovernanceType", "GovernanceType.Id", "School.GovernanceTypeId");
+            query.LeftJoin("IntakeType", "IntakeType.Id", "School.IntakeTypeId");
+            query.LeftJoin("Person", "Person.Id", "School.HeadTeacherId");
         }
 
         public async Task<string> GetLocalSchoolName()

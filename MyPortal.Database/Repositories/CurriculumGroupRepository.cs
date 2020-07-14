@@ -25,7 +25,7 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.CurriculumBlock as Block", "Block.Id", "CurriculumGroup.BlockId");
+            query.LeftJoin("CurriculumBlock as Block", "Block.Id", "CurriculumGroup.BlockId");
         }
 
         protected override async Task<IEnumerable<CurriculumGroup>> ExecuteQuery(Query query)
@@ -46,8 +46,8 @@ namespace MyPortal.Database.Repositories
         {
             var query = SelectAllColumns();
 
-            query.LeftJoin("dbo.CurriculumBandBlockAssignment as Assignment", "Assignment.BlockId", "Block.Id");
-            query.LeftJoin("dbo.CurriculumBand as Band", "Band.Id", "Assignment.BandId");
+            query.LeftJoin("CurriculumBandBlockAssignment as Assignment", "Assignment.BlockId", "Block.Id");
+            query.LeftJoin("CurriculumBand as Band", "Band.Id", "Assignment.BandId");
 
             query.Where("Band.AcademicYearId", academicYearId);
             query.Where("CurriculumGroup.Code", code);

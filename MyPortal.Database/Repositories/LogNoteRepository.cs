@@ -34,12 +34,12 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.LogNoteType", "LogNoteType.Id", "LogNote.TypeId");
-            query.LeftJoin("dbo.AspNetUsers as User", "User.Id", "LogNote.CreatedById");
-            query.LeftJoin("dbo.Person as AuthorPerson", "AuthorPerson.UserId", "User.Id");
-            query.LeftJoin("dbo.Student", "Student.Id", "LogNote.StudentId");
-            query.LeftJoin("dbo.Person as StudentPerson", "StudentPerson.Id", "Student.PersonId");
-            query.LeftJoin("dbo.AcademicYear", "AcademicYear.Id", "LogNote.AcademicYearId");
+            query.LeftJoin("LogNoteType", "LogNoteType.Id", "LogNote.TypeId");
+            query.LeftJoin("AspNetUsers as User", "User.Id", "LogNote.CreatedById");
+            query.LeftJoin("Person as AuthorPerson", "AuthorPerson.UserId", "User.Id");
+            query.LeftJoin("Student", "Student.Id", "LogNote.StudentId");
+            query.LeftJoin("Person as StudentPerson", "StudentPerson.Id", "Student.PersonId");
+            query.LeftJoin("AcademicYear", "AcademicYear.Id", "LogNote.AcademicYearId");
         }
 
         protected override async Task<IEnumerable<LogNote>> ExecuteQuery(Query query)

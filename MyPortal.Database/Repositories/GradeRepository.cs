@@ -26,7 +26,7 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.GradeSet", "GradeSet.Id", "Grade.GradeSetId");
+            query.LeftJoin("GradeSet", "GradeSet.Id", "Grade.GradeSetId");
         }
 
         protected override async Task<IEnumerable<Grade>> ExecuteQuery(Query query)

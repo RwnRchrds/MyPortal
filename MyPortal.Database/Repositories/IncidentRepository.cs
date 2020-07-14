@@ -35,15 +35,15 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.AcademicYear", "AcademicYear.Id", "Incident.AcademicYearId");
-            query.LeftJoin("dbo.IncidentType", "IncidentType.Id", "Incident.BehaviourTypeId");
-            query.LeftJoin("dbo.Student", "Student.Id", "Incident.StudentId");
-            query.LeftJoin("dbo.Person as StudentPerson", "StudentPerson.Id", "Student.PersonId");
-            query.LeftJoin("dbo.BehaviourOutcome", "BehaviourOutcome.Id", "Incident.OutcomeId");
-            query.LeftJoin("dbo.BehaviourStatus", "BehaviourStatus.Id", "Incident.StatusId");
-            query.LeftJoin("dbo.Location", "Location.Id", "Incident.LocationId");
-            query.LeftJoin("dbo.AspNetUsers as User", "User.Id", "Incident.RecordedById");
-            query.LeftJoin("dbo.Person as RecordedByPerson", "RecordedByPerson.UserId", "User.Id");
+            query.LeftJoin("AcademicYear", "AcademicYear.Id", "Incident.AcademicYearId");
+            query.LeftJoin("IncidentType", "IncidentType.Id", "Incident.BehaviourTypeId");
+            query.LeftJoin("Student", "Student.Id", "Incident.StudentId");
+            query.LeftJoin("Person as StudentPerson", "StudentPerson.Id", "Student.PersonId");
+            query.LeftJoin("BehaviourOutcome", "BehaviourOutcome.Id", "Incident.OutcomeId");
+            query.LeftJoin("BehaviourStatus", "BehaviourStatus.Id", "Incident.StatusId");
+            query.LeftJoin("Location", "Location.Id", "Incident.LocationId");
+            query.LeftJoin("AspNetUsers as User", "User.Id", "Incident.RecordedById");
+            query.LeftJoin("Person as RecordedByPerson", "RecordedByPerson.UserId", "User.Id");
         }
 
         protected override async Task<IEnumerable<Incident>> ExecuteQuery(Query query)

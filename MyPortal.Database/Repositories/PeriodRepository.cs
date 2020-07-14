@@ -25,7 +25,7 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.AttendanceWeekPattern as WeekPattern", "WeekPattern.Id", "Period.WeekPatternId");
+            query.LeftJoin("AttendanceWeekPattern as WeekPattern", "WeekPattern.Id", "Period.WeekPatternId");
         }
 
         protected override async Task<IEnumerable<Period>> ExecuteQuery(Query query)

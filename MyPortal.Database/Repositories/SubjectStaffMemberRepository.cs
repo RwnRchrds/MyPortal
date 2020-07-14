@@ -29,10 +29,10 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("dbo.Subject", "Subject.Id", "SubjectStaffMember.SubjectId");
-            query.LeftJoin("dbo.StaffMember", "StaffMember.Id", "SubjectStaffMember.StaffMemberId");
-            query.LeftJoin("dbo.Person", "Person.Id", "StaffMember.PersonId");
-            query.LeftJoin("dbo.SubjectStaffMemberRole as Role", "Role.Id", "SubjectStaffMember.RoleId");
+            query.LeftJoin("Subject", "Subject.Id", "SubjectStaffMember.SubjectId");
+            query.LeftJoin("StaffMember", "StaffMember.Id", "SubjectStaffMember.StaffMemberId");
+            query.LeftJoin("Person", "Person.Id", "StaffMember.PersonId");
+            query.LeftJoin("SubjectStaffMemberRole as Role", "Role.Id", "SubjectStaffMember.RoleId");
         }
 
         protected override async Task<IEnumerable<SubjectStaffMember>> ExecuteQuery(Query query)
