@@ -27,8 +27,9 @@ namespace MyPortalCore.Areas.Staff.Controllers
         private IIncidentService _incidentService;
         private IAttendanceMarkService _attendanceMarkService;
         private ITaskService _taskService;
+        private ILocationService _locationService;
 
-        public StudentController(IStudentService studentService, IPersonService personService, ILogNoteService logNoteService, IApplicationUserService userService, IDocumentService documentService, IAchievementService achievementService, IIncidentService incidentService, IAttendanceMarkService attendanceMarkService, ITaskService taskService) : base(userService)
+        public StudentController(IStudentService studentService, IPersonService personService, ILogNoteService logNoteService, IApplicationUserService userService, IDocumentService documentService, IAchievementService achievementService, IIncidentService incidentService, IAttendanceMarkService attendanceMarkService, ITaskService taskService, ILocationService locationService) : base(userService)
         {
             _studentService = studentService;
             _personService = personService;
@@ -38,6 +39,7 @@ namespace MyPortalCore.Areas.Staff.Controllers
             _incidentService = incidentService;
             _attendanceMarkService = attendanceMarkService;
             _taskService = taskService;
+            _locationService = locationService;
         }
 
         
@@ -79,6 +81,7 @@ namespace MyPortalCore.Areas.Staff.Controllers
             viewModel.LogNoteTypes = (await _logNoteService.GetTypes()).ToSelectList();
             viewModel.TaskTypes = (await _taskService.GetTypes(false)).ToSelectList("Select Task Type");
             viewModel.AchievementPoints = await _achievementService.GetPointsByStudent(studentId, academicYearId);
+            viewModel.BehaviourPoints = await _incidentService.GetPointsByStudent(studentId, academicYearId);
 
             var attendanceSummary = await _attendanceMarkService.GetSummaryByStudent(studentId, academicYearId, true);
 
@@ -112,12 +115,21 @@ namespace MyPortalCore.Areas.Staff.Controllers
         {
             var viewModel = new StudentBehaviourManagementViewModel();
 
-            viewModel.Student = await _studentService.GetById(studentId);
-            viewModel.AchievementTypes = (await _achievementService.GetTypes()).ToSelectList();
-            viewModel.AchievementOutcomes = (await _achievementService.GetOutcomes()).ToSelectList();
-            viewModel.IncidentOutcomes = (await _incidentService.GetOutcomes()).ToSelectList();
-            viewModel.IncidentTypes = (await _incidentService.GetTypes()).ToSelectList();
-            viewModel.IncidentStatus = (await _incidentService.GetStatus()).ToSelectList();
+            var student = await _studentService.GetById(studentId);
+            var achievementTypes = (await _achievementService.GetTypes()).ToSelectList("Select Type");
+            var achievementOutcomes = (await _achievementService.GetOutcomes()).ToSelectList("Select Award");
+            var incidentOutcomes = (await _incidentService.GetOutcomes()).ToSelectList("Select Action");
+            var incidentTypes = (await _incidentService.GetTypes()).ToSelectList("Select Type");
+            var incidentStatus = (await _incidentService.GetStatus()).ToSelectList("Select Status");
+            var locations = (await _locationService.GetLocations()).ToSelectList("Select Location");
+
+            viewModel.Student = student;
+            viewModel.AchievementTypes = achievementTypes;
+            viewModel.AchievementOutcomes = achievementOutcomes;
+            viewModel.IncidentOutcomes = incidentOutcomes;
+            viewModel.IncidentTypes = incidentTypes;
+            viewModel.IncidentStatus = incidentStatus;
+            viewModel.Locations = locations;
 
             return View("StudentProfile/BehaviourManagement", viewModel);
         }

@@ -37,7 +37,7 @@
                                     <span class="card-label font-weight-bolder text-dark">Achievements</span>
                                 </h3>
                                 <div class="card-toolbar">
-                                    <button class="btn btn-light-primary font-weight-bolder" id="btnNewAchievement">
+                                    <button class="btn btn-light-primary font-weight-bolder" id="new_achievement_button">
                                         <span class="svg-icon svg-icon-md">
                                             <i class="fas fa-plus"></i>
                                         </span>Add Achievement
@@ -88,7 +88,7 @@
                                     <span class="card-label font-weight-bolder text-dark">Behaviour</span>
                                 </h3>
                                 <div class="card-toolbar">
-                                    <button class="btn btn-light-primary font-weight-bolder" id="btnNewIncident">
+                                    <button class="btn btn-light-primary font-weight-bolder" id="new_incident_button">
                                         <span class="svg-icon svg-icon-md">
                                             <i class="fas fa-plus"></i>
                                         </span>Add Incident
@@ -101,7 +101,7 @@
                                 <div class="container">
                                     <div class="row mt-2">
                                         <div class="col-md-12">
-                                            <table id="tblIncidents" class="table" data-directory-id="@Model.Student.Person.DirectoryId">
+                                            <table id="tblIncidents" class="table" data-student-id="@Model.Student.Id">
                                                 <thead>
                                                 <tr>
                                                     <th>
@@ -136,16 +136,390 @@
     </div>
 </div>
 
+<div class="modal fade" id="achievement_modal" tabindex="-1" role="dialog" aria-labelledby="achievement_modal" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="achievement_modal_title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i aria-hidden="true" class="ki ki-close"></i>
+                </button>
+            </div>
+            <form id="achievement_form">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="achievement_type">Achievement Type</label>
+                        <select asp-for="AchievementModel.AchievementTypeId" asp-items="Model.AchievementTypes" name="AchievementTypeId" class="form-control" id="achievement_type"></select>
+                        @Html.ValidationMessageFor(x => x.AchievementModel.AchievementTypeId, null, new {data_valmsg_for = "AchievementTypeId", @class = "text-danger"})
+                    </div>
+                    <div class="form-group">
+                        <label for="achievement_location">Location</label>
+                        <select asp-for="AchievementModel.LocationId" asp-items="Model.Locations" class="form-control" id="achievement_location" name="LocationId"></select>
+                        @Html.ValidationMessageFor(x => x.AchievementModel.LocationId, null, new {data_valmsg_for = "LocationId", @class = "text-danger"})
+                    </div>
+                    <div class="form-group">
+                        <label for="achievement_comments">Comments</label>
+                        <textarea asp-for="AchievementModel.Comments" class="form-control" id="achievement_comments" name="Comments" rows="7"></textarea>
+                        @Html.ValidationMessageFor(x => x.AchievementModel.Comments, null, new {data_valmsg_for = "Comments", @class = "text-danger"})
+                    </div>
+                    <div class="form-group">
+                        <label for="achievement_points">Points</label>
+                        <input type="number" asp-for="AchievementModel.Points" class="form-control" id="achievement_points" name="Points"/>
+                        @Html.ValidationMessageFor(x => x.AchievementModel.Points, null, new {data_valmsg_for = "Points", @class = "text-danger"})
+                    </div>
+                    <div class="form-group">
+                        <label for="achievement_outcome">Award Given</label>
+                        <select asp-for="AchievementModel.OutcomeId" asp-items="Model.AchievementOutcomes" class="form-control" id="achievement_outcome" name="OutcomeId"></select>
+                        @Html.ValidationMessageFor(x => x.AchievementModel.OutcomeId, null, new {data_valmsg_for = "OutcomeId", @class = "text-danger"})
+                    </div>
+                    <input type="hidden" name="StudentId" id="achievement_studentId"/>
+                    <input type="hidden" name="Id" id="achievement_id"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary font-weight-bold" id="achievement_save">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
+<div class="modal fade" id="incident_modal" tabindex="-1" role="dialog" aria-labelledby="incident_modal" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="incident_modal_title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i aria-hidden="true" class="ki ki-close"></i>
+                </button>
+            </div>
+            <form id="incident_form">
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <div class="col-lg-6">
+                            <label for="incident_type">Incident Type</label>
+                            <select asp-for="IncidentModel.BehaviourTypeId" asp-items="Model.IncidentTypes" name="BehaviourTypeId" class="form-control" id="incident_type"></select>
+                            @Html.ValidationMessageFor(x => x.IncidentModel.BehaviourTypeId, null, new {data_valmsg_for = "BehaviourTypeId", @class = "text-danger"})
+                        </div>  
+                        <div class="col-lg-6">
+                            <label for="incident_location">Location</label>
+                            <select asp-for="IncidentModel.LocationId" asp-items="Model.Locations" class="form-control" id="incident_location" name="LocationId"></select>
+                            @Html.ValidationMessageFor(x => x.IncidentModel.LocationId, null, new {data_valmsg_for = "LocationId", @class = "text-danger"})
+                        </div>   
+                    </div>
+                    <div class="form-group">
+                        <label for="incident_comments">Comments</label>
+                        <textarea asp-for="IncidentModel.Comments" class="form-control" id="incident_comments" name="Comments" rows="7"></textarea>
+                        @Html.ValidationMessageFor(x => x.IncidentModel.Comments, null, new {data_valmsg_for = "Comments", @class = "text-danger"})
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-lg-6">
+                            <label for="incident_points">Points</label>
+                            <input type="number" asp-for="IncidentModel.Points" class="form-control" id="incident_points" name="Points"/>
+                            @Html.ValidationMessageFor(x => x.IncidentModel.Points, null, new {data_valmsg_for = "Points", @class = "text-danger"})                            
+                        </div>      
+                        <div class="col-lg-6">
+                            <label for="incident_status">Status</label>
+                            <select asp-for="IncidentModel.StatusId" asp-items="Model.IncidentStatus" class="form-control" id="incident_status" name="StatusId"></select>
+                            @Html.ValidationMessageFor(x => x.IncidentModel.StatusId, null, new {data_valmsg_for = "StatusId", @class="text-danger"})
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-lg-6">
+                            <label for="achievement_outcome">Action Taken</label>
+                            <select asp-for="IncidentModel.OutcomeId" asp-items="Model.IncidentOutcomes" class="form-control" id="incident_outcome" name="OutcomeId"></select>
+                            @Html.ValidationMessageFor(x => x.IncidentModel.OutcomeId, null, new {data_valmsg_for = "OutcomeId", @class = "text-danger"})                            
+                        </div>
+                    </div>                    
+                    <input type="hidden" name="StudentId" id="incident_studentId"/>
+                    <input type="hidden" name="Id" id="incident_id"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary font-weight-bold" id="incident_save">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 @section Scripts
 {
     <script>
     var urlGetAchievements = "@Url.Action("GetByStudent", "Achievement", new {studentId = Model.Student.Id})";
+    var urlGetAchievementById = "@Url.Action("GetById", "Achievement")";
+    var urlCreateAchievement = "@Url.Action("Create", "Achievement")";
+    var urlUpdateAchievement = "@Url.Action("Update", "Achievement")";
+    var urlDeleteAchievement = "@Url.Action("Delete", "Achievement")";
+    
+    var urlGetIncidents = "@Url.Action("GetByStudent", "Incident", new {studentId = Model.Student.Id})";
+    var urlGetIncidentById = "@Url.Action("GetById", "Incident")";
+    var urlCreateIncident = "@Url.Action("Create", "Incident")";
+    var urlUpdateIncident = "@Url.Action("Update", "Incident")";
+    var urlDeleteIncident = "@Url.Action("Delete", "Incident")";
     
     $(document).ready(function () {
+        $("#link_behaviour").addClass("active");
+        
         loadAchievements();
+        loadIncidents();       
+        
+        $("#new_achievement_button").on("click", function () {
+            openAchievementForm(false);
+        });
+        
+        $("#new_incident_button").on("click", function () {
+            openIncidentForm(false);
+        });              
+        
+        $("#achievement_save").on("click", function () {
+            submitAchievementForm();
+        });
+        
+        $("#incident_save").on("click", function () {
+            submitIncidentForm();
+        });
+        
+        $("#achievement_form").validate().settings.errorClass = "is-invalid";
+        $("#incident_form").validate().settings.errorClass = "is-invalid";
     });
+    
+    function openAchievementForm(editMode, achievementId) {
+                if (editMode) {
+                    $("#achievement_modal").addClass("edit-mode");
+    
+                    $("#achievement_id").removeAttr("disabled");
+    
+                    $("#achievement_modal_title").text("Edit Achievement");
+    
+                    $.ajax({
+                        type: "GET",
+                        dataType: "json",
+                        url: `${urlGetAchievementById}?achievementId=${achievementId}`,
+                        success: function(data) {
+                            $("#achievement_type").val(data["achievementTypeId"]);
+                            $("#achievement_location").val(data["locationId"]);
+                            $("#achievement_comments").val(data["comments"]);
+                            $("#achievement_points").val(data["points"]);
+                            $("#achievement_outcome").val(data["outcomeId"]);
+                            $("#achievement_id").val(data["id"]);                           
+                        },
+                        error: function(data) {
+                            toastr.error(data.responseJSON);
+                        }
+                    });
+    
+                } else {
+                    $("#achievement_modal").removeClass("edit-mode");
+    
+                    $("#achievement_id").attr("disabled", "true");
+    
+                    $("#achievement_modal_title").text("New Achievement");
+                }
+    
+                $("#achievement_studentId").val("@Model.Student.Id");
+                $("#achievement_modal").modal('show');
+            }
+            
+            function openIncidentForm(editMode, incidentId) {
+                            if (editMode) {
+                                $("#incident_modal").addClass("edit-mode");
+                
+                                $("#incident_id").removeAttr("disabled");
+                
+                                $("#incident_modal_title").text("Edit Incident");
+                
+                                $.ajax({
+                                    type: "GET",
+                                    dataType: "json",
+                                    url: `${urlGetIncidentById}?incidentId=${incidentId}`,
+                                    success: function(data) {
+                                        $("#incident_type").val(data["behaviourTypeId"]);
+                                        $("#incident_location").val(data["locationId"]);
+                                        $("#incident_comments").val(data["comments"]);
+                                        $("#incident_points").val(data["points"]);
+                                        $("#incident_outcome").val(data["outcomeId"]);
+                                        $("#incident_status").val(data["statusId"]);
+                                        $("#incident_id").val(data["id"]);                     
+                                    },
+                                    error: function(data) {
+                                        toastr.error(data.responseJSON);
+                                    }
+                                });
+                
+                            } else {
+                                $("#incident_modal").removeClass("edit-mode");
+                
+                                $("#incident_id").attr("disabled", "true");
+                
+                                $("#incident_modal_title").text("New Incident");
+                            }
+                
+                            $("#incident_studentId").val("@Model.Student.Id");
+                            $("#incident_modal").modal('show');
+                        }
+            
+            function submitAchievementForm() {
+            
+                        if ($("#achievement_form").valid()) {
+                            if ($("#achievement_modal").hasClass("edit-mode")) {
+                                $.ajax({
+                                    type: "PUT",
+                                    url: urlUpdateAchievement,
+                                    data: $("#achievement_form").serialize(),
+                                    success: function(e) {
+                                        $("#achievement_modal").modal('hide');
+                                        achievementSuccess(e);
+                                    },
+                                    error: function(e) {
+                                        achievementFailure(e);
+                                    }
+                                });
+                            } else {
+                                $.ajax({
+                                    type: "POST",
+                                    url: urlCreateAchievement,
+                                    data: $("#achievement_form").serialize(),
+                                    success: function(e) {
+                                        $("#achievement_modal").modal('hide');
+                                        achievementSuccess(e);
+                                    },
+                                    error: function(e) {
+                                        achievementFailure(e);
+                                    }
+                                });
+                            }
+                        }
+                    }
+                    
+                    function submitIncidentForm() {
+                                
+                                            if ($("#incident_form").valid()) {
+                                                if ($("#incident_modal").hasClass("edit-mode")) {
+                                                    $.ajax({
+                                                        type: "PUT",
+                                                        url: urlUpdateIncident,
+                                                        data: $("#incident_form").serialize(),
+                                                        success: function(e) {
+                                                            $("#incident_modal").modal('hide');
+                                                            incidentSuccess(e);
+                                                        },
+                                                        error: function(e) {
+                                                            incidentFailure(e);
+                                                        }
+                                                    });
+                                                } else {
+                                                    $.ajax({
+                                                        type: "POST",
+                                                        url: urlCreateIncident,
+                                                        data: $("#incident_form").serialize(),
+                                                        success: function(e) {
+                                                            $("#incident_modal").modal('hide');
+                                                            incidentSuccess(e);
+                                                        },
+                                                        error: function(e) {
+                                                            incidentFailure(e);
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        }
+                    
+                    function achievementSuccess(e) {
+                                Swal.fire({
+                                    title: "Success",
+                                    text: e,
+                                    icon: "success"
+                                }).then(function() {
+                                    //Reload log notes
+                                    $("#tblAchievements").DataTable().ajax.reload();
+                                });
+                            }
+                            
+                            function incidentSuccess(e) {
+                                                            Swal.fire({
+                                                                title: "Success",
+                                                                text: e,
+                                                                icon: "success"
+                                                            }).then(function() {
+                                                                //Reload log notes
+                                                                $("#tblIncidents").DataTable().ajax.reload();
+                                                            });
+                                                        }
+                    
+                            function achievementFailure(e) {
+                                Swal.fire({
+                                    title: "Error",
+                                    text: e.responseText,
+                                    icon: "error"
+                                });
+                            }
+                            
+                            function incidentFailure(e) {
+                                                            Swal.fire({
+                                                                title: "Error",
+                                                                text: e.responseText,
+                                                                icon: "error"
+                                                            });
+                                                        }
+                            
+                            function editAchievement(achievementId) {
+                                        if (achievementId != null) {
+                                            openAchievementForm(true, achievementId);
+                                        }
+                                    }
+                                    
+                                    function deleteAchievement(achievementId) {
+                                                Swal.fire({
+                                                    title: 'Are you sure?',
+                                                    text: "Are you sure you want to delete this achievement? This cannot be undone.",
+                                                    icon: "warning",
+                                                    showCancelButton: true,
+                                                    confirmButtonText: "Yes"
+                                                }).then((result) => {
+                                                    if (result.value) {
+                                                        $.ajax({
+                                                            type: "DELETE",
+                                                            url: `${urlDeleteAchievement}?achievementId=${achievementId}`,
+                                                            success: function(e) {
+                                                                achievementSuccess(e);
+                                                            },
+                                                            error: function(e) {
+                                                                achievementFailure(e);
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                            
+                                            function editIncident(achievementId) {
+                                                                                    if (achievementId != null) {
+                                                                                        openIncidentForm(true, achievementId);
+                                                                                    }
+                                                                                }
+                                                                                
+                                                                                function deleteIncident(incidentId) {
+                                                                                            Swal.fire({
+                                                                                                title: 'Are you sure?',
+                                                                                                text: "Are you sure you want to delete this incident? This cannot be undone.",
+                                                                                                icon: "warning",
+                                                                                                showCancelButton: true,
+                                                                                                confirmButtonText: "Yes"
+                                                                                            }).then((result) => {
+                                                                                                if (result.value) {
+                                                                                                    $.ajax({
+                                                                                                        type: "DELETE",
+                                                                                                        url: `${urlDeleteIncident}?incidentId=${incidentId}`,
+                                                                                                        success: function(e) {
+                                                                                                            incidentSuccess(e);
+                                                                                                        },
+                                                                                                        error: function(e) {
+                                                                                                            incidentFailure(e);
+                                                                                                        }
+                                                                                                    });
+                                                                                                }
+                                                                                            });
+                                                                                        }
     
     function loadAchievements() {
                 $("#tblAchievements").DataTable({
@@ -157,7 +531,10 @@
                     "dom": "rtilp",
                     columns: [
                         {
-                            data: "createdDate",                           
+                            data: "createdDate",
+                            render: function(data, type, child) {
+                                return moment(child.createdDate).format('DD/MM/YYYY');
+                            }                                                    
                         },
                         {
                             data: "typeName"
@@ -170,68 +547,28 @@
                         },
                         {
                             data: "id",
-                            render: function(data, type, child) {
-                                if (child.isDirectory) {
-                                    return `<div class="dropdown ml-2" data-toggle="tooltip" title="" data-placement="left" data-original-title="Quick actions">
+                            render: function(data, type, child) {                               
+                                                                    return `<div class="dropdown ml-2" data-toggle="tooltip" title="" data-placement="left" data-original-title="Quick actions">
                                                 <a href="#" class="btn btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                                     <i class="ki ki-more-hor font-size-lg text-primary"></i>
                                                 </a>
-                                                <div class="dropdown-menu dropdown-menu-md dropdown-menu-right" style="position: absolute; transform: translate3d(-217px, 33px, 0px); top: 0px; left: 0px; will-change: transform;" x-placement="bottom-end">
-                                                    <!--begin::Navigation-->
-                                                    <ul class="navi navi-hover py-5">
+                                                <div class="dropdown-menu dropdown-menu-md dropdown-menu-right" style="position: absolute; transform: translate3d(-217px, 33px, 0px); top: 0px; left: 0px; will-change: transform;" x-placement="bottom-end">                                                    
+                                                    <ul class="navi navi-hover py-5">                                                        
                                                         <li class="navi-item">
-                                                            <a href="javascript:editDirectory('${child.id}')" class="navi-link">
+                                                            <a href="javascript:editAchievement('${child.id}')" class="navi-link">
                                                                 <span class="navi-icon"><i class="fas fa-fw fa-edit"></i></span>
                                                                 <span class="navi-text">Edit</span>
                                                             </a>
                                                         </li>
                                                         <li class="navi-item">
-                                                            <a href="javascript:deleteDirectory('${child.id}')" class="navi-link">
+                                                            <a href="javascript:deleteAchievement('${child.id}')" class="navi-link">
                                                                 <span class="navi-icon"><i class="fas fa-fw fa-trash-alt"></i></span>
                                                                 <span class="navi-text">Delete</span>
                                                             </a>
                                                         </li>
-                                                    </ul>
-                                                    <!--end::Navigation-->
+                                                    </ul>                                                   
                                                 </div>
-                                            </div>`;
-                                } else {
-                                    return `<div class="dropdown ml-2" data-toggle="tooltip" title="" data-placement="left" data-original-title="Quick actions">
-                                                <a href="#" class="btn btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                                    <i class="ki ki-more-hor font-size-lg text-primary"></i>
-                                                </a>
-                                                <div class="dropdown-menu dropdown-menu-md dropdown-menu-right" style="position: absolute; transform: translate3d(-217px, 33px, 0px); top: 0px; left: 0px; will-change: transform;" x-placement="bottom-end">
-                                                    <!--begin::Navigation-->
-                                                    <ul class="navi navi-hover py-5">
-                                                        <li class="navi-item">
-                                                            <a href="javascript:webViewDocument('${child.id}')" class="navi-link">
-                                                                <span class="navi-icon"><i class="fab fa-fw fa-google-drive"></i></span>
-                                                                <span class="navi-text">Open in Google Drive</span>
-                                                            </a>
-                                                        </li>
-                                                        <li class="navi-item">
-                                                            <a href="javascript:downloadDocument('${child.id}')" class="navi-link">
-                                                                <span class="navi-icon"><i class="fas fa-fw fa-download"></i></span>
-                                                                <span class="navi-text">Download</span>
-                                                            </a>
-                                                        </li>
-                                                        <li class="navi-item">
-                                                            <a href="javascript:editDocument('${child.id}')" class="navi-link">
-                                                                <span class="navi-icon"><i class="fas fa-fw fa-edit"></i></span>
-                                                                <span class="navi-text">Edit</span>
-                                                            </a>
-                                                        </li>
-                                                        <li class="navi-item">
-                                                            <a href="javascript:deleteDocument('${child.id}')" class="navi-link">
-                                                                <span class="navi-icon"><i class="fas fa-fw fa-trash-alt"></i></span>
-                                                                <span class="navi-text">Delete</span>
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                    <!--end::Navigation-->
-                                                </div>
-                                            </div>`;
-                                }
+                                            </div>`;                                
                             }
                         }
                     ],
@@ -243,5 +580,67 @@
                     "responsive": true
                 });
                 }
+                
+                function loadIncidents() {
+                                $("#tblIncidents").DataTable({
+                                    ajax:
+                                    {
+                                        url: urlGetIncidents,
+                                        dataSrc: ""
+                                    },
+                                    "dom": "rtilp",
+                                    columns: [
+                                        {
+                                            data: "createdDate",
+                                            render: function(data, type, child) {
+                                                return moment(child.createdDate).format('DD/MM/YYYY');
+                                            }                                                    
+                                        },
+                                        {
+                                            data: "typeName"
+                                        },
+                                        {
+                                            data: "points"                         
+                                        },
+                                        {
+                                            data: "comments"
+                                        },
+                                        {
+                                            data: "id",
+                                            render: function(data, type, child) {                               
+                                                                                    return `<div class="dropdown ml-2" data-toggle="tooltip" title="" data-placement="left" data-original-title="Quick actions">
+                                                                <a href="#" class="btn btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                                    <i class="ki ki-more-hor font-size-lg text-primary"></i>
+                                                                </a>
+                                                                <div class="dropdown-menu dropdown-menu-md dropdown-menu-right" style="position: absolute; transform: translate3d(-217px, 33px, 0px); top: 0px; left: 0px; will-change: transform;" x-placement="bottom-end">                                                    
+                                                                    <ul class="navi navi-hover py-5">                                                        
+                                                                        <li class="navi-item">
+                                                                            <a href="javascript:editIncident('${child.id}')" class="navi-link">
+                                                                                <span class="navi-icon"><i class="fas fa-fw fa-edit"></i></span>
+                                                                                <span class="navi-text">Edit</span>
+                                                                            </a>
+                                                                        </li>
+                                                                        <li class="navi-item">
+                                                                            <a href="javascript:deleteIncident('${child.id}')" class="navi-link">
+                                                                                <span class="navi-icon"><i class="fas fa-fw fa-trash-alt"></i></span>
+                                                                                <span class="navi-text">Delete</span>
+                                                                            </a>
+                                                                        </li>
+                                                                    </ul>                                                   
+                                                                </div>
+                                                            </div>`;                                
+                                            }
+                                        }
+                                    ],
+                                    "ordering": false,
+                                    "language":
+                                    {
+                                        "emptyTable": "No incidents"
+                                    },
+                                    "responsive": true
+                                });
+                                }
     </script>
+    
+    <script src="~/js/modals.js"></script>
 }

@@ -18,6 +18,7 @@ using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Filters;
 using MyPortal.Logic.Constants;
+using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
@@ -117,7 +118,7 @@ namespace MyPortal.Logic.Services
         {
             var documentTypes = await _documentTypeRepository.Get(filter);
 
-            return new Lookup(documentTypes.ToDictionary(x => x.Description, x => x.Id));
+            return documentTypes.ToLookup();
         }
 
         public async Task Delete(params Guid[] documentIds)

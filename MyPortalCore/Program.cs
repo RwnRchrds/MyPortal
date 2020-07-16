@@ -28,7 +28,7 @@ namespace MyPortalCore
 
                     var http = config.GetValue<bool>("WebHost:UseHttps") ? "https" : "http";
 
-                    webBuilder.UseUrls($"{http}://localhost:{portNumber}");
+                    webBuilder.UseUrls($"{http}://*:{portNumber}");
                 });
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -49,7 +50,7 @@ namespace MyPortalCore.Controllers.Api
 
                     var incidents = await _incidentService.GetByStudent(studentId, academicYearId);
 
-                    return Ok(incidents);
+                    return Ok(incidents.Select(x => x.ToListModel()));
                 }
 
                 return Forbid();
@@ -59,7 +60,7 @@ namespace MyPortalCore.Controllers.Api
         [HttpPost]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Route("create", Name = "ApiIncidentCreate")]
-        public async Task<IActionResult> Create(IncidentModel model)
+        public async Task<IActionResult> Create([FromForm] IncidentModel model)
         {
             return await ProcessAsync(async () =>
             {
@@ -82,7 +83,7 @@ namespace MyPortalCore.Controllers.Api
         [HttpPut]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Route("update", Name = "ApiIncidentUpdate")]
-        public async Task<IActionResult> Update(IncidentModel model)
+        public async Task<IActionResult> Update([FromForm] IncidentModel model)
         {
             return await ProcessAsync(async () =>
             {
@@ -95,7 +96,7 @@ namespace MyPortalCore.Controllers.Api
         [HttpDelete]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Route("delete", Name = "ApiIncidentDelete")]
-        public async Task<IActionResult> Delete(Guid incidentId)
+        public async Task<IActionResult> Delete([FromQuery] Guid incidentId)
         {
             await _incidentService.Delete(incidentId);
 

@@ -27,7 +27,7 @@ namespace MyPortal.Database.Repositories
             query.SelectAll(typeof(BehaviourOutcome));
             query.SelectAll(typeof(BehaviourStatus));
             query.SelectAll(typeof(Location));
-            query.SelectAll(typeof(ApplicationUser));
+            query.SelectAll(typeof(ApplicationUser), "User");
             query.SelectAll(typeof(Person), "RecordedByPerson");
 
             JoinRelated(query);
@@ -88,7 +88,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<int> GetCountByStudent(Guid studentId, Guid academicYearId)
         {
-            var query = new Query(TblName).AsCount();
+            var query = SelectAllColumns().AsCount();
 
             query.Where("Student.Id", studentId);
             query.Where("AcademicYear.Id", academicYearId);
@@ -98,7 +98,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<int> GetPointsByStudent(Guid studentId, Guid academicYearId)
         {
-            var query = new Query(TblName).AsSum("Incident.Points");
+            var query = SelectAllColumns().AsSum("Incident.Points");
 
             query.Where("Student.Id", studentId);
             query.Where("AcademicYear.Id", academicYearId);

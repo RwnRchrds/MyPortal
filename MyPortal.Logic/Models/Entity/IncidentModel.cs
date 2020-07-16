@@ -1,4 +1,5 @@
 ﻿using System;
+using MyPortal.Logic.Models.ListModels;
 
 namespace MyPortal.Logic.Models.Entity
 {
@@ -41,5 +42,10 @@ namespace MyPortal.Logic.Models.Entity
         public virtual BehaviourOutcomeModel Outcome { get; set; }
 
         public virtual BehaviourStatusModel Status { get; set; }
+
+        public IncidentListModel ToListModel()
+        {
+            return new IncidentListModel(this);
+        }
     }
 }

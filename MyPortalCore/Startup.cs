@@ -214,6 +214,7 @@ namespace MyPortalCore
             services.AddScoped<IDirectoryService, DirectoryService>();
             services.AddScoped<IDocumentService, DocumentService>();
             services.AddScoped<IIncidentService, IncidentService>();
+            services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<ILogNoteService, LogNoteService>();
             services.AddScoped<IPeriodService, PeriodService>();
             services.AddScoped<IPersonService, PersonService>();

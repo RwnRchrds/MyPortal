@@ -102,19 +102,20 @@ namespace MyPortal.Database.Repositories
                 .QueryAsync(sql.Sql,
                     new[]
                     {
-                        typeof(Achievement), typeof(AchievementType), typeof(AchievementOutcome), typeof(Student), typeof(Person), typeof(Location),
+                        typeof(Achievement), typeof(AcademicYear), typeof(AchievementType), typeof(AchievementOutcome), typeof(Student), typeof(Person), typeof(Location),
                         typeof(ApplicationUser), typeof(Person)
                     }, (objects) =>
                     {
                         var achievement = (Achievement) objects[0];
 
-                        achievement.Type = (AchievementType) objects[1];
-                        achievement.Outcome = (AchievementOutcome) objects[2];
-                        achievement.Student = (Student) objects[3];
-                        achievement.Student.Person = (Person) objects[4];
-                        achievement.Location = (Location) objects[5];
-                        achievement.RecordedBy = (ApplicationUser) objects[6];
-                        achievement.RecordedBy.Person = (Person) objects[7];
+                        achievement.AcademicYear = (AcademicYear) objects[1];
+                        achievement.Type = (AchievementType) objects[2];
+                        achievement.Outcome = (AchievementOutcome) objects[3];
+                        achievement.Student = (Student) objects[4];
+                        achievement.Student.Person = (Person) objects[5];
+                        achievement.Location = (Location) objects[6];
+                        achievement.RecordedBy = (ApplicationUser) objects[7];
+                        achievement.RecordedBy.Person = (Person) objects[8];
 
                         return achievement;
                     }, sql.NamedBindings);

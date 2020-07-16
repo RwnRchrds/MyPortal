@@ -8,8 +8,7 @@ namespace MyPortal.Logic.Models.Entity
     public class AchievementModel
     {
         public Guid Id { get; set; }
-
-        [NotEmpty]
+        
         public Guid AcademicYearId { get; set; }
 
         [NotEmpty]
@@ -20,7 +19,6 @@ namespace MyPortal.Logic.Models.Entity
 
         [NotEmpty]
         public Guid LocationId { get; set; }
-
         
         public Guid RecordedById { get; set; }
 

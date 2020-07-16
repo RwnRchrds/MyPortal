@@ -8,6 +8,7 @@ namespace MyPortalCore.Areas.Staff.ViewModels.Student
     {
         public StudentModel Student { get; set; }
         public IEnumerable<SelectListItem> AchievementTypes { get; set; }
+        public IEnumerable<SelectListItem> Locations { get; set; }
         public IEnumerable<SelectListItem> AchievementOutcomes { get; set; }
         public IEnumerable<SelectListItem> IncidentTypes { get; set; }
         public IEnumerable<SelectListItem> IncidentOutcomes { get; set; }
