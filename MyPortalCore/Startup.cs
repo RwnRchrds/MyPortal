@@ -63,7 +63,7 @@ namespace MyPortalCore
             });
 
             services.AddControllersWithViews();
-            services.AddMvc().AddRazorRuntimeCompilation();
+            services.AddMvc();
             services.AddRazorPages();
 
             services

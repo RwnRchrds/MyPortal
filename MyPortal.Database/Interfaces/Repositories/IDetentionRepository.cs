@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MyPortal.Database.Models;
+using MyPortal.Database.Search;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
@@ -10,5 +11,7 @@ namespace MyPortal.Database.Interfaces.Repositories
         Task<IEnumerable<Detention>> GetByStudent(Guid studentId, Tuple<DateTime, DateTime> dateRange);
 
         Task<IEnumerable<Detention>> GetByStudent(Guid studentId, Guid academicYearId);
+
+        Task<IEnumerable<Detention>> GetAll(DetentionSearchOptions searchOptions);
     }
 }

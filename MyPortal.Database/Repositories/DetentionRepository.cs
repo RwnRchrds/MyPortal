@@ -6,6 +6,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
+using MyPortal.Database.Search;
 using SqlKata;
 
 namespace MyPortal.Database.Repositories
@@ -81,6 +82,24 @@ namespace MyPortal.Database.Repositories
             query.Where("Incident.StudentId", studentId);
 
             query.Where("Incident.AcademicYearId", academicYearId);
+
+            return await ExecuteQuery(query);
+        }
+
+        public async Task<IEnumerable<Detention>> GetAll(DetentionSearchOptions searchOptions)
+        {
+            var query = SelectAllColumns();
+
+            if (searchOptions.DetentionType != null && searchOptions.DetentionType != Guid.Empty)
+            {
+                query.Where("Detention.DetentionTypeId", searchOptions.DetentionType);
+            }
+
+            if (searchOptions.FirstDate != null && searchOptions.LastDate != null)
+            {
+                query.Where("DiaryEvent.StartTime", ">=", searchOptions.FirstDate.Value.Date);
+                query.Where("DiaryEvent.EndTime", "<", searchOptions.LastDate.Value.Date.AddDays(1));
+            }
 
             return await ExecuteQuery(query);
         }
