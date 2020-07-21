@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Dapper;
@@ -52,6 +53,15 @@ namespace MyPortal.Database.Repositories
 
                         return attendee;
                     }, sql.NamedBindings);
+        }
+
+        public async Task<IEnumerable<DiaryEventAttendee>> GetByEvent(Guid eventId)
+        {
+            var query = SelectAllColumns();
+
+            query.Where("Event.Id", eventId);
+
+            return await ExecuteQuery(query);
         }
     }
 }

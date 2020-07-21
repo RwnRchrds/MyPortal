@@ -4,6 +4,14 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>aspnet-MyPortalCore-069367EA-19F9-43C1-9911-9334856D0A19</UserSecretsId>
     <LangVersion>latest</LangVersion>
+    <AssemblyVersion>0.1.0</AssemblyVersion>
+    <Version>0.1.0</Version>
+    <Deterministic>false</Deterministic>
+    <Company>MyPortal Ltd</Company>
+    <Authors>MyPortal Ltd</Authors>
+    <Product>MyPortal</Product>
+    <AssemblyName>MyPortal</AssemblyName>
+    <PackageIcon>favicon.ico</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,6 +29,10 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
+    <None Include="wwwroot\lib\myportal\media\favicon.ico">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 
@@ -33,6 +45,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="3.1.6" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.6" />
     <PackageReference Include="Microsoft.jQuery.Unobtrusive.Ajax" Version="3.2.6" />
     <PackageReference Include="Microsoft.jQuery.Unobtrusive.Validation" Version="3.2.11" />
@@ -51,6 +64,16 @@
     <Folder Include="Areas\Identity\Views\" />
     <Folder Include="wwwroot\lib\metronic\media\icons\documents\" />
     <Folder Include="wwwroot\lib\myportal\" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Update="InstallService.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="UninstallService.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

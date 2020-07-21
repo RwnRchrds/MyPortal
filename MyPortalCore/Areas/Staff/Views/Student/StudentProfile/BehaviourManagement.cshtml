@@ -246,309 +246,313 @@
 @section Scripts
 {
     <script>
-    var urlGetAchievements = "@Url.Action("GetByStudent", "Achievement", new {studentId = Model.Student.Id})";
-    var urlGetAchievementById = "@Url.Action("GetById", "Achievement")";
-    var urlCreateAchievement = "@Url.Action("Create", "Achievement")";
-    var urlUpdateAchievement = "@Url.Action("Update", "Achievement")";
-    var urlDeleteAchievement = "@Url.Action("Delete", "Achievement")";
-    
-    var urlGetIncidents = "@Url.Action("GetByStudent", "Incident", new {studentId = Model.Student.Id})";
-    var urlGetIncidentById = "@Url.Action("GetById", "Incident")";
-    var urlCreateIncident = "@Url.Action("Create", "Incident")";
-    var urlUpdateIncident = "@Url.Action("Update", "Incident")";
-    var urlDeleteIncident = "@Url.Action("Delete", "Incident")";
-    
-    $(document).ready(function () {
-        $("#link_behaviour").addClass("active");
-        
-        loadAchievements();
-        loadIncidents();       
-        
-        $("#new_achievement_button").on("click", function () {
-            openAchievementForm(false);
+        var urlGetAchievements = "@Url.Action("GetByStudent", "Achievement", new {studentId = Model.Student.Id})";
+        var urlGetAchievementById = "@Url.Action("GetById", "Achievement")";
+        var urlCreateAchievement = "@Url.Action("Create", "Achievement")";
+        var urlUpdateAchievement = "@Url.Action("Update", "Achievement")";
+        var urlDeleteAchievement = "@Url.Action("Delete", "Achievement")";
+
+        var urlGetIncidents = "@Url.Action("GetByStudent", "Incident", new {studentId = Model.Student.Id})";
+        var urlGetIncidentById = "@Url.Action("GetById", "Incident")";
+        var urlCreateIncident = "@Url.Action("Create", "Incident")";
+        var urlUpdateIncident = "@Url.Action("Update", "Incident")";
+        var urlDeleteIncident = "@Url.Action("Delete", "Incident")";
+
+        $(document).ready(function() {
+            $("#link_behaviour").addClass("active");
+
+            loadAchievements();
+            loadIncidents();
+
+            $("#new_achievement_button").on("click",
+                function() {
+                    openAchievementForm(false);
+                });
+
+            $("#new_incident_button").on("click",
+                function() {
+                    openIncidentForm(false);
+                });
+
+            $("#achievement_save").on("click",
+                function() {
+                    submitAchievementForm();
+                });
+
+            $("#incident_save").on("click",
+                function() {
+                    submitIncidentForm();
+                });
+
+            $("#achievement_form").validate().settings.errorClass = "is-invalid";
+            $("#incident_form").validate().settings.errorClass = "is-invalid";
         });
-        
-        $("#new_incident_button").on("click", function () {
-            openIncidentForm(false);
-        });              
-        
-        $("#achievement_save").on("click", function () {
-            submitAchievementForm();
-        });
-        
-        $("#incident_save").on("click", function () {
-            submitIncidentForm();
-        });
-        
-        $("#achievement_form").validate().settings.errorClass = "is-invalid";
-        $("#incident_form").validate().settings.errorClass = "is-invalid";
-    });
-    
-    function openAchievementForm(editMode, achievementId) {
-                if (editMode) {
-                    $("#achievement_modal").addClass("edit-mode");
-    
-                    $("#achievement_id").removeAttr("disabled");
-    
-                    $("#achievement_modal_title").text("Edit Achievement");
-    
+
+        function openAchievementForm(editMode, achievementId) {
+            if (editMode) {
+                $("#achievement_modal").addClass("edit-mode");
+
+                $("#achievement_id").removeAttr("disabled");
+
+                $("#achievement_modal_title").text("Edit Achievement");
+
+                $.ajax({
+                    type: "GET",
+                    dataType: "json",
+                    url: `${urlGetAchievementById}?achievementId=${achievementId}`,
+                    success: function(data) {
+                        $("#achievement_type").val(data["achievementTypeId"]);
+                        $("#achievement_location").val(data["locationId"]);
+                        $("#achievement_comments").val(data["comments"]);
+                        $("#achievement_points").val(data["points"]);
+                        $("#achievement_outcome").val(data["outcomeId"]);
+                        $("#achievement_id").val(data["id"]);
+                    },
+                    error: function(data) {
+                        toastr.error(data.responseJSON);
+                    }
+                });
+
+            } else {
+                $("#achievement_modal").removeClass("edit-mode");
+
+                $("#achievement_id").attr("disabled", "true");
+
+                $("#achievement_modal_title").text("New Achievement");
+            }
+
+            $("#achievement_studentId").val("@Model.Student.Id");
+            $("#achievement_modal").modal('show');
+        }
+
+        function openIncidentForm(editMode, incidentId) {
+            if (editMode) {
+                $("#incident_modal").addClass("edit-mode");
+
+                $("#incident_id").removeAttr("disabled");
+
+                $("#incident_modal_title").text("Edit Incident");
+
+                $.ajax({
+                    type: "GET",
+                    dataType: "json",
+                    url: `${urlGetIncidentById}?incidentId=${incidentId}`,
+                    success: function(data) {
+                        $("#incident_type").val(data["behaviourTypeId"]);
+                        $("#incident_location").val(data["locationId"]);
+                        $("#incident_comments").val(data["comments"]);
+                        $("#incident_points").val(data["points"]);
+                        $("#incident_outcome").val(data["outcomeId"]);
+                        $("#incident_status").val(data["statusId"]);
+                        $("#incident_id").val(data["id"]);
+                    },
+                    error: function(data) {
+                        toastr.error(data.responseJSON);
+                    }
+                });
+
+            } else {
+                $("#incident_modal").removeClass("edit-mode");
+
+                $("#incident_id").attr("disabled", "true");
+
+                $("#incident_modal_title").text("New Incident");
+            }
+
+            $("#incident_studentId").val("@Model.Student.Id");
+            $("#incident_modal").modal('show');
+        }
+
+        function submitAchievementForm() {
+
+            if ($("#achievement_form").valid()) {
+                if ($("#achievement_modal").hasClass("edit-mode")) {
                     $.ajax({
-                        type: "GET",
-                        dataType: "json",
-                        url: `${urlGetAchievementById}?achievementId=${achievementId}`,
-                        success: function(data) {
-                            $("#achievement_type").val(data["achievementTypeId"]);
-                            $("#achievement_location").val(data["locationId"]);
-                            $("#achievement_comments").val(data["comments"]);
-                            $("#achievement_points").val(data["points"]);
-                            $("#achievement_outcome").val(data["outcomeId"]);
-                            $("#achievement_id").val(data["id"]);                           
+                        type: "PUT",
+                        url: urlUpdateAchievement,
+                        data: $("#achievement_form").serialize(),
+                        success: function(e) {
+                            $("#achievement_modal").modal('hide');
+                            achievementSuccess(e);
                         },
-                        error: function(data) {
-                            toastr.error(data.responseJSON);
+                        error: function(e) {
+                            achievementFailure(e);
                         }
                     });
-    
                 } else {
-                    $("#achievement_modal").removeClass("edit-mode");
-    
-                    $("#achievement_id").attr("disabled", "true");
-    
-                    $("#achievement_modal_title").text("New Achievement");
+                    $.ajax({
+                        type: "POST",
+                        url: urlCreateAchievement,
+                        data: $("#achievement_form").serialize(),
+                        success: function(e) {
+                            $("#achievement_modal").modal('hide');
+                            achievementSuccess(e);
+                        },
+                        error: function(e) {
+                            achievementFailure(e);
+                        }
+                    });
                 }
-    
-                $("#achievement_studentId").val("@Model.Student.Id");
-                $("#achievement_modal").modal('show');
             }
-            
-            function openIncidentForm(editMode, incidentId) {
-                            if (editMode) {
-                                $("#incident_modal").addClass("edit-mode");
-                
-                                $("#incident_id").removeAttr("disabled");
-                
-                                $("#incident_modal_title").text("Edit Incident");
-                
-                                $.ajax({
-                                    type: "GET",
-                                    dataType: "json",
-                                    url: `${urlGetIncidentById}?incidentId=${incidentId}`,
-                                    success: function(data) {
-                                        $("#incident_type").val(data["behaviourTypeId"]);
-                                        $("#incident_location").val(data["locationId"]);
-                                        $("#incident_comments").val(data["comments"]);
-                                        $("#incident_points").val(data["points"]);
-                                        $("#incident_outcome").val(data["outcomeId"]);
-                                        $("#incident_status").val(data["statusId"]);
-                                        $("#incident_id").val(data["id"]);                     
-                                    },
-                                    error: function(data) {
-                                        toastr.error(data.responseJSON);
-                                    }
-                                });
-                
-                            } else {
-                                $("#incident_modal").removeClass("edit-mode");
-                
-                                $("#incident_id").attr("disabled", "true");
-                
-                                $("#incident_modal_title").text("New Incident");
-                            }
-                
-                            $("#incident_studentId").val("@Model.Student.Id");
-                            $("#incident_modal").modal('show');
+        }
+
+        function submitIncidentForm() {
+
+            if ($("#incident_form").valid()) {
+                if ($("#incident_modal").hasClass("edit-mode")) {
+                    $.ajax({
+                        type: "PUT",
+                        url: urlUpdateIncident,
+                        data: $("#incident_form").serialize(),
+                        success: function(e) {
+                            $("#incident_modal").modal('hide');
+                            incidentSuccess(e);
+                        },
+                        error: function(e) {
+                            incidentFailure(e);
                         }
-            
-            function submitAchievementForm() {
-            
-                        if ($("#achievement_form").valid()) {
-                            if ($("#achievement_modal").hasClass("edit-mode")) {
-                                $.ajax({
-                                    type: "PUT",
-                                    url: urlUpdateAchievement,
-                                    data: $("#achievement_form").serialize(),
-                                    success: function(e) {
-                                        $("#achievement_modal").modal('hide');
-                                        achievementSuccess(e);
-                                    },
-                                    error: function(e) {
-                                        achievementFailure(e);
-                                    }
-                                });
-                            } else {
-                                $.ajax({
-                                    type: "POST",
-                                    url: urlCreateAchievement,
-                                    data: $("#achievement_form").serialize(),
-                                    success: function(e) {
-                                        $("#achievement_modal").modal('hide');
-                                        achievementSuccess(e);
-                                    },
-                                    error: function(e) {
-                                        achievementFailure(e);
-                                    }
-                                });
-                            }
+                    });
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        url: urlCreateIncident,
+                        data: $("#incident_form").serialize(),
+                        success: function(e) {
+                            $("#incident_modal").modal('hide');
+                            incidentSuccess(e);
+                        },
+                        error: function(e) {
+                            incidentFailure(e);
                         }
-                    }
-                    
-                    function submitIncidentForm() {
-                                
-                                            if ($("#incident_form").valid()) {
-                                                if ($("#incident_modal").hasClass("edit-mode")) {
-                                                    $.ajax({
-                                                        type: "PUT",
-                                                        url: urlUpdateIncident,
-                                                        data: $("#incident_form").serialize(),
-                                                        success: function(e) {
-                                                            $("#incident_modal").modal('hide');
-                                                            incidentSuccess(e);
-                                                        },
-                                                        error: function(e) {
-                                                            incidentFailure(e);
-                                                        }
-                                                    });
-                                                } else {
-                                                    $.ajax({
-                                                        type: "POST",
-                                                        url: urlCreateIncident,
-                                                        data: $("#incident_form").serialize(),
-                                                        success: function(e) {
-                                                            $("#incident_modal").modal('hide');
-                                                            incidentSuccess(e);
-                                                        },
-                                                        error: function(e) {
-                                                            incidentFailure(e);
-                                                        }
-                                                    });
-                                                }
-                                            }
-                                        }
-                    
-                    function achievementSuccess(e) {
-                                Swal.fire({
-                                    title: "Success",
-                                    text: e,
-                                    icon: "success"
-                                }).then(function() {
-                                    //Reload log notes
-                                    $("#tblAchievements").DataTable().ajax.reload();
-                                });
-                            }
-                            
-                            function incidentSuccess(e) {
-                                                            Swal.fire({
-                                                                title: "Success",
-                                                                text: e,
-                                                                icon: "success"
-                                                            }).then(function() {
-                                                                //Reload log notes
-                                                                $("#tblIncidents").DataTable().ajax.reload();
-                                                            });
-                                                        }
-                    
-                            function achievementFailure(e) {
-                                Swal.fire({
-                                    title: "Error",
-                                    text: e.responseText,
-                                    icon: "error"
-                                });
-                            }
-                            
-                            function incidentFailure(e) {
-                                                            Swal.fire({
-                                                                title: "Error",
-                                                                text: e.responseText,
-                                                                icon: "error"
-                                                            });
-                                                        }
-                            
-                            function editAchievement(achievementId) {
-                                        if (achievementId != null) {
-                                            openAchievementForm(true, achievementId);
-                                        }
-                                    }
-                                    
-                                    function deleteAchievement(achievementId) {
-                                                Swal.fire({
-                                                    title: 'Are you sure?',
-                                                    text: "Are you sure you want to delete this achievement? This cannot be undone.",
-                                                    icon: "warning",
-                                                    showCancelButton: true,
-                                                    confirmButtonText: "Yes"
-                                                }).then((result) => {
-                                                    if (result.value) {
-                                                        $.ajax({
-                                                            type: "DELETE",
-                                                            url: `${urlDeleteAchievement}?achievementId=${achievementId}`,
-                                                            success: function(e) {
-                                                                achievementSuccess(e);
-                                                            },
-                                                            error: function(e) {
-                                                                achievementFailure(e);
-                                                            }
-                                                        });
-                                                    }
-                                                });
-                                            }
-                                            
-                                            function editIncident(achievementId) {
-                                                                                    if (achievementId != null) {
-                                                                                        openIncidentForm(true, achievementId);
-                                                                                    }
-                                                                                }
-                                                                                
-                                                                                function deleteIncident(incidentId) {
-                                                                                            Swal.fire({
-                                                                                                title: 'Are you sure?',
-                                                                                                text: "Are you sure you want to delete this incident? This cannot be undone.",
-                                                                                                icon: "warning",
-                                                                                                showCancelButton: true,
-                                                                                                confirmButtonText: "Yes"
-                                                                                            }).then((result) => {
-                                                                                                if (result.value) {
-                                                                                                    $.ajax({
-                                                                                                        type: "DELETE",
-                                                                                                        url: `${urlDeleteIncident}?incidentId=${incidentId}`,
-                                                                                                        success: function(e) {
-                                                                                                            incidentSuccess(e);
-                                                                                                        },
-                                                                                                        error: function(e) {
-                                                                                                            incidentFailure(e);
-                                                                                                        }
-                                                                                                    });
-                                                                                                }
-                                                                                            });
-                                                                                        }
-    
-    function loadAchievements() {
-                $("#tblAchievements").DataTable({
-                    ajax:
+                    });
+                }
+            }
+        }
+
+        function achievementSuccess(e) {
+            Swal.fire({
+                title: "Success",
+                text: e,
+                icon: "success"
+            }).then(function() {
+                //Reload log notes
+                $("#tblAchievements").DataTable().ajax.reload();
+            });
+        }
+
+        function incidentSuccess(e) {
+            Swal.fire({
+                title: "Success",
+                text: e,
+                icon: "success"
+            }).then(function() {
+                //Reload log notes
+                $("#tblIncidents").DataTable().ajax.reload();
+            });
+        }
+
+        function achievementFailure(e) {
+            Swal.fire({
+                title: "Error",
+                text: e.responseText,
+                icon: "error"
+            });
+        }
+
+        function incidentFailure(e) {
+            Swal.fire({
+                title: "Error",
+                text: e.responseText,
+                icon: "error"
+            });
+        }
+
+        function editAchievement(achievementId) {
+            if (achievementId != null) {
+                openAchievementForm(true, achievementId);
+            }
+        }
+
+        function deleteAchievement(achievementId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Are you sure you want to delete this achievement? This cannot be undone.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: "DELETE",
+                        url: `${urlDeleteAchievement}?achievementId=${achievementId}`,
+                        success: function(e) {
+                            achievementSuccess(e);
+                        },
+                        error: function(e) {
+                            achievementFailure(e);
+                        }
+                    });
+                }
+            });
+        }
+
+        function editIncident(achievementId) {
+            if (achievementId != null) {
+                openIncidentForm(true, achievementId);
+            }
+        }
+
+        function deleteIncident(incidentId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Are you sure you want to delete this incident? This cannot be undone.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: "DELETE",
+                        url: `${urlDeleteIncident}?incidentId=${incidentId}`,
+                        success: function(e) {
+                            incidentSuccess(e);
+                        },
+                        error: function(e) {
+                            incidentFailure(e);
+                        }
+                    });
+                }
+            });
+        }
+
+        function loadAchievements() {
+            $("#tblAchievements").DataTable({
+                ajax:
+                {
+                    url: urlGetAchievements,
+                    dataSrc: ""
+                },
+                "dom": "rtilp",
+                columns: [
                     {
-                        url: urlGetAchievements,
-                        dataSrc: ""
+                        data: "createdDate",
+                        render: function(data, type, child) {
+                            return moment(child.createdDate).format('DD/MM/YYYY');
+                        }
                     },
-                    "dom": "rtilp",
-                    columns: [
-                        {
-                            data: "createdDate",
-                            render: function(data, type, child) {
-                                return moment(child.createdDate).format('DD/MM/YYYY');
-                            }                                                    
-                        },
-                        {
-                            data: "typeName"
-                        },
-                        {
-                            data: "points"                         
-                        },
-                        {
-                            data: "comments"
-                        },
-                        {
-                            data: "id",
-                            render: function(data, type, child) {                               
-                                                                    return `<div class="dropdown ml-2" data-toggle="tooltip" title="" data-placement="left" data-original-title="Quick actions">
+                    {
+                        data: "typeName"
+                    },
+                    {
+                        data: "points"
+                    },
+                    {
+                        data: "comments"
+                    },
+                    {
+                        data: "id",
+                        render: function(data, type, child) {
+                            return `<div class="dropdown ml-2" data-toggle="tooltip" title="" data-placement="left" data-original-title="Quick actions">
                                                 <a href="#" class="btn btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                                     <i class="ki ki-more-hor font-size-lg text-primary"></i>
                                                 </a>
@@ -568,47 +572,47 @@
                                                         </li>
                                                     </ul>                                                   
                                                 </div>
-                                            </div>`;                                
-                            }
+                                            </div>`;
                         }
-                    ],
-                    "ordering": false,
-                    "language":
+                    }
+                ],
+                "ordering": false,
+                "language":
+                {
+                    "emptyTable": "No achievements"
+                },
+                "responsive": true
+            });
+        }
+
+        function loadIncidents() {
+            $("#tblIncidents").DataTable({
+                ajax:
+                {
+                    url: urlGetIncidents,
+                    dataSrc: ""
+                },
+                "dom": "rtilp",
+                columns: [
                     {
-                        "emptyTable": "No achievements"
+                        data: "createdDate",
+                        render: function(data, type, child) {
+                            return moment(child.createdDate).format('DD/MM/YYYY');
+                        }
                     },
-                    "responsive": true
-                });
-                }
-                
-                function loadIncidents() {
-                                $("#tblIncidents").DataTable({
-                                    ajax:
-                                    {
-                                        url: urlGetIncidents,
-                                        dataSrc: ""
-                                    },
-                                    "dom": "rtilp",
-                                    columns: [
-                                        {
-                                            data: "createdDate",
-                                            render: function(data, type, child) {
-                                                return moment(child.createdDate).format('DD/MM/YYYY');
-                                            }                                                    
-                                        },
-                                        {
-                                            data: "typeName"
-                                        },
-                                        {
-                                            data: "points"                         
-                                        },
-                                        {
-                                            data: "comments"
-                                        },
-                                        {
-                                            data: "id",
-                                            render: function(data, type, child) {                               
-                                                                                    return `<div class="dropdown ml-2" data-toggle="tooltip" title="" data-placement="left" data-original-title="Quick actions">
+                    {
+                        data: "typeName"
+                    },
+                    {
+                        data: "points"
+                    },
+                    {
+                        data: "comments"
+                    },
+                    {
+                        data: "id",
+                        render: function(data, type, child) {
+                            return `<div class="dropdown ml-2" data-toggle="tooltip" title="" data-placement="left" data-original-title="Quick actions">
                                                                 <a href="#" class="btn btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                                                     <i class="ki ki-more-hor font-size-lg text-primary"></i>
                                                                 </a>
@@ -628,19 +632,19 @@
                                                                         </li>
                                                                     </ul>                                                   
                                                                 </div>
-                                                            </div>`;                                
-                                            }
-                                        }
-                                    ],
-                                    "ordering": false,
-                                    "language":
-                                    {
-                                        "emptyTable": "No incidents"
-                                    },
-                                    "responsive": true
-                                });
-                                }
+                                                            </div>`;
+                        }
+                    }
+                ],
+                "ordering": false,
+                "language":
+                {
+                    "emptyTable": "No incidents"
+                },
+                "responsive": true
+            });
+        }
     </script>
-    
+
     <script src="~/js/modals.js"></script>
 }

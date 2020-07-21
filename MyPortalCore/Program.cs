@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
@@ -13,7 +14,25 @@ namespace MyPortalCore
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var builder = CreateHostBuilder(args);
+
+            if (Debugger.IsAttached || args.Contains("--debug"))
+            {
+                var host = builder.Build();
+
+                host.Run();
+            }
+            else
+            {
+                RunAsService(builder);
+            }
+        }
+
+        public static void RunAsService(IHostBuilder builder)
+        {
+            var host = builder.UseWindowsService().Build();
+
+            host.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

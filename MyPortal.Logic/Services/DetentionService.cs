@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces.Repositories;
@@ -106,7 +107,7 @@ namespace MyPortal.Logic.Services
 
             if (attendees.Any(x => x.PersonId == student.PersonId))
             {
-                throw BadRequest("Student is already added to this detention.");
+                throw BadRequest("Student is already scheduled to attend this detention.");
             }
 
             var attendee = new DiaryEventAttendee
@@ -135,6 +136,34 @@ namespace MyPortal.Logic.Services
             _incidentDetentionRepository.Create(incidentDetention);
 
             await _incidentDetentionRepository.SaveChanges();
+        }
+
+        public async Task RemoveStudent(Guid detentionId, Guid studentId)
+        {
+            var detentionInDb = await _detentionRepository.GetById(detentionId);
+
+            if (detentionInDb == null)
+            {
+                throw NotFound();
+            }
+
+            var studentInDb = await _studentRepository.GetById(studentId);
+
+            if (studentInDb == null)
+            {
+                throw NotFound("Student not found.");
+            }
+
+            var attendees = await _attendeeRepository.GetByEvent(detentionInDb.EventId);
+
+            var attendeeToRemove = attendees.FirstOrDefault(x => x.PersonId == studentInDb.PersonId);
+
+            if (attendeeToRemove == null)
+            {
+                throw BadRequest("Student is not scheduled to attend this detention.");
+            }
+            
+            await _attendeeRepository.Delete(attendeeToRemove.Id);
         }
 
         public override void Dispose()
