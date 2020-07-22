@@ -16,7 +16,8 @@ namespace MyPortal.Logic.Services
 
         public override void Dispose()
         {
-            throw new System.NotImplementedException();
+            _diaryEventRepository.Dispose();
+            _detentionRepository.Dispose();
         }
     }
 }

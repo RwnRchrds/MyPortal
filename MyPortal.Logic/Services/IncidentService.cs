@@ -30,6 +30,9 @@ namespace MyPortal.Logic.Services
         public override void Dispose()
         {
             _incidentRepository.Dispose();
+            _outcomeRepository.Dispose();
+            _statusRepository.Dispose();
+            _incidentTypeRepository.Dispose();
         }
 
         public async Task<IEnumerable<IncidentModel>> GetByStudent(Guid studentId, Guid academicYearId)

@@ -32,6 +32,8 @@ namespace MyPortal.Logic.Services
         public override void Dispose()
         {
             _achievementRepository.Dispose();
+            _achievementTypeRepository.Dispose();
+            _achievementOutcomeRepository.Dispose();
         }
 
         public async Task<IEnumerable<AchievementModel>> GetByStudent(Guid studentId, Guid academicYearId)

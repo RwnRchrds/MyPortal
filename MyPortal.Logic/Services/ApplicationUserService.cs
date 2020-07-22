@@ -141,6 +141,7 @@ namespace MyPortal.Logic.Services
         {
             _userManager.Dispose();
             _academicYearRepository.Dispose();
+            _personRepository.Dispose();
         }
     }
 }

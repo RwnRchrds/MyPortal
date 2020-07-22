@@ -171,6 +171,9 @@ namespace MyPortal.Logic.Services
         public override void Dispose()
         {
             _taskRepository.Dispose();
+            _taskTypeRepository.Dispose();
+            _personRepository.Dispose();
+            _staffMemberService.Dispose();
         }
     }
 }

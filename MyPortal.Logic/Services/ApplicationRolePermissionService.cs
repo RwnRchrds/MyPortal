@@ -109,6 +109,7 @@ namespace MyPortal.Logic.Services
         {
             _rolePermissionRepository.Dispose();
             _permissionRepository.Dispose();
+            _systemAreaRepository.Dispose();
         }
     }
 }

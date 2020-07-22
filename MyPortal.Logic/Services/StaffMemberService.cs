@@ -19,7 +19,7 @@ namespace MyPortal.Logic.Services
 
         public override void Dispose()
         {
-            
+           _staffMemberRepository.Dispose(); 
         }
 
         public async Task<bool> IsLineManager(Guid staffMemberId, Guid lineManagerId)

@@ -6,7 +6,7 @@ using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Interfaces
 {
-    public interface IStaffMemberService
+    public interface IStaffMemberService : IService
     {
         Task<bool> IsLineManager(Guid staffMemberId, Guid lineManagerId);
 

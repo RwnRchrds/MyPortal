@@ -12,6 +12,7 @@ using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
 using Google.Apis.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
@@ -33,22 +34,19 @@ namespace MyPortal.Logic.Services
 {
     public class DocumentService : BaseService, IDocumentService
     {
-        private IGoogleHelper _googleHelper;
         private readonly IDocumentRepository _documentRepository;
         private readonly IDocumentTypeRepository _documentTypeRepository;
         private readonly IDirectoryService _directoryService;
-        private DriveService _driveService;
+        private readonly DriveService _driveService;
 
-        public DocumentService(IDocumentRepository documentRepository, IGoogleHelper googleHelper, IDirectoryService directoryService, IDocumentTypeRepository documentTypeRepository) : base("Document")
+        public DocumentService(IDocumentRepository documentRepository, IDirectoryService directoryService, IDocumentTypeRepository documentTypeRepository, IConfiguration config) : base("Document")
         {
             _documentRepository = documentRepository;
-            _googleHelper = googleHelper;
+             var googleHelper = new GoogleHelper(config);
             _directoryService = directoryService;
             _documentTypeRepository = documentTypeRepository;
 
-            var init = _googleHelper.GetInitializer();
-
-            _driveService = new DriveService(init);
+            _driveService = new DriveService(googleHelper.GetInitializer());
         }
 
         public async Task Create(params DocumentModel[] documents)

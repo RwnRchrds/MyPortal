@@ -201,9 +201,6 @@ namespace MyPortalCore
             services.AddScoped<IYearGroupRepository, YearGroupRepository>();
 
             // MyPortal business services
-
-            services.AddScoped<IGoogleHelper, GoogleHelper>();
-                        
             services.AddScoped<IAcademicYearService, AcademicYearService>();
             services.AddScoped<IAchievementService, AchievementService>();
             services.AddScoped<IApplicationRolePermissionService, ApplicationRolePermissionService>();

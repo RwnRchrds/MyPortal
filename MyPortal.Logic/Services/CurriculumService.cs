@@ -33,6 +33,8 @@ namespace MyPortal.Logic.Services
             _bandRepository.Dispose();
             _blockRepository.Dispose();
             _groupRepository.Dispose();
+            _assignmentRepository.Dispose();
+            _groupMembershipRepository.Dispose();
         }
 
         public async Task CreateBand(params CurriculumBandModel[] bandModels)

@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <OutputType>Exe</OutputType>
     <UserSecretsId>aspnet-MyPortalCore-069367EA-19F9-43C1-9911-9334856D0A19</UserSecretsId>
     <LangVersion>latest</LangVersion>
     <AssemblyVersion>0.1.0</AssemblyVersion>
@@ -11,7 +12,7 @@
     <Authors>MyPortal Ltd</Authors>
     <Product>MyPortal</Product>
     <AssemblyName>MyPortal</AssemblyName>
-    <PackageIcon>favicon.ico</PackageIcon>
+    <PackageIcon></PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
