@@ -61,7 +61,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<DocumentType> DocumentTypes { get; set; }
         public virtual DbSet<EmailAddress> EmailAddresses { get; set; }
         public virtual DbSet<EmailAddressType> EmailAddressTypes { get; set; }
-        public virtual DbSet<Enrolment> Enrolments { get; set; }
+        public virtual DbSet<CurriculumBandMembership> Enrolments { get; set; }
         public virtual DbSet<ExclusionReason> ExclusionReasons { get; set; }
         public virtual DbSet<ExclusionType> ExclusionTypes { get; set; }
         public virtual DbSet<GiftedTalented> GiftedTalented { get; set; }
@@ -87,7 +87,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<MedicalEvent> MedicalEvents { get; set; }
         public virtual DbSet<Observation> Observations { get; set; }
         public virtual DbSet<ObservationOutcome> ObservationOutcomes { get; set; }
-        public virtual DbSet<Period> Periods { get; set; }
+        public virtual DbSet<AttendancePeriod> AttendancePeriods { get; set; }
         public virtual DbSet<Person> People { get; set; }
         public virtual DbSet<PersonCondition> PersonConditions { get; set; }
         public virtual DbSet<PersonDietaryRequirement> PersonDietaryRequirements { get; set; }
@@ -280,7 +280,7 @@ namespace MyPortal.Database.Models
                             modelBuilder.Entity<EmailAddressType>()
                                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 
-                            modelBuilder.Entity<Enrolment>()
+                            modelBuilder.Entity<CurriculumBandMembership>()
                                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 
                             modelBuilder.Entity<ExclusionReason>()
@@ -352,7 +352,7 @@ namespace MyPortal.Database.Models
                             modelBuilder.Entity<ObservationOutcome>()
                                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 
-                            modelBuilder.Entity<Period>()
+                            modelBuilder.Entity<AttendancePeriod>()
                                 .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 
                             modelBuilder.Entity<Person>()
@@ -535,16 +535,16 @@ namespace MyPortal.Database.Models
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Period>()
+            modelBuilder.Entity<AttendancePeriod>()
                 .HasMany(e => e.AttendanceMarks)
-                .WithOne(e => e.Period)
+                .WithOne(e => e.AttendancePeriod)
                 .HasForeignKey(e => e.PeriodId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Period>()
+            modelBuilder.Entity<AttendancePeriod>()
                 .HasMany(e => e.Sessions)
-                .WithOne(e => e.Period)
+                .WithOne(e => e.AttendancePeriod)
                 .HasForeignKey(e => e.PeriodId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);

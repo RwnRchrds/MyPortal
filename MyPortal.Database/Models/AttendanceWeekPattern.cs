@@ -13,7 +13,7 @@ namespace MyPortal.Database.Models
         public AttendanceWeekPattern()
         {
             AttendanceWeeks = new HashSet<AttendanceWeek>();
-            Periods = new HashSet<Period>();
+            Periods = new HashSet<AttendancePeriod>();
         }
 
         [Key]
@@ -34,6 +34,6 @@ namespace MyPortal.Database.Models
         
         public virtual AcademicYear AcademicYear { get; set; }
         public virtual ICollection<AttendanceWeek> AttendanceWeeks { get; set; }
-        public virtual ICollection<Period> Periods { get; set; }
+        public virtual ICollection<AttendancePeriod> Periods { get; set; }
     }
 }

@@ -20,7 +20,7 @@ namespace MyPortal.Database.Repositories
         protected override void SelectAllRelated(Query query)
         {
             query.SelectAll(typeof(Class));
-            query.SelectAll(typeof(Period));
+            query.SelectAll(typeof(AttendancePeriod));
 
             JoinRelated(query);
         }
@@ -35,10 +35,10 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<Session, Class, Period, Session>(sql.Sql, (session, currClass, period) =>
+            return await Connection.QueryAsync<Session, Class, AttendancePeriod, Session>(sql.Sql, (session, currClass, period) =>
                 {
                     session.Class = currClass;
-                    session.Period = period;
+                    session.AttendancePeriod = period;
 
                     return session;
                 }, sql.NamedBindings);

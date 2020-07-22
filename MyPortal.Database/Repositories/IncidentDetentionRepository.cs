@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Dapper;
@@ -71,6 +72,16 @@ namespace MyPortal.Database.Repositories
 
                     return incidentDetention;
                 }, sql.NamedBindings);
+        }
+
+        public async Task<IncidentDetention> Get(Guid detentionId, Guid studentId)
+        {
+            var query = SelectAllColumns();
+
+            query.Where("Detention.Id", detentionId);
+            query.Where("Student.Id", studentId);
+
+            return await ExecuteQueryFirstOrDefault(query);
         }
     }
 }

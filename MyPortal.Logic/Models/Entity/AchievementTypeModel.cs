@@ -7,7 +7,7 @@ namespace MyPortal.Logic.Models.Entity
     {
         public Guid Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Description is required")]
         [StringLength(256)]
         public string Description { get; set; }
 

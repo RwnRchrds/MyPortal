@@ -38,6 +38,20 @@ namespace MyPortal.Logic.Services
             return detentions.Select(BusinessMapper.Map<DetentionModel>);
         }
 
+        public async Task<DetentionModel> GetById(Guid detentionId)
+        {
+            var detention = await _detentionRepository.GetById(detentionId);
+
+            return BusinessMapper.Map<DetentionModel>(detention);
+        }
+
+        public async Task<DetentionModel> GetByIncident(Guid incidentId)
+        {
+            var detention = await _detentionRepository.GetByIncident(incidentId);
+
+            return BusinessMapper.Map<DetentionModel>(detention);
+        }
+
         public async Task Create(params CreateDetentionModel[] detentionModels)
         {
             foreach (var model in detentionModels)
@@ -142,6 +156,8 @@ namespace MyPortal.Logic.Services
         {
             var detentionInDb = await _detentionRepository.GetById(detentionId);
 
+            var relatedIncident = await _incidentDetentionRepository.Get(detentionId, studentId);
+
             if (detentionInDb == null)
             {
                 throw NotFound();
@@ -164,11 +180,22 @@ namespace MyPortal.Logic.Services
             }
             
             await _attendeeRepository.Delete(attendeeToRemove.Id);
+            
+            if (relatedIncident != null)
+            {
+                await _incidentDetentionRepository.Delete(relatedIncident.Id);
+
+                await _incidentDetentionRepository.SaveChanges();
+            }
         }
 
         public override void Dispose()
         {
             _detentionRepository.Dispose();
+            _incidentRepository.Dispose();
+            _incidentDetentionRepository.Dispose();
+            _attendeeRepository.Dispose();
+            _studentRepository.Dispose();
         }
     }
 }

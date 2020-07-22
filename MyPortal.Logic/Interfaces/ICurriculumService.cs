@@ -22,7 +22,7 @@ namespace MyPortal.Logic.Interfaces
         Task CreateBandAssignment(params (Guid bandId, Guid blockId)[] bandAssignments);
         Task DeleteBandAssignment(params Guid[] bandAssignmentIds);
 
-        Task CreateGroupMembership(params (Guid studentId, Guid groupId)[] groupMemberships);
+        Task CreateGroupMembership(params CurriculumGroupMembershipModel[] groupMemberships);
         Task DeleteGroupMembership(params Guid[] membershipIds);
     }
 }

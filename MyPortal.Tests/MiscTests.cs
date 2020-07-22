@@ -53,7 +53,7 @@ namespace MyPortal.Tests
         }
 
         [Test]
-        public void EntityModel_MissingProperties()
+        public void EntityModel_NoMissingProperties()
         {
             var mappingValid = true;
 
@@ -80,7 +80,7 @@ namespace MyPortal.Tests
         }
 
         [Test]
-        public void EntityModel_SurplusProperties()
+        public void EntityModel_NoSurplusProperties()
         {
             var mappingValid = true;
 

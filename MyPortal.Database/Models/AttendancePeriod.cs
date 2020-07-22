@@ -8,10 +8,10 @@ using MyPortal.Database.Interfaces;
 namespace MyPortal.Database.Models
 {
     [Table("AttendancePeriod")]
-    public partial class Period : IEntity
+    public partial class AttendancePeriod : IEntity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Period()
+        public AttendancePeriod()
         {
             AttendanceMarks = new HashSet<AttendanceMark>();
             Sessions = new HashSet<Session>();

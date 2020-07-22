@@ -4,6 +4,9 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using MyPortal.Database.Models;
+using MyPortal.Database.Repositories;
+using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Services;
 using SqlKata.Compilers;
 
 namespace MyPortal.Tests.TestData
@@ -15,9 +18,9 @@ namespace MyPortal.Tests.TestData
             return new DbContextOptionsBuilder<ApplicationDbContext>().UseSqlite(connection).Options;
         }
         
-        public static ApplicationDbContext GetContext(out DbConnection connection)
+        internal static ApplicationDbContext GetContext()
         {
-            connection = new SqliteConnection("DataSource=:memory:");
+            var connection = new SqliteConnection("DataSource=:memory:");
             
             connection.Open();
 
@@ -29,6 +32,11 @@ namespace MyPortal.Tests.TestData
             }
 
             return new ApplicationDbContext(CreateOptions(connection)) {TestData = true};
+        }
+
+        internal static ISchoolService CreateSchoolService(ApplicationDbContext context)
+        {
+            return new SchoolService(new SchoolRepository(context.Database.GetDbConnection(), context));
         }
     }
 }

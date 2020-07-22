@@ -49,7 +49,7 @@ namespace MyPortal.Logic.Helpers
             {typeof(Location), typeof(LocationModel)},
             {typeof(LogNote), typeof(LogNoteModel)},
             {typeof(LogNoteType), typeof(LogNoteTypeModel)},
-            {typeof(Period), typeof(PeriodModel)},
+            {typeof(AttendancePeriod), typeof(AttendancePeriodModel)},
             {typeof(Person), typeof(PersonModel)},
             {typeof(RegGroup), typeof(RegGroupModel)},
             {typeof(ResultSet), typeof(ResultSetModel)},

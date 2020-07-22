@@ -20,6 +20,7 @@ namespace MyPortal.Database.Search
         }
 
         public StudentStatus Status { get; set; }
+        public Guid? CurriculumGroupId { get; set; }
         public Guid? RegGroupId { get; set; }
         public Guid? YearGroupId { get; set; }
         public Guid? HouseId { get; set; }

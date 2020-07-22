@@ -2,7 +2,7 @@
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IEnrolmentRepository : IReadWriteRepository<Enrolment>
+    public interface IAttendancePeriodRepository : IReadWriteRepository<AttendancePeriod>
     {
     }
 }

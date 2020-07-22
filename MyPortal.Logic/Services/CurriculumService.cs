@@ -2,6 +2,8 @@
 using System.Linq;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
+using MyPortal.Database.Repositories;
+using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Curriculum;
@@ -16,16 +18,19 @@ namespace MyPortal.Logic.Services
         private readonly ICurriculumGroupRepository _groupRepository;
         private readonly ICurriculumBandBlockAssignmentRepository _assignmentRepository;
         private readonly ICurriculumGroupMembershipRepository _groupMembershipRepository;
+        private readonly ICurriculumBandMembershipRepository _bandMembershipRepository;
 
         public CurriculumService(ICurriculumBandRepository bandRepository, ICurriculumBlockRepository blockRepository,
             ICurriculumGroupRepository groupRepository, ICurriculumBandBlockAssignmentRepository assignmentRepository,
-            ICurriculumGroupMembershipRepository groupMembershipRepository) : base("Curriculum object")
+            ICurriculumGroupMembershipRepository groupMembershipRepository,
+            ICurriculumBandMembershipRepository bandMembershipRepository) : base("Curriculum object")
         {
             _bandRepository = bandRepository;
             _blockRepository = blockRepository;
             _groupRepository = groupRepository;
             _assignmentRepository = assignmentRepository;
             _groupMembershipRepository = groupMembershipRepository;
+            _bandMembershipRepository = bandMembershipRepository;
         }
         
         public override void Dispose()
@@ -35,6 +40,7 @@ namespace MyPortal.Logic.Services
             _groupRepository.Dispose();
             _assignmentRepository.Dispose();
             _groupMembershipRepository.Dispose();
+            _bandMembershipRepository.Dispose();
         }
 
         public async Task CreateBand(params CurriculumBandModel[] bandModels)
@@ -81,6 +87,24 @@ namespace MyPortal.Logic.Services
             }
 
             await _bandRepository.SaveChanges();
+        }
+
+        public async Task CreateBandMembership(params CurriculumBandMembership[] bandMemberships)
+        {
+            foreach (var bandMembership in bandMemberships)
+            {
+                var membership = new CurriculumBandMembership
+                {
+                    StudentId = bandMembership.StudentId,
+                    BandId = bandMembership.BandId,
+                    StartDate = bandMembership.StartDate,
+                    EndDate = bandMembership.EndDate
+                };
+
+                _bandMembershipRepository.Create(membership);
+            }
+
+            await _bandMembershipRepository.SaveChanges();
         }
 
         public async Task CreateBlock(params CreateCurriculumBlockModel[] blockModels)
@@ -247,17 +271,37 @@ namespace MyPortal.Logic.Services
             await _assignmentRepository.SaveChanges();
         }
 
-        public async Task CreateGroupMembership(params (Guid studentId, Guid groupId)[] groupMemberships)
+        public async Task CreateGroupMembership(params CurriculumGroupMembershipModel[] groupMemberships)
         {
             foreach (var groupMembership in groupMemberships)
             {
                 var membership = new CurriculumGroupMembership
                 {
-                    StudentId = groupMembership.studentId,
-                    GroupId = groupMembership.groupId
+                    StudentId = groupMembership.StudentId,
+                    GroupId = groupMembership.GroupId,
+                    StartDate = groupMembership.StartDate,
+                    EndDate = groupMembership.EndDate
                 };
                 
                 _groupMembershipRepository.Create(membership);
+            }
+
+            await _groupMembershipRepository.SaveChanges();
+        }
+
+        public async Task UpdateGroupMembership(params CurriculumGroupMembershipModel[] groupMemberships)
+        {
+            foreach (var groupMembership in groupMemberships)
+            {
+                var membershipInDb = await _groupMembershipRepository.GetByIdWithTracking(groupMembership.Id);
+
+                if (membershipInDb == null)
+                {
+                    throw NotFound("Group membership not found.");
+                }
+
+                membershipInDb.StartDate = groupMembership.StartDate;
+                membershipInDb.EndDate = groupMembership.EndDate;
             }
 
             await _groupMembershipRepository.SaveChanges();

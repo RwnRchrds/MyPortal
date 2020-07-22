@@ -6,8 +6,8 @@ using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
-    [Table("Enrolment")]
-    public class Enrolment : IEntity
+    [Table("CurriculumBandMembership")]
+    public class CurriculumBandMembership : IEntity
     {
         [Column(Order = 0)]
         [Key]
@@ -19,6 +19,10 @@ namespace MyPortal.Database.Models
 
         [Column(Order = 2)]
         public Guid BandId { get; set; }
+
+        public DateTime StartDate { get; set; }
+
+        public DateTime EndDate { get; set; }
 
         public virtual CurriculumBand Band { get; set; }
 

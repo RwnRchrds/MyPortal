@@ -49,30 +49,31 @@ namespace MyPortal.Logic.Helpers
             {
                 return false;
             }
-            
-            if (int.TryParse(nhsNumber[9].ToString(), out var checkDigit))
+
+            if (!int.TryParse(nhsNumber[9].ToString(), out var checkDigit))
             {
-                var result = 0;
-                for (int i = 0; i < 9; i++)
-                {
-                    if (int.TryParse(nhsNumber[i].ToString(), out var digitValue))
-                    {
-                        result += digitValue * (10 - i);
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                
-                var validationResult = 11 - result % 11;
-
-                if (validationResult == 10) return false;
-
-                return validationResult == 11 ? checkDigit == 0 : checkDigit == validationResult;
+                return false;
             }
 
-            return false;
+            var result = 0;
+
+            for (var i = 0; i < 9; i++)
+            {
+                if (int.TryParse(nhsNumber[i].ToString(), out var digitValue))
+                {
+                    result += digitValue * (10 - i);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+                
+            var validationResult = 11 - result % 11;
+
+            if (validationResult == 10) return false;
+
+            return validationResult == 11 ? checkDigit == 0 : checkDigit == validationResult;
         }
 
         public static void ValidateModel<T>(T model)

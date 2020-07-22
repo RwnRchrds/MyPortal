@@ -17,7 +17,7 @@ namespace MyPortal.Database.Models
             AttendanceMarks = new HashSet<AttendanceMark>();
             Achievements = new HashSet<Achievement>();
             Incidents = new HashSet<Incident>();
-            Enrolments = new HashSet<Enrolment>();
+            Enrolments = new HashSet<CurriculumBandMembership>();
             FinanceBasketItems = new HashSet<BasketItem>();
             Sales = new HashSet<Sale>();
             MedicalEvents = new HashSet<MedicalEvent>();
@@ -111,7 +111,7 @@ namespace MyPortal.Database.Models
         public virtual ICollection<Incident> Incidents { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Enrolment> Enrolments { get; set; }
+        public virtual ICollection<CurriculumBandMembership> Enrolments { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BasketItem> FinanceBasketItems { get; set; }

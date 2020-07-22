@@ -13,7 +13,7 @@ namespace MyPortal.Database.Models
     {
     public CurriculumBand()
     {
-        Enrolments = new HashSet<Enrolment>();
+        Enrolments = new HashSet<CurriculumBandMembership>();
         AssignedBlocks = new HashSet<CurriculumBandBlockAssignment>();
     }
 
@@ -37,7 +37,7 @@ namespace MyPortal.Database.Models
 
     public virtual AcademicYear AcademicYear { get; set; }
     public virtual CurriculumYearGroup CurriculumYearGroup { get; set; }
-    public virtual ICollection<Enrolment> Enrolments { get; set; }
+    public virtual ICollection<CurriculumBandMembership> Enrolments { get; set; }
     public virtual ICollection<CurriculumBandBlockAssignment> AssignedBlocks { get; set; }
     }
 }

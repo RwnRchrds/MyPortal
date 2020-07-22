@@ -86,6 +86,18 @@ namespace MyPortal.Database.Repositories
             return await ExecuteQuery(query);
         }
 
+        public async Task<Detention> GetByIncident(Guid incidentId)
+        {
+            var query = SelectAllColumns();
+            
+            query.LeftJoin("IncidentDetention", "IncidentDetention.DetentionId", "Detention.Id");
+            query.LeftJoin("Incident", "Incident.Id", "IncidentDetention.IncidentId");
+
+            query.Where("Incident.Id", incidentId);
+
+            return await ExecuteQueryFirstOrDefault(query);
+        }
+
         public async Task<IEnumerable<Detention>> GetAll(DetentionSearchOptions searchOptions)
         {
             var query = SelectAllColumns();

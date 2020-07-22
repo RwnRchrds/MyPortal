@@ -27,7 +27,7 @@ namespace MyPortal.Database.Repositories
             query.SelectAll(typeof(Person), "StudentPerson");
             query.SelectAll(typeof(AttendanceWeek));
             query.SelectAll(typeof(AttendanceWeekPattern));
-            query.SelectAll(typeof(Period));
+            query.SelectAll(typeof(AttendancePeriod), "Period");
 
             JoinRelated(query);
         }
@@ -45,7 +45,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<AttendanceMark, Student, Person, AttendanceWeek, AttendanceWeekPattern, Period, AttendanceMark>(
+            return await Connection.QueryAsync<AttendanceMark, Student, Person, AttendanceWeek, AttendanceWeekPattern, AttendancePeriod, AttendanceMark>(
                 sql.Sql,
                 (mark, student, person, week, pattern, period) =>
                 {
@@ -53,7 +53,7 @@ namespace MyPortal.Database.Repositories
                     mark.Student.Person = person;
                     mark.Week = week;
                     mark.Week.WeekPattern = pattern;
-                    mark.Period = period;
+                    mark.AttendancePeriod = period;
 
                     return mark;
                 }, sql.NamedBindings);

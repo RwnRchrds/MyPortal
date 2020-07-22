@@ -12,6 +12,8 @@ namespace MyPortal.Database.Interfaces.Repositories
 
         Task<IEnumerable<Detention>> GetByStudent(Guid studentId, Guid academicYearId);
 
+        Task<Detention> GetByIncident(Guid incidentId);
+
         Task<IEnumerable<Detention>> GetAll(DetentionSearchOptions searchOptions);
     }
 }

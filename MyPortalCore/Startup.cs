@@ -138,7 +138,7 @@ namespace MyPortalCore
             services.AddScoped<IDocumentTypeRepository, DocumentTypeRepository>();
             services.AddScoped<IEmailAddressRepository, EmailAddressRepository>();
             services.AddScoped<IEmailAddressTypeRepository, EmailAddressTypeRepository>();
-            services.AddScoped<IEnrolmentRepository, EnrolmentRepository>();
+            services.AddScoped<ICurriculumBandMembershipRepository, CurriculumBandMembershipRepository>();
             services.AddScoped<IGiftedTalentedRepository, GiftedTalentedRepository>();
             services.AddScoped<IGovernanceTypeRepository, GovernanceTypeRepository>();
             services.AddScoped<IGradeRepository, GradeRepository>();
@@ -160,7 +160,7 @@ namespace MyPortalCore
             services.AddScoped<IMedicalEventRepository, MedicalEventRepository>();
             services.AddScoped<IObservationOutcomeRepository, ObservationOutcomeRepository>();
             services.AddScoped<IObservationRepository, ObservationRepository>();
-            services.AddScoped<IPeriodRepository, PeriodRepository>();
+            services.AddScoped<IAttendancePeriodRepository, AttendancePeriodRepository>();
             services.AddScoped<IPersonConditionRepository, PersonConditionRepository>();
             services.AddScoped<IPersonDietaryRequirementRepository, PersonDietaryRequirementRepository>();
             services.AddScoped<IPersonRepository, PersonRepository>();
@@ -213,7 +213,7 @@ namespace MyPortalCore
             services.AddScoped<IIncidentService, IncidentService>();
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<ILogNoteService, LogNoteService>();
-            services.AddScoped<IPeriodService, PeriodService>();
+            services.AddScoped<IPeriodService, AttendancePeriodService>();
             services.AddScoped<IPersonService, PersonService>();
             services.AddScoped<ISchoolService, SchoolService>();
             services.AddScoped<IStaffMemberService, StaffMemberService>();

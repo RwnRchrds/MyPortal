@@ -9,16 +9,16 @@ using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Services
 {
-    public class PeriodService : BaseService, IPeriodService
+    public class AttendancePeriodService : BaseService, IPeriodService
     {
-        private readonly IPeriodRepository _periodRepository;
+        private readonly IAttendancePeriodRepository _periodRepository;
 
-        public PeriodService(IPeriodRepository periodRepository) : base("Period")
+        public AttendancePeriodService(IAttendancePeriodRepository periodRepository) : base("Attendance Period")
         {
             _periodRepository = periodRepository;
         }
 
-        public async Task<PeriodModel> GetById(Guid periodId)
+        public async Task<AttendancePeriodModel> GetById(Guid periodId)
         {
             var period = await _periodRepository.GetById(periodId);
 
@@ -27,7 +27,7 @@ namespace MyPortal.Logic.Services
                 throw NotFound();
             }
 
-            return BusinessMapper.Map<PeriodModel>(period);
+            return BusinessMapper.Map<AttendancePeriodModel>(period);
         }
 
         public override void Dispose()

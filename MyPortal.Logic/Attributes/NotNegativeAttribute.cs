@@ -5,16 +5,11 @@ using System.Text;
 
 namespace MyPortal.Logic.Attributes
 {
-    public class NotNegativeAttribute : ValidationAttribute
+    public class NotNegativeAttribute : RangeAttribute
     {
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        public NotNegativeAttribute() : base(0, int.MaxValue)
         {
-            if ((decimal) value < 0)
-            {
-                return new ValidationResult("Value cannot be less than 0.");
-            }
 
-            return ValidationResult.Success;
         }
     }
 }

@@ -4,7 +4,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class PeriodModel
+    public class AttendancePeriodModel
     {
         public Guid Id { get; set; }
 

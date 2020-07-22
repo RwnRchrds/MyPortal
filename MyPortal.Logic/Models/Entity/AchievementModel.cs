@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using MyPortal.Database.Models;
 using MyPortal.Logic.Attributes;
 using MyPortal.Logic.Models.ListModels;
@@ -11,24 +12,24 @@ namespace MyPortal.Logic.Models.Entity
         
         public Guid AcademicYearId { get; set; }
 
-        [NotEmpty]
+        [Required(ErrorMessage = "Achievement Type is required.")]
         public Guid AchievementTypeId { get; set; }
 
-        [NotEmpty]
         public Guid StudentId { get; set; }
 
-        [NotEmpty]
+        [Required(ErrorMessage = "Location is required.")]
         public Guid LocationId { get; set; }
         
         public Guid RecordedById { get; set; }
 
-        [NotEmpty]
-        public Guid OutcomeId { get; set; }
+        public Guid? OutcomeId { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
         public string Comments { get; set; }
 
+        [Required(ErrorMessage = "Points is Required")]
+        [Range(0, int.MaxValue, ErrorMessage = "Points cannot be negative.")]
         public int Points { get; set; }
 
         public bool Deleted { get; set; }

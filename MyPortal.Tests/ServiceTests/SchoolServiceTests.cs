@@ -39,8 +39,8 @@ namespace MyPortal.Tests.ServiceTests
         [Test]
         public async System.Threading.Tasks.Task GetLocalSchoolName_ReturnsValue()
         {
-            await using (var context = TestDataFactory.GetContext(out var connection))
-            using (ISchoolService schoolService = new SchoolService(new SchoolRepository(connection, context)))
+            using (var context = TestDataFactory.GetContext())
+            using (ISchoolService schoolService = TestDataFactory.CreateSchoolService(context))
             {
                 AddTestSchool(context);
 

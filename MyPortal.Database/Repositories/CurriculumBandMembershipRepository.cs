@@ -11,9 +11,9 @@ using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
-    public class EnrolmentRepository : BaseReadWriteRepository<Enrolment>, IEnrolmentRepository
+    public class CurriculumBandMembershipRepository : BaseReadWriteRepository<CurriculumBandMembership>, ICurriculumBandMembershipRepository
     {
-        public EnrolmentRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public CurriculumBandMembershipRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
            
         }
@@ -28,15 +28,15 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("Student", "Student.Id", "Enrolment.StudentId");
-            query.LeftJoin("CurriculumBand", "CurriculumBand.Id", "Enrolment.BandId");
+            query.LeftJoin("Student", "Student.Id", "CurriculumBandMembership.StudentId");
+            query.LeftJoin("CurriculumBand", "CurriculumBand.Id", "CurriculumBandMembership.BandId");
         }
 
-        protected override async Task<IEnumerable<Enrolment>> ExecuteQuery(Query query)
+        protected override async Task<IEnumerable<CurriculumBandMembership>> ExecuteQuery(Query query)
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<Enrolment, Student, CurriculumBand, Enrolment>(sql.Sql,
+            return await Connection.QueryAsync<CurriculumBandMembership, Student, CurriculumBand, CurriculumBandMembership>(sql.Sql,
                 (enrolment, student, band) =>
                 {
                     enrolment.Student = student;

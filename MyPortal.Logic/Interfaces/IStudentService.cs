@@ -20,12 +20,6 @@ namespace MyPortal.Logic.Interfaces
 
         Task<StudentModel> GetByPersonId(Guid personId, bool throwIfNotFound = true);
 
-        Task<IEnumerable<StudentModel>> GetByCurriculumGroup(Guid groupId);
-
-        Task<IEnumerable<StudentModel>> GetByRegGroup(Guid regGroupId);
-
-        Task<IEnumerable<StudentModel>> GetByYearGroup(Guid yearGroupId);
-
         SelectList GetStudentStatusOptions(StudentStatus defaultStatus = StudentStatus.OnRoll);
     }
 }

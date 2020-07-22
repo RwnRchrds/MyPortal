@@ -35,7 +35,7 @@ namespace MyPortal.Database.Models
         [Column(Order = 6)]
         public int MinutesLate { get; set; }
 
-        public virtual Period Period { get; set; }
+        public virtual AttendancePeriod AttendancePeriod { get; set; }
 
         public virtual Student Student { get; set; }
 

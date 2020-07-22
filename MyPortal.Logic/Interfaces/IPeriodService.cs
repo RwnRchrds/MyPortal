@@ -8,6 +8,6 @@ namespace MyPortal.Logic.Interfaces
 { 
     public interface IPeriodService : IService
     {
-        Task<PeriodModel> GetById(Guid periodId);
+        Task<AttendancePeriodModel> GetById(Guid periodId);
     }
 }

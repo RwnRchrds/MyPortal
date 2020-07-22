@@ -13,11 +13,11 @@ namespace MyPortal.Logic.Models.Entity
 
         public decimal? MaxMark { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Name is required.")]
         [StringLength(128)]
         public string Name { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Description is required.")]
         [StringLength(256)]
         public string Description { get; set; }
 

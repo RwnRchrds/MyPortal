@@ -10,9 +10,9 @@ using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
-    public class PeriodRepository : BaseReadWriteRepository<Period>, IPeriodRepository
+    public class AttendancePeriodRepository : BaseReadWriteRepository<AttendancePeriod>, IAttendancePeriodRepository
     {
-        public PeriodRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public AttendancePeriodRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
         }
 
@@ -25,14 +25,14 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("AttendanceWeekPattern as WeekPattern", "WeekPattern.Id", "Period.WeekPatternId");
+            query.LeftJoin("AttendanceWeekPattern as WeekPattern", "WeekPattern.Id", "AttendancePeriod.WeekPatternId");
         }
 
-        protected override async Task<IEnumerable<Period>> ExecuteQuery(Query query)
+        protected override async Task<IEnumerable<AttendancePeriod>> ExecuteQuery(Query query)
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<Period, AttendanceWeekPattern, Period>(sql.Sql, (period, pattern) =>
+            return await Connection.QueryAsync<AttendancePeriod, AttendanceWeekPattern, AttendancePeriod>(sql.Sql, (period, pattern) =>
             {
                 period.WeekPattern = pattern;
 

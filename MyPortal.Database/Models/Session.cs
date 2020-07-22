@@ -28,7 +28,7 @@ namespace MyPortal.Database.Models
 
         public virtual StaffMember Teacher { get; set; }
         
-        public virtual Period Period { get; set; }
+        public virtual AttendancePeriod AttendancePeriod { get; set; }
 
         public virtual Class Class { get; set; }
 

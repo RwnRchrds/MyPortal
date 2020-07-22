@@ -59,13 +59,22 @@ namespace MyPortal.Logic.Services
             }
         }
 
-        public async Task ResetPassword(PasswordReset model)
+        public async Task<PasswordVerificationResult> CheckPassword(Guid userId, string password)
         {
-            var user = await _userManager.FindByIdAsync(model.UserId.ToString());
+            var hasher = new PasswordHasher<ApplicationUser>();
+
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            return hasher.VerifyHashedPassword(user, user.PasswordHash, password);
+        }
+
+        public async Task SetPassword(Guid userId, string newPassword)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
 
             await _userManager.RemovePasswordAsync(user);
 
-            await _userManager.AddPasswordAsync(user, model.NewPassword);
+            await _userManager.AddPasswordAsync(user, newPassword);
         }
 
         public async Task<bool> EnableDisableUser(Guid userId)

@@ -23,7 +23,7 @@ namespace MyPortal.Logic.Models.Entity
 
         public int MinutesLate { get; set; }
 
-        public virtual PeriodModel Period { get; set; }
+        public virtual AttendancePeriodModel AttendancePeriod { get; set; }
 
         public virtual StudentModel Student { get; set; }
 
