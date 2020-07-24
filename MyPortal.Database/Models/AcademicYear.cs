@@ -36,6 +36,9 @@ namespace MyPortal.Database.Models
 
         [Column(TypeName = "date", Order = 3)]
         public DateTime LastDate { get; set; }
+        
+        [Column(Order = 4)] 
+        public bool Locked { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AttendanceWeekPattern> AttendanceWeekPatterns { get; set; }

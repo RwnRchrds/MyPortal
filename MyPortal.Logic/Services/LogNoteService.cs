@@ -19,11 +19,14 @@ namespace MyPortal.Logic.Services
 {
     public class LogNoteService : BaseService, ILogNoteService
     {
+        private readonly IAcademicYearRepository _academicYearRepository;
         private readonly ILogNoteRepository _logNoteRepository;
         private readonly ILogNoteTypeRepository _logNoteTypeRepository;
 
-        public LogNoteService(ILogNoteRepository logNoteRepository, ILogNoteTypeRepository logNoteTypeRepository) : base("Log note")
+        public LogNoteService(ILogNoteRepository logNoteRepository, ILogNoteTypeRepository logNoteTypeRepository,
+            IAcademicYearRepository academicYearRepository) : base("Log note")
         {
+            _academicYearRepository = academicYearRepository;
             _logNoteRepository = logNoteRepository;
             _logNoteTypeRepository = logNoteTypeRepository;
         }
@@ -56,29 +59,30 @@ namespace MyPortal.Logic.Services
 
         public async Task Create(params LogNoteModel[] logNoteObjects)
         {
-            using (new ProcessTimer("Create Log Note"))
+            Guid? academicYearId = null;
+            
+            foreach (var logNoteObject in logNoteObjects)
             {
-                foreach (var logNoteObject in logNoteObjects)
+                await AcademicYearModel.CheckLock(_academicYearRepository, logNoteObject.AcademicYearId);
+                
+                var createDate = DateTime.Now;
+
+                var logNote = new LogNote
                 {
-                    var createDate = DateTime.Now;
+                    TypeId = logNoteObject.TypeId,
+                    Message = logNoteObject.Message,
+                    StudentId = logNoteObject.StudentId,
+                    CreatedDate = createDate,
+                    UpdatedDate = createDate,
+                    CreatedById = logNoteObject.CreatedById,
+                    UpdatedById = logNoteObject.UpdatedById,
+                    AcademicYearId = logNoteObject.AcademicYearId
+                };
 
-                    var logNote = new LogNote
-                    {
-                        TypeId = logNoteObject.TypeId,
-                        Message = logNoteObject.Message,
-                        StudentId = logNoteObject.StudentId,
-                        CreatedDate = createDate,
-                        UpdatedDate = createDate,
-                        CreatedById = logNoteObject.CreatedById,
-                        UpdatedById = logNoteObject.UpdatedById,
-                        AcademicYearId = logNoteObject.AcademicYearId
-                    };
-
-                    _logNoteRepository.Create(logNote);
-                }
-
-                await _logNoteRepository.SaveChanges();
+                _logNoteRepository.Create(logNote);
             }
+
+            await _logNoteRepository.SaveChanges();
         }
 
         public async Task Update(params LogNoteModel[] logNoteObjects)
@@ -93,6 +97,8 @@ namespace MyPortal.Logic.Services
                 {
                     throw NotFound();
                 }
+                
+                await AcademicYearModel.CheckLock(_academicYearRepository, logNote.AcademicYearId);
 
                 logNote.TypeId = logNoteObject.TypeId;
                 logNote.Message = logNoteObject.Message;
@@ -107,6 +113,10 @@ namespace MyPortal.Logic.Services
         {
             foreach (var logNoteId in logNoteIds)
             {
+                var logNote = await GetById(logNoteId);
+
+                await AcademicYearModel.CheckLock(_academicYearRepository, logNote.AcademicYearId);
+                
                 await _logNoteRepository.Delete(logNoteId);
             }
 

@@ -9,6 +9,7 @@ using MyPortal.Database.Models;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Exceptions;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
@@ -31,6 +32,36 @@ namespace MyPortal.Logic.Services
             }
 
             return BusinessMapper.Map<AcademicYearModel>(acadYear);
+        }
+
+        public async Task<AcademicYearModel> GetById(Guid academicYearId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<AcademicYearModel> GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task Create(params AcademicYearModel[] academicYearModels)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task Update(params AcademicYearModel[] academicYearModels)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task Delete(params Guid[] academicYearIds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> IsLocked(Guid academicYearId)
+        {
+            return await _academicYearRepository.IsLocked(academicYearId);
         }
 
         public override void Dispose()

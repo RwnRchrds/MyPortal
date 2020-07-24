@@ -13,6 +13,7 @@
     <Product>MyPortal</Product>
     <AssemblyName>MyPortal</AssemblyName>
     <PackageIcon></PackageIcon>
+    <ApplicationIcon>favicon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>

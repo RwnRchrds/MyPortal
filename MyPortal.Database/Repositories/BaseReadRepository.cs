@@ -19,13 +19,22 @@ namespace MyPortal.Database.Repositories
 {
     public abstract class BaseReadRepository<TEntity> : IReadRepository<TEntity> where TEntity : class, IEntity
     {
-        protected readonly IDbConnection Connection;
+        protected IDbConnection Connection;
         protected readonly SqlServerCompiler Compiler;
 
         public BaseReadRepository(IDbConnection connection, string tblAlias = null)
         {
             Connection = connection;
 
+            Compiler = new SqlServerCompiler();
+
+            TblAlias = string.IsNullOrWhiteSpace(tblAlias) ? typeof(TEntity).Name : tblAlias;
+
+            TblName = EntityHelper.GetTableName(typeof(TEntity), tblAlias);
+        }
+
+        public BaseReadRepository(string tblAlias = null)
+        {
             Compiler = new SqlServerCompiler();
 
             TblAlias = string.IsNullOrWhiteSpace(tblAlias) ? typeof(TEntity).Name : tblAlias;
@@ -49,6 +58,13 @@ namespace MyPortal.Database.Repositories
             var result = await ExecuteQuery(query);
 
             return result.FirstOrDefault();
+        }
+
+        protected async Task<T> ExecuteQueryFirstOrDefault<T>(Query query)
+        {
+            var sql = Compiler.Compile(query);
+
+            return await Connection.QueryFirstOrDefaultAsync<T>(sql.Sql, sql.NamedBindings);
         }
 
         protected virtual void JoinRelated(Query query)

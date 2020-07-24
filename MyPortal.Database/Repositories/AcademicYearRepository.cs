@@ -42,5 +42,16 @@ namespace MyPortal.Database.Repositories
 
             return await ExecuteQuery(sql);
         }
+
+        public async Task<bool> IsLocked(Guid academicYearId)
+        {
+            var query = new Query(TblName);
+
+            query.Select("Locked");
+
+            query.Where("AcademicYear.Id", academicYearId);
+
+            return await ExecuteQueryFirstOrDefault<bool>(query);
+        }
     }
 }

@@ -16,17 +16,19 @@ namespace MyPortal.Logic.Services
 {
     public class AchievementService : BaseService, IAchievementService
     {
+        private readonly IAcademicYearRepository _academicYearRepository;
         private readonly IAchievementRepository _achievementRepository;
         private readonly IAchievementTypeRepository _achievementTypeRepository;
         private readonly IAchievementOutcomeRepository _achievementOutcomeRepository;
 
         public AchievementService(IAchievementRepository achievementRepository,
             IAchievementTypeRepository achievementTypeRepository,
-            IAchievementOutcomeRepository achievementOutcomeRepository) : base("Achievement")
+            IAchievementOutcomeRepository achievementOutcomeRepository, IAcademicYearRepository academicYearRepository) : base("Achievement")
         {
             _achievementRepository = achievementRepository;
             _achievementTypeRepository = achievementTypeRepository;
             _achievementOutcomeRepository = achievementOutcomeRepository;
+            _academicYearRepository = academicYearRepository;
         }
 
         public override void Dispose()
@@ -64,10 +66,20 @@ namespace MyPortal.Logic.Services
             return count;
         }
 
+        public async Task CheckYearLock(Guid academicYearId)
+        {
+            if (await _academicYearRepository.IsLocked(academicYearId))
+            {
+                throw BadRequest("Academic year is locked and cannot be modified.");
+            }
+        }
+
         public async Task Create(params AchievementModel[] achievements)
         {
             foreach (var achievement in achievements)
             {
+                await AcademicYearModel.CheckLock(_academicYearRepository, achievement.AcademicYearId);
+                
                 var model = new Achievement
                 {
                     AcademicYearId = achievement.AcademicYearId,
@@ -91,6 +103,8 @@ namespace MyPortal.Logic.Services
         {
             foreach (var achievement in achievements)
             {
+                await AcademicYearModel.CheckLock(_academicYearRepository, achievement.AcademicYearId);
+                
                 var achievementInDb = await _achievementRepository.GetByIdWithTracking(achievement.Id);
 
                 if (achievementInDb == null)
@@ -112,6 +126,10 @@ namespace MyPortal.Logic.Services
         {
             foreach (var achievementId in achievementIds)
             {
+                var achievement = await GetById(achievementId);
+
+                await AcademicYearModel.CheckLock(_academicYearRepository, achievement.AcademicYearId);
+                
                 await _achievementRepository.Delete(achievementId);
             }
 

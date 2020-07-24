@@ -17,5 +17,10 @@ namespace MyPortal.Logic.Extensions
 
             return monday.AddDays(diff);
         }
+
+        public static bool IsWeekday(this DateTime dateTime)
+        {
+            return dateTime.DayOfWeek != DayOfWeek.Saturday && dateTime.DayOfWeek != DayOfWeek.Sunday;
+        }
     }
 }

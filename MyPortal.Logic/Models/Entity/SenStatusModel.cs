@@ -9,7 +9,5 @@ namespace MyPortal.Logic.Models.Entity
         [Required]
         [StringLength(1)]
         public string Code { get; set; }
-
-        public bool Active { get; set; }
     }
 }

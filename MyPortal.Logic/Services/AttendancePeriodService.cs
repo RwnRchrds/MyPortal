@@ -29,6 +29,8 @@ namespace MyPortal.Logic.Services
 
             return BusinessMapper.Map<AttendancePeriodModel>(period);
         }
+        
+        
 
         public override void Dispose()
         {
