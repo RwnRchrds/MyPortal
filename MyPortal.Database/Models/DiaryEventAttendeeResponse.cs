@@ -7,7 +7,7 @@ using MyPortal.Database.BaseTypes;
 
 namespace MyPortal.Database.Models
 {
-    [Table("DiaryEventAttendeeResponse")]
+    [Table("DiaryEventAttendeeResponses")]
     public class DiaryEventAttendeeResponse : LookupItem
     {
         public DiaryEventAttendeeResponse()

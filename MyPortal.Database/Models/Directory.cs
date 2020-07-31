@@ -4,23 +4,19 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using System.Text;
+using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
-    [Table("Directory")]
-    public class Directory : IEntity
+    [Table("Directories")]
+    public class Directory : Entity
     {
         public Directory()
         {
             Subdirectories = new HashSet<Directory>();
             Documents = new HashSet<Document>();
         }
-
-        [Column(Order = 0)]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Key]
-        public Guid Id { get; set; }
 
         [Column(Order = 1)]
         public Guid? ParentId { get; set; }
@@ -38,9 +34,10 @@ namespace MyPortal.Database.Models
 
         public virtual Directory Parent { get; set; }
         public virtual Bulletin Bulletin { get; set; }
-        public virtual Homework Homework { get; set; }
+        public virtual HomeworkItem HomeworkItem { get; set; }
         public virtual Person Person { get; set; }
         public virtual LessonPlan LessonPlan { get; set; }
+        public virtual Agency Agency { get; set; }
 
         public virtual ICollection<Directory> Subdirectories { get; set; }
         public virtual ICollection<Document> Documents { get; set; }

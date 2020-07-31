@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Identity;
 
 namespace MyPortal.Database.Models
 {
-    [Table("SystemArea")]
-    public class SystemArea : IEntity
+    [Table("SystemAreas")]
+    public class SystemArea : Entity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public SystemArea()
@@ -17,11 +18,6 @@ namespace MyPortal.Database.Models
             Reports = new HashSet<Report>();
             SubAreas = new HashSet<SystemArea>();
         }
-
-        [Column(Order = 0)]
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
 
         [Column(Order = 1)]
         [Required]

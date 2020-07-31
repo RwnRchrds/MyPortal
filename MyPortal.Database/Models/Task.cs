@@ -4,19 +4,15 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using System.Text;
+using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Identity;
 
 namespace MyPortal.Database.Models
 {
-    [Table("Task")]
-    public class Task : IEntity
+    [Table("Tasks")]
+    public class Task : Entity
     {
-        [Column(Order = 0)]
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
-
         [Column(Order = 1)]
         public Guid TypeId { get; set; }
 

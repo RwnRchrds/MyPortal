@@ -5,12 +5,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Runtime.Serialization;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
-    [Table("Location")]
-    public class Location : ISystemEntity
+    [Table("Locations")]
+    public class Location : Entity, ISystemEntity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Location()
@@ -19,11 +20,6 @@ namespace MyPortal.Database.Models
             BehaviourIncidents = new HashSet<Incident>();
             Rooms = new HashSet<Room>();
         }
-
-        [Column(Order = 0)]
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
 
         [Column(Order = 1)]
         [Required]

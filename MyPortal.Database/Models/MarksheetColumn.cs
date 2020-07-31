@@ -2,18 +2,14 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
-    [Table("MarksheetColumn")]
-    public class MarksheetColumn : IEntity
+    [Table("MarksheetColumns")]
+    public class MarksheetColumn : Entity
     {
-        [Column(Order = 0)]
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
-
         [Column(Order = 1)]
         public Guid TemplateId { get; set; }
 
@@ -24,7 +20,10 @@ namespace MyPortal.Database.Models
         public Guid ResultSetId { get; set; }
 
         [Column(Order = 4)]
-        public int ColumnOrder { get; set; }
+        public int DisplayOrder { get; set; }
+
+        [Column(Order = 5)]
+        public bool ReadOnly { get; set; }
 
         public virtual MarksheetTemplate Template { get; set; }
         public virtual Aspect Aspect { get; set; }

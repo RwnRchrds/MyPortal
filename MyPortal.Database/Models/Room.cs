@@ -3,24 +3,20 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
-    [Table("Room")]
-    public class Room : IEntity
+    [Table("Rooms")]
+    public class Room : Entity
     {
         public Room()
         {
             Sessions = new HashSet<Session>();
-            CoverArrangements = new HashSet<Cover>();
+            CoverArrangements = new HashSet<CoverArrangement>();
             Closures = new HashSet<RoomClosure>();
         }
-
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Column(Order = 0)]
-        public Guid Id { get; set; }
 
         [Column(Order = 1)]
         public Guid? LocationId { get; set; }
@@ -44,11 +40,13 @@ namespace MyPortal.Database.Models
 
         public virtual Location Location { get; set; }
 
+        public virtual ExamRoom ExamRoom { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Session> Sessions { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Cover> CoverArrangements { get; set; }
+        public virtual ICollection<CoverArrangement> CoverArrangements { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DiaryEvent> DiaryEvents { get; set; }

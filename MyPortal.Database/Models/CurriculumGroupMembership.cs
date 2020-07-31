@@ -1,18 +1,14 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
-    [Table("CurriculumGroupMembership")]
-    public class CurriculumGroupMembership : IEntity
+    [Table("CurriculumGroupMemberships")]
+    public class CurriculumGroupMembership : Entity
     {
-        [Key]
-        [Column(Order = 0)]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
-        
         [Column(Order = 1)]
         public Guid StudentId { get; set; }
         

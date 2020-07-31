@@ -20,7 +20,7 @@ namespace MyPortal.Database.Repositories
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(Homework));
+            query.SelectAll(typeof(HomeworkItem));
             query.SelectAll(typeof(Student));
             query.SelectAll(typeof(Person), "StudentPerson");
             query.SelectAll(typeof(Task));
@@ -30,7 +30,7 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("Homework", "Homework.Id", "HomeworkSubmission.HomeworkId");
+            query.LeftJoin("HomeworkItem", "HomeworkItem.Id", "HomeworkSubmission.HomeworkId");
             query.LeftJoin("Student", "Student.Id", "HomeworkSubmission.StudentId");
             query.LeftJoin("Person as StudentPerson", "StudentPerson.Id", "Student.PersonId");
             query.LeftJoin("Task", "Task.Id", "HomeworkSubmission.TaskId");
@@ -41,10 +41,10 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             return await Connection
-                .QueryAsync<HomeworkSubmission, Homework, Student, Person, Models.Task, HomeworkSubmission>(sql.Sql,
+                .QueryAsync<HomeworkSubmission, HomeworkItem, Student, Person, Models.Task, HomeworkSubmission>(sql.Sql,
                     (submission, homework, student, person, task) =>
                     {
-                        submission.Homework = homework;
+                        submission.HomeworkItem = homework;
                         submission.Student = student;
                         submission.Student.Person = person;
                         submission.Task = task;

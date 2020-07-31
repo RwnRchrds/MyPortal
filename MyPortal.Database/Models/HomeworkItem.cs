@@ -4,22 +4,18 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using System.Text;
+using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
-    [Table("Homework")]
-    public class Homework : IDirectoryEntity
+    [Table("HomeworkItems")]
+    public class HomeworkItem : Entity
     {
-        public Homework()
+        public HomeworkItem()
         {
             Submissions = new HashSet<HomeworkSubmission>();
         }
-
-        [Column(Order = 0)]
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
 
         [Column(Order = 1)]
         public Guid DirectoryId { get; set; }

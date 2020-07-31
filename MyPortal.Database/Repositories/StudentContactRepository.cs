@@ -10,7 +10,7 @@ using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
-    public class StudentContactRepository : BaseReadWriteRepository<StudentContact>, IStudentContactRepository
+    public class StudentContactRepository : BaseReadWriteRepository<StudentContactRelationship>, IStudentContactRepository
     {
         public StudentContactRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
         {
@@ -19,7 +19,7 @@ namespace MyPortal.Database.Repositories
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(RelationshipType));
+            query.SelectAll(typeof(ContactRelationshipType));
             query.SelectAll(typeof(Student));
             query.SelectAll(typeof(Person), "StudentPerson");
             query.SelectAll(typeof(Contact));
@@ -35,12 +35,12 @@ namespace MyPortal.Database.Repositories
             query.LeftJoin("Person as ContactPerson", "ContactPerson.Id", "Contact.PersonId");
         }
 
-        protected override async Task<IEnumerable<StudentContact>> ExecuteQuery(Query query)
+        protected override async Task<IEnumerable<StudentContactRelationship>> ExecuteQuery(Query query)
         {
             var sql = Compiler.Compile(query);
 
             return await Connection
-                .QueryAsync<StudentContact, RelationshipType, Student, Person, Contact, Person, StudentContact>(sql.Sql,
+                .QueryAsync<StudentContactRelationship, ContactRelationshipType, Student, Person, Contact, Person, StudentContactRelationship>(sql.Sql,
                     (sContact, relationship, student, sPerson, contact, cPerson) =>
                     {
                         sContact.RelationshipType = relationship;

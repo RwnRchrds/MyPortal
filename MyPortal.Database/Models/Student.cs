@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
-    [Table("Student")]
-    public class Student : IPersonEntity
+    [Table("Students")]
+    public class Student : Entity, ISoftDeleteEntity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Student()
@@ -25,15 +26,10 @@ namespace MyPortal.Database.Models
             SenProvisions = new HashSet<SenProvision>();
             ProfileLogs = new HashSet<LogNote>();
             GiftedTalentedSubjects = new HashSet<GiftedTalented>();
-            StudentContacts = new HashSet<StudentContact>();
+            StudentContacts = new HashSet<StudentContactRelationship>();
             HomeworkSubmissions = new HashSet<HomeworkSubmission>();
             GroupMemberships = new HashSet<CurriculumGroupMembership>();
         }
-
-        [Column(Order = 0)]
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
 
         [Column(Order = 1)]
         public Guid PersonId { get; set; }
@@ -65,9 +61,6 @@ namespace MyPortal.Database.Models
 
         [Column(Order = 10)]
         public bool FreeSchoolMeals { get; set; }
-
-        [Column(Order = 11)]
-        public bool GiftedAndTalented { get; set; }
 
         [Column(Order = 12)]
         public Guid? SenStatusId { get; set; }
@@ -129,7 +122,7 @@ namespace MyPortal.Database.Models
         public virtual ICollection<SenProvision> SenProvisions { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<StudentContact> StudentContacts { get; set; }
+        public virtual ICollection<StudentContactRelationship> StudentContacts { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<LogNote> ProfileLogs { get; set; }
@@ -139,5 +132,7 @@ namespace MyPortal.Database.Models
         
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<HomeworkSubmission> HomeworkSubmissions { get; set; }
+
+        public virtual ICollection<StudentAgentRelationship> AgentRelationships { get; set; }
     }
 }

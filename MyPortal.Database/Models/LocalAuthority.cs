@@ -3,22 +3,18 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
-    [Table("LocalAuthority")]
-    public class LocalAuthority : IEntity
+    [Table("LocalAuthorities")]
+    public class LocalAuthority : Entity
     {
         public LocalAuthority()
         {
             Schools = new HashSet<School>();
         }
-
-        [Column(Order = 0)]
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
 
         [Column(Order = 1)]
         public int LeaCode { get; set; }

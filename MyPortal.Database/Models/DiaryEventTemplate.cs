@@ -8,7 +8,7 @@ using MyPortal.Database.BaseTypes;
 
 namespace MyPortal.Database.Models
 {
-    [Table("DiaryEventTemplate")]
+    [Table("DiaryEventTemplates")]
     public class DiaryEventTemplate : LookupItem
     {
         [Column(Order = 0)]

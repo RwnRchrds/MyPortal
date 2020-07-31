@@ -2,7 +2,7 @@
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IHomeworkRepository : IReadWriteRepository<Homework>
+    public interface IHomeworkRepository : IReadWriteRepository<HomeworkItem>
     {
 
     }

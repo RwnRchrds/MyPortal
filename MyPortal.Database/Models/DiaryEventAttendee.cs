@@ -4,18 +4,14 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using System.Text;
+using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
-    [Table("DiaryEventAttendee")]
-    public class DiaryEventAttendee : IEntity
+    [Table("DiaryEventAttendees")]
+    public class DiaryEventAttendee : Entity
     {
-        [Column(Order = 0)]
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
-
         [Column(Order = 1)]
         public Guid EventId { get; set; }
 

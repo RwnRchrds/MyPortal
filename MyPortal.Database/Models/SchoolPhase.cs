@@ -6,11 +6,11 @@ using MyPortal.Database.BaseTypes;
 
 namespace MyPortal.Database.Models
 {
-    [Table("Phase")]
-    public class Phase : LookupItem
+    [Table("SchoolPhases")]
+    public class SchoolPhase : LookupItem
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Phase()
+        public SchoolPhase()
         {
             Schools = new HashSet<School>();
         }

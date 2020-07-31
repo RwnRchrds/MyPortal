@@ -10,7 +10,7 @@ using SqlKata;
 
 namespace MyPortal.Database.Repositories
 {
-    public class HomeworkRepository : BaseReadWriteRepository<Homework>, IHomeworkRepository
+    public class HomeworkRepository : BaseReadWriteRepository<HomeworkItem>, IHomeworkRepository
     {
         public HomeworkRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
         {
@@ -25,14 +25,14 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("Directory", "Directory.Id", "Homework.DirectoryId");
+            query.LeftJoin("Directory", "Directory.Id", "HomeworkItem.DirectoryId");
         }
 
-        protected override async Task<IEnumerable<Homework>> ExecuteQuery(Query query)
+        protected override async Task<IEnumerable<HomeworkItem>> ExecuteQuery(Query query)
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<Homework, Directory, Homework>(sql.Sql, (homework, directory) =>
+            return await Connection.QueryAsync<HomeworkItem, Directory, HomeworkItem>(sql.Sql, (homework, directory) =>
             {
                 homework.Directory = directory;
 

@@ -4,12 +4,13 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
-    [Table("StaffMember")]
-    public class StaffMember : IPersonEntity
+    [Table("StaffMembers")]
+    public class StaffMember : Entity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public StaffMember()
@@ -23,13 +24,9 @@ namespace MyPortal.Database.Models
             PersonnelTrainingCertificates = new HashSet<TrainingCertificate>();
             Subjects = new HashSet<SubjectStaffMember>();
             Subordinates = new HashSet<StaffMember>();
-            CoverArrangements = new HashSet<Cover>();
+            CoverArrangements = new HashSet<CoverArrangement>();
+            Absences = new HashSet<StaffAbsence>();
         }
-
-        [Column(Order = 0)]
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
 
         [Column(Order = 1)]
         public Guid? LineManagerId { get; set; }
@@ -91,7 +88,7 @@ namespace MyPortal.Database.Models
         public virtual ICollection<StaffMember> Subordinates { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Cover> CoverArrangements { get; set; }
+        public virtual ICollection<CoverArrangement> CoverArrangements { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<StaffAbsence> Absences { get; set; }

@@ -2,29 +2,25 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Identity;
 
 namespace MyPortal.Database.Models
 {
-    [Table("MedicalEvent")]
-    public class MedicalEvent : IEntity
+    [Table("MedicalEvents")]
+    public class MedicalEvent : Entity
     {
         [Column(Order = 1)]
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
-
-        [Column(Order = 2)]
         public Guid StudentId { get; set; }
 
-        [Column(Order = 3)]
+        [Column(Order = 2)]
         public Guid RecordedById { get; set; }
 
-        [Column(Order = 4, TypeName = "date")]
+        [Column(Order = 3, TypeName = "date")]
         public DateTime Date { get; set; }
 
-        [Column(Order = 5)]
+        [Column(Order = 4)]
         [Required]
         public string Note { get; set; }
 

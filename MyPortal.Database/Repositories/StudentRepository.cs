@@ -54,20 +54,18 @@ namespace MyPortal.Database.Repositories
 
         private static void ApplySearch(Query query, StudentSearchOptions search)
         {
-            if (search.Status == StudentStatus.OnRoll)
+            switch (search.Status)
             {
-                query.Where(q =>
-                    q.WhereNull("Student.DateLeaving").OrWhereDate("Student.DateLeaving", ">", DateTime.Today));
-            }
-
-            else if (search.Status == StudentStatus.Leavers)
-            {
-                query.WhereDate("Student.DateLeaving", "<=", DateTime.Today);
-            }
-
-            else if (search.Status == StudentStatus.Future)
-            {
-                query.WhereDate("Student.DateStarting", ">", DateTime.Today);
+                case StudentStatus.OnRoll:
+                    query.Where(q =>
+                        q.WhereNull("Student.DateLeaving").OrWhereDate("Student.DateLeaving", ">", DateTime.Today));
+                    break;
+                case StudentStatus.Leavers:
+                    query.WhereDate("Student.DateLeaving", "<=", DateTime.Today);
+                    break;
+                case StudentStatus.Future:
+                    query.WhereDate("Student.DateStarting", ">", DateTime.Today);
+                    break;
             }
 
             if (!string.IsNullOrWhiteSpace(search.FirstName))

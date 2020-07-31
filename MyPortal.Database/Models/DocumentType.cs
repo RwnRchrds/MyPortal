@@ -7,7 +7,7 @@ using MyPortal.Database.BaseTypes;
 
 namespace MyPortal.Database.Models
 {
-    [Table("DocumentType")]
+    [Table("DocumentTypes")]
     public class DocumentType : LookupItem
     {
         public DocumentType()

@@ -7,7 +7,7 @@ using MyPortal.Database.BaseTypes;
 namespace MyPortal.Database.Models
 {
     // FIXED
-    [Table("ExclusionType")]
+    [Table("ExclusionTypes")]
     public class ExclusionType : LookupItem
     {
 

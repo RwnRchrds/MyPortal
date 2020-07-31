@@ -42,10 +42,10 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<Class, Subject, StaffMember, Person, CurriculumGroup, Class>(sql.Sql,
-                (currClass, subject, teacher, person, group) =>
+            return await Connection.QueryAsync<Class, Course, StaffMember, Person, CurriculumGroup, Class>(sql.Sql,
+                (currClass, course, teacher, person, group) =>
                 {
-                    currClass.Subject = subject;
+                    currClass.Course = course;
                     currClass.Group = group;
 
                     return currClass;

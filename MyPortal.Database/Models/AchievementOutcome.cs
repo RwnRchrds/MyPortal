@@ -8,7 +8,7 @@ using MyPortal.Database.BaseTypes;
 
 namespace MyPortal.Database.Models
 {
-    [Table("AchievementOutcome")]
+    [Table("AchievementOutcomes")]
     public class AchievementOutcome : LookupItem
     {
         public AchievementOutcome()

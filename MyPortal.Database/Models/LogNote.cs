@@ -2,19 +2,15 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Identity;
 
 namespace MyPortal.Database.Models
 {
-    [Table("LogNote")]
-    public class LogNote : ISoftDeleteEntity, IAuditEntity
+    [Table("LogNotes")]
+    public class LogNote : Entity, ISoftDeleteEntity
     {
-        [Column(Order = 0)]
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
-
         [Column(Order = 1)]
         public Guid TypeId { get; set; }
 

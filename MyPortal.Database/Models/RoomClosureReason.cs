@@ -7,7 +7,7 @@ using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
-    [Table("RoomClosureReason")]
+    [Table("RoomClosureReasons")]
     public class RoomClosureReason : LookupItem, ISystemEntity
     {
         public RoomClosureReason()

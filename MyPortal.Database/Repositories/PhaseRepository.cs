@@ -8,7 +8,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Repositories
 {
-    public class PhaseRepository : BaseReadRepository<Phase>, IPhaseRepository
+    public class PhaseRepository : BaseReadRepository<SchoolPhase>, IPhaseRepository
     {
         public PhaseRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
         {

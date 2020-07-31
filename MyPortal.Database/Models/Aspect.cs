@@ -7,7 +7,7 @@ using MyPortal.Database.BaseTypes;
 
 namespace MyPortal.Database.Models
 {
-    [Table("Aspect")]
+    [Table("Aspects")]
     public class Aspect : LookupItem
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -30,11 +30,19 @@ namespace MyPortal.Database.Models
         [StringLength(128)]
         public string Name { get; set; }
 
+        [Column(Order = 7)]
+        public bool StudentVisible { get; set; }
+
         public virtual AspectType Type { get; set; }
 
         public virtual GradeSet GradeSet { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Result> Results { get; set; }
+
+        public virtual ICollection<ExamComponent> Components { get; set; }
+
+        public virtual ICollection<ExamElement> ExamEntries { get; set; }
+        public virtual ICollection<ExamElement> ExamResults { get; set; }
     }
 }

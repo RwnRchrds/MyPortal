@@ -7,7 +7,7 @@ using System.Text;
 
 namespace MyPortal.Database.Models
 {
-    [Table("SystemSetting")]
+    [Table("SystemSettings")]
     public class SystemSetting
     {
         [Column(Order = 0)]

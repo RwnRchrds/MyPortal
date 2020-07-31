@@ -3,20 +3,16 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using Microsoft.VisualBasic.CompilerServices;
+using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Identity;
 
 namespace MyPortal.Database.Models
 {
-    [Table("LessonPlan")]
-    public partial class LessonPlan : IDirectoryEntity
+    [Table("LessonPlans")]
+    public partial class LessonPlan : Entity
 
     {
-        [Column(Order = 0)]
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
-
         [Column(Order = 1)]
         public Guid StudyTopicId { get; set; }
 

@@ -24,7 +24,7 @@ namespace MyPortal.Database.Repositories
         protected override void SelectAllRelated(Query query)
         {
             query.SelectAll(typeof(LocalAuthority));
-            query.SelectAll(typeof(Phase));
+            query.SelectAll(typeof(SchoolPhase));
             query.SelectAll(typeof(SchoolType));
             query.SelectAll(typeof(GovernanceType));
             query.SelectAll(typeof(IntakeType));
@@ -36,7 +36,7 @@ namespace MyPortal.Database.Repositories
         protected override void JoinRelated(Query query)
         {
             query.LeftJoin("LocalAuthority", "LocalAuthority.Id", "School.LocalAuthorityId");
-            query.LeftJoin("Phase", "Phase.Id", "School.PhaseId");
+            query.LeftJoin("SchoolPhase", "SchoolPhase.Id", "School.PhaseId");
             query.LeftJoin("SchoolType", "SchoolType.Id", "School.TypeId");
             query.LeftJoin("GovernanceType", "GovernanceType.Id", "School.GovernanceTypeId");
             query.LeftJoin("IntakeType", "IntakeType.Id", "School.IntakeTypeId");
@@ -65,11 +65,11 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<School, LocalAuthority, Phase, SchoolType, GovernanceType, IntakeType, Person, School>(sql.Sql,
+            return await Connection.QueryAsync<School, LocalAuthority, SchoolPhase, SchoolType, GovernanceType, IntakeType, Person, School>(sql.Sql,
                 (school, lea, phase, type, gov, intake, head) =>
                 {
                     school.LocalAuthority = lea;
-                    school.Phase = phase;
+                    school.SchoolPhase = phase;
                     school.Type = type;
                     school.GovernanceType = gov;
                     school.IntakeType = intake;

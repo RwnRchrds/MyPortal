@@ -2,7 +2,7 @@
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface IPhaseRepository : IReadRepository<Phase>
+    public interface IPhaseRepository : IReadRepository<SchoolPhase>
     {
     }
 }

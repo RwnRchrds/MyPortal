@@ -1,18 +1,14 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
-    [Table("CurriculumBandBlockAssignment")]
-    public class CurriculumBandBlockAssignment : IEntity
+    [Table("CurriculumBandBlockAssignments")]
+    public class CurriculumBandBlockAssignment : Entity
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Column(Order = 0)]
-        public Guid Id { get; set; }
-        
         [Column(Order = 1)]
         public Guid BlockId { get; set; }
         

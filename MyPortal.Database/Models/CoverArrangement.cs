@@ -3,18 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
-    [Table("Cover")]
-    public class Cover : IEntity
+    [Table("CoverArrangements")]
+    public class CoverArrangement : Entity
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Column(Order = 0)]
-        public Guid Id { get; set; }
-
         [Column(Order = 1)]
         public Guid WeekId { get; set; }
 

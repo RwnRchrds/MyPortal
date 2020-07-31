@@ -40,7 +40,7 @@ namespace MyPortal.Logic.Helpers
             {typeof(DocumentType), typeof(DocumentTypeModel)},
             {typeof(Grade), typeof(GradeModel)},
             {typeof(GradeSet), typeof(GradeSetModel)},
-            {typeof(Homework), typeof(HomeworkModel)},
+            {typeof(HomeworkItem), typeof(HomeworkModel)},
             {typeof(HomeworkSubmission), typeof(HomeworkSubmissionModel)},
             {typeof(House), typeof(HouseModel)},
             {typeof(Incident), typeof(IncidentModel)},

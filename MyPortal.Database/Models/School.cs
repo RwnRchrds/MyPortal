@@ -2,18 +2,14 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
-    [Table("School")]
-    public class School :IEntity
+    [Table("Schools")]
+    public class School :Entity
     {
-        [Column(Order = 0)]
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
-
         [Column(Order = 1)]
         [Required]
         [StringLength(256)]
@@ -73,7 +69,7 @@ namespace MyPortal.Database.Models
         [Column(Order = 16)]
         public bool Local { get; set; }
 
-        public virtual Phase Phase { get; set; }
+        public virtual SchoolPhase SchoolPhase { get; set; }
         public virtual SchoolType Type { get; set; }
         public virtual GovernanceType GovernanceType { get; set; }
         public virtual IntakeType IntakeType { get; set; }

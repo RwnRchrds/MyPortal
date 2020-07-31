@@ -18,7 +18,7 @@ namespace MyPortal.Tests.ServiceTests
             {
                 Id = Guid.NewGuid(),
                 Name = "MyPortal Test School",
-                Phase = new Phase {Id = Guid.NewGuid(),Description = "TestPhase"},
+                SchoolPhase = new SchoolPhase {Id = Guid.NewGuid(),Description = "TestPhase"},
                 Type = new SchoolType {Id = Guid.NewGuid(), Description = "TestType"},
                 GovernanceType = new GovernanceType {Id = Guid.NewGuid(), Description = "GovernanceTest"},
                 IntakeType = new IntakeType {Id = Guid.NewGuid(),Description = "IntakeTest"},

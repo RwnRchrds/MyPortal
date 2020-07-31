@@ -3,22 +3,18 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
-    [Table("DiaryEvent")]
-    public class DiaryEvent : IEntity
+    [Table("DiaryEvents")]
+    public class DiaryEvent : Entity
     {
         public DiaryEvent()
         {
             Attendees = new HashSet<DiaryEventAttendee>();
         }
-
-        [Column(Order = 0)]
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
 
         [Column(Order = 1)]
         public Guid EventTypeId { get; set; }

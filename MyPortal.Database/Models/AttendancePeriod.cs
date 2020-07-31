@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
-    [Table("AttendancePeriod")]
-    public partial class AttendancePeriod : IEntity
+    [Table("AttendancePeriods")]
+    public partial class AttendancePeriod : Entity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public AttendancePeriod()
@@ -16,11 +17,6 @@ namespace MyPortal.Database.Models
             AttendanceMarks = new HashSet<AttendanceMark>();
             Sessions = new HashSet<Session>();
         }
-
-        [Column(Order = 0)]
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
 
         [Column(Order = 1)]
         public Guid WeekPatternId { get; set; }

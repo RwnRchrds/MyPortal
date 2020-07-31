@@ -8,18 +8,13 @@ using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.BaseTypes
 {
-    public abstract class LookupItem : IEntity
+    public abstract class LookupItem : Entity
     {
         public LookupItem()
         {
             Active = true;
         }
         
-        [Key]
-        [Column(Order = 0)]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
-
         [Required]
         [Column(Order = 1)]
         [StringLength(256)]

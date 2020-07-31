@@ -2,24 +2,20 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
-    [Table("CurriculumBlock")]
-    public class CurriculumBlock : IEntity
+    [Table("CurriculumBlocks")]
+    public class CurriculumBlock : Entity
     {
         public CurriculumBlock()
         {
             Groups = new HashSet<CurriculumGroup>();
             BandAssignments = new HashSet<CurriculumBandBlockAssignment>();
         }
-        
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Column(Order = 0)]
-        public Guid Id { get; set; }
-        
+
         [Column(Order = 1)]
         [StringLength(10)]
         public string Code { get; set; }

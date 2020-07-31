@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
-    [Table("CurriculumBand")]
-    public class CurriculumBand : IEntity
+    [Table("CurriculumBands")]
+    public class CurriculumBand : Entity
 
     {
     public CurriculumBand()
@@ -16,11 +17,6 @@ namespace MyPortal.Database.Models
         Enrolments = new HashSet<CurriculumBandMembership>();
         AssignedBlocks = new HashSet<CurriculumBandBlockAssignment>();
     }
-
-    [Column(Order = 0)]
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public Guid Id { get; set; }
 
     [Column(Order = 1)] public Guid AcademicYearId { get; set; }
 

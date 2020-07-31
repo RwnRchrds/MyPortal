@@ -8,7 +8,7 @@ using MyPortal.Database.BaseTypes;
 namespace MyPortal.Database.Models
 {
     [DataContract]
-    [Table("LogNoteType")]
+    [Table("LogNoteTypes")]
     public class LogNoteType : LookupItem
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

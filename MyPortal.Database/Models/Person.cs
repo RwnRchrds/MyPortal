@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Models.Identity;
 
@@ -16,8 +17,8 @@ namespace MyPortal.Database.Models
         public const string Unknown = "U";
     }
 
-    [Table("Person")]
-    public class Person : IEntity
+    [Table("People")]
+    public class Person : Entity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Person()
@@ -31,11 +32,6 @@ namespace MyPortal.Database.Models
             DiaryEventInvitations = new HashSet<DiaryEventAttendee>();
             AssignedTo = new HashSet<Task>();
         }
-
-        [Column(Order = 0)]
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
 
         [Column(Order = 1)]
         public Guid DirectoryId { get; set; }
@@ -60,11 +56,7 @@ namespace MyPortal.Database.Models
 
         [Column(Order = 6)]
         [StringLength(256)]
-        public string LegalFirstName { get; set; }
-
-        [Column(Order = 7)]
-        [StringLength(256)]
-        public string LegalLastName { get; set; }
+        public string ChosenFirstName { get; set; }
 
         [Column(Order = 8)]
         public int? PhotoId { get; set; }
@@ -100,6 +92,8 @@ namespace MyPortal.Database.Models
         public virtual StaffMember StaffMemberDetails { get; set; }
 
         public virtual Student StudentDetails { get; set; }
+
+        public virtual Agent AgentDetails { get; set; }
 
         public virtual ApplicationUser User { get; set; }
 

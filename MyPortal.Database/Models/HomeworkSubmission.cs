@@ -4,18 +4,14 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using System.Text;
+using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
-    [Table("HomeworkSubmission")]
-    public class HomeworkSubmission : IEntity
+    [Table("HomeworkSubmissions")]
+    public class HomeworkSubmission : Entity
     {
-        [Column(Order = 0)]
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
-
         [Column(Order = 1)]
         public Guid HomeworkId { get; set; }
 
@@ -37,7 +33,7 @@ namespace MyPortal.Database.Models
         [Column(Order = 7)]
         public string Comments { get; set; }
 
-        public virtual Homework Homework { get; set; }
+        public virtual HomeworkItem HomeworkItem { get; set; }
         public virtual Student Student { get; set; }
         public virtual Task Task { get; set; }
         public virtual Document SubmittedWork { get; set; }

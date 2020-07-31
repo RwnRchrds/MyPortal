@@ -8,7 +8,7 @@ using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Repositories
 {
-    public class RelationshipTypeRepository : BaseReadRepository<RelationshipType>, IRelationshipTypeRepository
+    public class RelationshipTypeRepository : BaseReadRepository<ContactRelationshipType>, IRelationshipTypeRepository
     {
         public RelationshipTypeRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
         {

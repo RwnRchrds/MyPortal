@@ -8,6 +8,7 @@ using MyPortal.Database.BaseTypes;
 namespace MyPortal.Database.Models
 {
     // FIXED
+    [Table("ExclusionReasons")]
     public class ExclusionReason : LookupItem
     {
         

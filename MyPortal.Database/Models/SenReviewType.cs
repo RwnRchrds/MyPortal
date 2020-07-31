@@ -7,7 +7,7 @@ using MyPortal.Database.BaseTypes;
 
 namespace MyPortal.Database.Models
 {
-    [Table("SenReviewType")]
+    [Table("SenReviewTypes")]
     public class SenReviewType : LookupItem
     {
         public virtual ICollection<SenReview> Reviews { get; set; }
