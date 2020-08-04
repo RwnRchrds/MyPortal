@@ -43,7 +43,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<DiaryEvent>> GetByDateRange(DateTime firstDate, DateTime lastDate, bool includePrivateEvents = false)
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
 
             query.WhereDate("DiaryEvent.StartTime", ">=", firstDate.Date);
             query.WhereDate("DiaryEvent.EndTime", "<", lastDate.Date.AddDays(1));
@@ -58,7 +58,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<DiaryEvent>> GetByPerson(DateTime firstDate, DateTime lastDate, Guid personId, bool includeDeclined = false)
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
 
             query.LeftJoin("DiaryEventAttendee as A", "A.EventId", "E.Id");
             

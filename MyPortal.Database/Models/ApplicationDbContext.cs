@@ -34,6 +34,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<BasketItem> BasketItems { get; set; }
         public virtual DbSet<BehaviourOutcome> BehaviourOutcomes { get; set; }
         public virtual DbSet<BehaviourStatus> BehaviourStatus { get; set; }
+        public virtual DbSet<BehaviourTarget> BehaviourTargets { get; set; }
         public virtual DbSet<Bulletin> Bulletins { get; set; }
         public virtual DbSet<Class> Classes { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
@@ -98,6 +99,10 @@ namespace MyPortal.Database.Models
         public virtual DbSet<ProductType> ProductTypes { get; set; }
         public virtual DbSet<RegGroup> RegGroups { get; set; }
         public virtual DbSet<ContactRelationshipType> RelationshipTypes { get; set; }
+        public virtual DbSet<ReportCard> ReportCards { get; set; }
+        public virtual DbSet<ReportCardSubmission> ReportCardSubmissions { get; set; }
+        public virtual DbSet<ReportCardTarget> ReportCardTargets { get; set; }
+        public virtual DbSet<ReportCardTargetSubmission> ReportCardTargetSubmissions { get; set; }
         public virtual DbSet<Report> Reports { get; set; }
         public virtual DbSet<Result> Results { get; set; }
         public virtual DbSet<ResultSet> ResultSets { get; set; }
@@ -583,6 +588,21 @@ namespace MyPortal.Database.Models
                     .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
 
                 modelBuilder.Entity<SubjectCode>()
+                    .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                modelBuilder.Entity<BehaviourTarget>()
+                    .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                modelBuilder.Entity<ReportCard>()
+                    .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                modelBuilder.Entity<ReportCardSubmission>()
+                    .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                modelBuilder.Entity<ReportCardTarget>()
+                    .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                modelBuilder.Entity<ReportCardTargetSubmission>()
                     .Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
             }
 
@@ -1839,6 +1859,62 @@ namespace MyPortal.Database.Models
                 .HasMany(e => e.MarksheetTemplates)
                 .WithOne(e => e.StudentGroup)
                 .HasForeignKey(e => e.StudentGroupId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<BehaviourTarget>()
+                .HasMany(e => e.ReportCardLinks)
+                .WithOne(e => e.Target)
+                .HasForeignKey(e => e.TargetId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ReportCard>()
+                .HasMany(e => e.Targets)
+                .WithOne(e => e.ReportCard)
+                .HasForeignKey(e => e.ReportCardId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ReportCard>()
+                .HasOne(e => e.Student)
+                .WithMany(e => e.ReportCards)
+                .HasForeignKey(e => e.StudentId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ReportCard>()
+                .HasOne(e => e.BehaviourType)
+                .WithMany(e => e.ReportCards)
+                .HasForeignKey(e => e.BehaviourTypeId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ReportCard>()
+                .HasMany(e => e.Submissions)
+                .WithOne(e => e.ReportCard)
+                .HasForeignKey(e => e.ReportCardId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ReportCardSubmission>()
+                .HasMany(e => e.TargetSubmissions)
+                .WithOne(e => e.Submission)
+                .HasForeignKey(e => e.SubmissionId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ReportCardSubmission>()
+                .HasOne(e => e.SubmittedBy)
+                .WithMany(e => e.ReportCardSubmissions)
+                .HasForeignKey(e => e.SubmittedById)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ReportCardTarget>()
+                .HasMany(e => e.Submissions)
+                .WithOne(e => e.Target)
+                .HasForeignKey(e => e.TargetId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 

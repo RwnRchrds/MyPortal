@@ -21,5 +21,7 @@ namespace MyPortal.Database.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Incident> Incidents { get; set; }
+
+        public virtual ICollection<ReportCard> ReportCards { get; set; }
     }
 }

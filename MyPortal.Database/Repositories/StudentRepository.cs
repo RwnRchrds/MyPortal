@@ -118,7 +118,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<Student> GetByUserId(Guid userId)
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
 
             query.Where("StudentPerson.UserId", userId);
 
@@ -127,7 +127,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<Student> GetByPersonId(Guid personId)
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
 
             query.Where("Student.PersonId", personId);
 
@@ -136,7 +136,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Student>> GetAll(StudentSearchOptions searchParams)
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
             
             ApplySearch(query, searchParams);
             
@@ -145,7 +145,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Student>> GetGiftedTalented()
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
 
             query.Where("Student.GiftedAndTalented", true);
 

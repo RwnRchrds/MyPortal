@@ -78,7 +78,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Incident>> GetByStudent(Guid studentId, Guid academicYearId)
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
 
             query.Where("Student.Id", studentId);
             query.Where("AcademicYear.Id", academicYearId);
@@ -88,7 +88,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<int> GetCountByStudent(Guid studentId, Guid academicYearId)
         {
-            var query = SelectAllColumns().AsCount();
+            var query = GenerateQuery().AsCount();
 
             query.Where("Student.Id", studentId);
             query.Where("AcademicYear.Id", academicYearId);
@@ -98,7 +98,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<int> GetPointsByStudent(Guid studentId, Guid academicYearId)
         {
-            var query = SelectAllColumns().AsSum("Incident.Points");
+            var query = GenerateQuery().AsSum("Incident.Points");
 
             query.Where("Student.Id", studentId);
             query.Where("AcademicYear.Id", academicYearId);

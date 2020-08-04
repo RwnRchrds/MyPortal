@@ -21,16 +21,16 @@ namespace MyPortal.Database.Repositories
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(Person));
-            query.SelectAll(typeof(Address));
+            query.SelectAll(typeof(Person), "Person");
+            query.SelectAll(typeof(Address), "Address");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("Person", "Person.Id", "AddressPerson.PersonId");
-            query.LeftJoin("Address", "Address.Id", "AddressPerson.AddressId");
+            query.LeftJoin("People as Person", "Person.Id", "AddressPerson.PersonId");
+            query.LeftJoin("Addresses as Address", "Address.Id", "AddressPerson.AddressId");
         }
 
         protected override async Task<IEnumerable<AddressPerson>> ExecuteQuery(Query query)

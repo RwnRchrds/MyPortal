@@ -203,6 +203,34 @@ var KTnoUiSliderDemos = function() {
         });      
     }    
 
+    var demo7 = function() {
+        // init slider
+        var slider = document.getElementById('kt_nouislider_7');
+
+        noUiSlider.create(slider, {
+            start: [ 40, 60 ],
+            connect: true,
+            range: {
+                'min': 0 ,
+                'max': 100
+            },
+            format: wNumb({
+                decimals: 2,
+                postfix: ' ($)',
+            })
+        });
+       
+
+        // init slider input
+        var sliderInput0 = document.getElementById('kt_nouislider_7_input');
+        var sliderInput1 = document.getElementById('kt_nouislider_7.1_input');
+        var sliderInputs = [sliderInput0, sliderInput1];        
+
+        slider.noUiSlider.on('update', function( values, handle ) {
+            sliderInputs[handle].value = values[handle];
+        });     
+    }    
+
     // Modal demo
 
     var modaldemo1 = function() {
@@ -298,6 +326,7 @@ var KTnoUiSliderDemos = function() {
             demo4(); 
             demo5();  
             demo6(); 
+            demo7();
             modaldemo1();
             modaldemo2();
             modaldemo3();                           

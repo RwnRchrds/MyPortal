@@ -54,7 +54,7 @@ namespace MyPortal.Database.Repositories
 
         public async System.Threading.Tasks.Task<IEnumerable<Task>> GetByAssignedTo(Guid personId, TaskSearchOptions searchOptions = null)
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
 
             query.Where("Task.AssignedToId", personId);
 

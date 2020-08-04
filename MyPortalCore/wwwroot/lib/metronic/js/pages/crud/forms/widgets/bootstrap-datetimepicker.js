@@ -1,116 +1,87 @@
 // Class definition
 
 var KTBootstrapDatetimepicker = function () {
-    
     // Private functions
-    var demos = function () {
-        // minimal setup
-        $('#kt_datetimepicker_1').datetimepicker({
-            todayHighlight: true,
-            autoclose: true,
-            format: 'yyyy.mm.dd hh:ii'
+    var baseDemos = function () {
+        // Demo 1
+        $('#kt_datetimepicker_1').datetimepicker();
+
+        // Demo 2
+        $('#kt_datetimepicker_2').datetimepicker({
+            locale: 'de'
         });
 
-        $('#kt_datetimepicker_1_modal').datetimepicker({
-            todayHighlight: true,
-            autoclose: true,
-            format: 'yyyy.mm.dd hh:ii'
-        });
-
-        // input group demo
-        $('#kt_datetimepicker_2, #kt_datetimepicker_1_validate, #kt_datetimepicker_2_validate, #kt_datetimepicker_3_validate').datetimepicker({
-            todayHighlight: true,
-            autoclose: true,
-            pickerPosition: 'bottom-left',
-            format: 'yyyy/mm/dd hh:ii'
-        });
-        $('#kt_datetimepicker_2_modal').datetimepicker({
-            todayHighlight: true,
-            autoclose: true,
-            pickerPosition: 'bottom-left',
-            format: 'yyyy/mm/dd hh:ii'
-        });
-
-        // today button
+        // Demo 3
         $('#kt_datetimepicker_3').datetimepicker({
-            todayHighlight: true,
-            autoclose: true,
-            pickerPosition: 'bottom-left',
-            todayBtn: true,
-            format: 'yyyy/mm/dd hh:ii'
-        });
-        $('#kt_datetimepicker_3_modal').datetimepicker({
-            todayHighlight: true,
-            autoclose: true,
-            pickerPosition: 'bottom-left',
-            todayBtn: true,
-            format: 'yyyy/mm/dd hh:ii'
+            format: 'L'
         });
 
-        // orientation
-        $('#kt_datetimepicker_4_1').datetimepicker({
-            todayHighlight: true,
-            autoclose: true,
-            pickerPosition: 'bottom-left',
-            format: 'yyyy.mm.dd hh:ii'
+        // Demo 4
+        $('#kt_datetimepicker_4').datetimepicker({
+            format: 'LT'
         });
 
-        $('#kt_datetimepicker_4_2').datetimepicker({
-            todayHighlight: true,
-            autoclose: true,
-            pickerPosition: 'bottom-right',
-            format: 'yyyy/mm/dd hh:ii'
-        });
+        // Demo 5
+        $('#kt_datetimepicker_5').datetimepicker();
 
-        $('#kt_datetimepicker_4_3').datetimepicker({
-            todayHighlight: true,
-            autoclose: true,
-            pickerPosition: 'top-left',
-            format: 'yyyy-mm-dd hh:ii'
-        });
-
-        $('#kt_datetimepicker_4_4').datetimepicker({
-            todayHighlight: true,
-            autoclose: true,
-            pickerPosition: 'top-right',
-            format: 'yyyy-mm-dd hh:ii'
-        });
-
-        $('#kt_datetimepicker_5').datetimepicker({
-            format: "dd MM yyyy - HH:ii P",
-            showMeridian: true,
-            todayHighlight: true,
-            autoclose: true,
-            pickerPosition: 'bottom-left'
-        });
-
+        // Demo 6
         $('#kt_datetimepicker_6').datetimepicker({
-            format: "yyyy/mm/dd",
-            todayHighlight: true,
-            autoclose: true,
-            startView: 2,
-            minView: 2,
-            forceParse: 0,
-            pickerPosition: 'bottom-left'
+            defaultDate: '11/1/2020',
+            disabledDates: [
+                moment('12/25/2020'),
+                new Date(2020, 11 - 1, 21),
+                '11/22/2022 00:53'
+            ]
         });
 
-        $('#kt_datetimepicker_7').datetimepicker({
-            format: "hh:ii",
-            showMeridian: true,
-            todayHighlight: true,
-            autoclose: true,
-            startView: 1,
-            minView: 0,
-            maxView: 1,
-            forceParse: 0,
-            pickerPosition: 'bottom-left'
+        // Demo 7
+        $('#kt_datetimepicker_7_1').datetimepicker();
+        $('#kt_datetimepicker_7_2').datetimepicker({
+            useCurrent: false
+        });
+
+        $('#kt_datetimepicker_7_1').on('change.datetimepicker', function (e) {
+            $('#kt_datetimepicker_7_2').datetimepicker('minDate', e.date);
+        });
+        $('#kt_datetimepicker_7_2').on('change.datetimepicker', function (e) {
+            $('#kt_datetimepicker_7_1').datetimepicker('maxDate', e.date);
+        });
+
+        // Demo 8
+        $('#kt_datetimepicker_8').datetimepicker({
+            inline: true,
         });
     }
 
+    var modalDemos = function () {
+        // Demo 9
+        $('#kt_datetimepicker_9').datetimepicker();
+
+        // Demo 10
+        $('#kt_datetimepicker_10').datetimepicker({
+            locale: 'de'
+        });
+
+        // Demo 11
+        $('#kt_datetimepicker_11').datetimepicker({
+            format: 'L'
+        });
+    }
+
+    var validationDemos = function () {
+        // Demo 12
+        $('#kt_datetimepicker_12').datetimepicker();
+
+        // Demo 13
+        $('#kt_datetimepicker_13').datetimepicker();
+    }
+
     return {
-        // public functions
+        // Public functions
         init: function() {
-            demos(); 
+            baseDemos();
+            modalDemos();
+            validationDemos();
         }
     };
 }();

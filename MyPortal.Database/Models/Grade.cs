@@ -21,14 +21,15 @@ namespace MyPortal.Database.Models
 
         [Column(Order = 2)]
         [Required]
-        [StringLength(128)]
+        [StringLength(25)]
         public string Code { get; set; }
 
         [Column(Order = 3)]
-        public int Value { get; set; }
+        [StringLength(50)]
+        public string Description { get; set; }
 
         [Column(Order = 4)]
-        public bool System { get; set; }
+        public int Value { get; set; }
 
         public virtual GradeSet GradeSet { get; set; }
 

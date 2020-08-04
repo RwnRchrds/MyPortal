@@ -3,25 +3,28 @@
 // Class definition
 var KTLayoutBuilder = function() {
 
+	var formAction;
+
 	var exporter = {
 		init: function() {
+			formAction = $('.form').attr('action');
 		},
 		startLoad: function(options) {
 			$('#builder_export').
-			addClass('spinner spinner-right spinner-primary').
-			find('span').text('Exporting...').
-			closest('.card-footer').
-			find('.btn').
-			attr('disabled', true);
+					addClass('spinner spinner-right spinner-primary').
+					find('span').text('Exporting...').
+					closest('.card-footer').
+					find('.btn').
+					attr('disabled', true);
 			toastr.info(options.title, options.message);
 		},
 		doneLoad: function() {
 			$('#builder_export').
-			removeClass('spinner spinner-right spinner-primary').
-			find('span').text('Export').
-			closest('.card-footer').
-			find('.btn').
-			attr('disabled', false);
+					removeClass('spinner spinner-right spinner-primary').
+					find('span').text('Export').
+					closest('.card-footer').
+					find('.btn').
+					attr('disabled', false);
 		},
 		exportHtml: function(demo) {
 			exporter.startLoad({
@@ -29,7 +32,7 @@ var KTLayoutBuilder = function() {
 				message: 'Process started and it may take a while.',
 			});
 
-			$.ajax('index.php', {
+			$.ajax(formAction, {
 				method: 'POST',
 				data: {
 					builder_export: 1,
@@ -45,10 +48,11 @@ var KTLayoutBuilder = function() {
 				}
 
 				var timer = setInterval(function() {
-					$.ajax('index.php', {
+					$.ajax(formAction, {
 						method: 'POST',
 						data: {
 							builder_export: 1,
+							demo: demo,
 							builder_check: result.id,
 						},
 					}).done(function(r) {
@@ -58,7 +62,7 @@ var KTLayoutBuilder = function() {
 						if (result.export_status !== 1) return;
 
 						$('<iframe/>').attr({
-							src: 'index.php?builder_export&builder_download&id=' + result.id,
+							src: formAction + '?builder_export&builder_download&id=' + result.id + '&demo=' + demo,
 							style: 'visibility:hidden;display:none',
 						}).ready(function() {
 							toastr.success('Export HTML Version Layout', 'HTML version exported.');
@@ -85,10 +89,10 @@ var KTLayoutBuilder = function() {
 			e.preventDefault();
 			var _self = $(this);
 			$(_self).
-			addClass('spinner spinner-right spinner-white').
-			closest('.card-footer').
-			find('.btn').
-			attr('disabled', true);
+					addClass('spinner spinner-right spinner-white').
+					closest('.card-footer').
+					find('.btn').
+					attr('disabled', true);
 
 			// keep remember tab id
 			$('.nav[data-remember-tab]').each(function() {
@@ -97,7 +101,7 @@ var KTLayoutBuilder = function() {
 				$('#' + tab).val(tabId);
 			});
 
-			$.ajax('index.php?demo=' + $(_self).data('demo'), {
+			$.ajax(formAction + '?demo=' + $(_self).data('demo'), {
 				method: 'POST',
 				data: $('[name]').serialize(),
 			}).done(function(r) {
@@ -115,12 +119,12 @@ var KTLayoutBuilder = function() {
 			e.preventDefault();
 			var _self = $(this);
 			$(_self).
-			addClass('spinner spinner-right spinner-primary').
-			closest('.card-footer').
-			find('.btn').
-			attr('disabled', true);
+					addClass('spinner spinner-right spinner-primary').
+					closest('.card-footer').
+					find('.btn').
+					attr('disabled', true);
 
-			$.ajax('index.php?demo=' + $(_self).data('demo'), {
+			$.ajax(formAction + '?demo=' + $(_self).data('demo'), {
 				method: 'POST',
 				data: {
 					builder_reset: 1,
@@ -134,7 +138,7 @@ var KTLayoutBuilder = function() {
 
 	var verify = {
 		reCaptchaVerified: function() {
-			return $.ajax('../tools/builder/recaptcha.php?recaptcha', {
+			return $.ajax('/metronic/theme/html/tools/builder/recaptcha.php?recaptcha', {
 				method: 'POST',
 				data: {
 					response: $('#g-recaptcha-response').val(),
@@ -142,9 +146,9 @@ var KTLayoutBuilder = function() {
 			}).fail(function() {
 				grecaptcha.reset();
 				$('#alert-message').
-				removeClass('alert-success d-hide').
-				addClass('alert-danger').
-				html('Invalid reCaptcha validation');
+						removeClass('alert-success d-hide').
+						addClass('alert-danger').
+						html('Invalid reCaptcha validation');
 			});
 		},
 		init: function() {
@@ -163,9 +167,9 @@ var KTLayoutBuilder = function() {
 				e.preventDefault();
 				if (!$('#g-recaptcha-response').val()) {
 					$('#alert-message').
-					removeClass('alert-success d-hide').
-					addClass('alert-danger').
-					html('Invalid reCaptcha validation');
+							removeClass('alert-success d-hide').
+							addClass('alert-danger').
+							html('Invalid reCaptcha validation');
 					return;
 				}
 
@@ -185,9 +189,9 @@ var KTLayoutBuilder = function() {
 					} else {
 						grecaptcha.reset();
 						$('#alert-message').
-						removeClass('alert-success d-hide').
-						addClass('alert-danger').
-						html('Invalid reCaptcha validation');
+								removeClass('alert-success d-hide').
+								addClass('alert-danger').
+								html('Invalid reCaptcha validation');
 					}
 				});
 			});

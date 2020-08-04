@@ -46,7 +46,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Bulletin>> GetApproved()
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
 
             query.Where("Bulletin.Approved", "=", true);
 
@@ -55,7 +55,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Bulletin>> GetStudent()
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
 
             query.Where("Bulletin.Approved", "=", true);
             query.Where("Bulletin.ShowStudents", "=", true);
@@ -65,7 +65,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Bulletin>> GetOwn(Guid authorId)
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
 
             query.Where("Bulletin.AuthorId", "=", authorId);
 

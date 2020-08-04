@@ -19,14 +19,14 @@ namespace MyPortal.Database.Repositories
 {
     public class PersonRepository : BaseReadWriteRepository<Person>, IPersonRepository
     {
-        public PersonRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public PersonRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context, "Person")
         {
      
         }
 
         public async Task<Person> GetByUserId(Guid userId)
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
 
             query.Where("Person.UserId", userId);
 
@@ -72,10 +72,10 @@ namespace MyPortal.Database.Repositories
         {
             var indicator = new PersonTypeIndicator();
 
-            var userQuery = new Query("Person").Where(q => q.WhereNotNull("Person.UserId").Where("Person.Id", personId)).AsCount();
-            var studentQuery = new Query("Student").Where("Student.PersonId", personId).AsCount();
-            var employeeQuery = new Query("StaffMember").Where("StaffMember.PersonId", personId).AsCount();
-            var contactQuery = new Query("Contact").Where("Contact.PersonId", personId).AsCount();
+            var userQuery = GenerateEmptyQuery(typeof(Person), "Person").Where(q => q.WhereNotNull("Person.UserId").Where("Person.Id", personId)).AsCount();
+            var studentQuery = GenerateEmptyQuery(typeof(Student), "Student").Where("Student.PersonId", personId).AsCount();
+            var employeeQuery = GenerateEmptyQuery(typeof(StaffMember), "StaffMember").Where("StaffMember.PersonId", personId).AsCount();
+            var contactQuery = GenerateEmptyQuery(typeof(Contact), "Contact").Where("Contact.PersonId", personId).AsCount();
 
             // TODO: Agent and applicant queries when available
 
@@ -99,7 +99,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Person>> GetAll(PersonSearchOptions searchParams)
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
             
             ApplySearch(query, searchParams);
 

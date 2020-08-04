@@ -318,6 +318,18 @@
 .ki-info:before {
   content: "\f13e"; }
 
+.ki-calendar-2:before {
+  content: "\f13f"; }
+
+.ki-calendar:before {
+  content: "\f140"; }
+
+.ki-calendar-today:before {
+  content: "\f141"; }
+
+.ki-clock:before {
+  content: "\f142"; }
+
 /**
  * FormValidation (https://formvalidation.io)
  * The best validation library for JavaScript
@@ -1509,353 +1521,267 @@ fieldset[disabled] .datepicker table tr td span.active.disabled:hover.focus {
   border-width: 1px 0;
   margin-left: -5px;
   margin-right: -5px; }
-/*!
- * Datetimepicker for Bootstrap
- *
- * Copyright 2012 Stefan Petre
- * Improvements by Andrew Rowls
- * Licensed under the Apache License v2.0
- * http://www.apache.org/licenses/LICENSE-2.0
- *
+/*@preserve
+ * Tempus Dominus Bootstrap4 v5.1.2 (https://tempusdominus.github.io/bootstrap-4/)
+ * Copyright 2016-2018 Jonathan Peterson
+ * Licensed under MIT (https://github.com/tempusdominus/bootstrap-3/blob/master/LICENSE)
  */
-.datetimepicker {
+.sr-only, .bootstrap-datetimepicker-widget .btn[data-action="incrementHours"]::after, .bootstrap-datetimepicker-widget .btn[data-action="incrementMinutes"]::after, .bootstrap-datetimepicker-widget .btn[data-action="decrementHours"]::after, .bootstrap-datetimepicker-widget .btn[data-action="decrementMinutes"]::after, .bootstrap-datetimepicker-widget .btn[data-action="showHours"]::after, .bootstrap-datetimepicker-widget .btn[data-action="showMinutes"]::after, .bootstrap-datetimepicker-widget .btn[data-action="togglePeriod"]::after, .bootstrap-datetimepicker-widget .btn[data-action="clear"]::after, .bootstrap-datetimepicker-widget .btn[data-action="today"]::after, .bootstrap-datetimepicker-widget .picker-switch::after, .bootstrap-datetimepicker-widget table th.prev::after, .bootstrap-datetimepicker-widget table th.next::after {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0; }
+
+.bootstrap-datetimepicker-widget {
+  list-style: none; }
+
+.bootstrap-datetimepicker-widget.dropdown-menu {
+  display: block;
+  margin: 2px 0;
   padding: 4px;
-  margin-top: 1px;
-  border-radius: 4px;
-  direction: ltr; }
+  width: 14rem; }
 
-.datetimepicker-inline {
-  width: 220px; }
+@media (min-width: 576px) {
+  .bootstrap-datetimepicker-widget.dropdown-menu.timepicker-sbs {
+    width: 38em; } }
 
-.datetimepicker.datetimepicker-rtl {
-  direction: rtl; }
+@media (min-width: 768px) {
+  .bootstrap-datetimepicker-widget.dropdown-menu.timepicker-sbs {
+    width: 38em; } }
 
-.datetimepicker.datetimepicker-rtl table tr td span {
-  float: right; }
+@media (min-width: 992px) {
+  .bootstrap-datetimepicker-widget.dropdown-menu.timepicker-sbs {
+    width: 38em; } }
 
-.datetimepicker-dropdown, .datetimepicker-dropdown-left {
-  top: 0;
-  left: 0; }
-
-[class*=" datetimepicker-dropdown"]:before {
+.bootstrap-datetimepicker-widget.dropdown-menu:before, .bootstrap-datetimepicker-widget.dropdown-menu:after {
   content: '';
   display: inline-block;
+  position: absolute; }
+
+.bootstrap-datetimepicker-widget.dropdown-menu.bottom:before {
   border-left: 7px solid transparent;
   border-right: 7px solid transparent;
-  border-bottom: 7px solid #cccccc;
+  border-bottom: 7px solid #ccc;
   border-bottom-color: rgba(0, 0, 0, 0.2);
-  position: absolute; }
+  top: -7px;
+  left: 7px; }
 
-[class*=" datetimepicker-dropdown"]:after {
-  content: '';
-  display: inline-block;
+.bootstrap-datetimepicker-widget.dropdown-menu.bottom:after {
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
-  border-bottom: 6px solid #ffffff;
-  position: absolute; }
+  border-bottom: 6px solid white;
+  top: -6px;
+  left: 8px; }
 
-[class*=" datetimepicker-dropdown-top"]:before {
-  content: '';
-  display: inline-block;
+.bootstrap-datetimepicker-widget.dropdown-menu.top:before {
   border-left: 7px solid transparent;
   border-right: 7px solid transparent;
-  border-top: 7px solid #cccccc;
+  border-top: 7px solid #ccc;
   border-top-color: rgba(0, 0, 0, 0.2);
-  border-bottom: 0; }
+  bottom: -7px;
+  left: 6px; }
 
-[class*=" datetimepicker-dropdown-top"]:after {
-  content: '';
-  display: inline-block;
+.bootstrap-datetimepicker-widget.dropdown-menu.top:after {
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
-  border-top: 6px solid #ffffff;
-  border-bottom: 0; }
-
-.datetimepicker-dropdown-bottom-left:before {
-  top: -7px;
-  right: 6px; }
-
-.datetimepicker-dropdown-bottom-left:after {
-  top: -6px;
-  right: 7px; }
-
-.datetimepicker-dropdown-bottom-right:before {
-  top: -7px;
-  left: 6px; }
-
-.datetimepicker-dropdown-bottom-right:after {
-  top: -6px;
-  left: 7px; }
-
-.datetimepicker-dropdown-top-left:before {
-  bottom: -7px;
-  right: 6px; }
-
-.datetimepicker-dropdown-top-left:after {
-  bottom: -6px;
-  right: 7px; }
-
-.datetimepicker-dropdown-top-right:before {
-  bottom: -7px;
-  left: 6px; }
-
-.datetimepicker-dropdown-top-right:after {
+  border-top: 6px solid white;
   bottom: -6px;
   left: 7px; }
 
-.datetimepicker > div {
-  display: none; }
+.bootstrap-datetimepicker-widget.dropdown-menu.float-right:before {
+  left: auto;
+  right: 6px; }
 
-.datetimepicker.minutes div.datetimepicker-minutes {
-  display: block; }
+.bootstrap-datetimepicker-widget.dropdown-menu.float-right:after {
+  left: auto;
+  right: 7px; }
 
-.datetimepicker.hours div.datetimepicker-hours {
-  display: block; }
+.bootstrap-datetimepicker-widget.dropdown-menu.wider {
+  width: 16rem; }
 
-.datetimepicker.days div.datetimepicker-days {
-  display: block; }
-
-.datetimepicker.months div.datetimepicker-months {
-  display: block; }
-
-.datetimepicker.years div.datetimepicker-years {
-  display: block; }
-
-.datetimepicker table {
+.bootstrap-datetimepicker-widget .list-unstyled {
   margin: 0; }
 
-.datetimepicker td,
-.datetimepicker th {
+.bootstrap-datetimepicker-widget a[data-action] {
+  padding: 6px 0; }
+
+.bootstrap-datetimepicker-widget a[data-action]:active {
+  -webkit-box-shadow: none;
+  box-shadow: none; }
+
+.bootstrap-datetimepicker-widget .timepicker-hour, .bootstrap-datetimepicker-widget .timepicker-minute, .bootstrap-datetimepicker-widget .timepicker-second {
+  width: 54px;
+  font-weight: bold;
+  font-size: 1.2em;
+  margin: 0; }
+
+.bootstrap-datetimepicker-widget button[data-action] {
+  padding: 6px; }
+
+.bootstrap-datetimepicker-widget .btn[data-action="incrementHours"]::after {
+  content: "Increment Hours"; }
+
+.bootstrap-datetimepicker-widget .btn[data-action="incrementMinutes"]::after {
+  content: "Increment Minutes"; }
+
+.bootstrap-datetimepicker-widget .btn[data-action="decrementHours"]::after {
+  content: "Decrement Hours"; }
+
+.bootstrap-datetimepicker-widget .btn[data-action="decrementMinutes"]::after {
+  content: "Decrement Minutes"; }
+
+.bootstrap-datetimepicker-widget .btn[data-action="showHours"]::after {
+  content: "Show Hours"; }
+
+.bootstrap-datetimepicker-widget .btn[data-action="showMinutes"]::after {
+  content: "Show Minutes"; }
+
+.bootstrap-datetimepicker-widget .btn[data-action="togglePeriod"]::after {
+  content: "Toggle AM/PM"; }
+
+.bootstrap-datetimepicker-widget .btn[data-action="clear"]::after {
+  content: "Clear the picker"; }
+
+.bootstrap-datetimepicker-widget .btn[data-action="today"]::after {
+  content: "Set the date to today"; }
+
+.bootstrap-datetimepicker-widget .picker-switch {
+  text-align: center; }
+
+.bootstrap-datetimepicker-widget .picker-switch::after {
+  content: "Toggle Date and Time Screens"; }
+
+.bootstrap-datetimepicker-widget .picker-switch td {
+  padding: 0;
+  margin: 0;
+  height: auto;
+  width: auto;
+  line-height: inherit; }
+
+.bootstrap-datetimepicker-widget .picker-switch td span {
+  line-height: 2.5;
+  height: 2.5em;
+  width: 100%; }
+
+.bootstrap-datetimepicker-widget table {
+  width: 100%;
+  margin: 0; }
+
+.bootstrap-datetimepicker-widget table td,
+.bootstrap-datetimepicker-widget table th {
   text-align: center;
-  width: 20px;
+  border-radius: 0.25rem; }
+
+.bootstrap-datetimepicker-widget table th {
   height: 20px;
-  border-radius: 4px;
-  border: none; }
+  line-height: 20px;
+  width: 20px; }
 
-.table-striped .datetimepicker table tr td,
-.table-striped .datetimepicker table tr th {
-  background-color: transparent; }
-
-.datetimepicker table tr td.minute:hover {
-  background: #eeeeee;
-  cursor: pointer; }
-
-.datetimepicker table tr td.hour:hover {
-  background: #eeeeee;
-  cursor: pointer; }
-
-.datetimepicker table tr td.day:hover {
-  background: #eeeeee;
-  cursor: pointer; }
-
-.datetimepicker table tr td.old,
-.datetimepicker table tr td.new {
-  color: #999999; }
-
-.datetimepicker table tr td.disabled,
-.datetimepicker table tr td.disabled:hover {
-  background: none;
-  color: #999999;
-  cursor: default; }
-
-.datetimepicker table tr td.today,
-.datetimepicker table tr td.today:hover,
-.datetimepicker table tr td.today.disabled,
-.datetimepicker table tr td.today.disabled:hover {
-  background-color: #fde19a;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#fdd49a), to(#fdf59a));
-  background-image: linear-gradient(to bottom, #fdd49a, #fdf59a);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fdd49a', endColorstr='#fdf59a', GradientType=0);
-  border-color: #fdf59a #fdf59a #fbed50;
-  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false); }
-
-.datetimepicker table tr td.today:hover,
-.datetimepicker table tr td.today:hover:hover,
-.datetimepicker table tr td.today.disabled:hover,
-.datetimepicker table tr td.today.disabled:hover:hover,
-.datetimepicker table tr td.today:active,
-.datetimepicker table tr td.today:hover:active,
-.datetimepicker table tr td.today.disabled:active,
-.datetimepicker table tr td.today.disabled:hover:active,
-.datetimepicker table tr td.today.active,
-.datetimepicker table tr td.today:hover.active,
-.datetimepicker table tr td.today.disabled.active,
-.datetimepicker table tr td.today.disabled:hover.active,
-.datetimepicker table tr td.today.disabled,
-.datetimepicker table tr td.today:hover.disabled,
-.datetimepicker table tr td.today.disabled.disabled,
-.datetimepicker table tr td.today.disabled:hover.disabled,
-.datetimepicker table tr td.today[disabled],
-.datetimepicker table tr td.today:hover[disabled],
-.datetimepicker table tr td.today.disabled[disabled],
-.datetimepicker table tr td.today.disabled:hover[disabled] {
-  background-color: #fdf59a; }
-
-.datetimepicker table tr td.today:active,
-.datetimepicker table tr td.today:hover:active,
-.datetimepicker table tr td.today.disabled:active,
-.datetimepicker table tr td.today.disabled:hover:active,
-.datetimepicker table tr td.today.active,
-.datetimepicker table tr td.today:hover.active,
-.datetimepicker table tr td.today.disabled.active,
-.datetimepicker table tr td.today.disabled:hover.active {
-  background-color: #fbf069; }
-
-.datetimepicker table tr td.active,
-.datetimepicker table tr td.active:hover,
-.datetimepicker table tr td.active.disabled,
-.datetimepicker table tr td.active.disabled:hover {
-  background-color: #006dcc;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#0088cc), to(#0044cc));
-  background-image: linear-gradient(to bottom, #0088cc, #0044cc);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0088cc', endColorstr='#0044cc', GradientType=0);
-  border-color: #0044cc #0044cc #002a80;
-  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
-  color: #ffffff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25); }
-
-.datetimepicker table tr td.active:hover,
-.datetimepicker table tr td.active:hover:hover,
-.datetimepicker table tr td.active.disabled:hover,
-.datetimepicker table tr td.active.disabled:hover:hover,
-.datetimepicker table tr td.active:active,
-.datetimepicker table tr td.active:hover:active,
-.datetimepicker table tr td.active.disabled:active,
-.datetimepicker table tr td.active.disabled:hover:active,
-.datetimepicker table tr td.active.active,
-.datetimepicker table tr td.active:hover.active,
-.datetimepicker table tr td.active.disabled.active,
-.datetimepicker table tr td.active.disabled:hover.active,
-.datetimepicker table tr td.active.disabled,
-.datetimepicker table tr td.active:hover.disabled,
-.datetimepicker table tr td.active.disabled.disabled,
-.datetimepicker table tr td.active.disabled:hover.disabled,
-.datetimepicker table tr td.active[disabled],
-.datetimepicker table tr td.active:hover[disabled],
-.datetimepicker table tr td.active.disabled[disabled],
-.datetimepicker table tr td.active.disabled:hover[disabled] {
-  background-color: #0044cc; }
-
-.datetimepicker table tr td.active:active,
-.datetimepicker table tr td.active:hover:active,
-.datetimepicker table tr td.active.disabled:active,
-.datetimepicker table tr td.active.disabled:hover:active,
-.datetimepicker table tr td.active.active,
-.datetimepicker table tr td.active:hover.active,
-.datetimepicker table tr td.active.disabled.active,
-.datetimepicker table tr td.active.disabled:hover.active {
-  background-color: #003399; }
-
-.datetimepicker table tr td span {
-  display: block;
-  width: 23%;
-  height: 54px;
-  line-height: 54px;
-  float: left;
-  margin: 1%;
-  cursor: pointer;
-  border-radius: 4px; }
-
-.datetimepicker .datetimepicker-hours span {
-  height: 26px;
-  line-height: 26px; }
-
-.datetimepicker .datetimepicker-hours table tr td span.hour_am,
-.datetimepicker .datetimepicker-hours table tr td span.hour_pm {
-  width: 14.6%; }
-
-.datetimepicker .datetimepicker-hours fieldset legend,
-.datetimepicker .datetimepicker-minutes fieldset legend {
-  margin-bottom: inherit;
-  line-height: 30px; }
-
-.datetimepicker .datetimepicker-minutes span {
-  height: 26px;
-  line-height: 26px; }
-
-.datetimepicker table tr td span:hover {
-  background: #eeeeee; }
-
-.datetimepicker table tr td span.disabled,
-.datetimepicker table tr td span.disabled:hover {
-  background: none;
-  color: #999999;
-  cursor: default; }
-
-.datetimepicker table tr td span.active,
-.datetimepicker table tr td span.active:hover,
-.datetimepicker table tr td span.active.disabled,
-.datetimepicker table tr td span.active.disabled:hover {
-  background-color: #006dcc;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#0088cc), to(#0044cc));
-  background-image: linear-gradient(to bottom, #0088cc, #0044cc);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0088cc', endColorstr='#0044cc', GradientType=0);
-  border-color: #0044cc #0044cc #002a80;
-  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
-  color: #ffffff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25); }
-
-.datetimepicker table tr td span.active:hover,
-.datetimepicker table tr td span.active:hover:hover,
-.datetimepicker table tr td span.active.disabled:hover,
-.datetimepicker table tr td span.active.disabled:hover:hover,
-.datetimepicker table tr td span.active:active,
-.datetimepicker table tr td span.active:hover:active,
-.datetimepicker table tr td span.active.disabled:active,
-.datetimepicker table tr td span.active.disabled:hover:active,
-.datetimepicker table tr td span.active.active,
-.datetimepicker table tr td span.active:hover.active,
-.datetimepicker table tr td span.active.disabled.active,
-.datetimepicker table tr td span.active.disabled:hover.active,
-.datetimepicker table tr td span.active.disabled,
-.datetimepicker table tr td span.active:hover.disabled,
-.datetimepicker table tr td span.active.disabled.disabled,
-.datetimepicker table tr td span.active.disabled:hover.disabled,
-.datetimepicker table tr td span.active[disabled],
-.datetimepicker table tr td span.active:hover[disabled],
-.datetimepicker table tr td span.active.disabled[disabled],
-.datetimepicker table tr td span.active.disabled:hover[disabled] {
-  background-color: #0044cc; }
-
-.datetimepicker table tr td span.active:active,
-.datetimepicker table tr td span.active:hover:active,
-.datetimepicker table tr td span.active.disabled:active,
-.datetimepicker table tr td span.active.disabled:hover:active,
-.datetimepicker table tr td span.active.active,
-.datetimepicker table tr td span.active:hover.active,
-.datetimepicker table tr td span.active.disabled.active,
-.datetimepicker table tr td span.active.disabled:hover.active {
-  background-color: #003399; }
-
-.datetimepicker table tr td span.old {
-  color: #999999; }
-
-.datetimepicker th.switch {
+.bootstrap-datetimepicker-widget table th.picker-switch {
   width: 145px; }
 
-.datetimepicker th span.glyphicon {
-  pointer-events: none; }
+.bootstrap-datetimepicker-widget table th.disabled, .bootstrap-datetimepicker-widget table th.disabled:hover {
+  background: none;
+  color: #6c757d;
+  cursor: not-allowed; }
 
-.datetimepicker thead tr:first-child th,
-.datetimepicker tfoot th {
+.bootstrap-datetimepicker-widget table th.prev::after {
+  content: "Previous Month"; }
+
+.bootstrap-datetimepicker-widget table th.next::after {
+  content: "Next Month"; }
+
+.bootstrap-datetimepicker-widget table thead tr:first-child th {
   cursor: pointer; }
 
-.datetimepicker thead tr:first-child th:hover,
-.datetimepicker tfoot th:hover {
-  background: #eeeeee; }
+.bootstrap-datetimepicker-widget table thead tr:first-child th:hover {
+  background: #e9ecef; }
 
-.input-append.date .add-on i,
-.input-prepend.date .add-on i,
-.input-group.date .input-group-addon span {
+.bootstrap-datetimepicker-widget table td {
+  height: 54px;
+  line-height: 54px;
+  width: 54px; }
+
+.bootstrap-datetimepicker-widget table td.cw {
+  font-size: .8em;
+  height: 20px;
+  line-height: 20px;
+  color: #6c757d; }
+
+.bootstrap-datetimepicker-widget table td.day {
+  height: 20px;
+  line-height: 20px;
+  width: 20px; }
+
+.bootstrap-datetimepicker-widget table td.day:hover, .bootstrap-datetimepicker-widget table td.hour:hover, .bootstrap-datetimepicker-widget table td.minute:hover, .bootstrap-datetimepicker-widget table td.second:hover {
+  background: #e9ecef;
+  cursor: pointer; }
+
+.bootstrap-datetimepicker-widget table td.old, .bootstrap-datetimepicker-widget table td.new {
+  color: #6c757d; }
+
+.bootstrap-datetimepicker-widget table td.today {
+  position: relative; }
+
+.bootstrap-datetimepicker-widget table td.today:before {
+  content: '';
+  display: inline-block;
+  border: solid transparent;
+  border-width: 0 0 7px 7px;
+  border-bottom-color: #007bff;
+  border-top-color: rgba(0, 0, 0, 0.2);
+  position: absolute;
+  bottom: 4px;
+  right: 4px; }
+
+.bootstrap-datetimepicker-widget table td.active, .bootstrap-datetimepicker-widget table td.active:hover {
+  background-color: #007bff;
+  color: #fff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25); }
+
+.bootstrap-datetimepicker-widget table td.active.today:before {
+  border-bottom-color: #fff; }
+
+.bootstrap-datetimepicker-widget table td.disabled, .bootstrap-datetimepicker-widget table td.disabled:hover {
+  background: none;
+  color: #6c757d;
+  cursor: not-allowed; }
+
+.bootstrap-datetimepicker-widget table td span {
+  display: inline-block;
+  width: 54px;
+  height: 54px;
+  line-height: 54px;
+  margin: 2px 1.5px;
   cursor: pointer;
-  width: 14px;
-  height: 14px; }
+  border-radius: 0.25rem; }
+
+.bootstrap-datetimepicker-widget table td span:hover {
+  background: #e9ecef; }
+
+.bootstrap-datetimepicker-widget table td span.active {
+  background-color: #007bff;
+  color: #fff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25); }
+
+.bootstrap-datetimepicker-widget table td span.old {
+  color: #6c757d; }
+
+.bootstrap-datetimepicker-widget table td span.disabled, .bootstrap-datetimepicker-widget table td span.disabled:hover {
+  background: none;
+  color: #6c757d;
+  cursor: not-allowed; }
+
+.bootstrap-datetimepicker-widget.usetwentyfour td.hour {
+  height: 27px;
+  line-height: 27px; }
+
+.input-group [data-toggle="datetimepicker"] {
+  cursor: pointer; }
 
 /*!
  * Timepicker Component for Twitter Bootstrap
@@ -2353,7 +2279,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled:hover.focus {
   bottom: 0; }
 
 /*!
- * Bootstrap-select v1.13.17 (https://developer.snapappointments.com/bootstrap-select)
+ * Bootstrap-select v1.13.18 (https://developer.snapappointments.com/bootstrap-select)
  *
  * Copyright 2012-2020 SnapAppointments, LLC
  * Licensed under MIT (https://github.com/snapappointments/bootstrap-select/blob/master/LICENSE)
@@ -4200,7 +4126,7 @@ Build date: 2019-12-19 16:51:02
   color: silver;
   font-size: 11px; }
 
-/*! nouislider - 14.5.0 - 5/11/2020 */
+/*! nouislider - 14.6.0 - 6/27/2020 */
 /* Functional styling;
  * These styles are required for noUiSlider to function.
  * You don't need to change these rules to apply your design.
@@ -10635,9 +10561,6 @@ button.toast-close-button {
   box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
   -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, 0.5); }
 
-.apexcharts-canvas.apexcharts-theme-dark {
-  background: #424242; }
-
 .apexcharts-inner {
   position: relative; }
 
@@ -11224,7 +11147,8 @@ button.toast-close-button {
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
   -ms-flex-direction: row;
-  flex-direction: row; }
+  flex-direction: row;
+  padding: 0; }
 
 .swal2-popup.swal2-toast .swal2-title {
   -webkit-box-flex: 1;
@@ -11251,6 +11175,7 @@ button.toast-close-button {
   -webkit-box-pack: start;
   -ms-flex-pack: start;
   justify-content: flex-start;
+  padding: 0;
   font-size: 1em; }
 
 .swal2-popup.swal2-toast .swal2-icon {
@@ -11578,7 +11503,8 @@ button.toast-close-button {
   flex-direction: column;
   -webkit-box-align: center;
   -ms-flex-align: center;
-  align-items: center; }
+  align-items: center;
+  padding: 0 1.8em; }
 
 .swal2-title {
   position: relative;
@@ -11761,7 +11687,7 @@ button.toast-close-button {
   -ms-flex-pack: center;
   justify-content: center;
   margin: 0;
-  padding: 0;
+  padding: 0 1.6em;
   color: #545454;
   font-size: 1.125em;
   font-weight: normal;
@@ -11810,9 +11736,6 @@ button.toast-close-button {
   -webkit-box-shadow: 0 0 3px #c4e6f5;
   box-shadow: 0 0 3px #c4e6f5; }
 
-.swal2-input::-webkit-input-placeholder, .swal2-file::-webkit-input-placeholder, .swal2-textarea::-webkit-input-placeholder {
-  color: #cccccc; }
-
 .swal2-input::-moz-placeholder, .swal2-file::-moz-placeholder, .swal2-textarea::-moz-placeholder {
   color: #cccccc; }
 
@@ -11820,6 +11743,9 @@ button.toast-close-button {
   color: #cccccc; }
 
 .swal2-input::-ms-input-placeholder, .swal2-file::-ms-input-placeholder, .swal2-textarea::-ms-input-placeholder {
+  color: #cccccc; }
+
+.swal2-input::-webkit-input-placeholder, .swal2-file::-webkit-input-placeholder, .swal2-textarea::-webkit-input-placeholder {
   color: #cccccc; }
 
 .swal2-input::placeholder,
@@ -21267,7 +21193,7 @@ readers do not read off random characters that represent icons */
   content: "\e0a7"; }
 
 /*!
- * Font Awesome Free 5.13.0 by @fontawesome - https://fontawesome.com
+ * Font Awesome Free 5.14.0 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
  */
 .fa, .fab, .fad, .fal, .far, .fas {
@@ -21690,6 +21616,12 @@ readers do not read off random characters that represent icons */
 .fa-bacon:before {
   content: "\f7e5"; }
 
+.fa-bacteria:before {
+  content: "\e059"; }
+
+.fa-bacterium:before {
+  content: "\e05a"; }
+
 .fa-bahai:before {
   content: "\f666"; }
 
@@ -21880,7 +21812,7 @@ readers do not read off random characters that represent icons */
   content: "\f49e"; }
 
 .fa-box-tissue:before {
-  content: "\f95b"; }
+  content: "\e05b"; }
 
 .fa-boxes:before {
   content: "\f468"; }
@@ -22456,7 +22388,7 @@ readers do not read off random characters that represent icons */
   content: "\f6ca"; }
 
 .fa-dailymotion:before {
-  content: "\f952"; }
+  content: "\e052"; }
 
 .fa-dashcube:before {
   content: "\f210"; }
@@ -22466,6 +22398,9 @@ readers do not read off random characters that represent icons */
 
 .fa-deaf:before {
   content: "\f2a4"; }
+
+.fa-deezer:before {
+  content: "\e077"; }
 
 .fa-delicious:before {
   content: "\f1a5"; }
@@ -22650,6 +22585,9 @@ readers do not read off random characters that represent icons */
 .fa-edge:before {
   content: "\f282"; }
 
+.fa-edge-legacy:before {
+  content: "\e078"; }
+
 .fa-edit:before {
   content: "\f044"; }
 
@@ -22780,7 +22718,7 @@ readers do not read off random characters that represent icons */
   content: "\f050"; }
 
 .fa-faucet:before {
-  content: "\f905"; }
+  content: "\e005"; }
 
 .fa-fax:before {
   content: "\f1ac"; }
@@ -22903,7 +22841,7 @@ readers do not read off random characters that represent icons */
   content: "\f269"; }
 
 .fa-firefox-browser:before {
-  content: "\f907"; }
+  content: "\e007"; }
 
 .fa-first-aid:before {
   content: "\f479"; }
@@ -23142,6 +23080,9 @@ readers do not read off random characters that represent icons */
 .fa-google-drive:before {
   content: "\f3aa"; }
 
+.fa-google-pay:before {
+  content: "\e079"; }
+
 .fa-google-play:before {
   content: "\f3ab"; }
 
@@ -23269,7 +23210,7 @@ readers do not read off random characters that represent icons */
   content: "\f4be"; }
 
 .fa-hand-holding-medical:before {
-  content: "\f95c"; }
+  content: "\e05c"; }
 
 .fa-hand-holding-usd:before {
   content: "\f4c0"; }
@@ -23311,7 +23252,7 @@ readers do not read off random characters that represent icons */
   content: "\f257"; }
 
 .fa-hand-sparkles:before {
-  content: "\f95d"; }
+  content: "\e05d"; }
 
 .fa-hand-spock:before {
   content: "\f259"; }
@@ -23323,16 +23264,16 @@ readers do not read off random characters that represent icons */
   content: "\f4c4"; }
 
 .fa-hands-wash:before {
-  content: "\f95e"; }
+  content: "\e05e"; }
 
 .fa-handshake:before {
   content: "\f2b5"; }
 
 .fa-handshake-alt-slash:before {
-  content: "\f95f"; }
+  content: "\e05f"; }
 
 .fa-handshake-slash:before {
-  content: "\f960"; }
+  content: "\e060"; }
 
 .fa-hanukiah:before {
   content: "\f6e6"; }
@@ -23356,16 +23297,16 @@ readers do not read off random characters that represent icons */
   content: "\f0a0"; }
 
 .fa-head-side-cough:before {
-  content: "\f961"; }
+  content: "\e061"; }
 
 .fa-head-side-cough-slash:before {
-  content: "\f962"; }
+  content: "\e062"; }
 
 .fa-head-side-mask:before {
-  content: "\f963"; }
+  content: "\e063"; }
 
 .fa-head-side-virus:before {
-  content: "\f964"; }
+  content: "\e064"; }
 
 .fa-heading:before {
   content: "\f1dc"; }
@@ -23470,7 +23411,7 @@ readers do not read off random characters that represent icons */
   content: "\f6f1"; }
 
 .fa-house-user:before {
-  content: "\f965"; }
+  content: "\e065"; }
 
 .fa-houzz:before {
   content: "\f27c"; }
@@ -23506,7 +23447,7 @@ readers do not read off random characters that represent icons */
   content: "\f47f"; }
 
 .fa-ideal:before {
-  content: "\f913"; }
+  content: "\e013"; }
 
 .fa-igloo:before {
   content: "\f7ae"; }
@@ -23542,7 +23483,7 @@ readers do not read off random characters that represent icons */
   content: "\f16d"; }
 
 .fa-instagram-square:before {
-  content: "\f955"; }
+  content: "\e055"; }
 
 .fa-intercom:before {
   content: "\f7af"; }
@@ -23659,7 +23600,7 @@ readers do not read off random characters that represent icons */
   content: "\f5fc"; }
 
 .fa-laptop-house:before {
-  content: "\f966"; }
+  content: "\e066"; }
 
 .fa-laptop-medical:before {
   content: "\f812"; }
@@ -23782,7 +23723,7 @@ readers do not read off random characters that represent icons */
   content: "\f604"; }
 
 .fa-lungs-virus:before {
-  content: "\f967"; }
+  content: "\e067"; }
 
 .fa-lyft:before {
   content: "\f3c3"; }
@@ -23911,7 +23852,7 @@ readers do not read off random characters that represent icons */
   content: "\f753"; }
 
 .fa-microblog:before {
-  content: "\f91a"; }
+  content: "\e01a"; }
 
 .fa-microchip:before {
   content: "\f2db"; }
@@ -23953,7 +23894,7 @@ readers do not read off random characters that represent icons */
   content: "\f289"; }
 
 .fa-mixer:before {
-  content: "\f956"; }
+  content: "\e056"; }
 
 .fa-mizuni:before {
   content: "\f3cc"; }
@@ -24193,7 +24134,7 @@ readers do not read off random characters that represent icons */
   content: "\f704"; }
 
 .fa-people-arrows:before {
-  content: "\f968"; }
+  content: "\e068"; }
 
 .fa-people-carry:before {
   content: "\f4ce"; }
@@ -24259,7 +24200,7 @@ readers do not read off random characters that represent icons */
   content: "\f1a7"; }
 
 .fa-pied-piper-square:before {
-  content: "\f91e"; }
+  content: "\e01e"; }
 
 .fa-piggy-bank:before {
   content: "\f4d3"; }
@@ -24292,7 +24233,7 @@ readers do not read off random characters that represent icons */
   content: "\f5b0"; }
 
 .fa-plane-slash:before {
-  content: "\f969"; }
+  content: "\e069"; }
 
 .fa-play:before {
   content: "\f04b"; }
@@ -24370,10 +24311,10 @@ readers do not read off random characters that represent icons */
   content: "\f542"; }
 
 .fa-pump-medical:before {
-  content: "\f96a"; }
+  content: "\e06a"; }
 
 .fa-pump-soap:before {
-  content: "\f96b"; }
+  content: "\e06b"; }
 
 .fa-pushed:before {
   content: "\f3e1"; }
@@ -24564,6 +24505,9 @@ readers do not read off random characters that represent icons */
 .fa-rupee-sign:before {
   content: "\f156"; }
 
+.fa-rust:before {
+  content: "\e07a"; }
+
 .fa-sad-cry:before {
   content: "\f5b3"; }
 
@@ -24661,7 +24605,7 @@ readers do not read off random characters that represent icons */
   content: "\f3ed"; }
 
 .fa-shield-virus:before {
-  content: "\f96c"; }
+  content: "\e06c"; }
 
 .fa-ship:before {
   content: "\f21a"; }
@@ -24676,7 +24620,7 @@ readers do not read off random characters that represent icons */
   content: "\f54b"; }
 
 .fa-shopify:before {
-  content: "\f957"; }
+  content: "\e057"; }
 
 .fa-shopping-bag:before {
   content: "\f290"; }
@@ -24719,6 +24663,9 @@ readers do not read off random characters that represent icons */
 
 .fa-simplybuilt:before {
   content: "\f215"; }
+
+.fa-sink:before {
+  content: "\e06d"; }
 
 .fa-sistrix:before {
   content: "\f3ee"; }
@@ -24814,7 +24761,7 @@ readers do not read off random characters that represent icons */
   content: "\f7d2"; }
 
 .fa-soap:before {
-  content: "\f96e"; }
+  content: "\e06e"; }
 
 .fa-socks:before {
   content: "\f696"; }
@@ -24982,7 +24929,7 @@ readers do not read off random characters that represent icons */
   content: "\f2f2"; }
 
 .fa-stopwatch-20:before {
-  content: "\f96f"; }
+  content: "\e06f"; }
 
 .fa-store:before {
   content: "\f54e"; }
@@ -24991,10 +24938,10 @@ readers do not read off random characters that represent icons */
   content: "\f54f"; }
 
 .fa-store-alt-slash:before {
-  content: "\f970"; }
+  content: "\e070"; }
 
 .fa-store-slash:before {
-  content: "\f971"; }
+  content: "\e071"; }
 
 .fa-strava:before {
   content: "\f428"; }
@@ -25206,6 +25153,9 @@ readers do not read off random characters that represent icons */
 .fa-ticket-alt:before {
   content: "\f3ff"; }
 
+.fa-tiktok:before {
+  content: "\e07b"; }
+
 .fa-times:before {
   content: "\f00d"; }
 
@@ -25234,7 +25184,7 @@ readers do not read off random characters that represent icons */
   content: "\f71e"; }
 
 .fa-toilet-paper-slash:before {
-  content: "\f972"; }
+  content: "\e072"; }
 
 .fa-toolbox:before {
   content: "\f552"; }
@@ -25264,7 +25214,7 @@ readers do not read off random characters that represent icons */
   content: "\f637"; }
 
 .fa-trailer:before {
-  content: "\f941"; }
+  content: "\e041"; }
 
 .fa-train:before {
   content: "\f238"; }
@@ -25375,7 +25325,7 @@ readers do not read off random characters that represent icons */
   content: "\f404"; }
 
 .fa-unity:before {
-  content: "\f949"; }
+  content: "\e049"; }
 
 .fa-universal-access:before {
   content: "\f29a"; }
@@ -25391,6 +25341,9 @@ readers do not read off random characters that represent icons */
 
 .fa-unlock-alt:before {
   content: "\f13e"; }
+
+.fa-unsplash:before {
+  content: "\e07c"; }
 
 .fa-untappd:before {
   content: "\f405"; }
@@ -25482,6 +25435,9 @@ readers do not read off random characters that represent icons */
 .fa-users-cog:before {
   content: "\f509"; }
 
+.fa-users-slash:before {
+  content: "\e073"; }
+
 .fa-usps:before {
   content: "\f7e1"; }
 
@@ -25549,13 +25505,13 @@ readers do not read off random characters that represent icons */
   content: "\f1ca"; }
 
 .fa-virus:before {
-  content: "\f974"; }
+  content: "\e074"; }
 
 .fa-virus-slash:before {
-  content: "\f975"; }
+  content: "\e075"; }
 
 .fa-viruses:before {
-  content: "\f976"; }
+  content: "\e076"; }
 
 .fa-vk:before {
   content: "\f189"; }

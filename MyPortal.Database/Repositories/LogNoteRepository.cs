@@ -64,7 +64,7 @@ namespace MyPortal.Database.Repositories
 
         public Task<IEnumerable<LogNote>> GetByStudent(Guid studentId, Guid academicYearId)
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
 
             query.Where("LogNote.StudentId", studentId);
             query.Where("LogNote.AcademicYearId", academicYearId);

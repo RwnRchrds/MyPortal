@@ -49,7 +49,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Document>> GetByDirectory(Guid directoryId)
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
 
             query.Where("Document.DirectoryId", directoryId);
 

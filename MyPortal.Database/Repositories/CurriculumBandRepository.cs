@@ -48,7 +48,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<bool> CheckUniqueCode(Guid academicYearId, string code)
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
 
             query.Where("CurriculumBand.AcademicYearId", academicYearId);
             query.Where("CurriculumBand.Code", code);

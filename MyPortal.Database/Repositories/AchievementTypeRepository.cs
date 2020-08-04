@@ -21,9 +21,9 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<AchievementType>> GetRecorded(Guid academicYearId)
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
 
-            query.LeftJoin("Achievement", "Achievement.AchievementTypeId", "AchievementType.Id");
+            query.LeftJoin("Achievements as Achievement", "Achievement.AchievementTypeId", "AchievementType.Id");
 
             query.GroupBy(EntityHelper.GetPropertyNames(typeof(AchievementType)));
 

@@ -46,7 +46,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<AttendanceCode> GetByCode(string code)
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
 
             query.Where("AttendanceCode.Code", "=", code);
 

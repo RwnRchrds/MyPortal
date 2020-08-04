@@ -44,7 +44,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<bool> CheckUniqueCode(Guid academicYearId, string code)
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
 
             query.LeftJoin("CurriculumBandBlockAssignment as Assignment", "Assignment.BlockId", "Block.Id");
             query.LeftJoin("CurriculumBand as Band", "Band.Id", "Assignment.BandId");

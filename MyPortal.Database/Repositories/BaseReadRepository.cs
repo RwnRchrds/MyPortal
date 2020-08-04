@@ -29,18 +29,14 @@ namespace MyPortal.Database.Repositories
 
             Compiler = new SqlServerCompiler();
 
-            TblAlias = string.IsNullOrWhiteSpace(tblAlias) ? typeof(TEntity).Name : tblAlias;
-
-            TblName = EntityHelper.GetTableName(typeof(TEntity), tblAlias);
+            TblName = EntityHelper.GetTableName(typeof(TEntity), out TblAlias, tblAlias);
         }
 
         public BaseReadRepository(string tblAlias = null)
         {
             Compiler = new SqlServerCompiler();
 
-            TblAlias = string.IsNullOrWhiteSpace(tblAlias) ? typeof(TEntity).Name : tblAlias;
-
-            TblName = EntityHelper.GetTableName(typeof(TEntity), tblAlias);
+            TblName = EntityHelper.GetTableName(typeof(TEntity), out TblAlias, tblAlias);
         }
 
         protected string TblName;
@@ -78,6 +74,11 @@ namespace MyPortal.Database.Repositories
             JoinRelated(query);
         }
 
+        protected Query GenerateEmptyQuery(Type t, string alias = null)
+        {
+            return new Query(EntityHelper.GetTableName(t, alias));
+        }
+
         protected async Task<int?> ExecuteQueryIntResult(Query query)
         {
             var sql = Compiler.Compile(query);
@@ -101,9 +102,9 @@ namespace MyPortal.Database.Repositories
             return await Connection.ExecuteAsync(compiled.Sql, compiled.Bindings);
         }
 
-        protected Query SelectAllColumns(bool includeDeleted = false, bool getRelated = true)
+        protected Query GenerateQuery(bool includeDeleted = false, bool getRelated = true)
         {
-            var query = new Query(TblName).SelectAll(typeof(TEntity));
+            var query = new Query(TblName).SelectAll(typeof(TEntity), TblAlias);
 
             if (!includeDeleted && typeof(TEntity).GetInterfaces().Contains(typeof(ISoftDeleteEntity)))
             {
@@ -120,14 +121,14 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<TEntity>> GetAll()
         {
-            var sql = SelectAllColumns();
+            var sql = GenerateQuery();
 
             return await ExecuteQuery(sql);
         }
 
         public async Task<TEntity> GetById(Guid id)
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
 
             query.Where($"{TblAlias}.Id", "=", id);
 

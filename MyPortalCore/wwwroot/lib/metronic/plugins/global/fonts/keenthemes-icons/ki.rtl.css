@@ -95,3 +95,7 @@
 .ki-wrench:before { content: "\f13c"; }
 .ki-gear:before { content: "\f13d"; }
 .ki-info:before { content: "\f13e"; }
+.ki-calendar-2:before { content: "\f13f"; }
+.ki-calendar:before { content: "\f140"; }
+.ki-calendar-today:before { content: "\f141"; }
+.ki-clock:before { content: "\f142"; }

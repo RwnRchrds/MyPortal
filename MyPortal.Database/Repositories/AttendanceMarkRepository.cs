@@ -61,7 +61,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<AttendanceMark>> GetByStudent(Guid studentId, Guid academicYearId)
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
 
             query.Where("Student.Id", "=", studentId);
             query.Where("AttendanceWeekPattern.AcademicYearId", "=", academicYearId);
@@ -71,7 +71,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<AttendanceMark> Get(Guid studentId, Guid attendanceWeekId, Guid periodId)
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
 
             query.Where("Student.Id", "=", studentId);
 

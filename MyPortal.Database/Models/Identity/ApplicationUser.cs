@@ -49,5 +49,7 @@ namespace MyPortal.Database.Models.Identity
         public virtual ICollection<Bulletin> Bulletins { get; set; }
 
         public virtual ICollection<Task> AssignedBy { get; set; }
+
+        public virtual ICollection<ReportCardSubmission> ReportCardSubmissions { get; set; }
     }
 }

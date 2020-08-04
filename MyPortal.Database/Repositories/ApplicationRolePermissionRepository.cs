@@ -52,7 +52,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<ApplicationRolePermission>> GetByRole(Guid roleId)
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
             
             query.Where("AspNetRolePermissions.RoleId", "=", roleId);
 

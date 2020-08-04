@@ -22,12 +22,13 @@ namespace MyPortal.Database.Helpers
             }
             else
             {
-                var tblName = string.IsNullOrWhiteSpace(alias) ? t.Name : alias;
+                string tblAlias;
+                GetTableName(t, out tblAlias, alias);
                 var props = GetProperties(t);
 
                 foreach (var prop in props)
                 {
-                    propNames.Add($"{tblName}.{prop.Name}");
+                    propNames.Add($"{tblAlias}.{prop.Name}");
                 }
             }
 
@@ -67,7 +68,7 @@ namespace MyPortal.Database.Helpers
             return props;
         }
 
-        internal static string GetTableName(Type t, string tblAlias = null, bool includeSchema = false, string schema = "dbo")
+        internal static string GetTableName(Type t, out string outputAlias, string tblAlias = null, bool includeSchema = false, string schema = "dbo")
         {
             var entityTable = ((TableAttribute) t.GetCustomAttribute(typeof(TableAttribute)))?.Name ?? t.Name;
             
@@ -83,6 +84,8 @@ namespace MyPortal.Database.Helpers
 
             if (!string.IsNullOrWhiteSpace(tblAlias))
             {
+                outputAlias = tblAlias;
+
                 if (includeSchema)
                 {
                     return $"{schema}.{entityTable} as {tblAlias}";   
@@ -91,12 +94,45 @@ namespace MyPortal.Database.Helpers
                 return $"{entityTable} as {tblAlias}";
             }
 
+            outputAlias = entityTable;
 
             if (includeSchema)
             {
                 return $"{schema}.{entityTable}";   
             }
             
+            return $"{entityTable}";
+        }
+
+        internal static string GetTableName(Type t, string tblAlias = null, bool includeSchema = false, string schema = "dbo")
+        {
+            var entityTable = ((TableAttribute)t.GetCustomAttribute(typeof(TableAttribute)))?.Name ?? t.Name;
+
+            if (t == typeof(ApplicationUser))
+            {
+                entityTable = "AspNetUsers";
+            }
+
+            if (t == typeof(ApplicationRole))
+            {
+                entityTable = "AspNetRoles";
+            }
+
+            if (!string.IsNullOrWhiteSpace(tblAlias))
+            {
+                if (includeSchema)
+                {
+                    return $"{schema}.{entityTable} as {tblAlias}";
+                }
+
+                return $"{entityTable} as {tblAlias}";
+            }
+
+            if (includeSchema)
+            {
+                return $"{schema}.{entityTable}";
+            }
+
             return $"{entityTable}";
         }
     }

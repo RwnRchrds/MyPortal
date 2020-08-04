@@ -46,7 +46,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<AttendanceWeek> GetByDate(DateTime date)
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
 
             query.WhereDate("AttendanceWeek.Beginning", "<=", date);
             query.WhereDate("DATEADD(DAY, 6, AttendanceWeek.Beginning)", ">=", date);

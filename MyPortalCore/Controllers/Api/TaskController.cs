@@ -170,7 +170,7 @@ namespace MyPortalCore.Controllers.Api
 
             else if (taskPersonTypes.Employee)
             {
-                if (User.HasPermission(Permissions.ManageStaff))
+                if (User.HasPermission(Permissions.GetEditStaffPerformanceDetailsGroup()))
                 {
                     return true;
                 }
@@ -208,7 +208,7 @@ namespace MyPortalCore.Controllers.Api
 
             if (taskPersonTypes.Employee)
             {
-                if (User.HasPermission(Permissions.ManageStaff))
+                if (User.HasPermission(Permissions.GetEditStaffPerformanceDetailsGroup()))
                 {
                     return true;
                 }

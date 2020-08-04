@@ -19,7 +19,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<DocumentType>> Get(DocumentTypeFilter filter)
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
 
             if (filter.Active)
             {

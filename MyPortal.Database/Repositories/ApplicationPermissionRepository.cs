@@ -24,14 +24,14 @@ namespace MyPortal.Database.Repositories
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(SystemArea));
+            query.SelectAll(typeof(SystemArea), "SystemArea");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("SystemArea", "SystemArea.Id", "AspNetPermissions.AreaId");
+            query.LeftJoin("SystemAreas as SystemArea", "SystemArea.Id", "AspNetPermissions.AreaId");
         }
 
         protected override async Task<IEnumerable<ApplicationPermission>> ExecuteQuery(Query query)
@@ -49,7 +49,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<ApplicationPermission> GetByClaimValue(int claimValue)
         {
-            var sql = SelectAllColumns();
+            var sql = GenerateQuery();
 
             sql.Where("AspNetPermissions.ClaimValue", "=", claimValue);
 

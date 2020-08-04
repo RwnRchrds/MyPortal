@@ -134,5 +134,7 @@ namespace MyPortal.Database.Models
         public virtual ICollection<HomeworkSubmission> HomeworkSubmissions { get; set; }
 
         public virtual ICollection<StudentAgentRelationship> AgentRelationships { get; set; }
+
+        public virtual ICollection<ReportCard> ReportCards { get; set; }
     }
 }

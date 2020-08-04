@@ -45,7 +45,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<StaffMember> GetByPersonId(Guid personId)
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
 
             query.Where("Person.Id", personId);
 
@@ -54,7 +54,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<StaffMember> GetByUserId(Guid userId)
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
 
             query.Where("Person.UserId", userId);
 

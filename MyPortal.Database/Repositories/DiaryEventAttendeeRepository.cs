@@ -57,7 +57,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<DiaryEventAttendee>> GetByEvent(Guid eventId)
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
 
             query.Where("Event.Id", eventId);
 

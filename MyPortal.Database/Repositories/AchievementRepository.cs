@@ -18,19 +18,19 @@ namespace MyPortal.Database.Repositories
 {
     public class AchievementRepository : BaseReadWriteRepository<Achievement>, IAchievementRepository
     {
-        public AchievementRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public AchievementRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context, "Achievement")
         {
            
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(AcademicYear));
-            query.SelectAll(typeof(AchievementType));
-            query.SelectAll(typeof(AchievementOutcome));
-            query.SelectAll(typeof(Student));
+            query.SelectAll(typeof(AcademicYear), "AcademicYear");
+            query.SelectAll(typeof(AchievementType), "AchievementType");
+            query.SelectAll(typeof(AchievementOutcome), "AchievementOutcome");
+            query.SelectAll(typeof(Student), "Student");
             query.SelectAll(typeof(Person), "StudentPerson");
-            query.SelectAll(typeof(Location));
+            query.SelectAll(typeof(Location), "Location");
             query.SelectAll(typeof(ApplicationUser), "RecordedBy");
             query.SelectAll(typeof(Person), "RecordedByPerson");
 
@@ -39,14 +39,14 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("AcademicYear", "AcademicYear.Id", "Achievement.AcademicYearId");
-            query.LeftJoin("AchievementType", "AchievementType.Id", "Achievement.AchievementTypeId");
-            query.LeftJoin("AchievementOutcome", "AchievementOutcome.Id", "Achievement.OutcomeId");
-            query.LeftJoin("Student", "Student.Id", "Achievement.StudentId");
-            query.LeftJoin("Person AS StudentPerson", "StudentPerson.Id", "Student.PersonId");
-            query.LeftJoin("Location", "Location.Id", "Achievement.LocationId");
-            query.LeftJoin("AspNetUsers as RecordedBy", "RecordedBy.Id", "Achievement.RecordedById");
-            query.LeftJoin("Person as RecordedByPerson", "RecordedByPerson.UserId", "RecordedBy.Id");
+            query.LeftJoin($"AcademicYears as AcademicYear", "AcademicYear.Id", "Achievement.AcademicYearId");
+            query.LeftJoin($"AchievementTypes as AchievementType", "AchievementType.Id", "Achievement.AchievementTypeId");
+            query.LeftJoin($"AchievementOutcomes as AchievementOutcome", "AchievementOutcome.Id", "Achievement.OutcomeId");
+            query.LeftJoin($"Students as Student", "Student.Id", "Achievement.StudentId");
+            query.LeftJoin($"People as StudentPerson", "StudentPerson.Id", "Student.PersonId");
+            query.LeftJoin($"Locations as Location", "Location.Id", "Achievement.LocationId");
+            query.LeftJoin($"AspNetUsers as RecordedBy", "RecordedBy.Id", "Achievement.RecordedById");
+            query.LeftJoin($"People as RecordedByPerson", "RecordedByPerson.UserId", "RecordedBy.Id");
         }
 
         public async Task<int> GetCountByStudent(Guid studentId, Guid academicYearId)
@@ -71,7 +71,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Achievement>> GetByStudent(Guid studentId, Guid academicYearId)
         {
-            var sql = SelectAllColumns();
+            var sql = GenerateQuery();
 
             sql.Where("Achievement.StudentId" ,"=", studentId);
             sql.Where("Achievement.AcademicYearId", "=", academicYearId);

@@ -76,7 +76,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IncidentDetention> Get(Guid detentionId, Guid studentId)
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
 
             query.Where("Detention.Id", detentionId);
             query.Where("Student.Id", studentId);

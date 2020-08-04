@@ -46,7 +46,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<Directory>> GetSubdirectories(Guid directoryId, bool includeStaffOnly)
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
 
             query.Where("Directory.ParentId", "=", directoryId);
 

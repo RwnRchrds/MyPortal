@@ -203,7 +203,7 @@ namespace MyPortalCore
             // MyPortal business services
             services.AddScoped<IAcademicYearService, AcademicYearService>();
             services.AddScoped<IAchievementService, AchievementService>();
-            services.AddScoped<IApplicationRolePermissionService, ApplicationRolePermissionService>();
+            services.AddScoped<IApplicationRolePermissionService, ApplicationPermissionService>();
             services.AddScoped<IApplicationRoleService, ApplicationRoleService>();
             services.AddScoped<IApplicationUserService, ApplicationUserService>();
             services.AddScoped<IAttendanceMarkService, AttendanceMarkService>();

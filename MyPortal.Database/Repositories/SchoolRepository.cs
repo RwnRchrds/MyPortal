@@ -16,19 +16,19 @@ namespace MyPortal.Database.Repositories
 {
     public class SchoolRepository : BaseReadWriteRepository<School>, ISchoolRepository
     {
-        public SchoolRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public SchoolRepository(ApplicationDbContext context) : base(context, "School")
         {
 
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(LocalAuthority));
-            query.SelectAll(typeof(SchoolPhase));
-            query.SelectAll(typeof(SchoolType));
-            query.SelectAll(typeof(GovernanceType));
-            query.SelectAll(typeof(IntakeType));
-            query.SelectAll(typeof(Person));
+            query.SelectAll(typeof(LocalAuthority), "LocalAuthority");
+            query.SelectAll(typeof(SchoolPhase), "SchoolPhase");
+            query.SelectAll(typeof(SchoolType), "SchoolType");
+            query.SelectAll(typeof(GovernanceType), "GovernanceType");
+            query.SelectAll(typeof(IntakeType), "IntakeType");
+            query.SelectAll(typeof(Person), "Person");
 
             JoinRelated(query);
         }
@@ -54,7 +54,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<School> GetLocal()
         {
-            var query = SelectAllColumns();
+            var query = GenerateQuery();
 
             query.Where("School.Local", true);
 

@@ -27,7 +27,7 @@ namespace MyPortal.Database.Models
         public bool Active { get; set; }
 
         [Column(Order = 5)]
-        public bool Statutory { get; set; }
+        public bool Restricted { get; set; }
 
         public virtual AttendanceCodeMeaning CodeMeaning { get; set; }
     }

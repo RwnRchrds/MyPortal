@@ -15,14 +15,14 @@ namespace MyPortal.Database.Repositories
 {
     public class AcademicYearRepository : BaseReadWriteRepository<AcademicYear>, IAcademicYearRepository
     {
-        public AcademicYearRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public AcademicYearRepository(IDbConnection connection, ApplicationDbContext context) : base(context, "AcademicYear")
         {
             
         }
 
         public async Task<AcademicYear> GetCurrent()
         {
-            var sql = SelectAllColumns();
+            var sql = GenerateQuery();
 
             var dateToday = DateTime.Today;
 
@@ -34,7 +34,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<IEnumerable<AcademicYear>> GetAllToDate()
         {
-            var sql = SelectAllColumns();
+            var sql = GenerateQuery();
 
             var dateToday = DateTime.Today;
 
