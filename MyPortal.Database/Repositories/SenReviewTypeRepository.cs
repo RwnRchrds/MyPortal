@@ -10,7 +10,7 @@ namespace MyPortal.Database.Repositories
 {
     public class SenReviewTypeRepository : BaseReadRepository<SenReviewType>, ISenReviewTypeRepository
     {
-        public SenReviewTypeRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public SenReviewTypeRepository(IDbConnection connection) : base(connection)
         {
         }
     }

@@ -15,14 +15,14 @@ namespace MyPortal.Database.Repositories
 {
     public class BulletinRepository : BaseReadWriteRepository<Bulletin>, IBulletinRepository
     {
-        public BulletinRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public BulletinRepository(ApplicationDbContext context) : base(context, "Bulletin")
         {
        
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(ApplicationUser), "User");
+            query.SelectAllColumns(typeof(ApplicationUser), "User");
 
             JoinRelated(query);
         }

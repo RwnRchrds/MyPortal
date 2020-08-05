@@ -2,6 +2,8 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Models;
+using MyPortal.Logic.Exceptions;
+using MyPortal.Logic.Models.Exceptions;
 
 namespace MyPortal.Logic.Helpers
 {
@@ -11,6 +13,8 @@ namespace MyPortal.Logic.Helpers
 
         public static ApplicationDbContext CreateContext()
         {
+            CheckConnectionString();
+
             var options = new DbContextOptionsBuilder<ApplicationDbContext>().UseSqlServer(ConnectionString).Options;
 
             return new ApplicationDbContext(options);
@@ -18,9 +22,19 @@ namespace MyPortal.Logic.Helpers
 
         public static IDbConnection CreateConnection()
         {
+            CheckConnectionString();
+
             var connection = new SqlConnection(ConnectionString);
 
             return connection;
+        }
+
+        private static void CheckConnectionString()
+        {
+            if (string.IsNullOrWhiteSpace(ConnectionString))
+            {
+                throw new ConnectionStringException("The connection string has not been set.");
+            }
         }
     }
 }

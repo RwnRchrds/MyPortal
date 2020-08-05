@@ -10,7 +10,7 @@ namespace MyPortal.Database.Repositories
 {
     public class IncidentTypeRepository : BaseReadWriteRepository<IncidentType>, IIncidentTypeRepository
     {
-        public IncidentTypeRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public IncidentTypeRepository(ApplicationDbContext context) : base(context)
         {
         }
     }

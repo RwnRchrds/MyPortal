@@ -6,7 +6,9 @@ using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
+using MyPortal.Database.Repositories;
 using MyPortal.Database.Search;
+using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Person;
@@ -31,9 +33,9 @@ namespace MyPortal.Logic.Services
             return person;
         }
 
-        public PersonService(IPersonRepository personRepository) : base("Person")
+        public PersonService(ApplicationDbContext context)
         {
-            _personRepository = personRepository;
+            _personRepository = new PersonRepository(context);
         }
 
         public async Task<PersonModel> GetById(Guid personId)
@@ -79,7 +81,7 @@ namespace MyPortal.Logic.Services
 
             if (person == null && throwIfNotFound)
             {
-                throw NotFound();
+                throw new NotFoundException("Person not found.");
             }
 
             return BusinessMapper.Map<PersonModel>(person);

@@ -13,37 +13,37 @@ namespace MyPortal.Database.Repositories
 {
     public class IncidentDetentionRepository : BaseReadWriteRepository<IncidentDetention>, IIncidentDetentionRepository
     {
-        public IncidentDetentionRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public IncidentDetentionRepository(ApplicationDbContext context) : base(context, "IncidentDetention")
         {
             
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(Incident));
-            query.SelectAll(typeof(IncidentType));
-            query.SelectAll(typeof(Student));
-            query.SelectAll(typeof(Person), "StudentPerson");
-            query.SelectAll(typeof(Location));
-            query.SelectAll(typeof(Detention));
-            query.SelectAll(typeof(DiaryEvent));
-            query.SelectAll(typeof(StaffMember));
-            query.SelectAll(typeof(Person), "SupervisorPerson");
+            query.SelectAllColumns(typeof(Incident), "Incident");
+            query.SelectAllColumns(typeof(IncidentType), "IncidentType");
+            query.SelectAllColumns(typeof(Student), "Student");
+            query.SelectAllColumns(typeof(Person), "StudentPerson");
+            query.SelectAllColumns(typeof(Location), "Location");
+            query.SelectAllColumns(typeof(Detention), "Detention");
+            query.SelectAllColumns(typeof(DiaryEvent), "DiaryEvent");
+            query.SelectAllColumns(typeof(StaffMember), "StaffMember");
+            query.SelectAllColumns(typeof(Person), "SupervisorPerson");
             
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("Incident", "Incident.Id", "IncidentDetention.IncidentId");
-            query.LeftJoin("IncidentType", "IncidentType.Id", "Incident.IncidentTypeId");
-            query.LeftJoin("Student", "Student.Id", "Incident.StudentId");
-            query.LeftJoin("Person as StudentPerson", "StudentPerson.Id", "Student.PersonId");
-            query.LeftJoin("Location", "Location.Id", "Incident.LocationId");
-            query.LeftJoin("Detention", "Detention.Id", "IncidentDetention.DetentionId");
-            query.LeftJoin("DiaryEvent", "DiaryEvent.Id", "Detention.EventId");
-            query.LeftJoin("StaffMember", "StaffMember.Id", "Detention.SupervisorId");
-            query.LeftJoin("Person as SupervisorPerson", "SupervisorPerson.Id", "StaffMember.PersonId");
+            query.LeftJoin("Incidents as Incident", "Incident.Id", "IncidentDetention.IncidentId");
+            query.LeftJoin("IncidentTypes as IncidentType", "IncidentType.Id", "Incident.IncidentTypeId");
+            query.LeftJoin("Students as Student", "Student.Id", "Incident.StudentId");
+            query.LeftJoin("People as StudentPerson", "StudentPerson.Id", "Student.PersonId");
+            query.LeftJoin("Locations as Location", "Location.Id", "Incident.LocationId");
+            query.LeftJoin("Detentions as Detention", "Detention.Id", "IncidentDetention.DetentionId");
+            query.LeftJoin("DiaryEvents as DiaryEvent", "DiaryEvent.Id", "Detention.EventId");
+            query.LeftJoin("StaffMembers as StaffMember", "StaffMember.Id", "Detention.SupervisorId");
+            query.LeftJoin("People as SupervisorPerson", "SupervisorPerson.Id", "StaffMember.PersonId");
         }
 
         protected override async Task<IEnumerable<IncidentDetention>> ExecuteQuery(Query query)

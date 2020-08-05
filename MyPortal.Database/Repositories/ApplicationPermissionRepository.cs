@@ -17,14 +17,14 @@ namespace MyPortal.Database.Repositories
 {
     public class ApplicationPermissionRepository : BaseReadRepository<ApplicationPermission>, IApplicationPermissionRepository
     {
-        public ApplicationPermissionRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public ApplicationPermissionRepository(IDbConnection connection) : base(connection)
         {
            
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(SystemArea), "SystemArea");
+            query.SelectAllColumns(typeof(SystemArea), "SystemArea");
 
             JoinRelated(query);
         }

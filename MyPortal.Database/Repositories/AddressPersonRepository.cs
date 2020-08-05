@@ -14,15 +14,15 @@ namespace MyPortal.Database.Repositories
 {
     public class AddressPersonRepository : BaseReadWriteRepository<AddressPerson>, IAddressPersonRepository
     {
-        public AddressPersonRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public AddressPersonRepository(ApplicationDbContext context) : base(context)
         {
            
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(Person), "Person");
-            query.SelectAll(typeof(Address), "Address");
+            query.SelectAllColumns(typeof(Person), "Person");
+            query.SelectAllColumns(typeof(Address), "Address");
 
             JoinRelated(query);
         }

@@ -12,20 +12,23 @@ using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
 using Google.Apis.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Filters;
+using MyPortal.Database.Repositories;
 using MyPortal.Logic.Constants;
+using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
+using MyPortal.Logic.Models.DocumentProvision;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Exceptions;
-using MyPortal.Logic.Models.Google;
 using MyPortal.Logic.Models.Requests.Documents;
 using File = Google.Apis.Drive.v3.Data.File;
 using Task = System.Threading.Tasks.Task;
@@ -39,13 +42,14 @@ namespace MyPortal.Logic.Services
         private readonly IDirectoryService _directoryService;
         private readonly DriveService _driveService;
 
-        public DocumentService(IDocumentRepository documentRepository, IDirectoryService directoryService, IDocumentTypeRepository documentTypeRepository, IConfiguration config) : base("Document")
+        public DocumentService(IConfiguration config, ApplicationDbContext context)
         {
-            _documentRepository = documentRepository;
-             var googleHelper = new GoogleHelper(config);
-            _directoryService = directoryService;
-            _documentTypeRepository = documentTypeRepository;
+            var connection = context.Database.GetDbConnection();
+            _documentRepository = new DocumentRepository(context);
+            _directoryService = new DirectoryService(context);
+            _documentTypeRepository = new DocumentTypeRepository(connection);
 
+            var googleHelper = new GoogleHelper(config);
             _driveService = new DriveService(googleHelper.GetInitializer());
         }
 
@@ -63,7 +67,7 @@ namespace MyPortal.Logic.Services
 
                 if (directory == null)
                 {
-                    throw NotFound("Directory not found.");
+                    throw new NotFoundException("Directory not found.");
                 }
 
                 try
@@ -90,7 +94,7 @@ namespace MyPortal.Logic.Services
                 }
                 catch (Exception e)
                 {
-                    throw BadRequest(e);
+                    throw GetInnerException(e);
                 }
             }
 
@@ -135,7 +139,7 @@ namespace MyPortal.Logic.Services
 
             if (document == null)
             {
-                throw NotFound();
+                throw new NotFoundException("Document not found.");
             }
 
             try
@@ -150,7 +154,7 @@ namespace MyPortal.Logic.Services
             }
             catch (Exception e)
             {
-                throw BadRequest(e);
+                throw GetInnerException(e);
             }
         }
 
@@ -160,7 +164,7 @@ namespace MyPortal.Logic.Services
 
             if (document == null)
             {
-                throw NotFound();
+                throw new NotFoundException("Document not found.");
             }
 
             return BusinessMapper.Map<DocumentModel>(document);
@@ -172,7 +176,7 @@ namespace MyPortal.Logic.Services
 
             if (document == null)
             {
-                throw NotFound();
+                throw new NotFoundException("Document not found.");
             }
 
             var googleMimeTypes = GoogleMimeTypes.GetAll();

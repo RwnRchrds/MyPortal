@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Security.Claims;
@@ -12,10 +11,13 @@ using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
+using MyPortal.Database.Repositories;
 using MyPortal.Logic.Constants;
+using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Admin;
+using InvalidDataException = System.IO.InvalidDataException;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
@@ -26,11 +28,11 @@ namespace MyPortal.Logic.Services
         private readonly IPersonRepository _personRepository;
         private readonly IAcademicYearRepository _academicYearRepository;
 
-        public ApplicationUserService(UserManager<ApplicationUser> userManager, IAcademicYearRepository academicYearRepository, IPersonRepository personRepository) : base("User")
+        public ApplicationUserService(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
             _userManager = userManager;
-            _academicYearRepository = academicYearRepository;
-            _personRepository = personRepository;
+            _academicYearRepository = new AcademicYearRepository(context);
+            _personRepository = new PersonRepository(context);
         }
 
         public async Task CreateUser(CreateUser creator)
@@ -55,7 +57,7 @@ namespace MyPortal.Logic.Services
 
             if (!result.Succeeded)
             {
-                throw BadRequest(result.Errors.FirstOrDefault()?.Description);
+                throw new InvalidDataException(result.Errors.FirstOrDefault()?.Description);
             }
         }
 
@@ -103,7 +105,7 @@ namespace MyPortal.Logic.Services
 
             if (selected == null && throwIfNotFound)
             {
-                throw NotFound("No academic year has been selected.");
+                throw new NotFoundException("No academic year has been selected.");
             }
 
             var acadYear = await _academicYearRepository.GetById(selected.Value);

@@ -10,7 +10,7 @@ namespace MyPortal.Database.Repositories
 {
     public class SchoolTypeRepository : BaseReadRepository<SchoolType>, ISchoolTypeRepository
     {
-        public SchoolTypeRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public SchoolTypeRepository(IDbConnection connection) : base(connection)
         {
         }
     }

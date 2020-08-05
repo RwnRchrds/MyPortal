@@ -1,11 +1,12 @@
 ﻿using System.Data;
+using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 
 namespace MyPortal.Database.Repositories
 {
-    public class CurriculumBandBlockAssignmentRepository : BaseReadWriteRepository<CurriculumBandBlockAssignment>
+    public class CurriculumBandBlockAssignmentRepository : BaseReadWriteRepository<CurriculumBandBlockAssignment>, ICurriculumBandBlockAssignmentRepository
     {
-        public CurriculumBandBlockAssignmentRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public CurriculumBandBlockAssignmentRepository(ApplicationDbContext context) : base(context)
         {
             
         }

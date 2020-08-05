@@ -13,22 +13,22 @@ namespace MyPortal.Database.Repositories
 {
     public class CurriculumBandRepository : BaseReadWriteRepository<CurriculumBand>, ICurriculumBandRepository
     {
-        public CurriculumBandRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
+        public CurriculumBandRepository(ApplicationDbContext context) : base(context, "CurriculumBand")
         {
             
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(AcademicYear));
-            query.SelectAll(typeof(CurriculumYearGroup), "CYG");
+            query.SelectAllColumns(typeof(AcademicYear), "AcademicYear");
+            query.SelectAllColumns(typeof(CurriculumYearGroup), "CYG");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("AcademicYear", "AcademicYear.Id", "CurriclumBand.AcademicYearId");
+            query.LeftJoin("AcademicYears as AcademicYear", "AcademicYear.Id", "CurriclumBand.AcademicYearId");
             query.LeftJoin("CurriculumYearGroup as CYG", "CYG.Id", "CurriculumBand.CurriclumYearGroupId");
         }
 

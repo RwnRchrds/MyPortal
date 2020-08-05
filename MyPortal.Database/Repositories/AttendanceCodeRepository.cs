@@ -14,21 +14,21 @@ namespace MyPortal.Database.Repositories
 {
     public class AttendanceCodeRepository : BaseReadRepository<AttendanceCode>, IAttendanceCodeRepository
     {
-        public AttendanceCodeRepository(IDbConnection connection) : base(connection)
+        public AttendanceCodeRepository(IDbConnection connection) : base(connection, "AttendanceCode")
         {
 
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(AttendanceCodeMeaning));
+            query.SelectAllColumns(typeof(AttendanceCodeMeaning), "AttendanceCodeMeaning");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("AttendanceCodeMeaning", "AttendanceCodeMeaning.Id", "AttendanceCode.MeaningId");
+            query.LeftJoin("AttendanceCodeMeanings as AttendanceCodeMeaning", "AttendanceCodeMeaning.Id", "AttendanceCode.MeaningId");
         }
 
         protected override async Task<IEnumerable<AttendanceCode>> ExecuteQuery(Query query)

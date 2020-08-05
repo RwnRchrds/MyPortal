@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
+using MyPortal.Database.Repositories;
+using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
@@ -23,12 +26,13 @@ namespace MyPortal.Logic.Services
         private readonly ILogNoteRepository _logNoteRepository;
         private readonly ILogNoteTypeRepository _logNoteTypeRepository;
 
-        public LogNoteService(ILogNoteRepository logNoteRepository, ILogNoteTypeRepository logNoteTypeRepository,
-            IAcademicYearRepository academicYearRepository) : base("Log note")
+        public LogNoteService(ApplicationDbContext context)
         {
-            _academicYearRepository = academicYearRepository;
-            _logNoteRepository = logNoteRepository;
-            _logNoteTypeRepository = logNoteTypeRepository;
+            var connection = context.Database.GetDbConnection();
+
+            _academicYearRepository = new AcademicYearRepository(context);
+            _logNoteRepository = new LogNoteRepository(context);
+            _logNoteTypeRepository = new LogNoteTypeRepository(connection);
         }
 
         public async Task<LogNoteModel> GetById(Guid logNoteId)
@@ -37,7 +41,7 @@ namespace MyPortal.Logic.Services
 
             if (logNote == null)
             {
-                throw NotFound();
+                throw new NotFoundException("Log note not found.");
             }
 
             return BusinessMapper.Map<LogNoteModel>(logNote);
@@ -95,7 +99,7 @@ namespace MyPortal.Logic.Services
 
                 if (logNote == null)
                 {
-                    throw NotFound();
+                    throw new NotFoundException("Log note not found.");
                 }
                 
                 await AcademicYearModel.CheckLock(_academicYearRepository, logNote.AcademicYearId);

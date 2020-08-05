@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using MyPortal.Database.Interfaces.Repositories;
+using MyPortal.Database.Models;
+using MyPortal.Database.Repositories;
+using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
 
@@ -12,9 +15,9 @@ namespace MyPortal.Logic.Services
     {
         private readonly IStaffMemberRepository _staffMemberRepository;
 
-        public StaffMemberService(IStaffMemberRepository staffMemberRepository) : base("Staff Member")
+        public StaffMemberService(ApplicationDbContext context)
         {
-            _staffMemberRepository = staffMemberRepository;
+            _staffMemberRepository = new StaffMemberRepository(context);
         }
 
         public override void Dispose()
@@ -28,7 +31,7 @@ namespace MyPortal.Logic.Services
 
             if (staffMember == null)
             {
-                throw NotFound();
+                throw new NotFoundException("Staff member not found.");
             }
 
             if (staffMember.LineManagerId == null)
@@ -50,7 +53,7 @@ namespace MyPortal.Logic.Services
 
             if (staffMember == null)
             {
-                throw NotFound();
+                throw new NotFoundException("Staff member not found.");
             }
 
             return BusinessMapper.Map<StaffMemberModel>(staffMember);
@@ -62,7 +65,7 @@ namespace MyPortal.Logic.Services
 
             if (staffMember == null && throwIfNotFound)
             {
-                throw NotFound();
+                throw new NotFoundException("Staff member not found.");
             }
 
             return BusinessMapper.Map<StaffMemberModel>(staffMember);
@@ -74,7 +77,7 @@ namespace MyPortal.Logic.Services
 
             if (staffMember == null && throwIfNotFound)
             {
-                throw NotFound();
+                throw new NotFoundException("Staff member not found.");
             }
 
             return BusinessMapper.Map<StaffMemberModel>(staffMember);

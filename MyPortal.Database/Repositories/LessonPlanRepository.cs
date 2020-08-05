@@ -13,25 +13,25 @@ namespace MyPortal.Database.Repositories
 {
     public class LessonPlanRepository : BaseReadWriteRepository<LessonPlan>, ILessonPlanRepository
     {
-        public LessonPlanRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public LessonPlanRepository(ApplicationDbContext context) : base(context, "LessonPlan")
         {
            
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(StudyTopic));
-            query.SelectAll(typeof(ApplicationUser));
-            query.SelectAll(typeof(Person));
+            query.SelectAllColumns(typeof(StudyTopic), "StudyTopic");
+            query.SelectAllColumns(typeof(ApplicationUser), "User");
+            query.SelectAllColumns(typeof(Person), "Person");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("StudyTopic", "StudyTopic.Id", "LessonPlan.StudyTopicId");
+            query.LeftJoin("StudyTopics as StudyTopic", "StudyTopic.Id", "LessonPlan.StudyTopicId");
             query.LeftJoin("AspNetUsers as User", "User.Id", "LessonPlan.AuthorId");
-            query.LeftJoin("Person", "Person.UserId", "User.Id");
+            query.LeftJoin("People as Person", "Person.UserId", "User.Id");
         }
 
         protected override async Task<IEnumerable<LessonPlan>> ExecuteQuery(Query query)

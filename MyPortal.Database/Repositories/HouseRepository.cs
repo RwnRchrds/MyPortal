@@ -12,23 +12,23 @@ namespace MyPortal.Database.Repositories
 {
     public class HouseRepository : BaseReadWriteRepository<House>, IHouseRepository
     {
-        public HouseRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public HouseRepository(ApplicationDbContext context) : base(context, "House")
         {
            
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(StaffMember));
-            query.SelectAll(typeof(Person));
+            query.SelectAllColumns(typeof(StaffMember), "StaffMember");
+            query.SelectAllColumns(typeof(Person), "Person");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("StaffMember", "StaffMember.Id", "House.HeadId");
-            query.LeftJoin("Person", "Person.Id", "StaffMember.PersonId");
+            query.LeftJoin("StaffMembers as StaffMember", "StaffMember.Id", "House.HeadId");
+            query.LeftJoin("People as Person", "Person.Id", "StaffMember.PersonId");
         }
 
         protected override async Task<IEnumerable<House>> ExecuteQuery(Query query)

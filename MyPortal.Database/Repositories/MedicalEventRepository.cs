@@ -13,20 +13,20 @@ namespace MyPortal.Database.Repositories
 {
     public class MedicalEventRepository : BaseReadWriteRepository<MedicalEvent>, IMedicalEventRepository
     {
-        public MedicalEventRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public MedicalEventRepository(ApplicationDbContext context) : base(context, "MedicalEvent")
         {
            
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(Student));
-            query.SelectAll(typeof(ApplicationUser), "User");
+            query.SelectAllColumns(typeof(Student), "Student");
+            query.SelectAllColumns(typeof(ApplicationUser), "User");
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("Student", "Student.Id", "MedicalEvent.StudentId");
+            query.LeftJoin("Students as Student", "Student.Id", "MedicalEvent.StudentId");
             query.LeftJoin("AspNetUsers as User", "User.Id", "MedicalEvent.RecordedById");
         }
 

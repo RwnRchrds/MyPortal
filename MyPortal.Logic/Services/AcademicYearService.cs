@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
+using MyPortal.Database.Repositories;
+using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Exceptions;
@@ -17,9 +19,9 @@ namespace MyPortal.Logic.Services
     {
         private readonly IAcademicYearRepository _academicYearRepository;
 
-        public AcademicYearService(IAcademicYearRepository academicYearRepository) : base("Academic year")
+        public AcademicYearService(ApplicationDbContext context)
         {
-            _academicYearRepository = academicYearRepository;
+            _academicYearRepository = new AcademicYearRepository(context);
         }
 
         public async Task<AcademicYearModel> GetCurrent()
@@ -28,7 +30,7 @@ namespace MyPortal.Logic.Services
 
             if (acadYear == null)
             {
-                throw NotFound("Current academic year not defined.");
+                throw new NotFoundException("Current academic year not defined.");
             }
 
             return BusinessMapper.Map<AcademicYearModel>(acadYear);

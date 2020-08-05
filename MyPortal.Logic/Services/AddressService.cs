@@ -7,7 +7,7 @@ namespace MyPortal.Logic.Services
 {
     public class AddressService : BaseService, IAddressService
     {
-        public AddressService() : base("Address")
+        public AddressService()
         {
         }
 

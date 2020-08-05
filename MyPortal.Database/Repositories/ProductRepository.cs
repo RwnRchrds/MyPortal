@@ -12,21 +12,21 @@ namespace MyPortal.Database.Repositories
 {
     public class ProductRepository : BaseReadWriteRepository<Product>, IProductRepository
     {
-        public ProductRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public ProductRepository(ApplicationDbContext context) : base(context, "Product")
         {
 
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(ProductType));
+            query.SelectAllColumns(typeof(ProductType), "ProductType");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("ProductType", "ProductType.Id", "Product.ProductTypeId");
+            query.LeftJoin("ProductTypes as ProductType", "ProductType.Id", "Product.ProductTypeId");
         }
 
         protected override async Task<IEnumerable<Product>> ExecuteQuery(Query query)

@@ -4,6 +4,9 @@ using System.Text;
 using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
+using MyPortal.Database.Models;
+using MyPortal.Database.Repositories;
+using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
 
@@ -13,9 +16,9 @@ namespace MyPortal.Logic.Services
     {
         private readonly IAttendancePeriodRepository _periodRepository;
 
-        public AttendancePeriodService(IAttendancePeriodRepository periodRepository) : base("Attendance Period")
+        public AttendancePeriodService(ApplicationDbContext context)
         {
-            _periodRepository = periodRepository;
+            _periodRepository = new AttendancePeriodRepository(context);
         }
 
         public async Task<AttendancePeriodModel> GetById(Guid periodId)
@@ -24,7 +27,7 @@ namespace MyPortal.Logic.Services
 
             if (period == null)
             {
-                throw NotFound();
+                throw new NotFoundException("Period not found.");
             }
 
             return BusinessMapper.Map<AttendancePeriodModel>(period);

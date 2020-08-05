@@ -21,15 +21,15 @@ namespace MyPortal.Database.Repositories
         private IDbConnection _connection;
         private ApplicationDbContext _context;
 
-        public SystemSettingRepository(IDbConnection connection, ApplicationDbContext context)
+        public SystemSettingRepository(ApplicationDbContext context)
         {
-            _connection = connection;
+            _connection = context.Database.GetDbConnection();
             _context = context;
         }
 
         public async Task<SystemSetting> Get(string name)
         {
-            var query = new Query("SystemSetting");
+            var query = new Query("SystemSettings as SystemSetting");
 
             query.Select("SystemSetting.Name, SystemSetting.Type, SystemSetting.Setting");
 

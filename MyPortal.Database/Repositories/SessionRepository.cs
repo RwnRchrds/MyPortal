@@ -12,23 +12,23 @@ namespace MyPortal.Database.Repositories
 {
     public class SessionRepository : BaseReadWriteRepository<Session>, ISessionRepository
     {
-        public SessionRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
+        public SessionRepository(ApplicationDbContext context) : base(context, "Session")
         {
             
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(Class));
-            query.SelectAll(typeof(AttendancePeriod));
+            query.SelectAllColumns(typeof(Class), "Class");
+            query.SelectAllColumns(typeof(AttendancePeriod), "Period");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("Class", "Class.Id", "Session.ClassId");
-            query.LeftJoin("Period", "Period.Id", "Session.PeriodId");
+            query.LeftJoin("Classes as Class", "Class.Id", "Session.ClassId");
+            query.LeftJoin("AttendancePeriods as Period", "Period.Id", "Session.PeriodId");
         }
 
         protected override async Task<IEnumerable<Session>> ExecuteQuery(Query query)

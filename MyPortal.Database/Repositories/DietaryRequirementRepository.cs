@@ -10,7 +10,7 @@ namespace MyPortal.Database.Repositories
 {
     public class DietaryRequirementRepository : BaseReadRepository<DietaryRequirement>, IDietaryRequirementRepository
     {
-        public DietaryRequirementRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public DietaryRequirementRepository(IDbConnection connection) : base(connection)
         {
         }
     }

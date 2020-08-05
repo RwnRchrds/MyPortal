@@ -19,7 +19,7 @@ namespace MyPortal.Database.Repositories
     {
         protected readonly ApplicationDbContext Context;
 
-        protected BaseReadWriteRepository(ApplicationDbContext context, string tblAlias = null) : base(context.Database.GetDbConnection(), tblAlias)
+        protected BaseReadWriteRepository(ApplicationDbContext context, string tblAlias = null) : base(context, tblAlias)
         {
             Context = context;
         }

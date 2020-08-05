@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using MyPortal.Database.Models.Filters;
 using MyPortal.Logic.Models.Data;
+using MyPortal.Logic.Models.DocumentProvision;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Google;
 using MyPortal.Logic.Models.Requests.Documents;
 using File = Google.Apis.Drive.v3.Data.File;
 

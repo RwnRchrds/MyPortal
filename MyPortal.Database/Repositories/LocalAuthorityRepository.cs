@@ -13,7 +13,7 @@ namespace MyPortal.Database.Repositories
 {
     public class LocalAuthorityRepository : BaseReadRepository<LocalAuthority>, ILocalAuthorityRepository
     {
-        public LocalAuthorityRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public LocalAuthorityRepository(IDbConnection connection) : base(connection, "LA")
         {
         }
 
@@ -21,7 +21,7 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateQuery();
 
-            query.LeftJoin("School", "School.LocalAuthorityId", "LocalAuthority.Id");
+            query.LeftJoin("Schools as School", "School.LocalAuthorityId", "LA.Id");
 
             query.Where("School.Local", true);
 

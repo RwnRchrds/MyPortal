@@ -12,21 +12,21 @@ namespace MyPortal.Database.Repositories
 {
     public class ReportRepository : BaseReadRepository<Report>, IReportRepository
     {
-        public ReportRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public ReportRepository(IDbConnection connection) : base(connection, "Report")
         {
             
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(SystemArea));
+            query.SelectAllColumns(typeof(SystemArea), "SystemArea");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("SystemArea", "SystemArea.Id", "Report.SystemAreaId");
+            query.LeftJoin("SystemAreas as SystemArea", "SystemArea.Id", "Report.SystemAreaId");
         }
 
         protected override async Task<IEnumerable<Report>> ExecuteQuery(Query query)

@@ -7,13 +7,17 @@ using System.Threading.Tasks;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
+using MyPortal.Database.Models;
+using MyPortal.Database.Repositories;
 using MyPortal.Database.Search;
 using MyPortal.Logic.Constants;
+using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Person.Tasks;
+using Task = System.Threading.Tasks.Task;
 using TaskStatus = MyPortal.Database.Search.TaskStatus;
 
 namespace MyPortal.Logic.Services
@@ -23,14 +27,14 @@ namespace MyPortal.Logic.Services
         private readonly ITaskRepository _taskRepository;
         private readonly ITaskTypeRepository _taskTypeRepository;
         private readonly IPersonRepository _personRepository;
-        private readonly IStaffMemberService _staffMemberService;
+        private readonly IStaffMemberRepository _staffMemberRepository;
 
-        public TaskService(ITaskRepository taskRepository, ITaskTypeRepository taskTypeRepository, IPersonRepository personRepository, IStaffMemberService staffMemberService) : base("Task")
+        public TaskService(ApplicationDbContext context)
         {
-            _taskRepository = taskRepository;
-            _taskTypeRepository = taskTypeRepository;
-            _personRepository = personRepository;
-            _staffMemberService = staffMemberService;
+            _taskRepository = new TaskRepository(context);
+            _taskTypeRepository = new TaskTypeRepository(context);
+            _personRepository = new PersonRepository(context);
+            _staffMemberRepository = new StaffMemberRepository(context);
         }
 
         public async Task Create(params TaskModel[] tasks)
@@ -78,7 +82,7 @@ namespace MyPortal.Logic.Services
 
             if (task == null)
             {
-                throw NotFound();
+                throw new NotFoundException("Task not found.");
             }
 
             var person = await _personRepository.GetByUserId(userId);
@@ -102,7 +106,7 @@ namespace MyPortal.Logic.Services
 
             if (task == null)
             {
-                throw NotFound();
+                throw new NotFoundException("Task not found.");
             }
 
             return BusinessMapper.Map<TaskModel>(task);
@@ -116,7 +120,12 @@ namespace MyPortal.Logic.Services
 
                 if (taskInDb == null)
                 {
-                    throw NotFound();
+                    throw new NotFoundException("Task not found.");
+                }
+
+                if (taskInDb.TypeId == TaskTypes.Homework)
+                {
+                    throw new InvalidDataException("Please use the homework module to manage homework tasks.");
                 }
 
                 taskInDb.Title = task.Title;
@@ -146,8 +155,7 @@ namespace MyPortal.Logic.Services
 
                 if (taskInDb.Type.Id == TaskTypes.Homework)
                 {
-                    throw BadRequest(
-                        "To delete homework tasks, delete the homework submission.");
+                    throw new InvalidDataException("Please use the homework module to manage homework tasks.");
                 }
 
                 await _taskRepository.Delete(taskId);
@@ -173,7 +181,7 @@ namespace MyPortal.Logic.Services
             _taskRepository.Dispose();
             _taskTypeRepository.Dispose();
             _personRepository.Dispose();
-            _staffMemberService.Dispose();
+            _staffMemberRepository.Dispose();
         }
     }
 }

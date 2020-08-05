@@ -10,7 +10,7 @@ namespace MyPortal.Database.Repositories
 {
     public class EmailAddressTypeRepository : BaseReadRepository<EmailAddressType>, IEmailAddressTypeRepository
     {
-        public EmailAddressTypeRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public EmailAddressTypeRepository(IDbConnection connection) : base(connection)
         {
         }
     }

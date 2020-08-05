@@ -1,4 +1,6 @@
 ﻿using MyPortal.Database.Interfaces.Repositories;
+using MyPortal.Database.Models;
+using MyPortal.Database.Repositories;
 using MyPortal.Logic.Interfaces;
 
 namespace MyPortal.Logic.Services
@@ -9,9 +11,10 @@ namespace MyPortal.Logic.Services
         private readonly IDetentionRepository _detentionRepository;
         
         
-        public DiaryEventService(IDiaryEventRepository diaryEventRepository) : base("Diary Event")
+        public DiaryEventService(ApplicationDbContext context)
         {
-            _diaryEventRepository = diaryEventRepository;
+            _diaryEventRepository = new DiaryEventRepository(context);
+            _detentionRepository = new DetentionRepository(context);
         }
 
         public override void Dispose()

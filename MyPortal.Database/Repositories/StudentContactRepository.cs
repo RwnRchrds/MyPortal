@@ -12,27 +12,27 @@ namespace MyPortal.Database.Repositories
 {
     public class StudentContactRepository : BaseReadWriteRepository<StudentContactRelationship>, IStudentContactRepository
     {
-        public StudentContactRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
+        public StudentContactRepository(ApplicationDbContext context) : base(context, "StudentContact")
         {
 
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(ContactRelationshipType));
-            query.SelectAll(typeof(Student));
-            query.SelectAll(typeof(Person), "StudentPerson");
-            query.SelectAll(typeof(Contact));
-            query.SelectAll(typeof(Person), "ContactPerson");
+            query.SelectAllColumns(typeof(ContactRelationshipType), "RelationshipType");
+            query.SelectAllColumns(typeof(Student), "Student");
+            query.SelectAllColumns(typeof(Person), "StudentPerson");
+            query.SelectAllColumns(typeof(Contact), "Contact");
+            query.SelectAllColumns(typeof(Person), "ContactPerson");
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("RelationshipType", "RelationshipType.Id", "StudentContact.RelationshipTypeId");
-            query.LeftJoin("Student", "Student.Id", "StudentContact.StudentId");
-            query.LeftJoin("Person as StudentPerson", "StudentPerson.Id", "Student.PersonId");
-            query.LeftJoin("Contact", "Contact.Id", "StudentContact.ContactId");
-            query.LeftJoin("Person as ContactPerson", "ContactPerson.Id", "Contact.PersonId");
+            query.LeftJoin("ContactRelationshipTypes as RelationshipType", "RelationshipType.Id", "StudentContact.RelationshipTypeId");
+            query.LeftJoin("Students as Student", "Student.Id", "StudentContact.StudentId");
+            query.LeftJoin("People as StudentPerson", "StudentPerson.Id", "Student.PersonId");
+            query.LeftJoin("Contacts as Contact", "Contact.Id", "StudentContact.ContactId");
+            query.LeftJoin("People as ContactPerson", "ContactPerson.Id", "Contact.PersonId");
         }
 
         protected override async Task<IEnumerable<StudentContactRelationship>> ExecuteQuery(Query query)

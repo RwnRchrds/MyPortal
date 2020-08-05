@@ -23,24 +23,24 @@ namespace MyPortal.Database.Repositories
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(LocalAuthority), "LocalAuthority");
-            query.SelectAll(typeof(SchoolPhase), "SchoolPhase");
-            query.SelectAll(typeof(SchoolType), "SchoolType");
-            query.SelectAll(typeof(GovernanceType), "GovernanceType");
-            query.SelectAll(typeof(IntakeType), "IntakeType");
-            query.SelectAll(typeof(Person), "Person");
+            query.SelectAllColumns(typeof(LocalAuthority), "LocalAuthority");
+            query.SelectAllColumns(typeof(SchoolPhase), "SchoolPhase");
+            query.SelectAllColumns(typeof(SchoolType), "SchoolType");
+            query.SelectAllColumns(typeof(GovernanceType), "GovernanceType");
+            query.SelectAllColumns(typeof(IntakeType), "IntakeType");
+            query.SelectAllColumns(typeof(Person), "Person");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("LocalAuthority", "LocalAuthority.Id", "School.LocalAuthorityId");
-            query.LeftJoin("SchoolPhase", "SchoolPhase.Id", "School.PhaseId");
-            query.LeftJoin("SchoolType", "SchoolType.Id", "School.TypeId");
-            query.LeftJoin("GovernanceType", "GovernanceType.Id", "School.GovernanceTypeId");
-            query.LeftJoin("IntakeType", "IntakeType.Id", "School.IntakeTypeId");
-            query.LeftJoin("Person", "Person.Id", "School.HeadTeacherId");
+            query.LeftJoin("LocalAuthorities as LocalAuthority", "LocalAuthority.Id", "School.LocalAuthorityId");
+            query.LeftJoin("SchoolPhases as SchoolPhase", "SchoolPhase.Id", "School.PhaseId");
+            query.LeftJoin("SchoolTypes as SchoolType", "SchoolType.Id", "School.TypeId");
+            query.LeftJoin("GovernanceTypes as GovernanceType", "GovernanceType.Id", "School.GovernanceTypeId");
+            query.LeftJoin("IntakeTypes as IntakeType", "IntakeType.Id", "School.IntakeTypeId");
+            query.LeftJoin("People as Person", "Person.Id", "School.HeadTeacherId");
         }
 
         public async Task<string> GetLocalSchoolName()

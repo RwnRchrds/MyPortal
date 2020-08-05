@@ -11,7 +11,7 @@ namespace MyPortal.Database.Repositories
 {
     public class CurriculumYearGroupRepository : BaseReadRepository<CurriculumYearGroup>, ICurriculumYearGroupRepository
     {
-        public CurriculumYearGroupRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public CurriculumYearGroupRepository(IDbConnection connection) : base(connection)
         {
         }
     }

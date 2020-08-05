@@ -15,21 +15,21 @@ namespace MyPortal.Database.Repositories
 {
     public class DirectoryRepository : BaseReadWriteRepository<Directory>, IDirectoryRepository
     {
-        public DirectoryRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
+        public DirectoryRepository(ApplicationDbContext context) : base(context, "Directory")
         {
            
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(Directory), "Parent");
+            query.SelectAllColumns(typeof(Directory), "Parent");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("Directory as Parent", "Parent.Id", "Directory.ParentId");
+            query.LeftJoin("Directories as Parent", "Parent.Id", "Directory.ParentId");
         }
 
         protected override async Task<IEnumerable<Directory>> ExecuteQuery(Query query)

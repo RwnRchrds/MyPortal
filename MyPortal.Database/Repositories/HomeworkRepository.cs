@@ -12,20 +12,20 @@ namespace MyPortal.Database.Repositories
 {
     public class HomeworkRepository : BaseReadWriteRepository<HomeworkItem>, IHomeworkRepository
     {
-        public HomeworkRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public HomeworkRepository(ApplicationDbContext context) : base(context, "HomeworkItem")
         {
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(Directory));
+            query.SelectAllColumns(typeof(Directory), "Directory");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("Directory", "Directory.Id", "HomeworkItem.DirectoryId");
+            query.LeftJoin("Directories as Directory", "Directory.Id", "HomeworkItem.DirectoryId");
         }
 
         protected override async Task<IEnumerable<HomeworkItem>> ExecuteQuery(Query query)

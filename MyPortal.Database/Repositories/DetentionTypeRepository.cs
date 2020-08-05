@@ -10,7 +10,7 @@ namespace MyPortal.Database.Repositories
 {
     public class DetentionTypeRepository : BaseReadWriteRepository<DetentionType>, IDetentionTypeRepository
     {
-        public DetentionTypeRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public DetentionTypeRepository(ApplicationDbContext context) : base(context)
         {
 
         }

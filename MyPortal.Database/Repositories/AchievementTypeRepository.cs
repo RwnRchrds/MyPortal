@@ -14,7 +14,7 @@ namespace MyPortal.Database.Repositories
 {
     public class AchievementTypeRepository : BaseReadWriteRepository<AchievementType>, IAchievementTypeRepository
     {
-        public AchievementTypeRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public AchievementTypeRepository(ApplicationDbContext context) : base(context)
         {
             
         }

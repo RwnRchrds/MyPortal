@@ -6,7 +6,7 @@ namespace MyPortal.Database.Repositories
 {
     public class AchievementOutcomeRepository : BaseReadWriteRepository<AchievementOutcome>, IAchievementOutcomeRepository
     {
-        public AchievementOutcomeRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
+        public AchievementOutcomeRepository(ApplicationDbContext context) : base(context)
         {
             
         }

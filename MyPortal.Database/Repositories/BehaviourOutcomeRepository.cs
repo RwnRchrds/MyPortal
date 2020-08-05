@@ -6,7 +6,7 @@ namespace MyPortal.Database.Repositories
 {
     public class BehaviourOutcomeRepository : BaseReadWriteRepository<BehaviourOutcome>, IBehaviourOutcomeRepository
     {
-        public BehaviourOutcomeRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
+        public BehaviourOutcomeRepository(ApplicationDbContext context) : base(context)
         {
         }
     }

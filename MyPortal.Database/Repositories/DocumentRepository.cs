@@ -14,22 +14,22 @@ namespace MyPortal.Database.Repositories
 {
     public class DocumentRepository : BaseReadWriteRepository<Document>, IDocumentRepository
     {
-        public DocumentRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public DocumentRepository(ApplicationDbContext context) : base(context, "Document")
         {
            
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(DocumentType));
-            query.SelectAll(typeof(ApplicationUser), "User"); 
+            query.SelectAllColumns(typeof(DocumentType), "DocumentType");
+            query.SelectAllColumns(typeof(ApplicationUser), "User"); 
             
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("DocumentType", "DocumentType.Id", "Document.TypeId");
+            query.LeftJoin("DocumentTypes as DocumentType", "DocumentType.Id", "Document.TypeId");
             query.LeftJoin("AspNetUsers as User", "User.Id", "Document.CreatedById");
         }
 

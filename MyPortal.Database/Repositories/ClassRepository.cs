@@ -15,27 +15,27 @@ namespace MyPortal.Database.Repositories
 {
     public class ClassRepository : BaseReadWriteRepository<Class>, IClassRepository
     {
-        public ClassRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public ClassRepository(ApplicationDbContext context) : base(context, "Class")
         {
 
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(Subject));
-            query.SelectAll(typeof(StaffMember), "Teacher");
-            query.SelectAll(typeof(Person), "TeacherPerson");
-            query.SelectAll(typeof(CurriculumGroup));
+            query.SelectAllColumns(typeof(Subject), "Subject");
+            query.SelectAllColumns(typeof(StaffMember), "Teacher");
+            query.SelectAllColumns(typeof(Person), "TeacherPerson");
+            query.SelectAllColumns(typeof(CurriculumGroup), "CurriculumGroup");
             
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("Subject", "Subject.Id", "Class.SubjectId");
-            query.LeftJoin("StaffMember as Teacher", "Teacher.Id", "Class.TeacherId");
-            query.LeftJoin("Person as TeacherPerson", "TeacherPerson.Id", "Teacher.PersonId");
-            query.LeftJoin("CurriculumGroup", "CurriculumGroup.Id", "Class.GroupId");
+            query.LeftJoin("Subjects as Subject", "Subject.Id", "Class.SubjectId");
+            query.LeftJoin("StaffMembers as Teacher", "Teacher.Id", "Class.TeacherId");
+            query.LeftJoin("People as TeacherPerson", "TeacherPerson.Id", "Teacher.PersonId");
+            query.LeftJoin("CurriculumGroups as CurriculumGroup", "CurriculumGroup.Id", "Class.GroupId");
         }
 
         protected override async Task<IEnumerable<Class>> ExecuteQuery(Query query)

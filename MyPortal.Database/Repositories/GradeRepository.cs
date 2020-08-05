@@ -12,21 +12,21 @@ namespace MyPortal.Database.Repositories
 {
     public class GradeRepository : BaseReadWriteRepository<Grade>, IGradeRepository
     {
-        public GradeRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public GradeRepository(ApplicationDbContext context) : base(context, "Grade")
         {
             
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(GradeSet));
+            query.SelectAllColumns(typeof(GradeSet));
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("GradeSet", "GradeSet.Id", "Grade.GradeSetId");
+            query.LeftJoin("GradeSets as GradeSet", "GradeSet.Id", "Grade.GradeSetId");
         }
 
         protected override async Task<IEnumerable<Grade>> ExecuteQuery(Query query)

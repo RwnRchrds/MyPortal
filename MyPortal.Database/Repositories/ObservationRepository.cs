@@ -13,29 +13,29 @@ namespace MyPortal.Database.Repositories
 {
     public class ObservationRepository : BaseReadWriteRepository<Observation>, IObservationRepository
     {
-        public ObservationRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public ObservationRepository(ApplicationDbContext context) : base(context, "Observation")
         {
             
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(StaffMember), "Observee");
-            query.SelectAll(typeof(Person), "ObserveePerson");
-            query.SelectAll(typeof(StaffMember), "Observer");
-            query.SelectAll(typeof(Person), "ObserverPerson");
-            query.SelectAll(typeof(ObservationOutcome));
+            query.SelectAllColumns(typeof(StaffMember), "Observee");
+            query.SelectAllColumns(typeof(Person), "ObserveePerson");
+            query.SelectAllColumns(typeof(StaffMember), "Observer");
+            query.SelectAllColumns(typeof(Person), "ObserverPerson");
+            query.SelectAllColumns(typeof(ObservationOutcome), "ObservationOutcome");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("StaffMember as Observee", "Observee.Id", "Observation.ObserveeId");
-            query.LeftJoin("Person as ObserveePerson", "ObserveePerson.Id", "Observee.PersonId");
-            query.LeftJoin("StaffMember as Observer", "Observer.Id", "Observation.ObserverId");
-            query.LeftJoin("Person as ObserverPerson", "ObserverPerson.Id", "Observer.PersonId");
-            query.LeftJoin("ObservationOutcome", "ObservationOutcome.Id", "Observation.OutcomeId");
+            query.LeftJoin("StaffMembers as Observee", "Observee.Id", "Observation.ObserveeId");
+            query.LeftJoin("People as ObserveePerson", "ObserveePerson.Id", "Observee.PersonId");
+            query.LeftJoin("StaffMembers as Observer", "Observer.Id", "Observation.ObserverId");
+            query.LeftJoin("People as ObserverPerson", "ObserverPerson.Id", "Observer.PersonId");
+            query.LeftJoin("ObservationOutcomes as ObservationOutcome", "ObservationOutcome.Id", "Observation.OutcomeId");
         }
 
         protected override async Task<IEnumerable<Observation>> ExecuteQuery(Query query)

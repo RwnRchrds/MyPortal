@@ -4,6 +4,9 @@ using System.Text;
 using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
+using MyPortal.Database.Models;
+using MyPortal.Database.Repositories;
+using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
@@ -14,9 +17,9 @@ namespace MyPortal.Logic.Services
     {
         private readonly IAttendanceWeekRepository _attendanceWeekRepository;
 
-        public AttendanceWeekService(IAttendanceWeekRepository attendanceWeekRepository) : base("Attendance week")
+        public AttendanceWeekService(ApplicationDbContext context)
         {
-            _attendanceWeekRepository = attendanceWeekRepository;
+            _attendanceWeekRepository = new AttendanceWeekRepository(context);
         }
 
         public async Task<AttendanceWeekModel> GetById(Guid attendanceWeekId)
@@ -25,7 +28,7 @@ namespace MyPortal.Logic.Services
 
             if (attendanceWeek == null)
             {
-                throw NotFound();
+                throw new NotFoundException("Attendance week not found.");
             }
 
             return BusinessMapper.Map<AttendanceWeekModel>(attendanceWeek);
@@ -37,7 +40,7 @@ namespace MyPortal.Logic.Services
 
             if (week == null && throwIfNotFound)
             {
-                throw NotFound();
+                throw new NotFoundException("Attendance week not found.");
             }
 
             return BusinessMapper.Map<AttendanceWeekModel>(week);

@@ -10,6 +10,7 @@ using MyPortal.Database.Models;
 using MyPortal.Database.Repositories;
 using MyPortal.Database.Search;
 using MyPortal.Logic.Constants;
+using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
@@ -22,9 +23,9 @@ namespace MyPortal.Logic.Services
     {
         private IStudentRepository _studentRepository;
 
-        public StudentService(IStudentRepository studentRepository) : base("Student")
+        public StudentService(ApplicationDbContext context)
         {
-            _studentRepository = studentRepository;
+            _studentRepository = new StudentRepository(context);
         }
 
         public async Task<StudentModel> GetById(Guid studentId)
@@ -32,7 +33,7 @@ namespace MyPortal.Logic.Services
             var student = await _studentRepository.GetById(studentId);
             if (student == null)
             {
-                throw NotFound();
+                throw new NotFoundException("Student not found.");
             }
 
             return BusinessMapper.Map<StudentModel>(student);
@@ -44,7 +45,7 @@ namespace MyPortal.Logic.Services
 
             if (student == null && throwNotFound)
             {
-                throw NotFound();
+                throw new NotFoundException("Student not found.");
             }
 
             return BusinessMapper.Map<StudentModel>(student);
@@ -56,7 +57,7 @@ namespace MyPortal.Logic.Services
 
             if (student == null && throwIfNotFound)
             {
-                throw NotFound();
+                throw new NotFoundException("Student not found.");
             }
 
             return BusinessMapper.Map<StudentModel>(student);

@@ -12,20 +12,20 @@ namespace MyPortal.Database.Repositories
 {
     public class AttendancePeriodRepository : BaseReadWriteRepository<AttendancePeriod>, IAttendancePeriodRepository
     {
-        public AttendancePeriodRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public AttendancePeriodRepository(ApplicationDbContext context) : base(context, "AttendancePeriod")
         {
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(AttendanceWeekPattern), "WeekPattern");
+            query.SelectAllColumns(typeof(AttendanceWeekPattern), "WeekPattern");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("AttendanceWeekPattern as WeekPattern", "WeekPattern.Id", "AttendancePeriod.WeekPatternId");
+            query.LeftJoin("AttendanceWeekPatterns as WeekPattern", "WeekPattern.Id", "AttendancePeriod.WeekPatternId");
         }
 
         protected override async Task<IEnumerable<AttendancePeriod>> ExecuteQuery(Query query)

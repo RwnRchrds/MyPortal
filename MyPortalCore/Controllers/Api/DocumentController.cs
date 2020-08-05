@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Google;
 using MyPortal.Logic.Models.Requests.Documents;
 
 namespace MyPortalCore.Controllers.Api

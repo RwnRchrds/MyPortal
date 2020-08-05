@@ -12,24 +12,24 @@ namespace MyPortal.Database.Repositories
 {
     public class TrainingCertificateRepository : BaseReadWriteRepository<TrainingCertificate>, ITrainingCertificateRepository
     {
-        public TrainingCertificateRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
+        public TrainingCertificateRepository(ApplicationDbContext context) : base(context, "TrainingCertificate")
         {
             
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(StaffMember));
-            query.SelectAll(typeof(TrainingCourse));
-            query.SelectAll(typeof(TrainingCertificateStatus));
+            query.SelectAllColumns(typeof(StaffMember), "StaffMember");
+            query.SelectAllColumns(typeof(TrainingCourse), "TrainingCourse");
+            query.SelectAllColumns(typeof(TrainingCertificateStatus), "TrainingCertificateStatus");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("StaffMember", "StaffMember.Id", "TrainingCertificate.StaffId");
-            query.LeftJoin("TrainingCourse", "TrainingCourse.Id", "TrainingCertificate.CourseId");
+            query.LeftJoin("StaffMembers as StaffMember", "StaffMember.Id", "TrainingCertificate.StaffId");
+            query.LeftJoin("TrainingCourses as TrainingCourse", "TrainingCourse.Id", "TrainingCertificate.CourseId");
             query.LeftJoin("TrainingCertificateStatus", "TrainingCertificateStatus.Id",
                 "TrainingCertificate.StatusId");
         }

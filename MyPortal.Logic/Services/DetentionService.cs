@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
+using MyPortal.Database.Repositories;
 using MyPortal.Database.Search;
+using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Behaviour;
@@ -22,13 +24,13 @@ namespace MyPortal.Logic.Services
         private readonly IDiaryEventAttendeeRepository _attendeeRepository;
         private readonly IStudentRepository _studentRepository;
 
-        public DetentionService(IDetentionRepository detentionRepository, IIncidentRepository incidentRepository, IIncidentDetentionRepository incidentDetentionRepository, IDiaryEventAttendeeRepository attendeeRepository, IStudentRepository studentRepository) : base("Detention")
+        public DetentionService(ApplicationDbContext context)
         {
-            _detentionRepository = detentionRepository;
-            _incidentRepository = incidentRepository;
-            _incidentDetentionRepository = incidentDetentionRepository;
-            _attendeeRepository = attendeeRepository;
-            _studentRepository = studentRepository;
+            _detentionRepository = new DetentionRepository(context);
+            _incidentRepository = new IncidentRepository(context);
+            _incidentDetentionRepository = new IncidentDetentionRepository(context);
+            _attendeeRepository = new DiaryEventAttendeeRepository(context);
+            _studentRepository = new StudentRepository(context);
         }
 
         public async Task<IEnumerable<DetentionModel>> Get(DetentionSearchOptions searchOptions)
@@ -107,21 +109,21 @@ namespace MyPortal.Logic.Services
 
             if (detentionInDb == null)
             {
-                throw NotFound("Detention not found.");
+                throw new NotFoundException("Detention not found.");
             }
 
             var student = await _studentRepository.GetById(studentId);
 
             if (student == null)
             {
-                throw NotFound("Student not found.");
+                throw new NotFoundException("Student not found.");
             }
 
             var attendees = await _attendeeRepository.GetByEvent(detentionInDb.EventId);
 
             if (attendees.Any(x => x.PersonId == student.PersonId))
             {
-                throw BadRequest("Student is already scheduled to attend this detention.");
+                throw new InvalidDataException("Student is already scheduled to attend this detention.");
             }
 
             var attendee = new DiaryEventAttendee
@@ -160,14 +162,14 @@ namespace MyPortal.Logic.Services
 
             if (detentionInDb == null)
             {
-                throw NotFound();
+                throw new NotFoundException("Detention not found.");
             }
 
             var studentInDb = await _studentRepository.GetById(studentId);
 
             if (studentInDb == null)
             {
-                throw NotFound("Student not found.");
+                throw new NotFoundException("Student not found.");
             }
 
             var attendees = await _attendeeRepository.GetByEvent(detentionInDb.EventId);
@@ -176,7 +178,7 @@ namespace MyPortal.Logic.Services
 
             if (attendeeToRemove == null)
             {
-                throw BadRequest("Student is not scheduled to attend this detention.");
+                throw new InvalidDataException("Student is not scheduled to attend this detention.");
             }
             
             await _attendeeRepository.Delete(attendeeToRemove.Id);

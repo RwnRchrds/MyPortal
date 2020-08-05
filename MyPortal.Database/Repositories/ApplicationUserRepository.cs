@@ -20,14 +20,14 @@ namespace MyPortal.Database.Repositories
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(Person));
+            query.SelectAllColumns(typeof(Person), "Person");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("Person", "Person.UserId", "User.Id");
+            query.LeftJoin("People as Person", "Person.UserId", "User.Id");
         }
 
         protected override async Task<IEnumerable<ApplicationUser>> ExecuteQuery(Query query)

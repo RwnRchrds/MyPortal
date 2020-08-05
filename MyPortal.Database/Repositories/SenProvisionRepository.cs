@@ -12,23 +12,23 @@ namespace MyPortal.Database.Repositories
 {
     public class SenProvisionRepository : BaseReadWriteRepository<SenProvision>, ISenProvisionRepository
     {
-        public SenProvisionRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
+        public SenProvisionRepository(ApplicationDbContext context) : base(context, "SenProvision")
         {
             
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(Student));
-            query.SelectAll(typeof(SenProvisionType));
+            query.SelectAllColumns(typeof(Student), "Student");
+            query.SelectAllColumns(typeof(SenProvisionType), "SenProvisionType");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("Student", "Student.Id", "SenProvision.StudentId");
-            query.LeftJoin("SenProvisionType", "SenProvisionType.Id", "SenProvision.ProvisionTypeId");
+            query.LeftJoin("Students as Student", "Student.Id", "SenProvision.StudentId");
+            query.LeftJoin("SenProvisionTypes as SenProvisionType", "SenProvisionType.Id", "SenProvision.ProvisionTypeId");
         }
 
         protected override async Task<IEnumerable<SenProvision>> ExecuteQuery(Query query)

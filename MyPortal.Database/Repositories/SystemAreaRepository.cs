@@ -10,7 +10,7 @@ namespace MyPortal.Database.Repositories
 {
     public class SystemAreaRepository : BaseReadRepository<SystemArea>, ISystemAreaRepository
     {
-        public SystemAreaRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public SystemAreaRepository(IDbConnection connection) : base(connection)
         {
         }
     }

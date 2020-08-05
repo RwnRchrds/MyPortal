@@ -13,27 +13,27 @@ namespace MyPortal.Database.Repositories
 {
     public class DetentionRepository : BaseReadWriteRepository<Detention>, IDetentionRepository
     {
-        public DetentionRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public DetentionRepository(ApplicationDbContext context) : base(context, "Detention")
         {
 
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(DetentionType));
-            query.SelectAll(typeof(DiaryEvent));
-            query.SelectAll(typeof(StaffMember));
-            query.SelectAll(typeof(Person));
+            query.SelectAllColumns(typeof(DetentionType), "DetentionType");
+            query.SelectAllColumns(typeof(DiaryEvent), "DiaryEvent");
+            query.SelectAllColumns(typeof(StaffMember), "StaffMember");
+            query.SelectAllColumns(typeof(Person), "Person");
             
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("DetentionType", "DetentionType.Id", "Detention.DetentionTypeId");
-            query.LeftJoin("DiaryEvent", "DiaryEvent.Id", "Detention.EventId");
-            query.LeftJoin("StaffMember", "StaffMember.Id", "Detention.SupervisorId");
-            query.LeftJoin("Person", "Person.Id", "StaffMember.PersonId");
+            query.LeftJoin("DetentionTypes as DetentionType", "DetentionType.Id", "Detention.DetentionTypeId");
+            query.LeftJoin("DiaryEvents as DiaryEvent", "DiaryEvent.Id", "Detention.EventId");
+            query.LeftJoin("StaffMembers as StaffMember", "StaffMember.Id", "Detention.SupervisorId");
+            query.LeftJoin("People as Person", "Person.Id", "StaffMember.PersonId");
         }
 
         protected override async Task<IEnumerable<Detention>> ExecuteQuery(Query query)

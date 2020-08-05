@@ -11,7 +11,7 @@ namespace MyPortal.Database.Repositories
 {
     public class SubjectStaffMemberRoleRepository : BaseReadWriteRepository<SubjectStaffMemberRole>, ISubjectStaffMemberRoleRepository
     {
-        public SubjectStaffMemberRoleRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
+        public SubjectStaffMemberRoleRepository(ApplicationDbContext context) : base(context)
         {
         }
     }

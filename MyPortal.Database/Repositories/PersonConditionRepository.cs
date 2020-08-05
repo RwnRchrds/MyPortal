@@ -12,15 +12,15 @@ namespace MyPortal.Database.Repositories
 {
     public class PersonConditionRepository : BaseReadWriteRepository<PersonCondition>, IPersonConditionRepository
     {
-        public PersonConditionRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public PersonConditionRepository(ApplicationDbContext context) : base(context, "PersonCondition")
         {
            
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(Person));
-            query.SelectAll(typeof(MedicalCondition));
+            query.SelectAllColumns(typeof(Person), "Person");
+            query.SelectAllColumns(typeof(MedicalCondition), "MedicalCondition");
 
             JoinRelated(query);
         }

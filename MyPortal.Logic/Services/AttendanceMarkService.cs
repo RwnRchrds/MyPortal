@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
+using MyPortal.Database.Repositories;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
@@ -19,26 +21,28 @@ namespace MyPortal.Logic.Services
     {
         private readonly IAttendanceMarkRepository _attendanceMarkRepository;
         private readonly IAttendanceCodeRepository _attendanceCodeRepository;
-        private readonly IStudentService _studentService;
-        private readonly IAttendanceWeekService _attendanceWeekService;
-        private readonly IPeriodService _periodService;
+        private readonly IStudentRepository _studentRepository;
+        private readonly IAttendanceWeekRepository _attendanceWeekRepository;
+        private readonly IAttendancePeriodRepository _periodRepository;
 
-        public AttendanceMarkService(IAttendanceMarkRepository attendanceMarkRepository, IAttendanceCodeRepository attendanceCodeRepository, IStudentService studentService, IAttendanceWeekService attendanceWeekService, IPeriodService periodService) : base("Attendance Mark")
+        public AttendanceMarkService(ApplicationDbContext context)
         {
-            _attendanceMarkRepository = attendanceMarkRepository;
-            _attendanceCodeRepository = attendanceCodeRepository;
-            _studentService = studentService;
-            _attendanceWeekService = attendanceWeekService;
-            _periodService = periodService;
+            var connection = context.Database.GetDbConnection();
+
+            _attendanceMarkRepository = new AttendanceMarkRepository(context);
+            _attendanceCodeRepository = new AttendanceCodeRepository(connection);
+            _studentRepository = new StudentRepository(context);
+            _attendanceWeekRepository = new AttendanceWeekRepository(context);
+            _periodRepository = new AttendancePeriodRepository(context);
         }
 
         public override void Dispose()
         {
             _attendanceMarkRepository.Dispose();
             _attendanceCodeRepository.Dispose();
-            _studentService.Dispose();
-            _attendanceWeekService.Dispose();
-            _periodService.Dispose();
+            _studentRepository.Dispose();
+            _attendanceWeekRepository.Dispose();
+            _periodRepository.Dispose();
         }
 
         private AttendanceMarkModel NoMark(Guid studentId, Guid attendanceWeekId, Guid periodId)
@@ -56,9 +60,9 @@ namespace MyPortal.Logic.Services
 
         public async Task<AttendanceMarkModel> Get(Guid studentId, Guid attendanceWeekId, Guid periodId)
         {
-            var student = await _studentService.GetById(studentId);
-            var attendanceWeek = await _attendanceWeekService.GetById(attendanceWeekId);
-            var period = await _periodService.GetById(periodId);
+            var student = await _studentRepository.GetById(studentId);
+            var attendanceWeek = await _attendanceWeekRepository.GetById(attendanceWeekId);
+            var period = await _periodRepository.GetById(periodId);
 
             var attendanceMark = await _attendanceMarkRepository.Get(studentId, attendanceWeekId, periodId);
 

@@ -10,7 +10,7 @@ namespace MyPortal.Database.Repositories
 {
     public class ObservationOutcomeRepository : BaseReadRepository<ObservationOutcome>, IObservationOutcomeRepository
     {
-        public ObservationOutcomeRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public ObservationOutcomeRepository(IDbConnection connection) : base(connection)
         {
         }
     }

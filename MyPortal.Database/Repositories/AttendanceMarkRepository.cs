@@ -16,29 +16,29 @@ namespace MyPortal.Database.Repositories
 {
     public class AttendanceMarkRepository : BaseReadWriteRepository<AttendanceMark>, IAttendanceMarkRepository
     {
-        public AttendanceMarkRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public AttendanceMarkRepository(ApplicationDbContext context) : base(context, "AttendanceMark")
         {
        
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(Student));
-            query.SelectAll(typeof(Person), "StudentPerson");
-            query.SelectAll(typeof(AttendanceWeek));
-            query.SelectAll(typeof(AttendanceWeekPattern));
-            query.SelectAll(typeof(AttendancePeriod), "Period");
+            query.SelectAllColumns(typeof(Student), "Student");
+            query.SelectAllColumns(typeof(Person), "StudentPerson");
+            query.SelectAllColumns(typeof(AttendanceWeek), "AttendanceWeek");
+            query.SelectAllColumns(typeof(AttendanceWeekPattern), "AttendanceWeekPattern");
+            query.SelectAllColumns(typeof(AttendancePeriod), "Period");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("Student", "Student.Id", "AttendanceMark.StudentId");
-            query.LeftJoin("Person AS StudentPerson", "StudentPerson.Id", "Student.PersonId");
-            query.LeftJoin("AttendanceWeek", "AttendanceWeek.Id", "AttendanceMark.WeekId");
-            query.LeftJoin("AttendanceWeekPattern", "AttendanceWeekPattern.Id", "AttendanceWeek.WeekPatternId");
-            query.LeftJoin("AttendancePeriod AS Period", "Period.Id", "AttendanceMark.PeriodId");
+            query.LeftJoin("Students as Student", "Student.Id", "AttendanceMark.StudentId");
+            query.LeftJoin("People as StudentPerson", "StudentPerson.Id", "Student.PersonId");
+            query.LeftJoin("AttendanceWeeks as AttendanceWeek", "AttendanceWeek.Id", "AttendanceMark.WeekId");
+            query.LeftJoin("AttendanceWeekPatterns as AttendanceWeekPattern", "AttendanceWeekPattern.Id", "AttendanceWeek.WeekPatternId");
+            query.LeftJoin("AttendancePeriods AS Period", "Period.Id", "AttendanceMark.PeriodId");
         }
 
         protected override async Task<IEnumerable<AttendanceMark>> ExecuteQuery(Query query)

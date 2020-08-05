@@ -10,7 +10,7 @@ namespace MyPortal.Database.Repositories
 {
     public class IntakeTypeRepository : BaseReadRepository<IntakeType>, IIntakeTypeRepository
     {
-        public IntakeTypeRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public IntakeTypeRepository(IDbConnection connection) : base(connection)
         {
         }
     }

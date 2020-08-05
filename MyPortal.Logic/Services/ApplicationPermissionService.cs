@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
+using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
 using MyPortal.Database.Repositories;
 using MyPortal.Logic.Constants;
@@ -15,6 +16,7 @@ using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Exceptions;
 using MyPortal.Logic.Models.Requests.Behaviour;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
@@ -24,13 +26,15 @@ namespace MyPortal.Logic.Services
         private readonly IApplicationPermissionRepository _permissionRepository;
         private readonly ISystemAreaRepository _systemAreaRepository;
 
-        public ApplicationPermissionService(IApplicationRolePermissionRepository rolePermissionRepository, IApplicationPermissionRepository permissionRepository, ISystemAreaRepository systemAreaRepository) : base("Role permission")
+        public ApplicationPermissionService(ApplicationDbContext context)
         {
-            _rolePermissionRepository = rolePermissionRepository;
-            _permissionRepository = permissionRepository;
-            _systemAreaRepository = systemAreaRepository;
+            var connection = context.Database.GetDbConnection();
+
+            _rolePermissionRepository = new ApplicationRolePermissionRepository(context);
+            _permissionRepository = new ApplicationPermissionRepository(connection);
+            _systemAreaRepository = new SystemAreaRepository(connection);
         }
-        
+
         public async Task<IEnumerable<string>> GetPermissionClaimValues(Guid roleId)
         {
             var claimValues = await _rolePermissionRepository.GetClaimValuesByRole(roleId);

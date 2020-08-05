@@ -33,10 +33,5 @@ namespace MyPortal.Tests.TestData
 
             return new ApplicationDbContext(CreateOptions(connection)) {TestData = true};
         }
-
-        internal static ISchoolService CreateSchoolService(ApplicationDbContext context)
-        {
-            return new SchoolService(new SchoolRepository(context.Database.GetDbConnection(), context));
-        }
     }
 }

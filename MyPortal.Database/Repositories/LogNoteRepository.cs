@@ -15,31 +15,31 @@ namespace MyPortal.Database.Repositories
 {
     public class LogNoteRepository : BaseReadWriteRepository<LogNote>, ILogNoteRepository
     {
-        public LogNoteRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public LogNoteRepository(ApplicationDbContext context) : base(context, "LogNote")
         {
            
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(LogNoteType));
-            query.SelectAll(typeof(ApplicationUser), "User");
-            query.SelectAll(typeof(Person), "AuthorPerson");
-            query.SelectAll(typeof(Student));
-            query.SelectAll(typeof(Person), "StudentPerson");
-            query.SelectAll(typeof(AcademicYear));
+            query.SelectAllColumns(typeof(LogNoteType), "LogNoteType");
+            query.SelectAllColumns(typeof(ApplicationUser), "User");
+            query.SelectAllColumns(typeof(Person), "AuthorPerson");
+            query.SelectAllColumns(typeof(Student), "Student");
+            query.SelectAllColumns(typeof(Person), "StudentPerson");
+            query.SelectAllColumns(typeof(AcademicYear), "AcademicYear");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("LogNoteType", "LogNoteType.Id", "LogNote.TypeId");
+            query.LeftJoin("LogNoteTypes as LogNoteType", "LogNoteType.Id", "LogNote.TypeId");
             query.LeftJoin("AspNetUsers as User", "User.Id", "LogNote.CreatedById");
-            query.LeftJoin("Person as AuthorPerson", "AuthorPerson.UserId", "User.Id");
-            query.LeftJoin("Student", "Student.Id", "LogNote.StudentId");
-            query.LeftJoin("Person as StudentPerson", "StudentPerson.Id", "Student.PersonId");
-            query.LeftJoin("AcademicYear", "AcademicYear.Id", "LogNote.AcademicYearId");
+            query.LeftJoin("People as AuthorPerson", "AuthorPerson.UserId", "User.Id");
+            query.LeftJoin("Students as Student", "Student.Id", "LogNote.StudentId");
+            query.LeftJoin("People as StudentPerson", "StudentPerson.Id", "Student.PersonId");
+            query.LeftJoin("AcademicYears as AcademicYear", "AcademicYear.Id", "LogNote.AcademicYearId");
         }
 
         protected override async Task<IEnumerable<LogNote>> ExecuteQuery(Query query)

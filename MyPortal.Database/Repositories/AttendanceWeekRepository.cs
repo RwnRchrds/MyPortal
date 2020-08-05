@@ -14,21 +14,21 @@ namespace MyPortal.Database.Repositories
 {
     public class AttendanceWeekRepository : BaseReadWriteRepository<AttendanceWeek>, IAttendanceWeekRepository
     {
-        public AttendanceWeekRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public AttendanceWeekRepository(ApplicationDbContext context) : base(context, "AttendanceWeek")
         {
       
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(AttendanceWeekPattern), "WeekPattern");
+            query.SelectAllColumns(typeof(AttendanceWeekPattern), "WeekPattern");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("AttendanceWeekPattern as WeekPattern", "WeekPattern.Id",
+            query.LeftJoin("AttendanceWeekPatterns as WeekPattern", "WeekPattern.Id",
                 "AttendanceWeek.WeekPatternId");
         }
 

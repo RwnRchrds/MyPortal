@@ -12,23 +12,23 @@ namespace MyPortal.Database.Repositories
 {
     public class YearGroupRepository : BaseReadWriteRepository<YearGroup>, IYearGroupRepository
     {
-        public YearGroupRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
+        public YearGroupRepository(ApplicationDbContext context) : base(context, "YearGroup")
         {
             
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(StaffMember));
-            query.SelectAll(typeof(Person));
-            query.SelectAll(typeof(CurriculumYearGroup));
+            query.SelectAllColumns(typeof(StaffMember), "StaffMember");
+            query.SelectAllColumns(typeof(Person), "Person");
+            query.SelectAllColumns(typeof(CurriculumYearGroup), "CYG");
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("StaffMember", "StaffMember.Id", "YearGroup.HeadId");
-            query.LeftJoin("Person", "Person.Id", "StaffMember.PersonId");
-            query.LeftJoin("CurriculumYearGroup", "CurriculumYearGroup.Id", "YearGroup.Id");
+            query.LeftJoin("StaffMembers as StaffMember", "StaffMember.Id", "YearGroup.HeadId");
+            query.LeftJoin("People as Person", "Person.Id", "StaffMember.PersonId");
+            query.LeftJoin("CurriculumYearGroup as CYG", "CYG.Id", "YearGroup.Id");
         }
 
         protected override async Task<IEnumerable<YearGroup>> ExecuteQuery(Query query)

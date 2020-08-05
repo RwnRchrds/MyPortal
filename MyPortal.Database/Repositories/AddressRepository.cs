@@ -15,7 +15,7 @@ namespace MyPortal.Database.Repositories
 {
     public class AddressRepository : BaseReadWriteRepository<Address>, IAddressRepository
     {
-        public AddressRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public AddressRepository(ApplicationDbContext context) : base(context)
         {
 
         }

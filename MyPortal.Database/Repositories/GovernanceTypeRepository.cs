@@ -10,7 +10,7 @@ namespace MyPortal.Database.Repositories
 {
     public class GovernanceTypeRepository : BaseReadRepository<GovernanceType>, IGovernanceTypeRepository
     {
-        public GovernanceTypeRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public GovernanceTypeRepository(IDbConnection connection) : base(connection)
         {
         }
     }

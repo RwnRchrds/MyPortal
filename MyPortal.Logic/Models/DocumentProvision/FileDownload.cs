@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using Microsoft.AspNetCore.Routing.Constraints;
+﻿using System.IO;
 
-namespace MyPortal.Logic.Models.Google
+namespace MyPortal.Logic.Models.DocumentProvision
 {
     public class FileDownload
     {

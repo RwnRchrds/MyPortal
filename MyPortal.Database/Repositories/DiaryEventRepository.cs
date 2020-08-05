@@ -13,21 +13,21 @@ namespace MyPortal.Database.Repositories
 {
     public class DiaryEventRepository : BaseReadWriteRepository<DiaryEvent>, IDiaryEventRepository
     {
-        public DiaryEventRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public DiaryEventRepository(ApplicationDbContext context) : base(context, "DiaryEvent")
         {
 
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(DiaryEventType));
+            query.SelectAllColumns(typeof(DiaryEventType), "DiaryEventType");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("DiaryEventType", "DiaryEventType.Id", "DiaryEvent.EventTypeId");
+            query.LeftJoin("DiaryEventTypes as DiaryEventType", "DiaryEventType.Id", "DiaryEvent.EventTypeId");
         }
 
         protected override async Task<IEnumerable<DiaryEvent>> ExecuteQuery(Query query)

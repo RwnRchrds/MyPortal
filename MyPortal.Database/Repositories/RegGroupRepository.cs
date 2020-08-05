@@ -12,23 +12,23 @@ namespace MyPortal.Database.Repositories
 {
     public class RegGroupRepository : BaseReadWriteRepository<RegGroup>, IRegGroupRepository
     {
-        public RegGroupRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public RegGroupRepository(ApplicationDbContext context) : base(context, "RegGroup")
         {
             
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(StaffMember));
-            query.SelectAll(typeof(YearGroup));
+            query.SelectAllColumns(typeof(StaffMember), "StaffMember");
+            query.SelectAllColumns(typeof(YearGroup), "YearGroup");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("StaffMember", "StaffMember.Id", "RegGroup.TutorId");
-            query.LeftJoin("YearGroup", "YearGroup.Id", "RegGroup.YearGroupId");
+            query.LeftJoin("StaffMembers as StaffMember", "StaffMember.Id", "RegGroup.TutorId");
+            query.LeftJoin("YearGroups as YearGroup", "YearGroup.Id", "RegGroup.YearGroupId");
         }
 
         protected override async Task<IEnumerable<RegGroup>> ExecuteQuery(Query query)

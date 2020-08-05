@@ -19,7 +19,7 @@ namespace MyPortal.Database.Repositories
 {
     public class PersonRepository : BaseReadWriteRepository<Person>, IPersonRepository
     {
-        public PersonRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context, "Person")
+        public PersonRepository(ApplicationDbContext context) : base(context, "Person")
         {
      
         }
@@ -35,7 +35,7 @@ namespace MyPortal.Database.Repositories
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(ApplicationUser), "User");
+            query.SelectAllColumns(typeof(ApplicationUser), "User");
 
             JoinRelated(query);
         }

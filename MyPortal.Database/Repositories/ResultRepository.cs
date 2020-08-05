@@ -12,29 +12,29 @@ namespace MyPortal.Database.Repositories
 {
     public class ResultRepository : BaseReadWriteRepository<Result>, IResultRepository
     {
-        public ResultRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public ResultRepository(ApplicationDbContext context) : base(context, "Result")
         {
             
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(ResultSet));
-            query.SelectAll(typeof(Student));
-            query.SelectAll(typeof(Person));
-            query.SelectAll(typeof(Aspect));
-            query.SelectAll(typeof(Grade));
+            query.SelectAllColumns(typeof(ResultSet), "ResultSet");
+            query.SelectAllColumns(typeof(Student), "Student");
+            query.SelectAllColumns(typeof(Person), "Person");
+            query.SelectAllColumns(typeof(Aspect), "Aspect");
+            query.SelectAllColumns(typeof(Grade), "Grade");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("ResultSet", "ResultSet.Id", "Result.ResultSetId");
-            query.LeftJoin("Student", "Student.Id", "Result.StudentId");
-            query.LeftJoin("Person", "Person.Id", "Student.PersonId");
-            query.LeftJoin("Aspect", "Aspect.Id", "Result.AspectId");
-            query.LeftJoin("Grade", "Grade.Id", "Result.GradeId");
+            query.LeftJoin("ResultSets as ResultSet", "ResultSet.Id", "Result.ResultSetId");
+            query.LeftJoin("Students as Student", "Student.Id", "Result.StudentId");
+            query.LeftJoin("People as Person", "Person.Id", "Student.PersonId");
+            query.LeftJoin("Aspects as Aspect", "Aspect.Id", "Result.AspectId");
+            query.LeftJoin("Grades as Grade", "Grade.Id", "Result.GradeId");
         }
 
         protected override async Task<IEnumerable<Result>> ExecuteQuery(Query query)

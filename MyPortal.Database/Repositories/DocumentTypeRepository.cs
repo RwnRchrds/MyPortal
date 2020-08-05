@@ -13,7 +13,7 @@ namespace MyPortal.Database.Repositories
 {
     public class DocumentTypeRepository : BaseReadRepository<DocumentType>, IDocumentTypeRepository
     {
-        public DocumentTypeRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public DocumentTypeRepository(IDbConnection connection) : base(connection, "DocumentType")
         {
         }
 

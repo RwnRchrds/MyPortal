@@ -13,23 +13,23 @@ namespace MyPortal.Database.Repositories
 {
     public class CurriculumBandMembershipRepository : BaseReadWriteRepository<CurriculumBandMembership>, ICurriculumBandMembershipRepository
     {
-        public CurriculumBandMembershipRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public CurriculumBandMembershipRepository(ApplicationDbContext context) : base(context, "CurriculumBandMembership")
         {
            
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(Student));
-            query.SelectAll(typeof(CurriculumBand));
+            query.SelectAllColumns(typeof(Student), "Student");
+            query.SelectAllColumns(typeof(CurriculumBand), "CurriculumBand");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("Student", "Student.Id", "CurriculumBandMembership.StudentId");
-            query.LeftJoin("CurriculumBand", "CurriculumBand.Id", "CurriculumBandMembership.BandId");
+            query.LeftJoin("Students as Student", "Student.Id", "CurriculumBandMembership.StudentId");
+            query.LeftJoin("CurriculumBands as CurriculumBand", "CurriculumBand.Id", "CurriculumBandMembership.BandId");
         }
 
         protected override async Task<IEnumerable<CurriculumBandMembership>> ExecuteQuery(Query query)

@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
+using MyPortal.Database.Repositories;
+using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
@@ -21,14 +23,12 @@ namespace MyPortal.Logic.Services
         private readonly IAchievementTypeRepository _achievementTypeRepository;
         private readonly IAchievementOutcomeRepository _achievementOutcomeRepository;
 
-        public AchievementService(IAchievementRepository achievementRepository,
-            IAchievementTypeRepository achievementTypeRepository,
-            IAchievementOutcomeRepository achievementOutcomeRepository, IAcademicYearRepository academicYearRepository) : base("Achievement")
+        public AchievementService(ApplicationDbContext context)
         {
-            _achievementRepository = achievementRepository;
-            _achievementTypeRepository = achievementTypeRepository;
-            _achievementOutcomeRepository = achievementOutcomeRepository;
-            _academicYearRepository = academicYearRepository;
+            _achievementRepository = new AchievementRepository(context);
+            _achievementTypeRepository = new AchievementTypeRepository(context);
+            _achievementOutcomeRepository = new AchievementOutcomeRepository(context);
+            _academicYearRepository = new AcademicYearRepository(context);
         }
 
         public override void Dispose()
@@ -70,7 +70,7 @@ namespace MyPortal.Logic.Services
         {
             if (await _academicYearRepository.IsLocked(academicYearId))
             {
-                throw BadRequest("Academic year is locked and cannot be modified.");
+                throw new InvalidDataException("Academic year is locked and cannot be modified.");
             }
         }
 
@@ -109,7 +109,7 @@ namespace MyPortal.Logic.Services
 
                 if (achievementInDb == null)
                 {
-                    throw NotFound();
+                    throw new NotFoundException("Achievement not found.");
                 }
 
                 achievementInDb.AchievementTypeId = achievement.AchievementTypeId;

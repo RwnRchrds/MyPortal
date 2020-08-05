@@ -4,8 +4,12 @@ using System.Text;
 using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
+using MyPortal.Database.Models;
+using MyPortal.Database.Repositories;
+using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
 {
@@ -13,9 +17,9 @@ namespace MyPortal.Logic.Services
     {
         private ISystemSettingRepository _systemSettingRepository;
 
-        public SystemSettingService(ISystemSettingRepository systemSettingRepository) : base("Setting")
+        public SystemSettingService(ApplicationDbContext context)
         {
-            _systemSettingRepository = systemSettingRepository;
+            _systemSettingRepository = new SystemSettingRepository(context);
         }
 
         public override void Dispose()
@@ -29,36 +33,12 @@ namespace MyPortal.Logic.Services
 
             if (setting == null)
             {
-                throw NotFound();
+                throw new NotFoundException("Setting not found.");
             }
 
             setting.Setting = value;
 
             await _systemSettingRepository.SaveChanges();
-        }
-
-        public async Task<string> GetLicenceNumber()
-        {
-            var licenceNumber = await _systemSettingRepository.Get("LicenceNumber");
-
-            if (licenceNumber == null)
-            {
-                throw NotFound("Licence number not found.");
-            }
-
-            return licenceNumber.Setting;
-        }
-
-        public async Task<bool> IsConfigured()
-        {
-            var isConfigured = await _systemSettingRepository.Get("InitialSetup");
-
-            if (isConfigured == null)
-            {
-                throw NotFound();
-            }
-
-            return Convert.ToBoolean(isConfigured.Setting);
         }
 
         public async Task<int> GetDatabaseVersion()
@@ -67,7 +47,7 @@ namespace MyPortal.Logic.Services
 
             if (databaseVersion == null)
             {
-                throw NotFound("Database version not found.");
+                throw new NotFoundException("Database version not found.");
             }
 
             return Convert.ToInt32(databaseVersion.Setting);

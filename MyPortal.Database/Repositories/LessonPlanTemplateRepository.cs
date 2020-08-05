@@ -10,7 +10,7 @@ namespace MyPortal.Database.Repositories
 {
     public class LessonPlanTemplateRepository : BaseReadWriteRepository<LessonPlanTemplate>, ILessonPlanTemplateRepository
     {
-        public LessonPlanTemplateRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public LessonPlanTemplateRepository(ApplicationDbContext context) : base(context)
         {
         }
     }

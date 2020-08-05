@@ -15,21 +15,21 @@ namespace MyPortal.Database.Repositories
 {
     public class CommunicationLogRepository : BaseReadWriteRepository<CommunicationLog>, ICommunicationLogRepository
     {
-        public CommunicationLogRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public CommunicationLogRepository(ApplicationDbContext context) : base(context, "CommunicationLog")
         {
       
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(CommunicationType));
+            query.SelectAllColumns(typeof(CommunicationType), "CommunicationType");
             
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("CommunicationType", "CommunicationType.Id", "CommnicationLog.CommunicationTypeId");
+            query.LeftJoin("CommunicationTypes as CommunicationType", "CommunicationType.Id", "CommnicationLog.CommunicationTypeId");
         }
 
         protected override async Task<IEnumerable<CommunicationLog>> ExecuteQuery(Query query)

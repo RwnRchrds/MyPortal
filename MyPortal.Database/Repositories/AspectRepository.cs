@@ -14,23 +14,23 @@ namespace MyPortal.Database.Repositories
 {
     public class AspectRepository : BaseReadWriteRepository<Aspect>, IAspectRepository
     {
-        public AspectRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public AspectRepository(ApplicationDbContext context) : base(context, "Aspect")
         {
 
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(AspectType));
-            query.SelectAll(typeof(GradeSet));
+            query.SelectAllColumns(typeof(AspectType), "AspectType");
+            query.SelectAllColumns(typeof(GradeSet), "GradeSet");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("AspectType", "AspectType.Id", "Aspect.TypeId");
-            query.LeftJoin("GradeSet", "GradeSet.Id", "Aspect.GradeSetId");
+            query.LeftJoin("AspectTypes as AspectType", "AspectType.Id", "Aspect.TypeId");
+            query.LeftJoin("GradeSets as GradeSet", "GradeSet.Id", "Aspect.GradeSetId");
         }
 
         protected override async Task<IEnumerable<Aspect>> ExecuteQuery(Query query)

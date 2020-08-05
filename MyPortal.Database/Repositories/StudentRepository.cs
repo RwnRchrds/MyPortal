@@ -17,38 +17,38 @@ namespace MyPortal.Database.Repositories
 {
     public class StudentRepository : BaseReadWriteRepository<Student>, IStudentRepository
     {
-        public StudentRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public StudentRepository(ApplicationDbContext context) : base(context, "Student")
         {
 
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(Person), "StudentPerson");
-            query.SelectAll(typeof(ApplicationUser), "User");
-            query.SelectAll(typeof(RegGroup));
-            query.SelectAll(typeof(StaffMember), "Tutor");
-            query.SelectAll(typeof(Person), "TutorPerson");
-            query.SelectAll(typeof(YearGroup));
-            query.SelectAll(typeof(StaffMember), "HeadOfYear");
-            query.SelectAll(typeof(Person), "HeadOfYearPerson");
-            query.SelectAll(typeof(House));
-            query.SelectAll(typeof(SenStatus));
+            query.SelectAllColumns(typeof(Person), "StudentPerson");
+            query.SelectAllColumns(typeof(ApplicationUser), "User");
+            query.SelectAllColumns(typeof(RegGroup), "RegGroup");
+            query.SelectAllColumns(typeof(StaffMember), "Tutor");
+            query.SelectAllColumns(typeof(Person), "TutorPerson");
+            query.SelectAllColumns(typeof(YearGroup), "YearGroup");
+            query.SelectAllColumns(typeof(StaffMember), "HeadOfYear");
+            query.SelectAllColumns(typeof(Person), "HeadOfYearPerson");
+            query.SelectAllColumns(typeof(House), "House");
+            query.SelectAllColumns(typeof(SenStatus), "SenStatus");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("Person as StudentPerson", "StudentPerson.Id", "Student.PersonId");
+            query.LeftJoin("People as StudentPerson", "StudentPerson.Id", "Student.PersonId");
             query.LeftJoin("AspNetUsers as User", "User.Id", "StudentPerson.UserId");
-            query.LeftJoin("RegGroup", "RegGroup.Id", "Student.RegGroupId");
-            query.LeftJoin("StaffMember as Tutor", "Tutor.Id", "RegGroup.TutorId");
-            query.LeftJoin("Person as TutorPerson", "TutorPerson.Id", "Tutor.PersonId");
-            query.LeftJoin("YearGroup", "YearGroup.Id", "Student.YearGroupId");
-            query.LeftJoin("StaffMember as HeadOfYear", "HeadOfYear.Id", "YearGroup.HeadId");
-            query.LeftJoin("Person as HeadOfYearPerson", "HeadOfYearPerson.Id", "HeadOfYear.PersonId");
-            query.LeftJoin("House", "House.Id", "Student.HouseId");
+            query.LeftJoin("RegGroups as RegGroup", "RegGroup.Id", "Student.RegGroupId");
+            query.LeftJoin("StaffMembers as Tutor", "Tutor.Id", "RegGroup.TutorId");
+            query.LeftJoin("People as TutorPerson", "TutorPerson.Id", "Tutor.PersonId");
+            query.LeftJoin("YearGroups as YearGroup", "YearGroup.Id", "Student.YearGroupId");
+            query.LeftJoin("StaffMembers as HeadOfYear", "HeadOfYear.Id", "YearGroup.HeadId");
+            query.LeftJoin("People as HeadOfYearPerson", "HeadOfYearPerson.Id", "HeadOfYear.PersonId");
+            query.LeftJoin("Houses as House", "House.Id", "Student.HouseId");
             query.LeftJoin("SenStatus", "SenStatus.Id", "Student.SenStatusId");
         }
 

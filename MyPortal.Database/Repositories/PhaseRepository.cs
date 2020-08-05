@@ -10,7 +10,7 @@ namespace MyPortal.Database.Repositories
 {
     public class PhaseRepository : BaseReadRepository<SchoolPhase>, IPhaseRepository
     {
-        public PhaseRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public PhaseRepository(IDbConnection connection) : base(connection)
         {
         }
     }

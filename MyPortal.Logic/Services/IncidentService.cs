@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
+using MyPortal.Database.Repositories;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
@@ -19,12 +21,14 @@ namespace MyPortal.Logic.Services
         private readonly IBehaviourStatusRepository _statusRepository;
         private readonly IIncidentTypeRepository _incidentTypeRepository;
 
-        public IncidentService(IIncidentRepository incidentRepository, IBehaviourOutcomeRepository outcomeRepository, IBehaviourStatusRepository statusRepository, IIncidentTypeRepository incidentTypeRepository) : base("Incident")
+        public IncidentService(ApplicationDbContext context)
         {
-            _incidentRepository = incidentRepository;
-            _outcomeRepository = outcomeRepository;
-            _statusRepository = statusRepository;
-            _incidentTypeRepository = incidentTypeRepository;
+            var connection = context.Database.GetDbConnection();
+
+            _incidentRepository = new IncidentRepository(context);
+            _outcomeRepository = new BehaviourOutcomeRepository(context);
+            _statusRepository = new BehaviourStatusRepository(connection);
+            _incidentTypeRepository = new IncidentTypeRepository(context);
         }
 
         public override void Dispose()

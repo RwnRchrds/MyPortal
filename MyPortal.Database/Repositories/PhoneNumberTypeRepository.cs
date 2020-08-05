@@ -10,7 +10,7 @@ namespace MyPortal.Database.Repositories
 {
     public class PhoneNumberTypeRepository : BaseReadRepository<PhoneNumberType>, IPhoneNumberTypeRepository
     {
-        public PhoneNumberTypeRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public PhoneNumberTypeRepository(IDbConnection connection) : base(connection)
         {
         }
     }

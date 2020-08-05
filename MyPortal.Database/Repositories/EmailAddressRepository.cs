@@ -12,23 +12,23 @@ namespace MyPortal.Database.Repositories
 {
     public class EmailAddressRepository : BaseReadWriteRepository<EmailAddress>, IEmailAddressRepository
     {
-        public EmailAddressRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public EmailAddressRepository(ApplicationDbContext context) : base(context, "EmailAddress")
         {
             
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(EmailAddressType));
-            query.SelectAll(typeof(Person));
+            query.SelectAllColumns(typeof(EmailAddressType), "EmailAddressType");
+            query.SelectAllColumns(typeof(Person), "Person");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("EmailAddressType", "EmailAddressType.Id", "EmailAddress.TypeId");
-            query.LeftJoin("Person", "Person.Id", "EmailAddress.PersonId");
+            query.LeftJoin("EmailAddressTypes as EmailAddressType", "EmailAddressType.Id", "EmailAddress.TypeId");
+            query.LeftJoin("People as Person", "Person.Id", "EmailAddress.PersonId");
         }
 
         protected override async Task<IEnumerable<EmailAddress>> ExecuteQuery(Query query)

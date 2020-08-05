@@ -12,25 +12,25 @@ namespace MyPortal.Database.Repositories
 {
     public class SaleRepository : BaseReadWriteRepository<Sale>, ISaleRepository
     {
-        public SaleRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public SaleRepository(ApplicationDbContext context) : base(context, "Sale")
         {
            
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(Student));
-            query.SelectAll(typeof(Person));
-            query.SelectAll(typeof(Product));
-            query.SelectAll(typeof(AcademicYear));
+            query.SelectAllColumns(typeof(Student), "Student");
+            query.SelectAllColumns(typeof(Person), "Person");
+            query.SelectAllColumns(typeof(Product), "Product");
+            query.SelectAllColumns(typeof(AcademicYear), "AcademicYear");
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("Student", "Student.Id", "Sale.StudentId");
-            query.LeftJoin("Person", "Person.Id", "Student.PersonId");
-            query.LeftJoin("Product", "Product.Id", "Sale.ProductId");
-            query.LeftJoin("AcademicYear", "AcademicYear.Id", "Sale.AcademicYearId");
+            query.LeftJoin("Students as Student", "Student.Id", "Sale.StudentId");
+            query.LeftJoin("People as Person", "Person.Id", "Student.PersonId");
+            query.LeftJoin("Products as Product", "Product.Id", "Sale.ProductId");
+            query.LeftJoin("AcademicYears as AcademicYear", "AcademicYear.Id", "Sale.AcademicYearId");
         }
 
         protected override async Task<IEnumerable<Sale>> ExecuteQuery(Query query)

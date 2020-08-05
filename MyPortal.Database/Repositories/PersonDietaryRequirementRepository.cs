@@ -12,24 +12,23 @@ namespace MyPortal.Database.Repositories
 {
     public class PersonDietaryRequirementRepository : BaseReadWriteRepository<PersonDietaryRequirement>, IPersonDietaryRequirementRepository
     {
-        public PersonDietaryRequirementRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public PersonDietaryRequirementRepository(ApplicationDbContext context) : base(context, "PDR")
         {
 
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(Person));
-            query.SelectAll(typeof(DietaryRequirement));
+            query.SelectAllColumns(typeof(Person), "P");
+            query.SelectAllColumns(typeof(DietaryRequirement), "D");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("Person", "Person.Id", "PersonDietaryRequirement.PersonId");
-            query.LeftJoin("DietaryRequirement", "DietaryRequirement.Id",
-                "PersonDietaryRequirement.DietaryRequirementId");
+            query.LeftJoin("People as P", "P.Id", "PDR.PersonId");
+            query.LeftJoin("DietaryRequirements as D", "D.Id", "PDR.DietaryRequirementId");
         }
 
         protected override async Task<IEnumerable<PersonDietaryRequirement>> ExecuteQuery(Query query)

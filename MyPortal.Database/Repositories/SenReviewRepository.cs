@@ -12,25 +12,25 @@ namespace MyPortal.Database.Repositories
 {
     public class SenReviewRepository : BaseReadWriteRepository<SenReview>, ISenReviewRepository
     {
-        public SenReviewRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
+        public SenReviewRepository(ApplicationDbContext context) : base(context, "SenReview")
         {
             
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(Student));
-            query.SelectAll(typeof(Person));
-            query.SelectAll(typeof(SenReviewType));
+            query.SelectAllColumns(typeof(Student), "Student");
+            query.SelectAllColumns(typeof(Person), "Person");
+            query.SelectAllColumns(typeof(SenReviewType), "SenReviewType");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("Student", "Student.Id", "SenReview.StudentId");
-            query.LeftJoin("Person", "Person.Id", "Student.PersonId");
-            query.LeftJoin("SenReviewType", "SenReviewType.Id", "SenReview.ReviewTypeId");
+            query.LeftJoin("Students as Student", "Student.Id", "SenReview.StudentId");
+            query.LeftJoin("People as Person", "Person.Id", "Student.PersonId");
+            query.LeftJoin("SenReviewTypes as SenReviewType", "SenReviewType.Id", "SenReview.ReviewTypeId");
         }
 
         protected override async Task<IEnumerable<SenReview>> ExecuteQuery(Query query)

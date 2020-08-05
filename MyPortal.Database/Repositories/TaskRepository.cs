@@ -14,27 +14,27 @@ namespace MyPortal.Database.Repositories
 {
     public class TaskRepository : BaseReadWriteRepository<Task>, ITaskRepository
     {
-        public TaskRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
+        public TaskRepository(ApplicationDbContext context) : base(context, "Task")
         {
            
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(Person), "AssignedTo");
-            query.SelectAll(typeof(ApplicationUser), "AssignedBy");
-            query.SelectAll(typeof(Person), "AssignedByPerson");
-            query.SelectAll(typeof(TaskType), "Type");
+            query.SelectAllColumns(typeof(Person), "AssignedTo");
+            query.SelectAllColumns(typeof(ApplicationUser), "AssignedBy");
+            query.SelectAllColumns(typeof(Person), "AssignedByPerson");
+            query.SelectAllColumns(typeof(TaskType), "Type");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("Person as AssignedTo", "AssignedTo.Id", "Task.AssignedToId");
+            query.LeftJoin("People as AssignedTo", "AssignedTo.Id", "Task.AssignedToId");
             query.LeftJoin("AspNetUsers as AssignedBy", "AssignedBy.Id", "Task.AssignedById");
-            query.LeftJoin("Person as AssignedByPerson", "AssignedByPerson.UserId", "AssignedBy.Id");
-            query.LeftJoin("TaskType as Type", "Type.Id", "Task.TypeId");
+            query.LeftJoin("People as AssignedByPerson", "AssignedByPerson.UserId", "AssignedBy.Id");
+            query.LeftJoin("TaskTypes as Type", "Type.Id", "Task.TypeId");
         }
 
         protected override async System.Threading.Tasks.Task<IEnumerable<Task>> ExecuteQuery(Query query)

@@ -8,7 +8,9 @@ using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
+using MyPortal.Database.Repositories;
 using MyPortal.Logic.Constants;
+using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Exceptions;
@@ -22,10 +24,10 @@ namespace MyPortal.Logic.Services
         private readonly IDirectoryRepository _directoryRepository;
         private readonly IDocumentRepository _documentRepository;
 
-        public DirectoryService(IDirectoryRepository directoryRepository, IDocumentRepository documentRepository) : base("Directory")
+        public DirectoryService(ApplicationDbContext context)
         {
-            _directoryRepository = directoryRepository;
-            _documentRepository = documentRepository;
+            _directoryRepository = new DirectoryRepository(context);
+            _documentRepository = new DocumentRepository(context);
         }
 
         public async Task<DirectoryModel> GetById(Guid directoryId)
@@ -34,7 +36,7 @@ namespace MyPortal.Logic.Services
 
             if (directory == null)
             {
-                throw NotFound();
+                throw new NotFoundException("Directory not found.");
             }
 
             return BusinessMapper.Map<DirectoryModel>(directory);
@@ -46,14 +48,14 @@ namespace MyPortal.Logic.Services
             {
                 if (directory.ParentId == null)
                 {
-                    throw BadRequest("Parent directory not specified.");
+                    throw new InvalidDataException("Parent directory not specified.");
                 }
 
                 var parentDirectory = await _directoryRepository.GetById(directory.ParentId.Value);
 
                 if (parentDirectory == null)
                 {
-                    throw NotFound("Parent directory not found.");
+                    throw new NotFoundException("Parent directory not found.");
                 }
 
                 var dirToAdd = new Directory
@@ -110,7 +112,7 @@ namespace MyPortal.Logic.Services
 
             if (directory == null)
             {
-                throw NotFound();
+                throw new NotFoundException("Directory not found.");
             }
 
             var children = new DirectoryChildren();

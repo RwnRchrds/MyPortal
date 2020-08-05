@@ -18,21 +18,21 @@ namespace MyPortal.Database.Repositories
 {
     public class AchievementRepository : BaseReadWriteRepository<Achievement>, IAchievementRepository
     {
-        public AchievementRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context, "Achievement")
+        public AchievementRepository(ApplicationDbContext context) : base(context, "Achievement")
         {
            
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(AcademicYear), "AcademicYear");
-            query.SelectAll(typeof(AchievementType), "AchievementType");
-            query.SelectAll(typeof(AchievementOutcome), "AchievementOutcome");
-            query.SelectAll(typeof(Student), "Student");
-            query.SelectAll(typeof(Person), "StudentPerson");
-            query.SelectAll(typeof(Location), "Location");
-            query.SelectAll(typeof(ApplicationUser), "RecordedBy");
-            query.SelectAll(typeof(Person), "RecordedByPerson");
+            query.SelectAllColumns(typeof(AcademicYear), "AcademicYear");
+            query.SelectAllColumns(typeof(AchievementType), "AchievementType");
+            query.SelectAllColumns(typeof(AchievementOutcome), "AchievementOutcome");
+            query.SelectAllColumns(typeof(Student), "Student");
+            query.SelectAllColumns(typeof(Person), "StudentPerson");
+            query.SelectAllColumns(typeof(Location), "Location");
+            query.SelectAllColumns(typeof(ApplicationUser), "RecordedBy");
+            query.SelectAllColumns(typeof(Person), "RecordedByPerson");
 
             JoinRelated(query);
         }

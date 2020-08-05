@@ -3,6 +3,7 @@ using System.Linq;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using MyPortal.Database.Repositories;
+using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
@@ -20,17 +21,14 @@ namespace MyPortal.Logic.Services
         private readonly ICurriculumGroupMembershipRepository _groupMembershipRepository;
         private readonly ICurriculumBandMembershipRepository _bandMembershipRepository;
 
-        public CurriculumService(ICurriculumBandRepository bandRepository, ICurriculumBlockRepository blockRepository,
-            ICurriculumGroupRepository groupRepository, ICurriculumBandBlockAssignmentRepository assignmentRepository,
-            ICurriculumGroupMembershipRepository groupMembershipRepository,
-            ICurriculumBandMembershipRepository bandMembershipRepository) : base("Curriculum object")
+        public CurriculumService(ApplicationDbContext context)
         {
-            _bandRepository = bandRepository;
-            _blockRepository = blockRepository;
-            _groupRepository = groupRepository;
-            _assignmentRepository = assignmentRepository;
-            _groupMembershipRepository = groupMembershipRepository;
-            _bandMembershipRepository = bandMembershipRepository;
+            _bandRepository = new CurriculumBandRepository(context);
+            _blockRepository = new CurriculumBlockRepository(context);
+            _groupRepository = new CurriculumGroupRepository(context);
+            _assignmentRepository = new CurriculumBandBlockAssignmentRepository(context);
+            _groupMembershipRepository = new CurriculumGroupMembershipRepository(context);
+            _bandMembershipRepository = new CurriculumBandMembershipRepository(context);
         }
         
         public override void Dispose()
@@ -49,7 +47,7 @@ namespace MyPortal.Logic.Services
             {
                 if (!await _bandRepository.CheckUniqueCode(bandModel.AcademicYearId, bandModel.Code))
                 {
-                    throw BadRequest($"Curriculum band with code {bandModel.Code} already exists.");
+                    throw new InvalidDataException($"Curriculum band with code {bandModel.Code} already exists.");
                 }
                 
                 var band = new CurriculumBand
@@ -113,7 +111,7 @@ namespace MyPortal.Logic.Services
             {
                 if (!blockModel.BandIds.Any())
                 {
-                    throw BadRequest("Curriculum block must be assigned to at least one band.");
+                    throw new InvalidDataException("Curriculum block must be assigned to at least one band.");
                 }
                 
                 var block = new CurriculumBlock
@@ -130,7 +128,7 @@ namespace MyPortal.Logic.Services
 
                     if (band == null)
                     {
-                        throw NotFound($"Curriculum band not found: {blockModel.BandIds[i]}.");
+                        throw new NotFoundException($"Curriculum band not found: {blockModel.BandIds[i]}.");
                     }
                     
                     if (i == 0)
@@ -139,7 +137,7 @@ namespace MyPortal.Logic.Services
                     }
                     else if (band.AcademicYearId != academicYearId)
                     {
-                        throw BadRequest("Curriculum blocks cannot span multiple academic years.");
+                        throw new InvalidDataException("Curriculum blocks cannot span multiple academic years.");
                     }
                     
                     block.BandAssignments.Add(new CurriculumBandBlockAssignment
@@ -151,7 +149,7 @@ namespace MyPortal.Logic.Services
 
                 if (!await _blockRepository.CheckUniqueCode(academicYearId, blockModel.BlockModel.Code))
                 {
-                    throw BadRequest($"Curriculum block with code {blockModel.BlockModel.Code} already exists.");
+                    throw new InvalidDataException($"Curriculum block with code {blockModel.BlockModel.Code} already exists.");
                 }
 
                 _blockRepository.Create(block);
@@ -168,7 +166,7 @@ namespace MyPortal.Logic.Services
 
                 if (blockInDb == null)
                 {
-                    throw NotFound("Curriculum block not found.");
+                    throw new NotFoundException("Curriculum block not found.");
                 }
 
                 blockInDb.Code = blockModel.Code;
@@ -196,12 +194,12 @@ namespace MyPortal.Logic.Services
                 
                 if (academicYearId == null)
                 {
-                    throw NotFound("Academic year not found for block.");
+                    throw new NotFoundException("Academic year not found for block.");
                 }
 
                 if (!await _groupRepository.CheckUniqueCode(academicYearId.Value, groupModel.Code))
                 {
-                    throw BadRequest($"Curriculum group with code {groupModel.Code} already exists.");
+                    throw new InvalidDataException($"Curriculum group with code {groupModel.Code} already exists.");
                 }
 
                 var group = new CurriculumGroup
@@ -225,7 +223,7 @@ namespace MyPortal.Logic.Services
 
                 if (groupInDb == null)
                 {
-                    throw NotFound("Curriculum group not found.");
+                    throw new NotFoundException("Curriculum group not found.");
                 }
 
                 groupInDb.Code = groupModel.Code;
@@ -297,7 +295,7 @@ namespace MyPortal.Logic.Services
 
                 if (membershipInDb == null)
                 {
-                    throw NotFound("Group membership not found.");
+                    throw new NotFoundException("Group membership not found.");
                 }
 
                 membershipInDb.StartDate = groupMembership.StartDate;

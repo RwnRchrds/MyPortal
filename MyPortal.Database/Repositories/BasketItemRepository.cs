@@ -15,25 +15,25 @@ namespace MyPortal.Database.Repositories
 {
     public class BasketItemRepository : BaseReadWriteRepository<BasketItem>, IBasketItemRepository
     {
-        public BasketItemRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public BasketItemRepository(ApplicationDbContext context) : base(context, "BasketItem")
         {
 
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(Student));
-            query.SelectAll(typeof(Person), "StudentPerson");
-            query.SelectAll(typeof(Product));
+            query.SelectAllColumns(typeof(Student), "Student");
+            query.SelectAllColumns(typeof(Person), "StudentPerson");
+            query.SelectAllColumns(typeof(Product), "Product");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("Student", "Student.Id", "BasketItem.StudentId");
-            query.LeftJoin("Person as StudentPerson", "StudentPerson.Id", "Student.PersonId");
-            query.LeftJoin("Product", "Product.Id", "BasketItem.ProductId");
+            query.LeftJoin("Students as Student", "Student.Id", "BasketItem.StudentId");
+            query.LeftJoin("People as StudentPerson", "StudentPerson.Id", "Student.PersonId");
+            query.LeftJoin("Products as Product", "Product.Id", "BasketItem.ProductId");
         }
 
         protected override async Task<IEnumerable<BasketItem>> ExecuteQuery(Query query)

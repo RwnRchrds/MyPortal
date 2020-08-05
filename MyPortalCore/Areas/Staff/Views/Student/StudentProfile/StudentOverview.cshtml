@@ -113,7 +113,16 @@
                             <!--begin::Text-->
                             <div class="d-flex flex-column flex-grow-1">
                                 <div class="mb-1">
-                                    <a href="#" class="text-dark-75 text-hover-primary font-weight-bold font-size-lg mb-1">@task.Title</a>
+                                    <a href="#" class="text-dark-75 text-hover-primary font-weight-bold font-size-lg mb-1">
+                                        @if (task.Completed)
+                                        {
+                                            <del>@task.Title</del>
+                                        }
+                                        else
+                                        {
+                                            @task.Title
+                                        }
+                                    </a>
                                 </div>
                                 @if (!string.IsNullOrWhiteSpace(task.AssignedByName))
                                 {
@@ -509,14 +518,15 @@
         }
 
         function toggleTaskCompleted(taskId) {
+            KTApp.block("#task_card");
             $.ajax({
                 type: "PUT",
                 url: `${urlToggleTask}?taskId=${taskId}`,
                 success: function (e) {
-                    KTApp.block("#task_card");
                     location.reload();
                 },
-                error: function(e) {
+                error: function (e) {
+                    KTApp.unblock("#task_card");
                     actionFailure(e);
                 }
             });

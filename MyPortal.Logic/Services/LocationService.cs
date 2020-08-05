@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
+using MyPortal.Database.Models;
+using MyPortal.Database.Repositories;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
@@ -13,9 +15,9 @@ namespace MyPortal.Logic.Services
     {
         private readonly ILocationRepository _locationRepository;
         
-        public LocationService(ILocationRepository locationRepository) : base("Location")
+        public LocationService(ApplicationDbContext context)
         {
-            _locationRepository = locationRepository;
+            _locationRepository = new LocationRepository(context);
         }
 
         public async Task<Lookup> GetLocations()

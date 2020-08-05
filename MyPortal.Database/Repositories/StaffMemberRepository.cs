@@ -14,21 +14,21 @@ namespace MyPortal.Database.Repositories
 {
     public class StaffMemberRepository : BaseReadWriteRepository<StaffMember>, IStaffMemberRepository
     {
-        public StaffMemberRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
+        public StaffMemberRepository(ApplicationDbContext context) : base(context, "StaffMember")
         {
            
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(Person));
+            query.SelectAllColumns(typeof(Person), "Person");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("Person", "Person.Id", "StaffMember.PersonId");
+            query.LeftJoin("People as Person", "Person.Id", "StaffMember.PersonId");
         }
 
         protected override async Task<IEnumerable<StaffMember>> ExecuteQuery(Query query)

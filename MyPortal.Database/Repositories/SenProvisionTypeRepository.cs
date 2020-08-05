@@ -10,7 +10,7 @@ namespace MyPortal.Database.Repositories
 {
     public class SenProvisionTypeRepository : BaseReadRepository<SenProvisionType>, ISenProvisionTypeRepository
     {
-        public SenProvisionTypeRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public SenProvisionTypeRepository(IDbConnection connection) : base(connection)
         {
         }
     }

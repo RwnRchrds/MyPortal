@@ -14,21 +14,21 @@ namespace MyPortal.Database.Repositories
 {
     public class CommentRepository : BaseReadWriteRepository<Comment>, ICommentRepository
     {
-        public CommentRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public CommentRepository(ApplicationDbContext context) : base(context, "Comment")
         {
 
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(CommentBank));
+            query.SelectAllColumns(typeof(CommentBank), "CommentBank");
             
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("CommentBank", "CommentBank.Id", "Comment.CommentBankId");
+            query.LeftJoin("CommentBanks as CommentBank", "CommentBank.Id", "Comment.CommentBankId");
         }
 
         protected override async Task<IEnumerable<Comment>> ExecuteQuery(Query query)

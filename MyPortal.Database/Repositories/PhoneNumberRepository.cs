@@ -12,21 +12,21 @@ namespace MyPortal.Database.Repositories
 {
     public class PhoneNumberRepository : BaseReadWriteRepository<PhoneNumber>, IPhoneNumberRepository
     {
-        public PhoneNumberRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public PhoneNumberRepository(ApplicationDbContext context) : base(context, "PhoneNumber")
         {
            
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(PhoneNumberType));
-            query.SelectAll(typeof(Person));
+            query.SelectAllColumns(typeof(PhoneNumberType), "PhoneNumberType");
+            query.SelectAllColumns(typeof(Person), "Person");
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("PhoneNumberType", "PhoneNumberType.Id", "PhoneNumber.TypeId");
-            query.LeftJoin("Person", "Person.Id", "PhoneNumber.PersonId");
+            query.LeftJoin("PhoneNumberTypes as PhoneNumberType", "PhoneNumberType.Id", "PhoneNumber.TypeId");
+            query.LeftJoin("People as Person", "Person.Id", "PhoneNumber.PersonId");
         }
 
         protected override async Task<IEnumerable<PhoneNumber>> ExecuteQuery(Query query)

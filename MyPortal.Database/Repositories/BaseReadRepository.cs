@@ -32,8 +32,10 @@ namespace MyPortal.Database.Repositories
             TblName = EntityHelper.GetTableName(typeof(TEntity), out TblAlias, tblAlias);
         }
 
-        public BaseReadRepository(string tblAlias = null)
+        public BaseReadRepository(ApplicationDbContext context, string tblAlias = null)
         {
+            Connection = context.Database.GetDbConnection();
+
             Compiler = new SqlServerCompiler();
 
             TblName = EntityHelper.GetTableName(typeof(TEntity), out TblAlias, tblAlias);
@@ -104,7 +106,7 @@ namespace MyPortal.Database.Repositories
 
         protected Query GenerateQuery(bool includeDeleted = false, bool getRelated = true)
         {
-            var query = new Query(TblName).SelectAll(typeof(TEntity), TblAlias);
+            var query = new Query(TblName).SelectAllColumns(typeof(TEntity), TblAlias);
 
             if (!includeDeleted && typeof(TEntity).GetInterfaces().Contains(typeof(ISoftDeleteEntity)))
             {

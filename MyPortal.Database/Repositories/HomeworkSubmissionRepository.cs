@@ -13,27 +13,27 @@ namespace MyPortal.Database.Repositories
 {
     public class HomeworkSubmissionRepository : BaseReadWriteRepository<HomeworkSubmission>, IHomeworkSubmissionRepository
     {
-        public HomeworkSubmissionRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public HomeworkSubmissionRepository(ApplicationDbContext context) : base(context, "HomeworkSubmission")
         {
             
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(HomeworkItem));
-            query.SelectAll(typeof(Student));
-            query.SelectAll(typeof(Person), "StudentPerson");
-            query.SelectAll(typeof(Task));
+            query.SelectAllColumns(typeof(HomeworkItem), "HomeworkItem");
+            query.SelectAllColumns(typeof(Student), "Student");
+            query.SelectAllColumns(typeof(Person), "StudentPerson");
+            query.SelectAllColumns(typeof(Task), "Task");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("HomeworkItem", "HomeworkItem.Id", "HomeworkSubmission.HomeworkId");
-            query.LeftJoin("Student", "Student.Id", "HomeworkSubmission.StudentId");
-            query.LeftJoin("Person as StudentPerson", "StudentPerson.Id", "Student.PersonId");
-            query.LeftJoin("Task", "Task.Id", "HomeworkSubmission.TaskId");
+            query.LeftJoin("HomeworkItems as HomeworkItem", "HomeworkItem.Id", "HomeworkSubmission.HomeworkId");
+            query.LeftJoin("Students as Student", "Student.Id", "HomeworkSubmission.StudentId");
+            query.LeftJoin("People as StudentPerson", "StudentPerson.Id", "Student.PersonId");
+            query.LeftJoin("Tasks as Task", "Task.Id", "HomeworkSubmission.TaskId");
         }
 
         protected override async Task<IEnumerable<HomeworkSubmission>> ExecuteQuery(Query query)

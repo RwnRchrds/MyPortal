@@ -12,20 +12,20 @@ namespace MyPortal.Database.Repositories
 {
     public class CurriculumGroupRepository : BaseReadWriteRepository<CurriculumGroup>, ICurriculumGroupRepository
     {
-        public CurriculumGroupRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public CurriculumGroupRepository(ApplicationDbContext context) : base(context, "CurriculumGroup")
         {
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(CurriculumBlock), "Block");
+            query.SelectAllColumns(typeof(CurriculumBlock), "Block");
             
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("CurriculumBlock as Block", "Block.Id", "CurriculumGroup.BlockId");
+            query.LeftJoin("CurriculumBlocks as Block", "Block.Id", "CurriculumGroup.BlockId");
         }
 
         protected override async Task<IEnumerable<CurriculumGroup>> ExecuteQuery(Query query)

@@ -14,7 +14,7 @@ namespace MyPortal.Logic.Services
     {
         private readonly RoleManager<ApplicationRole> _roleManager;
 
-        public ApplicationRoleService(RoleManager<ApplicationRole> roleManager) : base("Role")
+        public ApplicationRoleService(RoleManager<ApplicationRole> roleManager)
         {
             _roleManager = roleManager;
         }

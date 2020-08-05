@@ -13,7 +13,7 @@ namespace MyPortal.Database.Repositories
 {
     public class CurriculumBlockRepository : BaseReadWriteRepository<CurriculumBlock>, ICurriculumBlockRepository
     {
-        public CurriculumBlockRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context, "Block")
+        public CurriculumBlockRepository(ApplicationDbContext context) : base(context, "Block")
         {
             
         }
@@ -35,8 +35,8 @@ namespace MyPortal.Database.Repositories
 
             query.Select("Band.AcademicYearId");
 
-            query.LeftJoin("CurriculumBandBlockAssignment as Assignment", "Assignment.BlockId", "Block.Id");
-            query.LeftJoin("CurriculumBand as Band", "Band.Id", "Assignment.BandId");
+            query.LeftJoin("CurriculumBandBlockAssignments as Assignment", "Assignment.BlockId", "Block.Id");
+            query.LeftJoin("CurriculumBands as Band", "Band.Id", "Assignment.BandId");
 
             query.Where("Block.Id", blockId);
 

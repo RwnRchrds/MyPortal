@@ -12,26 +12,26 @@ namespace MyPortal.Database.Repositories
 {
     public class SubjectStaffMemberRepository : BaseReadWriteRepository<SubjectStaffMember>, ISubjectStaffMemberRepository
     {
-        public SubjectStaffMemberRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
+        public SubjectStaffMemberRepository(ApplicationDbContext context) : base(context, "SubjectStaffMember")
         {
             
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(Subject));
-            query.SelectAll(typeof(StaffMember));
-            query.SelectAll(typeof(Person));
-            query.SelectAll(typeof(SubjectStaffMemberRole), "Role");
+            query.SelectAllColumns(typeof(Subject), "Subject");
+            query.SelectAllColumns(typeof(StaffMember), "StaffMember");
+            query.SelectAllColumns(typeof(Person), "Person");
+            query.SelectAllColumns(typeof(SubjectStaffMemberRole), "Role");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("Subject", "Subject.Id", "SubjectStaffMember.SubjectId");
-            query.LeftJoin("StaffMember", "StaffMember.Id", "SubjectStaffMember.StaffMemberId");
-            query.LeftJoin("Person", "Person.Id", "StaffMember.PersonId");
+            query.LeftJoin("Subjects as Subject", "Subject.Id", "SubjectStaffMember.SubjectId");
+            query.LeftJoin("StaffMembers as StaffMember", "StaffMember.Id", "SubjectStaffMember.StaffMemberId");
+            query.LeftJoin("People as Person", "Person.Id", "StaffMember.PersonId");
             query.LeftJoin("SubjectStaffMemberRole as Role", "Role.Id", "SubjectStaffMember.RoleId");
         }
 

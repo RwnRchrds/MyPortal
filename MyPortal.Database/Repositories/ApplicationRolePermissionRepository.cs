@@ -14,15 +14,15 @@ namespace MyPortal.Database.Repositories
 {
     public class ApplicationRolePermissionRepository : BaseReadWriteRepository<ApplicationRolePermission>, IApplicationRolePermissionRepository
     {
-        public ApplicationRolePermissionRepository(IDbConnection connection, ApplicationDbContext context, string tblAlias = null) : base(connection, context, tblAlias)
+        public ApplicationRolePermissionRepository(ApplicationDbContext context) : base(context)
         {
            
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(ApplicationRole), "Role");
-            query.SelectAll(typeof(ApplicationPermission), "Permission");
+            query.SelectAllColumns(typeof(ApplicationRole), "Role");
+            query.SelectAllColumns(typeof(ApplicationPermission), "Permission");
 
             JoinRelated(query);
         }

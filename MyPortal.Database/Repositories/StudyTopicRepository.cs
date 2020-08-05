@@ -12,23 +12,23 @@ namespace MyPortal.Database.Repositories
 {
     public class StudyTopicRepository : BaseReadWriteRepository<StudyTopic>, IStudyTopicRepository
     {
-        public StudyTopicRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public StudyTopicRepository(ApplicationDbContext context) : base(context, "StudyTopic")
         {
 
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(Subject));
-            query.SelectAll(typeof(YearGroup));
+            query.SelectAllColumns(typeof(Subject));
+            query.SelectAllColumns(typeof(YearGroup));
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("Subject", "Subject.Id", "StudyTopic.SubjectId");
-            query.LeftJoin("YearGroup", "YearGroup.Id", "StudyTopic.YearGroupId");
+            query.LeftJoin("Subjects as Subject", "Subject.Id", "StudyTopic.SubjectId");
+            query.LeftJoin("YearGroups as YearGroup", "YearGroup.Id", "StudyTopic.YearGroupId");
         }
 
         protected override async Task<IEnumerable<StudyTopic>> ExecuteQuery(Query query)

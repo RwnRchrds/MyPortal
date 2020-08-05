@@ -7,8 +7,6 @@ namespace MyPortal.Logic.Interfaces
 {
     public interface ISystemSettingService : IDisposable
     {
-        public Task<string> GetLicenceNumber();
-        public Task<bool> IsConfigured();
         public Task<int> GetDatabaseVersion();
     }
 }

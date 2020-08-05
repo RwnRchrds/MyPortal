@@ -10,7 +10,7 @@ namespace MyPortal.Database.Repositories
 {
     public class SenEventTypeRepository : BaseReadRepository<SenEventType>, ISenEventTypeRepository
     {
-        public SenEventTypeRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public SenEventTypeRepository(IDbConnection connection) : base(connection)
         {
         }
     }

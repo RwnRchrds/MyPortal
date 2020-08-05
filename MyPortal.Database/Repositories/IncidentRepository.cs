@@ -13,37 +13,37 @@ namespace MyPortal.Database.Repositories
 {
     public class IncidentRepository : BaseReadWriteRepository<Incident>, IIncidentRepository
     {
-        public IncidentRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public IncidentRepository(ApplicationDbContext context) : base(context, "Incident")
         {
             
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(AcademicYear));
-            query.SelectAll(typeof(IncidentType));
-            query.SelectAll(typeof(Student));
-            query.SelectAll(typeof(Person), "StudentPerson");
-            query.SelectAll(typeof(BehaviourOutcome));
-            query.SelectAll(typeof(BehaviourStatus));
-            query.SelectAll(typeof(Location));
-            query.SelectAll(typeof(ApplicationUser), "User");
-            query.SelectAll(typeof(Person), "RecordedByPerson");
+            query.SelectAllColumns(typeof(AcademicYear), "AcademicYear");
+            query.SelectAllColumns(typeof(IncidentType), "IncidentType");
+            query.SelectAllColumns(typeof(Student), "Student");
+            query.SelectAllColumns(typeof(Person), "StudentPerson");
+            query.SelectAllColumns(typeof(BehaviourOutcome), "BehaviourOutcome");
+            query.SelectAllColumns(typeof(BehaviourStatus), "BehaviourStatus");
+            query.SelectAllColumns(typeof(Location), "Location");
+            query.SelectAllColumns(typeof(ApplicationUser), "User");
+            query.SelectAllColumns(typeof(Person), "RecordedByPerson");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("AcademicYear", "AcademicYear.Id", "Incident.AcademicYearId");
-            query.LeftJoin("IncidentType", "IncidentType.Id", "Incident.BehaviourTypeId");
-            query.LeftJoin("Student", "Student.Id", "Incident.StudentId");
-            query.LeftJoin("Person as StudentPerson", "StudentPerson.Id", "Student.PersonId");
-            query.LeftJoin("BehaviourOutcome", "BehaviourOutcome.Id", "Incident.OutcomeId");
+            query.LeftJoin("AcademicYears as AcademicYear", "AcademicYear.Id", "Incident.AcademicYearId");
+            query.LeftJoin("IncidentTypes as IncidentType", "IncidentType.Id", "Incident.BehaviourTypeId");
+            query.LeftJoin("Students as Student", "Student.Id", "Incident.StudentId");
+            query.LeftJoin("People as StudentPerson", "StudentPerson.Id", "Student.PersonId");
+            query.LeftJoin("BehaviourOutcomes as BehaviourOutcome", "BehaviourOutcome.Id", "Incident.OutcomeId");
             query.LeftJoin("BehaviourStatus", "BehaviourStatus.Id", "Incident.StatusId");
-            query.LeftJoin("Location", "Location.Id", "Incident.LocationId");
+            query.LeftJoin("Locations as Location", "Location.Id", "Incident.LocationId");
             query.LeftJoin("AspNetUsers as User", "User.Id", "Incident.RecordedById");
-            query.LeftJoin("Person as RecordedByPerson", "RecordedByPerson.UserId", "User.Id");
+            query.LeftJoin("People as RecordedByPerson", "RecordedByPerson.UserId", "User.Id");
         }
 
         protected override async Task<IEnumerable<Incident>> ExecuteQuery(Query query)

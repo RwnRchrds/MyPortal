@@ -12,21 +12,21 @@ namespace MyPortal.Database.Repositories
 {
     public class ContactRepository : BaseReadWriteRepository<Contact>, IContactRepository
     {
-        public ContactRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public ContactRepository(ApplicationDbContext context) : base(context, "Contact")
         {
      
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(Person));
+            query.SelectAllColumns(typeof(Person), "Person");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("Person", "Person.Id", "Contact.PersonId");
+            query.LeftJoin("People as Person", "Person.Id", "Contact.PersonId");
         }
 
         protected override async Task<IEnumerable<Contact>> ExecuteQuery(Query query)

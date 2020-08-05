@@ -12,23 +12,23 @@ namespace MyPortal.Database.Repositories
 {
     public class GiftedTalentedRepository : BaseReadWriteRepository<GiftedTalented>, IGiftedTalentedRepository
     {
-        public GiftedTalentedRepository(IDbConnection connection, ApplicationDbContext context) : base(connection, context)
+        public GiftedTalentedRepository(ApplicationDbContext context) : base(context, "GiftedTalented")
         {
 
         }
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAll(typeof(Student));
-            query.SelectAll(typeof(Subject));
+            query.SelectAllColumns(typeof(Student), "Student");
+            query.SelectAllColumns(typeof(Subject), "Subject");
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("Student", "Student.Id", "GiftedTalented.StudentId");
-            query.LeftJoin("Subject", "Subject.Id", "GiftedTalented.SubjectId");
+            query.LeftJoin("Students as Student", "Student.Id", "GiftedTalented.StudentId");
+            query.LeftJoin("Subjects as Subject", "Subject.Id", "GiftedTalented.SubjectId");
         }
 
         protected override async Task<IEnumerable<GiftedTalented>> ExecuteQuery(Query query)

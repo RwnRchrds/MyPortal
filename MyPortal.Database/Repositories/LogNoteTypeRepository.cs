@@ -10,7 +10,7 @@ namespace MyPortal.Database.Repositories
 {
     public class LogNoteTypeRepository : BaseReadRepository<LogNoteType>, ILogNoteTypeRepository
     {
-        public LogNoteTypeRepository(IDbConnection connection, string tblAlias = null) : base(connection, tblAlias)
+        public LogNoteTypeRepository(IDbConnection connection) : base(connection)
         {
         }
     }
