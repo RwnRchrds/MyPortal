@@ -47,10 +47,9 @@ namespace MyPortalCore.Controllers.Api
                     Title = model.Title,
                     Description = model.Description,
                     DirectoryId = model.DirectoryId,
-                    Public = model.Public,
                     CreatedById = user.Id,
-                    FileId = model.FileId,
-                    TypeId = model.TypeId
+                    TypeId = model.TypeId,
+                    Restricted = model.Restricted
                 };
 
                 await _documentService.Create(document);
@@ -70,9 +69,8 @@ namespace MyPortalCore.Controllers.Api
                     Id = model.Id,
                     Title = model.Title,
                     Description = model.Description,
-                    Approved = model.Approved,
                     TypeId = model.TypeId,
-                    Public = model.Public
+                    Restricted = model.Restricted
                 };
 
                 await _documentService.Update(document);

@@ -44,38 +44,31 @@ namespace MyPortal.Database.Models
         public Guid? HouseId { get; set; }
 
         [Column(Order = 5)]
-        [StringLength(128)]
-        public string CandidateNumber { get; set; }
-
-        [Column(Order = 6)]
         public int AdmissionNumber { get; set; }
 
-        [Column(Order = 7, TypeName = "date")]
+        [Column(Order = 6, TypeName = "date")]
         public DateTime? DateStarting { get; set; }
 
-        [Column(Order = 8, TypeName = "date")]
+        [Column(Order = 7, TypeName = "date")]
         public DateTime? DateLeaving { get; set; }
 
-        [Column(Order = 9, TypeName = "decimal(10,2)")]
+        [Column(Order = 8, TypeName = "decimal(10,2)")]
         public decimal AccountBalance { get; set; }
 
-        [Column(Order = 10)]
+        [Column(Order = 9)]
         public bool FreeSchoolMeals { get; set; }
 
-        [Column(Order = 12)]
+        [Column(Order = 10)]
         public Guid? SenStatusId { get; set; }
 
-        [Column(Order = 13)]
+        [Column(Order = 11)]
         public bool PupilPremium { get; set; }
 
-        [Column(Order = 14)]
+        [Column(Order = 12)]
         [StringLength(13)]
         public string Upn { get; set; }
 
-        [Column(Order = 15)]
-        public string Uci { get; set; }
-
-        [Column(Order = 16)]
+        [Column(Order = 13)]
         public bool Deleted { get; set; }
 
         public virtual RegGroup RegGroup { get; set; }
@@ -83,6 +76,8 @@ namespace MyPortal.Database.Models
         public virtual YearGroup YearGroup { get; set; }
 
         public virtual Person Person { get; set; }
+
+        public virtual ExamCandidate Candidate { get; set; }
 
         public virtual SenStatus SenStatus { get; set; }
 

@@ -12,6 +12,9 @@ namespace MyPortal.Database.Models
     {
         // TODO: Populate Data
 
+        [Column(Order = 3)] 
+        public string JcQualificationCode { get; set; }
+
         public virtual ICollection<ExamQualificationLevel> Levels { get; set; }
         public virtual ICollection<ExamAward> Awards { get; set; }
     }

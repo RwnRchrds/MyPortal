@@ -26,11 +26,11 @@ namespace MyPortal.Logic.Helpers
 
         public BaseClientService.Initializer GetInitializer(string accountName = null)
         {
-            var credPath = _config.GetValue<string>("Google:CredentialPath");
+            var credPath = _config.GetValue<string>("GSuiteIntegration:CredentialPath");
 
             if (string.IsNullOrWhiteSpace(accountName))
             {
-                accountName = _config.GetValue<string>("Google:AccountName");
+                accountName = _config.GetValue<string>("GSuiteIntegration:DefaultAccountName");
             }
 
             var originCredential =

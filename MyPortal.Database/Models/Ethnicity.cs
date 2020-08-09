@@ -1,25 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using MyPortal.Database.BaseTypes;
-using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
-    [Table("SubjectCodes")]
-    public class SubjectCode : LookupItem
+    [Table("Ethnicities")]
+    public class Ethnicity : LookupItem
     {
-        // TODO: Populate Data
-
-        public SubjectCode()
+        public Ethnicity()
         {
-            Elements = new HashSet<ExamBaseElement>();
+            People = new HashSet<Person>();
         }
 
         [Column(Order = 3)]
+        [Required]
+        [StringLength(10)]
         public string Code { get; set; }
 
-        public virtual ICollection<ExamBaseElement> Elements { get; set; }
+        public virtual ICollection<Person> People { get; set; }
     }
 }

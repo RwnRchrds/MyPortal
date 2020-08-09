@@ -23,12 +23,20 @@ namespace MyPortal.Database.Models
         public Guid? GradeSetId { get; set; }
 
         [Column(Order = 5, TypeName = "decimal(10,2)")]
+        public decimal? MinMark { get; set; }
+
+        [Column(Order = 6, TypeName = "decimal(10,2)")]
         public decimal? MaxMark { get; set; }
 
         [Column(Order = 6)]
         [Required]
         [StringLength(128)]
         public string Name { get; set; }
+
+        [Column(Order = 7)]
+        [Required]
+        [StringLength(50)]
+        public string ColumnHeading { get; set; }
 
         [Column(Order = 7)]
         public bool StudentVisible { get; set; }
@@ -40,9 +48,6 @@ namespace MyPortal.Database.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Result> Results { get; set; }
 
-        public virtual ICollection<ExamComponent> Components { get; set; }
-
-        public virtual ICollection<ExamElement> ExamEntries { get; set; }
-        public virtual ICollection<ExamElement> ExamResults { get; set; }
+        public virtual ICollection<ExamAssessmentAspect> AssessmentAspects { get; set; }
     }
 }

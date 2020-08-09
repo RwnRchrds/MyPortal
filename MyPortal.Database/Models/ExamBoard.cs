@@ -19,7 +19,7 @@ namespace MyPortal.Database.Models
 
         [Column(Order = 3)]
         [StringLength(128)]
-        public string Name { get; set; }
+        public string FullName { get; set; }
 
         [Column(Order = 4)]
         [StringLength(5)]
@@ -28,9 +28,13 @@ namespace MyPortal.Database.Models
         [Column(Order = 5)]
         public bool Domestic { get; set; }
 
-        [Column(Order = 6)]
+        [Column(Order = 6)] 
+        public bool UseEdi { get; set; }
+
+        [Column(Order = 7)]
         public bool Active { get; set; }
 
         public virtual ICollection<ExamSeries> ExamSeries { get; set; }
+        public virtual ICollection<ExamAssessment> ExamAssessments { get; set; }
     }
 }

@@ -237,7 +237,8 @@ namespace MyPortal.Database.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Name = table.Column<string>(maxLength: 128, nullable: false),
-                    KeyStage = table.Column<int>(nullable: false)
+                    KeyStage = table.Column<int>(nullable: false),
+                    Code = table.Column<string>(maxLength: 10, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -354,12 +355,27 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Ethnicities",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false),
+                    Code = table.Column<string>(maxLength: 10, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Ethnicities", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ExamAssessmentModes",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 256, nullable: false),
-                    Active = table.Column<bool>(nullable: false)
+                    Active = table.Column<bool>(nullable: false),
+                    ExternallyAssessed = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -372,9 +388,10 @@ namespace MyPortal.Database.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Abbreviation = table.Column<string>(maxLength: 20, nullable: true),
-                    Name = table.Column<string>(maxLength: 128, nullable: true),
+                    FullName = table.Column<string>(maxLength: 128, nullable: true),
                     Code = table.Column<string>(maxLength: 5, nullable: true),
                     Domestic = table.Column<bool>(nullable: false),
+                    UseEdi = table.Column<bool>(nullable: false),
                     Active = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -388,7 +405,8 @@ namespace MyPortal.Database.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 256, nullable: false),
-                    Active = table.Column<bool>(nullable: false)
+                    Active = table.Column<bool>(nullable: false),
+                    JcQualificationCode = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -407,6 +425,19 @@ namespace MyPortal.Database.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ExamSessions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ExamSpecialArrangements",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    Description = table.Column<string>(nullable: true),
+                    ExtraTime = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExamSpecialArrangements", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -441,7 +472,8 @@ namespace MyPortal.Database.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 256, nullable: false),
-                    Active = table.Column<bool>(nullable: false)
+                    Active = table.Column<bool>(nullable: false),
+                    Code = table.Column<string>(maxLength: 10, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -483,7 +515,8 @@ namespace MyPortal.Database.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 256, nullable: false),
-                    Active = table.Column<bool>(nullable: false)
+                    Active = table.Column<bool>(nullable: false),
+                    Code = table.Column<string>(maxLength: 10, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -599,6 +632,20 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Photos",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    Data = table.Column<byte[]>(nullable: true),
+                    PhotoDate = table.Column<DateTime>(nullable: false),
+                    MimeType = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Photos", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProductTypes",
                 columns: table => new
                 {
@@ -647,7 +694,8 @@ namespace MyPortal.Database.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 256, nullable: false),
-                    Active = table.Column<bool>(nullable: false)
+                    Active = table.Column<bool>(nullable: false),
+                    Code = table.Column<string>(maxLength: 10, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -660,7 +708,8 @@ namespace MyPortal.Database.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Description = table.Column<string>(maxLength: 256, nullable: false),
-                    Active = table.Column<bool>(nullable: false)
+                    Active = table.Column<bool>(nullable: false),
+                    Code = table.Column<string>(maxLength: 10, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -863,40 +912,6 @@ namespace MyPortal.Database.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TrainingCourses", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUsers",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    UserName = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
-                    Email = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(nullable: false),
-                    PasswordHash = table.Column<string>(nullable: true),
-                    SecurityStamp = table.Column<string>(nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
-                    PhoneNumber = table.Column<string>(nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
-                    LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false),
-                    UserType = table.Column<string>(maxLength: 5, nullable: true),
-                    SelectedAcademicYearId = table.Column<Guid>(nullable: true),
-                    Enabled = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetUsers_AcademicYears_SelectedAcademicYearId",
-                        column: x => x.SelectedAcademicYearId,
-                        principalTable: "AcademicYears",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -1131,21 +1146,22 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ExamQualificationLevels",
+                name: "ExamAssessments",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    Description = table.Column<string>(maxLength: 256, nullable: false),
-                    Active = table.Column<bool>(nullable: false),
-                    QualificationId = table.Column<Guid>(nullable: false)
+                    ExamBoardId = table.Column<Guid>(nullable: false),
+                    AssessmentType = table.Column<int>(nullable: false),
+                    InternalTitle = table.Column<string>(nullable: true),
+                    ExternalTitle = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ExamQualificationLevels", x => x.Id);
+                    table.PrimaryKey("PK_ExamAssessments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ExamQualificationLevels_ExamQualifications_QualificationId",
-                        column: x => x.QualificationId,
-                        principalTable: "ExamQualifications",
+                        name: "FK_ExamAssessments_ExamBoards_ExamBoardId",
+                        column: x => x.ExamBoardId,
+                        principalTable: "ExamBoards",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -1159,8 +1175,10 @@ namespace MyPortal.Database.Migrations
                     Active = table.Column<bool>(nullable: false),
                     TypeId = table.Column<Guid>(nullable: false),
                     GradeSetId = table.Column<Guid>(nullable: true),
+                    MinMark = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
                     MaxMark = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
                     Name = table.Column<string>(maxLength: 128, nullable: false),
+                    ColumnHeading = table.Column<string>(maxLength: 50, nullable: false),
                     StudentVisible = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -1176,6 +1194,34 @@ namespace MyPortal.Database.Migrations
                         name: "FK_Aspects_AspectTypes_TypeId",
                         column: x => x.TypeId,
                         principalTable: "AspectTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ExamQualificationLevels",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false),
+                    QualificationId = table.Column<Guid>(nullable: false),
+                    DefaultGradeSetId = table.Column<Guid>(nullable: true),
+                    JcLevelCode = table.Column<string>(maxLength: 25, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExamQualificationLevels", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ExamQualificationLevels_GradeSets_DefaultGradeSetId",
+                        column: x => x.DefaultGradeSetId,
+                        principalTable: "GradeSets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ExamQualificationLevels_ExamQualifications_QualificationId",
+                        column: x => x.QualificationId,
+                        principalTable: "ExamQualifications",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -1225,6 +1271,49 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "People",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    DirectoryId = table.Column<Guid>(nullable: false),
+                    Title = table.Column<string>(maxLength: 128, nullable: true),
+                    FirstName = table.Column<string>(maxLength: 256, nullable: false),
+                    MiddleName = table.Column<string>(maxLength: 256, nullable: true),
+                    LastName = table.Column<string>(maxLength: 256, nullable: false),
+                    ChosenFirstName = table.Column<string>(maxLength: 256, nullable: true),
+                    PhotoId = table.Column<Guid>(nullable: true),
+                    NhsNumber = table.Column<string>(maxLength: 10, nullable: true),
+                    UpdatedDate = table.Column<DateTime>(nullable: false),
+                    Gender = table.Column<string>(unicode: false, fixedLength: true, maxLength: 1, nullable: false),
+                    Dob = table.Column<DateTime>(type: "date", nullable: true),
+                    Deceased = table.Column<DateTime>(type: "date", nullable: true),
+                    EthnicityId = table.Column<Guid>(nullable: true),
+                    Deleted = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_People", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_People_Directories_DirectoryId",
+                        column: x => x.DirectoryId,
+                        principalTable: "Directories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_People_Ethnicities_EthnicityId",
+                        column: x => x.EthnicityId,
+                        principalTable: "Ethnicities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_People_Photos_PhotoId",
+                        column: x => x.PhotoId,
+                        principalTable: "Photos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
@@ -1243,6 +1332,26 @@ namespace MyPortal.Database.Migrations
                         name: "FK_Products_ProductTypes_ProductTypeId",
                         column: x => x.ProductTypeId,
                         principalTable: "ProductTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ExamResultEmbargoes",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    ResultSetId = table.Column<Guid>(nullable: false),
+                    StartTime = table.Column<DateTime>(nullable: false),
+                    EndTime = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExamResultEmbargoes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ExamResultEmbargoes_ResultSets_ResultSetId",
+                        column: x => x.ResultSetId,
+                        principalTable: "ResultSets",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -1360,200 +1469,6 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUserClaims",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<Guid>(nullable: false),
-                    ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetUserClaims_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserLogins",
-                columns: table => new
-                {
-                    LoginProvider = table.Column<string>(nullable: false),
-                    ProviderKey = table.Column<string>(nullable: false),
-                    ProviderDisplayName = table.Column<string>(nullable: true),
-                    UserId = table.Column<Guid>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserLogins_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserRoles",
-                columns: table => new
-                {
-                    UserId = table.Column<Guid>(nullable: false),
-                    RoleId = table.Column<Guid>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserTokens",
-                columns: table => new
-                {
-                    UserId = table.Column<Guid>(nullable: false),
-                    LoginProvider = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    Value = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserTokens_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Bulletins",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    DirectoryId = table.Column<Guid>(nullable: false),
-                    AuthorId = table.Column<Guid>(nullable: false),
-                    CreateDate = table.Column<DateTime>(nullable: false),
-                    ExpireDate = table.Column<DateTime>(nullable: true),
-                    Title = table.Column<string>(maxLength: 128, nullable: false),
-                    Detail = table.Column<string>(nullable: false),
-                    StaffOnly = table.Column<bool>(nullable: false),
-                    Approved = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Bulletins", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Bulletins_AspNetUsers_AuthorId",
-                        column: x => x.AuthorId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Bulletins_Directories_DirectoryId",
-                        column: x => x.DirectoryId,
-                        principalTable: "Directories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Documents",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    TypeId = table.Column<Guid>(nullable: false),
-                    DirectoryId = table.Column<Guid>(nullable: false),
-                    Title = table.Column<string>(maxLength: 128, nullable: false),
-                    Description = table.Column<string>(maxLength: 256, nullable: true),
-                    FileId = table.Column<string>(nullable: false),
-                    FileName = table.Column<string>(nullable: false),
-                    ContentType = table.Column<string>(nullable: false),
-                    CreatedById = table.Column<Guid>(nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "date", nullable: false),
-                    Public = table.Column<bool>(nullable: false),
-                    Approved = table.Column<bool>(nullable: false),
-                    Deleted = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Documents", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Documents_AspNetUsers_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Documents_Directories_DirectoryId",
-                        column: x => x.DirectoryId,
-                        principalTable: "Directories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Documents_DocumentTypes_TypeId",
-                        column: x => x.TypeId,
-                        principalTable: "DocumentTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "People",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    DirectoryId = table.Column<Guid>(nullable: false),
-                    Title = table.Column<string>(maxLength: 128, nullable: true),
-                    FirstName = table.Column<string>(maxLength: 256, nullable: false),
-                    MiddleName = table.Column<string>(maxLength: 256, nullable: true),
-                    LastName = table.Column<string>(maxLength: 256, nullable: false),
-                    ChosenFirstName = table.Column<string>(maxLength: 256, nullable: true),
-                    PhotoId = table.Column<int>(nullable: true),
-                    NhsNumber = table.Column<string>(maxLength: 10, nullable: true),
-                    UpdatedDate = table.Column<DateTime>(nullable: false),
-                    Gender = table.Column<string>(unicode: false, fixedLength: true, maxLength: 1, nullable: false),
-                    Dob = table.Column<DateTime>(type: "date", nullable: true),
-                    Deceased = table.Column<DateTime>(type: "date", nullable: true),
-                    UserId = table.Column<Guid>(nullable: true),
-                    Deleted = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_People", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_People_Directories_DirectoryId",
-                        column: x => x.DirectoryId,
-                        principalTable: "Directories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_People_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AttendancePeriods",
                 columns: table => new
                 {
@@ -1623,6 +1538,32 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ExamBaseComponents",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    AssessmentModeId = table.Column<Guid>(nullable: false),
+                    ExamAssessmentId = table.Column<Guid>(nullable: false),
+                    ComponentCode = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExamBaseComponents", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ExamBaseComponents_ExamAssessmentModes_AssessmentModeId",
+                        column: x => x.AssessmentModeId,
+                        principalTable: "ExamAssessmentModes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ExamBaseComponents_ExamAssessments_ExamAssessmentId",
+                        column: x => x.ExamAssessmentId,
+                        principalTable: "ExamAssessments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MarksheetColumns",
                 columns: table => new
                 {
@@ -1652,6 +1593,40 @@ namespace MyPortal.Database.Migrations
                         name: "FK_MarksheetColumns_MarksheetTemplates_TemplateId",
                         column: x => x.TemplateId,
                         principalTable: "MarksheetTemplates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ExamBaseElements",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    AssessmentId = table.Column<Guid>(nullable: false),
+                    LevelId = table.Column<Guid>(nullable: false),
+                    QcaCodeId = table.Column<Guid>(nullable: false),
+                    QualAccrNumber = table.Column<string>(nullable: true),
+                    ElementCode = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExamBaseElements", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ExamBaseElements_ExamAssessments_AssessmentId",
+                        column: x => x.AssessmentId,
+                        principalTable: "ExamAssessments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ExamBaseElements_ExamQualificationLevels_LevelId",
+                        column: x => x.LevelId,
+                        principalTable: "ExamQualificationLevels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ExamBaseElements_SubjectCodes_QcaCodeId",
+                        column: x => x.QcaCodeId,
+                        principalTable: "SubjectCodes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -1739,79 +1714,6 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ExamResultsEmbargoes",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    ExamSeasonId = table.Column<Guid>(nullable: false),
-                    StartTime = table.Column<DateTime>(nullable: false),
-                    EndTime = table.Column<DateTime>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ExamResultsEmbargoes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ExamResultsEmbargoes_ExamSeasons_ExamSeasonId",
-                        column: x => x.ExamSeasonId,
-                        principalTable: "ExamSeasons",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ExamSeries",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    ExamBoardId = table.Column<Guid>(nullable: false),
-                    ExamSeasonId = table.Column<Guid>(nullable: false),
-                    SeriesCode = table.Column<string>(nullable: true),
-                    Code = table.Column<string>(nullable: true),
-                    Title = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ExamSeries", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ExamSeries_ExamBoards_ExamBoardId",
-                        column: x => x.ExamBoardId,
-                        principalTable: "ExamBoards",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ExamSeries_ExamSeasons_ExamSeasonId",
-                        column: x => x.ExamSeasonId,
-                        principalTable: "ExamSeasons",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetRolePermissions",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    RoleId = table.Column<Guid>(nullable: false),
-                    PermissionId = table.Column<Guid>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetRolePermissions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetRolePermissions_AspNetPermissions_PermissionId",
-                        column: x => x.PermissionId,
-                        principalTable: "AspNetPermissions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_AspNetRolePermissions_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AddressPeople",
                 columns: table => new
                 {
@@ -1861,6 +1763,47 @@ namespace MyPortal.Database.Migrations
                         principalTable: "People",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    UserName = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
+                    Email = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(nullable: false),
+                    PasswordHash = table.Column<string>(nullable: true),
+                    SecurityStamp = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    PhoneNumber = table.Column<string>(nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
+                    LockoutEnabled = table.Column<bool>(nullable: false),
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    UserType = table.Column<string>(maxLength: 5, nullable: true),
+                    SelectedAcademicYearId = table.Column<Guid>(nullable: true),
+                    PersonId = table.Column<Guid>(nullable: true),
+                    Enabled = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_People_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "People",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_AcademicYears_SelectedAcademicYearId",
+                        column: x => x.SelectedAcademicYearId,
+                        principalTable: "AcademicYears",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -2087,39 +2030,72 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tasks",
+                name: "ExamSeries",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    TypeId = table.Column<Guid>(nullable: false),
-                    AssignedToId = table.Column<Guid>(nullable: false),
-                    AssignedById = table.Column<Guid>(nullable: true),
-                    CreatedDate = table.Column<DateTime>(nullable: false),
-                    DueDate = table.Column<DateTime>(nullable: true),
-                    CompletedDate = table.Column<DateTime>(nullable: true),
-                    Title = table.Column<string>(maxLength: 128, nullable: false),
-                    Description = table.Column<string>(maxLength: 256, nullable: true),
-                    Completed = table.Column<bool>(nullable: false)
+                    ExamBoardId = table.Column<Guid>(nullable: false),
+                    ExamSeasonId = table.Column<Guid>(nullable: false),
+                    SeriesCode = table.Column<string>(nullable: true),
+                    Code = table.Column<string>(nullable: true),
+                    Title = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tasks", x => x.Id);
+                    table.PrimaryKey("PK_ExamSeries", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Tasks_AspNetUsers_AssignedById",
-                        column: x => x.AssignedById,
-                        principalTable: "AspNetUsers",
+                        name: "FK_ExamSeries_ExamBoards_ExamBoardId",
+                        column: x => x.ExamBoardId,
+                        principalTable: "ExamBoards",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Tasks_People_AssignedToId",
-                        column: x => x.AssignedToId,
-                        principalTable: "People",
+                        name: "FK_ExamSeries_ExamSeasons_ExamSeasonId",
+                        column: x => x.ExamSeasonId,
+                        principalTable: "ExamSeasons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Courses",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    SubjectId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Courses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Courses_Subjects_SubjectId",
+                        column: x => x.SubjectId,
+                        principalTable: "Subjects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetRolePermissions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    RoleId = table.Column<Guid>(nullable: false),
+                    PermissionId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRolePermissions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetRolePermissions_AspNetPermissions_PermissionId",
+                        column: x => x.PermissionId,
+                        principalTable: "AspNetPermissions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Tasks_TaskTypes_TypeId",
-                        column: x => x.TypeId,
-                        principalTable: "TaskTypes",
+                        name: "FK_AspNetRolePermissions_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -2159,30 +2135,213 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ExamAwards",
+                name: "ExamRoomSeats",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    ExamSeriesId = table.Column<Guid>(nullable: false),
-                    QualificationId = table.Column<Guid>(nullable: false),
-                    ExternalTitle = table.Column<string>(nullable: true),
-                    InternalTitle = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    AwardCode = table.Column<string>(nullable: true)
+                    ExamRoomId = table.Column<Guid>(nullable: false),
+                    Column = table.Column<int>(nullable: false),
+                    Row = table.Column<int>(nullable: false),
+                    DoNotUse = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ExamAwards", x => x.Id);
+                    table.PrimaryKey("PK_ExamRoomSeats", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ExamAwards_ExamSeries_ExamSeriesId",
-                        column: x => x.ExamSeriesId,
-                        principalTable: "ExamSeries",
+                        name: "FK_ExamRoomSeats_ExamRooms_ExamRoomId",
+                        column: x => x.ExamRoomId,
+                        principalTable: "ExamRooms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<Guid>(nullable: false),
+                    ClaimType = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserClaims_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserLogins",
+                columns: table => new
+                {
+                    LoginProvider = table.Column<string>(nullable: false),
+                    ProviderKey = table.Column<string>(nullable: false),
+                    ProviderDisplayName = table.Column<string>(nullable: true),
+                    UserId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserLogins_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserRoles",
+                columns: table => new
+                {
+                    UserId = table.Column<Guid>(nullable: false),
+                    RoleId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserTokens",
+                columns: table => new
+                {
+                    UserId = table.Column<Guid>(nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    Value = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserTokens_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Bulletins",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    DirectoryId = table.Column<Guid>(nullable: false),
+                    AuthorId = table.Column<Guid>(nullable: false),
+                    CreateDate = table.Column<DateTime>(nullable: false),
+                    ExpireDate = table.Column<DateTime>(nullable: true),
+                    Title = table.Column<string>(maxLength: 128, nullable: false),
+                    Detail = table.Column<string>(nullable: false),
+                    StaffOnly = table.Column<bool>(nullable: false),
+                    Approved = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bulletins", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Bulletins_AspNetUsers_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ExamAwards_ExamQualifications_QualificationId",
-                        column: x => x.QualificationId,
-                        principalTable: "ExamQualifications",
+                        name: "FK_Bulletins_Directories_DirectoryId",
+                        column: x => x.DirectoryId,
+                        principalTable: "Directories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Documents",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    TypeId = table.Column<Guid>(nullable: false),
+                    DirectoryId = table.Column<Guid>(nullable: false),
+                    Title = table.Column<string>(maxLength: 128, nullable: false),
+                    Description = table.Column<string>(maxLength: 256, nullable: true),
+                    CreatedById = table.Column<Guid>(nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "date", nullable: false),
+                    Restricted = table.Column<bool>(nullable: false),
+                    Deleted = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Documents", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Documents_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Documents_Directories_DirectoryId",
+                        column: x => x.DirectoryId,
+                        principalTable: "Directories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Documents_DocumentTypes_TypeId",
+                        column: x => x.TypeId,
+                        principalTable: "DocumentTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tasks",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    TypeId = table.Column<Guid>(nullable: false),
+                    AssignedToId = table.Column<Guid>(nullable: false),
+                    AssignedById = table.Column<Guid>(nullable: true),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    DueDate = table.Column<DateTime>(nullable: true),
+                    CompletedDate = table.Column<DateTime>(nullable: true),
+                    Title = table.Column<string>(maxLength: 128, nullable: false),
+                    Description = table.Column<string>(maxLength: 256, nullable: true),
+                    Completed = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tasks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Tasks_AspNetUsers_AssignedById",
+                        column: x => x.AssignedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Tasks_People_AssignedToId",
+                        column: x => x.AssignedToId,
+                        principalTable: "People",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Tasks_TaskTypes_TypeId",
+                        column: x => x.TypeId,
+                        principalTable: "TaskTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -2400,33 +2559,80 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Courses",
+                name: "ExamAssessmentAspects",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    SubjectId = table.Column<Guid>(nullable: false),
-                    LevelId = table.Column<Guid>(nullable: false),
-                    AwardId = table.Column<Guid>(nullable: true)
+                    AssessmentId = table.Column<Guid>(nullable: false),
+                    AspectId = table.Column<Guid>(nullable: false),
+                    SeriesId = table.Column<Guid>(nullable: false),
+                    AspectOrder = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Courses", x => x.Id);
+                    table.PrimaryKey("PK_ExamAssessmentAspects", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Courses_ExamAwards_AwardId",
-                        column: x => x.AwardId,
-                        principalTable: "ExamAwards",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
-                    table.ForeignKey(
-                        name: "FK_Courses_ExamQualificationLevels_LevelId",
-                        column: x => x.LevelId,
-                        principalTable: "ExamQualificationLevels",
+                        name: "FK_ExamAssessmentAspects_Aspects_AspectId",
+                        column: x => x.AspectId,
+                        principalTable: "Aspects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Courses_Subjects_SubjectId",
-                        column: x => x.SubjectId,
-                        principalTable: "Subjects",
+                        name: "FK_ExamAssessmentAspects_ExamAssessments_AssessmentId",
+                        column: x => x.AssessmentId,
+                        principalTable: "ExamAssessments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ExamAssessmentAspects_ExamSeries_SeriesId",
+                        column: x => x.SeriesId,
+                        principalTable: "ExamSeries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ExamComponents",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    BaseComponentId = table.Column<Guid>(nullable: false),
+                    ExamSeriesId = table.Column<Guid>(nullable: false),
+                    AssessmentModeId = table.Column<Guid>(nullable: false),
+                    DateDue = table.Column<DateTime>(nullable: true),
+                    DateSubmitted = table.Column<DateTime>(nullable: true),
+                    IsTimetabled = table.Column<bool>(nullable: false),
+                    MaximumMark = table.Column<int>(nullable: false),
+                    SessionId = table.Column<Guid>(nullable: true),
+                    Duration = table.Column<int>(nullable: true),
+                    SittingDate = table.Column<DateTime>(nullable: true),
+                    ExamSessionId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExamComponents", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ExamComponents_ExamAssessmentModes_AssessmentModeId",
+                        column: x => x.AssessmentModeId,
+                        principalTable: "ExamAssessmentModes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ExamComponents_ExamBaseComponents_BaseComponentId",
+                        column: x => x.BaseComponentId,
+                        principalTable: "ExamBaseComponents",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ExamComponents_ExamSeries_ExamSeriesId",
+                        column: x => x.ExamSeriesId,
+                        principalTable: "ExamSeries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ExamComponents_ExamSessions_SessionId",
+                        column: x => x.SessionId,
+                        principalTable: "ExamSessions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -2436,43 +2642,121 @@ namespace MyPortal.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    ExamAwardId = table.Column<Guid>(nullable: false),
-                    QcaCodeId = table.Column<Guid>(nullable: false),
-                    Qan = table.Column<string>(nullable: true),
-                    LevelId = table.Column<Guid>(nullable: false),
-                    EntryAspectId = table.Column<Guid>(nullable: false),
-                    ResultAspectId = table.Column<Guid>(nullable: false),
-                    Fees = table.Column<decimal>(type: "decimal(10, 2)", nullable: false),
-                    InternalTitle = table.Column<string>(nullable: true),
-                    ExternalTitle = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    EntryCode = table.Column<string>(nullable: true)
+                    BaseElementId = table.Column<Guid>(nullable: false),
+                    SeriesId = table.Column<Guid>(nullable: false),
+                    Description = table.Column<string>(maxLength: 256, nullable: true),
+                    ExamFee = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
+                    Submitted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ExamElements", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ExamElements_Aspects_EntryAspectId",
-                        column: x => x.EntryAspectId,
-                        principalTable: "Aspects",
+                        name: "FK_ExamElements_ExamBaseElements_BaseElementId",
+                        column: x => x.BaseElementId,
+                        principalTable: "ExamBaseElements",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ExamElements_ExamAwards_ExamAwardId",
-                        column: x => x.ExamAwardId,
-                        principalTable: "ExamAwards",
+                        name: "FK_ExamElements_ExamSeries_SeriesId",
+                        column: x => x.SeriesId,
+                        principalTable: "ExamSeries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ExamAwards",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    QualificationId = table.Column<Guid>(nullable: false),
+                    AssessmentId = table.Column<Guid>(nullable: false),
+                    CourseId = table.Column<Guid>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    AwardCode = table.Column<string>(nullable: true),
+                    ExpiryDate = table.Column<DateTime>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExamAwards", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ExamAwards_ExamAssessments_AssessmentId",
+                        column: x => x.AssessmentId,
+                        principalTable: "ExamAssessments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ExamElements_SubjectCodes_QcaCodeId",
-                        column: x => x.QcaCodeId,
-                        principalTable: "SubjectCodes",
+                        name: "FK_ExamAwards_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_ExamAwards_ExamQualifications_QualificationId",
+                        column: x => x.QualificationId,
+                        principalTable: "ExamQualifications",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Files",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    DocumentId = table.Column<Guid>(nullable: false),
+                    FileId = table.Column<string>(nullable: false),
+                    FileName = table.Column<string>(nullable: false),
+                    ContentType = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Files", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Files_Documents_DocumentId",
+                        column: x => x.DocumentId,
+                        principalTable: "Documents",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Classes",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    CourseId = table.Column<Guid>(nullable: false),
+                    GroupId = table.Column<Guid>(nullable: false),
+                    Code = table.Column<string>(maxLength: 10, nullable: false),
+                    AcademicYearId = table.Column<Guid>(nullable: true),
+                    YearGroupId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Classes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Classes_AcademicYears_AcademicYearId",
+                        column: x => x.AcademicYearId,
+                        principalTable: "AcademicYears",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ExamElements_Aspects_ResultAspectId",
-                        column: x => x.ResultAspectId,
-                        principalTable: "Aspects",
+                        name: "FK_Classes_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Classes_CurriculumGroups_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "CurriculumGroups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Classes_YearGroups_YearGroupId",
+                        column: x => x.YearGroupId,
+                        principalTable: "YearGroups",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -2530,90 +2814,143 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Classes",
+                name: "ExamComponentSittings",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    CourseId = table.Column<Guid>(nullable: false),
-                    GroupId = table.Column<Guid>(nullable: false),
-                    Code = table.Column<string>(maxLength: 10, nullable: false),
-                    AcademicYearId = table.Column<Guid>(nullable: true),
-                    YearGroupId = table.Column<Guid>(nullable: true)
+                    ComponentId = table.Column<Guid>(nullable: false),
+                    ExamRoomId = table.Column<Guid>(nullable: false),
+                    ExamDate = table.Column<DateTime>(nullable: false),
+                    ActualStartTime = table.Column<TimeSpan>(nullable: true),
+                    ExtraTimePercent = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Classes", x => x.Id);
+                    table.PrimaryKey("PK_ExamComponentSittings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Classes_AcademicYears_AcademicYearId",
-                        column: x => x.AcademicYearId,
-                        principalTable: "AcademicYears",
+                        name: "FK_ExamComponentSittings_ExamComponents_ComponentId",
+                        column: x => x.ComponentId,
+                        principalTable: "ExamComponents",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Classes_Courses_CourseId",
-                        column: x => x.CourseId,
-                        principalTable: "Courses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Classes_CurriculumGroups_GroupId",
-                        column: x => x.GroupId,
-                        principalTable: "CurriculumGroups",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Classes_YearGroups_YearGroupId",
-                        column: x => x.YearGroupId,
-                        principalTable: "YearGroups",
+                        name: "FK_ExamComponentSittings_ExamRooms_ExamRoomId",
+                        column: x => x.ExamRoomId,
+                        principalTable: "ExamRooms",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ExamComponents",
+                name: "ExamElementComponents",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    ExamElementId = table.Column<Guid>(nullable: false),
-                    AssessmentModeId = table.Column<Guid>(nullable: false),
-                    AspectId = table.Column<Guid>(nullable: false),
-                    InternalTitle = table.Column<string>(nullable: true),
-                    ExternalTitle = table.Column<string>(nullable: true),
-                    ComponentCode = table.Column<string>(nullable: true),
-                    DateDue = table.Column<DateTime>(nullable: true),
-                    DateSubmitted = table.Column<DateTime>(nullable: true),
-                    IsTimetabled = table.Column<bool>(nullable: false),
-                    MaximumMark = table.Column<int>(nullable: false),
-                    ExaminationDate = table.Column<DateTime>(nullable: true),
-                    ExamSessionId = table.Column<Guid>(nullable: false),
-                    StartTime = table.Column<DateTime>(nullable: true),
-                    Duration = table.Column<int>(nullable: true)
+                    ElementId = table.Column<Guid>(nullable: false),
+                    ComponentId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ExamComponents", x => x.Id);
+                    table.PrimaryKey("PK_ExamElementComponents", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ExamComponents_Aspects_AspectId",
-                        column: x => x.AspectId,
-                        principalTable: "Aspects",
+                        name: "FK_ExamElementComponents_ExamComponents_ComponentId",
+                        column: x => x.ComponentId,
+                        principalTable: "ExamComponents",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ExamComponents_ExamAssessmentModes_AssessmentModeId",
-                        column: x => x.AssessmentModeId,
-                        principalTable: "ExamAssessmentModes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ExamComponents_ExamElements_ExamElementId",
-                        column: x => x.ExamElementId,
+                        name: "FK_ExamElementComponents_ExamElements_ElementId",
+                        column: x => x.ElementId,
                         principalTable: "ExamElements",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ExamAwardElements",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    AwardId = table.Column<Guid>(nullable: false),
+                    ElementId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExamAwardElements", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ExamComponents_ExamSessions_ExamSessionId",
-                        column: x => x.ExamSessionId,
-                        principalTable: "ExamSessions",
+                        name: "FK_ExamAwardElements_ExamAwards_AwardId",
+                        column: x => x.AwardId,
+                        principalTable: "ExamAwards",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ExamAwardElements_ExamElements_ElementId",
+                        column: x => x.ElementId,
+                        principalTable: "ExamElements",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ExamAwardSeries",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    AwardId = table.Column<Guid>(nullable: false),
+                    SeriesId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExamAwardSeries", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ExamAwardSeries_ExamAwards_AwardId",
+                        column: x => x.AwardId,
+                        principalTable: "ExamAwards",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ExamAwardSeries_ExamSeries_AwardId",
+                        column: x => x.AwardId,
+                        principalTable: "ExamSeries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Sessions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    ClassId = table.Column<Guid>(nullable: false),
+                    PeriodId = table.Column<Guid>(nullable: false),
+                    TeacherId = table.Column<Guid>(nullable: false),
+                    RoomId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sessions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Sessions_Classes_ClassId",
+                        column: x => x.ClassId,
+                        principalTable: "Classes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Sessions_AttendancePeriods_PeriodId",
+                        column: x => x.PeriodId,
+                        principalTable: "AttendancePeriods",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Sessions_Rooms_RoomId",
+                        column: x => x.RoomId,
+                        principalTable: "Rooms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Sessions_StaffMembers_TeacherId",
+                        column: x => x.TeacherId,
+                        principalTable: "StaffMembers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -2627,7 +2964,6 @@ namespace MyPortal.Database.Migrations
                     RegGroupId = table.Column<Guid>(nullable: false),
                     YearGroupId = table.Column<Guid>(nullable: false),
                     HouseId = table.Column<Guid>(nullable: true),
-                    CandidateNumber = table.Column<string>(maxLength: 128, nullable: true),
                     AdmissionNumber = table.Column<int>(nullable: false),
                     DateStarting = table.Column<DateTime>(type: "date", nullable: true),
                     DateLeaving = table.Column<DateTime>(type: "date", nullable: true),
@@ -2636,7 +2972,6 @@ namespace MyPortal.Database.Migrations
                     SenStatusId = table.Column<Guid>(nullable: true),
                     PupilPremium = table.Column<bool>(nullable: false),
                     Upn = table.Column<string>(unicode: false, maxLength: 13, nullable: true),
-                    Uci = table.Column<string>(nullable: true),
                     Deleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -2711,42 +3046,43 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Sessions",
+                name: "CoverArrangements",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    ClassId = table.Column<Guid>(nullable: false),
-                    PeriodId = table.Column<Guid>(nullable: false),
-                    TeacherId = table.Column<Guid>(nullable: false),
-                    RoomId = table.Column<Guid>(nullable: true)
+                    WeekId = table.Column<Guid>(nullable: false),
+                    SessionId = table.Column<Guid>(nullable: false),
+                    TeacherId = table.Column<Guid>(nullable: true),
+                    RoomId = table.Column<Guid>(nullable: true),
+                    Comments = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Sessions", x => x.Id);
+                    table.PrimaryKey("PK_CoverArrangements", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Sessions_Classes_ClassId",
-                        column: x => x.ClassId,
-                        principalTable: "Classes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Sessions_AttendancePeriods_PeriodId",
-                        column: x => x.PeriodId,
-                        principalTable: "AttendancePeriods",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Sessions_Rooms_RoomId",
+                        name: "FK_CoverArrangements_Rooms_RoomId",
                         column: x => x.RoomId,
                         principalTable: "Rooms",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Sessions_StaffMembers_TeacherId",
+                        name: "FK_CoverArrangements_Sessions_SessionId",
+                        column: x => x.SessionId,
+                        principalTable: "Sessions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CoverArrangements_StaffMembers_TeacherId",
                         column: x => x.TeacherId,
                         principalTable: "StaffMembers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_CoverArrangements_AttendanceWeeks_WeekId",
+                        column: x => x.WeekId,
+                        principalTable: "AttendanceWeeks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -2914,6 +3250,30 @@ namespace MyPortal.Database.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_CurriculumGroupMemberships_Students_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Students",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ExamCandidate",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    StudentId = table.Column<Guid>(nullable: false),
+                    Uci = table.Column<string>(nullable: true),
+                    CandidateNumber = table.Column<string>(maxLength: 4, nullable: true),
+                    PreviousCandidateNumber = table.Column<string>(maxLength: 4, nullable: true),
+                    PreviousCentreNumber = table.Column<string>(maxLength: 5, nullable: true),
+                    SpecialConsideration = table.Column<bool>(nullable: false),
+                    Note = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExamCandidate", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ExamCandidate_Students_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Students",
                         principalColumn: "Id",
@@ -3169,7 +3529,9 @@ namespace MyPortal.Database.Migrations
                     Date = table.Column<DateTime>(type: "date", nullable: false),
                     GradeId = table.Column<Guid>(nullable: true),
                     Mark = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
-                    Comments = table.Column<string>(nullable: true)
+                    Comments = table.Column<string>(nullable: true),
+                    Note = table.Column<string>(nullable: true),
+                    ColourCode = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -3389,43 +3751,116 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CoverArrangements",
+                name: "ExamCandidateSeries",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    WeekId = table.Column<Guid>(nullable: false),
-                    SessionId = table.Column<Guid>(nullable: false),
-                    TeacherId = table.Column<Guid>(nullable: true),
-                    RoomId = table.Column<Guid>(nullable: true),
-                    Comments = table.Column<string>(nullable: true)
+                    SeriesId = table.Column<Guid>(nullable: false),
+                    CandidateId = table.Column<Guid>(nullable: false),
+                    Flag = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CoverArrangements", x => x.Id);
+                    table.PrimaryKey("PK_ExamCandidateSeries", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CoverArrangements_Rooms_RoomId",
-                        column: x => x.RoomId,
-                        principalTable: "Rooms",
+                        name: "FK_ExamCandidateSeries_ExamCandidate_CandidateId",
+                        column: x => x.CandidateId,
+                        principalTable: "ExamCandidate",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_CoverArrangements_Sessions_SessionId",
-                        column: x => x.SessionId,
-                        principalTable: "Sessions",
+                        name: "FK_ExamCandidateSeries_ExamSeries_SeriesId",
+                        column: x => x.SeriesId,
+                        principalTable: "ExamSeries",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ExamCandidateSpecialArrangements",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    CandidateId = table.Column<Guid>(nullable: false),
+                    SpecialArrangementId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExamCandidateSpecialArrangements", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CoverArrangements_StaffMembers_TeacherId",
-                        column: x => x.TeacherId,
-                        principalTable: "StaffMembers",
+                        name: "FK_ExamCandidateSpecialArrangements_ExamCandidate_CandidateId",
+                        column: x => x.CandidateId,
+                        principalTable: "ExamCandidate",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_CoverArrangements_AttendanceWeeks_WeekId",
-                        column: x => x.WeekId,
-                        principalTable: "AttendanceWeeks",
+                        name: "FK_ExamCandidateSpecialArrangements_ExamSpecialArrangements_SpecialArrangementId",
+                        column: x => x.SpecialArrangementId,
+                        principalTable: "ExamSpecialArrangements",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ExamEnrolments",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    AwardId = table.Column<Guid>(nullable: false),
+                    CandidateId = table.Column<Guid>(nullable: false),
+                    StartDate = table.Column<DateTime>(nullable: false),
+                    EndDate = table.Column<DateTime>(nullable: true),
+                    RegistrationNumber = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExamEnrolments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ExamEnrolments_ExamAwards_AwardId",
+                        column: x => x.AwardId,
+                        principalTable: "ExamAwards",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ExamEnrolments_ExamCandidate_CandidateId",
+                        column: x => x.CandidateId,
+                        principalTable: "ExamCandidate",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ExamSeatAllocations",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    SittingId = table.Column<Guid>(nullable: false),
+                    SeatId = table.Column<Guid>(nullable: false),
+                    CandidateId = table.Column<Guid>(nullable: false),
+                    Active = table.Column<bool>(nullable: false),
+                    Attended = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExamSeatAllocations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ExamSeatAllocations_ExamCandidate_CandidateId",
+                        column: x => x.CandidateId,
+                        principalTable: "ExamCandidate",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ExamSeatAllocations_ExamRoomSeats_SeatId",
+                        column: x => x.SeatId,
+                        principalTable: "ExamRoomSeats",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ExamSeatAllocations_ExamComponentSittings_SittingId",
+                        column: x => x.SittingId,
+                        principalTable: "ExamComponentSittings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -3664,6 +4099,13 @@ namespace MyPortal.Database.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_PersonId",
+                table: "AspNetUsers",
+                column: "PersonId",
+                unique: true,
+                filter: "[PersonId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AspNetUsers_SelectedAcademicYearId",
                 table: "AspNetUsers",
                 column: "SelectedAcademicYearId");
@@ -3759,16 +4201,6 @@ namespace MyPortal.Database.Migrations
                 table: "Contacts",
                 column: "PersonId",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Courses_AwardId",
-                table: "Courses",
-                column: "AwardId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Courses_LevelId",
-                table: "Courses",
-                column: "LevelId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Courses_SubjectId",
@@ -3918,9 +4350,45 @@ namespace MyPortal.Database.Migrations
                 column: "TypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ExamAwards_ExamSeriesId",
+                name: "IX_ExamAssessmentAspects_AspectId",
+                table: "ExamAssessmentAspects",
+                column: "AspectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamAssessmentAspects_AssessmentId",
+                table: "ExamAssessmentAspects",
+                column: "AssessmentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamAssessmentAspects_SeriesId",
+                table: "ExamAssessmentAspects",
+                column: "SeriesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamAssessments_ExamBoardId",
+                table: "ExamAssessments",
+                column: "ExamBoardId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamAwardElements_AwardId",
+                table: "ExamAwardElements",
+                column: "AwardId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamAwardElements_ElementId",
+                table: "ExamAwardElements",
+                column: "ElementId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamAwards_AssessmentId",
                 table: "ExamAwards",
-                column: "ExamSeriesId");
+                column: "AssessmentId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamAwards_CourseId",
+                table: "ExamAwards",
+                column: "CourseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ExamAwards_QualificationId",
@@ -3928,9 +4396,62 @@ namespace MyPortal.Database.Migrations
                 column: "QualificationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ExamComponents_AspectId",
-                table: "ExamComponents",
-                column: "AspectId");
+                name: "IX_ExamAwardSeries_AwardId",
+                table: "ExamAwardSeries",
+                column: "AwardId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamBaseComponents_AssessmentModeId",
+                table: "ExamBaseComponents",
+                column: "AssessmentModeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamBaseComponents_ExamAssessmentId",
+                table: "ExamBaseComponents",
+                column: "ExamAssessmentId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamBaseElements_AssessmentId",
+                table: "ExamBaseElements",
+                column: "AssessmentId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamBaseElements_LevelId",
+                table: "ExamBaseElements",
+                column: "LevelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamBaseElements_QcaCodeId",
+                table: "ExamBaseElements",
+                column: "QcaCodeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamCandidate_StudentId",
+                table: "ExamCandidate",
+                column: "StudentId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamCandidateSeries_CandidateId",
+                table: "ExamCandidateSeries",
+                column: "CandidateId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamCandidateSeries_SeriesId",
+                table: "ExamCandidateSeries",
+                column: "SeriesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamCandidateSpecialArrangements_CandidateId",
+                table: "ExamCandidateSpecialArrangements",
+                column: "CandidateId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamCandidateSpecialArrangements_SpecialArrangementId",
+                table: "ExamCandidateSpecialArrangements",
+                column: "SpecialArrangementId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ExamComponents_AssessmentModeId",
@@ -3938,34 +4459,64 @@ namespace MyPortal.Database.Migrations
                 column: "AssessmentModeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ExamComponents_ExamElementId",
+                name: "IX_ExamComponents_BaseComponentId",
                 table: "ExamComponents",
-                column: "ExamElementId");
+                column: "BaseComponentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ExamComponents_ExamSessionId",
+                name: "IX_ExamComponents_ExamSeriesId",
                 table: "ExamComponents",
-                column: "ExamSessionId");
+                column: "ExamSeriesId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ExamElements_EntryAspectId",
-                table: "ExamElements",
-                column: "EntryAspectId");
+                name: "IX_ExamComponents_SessionId",
+                table: "ExamComponents",
+                column: "SessionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ExamElements_ExamAwardId",
-                table: "ExamElements",
-                column: "ExamAwardId");
+                name: "IX_ExamComponentSittings_ComponentId",
+                table: "ExamComponentSittings",
+                column: "ComponentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ExamElements_QcaCodeId",
-                table: "ExamElements",
-                column: "QcaCodeId");
+                name: "IX_ExamComponentSittings_ExamRoomId",
+                table: "ExamComponentSittings",
+                column: "ExamRoomId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ExamElements_ResultAspectId",
+                name: "IX_ExamElementComponents_ComponentId",
+                table: "ExamElementComponents",
+                column: "ComponentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamElementComponents_ElementId",
+                table: "ExamElementComponents",
+                column: "ElementId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamElements_BaseElementId",
                 table: "ExamElements",
-                column: "ResultAspectId");
+                column: "BaseElementId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamElements_SeriesId",
+                table: "ExamElements",
+                column: "SeriesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamEnrolments_AwardId",
+                table: "ExamEnrolments",
+                column: "AwardId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamEnrolments_CandidateId",
+                table: "ExamEnrolments",
+                column: "CandidateId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamQualificationLevels_DefaultGradeSetId",
+                table: "ExamQualificationLevels",
+                column: "DefaultGradeSetId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ExamQualificationLevels_QualificationId",
@@ -3973,9 +4524,9 @@ namespace MyPortal.Database.Migrations
                 column: "QualificationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ExamResultsEmbargoes_ExamSeasonId",
-                table: "ExamResultsEmbargoes",
-                column: "ExamSeasonId");
+                name: "IX_ExamResultEmbargoes_ResultSetId",
+                table: "ExamResultEmbargoes",
+                column: "ResultSetId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ExamRooms_RoomId",
@@ -3984,9 +4535,29 @@ namespace MyPortal.Database.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_ExamRoomSeats_ExamRoomId",
+                table: "ExamRoomSeats",
+                column: "ExamRoomId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ExamSeasons_ResultSetId",
                 table: "ExamSeasons",
                 column: "ResultSetId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamSeatAllocations_CandidateId",
+                table: "ExamSeatAllocations",
+                column: "CandidateId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamSeatAllocations_SeatId",
+                table: "ExamSeatAllocations",
+                column: "SeatId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamSeatAllocations_SittingId",
+                table: "ExamSeatAllocations",
+                column: "SittingId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ExamSeries_ExamBoardId",
@@ -3997,6 +4568,12 @@ namespace MyPortal.Database.Migrations
                 name: "IX_ExamSeries_ExamSeasonId",
                 table: "ExamSeries",
                 column: "ExamSeasonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Files_DocumentId",
+                table: "Files",
+                column: "DocumentId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_GiftedTalentedStudents_StudentId",
@@ -4190,11 +4767,14 @@ namespace MyPortal.Database.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_People_UserId",
+                name: "IX_People_EthnicityId",
                 table: "People",
-                column: "UserId",
-                unique: true,
-                filter: "[UserId] IS NOT NULL");
+                column: "EthnicityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_People_PhotoId",
+                table: "People",
+                column: "PhotoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PersonConditions_ConditionId",
@@ -4640,19 +5220,40 @@ namespace MyPortal.Database.Migrations
                 name: "EmailAddresses");
 
             migrationBuilder.DropTable(
-                name: "ExamComponents");
+                name: "ExamAssessmentAspects");
 
             migrationBuilder.DropTable(
-                name: "ExamResultsEmbargoes");
+                name: "ExamAwardElements");
 
             migrationBuilder.DropTable(
-                name: "ExamRooms");
+                name: "ExamAwardSeries");
+
+            migrationBuilder.DropTable(
+                name: "ExamCandidateSeries");
+
+            migrationBuilder.DropTable(
+                name: "ExamCandidateSpecialArrangements");
+
+            migrationBuilder.DropTable(
+                name: "ExamElementComponents");
+
+            migrationBuilder.DropTable(
+                name: "ExamEnrolments");
+
+            migrationBuilder.DropTable(
+                name: "ExamResultEmbargoes");
+
+            migrationBuilder.DropTable(
+                name: "ExamSeatAllocations");
 
             migrationBuilder.DropTable(
                 name: "ExclusionReasons");
 
             migrationBuilder.DropTable(
                 name: "ExclusionTypes");
+
+            migrationBuilder.DropTable(
+                name: "Files");
 
             migrationBuilder.DropTable(
                 name: "GiftedTalentedStudents");
@@ -4775,13 +5376,22 @@ namespace MyPortal.Database.Migrations
                 name: "EmailAddressTypes");
 
             migrationBuilder.DropTable(
-                name: "ExamAssessmentModes");
+                name: "ExamSpecialArrangements");
 
             migrationBuilder.DropTable(
                 name: "ExamElements");
 
             migrationBuilder.DropTable(
-                name: "ExamSessions");
+                name: "ExamAwards");
+
+            migrationBuilder.DropTable(
+                name: "ExamCandidate");
+
+            migrationBuilder.DropTable(
+                name: "ExamRoomSeats");
+
+            migrationBuilder.DropTable(
+                name: "ExamComponentSittings");
 
             migrationBuilder.DropTable(
                 name: "Documents");
@@ -4827,6 +5437,9 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "ReportCardTargets");
+
+            migrationBuilder.DropTable(
+                name: "Aspects");
 
             migrationBuilder.DropTable(
                 name: "Grades");
@@ -4898,7 +5511,13 @@ namespace MyPortal.Database.Migrations
                 name: "AttendancePeriods");
 
             migrationBuilder.DropTable(
-                name: "Aspects");
+                name: "ExamBaseElements");
+
+            migrationBuilder.DropTable(
+                name: "ExamComponents");
+
+            migrationBuilder.DropTable(
+                name: "ExamRooms");
 
             migrationBuilder.DropTable(
                 name: "DocumentTypes");
@@ -4919,10 +5538,16 @@ namespace MyPortal.Database.Migrations
                 name: "BehaviourStatus");
 
             migrationBuilder.DropTable(
+                name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
                 name: "ReportCards");
 
             migrationBuilder.DropTable(
                 name: "BehaviourTargets");
+
+            migrationBuilder.DropTable(
+                name: "AspectTypes");
 
             migrationBuilder.DropTable(
                 name: "ProductTypes");
@@ -4940,10 +5565,16 @@ namespace MyPortal.Database.Migrations
                 name: "AttendanceWeekPatterns");
 
             migrationBuilder.DropTable(
-                name: "GradeSets");
+                name: "ExamQualificationLevels");
 
             migrationBuilder.DropTable(
-                name: "AspectTypes");
+                name: "ExamBaseComponents");
+
+            migrationBuilder.DropTable(
+                name: "ExamSeries");
+
+            migrationBuilder.DropTable(
+                name: "ExamSessions");
 
             migrationBuilder.DropTable(
                 name: "DiaryEventTypes");
@@ -4964,16 +5595,28 @@ namespace MyPortal.Database.Migrations
                 name: "AgencyTypes");
 
             migrationBuilder.DropTable(
-                name: "ExamAwards");
-
-            migrationBuilder.DropTable(
-                name: "ExamQualificationLevels");
-
-            migrationBuilder.DropTable(
                 name: "Subjects");
 
             migrationBuilder.DropTable(
                 name: "CurriculumBlocks");
+
+            migrationBuilder.DropTable(
+                name: "AcademicYears");
+
+            migrationBuilder.DropTable(
+                name: "GradeSets");
+
+            migrationBuilder.DropTable(
+                name: "ExamQualifications");
+
+            migrationBuilder.DropTable(
+                name: "ExamAssessmentModes");
+
+            migrationBuilder.DropTable(
+                name: "ExamAssessments");
+
+            migrationBuilder.DropTable(
+                name: "ExamSeasons");
 
             migrationBuilder.DropTable(
                 name: "Locations");
@@ -4988,22 +5631,16 @@ namespace MyPortal.Database.Migrations
                 name: "SenStatus");
 
             migrationBuilder.DropTable(
-                name: "ExamSeries");
-
-            migrationBuilder.DropTable(
-                name: "ExamQualifications");
-
-            migrationBuilder.DropTable(
                 name: "SubjectCodes");
-
-            migrationBuilder.DropTable(
-                name: "YearGroups");
 
             migrationBuilder.DropTable(
                 name: "ExamBoards");
 
             migrationBuilder.DropTable(
-                name: "ExamSeasons");
+                name: "ResultSets");
+
+            migrationBuilder.DropTable(
+                name: "YearGroups");
 
             migrationBuilder.DropTable(
                 name: "CurriculumYearGroups");
@@ -5012,19 +5649,16 @@ namespace MyPortal.Database.Migrations
                 name: "StaffMembers");
 
             migrationBuilder.DropTable(
-                name: "ResultSets");
-
-            migrationBuilder.DropTable(
                 name: "People");
 
             migrationBuilder.DropTable(
                 name: "Directories");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Ethnicities");
 
             migrationBuilder.DropTable(
-                name: "AcademicYears");
+                name: "Photos");
         }
     }
 }

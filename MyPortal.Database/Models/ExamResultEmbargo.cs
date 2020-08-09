@@ -6,11 +6,11 @@ using MyPortal.Database.BaseTypes;
 
 namespace MyPortal.Database.Models
 {
-    [Table("ExamResultsEmbargoes")]
-    public class ExamResultsEmbargo : Entity
+    [Table("ExamResultEmbargoes")]
+    public class ExamResultEmbargo : Entity
     {
         [Column(Order = 1)]
-        public Guid ExamSeasonId { get; set; }
+        public Guid ResultSetId { get; set; }
 
         [Column(Order = 2)]
         public DateTime StartTime { get; set; }
@@ -18,6 +18,6 @@ namespace MyPortal.Database.Models
         [Column(Order = 3)]
         public DateTime EndTime { get; set; }
 
-        public virtual ExamSeason ExamSeason { get; set; }
+        public virtual ResultSet ResultSet { get; set; }
     }
 }

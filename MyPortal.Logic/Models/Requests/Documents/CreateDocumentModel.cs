@@ -19,11 +19,6 @@ namespace MyPortal.Logic.Models.Requests.Documents
 
         public string Description { get; set; }
 
-        [Required]
-        public string FileId { get; set; }
-
-        public bool Public { get; set; }
-
-        public bool Approved { get; set; }
+        public bool Restricted { get; set; }
     }
 }

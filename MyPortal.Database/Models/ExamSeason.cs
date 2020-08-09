@@ -34,6 +34,5 @@ namespace MyPortal.Database.Models
 
         public virtual ResultSet ResultSet { get; set; }
         public virtual ICollection<ExamSeries> ExamSeries { get; set; }
-        public virtual ICollection<ExamResultsEmbargo> Embargoes { get; set; }
     }
 }

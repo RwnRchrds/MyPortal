@@ -59,7 +59,7 @@ namespace MyPortal.Database.Models
         public string ChosenFirstName { get; set; }
 
         [Column(Order = 8)]
-        public int? PhotoId { get; set; }
+        public Guid? PhotoId { get; set; }
 
         [Column(Order = 9)]
         [StringLength(10)]
@@ -80,7 +80,7 @@ namespace MyPortal.Database.Models
         public DateTime? Deceased { get; set; }
 
         [Column(Order = 14)]
-        public Guid? UserId { get; set; }
+        public Guid? EthnicityId { get; set; }
 
         [Column(Order = 15)]
         public bool Deleted { get; set; }
@@ -96,6 +96,10 @@ namespace MyPortal.Database.Models
         public virtual Agent AgentDetails { get; set; }
 
         public virtual ApplicationUser User { get; set; }
+
+        public virtual Photo Photo { get; set; }
+
+        public virtual Ethnicity Ethnicity { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PhoneNumber> PhoneNumbers { get; set; }

@@ -26,6 +26,8 @@ namespace MyPortal.Database.Models.Identity
 
         public Guid? SelectedAcademicYearId { get; set; }
 
+        public Guid? PersonId { get; set; }
+
         public bool Enabled { get; set; }
 
         public virtual Person Person { get; set; }

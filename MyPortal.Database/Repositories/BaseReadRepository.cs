@@ -108,7 +108,7 @@ namespace MyPortal.Database.Repositories
         {
             var query = new Query(TblName).SelectAllColumns(typeof(TEntity), TblAlias);
 
-            if (!includeDeleted && typeof(TEntity).GetInterfaces().Contains(typeof(ISoftDeleteEntity)))
+            if (typeof(TEntity).GetInterfaces().Contains(typeof(ISoftDeleteEntity)) && !includeDeleted)
             {
                 query.Where($"{TblAlias}.Deleted", false);
             }

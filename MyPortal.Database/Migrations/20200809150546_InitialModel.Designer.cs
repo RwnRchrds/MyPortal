@@ -10,7 +10,7 @@ using MyPortal.Database.Models;
 namespace MyPortal.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200805154948_InitialModel")]
+    [Migration("20200809150546_InitialModel")]
     partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -444,6 +444,11 @@ namespace MyPortal.Database.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
+                    b.Property<string>("ColumnHeading")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(256)")
@@ -453,6 +458,9 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal?>("MaxMark")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<decimal?>("MinMark")
                         .HasColumnType("decimal(10,2)");
 
                     b.Property<string>("Name")
@@ -991,20 +999,10 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<Guid?>("AwardId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("LevelId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("SubjectId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AwardId");
-
-                    b.HasIndex("LevelId");
 
                     b.HasIndex("SubjectId");
 
@@ -1207,6 +1205,11 @@ namespace MyPortal.Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(10)")
+                        .HasMaxLength(10);
 
                     b.Property<int>("KeyStage")
                         .HasColumnType("int");
@@ -1500,13 +1503,6 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<bool>("Approved")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("ContentType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<Guid>("CreatedById")
                         .HasColumnType("uniqueidentifier");
 
@@ -1523,15 +1519,7 @@ namespace MyPortal.Database.Migrations
                     b.Property<Guid>("DirectoryId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("FileId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Public")
+                    b.Property<bool>("Restricted")
                         .HasColumnType("bit");
 
                     b.Property<string>("Title")
@@ -1645,6 +1633,87 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("EmailAddressTypes");
                 });
 
+            modelBuilder.Entity("MyPortal.Database.Models.Ethnicity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(10)")
+                        .HasMaxLength(10);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Ethnicities");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.ExamAssessment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<int>("AssessmentType")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("ExamBoardId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ExternalTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("InternalTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExamBoardId");
+
+                    b.ToTable("ExamAssessments");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.ExamAssessmentAspect", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("AspectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("AspectOrder")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("AssessmentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SeriesId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AspectId");
+
+                    b.HasIndex("AssessmentId");
+
+                    b.HasIndex("SeriesId");
+
+                    b.ToTable("ExamAssessmentAspects");
+                });
+
             modelBuilder.Entity("MyPortal.Database.Models.ExamAssessmentMode", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1660,6 +1729,9 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
+                    b.Property<bool>("ExternallyAssessed")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.ToTable("ExamAssessmentModes");
@@ -1672,31 +1744,136 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<Guid>("AssessmentId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("AwardCode")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("CourseId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("ExamSeriesId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ExternalTitle")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("InternalTitle")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime?>("ExpiryDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("QualificationId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ExamSeriesId");
+                    b.HasIndex("AssessmentId")
+                        .IsUnique();
+
+                    b.HasIndex("CourseId");
 
                     b.HasIndex("QualificationId");
 
                     b.ToTable("ExamAwards");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.ExamAwardElement", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("AwardId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ElementId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AwardId");
+
+                    b.HasIndex("ElementId");
+
+                    b.ToTable("ExamAwardElements");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.ExamAwardSeries", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("AwardId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SeriesId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AwardId");
+
+                    b.ToTable("ExamAwardSeries");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.ExamBaseComponent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("AssessmentModeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ComponentCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ExamAssessmentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssessmentModeId");
+
+                    b.HasIndex("ExamAssessmentId")
+                        .IsUnique();
+
+                    b.ToTable("ExamBaseComponents");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.ExamBaseElement", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("AssessmentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ElementCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("LevelId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("QcaCodeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("QualAccrNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssessmentId")
+                        .IsUnique();
+
+                    b.HasIndex("LevelId");
+
+                    b.HasIndex("QcaCodeId");
+
+                    b.ToTable("ExamBaseElements");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.ExamBoard", b =>
@@ -1720,13 +1897,102 @@ namespace MyPortal.Database.Migrations
                     b.Property<bool>("Domestic")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("FullName")
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
+
+                    b.Property<bool>("UseEdi")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
                     b.ToTable("ExamBoards");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.ExamCandidate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<string>("CandidateNumber")
+                        .HasColumnType("nvarchar(4)")
+                        .HasMaxLength(4);
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PreviousCandidateNumber")
+                        .HasColumnType("nvarchar(4)")
+                        .HasMaxLength(4);
+
+                    b.Property<string>("PreviousCentreNumber")
+                        .HasColumnType("nvarchar(5)")
+                        .HasMaxLength(5);
+
+                    b.Property<bool>("SpecialConsideration")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Uci")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudentId")
+                        .IsUnique();
+
+                    b.ToTable("ExamCandidate");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.ExamCandidateSeries", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("CandidateId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Flag")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("SeriesId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CandidateId");
+
+                    b.HasIndex("SeriesId");
+
+                    b.ToTable("ExamCandidateSeries");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.ExamCandidateSpecialArrangement", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("CandidateId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SpecialArrangementId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CandidateId");
+
+                    b.HasIndex("SpecialArrangementId");
+
+                    b.ToTable("ExamCandidateSpecialArrangements");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.ExamComponent", b =>
@@ -1736,14 +2002,11 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<Guid>("AspectId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("AssessmentModeId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ComponentCode")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("BaseComponentId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("DateDue")
                         .HasColumnType("datetime2");
@@ -1754,21 +2017,11 @@ namespace MyPortal.Database.Migrations
                     b.Property<int?>("Duration")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("ExamElementId")
+                    b.Property<Guid>("ExamSeriesId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("ExamSessionId")
-                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("ExaminationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ExternalTitle")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("InternalTitle")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsTimetabled")
                         .HasColumnType("bit");
@@ -1776,20 +2029,54 @@ namespace MyPortal.Database.Migrations
                     b.Property<int>("MaximumMark")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("StartTime")
+                    b.Property<Guid?>("SessionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("SittingDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AspectId");
-
                     b.HasIndex("AssessmentModeId");
 
-                    b.HasIndex("ExamElementId");
+                    b.HasIndex("BaseComponentId");
 
-                    b.HasIndex("ExamSessionId");
+                    b.HasIndex("ExamSeriesId");
+
+                    b.HasIndex("SessionId");
 
                     b.ToTable("ExamComponents");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.ExamComponentSitting", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<TimeSpan?>("ActualStartTime")
+                        .HasColumnType("time");
+
+                    b.Property<Guid>("ComponentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("ExamDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ExamRoomId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ExtraTimePercent")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ComponentId");
+
+                    b.HasIndex("ExamRoomId");
+
+                    b.ToTable("ExamComponentSittings");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.ExamElement", b =>
@@ -1799,50 +2086,82 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<Guid>("BaseElementId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
-                    b.Property<Guid>("EntryAspectId")
+                    b.Property<decimal?>("ExamFee")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<Guid>("SeriesId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("EntryCode")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("Submitted")
+                        .HasColumnType("bit");
 
-                    b.Property<Guid>("ExamAwardId")
+                    b.HasKey("Id");
+
+                    b.HasIndex("BaseElementId");
+
+                    b.HasIndex("SeriesId");
+
+                    b.ToTable("ExamElements");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.ExamElementComponent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("ComponentId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ExternalTitle")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Fees")
-                        .HasColumnType("decimal(10, 2)");
-
-                    b.Property<string>("InternalTitle")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("LevelId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Qan")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("QcaCodeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ResultAspectId")
+                    b.Property<Guid>("ElementId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EntryAspectId");
+                    b.HasIndex("ComponentId");
 
-                    b.HasIndex("ExamAwardId");
+                    b.HasIndex("ElementId");
 
-                    b.HasIndex("QcaCodeId");
+                    b.ToTable("ExamElementComponents");
+                });
 
-                    b.HasIndex("ResultAspectId");
+            modelBuilder.Entity("MyPortal.Database.Models.ExamEnrolment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.ToTable("ExamElements");
+                    b.Property<Guid>("AwardId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CandidateId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("RegistrationNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AwardId");
+
+                    b.HasIndex("CandidateId");
+
+                    b.ToTable("ExamEnrolments");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.ExamQualification", b =>
@@ -1860,6 +2179,9 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
+                    b.Property<string>("JcQualificationCode")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("ExamQualifications");
@@ -1875,22 +2197,31 @@ namespace MyPortal.Database.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
+                    b.Property<Guid?>("DefaultGradeSetId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
+
+                    b.Property<string>("JcLevelCode")
+                        .HasColumnType("nvarchar(25)")
+                        .HasMaxLength(25);
 
                     b.Property<Guid>("QualificationId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DefaultGradeSetId");
+
                     b.HasIndex("QualificationId");
 
                     b.ToTable("ExamQualificationLevels");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamResultsEmbargo", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.ExamResultEmbargo", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1900,7 +2231,7 @@ namespace MyPortal.Database.Migrations
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("ExamSeasonId")
+                    b.Property<Guid>("ResultSetId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("StartTime")
@@ -1908,9 +2239,9 @@ namespace MyPortal.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ExamSeasonId");
+                    b.HasIndex("ResultSetId");
 
-                    b.ToTable("ExamResultsEmbargoes");
+                    b.ToTable("ExamResultEmbargoes");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.ExamRoom", b =>
@@ -1935,6 +2266,32 @@ namespace MyPortal.Database.Migrations
                         .IsUnique();
 
                     b.ToTable("ExamRooms");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.ExamRoomSeat", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<int>("Column")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("DoNotUse")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("ExamRoomId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Row")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExamRoomId");
+
+                    b.ToTable("ExamRoomSeats");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.ExamSeason", b =>
@@ -1970,6 +2327,39 @@ namespace MyPortal.Database.Migrations
                     b.HasIndex("ResultSetId");
 
                     b.ToTable("ExamSeasons");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.ExamSeatAllocation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Attended")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("CandidateId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SeatId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SittingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CandidateId");
+
+                    b.HasIndex("SeatId");
+
+                    b.HasIndex("SittingId");
+
+                    b.ToTable("ExamSeatAllocations");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.ExamSeries", b =>
@@ -2026,6 +2416,24 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExamSessions");
                 });
 
+            modelBuilder.Entity("MyPortal.Database.Models.ExamSpecialArrangement", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("ExtraTime")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ExamSpecialArrangements");
+                });
+
             modelBuilder.Entity("MyPortal.Database.Models.ExclusionReason", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2066,6 +2474,36 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ExclusionTypes");
                 });
 
+            modelBuilder.Entity("MyPortal.Database.Models.File", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("DocumentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FileId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DocumentId")
+                        .IsUnique();
+
+                    b.ToTable("Files");
+                });
+
             modelBuilder.Entity("MyPortal.Database.Models.GiftedTalented", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2101,6 +2539,11 @@ namespace MyPortal.Database.Migrations
 
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(10)")
+                        .HasMaxLength(10);
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -2399,6 +2842,9 @@ namespace MyPortal.Database.Migrations
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("PersonId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
@@ -2431,6 +2877,10 @@ namespace MyPortal.Database.Migrations
                         .IsUnique()
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("PersonId")
+                        .IsUnique()
+                        .HasFilter("[PersonId] IS NOT NULL");
 
                     b.HasIndex("SelectedAcademicYearId");
 
@@ -2551,6 +3001,11 @@ namespace MyPortal.Database.Migrations
 
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(10)")
+                        .HasMaxLength(10);
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -2949,6 +3404,9 @@ namespace MyPortal.Database.Migrations
                     b.Property<DateTime?>("Dob")
                         .HasColumnType("date");
 
+                    b.Property<Guid?>("EthnicityId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(256)")
@@ -2974,8 +3432,8 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("nvarchar(10)")
                         .HasMaxLength(10);
 
-                    b.Property<int?>("PhotoId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("PhotoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(128)")
@@ -2984,17 +3442,14 @@ namespace MyPortal.Database.Migrations
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("DirectoryId")
                         .IsUnique();
 
-                    b.HasIndex("UserId")
-                        .IsUnique()
-                        .HasFilter("[UserId] IS NOT NULL");
+                    b.HasIndex("EthnicityId");
+
+                    b.HasIndex("PhotoId");
 
                     b.ToTable("People");
                 });
@@ -3101,6 +3556,27 @@ namespace MyPortal.Database.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PhoneNumberTypes");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Photo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<byte[]>("Data")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("MimeType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("PhotoDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Photos");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Product", b =>
@@ -3338,6 +3814,9 @@ namespace MyPortal.Database.Migrations
                     b.Property<Guid>("AspectId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("ColourCode")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Comments")
                         .HasColumnType("nvarchar(max)");
 
@@ -3349,6 +3828,9 @@ namespace MyPortal.Database.Migrations
 
                     b.Property<decimal?>("Mark")
                         .HasColumnType("decimal(10,2)");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("ResultSetId")
                         .HasColumnType("uniqueidentifier");
@@ -3618,6 +4100,11 @@ namespace MyPortal.Database.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(10)")
+                        .HasMaxLength(10);
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(256)")
@@ -3637,6 +4124,11 @@ namespace MyPortal.Database.Migrations
 
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(10)")
+                        .HasMaxLength(10);
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -4007,10 +4499,6 @@ namespace MyPortal.Database.Migrations
                     b.Property<int>("AdmissionNumber")
                         .HasColumnType("int");
 
-                    b.Property<string>("CandidateNumber")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
-
                     b.Property<DateTime?>("DateLeaving")
                         .HasColumnType("date");
 
@@ -4037,9 +4525,6 @@ namespace MyPortal.Database.Migrations
 
                     b.Property<Guid?>("SenStatusId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Uci")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Upn")
                         .HasColumnType("varchar(13)")
@@ -4788,17 +5273,6 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Course", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.ExamAward", "Award")
-                        .WithMany("Courses")
-                        .HasForeignKey("AwardId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("MyPortal.Database.Models.ExamQualificationLevel", "Level")
-                        .WithMany("Courses")
-                        .HasForeignKey("LevelId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("MyPortal.Database.Models.Subject", "Subject")
                         .WithMany("Courses")
                         .HasForeignKey("SubjectId")
@@ -5006,13 +5480,48 @@ namespace MyPortal.Database.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamAward", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.ExamAssessment", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.ExamSeries", "Series")
-                        .WithMany("ExamAwards")
-                        .HasForeignKey("ExamSeriesId")
+                    b.HasOne("MyPortal.Database.Models.ExamBoard", "ExamBoard")
+                        .WithMany("ExamAssessments")
+                        .HasForeignKey("ExamBoardId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.ExamAssessmentAspect", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Aspect", "Aspect")
+                        .WithMany("AssessmentAspects")
+                        .HasForeignKey("AspectId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.ExamAssessment", "Assessment")
+                        .WithMany("Aspects")
+                        .HasForeignKey("AssessmentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.ExamSeries", "Series")
+                        .WithMany("ExamAssessmentAspects")
+                        .HasForeignKey("SeriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.ExamAward", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.ExamAssessment", "Assessment")
+                        .WithOne("ExamAward")
+                        .HasForeignKey("MyPortal.Database.Models.ExamAward", "AssessmentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Course", "Course")
+                        .WithMany("Awards")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("MyPortal.Database.Models.ExamQualification", "Qualification")
                         .WithMany("Awards")
@@ -5021,44 +5530,62 @@ namespace MyPortal.Database.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamComponent", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.ExamAwardElement", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Aspect", "Aspect")
-                        .WithMany("Components")
-                        .HasForeignKey("AspectId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MyPortal.Database.Models.ExamAssessmentMode", "AssessmentMode")
-                        .WithMany("Components")
-                        .HasForeignKey("AssessmentModeId")
+                    b.HasOne("MyPortal.Database.Models.ExamAward", "Award")
+                        .WithMany("ExamAwardElements")
+                        .HasForeignKey("AwardId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("MyPortal.Database.Models.ExamElement", "Element")
-                        .WithMany("Components")
-                        .HasForeignKey("ExamElementId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MyPortal.Database.Models.ExamSession", "Session")
-                        .WithMany("Components")
-                        .HasForeignKey("ExamSessionId")
+                        .WithMany("ExamAwardElements")
+                        .HasForeignKey("ElementId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamElement", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.ExamAwardSeries", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Aspect", "EntryAspect")
-                        .WithMany("ExamEntries")
-                        .HasForeignKey("EntryAspectId")
+                    b.HasOne("MyPortal.Database.Models.ExamAward", "Award")
+                        .WithMany("ExamAwardSeries")
+                        .HasForeignKey("AwardId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.ExamAward", "Award")
-                        .WithMany("Elements")
-                        .HasForeignKey("ExamAwardId")
+                    b.HasOne("MyPortal.Database.Models.ExamSeries", "Series")
+                        .WithMany("ExamAwardSeries")
+                        .HasForeignKey("AwardId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.ExamBaseComponent", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.ExamAssessmentMode", "AssessmentMode")
+                        .WithMany("ExamBaseComponents")
+                        .HasForeignKey("AssessmentModeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.ExamAssessment", "Assessment")
+                        .WithOne("ExamBaseComponent")
+                        .HasForeignKey("MyPortal.Database.Models.ExamBaseComponent", "ExamAssessmentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.ExamBaseElement", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.ExamAssessment", "Assessment")
+                        .WithOne("ExamBaseElement")
+                        .HasForeignKey("MyPortal.Database.Models.ExamBaseElement", "AssessmentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.ExamQualificationLevel", "Level")
+                        .WithMany("ExamBaseElements")
+                        .HasForeignKey("LevelId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -5067,16 +5594,140 @@ namespace MyPortal.Database.Migrations
                         .HasForeignKey("QcaCodeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+                });
 
-                    b.HasOne("MyPortal.Database.Models.Aspect", "ResultAspect")
-                        .WithMany("ExamResults")
-                        .HasForeignKey("ResultAspectId")
+            modelBuilder.Entity("MyPortal.Database.Models.ExamCandidate", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Student", "Student")
+                        .WithOne("Candidate")
+                        .HasForeignKey("MyPortal.Database.Models.ExamCandidate", "StudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.ExamCandidateSeries", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.ExamCandidate", "Candidate")
+                        .WithMany("LinkedSeries")
+                        .HasForeignKey("CandidateId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.ExamSeries", "Series")
+                        .WithMany("ExamCandidateSeries")
+                        .HasForeignKey("SeriesId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.ExamCandidateSpecialArrangement", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.ExamCandidate", "Candidate")
+                        .WithMany("SpecialArrangements")
+                        .HasForeignKey("CandidateId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.ExamSpecialArrangement", "SpecialArrangement")
+                        .WithMany("Candidates")
+                        .HasForeignKey("SpecialArrangementId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.ExamComponent", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.ExamAssessmentMode", "AssessmentMode")
+                        .WithMany("Components")
+                        .HasForeignKey("AssessmentModeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.ExamBaseComponent", "BaseComponent")
+                        .WithMany("ExamComponents")
+                        .HasForeignKey("BaseComponentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.ExamSeries", "Series")
+                        .WithMany("ExamComponents")
+                        .HasForeignKey("ExamSeriesId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.ExamSession", "Session")
+                        .WithMany("Components")
+                        .HasForeignKey("SessionId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.ExamComponentSitting", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.ExamComponent", "Component")
+                        .WithMany("Sittings")
+                        .HasForeignKey("ComponentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.ExamRoom", "Room")
+                        .WithMany("ExamComponentSittings")
+                        .HasForeignKey("ExamRoomId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.ExamElement", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.ExamBaseElement", "BaseElement")
+                        .WithMany("Elements")
+                        .HasForeignKey("BaseElementId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.ExamSeries", "Series")
+                        .WithMany("ExamElements")
+                        .HasForeignKey("SeriesId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.ExamElementComponent", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.ExamComponent", "Component")
+                        .WithMany("ExamElementComponents")
+                        .HasForeignKey("ComponentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.ExamElement", "Element")
+                        .WithMany("ExamElementComponents")
+                        .HasForeignKey("ElementId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.ExamEnrolment", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.ExamAward", "Award")
+                        .WithMany("ExamEnrolments")
+                        .HasForeignKey("AwardId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.ExamCandidate", "Candidate")
+                        .WithMany("ExamEnrolments")
+                        .HasForeignKey("CandidateId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.ExamQualificationLevel", b =>
                 {
+                    b.HasOne("MyPortal.Database.Models.GradeSet", "DefaultGradeSet")
+                        .WithMany("ExamQualificationLevels")
+                        .HasForeignKey("DefaultGradeSetId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("MyPortal.Database.Models.ExamQualification", "Qualification")
                         .WithMany("Levels")
                         .HasForeignKey("QualificationId")
@@ -5084,11 +5735,11 @@ namespace MyPortal.Database.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.ExamResultsEmbargo", b =>
+            modelBuilder.Entity("MyPortal.Database.Models.ExamResultEmbargo", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.ExamSeason", "ExamSeason")
-                        .WithMany("Embargoes")
-                        .HasForeignKey("ExamSeasonId")
+                    b.HasOne("MyPortal.Database.Models.ResultSet", "ResultSet")
+                        .WithMany("ExamResultEmbargoes")
+                        .HasForeignKey("ResultSetId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -5102,11 +5753,41 @@ namespace MyPortal.Database.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("MyPortal.Database.Models.ExamRoomSeat", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.ExamRoom", "ExamRoom")
+                        .WithMany("Seats")
+                        .HasForeignKey("ExamRoomId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("MyPortal.Database.Models.ExamSeason", b =>
                 {
                     b.HasOne("MyPortal.Database.Models.ResultSet", "ResultSet")
                         .WithMany("ExamSeasons")
                         .HasForeignKey("ResultSetId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.ExamSeatAllocation", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.ExamCandidate", "Candidate")
+                        .WithMany("SeatAllocations")
+                        .HasForeignKey("CandidateId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.ExamRoomSeat", "Seat")
+                        .WithMany("SeatAllocations")
+                        .HasForeignKey("SeatId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.ExamComponentSitting", "Sitting")
+                        .WithMany("SeatAllocations")
+                        .HasForeignKey("SittingId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -5122,6 +5803,15 @@ namespace MyPortal.Database.Migrations
                     b.HasOne("MyPortal.Database.Models.ExamSeason", "Season")
                         .WithMany("ExamSeries")
                         .HasForeignKey("ExamSeasonId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.File", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Document", "Document")
+                        .WithOne("Attachment")
+                        .HasForeignKey("MyPortal.Database.Models.File", "DocumentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -5219,6 +5909,10 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Identity.ApplicationUser", b =>
                 {
+                    b.HasOne("MyPortal.Database.Models.Person", "Person")
+                        .WithOne("User")
+                        .HasForeignKey("MyPortal.Database.Models.Identity.ApplicationUser", "PersonId");
+
                     b.HasOne("MyPortal.Database.Models.AcademicYear", "SelectedAcademicYear")
                         .WithMany("Users")
                         .HasForeignKey("SelectedAcademicYearId")
@@ -5419,9 +6113,15 @@ namespace MyPortal.Database.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", "User")
-                        .WithOne("Person")
-                        .HasForeignKey("MyPortal.Database.Models.Person", "UserId");
+                    b.HasOne("MyPortal.Database.Models.Ethnicity", "Ethnicity")
+                        .WithMany("People")
+                        .HasForeignKey("EthnicityId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MyPortal.Database.Models.Photo", "Photo")
+                        .WithMany("People")
+                        .HasForeignKey("PhotoId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.PersonCondition", b =>

@@ -19,22 +19,11 @@ namespace MyPortal.Logic.Models.Entity
         [StringLength(256)]
         public string Description { get; set; }
 
-        [Required]
-        public string FileId { get; set; }
-
-        [Required]
-        public string FileName { get; set; }
-
-        [Required]
-        public string ContentType { get; set; }
-
         public Guid CreatedById { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
-        public bool Public { get; set; }
-
-        public bool Approved { get; set; }
+        public bool Restricted { get; set; }
 
         public bool Deleted { get; set; }
 
@@ -42,9 +31,11 @@ namespace MyPortal.Logic.Models.Entity
 
         public virtual DirectoryModel Directory { get; set; }
 
+        public virtual HomeworkSubmissionModel HomeworkSubmission { get; set; }
+
         public virtual DocumentTypeModel Type { get; set; }
 
-        public virtual HomeworkSubmissionModel HomeworkSubmission { get; set; }
+        public virtual FileModel Attachment { get; set; }
 
         public DirectoryChildListModel GetListModel()
         {

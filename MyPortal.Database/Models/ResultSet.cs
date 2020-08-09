@@ -24,7 +24,7 @@ namespace MyPortal.Database.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Result> Results { get; set; }
-
         public virtual ICollection<ExamSeason> ExamSeasons { get; set; }
+        public virtual ICollection<ExamResultEmbargo> ExamResultEmbargoes { get; set; }
     }
 }

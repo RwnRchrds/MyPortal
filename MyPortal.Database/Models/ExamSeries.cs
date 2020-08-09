@@ -27,6 +27,10 @@ namespace MyPortal.Database.Models
 
         public virtual ExamSeason Season { get; set; }
         public virtual ExamBoard ExamBoard { get; set; }
-        public virtual ICollection<ExamAward> ExamAwards { get; set; }
+        public virtual ICollection<ExamElement> ExamElements { get; set; }
+        public virtual ICollection<ExamComponent> ExamComponents { get; set; }
+        public virtual ICollection<ExamAssessmentAspect> ExamAssessmentAspects { get; set; }
+        public virtual ICollection<ExamAwardSeries> ExamAwardSeries { get; set; }
+        public virtual ICollection<ExamCandidateSeries> ExamCandidateSeries { get; set; }
     }
 }
