@@ -97,7 +97,7 @@ namespace MyPortalCore.Controllers.Api
         {
             return await ProcessAsync(async () =>
             {
-                var download = await _documentService.GetDownloadById(documentId, asPdf);
+                var download = await _documentService.GetDownloadByDocument(documentId, asPdf);
 
                 return File(download.FileStream, download.ContentType, download.FileName);
             });
@@ -109,7 +109,7 @@ namespace MyPortalCore.Controllers.Api
         {
             return await ProcessAsync(async () =>
             {
-                var file = await _documentService.GetFileById(documentId);
+                var file = await _documentService.GetAttachmentByDocument(documentId);
 
                 return Ok(file.WebViewLink);
             });

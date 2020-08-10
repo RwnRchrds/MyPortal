@@ -21,9 +21,9 @@ using MyPortal.Database.Models;
 using MyPortal.Database.Models.Filters;
 using MyPortal.Database.Repositories;
 using MyPortal.Logic.Constants;
-using MyPortal.Logic.DocumentProviders;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
+using MyPortal.Logic.FileProviders;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
@@ -41,7 +41,7 @@ namespace MyPortal.Logic.Services
         private readonly IDocumentRepository _documentRepository;
         private readonly IDocumentTypeRepository _documentTypeRepository;
         private readonly IDirectoryService _directoryService;
-        private readonly IDocumentProvider _documentProvider;
+        private readonly IFileProvider _fileProvider;
         private readonly IFileRepository _fileRepository;
 
         public DocumentService(IConfiguration config, ApplicationDbContext context)
@@ -56,10 +56,10 @@ namespace MyPortal.Logic.Services
             switch (documentSetting)
             {
                 case "GSuite":
-                    _documentProvider = new GoogleDocumentProvider(config);
+                    _fileProvider = new GoogleFileProvider(config);
                     break;
                 default:
-                    _documentProvider = new LocalDocumentProvider();
+                    _fileProvider = new LocalFileProvider(config);
                     break;
             }
         }
@@ -86,10 +86,7 @@ namespace MyPortal.Logic.Services
                         DirectoryId = document.DirectoryId,
                         CreatedById = document.CreatedById,
                         Deleted = false,
-                        Restricted = document.Restricted,
-                        //ContentType = documentInCloud.MimeType,
-                        //FileName = documentInCloud.Name,
-                        //FileId = document.FileId
+                        Restricted = document.Restricted
                     };
 
                     _documentRepository.Create(docToAdd);
@@ -135,11 +132,18 @@ namespace MyPortal.Logic.Services
             await _documentRepository.SaveChanges();
         }
 
-        public async Task<FileMetadata> GetFileById(Guid documentId)
+        public async Task<FileMetadata> GetAttachmentByDocument(Guid documentId)
         {
             var file = await _fileRepository.GetByDocumentId(documentId);
 
-            return await _documentProvider.GetMetadata(file.FileId);
+            var metadata = new FileMetadata
+            {
+                Id = file.FileId,
+                Name = file.FileName,
+                MimeType = file.ContentType
+            };
+
+            return await _fileProvider.FetchMetadata(file.FileId, metadata);
         }
 
         public async Task<DocumentModel> GetDocumentById(Guid documentId)
@@ -154,11 +158,37 @@ namespace MyPortal.Logic.Services
             return BusinessMapper.Map<DocumentModel>(document);
         }
 
-        public async Task<FileDownload> GetDownloadById(Guid documentId)
+        public async Task UploadAttachmentToDocument(UploadAttachmentModel upload)
+        {
+            var existingFile = await _fileRepository.GetByDocumentId(upload.DocumentId);
+
+            if (existingFile != null)
+            {
+                throw new LogicException("A file is already attached to this document.");
+            }
+
+            var fileExtension = Path.GetExtension(upload.File.FileName);
+
+            string fileId = await _fileProvider.UploadFile(upload);
+
+            var file = new Database.Models.File
+            {
+                FileId = fileId,
+                FileName = upload.File.FileName,
+                ContentType = upload.File.ContentType,
+                DocumentId = upload.DocumentId
+            };
+
+            _fileRepository.Create(file);
+
+            await _fileRepository.SaveChanges();
+        }
+
+        public async Task<FileDownload> GetDownloadByDocument(Guid documentId)
         {
             var file = await _fileRepository.GetByDocumentId(documentId);
 
-            var stream = await _documentProvider.GetDownloadStream(file.FileId);
+            var stream = await _fileProvider.DownloadFileToStream(file.FileId);
 
             return new FileDownload(stream, file.ContentType, file.FileName);
         }
@@ -169,7 +199,7 @@ namespace MyPortal.Logic.Services
             _documentTypeRepository.Dispose();
             _directoryService.Dispose();
             _fileRepository.Dispose();
-            _documentProvider.Dispose();
+            _fileProvider.Dispose();
         }
     }
 }
