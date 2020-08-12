@@ -93,11 +93,11 @@ namespace MyPortalCore.Controllers.Api
 
         [HttpGet]
         [Route("download", Name = "ApiDocumentDownload")]
-        public async Task<IActionResult> DownloadFile([FromQuery] Guid documentId, [FromQuery] bool asPdf = false)
+        public async Task<IActionResult> DownloadFile([FromQuery] Guid documentId)
         {
             return await ProcessAsync(async () =>
             {
-                var download = await _documentService.GetDownloadByDocument(documentId, asPdf);
+                var download = await _documentService.GetDownloadByDocument(documentId);
 
                 return File(download.FileStream, download.ContentType, download.FileName);
             });

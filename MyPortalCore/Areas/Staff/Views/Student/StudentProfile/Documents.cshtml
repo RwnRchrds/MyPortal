@@ -144,8 +144,8 @@
                     </div>
                     <div class="form-group">
                         <label for="document_fileId">Google File ID</label>
-                        <input asp-for="Document.FileId" name="FileId" type="text" id="document_fileId" class="form-control" />
-                        @Html.ValidationMessageFor(x => x.Document.FileId, null, new { data_valmsg_for = "FileId", @class = "text-danger" })
+                        @* <input asp-for="Document.FileId" name="FileId" type="text" id="document_fileId" class="form-control" /> *@
+                        @* @Html.ValidationMessageFor(x => x.Document.FileId, null, new { data_valmsg_for = "FileId", @class = "text-danger" }) *@
                     </div>
 
                     <input type="hidden" name="DirectoryId" id="document_directoryId" />
