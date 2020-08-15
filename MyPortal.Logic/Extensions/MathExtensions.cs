@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using MyPortal.Logic.Models.Requests.Reporting;
 
 namespace MyPortal.Logic.Extensions
 {

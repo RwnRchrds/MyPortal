@@ -11,8 +11,7 @@ using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.ListModels;
-using MyPortal.Logic.Models.Requests.Student.LogNotes;
+using MyPortal.Logic.Models.Student.LogNotes;
 
 namespace MyPortalCore.Controllers.Api
 {

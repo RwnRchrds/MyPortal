@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.0.0" />
-    <PackageReference Include="Google.Apis.Drive.v3" Version="1.48.0.2013" />
+    <PackageReference Include="Google.Apis.Drive.v3" Version="1.48.0.2030" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,7 +23,8 @@
 
   <ItemGroup>
     <Folder Include="Authorisation\Attributes\" />
-    <Folder Include="Models\Requests\Student\Behaviour" />
+    <Folder Include="Models\Admissions\" />
+    <Folder Include="Models\Student\Behaviour" />
   </ItemGroup>
 
 </Project>

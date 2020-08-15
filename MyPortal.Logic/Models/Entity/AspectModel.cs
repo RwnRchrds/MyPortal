@@ -1,30 +1,31 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using MyPortal.Database.BaseTypes;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class AspectModel
+    public class AspectModel : LookupItem
     {
-        public Guid Id { get; set; }
-
         public Guid TypeId { get; set; }
 
         public Guid? GradeSetId { get; set; }
 
+        public decimal? MinMark { get; set; }
+
         public decimal? MaxMark { get; set; }
 
-        [Required(ErrorMessage = "Name is required.")]
+        [Required]
         [StringLength(128)]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Description is required.")]
-        [StringLength(256)]
-        public string Description { get; set; }
+        [Required]
+        [StringLength(50)]
+        public string ColumnHeading { get; set; }
+
+        public bool StudentVisible { get; set; }
 
         public virtual AspectTypeModel Type { get; set; }
 
         public virtual GradeSetModel GradeSet { get; set; }
-
-        public bool Active { get; set; }
     }
 }

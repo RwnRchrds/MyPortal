@@ -66,8 +66,7 @@ namespace MyPortalCore
             services.AddMvc();
             services.AddRazorPages();
 
-            services
-                .AddTransient<IUserClaimsPrincipalFactory<ApplicationUser>, ApplicationUserClaimsPrincipalFactory>();
+            services.AddTransient<IUserClaimsPrincipalFactory<ApplicationUser>, ApplicationUserClaimsPrincipalFactory>();
 
             services.AddAuthorization(options =>
             {

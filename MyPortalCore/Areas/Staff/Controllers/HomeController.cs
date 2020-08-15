@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.ListModels;
+using MyPortal.Logic.Models.List;
 using MyPortalCore.Areas.Staff.ViewModels.Home;
 
 namespace MyPortalCore.Areas.Staff.Controllers

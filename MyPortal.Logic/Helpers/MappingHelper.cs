@@ -6,7 +6,6 @@ using AutoMapper;
 using MyPortal.Database.Models;
 using MyPortal.Database.Models.Identity;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.ListModels;
 
 namespace MyPortal.Logic.Helpers
 {

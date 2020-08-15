@@ -11,7 +11,6 @@ using MyPortal.Database.Search;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Requests.Person;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services

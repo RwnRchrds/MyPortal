@@ -2572,8 +2572,8 @@ namespace MyPortal.Database.Migrations
                     b.Property<Guid>("GradeSetId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Value")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Value")
+                        .HasColumnType("decimal(10,2)");
 
                     b.HasKey("Id");
 

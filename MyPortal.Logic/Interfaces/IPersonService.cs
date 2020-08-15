@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Search;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Requests.Person;
 
 namespace MyPortal.Logic.Interfaces
 {

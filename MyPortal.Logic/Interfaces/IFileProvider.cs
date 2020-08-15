@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using MyPortal.Logic.Models.DocumentProvision;
-using MyPortal.Logic.Models.Requests.Documents;
+using MyPortal.Logic.Models.Documents;
 
 namespace MyPortal.Logic.Interfaces
 {

@@ -14,7 +14,6 @@ using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Requests.Student;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services

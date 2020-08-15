@@ -28,8 +28,8 @@ namespace MyPortal.Database.Models
         [StringLength(50)]
         public string Description { get; set; }
 
-        [Column(Order = 4)]
-        public int Value { get; set; }
+        [Column(Order = 4, TypeName = "decimal(10,2)")]
+        public decimal Value { get; set; }
 
         public virtual GradeSet GradeSet { get; set; }
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using MyPortal.Logic.Attributes;
-using MyPortal.Logic.Models.ListModels;
+using MyPortal.Logic.Models.List;
 
 namespace MyPortal.Logic.Models.Entity
 {

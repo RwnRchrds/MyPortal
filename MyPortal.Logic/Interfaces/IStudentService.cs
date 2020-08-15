@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using MyPortal.Database.Search;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Requests.Student;
 
 namespace MyPortal.Logic.Interfaces
 {

@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Constants;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.ListModels;
 
 namespace MyPortalCore.Controllers.Api
 { 

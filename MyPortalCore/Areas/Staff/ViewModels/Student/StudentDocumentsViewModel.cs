@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using MyPortal.Logic.Models.Documents;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Requests.Documents;
 
 namespace MyPortalCore.Areas.Staff.ViewModels.Student
 {

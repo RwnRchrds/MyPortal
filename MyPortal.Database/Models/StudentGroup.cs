@@ -13,7 +13,7 @@ namespace MyPortal.Database.Models
         public Guid GroupType { get; set; }
 
         [Column(Order = 2)]
-        public Guid GroupId { get; set; }
+        public Guid BaseGroupId { get; set; }
 
         public virtual ICollection<MarksheetTemplateGroup> MarksheetTemplates { get; set; }
     }

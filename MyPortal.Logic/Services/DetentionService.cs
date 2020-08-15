@@ -10,8 +10,8 @@ using MyPortal.Database.Repositories;
 using MyPortal.Database.Search;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Behaviour;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Requests.Behaviour;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
@@ -54,7 +54,7 @@ namespace MyPortal.Logic.Services
             return BusinessMapper.Map<DetentionModel>(detention);
         }
 
-        public async Task Create(params CreateDetentionModel[] detentionModels)
+        public async Task Create(params CreateDetentionRequest[] detentionModels)
         {
             foreach (var model in detentionModels)
             {
@@ -78,7 +78,7 @@ namespace MyPortal.Logic.Services
             await _detentionRepository.SaveChanges();
         }
 
-        public async Task Update(params UpdateDetentionModel[] detentionModels)
+        public async Task Update(params UpdateDetentionRequest[] detentionModels)
         {
             foreach (var model in detentionModels)
             {

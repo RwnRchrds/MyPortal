@@ -57,6 +57,8 @@ namespace MyPortal.Tests
         {
             var mappingValid = true;
 
+            Dictionary<Type, Type> faultyMappings = new Dictionary<Type, Type>();
+
             foreach (var type in from type in MappingHelper.MappingDictionary
                 let entityProperties = type.Key.GetProperties().Where(x =>
                     x.PropertyType == typeof(string) || !typeof(IEnumerable).IsAssignableFrom(x.PropertyType)).ToList()
@@ -74,6 +76,11 @@ namespace MyPortal.Tests
                 select type)
             {
                 mappingValid = false;
+
+                if (!faultyMappings.ContainsKey(type.Key))
+                {
+                    faultyMappings.Add(type.Key, type.Value);
+                }
             }
 
             Assert.IsTrue(mappingValid);
@@ -84,13 +91,15 @@ namespace MyPortal.Tests
         {
             var mappingValid = true;
 
+            Dictionary<Type, Type> faultyMappings = new Dictionary<Type, Type>();
+
             foreach (var type in from type in MappingHelper.MappingDictionary
                 let entityProperties = type.Key.GetProperties().Where(x =>
                     x.PropertyType == typeof(string) || !typeof(IEnumerable).IsAssignableFrom(x.PropertyType)).ToList()
                 let modelProperties = type.Value.GetProperties().ToList()
                 let exceptions = new List<(Type type, string propertyName)>
                 {
-                     (typeof(TaskModel), "Overdue")
+                    (typeof(TaskModel), "Overdue")
                 }
                 from modelProperty in modelProperties.Where(modelProperty =>
                     !exceptions.Contains((type.Value, modelProperty.Name)) && entityProperties.All(e =>
@@ -98,6 +107,11 @@ namespace MyPortal.Tests
                 select type)
             {
                 mappingValid = false;
+
+                if (!faultyMappings.ContainsKey(type.Key))
+                {
+                    faultyMappings.Add(type.Key, type.Value);
+                }
             }
 
             Assert.IsTrue(mappingValid);

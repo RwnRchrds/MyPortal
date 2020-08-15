@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Constants;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Documents;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.ListModels;
-using MyPortal.Logic.Models.Requests.Documents;
+using MyPortal.Logic.Models.List;
 
 namespace MyPortalCore.Controllers.Api
 {

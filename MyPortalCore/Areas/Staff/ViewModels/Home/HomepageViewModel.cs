@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.ListModels;
-using MyPortal.Logic.Models.Requests.Person.Tasks;
+using MyPortal.Logic.Models.List;
+using MyPortal.Logic.Models.Person.Tasks;
 
 namespace MyPortalCore.Areas.Staff.ViewModels.Home
 {

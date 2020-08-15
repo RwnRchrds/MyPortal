@@ -21,20 +21,5 @@ namespace MyPortal.Logic.Models.Entity
         public virtual AspectModel Aspect { get; set; }
 
         public virtual StudentModel Student { get; set; }
-
-        public Type GetResultType()
-        {
-            if (this is GradeResultModel)
-            {
-                return typeof(GradeResultModel);
-            }
-
-            if (this is NumericResultModel)
-            {
-                return typeof(NumericResultModel);
-            }
-
-            throw new Exception("Could not determine result type.");
-        }
     }
 }

@@ -10,9 +10,9 @@ using MyPortal.Database.Models;
 using MyPortal.Database.Repositories;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Attendance;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.ListModels;
-using MyPortal.Logic.Models.Requests.Attendance;
+using MyPortal.Logic.Models.List;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services
@@ -128,7 +128,7 @@ namespace MyPortal.Logic.Services
             await _attendanceMarkRepository.SaveChanges();
         }
 
-        public async Task Save(params StudentAttendanceMarkCollection[] markCollections)
+        public async Task Save(params StudentRegisterMarkCollection[] markCollections)
         {
             var attendanceMarks = new List<AttendanceMarkListModel>();
 

@@ -8,7 +8,7 @@ using MyPortal.Logic.Constants;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Requests.Person.Tasks;
+using MyPortal.Logic.Models.Person.Tasks;
 using Task = MyPortal.Database.Models.Task;
 
 namespace MyPortalCore.Controllers.Api

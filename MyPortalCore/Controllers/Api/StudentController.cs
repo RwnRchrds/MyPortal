@@ -11,8 +11,7 @@ using MyPortal.Database.Search;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.ListModels;
-using MyPortal.Logic.Models.Requests.Student;
+using MyPortal.Logic.Models.List;
 
 namespace MyPortalCore.Controllers.Api
 {

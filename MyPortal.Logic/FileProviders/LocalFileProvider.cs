@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.DocumentProvision;
-using MyPortal.Logic.Models.Requests.Documents;
+using MyPortal.Logic.Models.Documents;
 
 namespace MyPortal.Logic.FileProviders
 {

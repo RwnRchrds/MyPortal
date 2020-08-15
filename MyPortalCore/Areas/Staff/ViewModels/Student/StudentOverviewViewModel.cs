@@ -8,9 +8,9 @@ using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.ListModels;
-using MyPortal.Logic.Models.Requests.Person.Tasks;
-using MyPortal.Logic.Models.Requests.Student.LogNotes;
+using MyPortal.Logic.Models.List;
+using MyPortal.Logic.Models.Person.Tasks;
+using MyPortal.Logic.Models.Student.LogNotes;
 
 namespace MyPortalCore.Areas.Staff.ViewModels.Student
 {

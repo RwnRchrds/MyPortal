@@ -9,7 +9,6 @@ using MyPortal.Database.Models.Identity;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Exceptions;
-using MyPortal.Logic.Models.Requests.Admin;
 using ClaimTypes = MyPortal.Database.Constants.ClaimTypes;
 
 namespace MyPortal.Logic.Authorisation

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Documents;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Requests.Documents;
 
 namespace MyPortalCore.Controllers.Api
 {

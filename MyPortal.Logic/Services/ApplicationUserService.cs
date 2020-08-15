@@ -15,8 +15,8 @@ using MyPortal.Database.Repositories;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Admin;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Requests.Admin;
 using InvalidDataException = System.IO.InvalidDataException;
 using Task = System.Threading.Tasks.Task;
 
@@ -35,7 +35,7 @@ namespace MyPortal.Logic.Services
             _personRepository = new PersonRepository(context);
         }
 
-        public async Task CreateUser(CreateUser creator)
+        public async Task CreateUser(CreateUserRequest creator)
         {
             if (creator.UserType != UserTypes.Staff && creator.UserType != UserTypes.Student &&
                 creator.UserType != UserTypes.Parent)
