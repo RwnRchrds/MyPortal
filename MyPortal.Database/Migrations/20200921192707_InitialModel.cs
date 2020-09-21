@@ -1970,7 +1970,6 @@ namespace MyPortal.Database.Migrations
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Username = table.Column<string>(maxLength: 256, nullable: true),
                     PasswordHash = table.Column<string>(nullable: true),
-                    PasswordSalt = table.Column<string>(nullable: true),
                     CreatedDate = table.Column<DateTime>(nullable: false),
                     PersonId = table.Column<Guid>(nullable: true),
                     UserType = table.Column<int>(maxLength: 1, nullable: false),

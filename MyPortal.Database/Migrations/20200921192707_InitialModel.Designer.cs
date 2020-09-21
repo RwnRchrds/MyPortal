@@ -10,7 +10,7 @@ using MyPortal.Database.Models;
 namespace MyPortal.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200921173841_InitialModel")]
+    [Migration("20200921192707_InitialModel")]
     partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -4785,9 +4785,6 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PasswordSalt")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("PersonId")
