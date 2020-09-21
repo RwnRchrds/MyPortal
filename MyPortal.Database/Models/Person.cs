@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
-using MyPortal.Database.Models.Identity;
 
 namespace MyPortal.Database.Models
 {
@@ -95,7 +94,7 @@ namespace MyPortal.Database.Models
 
         public virtual Agent AgentDetails { get; set; }
 
-        public virtual ApplicationUser User { get; set; }
+        public virtual User User { get; set; }
 
         public virtual Photo Photo { get; set; }
 

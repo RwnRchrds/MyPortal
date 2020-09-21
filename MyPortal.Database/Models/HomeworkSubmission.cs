@@ -36,6 +36,6 @@ namespace MyPortal.Database.Models
         public virtual HomeworkItem HomeworkItem { get; set; }
         public virtual Student Student { get; set; }
         public virtual Task Task { get; set; }
-        public virtual Document SubmittedWork { get; set; }
+        public virtual Directory SubmittedWork { get; set; }
     }
 }

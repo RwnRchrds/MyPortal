@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using MyPortal.Database.Search;
+using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
 

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using MyPortal.Database.Models.Identity;
+using Microsoft.Extensions.Options;
 
 namespace MyPortal.Database.Models
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
+    public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -26,8 +27,6 @@ namespace MyPortal.Database.Models
         public virtual DbSet<AgencyType> AgencyTypes { get; set; }
         public virtual DbSet<Agent> Agents { get; set; }
         public virtual DbSet<AgentRelationshipType> AgentRelationshipTypes { get; set; }
-        public virtual DbSet<ApplicationPermission> ApplicationPermissions { get; set; }
-        public virtual DbSet<ApplicationRolePermission> RolePermissions { get; set; }
         public virtual DbSet<Aspect> Aspects { get; set; }
         public virtual DbSet<AspectType> AspectTypes { get; set; }
         public virtual DbSet<AttendanceCode> AttendanceCodes { get; set; }
@@ -126,6 +125,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<MedicalEvent> MedicalEvents { get; set; }
         public virtual DbSet<Observation> Observations { get; set; }
         public virtual DbSet<ObservationOutcome> ObservationOutcomes { get; set; }
+        public virtual DbSet<Permission> Permissions { get; set; }
         public virtual DbSet<Person> People { get; set; }
         public virtual DbSet<PersonCondition> PersonConditions { get; set; }
         public virtual DbSet<PersonDietaryRequirement> PersonDietaryRequirements { get; set; }
@@ -134,6 +134,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<Photo> Photos { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<ProductType> ProductTypes { get; set; }
+        public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
         public virtual DbSet<RegGroup> RegGroups { get; set; }
         public virtual DbSet<Report> Reports { get; set; }
         public virtual DbSet<ReportCard> ReportCards { get; set; }
@@ -142,6 +143,8 @@ namespace MyPortal.Database.Models
         public virtual DbSet<ReportCardTargetSubmission> ReportCardTargetSubmissions { get; set; }
         public virtual DbSet<Result> Results { get; set; }
         public virtual DbSet<ResultSet> ResultSets { get; set; }
+        public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<RolePermission> RolePermissions { get; set; }
         public virtual DbSet<Room> Rooms { get; set; }
         public virtual DbSet<RoomClosure> RoomClosures { get; set; }
         public virtual DbSet<RoomClosureReason> RoomClosureReasons { get; set; }
@@ -177,6 +180,8 @@ namespace MyPortal.Database.Models
         public virtual DbSet<TrainingCertificate> TrainingCertificates { get; set; }
         public virtual DbSet<TrainingCertificateStatus> TrainingCertificateStatus { get; set; }
         public virtual DbSet<TrainingCourse> TrainingCourses { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<UserRole> UserRoles { get; set; }
         public virtual DbSet<YearGroup> YearGroups { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -193,9 +198,6 @@ namespace MyPortal.Database.Models
                 modelBuilder.Entity<AgencyType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Agent>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<AgentRelationshipType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ApplicationPermission>().HasIndex(e => e.ClaimValue).IsUnique();
-                modelBuilder.Entity<ApplicationPermission>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<ApplicationRolePermission>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Aspect>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<AspectType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<AttendanceCode>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
@@ -295,6 +297,7 @@ namespace MyPortal.Database.Models
                 modelBuilder.Entity<MedicalEvent>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Observation>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<ObservationOutcome>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                modelBuilder.Entity<Permission>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Person>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<PersonCondition>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<PersonDietaryRequirement>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
@@ -303,6 +306,7 @@ namespace MyPortal.Database.Models
                 modelBuilder.Entity<Photo>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Product>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<ProductType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                modelBuilder.Entity<RefreshToken>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<RegGroup>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Report>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<ReportCard>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
@@ -311,6 +315,8 @@ namespace MyPortal.Database.Models
                 modelBuilder.Entity<ReportCardTargetSubmission>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Result>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<ResultSet>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                modelBuilder.Entity<Role>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                modelBuilder.Entity<RolePermission>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Room>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<RoomClosure>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<RoomClosureReason>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
@@ -346,6 +352,8 @@ namespace MyPortal.Database.Models
                 modelBuilder.Entity<TrainingCertificate>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<TrainingCertificateStatus>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<TrainingCourse>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                modelBuilder.Entity<User>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                modelBuilder.Entity<UserRole>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<YearGroup>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
             }
 
@@ -536,12 +544,6 @@ namespace MyPortal.Database.Models
                 .HasForeignKey(e => e.AcademicYearId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<AcademicYear>()
-                .HasMany(e => e.Users)
-                .WithOne(e => e.SelectedAcademicYear)
-                .HasForeignKey(e => e.SelectedAcademicYearId)
-                .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<Class>()
                 .HasMany(e => e.Sessions)
@@ -962,52 +964,11 @@ namespace MyPortal.Database.Models
                 .IsFixedLength()
                 .IsUnicode(false);
 
-            modelBuilder.Entity<ApplicationUser>()
-                .HasMany(e => e.Achievements)
-                .WithOne(e => e.RecordedBy)
-                .HasForeignKey(e => e.RecordedById)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ApplicationUser>()
-                .HasMany(e => e.Incidents)
-                .WithOne(e => e.RecordedBy)
-                .HasForeignKey(e => e.RecordedById)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ApplicationUser>()
-                .HasMany(e => e.Bulletins)
-                .WithOne(e => e.Author)
-                .HasForeignKey(e => e.AuthorId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
             modelBuilder.Entity<StaffMember>()
                 .HasMany(e => e.Sessions)
                 .WithOne(e => e.Teacher)
                 .HasForeignKey(e => e.TeacherId)
                 .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ApplicationUser>()
-                .HasMany(e => e.LessonPlans)
-                .WithOne(e => e.Author)
-                .HasForeignKey(e => e.AuthorId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ApplicationUser>()
-                .HasMany(e => e.Documents)
-                .WithOne(e => e.CreatedBy)
-                .HasForeignKey(e => e.CreatedById)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ApplicationUser>()
-                .HasMany(e => e.AssignedBy)
-                .WithOne(e => e.AssignedBy)
-                .HasForeignKey(e => e.AssignedById)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<StaffMember>()
@@ -1087,20 +1048,6 @@ namespace MyPortal.Database.Models
                 .HasMany(e => e.Absences)
                 .WithOne(e => e.IllnessType)
                 .HasForeignKey(e => e.IllnessTypeId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ApplicationUser>()
-                .HasMany(e => e.LogNotesCreated)
-                .WithOne(e => e.CreatedBy)
-                .HasForeignKey(e => e.CreatedById)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ApplicationUser>()
-                .HasMany(e => e.LogNotesUpdated)
-                .WithOne(e => e.UpdatedBy)
-                .HasForeignKey(e => e.UpdatedById)
-                .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<StaffMember>()
@@ -1239,11 +1186,6 @@ namespace MyPortal.Database.Models
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<ApplicationUser>()
-                .HasOne(e => e.Person)
-                .WithOne(e => e.User)
-                .HasForeignKey<ApplicationUser>(e => e.PersonId);
-
             modelBuilder.Entity<Person>()
                 .HasMany(e => e.DiaryEventInvitations)
                 .WithOne(e => e.Person)
@@ -1283,27 +1225,6 @@ namespace MyPortal.Database.Models
                 .HasOne(e => e.SubmittedWork)
                 .WithOne(e => e.HomeworkSubmission)
                 .HasForeignKey<HomeworkSubmission>(e => e.DocumentId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ApplicationPermission>()
-                .HasOne(e => e.Area)
-                .WithMany(e => e.Permissions)
-                .HasForeignKey(e => e.AreaId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ApplicationPermission>()
-                .HasMany(e => e.RolePermissions)
-                .WithOne(e => e.Permission)
-                .HasForeignKey(e => e.PermissionId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<ApplicationRole>()
-                .HasMany(e => e.RolePermissions)
-                .WithOne(e => e.Role)
-                .HasForeignKey(e => e.RoleId)
-                .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<CurriculumBand>()
@@ -1859,6 +1780,116 @@ namespace MyPortal.Database.Models
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<User>()
+                .HasOne(e => e.Person)
+                .WithOne(e => e.User)
+                .HasForeignKey<User>(e => e.PersonId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<User>()
+                .HasMany(e => e.UserRoles)
+                .WithOne(e => e.User)
+                .HasForeignKey(e => e.UserId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<User>()
+                .HasMany(e => e.LogNotesCreated)
+                .WithOne(e => e.CreatedBy)
+                .HasForeignKey(e => e.CreatedById)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<User>()
+                .HasMany(e => e.LogNotesUpdated)
+                .WithOne(e => e.UpdatedBy)
+                .HasForeignKey(e => e.UpdatedById)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<User>()
+                .HasMany(e => e.Documents)
+                .WithOne(e => e.CreatedBy)
+                .HasForeignKey(e => e.CreatedById)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<User>()
+                .HasMany(e => e.MedicalEvents)
+                .WithOne(e => e.RecordedBy)
+                .HasForeignKey(e => e.RecordedById)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<User>()
+                .HasMany(e => e.Incidents)
+                .WithOne(e => e.RecordedBy)
+                .HasForeignKey(e => e.RecordedById)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<User>()
+                .HasMany(e => e.Achievements)
+                .WithOne(e => e.RecordedBy)
+                .HasForeignKey(e => e.RecordedById)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<User>()
+                .HasMany(e => e.LessonPlans)
+                .WithOne(e => e.Author)
+                .HasForeignKey(e => e.AuthorId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<User>()
+                .HasMany(e => e.Bulletins)
+                .WithOne(e => e.Author)
+                .HasForeignKey(e => e.AuthorId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<User>()
+                .HasMany(e => e.RefreshTokens)
+                .WithOne(e => e.User)
+                .HasForeignKey(e => e.UserId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+                .HasMany(e => e.AssignedBy)
+                .WithOne(e => e.AssignedBy)
+                .HasForeignKey(e => e.AssignedById)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Role>()
+                .HasMany(e => e.UserRoles)
+                .WithOne(e => e.Role)
+                .HasForeignKey(e => e.RoleId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Role>()
+                .HasMany(e => e.RolePermissions)
+                .WithOne(e => e.Role)
+                .HasForeignKey(e => e.RoleId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Permission>()
+                .HasOne(e => e.SystemArea)
+                .WithMany(e => e.Permissions)
+                .HasForeignKey(e => e.AreaId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Permission>()
+                .HasMany(e => e.RolePermissions)
+                .WithOne(e => e.Permission)
+                .HasForeignKey(e => e.PermissionId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(modelBuilder);
         }

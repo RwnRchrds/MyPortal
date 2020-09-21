@@ -13,11 +13,11 @@ namespace MyPortalCore.Areas.Staff.Controllers
 {
     public class HomeController : StaffPortalController
     {
-        private readonly IApplicationUserService _userService;
+        private readonly IUserService _userService;
         private readonly IPersonService _personService;
         private readonly ITaskService _taskService;
 
-        public HomeController(IApplicationUserService userService, IPersonService personService, ITaskService taskService) : base(userService)
+        public HomeController(IUserService userService, IPersonService personService, ITaskService taskService) : base(userService)
         {
             _personService = personService;
             _userService = userService;

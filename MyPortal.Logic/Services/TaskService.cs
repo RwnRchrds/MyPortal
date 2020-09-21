@@ -8,8 +8,8 @@ using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
+using MyPortal.Database.Models.Search;
 using MyPortal.Database.Repositories;
-using MyPortal.Database.Search;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
@@ -18,7 +18,7 @@ using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Person.Tasks;
 using Task = System.Threading.Tasks.Task;
-using TaskStatus = MyPortal.Database.Search.TaskStatus;
+using TaskStatus = MyPortal.Database.Models.Search.TaskStatus;
 
 namespace MyPortal.Logic.Services
 {

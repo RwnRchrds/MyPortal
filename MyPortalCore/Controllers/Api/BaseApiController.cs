@@ -23,10 +23,10 @@ namespace MyPortalCore.Controllers.Api
     [Route("api/[controller]")]
     public abstract class BaseApiController : ControllerBase, IDisposable
     {
-        protected readonly IApplicationUserService _userService;
+        protected readonly IUserService _userService;
         protected readonly UserModel _user;
 
-        public BaseApiController(IApplicationUserService userService)
+        public BaseApiController(IUserService userService)
         {
             _userService = userService;
         }

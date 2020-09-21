@@ -15,7 +15,7 @@ namespace MyPortalCore.Controllers.Api
         private readonly IAchievementService _achievementService;
         private readonly IStudentService _studentService;
         
-        public AchievementController(IApplicationUserService userService, IAchievementService achievementService, IStudentService studentService) : base(userService)
+        public AchievementController(IUserService userService, IAchievementService achievementService, IStudentService studentService) : base(userService)
         {
             _achievementService = achievementService;
             _studentService = studentService;

@@ -6,7 +6,7 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
-using MyPortal.Database.Search;
+using MyPortal.Database.Models.Search;
 using SqlKata;
 
 namespace MyPortal.Database.Repositories

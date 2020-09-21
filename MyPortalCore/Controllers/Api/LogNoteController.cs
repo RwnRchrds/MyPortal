@@ -21,7 +21,7 @@ namespace MyPortalCore.Controllers.Api
         private readonly ILogNoteService _logNoteService;
         private readonly IStudentService _studentService;
 
-        public LogNoteController(ILogNoteService logNoteService, IStudentService studentService, IApplicationUserService userService) : base(userService)
+        public LogNoteController(ILogNoteService logNoteService, IStudentService studentService, IUserService userService) : base(userService)
         {
             _logNoteService = logNoteService;
             _studentService = studentService;

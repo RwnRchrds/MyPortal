@@ -21,7 +21,7 @@ namespace MyPortalCore.Controllers.Api
         private readonly IStaffMemberService _staffMemberService;
         private readonly IStudentService _studentService;
         
-        public TaskController(IApplicationUserService userService, ITaskService taskService, IPersonService personService, IStaffMemberService staffMemberService, IStudentService studentService) : base(userService)
+        public TaskController(IUserService userService, ITaskService taskService, IPersonService personService, IStaffMemberService staffMemberService, IStudentService studentService) : base(userService)
         {
             _taskService = taskService;
             _personService = personService;

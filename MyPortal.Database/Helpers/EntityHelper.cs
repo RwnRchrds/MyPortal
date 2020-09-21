@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Security.Principal;
 using System.Text;
-using MyPortal.Database.Models.Identity;
 
 namespace MyPortal.Database.Helpers
 {
@@ -16,46 +15,16 @@ namespace MyPortal.Database.Helpers
         {
             var propNames = new List<string>();
 
-            if (t == typeof(ApplicationUser))
-            {
-                propNames = GetUserProperties(alias);
-            }
-            else
-            {
-                string tblAlias;
-                GetTableName(t, out tblAlias, alias);
-                var props = GetProperties(t);
+            string tblAlias;
+            GetTableName(t, out tblAlias, alias);
+            var props = GetProperties(t);
 
-                foreach (var prop in props)
-                {
-                    propNames.Add($"{tblAlias}.{prop.Name}");
-                }
+            foreach (var prop in props)
+            {
+                propNames.Add($"{tblAlias}.{prop.Name}");
             }
 
             return propNames.ToArray();
-        }
-
-        private static List<string> GetUserProperties(string alias = null)
-        {
-            var tblName = string.IsNullOrWhiteSpace(alias) ? "AspNetUsers" : alias;
-
-            var propNames = new List<string>
-            {
-                $"{tblName}.Id",
-                $"{tblName}.UserName",
-                $"{tblName}.NormalizedUserName",
-                $"{tblName}.Email",
-                $"{tblName}.NormalizedEmail",
-                $"{tblName}.EmailConfirmed",
-                $"{tblName}.PhoneNumber",
-                $"{tblName}.PhoneNumberConfirmed",
-                $"{tblName}.TwoFactorEnabled",
-                $"{tblName}.LockoutEnd",
-                $"{tblName}.AccessFailedCount",
-                $"{tblName}.Enabled"
-            };
-
-            return propNames;
         }
 
         private static IEnumerable<PropertyInfo> GetProperties(Type t)
@@ -71,16 +40,6 @@ namespace MyPortal.Database.Helpers
         internal static string GetTableName(Type t, out string outputAlias, string tblAlias = null, bool includeSchema = false, string schema = "dbo")
         {
             var entityTable = ((TableAttribute) t.GetCustomAttribute(typeof(TableAttribute)))?.Name ?? t.Name;
-            
-            if (t == typeof(ApplicationUser))
-            {
-                entityTable = "AspNetUsers";
-            }
-
-            if (t == typeof(ApplicationRole))
-            {
-                entityTable = "AspNetRoles";
-            }
 
             if (!string.IsNullOrWhiteSpace(tblAlias))
             {
@@ -107,16 +66,6 @@ namespace MyPortal.Database.Helpers
         internal static string GetTableName(Type t, string tblAlias = null, bool includeSchema = false, string schema = "dbo")
         {
             var entityTable = ((TableAttribute)t.GetCustomAttribute(typeof(TableAttribute)))?.Name ?? t.Name;
-
-            if (t == typeof(ApplicationUser))
-            {
-                entityTable = "AspNetUsers";
-            }
-
-            if (t == typeof(ApplicationRole))
-            {
-                entityTable = "AspNetRoles";
-            }
 
             if (!string.IsNullOrWhiteSpace(tblAlias))
             {

@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
-using MyPortal.Database.Models.Identity;
 
 namespace MyPortal.Database.Models
 {
@@ -45,11 +44,9 @@ namespace MyPortal.Database.Models
         [Column(Order = 11)]
         public bool Deleted { get; set; }
 
-        public virtual ApplicationUser CreatedBy { get; set; }
+        public virtual User CreatedBy { get; set; }
 
         public virtual Directory Directory { get; set; }
-
-        public virtual HomeworkSubmission HomeworkSubmission { get; set; }
 
         public virtual DocumentType Type { get; set; }
 

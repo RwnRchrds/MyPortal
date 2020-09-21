@@ -46,19 +46,33 @@ namespace MyPortal.Logic.Services
             throw new NotImplementedException();
         }
 
-        public async Task Create(params AcademicYearModel[] academicYearModels)
+        public async Task Create(AcademicYearModel academicYearModel)
         {
-            throw new NotImplementedException();
+            var academicYear = BusinessMapper.Map<AcademicYear>(academicYearModel);
+
+            _academicYearRepository.Create(academicYear);
+
+            await _academicYearRepository.SaveChanges();
         }
 
         public async Task Update(params AcademicYearModel[] academicYearModels)
         {
-            throw new NotImplementedException();
+            foreach (var academicYearModel in academicYearModels)
+            {
+                var academicYearInDb = await _academicYearRepository.GetById(academicYearModel.Id);
+
+                academicYearInDb.FirstDate = academicYearModel.FirstDate;
+                academicYearInDb.LastDate = academicYearModel.LastDate;
+                academicYearInDb.Locked = academicYearModel.Locked;
+            }
         }
 
         public async Task Delete(params Guid[] academicYearIds)
         {
-            throw new NotImplementedException();
+            foreach (var academicYearId in academicYearIds)
+            {
+                var academicYearInDb = await _academicYearRepository.GetById(academicYearId);
+            }
         }
 
         public async Task<bool> IsLocked(Guid academicYearId)

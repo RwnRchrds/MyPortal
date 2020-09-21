@@ -17,7 +17,7 @@ namespace MyPortalCore.Controllers.Api
     {
         private IDocumentService _documentService;
 
-        public DocumentController(IApplicationUserService userService, IDocumentService documentService) : base(userService)
+        public DocumentController(IUserService userService, IDocumentService documentService) : base(userService)
         {
             _documentService = documentService;
         }
@@ -109,7 +109,7 @@ namespace MyPortalCore.Controllers.Api
         {
             return await ProcessAsync(async () =>
             {
-                var file = await _documentService.GetAttachmentByDocument(documentId);
+                var file = await _documentService.GetFileMetadataByDocument(documentId);
 
                 return Ok(file.WebViewLink);
             });

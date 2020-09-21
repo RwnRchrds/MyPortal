@@ -10,7 +10,6 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
-using MyPortal.Database.Models.Identity;
 using SqlKata;
 using SqlKata.Compilers;
 
@@ -31,7 +30,7 @@ namespace MyPortal.Database.Repositories
             query.SelectAllColumns(typeof(Student), "Student");
             query.SelectAllColumns(typeof(Person), "StudentPerson");
             query.SelectAllColumns(typeof(Location), "Location");
-            query.SelectAllColumns(typeof(ApplicationUser), "RecordedBy");
+            query.SelectAllColumns(typeof(User), "RecordedBy");
             query.SelectAllColumns(typeof(Person), "RecordedByPerson");
 
             JoinRelated(query);
@@ -103,7 +102,7 @@ namespace MyPortal.Database.Repositories
                     new[]
                     {
                         typeof(Achievement), typeof(AcademicYear), typeof(AchievementType), typeof(AchievementOutcome), typeof(Student), typeof(Person), typeof(Location),
-                        typeof(ApplicationUser), typeof(Person)
+                        typeof(User), typeof(Person)
                     }, (objects) =>
                     {
                         var achievement = (Achievement) objects[0];
@@ -114,7 +113,7 @@ namespace MyPortal.Database.Repositories
                         achievement.Student = (Student) objects[4];
                         achievement.Student.Person = (Person) objects[5];
                         achievement.Location = (Location) objects[6];
-                        achievement.RecordedBy = (ApplicationUser) objects[7];
+                        achievement.RecordedBy = (User) objects[7];
                         achievement.RecordedBy.Person = (Person) objects[8];
 
                         return achievement;

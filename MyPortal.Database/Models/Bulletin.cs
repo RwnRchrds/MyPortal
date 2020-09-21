@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
-using MyPortal.Database.Models.Identity;
 
 namespace MyPortal.Database.Models
 {
@@ -38,7 +37,7 @@ namespace MyPortal.Database.Models
         [Column(Order = 8)]
         public bool Approved { get; set; }
 
-        public virtual ApplicationUser Author { get; set; }
+        public virtual User Author { get; set; }
         public virtual Directory Directory { get; set; }
     }
 }

@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
-using MyPortal.Database.Models.Identity;
 
 namespace MyPortal.Database.Models
 {
@@ -56,7 +55,7 @@ namespace MyPortal.Database.Models
 
         public virtual AcademicYear AcademicYear { get; set; }
 
-        public virtual ApplicationUser RecordedBy { get; set; } 
+        public virtual User RecordedBy { get; set; } 
 
         public virtual Student Student { get; set; }
 

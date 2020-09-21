@@ -7,21 +7,6 @@ namespace MyPortal.Database.Constants
 {
     public class Permissions
     {
-        public static Dictionary<Guid, string> ClaimValues = new Dictionary<Guid, string>();
-
-        public static void PopulateClaimValues()
-        {
-            if (!ClaimValues.Any())
-            {
-                var perms = GetAll();
-
-                foreach (var perm in perms)
-                {
-                    ClaimValues.Add(perm, string.Empty);
-                }
-            }
-        }
-
         public static Guid ViewEditPastoralStructure { get; } = Guid.Parse("F9F0F415-B47C-4C53-B897-D5964FBC6356");
         public static Guid ViewEditAcademicStructure { get; } = Guid.Parse("F9F0F415-B47C-4C53-B897-D5964FBC6357");
         public static Guid ViewStudyTopics { get; } = Guid.Parse("F9F0F415-B47C-4C53-B897-D5964FBC6358");

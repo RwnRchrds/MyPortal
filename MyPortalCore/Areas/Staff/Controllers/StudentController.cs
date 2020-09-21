@@ -29,7 +29,7 @@ namespace MyPortalCore.Areas.Staff.Controllers
         private ITaskService _taskService;
         private ILocationService _locationService;
 
-        public StudentController(IStudentService studentService, IPersonService personService, ILogNoteService logNoteService, IApplicationUserService userService, IDocumentService documentService, IAchievementService achievementService, IIncidentService incidentService, IAttendanceMarkService attendanceMarkService, ITaskService taskService, ILocationService locationService) : base(userService)
+        public StudentController(IStudentService studentService, IPersonService personService, ILogNoteService logNoteService, IUserService userService, IDocumentService documentService, IAchievementService achievementService, IIncidentService incidentService, IAttendanceMarkService attendanceMarkService, ITaskService taskService, ILocationService locationService) : base(userService)
         {
             _studentService = studentService;
             _personService = personService;

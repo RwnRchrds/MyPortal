@@ -6,8 +6,7 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
-using MyPortal.Database.Models.Identity;
-using MyPortal.Database.Search;
+using MyPortal.Database.Models.Search;
 using SqlKata;
 
 namespace MyPortal.Database.Repositories
@@ -22,7 +21,7 @@ namespace MyPortal.Database.Repositories
         protected override void SelectAllRelated(Query query)
         {
             query.SelectAllColumns(typeof(Person), "AssignedTo");
-            query.SelectAllColumns(typeof(ApplicationUser), "AssignedBy");
+            query.SelectAllColumns(typeof(User), "AssignedBy");
             query.SelectAllColumns(typeof(Person), "AssignedByPerson");
             query.SelectAllColumns(typeof(TaskType), "Type");
 
@@ -41,7 +40,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<Task, Person, ApplicationUser, Person, TaskType, Task>(sql.Sql, (task, assignedTo, assignedBy, abp, type) =>
+            return await Connection.QueryAsync<Task, Person, User, Person, TaskType, Task>(sql.Sql, (task, assignedTo, assignedBy, abp, type) =>
             {
                 task.AssignedTo = assignedTo;
                 task.AssignedBy = assignedBy;

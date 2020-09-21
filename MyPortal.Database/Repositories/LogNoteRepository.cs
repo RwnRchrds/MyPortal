@@ -8,7 +8,6 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
-using MyPortal.Database.Models.Identity;
 using SqlKata;
 
 namespace MyPortal.Database.Repositories
@@ -23,7 +22,7 @@ namespace MyPortal.Database.Repositories
         protected override void SelectAllRelated(Query query)
         {
             query.SelectAllColumns(typeof(LogNoteType), "LogNoteType");
-            query.SelectAllColumns(typeof(ApplicationUser), "User");
+            query.SelectAllColumns(typeof(User), "User");
             query.SelectAllColumns(typeof(Person), "AuthorPerson");
             query.SelectAllColumns(typeof(Student), "Student");
             query.SelectAllColumns(typeof(Person), "StudentPerson");
@@ -47,7 +46,7 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             return await Connection
-                .QueryAsync<LogNote, LogNoteType, ApplicationUser, Person, Student, Person, AcademicYear,
+                .QueryAsync<LogNote, LogNoteType, User, Person, Student, Person, AcademicYear,
                     LogNote>(sql.Sql,
                     (note, type, user, authorPerson, student, studentPerson, acadYear) =>
                     {

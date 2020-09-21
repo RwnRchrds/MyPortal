@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.DocumentProvision;
 using MyPortal.Logic.Models.Documents;
@@ -25,11 +26,6 @@ namespace MyPortal.Logic.FileProviders
 
         }
 
-        public async Task<FileMetadata> FetchMetadata(string fileId, FileMetadata metadata)
-        {
-            return metadata;
-        }
-
         public async Task<string> UploadFile(UploadAttachmentModel upload)
         {
             var fileName = Path.GetRandomFileName();
@@ -46,20 +42,25 @@ namespace MyPortal.Logic.FileProviders
 
         public async Task DeleteFile(string fileId)
         {
-            var fileInfo = new FileInfo(Path.Combine(_fileStoragePath, fileId));
+            var filePath = Path.Combine(_fileStoragePath, fileId);
 
-            fileInfo.Delete();
+            File.Delete(filePath);
         }
 
         public async Task<Stream> DownloadFileToStream(string fileId)
         {
             var path = Path.Combine(_fileStoragePath, fileId);
 
-            var stream = File.Open(path, FileMode.Open);
+            if (File.Exists(path))
+            {
+                var stream = File.Open(path, FileMode.Open);
 
-            stream.Position = 0;
+                stream.Position = 0;
 
-            return stream;
+                return stream;
+            }
+
+            throw new NotFoundException("File not found.");
         }
     }
 }

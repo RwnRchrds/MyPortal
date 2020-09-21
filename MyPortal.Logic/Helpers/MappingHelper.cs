@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using AutoMapper;
 using MyPortal.Database.Models;
-using MyPortal.Database.Models.Identity;
 using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Helpers
@@ -19,8 +18,6 @@ namespace MyPortal.Logic.Helpers
             {typeof(AchievementType), typeof(AchievementTypeModel)},
             {typeof(Aspect), typeof(AspectModel)},
             {typeof(AspectType), typeof(AspectTypeModel)},
-            {typeof(ApplicationRole), typeof(RoleModel)},
-            {typeof(ApplicationUser), typeof(UserModel)},
             {typeof(AttendanceCodeMeaning), typeof(AttendanceCodeMeaningModel)},
             {typeof(AttendanceCode), typeof(AttendanceCodeModel)},
             {typeof(AttendanceMark), typeof(AttendanceMarkModel)},
@@ -60,6 +57,7 @@ namespace MyPortal.Logic.Helpers
             {typeof(Subject), typeof(SubjectModel)},
             {typeof(Task), typeof(TaskModel)},
             {typeof(TaskType), typeof(TaskTypeModel)},
+            {typeof(User), typeof(UserModel)},
             {typeof(YearGroup), typeof(YearGroupModel)}
         };
         

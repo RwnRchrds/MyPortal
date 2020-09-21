@@ -1,11 +1,13 @@
-﻿namespace MyPortal.Logic.Models.Admin
+﻿using System;
+
+namespace MyPortal.Logic.Models.Admin
 {
     public class CreateUserRequest
     {
         public string Username { get; set; }
         public string Password { get; set; }
-        public string UserType { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
+        public int UserType { get; set; }
+        public Guid? PersonId { get; set; }
+        public Guid[] RoleIds { get; set; }
     }
 }

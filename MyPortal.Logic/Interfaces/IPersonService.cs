@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using MyPortal.Database.Constants;
-using MyPortal.Database.Search;
+using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Interfaces

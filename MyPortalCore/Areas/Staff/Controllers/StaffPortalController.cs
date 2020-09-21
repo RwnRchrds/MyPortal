@@ -15,7 +15,7 @@ namespace MyPortalCore.Areas.Staff.Controllers
     [Authorize(Policy = Policies.UserType.Staff)]
     public abstract class StaffPortalController : BaseController
     {
-        public StaffPortalController(IApplicationUserService userService) : base(userService)
+        public StaffPortalController(IUserService userService) : base(userService)
         {
             
         }

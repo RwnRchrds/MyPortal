@@ -1,4 +1,5 @@
-﻿using System.Data.Common;
+﻿using System;
+using System.Data.Common;
 using Microsoft.Data.SqlClient;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -20,18 +21,20 @@ namespace MyPortal.Tests.TestData
         
         internal static ApplicationDbContext GetContext()
         {
-            var connection = new SqliteConnection("DataSource=:memory:");
+            //var connection = new SqliteConnection("DataSource=:memory:");
             
-            connection.Open();
+            //connection.Open();
 
-            var options = CreateOptions(connection);
+            //var options = CreateOptions(connection);
 
-            using (var context = new ApplicationDbContext(options) {TestData = true})
-            {
-                context.Database.EnsureCreated();
-            }
+            //using (var context = new ApplicationDbContext(options) {TestData = true})
+            //{
+            //    context.Database.EnsureCreated();
+            //}
 
-            return new ApplicationDbContext(CreateOptions(connection)) {TestData = true};
+            //return new ApplicationDbContext(CreateOptions(connection)) {TestData = true};
+
+            throw new NotImplementedException();
         }
     }
 }

@@ -15,7 +15,7 @@ namespace MyPortalCore.Controllers.Api
         private readonly IIncidentService _incidentService;
         private readonly IStudentService _studentService;
         
-        public IncidentController(IApplicationUserService userService, IIncidentService incidentService, IStudentService studentService) : base(userService)
+        public IncidentController(IUserService userService, IIncidentService incidentService, IStudentService studentService) : base(userService)
         {
             _incidentService = incidentService;
             _studentService = studentService;
