@@ -9,8 +9,7 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
-using MyPortal.Database.Models.Identity;
-using MyPortal.Database.Search;
+using MyPortal.Database.Models.Search;
 using SqlKata;
 
 namespace MyPortal.Database.Repositories
@@ -25,7 +24,7 @@ namespace MyPortal.Database.Repositories
         protected override void SelectAllRelated(Query query)
         {
             query.SelectAllColumns(typeof(Person), "StudentPerson");
-            query.SelectAllColumns(typeof(ApplicationUser), "User");
+            query.SelectAllColumns(typeof(User), "User");
             query.SelectAllColumns(typeof(RegGroup), "RegGroup");
             query.SelectAllColumns(typeof(StaffMember), "Tutor");
             query.SelectAllColumns(typeof(Person), "TutorPerson");
@@ -159,7 +158,7 @@ namespace MyPortal.Database.Repositories
             return await Connection.QueryAsync(sql.Sql,
                 new[]
                 {
-                    typeof(Student), typeof(Person), typeof(ApplicationUser), typeof(RegGroup), typeof(StaffMember),
+                    typeof(Student), typeof(Person), typeof(User), typeof(RegGroup), typeof(StaffMember),
                     typeof(Person), typeof(YearGroup), typeof(StaffMember), typeof(Person), typeof(House), typeof(SenStatus)
                 },
                 objects =>
@@ -167,7 +166,7 @@ namespace MyPortal.Database.Repositories
                     var student = (Student) objects[0];
 
                     student.Person = (Person) objects[1];
-                    student.Person.User = (ApplicationUser) objects[2];
+                    student.Person.User = (User) objects[2];
                     student.RegGroup = (RegGroup) objects[3];
                     student.RegGroup.Tutor = (StaffMember) objects[4];
                     student.RegGroup.Tutor.Person = (Person) objects[5];

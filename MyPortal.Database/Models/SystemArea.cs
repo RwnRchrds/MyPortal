@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
-using MyPortal.Database.Models.Identity;
 
 namespace MyPortal.Database.Models
 {
@@ -34,6 +33,6 @@ namespace MyPortal.Database.Models
 
         public virtual ICollection<SystemArea> SubAreas { get; set; }
 
-        public virtual ICollection<ApplicationPermission> Permissions { get; set; }
+        public virtual ICollection<Permission> Permissions { get; set; }
     }
 }

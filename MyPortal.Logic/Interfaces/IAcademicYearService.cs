@@ -11,7 +11,7 @@ namespace MyPortal.Logic.Interfaces
         Task<AcademicYearModel> GetCurrent();
         Task<AcademicYearModel> GetById(Guid academicYearId);
         Task<AcademicYearModel> GetAll();
-        Task Create(params AcademicYearModel[] academicYearModels);
+        Task Create(AcademicYearModel academicYearModel);
         Task Update(params AcademicYearModel[] academicYearModels);
         Task Delete(params Guid[] academicYearIds);
         Task<bool> IsLocked(Guid academicYearId);

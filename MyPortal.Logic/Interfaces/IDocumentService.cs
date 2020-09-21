@@ -14,7 +14,7 @@ namespace MyPortal.Logic.Interfaces
     public interface IDocumentService : IService
     {
         Task Create(params DocumentModel[] documents);
-        Task<FileMetadata> GetAttachmentByDocument(Guid documentId);
+        Task<FileMetadata> GetFileMetadataByDocument(Guid documentId);
         Task<Lookup> GetTypes(DocumentTypeFilter filter);
         Task<FileDownload> GetDownloadByDocument(Guid documentId);
         Task<DocumentModel> GetDocumentById(Guid documentId);

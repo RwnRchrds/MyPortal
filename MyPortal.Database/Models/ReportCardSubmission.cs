@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using MyPortal.Database.BaseTypes;
-using MyPortal.Database.Models.Identity;
 
 namespace MyPortal.Database.Models
 {
@@ -18,14 +17,19 @@ namespace MyPortal.Database.Models
         public Guid SubmittedById { get; set; }
 
         [Column(Order = 3)]
-        public DateTime SubmissionDate { get; set; }
+        public Guid WeekId { get; set; }
 
         [Column(Order = 4)]
+        public Guid PeriodId { get; set; }
+
+        [Column(Order = 5)]
         [StringLength(256)]
         public string Comments { get; set; }
 
         public virtual ReportCard ReportCard { get; set; }
-        public virtual ApplicationUser SubmittedBy { get; set; }
+        public virtual User SubmittedBy { get; set; }
+        public virtual AttendanceWeek AttendanceWeek { get; set; }
+        public virtual AttendancePeriod Period { get; set; }
         public virtual ICollection<ReportCardTargetSubmission> TargetSubmissions { get; set; }
     }
 }

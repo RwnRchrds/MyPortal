@@ -11,9 +11,9 @@ namespace MyPortalCore.Controllers
 {
     public abstract class BaseController : Controller
     {
-        protected readonly IApplicationUserService _userService;
+        protected readonly IUserService _userService;
 
-        public BaseController(IApplicationUserService userService)
+        public BaseController(IUserService userService)
         {
             _userService = userService;
         }

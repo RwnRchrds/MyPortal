@@ -6,7 +6,6 @@ using System.Runtime.Serialization;
 using System.Text;
 using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
-using MyPortal.Database.Models.Identity;
 
 namespace MyPortal.Database.Models
 {
@@ -44,7 +43,7 @@ namespace MyPortal.Database.Models
         public bool Completed { get; set; }
         public virtual HomeworkSubmission HomeworkSubmission { get; set; }
         public virtual Person AssignedTo { get; set; }
-        public virtual ApplicationUser AssignedBy { get; set; }
+        public virtual User AssignedBy { get; set; }
         public virtual TaskType Type { get; set; }
     }
 }

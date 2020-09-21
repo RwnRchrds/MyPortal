@@ -21,7 +21,7 @@ namespace MyPortalCore.Controllers.Api
         private readonly IDirectoryService _directoryService;
         private readonly IDocumentService _documentService;
 
-        public DirectoryController(IApplicationUserService userService, IDirectoryService directoryService, IDocumentService documentService) : base(userService)
+        public DirectoryController(IUserService userService, IDirectoryService directoryService, IDocumentService documentService) : base(userService)
         {
             _directoryService = directoryService;
             _documentService = documentService;

@@ -16,7 +16,7 @@ namespace MyPortalCore.Controllers.Api
     {
         private readonly IApplicationRoleService _applicationRoleService;
 
-        public ApplicationRoleController(IApplicationRoleService applicationRoleService, IApplicationUserService userService) : base(userService)
+        public ApplicationRoleController(IApplicationRoleService applicationRoleService, IUserService userService) : base(userService)
         {
             _applicationRoleService = applicationRoleService;
         }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Models;
+using MyPortal.Logic.Authentication;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Models.Entity;
@@ -115,6 +116,18 @@ namespace MyPortal.Tests
             }
 
             Assert.IsTrue(mappingValid);
+        }
+
+        [Test]
+        public void GenerateHash_GeneratesHash()
+        {
+            var passwordHash = PasswordManager.GenerateHash("Educat1on!", out var salt);
+
+            var hashString = Convert.ToBase64String(passwordHash);
+
+            var saltString = Convert.ToBase64String(salt);
+
+            Assert.That(passwordHash != null);
         }
     }
 }

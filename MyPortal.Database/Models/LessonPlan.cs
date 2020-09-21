@@ -5,7 +5,6 @@ using System.Runtime.Serialization;
 using Microsoft.VisualBasic.CompilerServices;
 using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
-using MyPortal.Database.Models.Identity;
 
 namespace MyPortal.Database.Models
 {
@@ -35,7 +34,7 @@ namespace MyPortal.Database.Models
         [Required] public string Homework { get; set; }
 
         public virtual Directory Directory { get; set; }
-        public virtual ApplicationUser Author { get; set; }
+        public virtual User Author { get; set; }
         public virtual StudyTopic StudyTopic { get; set; }
     }
 }

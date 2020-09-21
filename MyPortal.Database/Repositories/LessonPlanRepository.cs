@@ -6,7 +6,6 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
-using MyPortal.Database.Models.Identity;
 using SqlKata;
 
 namespace MyPortal.Database.Repositories
@@ -21,7 +20,7 @@ namespace MyPortal.Database.Repositories
         protected override void SelectAllRelated(Query query)
         {
             query.SelectAllColumns(typeof(StudyTopic), "StudyTopic");
-            query.SelectAllColumns(typeof(ApplicationUser), "User");
+            query.SelectAllColumns(typeof(User), "User");
             query.SelectAllColumns(typeof(Person), "Person");
 
             JoinRelated(query);
@@ -38,7 +37,7 @@ namespace MyPortal.Database.Repositories
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<LessonPlan, StudyTopic, ApplicationUser, Person, LessonPlan>(sql.Sql,
+            return await Connection.QueryAsync<LessonPlan, StudyTopic, User, Person, LessonPlan>(sql.Sql,
                 (lessonPlan, topic, author, person) =>
                 {
                     lessonPlan.StudyTopic = topic;

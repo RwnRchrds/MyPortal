@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MyPortal.Database.Search;
+using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Models.Behaviour;
 using MyPortal.Logic.Models.Entity;
 

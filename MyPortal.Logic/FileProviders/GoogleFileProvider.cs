@@ -2,15 +2,18 @@
 using System.IO;
 using System.Threading.Tasks;
 using Google.Apis.Drive.v3;
+using Google.Apis.Drive.v3.Data;
+using Google.Apis.Upload;
 using Microsoft.Extensions.Configuration;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.DocumentProvision;
 using MyPortal.Logic.Models.Documents;
+using File = Google.Apis.Drive.v3.Data.File;
 
 namespace MyPortal.Logic.FileProviders
 {
-    public class GoogleFileProvider : IFileProvider
+    public class GoogleFileProvider : HostedFileProvider
     {
         private readonly DriveService _driveService;
 
@@ -20,16 +23,16 @@ namespace MyPortal.Logic.FileProviders
             _driveService = new DriveService(googleHelper.GetInitializer());
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             _driveService.Dispose();
         }
 
-        public async Task<FileMetadata> FetchMetadata(string fileId, FileMetadata metadata)
+        public override async Task<FileMetadata> FetchMetadata(string fileId, FileMetadata metadata)
         {
             var request = _driveService.Files.Get(fileId);
 
-            request.Fields = "id, name, description, iconLink, mimeType, webViewLink";
+            request.Fields = "id, name, description, mimeType, webViewLink";
 
             var data = await request.ExecuteAsync();
 
@@ -41,19 +44,29 @@ namespace MyPortal.Logic.FileProviders
             return metadata;
         }
 
-        public async Task<string> UploadFile(UploadAttachmentModel upload)
+        public override async Task<string> UploadFile(UploadAttachmentModel upload)
         {
-            throw new NotImplementedException();
+            var metadata = new File();
+
+            metadata.Name = upload.File.FileName;
+
+            var request = _driveService.Files.Create(metadata, upload.File.OpenReadStream(), upload.File.ContentType);
+
+            await request.UploadAsync();
+
+            var result = request.ResponseBody;
+
+            return result.Id;
         }
 
-        public async Task DeleteFile(string fileId)
+        public override async Task DeleteFile(string fileId)
         {
             var request = _driveService.Files.Delete(fileId);
 
             await request.ExecuteAsync();
         }
 
-        public async Task<Stream> DownloadFileToStream(string fileId)
+        public override async Task<Stream> DownloadFileToStream(string fileId)
         {
             var stream = new MemoryStream();
 

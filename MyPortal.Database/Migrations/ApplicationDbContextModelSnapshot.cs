@@ -15,110 +15,9 @@ namespace MyPortal.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.6")
+                .HasAnnotation("ProductVersion", "3.1.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("AspNetRoleClaims");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AspNetUserClaims");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
-                {
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("LoginProvider", "ProviderKey");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AspNetUserLogins");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("AspNetUserRoles");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("UserId", "LoginProvider", "Name");
-
-                    b.ToTable("AspNetUserTokens");
-                });
 
             modelBuilder.Entity("MyPortal.Database.Models.AcademicYear", b =>
                 {
@@ -2707,184 +2606,6 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("Houses");
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Identity.ApplicationPermission", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
-
-                    b.Property<Guid>("AreaId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ClaimValue")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
-
-                    b.Property<string>("FullDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("ShortDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AreaId");
-
-                    b.HasIndex("ClaimValue")
-                        .IsUnique();
-
-                    b.ToTable("AspNetPermissions");
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.Identity.ApplicationRole", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("NormalizedName")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<bool>("System")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
-
-                    b.ToTable("AspNetRoles");
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.Identity.ApplicationRolePermission", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
-
-                    b.Property<Guid>("PermissionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PermissionId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("AspNetRolePermissions");
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.Identity.ApplicationUser", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Enabled")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("PersonId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("SelectedAcademicYearId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("UserType")
-                        .HasColumnType("nvarchar(5)")
-                        .HasMaxLength(5);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("PersonId")
-                        .IsUnique()
-                        .HasFilter("[PersonId] IS NOT NULL");
-
-                    b.HasIndex("SelectedAcademicYearId");
-
-                    b.ToTable("AspNetUsers");
-                });
-
             modelBuilder.Entity("MyPortal.Database.Models.Incident", b =>
                 {
                     b.Property<Guid>("Id")
@@ -3379,6 +3100,29 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ObservationOutcomes");
                 });
 
+            modelBuilder.Entity("MyPortal.Database.Models.Permission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("AreaId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FullDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ShortDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AreaId");
+
+                    b.ToTable("Permissions");
+                });
+
             modelBuilder.Entity("MyPortal.Database.Models.Person", b =>
                 {
                     b.Property<Guid>("Id")
@@ -3634,6 +3378,29 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("ProductTypes");
                 });
 
+            modelBuilder.Entity("MyPortal.Database.Models.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Token")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
+                });
+
             modelBuilder.Entity("MyPortal.Database.Models.RegGroup", b =>
                 {
                     b.Property<Guid>("Id")
@@ -3733,20 +3500,30 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
+                    b.Property<Guid?>("AttendanceWeekId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Comments")
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<Guid>("ReportCardId")
+                    b.Property<Guid>("PeriodId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("SubmissionDate")
-                        .HasColumnType("datetime2");
+                    b.Property<Guid>("ReportCardId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("SubmittedById")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("WeekId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("AttendanceWeekId");
+
+                    b.HasIndex("PeriodId");
 
                     b.HasIndex("ReportCardId");
 
@@ -3872,6 +3649,46 @@ namespace MyPortal.Database.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ResultSets");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Role", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("System")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.RolePermission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("PermissionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PermissionId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("RolePermissions");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Room", b =>
@@ -4621,7 +4438,7 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<Guid>("GroupId")
+                    b.Property<Guid>("BaseGroupId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("GroupType")
@@ -4805,6 +4622,7 @@ namespace MyPortal.Database.Migrations
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<Guid?>("AssignedById")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("AssignedToId")
@@ -4951,6 +4769,67 @@ namespace MyPortal.Database.Migrations
                     b.ToTable("TrainingCourses");
                 });
 
+            modelBuilder.Entity("MyPortal.Database.Models.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Enabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordSalt")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("PersonId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("UserType")
+                        .HasColumnType("int")
+                        .HasMaxLength(1);
+
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PersonId")
+                        .IsUnique()
+                        .HasFilter("[PersonId] IS NOT NULL");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.UserRole", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserRoles");
+                });
+
             modelBuilder.Entity("MyPortal.Database.Models.YearGroup", b =>
                 {
                     b.Property<Guid>("Id")
@@ -4976,57 +4855,6 @@ namespace MyPortal.Database.Migrations
                     b.HasIndex("HeadId");
 
                     b.ToTable("YearGroups");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
-                {
-                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationRole", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
-                {
-                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
-                {
-                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
-                {
-                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationRole", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
-                {
-                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Achievement", b =>
@@ -5055,7 +4883,7 @@ namespace MyPortal.Database.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", "RecordedBy")
+                    b.HasOne("MyPortal.Database.Models.User", "RecordedBy")
                         .WithMany("Achievements")
                         .HasForeignKey("RecordedById")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -5206,7 +5034,7 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Bulletin", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", "Author")
+                    b.HasOne("MyPortal.Database.Models.User", "Author")
                         .WithMany("Bulletins")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -5444,7 +5272,7 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Document", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", "CreatedBy")
+                    b.HasOne("MyPortal.Database.Models.User", "CreatedBy")
                         .WithMany("Documents")
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -5849,7 +5677,7 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.HomeworkSubmission", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Document", "SubmittedWork")
+                    b.HasOne("MyPortal.Database.Models.Directory", "SubmittedWork")
                         .WithOne("HomeworkSubmission")
                         .HasForeignKey("MyPortal.Database.Models.HomeworkSubmission", "DocumentId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -5881,42 +5709,6 @@ namespace MyPortal.Database.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("MyPortal.Database.Models.Identity.ApplicationPermission", b =>
-                {
-                    b.HasOne("MyPortal.Database.Models.SystemArea", "Area")
-                        .WithMany("Permissions")
-                        .HasForeignKey("AreaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.Identity.ApplicationRolePermission", b =>
-                {
-                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationPermission", "Permission")
-                        .WithMany("RolePermissions")
-                        .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationRole", "Role")
-                        .WithMany("RolePermissions")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("MyPortal.Database.Models.Identity.ApplicationUser", b =>
-                {
-                    b.HasOne("MyPortal.Database.Models.Person", "Person")
-                        .WithOne("User")
-                        .HasForeignKey("MyPortal.Database.Models.Identity.ApplicationUser", "PersonId");
-
-                    b.HasOne("MyPortal.Database.Models.AcademicYear", "SelectedAcademicYear")
-                        .WithMany("Users")
-                        .HasForeignKey("SelectedAcademicYearId")
-                        .OnDelete(DeleteBehavior.SetNull);
-                });
-
             modelBuilder.Entity("MyPortal.Database.Models.Incident", b =>
                 {
                     b.HasOne("MyPortal.Database.Models.AcademicYear", "AcademicYear")
@@ -5943,7 +5735,7 @@ namespace MyPortal.Database.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", "RecordedBy")
+                    b.HasOne("MyPortal.Database.Models.User", "RecordedBy")
                         .WithMany("Incidents")
                         .HasForeignKey("RecordedById")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -5979,7 +5771,7 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.LessonPlan", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", "Author")
+                    b.HasOne("MyPortal.Database.Models.User", "Author")
                         .WithMany("LessonPlans")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -6006,7 +5798,7 @@ namespace MyPortal.Database.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", "CreatedBy")
+                    b.HasOne("MyPortal.Database.Models.User", "CreatedBy")
                         .WithMany("LogNotesCreated")
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -6024,7 +5816,7 @@ namespace MyPortal.Database.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", "UpdatedBy")
+                    b.HasOne("MyPortal.Database.Models.User", "UpdatedBy")
                         .WithMany("LogNotesUpdated")
                         .HasForeignKey("UpdatedById")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -6069,10 +5861,10 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.MedicalEvent", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", "RecordedBy")
+                    b.HasOne("MyPortal.Database.Models.User", "RecordedBy")
                         .WithMany("MedicalEvents")
                         .HasForeignKey("RecordedById")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("MyPortal.Database.Models.Student", "Student")
@@ -6099,6 +5891,15 @@ namespace MyPortal.Database.Migrations
                     b.HasOne("MyPortal.Database.Models.ObservationOutcome", "Outcome")
                         .WithMany("Observations")
                         .HasForeignKey("OutcomeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.Permission", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.SystemArea", "SystemArea")
+                        .WithMany("Permissions")
+                        .HasForeignKey("AreaId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -6176,6 +5977,15 @@ namespace MyPortal.Database.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("MyPortal.Database.Models.RefreshToken", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.User", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("MyPortal.Database.Models.RegGroup", b =>
                 {
                     b.HasOne("MyPortal.Database.Models.StaffMember", "Tutor")
@@ -6217,13 +6027,23 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.ReportCardSubmission", b =>
                 {
+                    b.HasOne("MyPortal.Database.Models.AttendanceWeek", "AttendanceWeek")
+                        .WithMany("ReportCardSubmissions")
+                        .HasForeignKey("AttendanceWeekId");
+
+                    b.HasOne("MyPortal.Database.Models.AttendancePeriod", "Period")
+                        .WithMany("ReportCardSubmissions")
+                        .HasForeignKey("PeriodId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("MyPortal.Database.Models.ReportCard", "ReportCard")
                         .WithMany("Submissions")
                         .HasForeignKey("ReportCardId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", "SubmittedBy")
+                    b.HasOne("MyPortal.Database.Models.User", "SubmittedBy")
                         .WithMany("ReportCardSubmissions")
                         .HasForeignKey("SubmittedById")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -6282,6 +6102,21 @@ namespace MyPortal.Database.Migrations
                     b.HasOne("MyPortal.Database.Models.Student", "Student")
                         .WithMany("Results")
                         .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.RolePermission", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Permission", "Permission")
+                        .WithMany("RolePermissions")
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.Role", "Role")
+                        .WithMany("RolePermissions")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -6598,10 +6433,11 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.Task", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Identity.ApplicationUser", "AssignedBy")
+                    b.HasOne("MyPortal.Database.Models.User", "AssignedBy")
                         .WithMany("AssignedBy")
                         .HasForeignKey("AssignedById")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("MyPortal.Database.Models.Person", "AssignedTo")
                         .WithMany("AssignedTo")
@@ -6633,6 +6469,29 @@ namespace MyPortal.Database.Migrations
                     b.HasOne("MyPortal.Database.Models.TrainingCertificateStatus", "Status")
                         .WithMany("Certificates")
                         .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.User", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Person", "Person")
+                        .WithOne("User")
+                        .HasForeignKey("MyPortal.Database.Models.User", "PersonId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("MyPortal.Database.Models.UserRole", b =>
+                {
+                    b.HasOne("MyPortal.Database.Models.Role", "Role")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyPortal.Database.Models.User", "User")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

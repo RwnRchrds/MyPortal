@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MyPortal.Database.Interfaces
 {
-    public interface ISoftDeleteEntity
+    public interface ISoftDeleteEntity : IEntity
     {
         bool Deleted { get; set; }
     }

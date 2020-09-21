@@ -102,9 +102,9 @@ namespace MyPortalCore
             // MyPortal business services
             services.AddScoped<IAcademicYearService, AcademicYearService>();
             services.AddScoped<IAchievementService, AchievementService>();
-            services.AddScoped<IApplicationRolePermissionService, ApplicationPermissionService>();
+            services.AddScoped<IRolePermissionService, RolePermissionService>();
             services.AddScoped<IApplicationRoleService, ApplicationRoleService>();
-            services.AddScoped<IApplicationUserService, ApplicationUserService>();
+            services.AddScoped<IUserService, ApplicationUserService>();
             services.AddScoped<IAttendanceMarkService, AttendanceMarkService>();
             services.AddScoped<IAttendanceWeekService, AttendanceWeekService>();
             services.AddScoped<IDirectoryService, DirectoryService>();

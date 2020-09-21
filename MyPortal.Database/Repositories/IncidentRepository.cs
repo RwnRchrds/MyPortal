@@ -6,7 +6,6 @@ using Dapper;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
-using MyPortal.Database.Models.Identity;
 using SqlKata;
 
 namespace MyPortal.Database.Repositories
@@ -27,7 +26,7 @@ namespace MyPortal.Database.Repositories
             query.SelectAllColumns(typeof(BehaviourOutcome), "BehaviourOutcome");
             query.SelectAllColumns(typeof(BehaviourStatus), "BehaviourStatus");
             query.SelectAllColumns(typeof(Location), "Location");
-            query.SelectAllColumns(typeof(ApplicationUser), "User");
+            query.SelectAllColumns(typeof(User), "User");
             query.SelectAllColumns(typeof(Person), "RecordedByPerson");
 
             JoinRelated(query);
@@ -55,7 +54,7 @@ namespace MyPortal.Database.Repositories
                     new[]
                     {
                         typeof(Incident), typeof(AcademicYear), typeof(IncidentType), typeof(Student), typeof(Person),
-                        typeof(BehaviourOutcome), typeof(BehaviourStatus), typeof(Location), typeof(ApplicationUser),
+                        typeof(BehaviourOutcome), typeof(BehaviourStatus), typeof(Location), typeof(User),
                         typeof(Person)
                     },
                     objects =>
@@ -69,7 +68,7 @@ namespace MyPortal.Database.Repositories
                         incident.Outcome = (BehaviourOutcome) objects[5];
                         incident.Status = (BehaviourStatus) objects[6];
                         incident.Location = (Location) objects[7];
-                        incident.RecordedBy = (ApplicationUser) objects[8];
+                        incident.RecordedBy = (User) objects[8];
                         incident.RecordedBy.Person = (Person) objects[9];
 
                         return incident;

@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
-using MyPortal.Database.Models.Identity;
 
 namespace MyPortal.Database.Models
 {
@@ -39,9 +38,9 @@ namespace MyPortal.Database.Models
         [Column(Order = 9)]
         public bool Deleted { get; set; }
 
-        public virtual ApplicationUser CreatedBy { get; set; }
+        public virtual User CreatedBy { get; set; }
 
-        public virtual ApplicationUser UpdatedBy { get; set; }
+        public virtual User UpdatedBy { get; set; }
 
         public virtual Student Student { get; set; }
             

@@ -14,6 +14,7 @@ using Google.Apis.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
@@ -132,7 +133,7 @@ namespace MyPortal.Logic.Services
             await _documentRepository.SaveChanges();
         }
 
-        public async Task<FileMetadata> GetAttachmentByDocument(Guid documentId)
+        public async Task<FileMetadata> GetFileMetadataByDocument(Guid documentId)
         {
             var file = await _fileRepository.GetByDocumentId(documentId);
 
@@ -143,7 +144,12 @@ namespace MyPortal.Logic.Services
                 MimeType = file.ContentType
             };
 
-            return await _fileProvider.FetchMetadata(file.FileId, metadata);
+            if (_fileProvider is HostedFileProvider hostingService)
+            {
+                metadata = await hostingService.FetchMetadata(file.FileId, metadata);
+            }
+
+            return metadata;
         }
 
         public async Task<DocumentModel> GetDocumentById(Guid documentId)

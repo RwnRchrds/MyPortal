@@ -7,6 +7,8 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.0.0" />
     <PackageReference Include="Google.Apis.Drive.v3" Version="1.48.0.2030" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.7.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,11 +20,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    
+    <Compile Remove="Authorisation\Attributes\**" />
+    <EmbeddedResource Remove="Authorisation\Attributes\**" />
+    <None Remove="Authorisation\Attributes\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Authorisation\Attributes\" />
     <Folder Include="Models\Admissions\" />
     <Folder Include="Models\Student\Behaviour" />
   </ItemGroup>

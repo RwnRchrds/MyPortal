@@ -20,7 +20,7 @@ namespace MyPortalCore.Controllers.Api
     {
         private readonly IStudentService _studentService;
 
-        public StudentController(IStudentService studentService, IApplicationUserService userService) : base(userService)
+        public StudentController(IStudentService studentService, IUserService userService) : base(userService)
         {
             _studentService = studentService;
         }
