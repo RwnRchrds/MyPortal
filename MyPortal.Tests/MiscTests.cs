@@ -121,13 +121,18 @@ namespace MyPortal.Tests
         [Test]
         public void GenerateHash_GeneratesHash()
         {
-            var passwordHash = PasswordManager.GenerateHash("Educat1on!", out var salt);
+            var passwordHash = PasswordManager.GenerateHash("Educat1on!");
 
-            var hashString = Convert.ToBase64String(passwordHash);
+            Assert.That(!string.IsNullOrWhiteSpace(passwordHash));
+        }
 
-            var saltString = Convert.ToBase64String(salt);
+        [Test]
+        public void CheckPassword_ReturnsTrue()
+        {
+            var result =
+                PasswordManager.CheckPassword("WV4dCchVoKxBNrNLb1ePZzIEPDgOoyM6T7mJkfyecp5YVqqS", "Educat1on!");
 
-            Assert.That(passwordHash != null);
+            Assert.That(result);
         }
     }
 }

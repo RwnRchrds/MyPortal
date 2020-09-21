@@ -35,19 +35,16 @@ namespace MyPortal.Database.Models
         public string PasswordHash { get; set; }
 
         [Column(Order = 3)]
-        public string PasswordSalt { get; set; }
-
-        [Column(Order = 4)]
         public DateTime CreatedDate { get; set; }
 
-        [Column(Order = 5)]
+        [Column(Order = 4)]
         public Guid? PersonId { get; set; }
 
-        [Column(Order = 6)]
+        [Column(Order = 5)]
         [StringLength(1)]
         public int UserType { get; set; }
 
-        [Column(Order = 7)]
+        [Column(Order = 6)]
         public bool Enabled { get; set; }
 
         public virtual Person Person { get; set; }

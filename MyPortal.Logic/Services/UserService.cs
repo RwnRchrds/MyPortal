@@ -47,15 +47,14 @@ namespace MyPortal.Logic.Services
         {
             foreach (var createUserRequest in createUserRequests)
             {
-                var passwordHash = PasswordManager.GenerateHash(createUserRequest.Password, out var passwordSalt);
+                var passwordHash = PasswordManager.GenerateHash(createUserRequest.Password);
 
                 var user = new User
                 {
                     CreatedDate = DateTime.Now,
                     Username = createUserRequest.Username,
                     UserType = createUserRequest.UserType,
-                    PasswordHash = Convert.ToBase64String(passwordHash),
-                    PasswordSalt = Convert.ToBase64String(passwordSalt),
+                    PasswordHash = passwordHash,
                     Enabled = true,
                     PersonId = createUserRequest.PersonId
                 };
@@ -68,7 +67,7 @@ namespace MyPortal.Logic.Services
 
         public async Task SetPassword(Guid userId, string newPassword)
         {
-            var passwordHash = PasswordManager.GenerateHash(newPassword, out var passwordSalt);
+            var passwordHash = PasswordManager.GenerateHash(newPassword);
 
             var user = await _userRepository.GetByIdWithTracking(userId);
 
@@ -77,8 +76,7 @@ namespace MyPortal.Logic.Services
                 throw new NotFoundException("User not found.");
             }
 
-            user.PasswordHash = Convert.ToBase64String(passwordHash);
-            user.PasswordSalt = Convert.ToBase64String(passwordSalt);
+            user.PasswordHash = passwordHash;
 
             await _userRepository.SaveChanges();
         }
@@ -89,18 +87,19 @@ namespace MyPortal.Logic.Services
 
             var user = await _userRepository.GetByUsername(login.Username);
 
-            if (user != null && !user.Enabled)
+            if (user != null)
             {
-                result.Fail("Your account is disabled.");
+                if (!user.Enabled)
+                {
+                    result.Fail("Your account has been disabled.");
+                }
 
-                return result;
-            }
+                if (PasswordManager.CheckPassword(user.PasswordHash, login.Password))
+                {
+                    result.Success(BusinessMapper.Map<UserModel>(user));
 
-            if (PasswordManager.CheckPassword(user, login.Password))
-            {
-                result.Success(BusinessMapper.Map<UserModel>(user));
-
-                return result;
+                    return result;
+                }
             }
 
             result.Fail("Username/password incorrect.");
@@ -174,32 +173,6 @@ namespace MyPortal.Logic.Services
             var tokens = await _refreshTokenRepository.GetByUser(userId);
 
             return tokens.ToList();
-        }
-
-        private ClaimsPrincipal GetPrincipalByToken(string token)
-        {
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateAudience = false,
-                ValidateIssuer = false,
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("MyPortal:Token").Value)),
-                ValidateLifetime = false
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-
-            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
-
-            var jwtSecurityToken = securityToken as JwtSecurityToken;
-
-            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha512,
-                StringComparison.InvariantCultureIgnoreCase))
-            {
-                throw new SecurityTokenException("Invalid access token.");
-            }
-
-            return principal;
         }
 
         public async Task<TokenModel> RefreshToken(ClaimsPrincipal principal, string refreshToken)

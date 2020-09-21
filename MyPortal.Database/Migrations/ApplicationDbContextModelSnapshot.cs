@@ -4785,9 +4785,6 @@ namespace MyPortal.Database.Migrations
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PasswordSalt")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<Guid?>("PersonId")
                         .HasColumnType("uniqueidentifier");
 
