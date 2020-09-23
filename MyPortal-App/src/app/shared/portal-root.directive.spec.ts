@@ -1,11 +1,11 @@
 /* tslint:disable:no-unused-variable */
 
 import { TestBed, async } from '@angular/core/testing';
-import { BaseComponentDirective } from './base-component.directive';
+import { PortalRootDirective } from './portal-root.directive';
 
-describe('Directive: BaseComponent', () => {
+describe('Directive: PortalRoot', () => {
   it('should create an instance', () => {
-    const directive = new BaseComponentDirective();
+    const directive = new PortalRootDirective();
     expect(directive).toBeTruthy();
   });
 });
