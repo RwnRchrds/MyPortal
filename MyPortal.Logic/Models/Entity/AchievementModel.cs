@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using MyPortal.Database.Models;
 using MyPortal.Logic.Attributes;
-using MyPortal.Logic.Models.List;
+using MyPortal.Logic.Models.DataGrid;
 
 namespace MyPortal.Logic.Models.Entity
 {
@@ -46,9 +46,9 @@ namespace MyPortal.Logic.Models.Entity
 
         public virtual StudentModel Student { get; set; }
 
-        public AchievementListModel ToListModel()
+        public AchievementDataGridModel ToListModel()
         {
-            return new AchievementListModel(this);
+            return new AchievementDataGridModel(this);
         }
     }
 }

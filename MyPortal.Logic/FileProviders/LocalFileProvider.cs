@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.DocumentProvision;
-using MyPortal.Logic.Models.Documents;
+using MyPortal.Logic.Models.Requests.Documents;
 
 namespace MyPortal.Logic.FileProviders
 {

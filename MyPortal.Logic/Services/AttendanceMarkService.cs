@@ -10,9 +10,9 @@ using MyPortal.Database.Models;
 using MyPortal.Database.Repositories;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.Attendance;
+using MyPortal.Logic.Models.DataGrid;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.List;
+using MyPortal.Logic.Models.Requests.Attendance;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Services

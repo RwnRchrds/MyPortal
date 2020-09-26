@@ -1,15 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { PortalViewComponent } from './../../shared/portal-view/portal-view.component';
+import { Component, OnInit, Renderer2, ElementRef, OnDestroy } from '@angular/core';
 
 @Component({
   selector: 'app-staff-homepage',
   templateUrl: './staff-homepage.component.html',
-  styleUrls: ['./staff-homepage.component.scss']
+  styleUrls: ['./staff-homepage.component.css']
 })
-export class StaffHomepageComponent implements OnInit {
+export class StaffHomepageComponent extends PortalViewComponent implements OnInit, OnDestroy {
 
-  constructor() { }
+  constructor(renderer: Renderer2, hostElement: ElementRef) {
+    super(renderer, hostElement);
+  }
 
   ngOnInit() {
+    super.addStyles();
+  }
+
+  ngOnDestroy() {
+    super.removeStyles();
   }
 
 }

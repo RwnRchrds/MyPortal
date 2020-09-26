@@ -29,9 +29,9 @@ using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.DocumentProvision;
-using MyPortal.Logic.Models.Documents;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Exceptions;
+using MyPortal.Logic.Models.Requests.Documents;
 using File = Google.Apis.Drive.v3.Data.File;
 using Task = System.Threading.Tasks.Task;
 

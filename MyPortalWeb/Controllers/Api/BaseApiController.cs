@@ -34,11 +34,6 @@ namespace MyPortalWeb.Controllers.Api
         {
             if (User.HasPermission(permissionsRequired))
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest("Invalid data.");
-                }
-
                 try
                 {
                     return await method.Invoke();

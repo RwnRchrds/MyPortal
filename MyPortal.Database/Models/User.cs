@@ -4,12 +4,14 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
 using MyPortal.Database.BaseTypes;
+using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
-    [Table("Users")]
-    public class User : Entity
+    [Table("AspNetUsers")]
+    public class User : IdentityUser<Guid>, IEntity
     {
         public User()
         {
@@ -24,15 +26,7 @@ namespace MyPortal.Database.Models
             Bulletins = new HashSet<Bulletin>();
             AssignedBy = new HashSet<Task>();
             ReportCardSubmissions = new HashSet<ReportCardSubmission>();
-            RefreshTokens = new HashSet<RefreshToken>();
         }
-
-        [Column(Order = 1)]
-        [StringLength(256)]
-        public string Username { get; set; }
-
-        [Column(Order = 2)]
-        public string PasswordHash { get; set; }
 
         [Column(Order = 3)]
         public DateTime CreatedDate { get; set; }
@@ -71,6 +65,10 @@ namespace MyPortal.Database.Models
 
         public virtual ICollection<ReportCardSubmission> ReportCardSubmissions { get; set; }
 
-        public virtual ICollection<RefreshToken> RefreshTokens { get; set; }
+        public virtual ICollection<UserClaim> UserClaims { get; set; }
+
+        public virtual ICollection<UserLogin> UserLogins { get; set; }
+
+        public virtual ICollection<UserToken> UserTokens { get; set; }
     }
 }

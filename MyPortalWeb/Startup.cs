@@ -20,6 +20,7 @@ using MyPortal.Database.Models;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Services;
+using MyPortalWeb.Extensions;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortalWeb
@@ -34,65 +35,12 @@ namespace MyPortalWeb
         public IConfiguration Configuration { get; }
         public void ConfigureServices(IServiceCollection services)
         {
-            DataConnectionFactory.ConnectionString = Configuration.GetConnectionString("MyPortal");
-
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("MyPortal")));
+            services.AddApplicationServices(Configuration);
 
             services.AddControllers();
             services.AddCors();
 
-            // MyPortal Database Connection
-            services.AddScoped<IDbConnection>(connection =>
-                new SqlConnection(Configuration.GetConnectionString("MyPortal")));
-
-            // MyPortal Business Services
-            services.AddScoped<IAcademicYearService, AcademicYearService>();
-            services.AddScoped<IAchievementService, AchievementService>();
-            services.AddScoped<IRolePermissionService, RolePermissionService>();
-            services.AddScoped<IAttendanceMarkService, AttendanceMarkService>();
-            services.AddScoped<IAttendanceWeekService, AttendanceWeekService>();
-            services.AddScoped<IDirectoryService, DirectoryService>();
-            services.AddScoped<IDocumentService, DocumentService>();
-            services.AddScoped<IIncidentService, IncidentService>();
-            services.AddScoped<ILocationService, LocationService>();
-            services.AddScoped<ILogNoteService, LogNoteService>();
-            services.AddScoped<IPeriodService, AttendancePeriodService>();
-            services.AddScoped<IPersonService, PersonService>();
-            services.AddScoped<ISchoolService, SchoolService>();
-            services.AddScoped<IStaffMemberService, StaffMemberService>();
-            services.AddScoped<IStudentService, StudentService>();
-            services.AddScoped<ISystemSettingService, SystemSettingService>();
-            services.AddScoped<ITaskService, TaskService>();
-            services.AddScoped<IUserService, UserService>();
-
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey =
-                            new SymmetricSecurityKey(
-                                Encoding.ASCII.GetBytes(Configuration.GetSection("MyPortal:Token").Value)),
-                        ValidateIssuer = false,
-                        ValidateAudience = false
-                    };
-
-                    options.Events = new JwtBearerEvents
-                    {
-                        OnAuthenticationFailed = c =>
-                        {
-                            if (c.Exception is SecurityTokenExpiredException)
-                            {
-                                c.Response.Headers.Add("Token-Expired", "true");
-                            }
-
-                            return Task.CompletedTask;
-                        }
-                    };
-                });
+            services.AddIdentityServices(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

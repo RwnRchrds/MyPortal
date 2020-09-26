@@ -47,7 +47,7 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateEmptyQuery(typeof(User), "User");
 
-            query.Where("User.Username", username);
+            query.Where("User.UserName", username);
 
             query.AsCount();
 
@@ -60,7 +60,7 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateQuery();
 
-            query.Where("User.Username", username);
+            query.Where("User.UserName", username);
 
             return await ExecuteQueryFirstOrDefault(query);
         }

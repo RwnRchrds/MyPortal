@@ -13,7 +13,7 @@ namespace MyPortal.Database.Repositories
 {
     public class RolePermissionRepository : BaseReadWriteRepository<RolePermission>, IRolePermissionRepository
     {
-        public RolePermissionRepository(ApplicationDbContext context) : base(context)
+        public RolePermissionRepository(ApplicationDbContext context) : base(context, "RolePermissions")
         {
            
         }
@@ -28,7 +28,7 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("Roles AS Role", "Role.Id", "RolePermissions.RoleId");
+            query.LeftJoin("AspNetRoles AS Role", "Role.Id", "RolePermissions.RoleId");
             query.LeftJoin("Permissions AS Permission", "Permission.Id",
                 "RolePermissions.PermissionId");
         }
@@ -46,7 +46,7 @@ namespace MyPortal.Database.Repositories
                         rp.Permission = perm;
 
                         return rp;
-                    }, sql.NamedBindings);
+                    }, sql.NamedBindings, splitOn:"Id,Id");
         }
 
         public async Task<IEnumerable<RolePermission>> GetByRole(Guid roleId)
@@ -62,8 +62,8 @@ namespace MyPortal.Database.Repositories
         {
             var query = GenerateQuery();
 
-            query.Join("UserRoles AS UserRole", "UserRole.RoleId", "Role.Id");
-            query.Join("Users AS User", "User.Id", "UserRole.UserId");
+            query.Join("AspNetUserRoles AS UserRole", "UserRole.RoleId", "Role.Id");
+            query.Join("AspNetUsers AS User", "User.Id", "UserRole.UserId");
 
             query.Where("User.Id", userId);
 

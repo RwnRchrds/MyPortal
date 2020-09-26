@@ -117,22 +117,5 @@ namespace MyPortal.Tests
 
             Assert.IsTrue(mappingValid);
         }
-
-        [Test]
-        public void GenerateHash_GeneratesHash()
-        {
-            var passwordHash = PasswordManager.GenerateHash("Educat1on!");
-
-            Assert.That(!string.IsNullOrWhiteSpace(passwordHash));
-        }
-
-        [Test]
-        public void CheckPassword_ReturnsTrue()
-        {
-            var result =
-                PasswordManager.CheckPassword("WV4dCchVoKxBNrNLb1ePZzIEPDgOoyM6T7mJkfyecp5YVqqS", "Educat1on!");
-
-            Assert.That(result);
-        }
     }
 }
