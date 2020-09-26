@@ -14,18 +14,21 @@
             <!--begin::Aside body-->
             <div class="d-flex flex-column-fluid flex-column flex-center">
               <!--begin::Signin-->
-              <div class="login-form login-signin py-11">
+              <div class="login-form login-signin py-11">              
                 <!--begin::Form-->
-                <form class="form" novalidate="novalidate" id="kt_login_signin_form">
+                <form #loginForm="ngForm" class="form" novalidate="novalidate" id="kt_login_signin_form" (ngSubmit)="login()">
                   <!--begin::Title-->
                   <div class="text-center pb-8">
                     <h2 class="font-weight-bolder text-dark font-size-h2 font-size-h1-lg">Sign In</h2>
+                  </div>
+                  <div class="text-center pb-2">
+                    <p class="text-danger font-weight-bold">{{loginError}}</p>
                   </div>
                   <!--end::Title-->
                   <!--begin::Form group-->
                   <div class="form-group">
                     <label class="font-size-h6 font-weight-bolder text-dark">Username</label>
-                    <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg" type="text" name="username" autocomplete="off" />
+                    <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg" type="text" name="username" autocomplete="off" required [(ngModel)]="loginModel.username" />
                   </div>
                   <!--end::Form group-->
                   <!--begin::Form group-->
@@ -33,12 +36,12 @@
                     <div class="d-flex justify-content-between mt-n5">
                       <label class="font-size-h6 font-weight-bolder text-dark pt-5">Password</label>                  
                     </div>
-                    <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg" type="password" name="password" autocomplete="off" />
+                    <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg" type="password" name="password" autocomplete="off" required [(ngModel)]="loginModel.password" />
                   </div>
                   <!--end::Form group-->
                   <!--begin::Action-->
                   <div class="text-center pt-2">
-                    <button id="kt_login_signin_submit" class="btn btn-dark font-weight-bolder font-size-h6 px-8 py-4 my-3">Sign In</button>
+                    <button type="submit" id="login_submit" class="btn btn-dark font-weight-bolder font-size-h6 px-8 py-4 my-3">Sign In</button>
                   </div>
                   <!--end::Action-->
                 </form>

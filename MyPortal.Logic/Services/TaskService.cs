@@ -16,7 +16,7 @@ using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Person.Tasks;
+using MyPortal.Logic.Models.Requests.Person.Tasks;
 using Task = System.Threading.Tasks.Task;
 using TaskStatus = MyPortal.Database.Models.Search.TaskStatus;
 

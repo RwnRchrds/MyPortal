@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using MyPortal.Database.Models;
 using MyPortal.Logic.Authentication;
-using MyPortal.Logic.Models.Admin;
 using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Requests.Admin;
+using MyPortal.Logic.Models.Requests.Auth;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Logic.Interfaces
@@ -21,8 +22,6 @@ namespace MyPortal.Logic.Interfaces
         Task<bool> EnableDisableUser(Guid userId);
         Task<UserModel> GetUserById(Guid userId);
         Task<UserModel> GetUserByPrincipal(ClaimsPrincipal principal);
-        Task<string> GenerateToken(UserModel userModel);
-        Task<string> GenerateRefreshToken(Guid userId);
-        Task<TokenModel> RefreshToken(ClaimsPrincipal principal, string refreshToken);
+        Task<UserModel> GetUserByToken(string token);
     }
 }

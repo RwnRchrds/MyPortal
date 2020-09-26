@@ -6,7 +6,7 @@ using MyPortal.Database.Constants;
 using MyPortal.Database.Models.Search;
 using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.Person.Tasks;
+using MyPortal.Logic.Models.Requests.Person.Tasks;
 
 namespace MyPortal.Logic.Interfaces
 {

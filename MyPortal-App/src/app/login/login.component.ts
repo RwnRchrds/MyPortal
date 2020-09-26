@@ -1,3 +1,4 @@
+import { AuthService } from './../_services/auth.service';
 import { ScriptService } from './../_services/script.service';
 import { Component, OnInit } from '@angular/core';
 
@@ -8,14 +9,26 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginComponent implements OnInit {
 
-  schoolName: string = 'Harrods Community School';
-  schoolMotto: string = 'Leap Into Learning';
+  loginModel: any = {};
 
-  constructor(private scriptService: ScriptService) {}
+  loginError = '';
+
+  schoolName = 'Harrods Community School';
+  schoolMotto = 'Leap Into Learning';
+
+  constructor(private scriptService: ScriptService, private authService: AuthService) {  }
 
   ngOnInit() {
     this.scriptService.loadStyleSheet('../../assets/lib/css/pages/login/login-2.css');
-    this.scriptService.loadScript('../../assets/lib/js/pages/custom/login/login-general.js');
+  }
+
+  login() {
+    this.authService.login(this.loginModel).subscribe(next => {
+      location.reload();
+    }, error => {
+      console.log(error);
+      this.loginError = error.error;
+    });
   }
 
 }

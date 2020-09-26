@@ -7,7 +7,7 @@ using MyPortal.Database.BaseTypes;
 
 namespace MyPortal.Database.Models
 {
-    [Table("RolePermissions")]
+    [Table("AspNetRolePermissions")]
     public class RolePermission : Entity
     {
         [Column(Order = 1)]

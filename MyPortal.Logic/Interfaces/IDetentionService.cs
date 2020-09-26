@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MyPortal.Database.Models.Search;
-using MyPortal.Logic.Models.Behaviour;
 using MyPortal.Logic.Models.Entity;
+using MyPortal.Logic.Models.Requests.Behaviour;
 
 namespace MyPortal.Logic.Interfaces
 {

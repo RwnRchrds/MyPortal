@@ -1,29 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Runtime.InteropServices.ComTypes;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using MyPortal.Logic.Authentication;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.Requests.Admin;
+using MyPortal.Logic.Models.Requests.Auth;
 
 namespace MyPortalWeb.Controllers.Api
 {
     [Route("api/auth")]
-    [ApiController]
     public class AuthenticationController : BaseApiController
     {
-        public AuthenticationController(IUserService userService) : base(userService)
+        private readonly ITokenService _tokenService;
+
+        public AuthenticationController(IUserService userService, ITokenService tokenService) : base(userService)
         {
+            _tokenService = tokenService;
         }
 
         [HttpPost]
         [Route("Login")]
-        public async Task<IActionResult> Login([FromForm] LoginModel login)
+        public async Task<IActionResult> Login([FromBody] LoginModel login)
         {
             return await ProcessAsync(async () =>
             {
@@ -31,10 +26,9 @@ namespace MyPortalWeb.Controllers.Api
 
                 if (loginResult.Succeeded)
                 {
-                    var token = await UserService.GenerateToken(loginResult.User);
-                    var refreshToken = await UserService.GenerateRefreshToken(loginResult.User.Id);
+                    var tokenModel = await _tokenService.GenerateToken(loginResult.User);
 
-                    return Ok(new TokenModel {Token = token, RefreshToken = refreshToken});
+                    return Ok(tokenModel);
                 }
 
                 return Unauthorized(loginResult.ErrorMessage);
@@ -42,15 +36,28 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpPost]
-        [Authorize]
         [Route("RefreshToken")]
-        public async Task<IActionResult> RefreshToken(string refreshToken)
+        public async Task<IActionResult> RefreshToken([FromBody] TokenModel tokenModel)
         {
             return await ProcessAsync(async () =>
             {
-                var tokenResult = await UserService.RefreshToken(User, refreshToken);
+                var user = await UserService.GetUserByToken(tokenModel.Token);
 
-                return Ok(tokenResult);
+                var newTokens = await _tokenService.RefreshToken(user, tokenModel);
+
+                return Ok(newTokens);
+            });
+        }
+
+        [HttpPost]
+        [Route("Register")]
+        public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest userRequest)
+        {
+            return await ProcessAsync(async () =>
+            {
+                await UserService.CreateUser(userRequest);
+
+                return Ok("User Created");
             });
         }
     }

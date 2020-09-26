@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using MyPortal.Logic.Models.Attendance;
+using MyPortal.Logic.Models.DataGrid;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.List;
+using MyPortal.Logic.Models.Requests.Attendance;
 
 namespace MyPortal.Logic.Interfaces
 {

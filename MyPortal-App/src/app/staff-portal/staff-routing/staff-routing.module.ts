@@ -1,0 +1,33 @@
+import { StaffAuthGuard } from './../../_guards/staff-auth.guard';
+import { StaffPortalComponent } from './../staff-portal.component';
+import { StaffHomepageComponent } from './../staff-homepage/staff-homepage.component';
+import { Routes, RouterModule } from '@angular/router';
+import { NgModule } from '@angular/core';
+
+const staffRoutes: Routes = [
+  {
+    path: 'staff',
+    component: StaffPortalComponent,
+    runGuardsAndResolvers: 'always',
+    canActivate: [StaffAuthGuard],
+    children: [
+      {
+        path: 'home',
+        component: StaffHomepageComponent
+      },
+      {
+        path: '',
+        redirectTo: 'home',
+        pathMatch: 'full'
+      }
+    ]
+  }
+];
+
+@NgModule({
+  imports: [
+    RouterModule.forChild(staffRoutes)
+  ],
+  exports: [RouterModule]
+})
+export class StaffRoutingModule { }
