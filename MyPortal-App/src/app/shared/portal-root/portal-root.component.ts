@@ -1,3 +1,4 @@
+import { AuthService } from './../../_services/auth.service';
 import { Component, OnInit, Renderer2 } from '@angular/core';
 
 @Component({
@@ -6,7 +7,7 @@ import { Component, OnInit, Renderer2 } from '@angular/core';
 })
 export class PortalRootComponent {
 
-  constructor(protected renderer: Renderer2) { }
+  constructor(protected renderer: Renderer2, public authService: AuthService) { }
 
   addBodyClasses(): void {
     this.renderer.addClass(document.body, 'header-fixed');
@@ -28,5 +29,10 @@ export class PortalRootComponent {
     this.renderer.removeClass(document.body, 'aside-fixed');
     this.renderer.removeClass(document.body, 'aside-minimize-hoverable');
     //this.renderer.removeClass(document.body, 'aside-minimize');
+  }
+
+  logout(): void {
+    this.authService.logout();
+    location.reload();
   }
 }

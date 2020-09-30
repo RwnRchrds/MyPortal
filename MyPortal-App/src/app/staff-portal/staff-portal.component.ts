@@ -9,23 +9,15 @@ import {Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
 })
 export class StaffPortalComponent extends PortalRootComponent implements OnInit, OnDestroy {
 
-  displayName = '';
-
-  constructor(renderer: Renderer2, private authService: AuthService) {
-    super(renderer);
+  constructor(renderer: Renderer2, authService: AuthService) {
+    super(renderer, authService);
   }
 
   ngOnInit(): void {
     super.addBodyClasses();
-    this.loadCurrentUser();
   }
 
   ngOnDestroy(): void {
     super.removeBodyClasses();
-  }
-
-  loadCurrentUser(): void {
-    const token = this.authService.getCurrentUser();
-    this.displayName = token.displayName;
   }
 }

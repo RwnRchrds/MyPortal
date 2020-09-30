@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using MyPortal.Database.Constants;
 using MyPortal.Database.Models;
+using MyPortal.Logic.Constants;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortalWeb.Extensions
@@ -52,6 +54,16 @@ namespace MyPortalWeb.Extensions
                         }
                     };
                 });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(Policies.UserType.Staff,
+                    policy => policy.RequireClaim(ApplicationClaimTypes.UserType, UserTypes.Staff.ToString()));
+                options.AddPolicy(Policies.UserType.Student,
+                    policy => policy.RequireClaim(ApplicationClaimTypes.UserType, UserTypes.Student.ToString()));
+                options.AddPolicy(Policies.UserType.Parent,
+                    policy => policy.RequireClaim(ApplicationClaimTypes.UserType, UserTypes.Parent.ToString()));
+            });
 
             return services;
         }

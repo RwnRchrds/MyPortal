@@ -1,3 +1,5 @@
+import { StudentSearchComponent } from './people/students/student-browser/student-search/student-search.component';
+import { StudentBrowserComponent } from './people/students/student-browser/student-browser.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -18,6 +20,8 @@ import { StaffSidebarComponent } from './staff-sidebar/staff-sidebar.component';
     StaffPortalComponent,
     StaffSidebarComponent,
     StaffHomepageComponent,
+    StudentBrowserComponent,
+    StudentSearchComponent
   ],
   exports: [
     StaffPortalComponent,

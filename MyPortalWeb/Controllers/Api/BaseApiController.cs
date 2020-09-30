@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using MyPortal.Database.Constants;
+using MyPortal.Logic.Constants;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
@@ -19,15 +20,18 @@ namespace MyPortalWeb.Controllers.Api
     public abstract class BaseApiController : ControllerBase, IDisposable
     {
         protected readonly IUserService UserService;
+        protected readonly IAcademicYearService AcademicYearService;
 
-        public BaseApiController(IUserService userService)
+        public BaseApiController(IUserService userService, IAcademicYearService academicYearService)
         {
             UserService = userService;
+            AcademicYearService = academicYearService;
         }
 
         public virtual void Dispose()
         {
             UserService.Dispose();
+            AcademicYearService.Dispose();
         }
 
         protected async Task<IActionResult> ProcessAsync(Func<Task<IActionResult>> method, params Guid[] permissionsRequired)
@@ -45,6 +49,13 @@ namespace MyPortalWeb.Controllers.Api
             }
 
             return Forbid();
+        }
+        
+        protected async Task<Guid> GetCurrentAcademicYearId()
+        {
+            var currentYear = await AcademicYearService.GetCurrent();
+
+            return currentYear.Id;
         }
 
         private IActionResult HandleException(Exception ex)
@@ -86,7 +97,7 @@ namespace MyPortalWeb.Controllers.Api
             return BadRequest(message);
         }
 
-        protected async Task<bool> AuthenticateStudentResource(IStudentService studentService, Guid studentId)
+        protected async Task<bool> AuthenticateStudent(IStudentService studentService, Guid studentId)
         {
             if (User.IsType(UserTypes.Student))
             {
