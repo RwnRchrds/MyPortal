@@ -11,7 +11,8 @@ namespace MyPortalWeb.Controllers.Api
     {
         private readonly ITokenService _tokenService;
 
-        public AuthenticationController(IUserService userService, ITokenService tokenService) : base(userService)
+        public AuthenticationController(IUserService userService, IAcademicYearService academicYearService,
+            ITokenService tokenService) : base(userService, academicYearService)
         {
             _tokenService = tokenService;
         }
@@ -59,6 +60,13 @@ namespace MyPortalWeb.Controllers.Api
 
                 return Ok("User Created");
             });
+        }
+
+        public override void Dispose()
+        {
+            _tokenService.Dispose();
+            
+            base.Dispose();
         }
     }
 }

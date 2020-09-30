@@ -1,3 +1,5 @@
+import { ParentAuthGuard } from './../_guards/parent-auth.guard';
+import { StudentAuthGuard } from './../_guards/student-auth.guard';
 import { LoginAuthGuard } from '../_guards/login-auth.guard';
 import { StaffAuthGuard } from './../_guards/staff-auth.guard';
 import { LoginComponent } from './../login/login.component';
@@ -22,8 +24,18 @@ const appRoutes: Routes = [
     canLoad: [StaffAuthGuard]
   },
   {
+    path: 'student',
+    loadChildren: () => import('../student-portal/student-portal.module').then(m => m.StudentPortalModule),
+    canLoad: [StudentAuthGuard]
+  },
+  {
+    path: 'parent',
+    loadChildren: () => import('../parent-portal/parent-portal.module').then(m => m.ParentPortalModule),
+    canLoad: [ParentAuthGuard]
+  },
+  {
     path: '**',
-    redirectTo: '',
+    redirectTo: 'login',
     pathMatch: 'full'
   },
 ];

@@ -1,3 +1,5 @@
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { AuthService } from './../_services/auth.service';
 import { Injectable } from '@angular/core';
 import { CanLoad, Router, CanActivate } from '@angular/router';
@@ -8,27 +10,34 @@ import { CanLoad, Router, CanActivate } from '@angular/router';
 export class StudentAuthGuard implements CanLoad, CanActivate {
 
   constructor(private authService: AuthService, private router: Router) {}
-  canActivate(): boolean {
-    const token = this.authService.getCurrentUser();
+  canActivate(): Observable<boolean> {
+    return this.authService.currentUser$.pipe(map(user => {
+      if (!!user)
+      {
+        if (user.userType === '1')
+        {
+          return true;
+        }
+      }
 
-    if (token.type === '1')
-    {
-      return true;
-    }
-
-    return false;
+      this.router.navigate(['/login']);
+      return false;
+    }));
   }
 
-  canLoad(): boolean {
-    const token = this.authService.getCurrentUser();
+  canLoad(): Observable<boolean> {
+    return this.authService.currentUser$.pipe(map(user => {
+      if (!!user)
+      {
+        if (user.userType === '1')
+        {
+          return true;
+        }
+      }
 
-    if (!!token && token.type === '1')
-    {
-      return true;
-    }
-
-    this.router.navigate(['/login']);
-    return false;
+      this.router.navigate(['/login']);
+      return false;
+    }));
   }
 
 }

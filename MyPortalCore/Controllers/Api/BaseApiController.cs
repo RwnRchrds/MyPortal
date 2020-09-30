@@ -24,23 +24,19 @@ namespace MyPortalCore.Controllers.Api
     public abstract class BaseApiController : ControllerBase, IDisposable
     {
         protected readonly IUserService _userService;
-        protected readonly UserModel _user;
+        protected readonly IAcademicYearService _academicYearService;
 
-        public BaseApiController(IUserService userService)
+        public BaseApiController(IUserService userService, IAcademicYearService academicYearService)
         {
             _userService = userService;
+            _academicYearService = academicYearService;
         }
 
-        protected async Task<Guid> GetSelectedAcademicYearId()
+        protected async Task<Guid> GetCurrentAcademicYearId()
         {
-            var user = await _userService.GetUserByPrincipal(User);
+            var currentYear = await _academicYearService.GetCurrent();
 
-            if (user.SelectedAcademicYearId == null)
-            {
-                throw new Exception("Academic year has not been selected.");
-            }
-
-            return user.SelectedAcademicYearId.Value;
+            return currentYear.Id;
         }
 
         protected async Task<IActionResult> ProcessAsync(Func<Task<IActionResult>> method, params Guid[] permissionsRequired)

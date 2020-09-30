@@ -27,7 +27,6 @@
 
   <ItemGroup>
     <Folder Include="Models\Requests\Admissions\" />
-    <Folder Include="Models\Requests\Student\Behaviour" />
   </ItemGroup>
 
 </Project>

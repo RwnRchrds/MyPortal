@@ -12,11 +12,11 @@ export class StaffHomepageComponent extends PortalViewComponent implements OnIni
     super(renderer, hostElement);
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     super.addStyles();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     super.removeStyles();
   }
 

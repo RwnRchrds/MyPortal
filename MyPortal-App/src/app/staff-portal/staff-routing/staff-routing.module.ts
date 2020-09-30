@@ -1,3 +1,4 @@
+import { StudentBrowserComponent } from './../people/students/student-browser/student-browser.component';
 import { StaffAuthGuard } from './../../_guards/staff-auth.guard';
 import { StaffPortalComponent } from './../staff-portal.component';
 import { StaffHomepageComponent } from './../staff-homepage/staff-homepage.component';
@@ -14,6 +15,10 @@ const staffRoutes: Routes = [
       {
         path: 'home',
         component: StaffHomepageComponent
+      },
+      {
+        path: 'students',
+        component: StudentBrowserComponent
       },
       {
         path: '',
