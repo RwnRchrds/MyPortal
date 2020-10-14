@@ -4,7 +4,7 @@ import { Component, ElementRef, Renderer2 } from '@angular/core';
   selector: 'app-portal-view',
   template: ''
 })
-export class PortalViewComponent {
+export abstract class PortalViewComponent {
 
   constructor(protected renderer: Renderer2, protected hostElement: ElementRef) { }
 

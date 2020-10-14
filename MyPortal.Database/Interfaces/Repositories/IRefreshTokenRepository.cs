@@ -11,6 +11,6 @@ namespace MyPortal.Database.Interfaces.Repositories
     {
         Task<IEnumerable<RefreshToken>> GetByUser(Guid userId);
 
-        Task DeleteExpired();
+        Task DeleteExpired(Guid userId);
     }
 }

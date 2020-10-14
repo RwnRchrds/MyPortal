@@ -7,6 +7,7 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using SqlKata;
+using SqlKata.Extensions;
 using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
@@ -27,7 +28,7 @@ namespace MyPortal.Database.Repositories
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("Users AS User", "User.Id", "RefreshToken.UserId");
+            query.LeftJoin("AspNetUsers AS User", "User.Id", "RefreshToken.UserId");
         }
 
         protected override async Task<IEnumerable<RefreshToken>> ExecuteQuery(Query query)
@@ -51,13 +52,16 @@ namespace MyPortal.Database.Repositories
             return await ExecuteQuery(query);
         }
 
-        public async Task DeleteExpired()
+        public async Task DeleteExpired(Guid userId)
         {
-            var query = GenerateEmptyQuery(typeof(RefreshToken), "RefreshToken");
+            var query = GenerateEmptyQuery(typeof(RefreshToken));
 
-            query.Where("RefreshToken.ExpirationDate", "<", DateTime.Now);
+            query.Where("UserId", userId);
+            query.Where("ExpirationDate", "<", DateTime.Now);
 
-            await ExecuteNonQuery(query.AsDelete());
+            query.AsDelete();
+
+            await ExecuteNonQuery(query);
         }
     }
 }

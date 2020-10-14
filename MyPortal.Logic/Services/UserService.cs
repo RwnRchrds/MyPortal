@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -136,11 +137,18 @@ namespace MyPortal.Logic.Services
 
         public async Task<UserModel> GetUserByPrincipal(ClaimsPrincipal principal)
         {
-            var tokenValid = Guid.TryParse(principal.FindFirst(JwtRegisteredClaimNames.NameId).Value, out var userId);
+            var nameId = principal.Claims.FirstOrDefault(c => c.Type.Contains(JwtRegisteredClaimNames.NameId));
+
+            if (nameId == null)
+            {
+                throw new SecurityTokenException("User ID could not be retrieved from token.");
+            }
+
+            var tokenValid = Guid.TryParse(nameId.Value, out var userId);
 
             if (!tokenValid)
             {
-                throw new SecurityTokenException("Invalid access token.");
+                throw new SecurityTokenException("User ID could not be retrieved from token.");
             }
 
             return await GetUserById(userId);

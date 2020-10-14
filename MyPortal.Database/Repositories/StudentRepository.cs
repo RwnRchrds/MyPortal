@@ -40,7 +40,7 @@ namespace MyPortal.Database.Repositories
         protected override void JoinRelated(Query query)
         {
             query.LeftJoin("People as StudentPerson", "StudentPerson.Id", "Student.PersonId");
-            query.LeftJoin("AspNetUsers as User", "User.Id", "StudentPerson.UserId");
+            query.LeftJoin("AspNetUsers as User", "User.PersonId", "StudentPerson.Id");
             query.LeftJoin("RegGroups as RegGroup", "RegGroup.Id", "Student.RegGroupId");
             query.LeftJoin("StaffMembers as Tutor", "Tutor.Id", "RegGroup.TutorId");
             query.LeftJoin("People as TutorPerson", "TutorPerson.Id", "Tutor.PersonId");
@@ -64,6 +64,8 @@ namespace MyPortal.Database.Repositories
                     break;
                 case StudentStatus.Future:
                     query.WhereDate("Student.DateStarting", ">", DateTime.Today);
+                    break;
+                default:
                     break;
             }
 

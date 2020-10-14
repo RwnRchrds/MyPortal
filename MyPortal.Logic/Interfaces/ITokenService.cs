@@ -13,6 +13,7 @@ namespace MyPortal.Logic.Interfaces
     {
         Task<TokenModel> GenerateToken(UserModel userModel);
         Task<TokenModel> RefreshToken(UserModel userModel, TokenModel tokenModel);
+        Task<bool> RevokeToken(UserModel userModel, TokenModel tokenModel);
         ClaimsPrincipal GetPrincipalFromToken(string token);
     }
 }

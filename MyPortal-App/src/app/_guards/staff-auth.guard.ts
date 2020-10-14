@@ -20,7 +20,6 @@ export class StaffAuthGuard implements CanLoad, CanActivate {
           return true;
         }
       }
-
       this.router.navigate(['/login']);
       return false;
     }));
@@ -35,7 +34,6 @@ export class StaffAuthGuard implements CanLoad, CanActivate {
           return true;
         }
       }
-
       this.router.navigate(['/login']);
       return false;
     }));

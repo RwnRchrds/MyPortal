@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Repositories;
+using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Helpers;
-using MyPortal.Logic.Models.Exceptions;
 
 namespace MyPortal.Logic.Models.Entity
 {
@@ -28,7 +28,7 @@ namespace MyPortal.Logic.Models.Entity
         {
             if (await academicYearRepository.IsLocked(academicYearId))
             {
-                throw new ServiceException(ExceptionType.BadRequest, "This academic year is locked and cannot be modified.");
+                throw new LogicException("This academic year is locked and cannot be modified.");
             }
         }
     }

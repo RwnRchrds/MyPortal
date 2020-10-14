@@ -101,14 +101,14 @@ namespace MyPortal.Database.Repositories
         {
             var compiled = Compiler.Compile(query);
 
-            return await Connection.ExecuteAsync(compiled.Sql, compiled.Bindings);
+            return await Connection.ExecuteAsync(compiled.Sql, compiled.NamedBindings);
         }
 
-        protected Query GenerateQuery(bool includeDeleted = false, bool getRelated = true)
+        protected Query GenerateQuery(bool includeSoftDeleted = false, bool getRelated = true)
         {
             var query = new Query(TblName).SelectAllColumns(typeof(TEntity), TblAlias);
 
-            if (typeof(TEntity).GetInterfaces().Contains(typeof(ISoftDeleteEntity)) && !includeDeleted)
+            if (typeof(TEntity).GetInterfaces().Contains(typeof(ISoftDeleteEntity)) && !includeSoftDeleted)
             {
                 query.Where($"{TblAlias}.Deleted", false);
             }

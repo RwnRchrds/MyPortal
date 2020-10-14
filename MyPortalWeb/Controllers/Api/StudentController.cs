@@ -24,7 +24,7 @@ namespace MyPortalWeb.Controllers.Api
         
         [HttpGet]
         [Authorize(Policy = Policies.UserType.Staff)]
-        [Route("Search", Name = "ApiStudentSearch")]
+        [Route("Search")]
         public async Task<IActionResult> SearchStudents([FromQuery] StudentSearchOptions searchModel)
         {
             return await ProcessAsync(async () =>
@@ -41,7 +41,7 @@ namespace MyPortalWeb.Controllers.Api
         }
 
         [HttpGet]
-        [Route("GetById", Name = "ApiStudentGetById")]
+        [Route("GetById")]
         public async Task<IActionResult> GetById([FromQuery] Guid studentId)
         {
             return await ProcessAsync(async () =>

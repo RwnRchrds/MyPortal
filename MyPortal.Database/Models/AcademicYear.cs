@@ -17,7 +17,6 @@ namespace MyPortal.Database.Models
             AttendanceWeekPatterns = new HashSet<AttendanceWeekPattern>();
             Classes = new HashSet<Class>();
             LogNotes= new HashSet<LogNote>();
-            Sales = new HashSet<Sale>();
             Achievements = new HashSet<Achievement>();
             Incidents = new HashSet<Incident>();
         }
@@ -44,9 +43,7 @@ namespace MyPortal.Database.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<LogNote> LogNotes { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Sale> Sales { get; set; }
+        
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Achievement> Achievements { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

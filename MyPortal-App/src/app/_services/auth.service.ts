@@ -1,53 +1,84 @@
-import { BaseService } from './base.service';
+import { TokenWrapper } from './../_models/token-wrapper';
 import { User } from './../_models/user';
+import { BaseService } from './base.service';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ReplaySubject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {EMPTY, Observable, ReplaySubject} from 'rxjs';
+import {map, take} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService extends BaseService {
 
+  refreshTokenInProgress = false;
+
   private currentUserSource = new ReplaySubject<User>(1);
 
   currentUser$ = this.currentUserSource.asObservable();
 
-constructor(http: HttpClient) {
-  super(http, 'auth');
- }
+  constructor(http: HttpClient) {
+    super(http, 'auth');
+  }
 
-login(model: any): any {
-  return this.http.post(this.baseUrl + 'login', model)
-    .pipe(
-      map((response: User) => {
-        const user = response;
+  login(model: any): any {
+    return this.http.post(this.baseUrl + 'login', model)
+      .pipe(
+        map((response: TokenWrapper) => {
+          const loginResponse = response;
 
-        const token = this.getDecodedToken(user.token);
+          const user = this.getUser(loginResponse);
 
-        user.displayName = token.displayName;
-        user.userType = token.type;
+          if (user) {
+            console.log(user);
+            localStorage.setItem('tokenWrapper', JSON.stringify(loginResponse));
+            this.currentUserSource.next(user);
+          }
+        })
+      );
+  }
 
-        if (user) {
-          localStorage.setItem('user', JSON.stringify(user));
-          this.currentUserSource.next(user);
-        }
-      })
-    );
-}
+  refreshToken(): Observable<boolean> {
+    this.refreshTokenInProgress = false;
+    let currentUser: User;
+    this.currentUser$.pipe(take(1)).subscribe(user => currentUser = user);
+    return this.http.post(this.baseUrl + 'refreshToken', currentUser).pipe(map((tokenResponse: TokenWrapper) => {
+      const userResponse = this.getUser(tokenResponse);
+      if (userResponse) {
+        console.log('refresh success');
+        localStorage.setItem('tokenWrapper', JSON.stringify(tokenResponse));
+        this.currentUserSource.next(userResponse);
+        return true;
+      }
+      return false;
+    }));
+  }
 
-getDecodedToken(token: string): any {
-  return JSON.parse(atob(token.split('.')[1]));
-}
+  private getDecodedToken(token: string): any {
+    return JSON.parse(atob(token.split('.')[1]));
+  }
 
-logout(): void {
-  localStorage.removeItem('user');
-  this.currentUserSource.next(null);
-}
+  getUser(tokenWrapper: TokenWrapper): User {
 
-setCurrentUser(user: User): void {
-  this.currentUserSource.next(user);
-}
+    const decodedToken = this.getDecodedToken(tokenWrapper.token);
 
+    const user = {
+      displayName: decodedToken.displayName,
+      userType: decodedToken.type,
+      permissions: decodedToken.perm,
+      token: tokenWrapper.token,
+      refreshToken: tokenWrapper.refreshToken
+    } as User;
+
+    return user;
+  }
+
+  logout(): void {
+    localStorage.removeItem('tokenWrapper');
+    this.currentUserSource.next(null);
+  }
+
+  setCurrentUser(user: User): void {
+    this.currentUserSource.next(user);
+  }
 }
