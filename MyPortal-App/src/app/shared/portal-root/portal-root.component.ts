@@ -1,13 +1,16 @@
+import { Router } from '@angular/router';
 import { AuthService } from './../../_services/auth.service';
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, Renderer2 } from '@angular/core';
+import {Observable} from 'rxjs';
+import {map, switchMap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-portal-root',
   template: ''
 })
-export class PortalRootComponent {
+export abstract class PortalRootComponent {
 
-  constructor(protected renderer: Renderer2, public authService: AuthService) { }
+  constructor(protected renderer: Renderer2, public authService: AuthService, protected router: Router) { }
 
   addBodyClasses(): void {
     this.renderer.addClass(document.body, 'header-fixed');
@@ -17,7 +20,7 @@ export class PortalRootComponent {
     this.renderer.addClass(document.body, 'aside-enabled');
     this.renderer.addClass(document.body, 'aside-fixed');
     this.renderer.addClass(document.body, 'aside-minimize-hoverable');
-    //this.renderer.addClass(document.body, 'aside-minimize');
+    // this.renderer.addClass(document.body, 'aside-minimize');
   }
 
   removeBodyClasses(): void {
@@ -28,11 +31,11 @@ export class PortalRootComponent {
     this.renderer.removeClass(document.body, 'aside-enabled');
     this.renderer.removeClass(document.body, 'aside-fixed');
     this.renderer.removeClass(document.body, 'aside-minimize-hoverable');
-    //this.renderer.removeClass(document.body, 'aside-minimize');
+    // this.renderer.removeClass(document.body, 'aside-minimize');
   }
 
   logout(): void {
     this.authService.logout();
-    location.reload();
+    this.router.navigate(['/login']);
   }
 }

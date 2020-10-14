@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using MyPortal.Logic.Models.Exceptions;
+using MyPortal.Logic.Exceptions;
 
 namespace MyPortal.Logic.Helpers
 {
@@ -85,7 +86,7 @@ namespace MyPortal.Logic.Helpers
             {
                 var errors = results.Select(x => x.ErrorMessage).ToList();
 
-                throw new ServiceException(ExceptionType.BadRequest, errors.FirstOrDefault());
+                throw new InvalidDataException(errors.FirstOrDefault());
             }
         }
     }

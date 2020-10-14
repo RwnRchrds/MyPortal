@@ -1,6 +1,5 @@
 import { AuthService } from './_services/auth.service';
-import { HttpClient } from '@angular/common/http';
-import { User } from './_models/user';
+import { TokenWrapper } from './_models/token-wrapper';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -9,17 +8,26 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'MyPortal-App';
+  title = 'MyPortal';
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(private authService: AuthService) {}
 
 ngOnInit(): void {
   this.setCurrentUser();
 }
 
 setCurrentUser(): void {
-  const user: User = JSON.parse(localStorage.getItem('user'));
-  this.authService.setCurrentUser(user);
+  const tokenWrapper: TokenWrapper = JSON.parse(localStorage.getItem('tokenWrapper'));
+
+  if (!!tokenWrapper)
+  {
+    const user = this.authService.getUser(tokenWrapper);
+    this.authService.setCurrentUser(user);
+  }
+  else
+  {
+    this.authService.setCurrentUser(null);
+  }
 }
 
 }

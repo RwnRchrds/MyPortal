@@ -41,6 +41,8 @@ namespace MyPortal.Database.Models
         public virtual DbSet<BehaviourOutcome> BehaviourOutcomes { get; set; }
         public virtual DbSet<BehaviourStatus> BehaviourStatus { get; set; }
         public virtual DbSet<BehaviourTarget> BehaviourTargets { get; set; }
+        public virtual DbSet<Bill> Bills { get; set; }
+        public virtual DbSet<BillItem> BillItems { get; set; }
         public virtual DbSet<Bulletin> Bulletins { get; set; }
         public virtual DbSet<Class> Classes { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
@@ -149,7 +151,6 @@ namespace MyPortal.Database.Models
         public virtual DbSet<Room> Rooms { get; set; }
         public virtual DbSet<RoomClosure> RoomClosures { get; set; }
         public virtual DbSet<RoomClosureReason> RoomClosureReasons { get; set; }
-        public virtual DbSet<Sale> Sales { get; set; }
         public virtual DbSet<School> Schools { get; set; }
         public virtual DbSet<SchoolPhase> Phases { get; set; }
         public virtual DbSet<SchoolType> SchoolTypes { get; set; }
@@ -181,6 +182,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<TrainingCertificate> TrainingCertificates { get; set; }
         public virtual DbSet<TrainingCertificateStatus> TrainingCertificateStatus { get; set; }
         public virtual DbSet<TrainingCourse> TrainingCourses { get; set; }
+        public virtual DbSet<VatRate> VatRates { get; set; }
         public virtual DbSet<YearGroup> YearGroups { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -214,6 +216,8 @@ namespace MyPortal.Database.Models
                 modelBuilder.Entity<BehaviourOutcome>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<BehaviourStatus>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<BehaviourTarget>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                modelBuilder.Entity<Bill>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                modelBuilder.Entity<BillItem>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Bulletin>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Class>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Comment>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
@@ -335,7 +339,6 @@ namespace MyPortal.Database.Models
                 modelBuilder.Entity<Room>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<RoomClosure>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<RoomClosureReason>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<Sale>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<School>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<SchoolPhase>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<SchoolType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
@@ -372,6 +375,7 @@ namespace MyPortal.Database.Models
                 modelBuilder.Entity<TrainingCertificateStatus>().Property(e => e.Id)
                     .HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<TrainingCourse>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                modelBuilder.Entity<VatRate>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<YearGroup>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
             }
 
@@ -550,13 +554,6 @@ namespace MyPortal.Database.Models
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<AcademicYear>()
-                .HasMany(e => e.Sales)
-                .WithOne(e => e.AcademicYear)
-                .HasForeignKey(e => e.AcademicYearId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<AcademicYear>()
                 .HasMany(e => e.LogNotes)
                 .WithOne(e => e.AcademicYear)
                 .HasForeignKey(e => e.AcademicYearId)
@@ -723,9 +720,16 @@ namespace MyPortal.Database.Models
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Product>()
-                .HasMany(e => e.Sales)
+                .HasMany(e => e.BillItems)
                 .WithOne(e => e.Product)
                 .HasForeignKey(e => e.ProductId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            modelBuilder.Entity<Product>()
+                .HasOne(e => e.VatRate)
+                .WithMany(e => e.Products)
+                .HasForeignKey(e => e.VatRateId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
@@ -1118,7 +1122,7 @@ namespace MyPortal.Database.Models
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Student>()
-                .HasMany(e => e.Sales)
+                .HasMany(e => e.Bills)
                 .WithOne(e => e.Student)
                 .HasForeignKey(e => e.StudentId)
                 .IsRequired()
@@ -1923,6 +1927,13 @@ namespace MyPortal.Database.Models
                 .HasMany(e => e.RolePermissions)
                 .WithOne(e => e.Permission)
                 .HasForeignKey(e => e.PermissionId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Bill>()
+                .HasMany(e => e.BillItems)
+                .WithOne(e => e.Bill)
+                .HasForeignKey(e => e.BillId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
         }

@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using MyPortal.Database.Constants;
 using MyPortal.Logic.Constants;
+using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.Exceptions;
 
 namespace MyPortalWeb.Controllers.Api
 {
@@ -60,62 +61,37 @@ namespace MyPortalWeb.Controllers.Api
 
         private IActionResult HandleException(Exception ex)
         {
-            var statusCode = HttpStatusCode.BadRequest;
+            HttpStatusCode statusCode;
 
             var message = ExceptionHelper.GetRootExceptionMessage(ex);
 
-            if (ex is ServiceException e)
+            switch (ex)
             {
-                switch (e.ExceptionType)
-                {
-                    case ExceptionType.Forbidden:
-                        statusCode = HttpStatusCode.Forbidden;
-                        break;
-                    case ExceptionType.NotFound:
-                        statusCode = HttpStatusCode.NotFound;
-                        break;
-                    default:
-                        statusCode = HttpStatusCode.BadRequest;
-                        break;
-                }
+                case NotFoundException n:
+                    statusCode = HttpStatusCode.NotFound;
+                    break;
+                case SecurityTokenException s:
+                    statusCode = HttpStatusCode.Unauthorized;
+                    break;
+                case UnauthorisedException u:
+                    statusCode = HttpStatusCode.Forbidden;
+                    break;
+                default:
+                    statusCode = HttpStatusCode.BadRequest;
+                    break;
             }
 
-            else if (ex is SecurityTokenException s)
+            switch (statusCode)
             {
-                return Unauthorized(s.Message);
+                case HttpStatusCode.NotFound:
+                    return NotFound(message);
+                case HttpStatusCode.Unauthorized:
+                    return Unauthorized(message);
+                case HttpStatusCode.Forbidden:
+                    return Forbid(message);
+                default:
+                    return BadRequest(message);
             }
-
-            if (statusCode == HttpStatusCode.NotFound)
-            {
-                return NotFound(message);
-            }
-            if (statusCode == HttpStatusCode.Forbidden)
-            {
-                return Forbid();
-            }
-
-            return BadRequest(message);
-        }
-
-        protected async Task<bool> AuthenticateStudent(IStudentService studentService, Guid studentId)
-        {
-            if (User.IsType(UserTypes.Student))
-            {
-                var user = await UserService.GetUserByPrincipal(User);
-
-                var student = await studentService.GetByUserId(user.Id);
-
-                if (student.Id == studentId)
-                {
-                    return true;
-                }
-            }
-            else if (User.IsType(UserTypes.Staff))
-            {
-                return true;
-            }
-
-            return false;
         }
     }
 }

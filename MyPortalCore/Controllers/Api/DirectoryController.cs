@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Constants;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.Documents;
+using MyPortal.Logic.Models.DataGrid;
 using MyPortal.Logic.Models.Entity;
-using MyPortal.Logic.Models.List;
+using MyPortal.Logic.Models.Requests.Documents;
 
 namespace MyPortalCore.Controllers.Api
 {
@@ -28,7 +28,7 @@ namespace MyPortalCore.Controllers.Api
         }
 
         [HttpGet]
-        [Route("getChildren", Name = "ApiDirectoryGetChildren")]
+        [Route("Children", Name = "ApiDirectoryGetChildren")]
         public async Task<IActionResult> GetChildren([FromQuery] Guid directoryId)
         {
             return await ProcessAsync(async () =>
@@ -63,7 +63,7 @@ namespace MyPortalCore.Controllers.Api
         }
 
         [HttpPost]
-        [Route("create", Name = "ApiDirectoryCreate")]
+        [Route("Create", Name = "ApiDirectoryCreate")]
         public async Task<IActionResult> Create([FromForm] CreateDirectoryModel model)
         {
             return await ProcessAsync(async () =>
@@ -90,7 +90,7 @@ namespace MyPortalCore.Controllers.Api
         }
 
         [HttpPut]
-        [Route("update", Name = "ApiDirectoryUpdate")]
+        [Route("Update", Name = "ApiDirectoryUpdate")]
         public async Task<IActionResult> Update([FromForm] UpdateDirectoryModel model)
         {
             return await ProcessAsync(async () =>
@@ -118,7 +118,7 @@ namespace MyPortalCore.Controllers.Api
         }
 
         [HttpDelete]
-        [Route("delete", Name = "ApiDirectoryDelete")]
+        [Route("Delete", Name = "ApiDirectoryDelete")]
         public async Task<IActionResult> Delete([FromQuery] Guid directoryId)
         {
             return await ProcessAsync(async () =>
@@ -137,7 +137,7 @@ namespace MyPortalCore.Controllers.Api
         }
 
         [HttpGet]
-        [Route("getById", Name = "ApiDirectoryGetById")]
+        [Route("Get", Name = "ApiDirectoryGetById")]
         public async Task<IActionResult> GetById([FromQuery] Guid directoryId)
         {
             return await ProcessAsync(async () =>

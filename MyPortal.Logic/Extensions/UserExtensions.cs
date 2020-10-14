@@ -14,6 +14,12 @@ namespace MyPortal.Logic.Extensions
             return user.FindFirst(ApplicationClaimTypes.DisplayName)?.Value ?? user.Identity.Name;
         }
 
+        /// <summary>
+        /// Determines whether the user has any of the permissions specified.
+        /// </summary>
+        /// <param name="principal">The ClaimsPrincipal object representing the authenticated user.</param>
+        /// <param name="permissions">The permissions to check against the user.</param>
+        /// <returns></returns>
         public static bool HasPermission(this ClaimsPrincipal principal, params Guid[] permissions)
         {
             if (permissions.Length == 0)

@@ -1,7 +1,6 @@
-export interface User {
+import { TokenWrapper } from './token-wrapper';
+export interface User extends TokenWrapper {
     displayName: string;
-    userType: string;
     permissions: string[];
-    token: string;
-    refreshToken: string;
+    userType: string;
 }

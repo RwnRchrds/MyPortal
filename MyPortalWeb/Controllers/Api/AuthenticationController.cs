@@ -44,9 +44,23 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var user = await UserService.GetUserByToken(tokenModel.Token);
 
-                var newTokens = await _tokenService.RefreshToken(user, tokenModel);
+                var newTokenModel = await _tokenService.RefreshToken(user, tokenModel);
 
-                return Ok(newTokens);
+                return Ok(newTokenModel);
+            });
+        }
+
+        [HttpPost]
+        [Route("RevokeToken")]
+        public async Task<IActionResult> RevokeToken([FromBody] TokenModel tokenModel)
+        {
+            return await ProcessAsync(async () =>
+            {
+                var user = await UserService.GetUserByToken(tokenModel.Token);
+
+                var result = await _tokenService.RevokeToken(user, tokenModel);
+
+                return Ok(result);
             });
         }
 

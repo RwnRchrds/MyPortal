@@ -11,18 +11,16 @@ namespace MyPortalWeb.Controllers.Api
 {
     [Authorize]
     [Route("api/behaviour/achievement")]
-    public class AchievementController : BaseApiController
+    public class AchievementController : StudentApiController
     {
         private readonly IAchievementService _achievementService;
-        private IStudentService _studentService;
 
-        public AchievementController(IUserService userService, IAcademicYearService academicYearService, IAchievementService achievementService, IStudentService studentService) : base(
-            userService, academicYearService)
+        public AchievementController(IUserService userService, IAcademicYearService academicYearService, IStudentService studentService, IAchievementService achievementService) : base(userService, academicYearService, studentService)
         {
             _achievementService = achievementService;
-            _studentService = studentService;
         }
-        
+
+
         [HttpGet]
         [Route("get", Name = "ApiAchievementGetById")]
         public async Task<IActionResult> GetById([FromQuery] Guid achievementId)
@@ -31,7 +29,7 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var achievement = await _achievementService.GetById(achievementId);
 
-                if (await AuthenticateStudent(_studentService, achievement.StudentId))
+                if (await AuthenticateStudent(achievement.StudentId))
                 {
                     return Ok(achievement);
                 }
@@ -46,7 +44,7 @@ namespace MyPortalWeb.Controllers.Api
         {
             return await ProcessAsync(async () =>
             {
-                if (await AuthenticateStudent(_studentService, studentId))
+                if (await AuthenticateStudent(studentId))
                 {
                     var fromAcademicYearId = academicYearId ?? await GetCurrentAcademicYearId();
 
@@ -105,8 +103,7 @@ namespace MyPortalWeb.Controllers.Api
         public override void Dispose()
         {
             _achievementService.Dispose();
-            _studentService.Dispose();
-            
+
             base.Dispose();
         }
     }

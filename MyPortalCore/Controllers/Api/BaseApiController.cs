@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Constants;
-using MyPortal.Database.Models.Identity;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
@@ -59,27 +58,6 @@ namespace MyPortalCore.Controllers.Api
             }
 
             return Forbid();
-        }
-
-        protected async Task<bool> AuthenticateStudentResource(IStudentService studentService, Guid studentId)
-        {
-            if (User.IsType(UserTypes.Student))
-            {
-                var user = await _userService.GetUserByPrincipal(User);
-
-                var student = await studentService.GetByUserId(user.Id);
-
-                if (student.Id == studentId)
-                {
-                    return true;
-                }
-            }
-            else if (User.IsType(UserTypes.Staff))
-            {
-                return true;
-            }
-
-            return false;
         }
 
         private IActionResult HandleException(Exception ex)

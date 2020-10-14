@@ -2,7 +2,7 @@
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface ISaleRepository : IReadWriteRepository<Sale>
+    public interface IBillRepository : IReadWriteRepository<Bill>
     {
     }
 }

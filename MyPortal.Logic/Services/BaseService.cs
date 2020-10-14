@@ -3,7 +3,6 @@ using AutoMapper;
  using MyPortal.Logic.Exceptions;
  using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
-using MyPortal.Logic.Models.Exceptions;
 
  namespace MyPortal.Logic.Services
 {

@@ -58,7 +58,7 @@ namespace MyPortal.Logic.Services
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddMinutes(20),
+                Expires = DateTime.Now.AddMinutes(15),
                 SigningCredentials = creds
             };
 
@@ -71,6 +71,8 @@ namespace MyPortal.Logic.Services
 
         private async Task<string> GenerateRefreshToken(Guid userId)
         {
+            await _refreshTokenRepository.DeleteExpired(userId);
+
             var randomNumber = new byte[256];
 
             using (var rng = RandomNumberGenerator.Create())
@@ -83,7 +85,7 @@ namespace MyPortal.Logic.Services
                 {
                     UserId = userId,
                     Value = token,
-                    ExpirationDate = DateTime.Now.AddDays(14)
+                    ExpirationDate = DateTime.Now.AddDays(60)
                 });
 
                 await _refreshTokenRepository.SaveChanges();
@@ -155,6 +157,23 @@ namespace MyPortal.Logic.Services
             await _refreshTokenRepository.SaveChanges();
 
             return tokenResult;
+        }
+
+        public async Task<bool> RevokeToken(UserModel userModel, TokenModel tokenModel)
+        {
+            var userRefreshTokens = await _refreshTokenRepository.GetByUser(userModel.Id);
+
+            var selectedRefreshToken = userRefreshTokens.FirstOrDefault(x => x.Value == tokenModel.RefreshToken);
+
+            if (selectedRefreshToken == null)
+            {
+                return false;
+            }
+
+            await _refreshTokenRepository.Delete(selectedRefreshToken.Id);
+            await _refreshTokenRepository.SaveChanges();
+
+            return true;
         }
     }
 }

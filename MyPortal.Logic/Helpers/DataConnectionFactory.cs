@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MyPortal.Database.Models;
 using MyPortal.Logic.Exceptions;
-using MyPortal.Logic.Models.Exceptions;
 
 namespace MyPortal.Logic.Helpers
 {
