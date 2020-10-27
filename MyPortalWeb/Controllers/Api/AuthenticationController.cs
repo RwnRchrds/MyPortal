@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using MyPortal.Database.Permissions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Requests.Admin;
 using MyPortal.Logic.Models.Requests.Auth;
@@ -73,7 +74,7 @@ namespace MyPortalWeb.Controllers.Api
                 await UserService.CreateUser(userRequest);
 
                 return Ok("User Created");
-            });
+            }, Permissions.System.Users.EditUsers);
         }
 
         public override void Dispose()

@@ -36,7 +36,7 @@ namespace MyPortalCore.Controllers.Api
 
                 using (new ProcessTimer("Fetch students"))
                 {
-                    students = (await _studentService.Get(searchModel)).Select(x => x.GetListModel());
+                    students = (await _studentService.Get(searchModel)).Select(x => x.GetDataGridModel());
                 }
 
                 return Ok(students);

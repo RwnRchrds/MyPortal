@@ -31,7 +31,7 @@
       <!--begin::Menu Nav-->
       <ul class="menu-nav">
         <li class="menu-item" aria-haspopup="true">
-          <a routerLink='/staff/home' class="menu-link">
+          <a routerLink='{{homeRoute}}' class="menu-link">
               <span class="svg-icon menu-icon">
                   <i class="fad fa-fw fa-home"></i>
               </span>
@@ -39,10 +39,10 @@
           </a>
       </li>
       <li class="menu-section">
-          <h4 class="menu-text">Staff Portal</h4>
+          <h4 class="menu-text">{{sidebarTitle}}</h4>
           <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
       </li>
-      <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+      <li *ngIf="(menuItems | menuItemFilter:assessmentMenu).length > 0" class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
           <a href="#" class="menu-link menu-toggle">
               <span class="svg-icon menu-icon">
                   <!--begin::Svg Icon | path:~/lib/metronic/media/svg/icons/Design/Bucket.svg-->
@@ -55,11 +55,23 @@
           <div class="menu-submenu">
               <i class="menu-arrow"></i>
               <ul class="menu-subnav">
-                  
+                <li class="menu-item menu-item-parent" aria-haspopup="true">
+                    <span class="menu-link">
+                        <span class="menu-text">Assessment</span>
+                    </span>
+                </li>
+                <li *ngFor="let menuItem of (menuItems | menuItemFilter:assessmentMenu)" class="menu-item" aria-haspopup="true">
+                    <a routerLink='{{menuItem.route}}' class="menu-link">
+                        <i class="menu-bullet menu-bullet-dot">
+                            <span></span>
+                        </i>
+                        <span class="menu-text">{{menuItem.text}}</span>
+                    </a>
+                </li>
               </ul>
           </div>
       </li>
-      <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+      <li *ngIf="(menuItems | menuItemFilter:attendanceMenu).length > 0" class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
           <a href="#" class="menu-link menu-toggle">
               <span class="svg-icon menu-icon">
                   <!--begin::Svg Icon | path:~/lib/metronic/media/svg/icons/Code/Compiling.svg-->
@@ -77,10 +89,18 @@
                           <span class="menu-text">Attendance</span>
                       </span>
                   </li>
+                  <li *ngFor="let menuItem of (menuItems | menuItemFilter:attendanceMenu)" class="menu-item" aria-haspopup="true">
+                    <a routerLink='{{menuItem.route}}' class="menu-link">
+                        <i class="menu-bullet menu-bullet-dot">
+                            <span></span>
+                        </i>
+                        <span class="menu-text">{{menuItem.text}}</span>
+                    </a>
+                </li>
               </ul>
           </div>
       </li>
-      <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+      <li *ngIf="(menuItems | menuItemFilter:behaviourMenu).length > 0" class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
           <a href="#" class="menu-link menu-toggle">
               <span class="svg-icon menu-icon">
                   <!--begin::Svg Icon | path:~/lib/metronic/media/svg/icons/General/Settings-1.svg-->
@@ -98,10 +118,18 @@
                           <span class="menu-text">Behaviour</span>
                       </span>
                   </li>
+                  <li *ngFor="let menuItem of (menuItems | menuItemFilter:behaviourMenu)" class="menu-item" aria-haspopup="true">
+                    <a routerLink='{{menuItem.route}}' class="menu-link">
+                        <i class="menu-bullet menu-bullet-dot">
+                            <span></span>
+                        </i>
+                        <span class="menu-text">{{menuItem.text}}</span>
+                    </a>
+                </li>
               </ul>
           </div>
       </li>
-      <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+      <li *ngIf="(menuItems | menuItemFilter:calendarMenu).length > 0" class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
           <a href="#" class="menu-link menu-toggle">
               <span class="svg-icon menu-icon">
                   <!--begin::Svg Icon | path:~/lib/metronic/media/svg/icons/General/Settings-1.svg-->
@@ -119,10 +147,18 @@
                           <span class="menu-text">Calendar</span>
                       </span>
                   </li>
+                  <li *ngFor="let menuItem of (menuItems | menuItemFilter:calendarMenu)" class="menu-item" aria-haspopup="true">
+                    <a routerLink='{{menuItem.route}}' class="menu-link">
+                        <i class="menu-bullet menu-bullet-dot">
+                            <span></span>
+                        </i>
+                        <span class="menu-text">{{menuItem.text}}</span>
+                    </a>
+                </li>
               </ul>
           </div>
       </li>
-      <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+      <li *ngIf="(menuItems | menuItemFilter:communicationMenu).length > 0" class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
           <a href="#" class="menu-link menu-toggle">
               <span class="svg-icon menu-icon">
                   <!--begin::Svg Icon | path:~/lib/metronic/media/svg/icons/General/Settings-1.svg-->
@@ -140,10 +176,18 @@
                           <span class="menu-text">Communication</span>
                       </span>
                   </li>
+                  <li *ngFor="let menuItem of (menuItems | menuItemFilter:communicationMenu)" class="menu-item" aria-haspopup="true">
+                    <a routerLink='{{menuItem.route}}' class="menu-link">
+                        <i class="menu-bullet menu-bullet-dot">
+                            <span></span>
+                        </i>
+                        <span class="menu-text">{{menuItem.text}}</span>
+                    </a>
+                </li>
               </ul>
           </div>
       </li>
-      <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+      <li *ngIf="(menuItems | menuItemFilter:curriculumMenu).length > 0" class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
           <a href="#" class="menu-link menu-toggle">
               <span class="svg-icon menu-icon">
                   <!--begin::Svg Icon | path:~/lib/metronic/media/svg/icons/General/Settings-1.svg-->
@@ -161,10 +205,18 @@
                           <span class="menu-text">Curriculum</span>
                       </span>
                   </li>
+                  <li *ngFor="let menuItem of (menuItems | menuItemFilter:curriculumMenu)" class="menu-item" aria-haspopup="true">
+                    <a routerLink='{{menuItem.route}}' class="menu-link">
+                        <i class="menu-bullet menu-bullet-dot">
+                            <span></span>
+                        </i>
+                        <span class="menu-text">{{menuItem.text}}</span>
+                    </a>
+                </li>
               </ul>
           </div>
       </li>
-      <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+      <li *ngIf="(menuItems | menuItemFilter:documentsMenu).length > 0" class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
           <a href="#" class="menu-link menu-toggle">
               <span class="svg-icon menu-icon">
                   <!--begin::Svg Icon | path:~/lib/metronic/media/svg/icons/General/Settings-1.svg-->
@@ -182,10 +234,18 @@
                           <span class="menu-text">Documents</span>
                       </span>
                   </li>
+                  <li *ngFor="let menuItem of (menuItems | menuItemFilter:documentsMenu)" class="menu-item" aria-haspopup="true">
+                    <a routerLink='{{menuItem.route}}' class="menu-link">
+                        <i class="menu-bullet menu-bullet-dot">
+                            <span></span>
+                        </i>
+                        <span class="menu-text">{{menuItem.text}}</span>
+                    </a>
+                </li>
               </ul>
           </div>
       </li>
-      <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+      <li *ngIf="(menuItems | menuItemFilter:financeMenu).length > 0" class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
           <a href="#" class="menu-link menu-toggle">
               <span class="svg-icon menu-icon">
                   <!--begin::Svg Icon | path:~/lib/metronic/media/svg/icons/General/Settings-1.svg-->
@@ -203,10 +263,18 @@
                           <span class="menu-text">Finance</span>
                       </span>
                   </li>
+                  <li *ngFor="let menuItem of (menuItems | menuItemFilter:financeMenu)" class="menu-item" aria-haspopup="true">
+                    <a routerLink='{{menuItem.route}}' class="menu-link">
+                        <i class="menu-bullet menu-bullet-dot">
+                            <span></span>
+                        </i>
+                        <span class="menu-text">{{menuItem.text}}</span>
+                    </a>
+                </li>
               </ul>
           </div>
       </li>
-      <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+      <li *ngIf="(menuItems | menuItemFilter:peopleMenu).length > 0" class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
           <a href="#" class="menu-link menu-toggle">
               <span class="svg-icon menu-icon">
                   <!--begin::Svg Icon | path:~/lib/metronic/media/svg/icons/General/Settings-1.svg-->
@@ -224,18 +292,18 @@
                           <span class="menu-text">People</span>
                       </span>
                   </li>
-                  <li class="menu-item" aria-haspopup="true">
-                      <a routerLink='/staff/students' class="menu-link">
+                  <li *ngFor="let menuItem of (menuItems | menuItemFilter:peopleMenu)" class="menu-item" aria-haspopup="true">
+                      <a routerLink='{{menuItem.route}}' class="menu-link">
                           <i class="menu-bullet menu-bullet-dot">
                               <span></span>
                           </i>
-                          <span class="menu-text">Students</span>
+                          <span class="menu-text">{{menuItem.text}}</span>
                       </a>
                   </li>
               </ul>
           </div>
       </li>
-      <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+      <li *ngIf="(menuItems | menuItemFilter:personnelMenu).length > 0" class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
           <a href="#" class="menu-link menu-toggle">
               <span class="svg-icon menu-icon">
                   <!--begin::Svg Icon | path:~/lib/metronic/media/svg/icons/General/Settings-1.svg-->
@@ -253,10 +321,18 @@
                           <span class="menu-text">Personnel</span>
                       </span>
                   </li>
+                  <li *ngFor="let menuItem of (menuItems | menuItemFilter:personnelMenu)" class="menu-item" aria-haspopup="true">
+                    <a routerLink='{{menuItem.route}}' class="menu-link">
+                        <i class="menu-bullet menu-bullet-dot">
+                            <span></span>
+                        </i>
+                        <span class="menu-text">{{menuItem.text}}</span>
+                    </a>
+                </li>
               </ul>
           </div>
       </li>
-      <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+      <li *ngIf="(menuItems | menuItemFilter:reportsMenu).length > 0" class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
           <a href="#" class="menu-link menu-toggle">
               <span class="svg-icon menu-icon">
                   <!--begin::Svg Icon | path:~/lib/metronic/media/svg/icons/General/Settings-1.svg-->
@@ -274,10 +350,18 @@
                           <span class="menu-text">Reports</span>
                       </span>
                   </li>
+                  <li *ngFor="let menuItem of (menuItems | menuItemFilter:reportsMenu)" class="menu-item" aria-haspopup="true">
+                    <a routerLink='{{menuItem.route}}' class="menu-link">
+                        <i class="menu-bullet menu-bullet-dot">
+                            <span></span>
+                        </i>
+                        <span class="menu-text">{{menuItem.text}}</span>
+                    </a>
+                </li>
               </ul>
           </div>
       </li>
-  <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+  <li *ngIf="(menuItems | menuItemFilter:schoolMenu).length > 0" class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
       <a href="#" class="menu-link menu-toggle">
           <span class="svg-icon menu-icon">
               <!--begin::Svg Icon | path:~/lib/metronic/media/svg/icons/General/Settings-1.svg-->
@@ -295,10 +379,18 @@
                       <span class="menu-text">School</span>
                   </span>
               </li>
+              <li *ngFor="let menuItem of (menuItems | menuItemFilter:schoolMenu)" class="menu-item" aria-haspopup="true">
+                <a routerLink='{{menuItem.route}}' class="menu-link">
+                    <i class="menu-bullet menu-bullet-dot">
+                        <span></span>
+                    </i>
+                    <span class="menu-text">{{menuItem.text}}</span>
+                </a>
+            </li>
           </ul>
       </div>
   </li>
-  <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+  <li *ngIf="(menuItems | menuItemFilter:settingsMenu).length > 0" class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
       <a href="#" class="menu-link menu-toggle">
           <span class="svg-icon menu-icon">
               <!--begin::Svg Icon | path:~/lib/metronic/media/svg/icons/General/Settings-1.svg-->
@@ -316,6 +408,14 @@
                       <span class="menu-text">Settings</span>
                   </span>
               </li>
+              <li *ngFor="let menuItem of (menuItems | menuItemFilter:settingsMenu)" class="menu-item" aria-haspopup="true">
+                <a routerLink='{{menuItem.route}}' class="menu-link">
+                    <i class="menu-bullet menu-bullet-dot">
+                        <span></span>
+                    </i>
+                    <span class="menu-text">{{menuItem.text}}</span>
+                </a>
+            </li>
           </ul>
       </div>
   </li>

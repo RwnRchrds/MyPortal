@@ -3,7 +3,7 @@ using MyPortal.Logic.Models.Entity;
 
 namespace MyPortal.Logic.Models.DataGrid
 {
-    public class StudentListModel
+    public class StudentDataGridModel
     {
         public Guid Id { get; set; }
         public string DisplayName { get; set; }
@@ -13,7 +13,7 @@ namespace MyPortal.Logic.Models.DataGrid
         public string Gender { get; set; }
         public string HouseColourCode { get; set; }
 
-        public StudentListModel(StudentModel student)
+        public StudentDataGridModel(StudentModel student)
         {
             Id = student.Id;
             DisplayName = student.Person.GetDisplayName();

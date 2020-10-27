@@ -1,13 +1,7 @@
 import { Router } from '@angular/router';
 import { AuthService } from './../../_services/auth.service';
-import { Component, Renderer2 } from '@angular/core';
-import {Observable} from 'rxjs';
-import {map, switchMap} from 'rxjs/operators';
+import { Renderer2 } from '@angular/core';
 
-@Component({
-  selector: 'app-portal-root',
-  template: ''
-})
 export abstract class PortalRootComponent {
 
   constructor(protected renderer: Renderer2, public authService: AuthService, protected router: Router) { }

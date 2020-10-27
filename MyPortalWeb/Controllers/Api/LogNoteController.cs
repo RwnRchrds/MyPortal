@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MyPortal.Database.Constants;
+using MyPortal.Database.Permissions;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
@@ -36,7 +38,7 @@ namespace MyPortalWeb.Controllers.Api
                 }
 
                 return Forbid();
-            });
+            }, Permissions.Student.StudentLogNotes.ViewLogNotes);
         }
 
         [HttpGet]
@@ -67,7 +69,7 @@ namespace MyPortalWeb.Controllers.Api
                 }
 
                 return Forbid();
-            });
+            }, Permissions.Student.StudentLogNotes.ViewLogNotes);
         }
 
         [HttpPost]
@@ -92,7 +94,7 @@ namespace MyPortalWeb.Controllers.Api
                 await _logNoteService.Create(logNote);
 
                 return Ok("Log note created successfully.");
-            });
+            }, Permissions.Student.StudentLogNotes.EditLogNotes);
         }
 
         [HttpPut]
@@ -116,7 +118,7 @@ namespace MyPortalWeb.Controllers.Api
                 await _logNoteService.Update(logNote);
 
                 return Ok("Log note updated successfully.");
-            });
+            }, Permissions.Student.StudentLogNotes.EditLogNotes);
         }
 
         [HttpDelete]
@@ -129,7 +131,7 @@ namespace MyPortalWeb.Controllers.Api
                 await _logNoteService.Delete(logNoteId);
 
                 return Ok("Log note deleted successfully.");
-            });
+            }, Permissions.Student.StudentLogNotes.EditLogNotes);
         }
 
         public override void Dispose()

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MyPortal.Database.Permissions;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
@@ -33,7 +34,7 @@ namespace MyPortalWeb.Controllers.Api
                 }
 
                 return Forbid();
-            });
+            }, Permissions.Behaviour.Incidents.ViewIncidents);
         }
 
         [HttpGet]
@@ -52,7 +53,7 @@ namespace MyPortalWeb.Controllers.Api
                 }
 
                 return Forbid();
-            });
+            }, Permissions.Behaviour.Incidents.ViewIncidents);
         }
 
         [HttpPost]
@@ -69,7 +70,7 @@ namespace MyPortalWeb.Controllers.Api
                 await _incidentService.Create(model);
 
                 return Ok("Incident created successfully.");
-            });
+            }, Permissions.Behaviour.Incidents.EditIncidents);
         }
 
         [HttpPut]
@@ -82,7 +83,7 @@ namespace MyPortalWeb.Controllers.Api
                 await _incidentService.Update(model);
 
                 return Ok("Incident updated successfully.");
-            });
+            }, Permissions.Behaviour.Incidents.EditIncidents);
         }
 
         [HttpDelete]
@@ -90,9 +91,12 @@ namespace MyPortalWeb.Controllers.Api
         [Route("delete", Name = "ApiIncidentDelete")]
         public async Task<IActionResult> Delete([FromQuery] Guid incidentId)
         {
-            await _incidentService.Delete(incidentId);
+            return await ProcessAsync(async () =>
+            {
+                await _incidentService.Delete(incidentId);
 
-            return Ok("Incident deleted successfully.");
+                return Ok("Incident deleted successfully.");
+            }, Permissions.Behaviour.Incidents.EditIncidents);
         }
 
         public override void Dispose()

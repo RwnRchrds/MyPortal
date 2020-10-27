@@ -1,3 +1,6 @@
+import { SharedModule } from './../shared/shared.module';
+import { AppModule } from './../app.module';
+import { MenuFilterPipe } from '../shared/_pipes/menu-filter.pipe';
 import { StudentSearchComponent } from './people/students/student-browser/student-search/student-search.component';
 import { StudentBrowserComponent } from './people/students/student-browser/student-browser.component';
 import { NgModule } from '@angular/core';
@@ -16,7 +19,8 @@ import {FormsModule} from '@angular/forms';
     CommonModule,
     FlexLayoutModule,
     FormsModule,
-    StaffRoutingModule
+    StaffRoutingModule,
+    SharedModule
   ],
   declarations: [
     StaffPortalComponent,

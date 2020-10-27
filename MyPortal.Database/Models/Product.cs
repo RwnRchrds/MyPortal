@@ -26,20 +26,25 @@ namespace MyPortal.Database.Models
 
         [Column(Order = 3)]
         [Required]
+        [StringLength(128)]
+        public string Name { get; set; }
+
+        [Column(Order = 4)]
+        [Required]
         [StringLength(256)]
         public string Description { get; set; }
 
-        [Column(Order = 4, TypeName = "decimal(10,2)")]
+        [Column(Order = 5, TypeName = "decimal(10,2)")]
         public decimal Price { get; set; }
 
-        [Column(Order = 5)]
+        [Column(Order = 6)]
         public bool ShowOnStore { get; set; }
 
         [Range(0, Int32.MaxValue)]
-        [Column(Order = 6)]
+        [Column(Order = 7)]
         public int OrderLimit { get; set; }
 
-        [Column(Order = 7)]
+        [Column(Order = 8)]
         public bool Deleted { get; set; }
 
         public virtual ProductType Type { get; set; }

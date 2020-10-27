@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MyPortal.Database.Permissions;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
@@ -35,7 +36,7 @@ namespace MyPortalWeb.Controllers.Api
                 }
 
                 return Forbid();
-            });
+            }, Permissions.Behaviour.Achievements.ViewAchievements);
         }
 
         [HttpGet]
@@ -54,7 +55,7 @@ namespace MyPortalWeb.Controllers.Api
                 }
 
                 return Forbid();
-            });
+            }, Permissions.Behaviour.Achievements.ViewAchievements);
         }
 
         [HttpPost]
@@ -71,7 +72,7 @@ namespace MyPortalWeb.Controllers.Api
                 await _achievementService.Create(model);
 
                 return Ok("Achievement created successfully.");
-            });
+            }, Permissions.Behaviour.Achievements.EditAchievements);
         }
 
         [HttpPut]
@@ -84,7 +85,7 @@ namespace MyPortalWeb.Controllers.Api
                 await _achievementService.Update(model);
 
                 return Ok("Achievement updated successfully.");
-            });
+            }, Permissions.Behaviour.Achievements.EditAchievements);
         }
 
         [HttpDelete]
@@ -97,7 +98,7 @@ namespace MyPortalWeb.Controllers.Api
                 await _achievementService.Delete(achievementId);
 
                 return Ok("Achievement deleted successfully.");
-            });
+            }, Permissions.Behaviour.Achievements.EditAchievements);
         }
 
         public override void Dispose()

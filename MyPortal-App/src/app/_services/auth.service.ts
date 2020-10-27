@@ -1,9 +1,9 @@
+import { Injectable } from '@angular/core';
 import { TokenWrapper } from './../_models/token-wrapper';
 import { User } from './../_models/user';
 import { BaseService } from './base.service';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import {EMPTY, Observable, ReplaySubject} from 'rxjs';
+import {Observable, ReplaySubject} from 'rxjs';
 import {map, take} from 'rxjs/operators';
 
 @Injectable({

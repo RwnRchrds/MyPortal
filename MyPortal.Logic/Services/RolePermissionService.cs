@@ -32,49 +32,49 @@ namespace MyPortal.Logic.Services
             _systemAreaRepository = new SystemAreaRepository(connection);
         }
 
-        public async Task<IEnumerable<TreeNode>> GetPermissionsTree(Guid roleId)
+        public async Task<TreeNode> GetPermissionsTree(Guid roleId)
         {
-            var nodes = new List<TreeNode>();
-
             var systemAreas = (await _systemAreaRepository.GetAll()).ToList();
 
             var permissions = (await _permissionRepository.GetAll()).ToList();
 
-            var exisingPermissions = (await _rolePermissionRepository.GetByRole(roleId)).ToList();
+            var existingPermissions = (await _rolePermissionRepository.GetByRole(roleId)).ToList();
 
-            nodes.Add(TreeNode.CreateRoot("MyPortal"));
+            var root = TreeNode.CreateRoot("MyPortal");
 
-            foreach (var systemArea in systemAreas)
+            foreach (var systemArea in systemAreas.Where(a => a.ParentId == null))
             {
-                nodes.Add(new TreeNode
+                // Load System Areas
+                root.Children.Add(new TreeNode
                 {
-                    Id = systemArea.Id.ToString(),
-                    Parent = systemArea.ParentId == null ? "#" : systemArea.ParentId.ToString(),
-                    State = TreeNodeState.Default(),
-                    Container = true,
-                    Text = systemArea.Description
-                });
-            }
+                    Id = systemArea.Id.ToString("N"),
+                    State = TreeNodeState.Default,
+                    Text = systemArea.Description,
 
-            foreach (var permission in permissions)
-            {
-                nodes.Add(new TreeNode
-                {
-                    Id = permission.Id.ToString(),
-                    Parent = permission.AreaId.ToString(),
-                    State = new TreeNodeState
+                    // Load Subareas
+                    Children = systemAreas.Where(x => x.ParentId.HasValue && x.ParentId.Value == systemArea.Id).Select(sa => new TreeNode
                     {
-                        Disabled = false,
-                        Opened = false,
-                        Selected = exisingPermissions.Any(x => x.Id == permission.Id)
-                    },
-                    Container = false,
-                    Text = permission.ShortDescription,
-                    Icon = "fas fa-check-circle text-success"
+                        Id = sa.Id.ToString("N"),
+                        Text = sa.Description,
+                        State = TreeNodeState.Default,
+
+                        // Load Permissions
+                        Children = permissions.Where(x => x.AreaId == sa.Id).Select(p => new TreeNode
+                        {
+                            Id = p.Id.ToString("N"),
+                            Text = p.ShortDescription,
+                            State = new TreeNodeState
+                            {
+                                Opened = false,
+                                Disabled = false,
+                                Selected = existingPermissions.Any(ep => ep.PermissionId == p.Id)
+                            }
+                        }).ToList()
+                    }).ToList()
                 });
             }
 
-            return nodes;
+            return root;
         }
 
         public async Task SetPermissions(Guid roleId, IEnumerable<Guid> permIds)
@@ -82,9 +82,9 @@ namespace MyPortal.Logic.Services
             // Add new permissions from list
             var existingPermissions = (await _rolePermissionRepository.GetByRole(roleId)).ToList();
 
-            var permissionsToAdd = permIds.Where(x => existingPermissions.All(p => p.Id != x)).ToList();
+            var permissionsToAdd = permIds.Where(x => existingPermissions.All(p => p.PermissionId != x)).ToList();
 
-            var permissionsToRemove = existingPermissions.Where(p => permIds.All(x => x != p.Id)).ToList();
+            var permissionsToRemove = existingPermissions.Where(p => permIds.All(x => x != p.PermissionId)).ToList();
 
             foreach (var permId in permissionsToAdd)
             {
@@ -96,7 +96,7 @@ namespace MyPortal.Logic.Services
 
             foreach (var perm in permissionsToRemove)
             {
-                await _rolePermissionRepository.Delete(perm.Id);
+                await _rolePermissionRepository.Delete(perm.RoleId, perm.PermissionId);
             }
 
             await _rolePermissionRepository.SaveChanges();
