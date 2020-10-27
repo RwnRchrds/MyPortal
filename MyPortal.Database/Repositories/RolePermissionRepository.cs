@@ -3,22 +3,30 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
 using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
 using SqlKata;
+using SqlKata.Compilers;
+using Task = System.Threading.Tasks.Task;
 
 namespace MyPortal.Database.Repositories
 {
-    public class RolePermissionRepository : BaseReadWriteRepository<RolePermission>, IRolePermissionRepository
+    public class RolePermissionRepository : IRolePermissionRepository
     {
-        public RolePermissionRepository(ApplicationDbContext context) : base(context, "RolePermissions")
+        private SqlServerCompiler _compiler;
+        private ApplicationDbContext _context;
+
+
+        public RolePermissionRepository(ApplicationDbContext context)
         {
-           
+           _compiler = new SqlServerCompiler();
+           _context = context;
         }
 
-        protected override void SelectAllRelated(Query query)
+        protected void SelectAllRelated(Query query)
         {
             query.SelectAllColumns(typeof(Role), "Role");
             query.SelectAllColumns(typeof(Permission), "Permission");
@@ -26,18 +34,27 @@ namespace MyPortal.Database.Repositories
             JoinRelated(query);
         }
 
-        protected override void JoinRelated(Query query)
+        protected void JoinRelated(Query query)
         {
             query.LeftJoin("AspNetRoles AS Role", "Role.Id", "RolePermissions.RoleId");
             query.LeftJoin("Permissions AS Permission", "Permission.Id",
                 "RolePermissions.PermissionId");
         }
 
-        protected override async Task<IEnumerable<RolePermission>> ExecuteQuery(Query query)
+        private Query GenerateQuery()
         {
-            var sql = Compiler.Compile(query);
+            var query = new Query("AspNetRolePermissions as RolePermissions").SelectAllColumns(typeof(RolePermission), "RolePermissions");
+            
+            SelectAllRelated(query);
 
-            return await Connection
+            return query;
+        }
+
+        protected async Task<IEnumerable<RolePermission>> ExecuteQuery(Query query)
+        {
+            var sql = _compiler.Compile(query);
+
+            return await _context.Database.GetDbConnection()
                 .QueryAsync<RolePermission, Role, Permission, RolePermission
                 >(sql.Sql,
                     (rp, role, perm) =>
@@ -58,6 +75,28 @@ namespace MyPortal.Database.Repositories
             return await ExecuteQuery(query);
         }
 
+        public void Create(RolePermission rolePermission)
+        {
+            _context.RolePermissions.Add(rolePermission);
+        }
+
+        public async Task Delete(Guid roleId, Guid permissionId)
+        {
+            var permission =
+                await _context.RolePermissions.FirstOrDefaultAsync(x =>
+                    x.RoleId == roleId && x.PermissionId == permissionId);
+
+            if (permission != null)
+            {
+                _context.RolePermissions.Remove(permission);
+            }
+        }
+
+        public async Task SaveChanges()
+        {
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<IEnumerable<RolePermission>> GetByUser(Guid userId)
         {
             var query = GenerateQuery();
@@ -68,6 +107,11 @@ namespace MyPortal.Database.Repositories
             query.Where("User.Id", userId);
 
             return await ExecuteQuery(query);
+        }
+
+        public void Dispose()
+        {
+            _context?.Dispose();
         }
     }
 }

@@ -23,10 +23,10 @@ namespace MyPortal.Database.Models
         [Column(Order = 5, TypeName = "decimal(10,2)")]
         public decimal NetAmount { get; set; }
         
-        [Column(Order = 6, TypeName = "decimal(10,2")]
+        [Column(Order = 6, TypeName = "decimal(10,2)")]
         public decimal TaxAmount { get; set; }
         
-        [Column(Order = 7, TypeName = "decimal(10,2")]
+        [Column(Order = 7, TypeName = "decimal(10,2)")]
         public decimal AmountPaid { get; set; }
 
         [Column(Order = 8)]

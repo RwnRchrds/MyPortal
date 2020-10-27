@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MyPortal.Database.Constants;
 using MyPortal.Database.Models.Search;
+using MyPortal.Database.Permissions;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
@@ -13,13 +15,11 @@ using MyPortal.Logic.Models.DataGrid;
 namespace MyPortalWeb.Controllers.Api
 {
     [Authorize]
-    public class StudentController : BaseApiController
+    public class StudentController : StudentApiController
     {
-        private readonly IStudentService _studentService;
-        
-        public StudentController(IUserService userService, IAcademicYearService academicYearService, IStudentService studentService) : base(userService, academicYearService)
+        public StudentController(IUserService userService, IAcademicYearService academicYearService, IStudentService studentService) : base(userService, academicYearService, studentService)
         {
-            _studentService = studentService;
+            
         }
         
         [HttpGet]
@@ -29,15 +29,15 @@ namespace MyPortalWeb.Controllers.Api
         {
             return await ProcessAsync(async () =>
             {
-                IEnumerable<StudentListModel> students;
+                IEnumerable<StudentDataGridModel> students;
 
                 using (new ProcessTimer("Fetch students"))
                 {
-                    students = (await _studentService.Get(searchModel)).Select(x => x.GetListModel());
+                    students = (await StudentService.Get(searchModel)).Select(x => x.GetDataGridModel());
                 }
 
                 return Ok(students);
-            });
+            }, Permissions.Student.StudentDetails.ViewStudentDetails);
         }
 
         [HttpGet]
@@ -46,17 +46,15 @@ namespace MyPortalWeb.Controllers.Api
         {
             return await ProcessAsync(async () =>
             {
-                var student = await _studentService.GetById(studentId);
+                if (await AuthenticateStudent(studentId))
+                {
+                    var student = await StudentService.GetById(studentId);
 
-                return Ok(student);
-            });
-        }
+                    return Ok(student);
+                }
 
-        public override void Dispose()
-        {
-            _studentService.Dispose();
-
-            base.Dispose();
+                return Forbid();
+            }, Permissions.Student.StudentDetails.ViewStudentDetails);
         }
     }
 }

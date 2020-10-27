@@ -52,9 +52,9 @@ namespace MyPortal.Logic.Models.Entity
 
         public virtual HouseModel House { get; set; }
 
-        public StudentListModel GetListModel()
+        public StudentDataGridModel GetDataGridModel()
         {
-            return new StudentListModel(this);
+            return new StudentDataGridModel(this);
         }
     }
 }

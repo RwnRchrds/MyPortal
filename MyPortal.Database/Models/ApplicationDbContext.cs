@@ -335,7 +335,6 @@ namespace MyPortal.Database.Models
                     .HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Result>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<ResultSet>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-                modelBuilder.Entity<RolePermission>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Room>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<RoomClosure>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<RoomClosureReason>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
@@ -797,7 +796,7 @@ namespace MyPortal.Database.Models
             modelBuilder.Entity<Person>()
                 .HasMany(e => e.Addresses)
                 .WithOne(e => e.Person)
-                .HasForeignKey(e => e.AddressId)
+                .HasForeignKey(e => e.PersonId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
@@ -1915,6 +1914,9 @@ namespace MyPortal.Database.Models
                 .WithOne(e => e.Role)
                 .HasForeignKey(e => e.RoleId)
                 .IsRequired();
+
+            modelBuilder.Entity<RolePermission>()
+                .HasKey(e => new {e.RoleId, e.PermissionId});
 
             modelBuilder.Entity<Permission>()
                 .HasOne(e => e.SystemArea)

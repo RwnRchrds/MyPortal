@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Constants;
+using MyPortal.Database.Permissions;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
@@ -177,7 +178,7 @@ namespace MyPortalWeb.Controllers.Api
 
             else if (taskPersonTypes.Employee)
             {
-                if (User.HasPermission(Permissions.EditStaffPerformancePermissions))
+                if (User.HasPermission(Permissions.People.StaffTasks.EditAllStaffTasks))
                 {
                     return true;
                 }
@@ -192,7 +193,8 @@ namespace MyPortalWeb.Controllers.Api
                         return true;
                     }
 
-                    return await _staffMemberService.IsLineManager(taskStaffMember.Id, userStaffMember.Id);
+                    return User.HasPermission(Permissions.People.StaffTasks.EditManagedStaffTasks) &&
+                           await _staffMemberService.IsLineManager(taskStaffMember.Id, userStaffMember.Id);
                 }
             }
 
@@ -220,7 +222,7 @@ namespace MyPortalWeb.Controllers.Api
 
             if (taskPersonTypes.Employee)
             {
-                if (User.HasPermission(Permissions.EditStaffPerformancePermissions))
+                if (User.HasPermission(Permissions.People.StaffTasks.EditAllStaffTasks))
                 {
                     return true;
                 }
@@ -229,7 +231,9 @@ namespace MyPortalWeb.Controllers.Api
 
                 var userStaffMember = await _staffMemberService.GetByUserId(userId, false);
 
-                if (userStaffMember != null && taskStaffMember != null && await _staffMemberService.IsLineManager(taskStaffMember.Id, userStaffMember.Id))
+                if (userStaffMember != null && taskStaffMember != null &&
+                    User.HasPermission(Permissions.People.StaffTasks.EditManagedStaffTasks) &&
+                    await _staffMemberService.IsLineManager(taskStaffMember.Id, userStaffMember.Id))
                 {
                     return true;
                 }

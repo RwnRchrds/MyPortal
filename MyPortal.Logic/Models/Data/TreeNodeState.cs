@@ -10,14 +10,11 @@ namespace MyPortal.Logic.Models.Data
         public bool Disabled { get; set; }
         public bool Selected { get; set; }
 
-        public static TreeNodeState Default()
+        public static TreeNodeState Default = new TreeNodeState
         {
-            return new TreeNodeState
-            {
-                Disabled = false,
-                Selected = false,
-                Opened = false
-            };
-        }
+            Opened = false,
+            Disabled = false,
+            Selected = false
+        };
     }
 }

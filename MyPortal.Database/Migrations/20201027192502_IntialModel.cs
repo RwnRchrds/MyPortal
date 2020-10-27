@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MyPortal.Database.Migrations
 {
-    public partial class InitialModel : Migration
+    public partial class IntialModel : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -915,6 +915,20 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "VatRates",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false),
+                    Value = table.Column<decimal>(type: "decimal(10,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VatRates", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AttendanceWeekPatterns",
                 columns: table => new
                 {
@@ -1314,29 +1328,6 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Products",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    ProductTypeId = table.Column<Guid>(nullable: false),
-                    Description = table.Column<string>(maxLength: 256, nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
-                    Visible = table.Column<bool>(nullable: false),
-                    OnceOnly = table.Column<bool>(nullable: false),
-                    Deleted = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Products", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Products_ProductTypes_ProductTypeId",
-                        column: x => x.ProductTypeId,
-                        principalTable: "ProductTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ExamResultEmbargoes",
                 columns: table => new
                 {
@@ -1463,6 +1454,37 @@ namespace MyPortal.Database.Migrations
                         name: "FK_Reports_SystemAreas_AreaId",
                         column: x => x.AreaId,
                         principalTable: "SystemAreas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    ProductTypeId = table.Column<Guid>(nullable: false),
+                    VatRateId = table.Column<Guid>(nullable: false),
+                    Name = table.Column<string>(maxLength: 128, nullable: false),
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    ShowOnStore = table.Column<bool>(nullable: false),
+                    OrderLimit = table.Column<int>(nullable: false),
+                    Deleted = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Products_ProductTypes_ProductTypeId",
+                        column: x => x.ProductTypeId,
+                        principalTable: "ProductTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Products_VatRates_VatRateId",
+                        column: x => x.VatRateId,
+                        principalTable: "VatRates",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -1730,8 +1752,8 @@ namespace MyPortal.Database.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_AddressPeople_People_AddressId",
-                        column: x => x.AddressId,
+                        name: "FK_AddressPeople_People_PersonId",
+                        column: x => x.PersonId,
                         principalTable: "People",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -2072,13 +2094,12 @@ namespace MyPortal.Database.Migrations
                 name: "AspNetRolePermissions",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     RoleId = table.Column<Guid>(nullable: false),
                     PermissionId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetRolePermissions", x => x.Id);
+                    table.PrimaryKey("PK_AspNetRolePermissions", x => new { x.RoleId, x.PermissionId });
                     table.ForeignKey(
                         name: "FK_AspNetRolePermissions_Permissions_PermissionId",
                         column: x => x.PermissionId,
@@ -3216,6 +3237,30 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Bills",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    StudentId = table.Column<Guid>(nullable: false),
+                    Date = table.Column<DateTime>(nullable: false),
+                    NetAmount = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    TaxAmount = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    AmountPaid = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    Status = table.Column<int>(nullable: false),
+                    Deleted = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bills", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Bills_Students_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Students",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CurriculumBandMemberships",
                 columns: table => new
                 {
@@ -3576,43 +3621,6 @@ namespace MyPortal.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Sales",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    StudentId = table.Column<Guid>(nullable: false),
-                    ProductId = table.Column<Guid>(nullable: false),
-                    AcademicYearId = table.Column<Guid>(nullable: false),
-                    Date = table.Column<DateTime>(nullable: false),
-                    AmountPaid = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
-                    Processed = table.Column<bool>(nullable: false),
-                    Refunded = table.Column<bool>(nullable: false),
-                    Deleted = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Sales", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Sales_AcademicYears_AcademicYearId",
-                        column: x => x.AcademicYearId,
-                        principalTable: "AcademicYears",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Sales_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Sales_Students_StudentId",
-                        column: x => x.StudentId,
-                        principalTable: "Students",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "SenEvents",
                 columns: table => new
                 {
@@ -3759,6 +3767,33 @@ namespace MyPortal.Database.Migrations
                         name: "FK_StudentContactRelationships_Students_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Students",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BillItems",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    BillId = table.Column<Guid>(nullable: false),
+                    ProductId = table.Column<Guid>(nullable: false),
+                    Quantity = table.Column<int>(nullable: false),
+                    CustomerReceived = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BillItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BillItems_Bills_BillId",
+                        column: x => x.BillId,
+                        principalTable: "Bills",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_BillItems_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -4029,6 +4064,11 @@ namespace MyPortal.Database.Migrations
                 column: "AddressId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AddressPeople_PersonId",
+                table: "AddressPeople",
+                column: "PersonId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Agencies_AddressId",
                 table: "Agencies",
                 column: "AddressId");
@@ -4074,11 +4114,6 @@ namespace MyPortal.Database.Migrations
                 name: "IX_AspNetRolePermissions_PermissionId",
                 table: "AspNetRolePermissions",
                 column: "PermissionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetRolePermissions_RoleId",
-                table: "AspNetRolePermissions",
-                column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
@@ -4164,6 +4199,21 @@ namespace MyPortal.Database.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_BasketItems_StudentId",
                 table: "BasketItems",
+                column: "StudentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BillItems_BillId",
+                table: "BillItems",
+                column: "BillId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BillItems_ProductId",
+                table: "BillItems",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bills_StudentId",
+                table: "Bills",
                 column: "StudentId");
 
             migrationBuilder.CreateIndex(
@@ -4828,6 +4878,11 @@ namespace MyPortal.Database.Migrations
                 column: "ProductTypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Products_VatRateId",
+                table: "Products",
+                column: "VatRateId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RegGroups_TutorId",
                 table: "RegGroups",
                 column: "TutorId");
@@ -4926,21 +4981,6 @@ namespace MyPortal.Database.Migrations
                 name: "IX_Rooms_LocationId",
                 table: "Rooms",
                 column: "LocationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Sales_AcademicYearId",
-                table: "Sales",
-                column: "AcademicYearId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Sales_ProductId",
-                table: "Sales",
-                column: "ProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Sales_StudentId",
-                table: "Sales",
-                column: "StudentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Schools_GovernanceTypeId",
@@ -5221,6 +5261,9 @@ namespace MyPortal.Database.Migrations
                 name: "BasketItems");
 
             migrationBuilder.DropTable(
+                name: "BillItems");
+
+            migrationBuilder.DropTable(
                 name: "Bulletins");
 
             migrationBuilder.DropTable(
@@ -5338,9 +5381,6 @@ namespace MyPortal.Database.Migrations
                 name: "RoomClosures");
 
             migrationBuilder.DropTable(
-                name: "Sales");
-
-            migrationBuilder.DropTable(
                 name: "Schools");
 
             migrationBuilder.DropTable(
@@ -5387,6 +5427,12 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "AttendanceCodeMeanings");
+
+            migrationBuilder.DropTable(
+                name: "Bills");
+
+            migrationBuilder.DropTable(
+                name: "Products");
 
             migrationBuilder.DropTable(
                 name: "CommentBanks");
@@ -5479,9 +5525,6 @@ namespace MyPortal.Database.Migrations
                 name: "RoomClosureReasons");
 
             migrationBuilder.DropTable(
-                name: "Products");
-
-            migrationBuilder.DropTable(
                 name: "GovernanceTypes");
 
             migrationBuilder.DropTable(
@@ -5536,6 +5579,12 @@ namespace MyPortal.Database.Migrations
                 name: "SystemAreas");
 
             migrationBuilder.DropTable(
+                name: "ProductTypes");
+
+            migrationBuilder.DropTable(
+                name: "VatRates");
+
+            migrationBuilder.DropTable(
                 name: "Classes");
 
             migrationBuilder.DropTable(
@@ -5582,9 +5631,6 @@ namespace MyPortal.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspectTypes");
-
-            migrationBuilder.DropTable(
-                name: "ProductTypes");
 
             migrationBuilder.DropTable(
                 name: "Agencies");
