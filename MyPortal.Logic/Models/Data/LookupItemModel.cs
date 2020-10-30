@@ -5,10 +5,8 @@ using System.Text;
 
 namespace MyPortal.Logic.Models.Data
 {
-    public class LookupItemModel
+    public class LookupItemModel : BaseModel
     {
-        public Guid Id { get; set; }
-
         [Required(ErrorMessage = "Description is required.")]
         [StringLength(256)]
         public string Description { get; set; }

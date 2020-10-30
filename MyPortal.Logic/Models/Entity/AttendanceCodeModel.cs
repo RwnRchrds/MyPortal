@@ -1,12 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using MyPortal.Logic.Models.Data;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class AttendanceCodeModel
+    public class AttendanceCodeModel : BaseModel
     {
-        public Guid Id { get; set; }
-
         [Required]
         [StringLength(1)]
         public string Code { get; set; }
@@ -19,7 +18,7 @@ namespace MyPortal.Logic.Models.Entity
 
         public bool Active { get; set; }
 
-        public bool Statutory { get; set; }
+        public bool Restricted { get; set; }
 
         public virtual AttendanceCodeMeaningModel CodeMeaning { get; set; }
     }

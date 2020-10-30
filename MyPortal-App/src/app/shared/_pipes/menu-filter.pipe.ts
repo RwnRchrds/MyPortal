@@ -12,7 +12,7 @@ export class MenuFilterPipe implements PipeTransform {
     }
 
     // TODO: Add Permissions filtering
-    const result = menuItems.filter(item => item.parentId === filter);
+    const result = menuItems.filter(item => item.section === filter);
     return result;
   }
 

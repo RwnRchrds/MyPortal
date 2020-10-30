@@ -9,7 +9,7 @@ using MyPortal.Database.Interfaces;
 namespace MyPortal.Database.Models
 {
     [Table("StudyTopics")]
-    public class StudyTopic : Entity
+    public class StudyTopic : LookupItem
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public StudyTopic()
@@ -17,18 +17,15 @@ namespace MyPortal.Database.Models
             LessonPlans = new HashSet<LessonPlan>();
         }
 
-        [Column(Order = 1)]
-        public Guid SubjectId { get; set; }
-
-        [Column(Order = 2)]
-        public Guid YearGroupId { get; set; }
-
         [Column(Order = 3)]
+        public Guid CourseId { get; set; }
+
+        [Column(Order = 4)]
         [Required]
-        [StringLength(256)]
+        [StringLength(128)]
         public string Name { get; set; }
 
-        public virtual Subject Subject { get; set; }
+        public virtual Course Course { get; set; }
 
         public virtual YearGroup YearGroup { get; set; }
         

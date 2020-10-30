@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using MyPortal.Logic.Models.Entity;
 
-namespace MyPortal.Logic.Models
+namespace MyPortal.Logic.Models.Data
 {
     public class FullCalendarEvent
     {

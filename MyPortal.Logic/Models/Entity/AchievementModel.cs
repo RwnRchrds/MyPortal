@@ -2,14 +2,13 @@
 using System.ComponentModel.DataAnnotations;
 using MyPortal.Database.Models;
 using MyPortal.Logic.Attributes;
+using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.DataGrid;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class AchievementModel
+    public class AchievementModel : BaseModel
     {
-        public Guid Id { get; set; }
-        
         public Guid AcademicYearId { get; set; }
 
         [Required(ErrorMessage = "Achievement Type is required.")]

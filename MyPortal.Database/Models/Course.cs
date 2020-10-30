@@ -12,7 +12,9 @@ namespace MyPortal.Database.Models
     {
         public Course()
         {
+            Awards = new HashSet<ExamAward>();
             Classes = new HashSet<Class>();
+            StudyTopics = new HashSet<StudyTopic>();
         }
 
         [Column(Order = 1)]
@@ -23,5 +25,7 @@ namespace MyPortal.Database.Models
         public virtual ICollection<ExamAward> Awards { get; set; }
 
         public virtual ICollection<Class> Classes { get; set; }
+
+        public virtual ICollection<StudyTopic> StudyTopics { get; set; }
     }
 }

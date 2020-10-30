@@ -1,5 +1,6 @@
-import { StudentDataGridModel } from './../_models/People/Students/student-datagrid';
-import { StudentSearch } from '../_models/People/Students/student-search';
+import { StudentEntity } from './../_models/entity/student-entity';
+import { StudentDataGridModel } from '../_models/datagrid/student-datagrid';
+import { StudentSearch } from '../_models/search/student-search';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import { BaseService } from './base.service';
 import { Injectable } from '@angular/core';
@@ -66,6 +67,10 @@ search(searchModel: StudentSearch): Observable<StudentDataGridModel[]> {
   return this.http.get(this.baseUrl + 'search', {params: searchParams}).pipe(map((response: StudentDataGridModel[]) => {
     return response;
   }));
+}
+
+getById(studentId: string): Observable<StudentEntity> {
+
 }
 
 }

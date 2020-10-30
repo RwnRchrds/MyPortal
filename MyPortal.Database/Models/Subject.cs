@@ -15,7 +15,6 @@ namespace MyPortal.Database.Models
         public Subject()
         {
             Courses = new HashSet<Course>();
-            StudyTopics = new HashSet<StudyTopic>();
             GiftedTalentedStudents = new HashSet<GiftedTalented>();
             StaffMembers = new HashSet<SubjectStaffMember>();
         }
@@ -40,9 +39,6 @@ namespace MyPortal.Database.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Course> Courses { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<StudyTopic> StudyTopics { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GiftedTalented> GiftedTalentedStudents { get; set; }

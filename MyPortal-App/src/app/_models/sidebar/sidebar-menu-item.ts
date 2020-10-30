@@ -1,5 +1,5 @@
 export interface SidebarMenuItem {
-    parentId: string;
+    section: string;
     text: string;
     route: string;
     requiredPermission?: string[];
