@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MyPortal.Database.Migrations
 {
-    public partial class IntialModel : Migration
+    public partial class InitialModel : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -2826,17 +2826,19 @@ namespace MyPortal.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
-                    SubjectId = table.Column<Guid>(nullable: false),
-                    YearGroupId = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(maxLength: 256, nullable: false)
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    Active = table.Column<bool>(nullable: false),
+                    CourseId = table.Column<Guid>(nullable: false),
+                    Name = table.Column<string>(maxLength: 128, nullable: false),
+                    YearGroupId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_StudyTopics", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_StudyTopics_Subjects_SubjectId",
-                        column: x => x.SubjectId,
-                        principalTable: "Subjects",
+                        name: "FK_StudyTopics_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -5145,9 +5147,9 @@ namespace MyPortal.Database.Migrations
                 column: "YearGroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StudyTopics_SubjectId",
+                name: "IX_StudyTopics_CourseId",
                 table: "StudyTopics",
-                column: "SubjectId");
+                column: "CourseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StudyTopics_YearGroupId",

@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { AlertService } from './../../../../../_services/alert.service';
-import { StudentDataGridModel } from './../../../../../_models/People/Students/student-datagrid';
-import { StudentSearch } from './../../../../../_models/People/Students/student-search';
+import { StudentDataGridModel } from '../../../../../_models/datagrid/student-datagrid';
+import { StudentSearch } from '../../../../../_models/search/student-search';
 import { Component, OnInit } from '@angular/core';
 import {StudentService} from '../../../../../_services/student.service';
 

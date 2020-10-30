@@ -10,8 +10,8 @@ using MyPortal.Database.Models;
 namespace MyPortal.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201027192502_IntialModel")]
-    partial class IntialModel
+    [Migration("20201028134810_InitialModel")]
+    partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -4523,20 +4523,28 @@ namespace MyPortal.Database.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<string>("Name")
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("CourseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<Guid>("SubjectId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
 
-                    b.Property<Guid>("YearGroupId")
+                    b.Property<Guid?>("YearGroupId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SubjectId");
+                    b.HasIndex("CourseId");
 
                     b.HasIndex("YearGroupId");
 
@@ -6588,17 +6596,15 @@ namespace MyPortal.Database.Migrations
 
             modelBuilder.Entity("MyPortal.Database.Models.StudyTopic", b =>
                 {
-                    b.HasOne("MyPortal.Database.Models.Subject", "Subject")
+                    b.HasOne("MyPortal.Database.Models.Course", "Course")
                         .WithMany("StudyTopics")
-                        .HasForeignKey("SubjectId")
+                        .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("MyPortal.Database.Models.YearGroup", "YearGroup")
-                        .WithMany("StudyTopics")
-                        .HasForeignKey("YearGroupId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("YearGroupId");
                 });
 
             modelBuilder.Entity("MyPortal.Database.Models.Subject", b =>

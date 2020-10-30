@@ -13,11 +13,10 @@ export class StudentBrowserComponent extends PortalViewComponent implements OnIn
    }
 
   ngOnInit(): void {
-    super.addStyles();
+    
   }
 
   ngOnDestroy(): void {
     super.removeStyles();
   }
-
 }

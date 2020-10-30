@@ -1,3 +1,4 @@
+import { StudentViewComponent } from './../people/students/student-view/student-view.component';
 import { StudentBrowserComponent } from './../people/students/student-browser/student-browser.component';
 import { StaffAuthGuard } from './../../_guards/staff-auth.guard';
 import { StaffPortalComponent } from './../staff-portal.component';
@@ -19,6 +20,10 @@ const staffRoutes: Routes = [
       {
         path: 'students',
         component: StudentBrowserComponent
+      },
+      {
+        path: 'students/:id',
+        component: StudentViewComponent,
       },
       {
         path: '',

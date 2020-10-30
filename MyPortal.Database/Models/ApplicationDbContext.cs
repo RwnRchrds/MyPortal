@@ -628,6 +628,13 @@ namespace MyPortal.Database.Models
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<StudyTopic>()
+                .HasOne(e => e.Course)
+                .WithMany(e => e.StudyTopics)
+                .HasForeignKey(e => e.CourseId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<Subject>()
                 .HasMany(e => e.Courses)
                 .WithOne(e => e.Subject)
@@ -637,13 +644,6 @@ namespace MyPortal.Database.Models
 
             modelBuilder.Entity<Subject>()
                 .HasMany(e => e.StaffMembers)
-                .WithOne(e => e.Subject)
-                .HasForeignKey(e => e.SubjectId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Subject>()
-                .HasMany(e => e.StudyTopics)
                 .WithOne(e => e.Subject)
                 .HasForeignKey(e => e.SubjectId)
                 .IsRequired()
@@ -769,13 +769,6 @@ namespace MyPortal.Database.Models
                 .HasMany(e => e.Students)
                 .WithOne(e => e.RegGroup)
                 .HasForeignKey(e => e.RegGroupId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<YearGroup>()
-                .HasMany(e => e.StudyTopics)
-                .WithOne(e => e.YearGroup)
-                .HasForeignKey(e => e.YearGroupId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 

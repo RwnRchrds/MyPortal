@@ -19,27 +19,24 @@ namespace MyPortal.Database.Repositories
 
         protected override void SelectAllRelated(Query query)
         {
-            query.SelectAllColumns(typeof(Subject));
-            query.SelectAllColumns(typeof(YearGroup));
+            query.SelectAllColumns(typeof(Course));
 
             JoinRelated(query);
         }
 
         protected override void JoinRelated(Query query)
         {
-            query.LeftJoin("Subjects as Subject", "Subject.Id", "StudyTopic.SubjectId");
-            query.LeftJoin("YearGroups as YearGroup", "YearGroup.Id", "StudyTopic.YearGroupId");
+            query.LeftJoin("Courses as Course", "Course.Id", "StudyTopic.CourseId");
         }
 
         protected override async Task<IEnumerable<StudyTopic>> ExecuteQuery(Query query)
         {
             var sql = Compiler.Compile(query);
 
-            return await Connection.QueryAsync<StudyTopic, Subject, YearGroup, StudyTopic>(sql.Sql,
-                (topic, subject, year) =>
+            return await Connection.QueryAsync<StudyTopic, Course, StudyTopic>(sql.Sql,
+                (topic, course) =>
                 {
-                    topic.Subject = subject;
-                    topic.YearGroup = year;
+                    topic.Course = course;
 
                     return topic;
                 }, sql.NamedBindings);

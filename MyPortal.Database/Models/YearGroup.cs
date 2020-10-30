@@ -16,7 +16,6 @@ namespace MyPortal.Database.Models
         {
             Students = new HashSet<Student>();
             Classes = new HashSet<Class>();
-            StudyTopics = new HashSet<StudyTopic>();
             RegGroups = new HashSet<RegGroup>();
         }
 
@@ -40,9 +39,6 @@ namespace MyPortal.Database.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Class> Classes { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<StudyTopic> StudyTopics { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RegGroup> RegGroups { get; set; }

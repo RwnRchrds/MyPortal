@@ -8,20 +8,6 @@ import { Component, OnInit } from '@angular/core';
 })
 export class StaffSidebarComponent extends PortalSidebarComponent implements OnInit {
 
-  assessmentMenu = 'assessment';
-  attendanceMenu = 'attendance';
-  behaviourMenu = 'behaviour';
-  calendarMenu = 'calendar';
-  communicationMenu = 'communication';
-  curriculumMenu = 'curriculum';
-  documentsMenu = 'documents';
-  financeMenu = 'finance';
-  peopleMenu = 'people';
-  personnelMenu = 'personnel';
-  reportsMenu = 'reports';
-  schoolMenu = 'school';
-  settingsMenu = 'settings';
-
   constructor() {
     super();
 
@@ -30,7 +16,7 @@ export class StaffSidebarComponent extends PortalSidebarComponent implements OnI
     this.sidebarTitle = 'Staff Portal';
 
     this.menuItems = [
-      {parentId: 'people', text: 'Students', route: '/staff/students'}
+      {section: 'people', text: 'Students', route: '/staff/students'}
     ];
    }
 

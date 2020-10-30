@@ -1,4 +1,4 @@
-import { PersonSearch } from './../person-search';
+import { PersonSearch } from './person-search';
 export class StudentSearch extends PersonSearch {
     status: string;
     curriculumGroupId: string;
