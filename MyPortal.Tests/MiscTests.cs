@@ -20,7 +20,7 @@ namespace MyPortal.Tests
         [Test]
         public void Mapping_BusinessConfigurationIsValid()
         {
-            Assert.DoesNotThrow(MappingHelper.GetBusinessConfig().ConfigurationProvider.AssertConfigurationIsValid);
+            Assert.DoesNotThrow(MappingHelper.GetConfig().ConfigurationProvider.AssertConfigurationIsValid);
         }
 
         [Test]
