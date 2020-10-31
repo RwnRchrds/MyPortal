@@ -13,7 +13,7 @@ using MyPortal.Logic.Interfaces;
 
         public BaseService()
         {
-            BusinessMapper = MappingHelper.GetBusinessConfig();
+            BusinessMapper = MappingHelper.GetConfig();
         }
 
         public abstract void Dispose();

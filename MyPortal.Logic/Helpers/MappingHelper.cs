@@ -16,16 +16,29 @@ namespace MyPortal.Logic.Helpers
             {typeof(Achievement), typeof(AchievementModel)},
             {typeof(AchievementOutcome), typeof(AchievementOutcomeModel)},
             {typeof(AchievementType), typeof(AchievementTypeModel)},
+            {typeof(Address), typeof(AddressModel)},
+            {typeof(AddressPerson), typeof(AddressPersonModel)},
+            {typeof(Agency), typeof(AgencyModel)},
+            {typeof(AgencyType), typeof(AgencyTypeModel)},
+            {typeof(Agent), typeof(AgentModel)},
+            {typeof(AgentRelationshipType), typeof(AgentRelationshipTypeModel)},
             {typeof(Aspect), typeof(AspectModel)},
             {typeof(AspectType), typeof(AspectTypeModel)},
-            {typeof(AttendanceCodeMeaning), typeof(AttendanceCodeMeaningModel)},
             {typeof(AttendanceCode), typeof(AttendanceCodeModel)},
+            {typeof(AttendanceCodeMeaning), typeof(AttendanceCodeMeaningModel)},
             {typeof(AttendanceMark), typeof(AttendanceMarkModel)},
+            {typeof(AttendancePeriod), typeof(AttendancePeriodModel)},
             {typeof(AttendanceWeek), typeof(AttendanceWeekModel)},
             {typeof(AttendanceWeekPattern), typeof(AttendanceWeekPatternModel)},
+            {typeof(BasketItem), typeof(BasketItemModel)},
             {typeof(BehaviourOutcome), typeof(BehaviourOutcomeModel)},
             {typeof(BehaviourStatus), typeof(BehaviourStatusModel)},
+            {typeof(BehaviourTarget), typeof(BehaviourTargetModel)},
+            {typeof(Bill), typeof(BillModel)},
+            {typeof(BillItem), typeof(BillItemModel)},
             {typeof(Bulletin), typeof(BulletinModel)},
+            {typeof(Class), typeof(ClassModel)},
+            {typeof(Comment), typeof(CommentModel)},
             {typeof(Contact), typeof(ContactModel)},
             {typeof(Detention), typeof(DetentionModel)},
             {typeof(DetentionType), typeof(DetentionTypeModel)},
@@ -45,7 +58,6 @@ namespace MyPortal.Logic.Helpers
             {typeof(Location), typeof(LocationModel)},
             {typeof(LogNote), typeof(LogNoteModel)},
             {typeof(LogNoteType), typeof(LogNoteTypeModel)},
-            {typeof(AttendancePeriod), typeof(AttendancePeriodModel)},
             {typeof(Person), typeof(PersonModel)},
             {typeof(RegGroup), typeof(RegGroupModel)},
             {typeof(ResultSet), typeof(ResultSetModel)},
@@ -61,7 +73,7 @@ namespace MyPortal.Logic.Helpers
             {typeof(YearGroup), typeof(YearGroupModel)}
         };
         
-        public static IMapper GetBusinessConfig()
+        public static IMapper GetConfig()
         {
             var config = new MapperConfiguration(cfg =>
             {
