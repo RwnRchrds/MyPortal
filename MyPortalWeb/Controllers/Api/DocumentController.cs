@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Logic.Interfaces;
+using MyPortal.Logic.Models.DocumentProvision;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Documents;
 
@@ -110,7 +111,12 @@ namespace MyPortalWeb.Controllers.Api
             {
                 var file = await _documentService.GetFileMetadataByDocument(documentId);
 
-                return Ok(file.WebViewLink);
+                if (file is HostedFileMetadata hostedMetadata)
+                {
+                    return Ok(hostedMetadata.WebViewLink);
+                }
+
+                return BadRequest("You are not using a 3rd party file provider.");
             });
         }
 
