@@ -43,7 +43,7 @@ namespace MyPortal.Logic.Services
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.NameId, userModel.Id.ToString("N")),
-                new Claim(JwtRegisteredClaimNames.UniqueName, userModel.Username),
+                new Claim(JwtRegisteredClaimNames.UniqueName, userModel.UserName),
                 new Claim(ApplicationClaimTypes.UserType, userModel.UserType.ToString()),
                 new Claim(ApplicationClaimTypes.DisplayName, userModel.GetDisplayName(userModel.UserType == UserTypes.Staff))
             };

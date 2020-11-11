@@ -1,18 +1,15 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using MyPortal.Logic.Models.Data;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class GradeSetModel
+    public class GradeSetModel : LookupItemModel
     {
-        public Guid Id { get; set; }
-
         [Required]
         [StringLength(256)]
         public string Name { get; set; }
-
-        public bool Active { get; set; }
-
+        
         public bool System { get; set; }
     }
 }

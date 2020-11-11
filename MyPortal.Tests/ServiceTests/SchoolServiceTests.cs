@@ -35,19 +35,5 @@ namespace MyPortal.Tests.ServiceTests
 
             context.SaveChanges();
         }
-
-        [Test]
-        public async System.Threading.Tasks.Task GetLocalSchoolName_ReturnsValue()
-        {
-            using (var context = TestDataFactory.GetContext())
-            using (ISchoolService schoolService = new SchoolService(context))
-            {
-                AddTestSchool(context);
-
-                var schoolName = await schoolService.GetLocalSchoolName();
-            
-                Assert.AreEqual("MyPortal Test School", schoolName);
-            }
-        }
     }
 }

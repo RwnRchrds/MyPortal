@@ -34,7 +34,7 @@ namespace MyPortalWeb.Extensions
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey =
                             new SymmetricSecurityKey(
-                                Encoding.ASCII.GetBytes(config.GetSection("MyPortal:TokenKey").Value)),
+                                Encoding.ASCII.GetBytes(config.GetSection("TokenKey").Value)),
                         ValidateIssuer = false,
                         ValidateAudience = false
                     };

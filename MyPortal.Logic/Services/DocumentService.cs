@@ -50,12 +50,13 @@ namespace MyPortal.Logic.Services
             _documentRepository = new DocumentRepository(context);
             _directoryService = new DirectoryService(context);
             _documentTypeRepository = new DocumentTypeRepository(connection);
+            _fileRepository = new FileRepository(context);
 
             var documentSetting = config.GetValue<string>("DocumentService:Provider");
 
-            switch (documentSetting)
+            switch (documentSetting.ToLower())
             {
-                case "GSuite":
+                case "google":
                     _fileProvider = new GoogleFileProvider(config);
                     break;
                 default:
@@ -136,19 +137,17 @@ namespace MyPortal.Logic.Services
         {
             var file = await _fileRepository.GetByDocumentId(documentId);
 
-            var metadata = new FileMetadata
+            if (_fileProvider is HostedFileProvider hostingService)
+            {
+                return await hostingService.FetchMetadata(file.FileId);
+            }
+            
+            return new FileMetadata
             {
                 Id = file.FileId,
                 Name = file.FileName,
                 MimeType = file.ContentType
             };
-
-            if (_fileProvider is HostedFileProvider hostingService)
-            {
-                metadata = await hostingService.FetchMetadata(file.FileId, metadata);
-            }
-
-            return metadata;
         }
 
         public async Task<DocumentModel> GetDocumentById(Guid documentId)

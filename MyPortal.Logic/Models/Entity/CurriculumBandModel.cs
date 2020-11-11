@@ -1,12 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using MyPortal.Logic.Models.Data;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class CurriculumBandModel
+    public class CurriculumBandModel : BaseModel
     {
-        public Guid Id { get; set; }
-        
         public Guid AcademicYearId { get; set; }
         
         public Guid CurriculumYearGroupId { get; set; }
@@ -18,6 +17,7 @@ namespace MyPortal.Logic.Models.Entity
         [StringLength(256)]
         public string Description { get; set; }
 
+        public virtual AcademicYearModel AcademicYear { get; set; }
         public virtual CurriculumYearGroupModel CurriculumYearGroup { get; set; }
     }
 }
