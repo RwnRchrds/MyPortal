@@ -27,8 +27,6 @@ namespace MyPortal.Database.Models
 
         public virtual Course Course { get; set; }
 
-        public virtual YearGroup YearGroup { get; set; }
-        
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<LessonPlan> LessonPlans { get; set; }
     }

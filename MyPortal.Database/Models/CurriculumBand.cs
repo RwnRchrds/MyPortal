@@ -18,9 +18,11 @@ namespace MyPortal.Database.Models
         AssignedBlocks = new HashSet<CurriculumBandBlockAssignment>();
     }
 
-    [Column(Order = 1)] public Guid AcademicYearId { get; set; }
+    [Column(Order = 1)] 
+    public Guid AcademicYearId { get; set; }
 
-    [Column(Order = 2)] public Guid CurriculumYearGroupId { get; set; }
+    [Column(Order = 2)] 
+    public Guid CurriculumYearGroupId { get; set; }
 
     [Column(Order = 3)]
     [Required]

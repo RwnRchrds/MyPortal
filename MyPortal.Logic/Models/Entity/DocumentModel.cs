@@ -1,13 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using MyPortal.Logic.Models.Data;
 using MyPortal.Logic.Models.DataGrid;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class DocumentModel
+    public class DocumentModel : BaseModel
     {
-        public Guid Id { get; set; }
-
         public Guid TypeId { get; set; }
 
         public Guid DirectoryId { get; set; }
@@ -30,8 +29,6 @@ namespace MyPortal.Logic.Models.Entity
         public virtual UserModel CreatedBy { get; set; }
 
         public virtual DirectoryModel Directory { get; set; }
-
-        public virtual HomeworkSubmissionModel HomeworkSubmission { get; set; }
 
         public virtual DocumentTypeModel Type { get; set; }
 

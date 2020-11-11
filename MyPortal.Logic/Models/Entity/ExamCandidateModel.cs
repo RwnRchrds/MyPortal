@@ -20,5 +20,7 @@ namespace MyPortal.Logic.Models.Entity
         public bool SpecialConsideration { get; set; }
 
         public string Note { get; set; }
+        
+        public virtual StudentModel Student { get; set; }
     }
 }

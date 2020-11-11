@@ -1,22 +1,17 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using MyPortal.Logic.Models.Data;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class StudyTopicModel
+    public class StudyTopicModel : LookupItemModel
     {
-        public Guid Id { get; set; }
-
-        public Guid SubjectId { get; set; }
-
-        public Guid YearGroupId { get; set; }
+        public Guid CourseId { get; set; }
 
         [Required]
-        [StringLength(256)]
+        [StringLength(128)]
         public string Name { get; set; }
 
-        public virtual SubjectModel Subject { get; set; }
-
-        public virtual YearGroupModel YearGroup { get; set; }
+        public virtual CourseModel Course { get; set; }
     }
 }

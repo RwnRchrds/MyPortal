@@ -11,7 +11,7 @@ namespace MyPortal.Logic.FileProviders
 {
     public abstract class HostedFileProvider : IFileProvider
     {
-        public abstract Task<FileMetadata> FetchMetadata(string fileId, FileMetadata metadata);
+        public abstract Task<HostedFileMetadata> FetchMetadata(string fileId);
         public abstract void Dispose();
         public abstract Task<string> UploadFile(UploadAttachmentModel upload);
         public abstract Task DeleteFile(string fileId);

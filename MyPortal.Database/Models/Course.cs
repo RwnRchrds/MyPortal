@@ -8,7 +8,7 @@ using MyPortal.Database.Interfaces;
 namespace MyPortal.Database.Models
 {
     [Table("Courses")]
-    public class Course : Entity
+    public class Course : LookupItem
     {
         public Course()
         {
@@ -17,8 +17,11 @@ namespace MyPortal.Database.Models
             StudyTopics = new HashSet<StudyTopic>();
         }
 
-        [Column(Order = 1)]
+        [Column(Order = 3)]
         public Guid SubjectId { get; set; }
+
+        [Column(Order = 4)]
+        public string Name { get; set; }
 
         public virtual Subject Subject { get; set; }
 

@@ -28,20 +28,22 @@ namespace MyPortal.Logic.FileProviders
             _driveService.Dispose();
         }
 
-        public override async Task<FileMetadata> FetchMetadata(string fileId, FileMetadata metadata)
+        public override async Task<HostedFileMetadata> FetchMetadata(string fileId)
         {
+            var hostedMetadata = new HostedFileMetadata();
+            
             var request = _driveService.Files.Get(fileId);
 
             request.Fields = "id, name, description, mimeType, webViewLink";
 
             var data = await request.ExecuteAsync();
 
-            metadata.Id = data.Id;
-            metadata.IconLink = data.IconLink;
-            metadata.WebViewLink = data.WebViewLink;
-            metadata.MimeType = data.MimeType;
+            hostedMetadata.Id = data.Id;
+            hostedMetadata.IconLink = data.IconLink;
+            hostedMetadata.WebViewLink = data.WebViewLink;
+            hostedMetadata.MimeType = data.MimeType;
 
-            return metadata;
+            return hostedMetadata;
         }
 
         public override async Task<string> UploadFile(UploadAttachmentModel upload)

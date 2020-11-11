@@ -66,10 +66,18 @@ namespace MyPortal.Tests
                 let modelProperties = type.Value.GetProperties().ToList()
                 let exceptions = new List<(Type type, string propertyName)>
                 {
+                    (typeof(PersonModel), "ContactDetails"),
+                    (typeof(PersonModel), "StaffMemberDetails"),
+                    (typeof(PersonModel), "StudentDetails"),
+                    (typeof(PersonModel), "AgentDetails"),
+                    (typeof(PersonModel), "User"),
+
+                    (typeof(UserModel), "NormalizedUserName"),
+                    (typeof(UserModel), "NormalizedEmail"),
                     (typeof(UserModel), "PasswordHash"),
                     (typeof(UserModel), "SecurityStamp"),
+                    (typeof(UserModel), "ConcurrencyStamp"),
                     (typeof(UserModel), "TwoFactorEnabled"),
-                    (typeof(UserModel), "LockoutEnd")
                 }
                 from entityProperty in entityProperties.Where(entityProperty =>
                     !exceptions.Contains((type.Value, entityProperty.Name)) && modelProperties.All(m =>
@@ -84,7 +92,15 @@ namespace MyPortal.Tests
                 }
             }
 
-            Assert.IsTrue(mappingValid);
+            if (mappingValid)
+            {
+                Assert.Pass();
+            }
+
+            var message =
+                $"Missing properties were found in the following mappings: {string.Join(", ", faultyMappings.Keys.Select(x => x.Name))}.";
+
+            Assert.Fail(message);
         }
 
         [Test]
@@ -96,10 +112,12 @@ namespace MyPortal.Tests
 
             foreach (var type in from type in MappingHelper.MappingDictionary
                 let entityProperties = type.Key.GetProperties().Where(x =>
-                    x.PropertyType == typeof(string) || !typeof(IEnumerable).IsAssignableFrom(x.PropertyType)).ToList()
+                    x.PropertyType == typeof(string) || x.PropertyType == typeof(byte[]) || !typeof(IEnumerable).IsAssignableFrom(x.PropertyType)).ToList()
                 let modelProperties = type.Value.GetProperties().ToList()
                 let exceptions = new List<(Type type, string propertyName)>
                 {
+                    (typeof(CoverArrangementModel), "StaffChanged"),
+                    (typeof(CoverArrangementModel), "RoomChanged"),
                     (typeof(TaskModel), "Overdue")
                 }
                 from modelProperty in modelProperties.Where(modelProperty =>
@@ -115,7 +133,15 @@ namespace MyPortal.Tests
                 }
             }
 
-            Assert.IsTrue(mappingValid);
+            if (mappingValid)
+            {
+                Assert.Pass();
+            }
+
+            var message =
+                $"Surplus properties were found in the following mappings: {string.Join(", ", faultyMappings.Keys.Select(x => x.Name))}.";
+
+            Assert.Fail(message);
         }
     }
 }

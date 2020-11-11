@@ -1,13 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using MyPortal.Logic.Attributes;
+using MyPortal.Logic.Models.Data;
 
 namespace MyPortal.Logic.Models.Entity
 {
-    public class PersonModel
+    public class PersonModel : BaseModel
     {
-        public Guid Id { get; set; }
-
         public Guid DirectoryId { get; set; }
 
         [StringLength(128)]
@@ -25,14 +24,11 @@ namespace MyPortal.Logic.Models.Entity
         public string LastName { get; set; }
 
         [StringLength(256)]
-        public string LegalFirstName { get; set; }
+        public string ChosenFirstName { get; set; }
 
-        [StringLength(256)]
-        public string LegalLastName { get; set; }
+        public Guid? PhotoId { get; set; }
 
-        public int? PhotoId { get; set; }
-
-        [NhsNumber]
+        [StringLength(10)]
         public string NhsNumber { get; set; }
 
         public DateTime UpdatedDate { get; set; }
@@ -45,19 +41,25 @@ namespace MyPortal.Logic.Models.Entity
 
         public DateTime? Deceased { get; set; }
 
-        public Guid? UserId { get; set; }
+        public Guid? EthnicityId { get; set; }
 
         public bool Deleted { get; set; }
 
-        public virtual ContactModel ContactDetails { get; set; }
+        //public virtual ContactModel ContactDetails { get; set; }
+
+        //public virtual StaffMemberModel StaffMemberDetails { get; set; }
+
+        //public virtual StudentModel StudentDetails { get; set; }
+
+        //public virtual AgentModel AgentDetails { get; set; }
+
+        //public virtual UserModel User { get; set; }
 
         public virtual DirectoryModel Directory { get; set; }
 
-        public virtual StaffMemberModel StaffMemberDetails { get; set; }
+        public virtual PhotoModel Photo { get; set; }
 
-        public virtual StudentModel StudentDetails { get; set; }
-
-        public virtual UserModel User { get; set; }
+        public virtual EthnicityModel Ethnicity { get; set; }
 
         public string GetDisplayName(bool salutationFormat = false)
         {
