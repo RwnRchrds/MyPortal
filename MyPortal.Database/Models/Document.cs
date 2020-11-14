@@ -47,6 +47,8 @@ namespace MyPortal.Database.Models
         public virtual User CreatedBy { get; set; }
 
         public virtual Directory Directory { get; set; }
+        
+        public virtual HomeworkSubmission HomeworkSubmission { get; set; }
 
         public virtual DocumentType Type { get; set; }
 

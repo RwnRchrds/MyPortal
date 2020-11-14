@@ -35,7 +35,6 @@ namespace MyPortal.Database.Models
         public virtual Directory Parent { get; set; }
         public virtual Bulletin Bulletin { get; set; }
         public virtual HomeworkItem HomeworkItem { get; set; }
-        public virtual HomeworkSubmission HomeworkSubmission { get; set; }
         public virtual Person Person { get; set; }
         public virtual LessonPlan LessonPlan { get; set; }
         public virtual Agency Agency { get; set; }
