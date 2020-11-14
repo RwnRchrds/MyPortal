@@ -31,6 +31,8 @@ namespace MyPortal.Logic.Models.Entity
         public virtual DirectoryModel Directory { get; set; }
 
         public virtual DocumentTypeModel Type { get; set; }
+        
+        public virtual HomeworkSubmissionModel HomeworkSubmission { get; set; }
 
         public virtual FileModel Attachment { get; set; }
 

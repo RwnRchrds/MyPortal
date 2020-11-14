@@ -20,7 +20,6 @@ namespace MyPortal.Logic.Models.Entity
         public virtual DirectoryModel Parent { get; set; }
         public virtual BulletinModel Bulletin { get; set; }
         public virtual HomeworkModel HomeworkItem { get; set; }
-        public virtual HomeworkSubmissionModel HomeworkSubmission { get; set; }
         public virtual PersonModel Person { get; set; }
         public virtual LessonPlanModel LessonPlan { get; set; }
         public virtual AgencyModel Agency { get; set; }

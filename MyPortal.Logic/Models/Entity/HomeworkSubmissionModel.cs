@@ -16,6 +16,6 @@ namespace MyPortal.Logic.Models.Entity
         public virtual HomeworkModel HomeworkItem { get; set; }
         public virtual StudentModel Student { get; set; }
         public virtual TaskModel Task { get; set; }
-        public virtual DirectoryModel SubmittedWork { get; set; }
+        public virtual DocumentModel SubmittedWork { get; set; }
     }
 }
