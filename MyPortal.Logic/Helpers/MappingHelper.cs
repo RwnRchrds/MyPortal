@@ -163,6 +163,7 @@ namespace MyPortal.Logic.Helpers
             {typeof(StudyTopic), typeof(StudyTopicModel)},
             {typeof(Subject), typeof(SubjectModel)},
             {typeof(SubjectCode), typeof(SubjectCodeModel)},
+            {typeof(SubjectCodeSet), typeof(SubjectCodeSetModel)},
             {typeof(SubjectStaffMember), typeof(SubjectStaffMemberModel)},
             {typeof(SubjectStaffMemberRole), typeof(SubjectStaffMemberRoleModel)},
             {typeof(SystemArea), typeof(SystemAreaModel)},
