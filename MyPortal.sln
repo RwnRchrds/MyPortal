@@ -5,13 +5,11 @@ VisualStudioVersion = 16.0.29123.88
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyPortal.Database", "MyPortal.Database\MyPortal.Database.csproj", "{166E1359-8F93-462C-A72D-61750A7E30F9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyPortalCore", "MyPortalCore\MyPortalCore.csproj", "{31D132D9-621D-41B5-A8EC-E1D3C29DE9C6}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyPortal.Logic", "MyPortal.Logic\MyPortal.Logic.csproj", "{CCE77F36-AC3F-4844-9B35-DE832479033B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyPortal.Tests", "MyPortal.Tests\MyPortal.Tests.csproj", "{3B96153E-9A51-433E-8150-B228DD497D02}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyPortalWeb", "MyPortalWeb\MyPortalWeb.csproj", "{E5F08C1D-A0C6-456B-B01E-1C8E5644B96E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyPortalWeb", "MyPortalWeb\MyPortalWeb.csproj", "{E5F08C1D-A0C6-456B-B01E-1C8E5644B96E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +21,6 @@ Global
 		{166E1359-8F93-462C-A72D-61750A7E30F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{166E1359-8F93-462C-A72D-61750A7E30F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{166E1359-8F93-462C-A72D-61750A7E30F9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{31D132D9-621D-41B5-A8EC-E1D3C29DE9C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{31D132D9-621D-41B5-A8EC-E1D3C29DE9C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{31D132D9-621D-41B5-A8EC-E1D3C29DE9C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{31D132D9-621D-41B5-A8EC-E1D3C29DE9C6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CCE77F36-AC3F-4844-9B35-DE832479033B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CCE77F36-AC3F-4844-9B35-DE832479033B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CCE77F36-AC3F-4844-9B35-DE832479033B}.Release|Any CPU.ActiveCfg = Release|Any CPU

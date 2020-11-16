@@ -31,7 +31,7 @@ namespace MyPortal.Database.Repositories
 
         public async Task<TEntity> GetByIdWithTracking(Guid id)
         {
-            var entity = await Context.Set<TEntity>().FindAsync(id);
+            var entity = await Context.Set<TEntity>().FirstOrDefaultAsync(x => x.Id == id);
 
             if (entity == null)
             {
@@ -53,7 +53,7 @@ namespace MyPortal.Database.Repositories
             switch (entity)
             {
                 case ISystemEntity systemObject when systemObject.System:
-                    throw new SystemEntityException("System entity cannot be deleted.");
+                    throw new SystemEntityException("This item is protected from deletion.");
                 case ISoftDeleteEntity softDeleteObject:
                     softDeleteObject.Deleted = true;
                     break;

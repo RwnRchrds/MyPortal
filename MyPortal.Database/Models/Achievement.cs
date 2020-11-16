@@ -8,7 +8,7 @@ using MyPortal.Database.Interfaces;
 namespace MyPortal.Database.Models
 {
     [Table("Achievements")]
-    public class Achievement : Entity
+    public class Achievement : Entity, ISoftDeleteEntity
     {
         [Column(Order = 1)]
         public Guid AcademicYearId { get; set; }
