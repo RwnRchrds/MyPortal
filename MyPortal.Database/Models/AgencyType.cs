@@ -9,8 +9,6 @@ namespace MyPortal.Database.Models
     [Table("AgencyTypes")]
     public class AgencyType : LookupItem
     {
-        // TODO: Populate Data
-
         public AgencyType()
         {
             Agencies = new HashSet<Agency>();

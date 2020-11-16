@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Constants;
+using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.Models
 {
     [Table("Bills")]
-    public class Bill : Entity
+    public class Bill : Entity, ISoftDeleteEntity
     {
         public Bill()
         {

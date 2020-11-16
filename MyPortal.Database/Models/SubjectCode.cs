@@ -10,8 +10,6 @@ namespace MyPortal.Database.Models
     [Table("SubjectCodes")]
     public class SubjectCode : LookupItem
     {
-        // TODO: Populate Data
-
         public SubjectCode()
         {
             Elements = new HashSet<ExamBaseElement>();
@@ -20,6 +18,10 @@ namespace MyPortal.Database.Models
         [Column(Order = 3)]
         public string Code { get; set; }
 
+        [Column(Order = 4)] 
+        public Guid SubjectCodeSetId { get; set; }
+
+        public virtual SubjectCodeSet SubjectCodeSet { get; set; }
         public virtual ICollection<ExamBaseElement> Elements { get; set; }
     }
 }

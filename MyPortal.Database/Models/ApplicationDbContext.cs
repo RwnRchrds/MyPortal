@@ -173,6 +173,7 @@ namespace MyPortal.Database.Models
         public virtual DbSet<StudyTopic> StudyTopics { get; set; }
         public virtual DbSet<Subject> Subjects { get; set; }
         public virtual DbSet<SubjectCode> SubjectCodes { get; set; }
+        public virtual DbSet<SubjectCodeSet> SubjectCodeSets { get; set; }
         public virtual DbSet<SubjectStaffMember> SubjectStaffMembers { get; set; }
         public virtual DbSet<SubjectStaffMemberRole> SubjectStaffMemberRoles { get; set; }
         public virtual DbSet<SystemArea> SystemAreas { get; set; }
@@ -364,6 +365,7 @@ namespace MyPortal.Database.Models
                 modelBuilder.Entity<StudyTopic>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Subject>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<SubjectCode>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                modelBuilder.Entity<SubjectCodeSet>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<SubjectStaffMember>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<SubjectStaffMemberRole>().Property(e => e.Id)
                     .HasDefaultValueSql("NEWSEQUENTIALID()");
@@ -653,6 +655,13 @@ namespace MyPortal.Database.Models
                 .HasMany(e => e.GiftedTalentedStudents)
                 .WithOne(e => e.Subject)
                 .HasForeignKey(e => e.SubjectId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<SubjectCodeSet>()
+                .HasMany(e => e.SubjectCodes)
+                .WithOne(e => e.SubjectCodeSet)
+                .HasForeignKey(e => e.SubjectCodeSetId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 

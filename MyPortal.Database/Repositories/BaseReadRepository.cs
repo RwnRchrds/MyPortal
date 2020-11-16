@@ -23,19 +23,18 @@ namespace MyPortal.Database.Repositories
         protected IDbConnection Connection;
         protected readonly SqlServerCompiler Compiler;
 
-        public BaseReadRepository(IDbConnection connection, string tblAlias = null)
+        public BaseReadRepository(IDbConnection connection, string tblAlias = null) : this(tblAlias)
         {
             Connection = connection;
-
-            Compiler = new SqlServerCompiler();
-
-            TblName = EntityHelper.GetTableName(typeof(TEntity), out TblAlias, tblAlias);
         }
 
-        public BaseReadRepository(ApplicationDbContext context, string tblAlias = null)
+        public BaseReadRepository(ApplicationDbContext context, string tblAlias = null) : this(tblAlias)
         {
             Connection = context.Database.GetDbConnection();
+        }
 
+        private BaseReadRepository(string tblAlias = null)
+        {
             Compiler = new SqlServerCompiler();
 
             TblName = EntityHelper.GetTableName(typeof(TEntity), out TblAlias, tblAlias);
