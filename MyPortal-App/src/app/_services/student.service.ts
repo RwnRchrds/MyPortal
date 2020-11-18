@@ -69,8 +69,4 @@ search(searchModel: StudentSearch): Observable<StudentDataGridModel[]> {
   }));
 }
 
-getById(studentId: string): Observable<StudentEntity> {
-
-}
-
 }
