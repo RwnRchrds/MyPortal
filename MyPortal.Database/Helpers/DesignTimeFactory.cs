@@ -9,7 +9,7 @@ namespace MyPortal.Database.Helpers
 {
     public class DesignTimeFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
     {
-        private const string ConnectionString = @"data source=NEBULA\DEVELOPMENT;initial catalog=MyPortal;persist security info=True;user id=sa;password=***REMOVED***;multipleactiveresultsets=True;application name=MyPortal";
+        private const string ConnectionString = @"data source=VADER\DEVELOPMENT;initial catalog=MyPortal;persist security info=True;user id=sa;password=***REMOVED***;multipleactiveresultsets=True;application name=MyPortal";
 
         public ApplicationDbContext CreateDbContext(string[] args)
         {
