@@ -20,11 +20,11 @@ namespace MyPortal.Logic.Services
             _locationRepository = new LocationRepository(context);
         }
 
-        public async Task<Lookup> GetLocations()
+        public async Task<IEnumerable<LocationModel>> GetLocations()
         {
             var locations = await _locationRepository.GetAll();
 
-            return new Lookup(locations.OrderBy(x => x.Description).ToDictionary(x => x.Description, x => x.Id));
+            return locations.Select(BusinessMapper.Map<LocationModel>);
         }
 
         public override void Dispose()

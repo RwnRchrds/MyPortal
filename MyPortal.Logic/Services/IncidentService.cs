@@ -118,25 +118,25 @@ namespace MyPortal.Logic.Services
             await _incidentRepository.SaveChanges();
         }
 
-        public async Task<Lookup> GetTypes()
+        public async Task<IEnumerable<IncidentTypeModel>> GetTypes()
         {
             var types = await _incidentTypeRepository.GetAll();
 
-            return types.ToLookup();
+            return types.Select(BusinessMapper.Map<IncidentTypeModel>).ToList();
         }
 
-        public async Task<Lookup> GetOutcomes()
+        public async Task<IEnumerable<BehaviourOutcomeModel>> GetOutcomes()
         {
             var outcomes = await _outcomeRepository.GetAll();
 
-            return outcomes.ToLookup();
+            return outcomes.Select(BusinessMapper.Map<BehaviourOutcomeModel>).ToList();
         }
 
-        public async Task<Lookup> GetStatus()
+        public async Task<IEnumerable<BehaviourStatusModel>> GetStatus()
         {
             var status = await _statusRepository.GetAll();
 
-            return status.ToLookup();
+            return status.Select(BusinessMapper.Map<BehaviourStatusModel>).ToList();
         }
     }
 }

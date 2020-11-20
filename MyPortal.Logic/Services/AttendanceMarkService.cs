@@ -60,10 +60,6 @@ namespace MyPortal.Logic.Services
 
         public async Task<AttendanceMarkModel> Get(Guid studentId, Guid attendanceWeekId, Guid periodId)
         {
-            var student = await _studentRepository.GetById(studentId);
-            var attendanceWeek = await _attendanceWeekRepository.GetById(attendanceWeekId);
-            var period = await _periodRepository.GetById(periodId);
-
             var attendanceMark = await _attendanceMarkRepository.Get(studentId, attendanceWeekId, periodId);
 
             if (attendanceMark == null)

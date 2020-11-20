@@ -15,8 +15,8 @@ namespace MyPortal.Logic.Interfaces
         Task Create(params IncidentModel[] incidents);
         Task Update(params IncidentModel[] incidents);
         Task Delete(params Guid[] incidentIds);
-        Task<Lookup> GetTypes();
-        Task<Lookup> GetOutcomes();
-        Task<Lookup> GetStatus();
+        Task<IEnumerable<IncidentTypeModel>> GetTypes();
+        Task<IEnumerable<BehaviourOutcomeModel>> GetOutcomes();
+        Task<IEnumerable<BehaviourStatusModel>> GetStatus();
     }
 }

@@ -116,11 +116,11 @@ namespace MyPortal.Logic.Services
             await _documentRepository.SaveChanges();
         }
 
-        public async Task<Lookup> GetTypes(DocumentTypeFilter filter)
+        public async Task<IEnumerable<DocumentTypeModel>> GetTypes(DocumentTypeFilter filter)
         {
             var documentTypes = await _documentTypeRepository.Get(filter);
 
-            return documentTypes.ToLookup();
+            return documentTypes.Select(BusinessMapper.Map<DocumentTypeModel>).ToList();
         }
 
         public async Task Delete(params Guid[] documentIds)
