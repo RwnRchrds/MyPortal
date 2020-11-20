@@ -136,18 +136,18 @@ namespace MyPortal.Logic.Services
             await _achievementRepository.SaveChanges();
         }
 
-        public async Task<Lookup> GetTypes()
+        public async Task<IEnumerable<AchievementTypeModel>> GetTypes()
         {
             var types = await _achievementTypeRepository.GetAll();
 
-            return types.ToLookup();
+            return types.Select(BusinessMapper.Map<AchievementTypeModel>).ToList();
         }
 
-        public async Task<Lookup> GetOutcomes()
+        public async Task<IEnumerable<AchievementOutcomeModel>> GetOutcomes()
         {
             var outcomes = await _achievementOutcomeRepository.GetAll();
 
-            return outcomes.ToLookup();
+            return outcomes.Select(BusinessMapper.Map<AchievementOutcomeModel>).ToList();
         }
     }
 }

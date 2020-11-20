@@ -7,6 +7,6 @@ namespace MyPortal.Logic.Interfaces
 {
     public interface ILocationService : IService
     {
-        Task<Lookup> GetLocations();
+        Task<IEnumerable<LocationModel>> GetLocations();
     }
 }

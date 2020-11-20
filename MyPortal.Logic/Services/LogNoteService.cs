@@ -53,11 +53,11 @@ namespace MyPortal.Logic.Services
             return logNotes.Select(BusinessMapper.Map<LogNoteModel>);
         }
 
-        public async Task<Lookup> GetTypes()
+        public async Task<IEnumerable<LogNoteTypeModel>> GetTypes()
         {
             var logNoteTypes = await _logNoteTypeRepository.GetAll();
 
-            return logNoteTypes.ToLookup();
+            return logNoteTypes.Select(BusinessMapper.Map<LogNoteTypeModel>);
         }
 
         public async Task Create(params LogNoteModel[] logNoteObjects)

@@ -15,7 +15,7 @@ namespace MyPortal.Logic.Interfaces
     {
         Task Create(params DocumentModel[] documents);
         Task<FileMetadata> GetFileMetadataByDocument(Guid documentId);
-        Task<Lookup> GetTypes(DocumentTypeFilter filter);
+        Task<IEnumerable<DocumentTypeModel>> GetTypes(DocumentTypeFilter filter);
         Task<FileDownload> GetDownloadByDocument(Guid documentId);
         Task<DocumentModel> GetDocumentById(Guid documentId);
         Task Update(params DocumentModel[] documents);

@@ -16,7 +16,7 @@ namespace MyPortal.Logic.Interfaces
         Task Create(params AchievementModel[] achievements);
         Task Update(params AchievementModel[] achievements);
         Task Delete(params Guid[] achievementIds);
-        Task<Lookup> GetTypes();
-        Task<Lookup> GetOutcomes();
+        Task<IEnumerable<AchievementTypeModel>> GetTypes();
+        Task<IEnumerable<AchievementOutcomeModel>> GetOutcomes();
     }
 }

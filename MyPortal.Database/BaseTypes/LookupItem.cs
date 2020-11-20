@@ -8,7 +8,7 @@ using MyPortal.Database.Interfaces;
 
 namespace MyPortal.Database.BaseTypes
 {
-    public abstract class LookupItem : Entity
+    public abstract class LookupItem : Entity, ILookupItem
     {
         public LookupItem()
         {
