@@ -8,6 +8,7 @@ using MyPortal.Database.Permissions;
 using MyPortal.Logic.Constants;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
+using MyPortalWeb.Controllers.BaseControllers;
 
 namespace MyPortalWeb.Controllers.Api
 {

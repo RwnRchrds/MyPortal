@@ -7,6 +7,7 @@ using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Person.Tasks;
+using MyPortalWeb.Controllers.BaseControllers;
 
 namespace MyPortalWeb.Controllers.Api
 {
@@ -207,7 +208,7 @@ namespace MyPortalWeb.Controllers.Api
             {
                 return false;
             }
-            
+
             if (await _taskService.IsTaskOwner(model.Id, userId))
             {
                 return true;

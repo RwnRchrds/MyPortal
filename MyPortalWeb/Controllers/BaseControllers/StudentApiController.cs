@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using MyPortal.Database.Constants;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 
-namespace MyPortalWeb.Controllers.Api
+namespace MyPortalWeb.Controllers.BaseControllers
 {
     public abstract class StudentApiController : BaseApiController
     {

@@ -1,20 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using MyPortal.Database.Constants;
-using MyPortal.Logic.Constants;
 using MyPortal.Logic.Exceptions;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 
-namespace MyPortalWeb.Controllers.Api
+namespace MyPortalWeb.Controllers.BaseControllers
 {
     [Route("api/[controller]")]
     [ApiController]

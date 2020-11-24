@@ -9,6 +9,7 @@ using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.DataGrid;
 using MyPortal.Logic.Models.Entity;
 using MyPortal.Logic.Models.Requests.Documents;
+using MyPortalWeb.Controllers.BaseControllers;
 
 namespace MyPortalWeb.Controllers.Api
 {
