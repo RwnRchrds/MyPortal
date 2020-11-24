@@ -4,6 +4,7 @@ using MyPortal.Database.Permissions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.Requests.Admin;
 using MyPortal.Logic.Models.Requests.Auth;
+using MyPortalWeb.Controllers.BaseControllers;
 
 namespace MyPortalWeb.Controllers.Api
 {
@@ -80,7 +81,7 @@ namespace MyPortalWeb.Controllers.Api
         public override void Dispose()
         {
             _tokenService.Dispose();
-            
+
             base.Dispose();
         }
     }

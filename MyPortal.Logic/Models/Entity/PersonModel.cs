@@ -45,16 +45,6 @@ namespace MyPortal.Logic.Models.Entity
 
         public bool Deleted { get; set; }
 
-        //public virtual ContactModel ContactDetails { get; set; }
-
-        //public virtual StaffMemberModel StaffMemberDetails { get; set; }
-
-        //public virtual StudentModel StudentDetails { get; set; }
-
-        //public virtual AgentModel AgentDetails { get; set; }
-
-        //public virtual UserModel User { get; set; }
-
         public virtual DirectoryModel Directory { get; set; }
 
         public virtual PhotoModel Photo { get; set; }

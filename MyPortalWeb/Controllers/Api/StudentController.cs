@@ -11,6 +11,7 @@ using MyPortal.Logic.Constants;
 using MyPortal.Logic.Helpers;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.DataGrid;
+using MyPortalWeb.Controllers.BaseControllers;
 
 namespace MyPortalWeb.Controllers.Api
 {
@@ -19,9 +20,9 @@ namespace MyPortalWeb.Controllers.Api
     {
         public StudentController(IUserService userService, IAcademicYearService academicYearService, IStudentService studentService) : base(userService, academicYearService, studentService)
         {
-            
+
         }
-        
+
         [HttpGet]
         [Authorize(Policy = Policies.UserType.Staff)]
         [Route("Search")]
