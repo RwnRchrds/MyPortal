@@ -10,7 +10,7 @@ using MyPortal.Database.Interfaces;
 namespace MyPortal.Database.Models
 {
     [Table("TaskTypes")]
-    public class TaskType : LookupItem, ISystemEntity
+    public class TaskType : LookupItem, ISystemEntity, IReservable
     {
         public TaskType()
         {
