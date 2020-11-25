@@ -52,9 +52,6 @@ namespace MyPortal.Database.Models
         [Column(Order = 7, TypeName = "date")]
         public DateTime? DateLeaving { get; set; }
 
-        [Column(Order = 8, TypeName = "decimal(10,2)")]
-        public decimal AccountBalance { get; set; }
-
         [Column(Order = 9)]
         public bool FreeSchoolMeals { get; set; }
 
@@ -133,5 +130,7 @@ namespace MyPortal.Database.Models
         public virtual ICollection<ReportCard> ReportCards { get; set; }
 
         public virtual ICollection<ActivityMembership> ActivityMemberships { get; set; }
+
+        public virtual ICollection<AccountTransaction> AccountTransactions { get; set; }
     }
 }
