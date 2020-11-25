@@ -10,12 +10,12 @@ namespace MyPortal.Logic.Interfaces
     public interface IDetentionService : IService
     {
         Task<IEnumerable<DetentionModel>> Get(DetentionSearchOptions searchOptions);
+        Task<DetentionModel> GetById(Guid detentionId);
         Task<DetentionModel> GetByIncident(Guid incidentId);
         Task Create(params CreateDetentionRequest[] detentionModels);
         Task Update(params UpdateDetentionRequest[] detentionModels);
         Task Delete(params Guid[] detentionIds);
-        Task AddStudent(Guid detentionId, Guid studentId);
-        Task AddStudent(Guid detentionId, Guid studentId, Guid incidentId);
-        Task RemoveStudent(Guid detentionId, Guid studentId);
+        Task AddStudent(Guid detentionId, Guid incidentId);
+        Task RemoveStudent(Guid incidentDetentionId);
     }
 }

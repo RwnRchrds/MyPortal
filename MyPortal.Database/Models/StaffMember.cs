@@ -92,5 +92,7 @@ namespace MyPortal.Database.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<StaffAbsence> Absences { get; set; }
+
+        public virtual ICollection<ActivitySupervisor> Activities { get; set; }
     }
 }

@@ -23,6 +23,10 @@ namespace MyPortal.Database.Models
         public virtual DbSet<Achievement> Achievements { get; set; }
         public virtual DbSet<AchievementOutcome> AchievementOutcomes { get; set; }
         public virtual DbSet<AchievementType> AchievementTypes { get; set; }
+        public virtual DbSet<Activity> Activities { get; set; }
+        public virtual DbSet<ActivityEvent> ActivityEvents { get; set; }
+        public virtual DbSet<ActivityMembership> ActivityMemberships { get; set; }
+        public virtual DbSet<ActivitySupervisor> ActivitySupervisors { get; set; }
         public virtual DbSet<Address> Addresses { get; set; }
         public virtual DbSet<AddressPerson> AddressPersons { get; set; }
         public virtual DbSet<Agency> Agencies { get; set; }
@@ -196,6 +200,10 @@ namespace MyPortal.Database.Models
                 modelBuilder.Entity<Achievement>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<AchievementOutcome>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<AchievementType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                modelBuilder.Entity<Activity>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                modelBuilder.Entity<ActivityEvent>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                modelBuilder.Entity<ActivityMembership>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                modelBuilder.Entity<ActivitySupervisor>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Address>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<AddressPerson>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Agency>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
@@ -1938,6 +1946,48 @@ namespace MyPortal.Database.Models
                 .HasMany(e => e.BillItems)
                 .WithOne(e => e.Bill)
                 .HasForeignKey(e => e.BillId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Activity>()
+                .HasMany(e => e.Events)
+                .WithOne(e => e.Activity)
+                .HasForeignKey(e => e.ActivityId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Activity>()
+                .HasMany(e => e.Memberships)
+                .WithOne(e => e.Activity)
+                .HasForeignKey(e => e.ActivityId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Activity>()
+                .HasMany(e => e.Supervisors)
+                .WithOne(e => e.Activity)
+                .HasForeignKey(e => e.ActivityId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ActivityEvent>()
+                .HasOne(e => e.Event)
+                .WithOne(e => e.Activity)
+                .HasForeignKey<ActivityEvent>(e => e.EventId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ActivityMembership>()
+                .HasOne(e => e.Student)
+                .WithMany(e => e.ActivityMemberships)
+                .HasForeignKey(e => e.StudentId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ActivitySupervisor>()
+                .HasOne(e => e.Supervisor)
+                .WithMany(e => e.Activities)
+                .HasForeignKey(e => e.SupervisorId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
         }
