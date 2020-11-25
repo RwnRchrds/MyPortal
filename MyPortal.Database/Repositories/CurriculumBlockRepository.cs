@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Dapper;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
+using MyPortal.Database.Models.Entity;
 using SqlKata;
 using Task = System.Threading.Tasks.Task;
 

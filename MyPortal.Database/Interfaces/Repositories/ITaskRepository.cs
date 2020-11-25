@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MyPortal.Database.Models.Search;
+using Task = MyPortal.Database.Models.Entity.Task;
 
 namespace MyPortal.Database.Interfaces.Repositories
 {
-    public interface ITaskRepository : IReadWriteRepository<Models.Task>
+    public interface ITaskRepository : IReadWriteRepository<Task>
     {
-        Task<IEnumerable<Models.Task>> GetByAssignedTo(Guid personId, TaskSearchOptions searchOptions = null);
+        Task<IEnumerable<Task>> GetByAssignedTo(Guid personId, TaskSearchOptions searchOptions = null);
     }
 }

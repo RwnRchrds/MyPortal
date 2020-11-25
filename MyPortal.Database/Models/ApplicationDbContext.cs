@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using MyPortal.Database.Models.Entity;
+using Task = MyPortal.Database.Models.Entity.Task;
 
 namespace MyPortal.Database.Models
 {
@@ -20,6 +22,7 @@ namespace MyPortal.Database.Models
         public bool Debug { get; set; }
 
         public virtual DbSet<AcademicYear> AcademicYears { get; set; }
+        public virtual DbSet<AccountTransaction> AccountTransactions { get; set; }
         public virtual DbSet<Achievement> Achievements { get; set; }
         public virtual DbSet<AchievementOutcome> AchievementOutcomes { get; set; }
         public virtual DbSet<AchievementType> AchievementTypes { get; set; }
@@ -46,6 +49,8 @@ namespace MyPortal.Database.Models
         public virtual DbSet<BehaviourStatus> BehaviourStatus { get; set; }
         public virtual DbSet<BehaviourTarget> BehaviourTargets { get; set; }
         public virtual DbSet<Bill> Bills { get; set; }
+        public virtual DbSet<BillingCycle> BillingCycles { get; set; }
+        public virtual DbSet<BillAccountTransaction> BillAccountTransactions { get; set; }
         public virtual DbSet<BillItem> BillItems { get; set; }
         public virtual DbSet<Bulletin> Bulletins { get; set; }
         public virtual DbSet<Class> Classes { get; set; }
@@ -197,6 +202,7 @@ namespace MyPortal.Database.Models
             if (!Debug)
             {
                 modelBuilder.Entity<AcademicYear>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                modelBuilder.Entity<AccountTransaction>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Achievement>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<AchievementOutcome>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<AchievementType>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
@@ -226,6 +232,8 @@ namespace MyPortal.Database.Models
                 modelBuilder.Entity<BehaviourStatus>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<BehaviourTarget>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Bill>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                modelBuilder.Entity<BillingCycle>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+                modelBuilder.Entity<BillAccountTransaction>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<BillItem>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Bulletin>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Class>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
@@ -1988,6 +1996,27 @@ namespace MyPortal.Database.Models
                 .HasOne(e => e.Supervisor)
                 .WithMany(e => e.Activities)
                 .HasForeignKey(e => e.SupervisorId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<BillAccountTransaction>()
+                .HasOne(e => e.Bill)
+                .WithMany(e => e.AccountTransactions)
+                .HasForeignKey(e => e.BillId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<BillAccountTransaction>()
+                .HasOne(e => e.AccountTransaction)
+                .WithMany(e => e.BillAccountTransactions)
+                .HasForeignKey(e => e.AccountTransactionId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<AccountTransaction>()
+                .HasOne(e => e.Student)
+                .WithMany(e => e.AccountTransactions)
+                .HasForeignKey(e => e.StudentId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
         }

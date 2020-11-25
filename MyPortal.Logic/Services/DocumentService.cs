@@ -19,6 +19,7 @@ using MyPortal.Database.Constants;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
+using MyPortal.Database.Models.Entity;
 using MyPortal.Database.Models.Filters;
 using MyPortal.Database.Repositories;
 using MyPortal.Logic.Constants;
@@ -175,7 +176,7 @@ namespace MyPortal.Logic.Services
 
             string fileId = await _fileProvider.UploadFile(upload);
 
-            var file = new Database.Models.File
+            var file = new Database.Models.Entity.File
             {
                 FileId = fileId,
                 FileName = upload.File.FileName,

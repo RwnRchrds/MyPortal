@@ -1,5 +1,6 @@
 ﻿using System;
 using MyPortal.Database.Models;
+using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Models.Data;
 
 namespace MyPortal.Logic.Models.Entity

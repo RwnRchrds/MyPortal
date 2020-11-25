@@ -6,8 +6,9 @@ using MyPortal.Database.Helpers;
 using MyPortal.Database.Interfaces;
 using MyPortal.Database.Interfaces.Repositories;
 using MyPortal.Database.Models;
+using MyPortal.Database.Models.Entity;
 using SqlKata;
-using Task = MyPortal.Database.Models.Task;
+using Task = MyPortal.Database.Models.Entity.Task;
 
 namespace MyPortal.Database.Repositories
 {
@@ -41,7 +42,7 @@ namespace MyPortal.Database.Repositories
             var sql = Compiler.Compile(query);
 
             return await Connection
-                .QueryAsync<HomeworkSubmission, HomeworkItem, Student, Person, Models.Task, HomeworkSubmission>(sql.Sql,
+                .QueryAsync<HomeworkSubmission, HomeworkItem, Student, Person, Task, HomeworkSubmission>(sql.Sql,
                     (submission, homework, student, person, task) =>
                     {
                         submission.HomeworkItem = homework;
