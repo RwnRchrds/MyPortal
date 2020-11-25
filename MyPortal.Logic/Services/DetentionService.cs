@@ -21,7 +21,6 @@ namespace MyPortal.Logic.Services
         private readonly IDetentionRepository _detentionRepository;
         private readonly IIncidentRepository _incidentRepository;
         private readonly IIncidentDetentionRepository _incidentDetentionRepository;
-        private readonly IDiaryEventAttendeeRepository _attendeeRepository;
         private readonly IStudentRepository _studentRepository;
 
         public DetentionService(ApplicationDbContext context)
@@ -29,7 +28,6 @@ namespace MyPortal.Logic.Services
             _detentionRepository = new DetentionRepository(context);
             _incidentRepository = new IncidentRepository(context);
             _incidentDetentionRepository = new IncidentDetentionRepository(context);
-            _attendeeRepository = new DiaryEventAttendeeRepository(context);
             _studentRepository = new StudentRepository(context);
         }
 
@@ -103,46 +101,8 @@ namespace MyPortal.Logic.Services
             await _detentionRepository.SaveChanges();
         }
 
-        public async Task AddStudent(Guid detentionId, Guid studentId)
+        public async Task AddStudent(Guid detentionId, Guid incidentId)
         {
-            var detentionInDb = await _detentionRepository.GetById(detentionId);
-
-            if (detentionInDb == null)
-            {
-                throw new NotFoundException("Detention not found.");
-            }
-
-            var student = await _studentRepository.GetById(studentId);
-
-            if (student == null)
-            {
-                throw new NotFoundException("Student not found.");
-            }
-
-            var attendees = await _attendeeRepository.GetByEvent(detentionInDb.EventId);
-
-            if (attendees.Any(x => x.PersonId == student.PersonId))
-            {
-                throw new InvalidDataException("Student is already scheduled to attend this detention.");
-            }
-
-            var attendee = new DiaryEventAttendee
-            {
-                PersonId = student.PersonId,
-                EventId = detentionInDb.EventId,
-                Required = true,
-                ResponseId = AttendeeResponses.Accepted
-            };
-
-            _attendeeRepository.Create(attendee);
-
-            await _attendeeRepository.SaveChanges();
-        }
-
-        public async Task AddStudent(Guid detentionId, Guid studentId, Guid incidentId)
-        {
-            await AddStudent(detentionId, studentId);
-
             var incidentDetention = new IncidentDetention
             {
                 DetentionId = detentionId,
@@ -154,41 +114,18 @@ namespace MyPortal.Logic.Services
             await _incidentDetentionRepository.SaveChanges();
         }
 
-        public async Task RemoveStudent(Guid detentionId, Guid studentId)
+        public async Task RemoveStudent(Guid incidentDetentionId)
         {
-            var detentionInDb = await _detentionRepository.GetById(detentionId);
+            var relatedIncident = await _incidentDetentionRepository.GetById(incidentDetentionId);
 
-            var relatedIncident = await _incidentDetentionRepository.Get(detentionId, studentId);
-
-            if (detentionInDb == null)
+            if (relatedIncident == null)
             {
                 throw new NotFoundException("Detention not found.");
             }
 
-            var studentInDb = await _studentRepository.GetById(studentId);
+            await _incidentDetentionRepository.Delete(relatedIncident.Id);
 
-            if (studentInDb == null)
-            {
-                throw new NotFoundException("Student not found.");
-            }
-
-            var attendees = await _attendeeRepository.GetByEvent(detentionInDb.EventId);
-
-            var attendeeToRemove = attendees.FirstOrDefault(x => x.PersonId == studentInDb.PersonId);
-
-            if (attendeeToRemove == null)
-            {
-                throw new InvalidDataException("Student is not scheduled to attend this detention.");
-            }
-            
-            await _attendeeRepository.Delete(attendeeToRemove.Id);
-            
-            if (relatedIncident != null)
-            {
-                await _incidentDetentionRepository.Delete(relatedIncident.Id);
-
-                await _incidentDetentionRepository.SaveChanges();
-            }
+            await _incidentDetentionRepository.SaveChanges();
         }
 
         public override void Dispose()
@@ -196,7 +133,6 @@ namespace MyPortal.Logic.Services
             _detentionRepository.Dispose();
             _incidentRepository.Dispose();
             _incidentDetentionRepository.Dispose();
-            _attendeeRepository.Dispose();
             _studentRepository.Dispose();
         }
     }

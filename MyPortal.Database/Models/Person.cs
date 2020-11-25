@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using MyPortal.Database.Attributes;
 using MyPortal.Database.BaseTypes;
 using MyPortal.Database.Interfaces;
 
@@ -84,16 +85,21 @@ namespace MyPortal.Database.Models
         [Column(Order = 15)]
         public bool Deleted { get; set; }
 
+        [EntityOnly]
         public virtual Contact ContactDetails { get; set; }
 
         public virtual Directory Directory { get; set; }
 
+        [EntityOnly]
         public virtual StaffMember StaffMemberDetails { get; set; }
 
+        [EntityOnly]
         public virtual Student StudentDetails { get; set; }
 
+        [EntityOnly]
         public virtual Agent AgentDetails { get; set; }
 
+        [EntityOnly]
         public virtual User User { get; set; }
 
         public virtual Photo Photo { get; set; }

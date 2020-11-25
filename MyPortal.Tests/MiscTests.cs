@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using MyPortal.Database.Attributes;
 using MyPortal.Database.Constants;
 using MyPortal.Database.Models;
 using MyPortal.Logic.Authentication;
@@ -62,16 +64,10 @@ namespace MyPortal.Tests
 
             foreach (var type in from type in MappingHelper.MappingDictionary
                 let entityProperties = type.Key.GetProperties().Where(x =>
-                    x.PropertyType == typeof(string) || !typeof(IEnumerable).IsAssignableFrom(x.PropertyType)).ToList()
+                    (x.PropertyType == typeof(string) || !typeof(IEnumerable).IsAssignableFrom(x.PropertyType)) && !x.GetCustomAttributes(typeof(EntityOnlyAttribute)).Any()).ToList()
                 let modelProperties = type.Value.GetProperties().ToList()
                 let exceptions = new List<(Type type, string propertyName)>
                 {
-                    (typeof(PersonModel), "ContactDetails"),
-                    (typeof(PersonModel), "StaffMemberDetails"),
-                    (typeof(PersonModel), "StudentDetails"),
-                    (typeof(PersonModel), "AgentDetails"),
-                    (typeof(PersonModel), "User"),
-
                     (typeof(UserModel), "NormalizedUserName"),
                     (typeof(UserModel), "NormalizedEmail"),
                     (typeof(UserModel), "PasswordHash"),
