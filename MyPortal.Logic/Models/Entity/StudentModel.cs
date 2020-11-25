@@ -21,8 +21,6 @@ namespace MyPortal.Logic.Models.Entity
 
         public DateTime? DateLeaving { get; set; }
 
-        public decimal AccountBalance { get; set; }
-
         public bool FreeSchoolMeals { get; set; }
 
         public Guid? SenStatusId { get; set; }
