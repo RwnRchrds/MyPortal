@@ -7,6 +7,7 @@ using System.Runtime.Serialization;
 using System.Security.Principal;
 using System.Text;
 using MyPortal.Database.Models;
+using MyPortal.Database.Models.Entity;
 
 namespace MyPortal.Database.Helpers
 {

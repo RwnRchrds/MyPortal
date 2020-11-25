@@ -41,7 +41,7 @@ namespace MyPortal.Logic.Services
         {
             foreach (var task in tasks)
             {
-                var taskToAdd = new Database.Models.Task
+                var taskToAdd = new Database.Models.Entity.Task
                 {
                     Title = task.Title,
                     Description = task.Description,

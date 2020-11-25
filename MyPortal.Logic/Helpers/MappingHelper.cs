@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using AutoMapper;
 using MyPortal.Database.Models;
+using MyPortal.Database.Models.Entity;
 using MyPortal.Logic.Models;
 using MyPortal.Logic.Models.Entity;
 
