@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyPortal.Database.Constants;
+using MyPortal.Database.Permissions;
 using MyPortal.Logic.Interfaces;
 using MyPortal.Logic.Models.DataGrid;
 using MyPortal.Logic.Models.Entity;
@@ -65,7 +66,7 @@ namespace MyPortalWeb.Controllers.Api
 
         [HttpPost]
         [Route("Create")]
-        public async Task<IActionResult> Create([FromForm] CreateDirectoryModel model)
+        public async Task<IActionResult> Create([FromBody] CreateDirectoryModel model)
         {
             return await ProcessAsync(async () =>
             {

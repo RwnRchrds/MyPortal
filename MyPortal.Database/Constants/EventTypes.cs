@@ -4,6 +4,7 @@ namespace MyPortal.Database.Constants
 {
     public class EventTypes
     {
+        public static Guid ExCurrActivity = Guid.Parse("84E9DDA4-1BCB-4A2F-8082-FCE51DD04F22");
         public static Guid Lesson = Guid.Parse("84E9DDA4-1BCB-4A2F-8082-FCE51DD04F23");
         public static Guid Cover = Guid.Parse("84E9DDA4-1BCB-4A2F-8082-FCE51DD04F24");
         public static Guid Detention = Guid.Parse("84E9DDA4-1BCB-4A2F-8082-FCE51DD04F25");

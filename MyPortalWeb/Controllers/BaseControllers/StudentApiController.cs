@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using MyPortal.Database.Constants;
 using MyPortal.Logic.Extensions;
 using MyPortal.Logic.Interfaces;
 
@@ -17,7 +16,7 @@ namespace MyPortalWeb.Controllers.BaseControllers
 
         protected async Task<bool> AuthenticateStudent(Guid studentId)
         {
-            if (User.IsType(UserTypes.Student))
+            if (User.IsType(1))
             {
                 var user = await UserService.GetUserByPrincipal(User);
 
@@ -28,7 +27,7 @@ namespace MyPortalWeb.Controllers.BaseControllers
                     return true;
                 }
             }
-            else if (User.IsType(UserTypes.Staff))
+            else if (User.IsType(0))
             {
                 return true;
             }
