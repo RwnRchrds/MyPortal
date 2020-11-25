@@ -14,11 +14,11 @@ namespace MyPortal.Logic.Models.Entity
 
         public decimal NetAmount { get; set; }
 
+        public decimal DiscountAmount { get; set; }
+
         public decimal TaxAmount { get; set; }
 
-        public decimal AmountPaid { get; set; }
-
-        public BillStatus Status { get; set; }
+        public bool Refunded { get; set; }
 
         public bool Deleted { get; set; }
 

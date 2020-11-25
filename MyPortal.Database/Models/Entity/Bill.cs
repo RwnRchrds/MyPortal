@@ -22,15 +22,15 @@ namespace MyPortal.Database.Models.Entity
 
         [Column(Order = 3, TypeName = "decimal(10,2)")]
         public decimal NetAmount { get; set; }
-        
+
         [Column(Order = 4, TypeName = "decimal(10,2)")]
-        public decimal TaxAmount { get; set; }
+        public decimal DiscountAmount { get; set; }
         
         [Column(Order = 5, TypeName = "decimal(10,2)")]
-        public decimal AmountPaid { get; set; }
+        public decimal TaxAmount { get; set; }
 
-        [Column(Order = 6)]
-        public BillStatus Status { get; set; }
+        [Column(Order = 5)] 
+        public bool Refunded { get; set; }
 
         [Column(Order = 7)]
         public bool Deleted { get; set; }
