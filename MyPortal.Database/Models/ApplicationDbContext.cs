@@ -21,6 +21,7 @@ namespace MyPortal.Database.Models
 
         public bool Debug { get; set; }
 
+        public virtual DbSet<AcademicTerm> AcademicTerms { get; set; }
         public virtual DbSet<AcademicYear> AcademicYears { get; set; }
         public virtual DbSet<AccountTransaction> AccountTransactions { get; set; }
         public virtual DbSet<Achievement> Achievements { get; set; }
@@ -201,6 +202,7 @@ namespace MyPortal.Database.Models
 
             if (!Debug)
             {
+                modelBuilder.Entity<AcademicTerm>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<AcademicYear>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<AccountTransaction>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
                 modelBuilder.Entity<Achievement>().Property(e => e.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
@@ -2017,6 +2019,13 @@ namespace MyPortal.Database.Models
                 .HasOne(e => e.Student)
                 .WithMany(e => e.AccountTransactions)
                 .HasForeignKey(e => e.StudentId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<AcademicTerm>()
+                .HasOne(e => e.AcademicYear)
+                .WithMany(e => e.AcademicTerms)
+                .HasForeignKey(e => e.AcademicYearId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
         }
