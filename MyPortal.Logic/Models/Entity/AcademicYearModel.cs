@@ -15,12 +15,6 @@ namespace MyPortal.Logic.Models.Entity
         [StringLength(128)]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "First Date is required.")]
-        public DateTime FirstDate { get; set; }
-
-        [Required(ErrorMessage = "Last Date is required.")]
-        public DateTime LastDate { get; set; }
-
         public bool Locked { get; set; }
 
         public static async Task CheckLock(IAcademicYearRepository academicYearRepository, Guid academicYearId)

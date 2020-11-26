@@ -61,8 +61,6 @@ namespace MyPortal.Logic.Services
             {
                 var academicYearInDb = await _academicYearRepository.GetById(academicYearModel.Id);
 
-                academicYearInDb.FirstDate = academicYearModel.FirstDate;
-                academicYearInDb.LastDate = academicYearModel.LastDate;
                 academicYearInDb.Locked = academicYearModel.Locked;
             }
         }
